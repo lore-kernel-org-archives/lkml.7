@@ -2,259 +2,117 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B02C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59552C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F7B20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556130409;
-	bh=F+6me7MTYts2NQbnvjLd0jtOQSNfUSvWqCoT1rIddl4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mOIBY3/UAJaEv6F8XlS+JiRqd0F9nwoZVVXLAHwBDK3EJuzr96Op4lPhamAhL6/UW
-	 56m9SDlztFUDNKrSp/2qaIARlQBe+AZlRna7JcVjAEKdCEvA9uoGSVChIgxGdm73bH
-	 L3K2r3GNFCFWGV9sLUZUzIyhC98o2qFxl+FOuNd0=
+	by mail.kernel.org (Postfix) with ESMTP id 2A336206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:28:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZdtWjBrW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387591AbfDXS0s (ORCPT
+        id S2387628AbfDXS2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:26:48 -0400
-Received: from casper.infradead.org ([85.118.1.10]:50252 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732960AbfDXS0s (ORCPT
+        Wed, 24 Apr 2019 14:28:00 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48762 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733047AbfDXS17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:26:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zpl3Kp5jL5IHSrBY2v6relyH7ftFWN04nThOvb5SeQc=; b=NngPC7x8RnR6PtI2sKhTEdwt2u
-        hBqSl2z4Lm86ts5tRoh3imK2EC7PCxdY74WBq3lNB+8h/GxS4T/cqkemJ7ubWWFLuQhr5yNxLTSPv
-        N5jRboYCYTO4yw+bPtSXIP70yXPC+Fges3LSPN504OaRMPSjx/8A0fK5ogmQKmn+rxAtWTqeYsee5
-        WpfNI24TSCh5YJFm2qsgisll6qgvR0hDwNlD2X0D4h+N7YxX1IpBoUASbfehac0z1nDaY+hFNRGVJ
-        SbMIRYxTDIWUhqJTwu0x05HdlgFZVXhYbtZWu0yaOQuXDikizLMBzcLAOKNhpETBTJ0ChkdG0VOJ7
-        mrIvLCaw==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJMbU-0002RD-66; Wed, 24 Apr 2019 18:26:44 +0000
-Date:   Wed, 24 Apr 2019 15:26:38 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>, linux-acpi@vger.kernel.org
-Cc:     rjw@rjwysocki.net, Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5 23/23] Documentation: ACPI: move video_extension.txt
- to firmware-guide/acpi and convert to reST
-Message-ID: <20190424152638.76691e9e@coco.lan>
-In-Reply-To: <20190424175306.25880-24-changbin.du@gmail.com>
-References: <20190424175306.25880-1-changbin.du@gmail.com>
-        <20190424175306.25880-24-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 24 Apr 2019 14:27:59 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3OINpqI077256;
+        Wed, 24 Apr 2019 18:27:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=KBSDR6RWqPya7xUYiX+Qhe6fX2wumsafyUnxOMhrzC8=;
+ b=ZdtWjBrWW1T1ii/DKxZ92QlWm+mSqiTHgpxDBM91XdHa4rPjH1vesiMI2s20vAhnWHO+
+ m7ke8mXaBE2sczCRIpO0/782RMjEJOSIi0OP6G+iBBYITlVDk0Vtfic0hxP401bdEC3Z
+ 0FQ8l50cgDTSn4ZcG7DowoBAHz+eC95ATgyn+zjBBun5ZNw2WGnrHb5wfp8aYlSaTqhC
+ 9+V3nBQnRg19wODlXpxUBFsk5UMCwIAYv2pMMoSu9j6CG2Fzhj73Vc/yvysGM1X/M+93
+ 3ZLjXPTwOPnk4qIay1opZDaFRVt4PE8NaxUZlzoncnMwcSqZKnLPUcViy7n5Nu/r3yUQ tQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2rytut44ne-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Apr 2019 18:27:30 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3OIQTAf076377;
+        Wed, 24 Apr 2019 18:27:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2s0fv3qjgw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Apr 2019 18:27:29 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3OIRRcv004972;
+        Wed, 24 Apr 2019 18:27:27 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 24 Apr 2019 11:27:27 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id C0D466A00FB; Wed, 24 Apr 2019 14:27:30 -0400 (EDT)
+Date:   Wed, 24 Apr 2019 14:27:30 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v3 08/10] iommu/vt-d: Check whether device requires
+ bounce buffer
+Message-ID: <20190424182730.GA17505@char.us.oracle.com>
+References: <20190421011719.14909-1-baolu.lu@linux.intel.com>
+ <20190421011719.14909-9-baolu.lu@linux.intel.com>
+ <20190422164755.GC31181@lst.de>
+ <76e35340-32c3-ee0d-5232-bd8800248402@linux.intel.com>
+ <20190423060858.GA12762@lst.de>
+ <e11489cf-87cc-a956-7c6c-ffdd26a4e3ec@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e11489cf-87cc-a956-7c6c-ffdd26a4e3ec@linux.intel.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9237 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=927
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904240133
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9237 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=950 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904240133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 25 Apr 2019 01:53:06 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
-
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
+On Tue, Apr 23, 2019 at 03:35:51PM +0800, Lu Baolu wrote:
+> Hi,
 > 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  Documentation/firmware-guide/acpi/index.rst   |  1 +
->  .../acpi/video_extension.rst}                 | 83 +++++++++++--------
->  2 files changed, 50 insertions(+), 34 deletions(-)
->  rename Documentation/{acpi/video_extension.txt => firmware-guide/acpi/video_extension.rst} (70%)
+> On 4/23/19 2:08 PM, Christoph Hellwig wrote:
+> > > > Again, this and the option should not be in a specific iommu driver.
+> > > > 
+> > > 
+> > > The option of whether bounce is ignored should be in the specific iommu
+> > > driver.
+> > 
+> > Why?  As a user I could not care less which IOMMU driver my particular
+> > system uses.
+> > 
 > 
-> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-> index 0e60f4b7129a..ae609eec4679 100644
-> --- a/Documentation/firmware-guide/acpi/index.rst
-> +++ b/Documentation/firmware-guide/acpi/index.rst
-> @@ -23,3 +23,4 @@ ACPI Support
->     i2c-muxes
->     acpi-lid
->     lpit
-> +   video_extension
-> diff --git a/Documentation/acpi/video_extension.txt b/Documentation/firmware-guide/acpi/video_extension.rst
-> similarity index 70%
-> rename from Documentation/acpi/video_extension.txt
-> rename to Documentation/firmware-guide/acpi/video_extension.rst
-> index 79bf6a4921be..099b8607e07b 100644
-> --- a/Documentation/acpi/video_extension.txt
-> +++ b/Documentation/firmware-guide/acpi/video_extension.rst
-> @@ -1,5 +1,8 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=====================
->  ACPI video extensions
-> -~~~~~~~~~~~~~~~~~~~~~
-> +=====================
->  
->  This driver implement the ACPI Extensions For Display Adapters for
->  integrated graphics devices on motherboard, as specified in ACPI 2.0
-> @@ -8,9 +11,10 @@ defining the video POST device, retrieving EDID information or to
->  setup a video output, etc.  Note that this is an ref. implementation
->  only.  It may or may not work for your integrated video device.
->  
-> -The ACPI video driver does 3 things regarding backlight control:
-> +The ACPI video driver does 3 things regarding backlight control.
+> Looks reasonable to me. Let's listen to more opinions.
 
-Hmm... didn't notice this change before... The way it is, this
-sentence sounds incomplete, specially since you removed the
-numbering from the paragraphs. Perhaps you could, instead, be
-explicit about what the video driver does, e. g.:
-
-	The ACPI video driver exports the backlight control via a
-	sysfs interface, notifies userspace with events and
-	changes the backlight level via ACPI firmware, as detailed
-	at the following chapters:
-
-@ACPI maintainers: 
-
-Please check if the above properly summarizes the activity done 
-with regards to backlight control.
-
-If you agree with that, feel free to add:
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
->  
-> -1 Export a sysfs interface for user space to control backlight level
-> +Export a sysfs interface for user space to control backlight level
-> +==================================================================
->  
->  If the ACPI table has a video device, and acpi_backlight=vendor kernel
->  command line is not present, the driver will register a backlight device
-> @@ -22,36 +26,41 @@ The backlight sysfs interface has a standard definition here:
->  Documentation/ABI/stable/sysfs-class-backlight.
->  
->  And what ACPI video driver does is:
-> -actual_brightness: on read, control method _BQC will be evaluated to
-> -get the brightness level the firmware thinks it is at;
-> -bl_power: not implemented, will set the current brightness instead;
-> -brightness: on write, control method _BCM will run to set the requested
-> -brightness level;
-> -max_brightness: Derived from the _BCL package(see below);
-> -type: firmware
-> +
-> +actual_brightness:
-> +  on read, control method _BQC will be evaluated to
-> +  get the brightness level the firmware thinks it is at;
-> +bl_power:
-> +  not implemented, will set the current brightness instead;
-> +brightness:
-> +  on write, control method _BCM will run to set the requested brightness level;
-> +max_brightness:
-> +  Derived from the _BCL package(see below);
-> +type:
-> +  firmware
->  
->  Note that ACPI video backlight driver will always use index for
->  brightness, actual_brightness and max_brightness. So if we have
-> -the following _BCL package:
-> +the following _BCL package::
->  
-> -Method (_BCL, 0, NotSerialized)
-> -{
-> -	Return (Package (0x0C)
-> +	Method (_BCL, 0, NotSerialized)
->  	{
-> -		0x64,
-> -		0x32,
-> -		0x0A,
-> -		0x14,
-> -		0x1E,
-> -		0x28,
-> -		0x32,
-> -		0x3C,
-> -		0x46,
-> -		0x50,
-> -		0x5A,
-> -		0x64
-> -	})
-> -}
-> +		Return (Package (0x0C)
-> +		{
-> +			0x64,
-> +			0x32,
-> +			0x0A,
-> +			0x14,
-> +			0x1E,
-> +			0x28,
-> +			0x32,
-> +			0x3C,
-> +			0x46,
-> +			0x50,
-> +			0x5A,
-> +			0x64
-> +		})
-> +	}
->  
->  The first two levels are for when laptop are on AC or on battery and are
->  not used by Linux currently. The remaining 10 levels are supported levels
-> @@ -62,13 +71,15 @@ as a "brightness level" indicator. Thus from the user space perspective
->  the range of available brightness levels is from 0 to 9 (max_brightness)
->  inclusive.
->  
-> -2 Notify user space about hotkey event
-> +Notify user space about hotkey event
-> +====================================
->  
->  There are generally two cases for hotkey event reporting:
-> +
->  i) For some laptops, when user presses the hotkey, a scancode will be
->     generated and sent to user space through the input device created by
->     the keyboard driver as a key type input event, with proper remap, the
-> -   following key code will appear to user space:
-> +   following key code will appear to user space::
->  
->  	EV_KEY, KEY_BRIGHTNESSUP
->  	EV_KEY, KEY_BRIGHTNESSDOWN
-> @@ -84,23 +95,27 @@ ii) For some laptops, the press of the hotkey will not generate the
->      notify value it received and send the event to user space through the
->      input device it created:
->  
-> +	=====		==================
->  	event		keycode
-> +	=====		==================
->  	0x86		KEY_BRIGHTNESSUP
->  	0x87		KEY_BRIGHTNESSDOWN
->  	etc.
-> +	=====		==================
->  
->  so this would lead to the same effect as case i) now.
->  
->  Once user space tool receives this event, it can modify the backlight
->  level through the sysfs interface.
->  
-> -3 Change backlight level in the kernel
-> +Change backlight level in the kernel
-> +====================================
->  
->  This works for machines covered by case ii) in Section 2. Once the driver
->  received a notification, it will set the backlight level accordingly. This does
->  not affect the sending of event to user space, they are always sent to user
->  space regardless of whether or not the video module controls the backlight level
->  directly. This behaviour can be controlled through the brightness_switch_enabled
-> -module parameter as documented in admin-guide/kernel-parameters.rst. It is recommended to
-> -disable this behaviour once a GUI environment starts up and wants to have full
-> -control of the backlight level.
-> +module parameter as documented in admin-guide/kernel-parameters.rst. It is
-> +recommended to disable this behaviour once a GUI environment starts up and
-> +wants to have full control of the backlight level.
-
-
-
-Thanks,
-Mauro
+I agree with Christoph here.
+> 
+> Best regards,
+> Lu Baolu
