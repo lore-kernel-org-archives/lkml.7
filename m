@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D0AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24476C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19BC21905
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81FF21904
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127177;
-	bh=bo2aulTAxicZiE39XAzO3FAOvczOP38m53ofMhCvz2M=;
+	s=default; t=1556127181;
+	bh=4wydJWNvK9qJQM29yp42FK4Cou/td47pYQNS2hDP8w4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bZ+kJNn6lPFFXTKc97ZxRUBJTgv+2O5aUmV2+Xoh1wkU1i9xIdAAkm70Zbfyge/3O
-	 fnPw57TcvrvTBIYz4o/UzHxGTPrAmrYWZ9meJQgIAgTmfoD1ExiebUmZ0/T9VDKDJo
-	 WvTSbmQcwW8XIb631GYYcQj9e2/0r0rqXJ2xU/dM=
+	b=v7H0l2WR/5U6FotQSn1zzEV/7Bk0eo3rGcwwMxn6aGfHOGI8FnyVpKn6g5pv9rgGW
+	 GU25mR6XG4Kyc6BjhTpAZZMGQL9mIUYeNIT5/ktk9EO8I8tOvnjCn5PFRwVWXUICCJ
+	 769zp7Vz7EqIZMDYgekJDiFUDXEycR8Uuy7ySMXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391197AbfDXRc4 (ORCPT
+        id S2391205AbfDXRdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:32:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59670 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:33:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391173AbfDXRcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:32:52 -0400
+        id S2390836AbfDXRc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:32:58 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1B1921939;
-        Wed, 24 Apr 2019 17:32:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11AE3218B0;
+        Wed, 24 Apr 2019 17:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127171;
-        bh=bo2aulTAxicZiE39XAzO3FAOvczOP38m53ofMhCvz2M=;
+        s=default; t=1556127177;
+        bh=4wydJWNvK9qJQM29yp42FK4Cou/td47pYQNS2hDP8w4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ulJ7vWhAt3CyVrwVVKFOiJYCdXJnTJ+5efCy4eyxFgeKGUp0vosvP02peIa79O8pI
-         i09pbhk1eXd8uY9f9meM2jA2eAR065jEshGU0Al7Qh9aNSakOiM2satPGUTp2VeMOE
-         oCSDruTmpI7VsNrfMtmiwBLV/9+z1zZ+PMJKoPIA=
+        b=2W5Ssnj0Hxp/gLHBSn6ksf25/fWwsDC7nHfvsTk+sc/DsDIhQ9GOtiKkOegpD2jNf
+         1Uyz72RUUOlouvuZPvqIoI+seIVAoyM4tJCatiel8MpQBq6kS75XmXHwvpKiSiazXe
+         h+QRANMg+69QLFqBM+AIW7FGLTsOF9OqNYlUXVys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        James Morris <james.morris@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 87/96] tpm: Fix the type of the return value in calc_tpm2_event_size()
-Date:   Wed, 24 Apr 2019 19:10:32 +0200
-Message-Id: <20190424170925.704176363@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Auld <pauld@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Ben Segall <bsegall@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 89/96] sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup
+Date:   Wed, 24 Apr 2019 19:10:34 +0200
+Message-Id: <20190424170925.833332824@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -62,39 +64,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit b9d0a85d6b2e76630cfd4c475ee3af4109bfd87a upstream
+[ Upstream commit 2e8e19226398db8265a8e675fcc0118b9e80c9e8 ]
 
-calc_tpm2_event_size() has an invalid signature because
-it returns a 'size_t' where as its signature says that
-it returns 'int'.
+With extremely short cfs_period_us setting on a parent task group with a large
+number of children the for loop in sched_cfs_period_timer() can run until the
+watchdog fires. There is no guarantee that the call to hrtimer_forward_now()
+will ever return 0.  The large number of children can make
+do_sched_cfs_period_timer() take longer than the period.
 
+ NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
+ RIP: 0010:tg_nop+0x0/0x10
+  <IRQ>
+  walk_tg_tree_from+0x29/0xb0
+  unthrottle_cfs_rq+0xe0/0x1a0
+  distribute_cfs_runtime+0xd3/0xf0
+  sched_cfs_period_timer+0xcb/0x160
+  ? sched_cfs_slack_timer+0xd0/0xd0
+  __hrtimer_run_queues+0xfb/0x270
+  hrtimer_interrupt+0x122/0x270
+  smp_apic_timer_interrupt+0x6a/0x140
+  apic_timer_interrupt+0xf/0x20
+  </IRQ>
+
+To prevent this we add protection to the loop that detects when the loop has run
+too many times and scales the period and quota up, proportionally, so that the timer
+can complete before then next period expires.  This preserves the relative runtime
+quota while preventing the hard lockup.
+
+A warning is issued reporting this state and the new values.
+
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: <stable@vger.kernel.org>
-Fixes: 4d23cc323cdb ("tpm: add securityfs support for TPM 2.0 firmware event log")
-Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: James Morris <james.morris@microsoft.com>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190319130005.25492-1-pauld@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/eventlog/tpm2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/sched/fair.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/char/tpm/eventlog/tpm2.c b/drivers/char/tpm/eventlog/tpm2.c
-index 1b8fa9de2cac..41b9f6c92da7 100644
---- a/drivers/char/tpm/eventlog/tpm2.c
-+++ b/drivers/char/tpm/eventlog/tpm2.c
-@@ -37,8 +37,8 @@
-  *
-  * Returns size of the event. If it is an invalid event, returns 0.
-  */
--static int calc_tpm2_event_size(struct tcg_pcr_event2 *event,
--				struct tcg_pcr_event *event_header)
-+static size_t calc_tpm2_event_size(struct tcg_pcr_event2 *event,
-+				   struct tcg_pcr_event *event_header)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 640094391169..4aa8e7d90c25 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4847,12 +4847,15 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
+ 	return HRTIMER_NORESTART;
+ }
+ 
++extern const u64 max_cfs_quota_period;
++
+ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
  {
- 	struct tcg_efi_specid_event *efispecid;
- 	struct tcg_event_field *event_field;
+ 	struct cfs_bandwidth *cfs_b =
+ 		container_of(timer, struct cfs_bandwidth, period_timer);
+ 	int overrun;
+ 	int idle = 0;
++	int count = 0;
+ 
+ 	raw_spin_lock(&cfs_b->lock);
+ 	for (;;) {
+@@ -4860,6 +4863,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ 		if (!overrun)
+ 			break;
+ 
++		if (++count > 3) {
++			u64 new, old = ktime_to_ns(cfs_b->period);
++
++			new = (old * 147) / 128; /* ~115% */
++			new = min(new, max_cfs_quota_period);
++
++			cfs_b->period = ns_to_ktime(new);
++
++			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
++			cfs_b->quota *= new;
++			cfs_b->quota = div64_u64(cfs_b->quota, old);
++
++			pr_warn_ratelimited(
++        "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
++	                        smp_processor_id(),
++	                        div_u64(new, NSEC_PER_USEC),
++                                div_u64(cfs_b->quota, NSEC_PER_USEC));
++
++			/* reset count so we don't come right back in here */
++			count = 0;
++		}
++
+ 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
+ 	}
+ 	if (idle)
 -- 
 2.19.1
 
