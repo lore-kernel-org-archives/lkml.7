@@ -2,120 +2,87 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8653C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD09C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B212089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:10:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ixWlRqFz"
+	by mail.kernel.org (Postfix) with ESMTP id 5E05E218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:12:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbfDXFKl (ORCPT
+        id S1728704AbfDXFMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 01:10:41 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58297 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729146AbfDXFKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 01:10:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44ppL52k2sz9s6w;
-        Wed, 24 Apr 2019 15:10:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556082638;
-        bh=kSPMn1crfBknvu1HWN7CZ6K116S69it87DcabL9Lpqc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ixWlRqFz7WcrAjSXkSrqHUlGhEweJTImTtuvg0L37htQL6rfbqqOWAqPk5MAWSteB
-         zmIYHFDymAW2bTRJFFO6CHxv/1LoxGqUo1fZKdSm9j/0Xr3TjElmgHDjU2bghacNaq
-         IIU9FhVHsoJkNmav+EuzJm52LCivXoit7VsP0nd/TrWCjGMjMzd5WhxelozzLed7kR
-         h5fzRdjRaVBG3DL1nhEIwd2ghJlaWfan1cKdQbR48t4ZF069cq8cRD5RM3a9VFzpSm
-         L8KEAjA8tk8nDLzDcsMk+7KftLGMzqsGpLlWihz3vYf99NV6G88I3Huptja2PAw6jP
-         a6/FOI8k5dPeA==
-Date:   Wed, 24 Apr 2019 15:10:36 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the tip tree with the asm-generic tree
-Message-ID: <20190424151036.260a58f2@canb.auug.org.au>
+        Wed, 24 Apr 2019 01:12:55 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:44915 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfDXFMy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 01:12:54 -0400
+Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hJADC-00026h-3q from Jiada_Wang@mentor.com ; Tue, 23 Apr 2019 22:12:50 -0700
+Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
+ (TLS) id 15.0.1320.4; Tue, 23 Apr 2019 22:12:45 -0700
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
+        <daniel.lezcano@linaro.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>, <horms+renesas@verge.net.au>,
+        <niklas.soderlund+renesas@ragnatech.se>, <geert+renesas@glider.be>,
+        <sergei.shtylyov@cogentembedded.com>,
+        <marek.vasut+renesas@gmail.com>,
+        <kuninori.morimoto.gx@renesas.com>, <hien.dang.eb@renesas.com>,
+        <fabrizio.castro@bp.renesas.com>, <dien.pham.ry@renesas.com>,
+        <biju.das@bp.renesas.com>, <erosca@de.adit-jv.com>,
+        <george_davis@mentor.com>, <joshua_frkuska@mentor.com>
+Subject: [PATCH v4 0/2] thermal: rcar_gen3_thermal: fix IRQ issues
+Date:   Wed, 24 Apr 2019 14:11:43 +0900
+Message-ID: <20190424051145.23072-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/ZjJN/=kO2oLlAR.mBqf/4j4"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ZjJN/=kO2oLlAR.mBqf/4j4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+There are issues with interrupt handling in rcar_gen3_thermal driver.
 
-Hi all,
+Currently IRQ is remain enabled after .remove, later if device is probed,
+IRQ is requested before .thermal_init, this may cause IRQ function be
+triggered but not able to clear IRQ status, thus cause system to hang.
 
-Today's linux-next merge of the tip tree got a conflict in:
+Since the irq line isn't shared between different devices,
+so the proper interrupt type flag should be IRQF_ONESHOT.
 
-  arch/arm64/include/asm/Kbuild
+This patch-set fix these interrupt handling retated issues.
 
-between commit:
+---
+v4: remove 'spinlock_t lock'
+    add Fixes tag in ("thermal: rcar_gen3_thermal: fix interrupt type")
+    fix typos in ("thermal: rcar_gen3_thermal: disable interrupt in .remove")
 
-  c67fdc1f00cb ("arch: mostly remove <asm/segment.h>")
+v3: fix to use correct code base
+    remove unused "flag" variable in rcar_gen3_thermal_irq
 
-from the asm-generic tree and commit:
+v2: use irq type IRQF_ONESHOT instead of IRQF_SHARED
+    disable interrupt in .remove
 
-  46ad0840b158 ("locking/rwsem: Remove arch specific rwsem files")
+v1: initial version
 
-from the tip tree.
+Jiada Wang (2):
+  thermal: rcar_gen3_thermal: fix interrupt type
+  thermal: rcar_gen3_thermal: disable interrupt in .remove
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+ drivers/thermal/rcar_gen3_thermal.c | 41 +++++++----------------------
+ 1 file changed, 9 insertions(+), 32 deletions(-)
 
---=20
-Cheers,
-Stephen Rothwell
+-- 
+2.19.2
 
-diff --cc arch/arm64/include/asm/Kbuild
-index afd8a3740b18,60a933b07001..000000000000
---- a/arch/arm64/include/asm/Kbuild
-+++ b/arch/arm64/include/asm/Kbuild
-@@@ -17,7 -16,7 +17,6 @@@ generic-y +=3D mmiowb.
-  generic-y +=3D msi.h
-  generic-y +=3D qrwlock.h
-  generic-y +=3D qspinlock.h
-- generic-y +=3D rwsem.h
- -generic-y +=3D segment.h
-  generic-y +=3D serial.h
-  generic-y +=3D set_memory.h
-  generic-y +=3D sizes.h
-
---Sig_/ZjJN/=kO2oLlAR.mBqf/4j4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/78wACgkQAVBC80lX
-0Gzkggf+MQGgwftVnnKAFwlcWHA2BxguCtawsm2gvUObDrGdRJmezE/hv57tctue
-pFirI/XApa6x0dSBq1WS5Jq4uMjKzuQcKAEClRtkXXZ4sqc/q09d1ohqgCA9c1ty
-80P36Mfn3sUiIMbT/wXGjAJxwwTnqWVL4QCQRKcPaaUt2ILdNeNfwD+PwC1phkf0
-eWOeMKDnBWed5EqVttJbs5NTehB9S5NakXg3u5+3r59frkUdYY7JyymG1MVqd67C
-Q0fthbPkAP/FVFNl44bw2lRnSJD6219eKSfBPYLcI0Uz2NdHPOei5JZT0voe1G3H
-HDC2hSmnzrYfpwrojQVuj3XPERUG5A==
-=xa6z
------END PGP SIGNATURE-----
-
---Sig_/ZjJN/=kO2oLlAR.mBqf/4j4--
