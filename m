@@ -2,110 +2,118 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BD1C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C550AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7728B20811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:39:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VTntqaoB"
+	by mail.kernel.org (Postfix) with ESMTP id 9FAB120811
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730256AbfDXMjg (ORCPT
+        id S1730149AbfDXMlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:39:36 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33138 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfDXMjf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:39:35 -0400
-Received: by mail-oi1-f193.google.com with SMTP id e5so14137685oii.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vyXfa149xflFPUebzbBDNz6s0lUGYHuiRaKn3DL9Cs4=;
-        b=VTntqaoByvKi4O60oIfPkpb91X5rmSYz9Q3BhXE8h28107pN+W8kpnWHQzAQvNjGGA
-         dOaI53lntSNvaer6TNQoqeJ2F4Ndqc8MFoPtG2wlSgCudqwqV3IlAvpKqQX51IessjEv
-         RUr9Sqsb6/x8EhdRucXIiWJkBWPL0NRKRkUn0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vyXfa149xflFPUebzbBDNz6s0lUGYHuiRaKn3DL9Cs4=;
-        b=jUYpjVrxw93FPGCthtcFNOcH1DrErNiE3vDYV6t1AwYCXpmQ1FiCShvFsmeWPchmX4
-         UZQeVmBxG9lemfI9QR+DPsfgxPZpawkMictdODQuD1OMO+2Enr0LY+nQcgIU82YehdJF
-         PuhS3LVwmEB6PJhV93e5tqz11nNOu7qmkAwoQBPZ86cwBBmodlhm+lmZ993gfnY4f+B/
-         DgcBXqdYepJY3m5+pwmLwy48kufYo9jF69ZnyorgEKJnLmYuq3EGl5l07kqGHQtc1bmc
-         CW480J0qGOZxVykkkKoIJY9McigyvBC5+hjKZuT3Ki6koCDE0QPcEI2pitpx2ErXM5T+
-         MhIQ==
-X-Gm-Message-State: APjAAAVKtxFwkwOU1v9SoKVFqxDdWDJCqqbjiPLxwL5lbwD2l54Ay3I5
-        ddl9PT3e1/q20gsKglvpFxn/qyEJDbQ=
-X-Google-Smtp-Source: APXvYqxTFmBOqe5m3J5c+L6yQC0Uoo2dfz/lgP57a++/sptE1eGN+jTkqQIqTS0C00aovcfE17fUeg==
-X-Received: by 2002:aca:4987:: with SMTP id w129mr5360246oia.33.1556109574444;
-        Wed, 24 Apr 2019 05:39:34 -0700 (PDT)
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com. [209.85.210.48])
-        by smtp.gmail.com with ESMTPSA id t24sm7477789otk.16.2019.04.24.05.39.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 05:39:33 -0700 (PDT)
-Received: by mail-ot1-f48.google.com with SMTP id t20so6523649otl.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:39:33 -0700 (PDT)
-X-Received: by 2002:a9d:6f90:: with SMTP id h16mr7097977otq.152.1556109572667;
- Wed, 24 Apr 2019 05:39:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
- <20190117162008.25217-11-stanimir.varbanov@linaro.org> <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
- <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org>
-In-Reply-To: <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 24 Apr 2019 21:39:21 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5Co3G1J4+HOcjtCb7p3rhLcm+1E=mPr2d=AtdOSuF_eKg@mail.gmail.com>
-Message-ID: <CAAFQd5Co3G1J4+HOcjtCb7p3rhLcm+1E=mPr2d=AtdOSuF_eKg@mail.gmail.com>
-Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
- codec API
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Wed, 24 Apr 2019 08:41:14 -0400
+Received: from lizzard.sbs.de ([194.138.37.39]:40515 "EHLO lizzard.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727383AbfDXMlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 08:41:13 -0400
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id x3OCf4FL005948
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Apr 2019 14:41:04 +0200
+Received: from [139.25.69.165] ([139.25.69.165])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x3OCf327030489;
+        Wed, 24 Apr 2019 14:41:03 +0200
+Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Malathi Gottam <mgottam@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+References: <20190424081802.GV2654@lahna.fi.intel.com>
+ <5a28f22c-22f7-760a-d076-68ff19800d44@siemens.com>
+ <20190424084259.GW2654@lahna.fi.intel.com>
+ <7e328b7e-f4f0-851a-4152-a9ffd058201c@siemens.com>
+ <20190424094506.GA2654@lahna.fi.intel.com>
+ <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
+ <20190424100130.GB2654@lahna.fi.intel.com>
+ <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
+ <20190424103306.GC2654@lahna.fi.intel.com>
+ <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
+ <20190424104613.GD2654@lahna.fi.intel.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <761ed823-58f4-d166-c415-6b100b1fe615@siemens.com>
+Date:   Wed, 24 Apr 2019 14:41:02 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
+ Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+MIME-Version: 1.0
+In-Reply-To: <20190424104613.GD2654@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 9:15 PM Stanimir Varbanov
-<stanimir.varbanov@linaro.org> wrote:
->
-> Hi Hans,
->
-> On 2/15/19 3:44 PM, Hans Verkuil wrote:
-> > Hi Stanimir,
-> >
-> > I never paid much attention to this patch series since others were busy
-> > discussing it and I had a lot of other things on my plate, but then I heard
-> > that this patch made G_FMT blocking.
->
-> OK, another option could be to block REQBUF(CAPTURE) until event from hw
-> is received that the stream is parsed and the resolution is correctly
-> set by application. Just to note that I'd think to this like a temporal
-> solution until gstreamer implements v4l events.
->
-> Is that looks good to you?
+On 24.04.19 12:46, Mika Westerberg wrote:
+> On Wed, Apr 24, 2019 at 12:39:35PM +0200, Jan Kiszka wrote:
+>> On 24.04.19 12:33, Mika Westerberg wrote:
+>>> On Wed, Apr 24, 2019 at 12:19:02PM +0200, Jan Kiszka wrote:
+>>>>> I think what you want is "GPIO signaled ACPI event". It works so that
+>>>>> you declare _AEI method below the GPIO controller listing the GPIOs you
+>>>>> want to trigger events for and then either _Lxx, _Exx or _EVT method for
+>>>>> each of them under the same controller. GPIO core then handles it
+>>>>> automatically when you register the GPIO chip. See also
+>>>>> acpi_gpiochip_request_interrupts().
+>>>>
+>>>> Right, that is was I read as well. Let's assume I would be able to patch the
+>>>> tables: Would I describe all the logic of this patch in ACPI terms? Where to
+>>>> enable interrupts, how to dispatch the SCI event, how to acknowledge it
+>>>> etc.? Will it also take care of locking? (BTW, my locking seems to have some
+>>>> remaining inconsistency, on second look.)
+>>>
+>>> The GPIO core would then take care of it by requesting the GPIO in
+>>> question and dispatching to the correct event handler. In this patch you
+>>> just leave out the SCI part and only implement the irqchip like you did
+>>> already.
+>>
+>> Could you point me to a gpio driver that works like that already? Would be
+>> easier to learn that from an example. That infrastructure with all its
+>> different modes is seriously complex and not very well documented.
+> 
+> Pretty much all drivers under drivers/pinctrl/intel.
 
-Hmm, I thought we concluded that gstreamer sets the width and height
-in OUTPUT queue before querying the CAPTURE queue and so making the
-driver calculate the CAPTURE format based on what's set on OUTPUT
-would work fine. Did I miss something?
+OK... that's a purely descriptive way. So, provided we had such ACPI table 
+entries, that plus some corresponding pinctrl driver would obsolete gpio-sch.c? 
+Or are there other reason than historical ones for having gpio-*ch.c drivers around?
 
-Best regards,
-Tomasz
+> 
+>>>> And even if that were possible, we would be back to the square of existing
+>>>> devices without those definitions. If this were a recent chipset, I would
+>>>> say, "go, fix future firmware versions". But this one is legacy.
+>>>
+>>> Is it fixing some real issue with these legacy platforms? I mean without
+>>> the patch some GPE event is not handled properly? It was not clear to me
+>>> from the commit message.
+>>>
+>> Without that patch, you are forced to poll for event changes in your
+>> application, timer-driven. There are application that cannot process these
+>> GPIOs because they lack such logic (mraa with node-red-node-intel-gpio is a
+>> public example).
+> 
+> But those are using the GPIOs via sysfs or the char device which should
+> work without the SCI handling part of your patch, no?
+
+They work via sysfs. How would the char dev compensate the missing interrupt 
+support? By doing polling itself when the user wants an event? But I don't find 
+any traces or timers.
+
+Jan
+
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
