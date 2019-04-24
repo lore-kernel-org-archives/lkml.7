@@ -2,104 +2,140 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ED9C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C367C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21195218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125336;
-	bh=I0l476XyVzeji+kfFkiTE/STPvHXToQQfFFwfxuBYrk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0dE3TMRXyLYurB2b1OPLthw+g4mracD5R11xxyT20SsQGTZTWeU2BNtdXBVXLzp3I
-	 PfOs+WVaWin23nA+U+jwMy/yeADsdQmiApI1bMbLTfi993ochosRU/olWjnCP8rU/O
-	 bOLBNAW0lon37N5IMRyBLrzXgOIf8NniIR7eoe0k=
+	by mail.kernel.org (Postfix) with ESMTP id 144252148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:03:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Z65Z2ecO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733105AbfDXRCO (ORCPT
+        id S1733119AbfDXRDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:02:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730844AbfDXRCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:02:14 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F00602148D;
-        Wed, 24 Apr 2019 17:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125333;
-        bh=I0l476XyVzeji+kfFkiTE/STPvHXToQQfFFwfxuBYrk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PkAtPdFuy5Bm1qOz2bZvKvkXVgOYz4xHJQC0liUOHKoSJml5QNFUH5j3iYOTuTOai
-         6aDXoGVOKew4ZAZfjgecThv3cxbCgtaCb/e/GiQ1wcQJQA1hHrRNErnh6X4hJ90Rcj
-         sUZTHghsO427NjnZSHSrhTgUrDvB11K8EJVf7Hzk=
-Date:   Wed, 24 Apr 2019 19:02:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Kirill Smelkov <kirr@nexedi.com>,
+        Wed, 24 Apr 2019 13:03:02 -0400
+Received: from mail.efficios.com ([167.114.142.138]:39754 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730708AbfDXRDB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:03:01 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id CC7AB1DAAE6;
+        Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id yNASwfcFOYXs; Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 75F621DAADF;
+        Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 75F621DAADF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1556125379;
+        bh=DPZxSR6wYKJnzekC6sgrLt8hlX9/r4//uloKdoG3rCc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Z65Z2ecOVrs5AYVi+2oZhJCtp57WyBQsC1D3s1U5WPpHO39pLlAw2/R91pN8mFecy
+         XWPTMW34QEbvnQdhm+mJWud5p0GsFMI8a/gKUVgteJZZfBqKMjg487isP6iaYTwggr
+         hTfA1ZkgUgwQnBCLbKYMJCmbf+ps+v2PX6RyPkbh2TvgvX+uxsTcgJ3kAthDu+EvP6
+         Yxx4Fb9Dxo4b6AOMQ/JIVccnUpYYutZnCsehdnzbGc0wdd+jCHMjE7eL3bj6MqHiFU
+         eNcUvkWDxX8RhCQe+xRSopaMNjl1RhSRcaYafOI1NGE79mUJIS1INtZM+E7/eizsFG
+         4kvv5wIYOj77Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id L4OG3F3Nyf9m; Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 5860E1DAAD8;
+        Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
+Date:   Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Michael Kerrisk <mtk.manpages@gmail.com>,
-        Yongzhi Pan <panyongzhi@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Vrabel <david.vrabel@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Miklos Szeredi <miklos@szeredi.hu>, Tejun Heo <tj@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Nikolaus Rath <Nikolaus@rath.org>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.0 59/66] fs: stream_open - opener for
- stream-like files so that read and write can run simultaneously without
- deadlock
-Message-ID: <20190424170211.GA4253@kroah.com>
-References: <20190424143341.27665-1-sashal@kernel.org>
- <20190424143341.27665-59-sashal@kernel.org>
- <20190424163415.GB21413@kroah.com>
- <CAHk-=wjEOyba5As1PEMk6RitNVOJH9oJ_Jbg4y=5B0fcX1iKGw@mail.gmail.com>
+        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>
+Message-ID: <2087640779.608.1556125379269.JavaMail.zimbra@efficios.com>
+In-Reply-To: <697611694.604.1556125254852.JavaMail.zimbra@efficios.com>
+References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com> <20190424152502.14246-9-mathieu.desnoyers@efficios.com> <20190424164538.GC18611@fuggles.cambridge.arm.com> <20190424165150.GF21101@lakrids.cambridge.arm.com> <697611694.604.1556125254852.JavaMail.zimbra@efficios.com>
+Subject: Re: [RFC PATCH for 5.2 08/10] rseq/selftests: aarch64 code
+ signature: handle big-endian environment
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjEOyba5As1PEMk6RitNVOJH9oJ_Jbg4y=5B0fcX1iKGw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: rseq/selftests: aarch64 code signature: handle big-endian environment
+Thread-Index: OBjeHUeE7gQ5xyWKTP757DExutwbEyS+nxVk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 09:40:53AM -0700, Linus Torvalds wrote:
-> On Wed, Apr 24, 2019 at 9:34 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > I think there is a follow-on patch for this one as well, that adds the
-> > proper "stream open" logic to all of the individual locations.
+----- On Apr 24, 2019, at 1:00 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+
+> ----- On Apr 24, 2019, at 12:51 PM, Mark Rutland mark.rutland@arm.com wrote:
 > 
-> That bulk one hasn't been applied yet, and wouldn't be appropriate for
-> stable anyway. It's 5.2 material.
-
-Ah, ok.
-
-> But...
+>> On Wed, Apr 24, 2019 at 05:45:38PM +0100, Will Deacon wrote:
+>>> On Wed, Apr 24, 2019 at 11:25:00AM -0400, Mathieu Desnoyers wrote:
+>>> > +/*
+>>> > + * aarch64 -mbig-endian generates mixed endianness code vs data:
+>>> > + * little-endian code and big-endian data. Ensure the RSEQ_SIG signature
+>>> > + * matches code endianness.
+>>> > + */
+>>> > +#define RSEQ_SIG_CODE	0xd428bc00	/* BRK #0x45E0.  */
+>>> > +
+>>> > +#ifdef __AARCH64EB__
+>>> > +#define RSEQ_SIG_DATA	0x00bc28d4	/* BRK #0x45E0.  */
+>>> 
+>>> It would be neater to implement swab32 and use that with RSEQ_SIG_CODE,
+>> 
+>> If possible, marginally neater than that would be using
+>> le32_to_cpu(RSEQ_SIG_CODE), without any ifdeffery necessary.
+>> 
+>> It looks like that's defined in tools/include/linux/kernel.h, but I'm
+>> not sure if that gets pulled into your include path.
 > 
-> > But even with that, I don't think this is stable material, it should
-> > just be for 5.1 and newer kernels.
+> Considering that those RSEQ_SIG* define will end up in public bits/rseq.h
+> headers within glibc, I'm tempted to keep the amount of dependencies on
+> external headers to a minimum, if it's OK with you.
+
+Also, I'm not sure the le32_to_cpu() approach would work in __ASSEMBLER__
+builds.
+
+Thanks,
+
+Mathieu
+
 > 
-> We likely *will* have a fuse-only patch that uses stream_open() and
-> _will_ be marked for stable, but that hasn't actually happened yet
-> either. But if/when that happens, then this infrastructure patch will
-> indeed be needed in stable.
+> Thanks,
+> 
+> Mathieu
+> 
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> http://www.efficios.com
 
-Ok, I'll add this to my list of things to apply sometime in the future
-when it shows up.
-
-thanks,
-
-greg k-h
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
