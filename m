@@ -2,80 +2,80 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB8AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2BC20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556120381;
-	bh=Gx6D8oVIngXZQhCE73Ll4RIrliO5zdIxd1ORVaeWTMo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ibc0ZsKAEtyuoFFQvKWNE4DyJDeN/xM861shibMkQ/zhMU1uV5L0c9ciL5j2LB8rW
-	 JOJ4Ur+gDFXthM+oUrYz5ESDqbXYYhvQjkwU+P4OAdKBrlZlSyBaQKv5Zj1G9p9hFu
-	 3hlA23gW/RfBFdwHeHnul+3rJo7rsVns/aaqUvxQ=
+	by mail.kernel.org (Postfix) with ESMTP id 82B822077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:42:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=comcastmailservice.net header.i=@comcastmailservice.net header.b="CbAjzVK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731622AbfDXPjk (ORCPT
+        id S1731594AbfDXPmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730953AbfDXPjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:39:37 -0400
-Received: from localhost.localdomain (user-0ccsrjt.cable.mindspring.com [24.206.110.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B075F218FE;
-        Wed, 24 Apr 2019 15:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556120377;
-        bh=Gx6D8oVIngXZQhCE73Ll4RIrliO5zdIxd1ORVaeWTMo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uw9HpTUz0bc4MRciBhR3fIR8MogAteU9Q6H8uV1JDn6MG1pOJi5fhpaYAGkyVkgmz
-         ttGmW5cqlxDPl7G9mC9O0CU7QIkhtlmGyzpqpJoyGW5s+tRbsqT+Pl5q8+42hUzuYE
-         Wu/0mKN46gdZvqwgxsMsc4Y/9ya5+uIfsWFM9WIE=
-From:   Alan Tull <atull@kernel.org>
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        delicious.quinoa@gmail.com, Alan Tull <atull@kernel.org>
-Subject: [PATCH 2/2] ARM: socfpga_defconfig: enable LTC2497
-Date:   Wed, 24 Apr 2019 10:39:16 -0500
-Message-Id: <20190424153916.30115-2-atull@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424153916.30115-1-atull@kernel.org>
-References: <20190424153916.30115-1-atull@kernel.org>
+        Wed, 24 Apr 2019 11:42:04 -0400
+Received: from resqmta-po-09v.sys.comcast.net ([96.114.154.168]:55750 "EHLO
+        resqmta-po-09v.sys.comcast.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730163AbfDXPmD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 11:42:03 -0400
+Received: from resomta-po-13v.sys.comcast.net ([96.114.154.237])
+        by resqmta-po-09v.sys.comcast.net with ESMTP
+        id JGcYh0tjiNBGvJK26hAi09; Wed, 24 Apr 2019 15:42:02 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=comcastmailservice.net; s=20180828_2048; t=1556120522;
+        bh=OsrM/Bsva4RwGFaT/nZgwNkE1/WhG8jGyH9iGznKOW0=;
+        h=Received:Received:Reply-To:Subject:To:From:Message-ID:Date:
+         MIME-Version:Content-Type;
+        b=CbAjzVK94alwDuI0g7sM8SUPI76SOOTtd6SHi9eDvOL5QYIV+g8Xg2qvhwULstT5y
+         KSRSoryAYw7MrmClqF4tQDDLhSgV9naHlTrF4ZrpJ/uQ3DQE1eJ3rVMITeVPgIAjoH
+         QUqKfxx9JzW+j/Gu2KHRF4MRs2dXYgwe2N4MQu9Lg/wQ6EYI7fWBpX0gOlWyoFYIMS
+         XF2Q/AC/lxmpt38jWVgoJjUyhHOBSngw5Loqu4jQEEjGoQ6QgdYa1S/t2vMxK/5Xn+
+         0EQjPDYAex4SlJ3Yx8KJaWWb1Nl62vmCjwvzk+iDihsWnoWi1u4gAO+B71Cty+dDSs
+         /U6Nlv8LCE/CA==
+Received: from [IPv6:2001:558:6040:22:2171:426f:b27e:296d] ([IPv6:2001:558:6040:22:2171:426f:b27e:296d])
+        by resomta-po-13v.sys.comcast.net with ESMTPSA
+        id JK25h1CBkM7ICJK26haAVB; Wed, 24 Apr 2019 15:42:02 +0000
+X-Xfinity-VMeta: sc=-100;st=legit
+Reply-To: james@nurealm.net
+Subject: Re: [PATCH 1/2] HID: input: make sure the wheel high resolution
+ multiplier is set
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Peter Hutterer <peter.hutterer@who-t.net>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+References: <20190423154615.18257-1-benjamin.tissoires@redhat.com>
+ <CAO-hwJLCL95pAzO9kco2jo2_uCV2=3f5OEf=P=AoB9EpEjFTAw@mail.gmail.com>
+From:   James Feeney <james@nurealm.net>
+Message-ID: <43a56e9b-6e44-76b7-efff-fa8996183fbc@nurealm.net>
+Date:   Wed, 24 Apr 2019 09:42:00 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAO-hwJLCL95pAzO9kco2jo2_uCV2=3f5OEf=P=AoB9EpEjFTAw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the LTC2497 driver to support the two LTC2497's that are on
-the SoCFPGA Arria10 Devkit.
+Hey Benjamin
 
-Signed-off-by: Alan Tull <atull@kernel.org>
----
- arch/arm/configs/socfpga_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+On 4/24/19 7:30 AM, Benjamin Tissoires wrote:
+> Given that this basically breaks a basic functionality of many
+> Microsoft mice, I went ahead and applied this series to
+> for-5.1/upstream-fixes
 
-diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
-index 08d1b3e11d68..cfc447161c09 100644
---- a/arch/arm/configs/socfpga_defconfig
-+++ b/arch/arm/configs/socfpga_defconfig
-@@ -127,6 +127,8 @@ CONFIG_RTC_DRV_DS1307=y
- CONFIG_DMADEVICES=y
- CONFIG_PL330_DMA=y
- CONFIG_DMATEST=m
-+CONFIG_IIO=y
-+CONFIG_LTC2497=y
- CONFIG_FPGA=y
- CONFIG_FPGA_MGR_SOCFPGA=y
- CONFIG_FPGA_MGR_SOCFPGA_A10=y
--- 
-2.21.0
+Is there some reason that both patches should not be applied immediately, to the 5.0 series?
 
+Or - likely I am uninformed - are the 5.1 patches applied as a set separate from the 5.0 series revisions?
+
+Thanks
+James
