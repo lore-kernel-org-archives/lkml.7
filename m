@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965ECC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB828C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680732054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9C621903
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127234;
-	bh=h1X2hjkuDRDAxqLcnuW0kO6muFRfT3eHK38aplXowfo=;
+	s=default; t=1556127237;
+	bh=+684G1eZOtnhpZivnpohq4hv5DP7GMPYHm7gUiyyVrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aT/PdGShTZmj+YvK7nVYJqucv3SDOj3R9jW2ENwFwPC5aU8U0Qemd6a0mQjO9VFlq
-	 um1ddk1790o2uqGZkge0zWrOUHxwb3zLLzlArC6zcKYVwTWEV+i/UWXABJzJK7Hj6n
-	 V8fBqy9PX3taY9qEtS91+ZQgL17IzZBWzxrbSNHs=
+	b=1jV9hr0cT3Au+4D+ai2VGrJKrf6XYN4SKTrD8JvjxFGqsQ2ut4WsamZXVDT28kI2j
+	 wCcWlwNR6bV+SLrobcB714XjhpS32p0f6DcHqMiQe9rF1jP+v0iRBnS/GJ2bsvQYVn
+	 bcJcM0N7xbSnmuTqetDbvQkjVnUfM0rXfJMa5lqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391594AbfDXRdx (ORCPT
+        id S2391605AbfDXRd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:33:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60922 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:33:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391558AbfDXRdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:33:50 -0400
+        id S2391585AbfDXRdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:33:52 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 409F02054F;
-        Wed, 24 Apr 2019 17:33:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D45382077C;
+        Wed, 24 Apr 2019 17:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127229;
-        bh=h1X2hjkuDRDAxqLcnuW0kO6muFRfT3eHK38aplXowfo=;
+        s=default; t=1556127232;
+        bh=+684G1eZOtnhpZivnpohq4hv5DP7GMPYHm7gUiyyVrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VfBeEt6d0UsQMZ7BSmTN1Fe28mL3UqinGpo4lqsw+esyJVszGAK76Y9ubF7k2f6k3
-         6WBIVumrY/K5IdtziTPwPO5Ur6JupxoVXeKhi4rVNvIzqQpVSI+4dulpyt/gyEXrOH
-         QNQMXVoFTNOgKpWO3TtPCqXyp/NHXWFicXPQ3bLE=
+        b=Mh3pHloMFMNbFgei8l/XUs5YpZAyzWFVX6w5t0o/21YWPgf3Jl7jiccXGeM/Fkq8b
+         vjV6fcYxJ/Vaftj2vNmNBuQ+HpgGGJoHG5cLvh2Di4x7yyxx507YSUKTFwHGfN+++7
+         SaJaEXJAL0ouWyHBtGbtzGc5JB+RT9kz5Znqkbv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Alex Kushnarov <alexanderk@mellanox.com>,
         Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 015/115] mlxsw: spectrum_switchdev: Add MDB entries in prepare phase
-Date:   Wed, 24 Apr 2019 19:09:11 +0200
-Message-Id: <20190424170925.910560208@linuxfoundation.org>
+Subject: [PATCH 5.0 016/115] mlxsw: core: Do not use WQ_MEM_RECLAIM for EMAD workqueue
+Date:   Wed, 24 Apr 2019 19:09:12 +0200
+Message-Id: <20190424170925.986534185@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -63,64 +62,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit d4d0e40977ac450f32f2db5e4d8e23c9d2578899 ]
+[ Upstream commit a8c133b06183c529c51cd0d54eb57d6b7078370c ]
 
-The driver cannot guarantee in the prepare phase that it will be able to
-write an MDB entry to the device. In case the driver returned success
-during the prepare phase, but then failed to add the entry in the commit
-phase, a WARNING [1] will be generated by the switchdev core.
+The EMAD workqueue is used to handle retransmission of EMAD packets that
+contain configuration data for the device's firmware.
 
-Fix this by doing the work in the prepare phase instead.
+Given the workers need to allocate these packets and that the code is
+not called as part of memory reclaim path, remove the WQ_MEM_RECLAIM
+flag.
 
-[1]
-[  358.544486] swp12s0: Commit of object (id=2) failed.
-[  358.550061] WARNING: CPU: 0 PID: 30 at net/switchdev/switchdev.c:281 switchdev_port_obj_add_now+0x9b/0xe0
-[  358.560754] CPU: 0 PID: 30 Comm: kworker/0:1 Not tainted 5.0.0-custom-13382-gf2449babf221 #1350
-[  358.570472] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
-[  358.580582] Workqueue: events switchdev_deferred_process_work
-[  358.587001] RIP: 0010:switchdev_port_obj_add_now+0x9b/0xe0
-...
-[  358.614109] RSP: 0018:ffffa6b900d6fe18 EFLAGS: 00010286
-[  358.619943] RAX: 0000000000000000 RBX: ffff8b00797ff000 RCX: 0000000000000000
-[  358.627912] RDX: ffff8b00b7a1d4c0 RSI: ffff8b00b7a152e8 RDI: ffff8b00b7a152e8
-[  358.635881] RBP: ffff8b005c3f5bc0 R08: 000000000000022b R09: 0000000000000000
-[  358.643850] R10: 0000000000000000 R11: ffffa6b900d6fcc8 R12: 0000000000000000
-[  358.651819] R13: dead000000000100 R14: ffff8b00b65a23c0 R15: 0ffff8b00b7a2200
-[  358.659790] FS:  0000000000000000(0000) GS:ffff8b00b7a00000(0000) knlGS:0000000000000000
-[  358.668820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  358.675228] CR2: 00007f00aad90de0 CR3: 00000001ca80d000 CR4: 00000000001006f0
-[  358.683188] Call Trace:
-[  358.685918]  switchdev_port_obj_add_deferred+0x13/0x60
-[  358.691655]  switchdev_deferred_process+0x6b/0xf0
-[  358.696907]  switchdev_deferred_process_work+0xa/0x10
-[  358.702548]  process_one_work+0x1f5/0x3f0
-[  358.707022]  worker_thread+0x28/0x3c0
-[  358.711099]  ? process_one_work+0x3f0/0x3f0
-[  358.715768]  kthread+0x10d/0x130
-[  358.719369]  ? __kthread_create_on_node+0x180/0x180
-[  358.724815]  ret_from_fork+0x35/0x40
-
-Fixes: 3a49b4fde2a1 ("mlxsw: Adding layer 2 multicast support")
+Fixes: d965465b60ba ("mlxsw: core: Fix possible deadlock")
 Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
-Tested-by: Alex Kushnarov <alexanderk@mellanox.com>
 Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c |    2 +-
+ drivers/net/ethernet/mellanox/mlxsw/core.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
-@@ -1654,7 +1654,7 @@ static int mlxsw_sp_port_mdb_add(struct
- 	u16 fid_index;
- 	int err = 0;
- 
--	if (switchdev_trans_ph_prepare(trans))
-+	if (switchdev_trans_ph_commit(trans))
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -568,7 +568,7 @@ static int mlxsw_emad_init(struct mlxsw_
+ 	if (!(mlxsw_core->bus->features & MLXSW_BUS_F_TXRX))
  		return 0;
  
- 	bridge_port = mlxsw_sp_bridge_port_find(mlxsw_sp->bridge, orig_dev);
+-	emad_wq = alloc_workqueue("mlxsw_core_emad", WQ_MEM_RECLAIM, 0);
++	emad_wq = alloc_workqueue("mlxsw_core_emad", 0, 0);
+ 	if (!emad_wq)
+ 		return -ENOMEM;
+ 	mlxsw_core->emad_wq = emad_wq;
 
 
