@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8C9C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B03C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1048821903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6226421906
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127433;
-	bh=QaC7OLSae2UqYGEOi94elRqZQDNj3+TzPqTEdw9m+yo=;
+	s=default; t=1556127438;
+	bh=CRdJ3pd3VirtgKj+DY5akZXhB2PtyGjOh3T0rDq6gP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fanJSzLNFaHG93Whaf5dOkdZeaLE3wFzupB+YwFknAaeJjzDlNslRJqiGR6aVpacd
-	 e69u+gfgOXIkh1Ugb04AfxIb64nLA2KLaxbfNzsWa+EgMC5zI0a5/t/pQXKNHNvQ66
-	 TlhXV9p2sGHZMP18AeFB82NZvG/gwT8xMAuJVR38=
+	b=dUeWwi2Am4LAuElIiSFuOyy4LMDqBj5i49HC+DAVC5nqWGuc666GugWtaJqoTryN9
+	 068QcnOwArmMx3WJdMawgDb+2siQk+MBx3DKWE312aVer9+dOfQEHfAxy4FIJREXOO
+	 iK4tQcTHoSS2tOhK+5UiTuZwDqRO6vhQ3sDn9OP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391365AbfDXRhM (ORCPT
+        id S2391252AbfDXRhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:37:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35956 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:37:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403957AbfDXRhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:37:05 -0400
+        id S2403978AbfDXRhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:37:10 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 672BE21905;
-        Wed, 24 Apr 2019 17:37:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F76121904;
+        Wed, 24 Apr 2019 17:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127423;
-        bh=QaC7OLSae2UqYGEOi94elRqZQDNj3+TzPqTEdw9m+yo=;
+        s=default; t=1556127429;
+        bh=CRdJ3pd3VirtgKj+DY5akZXhB2PtyGjOh3T0rDq6gP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QttRZli8o1zdE/NMOG7jbsQu7mESR9a4a/ZTFfweMTGTU7P3gMOdPFJy+cl8VvISP
-         nEtiyc3nu7/M2JZgTpWqpT0UVYYGLUfhtkngbfMHpHS8iWSoIsVLBF25qMkB5HPJUp
-         4L4jc65IqZzQx5bxUOSA5KhKsd4PBNNvgMfDLhqs=
+        b=v/C9P53eT75I/ozNTFXjGl3Y8NGar1B0DErHqUOkGLkAI5/MyPjd3RVZ4ITZWhLU8
+         XI6HhvC52SW6vhQNnOjcsVGSwbVsdQ6ue5rjhvVmdMkROPPMvybSSXnCxGRPuVX6ez
+         ULpeeEauElpRtYeBO6Lyhf9hXjwH+/y9DleFSXto=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.0 087/115] x86/kprobes: Verify stack frame on kretprobe
-Date:   Wed, 24 Apr 2019 19:10:23 +0200
-Message-Id: <20190424170929.987703426@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 071/115] ALSA: core: Fix card races between register and disconnect
+Date:   Wed, 24 Apr 2019 19:10:07 +0200
+Message-Id: <20190424170929.210240562@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -65,112 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 3ff9c075cc767b3060bdac12da72fc94dd7da1b8 upstream.
+commit 2a3f7221acddfe1caa9ff09b3a8158c39b2fdeac upstream.
 
-Verify the stack frame pointer on kretprobe trampoline handler,
-If the stack frame pointer does not match, it skips the wrong
-entry and tries to find correct one.
+There is a small race window in the card disconnection code that
+allows the registration of another card with the very same card id.
+This leads to a warning in procfs creation as caught by syzkaller.
 
-This can happen if user puts the kretprobe on the function
-which can be used in the path of ftrace user-function call.
-Such functions should not be probed, so this adds a warning
-message that reports which function should be blacklisted.
+The problem is that we delete snd_cards and snd_cards_lock entries at
+the very beginning of the disconnection procedure.  This makes the
+slot available to be assigned for another card object while the
+disconnection procedure is being processed.  Then it becomes possible
+to issue a procfs registration with the existing file name although we
+check the conflict beforehand.
 
-Tested-by: Andrea Righi <righi.andrea@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/155094059185.6137.15527904013362842072.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+The fix is simply to move the snd_cards and snd_cards_lock clearances
+at the end of the disconnection procedure.  The references to these
+entries are merely either from the global proc files like
+/proc/asound/cards or from the card registration / disconnection, so
+it should be fine to shift at the very end.
+
+Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/kprobes/core.c |   26 ++++++++++++++++++++++++++
- include/linux/kprobes.h        |    1 +
- 2 files changed, 27 insertions(+)
+ sound/core/init.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -569,6 +569,7 @@ void arch_prepare_kretprobe(struct kretp
- 	unsigned long *sara = stack_addr(regs);
+--- a/sound/core/init.c
++++ b/sound/core/init.c
+@@ -407,14 +407,7 @@ int snd_card_disconnect(struct snd_card
+ 	card->shutdown = 1;
+ 	spin_unlock(&card->files_lock);
  
- 	ri->ret_addr = (kprobe_opcode_t *) *sara;
-+	ri->fp = sara;
+-	/* phase 1: disable fops (user space) operations for ALSA API */
+-	mutex_lock(&snd_card_mutex);
+-	snd_cards[card->number] = NULL;
+-	clear_bit(card->number, snd_cards_lock);
+-	mutex_unlock(&snd_card_mutex);
+-	
+-	/* phase 2: replace file->f_op with special dummy operations */
+-	
++	/* replace file->f_op with special dummy operations */
+ 	spin_lock(&card->files_lock);
+ 	list_for_each_entry(mfile, &card->files_list, list) {
+ 		/* it's critical part, use endless loop */
+@@ -430,7 +423,7 @@ int snd_card_disconnect(struct snd_card
+ 	}
+ 	spin_unlock(&card->files_lock);	
  
- 	/* Replace the return addr with trampoline addr */
- 	*sara = (unsigned long) &kretprobe_trampoline;
-@@ -759,15 +760,21 @@ static __used void *trampoline_handler(s
- 	unsigned long flags, orig_ret_address = 0;
- 	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
- 	kprobe_opcode_t *correct_ret_addr = NULL;
-+	void *frame_pointer;
-+	bool skipped = false;
+-	/* phase 3: notify all connected devices about disconnection */
++	/* notify all connected devices about disconnection */
+ 	/* at this point, they cannot respond to any calls except release() */
  
- 	INIT_HLIST_HEAD(&empty_rp);
- 	kretprobe_hash_lock(current, &head, &flags);
- 	/* fixup registers */
- #ifdef CONFIG_X86_64
- 	regs->cs = __KERNEL_CS;
-+	/* On x86-64, we use pt_regs->sp for return address holder. */
-+	frame_pointer = &regs->sp;
- #else
- 	regs->cs = __KERNEL_CS | get_kernel_rpl();
- 	regs->gs = 0;
-+	/* On x86-32, we use pt_regs->flags for return address holder. */
-+	frame_pointer = &regs->flags;
+ #if IS_ENABLED(CONFIG_SND_MIXER_OSS)
+@@ -446,6 +439,13 @@ int snd_card_disconnect(struct snd_card
+ 		device_del(&card->card_dev);
+ 		card->registered = false;
+ 	}
++
++	/* disable fops (user space) operations for ALSA API */
++	mutex_lock(&snd_card_mutex);
++	snd_cards[card->number] = NULL;
++	clear_bit(card->number, snd_cards_lock);
++	mutex_unlock(&snd_card_mutex);
++
+ #ifdef CONFIG_PM
+ 	wake_up(&card->power_sleep);
  #endif
- 	regs->ip = trampoline_address;
- 	regs->orig_ax = ~0UL;
-@@ -789,8 +796,25 @@ static __used void *trampoline_handler(s
- 		if (ri->task != current)
- 			/* another task is sharing our hash bucket */
- 			continue;
-+		/*
-+		 * Return probes must be pushed on this hash list correct
-+		 * order (same as return order) so that it can be poped
-+		 * correctly. However, if we find it is pushed it incorrect
-+		 * order, this means we find a function which should not be
-+		 * probed, because the wrong order entry is pushed on the
-+		 * path of processing other kretprobe itself.
-+		 */
-+		if (ri->fp != frame_pointer) {
-+			if (!skipped)
-+				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
-+			skipped = true;
-+			continue;
-+		}
- 
- 		orig_ret_address = (unsigned long)ri->ret_addr;
-+		if (skipped)
-+			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
-+				ri->rp->kp.addr);
- 
- 		if (orig_ret_address != trampoline_address)
- 			/*
-@@ -808,6 +832,8 @@ static __used void *trampoline_handler(s
- 		if (ri->task != current)
- 			/* another task is sharing our hash bucket */
- 			continue;
-+		if (ri->fp != frame_pointer)
-+			continue;
- 
- 		orig_ret_address = (unsigned long)ri->ret_addr;
- 		if (ri->rp && ri->rp->handler) {
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -173,6 +173,7 @@ struct kretprobe_instance {
- 	struct kretprobe *rp;
- 	kprobe_opcode_t *ret_addr;
- 	struct task_struct *task;
-+	void *fp;
- 	char data[0];
- };
- 
 
 
