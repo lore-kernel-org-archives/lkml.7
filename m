@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215D8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21E7C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16D421907
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD40520675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126535;
-	bh=Xee1BMEyw6B/ZcyGAxTLvphFVOjNIvl7eqqSleDbjAo=;
+	s=default; t=1556126539;
+	bh=Iipc3dRx1CDZCpkc6w+7RdtCKlUAQm9/Hwze5cPwzxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Snm8DVL2T0aJCUZQk1W6MGzB5bj1ZNg/LNpPx9HNkREtDDngt6LLYw1SBdeKsRPbh
-	 peQCOSVuLNcadIbV5Ehpu5upKyDMw0J4BipSxENbt5dktWYifZkGjTLqacfXcR+z2R
-	 jENZ13xg555BhEfLs0wK0UMy/pMlxryVlZ0aN2JY=
+	b=JmqLXPWgLR20fKpRSqLmdpUR5sBOeMoNjEGxMb7kQXaDHwQzPuJb1LbLV3GpwFrJU
+	 GubKIdX2l41RnmDSi9XWfAU064+TG6nFRvAP/1FIlT0fyK/iuvfdsdlgFxT1Ciciin
+	 Rlv7bUc6iqTeUP1BiFB8qMpwGvDNKI66kj4z3Dtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389526AbfDXRWO (ORCPT
+        id S2389535AbfDXRWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:22:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47766 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:22:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389511AbfDXRWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:22:12 -0400
+        id S2389130AbfDXRWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:22:16 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 799DC21909;
-        Wed, 24 Apr 2019 17:22:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C90220675;
+        Wed, 24 Apr 2019 17:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126532;
-        bh=Xee1BMEyw6B/ZcyGAxTLvphFVOjNIvl7eqqSleDbjAo=;
+        s=default; t=1556126534;
+        bh=Iipc3dRx1CDZCpkc6w+7RdtCKlUAQm9/Hwze5cPwzxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zI4p0WEF8RaTBwDb5OvhhvSPvWeHU22BM3QlWVAihkoVYvaP4yQZL8d8Ae1lE1+Fe
-         uUknmvKZXKK4H5cB96PpiTL2zqIXbVkJCFp+zSEyJ7xQj+Xm7SlimSt1XXDHQbEmb2
-         98HCWyd0KnttaTstXOduSEHrKQ7eh5jL5EVgrQIA=
+        b=TXFJeW8WRbNSW7ovps/yH3mU/CKZmd2Euxagq65Veej7xdEnOOENAH56SpCugySPI
+         ulsNg4riFVOi/biXtAHIP68zRc4KWVw4CfIIm3kr6Rc2LDdIKCrjEbvCPYq8YQ/aV3
+         ZJjba9Yh/21wrIgrCvsp1MxHVBu8kZLSUGrrrsTs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 139/168] net: bridge: multicast: use rcu to access port list from br_multicast_start_querier
-Date:   Wed, 24 Apr 2019 19:09:43 +0200
-Message-Id: <20190424170931.485603527@linuxfoundation.org>
+Subject: [PATCH 4.4 140/168] net: fou: do not use guehdr after iptunnel_pull_offloads in gue_udp_recv
+Date:   Wed, 24 Apr 2019 19:09:44 +0200
+Message-Id: <20190424170931.535386004@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -59,41 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 
-[ Upstream commit c5b493ce192bd7a4e7bd073b5685aad121eeef82 ]
+[ Upstream commit 988dc4a9a3b66be75b30405a5494faf0dc7cffb6 ]
 
-br_multicast_start_querier() walks over the port list but it can be
-called from a timer with only multicast_lock held which doesn't protect
-the port list, so use RCU to walk over it.
+gue tunnels run iptunnel_pull_offloads on received skbs. This can
+determine a possible use-after-free accessing guehdr pointer since
+the packet will be 'uncloned' running pskb_expand_head if it is a
+cloned gso skb (e.g if the packet has been sent though a veth device)
 
-Fixes: c83b8fab06fc ("bridge: Restart queries when last querier expires")
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Fixes: a09a4c8dd1ec ("tunnels: Remove encapsulation offloads on decap")
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_multicast.c |    4 +++-
+ net/ipv4/fou.c |    4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -1894,7 +1894,8 @@ static void br_multicast_start_querier(s
+--- a/net/ipv4/fou.c
++++ b/net/ipv4/fou.c
+@@ -116,6 +116,7 @@ static int gue_udp_recv(struct sock *sk,
+ 	struct guehdr *guehdr;
+ 	void *data;
+ 	u16 doffset = 0;
++	u8 proto_ctype;
  
- 	__br_multicast_open(br, query);
+ 	if (!fou)
+ 		return 1;
+@@ -173,13 +174,14 @@ static int gue_udp_recv(struct sock *sk,
+ 	if (unlikely(guehdr->control))
+ 		return gue_control_message(skb, guehdr);
  
--	list_for_each_entry(port, &br->port_list, list) {
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(port, &br->port_list, list) {
- 		if (port->state == BR_STATE_DISABLED ||
- 		    port->state == BR_STATE_BLOCKING)
- 			continue;
-@@ -1906,6 +1907,7 @@ static void br_multicast_start_querier(s
- 			br_multicast_enable(&port->ip6_own_query);
- #endif
- 	}
-+	rcu_read_unlock();
- }
++	proto_ctype = guehdr->proto_ctype;
+ 	__skb_pull(skb, sizeof(struct udphdr) + hdrlen);
+ 	skb_reset_transport_header(skb);
  
- int br_multicast_toggle(struct net_bridge *br, unsigned long val)
+ 	if (iptunnel_pull_offloads(skb))
+ 		goto drop;
+ 
+-	return -guehdr->proto_ctype;
++	return -proto_ctype;
+ 
+ drop:
+ 	kfree_skb(skb);
 
 
