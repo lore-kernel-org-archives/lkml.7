@@ -2,51 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D12C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F51DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0F920835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554C3205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126482;
-	bh=1IbneeFxs0YGSLZoGnP9YUCxnrKT6HnZjpdkW+uChFg=;
+	s=default; t=1556126485;
+	bh=kvoszp9IDmHg9ngeL4CEh7OMph4HwrbQW4aEiH5OQf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FtJEQDXe3BobjG8ZfzSE0uY/2p75M2oQvcQiPbk2maVjSRyBEODTMzcLwuVvQn+Ht
-	 KES9USu6rq4RCKAEXyRFzouSgiCk98jPor1Em8nqr8V1UfPGDKUiUKtlIJovGvFad+
-	 cXRHKbdpJ7mGuaJaSEvMHntvLutEDcI1iMV452Kk=
+	b=pzuxJwdCg0QRUrLqE2RRGad60+tduypW48ubyV9kK1em6O5G3dOOwjsOLCp3pkm68
+	 rHNk27drEqbO5ZmQepjCN5JAGBtYm60TMCOAnwa5Pu8bHcsAE8Zm+OBAuxM9gZbaTR
+	 B4W4zfSnaXSz+1xz496jsgLJsqmMCbVDo+3bvp0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389320AbfDXRVV (ORCPT
+        id S2389333AbfDXRVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:21:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46788 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:21:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389283AbfDXRVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:21:18 -0400
+        id S2388321AbfDXRVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:21:21 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52C9B205ED;
-        Wed, 24 Apr 2019 17:21:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85D9F205ED;
+        Wed, 24 Apr 2019 17:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126477;
-        bh=1IbneeFxs0YGSLZoGnP9YUCxnrKT6HnZjpdkW+uChFg=;
+        s=default; t=1556126481;
+        bh=kvoszp9IDmHg9ngeL4CEh7OMph4HwrbQW4aEiH5OQf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RchZNklWikEih03PeE3IAFr0YE7+3fTq18Mxx7Qclu8VJ0rik7TB2WlI/cUnZ3oTk
-         nIyn4AlfFrXW1qlO8VhrO/5asIJa70oVL4FnZXY6QENimkHetFxthQnObjHIR0geDf
-         nU4N01eJMZgQvZxN9GHW+qXQfwmfk4e1it3XMvJM=
+        b=L3aoNn9BsomLihxbZG076t3Dva0X7jzqmZBH4k7m4pILrg3mdZXHlnQiIjJqQLUh8
+         ZRwUEk1FsUR9N7ZF/7eH1sGMqQSNMgvoPVqyygexPb7q+rSnj1QEssGlNwbdOF4dYz
+         iTIhI8Dq7wuIK4R5i9GvvAPo7H/z8f+9rbqhj4sE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 123/168] serial: uartps: console_setup() cant be placed to init section
-Date:   Wed, 24 Apr 2019 19:09:27 +0200
-Message-Id: <20190424170930.661710689@linuxfoundation.org>
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.4 097/168] PCI: Add function 1 DMA alias quirk for Marvell 9170 SATA controller
+Date:   Wed, 24 Apr 2019 19:09:01 +0200
+Message-Id: <20190424170929.430446249@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -59,36 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4bb1ce2350a598502b23088b169e16b43d4bc639 ]
+From: Andre Przywara <andre.przywara@arm.com>
 
-When console device is rebinded, console_setup() is called again.
-But marking it as __init means that function will be clear after boot is
-complete. If console device is binded again console_setup() is not found
-and error "Unable to handle kernel paging request at virtual address"
-is reported.
+commit 9cde402a59770a0669d895399c13407f63d7d209 upstream.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+There is a Marvell 88SE9170 PCIe SATA controller I found on a board here.
+Some quick testing with the ARM SMMU enabled reveals that it suffers from
+the same requester ID mixup problems as the other Marvell chips listed
+already.
+
+Add the PCI vendor/device ID to the list of chips which need the
+workaround.
+
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+CC: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/tty/serial/xilinx_uartps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/quirks.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 4f2f4aca8d2e..06efcef1b495 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1145,7 +1145,7 @@ static void cdns_uart_console_write(struct console *co, const char *s,
-  *
-  * Return: 0 on success, negative errno otherwise.
-  */
--static int __init cdns_uart_console_setup(struct console *co, char *options)
-+static int cdns_uart_console_setup(struct console *co, char *options)
- {
- 	struct uart_port *port = &cdns_uart_port[co->index];
- 	int baud = 9600;
--- 
-2.19.1
-
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3623,6 +3623,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_M
+ /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c14 */
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9130,
+ 			 quirk_dma_func1_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9170,
++			 quirk_dma_func1_alias);
+ /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c47 + c57 */
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9172,
+ 			 quirk_dma_func1_alias);
 
 
