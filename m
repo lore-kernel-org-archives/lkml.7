@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649EBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE10CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26B3F20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3A520675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126569;
-	bh=wQNxBriBnJEwg9qJRwGyb2kB0n3ar/kHJ1ovso8pRWw=;
+	s=default; t=1556126572;
+	bh=4gtR+ipHP8b1akbPwICoubHd21BbkofpmeWiKRBdxrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LiOARvzUY5HbhITCkk/zjRPNpkkMqP7RQwQ6foSHeCFqGJ0qhLu6BHDX6Oah9ujU6
-	 1InKiqeu9vNeSE3dQLoGDhGPGVQOvBQJGIrYVRvRH8CWTfYi4F0UWH2NvcIchLZXVq
-	 mhxNhAiIGsHPS36Gys+bElgmgs/sNUchee0sm02s=
+	b=pNrUe/Ul2Z9kYuvWuzTpA61JKjSrvaYA4ngSWlCPk/v0hzFZhD7rRBq4PcQ3SyWWP
+	 vGZ4hpasUb+w5qS3Y8Nu6NaPWCt3ia2CONCV9+IS+9BCCZ1St79AYch7R1+MBX7mdQ
+	 tdgzSB31jY7b1a2mbIY4T6ZbY6bna1z29ZaGwCZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389402AbfDXRWr (ORCPT
+        id S2389418AbfDXRWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:22:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48352 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:22:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389615AbfDXRWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:22:45 -0400
+        id S2389398AbfDXRWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:22:48 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBB0C21905;
-        Wed, 24 Apr 2019 17:22:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3BEA20675;
+        Wed, 24 Apr 2019 17:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126564;
-        bh=wQNxBriBnJEwg9qJRwGyb2kB0n3ar/kHJ1ovso8pRWw=;
+        s=default; t=1556126567;
+        bh=4gtR+ipHP8b1akbPwICoubHd21BbkofpmeWiKRBdxrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tC0wdsw9ncZtyGBfWBtD+wYUiwS38TpbnwTstnyJRC5y52ZchhLbuwHLq6Is3f+vC
-         NM/3UVEOZf+peTmVAvaeJxZyRsGFVkt/ekYmdnT01/1GqstDdiGiP/becE9UslvmDN
-         0QbgshLAON4bLYuoLMqHLVkcmRzzdEniOj+uzZWc=
+        b=R3m6MRyEvTzrRV9O5wSltzyUnLpFUbX0uVeON/EudVjFLIiaNjJ7PUgo29BhhGrX+
+         3PB62QiigqJ1LASYmZTWHQKaQ+yI7cC5ue60yq2kHX/K8SBg1uN22pUkfMZ3Kz8s6E
+         OtB8hUmz4okGMgKyy4GgfxYAOONF6LAgcr/wQsxk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.4 153/168] staging: comedi: vmk80xx: Fix use of uninitialized semaphore
-Date:   Wed, 24 Apr 2019 19:09:57 +0200
-Message-Id: <20190424170932.221595920@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.4 154/168] staging: comedi: vmk80xx: Fix possible double-free of ->usb_rx_buf
+Date:   Wed, 24 Apr 2019 19:09:58 +0200
+Message-Id: <20190424170932.268783931@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -62,107 +60,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 08b7c2f9208f0e2a32159e4e7a4831b7adb10a3e upstream.
+commit 663d294b4768bfd89e529e069bffa544a830b5bf upstream.
 
-If `vmk80xx_auto_attach()` returns an error, the core comedi module code
-will call `vmk80xx_detach()` to clean up.  If `vmk80xx_auto_attach()`
-successfully allocated the comedi device private data,
-`vmk80xx_detach()` assumes that a `struct semaphore limit_sem` contained
-in the private data has been initialized and uses it.  Unfortunately,
-there are a couple of places where `vmk80xx_auto_attach()` can return an
-error after allocating the device private data but before initializing
-the semaphore, so this assumption is invalid.  Fix it by initializing
-the semaphore just after allocating the private data in
-`vmk80xx_auto_attach()` before any other errors can be returned.
+`vmk80xx_alloc_usb_buffers()` is called from `vmk80xx_auto_attach()` to
+allocate RX and TX buffers for USB transfers.  It allocates
+`devpriv->usb_rx_buf` followed by `devpriv->usb_tx_buf`.  If the
+allocation of `devpriv->usb_tx_buf` fails, it frees
+`devpriv->usb_rx_buf`,  leaving the pointer set dangling, and returns an
+error.  Later, `vmk80xx_detach()` will be called from the core comedi
+module code to clean up.  `vmk80xx_detach()` also frees both
+`devpriv->usb_rx_buf` and `devpriv->usb_tx_buf`, but
+`devpriv->usb_rx_buf` may have already been freed, leading to a
+double-free error.  Fix it by removing the call to
+`kfree(devpriv->usb_rx_buf)` from `vmk80xx_alloc_usb_buffers()`, relying
+on `vmk80xx_detach()` to free the memory.
 
-I believe this was the cause of the following syzbot crash report
-<https://syzkaller.appspot.com/bug?extid=54c2f58f15fe6876b6ad>:
-
-usb 1-1: config 0 has no interface number 0
-usb 1-1: New USB device found, idVendor=10cf, idProduct=8068, bcdDevice=e6.8d
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-vmk80xx 1-1:0.117: driver 'vmk80xx' failed to auto-configure device.
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xe8/0x16e lib/dump_stack.c:113
- assign_lock_key kernel/locking/lockdep.c:786 [inline]
- register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
- __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
- lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
- down+0x12/0x80 kernel/locking/semaphore.c:58
- vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
- comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
- comedi_device_cleanup.part.0+0x68/0x140 drivers/staging/comedi/comedi_fops.c:156
- comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
- comedi_free_board_dev.part.0+0x16/0x90 drivers/staging/comedi/comedi_fops.c:190
- comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
- comedi_release_hardware_device+0x111/0x140 drivers/staging/comedi/comedi_fops.c:2880
- comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
- usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
- really_probe+0x2da/0xb10 drivers/base/dd.c:509
- driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
- __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
- bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
- __device_attach+0x223/0x3a0 drivers/base/dd.c:844
- bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
- device_add+0xad2/0x16e0 drivers/base/core.c:2106
- usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
- generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
- usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
- really_probe+0x2da/0xb10 drivers/base/dd.c:509
- driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
- __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
- bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
- __device_attach+0x223/0x3a0 drivers/base/dd.c:844
- bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
- device_add+0xad2/0x16e0 drivers/base/core.c:2106
- usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
- hub_port_connect drivers/usb/core/hub.c:5089 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
- port_event drivers/usb/core/hub.c:5350 [inline]
- hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
- process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
- worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
- kthread+0x313/0x420 kernel/kthread.c:253
- ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-Reported-by: syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com
 Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/vmk80xx.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/comedi/drivers/vmk80xx.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 --- a/drivers/staging/comedi/drivers/vmk80xx.c
 +++ b/drivers/staging/comedi/drivers/vmk80xx.c
-@@ -809,6 +809,8 @@ static int vmk80xx_auto_attach(struct co
+@@ -691,10 +691,8 @@ static int vmk80xx_alloc_usb_buffers(str
  
- 	devpriv->model = board->model;
+ 	size = le16_to_cpu(devpriv->ep_tx->wMaxPacketSize);
+ 	devpriv->usb_tx_buf = kzalloc(size, GFP_KERNEL);
+-	if (!devpriv->usb_tx_buf) {
+-		kfree(devpriv->usb_rx_buf);
++	if (!devpriv->usb_tx_buf)
+ 		return -ENOMEM;
+-	}
  
-+	sema_init(&devpriv->limit_sem, 8);
-+
- 	ret = vmk80xx_find_usb_endpoints(dev);
- 	if (ret)
- 		return ret;
-@@ -817,8 +819,6 @@ static int vmk80xx_auto_attach(struct co
- 	if (ret)
- 		return ret;
- 
--	sema_init(&devpriv->limit_sem, 8);
--
- 	usb_set_intfdata(intf, devpriv);
- 
- 	if (devpriv->model == VMK8055_MODEL)
+ 	return 0;
+ }
 
 
