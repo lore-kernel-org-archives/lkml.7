@@ -2,79 +2,68 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4953AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AED3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD537218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:50:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="jJLw1QbI"
+	by mail.kernel.org (Postfix) with ESMTP id 254B1218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbfDXNuM (ORCPT
+        id S1730730AbfDXNuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:50:12 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:35813 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfDXNuK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:50:10 -0400
-Received: by mail-it1-f196.google.com with SMTP id w15so6308196itc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 06:50:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mKz/luMtBy17RLYnZeF6UP5kIdo60vBRpeptyrj0nHk=;
-        b=jJLw1QbIzB/Ybb/nEKkvhOLuDfRA68gaWMF+LCcOdFaR1gdjvEZS6LHCPsN/B64yF9
-         R6nKme2aRak2nRR8MWdtGQ/bBhT6hRbGpU4NsD1DVdjmI9PamqCMIVGIp/9+vXAP6xDW
-         ejnKZIo7WkXbsLoUE8rgkVxzrwOmGv7ji7b2M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mKz/luMtBy17RLYnZeF6UP5kIdo60vBRpeptyrj0nHk=;
-        b=ZAu0fSXUutTrQrlRR/cvgTh/PqHQgwQbQBd7wR/jYBci5DGFCeyRj/zPS1AB6fknRz
-         yxfxgKbS6kIcwjIsqwQyZREnXNhXFITXM/M+XrmzZTwl+aWl+HwPxV30lGSn5m89QhT8
-         /rrPNU24PAUfAi+a4o6XtPdfoNnle459RLJDbuG/xLJ8Ivn4vf8UG2zfNO55owNbUnHP
-         X83wonux2HbSZ/5MqeMVzhkP8q0zsJQl6equE3ZQzI7sKVjvgImB/XPSPA79dIJtnp/v
-         8NNFISEcgFrEfafgxxMibD8MZITvXWOdpiOvBKm1KVKFLjwuapz31m9Pa9TK/1SyBzXb
-         F3tw==
-X-Gm-Message-State: APjAAAU0LqlDKCI0ai5RCwpwqzD3VzK5OtNIpeeHbb3Nshg9DDrjtZNw
-        MhiynKAG8gxqO5Km4sdxk1e20b2T1B/u5hl878gSUA==
-X-Google-Smtp-Source: APXvYqzx0xeC/wjWFLY/OEvZX8cI+84+BQ2oenSdoQNyEiXjh02dwzsYU3JcbtKTXdftrMJ3iJ+T8G5UCl+dFEYDojY=
-X-Received: by 2002:a24:1342:: with SMTP id 63mr6371719itz.69.1556113809602;
- Wed, 24 Apr 2019 06:50:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
- <155373025917.7602.9176080493180672665.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155373025917.7602.9176080493180672665.stgit@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 24 Apr 2019 15:49:58 +0200
-Message-ID: <CAJfpegt6NXBHWnTHMnoCaszFhfRY+TDmyUaCaTGm-0vHYh7iMw@mail.gmail.com>
-Subject: Re: [RFC PATCH 30/68] vfs: Convert fusectl to use the new mount API
+        Wed, 24 Apr 2019 09:50:21 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44006 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfDXNuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:50:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15DDB80D;
+        Wed, 24 Apr 2019 06:50:20 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0BCE3F5C1;
+        Wed, 24 Apr 2019 06:50:17 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 14:50:15 +0100
+From:   Will Deacon <will.deacon@arm.com>
 To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Boyang Zhou <zhouby_cn@126.com>, catalin.marinas@arm.com,
+        haozhu@nudt.edu.cn, linux@dominikbrodowski.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, arnd@arndb.de, viro@zeniv.linux.org.uk,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH] The patch solves =?utf-8?Q?the?=
+ =?utf-8?Q?_type_error__of_the_parameter_=E2=80=9Coff?= =?utf-8?B?4oCd?= in
+ syscall mmap on the ARM64 platform.
+Message-ID: <20190424135015.GE14829@fuggles.cambridge.arm.com>
+References: <20190423170445.GB21047@fuggles.cambridge.arm.com>
+ <1555504525-17962-1-git-send-email-zhouby_cn@126.com>
+ <20190418112818.GA31923@lakrids.cambridge.arm.com>
+ <28023.1556094688@warthog.procyon.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28023.1556094688@warthog.procyon.org.uk>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 12:44 AM David Howells <dhowells@redhat.com> wrote:
->
-> Convert the fusectl filesystem to the new internal mount API as the old
-> one will be obsoleted and removed.  This allows greater flexibility in
-> communication of mount parameters between userspace, the VFS and the
-> filesystem.
->
-> See Documentation/filesystems/mount_api.txt for more information.
+On Wed, Apr 24, 2019 at 09:31:28AM +0100, David Howells wrote:
+> Will Deacon <will.deacon@arm.com> wrote:
+> 
+> > -		unsigned long, fd, off_t, off)
+> > +		unsigned long, fd, off_t, pgoff)
+> >  {
+> > +	unsigned long off = pgoff;
+> > +
+> 
+> Would loff_t be better?
 
-Applied to fuse.git#for-next.
+I don't think so, isn't that still signed? I also think it's the same
+size as off_t on arm64 (long long vs long).
 
-Thanks,
-Miklos
+Will
