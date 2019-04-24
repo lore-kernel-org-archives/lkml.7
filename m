@@ -2,72 +2,101 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35750C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4243DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E6320835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02AFF20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:24:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xMGgM+6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbfDXWYe (ORCPT
+        id S1731523AbfDXWYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 18:24:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:13756 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbfDXWYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 18:24:34 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EACDB308A124;
-        Wed, 24 Apr 2019 22:24:33 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 39EB45DEFE;
-        Wed, 24 Apr 2019 22:24:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAG48ez23c1eiEJpBwkV183sesj6EDWoMsEh40GDXQkS1W2_nMA@mail.gmail.com>
-References: <CAG48ez23c1eiEJpBwkV183sesj6EDWoMsEh40GDXQkS1W2_nMA@mail.gmail.com> <155612240208.8564.13865046977065545591.stgit@warthog.procyon.org.uk> <155612246750.8564.9186344007442012471.stgit@warthog.procyon.org.uk>
-To:     Jann Horn <jannh@google.com>
-Cc:     dhowells@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>,
-        keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>, dwalsh@redhat.com,
-        vgoyal@redhat.com
-Subject: Re: [PATCH 07/11] keys: Move the user and user-session keyrings to the user_namespace
+        Wed, 24 Apr 2019 18:24:41 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41102 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfDXWYj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 18:24:39 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3OMOYiO020824;
+        Wed, 24 Apr 2019 17:24:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556144674;
+        bh=unQq1+z0iNRuTfKra4LE6BoXbsmw8kudBXsZCBKVcGc=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=xMGgM+6oGMR3omHrFCFZr+ix6SUJh63cOCO2wPsSjK3ZEK/fafjuZmZKkO3IrnBXM
+         iqSlWMFdQpmulS3JSjE2TM+EUyJ2D3w66ycIyX/emWlKT/FOO39DlalOIQMEHmHTfZ
+         T+dHhuc79VO5kcYwLv5AML2WrqTAC0maQwtQ+GaA=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3OMOXOT110553
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Apr 2019 17:24:33 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
+ Apr 2019 17:24:33 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 24 Apr 2019 17:24:33 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3OMOWCL049868;
+        Wed, 24 Apr 2019 17:24:32 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>
+CC:     Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [RFC PATCH v3 net-next 01/11] net: ethernet: ti: cpts: use devm_get_clk_from_child
+Date:   Thu, 25 Apr 2019 01:24:17 +0300
+Message-ID: <1556144667-27997-2-git-send-email-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
+References: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3752.1556144671.1@warthog.procyon.org.uk>
-Date:   Wed, 24 Apr 2019 23:24:31 +0100
-Message-ID: <3753.1556144671@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 24 Apr 2019 22:24:34 +0000 (UTC)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> wrote:
+Use devm_get_clk_from_child() instead of devm_clk_get() and this way allow
+to group CPTS DT properties in sub-node for better code readability and
+maintenance.
 
-> Overall, this looks good to me, apart from some details.
-> 
-> The user_keyring_register keyring is basically just used like an
-> xarray/idr/... that maps from namespaced UIDs to keyrings, right? (Not
-> saying it's a bad idea, just want to make sure I understand it
-> correctly.)
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/cpts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Well, a keyring is a wrapper around an assoc_array object, the keyring search
-functions do the access checks and the keys garbage collector does the
-cleanup.  Also, each UID is mapped to two keyrings.
+diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
+index 499806ce4cd5..aad118e71b61 100644
+--- a/drivers/net/ethernet/ti/cpts.c
++++ b/drivers/net/ethernet/ti/cpts.c
+@@ -572,7 +572,7 @@ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
+-	cpts->refclk = devm_clk_get(dev, "cpts");
++	cpts->refclk = devm_get_clk_from_child(dev, node, "cpts");
+ 	if (IS_ERR(cpts->refclk)) {
+ 		dev_err(dev, "Failed to get cpts refclk\n");
+ 		return ERR_CAST(cpts->refclk);
+-- 
+2.17.1
 
-I'll have a look at applying the rest of your comments tomorrow.
-
-Thanks,
-David
