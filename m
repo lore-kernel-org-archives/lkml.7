@@ -2,98 +2,149 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6ECC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D401C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36314218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:25:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="c9yHI+eo"
+	by mail.kernel.org (Postfix) with ESMTP id 37A68217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfDXBZb (ORCPT
+        id S1729254AbfDXB0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:25:31 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:32960 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729269AbfDXBZa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:25:30 -0400
-Received: by mail-qk1-f195.google.com with SMTP id k189so9886852qkc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=iEeZgL0VLnAFC2YaL3OKxz1fZYNN/AJX7WfyiHQRd2c=;
-        b=c9yHI+eo9azROJYdTqJXAZ12f4+oRqiVSL3JKSjX/2aIvNqkrsd5ZoZd38FU1SKi+b
-         Jw+EyoFhKlTRuJzu4xx4Pkxr43qViXxqX9tZqwfb5WGitY7UgvJTWG8IXcFzxV5v/W/+
-         EiFCK5TY5YXUiLLHg4MFHMZGFacnIOH6Ccmix7rRyiHrA5ien5jJINTa/TZyYDt9udYd
-         oKdEzXrYWC1ArHqVIVt6TOWQdCtHmPJ1WzVCPd3be+Tdyy/nSOC7jS9zZf4DIxLBLAs5
-         3ynK4dBy9lXhhTY2a+YFWpgdTawoKsNTpLfTGJ5hGL2RNgAU3waFJ1H7Fh3VOP7oXpIb
-         pJiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=iEeZgL0VLnAFC2YaL3OKxz1fZYNN/AJX7WfyiHQRd2c=;
-        b=cmh9dDtE27hSIBetLsgz3pXOF+p8o4Pq+H961x5NFLnTUsqDP/bFFVCcRtxScblvDU
-         Kz0pFKkTqPZNtDdcI+ezAWS6CXIAuzDtgfF5RXaArxUvEz8c6QYwzyTvh83S4Gy3A5Zm
-         t84JrLEp73HQz13VG9Dxp4YPuDY3le6ROkSInG2k5OQ/MxCe0ndVWkIPvg64A0AUVfBZ
-         Ms2ZLNNae1Hr3OYfIWvaURvaS/WVaP4wb1rFd/H96SWV8YqvR14/3cgYV2K1H01zErpI
-         ksn0++BFK7nGjFn1MK7GXYGkQcYmsnPAELwHxp/C3s5JC97oLU6omHZ8/6EFhSLdjMHT
-         ysvg==
-X-Gm-Message-State: APjAAAUOpFX/ZsnX9ooIipYIjqnOkPIilctGUE/+JsIUv3zMIbprJxxL
-        4WaEExlkMbk9u2nDPph1AkQ4mQ==
-X-Google-Smtp-Source: APXvYqy9cpqCoo3NZxMDHXid22XhjI0797hHPARLSj3YZXEDWX6Qrtus5svvzsUaaEXAoyvRjfPj1A==
-X-Received: by 2002:ae9:e506:: with SMTP id w6mr22900147qkf.167.1556069129964;
-        Tue, 23 Apr 2019 18:25:29 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id s2sm8275350qkg.67.2019.04.23.18.25.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 18:25:29 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 18:24:50 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Tao Ren <taoren@fb.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Samuel Mendoza-Jonas" <sam@mendozajonas.com>,
-        Joel Stanley <joel@jms.id.au>,
-        "Andrew Jeffery" <andrew@aj.id.au>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH net 1/2] net: add eth_addr_inc in etherdevice.h
-Message-ID: <20190423182450.27b403d3@cakuba.netronome.com>
-In-Reply-To: <2b3935f9-fbf9-6baa-570c-dcd6382518c4@fb.com>
-References: <20190423224138.1295-1-taoren@fb.com>
-        <20190423161502.5d3e9c36@cakuba.netronome.com>
-        <2b3935f9-fbf9-6baa-570c-dcd6382518c4@fb.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 23 Apr 2019 21:26:50 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:50986 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729033AbfDXB0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 21:26:50 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 39A931A004D;
+        Wed, 24 Apr 2019 03:26:47 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 484AB1A0023;
+        Wed, 24 Apr 2019 03:26:43 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 17ACA402A3;
+        Wed, 24 Apr 2019 09:26:38 +0800 (SGT)
+From:   andy.tang@nxp.com
+To:     mturquette@baylibre.com
+Cc:     sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH] clk: qoriq: Add ls1028a clock configuration
+Date:   Wed, 24 Apr 2019 09:19:12 +0800
+Message-Id: <20190424011912.2179-1-andy.tang@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019 00:59:52 +0000, Tao Ren wrote:
-> > Please see:  Documentation/doc-guide/kernel-doc.rst
-> > 
-> > Here we need:
-> >  - "()" after function name;
-> >  - no extra line between function name and argument description.  
-> 
-> Thank you for pointing it out (I didn't know the doc-guide). Given I copied the function comment from eth_addr_dec(), I will also fix the format for eth_addr_eth() then.
-> 
-> BTW, "()" is missing from all the other functions' comment in etherdevice.h, so maybe we should fix that in a separate patch?
+From: Yuantian Tang <andy.tang@nxp.com>
 
-Possibly, I'm just trying to make sure the new stuff we add follows the
-official guidelines :)  For the old stuff we need to way it with
-potential merge conflicts and muddied git history so the case is not as
-clear cut.
+Enable clock driver by adding clock configuration for ls1028a chip.
+
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+ drivers/clk/clk-qoriq.c |   68 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 68 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
+index 1212a9b..8b0cb0b 100644
+--- a/drivers/clk/clk-qoriq.c
++++ b/drivers/clk/clk-qoriq.c
+@@ -245,6 +245,58 @@ static u32 cg_in(struct clockgen *cg, u32 __iomem *reg)
+ 	},
+ };
+ 
++static const struct clockgen_muxinfo ls1028a_hwa1 = {
++	{
++		{ CLKSEL_VALID, PLATFORM_PLL, PLL_DIV1 },
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV1 },
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV2 },
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV3 },
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV4 },
++		{},
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV2 },
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV3 },
++	},
++};
++
++static const struct clockgen_muxinfo ls1028a_hwa2 = {
++	{
++		{ CLKSEL_VALID, PLATFORM_PLL, PLL_DIV1 },
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV1 },
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV2 },
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV3 },
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV4 },
++		{},
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV2 },
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV3 },
++	},
++};
++
++static const struct clockgen_muxinfo ls1028a_hwa3 = {
++	{
++		{ CLKSEL_VALID, PLATFORM_PLL, PLL_DIV1 },
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV1 },
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV2 },
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV3 },
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV4 },
++		{},
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV2 },
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV3 },
++	},
++};
++
++static const struct clockgen_muxinfo ls1028a_hwa4 = {
++	{
++		{ CLKSEL_VALID, PLATFORM_PLL, PLL_DIV1 },
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV1 },
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV2 },
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV3 },
++		{ CLKSEL_VALID, CGA_PLL2, PLL_DIV4 },
++		{},
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV2 },
++		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV3 },
++	},
++};
++
+ static const struct clockgen_muxinfo ls1043a_hwa1 = {
+ 	{
+ 		{},
+@@ -508,6 +560,21 @@ static void __init t4240_init_periph(struct clockgen *cg)
+ 		.pll_mask = 0x03,
+ 	},
+ 	{
++		.compat = "fsl,ls1028a-clockgen",
++		.cmux_groups = {
++			&clockgen2_cmux_cga12
++		},
++		.hwaccel = {
++			&ls1028a_hwa1, &ls1028a_hwa2,
++			&ls1028a_hwa3, &ls1028a_hwa4
++		},
++		.cmux_to_group = {
++			0, 0, 0, 0, -1
++		},
++		.pll_mask = 0x07,
++		.flags = CG_VER3 | CG_LITTLE_ENDIAN,
++	},
++	{
+ 		.compat = "fsl,ls1043a-clockgen",
+ 		.init_periph = t2080_init_periph,
+ 		.cmux_groups = {
+@@ -1423,6 +1490,7 @@ static void __init clockgen_init(struct device_node *np)
+ CLK_OF_DECLARE(qoriq_clockgen_b4860, "fsl,b4860-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls1012a, "fsl,ls1012a-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls1021a, "fsl,ls1021a-clockgen", clockgen_init);
++CLK_OF_DECLARE(qoriq_clockgen_ls1028a, "fsl,ls1028a-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls1043a, "fsl,ls1043a-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls1046a, "fsl,ls1046a-clockgen", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_ls1088a, "fsl,ls1088a-clockgen", clockgen_init);
+-- 
+1.7.1
+
