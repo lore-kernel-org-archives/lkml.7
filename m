@@ -2,116 +2,73 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA29DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1457BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95DFB2183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95C9218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556138971;
-	bh=vFKxkMdTx4Uvizz7u1yAsOjQ0dHVcCJhqrlMzXejfKU=;
+	s=default; t=1556139020;
+	bh=cwKb2Q4aYEHUb1HddaC9+HyWLX71sRpMMritCJuPOqk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dDZwym0QkcDvB5t3+0cxuwAHwRZSWlkychr1pGrHnRuO118GHa81x/2naARs2jSG0
-	 tVdeL0tGaAPl/e/yS5UMD6qLho/+hG94Vp9Cm0QNxfWZUFzq/AaQM8Ghl03bDrnLIe
-	 8CoHh/0QjLVCSri/NTpQmv186c9/BymyWgvDVspo=
+	b=BKpelkhBVvc4EUmVEbwRM2TrpGQo362r/PsUX4Uzi/PAvWCEug+AsumM7RsyMu5fr
+	 1s4FlLWqAaI1/Lc3cX5lmQyQGWzvU7qVPaKveSZP1CnYSc45jNU8TkNTms4fGYRAjE
+	 DaZChypZmZfUtZzI7TctCDyVX3nxDa7Ni4XpdCMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732424AbfDXUta (ORCPT
+        id S1732746AbfDXUuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 16:49:30 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33511 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731341AbfDXUt3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 16:49:29 -0400
-Received: by mail-oi1-f194.google.com with SMTP id e5so15476937oii.0;
-        Wed, 24 Apr 2019 13:49:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hA9wyW5hWL/UGprMldN2tXNfvuMbYYLtufWQs+OYr98=;
-        b=NgN2b5g+7z59SROUrLjYkQlOjGs966ft934Opnqti4Ad86Xqx3DVfYm2lGIep8IF8Q
-         5/gGTNl/zStYVngMsqf3iQUH5LEDPfIqeVw6VD8bTmDSJSAYRkxNJnl3rlzGuaqWtp4D
-         jfqM9q5hRT9miKOdQIvwwzRgWu06c1S4RTd5oN6jC2ik56R9XUaT/EStjthRMBMqx/Pr
-         rwV907+786GM/ECHaublBg2DYfiZO2clWok0YX5EJR1Vbf+hPCeiX5RvHb3EbBEG6Mnb
-         CBhO+rHIPIM0XH3HSjQ2lnVuXGSIYxohQR5p1FhRHauqQEwHryHC/gN4a+/YoH/U+VJF
-         DgDw==
-X-Gm-Message-State: APjAAAVIgzCiFvC9nZQGBKFlUrHqTESrBcfDDgiSwxFV8JIe8Xd7iW5U
-        K4WszHUvUTFE9L7133S9qA==
-X-Google-Smtp-Source: APXvYqxQl9Ydr8xtWFHPej3FcBb6/xoLMBl0WclDB9AVwHhY6wXcxIXRWP45v1OBBTKvAXTK/Yw6rg==
-X-Received: by 2002:aca:3084:: with SMTP id w126mr790535oiw.102.1556138968680;
-        Wed, 24 Apr 2019 13:49:28 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v201sm8735745oia.39.2019.04.24.13.49.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 13:49:27 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 15:49:27 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V12 1/5] dt-bindings: fsl: scu: add thermal binding
-Message-ID: <20190424204927.GA31960@bogus>
-References: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
+        Wed, 24 Apr 2019 16:50:19 -0400
+Received: from mga04.intel.com ([192.55.52.120]:39221 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731341AbfDXUuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 16:50:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 13:50:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,390,1549958400"; 
+   d="scan'208";a="164547980"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Apr 2019 13:50:18 -0700
+Date:   Wed, 24 Apr 2019 14:44:17 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     David Woodhouse <dwmw2@infradead.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
+        James Smart <james.smart@broadcom.com>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        Maximilian Heyne <mheyne@amazon.de>,
+        Amit Shah <aams@amazon.de>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v2 0/2] Adding per-controller timeout support to nvme
+Message-ID: <20190424204417.GC15412@localhost.localdomain>
+References: <20190403123506.122904-1-mheyne@amazon.de>
+ <fb33a464-af65-abec-5ff1-15925e7669a4@grimberg.me>
+ <20190424200706.GB15412@localhost.localdomain>
+ <983e5d039dce9de1d32c71d28fd59bbc01c3fee5.camel@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <983e5d039dce9de1d32c71d28fd59bbc01c3fee5.camel@infradead.org>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019 03:22:09 +0000, Anson Huang wrote:
-> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-> system controller, the system controller is in charge of system
-> power, clock and thermal sensors etc. management, Linux kernel
-> has to communicate with system controller via MU (message unit)
-> IPC to get temperature from thermal sensors, this patch adds
-> binding doc for i.MX system controller thermal driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No changes.
-> ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
+On Wed, Apr 24, 2019 at 10:30:08PM +0200, David Woodhouse wrote:
+> It isn't that the media is slow; the max timeout is based on the SLA
+> for certain classes of "fabric" outages. Linux copes *really* badly
+> with I/O errors, and if we can make the timeout last long enough to
+> cover the switch restart worst case, then users are a lot happier.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Gotchya. So the default timeout is sufficient under normal operation,
+but temporary intermittent outages may exceed it. It'd be a real
+dissappointment if the command times out with an error anyway after
+waiting for the extended time, but we ought to cover the worst case
+time for a successful completion.
