@@ -6,47 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E169C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87552C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403D72054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B0220675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127356;
-	bh=58pozoQrwZGzJrIZVdyKAOnCwFuXUwJAhOFdktVPmQ4=;
+	s=default; t=1556127359;
+	bh=SjD6htXr7CFXazsCXr959/nxj1ZPNcG948lLniQ+4q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PwG/ULgf2NVIltqgaC66m+dO5n4uR4CRghocdJtofvrSO3yKXKX/GzGYqc4QbufpV
-	 qYoXkqgk0+Qhi8NQwuRaQnqXkGx2tprB3ld589gEsyjYhPPz0nBHrCpSCotfkI5DPt
-	 feoXiFxemlP4LaFjhISq99LCP5m5L/SyLL5mRsiM=
+	b=HQAIXb2L+OMkAVYVuH53yHQ3Xe3rwK/uuLJF1fMd4Pod8QPfbsKwpVqZn2kgI9EOw
+	 5uA1sAJFOxHP2RcfhamuwpRVVQs7rGyn9Pyw/TBGZfsiV2EdOSYbTKU2xFNEZrh5Y5
+	 xF9BO/KEjib9ubt5zhcRFA/6sow9GDHhcdhDXkDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392008AbfDXRfz (ORCPT
+        id S2392010AbfDXRf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:35:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34684 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390953AbfDXRfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:35:48 -0400
+        id S2391997AbfDXRfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:35:54 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C01562054F;
-        Wed, 24 Apr 2019 17:35:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F031D2054F;
+        Wed, 24 Apr 2019 17:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127348;
-        bh=58pozoQrwZGzJrIZVdyKAOnCwFuXUwJAhOFdktVPmQ4=;
+        s=default; t=1556127353;
+        bh=SjD6htXr7CFXazsCXr959/nxj1ZPNcG948lLniQ+4q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WaEJQ9qkjDLqV11TDSU/Bpl9b6E+ifMJLYzGFN0pEPkIl9L0LCPFTBTrxRHXCD/vp
-         iIYaZTkYQhud0n7mnMFIbKJnCwTio+ALcFn5vK6EsFqspG1TDuSUogvk6RlIxSZk8k
-         +AfHAeRDE/VY3mvspQklMDTLWyP2DtJe3EfdHZBE=
+        b=iZgcbExKT3StRhwGNXzsslFkDNZwfR1t5MnUjzxnlJILXzFY2Wpwsx5eg9eNwW6Rl
+         gB87LnHAN3FKqWZNhjCMloYkApkRme28y4COP+KzvUy7a4VGDIRe5KV7IhMWPpfea1
+         KxsAvPwyfRUto6gKV2PUPTsEnym/G8ol1B9Yr0LU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>,
+        stable@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.0 056/115] iio:chemical:bme680: Fix, report temperature in millidegrees
-Date:   Wed, 24 Apr 2019 19:09:52 +0200
-Message-Id: <20190424170928.503115334@linuxfoundation.org>
+Subject: [PATCH 5.0 058/115] iio: cros_ec: Fix the maths for gyro scale calculation
+Date:   Wed, 24 Apr 2019 19:09:54 +0200
+Message-Id: <20190424170928.584445787@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -59,75 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Looijmans <mike.looijmans@topic.nl>
+From: Gwendal Grignou <gwendal@chromium.org>
 
-commit 9436f45dd53595e21566a8c6627411077dfdb776 upstream.
+commit 3d02d7082e5823598090530c3988a35f69689943 upstream.
 
-The standard unit for temperature is millidegrees Celcius. Adapt the
-driver to report in millidegrees instead of degrees.
+Calculation did not use IIO_DEGREE_TO_RAD and implemented a variant to
+avoid precision loss as we aim a nano value. The offset added to avoid
+rounding error, though, doesn't give us a close result to the expected
+value. E.g.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-Fixes: 1b3bd8592780 ("iio: chemical: Add support for Bosch BME680 sensor");
+For 1000dps, the result should be:
+
+    (1000 * pi ) / 180 >> 15 ~= 0.000532632218
+
+But with current calculation we get
+
+    $ cat scale
+    0.000547890
+
+Fix the calculation by just doing the maths involved for a nano value
+
+   val * pi * 10e12 / (180 * 2^15)
+
+so we get a closer result.
+
+    $ cat scale
+    0.000532632
+
+Fixes: c14dca07a31d ("iio: cros_ec_sensors: add ChromeOS EC Contiguous Sensors driver")
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/chemical/bme680_core.c |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/chemical/bme680_core.c
-+++ b/drivers/iio/chemical/bme680_core.c
-@@ -583,8 +583,7 @@ static int bme680_gas_config(struct bme6
- 	return ret;
- }
- 
--static int bme680_read_temp(struct bme680_data *data,
--			    int *val, int *val2)
-+static int bme680_read_temp(struct bme680_data *data, int *val)
- {
- 	struct device *dev = regmap_get_device(data->regmap);
- 	int ret;
-@@ -617,10 +616,9 @@ static int bme680_read_temp(struct bme68
- 	 * compensate_press/compensate_humid to get compensated
- 	 * pressure/humidity readings.
- 	 */
--	if (val && val2) {
--		*val = comp_temp;
--		*val2 = 100;
--		return IIO_VAL_FRACTIONAL;
-+	if (val) {
-+		*val = comp_temp * 10; /* Centidegrees to millidegrees */
-+		return IIO_VAL_INT;
- 	}
- 
- 	return ret;
-@@ -635,7 +633,7 @@ static int bme680_read_press(struct bme6
- 	s32 adc_press;
- 
- 	/* Read and compensate temperature to get a reading of t_fine */
--	ret = bme680_read_temp(data, NULL, NULL);
-+	ret = bme680_read_temp(data, NULL);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -668,7 +666,7 @@ static int bme680_read_humid(struct bme6
- 	u32 comp_humidity;
- 
- 	/* Read and compensate temperature to get a reading of t_fine */
--	ret = bme680_read_temp(data, NULL, NULL);
-+	ret = bme680_read_temp(data, NULL);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -761,7 +759,7 @@ static int bme680_read_raw(struct iio_de
- 	case IIO_CHAN_INFO_PROCESSED:
- 		switch (chan->type) {
- 		case IIO_TEMP:
--			return bme680_read_temp(data, val, val2);
-+			return bme680_read_temp(data, val);
- 		case IIO_PRESSURE:
- 			return bme680_read_press(data, val, val2);
- 		case IIO_HUMIDITYRELATIVE:
+--- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
++++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+@@ -103,9 +103,10 @@ static int cros_ec_sensors_read(struct i
+ 			 * Do not use IIO_DEGREE_TO_RAD to avoid precision
+ 			 * loss. Round to the nearest integer.
+ 			 */
+-			*val = div_s64(val64 * 314159 + 9000000ULL, 1000);
+-			*val2 = 18000 << (CROS_EC_SENSOR_BITS - 1);
+-			ret = IIO_VAL_FRACTIONAL;
++			*val = 0;
++			*val2 = div_s64(val64 * 3141592653ULL,
++					180 << (CROS_EC_SENSOR_BITS - 1));
++			ret = IIO_VAL_INT_PLUS_NANO;
+ 			break;
+ 		case MOTIONSENSE_TYPE_MAG:
+ 			/*
 
 
