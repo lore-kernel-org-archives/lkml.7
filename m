@@ -2,78 +2,179 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E79C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD00CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12543206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88039206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KHOIjA9w"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="05KiQNhk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbfDXGVB (ORCPT
+        id S1729792AbfDXGVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:21:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47134 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfDXGVB (ORCPT
+        Wed, 24 Apr 2019 02:21:40 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40571 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729687AbfDXGVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:21:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1Fv91G1W6r/Keg5N/of7tsmV7rm01oISNszMPhG9TTg=; b=KHOIjA9wNM6KLQKnbLEQhxzQc
-        970lfTr8yiNNsEtFifLbQgeX9Mw7DHJkGsmFrZxsv6Mxlg04g7CPFZwFVWsztwmnCtbKjOIVHP9Xp
-        AHpdo0+DdiLYObIjUv9c1wIp5uFjQOkPqkNjX5D5cdKb9X7DHVKAw4wYWc2TLO7WmRCA9Re5Jult6
-        tdurpsXV0dfiSeRy9P31Ka1qmszHCQVh162oVIf8m8BUdaLxR59V+cTo+dPOQAPHc80D8r9/PMVON
-        dGU1PC6UxeEm4xMgoCxJdGA2EMIrzOs7/l6pxPWpKP+VDUWMqzQPU+v+B/ZnvBAazLVuVmf2Q9qLN
-        R3uDnE++Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJBHA-0002I3-OL; Wed, 24 Apr 2019 06:21:00 +0000
-Date:   Tue, 23 Apr 2019 23:21:00 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
-        Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Johan Hovold <johan@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Andreas Schwab <schwab@suse.de>,
-        linux-riscv@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3 1/3] RISC-V: Add RISC-V specific arch_match_cpu_phys_id
-Message-ID: <20190424062100.GB3902@infradead.org>
-References: <20190424000227.3085-1-atish.patra@wdc.com>
- <20190424000227.3085-2-atish.patra@wdc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424000227.3085-2-atish.patra@wdc.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 24 Apr 2019 02:21:40 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h4so23352738wre.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 23:21:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=9n2dO/SKKYGuJasuWotySUuBbez5lEo+5eIBxC2+8fk=;
+        b=05KiQNhk6zf4MTpFRQ+ukjh++1Xr2XC88h84nHFG6VS217Av2YTxpjIRjHqfrdcYN+
+         4rRjVuD15M1ceCoqC0WADcHqNPCqGW/nmCuD7x1s5p4Lq3mNCnCxwY6Y6zzVRnWBRWP9
+         jguzUAzA0kBjUIYhxN62UoQ4ggBmDm5ix1WioPab0JkboCdZal8iNFqVfd7vU2BE7edU
+         jJzuTlgXYndIU/xPhfO8fwlvxSiQLNpdzv8YlERKmSmi71UHKEDUbSenelcOoxg1cLT+
+         3Scx/kM9vf4DDncNIKNQTD8BDDSIPOZW9xX+cTZzFjHyVQIB2q3Y9Y/0138H5C0COmGQ
+         XxxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=9n2dO/SKKYGuJasuWotySUuBbez5lEo+5eIBxC2+8fk=;
+        b=sfTxdywEkJl3h89DOHY6DjSZ9BU82ipU1eeL3PwJTagN/QFNnwKaRt1IvW+G3O/+3R
+         27W9s22gfVXlS/EMC37E8m5BkQryRKLIaUuF5movI7fVQbJKCQXE24df8p/426kY9N1z
+         /5JPVObOkNHgtizRKm8em96QRNBI3FUEQzmNJrrmVRfcx3mYcCCq7/ZPok5qoKAsgINV
+         VG37I8q94gA88l95+0bQ3O51hwDd5fulahfivyfISI6BK1/xonTm983d7s8mZrjI9Y6n
+         zGvR4fT5MrE7KAJ+yqiVr76xRN8Yq7c61S1tdxVXbH1zyZoPu0N25/Vug5qjnCGs1eyZ
+         4XrA==
+X-Gm-Message-State: APjAAAXYIfyZV3s8skOxc075PjvI0puK0S56ksJxW5jkQRKOvSiOgftO
+        HFFMchpkHcv0q3WU7Zau4fQVlQ==
+X-Google-Smtp-Source: APXvYqwdEmw2wSAdMm2uNSwygYS/tReUHa298khqlcEJ6SUMpUUx2ztpYjieysLgrH1cxzIIR9U/9w==
+X-Received: by 2002:a5d:6604:: with SMTP id n4mr17380528wru.42.1556086898627;
+        Tue, 23 Apr 2019 23:21:38 -0700 (PDT)
+Received: from [10.189.18.164] (eth-east-parth2-46-193-66-10.wb.wifirst.net. [46.193.66.10])
+        by smtp.gmail.com with ESMTPSA id w9sm25604173wmi.0.2019.04.23.23.21.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 23:21:37 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <EB85EE47-BCCC-4A0C-9A33-0A5AC7239554@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_D176D8A4-852F-4A5B-BEA3-8D4911BAAF0A";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH v2] ext4: cond_resched in work-heavy group loops
+Date:   Wed, 24 Apr 2019 08:21:36 +0200
+In-Reply-To: <20190423211329.149642-1-khazhy@google.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
+To:     Khazhismel Kumykov <khazhy@google.com>
+References: <CACGdZYLCi+Or=afmBK8hbP3Ay8x8Oaqnp0Yr+jf1PoQiMc7_DQ@mail.gmail.com>
+ <20190423211329.149642-1-khazhy@google.com>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  }
-> +
-> +bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
-> +{
-> +	return phys_id == cpuid_to_hartid_map(cpu);
-> +}
->  /* Unsupported */
 
-Please keep an empty line after function bodys.
+--Apple-Mail=_D176D8A4-852F-4A5B-BEA3-8D4911BAAF0A
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Otherwise looks good:
+On Apr 23, 2019, at 11:13 PM, Khazhismel Kumykov <khazhy@google.com> =
+wrote:
+>=20
+> These functions may take a long time looping over many groups, which
+> may cause issues for non-preempt kernels.
+> ext4_mb_init_backend()
+> ext4_setup_system_zone()
+> ext4_mb_release()
+>=20
+> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+
+> ---
+> v2:
+> - a few other places that in testing showed to be slow
+>=20
+> fs/ext4/block_validity.c | 1 +
+> fs/ext4/mballoc.c        | 2 ++
+> 2 files changed, 3 insertions(+)
+>=20
+> diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+> index 913061c0de1b..16134469ea3c 100644
+> --- a/fs/ext4/block_validity.c
+> +++ b/fs/ext4/block_validity.c
+> @@ -155,6 +155,7 @@ int ext4_setup_system_zone(struct super_block *sb)
+> 		return 0;
+>=20
+> 	for (i=3D0; i < ngroups; i++) {
+> +		cond_resched();
+> 		if (ext4_bg_has_super(sb, i) &&
+> 		    ((i < 5) || ((i % flex_size) =3D=3D 0)))
+> 			add_system_zone(sbi, =
+ext4_group_first_block_no(sb, i),
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 8ef5f12bbee2..99ba720dbb7a 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -2490,6 +2490,7 @@ static int ext4_mb_init_backend(struct =
+super_block *sb)
+> 	sbi->s_buddy_cache->i_ino =3D EXT4_BAD_INO;
+> 	EXT4_I(sbi->s_buddy_cache)->i_disksize =3D 0;
+> 	for (i =3D 0; i < ngroups; i++) {
+> +		cond_resched();
+> 		desc =3D ext4_get_group_desc(sb, i, NULL);
+> 		if (desc =3D=3D NULL) {
+> 			ext4_msg(sb, KERN_ERR, "can't read descriptor =
+%u", i);
+> @@ -2705,6 +2706,7 @@ int ext4_mb_release(struct super_block *sb)
+>=20
+> 	if (sbi->s_group_info) {
+> 		for (i =3D 0; i < ngroups; i++) {
+> +			cond_resched();
+> 			grinfo =3D ext4_get_group_info(sb, i);
+> #ifdef DOUBLE_CHECK
+> 			kfree(grinfo->bb_bitmap);
+> --
+> 2.21.0.593.g511ec345e18-goog
+>=20
+
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_D176D8A4-852F-4A5B-BEA3-8D4911BAAF0A
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAlzAAHAACgkQcqXauRfM
+H+AJjQ//egWnCTo2jiw4DtSAWlxwng0FavawWfmuKUmPGmxIBHmw/JM/m86f0JuB
+t5SpFCEdHBB7uX3KoxPF6ZF/dbrnToHmv7FGMkb/wBoefxHtbwyBD4UWeZL7ZZ0x
+mc17+lEBXsUUOMXJuxr4r+8sZkn9FA+KB51Gmd0NN9R7hinY9Eia1BkDza5MYFf4
+Hf/ibSpCCPV5pvSdB0mumTSOYW0bcLXX0Jdz33/Qked7+rgaI8kRgdywFa1cQeGl
++BemfwrGuoT9sOM/pxRxIdnUWARo06Of3RShA9PVA7kurVIwe8yV5gy2dUh1WUuL
+FAA2VROXnG7Q1FbAKRSLZbpKyqiGBuJn6wCa9b1/z7zGUYw+T5kIlkOEULpLEM6q
+4eufuucMkBWGewNa1PsI+ZKEqfJKhGoBOQj2/114hWdv4ONBbx/VXlNdc2DqIG/Z
+fHb+/EvhRIwxYQwYKLB14SdcRTXchBU6F2LTQ2VOB14jBdZQYksSE+KmfZY5Mf/c
+Wlzy1OvgT3CrKL4Hk99qtSM1iLF787nQue24+Ig0xyGGLZGJKPBqoebZ4/iDUm1g
+mXeHRWkSOiUk5gKZzGvVHHi5UM1RK8tTL39xwOEcjSKdtEJ32hRJSh7FwgfE7E7r
+CEFGOKE57oZu0gFJnzddf2DFHds1O9hMky3n7OV1CCFYVgoCrsk=
+=+WoV
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_D176D8A4-852F-4A5B-BEA3-8D4911BAAF0A--
