@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D921C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A77C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22AC21902
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF59721902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116484;
-	bh=sMa0LKSd7ygF4I+5+aKVKoakBEUuxOhlxlH0O8rOr2s=;
+	s=default; t=1556116487;
+	bh=888zvxrjA7XOcy1VzeEiGB+h0t4AqJ63Z5hDuQ3W0II=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uHVU9dWeCrRLM0TbJmXgiU/ZEjzZMt7uowFrYdcOWEW7YAkprHYciRZ/XzP1OtSAv
-	 N7zBG/e8xgdfV5x3OQSaBJduj7zruhtyySm1xOUvQqj85xRwuX2dd9/8iAYmh5eair
-	 ZQPM+IAW7/ijeT/UedxRR/Wnh0L/MRHBNUhadf/k=
+	b=hFEDq9+xo8SnXRkiOSP4k2mvW3L/MJYDKKv2NBd0No7xnpknkcvxqN0Km2vMktouH
+	 fUJxOuFBgGZLPrQGRrNdGY6aWzuq8+eNWmCDKr/WK+MdOI7Wt7XuI/G4lUcNsnXAb9
+	 43xCbnkBun16uEBYmXBs0/FHrtQEj8YyEY+eG5Ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731132AbfDXOen (ORCPT
+        id S1731152AbfDXOeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:34:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38570 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:34:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731105AbfDXOem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:34:42 -0400
+        id S1731105AbfDXOeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:34:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAEEB218FE;
-        Wed, 24 Apr 2019 14:34:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 784142089F;
+        Wed, 24 Apr 2019 14:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116481;
-        bh=sMa0LKSd7ygF4I+5+aKVKoakBEUuxOhlxlH0O8rOr2s=;
+        s=default; t=1556116484;
+        bh=888zvxrjA7XOcy1VzeEiGB+h0t4AqJ63Z5hDuQ3W0II=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H2hHyoVtturDXEaV+ka1oQ2FTfCCVcmYDmsN+/G5NQMXFDFCP873bfhyqrZpJGYDo
-         Z3ay8vOJqwkncKO8f23eJpyfF5dgL1oSIN2Ani12YCM7y1DnEIZ/k3JNXd6rC3eGbO
-         ypcf+dpNdRaMBDU7KwVwajPxAgMnUfTODpGdbsqA=
+        b=Q7VEImkxQoytfXRetviqOQF0z8fGecYKvrUDCz7ow730YRQm2Q5xN5/oa2+n5kys9
+         qCwqm3Z9egf7O/B6eenE0cjEOB+KXBxwNUQXQ0OR9aMC4aGHG3rWD+mN+Azq++2Fvd
+         npZBTNROgHrlo/lE7Xb4vz1/EsXgBNZiE7TEABsE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+Cc:     Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 23/66] xdp: fix cpumap redirect SKB creation bug
-Date:   Wed, 24 Apr 2019 10:32:57 -0400
-Message-Id: <20190424143341.27665-23-sashal@kernel.org>
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 24/66] net/mlx5: E-Switch, Protect from invalid memory access in offload fdb table
+Date:   Wed, 24 Apr 2019 10:32:58 -0400
+Message-Id: <20190424143341.27665-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -59,102 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit 676e4a6fe703f2dae699ee9d56f14516f9ada4ea ]
+[ Upstream commit 5c1d260ed10cf08dd7a0299c103ad0a3f9a9f7a1 ]
 
-We want to avoid leaking pointer info from xdp_frame (that is placed in
-top of frame) like commit 6dfb970d3dbd ("xdp: avoid leaking info stored in
-frame data on page reuse"), and followup commit 97e19cce05e5 ("bpf:
-reserve xdp_frame size in xdp headroom") that reserve this headroom.
+The esw offloads structures share a union with the legacy mode structs.
+Reset the offloads struct to zero in init to protect from null
+assumptions made by the legacy mode code.
 
-These changes also affected how cpumap constructed SKBs, as xdpf->headroom
-size changed, the skb data starting point were in-effect shifted with 32
-bytes (sizeof xdp_frame). This was still okay, as the cpumap frame_size
-calculation also included xdpf->headroom which were reduced by same amount.
-
-A bug was introduced in commit 77ea5f4cbe20 ("bpf/cpumap: make sure
-frame_size for build_skb is aligned if headroom isn't"), where the
-xdpf->headroom became part of the SKB_DATA_ALIGN rounding up. This
-round-up to find the frame_size is in principle still correct as it does
-not exceed the 2048 bytes frame_size (which is max for ixgbe and i40e),
-but the 32 bytes offset of pkt_data_start puts this over the 2048 bytes
-limit. This cause skb_shared_info to spill into next frame. It is a little
-hard to trigger, as the SKB need to use above 15 skb_shinfo->frags[] as
-far as I calculate. This does happen in practise for TCP streams when
-skb_try_coalesce() kicks in.
-
-KASAN can be used to detect these wrong memory accesses, I've seen:
- BUG: KASAN: use-after-free in skb_try_coalesce+0x3cb/0x760
- BUG: KASAN: wild-memory-access in skb_release_data+0xe2/0x250
-
-Driver veth also construct a SKB from xdp_frame in this way, but is not
-affected, as it doesn't reserve/deduct the room (used by xdp_frame) from
-the SKB headroom. Instead is clears the pointers via xdp_scrub_frame(),
-and allows SKB to use this area.
-
-The fix in this patch is to do like veth and instead allow SKB to (re)use
-the area occupied by xdp_frame, by clearing via xdp_scrub_frame().  (This
-does kill the idea of the SKB being able to access (mem) info from this
-area, but I guess it was a bad idea anyhow, and it was already killed by
-the veth changes.)
-
-Fixes: 77ea5f4cbe20 ("bpf/cpumap: make sure frame_size for build_skb is aligned if headroom isn't")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Or Gerlitz <ogerlitz@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- kernel/bpf/cpumap.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index 8974b3755670..3c18260403dd 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -162,10 +162,14 @@ static void cpu_map_kthread_stop(struct work_struct *work)
- static struct sk_buff *cpu_map_build_skb(struct bpf_cpu_map_entry *rcpu,
- 					 struct xdp_frame *xdpf)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+index d4e6fe5b9300..ce5766a26baa 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+@@ -1402,6 +1402,7 @@ int esw_offloads_init(struct mlx5_eswitch *esw, int nvports)
  {
-+	unsigned int hard_start_headroom;
- 	unsigned int frame_size;
- 	void *pkt_data_start;
- 	struct sk_buff *skb;
+ 	int err;
  
-+	/* Part of headroom was reserved to xdpf */
-+	hard_start_headroom = sizeof(struct xdp_frame) +  xdpf->headroom;
-+
- 	/* build_skb need to place skb_shared_info after SKB end, and
- 	 * also want to know the memory "truesize".  Thus, need to
- 	 * know the memory frame size backing xdp_buff.
-@@ -183,15 +187,15 @@ static struct sk_buff *cpu_map_build_skb(struct bpf_cpu_map_entry *rcpu,
- 	 * is not at a fixed memory location, with mixed length
- 	 * packets, which is bad for cache-line hotness.
- 	 */
--	frame_size = SKB_DATA_ALIGN(xdpf->len + xdpf->headroom) +
-+	frame_size = SKB_DATA_ALIGN(xdpf->len + hard_start_headroom) +
- 		SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++	memset(&esw->fdb_table.offloads, 0, sizeof(struct offloads_fdb));
+ 	mutex_init(&esw->fdb_table.offloads.fdb_prio_lock);
  
--	pkt_data_start = xdpf->data - xdpf->headroom;
-+	pkt_data_start = xdpf->data - hard_start_headroom;
- 	skb = build_skb(pkt_data_start, frame_size);
- 	if (!skb)
- 		return NULL;
- 
--	skb_reserve(skb, xdpf->headroom);
-+	skb_reserve(skb, hard_start_headroom);
- 	__skb_put(skb, xdpf->len);
- 	if (xdpf->metasize)
- 		skb_metadata_set(skb, xdpf->metasize);
-@@ -205,6 +209,9 @@ static struct sk_buff *cpu_map_build_skb(struct bpf_cpu_map_entry *rcpu,
- 	 * - RX ring dev queue index	(skb_record_rx_queue)
- 	 */
- 
-+	/* Allow SKB to reuse area used by xdp_frame */
-+	xdp_scrub_frame(xdpf);
-+
- 	return skb;
- }
- 
+ 	err = esw_create_offloads_fdb_tables(esw, nvports);
 -- 
 2.19.1
 
