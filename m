@@ -2,185 +2,133 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6420C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07023C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A134420811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:30:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SYug7tCs"
+	by mail.kernel.org (Postfix) with ESMTP id D1C3D218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbfDXMaH (ORCPT
+        id S1730138AbfDXMaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:30:07 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43196 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfDXMaH (ORCPT
+        Wed, 24 Apr 2019 08:30:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44092 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730114AbfDXMaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:30:07 -0400
-Received: by mail-qt1-f196.google.com with SMTP id g4so578393qtq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:30:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NX2CogWQOYKbmVq2K2TtYwKyJnHLXLCU8YLX3Iw1nc0=;
-        b=SYug7tCsoV9WY+MIkMo9/DxWOnPjEgsrpp2RJpkfp7cRLo7bwhtPrREaehKLf2eHvK
-         9PI4gc/0QPNlM2+ezGx9IZ/z93fkbDcV9nnT8j5xGmA8g6FEfiEjhXwqVM4LgZhpeU9L
-         pcuJ3AsSp+ujN6hNog7sPQu05dJDY82Felij2es7TrpVZ4wIK9Ok3ruz/RSv/4lc5iG1
-         3Frr+zr8nbZXyM3JJWxBbpJIvTUIzQor4vUC/IoHcmW73pjaN6jUWTzKUKfGq8bK2vWi
-         v2DP3rJGJ5hIj2JGv9mNtx9NkvAdEGcEyX+sa97EAUxHzcRKdnTXNKEzDteF5JnNEF04
-         OA9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NX2CogWQOYKbmVq2K2TtYwKyJnHLXLCU8YLX3Iw1nc0=;
-        b=SydG8IjBzjAY1DneQ5/Xe3hd/6jg0IkKOG1soa2Mwe3F1DcUwto5Szu6hf8UqEslSp
-         9X5T4zpGOqehZuaHdkcQPhj3CSZ+rzoq3c16/IjV9FpKOMffLVa5ESwBWPuDdsoycmDO
-         9QpCMunFPXvddy4DDwgSLp3pFT/URszMygzoCLLc736PGJ67Px2w9irIQwrk5ZL3nQ+C
-         lfsGzwqKLM0anyHvHcVT0WB0vQB7fkAJpQyxz8sd/I8NzkKuT2ysD7wmg4A6QhDScFUB
-         iCEKBrOUGGXGXMOokpWJbmrZlcwIKFZyg2mio4E18y+3M0q/AdXq7LctIC9YVC70AoBB
-         GfLQ==
-X-Gm-Message-State: APjAAAVlBqLK8RoBJqBpkEaWoH9nL0qHnJwI1BFqm82oJFpYg2o1KUQu
-        oT5ge5w+YNPndbv4gJ/isqCZvnpUFHBpfetXgY28hQ==
-X-Google-Smtp-Source: APXvYqwwz23EwzGcXb0R9ebrnLdhBz25tlYTnJ/RYRoOGaSI9pkGjtSGsx2EBGEssnAmd58bFssBt20dh3cd1Httzoo=
-X-Received: by 2002:a0c:b0a5:: with SMTP id o34mr24160016qvc.42.1556109006376;
- Wed, 24 Apr 2019 05:30:06 -0700 (PDT)
+        Wed, 24 Apr 2019 08:30:12 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OCTdP6125006
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:30:11 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s2mwy10kt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:30:11 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Wed, 24 Apr 2019 13:30:09 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 24 Apr 2019 13:30:05 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3OCU4Vl50397410
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Apr 2019 12:30:04 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA8F1AE051;
+        Wed, 24 Apr 2019 12:30:03 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B439AE058;
+        Wed, 24 Apr 2019 12:30:03 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 24 Apr 2019 12:30:03 +0000 (GMT)
+Date:   Wed, 24 Apr 2019 14:30:02 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v2 31/79] docs: s390: convert docs to ReST and rename to
+ *.rst
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+ <fb86b676b3b426732f1f11378868a9bd3b580b46.1555938376.git.mchehab+samsung@kernel.org>
+ <20190424134109.2891a7cc.cohuck@redhat.com>
 MIME-Version: 1.0
-References: <1554283514-2960-1-git-send-email-yannick.fertre@st.com> <f031fc0f-ea81-1083-df7a-e7ce413d2868@st.com>
-In-Reply-To: <f031fc0f-ea81-1083-df7a-e7ce413d2868@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Wed, 24 Apr 2019 14:29:55 +0200
-Message-ID: <CA+M3ks4q6J1pxd2ooSU+pDssX9u_sWCMeqtT3a4YqALhtAuimA@mail.gmail.com>
-Subject: Re: [PATCH] drm/stm: ltdc: add modifier support
-To:     Philippe CORNU <philippe.cornu@st.com>
-Cc:     Yannick FERTRE <yannick.fertre@st.com>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Vincent ABRIOU <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424134109.2891a7cc.cohuck@redhat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19042412-0012-0000-0000-000003130BC3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042412-0013-0000-0000-0000214B6108
+Message-Id: <20190424123001.GB3990@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904240100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le ven. 5 avr. 2019 =C3=A0 18:32, Philippe CORNU <philippe.cornu@st.com> a =
-=C3=A9crit :
->
->
->
-> On 4/3/19 11:25 AM, Yannick Fertr=C3=A9 wrote:
-> > Signed-off-by: Mickael Reulier <mickael.reulier@st.com>
-> > Signed-off-by: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
-> > ---
-> >   drivers/gpu/drm/stm/ltdc.c | 21 ++++++++++++++++++++-
-> >   1 file changed, 20 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> > index b1741a9..6fa8fbc 100644
-> > --- a/drivers/gpu/drm/stm/ltdc.c
-> > +++ b/drivers/gpu/drm/stm/ltdc.c
-> > @@ -232,6 +232,11 @@ static const enum ltdc_pix_fmt ltdc_pix_fmt_a1[NB_=
-PF] =3D {
-> >       PF_ARGB4444             /* 0x07 */
-> >   };
-> >
-> > +static const u64 ltdc_format_modifiers[] =3D {
-> > +     DRM_FORMAT_MOD_LINEAR,
-> > +     DRM_FORMAT_MOD_INVALID
-> > +};
+On Wed, Apr 24, 2019 at 01:41:09PM +0200, Cornelia Huck wrote:
+> > diff --git a/Documentation/s390/Debugging390.txt b/Documentation/s390/debugging390.rst
+> > similarity index 53%
+> > rename from Documentation/s390/Debugging390.txt
+> > rename to Documentation/s390/debugging390.rst
+> > index c35804c238ad..d49305fd5e1a 100644
+> > --- a/Documentation/s390/Debugging390.txt
+> > +++ b/Documentation/s390/debugging390.rst
+> 
+> I'll skip this one...
+> 
+> (Question for the s390 arch maintainers: I remember that there was some
+> interesting stuff in there, but I'm not sure how much of it is still
+> accurate/useful... is it worth spending time on trying to update this?)
+> 
+> > diff --git a/Documentation/s390/text_files.rst b/Documentation/s390/text_files.rst
+> > new file mode 100644
+> > index 000000000000..c94d05d4fa17
+> > --- /dev/null
+> > +++ b/Documentation/s390/text_files.rst
+> > @@ -0,0 +1,11 @@
+> > +ibm 3270 changelog
+> > +------------------
 > > +
-> >   static inline u32 reg_read(void __iomem *base, u32 reg)
-> >   {
-> >       return readl_relaxed(base + reg);
-> > @@ -864,6 +869,16 @@ static void ltdc_plane_atomic_print_state(struct d=
-rm_printer *p,
-> >       fpsi->counter =3D 0;
-> >   }
-> >
-> > +static bool ltdc_plane_format_mod_supported(struct drm_plane *plane,
-> > +                                         u32 format,
-> > +                                         u64 modifier)
-> > +{
-> > +     if (modifier =3D=3D DRM_FORMAT_MOD_LINEAR)
-> > +             return true;
+> > +.. include:: 3270.ChangeLog
+> > +    :literal:
 > > +
-> > +     return false;
-> > +}
+> > +ibm 3270 config3270.sh
+> > +----------------------
 > > +
-> >   static const struct drm_plane_funcs ltdc_plane_funcs =3D {
-> >       .update_plane =3D drm_atomic_helper_update_plane,
-> >       .disable_plane =3D drm_atomic_helper_disable_plane,
-> > @@ -872,6 +887,7 @@ static const struct drm_plane_funcs ltdc_plane_func=
-s =3D {
-> >       .atomic_duplicate_state =3D drm_atomic_helper_plane_duplicate_sta=
-te,
-> >       .atomic_destroy_state =3D drm_atomic_helper_plane_destroy_state,
-> >       .atomic_print_state =3D ltdc_plane_atomic_print_state,
-> > +     .format_mod_supported =3D ltdc_plane_format_mod_supported,
-> >   };
-> >
-> >   static const struct drm_plane_helper_funcs ltdc_plane_helper_funcs =
-=3D {
-> > @@ -890,6 +906,7 @@ static struct drm_plane *ltdc_plane_create(struct d=
-rm_device *ddev,
-> >       unsigned int i, nb_fmt =3D 0;
-> >       u32 formats[NB_PF * 2];
-> >       u32 drm_fmt, drm_fmt_no_alpha;
-> > +     const u64 *modifiers =3D ltdc_format_modifiers;
-> >       int ret;
-> >
-> >       /* Get supported pixel formats */
-> > @@ -918,7 +935,7 @@ static struct drm_plane *ltdc_plane_create(struct d=
-rm_device *ddev,
-> >
-> >       ret =3D drm_universal_plane_init(ddev, plane, possible_crtcs,
-> >                                      &ltdc_plane_funcs, formats, nb_fmt=
-,
-> > -                                    NULL, type, NULL);
-> > +                                    modifiers, type, NULL);
-> >       if (ret < 0)
-> >               return NULL;
-> >
-> > @@ -1179,6 +1196,8 @@ int ltdc_load(struct drm_device *ddev)
-> >               goto err;
-> >       }
-> >
-> > +     ddev->mode_config.allow_fb_modifiers =3D true;
-> > +
->
->
-> Acked-by: Philippe Cornu <philippe.cornu@st.com>
->
+> > +.. literalinclude:: config3270.sh
+> > +    :language: shell
+> 
+> 
+> Another question for the s390 arch maintainers: How valuable is this still?
 
-Applied on drm-misc-next even if I got issue with the author name encoding
+...to be honest I consider 80% within Documentation/s390 to be
+completely outdated, partially wrong, or irrelevant in the meantime;
+the vfio stuff seems to be pretty much up-to-date, and I like the
+parts that move comments to code.
 
-Thanks,
-Benjamin
+Cleaning this up can be done at a later time. I don't want to make
+Mauro spend more time than necessary on this.
 
-> Philippe :)
->
-> >       ret =3D ltdc_crtc_init(ddev, crtc);
-> >       if (ret) {
-> >               DRM_ERROR("Failed to init crtc\n");
-> >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
