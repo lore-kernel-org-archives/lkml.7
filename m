@@ -2,53 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DDEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4512C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22CB021909
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914462190A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126366;
-	bh=XBnV7yUkTta6EYtZvwVDzOoXMmsyTzKA37ZvjCVQq48=;
+	s=default; t=1556126370;
+	bh=DNzbvR+6HvBRWcXAHVIlIVv77H2hy4Iarg1JpF0HhhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G7P+Nn0LtyBuZPtFtUjd/BAbn70+mt8oROwV0iQWY90ECdgfa1wQvYDktgKGDC2kw
-	 zziRCu3zPyk5vjBzGUf0ztQz6Wt44xAqqLUcvVyZM30DKJbsY6O49zO8hysHQEhxvt
-	 wm3fxsdlJFAsvOEZvUqKQrtL/WnsDuziECUCGJLU=
+	b=hgH2WvxP2v+JUystsSYZLbZRzYFLPCoJgJz+sKhnKzvwoHpq1C4Nq/JeDO7uSRhrt
+	 RILA7895kCY9Bd6L/k+bd77/mdTmt5JxwbljhpN55YPV0Eq0ox2ljeIa9Fd+ObWfYv
+	 bzdim9ETYp5eoAdmC7GIKBIEgyw5VKjNvTqHQKIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388993AbfDXRTZ (ORCPT
+        id S2389003AbfDXRT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:19:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44570 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:19:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388985AbfDXRTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:19:22 -0400
+        id S2388594AbfDXRTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:19:24 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C68EC20835;
-        Wed, 24 Apr 2019 17:19:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8674C20835;
+        Wed, 24 Apr 2019 17:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126361;
-        bh=XBnV7yUkTta6EYtZvwVDzOoXMmsyTzKA37ZvjCVQq48=;
+        s=default; t=1556126364;
+        bh=DNzbvR+6HvBRWcXAHVIlIVv77H2hy4Iarg1JpF0HhhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eyUo0Dgq+5Lu3OxaO2BiIIT6Ed8F6J8uR2qXxrMB/L1H1OFyYsPjgzcANww4QvpMX
-         OEZ7YRLivm2oh+WkRNiLPRwyruERoixR997dgz6hUyxmQyQD1pcPAjGJs9aIzsyvIc
-         HmPIfcrhVYOePZzdHym241gIveYpOf2wNr/Il1UE=
+        b=U9wfRbDUJWo7e8B24R+1oXK8uzIWP1bAhI3FWygWnk2QH2HT0/Jk40KTs5LVEL09Z
+         GArr7QpBCx4Ru9U8P1ijMbjdggIjDIT0DbPF8bOcQXHj+1MsMwKhrkXbcyb5pq+sgL
+         HkjCuD4bQbOvW1VMrMo9dwfivwqXqfP17U226FfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Wang Li <wangli39@baidu.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 085/168] net: ethtool: not call vzalloc for zero sized memory request
-Date:   Wed, 24 Apr 2019 19:08:49 +0200
-Message-Id: <20190424170928.830672805@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 050/168] cdrom: Fix race condition in cdrom_sysctl_register
+Date:   Wed, 24 Apr 2019 19:08:14 +0200
+Message-Id: <20190424170926.759700328@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,85 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
 
-[ Upstream commit 3d8830266ffc28c16032b859e38a0252e014b631 ]
+The following traceback is sometimes seen when booting an image in qemu:
 
-NULL or ZERO_SIZE_PTR will be returned for zero sized memory
-request, and derefencing them will lead to a segfault
+[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
+[   54.611085] Fusion MPT base driver 3.04.20
+[   54.611877] Copyright (c) 1999-2008 LSI Corporation
+[   54.616234] Fusion MPT SAS Host driver 3.04.20
+[   54.635139] sysctl duplicate entry: /dev/cdrom//info
+[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
+[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[   54.641273] Workqueue: events_unbound async_run_entry_fn
+[   54.641273] Call Trace:
+[   54.641273]  dump_stack+0x67/0x90
+[   54.641273]  __register_sysctl_table+0x50b/0x570
+[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
+[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
+[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
+[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
+[   54.646814]  register_cdrom.cold.24+0x2a/0x33
+[   54.646814]  sr_probe+0x4bd/0x580
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  really_probe+0xd6/0x260
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  driver_probe_device+0x4a/0xb0
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  bus_for_each_drv+0x73/0xc0
+[   54.646814]  __device_attach+0xd6/0x130
+[   54.646814]  bus_probe_device+0x9a/0xb0
+[   54.646814]  device_add+0x40c/0x670
+[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
+[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
+[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
+[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
+[   54.646814]  __scsi_add_device+0x116/0x130
+[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
+[   54.646814]  async_run_entry_fn+0x34/0x100
+[   54.646814]  process_one_work+0x237/0x5e0
+[   54.646814]  worker_thread+0x37/0x380
+[   54.646814]  ? rescuer_thread+0x360/0x360
+[   54.646814]  kthread+0x118/0x130
+[   54.646814]  ? kthread_create_on_node+0x60/0x60
+[   54.646814]  ret_from_fork+0x3a/0x50
 
-so it is unnecessory to call vzalloc for zero sized memory
-request and not call functions which maybe derefence the
-NULL allocated memory
+The only sensible explanation is that cdrom_sysctl_register() is called
+twice, once from the module init function and once from register_cdrom().
+cdrom_sysctl_register() is not mutex protected and may happily execute
+twice if the second call is made before the first call is complete.
 
-this also fixes a possible memory leak if phy_ethtool_get_stats
-returns error, memory should be freed before exit
+Use a static atomic to ensure that the function is executed exactly once.
 
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Reviewed-by: Wang Li <wangli39@baidu.com>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/ethtool.c |   29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+ drivers/cdrom/cdrom.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -1287,17 +1287,22 @@ static int ethtool_get_strings(struct ne
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index d203940203b6..aee23092f50e 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -265,6 +265,7 @@
+ /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
+ /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
  
- 	gstrings.len = ret;
++#include <linux/atomic.h>
+ #include <linux/module.h>
+ #include <linux/fs.h>
+ #include <linux/major.h>
+@@ -3677,9 +3678,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
  
--	data = kcalloc(gstrings.len, ETH_GSTRING_LEN, GFP_USER);
--	if (!data)
--		return -ENOMEM;
-+	if (gstrings.len) {
-+		data = kcalloc(gstrings.len, ETH_GSTRING_LEN, GFP_USER);
-+		if (!data)
-+			return -ENOMEM;
+ static void cdrom_sysctl_register(void)
+ {
+-	static int initialized;
++	static atomic_t initialized = ATOMIC_INIT(0);
  
--	__ethtool_get_strings(dev, gstrings.string_set, data);
-+		__ethtool_get_strings(dev, gstrings.string_set, data);
-+	} else {
-+		data = NULL;
-+	}
+-	if (initialized == 1)
++	if (!atomic_add_unless(&initialized, 1, 1))
+ 		return;
  
- 	ret = -EFAULT;
- 	if (copy_to_user(useraddr, &gstrings, sizeof(gstrings)))
- 		goto out;
- 	useraddr += sizeof(gstrings);
--	if (copy_to_user(useraddr, data, gstrings.len * ETH_GSTRING_LEN))
-+	if (gstrings.len &&
-+	    copy_to_user(useraddr, data, gstrings.len * ETH_GSTRING_LEN))
- 		goto out;
- 	ret = 0;
+ 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
+@@ -3690,8 +3691,6 @@ static void cdrom_sysctl_register(void)
+ 	cdrom_sysctl_settings.debug = debug;
+ 	cdrom_sysctl_settings.lock = lockdoor;
+ 	cdrom_sysctl_settings.check = check_media_type;
+-
+-	initialized = 1;
+ }
  
-@@ -1385,17 +1390,21 @@ static int ethtool_get_stats(struct net_
- 		return -EFAULT;
- 
- 	stats.n_stats = n_stats;
--	data = kmalloc(n_stats * sizeof(u64), GFP_USER);
--	if (!data)
--		return -ENOMEM;
-+	if (n_stats) {
-+		data = kmalloc(n_stats * sizeof(u64), GFP_USER);
-+		if (!data)
-+			return -ENOMEM;
- 
--	ops->get_ethtool_stats(dev, &stats, data);
-+		ops->get_ethtool_stats(dev, &stats, data);
-+	} else {
-+		data = NULL;
-+	}
- 
- 	ret = -EFAULT;
- 	if (copy_to_user(useraddr, &stats, sizeof(stats)))
- 		goto out;
- 	useraddr += sizeof(stats);
--	if (copy_to_user(useraddr, data, stats.n_stats * sizeof(u64)))
-+	if (n_stats && copy_to_user(useraddr, data, n_stats * sizeof(u64)))
- 		goto out;
- 	ret = 0;
- 
+ static void cdrom_sysctl_unregister(void)
+-- 
+2.19.1
+
 
 
