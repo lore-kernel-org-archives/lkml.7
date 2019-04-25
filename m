@@ -2,137 +2,136 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C81C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045BBC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C238F20717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:53:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556229227;
-	bh=Plwfy3oB+OykF8/1IlF7++4WyiIFYA0MI70M18z1WSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rk5GERdSE9rHno2zAntXQJiu9wt8HdO+QRqQP0TwLkf3EVs7pdpMsyrD5ppOmUoEP
-	 yAOkhDs+NQZ09hclnGm0iJmXhDebvUGhOILQGS6q5/Zes6xbzAX5wkcs0hE36l7LE1
-	 2cm4PTmlBtfnRCrGceUZr2DFIbFgB2wRngWAto0E=
+	by mail.kernel.org (Postfix) with ESMTP id 148ED20717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:56:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tcH6Or/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730877AbfDYVxq (ORCPT
+        id S1730906AbfDYV4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 17:53:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfDYVxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 17:53:46 -0400
-Received: from earth.universe (unknown [185.62.205.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67A24206C1;
-        Thu, 25 Apr 2019 21:53:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556229224;
-        bh=Plwfy3oB+OykF8/1IlF7++4WyiIFYA0MI70M18z1WSI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jqQL/dbcwqs2D51cN4rE1l6EI93UALyGTXHF8GdW/erXVaGHeb+oSgw6ECTy0Q8Ou
-         whkQPwJF+dfOPOqiUrGQbXLMKHCX1ErBvIBGnh3koruCpj91M7nhiLVWHUlynOf1L1
-         DYQ0C/P50aeIJOcRJWdsI5+pnq5rwwqQ5JbkrcSw=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 00E5D3C0D1D; Thu, 25 Apr 2019 23:46:09 +0200 (CEST)
-Date:   Thu, 25 Apr 2019 23:46:09 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Pavel Machek <pavel@denx.de>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v10 00/11] mfd: add support for max77650 PMIC
-Message-ID: <20190425214609.rav7ooxovzhvgn7e@earth.universe>
-References: <20190423090451.23711-1-brgl@bgdev.pl>
- <20190424083127.GB6699@amd>
- <CAMRc=McN78_gJw_T4EPucM8veTC9XRUu7TGJ0J+zPsU=0Hu2GQ@mail.gmail.com>
+        Thu, 25 Apr 2019 17:56:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46487 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfDYV4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 17:56:30 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t17so1395047wrw.13
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 14:56:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GEgbleUXiftEFa1b6/nUBQ/7QI0Sg4jIX3OywJ4O6ss=;
+        b=tcH6Or/aUj2gN2lZ+ilpm9QvEleYeL5nv+beBZyu5quvO7K0VU1A9U3qLFUEluKpEu
+         Y1Ll+DSw/qgyJFUAUisuVrVxhkvCTOmW4gJeglXkWJggKF62oymkWwR+Ie5uRSFrjUF2
+         k8Wmel3W9KzeQ5RuK/SWkRgsB3pQaIQzk5lLkiKt0yYu3MmIyMK0PuPN0InqZrsKnfzm
+         RzMxVSdFj48PUqcTlJgGpZupP3AmqzhLHoMmwN9hoB6LUywsovrRZGD2R53ON8S7GRft
+         V+t4nQpJNlvZBhAhgFWaA/9qneaTzyviepc/XTlKG3nrV0j15Rlr0hojFhKsS36Jwl1q
+         Iq6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GEgbleUXiftEFa1b6/nUBQ/7QI0Sg4jIX3OywJ4O6ss=;
+        b=rNQ2cPbGThdRlA5ZCtE5CDXtN4Lt0CB8z2JQl2CbMxRUzTiTWmlgRdoZTPSi+XeZyD
+         eKoUFpiVNsWcdFqAp7kPA9VKIupsL5K9G1sUFWYoeLow/zbu+G7Hb75JM1GXOwJvgfVy
+         QIwlom/kHpMXSSo7iEucWGguU+naBkKjwGb7pHb7Pq8W2948wikPJleFSbERQ++W3RRY
+         xTLE7bqpA2y/tic4yyZwWxCEm0ViNI7q2esJs7a1O4CBevaM31OMSItEX8x9BidOSAjs
+         xb19Sb9iVcWLa8jUO3Zgh54VTBhdUy8fgCiGIS00VFH+WDBTGI2EQ4fwF6yAPPWC3vI1
+         lhZQ==
+X-Gm-Message-State: APjAAAW5uibKvSq8tdium+uHY9azZCVLIoACb6EtlN0Y0qGSOV3NBrmT
+        oVn899sYDXh9jJ9DpEbNPmroHqV8gWH4b+uEKd7RHA==
+X-Google-Smtp-Source: APXvYqyMwEjv55C5T76qTTC8HI998zMaiRIQFxwC2X83mO0xhC+T72nf95L5ZLJIS/AdipIWQnRCB4DsPuraplN4L08=
+X-Received: by 2002:adf:9144:: with SMTP id j62mr29511655wrj.320.1556229387867;
+ Thu, 25 Apr 2019 14:56:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hkqjlur2zgw6jemw"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=McN78_gJw_T4EPucM8veTC9XRUu7TGJ0J+zPsU=0Hu2GQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190411014353.113252-1-surenb@google.com> <20190411014353.113252-2-surenb@google.com>
+ <c745df86-b95c-e82b-42ba-519da4f448ab@i-love.sakura.ne.jp>
+In-Reply-To: <c745df86-b95c-e82b-42ba-519da4f448ab@i-love.sakura.ne.jp>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Thu, 25 Apr 2019 14:56:16 -0700
+Message-ID: <CAJuCfpH-SnFQT=3qy3VANsgJsxK+vV6=G=WPkt11qG_2RpYAcQ@mail.gmail.com>
+Subject: Re: [RFC 1/2] mm: oom: expose expedite_reclaim to use oom_reaper
+ outside of oom_kill.c
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        yuzhoujian@didichuxing.com,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
+        lsf-pc@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---hkqjlur2zgw6jemw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Apr 24, 2019 at 10:45:00AM +0200, Bartosz Golaszewski wrote:
-> =C5=9Br., 24 kwi 2019 o 10:31 Pavel Machek <pavel@denx.de> napisa=C5=82(a=
-):
+On Thu, Apr 25, 2019 at 2:13 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> On 2019/04/11 10:43, Suren Baghdasaryan wrote:
+> > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> > index 3a2484884cfd..6449710c8a06 100644
+> > --- a/mm/oom_kill.c
+> > +++ b/mm/oom_kill.c
+> > @@ -1102,6 +1102,21 @@ bool out_of_memory(struct oom_control *oc)
+> >       return !!oc->chosen;
+> >  }
 > >
-> > On Tue 2019-04-23 11:04:40, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > This series adds support for max77650 ultra low-power PMIC. It provid=
-es
-> > > the core mfd driver and a set of five sub-drivers for the regulator,
-> > > power supply, gpio, leds and input subsystems.
-> > >
-> > > Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_d=
-evices().
-> > > Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for=
- this
-> > > device.
-> > >
-> > > The regulator part is already upstream.
+> > +bool expedite_reclaim(struct task_struct *task)
+> > +{
+> > +     bool res = false;
+> > +
+> > +     task_lock(task);
+> > +     if (task_will_free_mem(task)) {
+>
+> mark_oom_victim() needs to be called under oom_lock mutex after
+> checking that oom_killer_disabled == false. Since you are trying
+> to trigger this function from signal handler, you might want to
+> defer until e.g. WQ context.
+
+Thanks for the tip! I'll take this into account in the new design.
+Just thinking out loud... AFAIU oom_lock is there to protect against
+multiple concurrent out_of_memory calls from different contexts and
+prevent overly-aggressive process killing. For my purposes when
+reaping memory of a killed process we don't have this concern (we did
+not initiate the killing, SIGKILL was explicitly requested). I'll
+probably need some synchronization there but not for purposes of
+preventing multiple concurrent reapers. In any case, thank you for the
+feedback!
+
+>
+> > +             mark_oom_victim(task);
+> > +             wake_oom_reaper(task);
+> > +             res = true;
+> > +     }
+> > +     task_unlock(task);
+> > +
+> > +     return res;
+> > +}
+> > +
+> >  /*
+> >   * The pagefault handler calls here because it is out of memory, so kill a
+> >   * memory-hogging task. If oom_lock is held by somebody else, a parallel oom
 > >
-> > I see v10 in my inbox... and acks from all over the place, but patches
-> > not going in. Who takes these? I don't think I need another 10
-> > versions in my inbox...
-> >                                                                 Pavel
->=20
-> I think Lee Jones should take them through the MFD tree. With the ack
-> from Sebastian Reichel on the driver part and the example in the
-> charger binding fixed I think they are ready to be picked up.
-
-Fine with me.
-
--- Sebastian
-
---hkqjlur2zgw6jemw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzCKpoACgkQ2O7X88g7
-+pr2mBAAkSSqMITsZQW+RCxTbutrVPO+dqNO9WPo6/0+bjuOfMLt5V9ty3vimvhi
-K/dCIpbQRO417ZwlyCM+mt5wuhPBGbgOy/65EBAcdFKweDFv4q/tug45qh6V3fZ8
-6iaSwd9wXMf2UttkJZ5UeOX+O+ud19RjBVmoJ8HqUG5LA+ud0ZbUcVDhlUEiMcEJ
-+zNMo0HQpUuKMmHRp2iKlWkoekPFDhEWnQZbuBxwhVhKbvZCX4LavbHeiR3GCkO8
-Q1onr1MjkpFJfrQTjbQLOKFB5i2/I4EMmZ63LECwv5PhaYkb3Rf7dtGj7koS+4ni
-rVKYEvSuiCXDPliimXmV6zorkK4FQd2ykZc+pHamTdEMsqanOr+K/BpSh4qOZvqH
-Mo2t4FiEqKZ2ATKnfimQsqnPG37cr5yq4cKwukL+hND36maWjws0jF9o2HkXJI8Y
-CTcIs+ZGjuDRDgW5bxkpao9P+M16FlKzrkO1EP6LLCBtIQde4nWf5jn26xHj8j56
-QHGToQk12PykVLrXrzpWFYxHilzCtV7ZNdSj02rMFJFiCwcxkqPv2jJqQhILJnuR
-CcdSpEILZZgcTan0H4p7plyOJWoPpminEHFZLHTNkQyywFYXXQRGHVRvNXjc/P/I
-vpvXVsB8WQCEXVhUtJz1fzyEhBSKN0XGOPEWEe6OYtI4rgtm+io=
-=X5TB
------END PGP SIGNATURE-----
-
---hkqjlur2zgw6jemw--
