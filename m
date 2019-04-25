@@ -2,79 +2,87 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E77FC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3A9C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC6D720717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C65D2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfDYOdo (ORCPT
+        id S1726861AbfDYOfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:33:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59702 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726790AbfDYOdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:33:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A09A3AEE8;
-        Thu, 25 Apr 2019 14:33:33 +0000 (UTC)
-From:   Qu Wenruo <wqu@suse.com>
-To:     linux-btrfs@vger.kernel.org, ast@fb.com, jbacik@fb.com
-Cc:     linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>
-Subject: [PATCH] error-injection: Include definitions for bool and true/false
-Date:   Thu, 25 Apr 2019 22:33:27 +0800
-Message-Id: <20190425143327.17574-1-wqu@suse.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 25 Apr 2019 10:35:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58102 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbfDYOfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:35:11 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 051D8307EA92;
+        Thu, 25 Apr 2019 14:35:11 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E150F600C0;
+        Thu, 25 Apr 2019 14:35:08 +0000 (UTC)
+Date:   Thu, 25 Apr 2019 10:35:07 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Aubrey Li <aubrey.intel@gmail.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v2 11/17] sched: Basic tracking of matching tasks
+Message-ID: <20190425143506.GB979@pauld.bos.csb>
+References: <54772e18-2f70-34cc-29ef-b9291f4846e2@linux.intel.com>
+ <20190424204337.22283-1-vpillai@digitalocean.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424204337.22283-1-vpillai@digitalocean.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 25 Apr 2019 14:35:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If error injection user hasn't included definitions for bool and
-true/false, kernel may not compile under certain case, just like:
+On Wed, Apr 24, 2019 at 08:43:36PM +0000 Vineeth Remanan Pillai wrote:
+> > A minor nitpick.  I find keeping the vruntime base readjustment in
+> > core_prio_less probably is more straight forward rather than pass a
+> > core_cmp bool around.
+> 
+> The reason I moved the vruntime base adjustment to __prio_less is
+> because, the vruntime seemed alien to __prio_less when looked as
+> a standalone function.
+> 
+> I do not have a strong opinion on both. Probably a better approach
+> would be to replace both cpu_prio_less/core_prio_less with prio_less
+> which takes the third arguement 'bool on_same_rq'?
+> 
 
-  All errors (new ones prefixed by >>):
+Fwiw, I find the two names easier to read than a boolean flag. Could still
+be wrapped to a single implementation I suppose. 
 
-     In file included from fs//btrfs/tree-checker.c:18:
-  >> include/linux/error-injection.h:15:15: error: unknown type name 'bool'
-      static inline bool within_error_injection_list(unsigned long addr)
-                    ^~~~
-     include/linux/error-injection.h: In function 'within_error_injection_list':
-  >> include/linux/error-injection.h:17:9: error: 'false' undeclared (first use in this function)
-       return false;
-              ^~~~~
-     include/linux/error-injection.h:17:9: note: each undeclared identifier is reported only once for each function it appears in
+An enum to control cpu or core would be more readable, but probably overkill... 
 
-Anyway the fix is straightforward, include <linux/types.h> for bool and
-<linux/stddef.h> for true/false in error-injection.h to make it self
-contained.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
----
- include/linux/error-injection.h | 2 ++
- 1 file changed, 2 insertions(+)
+Cheers,
+Phil
 
-diff --git a/include/linux/error-injection.h b/include/linux/error-injection.h
-index 280c61ecbf20..1a8e09978616 100644
---- a/include/linux/error-injection.h
-+++ b/include/linux/error-injection.h
-@@ -2,6 +2,8 @@
- #ifndef _LINUX_ERROR_INJECTION_H
- #define _LINUX_ERROR_INJECTION_H
- 
-+#include <linux/types.h>	/* for bool */
-+#include <linux/stddef.h>	/* for true/false */
- #ifdef CONFIG_FUNCTION_ERROR_INJECTION
- 
- #include <asm/error-injection.h>
+
+> Thanks
+
 -- 
-2.21.0
-
