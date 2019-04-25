@@ -2,97 +2,185 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B8FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA8AC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 273102084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7ED20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:58:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OVN//KQl"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WE23i7qt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbfDYS4r (ORCPT
+        id S1729902AbfDYS6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:56:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39204 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfDYS4r (ORCPT
+        Thu, 25 Apr 2019 14:58:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52655 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfDYS6V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:56:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GfxYqWaXpjNR7LK7i4LsPRRgPJeb/GnO1gEeqtsBVsI=; b=OVN//KQlDhGo0wx6Wn1zAH3v5
-        iqJDPypXGLrYCJGgPOX+P6uttkfZBruXkttjMFGGlJ4/LiO6W495UMkYsZBRn+WEFxPEVQcO481o+
-        CFo1e5Vqv4TmE1/VTt13rHN9OFsXGnKGoXi/rE6O0CFjZys30MhBqEPwSNwQaDrIXORqBIluZFlQH
-        tvGdbRepAwB4hZzPxvIeK1fAv1jAT89OS7EJnpkWOSPlGXXUsEB6MqLeYmnOMfmbl9ZyKHbZU6/7T
-        b99BHlRad9niZXbSM9W/WrmAznoG9d39gH5pyvQ1EVPe1kn2y8c6F2SUOX3A4rrmZ9R+E3w6UATvp
-        sv+yGoXAQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJjY3-0006FD-Fk; Thu, 25 Apr 2019 18:56:43 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1EF2F20321925; Thu, 25 Apr 2019 20:56:41 +0200 (CEST)
-Date:   Thu, 25 Apr 2019 20:56:41 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yuyang Du <duyuyang@gmail.com>
-Cc:     will.deacon@arm.com, mingo@kernel.org, bvanassche@acm.org,
-        ming.lei@redhat.com, frederic@kernel.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/28] Optimize IRQ usage checks and other small bits
-Message-ID: <20190425185641.GT12232@hirez.programming.kicks-ass.net>
-References: <20190424101934.51535-1-duyuyang@gmail.com>
+        Thu, 25 Apr 2019 14:58:21 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3PIw7N03249921
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Apr 2019 11:58:07 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3PIw7N03249921
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1556218688;
+        bh=Rm+yBZl2P3ydJgMvbUeWPGGJNHoS26focdtDma/OW+8=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=WE23i7qtVot8wThMqddT9Kd4x/dKIlGqFmTk1oBcwcGEmCeUZKe5t3Jlx9f6+g6aw
+         ssb/IdknrNSmKYDpKHCvuq+y2/7v7EggzYeRLrnpdQx9N5mcY4+zh1ksxwfUEQNAW7
+         hBXHiq703pXsHlyCDfp8ORoZLnkWTOatLv93nAhjxjfRcjhdPnGzL2ITqJs3rIcuBR
+         V2TXIF51ADCkFf5oSMEIjA9IKDPvxiRhbI1eRgI4mpcxtuw/wH3OfZMz23+sZD3Ek8
+         S0QvIMO2aV9KfdAjFJlHapLzcU4D+3qo8xoMWyHhX5lW1ImEXyU7N/ncZFdZyuAZtx
+         Lyy8EQtZ5xrfA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3PIw7wm3249918;
+        Thu, 25 Apr 2019 11:58:07 -0700
+Date:   Thu, 25 Apr 2019 11:58:07 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jacob Pan <tipbot@zytor.com>
+Message-ID: <tip-6eb4f08293e971cb1b7b867c7fe994c244b91460@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com,
+        lenb@kernel.org, mingo@kernel.org, hpa@zytor.com,
+        drake@endlessm.com, tglx@linutronix.de
+Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org,
+          jacob.jun.pan@linux.intel.com, lenb@kernel.org,
+          tglx@linutronix.de, hpa@zytor.com, drake@endlessm.com
+In-Reply-To: <1556213272-63568-1-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1556213272-63568-1-git-send-email-jacob.jun.pan@linux.intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/apic] x86/apic: Unify duplicated local apic timer
+ clockevent initialization
+Git-Commit-ID: 6eb4f08293e971cb1b7b867c7fe994c244b91460
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190424101934.51535-1-duyuyang@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 06:19:06PM +0800, Yuyang Du wrote:
-> Yuyang Du (28):
->   locking/lockdep: Change all print_*() return type to void
->   locking/lockdep: Add description and explanation in lockdep design doc
->   locking/lockdep: Adjust lock usage bit character checks
->   locking/lockdep: Remove useless conditional macro
->   locking/lockdep: Print the right depth for chain key colission
->   locking/lockdep: Update obsolete struct field description
->   locking/lockdep: Use lockdep_init_task for task initiation
->     consistently
->   locking/lockdep: Define INITIAL_CHAIN_KEY for chain keys to start with
->   locking/lockdep: Change the range of class_idx in held_lock struct
->   locking/lockdep: Remove unused argument in validate_chain() and
->     check_deadlock()
->   locking/lockdep: Update comment
->   locking/lockdep: Change type of the element field in circular_queue
->   locking/lockdep: Change the return type of __cq_dequeue()
->   locking/lockdep: Avoid constant checks in __bfs by using offset
->     reference
->   locking/lockdep: Update comments on dependency search
->   locking/lockdep: Add explanation to lock usage rules in lockdep design
->     doc
->   locking/lockdep: Remove redundant argument in check_deadlock
->   locking/lockdep: Remove unused argument in __lock_release
+Commit-ID:  6eb4f08293e971cb1b7b867c7fe994c244b91460
+Gitweb:     https://git.kernel.org/tip/6eb4f08293e971cb1b7b867c7fe994c244b91460
+Author:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+AuthorDate: Thu, 25 Apr 2019 10:27:52 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 25 Apr 2019 20:54:21 +0200
 
-Those look really good (but don't readily apply to tip/locking/core) now
-let me try and look at the real changes..
+x86/apic: Unify duplicated local apic timer clockevent initialization
 
->   locking/lockdep: Optimize irq usage check when marking lock usage bit
->   locking/lockdep: Refactorize check_noncircular and check_redundant
->   locking/lockdep: Consolidate lock usage bit initialization
->   locking/lockdep: Adjust new bit cases in mark_lock
->   locking/lockdep: Update irqsafe lock bitmaps
->   locking/lockdep: Remove !dir in lock irq usage check
->   locking/lockdep: Implement new IRQ usage checking algorithm
->   locking/lockdep: Remove __bfs
->   locking/lockdep: Remove locks_before
->   locking/lockdep: Reduce lock_list_entries by half
+Local APIC timer clockevent parameters can be calculated based on platform
+specific methods. However the code is mostly duplicated with the interrupt
+based calibration. The commit which increased the max_delta parameter
+updated only one place and made the implementations diverge.
+
+Unify it to prevent further damage.
+
+[ tglx: Rename function to lapic_init_clockevent() and adjust changelog a bit ]
+
+Fixes: 4aed89d6b515 ("x86, lapic-timer: Increase the max_delta to 31 bits")
+Reported-by: Daniel Drake <drake@endlessm.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Len Brown <lenb@kernel.org>
+Link: https://lkml.kernel.org/r/1556213272-63568-1-git-send-email-jacob.jun.pan@linux.intel.com
+---
+ arch/x86/kernel/apic/apic.c | 57 ++++++++++++++++++++++++---------------------
+ 1 file changed, 31 insertions(+), 26 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index b7bcdd781651..ab6af775f06c 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -802,6 +802,24 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
+ 	return 0;
+ }
+ 
++static int __init lapic_init_clockevent(void)
++{
++	if (!lapic_timer_frequency)
++		return -1;
++
++	/* Calculate the scaled math multiplication factor */
++	lapic_clockevent.mult = div_sc(lapic_timer_frequency/APIC_DIVISOR,
++					TICK_NSEC, lapic_clockevent.shift);
++	lapic_clockevent.max_delta_ns =
++		clockevent_delta2ns(0x7FFFFFFF, &lapic_clockevent);
++	lapic_clockevent.max_delta_ticks = 0x7FFFFFFF;
++	lapic_clockevent.min_delta_ns =
++		clockevent_delta2ns(0xF, &lapic_clockevent);
++	lapic_clockevent.min_delta_ticks = 0xF;
++
++	return 0;
++}
++
+ static int __init calibrate_APIC_clock(void)
+ {
+ 	struct clock_event_device *levt = this_cpu_ptr(&lapic_events);
+@@ -810,25 +828,21 @@ static int __init calibrate_APIC_clock(void)
+ 	long delta, deltatsc;
+ 	int pm_referenced = 0;
+ 
+-	/**
+-	 * check if lapic timer has already been calibrated by platform
+-	 * specific routine, such as tsc calibration code. if so, we just fill
++	if (boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
++		return 0;
++
++	/*
++	 * Check if lapic timer has already been calibrated by platform
++	 * specific routine, such as tsc calibration code. If so just fill
+ 	 * in the clockevent structure and return.
+ 	 */
+-
+-	if (boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER)) {
+-		return 0;
+-	} else if (lapic_timer_frequency) {
++	if (!lapic_init_clockevent()) {
+ 		apic_printk(APIC_VERBOSE, "lapic timer already calibrated %d\n",
+-				lapic_timer_frequency);
+-		lapic_clockevent.mult = div_sc(lapic_timer_frequency/APIC_DIVISOR,
+-					TICK_NSEC, lapic_clockevent.shift);
+-		lapic_clockevent.max_delta_ns =
+-			clockevent_delta2ns(0x7FFFFF, &lapic_clockevent);
+-		lapic_clockevent.max_delta_ticks = 0x7FFFFF;
+-		lapic_clockevent.min_delta_ns =
+-			clockevent_delta2ns(0xF, &lapic_clockevent);
+-		lapic_clockevent.min_delta_ticks = 0xF;
++			    lapic_timer_frequency);
++		/*
++		 * Direct calibration methods must have an always running
++		 * local APIC timer, no need for broadcast timer.
++		 */
+ 		lapic_clockevent.features &= ~CLOCK_EVT_FEAT_DUMMY;
+ 		return 0;
+ 	}
+@@ -869,17 +883,8 @@ static int __init calibrate_APIC_clock(void)
+ 	pm_referenced = !calibrate_by_pmtimer(lapic_cal_pm2 - lapic_cal_pm1,
+ 					&delta, &deltatsc);
+ 
+-	/* Calculate the scaled math multiplication factor */
+-	lapic_clockevent.mult = div_sc(delta, TICK_NSEC * LAPIC_CAL_LOOPS,
+-				       lapic_clockevent.shift);
+-	lapic_clockevent.max_delta_ns =
+-		clockevent_delta2ns(0x7FFFFFFF, &lapic_clockevent);
+-	lapic_clockevent.max_delta_ticks = 0x7FFFFFFF;
+-	lapic_clockevent.min_delta_ns =
+-		clockevent_delta2ns(0xF, &lapic_clockevent);
+-	lapic_clockevent.min_delta_ticks = 0xF;
+-
+ 	lapic_timer_frequency = (delta * APIC_DIVISOR) / LAPIC_CAL_LOOPS;
++	lapic_init_clockevent();
+ 
+ 	apic_printk(APIC_VERBOSE, "..... delta %ld\n", delta);
+ 	apic_printk(APIC_VERBOSE, "..... mult: %u\n", lapic_clockevent.mult);
