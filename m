@@ -2,145 +2,129 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49144C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D15C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBD420643
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:39:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=thinciit.onmicrosoft.com header.i=@thinciit.onmicrosoft.com header.b="NrkNL3iH"
+	by mail.kernel.org (Postfix) with ESMTP id C379020644
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbfDYMji (ORCPT
+        id S1729670AbfDYMka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:39:38 -0400
-Received: from rout5.hes.trendmicro.com ([54.219.188.4]:52591 "EHLO
-        rout5.hes.trendmicro.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfDYMjh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:39:37 -0400
-Received: from 0.0.0.0_hes.trendmicro.com (unknown [10.64.10.65])
-        by rout5.hes.trendmicro.com (Postfix) with SMTP id 643C6EFC06B;
-        Thu, 25 Apr 2019 12:39:36 +0000 (UTC)
-Received: from IND01-BO1-obe.outbound.protection.outlook.com (unknown [104.47.101.55])
-        by relay1.hes.trendmicro.com (TrendMicro Hosted Email Security) with ESMTPS id 5AE84142C0AD;
-        Thu, 25 Apr 2019 12:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=thinciit.onmicrosoft.com; s=selector1-thinci-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BLt1gVCtYnHhzdwOImhRChXyI1IvDmLIelYxUfbX+MM=;
- b=NrkNL3iH0ur9ATJ33Cba3kmUE0IAL+o6y++l0c8XMarGUxm1fnlR5+/ue+HDApLyoDR/r3XuTJNfK8fRzZxnGPjJcvy9LF+pUd4uZ6zk728ws8//Ork3apXbklzfE2ZhOFMjARDmGiCBSDZ3QEdTur8EA1tKqEJzb8Hk2FB2tDs=
-Received: from MAXPR01MB3773.INDPRD01.PROD.OUTLOOK.COM (52.134.158.84) by
- MAXPR01MB3600.INDPRD01.PROD.OUTLOOK.COM (52.134.157.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Thu, 25 Apr 2019 12:39:28 +0000
-Received: from MAXPR01MB3773.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::8c8f:543a:ccd6:fe7a]) by MAXPR01MB3773.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::8c8f:543a:ccd6:fe7a%2]) with mapi id 15.20.1835.010; Thu, 25 Apr 2019
- 12:39:28 +0000
-From:   Matt Redfearn <matt.redfearn@thinci.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Philippe Cornu <philippe.cornu@st.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Matthew Redfearn <matthew.redfearn@thinci.com>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Archit Taneja <architt@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH] drm/bridge/synopsys: dsi: Don't blindly call post_disable
-Thread-Topic: [PATCH] drm/bridge/synopsys: dsi: Don't blindly call
- post_disable
-Thread-Index: AQHU+qkUj1HzsBP9eU2naClnjE4OuqZMy1aAgAAHJ4A=
-Date:   Thu, 25 Apr 2019 12:39:27 +0000
-Message-ID: <95c36782-7eaf-2224-bb52-cff0a53d98d8@thinci.com>
-References: <CGME20190424142210epcas3p403bd5159852ab4e90eca1be67800ecde@epcas3p4.samsung.com>
- <20190424142148.25927-1-matt.redfearn@thinci.com>
- <3da4c0a3-a77b-5128-63f7-9c8d6b012c68@samsung.com>
-In-Reply-To: <3da4c0a3-a77b-5128-63f7-9c8d6b012c68@samsung.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: DB6PR02CA0006.eurprd02.prod.outlook.com
- (2603:10a6:6:15::19) To MAXPR01MB3773.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:64::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=matthew.redfearn@thinci.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [87.242.198.86]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 728cfca8-b36c-4569-45de-08d6c97b0e4d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MAXPR01MB3600;
-x-ms-traffictypediagnostic: MAXPR01MB3600:
-x-microsoft-antispam-prvs: <MAXPR01MB3600F3F991E79FB54BD11FDCF13D0@MAXPR01MB3600.INDPRD01.PROD.OUTLOOK.COM>
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(396003)(366004)(376002)(136003)(346002)(199004)(189003)(25786009)(305945005)(6116002)(7416002)(6246003)(53936002)(4326008)(7736002)(3846002)(31686004)(6512007)(68736007)(478600001)(229853002)(97736004)(6436002)(14454004)(66066001)(6486002)(102836004)(64756008)(256004)(54906003)(8936002)(53546011)(476003)(26005)(11346002)(5660300002)(446003)(486006)(2616005)(36756003)(316002)(52116002)(76176011)(99286004)(71190400001)(71200400001)(81166006)(66946007)(66556008)(8676002)(73956011)(66446008)(14444005)(2906002)(6506007)(31696002)(81156014)(186003)(110136005)(66476007)(386003);DIR:OUT;SFP:1102;SCL:1;SRVR:MAXPR01MB3600;H:MAXPR01MB3773.INDPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: thinci.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: h47p0+SvWtxv3yko/P/rrJNJiW8UUQp/lAVnlDOiXqn/q6FNq9XJLspTnLi9jyjryjHGBBT7LLIKCL/HDgwZoT29MYNCqJq7uBILIHIqQQCZUIGMzb6Oj7PSiCOkrlNfW5Zqy2Ymc6DKgDYZUdWi0I25N/u4i5C+36pf5LscMbPLdnq1CGjapc4PLL5vlPbBdyipeyWmkqDmsvaPi8QfUO1142WaWenqHmLlZ6STHUDKd0XdhLODtUv1BB5kpr01m3JUXM267SYwB9lS0Yo+eh9/odplu6wN8zlV77xRFGnh2oqHqo0cVGWTUEB1DPXKkaLRUsDD7gGjS2q3zmFpWLAiUyPkVolKB3zh++CK+0G/yP7zNnykLDPrgJqLleCPI+xZasDhZkkiD2+lSmRlAHo60OAwm/qdsbLY82crg7g=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CDD7503909642D4A9E9E9FE205475BD5@INDPRD01.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        Thu, 25 Apr 2019 08:40:30 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20751 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbfDYMka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 08:40:30 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 05:40:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,393,1549958400"; 
+   d="asc'?scan'208";a="138735172"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga006.jf.intel.com with ESMTP; 25 Apr 2019 05:40:22 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Douglas Anderson <dianders@chromium.org>,
+        Minas Harutyunyan <hminas@synopsys.com>, heiko@sntech.de
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Artur Petrosyan <Arthur.Petrosyan@synopsys.com>,
+        amstan@chromium.org, linux-rockchip@lists.infradead.org,
+        William Wu <william.wu@rock-chips.com>,
+        linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Randy Li <ayaka@soulik.info>, zyw@rock-chips.com,
+        mka@chromium.org, ryandcase@chromium.org,
+        Amelie Delaunay <amelie.delaunay@st.com>, jwerner@chromium.org,
+        dinguyen@opensource.altera.com,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 3/5] Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
+In-Reply-To: <20190418001356.124334-4-dianders@chromium.org>
+References: <20190418001356.124334-1-dianders@chromium.org> <20190418001356.124334-4-dianders@chromium.org>
+Date:   Thu, 25 Apr 2019 15:40:18 +0300
+Message-ID: <87pnpas1fx.fsf@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: thinci.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 728cfca8-b36c-4569-45de-08d6c97b0e4d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 12:39:27.9981
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9d1c3c89-8615-4064-88a7-bb1a8537c779
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAXPR01MB3600
-X-TMASE-Version: StarCloud-1.3-8.2.1013-24572.007
-X-TMASE-Result: 10--10.565900-4.000000
-X-TMASE-MatchedRID: u7Yf2n7Ca/0OwH4pD14DsPHkpkyUphL9FuNF4lJG6xtIyDY579vwTCbR
-        wYCA7OowGafy0sn9g0ZHVle6mAl0dQXl7w+ur8elVU3yVpaj3QwnAUsgdVnp+xcEzr0UIqADvFf
-        PytWHA2khXi7xgp14qwG2ORx9Eyap3CtEsOTZxuKBlNt4VSGvIdJ178I1tpklxSZxKZrfThNFQm
-        CP4adJATebgFOGUoOXX07Sn912HMw5HWa1kxc3Mf9Ci025qU0xyeUl7aCTy8i7+NPPxj+R6nHyD
-        p4fu+gqJZ5+dQl9ac9+NZ4lfSsps4f1OcQR3MIT0gVVXNgaM0qcIZLVZAQa0I7xHquoAJGGq7rF
-        UcuGp/EgBwKKRHe+r1I6nBAvPlKt7p7SoAVOS6LslI6MxjzE4caQMxpU+MJnAcIVrF+S0nM=
-X-TM-Deliver-Signature: F9526AD280FD159FD924F4F6FAB49FB4
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcnplaiwNCg0KT24gMjUvMDQvMjAxOSAxMzoxMywgQW5kcnplaiBIYWpkYSB3cm90ZToN
-Cj4gT24gMjQuMDQuMjAxOSAxNjoyMiwgTWF0dCBSZWRmZWFybiB3cm90ZToNCj4+IFRoZSBEUk0g
-ZG9jdW1lbnRhdGlvbiBzdGF0ZXMgdGhhdCBwb3N0X2Rpc2FibGUgaXMgYW4gb3B0aW9uYWwgY2Fs
-bGJhY2suDQo+PiBBcyBzdWNoIGFuIGltcGxlbWVudGluZyBkZXZpY2UgbWF5IG5vdCBwb3B1bGF0
-ZSBpdC4gVG8gYXZvaWQgcGFuaWNpbmcNCj4+IHRoZSBrZXJuZWwgYnkgY2FsbGluZyBhIE5VTEwg
-ZnVuY3Rpb24gcG9pbnRlciwgd2Ugc2hvdWxkIE5VTEwgY2hlY2sgaXQNCj4+IGJlZm9yZSBibGlu
-ZHkgY2FsbGluZyBpdC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBNYXR0IFJlZGZlYXJuIDxtYXR0
-LnJlZGZlYXJuQHRoaW5jaS5jb20+DQo+IA0KPj4gLS0tDQo+Pg0KPj4gICBkcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgfCAzICsrLQ0KPj4gICAxIGZpbGUgY2hh
-bmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYyBiL2RyaXZlcnMv
-Z3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYw0KPj4gaW5kZXggMzhlODgwNzEz
-NjMuLjBlZTQ0MDIxNmI4IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9z
-eW5vcHN5cy9kdy1taXBpLWRzaS5jDQo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5
-bm9wc3lzL2R3LW1pcGktZHNpLmMNCj4+IEBAIC04MDUsNyArODA1LDggQEAgc3RhdGljIHZvaWQg
-ZHdfbWlwaV9kc2lfYnJpZGdlX3Bvc3RfZGlzYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdl
-KQ0KPj4gICAJICogVGhpcyBuZWVkcyB0byBiZSBmaXhlZCBpbiB0aGUgZHJtX2JyaWRnZSBmcmFt
-ZXdvcmsgYW5kIHRoZSBBUEkNCj4+ICAgCSAqIG5lZWRzIHRvIGJlIHVwZGF0ZWQgdG8gbWFuYWdl
-IG91ciBvd24gY2FsbCBjaGFpbnMuLi4NCj4+ICAgCSAqLw0KPj4gLQlkc2ktPnBhbmVsX2JyaWRn
-ZS0+ZnVuY3MtPnBvc3RfZGlzYWJsZShkc2ktPnBhbmVsX2JyaWRnZSk7DQo+PiArCWlmIChkc2kt
-PnBhbmVsX2JyaWRnZS0+ZnVuY3MtPnBvc3RfZGlzYWJsZSkNCj4+ICsJCWRzaS0+cGFuZWxfYnJp
-ZGdlLT5mdW5jcy0+cG9zdF9kaXNhYmxlKGRzaS0+cGFuZWxfYnJpZGdlKTsNCj4+ICAgDQo+IA0K
-PiBXaHkgbm90IGRybV9icmlkZ2VfcG9zdF9kaXNhYmxlID8NCg0KQWggLSB0aGF0IHNlZW1zIGxp
-a2UgYSBuaWNlciBmaXghIERvIHlvdSB0aGluayB0aGUgY29tbWVudCBhYm92ZSANCmRlc2NyaWJp
-bmcgd2h5IHRoaXMgZnVuY3Rpb24gcG9pbnRlciBpcyBjYWxsZWQgZGlyZWN0bHkgY2FuIGJlIHJl
-bW92ZWQgDQphcyB3ZWxsIGlmIHdlIGdvIHRoaXMgcm91dGU/DQoNCklmIHNvbWVvbmUgY2FsbHMg
-ZHJtX2JyaWRnZV9wb3N0X2Rpc2FibGUoKSBvbiB0aGUgU3lucG9zeXMgRFNJIA0KZHJtX2JyaWRn
-ZSBpdCB3aWxsIGdvIG9uIHRvIGNhbGwgcG9zdF9kaXNhYmxlIG9uIGFsbCBvdGhlciBicmlkZ2Vz
-IGluIA0KdGhlIGNoYWluLCBpbiBhZGRpdGlvbiB0byB1cyBjYWxsaW5nIHRoZW0gaGVyZS4gSXMg
-aXQgYW4gaXNzdWUgdG8gY2FsbCANCml0IG11bHRpcGxlIHRpbWVzPw0KDQpUaGFua3MsDQpNYXR0
-DQoNCg0KPiANCj4gDQo+IFJlZ2FyZHMNCj4gDQo+IEFuZHJ6ZWoNCj4gDQo+IA0KPj4gICAJaWYg
-KGRzaS0+c2xhdmUpIHsNCj4+ICAgCQlkd19taXBpX2RzaV9kaXNhYmxlKGRzaS0+c2xhdmUpOw0K
-PiANCj4gDQo=
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Douglas Anderson <dianders@chromium.org> writes:
+
+> Some SoCs with a dwc2 USB controller may need to keep the PHY on to
+> support remote wakeup.  Allow specifying this as a device tree
+> property.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> For relevant prior discussion on this patch, see:
+>
+> https://lkml.kernel.org/r/1435017144-2971-3-git-send-email-dianders@chrom=
+ium.org
+>
+> I didn't make any changes from the prior version since I never found
+> out what Rob thought of my previous arguments.  If folks want a
+> change, perhaps they could choose from these options:
+>
+> 1. Assume that all dwc2 hosts would like to keep their PHY on for
+>    suspend if there's a USB wakeup enabled, thus we totally drop this
+>    binding.  This doesn't seem super great to me since I'd bet that
+>    many devices that use dwc2 weren't designed for USB wakeup (they
+>    may not keep enough clocks or rails on) so we might be wasting
+>    power for nothing.
+> 2. Rename this property to "snps,wakeup-from-suspend-with-phy" to make
+>    it more obvious that this property is intended both to document
+>    that wakeup from suspend is possible and that we need the PHY for
+>    said wakeup.
+> 3. Rename this property to "snps,can-wakeup-from-suspend" and assume
+>    it's implicit that if we can wakeup from suspend that we need to
+>    keep the PHY on.  If/when someone shows that a device exists using
+>    dwc2 where we can wakeup from suspend without the PHY they can add
+>    a new property.
+>
+> Changes in v2: None
+>
+>  Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+
+checking file Documentation/devicetree/bindings/usb/dwc2.txt
+Hunk #1 FAILED at 37.
+Hunk #2 succeeded at 52 (offset -1 lines).
+1 out of 2 hunks FAILED
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlzBqrIACgkQzL64meEa
+mQYE0w//cCr/Wc2ZD2abiUr+FHaO2iz3BvODX3EHdzur4BMpo/KZK9JnKw4m4RUa
+L0qSu3RYrcbBW0h/zU+cy41VXKz+WBMJVgpl3TWUJ4AiTLrfQHzDNLvEXssyukkd
+t3xocK2DAbDh6IMBriCDFsogXcLAuEQmPiuXZmj7fEtdFqymdCuFDijqT7GNCHNq
+toCH4ajwUlvtjWbutwAUEl+o4Hq91nQqyZfKRhHu6Q43fLXyqQzHdDFKn041J7+f
+5bxgb3TGihobUYBNX2cGRgJBXl36fn1E+PlhFIBk7e8/09ZmF+oQaP6eU1n+jbkC
+S2BSNRO2+Cvnnylp7XTrj88QUyNv+hqiSC3lkmWoyE7IbP7LphW0K0J8h0t70P0t
+yg+7/HG1m/AhJxSSrBqUXtHdgJeCBoLjOZgRzdNccDS4vzJVId8hsZX17und9Xmg
+UCuHgLwrF+69vqD4HgVBWhFlh/BawSwgxOmih/VskGPoVIObtyxCqKqflPoEiAYT
+DtF0S6fWKk0Ko+BfCaPTg548QecBuu3uo4DO0XOu3GaYAraV9Sn2VkoJYXTDF+ny
+lv5+dRw+cY3c7UVgg41kd7Tq1Hbhuuv/IFmIg1yR1qY0gSGuLOjEYKjooa4cIblB
+AE63sGvm4y81n9AChloTq4x3NabubgLpcr8GCFuSUiDz+zwHiiY=
+=tY5t
+-----END PGP SIGNATURE-----
+--=-=-=--
