@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C7FC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6E4C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA83218AD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36774218AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R9anAuH0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KJQqtsxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbfDYHJn (ORCPT
+        id S1730064AbfDYHKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:09:43 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43495 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbfDYHJn (ORCPT
+        Thu, 25 Apr 2019 03:10:51 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38974 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbfDYHKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:09:43 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k2so4991313lje.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 00:09:42 -0700 (PDT)
+        Thu, 25 Apr 2019 03:10:51 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l7so19250004ljg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 00:10:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=k/L2wknJxv6J3HhquDS95slc5Q003Es6Yvja4wKDWL4=;
-        b=R9anAuH03YEokzCL95yrjGWJYldsVyIg8C0oQWh1sHOfaGOt2JaZb4NYRl3sXp9kKC
-         tc3z74UU6z4qVj274Wo5ruP6chbMT4NKrJauvBXUqKdGDkbWHofpxviCPYta9RU2lrV5
-         1CIIUVKHoCyTgWoOZFCotMyBHUafriF1MePRnpGtd3VUKXDr3vrYnaO1gOhjug2ccVCJ
-         bVas9m/WlSzCCrod8HFTJysU/Zf1RU/ithD69GwGRCyB2Lv5E9m+Ra9aOtvwMAMz+dZ9
-         Vs/kzkTbKKKR3TLui4/a+a3Bd8+XWgytjXwiDGtXXdu5+cAp6+dTMWfxi+YurURbx5lq
-         DMyg==
+        bh=AyBXHdsRDXpqiQ1wImOgmhvmQy1dJwW8LYuF8EyisPw=;
+        b=KJQqtsxHQISphq4uUoQ0YwQpBaHkBHKjvZq8ja8JolhAGzd78ZOZd6lXskoppuTsPF
+         YIZdPepXfD0ev8v3jF20QNaoEpHwNMiyFNlmX7SX4p/wDEc9tZBbXKykqWZaHRZckVbX
+         k9RVDwgey4TjsgrLTBCp3LPFqF7OOkGZxmaoiLyE+M56g+avo12TqJxfOkk4VCeBtE9U
+         0jkw1DTyAuUcAcU5iFJBsJUXNMiuDk7N7qZStX0PGToql99Pkx8YuyqVfA7ngM8d0nbh
+         lybONcpCNLDaGzYICpGxKbtQ3ECdRj2S5zGCZCthWHN6WPJAOlKElF68efRmQL8w1Wmf
+         t4ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=k/L2wknJxv6J3HhquDS95slc5Q003Es6Yvja4wKDWL4=;
-        b=TA5Ty50kih30/VpI//FLLPYQ2etGTIkr9nHwHh9bVnRTnz9MSFfD6Rpqh/ht8uCGrs
-         kNNiNJFkRLBfIFTDGDXQ7W8O1tKMplshLdnppcMvpZJy6tOxBzQnROCE7Bm5tJ5yleeC
-         Az3WYcMzB58Jjv7ImP5XOclCTbyimh6SGIFcXkUmRz7uQ01m3os4nGTAEl6aJJWhEO50
-         CeEaV8tbG1OQq/zhRCIc0T+o6ejowDIy0pSLedyvtzZ5/R5IQ9pCJANDJqYZ42pMfEtP
-         3rhq7eIl/WLSyjOUP8fXbnPjzwaE7OfQa02bYKFFVHInF+T49MmzAVUA8yQMhSffcMaW
-         oXug==
-X-Gm-Message-State: APjAAAXJ7YTjyXML1XcSNmVwj7VOIlPEvXje1BJ+hthtgPB+1zAqy8Lf
-        mUxoouZiZpmQoMvFbmz0MSj9vQGJ6vm3XqZjePivWg==
-X-Google-Smtp-Source: APXvYqw32Pu6FHrS9T+i/2TjYtQ+otk6j1fgJSWEE8eWoDYL5B9OxQ1m0MPz6dJNjutCAvQFfvzUS5miNJ7mQ/VqIw8=
-X-Received: by 2002:a2e:960b:: with SMTP id v11mr19623310ljh.135.1556176181632;
- Thu, 25 Apr 2019 00:09:41 -0700 (PDT)
+        bh=AyBXHdsRDXpqiQ1wImOgmhvmQy1dJwW8LYuF8EyisPw=;
+        b=KEvwJ/33Tk9HDN+g+PIir51dki2XsLo04SJnk6/bkFgzuX8NcKvqgUHF26kqes0/m0
+         xf8+T/BHNTKq9g1jomhLnFQA3FpHqDE3DNT9bubukYaxUCZLwOSle5MX33fiIWNrjwad
+         wUhQ1o+59WexSZ1qpaST9orQNSK64TYiUxOJ4+/wmdZ+ctwzQw8l4AVe654reJ2I1Yil
+         R4fOnIWfYOFW8GkgNWBARq34HF2ShqLW+ygR0E5DCWzBUl3Qjc4lGBB/PSjl3ryauAY8
+         xcbK+6zVDAyCezkJcWUH9bUmJl+OV2iHwCHPrnNEAY32yN5Zfa9PFLQ6vgIbhtRXOg/+
+         gyHQ==
+X-Gm-Message-State: APjAAAX9xK0xAjPu07D5ps7eEHrXUuyAXnLS0I4v5gSKCjDdTjoTyiZS
+        w3Krcbtbyas5pEPRhByHYw62/4iHeAXj7fXwdZON0w==
+X-Google-Smtp-Source: APXvYqyX6nuRgUTdqSUMq0wPF94YKtUuYkoyJkIFqUAr5E10IBWxL2Q7lCgAl196OfDrlxbxUSAGFZR+YxZqX4w1fUE=
+X-Received: by 2002:a2e:5056:: with SMTP id v22mr9937717ljd.153.1556176249185;
+ Thu, 25 Apr 2019 00:10:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190424120224.22660-1-manivannan.sadhasivam@linaro.org> <20190424120224.22660-5-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20190424120224.22660-5-manivannan.sadhasivam@linaro.org>
+References: <20190424120224.22660-1-manivannan.sadhasivam@linaro.org> <20190424120224.22660-6-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190424120224.22660-6-manivannan.sadhasivam@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 25 Apr 2019 09:09:28 +0200
-Message-ID: <CACRpkdZJweCPs096r6LJJTUSmPYViPDV_rBJ8NWbHzx96xEfsw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] pinctrl: Add pinctrl support for BM1880 SoC
+Date:   Thu, 25 Apr 2019 09:10:37 +0200
+Message-ID: <CACRpkdaM6HsBWNGikAG-KFWWJFOtejZV4n+KWVQngdg-U6rNUg@mail.gmail.com>
+Subject: Re: [PATCH 5/5] MAINTAINERS: Add entry for BM1880 pinctrl
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
@@ -74,56 +74,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Wed, Apr 24, 2019 at 2:03 PM Manivannan Sadhasivam
 <manivannan.sadhasivam@linaro.org> wrote:
 
-> Add pinctrl support for Bitmain BM1880 SoC. The driver only handles
-> pinmuxing as the SoC is not capable of handling pinconf.
+> Add MAINTAINERS entry for Bitmain BM1880 SoC pinctrl.
 >
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Patch applied, because there is no reason to hold back this clean
-and important infrastructure for the platform. Minor nits can be
-considered for follow-up patches.
-
-> +config PINCTRL_BM1880
-> +       bool "Bitmain BM1880 Pinctrl driver"
-> +       depends on ARCH_BITMAIN
-
-Could we do:
-
-depends on ARCH_BITMAIN || COMPILE_TEST
-
-to get some compiler coverage?
-
-> +       select PINMUX
-> +       help
-> +         Pinctrl driver for Bitmain BM1880 SoC.
-
-I think the platform always want this driver enabled, so I would either
-select it from arch/arm/mach-foo/Kconfig or add a row like this:
-
-default ARCH_BITMAIN
-
-Either defaulting it to 'y'.
-
-> +       F_nand, F_spi, F_emmc, F_sdio, F_eth0, F_pwm0, F_pwm1, F_pwm2,
-> +       F_pwm3, F_pwm4, F_pwm5, F_pwm6, F_pwm7, F_pwm8, F_pwm9, F_pwm10,
-> +       F_pwm11, F_pwm12, F_pwm13, F_pwm14, F_pwm15, F_pwm16, F_pwm17,
-> +       F_pwm18, F_pwm19, F_pwm20, F_pwm21, F_pwm22, F_pwm23, F_pwm24,
-> +       F_pwm25, F_pwm26, F_pwm27, F_pwm28, F_pwm29, F_pwm30, F_pwm31,
-> +       F_pwm32, F_pwm33, F_pwm34, F_pwm35, F_pwm36, F_pwm37, F_i2c0, F_i2c1,
-
-
-Wow 38 individual PWMs. This platform must really have good use for PWM.
-I wonder why they hardcoded so many of them into the hardware...
-
-> +static int __init bm1880_pinctrl_init(void)
-> +{
-> +       return platform_driver_register(&bm1880_pinctrl_driver);
-> +}
-> +arch_initcall(bm1880_pinctrl_init);
-
-driver_initcall() also known as module_builtin_driver() doesn't work?
-
-Do you plan to add GPIO (and interrupts) and pin config to this driver as well?
+Patch applied.
 
 Yours,
 Linus Walleij
