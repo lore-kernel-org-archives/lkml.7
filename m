@@ -7,61 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6B7C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D73C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0552077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3133D20717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220415;
-	bh=8/UL2SzB5dfTGCOYMEwzw+35N9x4hjGA99v69n3xvQU=;
+	s=default; t=1556220418;
+	bh=0VC3POMpamyfDyUqD+EWGGtVBFOxCNwz9mGQpbpgHOA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=NW/FcM/hJuQMtkIfO1gQiW9CDs8nwmWkvUnOwTDFCvn5yo5lnHEg0h4o4OsEapCw4
-	 iVI/qErEsm0L5sOi3TtzmdX9Mq1j7b7yJtPQksbqzxdnSe5BzL5BhvNsa+qWiUMnW4
-	 Z+iNBKuBGQtiWMJPt9tuhl8V33V09whLBZCR0WLU=
+	b=YJAUlQClppukuix3WmD/M2HJaUs9h5t3NRSka8xfaoenO/OSWG2p9hqV71eTnt3wJ
+	 toZFC0MpNjAMIkLCGSxSOpj7DVsJiTlvBYMf23rblLzjejTaAyxVh+RFlAqe5TQL6N
+	 acAd3D8eBVZaeTFoAWHOgTWfC+jKe5gnR4hA6tk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730674AbfDYT0y (ORCPT
+        id S1730731AbfDYT04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:26:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53088 "EHLO
+        Thu, 25 Apr 2019 15:26:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53174 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730113AbfDYT0x (ORCPT
+        with ESMTP id S1730113AbfDYT0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:26:53 -0400
+        Thu, 25 Apr 2019 15:26:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=yfFCeq4yV0ETcpTbhXvGa9QGBb+TApD4rEysij+3cPs=; b=Ei+E8rHnrDQm
-        JZ9CLSk20Im7G2Y2mw0TREJ2NP0fhKvnn6h2FhhoCcsuvHp4qLu14/DRq+A13u/16ImoW2MxAovfF
-        ylV2ytvIhwXikcGPl8I73+yYx2X8HCd0rSNs9+Ypvg7AvtHpuXxn9V669Ceoay5VwglfI58Dmyzo1
-        qJ0H0=;
+        List-Archive; bh=Ujin8fPqiBYO8fG0iJPxqJkdDmUEfnPunS2eRUnJRt4=; b=l00VfSMJdDnb
+        EtPO8GNXvA8wh7CiU48RLYEOAFUDxWRAflWZqa/2ndHcUPSrcNcmJ3ENqYj2nKFOeRLoN/EPQwSvP
+        GTEnuY7QLOHNP6OuASEBrZ5KM8YWtfBbqUjHGr9EjCevzxQDkHvXhsMpbg5pDoHwxMWWV/4ulx18x
+        xxguU=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJk0v-0004dC-4I; Thu, 25 Apr 2019 19:26:33 +0000
+        id 1hJk11-0004es-4v; Thu, 25 Apr 2019 19:26:39 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id C58A7441D56; Thu, 25 Apr 2019 20:26:29 +0100 (BST)
+        id 36C8E441D3D; Thu, 25 Apr 2019 20:26:38 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Fabien Dessenne <fabien.dessenne@st.com>
-Cc:     Alexandre@sirena.org.uk, alsa-devel@alsa-project.org,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: stm32: i2s: return the get_irq error" to the asoc tree
-In-Reply-To: <1556119724-9873-1-git-send-email-fabien.dessenne@st.com>
+To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org, dwmw2@infradead.org,
+        kbuild test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, marek.vasut@gmail.com,
+        Mark Brown <broonie@kernel.org>, michals@xilinx.com,
+        nagasuresh12@gmail.com, richard@nod.at, vigneshr@ti.com
+Subject: Applied "spi: spi-mem: zynq-qspi: Fix build error on architectures missing readsl/writesl" to the spi tree
+In-Reply-To: <1555918009-13172-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192629.C58A7441D56@finisterre.ee.mobilebroadband>
-Date:   Thu, 25 Apr 2019 20:26:29 +0100 (BST)
+Message-Id: <20190425192638.36C8E441D3D@finisterre.ee.mobilebroadband>
+Date:   Thu, 25 Apr 2019 20:26:38 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: i2s: return the get_irq error
+   spi: spi-mem: zynq-qspi: Fix build error on architectures missing readsl/writesl
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -94,36 +90,49 @@ to this mail.
 Thanks,
 Mark
 
-From 0bbf4084e0cfbbbff8673f3b9867778d5d4b1d6f Mon Sep 17 00:00:00 2001
-From: Fabien Dessenne <fabien.dessenne@st.com>
-Date: Wed, 24 Apr 2019 17:28:44 +0200
-Subject: [PATCH] ASoC: stm32: i2s: return the get_irq error
+From 2a2dd8cafc06d72a6ad12d9726c9e514839a82bf Mon Sep 17 00:00:00 2001
+From: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Date: Mon, 22 Apr 2019 12:56:49 +0530
+Subject: [PATCH] spi: spi-mem: zynq-qspi: Fix build error on architectures
+ missing readsl/writesl
 
-During probe, return the "get_irq" error value instead of -ENOENT. This
-allows the driver to be deferred probed if needed.
+Alpha and some of the architectures are missing readsl/writesl functions.
+so the zynq-qspi driver won't be able to build on these arches. hence use
+ioread32_rep()/iowrite32_rep() instead of readsl()/writesl().
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_i2s.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/spi/spi-zynq-qspi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
-index 8968458eec62..e707d28cb203 100644
---- a/sound/soc/stm/stm32_i2s.c
-+++ b/sound/soc/stm/stm32_i2s.c
-@@ -845,8 +845,9 @@ static int stm32_i2s_parse_dt(struct platform_device *pdev,
- 	/* Get irqs */
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
--		dev_err(&pdev->dev, "no irq for node %s\n", pdev->name);
--		return -ENOENT;
-+		if (irq != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "no irq for node %s\n", pdev->name);
-+		return irq;
- 	}
+diff --git a/drivers/spi/spi-zynq-qspi.c b/drivers/spi/spi-zynq-qspi.c
+index 8079d0062d03..c6bee67decb5 100644
+--- a/drivers/spi/spi-zynq-qspi.c
++++ b/drivers/spi/spi-zynq-qspi.c
+@@ -407,8 +407,8 @@ static void zynq_qspi_write_op(struct zynq_qspi *xqspi, int txcount,
+ 		count = txcount;
  
- 	ret = devm_request_irq(&pdev->dev, irq, stm32_i2s_isr, IRQF_ONESHOT,
+ 	if (xqspi->txbuf) {
+-		writesl(xqspi->regs + ZYNQ_QSPI_TXD_00_00_OFFSET,
+-			xqspi->txbuf, count);
++		iowrite32_rep(xqspi->regs + ZYNQ_QSPI_TXD_00_00_OFFSET,
++			      xqspi->txbuf, count);
+ 		xqspi->txbuf += count * 4;
+ 	} else {
+ 		for (k = 0; k < count; k++)
+@@ -433,8 +433,8 @@ static void zynq_qspi_read_op(struct zynq_qspi *xqspi, int rxcount)
+ 	if (count > rxcount)
+ 		count = rxcount;
+ 	if (xqspi->rxbuf) {
+-		readsl(xqspi->regs + ZYNQ_QSPI_RXD_OFFSET,
+-		       xqspi->rxbuf, count);
++		ioread32_rep(xqspi->regs + ZYNQ_QSPI_RXD_OFFSET,
++			     xqspi->rxbuf, count);
+ 		xqspi->rxbuf += count * 4;
+ 	} else {
+ 		for (k = 0; k < count; k++)
 -- 
 2.20.1
 
