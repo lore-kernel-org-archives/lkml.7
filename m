@@ -2,146 +2,78 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB990C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E244C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFEDA206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:47:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556221640;
-	bh=rbgSt1Z/AZYaF31m0DDwCoq42ppzgpseqxIMx2mDntk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ba0AqctW1lvNoWzLKzDKrKErikbH/0PkMyDrnmZdIlnJgnp/jBCDgqetkMWUcuJRC
-	 /HIN8+dHzFF1VOvDIxzGDQf8Rh0lO0e+JO0RqcJjr8Kk8zHdfvDmXDn1+6gKcmehU9
-	 l5VDJV67UB1+DKTfG0NgWFIleCACvVXiJSXzqGEE=
+	by mail.kernel.org (Postfix) with ESMTP id 35681206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VK9BPAw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387574AbfDYTrT (ORCPT
+        id S1728035AbfDYTsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:47:19 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41659 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfDYTrT (ORCPT
+        Thu, 25 Apr 2019 15:48:42 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55216 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfDYTsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:47:19 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c12so998010wrt.8;
-        Thu, 25 Apr 2019 12:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ydDrHuDhZXJBmgP1xmnm9CGqwfa2HZ/by3+G5Gc/qz8=;
-        b=FQdjsNNesEsS+R16FOsavmXeWEvpkdaR8uvYQPZhi5Fguc4QyUht7xG4qkcysn0ZTC
-         E1MYLGYj+P8Cvu5r472c5/ZuiCA0SpOSjrMwUzIsBHG3eYdLYiwhhv0eaToYzInEs7dn
-         JWPvAvLHCEaBR71XfJluuTyaBqYC60oYg+ZDILBDt2AwHQcMqPHLkgSVEk8aPEdoj+AA
-         E1UdAGKxpV+HAIePZ89lsNl85sTx6fGsSexiJ4sswSboxg9Lg8pkwuaP0B+jJa1QmwUp
-         e+s8J2wRJo4kMW79Fh2CrH9WzevN+RGZlxJl15hj1HUhnDqKA1XpyXNnLRG6ihZHWWaV
-         g+XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ydDrHuDhZXJBmgP1xmnm9CGqwfa2HZ/by3+G5Gc/qz8=;
-        b=KAtyW51e3fW2sMDnEXNkEHx4jZqINP808RAmapxvXcZANziFj2Hzs5AqYFwcQ+b3Ct
-         ts3Bm0Cf715lZmPa5hhzjsmxHrapIlW7Iooi4BcywFZm2sMnVFX9Hb4soEAxTG1dkmJ6
-         0VdBL9qdMXNWeA+AtaQwB1QWQe28OWmnoid4soPgABM8gBGCMb+Zhd+sut0VIp/+x3Up
-         6gj3HlpKAs1uol05i5pFmG0MVhN72GXFcef8AEo66k54pKYIAzuDrphKNL4NC362uKet
-         jhRVJSuyGYQGPseIprEWEGz4BdxEvyki9cpSwWDRBdGSwxQ2XqzvtCY5Ihk43BGqeZRw
-         Tgfg==
-X-Gm-Message-State: APjAAAW1vuoaCHwcfz7RsB4//ua4/y+yNjJeZCFGjgfJQOq0n4A1T03I
-        +IxD1+7z0qD9CH33GaKdz1g=
-X-Google-Smtp-Source: APXvYqwh0niotys+kP44J79XSppHEpypwWfa7yKREdp/DHiSyfVh9/akqrFbPU64RzOVHr4z7vnDfQ==
-X-Received: by 2002:adf:dc83:: with SMTP id r3mr8453910wrj.179.1556221637279;
-        Thu, 25 Apr 2019 12:47:17 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id l21sm18779718wme.4.2019.04.25.12.47.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 12:47:16 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 21:47:14 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v8 05/15] x86/msr-index: Define MSR_IA32_CORE_CAPABILITY
- and split lock detection bit
-Message-ID: <20190425194714.GA58719@gmail.com>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
- <1556134382-58814-6-git-send-email-fenghua.yu@intel.com>
- <20190425054511.GA40105@gmail.com>
- <20190425190148.GA64477@romley-ivt3.sc.intel.com>
+        Thu, 25 Apr 2019 15:48:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gSGV6pj1xTOJsvQqk01AL/unLk9JzTaCItBvbXk2Ytg=; b=VK9BPAw2Zil3nZ4/sJgXS/pWJ
+        emi0uLXCg/hPYvDVFdGantn9QxL9TFSjVkC8IbZKgwN06J/B9mDxKnz6dznzKUIwm/LV7qcaQcyML
+        c9V2n995g5gpL0/Vy1iXw5jFJgUUbHwmP+48z9RF3IcPcerPssU8moR0xz5AhM0MwhnNzdgwrNx6u
+        EdjL0ZCBoJGYLlP58oRzaDHh1KhHMVzAlf/Rj8xgl1BQYK0nNEMhOVEcjFC7GyC/UIZdO+UYDeVv/
+        COBai+WWOrhT1WengCeM1fZKLRxa8gWsxsIMrwSwkNijojd/RUg+jhPQszx9zivAU1oFA1xFpgU6f
+        N2u10LzFw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJkMC-0001VJ-PL; Thu, 25 Apr 2019 19:48:33 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 85E3729C22B12; Thu, 25 Apr 2019 21:48:31 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 21:48:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yuyang Du <duyuyang@gmail.com>
+Cc:     will.deacon@arm.com, mingo@kernel.org, bvanassche@acm.org,
+        ming.lei@redhat.com, frederic@kernel.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 20/28] locking/lockdep: Refactorize check_noncircular and
+ check_redundant
+Message-ID: <20190425194831.GV12232@hirez.programming.kicks-ass.net>
+References: <20190424101934.51535-1-duyuyang@gmail.com>
+ <20190424101934.51535-21-duyuyang@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425190148.GA64477@romley-ivt3.sc.intel.com>
+In-Reply-To: <20190424101934.51535-21-duyuyang@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 24, 2019 at 06:19:26PM +0800, Yuyang Du wrote:
+> These two functions now handle different check results themselves. A new
+> check_path function is added to check whether there is a path in the
+> dependency graph. No functional change.
 
-* Fenghua Yu <fenghua.yu@intel.com> wrote:
+This looks good, however I completely forgot we still had the redundant
+thing.
 
-> On Thu, Apr 25, 2019 at 07:45:11AM +0200, Ingo Molnar wrote:
-> > 
-> > * Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > 
-> > > A new MSR_IA32_CORE_CAPABILITY (0xcf) is defined. Each bit in the MSR
-> > > enumerates a model specific feature. Currently bit 5 enumerates split
-> > > lock detection. When bit 5 is 1, split lock detection is supported.
-> > > When the bit is 0, split lock detection is not supported.
-> > > 
-> > > Please check the latest Intel 64 and IA-32 Architectures Software
-> > > Developer's Manual for more detailed information on the MSR and the
-> > > split lock detection bit.
-> > > 
-> > > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> > > ---
-> > >  arch/x86/include/asm/msr-index.h | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> > > index ca5bc0eacb95..f65ef6f783d2 100644
-> > > --- a/arch/x86/include/asm/msr-index.h
-> > > +++ b/arch/x86/include/asm/msr-index.h
-> > > @@ -59,6 +59,9 @@
-> > >  #define MSR_PLATFORM_INFO_CPUID_FAULT_BIT	31
-> > >  #define MSR_PLATFORM_INFO_CPUID_FAULT		BIT_ULL(MSR_PLATFORM_INFO_CPUID_FAULT_BIT)
-> > >  
-> > > +#define MSR_IA32_CORE_CAPABILITY	0x000000cf
-> > > +#define CORE_CAP_SPLIT_LOCK_DETECT	BIT(5)     /* Detect split lock */
-> > 
-> > Please don't put comments into definitions.
-> 
-> I'll remove the comment and change definitions of the MSR and the split lock
-> detection bit as following:
-> 
-> +#define MSR_IA32_CORE_CAPABILITY                       0x000000cf
-> +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT 5
-> +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT)
-> 
-> Are these right changes?
+It was added for cross-release (which has since been reverted) which
+would generate a lot of redundant links (IIRC) but having it makes the
+reports more convoluted -- basically, if we had an A-B-C relation, then
+A-C will not be added to the graph because it is already covered. This
+then means any report will include B, even though a shorter cycle might
+have been possible.
 
-I suspect it could be shortened to CORE_CAP as you (partly) did it 
-originally.
-
-Thanks,
-
-	Ingo
+Maybe we should make the whole redundant check depend on LOCKDEP_SMALL
+for now.
