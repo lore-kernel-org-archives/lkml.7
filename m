@@ -2,171 +2,117 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB851C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E82AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B76DA217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:52:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOIrPSjE"
+	by mail.kernel.org (Postfix) with ESMTP id 11FC0218AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:52:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389066AbfDYDwi (ORCPT
+        id S2389088AbfDYDwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 23:52:38 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34332 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388848AbfDYDwi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 23:52:38 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b3so10425005pfd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 20:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JyMRC4bQxmeTecRIhQz8MaDeN6OKQdFakSOWHZxzJ1I=;
-        b=cOIrPSjEugBZ2GkQWM5NvKDRb6VzYjjJXiTvqE7Lsj7qzmJrDUYKKOEMkhsTll5D3n
-         OWIoZViz4EmUMQ5aUsOAc8nsW82yqxpAikMsYq4ieYF9LDDH25eNAKcsn4GXQk5j5gLa
-         ettWTERzZdcK+TimJQX+kzQwwt4KB0A8ijQKrzfzNkwpA6AhHp5X5PxGqpoyvEfENE+v
-         8slyTFyyrmHlV+NzId7T4kgFWoOSqg4EFtIZyFIu68jEMOnwCQ3icyK17oL83oOAfSSt
-         1HMPOlHY5euAbs/Cde6b+ndkQM4i+qw+H0xKP8pNQWIQ7ldmT/vepFRKm9OuXTdslfyn
-         4lQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JyMRC4bQxmeTecRIhQz8MaDeN6OKQdFakSOWHZxzJ1I=;
-        b=Cen5JC+Gc9oh4H8og2nV5Yj/qQg1L4Vub7AXd144qb5XLHy1Ob3BY+xH0UXVcpC+M4
-         WEmPm9NONMvdllxjTuIZQcIHgzZRhKgqH9bfxv2lOyc41J5rr/v4oOVgcbXBAP81/S7I
-         sSlLxwnb1nYdWwitUr8F/MHSpukaro0xrQUrQtrGdXpXGixu5X369402GnjVMpc8iAjV
-         QusOwEQtLUWAAi53O9ECdtqL0SaOSuug+dzb5eXZ5uiBdLj9N8y5EuIXtmwvEeAKlVeH
-         hSztBtrQP7hiVjW3dM+qtXH5WHg0VVjsDzMJEWLpJVeW8tGuqWJjbkJ1v+CgHLSKlsv0
-         EQWQ==
-X-Gm-Message-State: APjAAAXjwpeXzXzlLWvERh6TXFNUt8Richvkn5VdQ0YCshghvFYN5riJ
-        NK4Yk688LyreIUg5VvtrDak=
-X-Google-Smtp-Source: APXvYqyVhlqsD0Ke74YRA1J4/JYML+7yMMUUio3ArmBN6WffuxeCbjQ8TTRe9vBIiFtFTrVX8a/szg==
-X-Received: by 2002:a63:4c45:: with SMTP id m5mr26240163pgl.78.1556164357455;
-        Wed, 24 Apr 2019 20:52:37 -0700 (PDT)
-Received: from localhost ([175.223.37.83])
-        by smtp.gmail.com with ESMTPSA id p17sm27687094pfn.157.2019.04.24.20.52.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 20:52:36 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 12:52:33 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC][PATCH 1/2] printk: lock console_sem before we unregister
- boot consoles
-Message-ID: <20190425035233.GA8532@jagdpanzerIV>
-References: <20190423062511.1118-1-sergey.senozhatsky@gmail.com>
- <20190423062511.1118-2-sergey.senozhatsky@gmail.com>
- <20190424144924.lw5sgl7qa2yrpxsj@pathway.suse.cz>
+        Wed, 24 Apr 2019 23:52:42 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56116 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388848AbfDYDwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 23:52:40 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E0D1E4C7E82AEEA99D38;
+        Thu, 25 Apr 2019 11:52:36 +0800 (CST)
+Received: from [127.0.0.1] (10.177.19.210) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Apr 2019
+ 11:52:29 +0800
+Subject: Re: [PATCH] sched: fix a potential divide error
+To:     Peter Zijlstra <peterz@infradead.org>
+References: <20190420083416.170446-1-xiexiuqi@huawei.com>
+ <20190423184458.GW4038@hirez.programming.kicks-ass.net>
+CC:     <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <cj.chengjian@huawei.com>
+From:   Xie XiuQi <xiexiuqi@huawei.com>
+Message-ID: <14cdc45e-7a6f-5e1f-e877-10503180ac4e@huawei.com>
+Date:   Thu, 25 Apr 2019 11:52:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424144924.lw5sgl7qa2yrpxsj@pathway.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190423184458.GW4038@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.19.210]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (04/24/19 16:49), Petr Mladek wrote:
-> > +	if (bcon && (newcon->flags & (CON_CONSDEV|CON_BOOT)) == CON_CONSDEV) {
-> > +		console_lock();
-> > +		/*
-> > +		 * We need to iterate through all boot consoles, to make
-> >  		 * sure we print everything out, before we unregister them.
-> >  		 */
+Hi Peter,
+
+Thanks for your comments.
+
+On 2019/4/24 2:44, Peter Zijlstra wrote:
+> On Sat, Apr 20, 2019 at 04:34:16PM +0800, Xie XiuQi wrote:
+>> We meet a divide error on 3.10.0 kernel, the error message is bellow:
 > 
-> I wondered if moving the console locking could break the above
-> statement.
+> That is a _realllllllyyyy_ old kernel. I would urge you to upgrade.
+
+I will.
+
 > 
-> It seems that the comment has been invalid since the commit
-> 8259cf4342029aad37660e ("printk: Ensure that "console
-> enabled" messages are printed on the console").
-
-That's very interesting. Yes, you are right, the comment is a
-leftover. printk used to iterate consoles twice before
-8259cf4342029aad37660e
-
-               /* we need to iterate through twice, to make sure we print
-                * everything out, before we unregister the console(s)
-                */
-               printk(KERN_INFO "console handover:");
-               for_each_console(bcon)
-                       printk("boot [%s%d] ", bcon->name, bcon->index);
-
-               printk(" -> real [%s%d]\n", newcon->name, newcon->index);
-               for_each_console(bcon)
-                       unregister_console(bcon);
-
-But 8259cf4342029aad37660e has changed that and has made comment
-invalid.
-
-> Could we remove it in this patch? It touches it indirectly anyway.
-
-Sure we can.
-
-We also can take extra care of pr_info("%sconsole [%s%d] enabled\n".
-Right now we do
-
-	...
-	console_unlock();
-	console_sysfs_notify();
-
-	pr_info("%sconsole [%s%d] enabled\n",....
-
-
-But we can simply move that pr_info() a bit up:
-
-	pr_info("%sconsole [%s%d] enabled\n",
-	console_unlock();
-	console_sysfs_notify();
-
-
-So the message will be printed on all consoles.
-
----
-
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index c2bccf58d03e..981eb6c27cdb 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2813,8 +2813,6 @@ void register_console(struct console *newcon)
- 		exclusive_console_stop_seq = console_seq;
- 		logbuf_unlock_irqrestore(flags);
- 	}
--	console_unlock();
--	console_sysfs_notify();
- 
- 	/*
- 	 * By unregistering the bootconsoles after we enable the real console
-@@ -2827,6 +2825,9 @@ void register_console(struct console *newcon)
- 		(newcon->flags & CON_BOOT) ? "boot" : "" ,
- 		newcon->name, newcon->index);
- 
-+	console_unlock();
-+	console_sysfs_notify();
-+
- 	if (keep_bootcon)
- 		return;
- 
----
-
-> Otherwise, the patch looks fine to me:
+>> [499992.287996] divide error: 0000 [#1] SMP
 > 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
+>> sched_clock_cpu may not be consistent bwtwen cpus. If a task migrate
+>> to another cpu, the se.exec_start was set to that cpu's rq_clock_task
+>> by update_stats_curr_start(). Which may not be monotonic.
+>>
+>> update_stats_curr_start
+>>   <- set_next_entity
+>>      <- set_curr_task_fair
+>>         <- sched_move_task
+> 
+> That is not in fact a cross-cpu migration path. But I see the point.
+> Also many migration paths do in fact preserve monotonicity, even when
+> the clock is busted, but you're right, not all of them.
+> 
+>> So, if  now - p->last_task_numa_placement is -1, then (*period + 1) is
+>> 0, and divide error was triggerred at the div operation:
+>>   task_numa_placement:
+>>     runtime = numa_get_avg_runtime(p, &period);
+>>     f_weight = div64_u64(runtime << 16, period + 1);  // divide error here
+>>
+>> In this patch, we make sure period is not less than 0 to avoid this
+>> divide error.
+>>
+>> Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+>> Cc: stable@vger.kernel.org
+>> ---
+>>  kernel/sched/fair.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 40bd1e27b1b7..f2abb258fc85 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -2007,6 +2007,10 @@ static u64 numa_get_avg_runtime(struct task_struct *p, u64 *period)
+>>  	if (p->last_task_numa_placement) {
+>>  		delta = runtime - p->last_sum_exec_runtime;
+>>  		*period = now - p->last_task_numa_placement;
+>> +
+>> +		/* Avoid backward, and prevent potential divide error */
+>> +		if ((s64)*period < 0)
+>> +			*period = 0;
+>>  	} else {
+>>  		delta = p->se.avg.load_sum;
+>>  		*period = LOAD_AVG_MAX;
+> 
+> Yeah, I suppose that is indeed correct.
+> 
+> I'll try and come up with a better Changelog tomorrow.
 
-Thanks!
+Thanks.
 
-	-ss
+-- 
+Thanks,
+Xie XiuQi
+
