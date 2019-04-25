@@ -2,163 +2,353 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0807C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED36C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF1B206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:46:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FJqIQTcn"
+	by mail.kernel.org (Postfix) with ESMTP id 48483206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfDYQqr (ORCPT
+        id S1726622AbfDYQtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:46:47 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41464 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfDYQqr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:46:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 188so184124pfd.8
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=p/IQSSk/LXWTRzdszIj6+hfd6gppMjKJokTDca/mb6g=;
-        b=FJqIQTcnUv/bBkHre6QVurdXsLIzsGHPiHhQsfrtMnIiTxT30TYHcQlPthaIMuMxzO
-         YUQEP4wuoJCJCJvwTIB+739EKOXA+mo+YttjPV7ugw5XvTRHLN01UXMaDqaI1hp/w85W
-         kjAGW6Ed4poW9L2fWG1bwFvdi01vxVKybb3lI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p/IQSSk/LXWTRzdszIj6+hfd6gppMjKJokTDca/mb6g=;
-        b=fGA+awAnCS7iqWUyXoP93QtN8uVKjfghlE2rKkyTtY2rwsh3t2X53NzDrflwkON6/C
-         Ei3sR5CuWVFzRZFOBIFlCRllXrS90ujelMKmsOM1uFDbCXLQwSNxYRm+Hg6HQtz8mOtF
-         nXhdzDn/AJjJYpmwz8oihRyyQ9E9G5PXTuJYW50nCM0qliK3ysetcyfQog5+q8nzgwSJ
-         5Mo+gg9JBtxiIKMiFeeuw+0rVXXt42cvJDzDd6I0ZYDJGwdTfdSeI1pUw8aibu9+K+YY
-         /tAgtqSvmQB9855Klr8XgoQ183z4D6WGqU06dpFSz38VYZs1HGZd2s3Ab6SCqt/8Y39b
-         +Odw==
-X-Gm-Message-State: APjAAAVureDYFtabP1G3Fhy8cPurpkCmjUhhW7fngYeDohVUM1qB5h8g
-        MZXDplJY9zKxNzZ+FdGRbWOdQA==
-X-Google-Smtp-Source: APXvYqyhpUHLP1UZ+vFp9LZmFFNV0dHmtiDDg8IPR26/GOv9X6L9/jv7yTIrxerJE3qC78EUmyI0Pw==
-X-Received: by 2002:a63:750c:: with SMTP id q12mr38387096pgc.133.1556210806225;
-        Thu, 25 Apr 2019 09:46:46 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id n5sm24764349pgp.80.2019.04.25.09.46.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 09:46:45 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 09:46:44 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Harish Bandi <c-hbandi@codeaurora.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: Re: [PATCH v7 1/2] Bluetooth: hci_qca: Added support for WCN3998
-Message-ID: <20190425164644.GG112750@google.com>
-References: <1556194416-30842-1-git-send-email-c-hbandi@codeaurora.org>
- <1556194416-30842-2-git-send-email-c-hbandi@codeaurora.org>
- <08C6CC93-45C7-468E-AFC3-251507FA678E@holtmann.org>
- <2172b21d6b936c0befca1a608ae297c1@codeaurora.org>
+        Thu, 25 Apr 2019 12:49:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58786 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbfDYQtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 12:49:43 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7CCF93147B24;
+        Thu, 25 Apr 2019 16:49:42 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C48014B4;
+        Thu, 25 Apr 2019 16:49:40 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 25 Apr 2019 18:49:41 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 18:49:39 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/1] rcu/sync: simplify the state machine
+Message-ID: <20190425164939.GB21412@redhat.com>
+References: <20190425164054.GA21309@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2172b21d6b936c0befca1a608ae297c1@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190425164054.GA21309@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 25 Apr 2019 16:49:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 07:10:51PM +0530, Harish Bandi wrote:
-> Hi Marcel,
-> 
-> On 2019-04-25 18:17, Marcel Holtmann wrote:
-> > Hi Harish,
-> > 
-> > > Added new compatible for WCN3998 and corresponding voltage
-> > > and current values to WCN3998 compatible.
-> > > Changed driver code to support WCN3998
-> > > 
-> > > Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-> > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> > > ---
-> > > Changes in V7:
-> > > - Initialized rom_ver to 0 to fix compiler warning
-> > > ---
-> > > drivers/bluetooth/btqca.c   | 12 +++++++++---
-> > > drivers/bluetooth/btqca.h   |  8 +++++++-
-> > > drivers/bluetooth/hci_qca.c | 40
-> > > ++++++++++++++++++++++++++--------------
-> > > 3 files changed, 42 insertions(+), 18 deletions(-)
-> > > 
-> > > diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> > > index 6122685..495a52f 100644
-> > > --- a/drivers/bluetooth/btqca.c
-> > > +++ b/drivers/bluetooth/btqca.c
-> > > @@ -336,7 +336,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t
-> > > baudrate,
-> > > {
-> > > 	struct rome_config config;
-> > > 	int err;
-> > > -	u8 rom_ver;
-> > > +	u8 rom_ver = 0;
-> > 
-> > what is this change for?
-> [Harish] - kbuild test robot gave compiler warning. So initialized.
-> drivers/bluetooth/btqca.c:369:3: warning: 'rom_ver' may be used
-> uninitialized in this function [-Wmaybe-uninitialized]
-> 
-> > 
-> > > 	bt_dev_dbg(hdev, "QCA setup on UART");
-> > > 
-> > > @@ -344,7 +344,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t
-> > > baudrate,
-> > > 
-> > > 	/* Download rampatch file */
-> > > 	config.type = TLV_TYPE_PATCH;
-> > > -	if (soc_type == QCA_WCN3990) {
-> > > +	if (qca_is_wcn399x(soc_type)) {
-> > > 		/* Firmware files to download are based on ROM version.
-> > > 		 * ROM version is derived from last two bytes of soc_ver.
-> > > 		 */
-> > > @@ -365,7 +365,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t
-> > > baudrate,
-> > > 
-> > > 	/* Download NVM configuration */
-> > > 	config.type = TLV_TYPE_NVM;
-> > > -	if (soc_type == QCA_WCN3990)
-> > > +	if (qca_is_wcn399x(soc_type))
-> > > 		snprintf(config.fwname, sizeof(config.fwname),
-> > > 			 "qca/crnv%02x.bin", rom_ver);
-> > > 	else
-> > > @@ -410,6 +410,12 @@ int qca_set_bdaddr(struct hci_dev *hdev, const
-> > > bdaddr_t *bdaddr)
-> > > }
-> > > EXPORT_SYMBOL_GPL(qca_set_bdaddr);
-> > > 
-> > > +bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
-> > > +{
-> > > +	return ((soc_type == QCA_WCN3990) || (soc_type == QCA_WCN3998));
-> > 
-> > no () needed around soc_type = check.
-> 
-> [Harish]  - OK, will change it.
-> > 
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(qca_is_wcn399x);
-> > > +
-> > 
-> > Why is this exported. Make this an inline function in btqca.h.
-> [Harish] - This was used in btqca.c also to check the soc_type
+With this patch rcu_sync has a single state variable and the transition rules
+become really simple:
 
-true, but this is still possible with an inline function in btqca.h.
+	GP_IDLE   - owned by the first rcu_sync_enter() which moves it to
+
+	GP_ENTER  - owned by rcu-callback which moves it to
+
+	GP_PASSED - owned by the last rcu_sync_exit() which moves it to
+
+	GP_EXIT   - and this is the only "nontrivial" state.
+
+		rcu-callback moves it back to GP_IDLE unless another enter()
+		comes before a GP pass.
+
+		If rcu-callback is invoked before the next rcu_sync_exit() it
+		must see gp_count incremented by that enter() and set GP_PASSED.
+
+		Otherwise, if the next rcu_sync_exit() wins the race, it will
+		move it to
+
+	GP_REPLAY - owned by rcu-callback which moves it to GP_EXIT
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ include/linux/rcu_sync.h |   2 -
+ kernel/rcu/sync.c        | 165 +++++++++++++++++++++++++++--------------------
+ 2 files changed, 95 insertions(+), 72 deletions(-)
+
+diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
+index e7ae221..3156a14 100644
+--- a/include/linux/rcu_sync.h
++++ b/include/linux/rcu_sync.h
+@@ -19,7 +19,6 @@ struct rcu_sync {
+ 	int			gp_count;
+ 	wait_queue_head_t	gp_wait;
+ 
+-	int			cb_state;
+ 	struct rcu_head		cb_head;
+ };
+ 
+@@ -47,7 +46,6 @@ extern void rcu_sync_dtor(struct rcu_sync *);
+ 		.gp_state = 0,						\
+ 		.gp_count = 0,						\
+ 		.gp_wait = __WAIT_QUEUE_HEAD_INITIALIZER(name.gp_wait),	\
+-		.cb_state = 0,						\
+ 	}
+ 
+ #define	DEFINE_RCU_SYNC(name)	\
+diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
+index ee427e1..d9f80fc 100644
+--- a/kernel/rcu/sync.c
++++ b/kernel/rcu/sync.c
+@@ -10,15 +10,13 @@
+ #include <linux/rcu_sync.h>
+ #include <linux/sched.h>
+ 
+-enum { GP_IDLE = 0, GP_PENDING, GP_PASSED };
+-enum { CB_IDLE = 0, CB_PENDING, CB_REPLAY };
++enum { GP_IDLE = 0, GP_ENTER, GP_PASSED, GP_EXIT, GP_REPLAY };
+ 
+ #define	rss_lock	gp_wait.lock
+ 
+ /**
+  * rcu_sync_init() - Initialize an rcu_sync structure
+  * @rsp: Pointer to rcu_sync structure to be initialized
+- * @type: Flavor of RCU with which to synchronize rcu_sync structure
+  */
+ void rcu_sync_init(struct rcu_sync *rsp)
+ {
+@@ -41,56 +39,26 @@ void rcu_sync_enter_start(struct rcu_sync *rsp)
+ 	rsp->gp_state = GP_PASSED;
+ }
+ 
+-/**
+- * rcu_sync_enter() - Force readers onto slowpath
+- * @rsp: Pointer to rcu_sync structure to use for synchronization
+- *
+- * This function is used by updaters who need readers to make use of
+- * a slowpath during the update.  After this function returns, all
+- * subsequent calls to rcu_sync_is_idle() will return false, which
+- * tells readers to stay off their fastpaths.  A later call to
+- * rcu_sync_exit() re-enables reader slowpaths.
+- *
+- * When called in isolation, rcu_sync_enter() must wait for a grace
+- * period, however, closely spaced calls to rcu_sync_enter() can
+- * optimize away the grace-period wait via a state machine implemented
+- * by rcu_sync_enter(), rcu_sync_exit(), and rcu_sync_func().
+- */
+-void rcu_sync_enter(struct rcu_sync *rsp)
+-{
+-	bool need_wait, need_sync;
+ 
+-	spin_lock_irq(&rsp->rss_lock);
+-	need_wait = rsp->gp_count++;
+-	need_sync = rsp->gp_state == GP_IDLE;
+-	if (need_sync)
+-		rsp->gp_state = GP_PENDING;
+-	spin_unlock_irq(&rsp->rss_lock);
++static void rcu_sync_func(struct rcu_head *rcu);
+ 
+-	WARN_ON_ONCE(need_wait && need_sync);
+-	if (need_sync) {
+-		synchronize_rcu();
+-		rsp->gp_state = GP_PASSED;
+-		wake_up_all(&rsp->gp_wait);
+-	} else if (need_wait) {
+-		wait_event(rsp->gp_wait, rsp->gp_state == GP_PASSED);
+-	} else {
+-		/*
+-		 * Possible when there's a pending CB from a rcu_sync_exit().
+-		 * Nobody has yet been allowed the 'fast' path and thus we can
+-		 * avoid doing any sync(). The callback will get 'dropped'.
+-		 */
+-		WARN_ON_ONCE(rsp->gp_state != GP_PASSED);
+-	}
++static void rcu_sync_call(struct rcu_sync *rsp)
++{
++	call_rcu(&rsp->cb_head, rcu_sync_func);
+ }
+ 
+ /**
+  * rcu_sync_func() - Callback function managing reader access to fastpath
+  * @rhp: Pointer to rcu_head in rcu_sync structure to use for synchronization
+  *
+- * This function is passed to one of the call_rcu() functions by
++ * This function is passed to call_rcu() function by rcu_sync_enter() and
+  * rcu_sync_exit(), so that it is invoked after a grace period following the
+- * that invocation of rcu_sync_exit().  It takes action based on events that
++ * that invocation of enter/exit.
++ *
++ * If it is called by rcu_sync_enter() it signals that all the readers were
++ * switched onto slow path.
++ *
++ * If it is called by rcu_sync_exit() it takes action based on events that
+  * have taken place in the meantime, so that closely spaced rcu_sync_enter()
+  * and rcu_sync_exit() pairs need not wait for a grace period.
+  *
+@@ -102,40 +70,93 @@ void rcu_sync_enter(struct rcu_sync *rsp)
+  * rcu_sync_exit().  Otherwise, set all state back to idle so that readers
+  * can again use their fastpaths.
+  */
+-static void rcu_sync_func(struct rcu_head *rhp)
++static void rcu_sync_func(struct rcu_head *rcu)
+ {
+-	struct rcu_sync *rsp = container_of(rhp, struct rcu_sync, cb_head);
++	struct rcu_sync *rsp = container_of(rcu, struct rcu_sync, cb_head);
+ 	unsigned long flags;
+ 
+-	WARN_ON_ONCE(rsp->gp_state != GP_PASSED);
+-	WARN_ON_ONCE(rsp->cb_state == CB_IDLE);
++	WARN_ON_ONCE(rsp->gp_state == GP_IDLE);
++	WARN_ON_ONCE(rsp->gp_state == GP_PASSED);
+ 
+ 	spin_lock_irqsave(&rsp->rss_lock, flags);
+ 	if (rsp->gp_count) {
+ 		/*
+-		 * A new rcu_sync_begin() has happened; drop the callback.
++		 * We're at least a GP after the GP_IDLE->GP_ENTER transition.
+ 		 */
+-		rsp->cb_state = CB_IDLE;
+-	} else if (rsp->cb_state == CB_REPLAY) {
++		rsp->gp_state = GP_PASSED;
++		wake_up_locked(&rsp->gp_wait);
++	} else if (rsp->gp_state == GP_REPLAY) {
+ 		/*
+-		 * A new rcu_sync_exit() has happened; requeue the callback
+-		 * to catch a later GP.
++		 * A new rcu_sync_exit() has happened; requeue the callback to
++		 * catch a later GP.
+ 		 */
+-		rsp->cb_state = CB_PENDING;
+-		call_rcu(&rsp->cb_head, rcu_sync_func);
++		rsp->gp_state = GP_EXIT;
++		rcu_sync_call(rsp);
+ 	} else {
+ 		/*
+-		 * We're at least a GP after rcu_sync_exit(); eveybody will now
+-		 * have observed the write side critical section. Let 'em rip!.
++		 * We're at least a GP after the last rcu_sync_exit(); eveybody
++		 * will now have observed the write side critical section.
++		 * Let 'em rip!.
+ 		 */
+-		rsp->cb_state = CB_IDLE;
+ 		rsp->gp_state = GP_IDLE;
+ 	}
+ 	spin_unlock_irqrestore(&rsp->rss_lock, flags);
+ }
+ 
+ /**
+- * rcu_sync_exit() - Allow readers back onto fast patch after grace period
++ * rcu_sync_enter() - Force readers onto slowpath
++ * @rsp: Pointer to rcu_sync structure to use for synchronization
++ *
++ * This function is used by updaters who need readers to make use of
++ * a slowpath during the update.  After this function returns, all
++ * subsequent calls to rcu_sync_is_idle() will return false, which
++ * tells readers to stay off their fastpaths.  A later call to
++ * rcu_sync_exit() re-enables reader slowpaths.
++ *
++ * When called in isolation, rcu_sync_enter() must wait for a grace
++ * period, however, closely spaced calls to rcu_sync_enter() can
++ * optimize away the grace-period wait via a state machine implemented
++ * by rcu_sync_enter(), rcu_sync_exit(), and rcu_sync_func().
++ */
++void rcu_sync_enter(struct rcu_sync *rsp)
++{
++	int gp_state;
++
++	spin_lock_irq(&rsp->rss_lock);
++	gp_state = rsp->gp_state;
++	if (gp_state == GP_IDLE) {
++		rsp->gp_state = GP_ENTER;
++		WARN_ON_ONCE(rsp->gp_count);
++		/*
++		 * Note that we could simply do rcu_sync_call(rsp) here and
++		 * avoid the "if (gp_state == GP_IDLE)" block below.
++		 *
++		 * However, synchronize_rcu() can be faster if rcu_expedited
++		 * or rcu_blocking_is_gp() is true.
++		 *
++		 * Another reason is that we can't wait for rcu callback if
++		 * we are called at early boot time but this shouldn't happen.
++		 */
++	}
++	rsp->gp_count++;
++	spin_unlock_irq(&rsp->rss_lock);
++
++	if (gp_state == GP_IDLE) {
++		/*
++		 * See the comment above, this simply does the "synchronous"
++		 * call_rcu(rcu_sync_func) which does GP_ENTER -> GP_PASSED.
++		 */
++		synchronize_rcu();
++		rcu_sync_func(&rsp->cb_head);
++		/* Not really needed, wait_event() would see GP_PASSED. */
++		return;
++	}
++
++	wait_event(rsp->gp_wait, rsp->gp_state >= GP_PASSED);
++}
++
++/**
++ * rcu_sync_exit() - Allow readers back onto fast path after grace period
+  * @rsp: Pointer to rcu_sync structure to use for synchronization
+  *
+  * This function is used by updaters who have completed, and can therefore
+@@ -146,13 +167,16 @@ static void rcu_sync_func(struct rcu_head *rhp)
+  */
+ void rcu_sync_exit(struct rcu_sync *rsp)
+ {
++	WARN_ON_ONCE(rsp->gp_state == GP_IDLE);
++	WARN_ON_ONCE(rsp->gp_count == 0);
++
+ 	spin_lock_irq(&rsp->rss_lock);
+ 	if (!--rsp->gp_count) {
+-		if (rsp->cb_state == CB_IDLE) {
+-			rsp->cb_state = CB_PENDING;
+-			call_rcu(&rsp->cb_head, rcu_sync_func);
+-		} else if (rsp->cb_state == CB_PENDING) {
+-			rsp->cb_state = CB_REPLAY;
++		if (rsp->gp_state == GP_PASSED) {
++			rsp->gp_state = GP_EXIT;
++			rcu_sync_call(rsp);
++		} else if (rsp->gp_state == GP_EXIT) {
++			rsp->gp_state = GP_REPLAY;
+ 		}
+ 	}
+ 	spin_unlock_irq(&rsp->rss_lock);
+@@ -164,18 +188,19 @@ void rcu_sync_exit(struct rcu_sync *rsp)
+  */
+ void rcu_sync_dtor(struct rcu_sync *rsp)
+ {
+-	int cb_state;
++	int gp_state;
+ 
+ 	WARN_ON_ONCE(rsp->gp_count);
++	WARN_ON_ONCE(rsp->gp_state == GP_PASSED);
+ 
+ 	spin_lock_irq(&rsp->rss_lock);
+-	if (rsp->cb_state == CB_REPLAY)
+-		rsp->cb_state = CB_PENDING;
+-	cb_state = rsp->cb_state;
++	if (rsp->gp_state == GP_REPLAY)
++		rsp->gp_state = GP_EXIT;
++	gp_state = rsp->gp_state;
+ 	spin_unlock_irq(&rsp->rss_lock);
+ 
+-	if (cb_state != CB_IDLE) {
++	if (gp_state != GP_IDLE) {
+ 		rcu_barrier();
+-		WARN_ON_ONCE(rsp->cb_state != CB_IDLE);
++		WARN_ON_ONCE(rsp->gp_state != GP_IDLE);
+ 	}
+ }
+-- 
+2.5.0
+
+
