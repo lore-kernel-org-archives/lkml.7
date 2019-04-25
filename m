@@ -2,129 +2,123 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D15C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1911DC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C379020644
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CC920644
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729670AbfDYMka (ORCPT
+        id S1731276AbfDYMlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:40:30 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20751 "EHLO mga02.intel.com"
+        Thu, 25 Apr 2019 08:41:05 -0400
+Received: from mga07.intel.com ([134.134.136.100]:8990 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbfDYMka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:40:30 -0400
+        id S1725965AbfDYMlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 08:41:05 -0400
 X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 05:40:29 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 05:41:04 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,393,1549958400"; 
-   d="asc'?scan'208";a="138735172"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga006.jf.intel.com with ESMTP; 25 Apr 2019 05:40:22 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Douglas Anderson <dianders@chromium.org>,
-        Minas Harutyunyan <hminas@synopsys.com>, heiko@sntech.de
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Artur Petrosyan <Arthur.Petrosyan@synopsys.com>,
-        amstan@chromium.org, linux-rockchip@lists.infradead.org,
-        William Wu <william.wu@rock-chips.com>,
-        linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Randy Li <ayaka@soulik.info>, zyw@rock-chips.com,
-        mka@chromium.org, ryandcase@chromium.org,
-        Amelie Delaunay <amelie.delaunay@st.com>, jwerner@chromium.org,
-        dinguyen@opensource.altera.com,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 3/5] Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
-In-Reply-To: <20190418001356.124334-4-dianders@chromium.org>
-References: <20190418001356.124334-1-dianders@chromium.org> <20190418001356.124334-4-dianders@chromium.org>
-Date:   Thu, 25 Apr 2019 15:40:18 +0300
-Message-ID: <87pnpas1fx.fsf@linux.intel.com>
+   d="scan'208";a="145753111"
+Received: from shbuild888.sh.intel.com (HELO localhost) ([10.239.147.114])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Apr 2019 05:41:03 -0700
+Date:   Thu, 25 Apr 2019 20:44:55 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH v3] panic: add an option to replay all the printk message
+ in buffer
+Message-ID: <20190425124455.j2c7vwpyve77fuqb@shbuild888>
+References: <1556095872-36838-1-git-send-email-feng.tang@intel.com>
+ <20190425110517.cafkeexdr6r4b25v@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425110517.cafkeexdr6r4b25v@pathway.suse.cz>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Petr,
 
-Douglas Anderson <dianders@chromium.org> writes:
+On Thu, Apr 25, 2019 at 01:05:17PM +0200, Petr Mladek wrote:
+> On Wed 2019-04-24 16:51:12, Feng Tang wrote:
+> > Currently on panic, kernel will lower the loglevel and print out
+> > pending printk msg only with console_flush_on_panic().
+> > 
+> > Add an option for users to configure the "panic_print" to replay
+> > all dmesg in buffer, some of which they may have never seen due
+> > to the loglevel setting, which will help panic debugging .
+> > 
+> > diff --git a/kernel/panic.c b/kernel/panic.c
+> > index b9f004e..b9c0eb3 100644
+> > --- a/kernel/panic.c
+> > +++ b/kernel/panic.c
+> > @@ -53,6 +53,7 @@ int panic_suppress_printk;
+> >  #define PANIC_PRINT_TIMER_INFO		0x00000004
+> >  #define PANIC_PRINT_LOCK_INFO		0x00000008
+> >  #define PANIC_PRINT_FTRACE_INFO		0x00000010
+> > +#define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
+> >  unsigned long panic_print;
+> >  
+> >  ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
+> > @@ -136,6 +137,11 @@ EXPORT_SYMBOL(nmi_panic);
+> >  
+> >  static void panic_print_sys_info(void)
+> >  {
+> > +	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+> > +		console_flush_on_panic(CONSOLE_REPLAY_ALL);
+> > +	else
+> > +		console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+> > +
+> >  	if (panic_print & PANIC_PRINT_TASK_INFO)
+> >  		show_state();
+> >  
+> > @@ -279,8 +285,6 @@ void panic(const char *fmt, ...)
+> >  	 * panic() is not being callled from OOPS.
+> >  	 */
+> >  	debug_locks_off();
+> > -	console_flush_on_panic();
+> 
+> I would prefer if we keep it here. It is a very important
+> operation that plays a role in many panic/printk related
+> bugs. We should not hide it in an "unrelated"
+> function.
+> 
+> The name "panic_print_sys_info" suggests that it
+> just shows some additional information.
+> 
+> I guess that you wanted to avoid flushing some messages
+> twice. IMHO, it is not a big deal. In many situations,
+> console_flush_on_panic(CONSOLE_FLUSH_PENDING) will
+> do nothing or it would handle just few lines.
 
-> Some SoCs with a dwc2 USB controller may need to keep the PHY on to
-> support remote wakeup.  Allow specifying this as a device tree
-> property.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> For relevant prior discussion on this patch, see:
->
-> https://lkml.kernel.org/r/1435017144-2971-3-git-send-email-dianders@chrom=
-ium.org
->
-> I didn't make any changes from the prior version since I never found
-> out what Rob thought of my previous arguments.  If folks want a
-> change, perhaps they could choose from these options:
->
-> 1. Assume that all dwc2 hosts would like to keep their PHY on for
->    suspend if there's a USB wakeup enabled, thus we totally drop this
->    binding.  This doesn't seem super great to me since I'd bet that
->    many devices that use dwc2 weren't designed for USB wakeup (they
->    may not keep enough clocks or rails on) so we might be wasting
->    power for nothing.
-> 2. Rename this property to "snps,wakeup-from-suspend-with-phy" to make
->    it more obvious that this property is intended both to document
->    that wakeup from suspend is possible and that we need the PHY for
->    said wakeup.
-> 3. Rename this property to "snps,can-wakeup-from-suspend" and assume
->    it's implicit that if we can wakeup from suspend that we need to
->    keep the PHY on.  If/when someone shows that a device exists using
->    dwc2 where we can wakeup from suspend without the PHY they can add
->    a new property.
->
-> Changes in v2: None
->
->  Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
->  1 file changed, 3 insertions(+)
+Yes, that was one of my consideration. I got your point
+and will send a v4, though Andrew has taken the v3.
 
-checking file Documentation/devicetree/bindings/usb/dwc2.txt
-Hunk #1 FAILED at 37.
-Hunk #2 succeeded at 52 (offset -1 lines).
-1 out of 2 hunks FAILED
-=2D-=20
-balbi
+> 
+> Also people might decide to do a forced reboot when
+> the console is slow and it takes ages to print
+> everything. Then it might be useful to handle
+> the few "most" important lines before starting
+> from beginning.
+> 
+> Other than that I am fine with the patch. I give up
+> on bike shedding about the header line ;-)
+	:)
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlzBqrIACgkQzL64meEa
-mQYE0w//cCr/Wc2ZD2abiUr+FHaO2iz3BvODX3EHdzur4BMpo/KZK9JnKw4m4RUa
-L0qSu3RYrcbBW0h/zU+cy41VXKz+WBMJVgpl3TWUJ4AiTLrfQHzDNLvEXssyukkd
-t3xocK2DAbDh6IMBriCDFsogXcLAuEQmPiuXZmj7fEtdFqymdCuFDijqT7GNCHNq
-toCH4ajwUlvtjWbutwAUEl+o4Hq91nQqyZfKRhHu6Q43fLXyqQzHdDFKn041J7+f
-5bxgb3TGihobUYBNX2cGRgJBXl36fn1E+PlhFIBk7e8/09ZmF+oQaP6eU1n+jbkC
-S2BSNRO2+Cvnnylp7XTrj88QUyNv+hqiSC3lkmWoyE7IbP7LphW0K0J8h0t70P0t
-yg+7/HG1m/AhJxSSrBqUXtHdgJeCBoLjOZgRzdNccDS4vzJVId8hsZX17und9Xmg
-UCuHgLwrF+69vqD4HgVBWhFlh/BawSwgxOmih/VskGPoVIObtyxCqKqflPoEiAYT
-DtF0S6fWKk0Ko+BfCaPTg548QecBuu3uo4DO0XOu3GaYAraV9Sn2VkoJYXTDF+ny
-lv5+dRw+cY3c7UVgg41kd7Tq1Hbhuuv/IFmIg1yR1qY0gSGuLOjEYKjooa4cIblB
-AE63sGvm4y81n9AChloTq4x3NabubgLpcr8GCFuSUiDz+zwHiiY=
-=tY5t
------END PGP SIGNATURE-----
---=-=-=--
+Thanks,
+Feng
