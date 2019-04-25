@@ -2,187 +2,84 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07E9C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A052C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA9CF218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DD3218AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C0pPktUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfDYIp3 convert rfc822-to-8bit (ORCPT
+        id S1727334AbfDYIse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 04:45:29 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40546 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfDYIp2 (ORCPT
+        Thu, 25 Apr 2019 04:48:34 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44859 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfDYIsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 04:45:28 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y49so4790374qta.7
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 01:45:27 -0700 (PDT)
+        Thu, 25 Apr 2019 04:48:33 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h16so6937685ljg.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 01:48:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jMr8bu5kl5BcuDVONmGfFOjhUj3h7CSULUX9UnXjHUA=;
+        b=C0pPktUnyqduUGe8cPB/Q4nL72VxaNffrr+NhYVICD+TZEhaSULBaYM4f8tKQPQzNH
+         cfvG/WfXCJofJte8uHKpERjxNL8N63oYQmOTAx0HqU5vgy0JRo1WsrxAvZa93fQIRT6n
+         UBthNqtrMCoAbHg7Hur1a2diLuFvWcpNnT9zSWSE8Rnq/zRdshCP4pmEW5THXCVRkeTL
+         Uw7TLqWr5iwxqgXbwUr9m4gn2NCCCq6sQKZAI5aBcuof5bxsVOEhE99nbW0PvYLsrWPf
+         KSFfd7fMGUemPDjrOCL2Qthb9I7avNks0ko5wnQAwsLbw97ADCkE2/VBrNGkqJ2Hng5q
+         A6pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Rxh5UXQJvULZ3n30+PzSL5PPQmBybHhGbCpXeflXtJc=;
-        b=dShLA27EwhKmuiN87VhPYKmhV7j11cJu8+uO39RSg8o1Preg6GGDxuW9VwR4GQYPfe
-         V1uKprQhrgQY52MTIy1/BwMmCZV7pAiuGpXNxiSgjYrr8FVvw/PDqFztp3YRUnihN/A3
-         W25Sn+QFdElsmjKh4aRanwjllQeUpwiYoDjcnNJAn6CVZfa9C7oMDjKFVbxT79sw9vYp
-         0b52ULk32kl/oOgrmTKDj1Eft8KJi5VTIykkRnjT3QGusX3x5mCIOmZamsTHuj2ACb4Q
-         7ww5MTP7oQiThQNWxfcZAzsbOl5lFl4QCpZDtwFfNZ6oH+ih/9qC90/VUKpRaIb8orDL
-         mHag==
-X-Gm-Message-State: APjAAAWUWqxM60FkkZt7g0dhGHF1TGb3MxRK+nxWdAspHWZaBDpFppTI
-        oMN01NAfnr8tcjTGqaUcfghoedp6TojZFodnDKUb3w==
-X-Google-Smtp-Source: APXvYqx4AQqpVJryb9exQ3Flt9Br8s+Iman3ChDhxAtRr6MSe78TOUZuUiOi4GnDqfaVWPoh/FJ2cIMWrX2gftWs8HA=
-X-Received: by 2002:ac8:247c:: with SMTP id d57mr30370397qtd.308.1556181927516;
- Thu, 25 Apr 2019 01:45:27 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=jMr8bu5kl5BcuDVONmGfFOjhUj3h7CSULUX9UnXjHUA=;
+        b=TqHg7ip+rcPvIz0jLVLyEuhIaA4Po/jsHLcJemnmCqYk7gEajN8DWJMZ3Q2C/oO+GD
+         IkwgROTEb4AKtEJEMv+bE/cDQtjLIN71wXVMhV0HCwE5d97/zSwYcjVKiDhYVbDdZdW0
+         JIYP2rFyYabtq4JKUecpct6p5gN/5TExC6Qob26nHbx9Xu9MYLqW8jZUc8fgpMtm5JfO
+         zite8wvnXHVbpPP6lEHpnOgRfuL1bTtUwiLk4zfSRHUKf0nQ2AmoHnVRyVaKUMWJ9qwa
+         9C31ht5qsMj87/8ILqBi1W+0F1dhag6eW+ShF6x1GsM/f9Rzvfy3ccLE81aCKkQaOj53
+         nGag==
+X-Gm-Message-State: APjAAAVDDc6MUyfQJXC+epyk4zcmaAF2ri47yW+qL/Nqsry38HvKhML+
+        DPnu20VwxiV0uEFwNa5zHmY5Zqtmd1jUFfBdfoOo6w==
+X-Google-Smtp-Source: APXvYqzKtIoL/f4WakBCPUJKI9REJmMR16Ho5tei/70YYa5QkN+9FnG19pd0Cr8GwWofrhKhdPLaO3db4thx6yvoUG0=
+X-Received: by 2002:a2e:8703:: with SMTP id m3mr19386715lji.107.1556182111810;
+ Thu, 25 Apr 2019 01:48:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20181205004228.10714-1-peter.hutterer@who-t.net>
- <20181205004228.10714-8-peter.hutterer@who-t.net> <CAM4jgCqAh9Pck-9i8F5tO4-Kzpu+SjH-mQnGYThadSf-3b1ikw@mail.gmail.com>
- <CA+jURcuhBRYiqFYHDgK8dDycrPgvzkujTRZfnmYraiHvwE+e6w@mail.gmail.com>
- <CAM4jgCo483upCJWUnpP45zh2LzQWqAZmQREf2622p49a1vbnnA@mail.gmail.com>
- <CAM4jgCqj5gs-q7VKLm90p0a01k_tYAqxA=zxsmShxv4PSGBJ4A@mail.gmail.com>
- <CAO-hwJK7pFvuYZJTKgwkj794=xinekDgN_eLBSViw3v_dWAecw@mail.gmail.com>
- <CAM4jgCrYBr+M+F2iAn8-pPFjiZQ-nPT_H16WcyPKp2PFCM=qhQ@mail.gmail.com>
- <CAO-hwJJkyK_qPEL37QLd3kLuwB2rFBk+5FWg1UCfgr-FzxZ5aw@mail.gmail.com> <CAM4jgCrLRxOx-qtq8Wfbc1xmYkNHG9vsRSk_BBK5OPgkLyVYnQ@mail.gmail.com>
-In-Reply-To: <CAM4jgCrLRxOx-qtq8Wfbc1xmYkNHG9vsRSk_BBK5OPgkLyVYnQ@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Thu, 25 Apr 2019 10:45:16 +0200
-Message-ID: <CAO-hwJ+r1TUQLZqdpNFD4AWC3URro3=Tc56gjV52i=aWrCbL8A@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] HID: logitech: Enable high-resolution scrolling on
- Logitech mice
-To:     =?UTF-8?Q?Cl=C3=A9ment_VUCHENER?= <clement.vuchener@gmail.com>
-Cc:     Harry Cutts <hcutts@chromium.org>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nestor Lopez Casado <nlopezcasad@logitech.com>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <20190424120224.22660-1-manivannan.sadhasivam@linaro.org> <20190424120224.22660-3-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190424120224.22660-3-manivannan.sadhasivam@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 25 Apr 2019 10:48:20 +0200
+Message-ID: <CACRpkdZW=3muxWNnDKDnBFroYD5ZQWGqmw23o8ZFkf4+Y6DjCA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] arm64: dts: bitmain: Add pinctrl support for BM1880 SoC
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 10:25 AM Clément VUCHENER
-<clement.vuchener@gmail.com> wrote:
+On Wed, Apr 24, 2019 at 2:03 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+
+> Add pinctrl support for Bitmain BM1880 SoC. This SoC only supports
+> pinmuxing and the pinctrl registers are part of the sctrl block.
 >
-> Le jeu. 25 avr. 2019 à 09:40, Benjamin Tissoires
-> <benjamin.tissoires@redhat.com> a écrit :
-> >
-> > Hi Clément,
-> >
-> > On Wed, Apr 24, 2019 at 5:34 PM Clément VUCHENER
-> > <clement.vuchener@gmail.com> wrote:
-> > >
-> > > Hi Benjamin,
-> > >
-> > > I tried again to add hi-res wheel support for the G500 with Hans de
-> > > Goede's latest patch series you've just merged in for-5.2/logitech, it
-> > > is much better but there is still some issues.
-> > >
-> > > The first one is the device index, I need to use device index 0
-> > > instead 0xff. I added a quick and dirty quirk (stealing in the
-> > > QUIRK_CLASS range since the normal quirk range looks full) to change
-> > > the device index assigned in __hidpp_send_report. After that the
-> > > device is correctly initialized and the wheel multiplier is set.
-> >
-> > Hmm, maybe we should restrain a little bit the reserved quirks...
-> > But actually, .driver_data and .quirks are both unsigned long, so you
-> > should be able to use the 64 bits.
->
-> Only on 64 bits architectures, or is the kernel forcing long integers
-> to be 64 bits everywhere?
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Damnit, you are correct, there is no such enforcement :/
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
->
-> >
-> > >
-> > > The second issue is that wheel values are not actually scaled
-> > > according to the multiplier. I get 7/8 full scroll event for each
-> > > wheel step. I think it happens because the mouse is split in two
-> > > devices. The first device has the wheel events, and the second device
-> > > has the HID++ reports. The wheel multiplier is only set on the second
-> > > device (where the hi-res mode is enabled) and does not affect the
-> > > wheel events from the first one.
-> >
-> > I would think this have to do with the device not accepting the
-> > command instead. Can you share some raw logs of the events (ideally
-> > with hid-recorder from
-> > https://gitlab.freedesktop.org/libevdev/hid-tools)?
->
-> I already checked with usbmon and double-checked by querying the
-> register. The flag is set and accepted by the device and it behaves
-> accordingly: it sends about 8 wheel events per step.
-
-OK, that's what I wanted to see.
-
->
-> hid-recorder takes hidraw nodes as parameters, how do I use it to
-> record the initialization by the driver?
-
-You can't. But it doesn't really matter here because I wanted to check
-what your mouse is actually sending after the initialization.
-
-So if I read correctly: the mouse is sending high res data but
-evemu-recorder shows one REL_WHEEL event every 7/8 clicks?
-
-Cheers,
-Benjamin
-
-> > > Le mer. 19 déc. 2018 à 21:35, Benjamin Tissoires
-> > > <benjamin.tissoires@redhat.com> a écrit :
-> > > >
-> > > > On Wed, Dec 19, 2018 at 11:57 AM Clément VUCHENER
-> > > > <clement.vuchener@gmail.com> wrote:
-> > > > >
-> > > > > Le sam. 15 déc. 2018 à 15:45, Clément VUCHENER
-> > > > > <clement.vuchener@gmail.com> a écrit :
-> > > > > >
-> > > > > > Le ven. 14 déc. 2018 à 19:37, Harry Cutts <hcutts@chromium.org> a écrit :
-> > > > > > >
-> > > > > > > Hi Clement,
-> > > > > > >
-> > > > > > > On Fri, 14 Dec 2018 at 05:47, Clément VUCHENER
-> > > > > > > <clement.vuchener@gmail.com> wrote:
-> > > > > > > > Hi, The G500s (and the G500 too, I think) does support the "scrolling
-> > > > > > > > acceleration" bit. If I set it, I get around 8 events for each wheel
-> > > > > > > > "click", this is what this driver expects, right? If I understood
-> > > > > > > > correctly, I should try this patch with the
-> > > > > > > > HIDPP_QUIRK_HI_RES_SCROLL_1P0 quirk set for my mouse.
-> > > > > > >
-> > > > > > > Thanks for the info! Yes, that should work.
-> > > > > >
-> > > > > > Well, it is not that simple. I get "Device not connected" errors for
-> > > > > > both interfaces of the mouse.
-> > > > >
-> > > > > I suspect the device is not responding because the hid device is not
-> > > > > started. When is hid_hw_start supposed to be called? It is called
-> > > > > early for HID_QUIRK_CLASS_G920 but later for other device. So the
-> > > > > device is not started when hidpp_is_connected is called. Is this
-> > > > > because most of the device in this driver are not real HID devices but
-> > > > > DJ devices? How should non-DJ devices be treated?
-> > > >
-> > > > Hi Clement,
-> > > >
-> > > > I have a series I sent last September that allows to support non DJ
-> > > > devices on logitech-hidpp
-> > > > (https://patchwork.kernel.org/project/linux-input/list/?series=16359).
-> > > >
-> > > > In its current form, with the latest upstream kernel, the series will
-> > > > oops during the .event() callback, which is easy enough to fix.
-> > > > However, I am currently trying to make it better as a second or third
-> > > > reading made me realized that there was a bunch of non-sense in it and
-> > > > a proper support would require slightly more work for the non unifying
-> > > > receiver case.
-> > > >
-> > > > I hope I'll be able to send out something by the end of the week.
-> > > >
-> > > > Cheers,
-> > > > Benjamin
+Yours,
+Linus Walleij
