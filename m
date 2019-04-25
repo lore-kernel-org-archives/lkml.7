@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F79EC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF14C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4E720891
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C757E20891
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbfDYQ2p (ORCPT
+        id S1730239AbfDYQ2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:28:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34530 "EHLO mail.kernel.org"
+        Thu, 25 Apr 2019 12:28:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726730AbfDYQ2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727041AbfDYQ2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Apr 2019 12:28:45 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E2712089E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BF5D212F5;
         Thu, 25 Apr 2019 16:28:45 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hJhEp-0005Ku-Rv; Thu, 25 Apr 2019 12:28:43 -0400
-Message-Id: <20190425162843.751657930@goodmis.org>
+        id 1hJhEq-0005Ly-6v; Thu, 25 Apr 2019 12:28:44 -0400
+Message-Id: <20190425162844.102484207@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 25 Apr 2019 12:28:10 -0400
+Date:   Thu, 25 Apr 2019 12:28:12 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 2/5] ftrace: Do not process STUB functions in ftrace_ops_list_func()
+Subject: [for-next][PATCH 4/5] function_graph: Use a ftrace_graph_ret_stub() for return
 References: <20190425162808.056301033@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -45,34 +45,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-The function_graph tracer has a stub function and its ops flag has the
-FTRACE_OPS_FL_STUB set. As the function graph does not use the
-ftrace_ops->func pointer but instead is called by a separate part of the
-ftrace trampoline. The function_graph tracer still requires to pass in a
-ftrace_ops that may also hold the hash of the functions to call. But there's
-no reason to test that hash in the function tracing portion. Instead of
-testing to see if we should call the stub function, just test if the ops has
-FTRACE_OPS_FL_STUB set, and just skip it.
+There's a unique ftrace_graph_entry_stub() for the entryfunc of a
+fgraph_ops, but the ftrace_stub is used for the retfunc(). To be consistent
+and also to use the same type of function as the type being called for
+retfunc(), create and use ftrace_graph_ret_stub().
 
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/trace/fgraph.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index bf11e0553450..433a64f49532 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6260,6 +6260,9 @@ __ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
- 	preempt_disable_notrace();
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 8dfd5021b933..580ce7534a49 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -327,14 +327,17 @@ void ftrace_graph_sleep_time_control(bool enable)
+ 	fgraph_sleep_time = enable;
+ }
  
- 	do_for_each_ftrace_op(op, ftrace_ops_list) {
-+		/* Stub functions don't need to be called nor tested */
-+		if (op->flags & FTRACE_OPS_FL_STUB)
-+			continue;
- 		/*
- 		 * Check the following for each ops before calling their func:
- 		 *  if RCU flag is set, then rcu_is_watching() must be true
++static void ftrace_graph_ret_stub(struct ftrace_graph_ret *trace)
++{
++}
++
+ int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace)
+ {
+ 	return 0;
+ }
+ 
+ /* The callbacks that hook a function */
+-trace_func_graph_ret_t ftrace_graph_return =
+-			(trace_func_graph_ret_t)ftrace_stub;
++trace_func_graph_ret_t ftrace_graph_return = ftrace_graph_ret_stub;
+ trace_func_graph_ent_t ftrace_graph_entry = ftrace_graph_entry_stub;
+ static trace_func_graph_ent_t __ftrace_graph_entry = ftrace_graph_entry_stub;
+ 
+@@ -614,7 +617,7 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
+ 		goto out;
+ 
+ 	ftrace_graph_active--;
+-	ftrace_graph_return = (trace_func_graph_ret_t)ftrace_stub;
++	ftrace_graph_return = ftrace_graph_ret_stub;
+ 	ftrace_graph_entry = ftrace_graph_entry_stub;
+ 	__ftrace_graph_entry = ftrace_graph_entry_stub;
+ 	ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
 -- 
 2.20.1
 
