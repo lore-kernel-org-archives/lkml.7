@@ -2,156 +2,147 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ACBC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58A2C4321B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782CD20685
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:09:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pj90B39I"
+	by mail.kernel.org (Postfix) with ESMTP id 6946020717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556215760;
+	bh=2oKokC3pkrt1E8iupN9/b6YmSxWCfYtApWjD9u1/PBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XVFg3bUAfx67fw0eLwk9LXi+5OZfnW2QdHan0IFaVw8S24fi/w4T5uBEWZfx/ZqH3
+	 YnWTQRdoq1m4R1hAAljfsWGR1ae2p/aIXhdj6H/WskTvkrV8b3T/n0Q7cOBpNRcfDz
+	 1hxQwT6N4q2JiLg/57eQvs0Zr8njXqUdiv2vmXz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbfDYSI6 (ORCPT
+        id S2387494AbfDYSJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:08:58 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41421 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729242AbfDYSI6 (ORCPT
+        Thu, 25 Apr 2019 14:09:18 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35176 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbfDYSJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:08:58 -0400
-Received: by mail-ed1-f66.google.com with SMTP id m4so687120edd.8;
-        Thu, 25 Apr 2019 11:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LcuPp4VUMGvYfJkfS+lOt3bGBCBLd3jhg06YeoQI2NA=;
-        b=Pj90B39IUsQmToWi+41j2bmcG1nscOWV8JIvTnofJCKc4gfraf2kfkzFt1SmLDRva8
-         wEEv4+CUxoUTruREkBE93zm8h0xa8nqsUXS1NbFzEvy3tC1Xv42WG00uhhBJgF81Cz5o
-         /Tm78yZJyV2ggXlXnw74K0f0CiPnu+KEVqBEr1fmHk1at6We5bU4RQ9aJDKCxIuylIdX
-         VRXfWnlP931VuXJSluPcBkU0q33JltvgKwElnuxwofyE+Waezd4g+O3XgrJ0T96UhwPP
-         WHLaFK6Dycu7KVmSwfmS5jS59U7q1n68koEBnBCOGpURp/O+4otlToHvD8uHhMKlbteL
-         mA1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LcuPp4VUMGvYfJkfS+lOt3bGBCBLd3jhg06YeoQI2NA=;
-        b=kwj30yXhgG+Zeim7nCKGUHOVfCHDiTUHHsurt70Tx3LzoM/k+ukRyXUKuVcepYZ1LB
-         v0BB2oIThJEeT/0484QtuVMnJ/2+m1ZTfJW34wUGJwOcu8QDfXOHXuswuiABqbkwXISe
-         NL48HN/rxzvowqZ0pggAB79o3XSgbhNYMtwO2BxQQyE5mZmEHb/DXGB23gY3RdPXAVgc
-         zgJ1gw2yZVnaPPgch7ZBbDjZtdjKV8A53nwXmYHUhi7t5E5BRG3gIzXeLJek97PpUfTP
-         1RfZAOBP93eOdfuCjsKi1MzK79yJ2SHfCOqKeK2eA7v17glWQCamJtmYboOINXiI+nue
-         9eJA==
-X-Gm-Message-State: APjAAAWUIPIKyl2yJRhKHCyq/4MpqXHlhhQaRKTRcT6Ky6fKjxdEi1vq
-        bBoknbwD+nbn++lcxSDky1Q=
-X-Google-Smtp-Source: APXvYqwMSwLG4/WQc5qq/qJyDyiTxG9/gf0x3H/9KV9WcKpGeO6mmoMxQZvi5lZI6IX7q7WpFmZN1Q==
-X-Received: by 2002:a17:906:1f12:: with SMTP id w18mr1951824ejj.95.1556215736138;
-        Thu, 25 Apr 2019 11:08:56 -0700 (PDT)
-Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id ka15sm2910408ejb.11.2019.04.25.11.08.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Apr 2019 11:08:55 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 11:08:53 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Coly Li <colyli@suse.de>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Shenghui Wang <shhuiw@foxmail.com>,
-        Hannes Reinecke <hare@suse.com>, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bcache: avoid clang -Wunintialized warning
-Message-ID: <20190425180853.GA4507@archlinux-i9>
-References: <20190322143507.1256436-1-arnd@arndb.de>
+        Thu, 25 Apr 2019 14:09:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2oKokC3pkrt1E8iupN9/b6YmSxWCfYtApWjD9u1/PBY=; b=dSsewGvtuMhhlNA66ppDxBFwY
+        IwxcrS6w1Yr4eDYIiQkSN4UCcv98j5XCjgcJ06n5+5qyXPNHSdnNAM8va5oF/cW1zBN1oHLLU+CKf
+        lrNCY0rg2jaySC7z2jKotuTNlL5ZSQinGfYKCam13OfX6NQspDuqwl/gd3uNhUDXMwj34=;
+Received: from 94.197.120.252.threembb.co.uk ([94.197.120.252] helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hJin0-0003sZ-S0; Thu, 25 Apr 2019 18:08:32 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 9B05B441D3B; Thu, 25 Apr 2019 19:07:58 +0100 (BST)
+Date:   Thu, 25 Apr 2019 19:07:58 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 25/79] docs: convert docs to ReST and rename to *.rst
+Message-ID: <20190425180758.GC23183@sirena.org.uk>
+Mail-Followup-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+ <7adf9035ae06ecc6c7e46b51cb677f0a8f61d19a.1555938376.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="aT9PWwzfKXlsBJM1"
 Content-Disposition: inline
-In-Reply-To: <20190322143507.1256436-1-arnd@arndb.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <7adf9035ae06ecc6c7e46b51cb677f0a8f61d19a.1555938376.git.mchehab+samsung@kernel.org>
+X-Cookie: But they went to MARS around 1953!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 03:35:00PM +0100, Arnd Bergmann wrote:
-> clang has identified a code path in which it thinks a
-> variable may be unused:
-> 
-> drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
->       [-Werror,-Wsometimes-uninitialized]
->                         fifo_pop(&ca->free_inc, bucket);
->                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
->  #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
->                                 ^~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
->         if (_r) {                                                       \
->             ^~
-> drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
->                         allocator_wait(ca, bch_allocator_push(ca, bucket));
->                                                                   ^~~~~~
-> drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
->                 if (cond)                                               \
->                     ^~~~
-> drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
->                         fifo_pop(&ca->free_inc, bucket);
->                         ^
-> drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
->  #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
->                                 ^
-> drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
->         if (_r) {                                                       \
->         ^
-> drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
->                         long bucket;
->                                    ^
-> 
-> This cannot happen in practice because we only enter the loop
-> if there is at least one element in the list.
-> 
-> Slightly rearranging the code makes this clearer to both the
-> reader and the compiler, which avoids the warning.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/md/bcache/alloc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-> index 5002838ea476..f8986effcb50 100644
-> --- a/drivers/md/bcache/alloc.c
-> +++ b/drivers/md/bcache/alloc.c
-> @@ -327,10 +327,11 @@ static int bch_allocator_thread(void *arg)
->  		 * possibly issue discards to them, then we add the bucket to
->  		 * the free list:
->  		 */
-> -		while (!fifo_empty(&ca->free_inc)) {
-> +		while (1) {
->  			long bucket;
->  
-> -			fifo_pop(&ca->free_inc, bucket);
-> +			if (!fifo_pop(&ca->free_inc, bucket))
-> +				break;
->  
->  			if (ca->discard) {
->  				mutex_unlock(&ca->set->bucket_lock);
-> -- 
-> 2.20.0
-> 
 
-Hi all,
+--aT9PWwzfKXlsBJM1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Could someone please review/pick this up? This is one of two remaining
--Wsometimes-uninitialized warnings among arm, arm64, and x86_64
-all{yes,mod}config and I'd like to get it turned on as soon as possible
-to catch more bugs.
+On Mon, Apr 22, 2019 at 10:27:14AM -0300, Mauro Carvalho Chehab wrote:
+> Convert the PM documents to ReST, in order to allow them to
+> build with Sphinx.
 
-Thanks,
-Nathan
+This is massively CCed covering a large range of subsystems and is patch
+25 of a 79 patch series so I've no context for what's going on here or
+why... =20
+
+--aT9PWwzfKXlsBJM1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzB930ACgkQJNaLcl1U
+h9D9hggAgwfFCuARstTCzGVBwHcVdm64UOuT+vxyBjKpaiOugpu9eYgcEyTMTndn
+s/LwwIR6+jTD8By3kSTAXNwf45w0LPS6lFtpErJnjM5UirPgDON9007j9qhKipEN
+tJvLGym/Jsh45UdlYTK1odH7gaOZCwygFNT3x/GyB223C7QCmWBWpwEm1bcMUJ1m
+x8dEcMx7tFb4LdKprVW5kTex9KsBWG1MCnw8OCiZTmvnlXfkcvJnm4T5Rzv8ZLR1
+vpMRGaEVRnHIgfnPArpTgNa/owmkH6oB8f4A3bLpvRlqfQO3xYP0DQMKXNjyKESN
+JYPDGkiQ4n7iBx70h8+FV4GcF7mlNA==
+=a3df
+-----END PGP SIGNATURE-----
+
+--aT9PWwzfKXlsBJM1--
