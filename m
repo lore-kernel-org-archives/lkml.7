@@ -2,105 +2,111 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E19C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A67C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D157214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FBA0214C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rISgOv/h"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dDC2Xz9F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfDYJGU (ORCPT
+        id S1727610AbfDYJGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 05:06:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43854 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfDYJGT (ORCPT
+        Thu, 25 Apr 2019 05:06:49 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56964 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726150AbfDYJGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 05:06:19 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a12so5948450wrq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 02:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=PKlaTnAlCgVIzuGnj77yzvrLkhPjokOBr925naoIOJU=;
-        b=rISgOv/hpFgSTOrSIUazBAq+4GfMNKFMtYdwx3WjMXXY6AxRoUKfJoaEpDZwN4y0px
-         gvNU9YvmZxmqEW5AxzLlY1OpMm0Mx9F+8/O59xZwAd0wODXqTiYWjnQS+fneuxz1x/Qd
-         /6cWkFRloaNtfXckBVPelR0/Sj0cf1neWxi11e6DVryTxWWRjCOnS6vYEEjcEPyreOMC
-         u8LNlfAJt7Dk/q3FoawHGUe06fxgzVhcDl6q29FMIiHfC+Tz7IVLEYkTV7Y8wDncJ3IR
-         qhTTYYLG8o9VpDC2rQ/KLzaA6yFIwoBOepEeD391vCDMkPqN4WUiRWsQ13MvPzFmLMKO
-         3KrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=PKlaTnAlCgVIzuGnj77yzvrLkhPjokOBr925naoIOJU=;
-        b=fpH3FD42omJ96GTFQQbgqIPjZtBmoSOY77AqRHFx3VHP0xq06lCGrLkwL3DjzWtCB7
-         UeKfkGbVFRF0BDP4rtKV+iN+aW2L2WZs166mSJ0q9PigH0u6sbmDR0eLgzJ0+sgeC0Ta
-         +NnOjZwNBMrAGgrOkug7vPlNnDRci+zrLt+NTehmgnOOgq8iXAXy+tQUwxRZoDXWnQyO
-         Q6Zx02X2YxQ60Zf4SUQMIxfzxjo8MhoNAR/r+CET5wWsCL/1kvlOyzouMcPlbn5Abukb
-         mTaF1TdXLDI412HKSe3Likww3ISQTE6V9SNzkT5IP5Ovm6V6OSeoBXYJxT6z/eftdwB/
-         h+cg==
-X-Gm-Message-State: APjAAAVjiZN9Al6d0UXk6Sh02UAIOoLtNU4QpXLrIXLO0CBbL3Aew0Ak
-        kqnAiM2k/v+19fpvf3WBY88HMw==
-X-Google-Smtp-Source: APXvYqzLq/S1hvu10+HbLsXVMDpTNkKa8JPB1mEoi6/BoF6xV/06t57mFlFy0JbcSFTVCDOd+Bxc1Q==
-X-Received: by 2002:a05:6000:118a:: with SMTP id g10mr3662785wrx.233.1556183177948;
-        Thu, 25 Apr 2019 02:06:17 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id s2sm14765072wrr.50.2019.04.25.02.06.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 02:06:16 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 10:06:15 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 7/7] mfd: cros_ec: differentiate SCP from EC by
- feature bit.
-Message-ID: <20190425090615.GG14758@dell>
-References: <20190412071851.60332-1-pihsun@chromium.org>
- <20190412071851.60332-8-pihsun@chromium.org>
- <9bf20470-e5f6-7c12-9cc3-d9c6041a3bf8@collabora.com>
+        Thu, 25 Apr 2019 05:06:48 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3P8vtgt010204;
+        Thu, 25 Apr 2019 11:05:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=9gcnowIpP07YBTGHpsa+ga9c245iPiuAayjtVomVP2Y=;
+ b=dDC2Xz9F7q132dOW+AZg4cvlBV7TPVcSixnVdmUDlkbc+KHQlpfRsOvfyMhOvTOe4qTg
+ w/6fGaiwHihjeCZi5Q/Ey5AVhfWCINf0LxJxgIa7ov+FaXKKRmYBO/H/05pRAp0QZ4V3
+ uzG40RA23YS6dXSLnoCSRe01azl5Ax+45Q2HIL5Jw+aCbRTsLwDnWFOJSN3oC55DXySi
+ 5LqGkVI8kgZdbb8ygpaNJVr3LLxXpBfAtTS8dk0bQfqPouhC7cdEgKTgls2ZEN++CvOX
+ cQKV4EtIQaMzkTgHtd+yC8nsZ/yYntQpf4Agw0/ByZoPXFhF8aquEGMaNpNDicWKQJF9 Ug== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rytadbwq9-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 25 Apr 2019 11:05:24 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30AA93D;
+        Thu, 25 Apr 2019 09:05:23 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E4C9815AA;
+        Thu, 25 Apr 2019 09:05:22 +0000 (GMT)
+Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 25 Apr
+ 2019 11:05:23 +0200
+Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
+ SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
+ 15.00.1347.000; Thu, 25 Apr 2019 11:05:22 +0200
+From:   Olivier MOYSAN <olivier.moysan@st.com>
+To:     Fabien DESSENNE <fabien.dessenne@st.com>,
+        Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre TORGUE" <alexandre.torgue@st.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: stm32: i2s: return the get_irq error
+Thread-Topic: [PATCH] ASoC: stm32: i2s: return the get_irq error
+Thread-Index: AQHU+rJqRAfgtovdak6IJCRw7t7aO6ZMdRoA
+Date:   Thu, 25 Apr 2019 09:05:22 +0000
+Message-ID: <215557bf-19f5-7353-e929-f45123f1886e@st.com>
+References: <1556119724-9873-1-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <1556119724-9873-1-git-send-email-fabien.dessenne@st.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F4F5BBA671AEAC43BE4CED75A915CD6E@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9bf20470-e5f6-7c12-9cc3-d9c6041a3bf8@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019, Enric Balletbo i Serra wrote:
-> On 12/4/19 9:18, Pi-Hsun Shih wrote:
-> > System Companion Processor (SCP) is Cortex M4 co-processor on some
-> > MediaTek platform that can run EC-style firmware. Since a SCP and EC
-> > would both exist on a system, and use the cros_ec_dev driver, we need to
-> > differentiate between them for the userspace, or they would both be
-> > registered at /dev/cros_ec, causing a conflict.
-> > 
-> > Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> 
-> Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> 
-> Lee, there are several patches touching these files right now so you could have
-> to solve some trivial conflicts. If you want I send a series with all that apply
-> cleanly just let me know.
-
-It would be ideal if you could bundle them to avoid conflicts.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+DQoNCk9uIDQvMjQvMTkgNToyOCBQTSwgRmFiaWVuIERlc3Nlbm5lIHdyb3RlOg0KPiBEdXJpbmcg
+cHJvYmUsIHJldHVybiB0aGUgImdldF9pcnEiIGVycm9yIHZhbHVlIGluc3RlYWQgb2YgLUVOT0VO
+VC4gVGhpcw0KPiBhbGxvd3MgdGhlIGRyaXZlciB0byBiZSBkZWZlcnJlZCBwcm9iZWQgaWYgbmVl
+ZGVkLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRmFiaWVuIERlc3Nlbm5lIDxmYWJpZW4uZGVzc2Vu
+bmVAc3QuY29tPg0KDQpBY2tlZC1ieTogT2xpdmllciBNb3lzYW4gPG9saXZpZXIubW95c2FuQHN0
+LmNvbT4NCg0KPiAtLS0NCj4gICBzb3VuZC9zb2Mvc3RtL3N0bTMyX2kycy5jIHwgNSArKystLQ0K
+PiAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0K
+PiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL3N0bS9zdG0zMl9pMnMuYyBiL3NvdW5kL3NvYy9zdG0v
+c3RtMzJfaTJzLmMNCj4gaW5kZXggOTUyNjM0Mi4uOTdkNWU5OSAxMDA2NDQNCj4gLS0tIGEvc291
+bmQvc29jL3N0bS9zdG0zMl9pMnMuYw0KPiArKysgYi9zb3VuZC9zb2Mvc3RtL3N0bTMyX2kycy5j
+DQo+IEBAIC04MzgsOCArODM4LDkgQEAgc3RhdGljIGludCBzdG0zMl9pMnNfcGFyc2VfZHQoc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gICAJLyogR2V0IGlycXMgKi8NCj4gICAJaXJx
+ID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKTsNCj4gICAJaWYgKGlycSA8IDApIHsNCj4gLQkJ
+ZGV2X2VycigmcGRldi0+ZGV2LCAibm8gaXJxIGZvciBub2RlICVzXG4iLCBwZGV2LT5uYW1lKTsN
+Cj4gLQkJcmV0dXJuIC1FTk9FTlQ7DQo+ICsJCWlmIChpcnEgIT0gLUVQUk9CRV9ERUZFUikNCj4g
+KwkJCWRldl9lcnIoJnBkZXYtPmRldiwgIm5vIGlycSBmb3Igbm9kZSAlc1xuIiwgcGRldi0+bmFt
+ZSk7DQo+ICsJCXJldHVybiBpcnE7DQo+ICAgCX0NCj4gICANCj4gICAJcmV0ID0gZGV2bV9yZXF1
+ZXN0X2lycSgmcGRldi0+ZGV2LCBpcnEsIHN0bTMyX2kyc19pc3IsIElSUUZfT05FU0hPVCwNCj4g
