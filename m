@@ -1,173 +1,96 @@
 Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96611C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421B5C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F84208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0893E208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556186115;
-	bh=0n4/b804LrRgV0IkstfXDxmzKKNR4zvoBIoq6K5si1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X5IsTIalUY7AYLhEf01YJQtlibcPJf746QpdXT66OLC2XO9pZ+HUiSii+H+nbQxAY
-	 Yb4PzVAV4n1SDxnq4nCbNWeXuQ/vuHQneclY7Vm5ZJktMYPe/KeSwwpu3wftxmlAIp
-	 1+/p03QE/jNuyirsduXoezdS5zhlAC6rtKGFIQjU=
+	s=default; t=1556186204;
+	bh=p7gcO/tey9CZk2Vrhy0h7TUDheM1dlIFHFpjNdL8IZ0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EqPIAhbyUZf1+exsZ3XAyyXukgV9LyWp1FFn53DWsM2G8vyB2Ed/pS/CXGoggqxeh
+	 vM4FeWkTPnDUTSkJENJEbepfGfolcnveABt1x3JXMMBJxO8oES/S/ot5Cu5cc+URHJ
+	 nXexuVDmi5kXilTY64gktC0JXzqphE46nLJgERSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbfDYJzN (ORCPT
+        id S1729034AbfDYJ4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 05:55:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40522 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728721AbfDYJzN (ORCPT
+        Thu, 25 Apr 2019 05:56:43 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43721 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728077AbfDYJ4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 05:55:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h4so29404395wre.7
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 02:55:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ouVX7DLtQR+TSPnOB9BUOPib5uiKvZBg++0sPW/v4gE=;
-        b=Xyvp+dfhww1WMbugWM08fm5oyJfQ+wIKPoCdMy5/ONKkXkHlNV+XZLOEPkycNdN2do
-         wyRtmYS6t3ALW+vGuhfpcfhylKnMcYe6E0xduwzdwMPka8vN5YpT8tbdDeMIz2FKamuC
-         FHet4fcB3VWAX2UW6ElDdXhh8Wh86rjliHR7rxe3T8nmBI5/kUYAKokSiAwVSC2VV68S
-         xCbdKUjHUs7yNGSmyo1MRwmduYGsY9YMwiS5t7gpziXlFBhWE37EdGi4oqoN11Ha/cyK
-         0zEQYoe3GEq/pBSf3mv/N8Mwpk4lsZttHC6QA4OVzxdaGAtoCRL4vE7/Px07Bo8BEilM
-         2RYA==
+        Thu, 25 Apr 2019 05:56:42 -0400
+Received: by mail-ot1-f67.google.com with SMTP id u15so18857796otq.10;
+        Thu, 25 Apr 2019 02:56:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ouVX7DLtQR+TSPnOB9BUOPib5uiKvZBg++0sPW/v4gE=;
-        b=ldJl+QP/Vza+FEwDQ1uqp33GZSmpe/5hLsZ0+LcgNpBc6K6RlyTvZjGR+/LVTKZLxp
-         BN85goprZVzzS6ULu8MozjcrKiu9k95wqPK+LlvoM4I8btH5MYl8CJvz5B6xr4GBexrS
-         R0lKFWHypmcfXpzdt+rrXxnLug7ZjYhqoPDgiLKT0w5l85GVbvC8LolZcpSOZYh2j5sW
-         SOFj8PMmxHRsaRnax9b6IBLEtmK7jCPPag+WaJwwq+5jzJuOCgznHo+jKhwRGS2c5VTX
-         E7rumJeLwNOZOQbbTzdnPZV/cZgH8VuO9wgLGUlERHqHQrmj7X0rvaAZB9o4vM7VPrzo
-         coww==
-X-Gm-Message-State: APjAAAXDCxIFBndh7vU5FrfD2DdJZJC/wG3uCN/AXoWTk6xCF3oVmsd1
-        qHh4kSz4XfhGA/8aiQuhve0=
-X-Google-Smtp-Source: APXvYqyp1suasz+reeDqu2oVDxNMpbouFweRJdk2YT+qAB2J5V6DmzM+Dd9vTRpCuBTv6lky9b0Kgg==
-X-Received: by 2002:adf:80ec:: with SMTP id 99mr16716387wrl.55.1556186111655;
-        Thu, 25 Apr 2019 02:55:11 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id y125sm31917125wmc.39.2019.04.25.02.55.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 02:55:10 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 11:55:08 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-Message-ID: <20190425095508.GA8387@gmail.com>
-References: <cover.1556025155.git.vpillai@digitalocean.com>
- <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
- <20190424140013.GA14594@sinkpad>
- <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kpUJHSGSVSfasemuOSXo7I60OKnWpgjskqVXdlDjlsE=;
+        b=BPRU7PjzxynNPbSJyxN3Nevo5UOuHgp8U5DGA0Wd6MAcC7OOjrAJ5zzkkYmbm5q4LX
+         U4nsr6q0PglVhnWVR/J7P9JXAvXBJlFFJUydQdKpVcpsuOtxJq1xNKkawRLQ4uodDZ+e
+         18EFsqJQjUOUbCtPIq7NH11f24a40RzT/Qtl68Au4ZiTJNdNNQ9btvwgfSSVcItw0m7I
+         9MdnwzWzhFtqahiLYCsftxUd00V2MbsOboYBXhUJbbW2aVlvcH4g4DWYJeX2hRjm8jXk
+         j1b2IyjAm1ntDYohfxZfXDm1/765rttiBNtDTl6ikz7BbzhUfCr1gEKb1i3GQzfcSQ24
+         j25Q==
+X-Gm-Message-State: APjAAAVmSiJ4zWO836iK0ehVnD7YqFm38fsk/r+YGhM2GdWBQLbUt8em
+        Yl9p19mpd29Ncn8YrswVyvb4wGm5sgnp3BPz2KY=
+X-Google-Smtp-Source: APXvYqygjkp0v3UD+PQF/1OSxjEJHHBYEh9cI11NjJkvo0elY8re//aja/WvkvEtQIkYq9Vs1Ig4Fgykz5pZegZRt0U=
+X-Received: by 2002:a9d:648f:: with SMTP id g15mr22116915otl.220.1556186201197;
+ Thu, 25 Apr 2019 02:56:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190425090413.10700-1-ulf.hansson@linaro.org>
+In-Reply-To: <20190425090413.10700-1-ulf.hansson@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 Apr 2019 11:56:30 +0200
+Message-ID: <CAJZ5v0jxGcFu-aqvyR4UgjRuCwB9q9fZCiXf+D3NL3TJ5OVEPA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] PM / Domains: Improve support for CPUs in genpd
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 25, 2019 at 11:04 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> Recently genpd was extended to cope with devices belonging to CPUs. However,
+> attaching CPU devices via genpd_dev_pm_attach_by_id|name() doesn't work,
+> because of the virtual device that genpd allocates in this path.
+>
+> In this series, this limitation is addressed, together with a few other related
+> fixes/cleanups.
+>
+> Ulf Hansson (4):
+>   PM / Domains: Use the base device for
+>     driver_deferred_probe_check_state()
+>   PM / Domains: Drop unused in-parameter to some genpd functions
+>   PM / Domains: Search for the CPU device outside the genpd lock
+>   PM / Domains: Allow to attach a CPU via
+>     genpd_dev_pm_attach_by_id|name()
+>
+>  drivers/base/power/domain.c | 73 ++++++++++++++++++-------------------
+>  include/linux/pm_domain.h   |  1 +
+>  2 files changed, 36 insertions(+), 38 deletions(-)
 
-* Aubrey Li <aubrey.intel@gmail.com> wrote:
-
-> On Wed, Apr 24, 2019 at 10:00 PM Julien Desfossez
-> <jdesfossez@digitalocean.com> wrote:
-> >
-> > On 24-Apr-2019 09:13:10 PM, Aubrey Li wrote:
-> > > On Wed, Apr 24, 2019 at 12:18 AM Vineeth Remanan Pillai
-> > > <vpillai@digitalocean.com> wrote:
-> > > >
-> > > > Second iteration of the core-scheduling feature.
-> > > >
-> > > > This version fixes apparent bugs and performance issues in v1. This
-> > > > doesn't fully address the issue of core sharing between processes
-> > > > with different tags. Core sharing still happens 1% to 5% of the time
-> > > > based on the nature of workload and timing of the runnable processes.
-> > > >
-> > > > Changes in v2
-> > > > -------------
-> > > > - rebased on mainline commit: 6d906f99817951e2257d577656899da02bb33105
-> > >
-> > > Thanks to post v2, based on this version, here is my benchmarks result.
-> > >
-> > > Environment setup
-> > > --------------------------
-> > > Skylake server, 2 numa nodes, 104 CPUs (HT on)
-> > > cgroup1 workload, sysbench (CPU intensive non AVX workload)
-> > > cgroup2 workload, gemmbench (AVX512 workload)
-> > >
-> > > Case 1: task number < CPU num
-> > > --------------------------------------------
-> > > 36 sysbench threads in cgroup1
-> > > 36 gemmbench threads in cgroup2
-> > >
-> > > core sched off:
-> > > - sysbench 95th percentile latency(ms): avg = 4.952, stddev = 0.55342
-> > > core sched on:
-> > > - sysbench 95th percentile latency(ms): avg = 3.549, stddev = 0.04449
-> > >
-> > > Due to core cookie matching, sysbench tasks won't be affect by AVX512
-> > > tasks, latency has ~28% improvement!!!
-> > >
-> > > Case 2: task number > CPU number
-> > > -------------------------------------------------
-> > > 72 sysbench threads in cgroup1
-> > > 72 gemmbench threads in cgroup2
-> > >
-> > > core sched off:
-> > > - sysbench 95th percentile latency(ms): avg = 11.914, stddev = 3.259
-> > > core sched on:
-> > > - sysbench 95th percentile latency(ms): avg = 13.289, stddev = 4.863
-> > >
-> > > So not only power, now security and performance is a pair of contradictions.
-> > > Due to core cookie not matching and forced idle introduced, latency has ~12%
-> > > regression.
-> > >
-> > > Any comments?
-> >
-> > Would it be possible to post the results with HT off as well ?
-> 
-> What's the point here to turn HT off? The latency is sensitive to the
-> relationship
-> between the task number and CPU number. Usually less CPU number, more run
-> queue wait time, and worse result.
-
-HT-off numbers are mandatory: turning HT off is by far the simplest way 
-to solve the security bugs in these CPUs.
-
-Any core-scheduling solution *must* perform better than HT-off for all 
-relevant workloads, otherwise what's the point?
-
-Thanks,
-
-	Ingo
+Are there any dependencies between this and the series you've recently posted?
