@@ -2,75 +2,108 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719FEC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04909C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C7520652
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CED206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388157AbfDYBls (ORCPT
+        id S2388180AbfDYBmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 21:41:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7250 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387460AbfDYBlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 21:41:47 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 52953A8057D19D74EFD0;
-        Thu, 25 Apr 2019 09:41:45 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.20) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Apr 2019
- 09:41:35 +0800
-Subject: Re: [PATCH] net: vrf: Fix operation not supported when set vrf mac
-To:     David Miller <davem@davemloft.net>
-CC:     <dsa@cumulusnetworks.com>, <shrijeet@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mingfangsen@huawei.com>
-References: <4e8a50df-bf96-3ef7-2977-71495d80643c@huawei.com>
- <20190424.114545.1491189947661702492.davem@davemloft.net>
-From:   linmiaohe <linmiaohe@huawei.com>
-Message-ID: <a91ac133-c3c0-f791-198d-9a22523b8f81@huawei.com>
-Date:   Thu, 25 Apr 2019 09:41:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190424.114545.1491189947661702492.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.20]
-X-CFilter-Loop: Reflected
+        Wed, 24 Apr 2019 21:42:42 -0400
+Received: from mga11.intel.com ([192.55.52.93]:25341 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387460AbfDYBmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 21:42:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 18:42:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,391,1549958400"; 
+   d="scan'208";a="152134204"
+Received: from zz23f_aep_wp03.sh.intel.com ([10.239.85.39])
+  by FMSMGA003.fm.intel.com with ESMTP; 24 Apr 2019 18:42:40 -0700
+From:   Fan Du <fan.du@intel.com>
+To:     akpm@linux-foundation.org, mhocko@suse.com, fengguang.wu@intel.com,
+        dan.j.williams@intel.com, dave.hansen@intel.com,
+        xishi.qiuxishi@alibaba-inc.com, ying.huang@intel.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Fan Du <fan.du@intel.com>
+Subject: [RFC PATCH 0/5] New fallback workflow for heterogeneous memory system
+Date:   Thu, 25 Apr 2019 09:21:30 +0800
+Message-Id: <1556155295-77723-1-git-send-email-fan.du@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is another approach of building zonelist based on patch #10 of
+patchset[1].
 
+For systems with heterogeneous DRAM and PMEM (persistent memory),
 
-On 2019/4/25 2:45, David Miller wrote:
-> From: linmiaohe <linmiaohe@huawei.com>
-> Date: Sat, 20 Apr 2019 12:09:39 +0800
-> 
->> From: Miaohe Lin <linmiaohe@huawei.com>
->>
->> Vrf device is not able to change mac address now because lack of
->> ndo_set_mac_address. Complete this in case some apps need to do
->> this.
->>
->> Reported-by: Hui Wang <wanghui104@huawei.com>
->> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> It seems useless, but this change is pretty much harmless so I'll
-> apply it.
-> 
-> Thanks.
-> 
-> .
-> 
+1) change ZONELIST_FALLBACK to first fallback to same type nodes,
+   then the other types
 
-That's very nice of you. Thanks a lot.
+2) add ZONELIST_FALLBACK_SAME_TYPE to fallback only same type nodes.
+   To be explicitly selected by __GFP_SAME_NODE_TYPE.
+
+For example, a 2S DRAM+PMEM system may have NUMA distances:
+node   0   1   2   3 
+  0:  10  21  17  28 
+  1:  21  10  28  17 
+  2:  17  28  10  28 
+  3:  28  17  28  10
+
+Node 0,1 are DRAM nodes, node 2, 3 are PMEM nodes.
+
+ZONELIST_FALLBACK
+=================
+Current zoned fallback lists are based on numa distance only,
+which means page allocation request from node 0 will iterate zone order
+like: DRAM node 0 -> PMEM node 2 -> DRAM node 1 -> PMEM node 3.
+
+However PMEM has different characteristics from DRAM,
+the more reasonable or desirable fallback style would be:
+DRAM node 0 -> DRAM node 1 -> PMEM node 2 -> PMEM node 3.
+When DRAM is exhausted, try PMEM then. 
+
+ZONELIST_FALLBACK_SAME_TYPE
+===========================
+Some cases are more suitable to fit PMEM characteristics, like page is
+read more frequently than written. Other cases may prefer DRAM only.
+It doesn't matter page is from local node, or remote.
+
+Create __GFP_SAME_NODE_TYPE to request page of same node type,
+either we got DRAM(from node 0, 1) or PMEM (from node 2, 3), it's kind
+of extension to the nofallback list, but with the same node type. 
+
+This patchset is self-contained, and based on Linux 5.1-rc6.
+
+[1]:
+https://lkml.org/lkml/2018/12/26/138
+
+Fan Du (5):
+  acpi/numa: memorize NUMA node type from SRAT table
+  mmzone: new pgdat flags for DRAM and PMEM
+  x86,numa: update numa node type
+  mm, page alloc: build fallback list on per node type basis
+  mm, page_alloc: Introduce ZONELIST_FALLBACK_SAME_TYPE fallback list
+
+ arch/x86/include/asm/numa.h |  2 ++
+ arch/x86/mm/numa.c          |  3 +++
+ drivers/acpi/numa.c         |  5 ++++
+ include/linux/gfp.h         |  7 ++++++
+ include/linux/mmzone.h      | 35 ++++++++++++++++++++++++++++
+ mm/page_alloc.c             | 57 ++++++++++++++++++++++++++++++++-------------
+ 6 files changed, 93 insertions(+), 16 deletions(-)
+
+-- 
+1.8.3.1
 
