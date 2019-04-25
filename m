@@ -7,56 +7,61 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA7CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6B7C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3745A20717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0552077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220412;
-	bh=QzyhD7N9W9+3Rkpw4KW13ZoZa7onjnWNrb8Pk/Z/3Wc=;
+	s=default; t=1556220415;
+	bh=8/UL2SzB5dfTGCOYMEwzw+35N9x4hjGA99v69n3xvQU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=UyMl0Fws/ZQpmdfQuSPQupYqrsedh0kW56UsRu4lFMwQzV8JmojL7su5PXKSKzp+B
-	 fyTBUcCHEn7iAI29xyT+5ZBaCLXGT80pwfq4WufuiSJMnz1C1VVKSY9VcyMlQ1imgT
-	 Xw6ff8gnzhzm4V8f+mrHiHlebIo5h5ngRu3AaBbI=
+	b=NW/FcM/hJuQMtkIfO1gQiW9CDs8nwmWkvUnOwTDFCvn5yo5lnHEg0h4o4OsEapCw4
+	 iVI/qErEsm0L5sOi3TtzmdX9Mq1j7b7yJtPQksbqzxdnSe5BzL5BhvNsa+qWiUMnW4
+	 Z+iNBKuBGQtiWMJPt9tuhl8V33V09whLBZCR0WLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730650AbfDYT0u (ORCPT
+        id S1730674AbfDYT0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:26:50 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52928 "EHLO
+        Thu, 25 Apr 2019 15:26:54 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53088 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730582AbfDYT0s (ORCPT
+        with ESMTP id S1730113AbfDYT0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:26:48 -0400
+        Thu, 25 Apr 2019 15:26:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=UnN0noVs09U+oC8IHwNuhp93wJJtR3MSoJVYguNN22o=; b=JOyeSbj8wBYI
-        sOE9P5NYs6sXQ5uCXGGULMAIGnjYPffBgnZsbGyf6FhcuPkIcDrMKS69LZ8hs3+TvwOQ/CW8347nV
-        5K1DEeq/v0i4Xk5y3XiWTLBAW+6TYnFCCraPZc0BuEqGTOhRASTJtUMPwWA5Hc2kVIjIkn1sGz9Hg
-        Kbqp0=;
+        List-Archive; bh=yfFCeq4yV0ETcpTbhXvGa9QGBb+TApD4rEysij+3cPs=; b=Ei+E8rHnrDQm
+        JZ9CLSk20Im7G2Y2mw0TREJ2NP0fhKvnn6h2FhhoCcsuvHp4qLu14/DRq+A13u/16ImoW2MxAovfF
+        ylV2ytvIhwXikcGPl8I73+yYx2X8HCd0rSNs9+Ypvg7AvtHpuXxn9V669Ceoay5VwglfI58Dmyzo1
+        qJ0H0=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJk12-0004f9-I9; Thu, 25 Apr 2019 19:26:40 +0000
+        id 1hJk0v-0004dC-4I; Thu, 25 Apr 2019 19:26:33 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id AD9F3441D3C; Thu, 25 Apr 2019 20:26:39 +0100 (BST)
+        id C58A7441D56; Thu, 25 Apr 2019 20:26:29 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     alexandre.belloni@bootlin.com, broonie@kernel.org,
-        Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Ludovic.Desroches@microchip.com, Mark Brown <broonie@kernel.org>,
-        Nicolas.Ferre@microchip.com
-Subject: Applied "spi: atmel-quadspi: fix crash while suspending" to the spi tree
-In-Reply-To: <1556097463-29672-1-git-send-email-claudiu.beznea@microchip.com>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Alexandre@sirena.org.uk, alsa-devel@alsa-project.org,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Olivier Moysan <olivier.moysan@st.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: stm32: i2s: return the get_irq error" to the asoc tree
+In-Reply-To: <1556119724-9873-1-git-send-email-fabien.dessenne@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192639.AD9F3441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu, 25 Apr 2019 20:26:39 +0100 (BST)
+Message-Id: <20190425192629.C58A7441D56@finisterre.ee.mobilebroadband>
+Date:   Thu, 25 Apr 2019 20:26:29 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +69,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: atmel-quadspi: fix crash while suspending
+   ASoC: stm32: i2s: return the get_irq error
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.1
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,47 +94,36 @@ to this mail.
 Thanks,
 Mark
 
-From 12eede5fccc06e422b2de869a3675ee57737bf48 Mon Sep 17 00:00:00 2001
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Date: Wed, 24 Apr 2019 09:17:59 +0000
-Subject: [PATCH] spi: atmel-quadspi: fix crash while suspending
+From 0bbf4084e0cfbbbff8673f3b9867778d5d4b1d6f Mon Sep 17 00:00:00 2001
+From: Fabien Dessenne <fabien.dessenne@st.com>
+Date: Wed, 24 Apr 2019 17:28:44 +0200
+Subject: [PATCH] ASoC: stm32: i2s: return the get_irq error
 
-atmel_qspi objects are kept in spi_controller objects, so, first get
-pointer to spi_controller object and then get atmel_qspi object from
-spi_controller object.
+During probe, return the "get_irq" error value instead of -ENOENT. This
+allows the driver to be deferred probed if needed.
 
-Fixes: 2d30ac5ed633 ("mtd: spi-nor: atmel-quadspi: Use spi-mem interface for atmel-quadspi driver")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/atmel-quadspi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/soc/stm/stm32_i2s.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-index fffc21cd5f79..b3173ebddade 100644
---- a/drivers/spi/atmel-quadspi.c
-+++ b/drivers/spi/atmel-quadspi.c
-@@ -570,7 +570,8 @@ static int atmel_qspi_remove(struct platform_device *pdev)
+diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
+index 8968458eec62..e707d28cb203 100644
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -845,8 +845,9 @@ static int stm32_i2s_parse_dt(struct platform_device *pdev,
+ 	/* Get irqs */
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+-		dev_err(&pdev->dev, "no irq for node %s\n", pdev->name);
+-		return -ENOENT;
++		if (irq != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "no irq for node %s\n", pdev->name);
++		return irq;
+ 	}
  
- static int __maybe_unused atmel_qspi_suspend(struct device *dev)
- {
--	struct atmel_qspi *aq = dev_get_drvdata(dev);
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
- 
- 	clk_disable_unprepare(aq->qspick);
- 	clk_disable_unprepare(aq->pclk);
-@@ -580,7 +581,8 @@ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
- 
- static int __maybe_unused atmel_qspi_resume(struct device *dev)
- {
--	struct atmel_qspi *aq = dev_get_drvdata(dev);
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
- 
- 	clk_prepare_enable(aq->pclk);
- 	clk_prepare_enable(aq->qspick);
+ 	ret = devm_request_irq(&pdev->dev, irq, stm32_i2s_isr, IRQF_ONESHOT,
 -- 
 2.20.1
 
