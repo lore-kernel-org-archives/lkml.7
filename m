@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67C9C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951F2C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835142084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671912084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbfDYLPx (ORCPT
+        id S1730854AbfDYLQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:15:53 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38231 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfDYLPw (ORCPT
+        Thu, 25 Apr 2019 07:16:16 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40352 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfDYLQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:15:52 -0400
-Received: by mail-lf1-f68.google.com with SMTP id v1so4737339lfg.5;
-        Thu, 25 Apr 2019 04:15:49 -0700 (PDT)
+        Thu, 25 Apr 2019 07:16:15 -0400
+Received: by mail-lf1-f67.google.com with SMTP id o16so6381892lfl.7;
+        Thu, 25 Apr 2019 04:16:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=blDCyrEODowPa5clZ/fiSVTKEEZv9ME47UoHqDskt5U=;
-        b=QuyCVyd9e6xzYZhPsijsGkQh/ROi37P82teo1R4UsEG02kXNranbO5G3sMTQrisOwc
-         D9ZEYNnD5OjVBlGoP1m0lBPF339pwNcnZRSRqFDX+2CJ+SWyXEEVvJVVnpKFpMVvihRC
-         gRt0nM4F0cMH6cD+hgvMqKprJnM5/++CyonbVnRVyDDG2Cy8mho0LmNi8qPfKgS3RSia
-         VSJN9D2p+2MbHFlXxljGmVcnSpl2gx60csp9rABX4ZTxXH0grUf9Ap2h1dj69kkkiSC1
-         HpbqzEs84JA85RvJeNiBPTOLdy/b5GXQeo+Xi2J8tOw3rUaxbStbsDWTU5GbpTCld9Zu
-         PcZQ==
-X-Gm-Message-State: APjAAAVLjNo5hbOHrvk+WsJcQVsv6/8wgrys2LaP5OyHEodcGRzgDA0b
-        ts0hCyC6/pYwwoUPohRuWWE=
-X-Google-Smtp-Source: APXvYqyQ38zclCVRN5N5GwHh4KA5xhpI4ZmxyGofcnobGAZXkE2fgOf7ofwZuyQCJ9GzThVplukEvg==
-X-Received: by 2002:ac2:5582:: with SMTP id v2mr20247328lfg.19.1556190948724;
-        Thu, 25 Apr 2019 04:15:48 -0700 (PDT)
+        bh=aHE7fQArN3X0/wo8VSAGDCuy0SjLds/v+QvmhqAqXKk=;
+        b=fZxr41ws2oZokDr0ZU83OiA73g5RZ4hV9s+09i6HHB/iY2AwM6c6z2QQ50jWaR0oGt
+         nzz3Cz3k8ZCz+E5OlyPEyd0B3r/kaXkMekLG/rwq12JVGFCi0WJImOz3W+d95YIUXIfl
+         Kn9VR+fTNKY2rulGYb0ok9yW+EjERy9fhEMJDgRBALgV3++Y4xlgLWFCTGPTIsqXFVz+
+         muvMrxM+wUx0Ca2uski6JxGPDYGU2fk8YLfFriya5gsRbbkwk1Fm4BU1E5O/6IT+gk7P
+         xMU/KjHRClwBlAqpLkEp63hOEsT389kf4h1tgf1Xm0JCnN76XCtIE8mYz5PH5L8JmDWv
+         IFNA==
+X-Gm-Message-State: APjAAAV0A3ssvi4/VQ0YUapzha0ZQQ2gbaOAoKP9TL2D4L4X2zLZRWJy
+        tLoWzj9Qw9jFTB31uh0e4yk=
+X-Google-Smtp-Source: APXvYqzaZt+ALZWJlEDV1yax6DpsYKDlwQ62qKeuZR95dKatwQ6VyqIxk+JIQ1kRgaavlD07vni4DQ==
+X-Received: by 2002:a19:ae0b:: with SMTP id f11mr18598143lfc.106.1556190972143;
+        Thu, 25 Apr 2019 04:16:12 -0700 (PDT)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id z30sm4948330lfb.87.2019.04.25.04.15.47
+        by smtp.gmail.com with ESMTPSA id d24sm928041lfj.30.2019.04.25.04.16.10
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 04:15:48 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 14:15:35 +0300
+        Thu, 25 Apr 2019 04:16:11 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 14:16:04 +0300
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         mazziesaccount@gmail.com
@@ -63,9 +63,9 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
         heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
-Subject: [PATCH RESEND v13 4/8] dt-bindings: mfd: Document first ROHM BD70528
- bindings
-Message-ID: <resend.9208a23a40127df32d3efc6e0ac02d9fcd49d80e.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH RESEND v13 5/8] gpio: Initial support for ROHM bd70528 GPIO
+ block
+Message-ID: <resend.f13335eac4754ec9f49c606b18a0d8b5f56587b1.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover2.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -77,132 +77,300 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
-drivers) and 4 GPIO pins which can be configured for I/O or
-as interrupt sources withe configurable trigger levels.
+ROHM BD70528 PMIC has 4 GPIO pins. Allow them to be
+controlled by GPIO framework.
+
+IRQs are handled by regmap-irq and GPIO driver is not
+aware of the irq usage.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
 Changelog v13:
 - No changes
 
 Changelog v12:
-- Minor grammar/styling fixes suggested by Lee Jones
+- No functional changes
+- Styling fixes
 
- .../bindings/mfd/rohm,bd70528-pmic.txt        | 102 ++++++++++++++++++
- 1 file changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+ drivers/gpio/Kconfig        |  11 ++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-bd70528.c | 232 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 244 insertions(+)
+ create mode 100644 drivers/gpio/gpio-bd70528.c
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 3f50526a771f..2789530a93ae 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -979,6 +979,17 @@ config GPIO_ARIZONA
+ 	help
+ 	  Support for GPIOs on Wolfson Arizona class devices.
+ 
++config GPIO_BD70528
++	tristate "ROHM BD70528 GPIO support"
++	depends on MFD_ROHM_BD70528
++	help
++	  Support for GPIOs on ROHM BD70528 PMIC. There are four GPIOs
++	  available on the ROHM PMIC in total. The GPIOs can also
++	  generate interrupts.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called gpio-bd70528.
++
+ config GPIO_BD9571MWV
+ 	tristate "ROHM BD9571 GPIO support"
+ 	depends on MFD_BD9571MWV
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 54d55274b93a..e93e376bae0b 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -35,6 +35,7 @@ obj-$(CONFIG_GPIO_ATH79)	+= gpio-ath79.o
+ obj-$(CONFIG_GPIO_ASPEED)	+= gpio-aspeed.o
+ obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+= gpio-raspberrypi-exp.o
+ obj-$(CONFIG_GPIO_BCM_KONA)	+= gpio-bcm-kona.o
++obj-$(CONFIG_GPIO_BD70528) 	+= gpio-bd70528.o
+ obj-$(CONFIG_GPIO_BD9571MWV)	+= gpio-bd9571mwv.o
+ obj-$(CONFIG_GPIO_BRCMSTB)	+= gpio-brcmstb.o
+ obj-$(CONFIG_GPIO_BT8XX)	+= gpio-bt8xx.o
+diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
 new file mode 100644
-index 000000000000..c3c02ce73cde
+index 000000000000..fd85605d2dab
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-@@ -0,0 +1,102 @@
-+* ROHM BD70528 Power Management Integrated Circuit bindings
++++ b/drivers/gpio/gpio-bd70528.c
+@@ -0,0 +1,232 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2018 ROHM Semiconductors
++// gpio-bd70528.c ROHM BD70528MWV gpio driver
 +
-+BD70528MWV is an ultra-low quiescent current general purpose, single-chip,
-+power management IC for battery-powered portable devices. The IC
-+integrates 3 ultra-low current consumption buck converters, 3 LDOs and 2
-+LED Drivers. Also included are 4 GPIOs, a real-time clock (RTC), a 32kHz
-+clock gate, high-accuracy VREF for use with an external ADC, flexible
-+dual-input power path, 10 bit SAR ADC for battery temperature monitor and
-+1S battery charger with scalable charge currents.
++#include <linux/gpio/driver.h>
++#include <linux/mfd/rohm-bd70528.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +
-+Required properties:
-+ - compatible		: Should be "rohm,bd70528"
-+ - reg			: I2C slave address.
-+ - interrupts		: The interrupt line the device is connected to.
-+ - interrupt-controller	: To indicate BD70528 acts as an interrupt controller.
-+ - #interrupt-cells	: Should be 2. Usage is compliant to the 2 cells
-+			  variant of ../interrupt-controller/interrupts.txt
-+ - gpio-controller	: To indicate BD70528 acts as a GPIO controller.
-+ - #gpio-cells		: Should be 2. The first cell is the pin number and
-+			  the second cell is used to specify flags. See
-+			  ../gpio/gpio.txt for more information.
-+ - #clock-cells		: Should be 0.
-+ - regulators:		: List of child nodes that specify the regulators.
-+			  Please see ../regulator/rohm,bd70528-regulator.txt
++#define GPIO_IN_REG(offset) (BD70528_REG_GPIO1_IN + (offset) * 2)
++#define GPIO_OUT_REG(offset) (BD70528_REG_GPIO1_OUT + (offset) * 2)
 +
-+Optional properties:
-+ - clock-output-names	: Should contain name for output clock.
-+
-+Example:
-+/* External oscillator */
-+osc: oscillator {
-+	compatible = "fixed-clock";
-+	#clock-cells = <1>;
-+	clock-frequency  = <32768>;
-+	clock-output-names = "osc";
++struct bd70528_gpio {
++	struct rohm_regmap_dev chip;
++	struct gpio_chip gpio;
 +};
 +
-+pmic: pmic@4b {
-+	compatible = "rohm,bd70528";
-+	reg = <0x4b>;
-+	interrupt-parent = <&gpio1>;
-+	interrupts = <29 GPIO_ACTIVE_LOW>;
-+	clocks = <&osc 0>;
-+	#clock-cells = <0>;
-+	clock-output-names = "bd70528-32k-out";
-+	#gpio-cells = <2>;
-+	gpio-controller;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
++static int bd70528_set_debounce(struct bd70528_gpio *bdgpio,
++				unsigned int offset, unsigned int debounce)
++{
++	u8 val;
 +
-+	regulators {
-+		buck1: BUCK1 {
-+			regulator-name = "buck1";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <3400000>;
-+			regulator-boot-on;
-+			regulator-ramp-delay = <125>;
-+		};
-+		buck2: BUCK2 {
-+			regulator-name = "buck2";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+			regulator-ramp-delay = <125>;
-+		};
-+		buck3: BUCK3 {
-+			regulator-name = "buck3";
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-boot-on;
-+			regulator-ramp-delay = <250>;
-+		};
-+		ldo1: LDO1 {
-+			regulator-name = "ldo1";
-+			regulator-min-microvolt = <1650000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+		};
-+		ldo2: LDO2 {
-+			regulator-name = "ldo2";
-+			regulator-min-microvolt = <1650000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+		};
++	switch (debounce) {
++	case 0:
++		val = BD70528_DEBOUNCE_DISABLE;
++		break;
++	case 1 ... 15:
++		val = BD70528_DEBOUNCE_15MS;
++		break;
++	case 16 ... 30:
++		val = BD70528_DEBOUNCE_30MS;
++		break;
++	case 31 ... 50:
++		val = BD70528_DEBOUNCE_50MS;
++		break;
++	default:
++		dev_err(bdgpio->chip.dev,
++			"Invalid debouce value %u\n", debounce);
++		return -EINVAL;
++	}
++	return regmap_update_bits(bdgpio->chip.regmap, GPIO_IN_REG(offset),
++				 BD70528_DEBOUNCE_MASK, val);
++}
 +
-+		ldo3: LDO3 {
-+			regulator-name = "ldo3";
-+			regulator-min-microvolt = <1650000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+		led_ldo1: LED_LDO1 {
-+			regulator-name = "led_ldo1";
-+			regulator-min-microvolt = <200000>;
-+			regulator-max-microvolt = <300000>;
-+		};
-+		led_ldo2: LED_LDO2 {
-+			regulator-name = "led_ldo2";
-+			regulator-min-microvolt = <200000>;
-+			regulator-max-microvolt = <300000>;
-+		};
-+	};
++static int bd70528_get_direction(struct gpio_chip *chip, unsigned int offset)
++{
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++	int val, ret;
++
++	/* Do we need to do something to IRQs here? */
++	ret = regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(offset), &val);
++	if (ret) {
++		dev_err(bdgpio->chip.dev, "Could not read gpio direction\n");
++		return ret;
++	}
++
++	return !(val & BD70528_GPIO_OUT_EN_MASK);
++}
++
++static int bd70528_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
++				   unsigned long config)
++{
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++
++	switch (pinconf_to_config_param(config)) {
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++		return regmap_update_bits(bdgpio->chip.regmap,
++					  GPIO_OUT_REG(offset),
++					  BD70528_GPIO_DRIVE_MASK,
++					  BD70528_GPIO_OPEN_DRAIN);
++		break;
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		return regmap_update_bits(bdgpio->chip.regmap,
++					  GPIO_OUT_REG(offset),
++					  BD70528_GPIO_DRIVE_MASK,
++					  BD70528_GPIO_PUSH_PULL);
++		break;
++	case PIN_CONFIG_INPUT_DEBOUNCE:
++		return bd70528_set_debounce(bdgpio, offset,
++					    pinconf_to_config_argument(config));
++		break;
++	default:
++		break;
++	}
++	return -ENOTSUPP;
++}
++
++static int bd70528_direction_input(struct gpio_chip *chip, unsigned int offset)
++{
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++
++	/* Do we need to do something to IRQs here? */
++	return regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				 BD70528_GPIO_OUT_EN_MASK,
++				 BD70528_GPIO_OUT_DISABLE);
++}
++
++static void bd70528_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			     int value)
++{
++	int ret;
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++	u8 val = (value) ? BD70528_GPIO_OUT_HI : BD70528_GPIO_OUT_LO;
++
++	ret = regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				 BD70528_GPIO_OUT_MASK, val);
++	if (ret)
++		dev_err(bdgpio->chip.dev, "Could not set gpio to %d\n", value);
++}
++
++static int bd70528_direction_output(struct gpio_chip *chip, unsigned int offset,
++				    int value)
++{
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++
++	bd70528_gpio_set(chip, offset, value);
++	return regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				 BD70528_GPIO_OUT_EN_MASK,
++				 BD70528_GPIO_OUT_ENABLE);
++}
++
++#define GPIO_IN_STATE_MASK(offset) (BD70528_GPIO_IN_STATE_BASE << (offset))
++
++static int bd70528_gpio_get_o(struct bd70528_gpio *bdgpio, unsigned int offset)
++{
++	int ret;
++	unsigned int val;
++
++	ret = regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(offset), &val);
++	if (!ret)
++		ret = !!(val & BD70528_GPIO_OUT_MASK);
++	else
++		dev_err(bdgpio->chip.dev, "GPIO (out) state read failed\n");
++
++	return ret;
++}
++
++static int bd70528_gpio_get_i(struct bd70528_gpio *bdgpio, unsigned int offset)
++{
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(bdgpio->chip.regmap, BD70528_REG_GPIO_STATE, &val);
++
++	if (!ret)
++		ret = !(val & GPIO_IN_STATE_MASK(offset));
++	else
++		dev_err(bdgpio->chip.dev, "GPIO (in) state read failed\n");
++
++	return ret;
++}
++
++static int bd70528_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	int ret = -EINVAL;
++	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
++
++	/*
++	 * There is a race condition where someone might be changing the
++	 * GPIO direction after we get it but before we read the value. But
++	 * application design where GPIO direction may be changed just when
++	 * we read GPIO value would be pointless as reader could not know
++	 * whether the returned high/low state is caused by input or output.
++	 * Or then there must be other ways to mitigate the issue. Thus
++	 * locking would make no sense.
++	 */
++	ret = bd70528_get_direction(chip, offset);
++	if (ret == 0)
++		ret = bd70528_gpio_get_o(bdgpio, offset);
++	else if (ret == 1)
++		ret = bd70528_gpio_get_i(bdgpio, offset);
++	else
++		dev_err(bdgpio->chip.dev, "failed to read GPIO direction\n");
++
++	return ret;
++}
++
++static int bd70528_probe(struct platform_device *pdev)
++{
++	struct bd70528_gpio *bdgpio;
++	struct rohm_regmap_dev *bd70528;
++	int ret;
++
++	bd70528 = dev_get_drvdata(pdev->dev.parent);
++	if (!bd70528) {
++		dev_err(&pdev->dev, "No MFD driver data\n");
++		return -EINVAL;
++	}
++
++	bdgpio = devm_kzalloc(&pdev->dev, sizeof(*bdgpio),
++			      GFP_KERNEL);
++	if (!bdgpio)
++		return -ENOMEM;
++	bdgpio->chip.dev = &pdev->dev;
++	bdgpio->gpio.parent = pdev->dev.parent;
++	bdgpio->gpio.label = "bd70528-gpio";
++	bdgpio->gpio.owner = THIS_MODULE;
++	bdgpio->gpio.get_direction = bd70528_get_direction;
++	bdgpio->gpio.direction_input = bd70528_direction_input;
++	bdgpio->gpio.direction_output = bd70528_direction_output;
++	bdgpio->gpio.set_config = bd70528_gpio_set_config;
++	bdgpio->gpio.can_sleep = true;
++	bdgpio->gpio.get = bd70528_gpio_get;
++	bdgpio->gpio.set = bd70528_gpio_set;
++	bdgpio->gpio.ngpio = 4;
++	bdgpio->gpio.base = -1;
++#ifdef CONFIG_OF_GPIO
++	bdgpio->gpio.of_node = pdev->dev.parent->of_node;
++#endif
++	bdgpio->chip.regmap = bd70528->regmap;
++
++	ret = devm_gpiochip_add_data(&pdev->dev, &bdgpio->gpio,
++				     bdgpio);
++	if (ret)
++		dev_err(&pdev->dev, "gpio_init: Failed to add bd70528-gpio\n");
++
++	return ret;
++}
++
++static struct platform_driver bd70528_gpio = {
++	.driver = {
++		.name = "bd70528-gpio"
++	},
++	.probe = bd70528_probe,
 +};
++
++module_platform_driver(bd70528_gpio);
++
++MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
++MODULE_DESCRIPTION("BD70528 voltage regulator driver");
++MODULE_LICENSE("GPL");
 -- 
 2.17.2
 
