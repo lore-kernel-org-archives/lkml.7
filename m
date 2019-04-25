@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D8DC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC09C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B1D20890
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982912088F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731097AbfDYM3t (ORCPT
+        id S1731108AbfDYM3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:29:49 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:44815 "EHLO
+        Thu, 25 Apr 2019 08:29:53 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:54783 "EHLO
         relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfDYM3s (ORCPT
+        with ESMTP id S1726067AbfDYM3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:29:48 -0400
+        Thu, 25 Apr 2019 08:29:50 -0400
 X-Originating-IP: 90.88.147.33
 Received: from localhost.localdomain (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 4C87F240007;
-        Thu, 25 Apr 2019 12:29:43 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 06B0B240019;
+        Thu, 25 Apr 2019 12:29:46 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 Cc:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
@@ -32,9 +32,9 @@ Cc:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Eben Upton <eben@raspberrypi.org>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v7 1/4] drm/vc4: Reformat and the binner bo allocation helper
-Date:   Thu, 25 Apr 2019 14:29:14 +0200
-Message-Id: <20190425122917.26536-2-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v7 2/4] drm/vc4: Check for V3D before binner bo alloc
+Date:   Thu, 25 Apr 2019 14:29:15 +0200
+Message-Id: <20190425122917.26536-3-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190425122917.26536-1-paul.kocialkowski@bootlin.com>
 References: <20190425122917.26536-1-paul.kocialkowski@bootlin.com>
@@ -45,65 +45,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for wrapping the binner bo allocation helper with
-put/get helpers, pass the vc4 dev directly and drop the vc4 prefix.
+Check that we have a V3D device registered before attempting to
+allocate a binner buffer object.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- drivers/gpu/drm/vc4/vc4_v3d.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/vc4/vc4_v3d.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_v3d.c b/drivers/gpu/drm/vc4/vc4_v3d.c
-index a4b6859e3af6..7c490106e185 100644
+index 7c490106e185..c16db4665af6 100644
 --- a/drivers/gpu/drm/vc4/vc4_v3d.c
 +++ b/drivers/gpu/drm/vc4/vc4_v3d.c
-@@ -213,7 +213,7 @@ int vc4_v3d_get_bin_slot(struct vc4_dev *vc4)
- }
- 
- /**
-- * vc4_allocate_bin_bo() - allocates the memory that will be used for
-+ * bin_bo_alloc() - allocates the memory that will be used for
-  * tile binning.
-  *
-  * The binner has a limitation that the addresses in the tile state
-@@ -234,9 +234,8 @@ int vc4_v3d_get_bin_slot(struct vc4_dev *vc4)
-  * overall CMA pool before they make scenes complicated enough to run
-  * out of bin space.
-  */
--static int vc4_allocate_bin_bo(struct drm_device *drm)
-+static int bin_bo_alloc(struct vc4_dev *vc4)
- {
--	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 	struct vc4_v3d *v3d = vc4->v3d;
- 	uint32_t size = 16 * 1024 * 1024;
+@@ -241,6 +241,9 @@ static int bin_bo_alloc(struct vc4_dev *vc4)
  	int ret = 0;
-@@ -251,7 +250,7 @@ static int vc4_allocate_bin_bo(struct drm_device *drm)
- 	INIT_LIST_HEAD(&list);
+ 	struct list_head list;
  
- 	while (true) {
--		struct vc4_bo *bo = vc4_bo_create(drm, size, true,
-+		struct vc4_bo *bo = vc4_bo_create(vc4->dev, size, true,
- 						  VC4_BO_TYPE_BIN);
- 
- 		if (IS_ERR(bo)) {
-@@ -333,7 +332,7 @@ static int vc4_v3d_runtime_resume(struct device *dev)
- 	struct vc4_dev *vc4 = v3d->vc4;
- 	int ret;
- 
--	ret = vc4_allocate_bin_bo(vc4->dev);
-+	ret = bin_bo_alloc(vc4);
- 	if (ret)
- 		return ret;
- 
-@@ -403,7 +402,7 @@ static int vc4_v3d_bind(struct device *dev, struct device *master, void *data)
- 	if (ret != 0)
- 		return ret;
- 
--	ret = vc4_allocate_bin_bo(drm);
-+	ret = bin_bo_alloc(vc4);
- 	if (ret) {
- 		clk_disable_unprepare(v3d->clk);
- 		return ret;
++	if (!v3d)
++		return -ENODEV;
++
+ 	/* We may need to try allocating more than once to get a BO
+ 	 * that doesn't cross 256MB.  Track the ones we've allocated
+ 	 * that failed so far, so that we can free them when we've got
 -- 
 2.21.0
 
