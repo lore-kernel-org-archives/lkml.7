@@ -6,50 +6,124 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF58AC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB65C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC001206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DCB206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfDYOSt (ORCPT
+        id S1727170AbfDYOTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:18:49 -0400
-Received: from verein.lst.de ([213.95.11.211]:34787 "EHLO newverein.lst.de"
+        Thu, 25 Apr 2019 10:19:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:56141 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfDYOSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:18:49 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id C43A268B20; Thu, 25 Apr 2019 16:18:32 +0200 (CEST)
-Date:   Thu, 25 Apr 2019 16:18:32 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ian Abbott <abbotti@mev.co.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org,
-        "kernel-janitors@vger.kernel.org H Hartley Sweeten" 
-        <hsweeten@visionengravers.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma-mapping: remove an unnecessary NULL check
-Message-ID: <20190425141832.GA16643@lst.de>
-References: <20190424142437.GA29490@mwanda> <20190424142743.GC20974@lst.de> <3142dc82-1d4c-5f01-678e-628038d86bd6@mev.co.uk>
+        id S1726170AbfDYOTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:19:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 07:19:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
+   d="scan'208";a="143549570"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Apr 2019 07:19:44 -0700
+Date:   Thu, 25 Apr 2019 07:19:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+Message-ID: <20190425141944.GA31197@linux.intel.com>
+References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
+ <20190424143238.GB18442@linux.intel.com>
+ <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
+ <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
+ <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
+ <be509b34ba01a22845363aeb0b0f053f25c2d9c1.camel@intel.com>
+ <7568a794-2e91-c84c-5b64-d33e394f0e2b@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3142dc82-1d4c-5f01-678e-628038d86bd6@mev.co.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <7568a794-2e91-c84c-5b64-d33e394f0e2b@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 03:13:49PM +0100, Ian Abbott wrote:
-> So for comedi_isadma, we can just replace the NULL with a pointer to a 
-> static dummy device with a 24-bit coherent mask?
+On Thu, Apr 25, 2019 at 03:07:35PM +0800, Like Xu wrote:
+> On 2019/4/25 14:30, Xiaoyao Li wrote:
+> >>>Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes is
+> >>>that we cannot assmue the reserved bits 31:16 of ECX is always 0 for the
+> >>>future generation.
 
-It should be converted to a proper isa_driver, so that it gets a real
-struct device.
+It doesn't matter if future CPUs use 31:16 for other things since this
+code only cares about whether or not CPUID.1F exists.  The check
+entry->eax >= 0x1f ensures that CPUID.1F will return zeros if the leaf
+does *NOT* exist, ergo the check against CPUID.1F.ECX only needs to
+look for a non-zero value.  CPUID.1F.ECX is the logical choice for
+detecting support because it is guaranteed to be non-zero if the leaf
+actually exists (because bits 15:8 will be non-zero).  Whether or not
+bits 31:16 are non-zero is irrelevant.
+
+> >>
+> >>It's true cause the statement in public spec is not "Reserved = 0" but
+> >>"Bits 31 - 16: Reserved".
+> >>
+> >>>
+> >>>In my opinion, Sean's codes is OK and much simple and clear.
+> >>
+> >>If the host cpuid.0.eax is greater than 0x1f but actually it doesn't
+> >>have multi-chip packaging technology and we may want to expose
+> >>entry->eax to some value smaller than 0x1f but greater than 0x14, much
+> >>effort needs to apply on Sean's code.
+> >>
+> >>My improvement is good to overwrite cpuid.0.eax in future usage
+> >>from the perspective of kvm feature setting not just from value check.
+> >
+> >Alright, there is something wrong in your code that you haven't realised.
+> >
+> >When you do
+> >	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+> >
+> >it changes the entry->eax if entry->eax > 0x14. So you cannot directly use
+> >cpuid_ecx(0x1f). At least, you need to cache the value of entry->eax, like:
+> >	
+> >	u32 max_leaf = entry->eax;
+> >	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+> >	
+> >	//...leaf between 0x14 and 0x1f
+> >	
+> >	if (max_leaf >= 0x1f && (cpuid_ecx(0x1f) & 0x0000ff00))
+> >  		entry->eax = 0x1f;
+> 
+> The cache value make no sense on this.
+
+Xiaoyao is pointing out that by limiting entry->eax to 0x14 (or 0xd), then
+it can't be used to detect support for CPUID.1F since KVM will have lost
+the required information.
+
+> >However, handling in increasing order in totally wrong. Since it's to report the
+> >max the leaf supported, we should handle in descending order, which is what Sean
+> >does.
+> 
+> There is no need to check "entry->eax >= 0x1f" before "setting entry->eax =
+> 0x1f" if and only if cpuid_ecx(0x1f) meets requirements.
+
+entry->eax absolutely needs to be checked, otherwise you have no idea what
+CPUID leaf is actually being consumed.  For example, a CPU with a maximum
+basic CPUID leaf of 0xB will report information that is indistinguishable
+from the actual CPUID.1F, i.e. KVM will incorrectly think the CPU supports
+CPUID.1F regardless of what heuristic is used to detect a "valid" CPUID.1F
+if it only looks at the result of CPUID.1F.
+
+> An increasing manner helps to overwrite this value on demand in a flat code
+> flow (easy to understand and maintain) not an if-else_if-else flow.
+
+Maybe in the future the code will need to be refactored as more cases are
+added, but for now an if-else is quite readable.  Worry about the future
+when it happens. :-)
