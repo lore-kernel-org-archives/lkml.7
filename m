@@ -2,102 +2,98 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B48C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F54C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E62218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6890218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Om/tjs+c"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vz99B6wW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbfDYMUU (ORCPT
+        id S1729154AbfDYMWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:20:20 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:50251 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfDYMUU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:20:20 -0400
-Received: by mail-it1-f195.google.com with SMTP id q14so12038583itk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 05:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=Ff5AtzwwT3/+/+DhAf7emgB+G9uyqnQ39QFzfiHlnCY=;
-        b=Om/tjs+cIisp8QHDq6CzrUaiOLSXRjROsCaIOMcfRT7mExJkBP94D6lLaZqgBjmK7E
-         IhxDMxIDh6ZRbqEyX+oeKocEyjgq0RWG29jCZumjVsCAVAXZmywYbn8qZHxE9DhMM3Q7
-         fC1vizrABzM9jaOPzrsHF9sfKzMnciSxuLttMK5ICCOzSw+9+mhdDFphZxs9Kbmvhu6N
-         TtmlT4ceZoENTs/l/PFUspaub2hvQijbD14amJ0ZUDUxSKdhU2LZjV78hiJHAhlwPqKP
-         oHiUMJIna1eVjx/uNAdb9JzIrhaX9BexQ+YAQR6sEGBjxhOtpiNgU2kAWR9Sat6WPilD
-         sfhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=Ff5AtzwwT3/+/+DhAf7emgB+G9uyqnQ39QFzfiHlnCY=;
-        b=Z5qmjRMTaupWjCVfQ9McKUoBOTfIWzObB/F4vJ0sMtBl3BfSCAuFSd2/SzHuxC1Xdo
-         tTfkekhZeNPmtb2TOq8+qIo5n7sEG57gxLC/JxZkOsNF9rI0wUJF5jgqBUnIi5ETY2wQ
-         Im9h5Dst33f1PWHMTQdYnAkmJUWnPMeAuNkJ/Cbhl1RvxTQTSHzbAfkoMA2jxpiJJPIp
-         JRmJMEyIw3edpXYBIXtdYc6vbzmUa0FVJxaIVUns1l8KEsFTLFunYO6D17bXNcncudO/
-         ET8Oo7T+h9iFwoKjfBboLPpe//wTg4ORJNwpEV3jif+III4Z2ibjFss+r1zCR2lXCLFa
-         k8HQ==
-X-Gm-Message-State: APjAAAUaEs+seQKTXUy+ku2BtMdETznQpWNF2IoKCdfcir0Z9JeF2l5B
-        Vv2PuXSmb2UVw47FuAKoRhaK61JLpKYYeWwn+dz7NlpgqwE=
-X-Google-Smtp-Source: APXvYqzvwgFEFTx/KOu9/KRtMQB8bZPew2d9yQi0ISoduzu75d/y4B7m7oOTvlB/BIjiqYUpckQCHfBQ76huRI/Tbss=
-X-Received: by 2002:a24:7350:: with SMTP id y77mr3050214itb.52.1556194819534;
- Thu, 25 Apr 2019 05:20:19 -0700 (PDT)
+        Thu, 25 Apr 2019 08:22:44 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:43814 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbfDYMWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 08:22:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=UY0arVveNFSYSz3FddQN2GcVIvcVeKJYS6aneMZAL98=; b=vz99B6wWCVVclfobMF8j/ZgDSW
+        xX9vbDbIRzAU7uflhcv790PMFRUnQEY/MWB9S6ZVieCrk8+DNF8jwQ4QO6onSyHzSc7FKgQ+6q4Vn
+        wCaHm89UFu0jMIBByu1A4DhckTTtPg7T/9Pim1aOMzYrLibCKLffSpLeqwfgFIxIc6Qc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hJdOi-0002F1-0t; Thu, 25 Apr 2019 14:22:40 +0200
+Date:   Thu, 25 Apr 2019 14:22:40 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
+        "Voon, Weifeng" <weifeng.voon@intel.com>
+Subject: Re: [PATCH 4/7] net: stmmac: introducing support for DWC xPCS logics
+Message-ID: <20190425122240.GB8117@lunn.ch>
+References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
+ <1556126241-2774-5-git-send-email-weifeng.voon@intel.com>
+ <20190424134136.GO28405@lunn.ch>
+ <AF233D1473C1364ABD51D28909A1B1B75C0B0244@pgsmsx114.gar.corp.intel.com>
+ <20190425032120.GJ3371@lunn.ch>
+ <AF233D1473C1364ABD51D28909A1B1B75C0B0E38@pgsmsx114.gar.corp.intel.com>
 MIME-Version: 1.0
-From:   Uros Bizjak <ubizjak@gmail.com>
-Date:   Thu, 25 Apr 2019 14:20:08 +0200
-Message-ID: <CAFULd4ZDbg5jFkLzRnEgnVgRwRJa+OG2EvGYUEFQ0RASux2qqg@mail.gmail.com>
-Subject: Re: x86: Use named address spaces in asm/percpu.h
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AF233D1473C1364ABD51D28909A1B1B75C0B0E38@pgsmsx114.gar.corp.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> * Ingo Molnar <mingo@kernel.org> wrote:
->
->> Not all GCC versions seem to like this series:
->>
->>  In file included from arch/x86/mm/tlb.c:12:0:
->>  arch/x86/mm/tlb.c: In function =E2=80=98switch_mm_irqs_off=E2=80=99:
->>  ./arch/x86/include/asm/mmu_context.h:210:28: internal compiler error: S=
-egmentation fault
->>   #define switch_mm_irqs_off switch_mm_irqs_off
->>  arch/x86/mm/tlb.c:183:6: note: in expansion of macro =E2=80=98switch_mm=
-_irqs_off=E2=80=99
->>   void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next=
-,
->>  Please submit a full bug report,
->>  with preprocessed source if appropriate.
->>  See <file:///usr/share/doc/gcc-7/README.Bugs> for instructions.
->>
->> gcc version 7.3.0 (Ubuntu 7.3.0-16ubuntu3)
->
-> That's with a 32-bit kernel, config attached.
+> >> >> +/* MII MMD AN Status defines for C37 AN SGMII Status */
+> >> >> +#define AN_STAT_C37_AN_CMPLT		BIT(0)	/* AN
+> >Complete Intr */
+> >> >> +#define AN_STAT_C37_AN_FD		BIT(1)	/* Full Duplex */
+> >> >> +#define AN_STAT_C37_AN_SPEED_SHIFT	2	/* AN Speed shift */
+> >> >> +#define AN_STAT_C37_AN_SPEED		GENMASK(3, 2)	/* AN
+> >Speed */
+> >> >> +#define AN_STAT_C37_AN_10MBPS		0x0	/* 10 Mbps */
+> >> >> +#define AN_STAT_C37_AN_100MBPS		0x1	/* 100 Mbps
+> >> >*/
+> >> >> +#define AN_STAT_C37_AN_1000MBPS		0x2	/* 1000 Mbps
+> >> >*/
+> >> >> +#define AN_STAT_C37_AN_LNKSTS		BIT(4)	/* Link Status
+> >*/
+> >> >
+> >> >Is these are standardized, not proprietary, consider adding them to
+> >> >include/uapi/linux/mii.h so similar.
+> >>
+> >> Yeah, it does look very standardized. However, per DW spec, they are
+> >> vendor-specific register set which uses MDIO_MMD_VEND2 to access.
+> >
+> >Maybe you can go get the 802.3 standard and check section 37. If these
+> >registers are the same, they could still be placed in mii.h. What MMD
+> >you use is a different matter.
+> >
+> I cross-checked on 802.3 section 37.2.5.1 Management registers, the spec only
+> talks about BMSR and extended status. I also checked on 802.3 section 45.2
+> MDIO interface registers, section 45.2.7 AN registers, section 45.2.9 &
+> 45.2.10 Vendor specific MMD1 & MMD2, there are no field format that
+> matches the above bit fields. So, it should be reasonable to park these #defines
+> in this local file for now.  
 
-I am resurrecting an old thread at [1] that tried to introduce named
-address spaces in asm/percpu.h. The thread ended with the above
-message [2], but no bugreport was ever filled to GCC's bugzilla. Can
-please someone from linux  community file a PR with a failing testcase
-to GCC Bugzilla, so we (the GCC community) can analyze the problem and
-eventually fix the compiler?
+Thanks for checking the standards. If these don't actually represent
+anything from C37, maybe you should change the name to avoid
+confusion. s/C37/SGMII/g ?
 
-[1] https://lkml.org/lkml/2018/9/12/646
-[2] https://lkml.org/lkml/2018/9/12/1052
-[3] https://gcc.gnu.org/bugs/
-
-Thanks,
-Uros.
+	   Thanks
+		Andrew
