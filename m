@@ -2,95 +2,104 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684F0C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8F9C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D53208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3D7208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PFrN8ifn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2gypBO3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfDYIcv (ORCPT
+        id S1729374AbfDYIdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 04:32:51 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44503 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfDYIcu (ORCPT
+        Thu, 25 Apr 2019 04:33:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48294 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfDYIdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 04:32:50 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y12so8142203plk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 01:32:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=jIW32WrHBs99jVmzDwkmowyofrzG8/2LnuHeALQVAA0=;
-        b=PFrN8ifnasv9JFgkqMxUdwY4XqcumWQ4tFtku3YIX7Z8Xw3gMjGdXebz+mGKwVe3mf
-         uqSpHaV6X97Jexjs0XQuwfh4lPnDY/ZIoIY8NOMTj6txsQpC4YKAxw8PNYDR4UQR4hTz
-         iLfRvmxeD1AosROYrBQhfuGldifCGsN+T7ZywERZ9II2lIfeeNjxkRqKorY5Ey9eG7jD
-         8cv8Tjx32QphwlbVlbltaQKZxV5cYrozCgU9mKOBfHeCa/S8U1AkRLVKVDKbonGdR6Oy
-         laSrH3cZYaKsWznCjnH3NYmvY00bF/ZJjJMu1tXB13Kb91C9hIaoB9eqY9ihRIWXScUQ
-         hShQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jIW32WrHBs99jVmzDwkmowyofrzG8/2LnuHeALQVAA0=;
-        b=SR9t1vt2wkO88F+J2/y/POuIfHdlfu2kHYPhc+f881MvootGMI+NiulLDZBjW70IEf
-         egi2amP7omLAmxlN7PQpO/vyzMFU+yuj7DtGNuAuuPuqq+BLIGWb1oLEchf2wczu6E4z
-         eFGU3Ut2Om8fFYEoYD8/Huk+Jc5vNeSl7uDw/FiwZn7sFkuOgUw5tIoOU0yxhjn/blsR
-         ipKWf+uMhSusUaI/J3cuB1Q8SEBUDk6eXKP5pzrUQkuYkIzNpjSKFx1HeI3hg/21BgYY
-         SLFI5i+Cp/25HkPKS0/7M/eCZ3a0HowDUibB70fcbDrFsuoD2LTRaKixNs0neM0WeQYa
-         RAYA==
-X-Gm-Message-State: APjAAAUnQcec8GXaKxxcyL1/EQVmufI/5qYeH+/W/L+akwjCAu3/q1qr
-        4eQPrgjA6VGkYctBXJs9vGOi
-X-Google-Smtp-Source: APXvYqxkdrgKWWGciW0rcU7Nn5egx1GFUyCPlxx7V4v6adiNHKCBKP7mA2LEPBbxU9fgBYE2wjskrw==
-X-Received: by 2002:a17:902:ab91:: with SMTP id f17mr39368241plr.151.1556181169837;
-        Thu, 25 Apr 2019 01:32:49 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:81e:2691:7d48:1fca:4d86:743])
-        by smtp.gmail.com with ESMTPSA id d69sm41765166pfg.24.2019.04.25.01.32.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 01:32:49 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, haitao.suo@bitmain.com,
-        darren.tsao@bitmain.com, linux-gpio@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] pinctrl: Rework Kconfig dependency for BM1880 pinctrl driver
-Date:   Thu, 25 Apr 2019 14:02:24 +0530
-Message-Id: <20190425083224.9762-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 25 Apr 2019 04:33:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sA64SEnRlKcPxfGZbt5NjWRkUkhVgmJCuZ+TFzTB++k=; b=2gypBO3nHvA0R+JYarJCymfk0
+        PZjTr/t+QOUrMNmsZT4xwbfMLNhlMjMbn6wSca+OUO3TAM/1Wd46V0xKQYIUFWrP2Ud4V7YteDXHO
+        5Y6C3fJ95Dw4qx/p7dQUKfJlNYlRsx1wWY+okqDrfqrX5I02mqh1UZQoX6YQ0cuecFTV7cXmDVi3M
+        AyilxPCRvBsYzMQbdo1Gu7xeN8iO/Y5yWUYX9wTN6xqebZHKAjHMSYYPv9HnQXKAGehDv3tyq4Yus
+        N54OzSu0A/zKZHChhn7s8JVQyVULU+mH5QY6RA/7Mk2X4N2KAi3Hqp0RQVcoO1gm0JulywhOpQxcl
+        cMGizLfpg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJZon-0001Fs-Me; Thu, 25 Apr 2019 08:33:21 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3B75B203E8871; Thu, 25 Apr 2019 10:33:20 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 10:33:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Raphael Gault <Raphael.Gault@arm.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Julien Thierry <Julien.Thierry@arm.com>
+Subject: Re: [RFC 3/6] objtool: arm64: Adapt the stack frame checks and the
+ section analysis for the arm architecture
+Message-ID: <20190425083320.GK4038@hirez.programming.kicks-ass.net>
+References: <20190409135243.12424-1-raphael.gault@arm.com>
+ <20190409135243.12424-4-raphael.gault@arm.com>
+ <20190423203627.mwnaknit7cvr3l5l@treble>
+ <cd86ce1a-7c6a-9ebf-4c84-6cb6ffd88017@arm.com>
+ <20190424165640.5yeg2yicl7ej7g3i@treble>
+ <c90f402e-6494-73bc-1df8-516c3113019a@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c90f402e-6494-73bc-1df8-516c3113019a@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the BM1880 SoC pinctrl driver depend on COMPILE_TEST to get compiler
-test coverage and also select this driver by default for ARCH_BITMAIN
-platform.
+On Thu, Apr 25, 2019 at 08:12:24AM +0000, Raphael Gault wrote:
+> The motivation behind this is that the `br <Xn>` instruction is a
+> dynamic jump (jump to the address contained in the provided register).
+> This instruction is used for sibling calls but can also be used for
+> switch table. I use this to differentiate these two cases from one another:
+> 
+> Generally the `adr/adrp` instruction is used prior to `br` in order to
+> load the address into the register. What I do here is go back throught
+> the instructions and try to identify if the address loaded.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pinctrl/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Yikes, be very careful with simply going back on the instruction stream.
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index c4ac4bf1e1e4..19d8af9a36a2 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -110,7 +110,8 @@ config PINCTRL_AMD
- 
- config PINCTRL_BM1880
- 	bool "Bitmain BM1880 Pinctrl driver"
--	depends on ARCH_BITMAIN
-+	depends on OF && (ARCH_BITMAIN || COMPILE_TEST)
-+	default ARCH_BITMAIN
- 	select PINMUX
- 	help
- 	  Pinctrl driver for Bitmain BM1880 SoC.
--- 
-2.17.1
+The problem case would be something like:
 
+	adr	...
+	b	1f
+
+	...
+
+	b	...
+1:	br	...
+
+In that case, simply going backwards from 1 will not yield the desired
+result.
+
+At some point I did a pass storing all the fwd jumps in their
+destination and used that to 'rewind' the instruction stream, but that
+wasn't very pretty either.
+
+The best way might be to, while doing validate_branch() keep a state
+table of all most recent ADR(P) instructions and when encountering BR
+check that state to see what it really is.
+
+We currently don't do dynamic insn->type, but it shouldn't be too hard
+(famous last words of course).
