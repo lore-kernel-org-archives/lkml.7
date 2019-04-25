@@ -2,124 +2,155 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31860C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE6EC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF0320578
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556218065;
-	bh=58VDPqtLdQZ88knjIGTrutzHEM4jKBnupXFLQDFhAyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZNDHPz/AN+hQEPV/yhE0oElf565xaNoBmqFVLNwEH47z+UIIv6f6UzYvuJvjkMALt
-	 w3L8r9sOqnvB71hA7mxcHHt1CdHIstw5hYaFYyPRB1Umf7634w2FdwaCK67yWT9DlS
-	 WzGQWpwf4dTi/QxvXzpJXFz2mTIEfJW8Um72fMps=
+	by mail.kernel.org (Postfix) with ESMTP id 93A9A20717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfDYSrn (ORCPT
+        id S1728960AbfDYSse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:47:43 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43101 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfDYSrn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:47:43 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t81so880720oig.10;
-        Thu, 25 Apr 2019 11:47:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=yXiFss0vsoyhJ0q1L+jTx3RrnB1EEkBfYKFClH1MxPE=;
-        b=iPjdJUb1BFTGJTOXuZVKfaJCTuL6PTyMZ0bSPnGpSZ/p4a9im0GDt3JfOxZ0pnhFVt
-         pqShpkMXa7a/Xy01RpctdSJKdZ1XeBYkyeIsQ9DTa5cHMswg9oo9X5iY/uHstY4srQQl
-         8QDzf2D16grnkaVp2cAAgVgi14zsHgkCPrzxq/oTE1hM7a187dC6R21Q3rt5yiEp91Aj
-         5QTJktig0tpAUQPzoc+colPsNRQ/dh/+EUh3QdlA7sV70+vwADWLb2SLksaOZtZQpcbq
-         fitnFsZtoZaZam7xJmaPzfIW2tA/ttdpAXfC+QTp979fJnepMrRIVClkFWtXNkiS3jKZ
-         odYA==
-X-Gm-Message-State: APjAAAUDxK2qwtlqt8Bqzds6PxcsWksZgKrNZKXBA03oR00jsdtSnh48
-        DIbSTObVbxTsmKe757gQ8Q==
-X-Google-Smtp-Source: APXvYqxkivPCtuDEZfWO8WhLbScu0RlgUuZ/RnZfhK9LtSzktVkLz89O1tuw9sorDwS+Jxxb/0Ikpg==
-X-Received: by 2002:aca:a88c:: with SMTP id r134mr4347008oie.139.1556218061963;
-        Thu, 25 Apr 2019 11:47:41 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v123sm9707742oie.25.2019.04.25.11.47.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 11:47:41 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 13:47:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Harish Bandi <c-hbandi@codeaurora.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
-        devicetree@vger.kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip WCN3998
-Message-ID: <20190425184740.GA23300@bogus>
-References: <1556194416-30842-1-git-send-email-c-hbandi@codeaurora.org>
- <1556194416-30842-3-git-send-email-c-hbandi@codeaurora.org>
- <B3F78119-055C-41EB-BE3B-C5C94825B93E@holtmann.org>
+        Thu, 25 Apr 2019 14:48:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41368 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbfDYSse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 14:48:34 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D2C9988E63;
+        Thu, 25 Apr 2019 18:48:33 +0000 (UTC)
+Received: from treble (ovpn-123-99.rdu2.redhat.com [10.10.123.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CD1A60BE5;
+        Thu, 25 Apr 2019 18:48:30 +0000 (UTC)
+Date:   Thu, 25 Apr 2019 13:48:29 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     live-patching@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Livepatch vs LTO
+Message-ID: <20190425184829.wcpgmt3xxuucq4oc@treble>
+References: <20190425152628.ogk4woi3omeocwly@treble>
+ <18a4eaae-e874-8568-9372-337ea1ce301b@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <B3F78119-055C-41EB-BE3B-C5C94825B93E@holtmann.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <18a4eaae-e874-8568-9372-337ea1ce301b@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 25 Apr 2019 18:48:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 02:43:56PM +0200, Marcel Holtmann wrote:
-> Hi Harish,
+On Thu, Apr 25, 2019 at 02:22:23PM -0400, Joe Lawrence wrote:
+> On 4/25/19 11:26 AM, Josh Poimboeuf wrote:
+> > Hi all,
+> > 
+> > On IRC, Peter expressed some concern about -flive-patching, specifically
+> > that the flag isn't compatible with LTO.
+> > 
+> > The upstream kernel currently doesn't support LTO, but Android is using
+> > it with LLVM:
+> > 
+> >    https://source.android.com/devices/tech/debug/kcfi
+> > 
+> > And there seems to be progress being made in that direction for
+> > upstream.
+> > 
+> > Live patching has at least the following issues with LTO:
+> > 
+> > - For source-based patch generation (klp-convert and friends), the GCC
+> >    manual says that -flive-patching is incompatible with LTO.  Does
+> >    anybody know if that's a hard incompatibility, or can it be fixed?
+> > 
+> >    Also, what about the performance implications of this flag with LTO?
+> >    Might they become more pronounced?
+> > 
+> >    Also I wonder if -fdump-ipa-clones works with LTO?
+> > 
+> >    I also wonder about the future of source-based patch generation with
+> >    LLVM.  Will it also have -flive-patching and -fdump-ipa-clones flags?
+> > 
+> > - For binary-based patch generation (kpatch-build), we currently diff
+> >    objects at a per-compilation-unit level.  That would have to be
+> >    changed to work on vmlinux.o instead.
+> > 
+> > - Objtool would also have to be changed to work on vmlinux.o.  It's
+> >    currently not optimized for large files, and the per-.o whitelisting
+> >    would need to be fixed.  And there may be other issues lurking.
+> > 
+> > Also, thinking about objtool in this context has given me another idea,
+> > which might allow us to get rid of the use of -flive-patching and
+> > -fdump-ipa-clones altogether (which are both nasty and way too
+> > compiler-dependent):
 > 
-> > Add compatible string for the Qualcomm WCN3998 Bluetooth controller
+> Would objtool work around these issues because it would (pending the above
+> changes) operate on post-LTO object files?
+
+No, my idea below would work either way (LTO or not).
+
+With the current approach of objtool running per .o file, it could
+create a function checksum file per .o file.
+
+With objtool running once on vmlinux.o, it would instead just make one
+big function checksum file for vmlinux.o, plus one per kernel module.
+
+> > Since objtool is already reading every function in the kernel, it could
+> > create a checksum associated with each function, based on all the
+> > instructions (both within the function and any alternatives or other
+> > special sections it relies on).  The function checksums could be written
+> > to a file.
 > > 
-> > Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-> > ---
-> > Changes in V6:
-> > - Changed Commit text
-> > ---
-> > Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 5 +++--
-> > 1 file changed, 3 insertions(+), 2 deletions(-)
+> > Then, when a patch file is applied and the kernel rebuilt, the checksum
+> > files could be compared to determine exactly which functions have
+> > changed at a binary level.
 > > 
-> > diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > index 824c0e2..7ef6118 100644
-> > --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > @@ -11,20 +11,21 @@ Required properties:
-> >  - compatible: should contain one of the following:
-> >    * "qcom,qca6174-bt"
-> >    * "qcom,wcn3990-bt"
-> > +   * "qcom,wcn3998-bt"
-> > 
-> > Optional properties for compatible string qcom,qca6174-bt:
-> > 
-> >  - enable-gpios: gpio specifier used to enable chip
-> >  - clocks: clock provided to the controller (SUSCLK_32KHZ)
-> > 
-> > -Required properties for compatible string qcom,wcn3990-bt:
-> > +Required properties for compatible string qcom,wcn399x-bt:
-> > 
-> >  - vddio-supply: VDD_IO supply regulator handle.
-> >  - vddxo-supply: VDD_XO supply regulator handle.
-> >  - vddrf-supply: VDD_RF supply regulator handle.
-> >  - vddch0-supply: VDD_CH0 supply regulator handle.
-> > 
-> > -Optional properties for compatible string qcom,wcn3990-bt:
-> > +Optional properties for compatible string qcom,wcn399x-bt:
+> > Thoughts?  Any reasons why that wouldn't work?
 > 
-> wasn’t the conclusion to _not_ use x things in compatible strings? I would personally prefer you list these two compatible strings separately. However I let Rob comment and Ack this if this is fine for him.
+> This is an interesting option.  Keep in mind, like kpatch-build, it would
+> detect changes as a result of source code line number positioning, ie WARN_*
+> or might_sleep macros that kpatch-build currently detects and chooses to
+> ignore.  Not a big deal, but warts like this start introducing more
+> instruction decoding into the process.
 
-It's fine for me as it isn't the actual string used.
+True.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> Also, I think a klp-convert type script would still be needed to create
+> livepatch symbols and their corresponding sections and relocations, right?
 
-Rob
+Right.  Unless we did the option I mentioned below where objtool would
+become a full kpatch-build replacement.
+
+> However, we might not need manual symbol <obj, pos> annotations to pull this
+> off since presumably the object will have already built/linked.  I think.
+
+Actually I'm not sure about that.  Even when analyzing vmlinux.o, the
+object hasn't been fully linked so the final addresses aren't known.
+
+> I've only just started looking at klp-convert and asm alternatives, but
+> maybe this would also help determine the alteratives-relocation to
+> klp_object relationship that we will need if we want klp-convert to create
+> klp.arch sections.
+
+TBH, I'm a bit behind on that discussion :-)
+
+> > And, if we wanted to take the idea even further, objtool could have the
+> > ability to write the changed functions to a new object file.  Voila, we
+> > now pretty much have kpatch-build :-)  (Though whether this is better
+> > than source-based patch generation is certainly an open question.)
+> 
+> Porting objtool to new arches is probably easier than kpatch-build at least.
+
+Yeah.  And there's really a lot of overlap between the two, so it could
+potentially be a decent option.
+
+-- 
+Josh
