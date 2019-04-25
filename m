@@ -2,94 +2,107 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70029C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12832C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F17F205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDiS67+n"
+	by mail.kernel.org (Postfix) with ESMTP id 31A62205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556221140;
+	bh=tS+iPox5jtN9Ldjz88oImhdUJkmle0a+FcnNsF7XGsM=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=wv7psQWgoh9ZZ2OWSeU1EFiz/OC9f+S935S3hR1A8QHlEiIPkTZNtgbCoSzaDe4qh
+	 Ra8yp/TKjpRuTFea/sDxiOWHlcgOs7JYLDDMfsHwEkKXs1lFXeZ2iofveZEAA36xCP
+	 K5IvqsTfuQDwSsQhW8M2QCGTZmPDJ5tVgrGdBApU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbfDYTix (ORCPT
+        id S1730668AbfDYTi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:38:53 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41170 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfDYTiw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:38:52 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 188so409614pfd.8;
-        Thu, 25 Apr 2019 12:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NhAaBoh1UOOJS2beDrhy147sMZ3ieUx2BwOnAkrOn2A=;
-        b=FDiS67+nZkmt1kzlhy7ZAIuWoi0E5hOaMWc69eOAtydO0+i37DA3w+xY24bNYotj7L
-         HHu73oa/y0y7i5Nlk4T5IDHATnWnDTcDUj0K7X+t/uZ81WhkVDqvshcQLzMfrstIJNjg
-         7rs/wOHRPHVSB6ikcNV8qw5r6fNMH8MMotQ9aUfJyPsmZTeIZR8uDFIclmTkMiRgYipE
-         cE5YhUccNaCRsuJUTLypTcjpY37Zul69oxSQHiG7yC9jmj4TWdOkQ/Qag2ZJbz0MzXeb
-         EDljd7VPu2GsCupP8tP3tlz5LudY00+QO8c24h6s/yBNzoDiLBklQWLOrl2PUXNZh3LC
-         F05g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NhAaBoh1UOOJS2beDrhy147sMZ3ieUx2BwOnAkrOn2A=;
-        b=YI5GBHA+QXM3HPi2U2q6vxMKKtgV+86FAKYWjIM3/Dcj5TaT4KTiT16JfVWqiTxkLf
-         o5hi/coGM3eLHy1UeWswSfACiWOgUwAD6X3uNJIdYg4vaBTxG5XxvfRvKDejCFKnmdqr
-         X2ya3GPOibtNysVBih/BoRBGvLrzCrVxP8X2/nKG/vuBxGHDiCwH8jXUCd4T44eRgnW2
-         pEYj8gGwuKCTicjNghDuQvrzwLqnTwVK5ouW66LG8i64H1SR2gLZ7txPDFpiIIwnAUDw
-         SyYZgCG2RPoDN0TPxFfIRYWDCRmdUEzD0V/cveVGv99uUDCASKt4maKuaJSZegFEA0LV
-         +EYg==
-X-Gm-Message-State: APjAAAV2utI/dyxziQkw4POr4Qo2ziL36UkX3/V+q2L/zza5oqB4Vmsf
-        tysb4t69AxVJ/0+MqeUY4Zo=
-X-Google-Smtp-Source: APXvYqxsutLfX4mCh4VtuTdHtCpdrQRB1c8utPQ4xGKIOWyi/rv2Vl5hS6Gu5dRb1fmET0rRSdxEsg==
-X-Received: by 2002:a62:5a42:: with SMTP id o63mr43980929pfb.170.1556221132167;
-        Thu, 25 Apr 2019 12:38:52 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j67sm48463732pfc.72.2019.04.25.12.38.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 12:38:51 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 12:38:50 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/96] 4.19.37-stable review
-Message-ID: <20190425193850.GE13462@roeck-us.net>
-References: <20190424170919.829037226@linuxfoundation.org>
+        Thu, 25 Apr 2019 15:38:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726086AbfDYTi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 15:38:57 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C74E020878;
+        Thu, 25 Apr 2019 19:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556221136;
+        bh=tS+iPox5jtN9Ldjz88oImhdUJkmle0a+FcnNsF7XGsM=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=pMeWqnC69nLOJAccAGey3trTpp3x5bWilCcA901bV+KdjvOxtv9cTACxEop+J45Vx
+         7UcXEDAYGprPwqEsmwlO2CX05pCBJfjX9YplfKm/e0pF4+bgLFIPEhuZiEaFjjzmBy
+         86kFYHqkpDj5vI5InDs+W3lzdS4x2iQNTlBCttWo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190402125056.21509-8-alexandre.belloni@bootlin.com>
+References: <20190402125056.21509-1-alexandre.belloni@bootlin.com> <20190402125056.21509-8-alexandre.belloni@bootlin.com>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 7/7] clk: at91: add sam9x60 pmc driver
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Message-ID: <155622113579.15276.15900194435736283135@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 25 Apr 2019 12:38:55 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 07:09:05PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.37 release.
-> There are 96 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 26 Apr 2019 05:07:35 PM UTC.
-> Anything received after that time might be too late.
-> 
+Quoting Alexandre Belloni (2019-04-02 05:50:56)
+> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
+> new file mode 100644
+> index 000000000000..22bf51c55bdc
+> --- /dev/null
+> +++ b/drivers/clk/at91/sam9x60.c
+> @@ -0,0 +1,307 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/clk-provider.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/slab.h>
+> +
+> +#include <dt-bindings/clock/at91.h>
+> +
+> +#include "pmc.h"
+> +
+> +DEFINE_SPINLOCK(pmc_pll_lock);
+> +
+> +static const struct clk_master_characteristics mck_characteristics =3D {
+> +       .output =3D { .min =3D 140000000, .max =3D 200000000 },
+> +       .divisors =3D { 1, 2, 4, 3 },
+> +       .have_div3_pres =3D 1,
+> +};
+> +
+> +static const struct clk_master_layout sam9x60_master_layout =3D {
+> +       .mask =3D 0x373,
+> +       .pres_shift =3D 4,
+> +       .offset =3D 0x28,
+> +};
+> +
+> +static struct clk_range plla_outputs[] =3D {
 
-For v4.19.36-99-gc60b2d434e04:
+const?
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 349 pass: 349 fail: 0
+> +       { .min =3D 300000000, .max =3D 600000000 },
+> +};
+[...]
+> +
+> +}
+> +
+> +CLK_OF_DECLARE_DRIVER(sam9x60_pmc, "microchip,sam9x60-pmc", sam9x60_pmc_=
+setup);
+> --=20
 
-Guenter
+Can't be platform device?
+
