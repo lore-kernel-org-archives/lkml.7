@@ -2,135 +2,143 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764A0C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAAAC4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07EFF206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E9C206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hnqr57/l"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Ak4fyqQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbfDYRxg (ORCPT
+        id S1728625AbfDYRyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 13:53:36 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43244 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfDYRxf (ORCPT
+        Thu, 25 Apr 2019 13:54:44 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43217 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfDYRyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 13:53:35 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t81so740712oig.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 10:53:35 -0700 (PDT)
+        Thu, 25 Apr 2019 13:54:44 -0400
+Received: by mail-qt1-f196.google.com with SMTP id g4so1061697qtq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 10:54:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L9qLug75eCqanUiaGqzm+mHAapGaNlxsUMfe82uh5HQ=;
-        b=hnqr57/loN1crKYWPcX3hFH596sHdsOXxDyMbZotyCTigk1WoeSZOwrE0ei/UapYxp
-         ud7+Nn2ZGsD+Kav99e5RpCpzqbcFP0iNvDPH9gZAWyLaWBmAuoLV02R0a8PnKvvlV2W1
-         MWG2xaFDn51nXR1JuLD7Bg7bUZnyXH1+umUmIOl/wwTzAZ3l/5UMelL275RObExupOvE
-         MhyNN2qx5Zz3BLwCuD73tBb1U5kvDezD8Ecs4MVTQjNq2PyLUJ0+SEXYC61rkjb8koBi
-         9FzRfZfCVSd7YKWaQB+/f9SIjGgw4uegQzOft0gZbdoX9UIOBpw9eilvvWumqscwAHxz
-         MpBQ==
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KNp2ygAC3i6FKmzuLjHlJU1UqV45srtBI635+kYEZ+4=;
+        b=Ak4fyqQhM8BxKff8fJEXf161Q1Q+odtuMhpTnuQUaVgZUmLE5+U2QcMZCNIxNsWpvr
+         qxp/fnxisE1eVMxMg2cO54YQTaynDm09tw7mDW3edY33edar3pSTA/AbaTOZf5EmRzo0
+         0e/ALVbFhIcBTc110AA1mRfkafLVwM6EMHHHXgIdUFtP1TR+BlePj6R4lsVx+dDuREhg
+         zn2OAnyf6W73zJ490JzMZEY+fP3dVE+pmATmY7Fc42tbURkvCNhWTKISdRowzAiVVUQk
+         aE/eMAcZYyHLGrML4/luEEL04zutva8eybz6doAmBmVNKUwEf2ooj/7ZlFTdgw+VoeRB
+         a9rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L9qLug75eCqanUiaGqzm+mHAapGaNlxsUMfe82uh5HQ=;
-        b=i7NQCV9DQg+SaEbNt9pqmiZzk60cXtNVQKLhBWgMVZL1dBG/XMTVxuL3Dl2mABJDow
-         8cm4bTMnDxIjTOY8o4b79qvxojbARTYAbIWDP6IIuKOk3EWeWZpaPgIgmBc5qaEeOkkT
-         bq5uwpY0awDXq4B8V2W/CzL5dEvTBJbNGID4UPYEoWvfGVuIUyom5c7lHBHH9SoGT3Xo
-         /IUJwe362YhcbZhsTgrJxnCRK0AWmVobAKyqvFLN7NcSHSjHuUgCGl0LkRZigYYB/EfJ
-         fr5g8mZtcsJ/LKn/JCNCMfJ92NZxg1e4EUEw5FkXt/5dx3fD+gwypiyry3CkJ9yYFtpd
-         XKkw==
-X-Gm-Message-State: APjAAAXi5MOEg/YtGn6LE6CgFWn+yq8eHpH04JqRyre/KKN7myUhgChU
-        vlYJW9phopk/iCiA4VpkSQ7h/Ba7vqRS6on2FrplrGBSMdWK3Q==
-X-Google-Smtp-Source: APXvYqyaVHjhed48qkxTGrIUA67AWtjqLg5sOT1DLNDNPuJcjam2N+oOhdZOZVbC0v7H0NTOjeCFPStBf8GMWBtI8aM=
-X-Received: by 2002:aca:e4cc:: with SMTP id b195mr4079086oih.39.1556214814617;
- Thu, 25 Apr 2019 10:53:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KNp2ygAC3i6FKmzuLjHlJU1UqV45srtBI635+kYEZ+4=;
+        b=XDE+R5zmJmG1X8EuS5Vmwv4G6HHxD0N8OsbyPXWcesPAr0zcPRk1v5IyUleOJ9HuC4
+         HVV87f1h+1NKol/2oYBouH6O4sHQt6FHUutIkRpWRmKab4bSptJasCSMKRqVvFLUmH/B
+         C9enIZfJ0Jlg0RPxLHODUCuvPeiBg37nqiEvou9vjzCVdgc6azxwZZf1okdPVVJOmYfW
+         OERzAj7FoZHn644I0MP/ec6E4Dr+CeLRpG7gbIjMBJZ0VR7V6SgJgcfnrEt2BB/dvHex
+         TI2c10R8vffD8HIEU0sg+Au2r8QZKm907krz9TqUqzKjYbuUO2+3ESGT8KrDk9Mz0OJ5
+         XNrw==
+X-Gm-Message-State: APjAAAUFZZ3D+5V+l4xgoicp0BfA/yQBdIvvuGbkXApJfjz78raa0QyG
+        NSQlTH5udENLmo9tNiuj4X7LMQ==
+X-Google-Smtp-Source: APXvYqyr9cp5oN/zmGj2t+i+id0VkfzdkKjneABv6Aqo2hHim6ED7PoKXjQJFBxK7dbJDJzvggzXyQ==
+X-Received: by 2002:ac8:18ea:: with SMTP id o39mr11398232qtk.290.1556214883289;
+        Thu, 25 Apr 2019 10:54:43 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id 7sm5950641qtx.20.2019.04.25.10.54.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 10:54:42 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, akpm@linux-foundation.org,
+        mhocko@suse.com, dave.hansen@linux.intel.com,
+        dan.j.williams@intel.com, keith.busch@intel.com,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
+        thomas.lendacky@amd.com, ying.huang@intel.com,
+        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
+        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com,
+        david@redhat.com
+Subject: [v3 0/2] "Hotremove" persistent memory
+Date:   Thu, 25 Apr 2019 13:54:38 -0400
+Message-Id: <20190425175440.9354-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190425161416.26600-1-dima@arista.com> <20190425161416.26600-17-dima@arista.com>
-In-Reply-To: <20190425161416.26600-17-dima@arista.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 25 Apr 2019 19:53:08 +0200
-Message-ID: <CAG48ez3M6aLNda+dmviba4CVDBSx0nTknp4JiophDKmqpHYh_A@mail.gmail.com>
-Subject: Re: [PATCHv3 16/27] x86/vdso: Switch image on setns()/unshare()/clone()
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        Linux API <linux-api@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 6:15 PM Dmitry Safonov <dima@arista.com> wrote:
-> As it has been discussed on timens RFC, adding a new conditional branch
-> `if (inside_time_ns)` on VDSO for all processes is undesirable.
-> It will add a penalty for everybody as branch predictor may mispredict
-> the jump. Also there are instruction cache lines wasted on cmp/jmp.
->
-> Those effects of introducing time namespace are very much unwanted
-> having in mind how much work have been spent on micro-optimisation
-> vdso code.
->
-> Addressing those problems, there are two versions of VDSO's .so:
-> for host tasks (without any penalty) and for processes inside of time
-> namespace with clk_to_ns() that subtracts offsets from host's time.
->
-> Whenever a user does setns()/unshare() or clone() with CLONE_TIMENS,
-> change VDSO image in mm and zap existing VVAR/VDSO page tables.
-> They will be re-faulted with corresponding image and VVAR offsets.
-[...]
-> +#ifdef CONFIG_TIME_NS
-> +int vdso_join_timens(struct task_struct *task, bool inside_ns)
+Changelog:
+v3
+- Addressed comments from David Hildenbrand. Don't release
+  lock_device_hotplug after checking memory status, and rename
+  memblock_offlined_cb() to check_memblock_offlined_cb()
 
-The parameter "inside_ns" is never used, right?
+v2
+- Dan Williams mentioned that drv->remove() return is ignored
+  by unbind. Unbind always succeeds. Because we cannot guarantee
+  that memory can be offlined from the driver, don't even
+  attempt to do so. Simply check that every section is offlined
+  beforehand and only then proceed with removing dax memory.
 
-> +{
-> +       struct mm_struct *mm = task->mm;
-> +       struct vm_area_struct *vma;
-> +
-> +       if (down_write_killable(&mm->mmap_sem))
-> +               return -EINTR;
-> +
-> +       for (vma = mm->mmap; vma; vma = vma->vm_next) {
-> +               unsigned long size = vma->vm_end - vma->vm_start;
-> +
-> +               if (vma_is_special_mapping(vma, &vvar_mapping))
-> +                       zap_page_range(vma, vma->vm_start, size);
-> +               if (vma_is_special_mapping(vma, &vdso_mapping))
-> +                       zap_page_range(vma, vma->vm_start, size);
+---
 
-Nit: This could be rewritten as:
+Recently, adding a persistent memory to be used like a regular RAM was
+added to Linux. This work extends this functionality to also allow hot
+removing persistent memory.
 
-if (vma_is_special_mapping(vma, &vvar_mapping) ||
-    vma_is_special_mapping(vma, &vdso_mapping))
-        zap_page_range(vma, vma->vm_start, size);
+We (Microsoft) have an important use case for this functionality.
 
-> +       }
-> +
-> +       up_write(&mm->mmap_sem);
-> +       return 0;
-> +}
-[...]
+The requirement is for physical machines with small amount of RAM (~8G)
+to be able to reboot in a very short period of time (<1s). Yet, there is
+a userland state that is expensive to recreate (~2G).
+
+The solution is to boot machines with 2G preserved for persistent
+memory.
+
+Copy the state, and hotadd the persistent memory so machine still has
+all 8G available for runtime. Before reboot, offline and hotremove
+device-dax 2G, copy the memory that is needed to be preserved to pmem0
+device, and reboot.
+
+The series of operations look like this:
+
+1. After boot restore /dev/pmem0 to ramdisk to be consumed by apps.
+   and free ramdisk.
+2. Convert raw pmem0 to devdax
+   ndctl create-namespace --mode devdax --map mem -e namespace0.0 -f
+3. Hotadd to System RAM
+   echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
+   echo dax0.0 > /sys/bus/dax/drivers/kmem/new_id
+   echo online_movable > /sys/devices/system/memoryXXX/state
+4. Before reboot hotremove device-dax memory from System RAM
+   echo offline > /sys/devices/system/memoryXXX/state
+   echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
+5. Create raw pmem0 device
+   ndctl create-namespace --mode raw  -e namespace0.0 -f
+6. Copy the state that was stored by apps to ramdisk to pmem device
+7. Do kexec reboot or reboot through firmware if firmware does not
+   zero memory in pmem0 region (These machines have only regular
+   volatile memory). So to have pmem0 device either memmap kernel
+   parameter is used, or devices nodes in dtb are specified.
+
+Pavel Tatashin (2):
+  device-dax: fix memory and resource leak if hotplug fails
+  device-dax: "Hotremove" persistent memory that is used like normal RAM
+
+ drivers/dax/dax-private.h |  2 +
+ drivers/dax/kmem.c        | 99 +++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 96 insertions(+), 5 deletions(-)
+
+-- 
+2.21.0
+
