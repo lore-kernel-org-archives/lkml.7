@@ -2,160 +2,171 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563ABC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CFDC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A195E20651
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OnNbUkaI"
+	by mail.kernel.org (Postfix) with ESMTP id D41CA20651
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfDYQKC (ORCPT
+        id S1726801AbfDYQLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:10:02 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53753 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfDYQKB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:10:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 26so19213wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:09:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kHfu24V2nbXQ/IUQMqdxKXSBz0OftONrexhtdDDcmec=;
-        b=OnNbUkaIqKey5FD39I/mMhgGJ6J90AaU0MfsUf4/yMHh0m75nA9h6sx0SxAlrSru0P
-         agUxhMvykSSSY+YGlmuegn/BYFh1TDJGFHMHS0iODqnnUcnoZ0jakM+h5OqhKJm3+Hy2
-         M3wSaAZRL3aozz3Uhauk4YLqRVlzraZ3rU+vUm37elDUTIw34N9caVO+QkajMWx0pT1X
-         9GgrMO6GXwWz6YvkEPoOzRh3XJSmrk2YrJyyZiH2CoeZGPhVFcdWFd9z5Q1lQLK0dmvH
-         upDdZB7NtcqYFB8rhPbxleqV+EPdviqF4quTRoXwhDjfpTVCikeIyR7lEaP9ZIlI3/Wr
-         VYAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kHfu24V2nbXQ/IUQMqdxKXSBz0OftONrexhtdDDcmec=;
-        b=Zv28jqXHTbIduC1wflhr2elhmgH13AHbvin069Qd61t9BNoW3knCjK4dNPZnigxYay
-         9ACqHP90WG6JS1mZ4mg0qvcHZHSZUHtuszbRepxDpafVudwI11mqJIKFWUMfPd2R9NlX
-         +IWeseLF7f/A+aS3EdCLkYgUWVspK2c9UE4dAc02z761p+qXJMbiRW2wBtzQSNdrMSIq
-         8M/MHih7BSEKoLjGpmi1tOSH93fJQeYszvJ5UzITKWffKUS46wXyKt7+NBIb0wTc2rQM
-         CZhvbQB6WuVg0uAmnTi71fNfKfScYQQ2LPqn5m/xnqrKobhl1MhGUoOCdyp2sA+QTi54
-         EYRA==
-X-Gm-Message-State: APjAAAUehb6AkuQl6Tk/aw/mGvnMYWjU8byV7vL3TpTAPGSsk/b+z1H4
-        vMbVdMAzqurqcWBWExRU0MBG2jms25AQpfx5EMfmiA==
-X-Google-Smtp-Source: APXvYqz3H4/iLoiWRaQeNU7ZMerLf+kKKfzochV0gZw5KevLdBnY3GwqLv98mSVjgzyEIuUH7AL6GEPsJIfrBVywY64=
-X-Received: by 2002:a1c:2109:: with SMTP id h9mr4234995wmh.68.1556208598710;
- Thu, 25 Apr 2019 09:09:58 -0700 (PDT)
+        Thu, 25 Apr 2019 12:11:19 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47530 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbfDYQLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 12:11:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B3C980D;
+        Thu, 25 Apr 2019 09:11:18 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 976F43F557;
+        Thu, 25 Apr 2019 09:11:13 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 17:11:11 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
+Subject: Re: [RFC PATCH v6 22/26] x86/cet/shstk: ELF header parsing of Shadow
+ Stack
+Message-ID: <20190425161110.GH3567@e103592.cambridge.arm.com>
+References: <20181119214809.6086-1-yu-cheng.yu@intel.com>
+ <20181119214809.6086-23-yu-cheng.yu@intel.com>
+ <20190425110211.GZ3567@e103592.cambridge.arm.com>
+ <e7bbb51291434a9c8526d7b617929465d5784121.camel@intel.com>
+ <20190425153547.GG3567@e103592.cambridge.arm.com>
 MIME-Version: 1.0
-References: <20190411014353.113252-1-surenb@google.com> <20190411014353.113252-3-surenb@google.com>
- <20190411153313.GE22763@bombadil.infradead.org> <20190412065314.GC13373@dhcp22.suse.cz>
- <CAKOZuetQH1rVtPdMNgw0sdnzWidd6v9eCWscRiOb7Y+3-JQ14Q@mail.gmail.com>
-In-Reply-To: <CAKOZuetQH1rVtPdMNgw0sdnzWidd6v9eCWscRiOb7Y+3-JQ14Q@mail.gmail.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Thu, 25 Apr 2019 09:09:46 -0700
-Message-ID: <CAJuCfpHQm5=QrOiOQ4thA5FmRUQjNGdSfis=iEaNGv7npmMVxQ@mail.gmail.com>
-Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
- process killing
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        yuzhoujian@didichuxing.com,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
-        lsf-pc@lists.linux-foundation.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425153547.GG3567@e103592.cambridge.arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 7:14 AM Daniel Colascione <dancol@google.com> wrote:
->
-> On Thu, Apr 11, 2019 at 11:53 PM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Thu 11-04-19 08:33:13, Matthew Wilcox wrote:
-> > > On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
-> > > > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
-> > > > pidfd_send_signal() syscall to allow expedited memory reclaim of the
-> > > > victim process. The usage of this flag is currently limited to SIGKILL
-> > > > signal and only to privileged users.
-> > >
-> > > What is the downside of doing expedited memory reclaim?  ie why not do it
-> > > every time a process is going to die?
-> >
-> > Well, you are tearing down an address space which might be still in use
-> > because the task not fully dead yeat. So there are two downsides AFAICS.
-> > Core dumping which will not see the reaped memory so the resulting
->
-> Test for SIGNAL_GROUP_COREDUMP before doing any of this then. If you
-> try to start a core dump after reaping begins, too bad: you could have
-> raced with process death anyway.
->
-> > coredump might be incomplete. And unexpected #PF/gup on the reaped
-> > memory will result in SIGBUS.
->
-> It's a dying process. Why even bother returning from the fault
-> handler? Just treat that situation as a thread exit. There's no need
-> to make this observable to userspace at all.
+On Thu, Apr 25, 2019 at 04:35:48PM +0100, Dave Martin wrote:
+> On Thu, Apr 25, 2019 at 08:14:52AM -0700, Yu-cheng Yu wrote:
+> > On Thu, 2019-04-25 at 12:02 +0100, Dave Martin wrote:
+> > > On Mon, Nov 19, 2018 at 01:48:05PM -0800, Yu-cheng Yu wrote:
+> > > > Look in .note.gnu.property of an ELF file and check if Shadow Stack needs
+> > > > to be enabled for the task.
+> > > 
+> > > What's the status of this series?  I don't see anything in linux-next
+> > > yet.
+> > > 
+> > > For describing ELF features, Arm has recently adopted
+> > > NT_GNU_PROPERTY_TYPE_0, with properties closely modelled on
+> > > GNU_PROPERTY_X86_FEATURE_1_AND etc. [1]
+> > > 
+> > > So, arm64 will be need something like this patch for supporting new
+> > > features (such as the Branch Target Identification feature of ARMv8.5-A
+> > > [2]).
+> > > 
+> > > If this series isn't likely to merge soon, can we split this patch into
+> > > generic and x86-specific parts and handle them separately?
+> > > 
+> > > It would be good to see the generic ELF note parsing move to common
+> > > code -- I'll take a look and comment in more detail.
+> > 
+> > Yes, I will work on that.
+> 
+> Thanks.  I may try to hack something in the meantime based on your
+> patch.
+> 
+> One other question: according to the draft spec at
+> https://github.com/hjl-tools/linux-abi/wiki/Linux-Extensions-to-gABI, it
+> looks like the .note.gnu.property section is supposed to be marked with
+> SHF_ALLOC in object files.
+> 
+> I think that means that the linker will map it with a PT_LOAD entry in
+> the program header table in addition to the PT_NOTE that describes the
+> location of the note.  I need to check what the toolchain actually
+> does.
+> 
+> If so, can we simply rely on the notes being already mapped, rather than
+> needing to do additional I/O on the ELF file to fetch the notes?
 
-I've spent some more time to investigate possible effects of reaping
-on coredumps and asked Oleg Nesterov who worked on patchsets that
-prioritize SIGKILLs over coredump activity
-(https://lkml.org/lkml/2013/2/17/118). Current do_coredump
-implementation seems to handle the case of SIGKILL interruption by
-bailing out whenever dump_interrupted() returns true and that would be
-the case with pending SIGKILL. So in the case of race when coredump
-happens first and SIGKILL comes next interrupting the coredump seems
-to result in no change in behavior and reaping memory proactively
-seems to have no side effects.
-An opposite race when SIGKILL gets posted and then coredump happens
-seems impossible because do_coredump won't be called from get_signal
-due to signal_group_exit check (get_signal checks signal_group_exit
-while holding sighand->siglock and complete_signal sets
-SIGNAL_GROUP_EXIT while holding the same lock). There is a path from
-__seccomp_filter calling do_coredump while processing
-SECCOMP_RET_KILL_xxx but even then it should bail out when
-coredump_wait()->zap_threads(current) checks signal_group_exit().
-(Thanks Oleg for clarifying this for me).
+[...]
 
-If we are really concerned about possible increase in failed coredumps
-because of the proactive reaping I could make it conditional on
-whether coredumping mm is possible by placing this feature behind
-!get_dumpable(mm) condition. Another possibility is to check
-RLIMIT_CORE to decide if coredumps are possible (although if pipe is
-used for coredump that limit seems to be ignored, so that check would
-have to take this into consideration).
+BTW, it looks like this holds true for AArch64 (see below).
 
-On the issue of SIGBUS happening when accessed memory was already
-reaped, my understanding that SIGBUS being a synchronous signal will
-still have to be fetched using dequeue_synchronous_signal from
-get_signal but not before signal_group_exit is checked. So again if
-SIGKILL is pending I think SIGBUS will be ignored (please correct me
-if that's not correct).
+Providing this also works on other arches, I think we can just pick
+PT_GNU_PROPERTY out of the program headers and rely on the
+corresponding note being already mapped by the existing binfmt_elf
+code.
 
-One additional question I would like to clarify is whether per-node
-reapers like Roman suggested would make a big difference (All CPUs
-that I've seen used for Android are single-node ones, so looking for
-more feedback here). If it's important then reaping victim's memory by
-the killer is probably not an option.
+Cheers
+---Dave
+
+
+--8<--
+
+$ echo 'void f(void) { }' | \
+	aarch64-linux-gnu-gcc -v -nostdlib -Wl,-ef \
+		-mbranch-protection=standard -o /tmp/x -x c - && \
+	aarch64-linux-gnu-readelf -nl /tmp/x
+
+[...]
+
+gcc version 9.0.1 20190425 (experimental) (GCC) 
+
+[...]
+
+GNU assembler version 2.32.51 (aarch64-linux-gnu) using BFD version (GNU Binutils) 2.32.51.20190425
+
+[...]
+
+Elf file type is EXEC (Executable file)
+Entry point 0x400178
+There are 5 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  LOAD           0x0000000000000000 0x0000000000400000 0x0000000000400000
+                 0x00000000000001c0 0x00000000000001c0  R E    0x10000
+  NOTE           0x0000000000000158 0x0000000000400158 0x0000000000400158
+                 0x0000000000000020 0x0000000000000020  R      0x8
+  GNU_PROPERTY   0x0000000000000158 0x0000000000400158 0x0000000000400158
+                 0x0000000000000020 0x0000000000000020  R      0x8
+  GNU_EH_FRAME   0x0000000000000184 0x0000000000400184 0x0000000000400184
+                 0x0000000000000014 0x0000000000000014  R      0x4
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000  RW     0x10
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     .note.gnu.property .text .eh_frame_hdr .eh_frame 
+   01     .note.gnu.property 
+   02     .note.gnu.property 
+   03     .eh_frame_hdr 
+   04     
+
+Displaying notes found in: .note.gnu.property
+  Owner                 Data size	Description
+  GNU                  0x00000010	NT_GNU_PROPERTY_TYPE_0
+      Properties: AArch64 feature: BTI, PAC
