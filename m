@@ -2,127 +2,81 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57541C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213C6C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664C820717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309BC20717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfDYOdg (ORCPT
+        id S1727452AbfDYOdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:33:36 -0400
-Received: from mga17.intel.com ([192.55.52.151]:50006 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfDYOde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:33:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 07:33:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
-   d="scan'208";a="134317370"
-Received: from aubrey-skl.sh.intel.com ([10.239.53.6])
-  by orsmga007.jf.intel.com with ESMTP; 25 Apr 2019 07:33:30 -0700
-From:   Aubrey Li <aubrey.li@linux.intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
-        hpa@zytor.com
-Cc:     ak@linux.intel.com, tim.c.chen@linux.intel.com,
-        dave.hansen@intel.com, arjan@linux.intel.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, aubrey.li@intel.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v18 3/3] Documentation/filesystems/proc.txt: add arch_status file
-Date:   Thu, 25 Apr 2019 22:32:19 +0800
-Message-Id: <20190425143219.102258-3-aubrey.li@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190425143219.102258-1-aubrey.li@linux.intel.com>
-References: <20190425143219.102258-1-aubrey.li@linux.intel.com>
+        Thu, 25 Apr 2019 10:33:39 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45628 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbfDYOdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:33:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95696A78;
+        Thu, 25 Apr 2019 07:33:37 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4AAB3F5AF;
+        Thu, 25 Apr 2019 07:33:35 -0700 (PDT)
+Subject: Re: [PATCH v2 02/19] iommu: introduce device fault data
+To:     Auger Eric <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Yi L <yi.l.liu@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556062279-64135-3-git-send-email-jacob.jun.pan@linux.intel.com>
+ <f444a689-4941-524e-1d4b-c090390d5b5d@arm.com>
+ <220a581e-0ee8-70e2-796b-b434594e4825@redhat.com>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <a2880e11-90fe-36d4-01ad-bf3c346c6d7f@arm.com>
+Date:   Thu, 25 Apr 2019 15:33:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <220a581e-0ee8-70e2-796b-b434594e4825@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added /proc/<pid>/arch_status file, and added AVX512_elapsed_ms in
-/proc/<pid>/arch_status. Report it in Documentation/filesystems/proc.txt
+On 25/04/2019 14:21, Auger Eric wrote:
+  We could add a
+>> IOMMU_FAULT_PAGE_REQUEST_PERM_VALID bit instead, but I still find it
+>> weird to denote the validity of a bitfield using a separate bit.
+>>
+>> Given that three different series now rely on this, how about we send
+>> the fault patches separately for v5.2?
 
-Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linux API <linux-api@vger.kernel.org>
----
- Documentation/filesystems/proc.txt | 39 ++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Sorry I meant v5.3 - after the merge window
 
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-index 66cad5c86171..e8bc403d15df 100644
---- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -45,6 +45,7 @@ Table of Contents
-   3.9   /proc/<pid>/map_files - Information about memory mapped files
-   3.10  /proc/<pid>/timerslack_ns - Task timerslack value
-   3.11	/proc/<pid>/patch_state - Livepatch patch operation state
-+  3.12	/proc/<pid>/arch_status - Task architecture specific information
- 
-   4	Configuring procfs
-   4.1	Mount options
-@@ -1948,6 +1949,44 @@ patched.  If the patch is being enabled, then the task has already been
- patched.  If the patch is being disabled, then the task hasn't been
- unpatched yet.
- 
-+3.12 /proc/<pid>/arch_status - task architecture specific status
-+-------------------------------------------------------------------
-+When CONFIG_PROC_PID_ARCH_STATUS is enabled, this file displays the
-+architecture specific status of the task.
-+
-+Example
-+-------
-+ $ cat /proc/6753/arch_status
-+ AVX512_elapsed_ms:      8
-+
-+Description
-+-----------
-+
-+x86 specific entries:
-+---------------------
-+ AVX512_elapsed_ms:
-+ ------------------
-+  If AVX512 is supported on the machine, this entry shows the milliseconds
-+  elapsed since the last time AVX512 usage was recorded. The recording
-+  happens on a best effort basis when a task is scheduled out. This means
-+  that the value depends on two factors:
-+
-+    1) The time which the task spent on the CPU without being scheduled
-+       out. With CPU isolation and a single runnable task this can take
-+       several seconds.
-+
-+    2) The time since the task was scheduled out last. Depending on the
-+       reason for being scheduled out (time slice exhausted, syscall ...)
-+       this can be arbitrary long time.
-+
-+  As a consequence the value cannot be considered precise and authoritative
-+  information. The application which uses this information has to be aware
-+  of the overall scenario on the system in order to determine whether a
-+  task is a real AVX512 user or not.
-+
-+  A special value of '-1' indicates that no AVX512 usage was recorded, thus
-+  the task is unlikely an AVX512 user, but depends on the workload and the
-+  scheduling scenario, it also could be a false negative mentioned above.
- 
- ------------------------------------------------------------------------------
- Configuring procfs
--- 
-2.17.1
+>> I pushed the recoverable fault
+>> support applied on top of this, with the PERM_READ bit and cleaned up
+>> kernel doc, to git://linux-arm.org/linux-jpb.git sva/api
+> 
+> my only concern is is it likely to be upstreamed without any actual
+> user? In the positive, of course, I don't have any objection.
 
+Possibly, I don't think my I/O page fault stuff for SVA is likely to get
+in v5.3, it depends on one or two more patch sets. But your nested work
+and Jacob's one may be in good shape for next version? I find it
+difficult to keep track of the same patches in three different series.
+
+Thanks,
+Jean
