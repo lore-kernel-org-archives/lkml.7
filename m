@@ -7,57 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC73EC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E057C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA41120878
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE6120717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220293;
-	bh=H5WCzhbmj2by4Y9S5ogQQPVbCVtMDoUvOjiQqDw54ro=;
+	s=default; t=1556220296;
+	bh=y+Go1WRLK5n4f+On4W3yJ35EoKNFSswc3fr4x+hcr5w=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=AzW7e3wPDQz1HU8OrRZZgPpssVEAp8kjZOCuOtYZWOO3B6rUYwiSAOxkp+FTel8J1
-	 LJkhC6S16Y1XWmU3e+rqGazC2IE54mHJdd3INdmwfqNzEd9iXFApClGLhuC/ojXR2e
-	 TSsp0db6eY3/iUV5dGOHv6ugZz0U5qFICQPX0AKA=
+	b=hD6WzqCNJN9FasV/c/X5QHiMpFYQa8XVitR/nfOu6+4MMcIQwwUAAMlSzGFUCXwnI
+	 hFD9qV/yeTonJ1ovddIobn9F7UJGlszPHi82ztRxqkz3sgNUvAcCntjxOhRbzECl4s
+	 nKB6VbOsyMhvqnU5sYY+oO9a7IRkBJ+Jeo6EVJKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbfDYTYw (ORCPT
+        id S1728877AbfDYTYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:24:52 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49232 "EHLO
+        Thu, 25 Apr 2019 15:24:54 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49384 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbfDYTYt (ORCPT
+        with ESMTP id S1727833AbfDYTYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:24:49 -0400
+        Thu, 25 Apr 2019 15:24:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=BEpTm4OOklfiV4a5BvaAAc5vHXwdDqEt83iDK9RL0BA=; b=VUcB/dc/VWur
-        4hUBUefQ7x6/Il5B9ODhIN9mSLUaynb4Fo6+UQ+VUGbjnskTEAUzw5k3cjNG8LeGbo1X8Zyj88Z2c
-        wziby9YCHgKJ3+MxTfHuUeSwYZX4vcdqLLX6Oy5N0Z9WDO0zxb1IGZnodvjKErbugMue9H1uV96YN
-        oq25k=;
+        List-Archive; bh=186tI01NFJbySUzApuY1r3i/98S2MNaBK0plgCP0MRg=; b=expFCHu7R/CB
+        z13NjyNgMNPxLT37Mtt96f6ZQx1pGFYVdhbyzYKJ1Nmvdf5RPLKef0aK+4JXUXDTLXyFg0ePfA5b+
+        fJO0JxuGF5kDgfJNevmjRCAAIMPwjOX2hM7xZx4qxzAYpauqiPIzVeJd57NAkk/PPWn4clw3+9f91
+        PCREI=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJjz5-0004Yg-2d; Thu, 25 Apr 2019 19:24:39 +0000
+        id 1hJjz7-0004ZV-9Q; Thu, 25 Apr 2019 19:24:41 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 19363441D3D; Thu, 25 Apr 2019 20:24:33 +0100 (BST)
+        id CEF9F441D3B; Thu, 25 Apr 2019 20:24:39 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Icenowy Zheng <icenowy@aosc.io>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Applied "ASoC: doc: simple-card: Add pin-switches property" to the asoc tree
-In-Reply-To: <20190420104553.5071-1-paul@crapouillou.net>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: sy8106a: Get rid of struct sy8106a" to the regulator tree
+In-Reply-To: <20190420030125.6661-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192433.19363441D3D@finisterre.ee.mobilebroadband>
-Date:   Thu, 25 Apr 2019 20:24:33 +0100 (BST)
+Message-Id: <20190425192439.CEF9F441D3B@finisterre.ee.mobilebroadband>
+Date:   Thu, 25 Apr 2019 20:24:39 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: doc: simple-card: Add pin-switches property
+   regulator: sy8106a: Get rid of struct sy8106a
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,32 +87,113 @@ to this mail.
 Thanks,
 Mark
 
-From 6b903f9bdd98093a2c1ea79df07e86decfda3b04 Mon Sep 17 00:00:00 2001
-From: Paul Cercueil <paul@crapouillou.net>
-Date: Sat, 20 Apr 2019 12:45:51 +0200
-Subject: [PATCH] ASoC: doc: simple-card: Add pin-switches property
+From e7599207d7db2fe6a7b2ba3c9a55a06da95b03f0 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Sat, 20 Apr 2019 11:01:25 +0800
+Subject: [PATCH] regulator: sy8106a: Get rid of struct sy8106a
 
-The simple-audio-card,pin-switches property can contain the list of
-widget names for which pin switches must be created.
+All the fields in struct sy8106a are only used in sy8106a_i2c_probe(), so
+use local variables instead.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/simple-card.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/regulator/sy8106a-regulator.c | 40 +++++++++------------------
+ 1 file changed, 13 insertions(+), 27 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index 4629c8f8a6b6..79954cd6e37b 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -24,6 +24,8 @@ Optional properties:
- 					  a microphone is attached.
- - simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
- 					  as amplifiers, to be added to the sound card.
-+- simple-audio-card,pin-switches	: List of strings containing the widget names for
-+					  which pin switches must be created.
+diff --git a/drivers/regulator/sy8106a-regulator.c b/drivers/regulator/sy8106a-regulator.c
+index 65fbd1f0b612..42e03b2c10a0 100644
+--- a/drivers/regulator/sy8106a-regulator.c
++++ b/drivers/regulator/sy8106a-regulator.c
+@@ -22,12 +22,6 @@
+  */
+ #define SY8106A_GO_BIT			BIT(7)
  
- Optional subnodes:
+-struct sy8106a {
+-	struct regulator_dev *rdev;
+-	struct regmap *regmap;
+-	u32 fixed_voltage;
+-};
+-
+ static const struct regmap_config sy8106a_regmap_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 8,
+@@ -70,36 +64,32 @@ static const struct regulator_desc sy8106a_reg = {
+ static int sy8106a_i2c_probe(struct i2c_client *i2c,
+ 			    const struct i2c_device_id *id)
+ {
+-	struct sy8106a *chip;
+ 	struct device *dev = &i2c->dev;
+-	struct regulator_dev *rdev = NULL;
++	struct regulator_dev *rdev;
+ 	struct regulator_config config = { };
++	struct regmap *regmap;
+ 	unsigned int reg, vsel;
++	u32 fixed_voltage;
+ 	int error;
+ 
+-	chip = devm_kzalloc(&i2c->dev, sizeof(struct sy8106a), GFP_KERNEL);
+-	if (!chip)
+-		return -ENOMEM;
+-
+ 	error = of_property_read_u32(dev->of_node, "silergy,fixed-microvolt",
+-				     &chip->fixed_voltage);
++				     &fixed_voltage);
+ 	if (error)
+ 		return error;
+ 
+-	if (chip->fixed_voltage < SY8106A_MIN_MV * 1000 ||
+-	    chip->fixed_voltage > SY8106A_MAX_MV * 1000)
++	if (fixed_voltage < SY8106A_MIN_MV * 1000 ||
++	    fixed_voltage > SY8106A_MAX_MV * 1000)
+ 		return -EINVAL;
+ 
+-	chip->regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
+-	if (IS_ERR(chip->regmap)) {
+-		error = PTR_ERR(chip->regmap);
++	regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
++	if (IS_ERR(regmap)) {
++		error = PTR_ERR(regmap);
+ 		dev_err(dev, "Failed to allocate register map: %d\n", error);
+ 		return error;
+ 	}
+ 
+ 	config.dev = &i2c->dev;
+-	config.regmap = chip->regmap;
+-	config.driver_data = chip;
++	config.regmap = regmap;
+ 
+ 	config.of_node = dev->of_node;
+ 	config.init_data = of_get_regulator_init_data(dev, dev->of_node,
+@@ -109,15 +99,15 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c,
+ 		return -ENOMEM;
+ 
+ 	/* Ensure GO_BIT is enabled when probing */
+-	error = regmap_read(chip->regmap, SY8106A_REG_VOUT1_SEL, &reg);
++	error = regmap_read(regmap, SY8106A_REG_VOUT1_SEL, &reg);
+ 	if (error)
+ 		return error;
+ 
+ 	if (!(reg & SY8106A_GO_BIT)) {
+-		vsel = (chip->fixed_voltage / 1000 - SY8106A_MIN_MV) /
++		vsel = (fixed_voltage / 1000 - SY8106A_MIN_MV) /
+ 		       SY8106A_STEP_MV;
+ 
+-		error = regmap_write(chip->regmap, SY8106A_REG_VOUT1_SEL,
++		error = regmap_write(regmap, SY8106A_REG_VOUT1_SEL,
+ 				     vsel | SY8106A_GO_BIT);
+ 		if (error)
+ 			return error;
+@@ -131,10 +121,6 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c,
+ 		return error;
+ 	}
+ 
+-	chip->rdev = rdev;
+-
+-	i2c_set_clientdata(i2c, chip);
+-
+ 	return 0;
+ }
  
 -- 
 2.20.1
