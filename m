@@ -2,80 +2,236 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5920FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6AAC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8967C206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E58206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Ksz6Xw2L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXBpAtwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbfDYPcp (ORCPT
+        id S1729926AbfDYPcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:32:45 -0400
-Received: from a9-37.smtp-out.amazonses.com ([54.240.9.37]:42332 "EHLO
-        a9-37.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729689AbfDYPcn (ORCPT
+        Thu, 25 Apr 2019 11:32:48 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46547 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729901AbfDYPcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:32:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1556206362;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=pO2pP6FljQafTmg62m+I2qdYl7zhRSiQcJpHjYrZsOI=;
-        b=Ksz6Xw2LBldNY0PeACCSCxyacWYJi2nwVBs9e+UrzD4PQHyFDVKetoqaWKWpQnf0
-        WM46Uqwjfx9t2aT4o6gE4SwbHRswpzYhPz0+X6YzhW2kWmvYu3dGcDZzhQLlo06NBK3
-        KiN0MpVrYl1Ekn3YvEVgztvzplukXEXDA+f/sMhI=
-Date:   Thu, 25 Apr 2019 15:32:42 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Matthew Garrett <matthewgarrett@google.com>
-cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Matthew Garrett <mjg59@google.com>
-Subject: Re: [PATCH] mm: Allow userland to request that the kernel clear
- memory on release
-In-Reply-To: <20190424191440.170422-1-matthewgarrett@google.com>
-Message-ID: <0100016a55209db0-efc46978-fa1e-48be-b17a-fcb6b58ae882-000000@email.amazonses.com>
-References: <20190424191440.170422-1-matthewgarrett@google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 25 Apr 2019 11:32:46 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j11so72875pff.13;
+        Thu, 25 Apr 2019 08:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SyEwlX82c6Bq2y5y3PF+BOLHdI7/R7pprHZNYOVIDmE=;
+        b=ZXBpAtwbbbojc7JxUhsbCf3bMqrAJug3Vl1FxI+U8Lidue3J9RNX+CCaDfjaxmJK5M
+         Sg0WMoLR2AvBx/ZlqsNZ7DQrNTyAl+OBrBh+Vz4CtsJjdvlZi92cOBo98OXq78nzxGaw
+         tDsT0yEPyQcOP2Uy6Fy1aMGc9vuVKTbGEIa47KW18cdJ0oYAseRpMg6POweWofg3Fqtu
+         YeGPwRflm2kL4c2wIfrr9IB1/s7IK4tyUSdkK0HUV7F2nw6Uu48BdJLJfeuOTTt4cYjm
+         36bnYMTxIrqdeVDMnR+UKzSbJNttXwoyn8PqIa/Ntv5rHTNyTzyqx1JjMxHdD8DnoICs
+         Izhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SyEwlX82c6Bq2y5y3PF+BOLHdI7/R7pprHZNYOVIDmE=;
+        b=MCoquvJwidv8Df/rjQfAzamyPnKO3Ek6C+6/sCNb3jBV5ul/nNhdvhlJjB3s/EUi7H
+         3+CBVSv+p/f9DAcmkF6amQ2p4Z95O/3O2Y1UwB2PRKU0KNUeP48BwURXFn+WEDWAcbMv
+         71D6EYCaaovsy+ZjkVFwpFEOX8xmhNDv5yJArgxJZUv0t6DdG+8sHan9+quG/TYr2AIK
+         oOeMU6fAcA2mkC8NWEcgld62Kx4jey+f9p+qZDcDsrxZaZwSpilJycWhB70nPPPobM/F
+         ejEmzwR97LwXk0HDF3jjIFYx+X5i6t2cKiGXwowsyGMaKS6TwDAM90Bz+WOcEQalPo7z
+         oIGA==
+X-Gm-Message-State: APjAAAUgpCPvGWjNR5jooCk/+i7hB4+E398YECtE1swWd+y6nxyoxgD8
+        F4T/Na53XfFXubBfn7Lrxfw=
+X-Google-Smtp-Source: APXvYqzBwVFTuK1bQGBeqX5wlDE1yU17f/KuEgz4bEwbfPgIlaGhp+8dXp0z/5brq6RQhcdg5i+xpg==
+X-Received: by 2002:a63:6e09:: with SMTP id j9mr38174965pgc.416.1556206365276;
+        Thu, 25 Apr 2019 08:32:45 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id c14sm2643363pgj.94.2019.04.25.08.32.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 08:32:44 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     rjw@rjwysocki.net, Jonathan Corbet <corbet@lwn.net>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v6 12/24] Documentation: ACPI: move i2c-muxes.txt to firmware-guide/acpi and convert to reST
+Date:   Thu, 25 Apr 2019 23:31:05 +0800
+Message-Id: <20190425153117.16057-13-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190425153117.16057-1-changbin.du@gmail.com>
+References: <20190425153117.16057-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.04.25-54.240.9.37
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019, Matthew Garrett wrote:
+This converts the plain text documentation to reStructuredText format and
+add it to Sphinx TOC tree. No essential content change.
 
-> Applications that hold secrets and wish to avoid them leaking can use
-> mlock() to prevent the page from being pushed out to swap and
-> MADV_DONTDUMP to prevent it from being included in core dumps. Applications
-> can also use atexit() handlers to overwrite secrets on application exit.
-> However, if an attacker can reboot the system into another OS, they can
-> dump the contents of RAM and extract secrets. We can avoid this by setting
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/acpi/i2c-muxes.txt              | 58 ------------------
+ .../firmware-guide/acpi/i2c-muxes.rst         | 61 +++++++++++++++++++
+ Documentation/firmware-guide/acpi/index.rst   |  3 +-
+ 3 files changed, 63 insertions(+), 59 deletions(-)
+ delete mode 100644 Documentation/acpi/i2c-muxes.txt
+ create mode 100644 Documentation/firmware-guide/acpi/i2c-muxes.rst
 
-Well nothing in this patchset deals with that issue.... That hole still
-exists afterwards. So is it worth to have this functionality?
-
-> Unfortunately, if an application exits uncleanly, its secrets may still be
-> present in RAM. This can't be easily fixed in userland (eg, if the OOM
-> killer decides to kill a process holding secrets, we're not going to be able
-> to avoid that), so this patch adds a new flag to madvise() to allow userland
-> to request that the kernel clear the covered pages whenever the page
-> reference count hits zero. Since vm_flags is already full on 32-bit, it
-> will only work on 64-bit systems.
-
-But then the pages are cleared anyways when reallocated to another
-process. This just clears it sooner before reuse. So it will reduce the
-time that a page contains the secret sauce in case the program is
-aborted and cannot run its exit handling.
-
-Is that realy worth extending system calls and adding kernel handling for
-this? Maybe the answer is yes given our current concern about anything
-related to "security".
+diff --git a/Documentation/acpi/i2c-muxes.txt b/Documentation/acpi/i2c-muxes.txt
+deleted file mode 100644
+index 9fcc4f0b885e..000000000000
+--- a/Documentation/acpi/i2c-muxes.txt
++++ /dev/null
+@@ -1,58 +0,0 @@
+-ACPI I2C Muxes
+---------------
+-
+-Describing an I2C device hierarchy that includes I2C muxes requires an ACPI
+-Device () scope per mux channel.
+-
+-Consider this topology:
+-
+-+------+   +------+
+-| SMB1 |-->| MUX0 |--CH00--> i2c client A (0x50)
+-|      |   | 0x70 |--CH01--> i2c client B (0x50)
+-+------+   +------+
+-
+-which corresponds to the following ASL:
+-
+-Device (SMB1)
+-{
+-    Name (_HID, ...)
+-    Device (MUX0)
+-    {
+-        Name (_HID, ...)
+-        Name (_CRS, ResourceTemplate () {
+-            I2cSerialBus (0x70, ControllerInitiated, I2C_SPEED,
+-                          AddressingMode7Bit, "^SMB1", 0x00,
+-                          ResourceConsumer,,)
+-        }
+-
+-        Device (CH00)
+-        {
+-            Name (_ADR, 0)
+-
+-            Device (CLIA)
+-            {
+-                Name (_HID, ...)
+-                Name (_CRS, ResourceTemplate () {
+-                    I2cSerialBus (0x50, ControllerInitiated, I2C_SPEED,
+-                                  AddressingMode7Bit, "^CH00", 0x00,
+-                                  ResourceConsumer,,)
+-                }
+-            }
+-        }
+-
+-        Device (CH01)
+-        {
+-            Name (_ADR, 1)
+-
+-            Device (CLIB)
+-            {
+-                Name (_HID, ...)
+-                Name (_CRS, ResourceTemplate () {
+-                    I2cSerialBus (0x50, ControllerInitiated, I2C_SPEED,
+-                                  AddressingMode7Bit, "^CH01", 0x00,
+-                                  ResourceConsumer,,)
+-                }
+-            }
+-        }
+-    }
+-}
+diff --git a/Documentation/firmware-guide/acpi/i2c-muxes.rst b/Documentation/firmware-guide/acpi/i2c-muxes.rst
+new file mode 100644
+index 000000000000..3a8997ccd7c4
+--- /dev/null
++++ b/Documentation/firmware-guide/acpi/i2c-muxes.rst
+@@ -0,0 +1,61 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==============
++ACPI I2C Muxes
++==============
++
++Describing an I2C device hierarchy that includes I2C muxes requires an ACPI
++Device () scope per mux channel.
++
++Consider this topology::
++
++    +------+   +------+
++    | SMB1 |-->| MUX0 |--CH00--> i2c client A (0x50)
++    |      |   | 0x70 |--CH01--> i2c client B (0x50)
++    +------+   +------+
++
++which corresponds to the following ASL::
++
++    Device (SMB1)
++    {
++        Name (_HID, ...)
++        Device (MUX0)
++        {
++            Name (_HID, ...)
++            Name (_CRS, ResourceTemplate () {
++                I2cSerialBus (0x70, ControllerInitiated, I2C_SPEED,
++                            AddressingMode7Bit, "^SMB1", 0x00,
++                            ResourceConsumer,,)
++            }
++
++            Device (CH00)
++            {
++                Name (_ADR, 0)
++
++                Device (CLIA)
++                {
++                    Name (_HID, ...)
++                    Name (_CRS, ResourceTemplate () {
++                        I2cSerialBus (0x50, ControllerInitiated, I2C_SPEED,
++                                    AddressingMode7Bit, "^CH00", 0x00,
++                                    ResourceConsumer,,)
++                    }
++                }
++            }
++
++            Device (CH01)
++            {
++                Name (_ADR, 1)
++
++                Device (CLIB)
++                {
++                    Name (_HID, ...)
++                    Name (_CRS, ResourceTemplate () {
++                        I2cSerialBus (0x50, ControllerInitiated, I2C_SPEED,
++                                    AddressingMode7Bit, "^CH01", 0x00,
++                                    ResourceConsumer,,)
++                    }
++                }
++            }
++        }
++    }
+diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+index d1d069b26bbc..1c89888f6ee8 100644
+--- a/Documentation/firmware-guide/acpi/index.rst
++++ b/Documentation/firmware-guide/acpi/index.rst
+@@ -12,4 +12,5 @@ ACPI Support
+    osi
+    method-customizing
+    DSD-properties-rules
+-   gpio-properties
+\ No newline at end of file
++   gpio-properties
++   i2c-muxes
+-- 
+2.20.1
 
