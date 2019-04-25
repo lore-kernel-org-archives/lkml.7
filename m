@@ -2,143 +2,135 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3286C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC251C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8725C217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556175135;
-	bh=S5f1qcsepvqbumXVX4TS7tPs8tBGK1oMYU4KaDDnbIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SQwgB+TqwzJAIidJ2r7qSkK2LRz5jC9nSEIf55iM5wwEjmvIJvuo3IpzRegoyDCPE
-	 HZFv+0rNn2l9g7tZ3PxvqzvzcmnNOG7D/P4Hpd9EZ5h6yTU86k/VgnZS70K4mJ1LML
-	 uamr2KshxAWTZ+0Twg2v35e0FRyl9N0WcLwNy5bM=
+	by mail.kernel.org (Postfix) with ESMTP id 8FD4D217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:57:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="istUHVib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbfDYGwO (ORCPT
+        id S1729896AbfDYG5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 02:52:14 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:38918 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfDYGwO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 02:52:14 -0400
-Received: by mail-wm1-f48.google.com with SMTP id n25so8817906wmk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 23:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TXX6+gv7iWhMRNXZMbTkplqE/2KpwHYiSmGi33/7wls=;
-        b=PQS++NYW/VuRgmUQ/AlgsuwLmbWSuuFgW2GQqOkp0ReLqN59tG7prr8rhDaKgiIow7
-         DfP6RoxxMKcjM0i2HsFfvpKAxfC9vL+6zTfxhAHx2mIyt00blakIUmahyKLHt15yVXV6
-         2XWKBnQettmhc0mNrZiuvIgF62/+8tguxfFDWccZCZla8WOMPDJquLvOEsteDojORUCa
-         uFbwk/ZwGf0CGXhLLiakZTcVWsTHWYp6yMb/B7fITqZIUqoH860ghpRzmcysQmgm6iJN
-         Xs0QN6/ltI/2Q6jZS2eNKUFj4X45bcmkbSe2cDPUUgr1kHiqX7Q1Kr5RnKy7nCu3ux9N
-         3dsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TXX6+gv7iWhMRNXZMbTkplqE/2KpwHYiSmGi33/7wls=;
-        b=nOVYb2RbHuuzjIXO3suzjuY9nN7uZTdxbJe8OWi24IRbW9ck7Xh96ZAZRcasah90lU
-         +YPDG6wrEekvjZVeuFWA+kJ70msTgLe3kGNsznFWiPWbij6kZGgaDvek41theJ2jq8pw
-         sl9RFggFNh8xnVy12DZQYz0F/EQJWbBo1U7nBe+W63Ja0uBPjEABuTOSVFH54cIg1Xu9
-         K/RJZpUeyUUDV5FKEuqwr5QYFolC4MhlNwUV3L0bUF4x4fKEuYWmvm3ijPnoZR4svJFJ
-         mwzpdKykvUA5QQCX0zFy0g7EKhAZwbIZHMCOiLpQNUXw6zcH/836fPcxQTGOEeMXE7kB
-         iguw==
-X-Gm-Message-State: APjAAAXPYvl2VObAjxz8FL6EHtk57kYAqnHB9JZyMj0iQQRIqy1T0gkV
-        OsT+AC57DmjQeyjpvXYh/ac=
-X-Google-Smtp-Source: APXvYqyv2pXGvTJJQXMMRuZqilOlTbp9o65d8ZaXPFJx4WdO/ju/l4eQS917ZCazQW7Jt8AOcd26lA==
-X-Received: by 2002:a1c:6c19:: with SMTP id h25mr2092886wmc.119.1556175132431;
-        Wed, 24 Apr 2019 23:52:12 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id z17sm21389161wmc.7.2019.04.24.23.52.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 23:52:11 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 08:52:09 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [patch 3/3] x86/paravirt: Replace paravirt patch asm magic
-Message-ID: <20190425065209.GA89582@gmail.com>
-References: <20190424134115.091452807@linutronix.de>
- <20190424134223.690835713@linutronix.de>
+        Thu, 25 Apr 2019 02:57:35 -0400
+Received: from mail-eopbgr50051.outbound.protection.outlook.com ([40.107.5.51]:46833
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725970AbfDYG5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 02:57:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sa5UJstmpqGoE/d1L4fsTERqxf3Y5QrYB4rvQdRgjJ4=;
+ b=istUHVibs/iPE5PyaNjFpTpYHeaCLkye9eMk2ClsuvOcwZUfC4NXWuW7C+sl1ahlXTS6cWyKPNu6rhsmguQCZDK+ZxSeQUWYlU3uFyes24O/2LX5XnsqDuRncTbKKFkYnhw8OEcaa3YBoSwbicx7dvsVUBXMgNGgfKxbHgY9zhU=
+Received: from VI1PR04MB4800.eurprd04.prod.outlook.com (20.177.48.221) by
+ VI1PR04MB3119.eurprd04.prod.outlook.com (10.170.229.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.16; Thu, 25 Apr 2019 06:56:51 +0000
+Received: from VI1PR04MB4800.eurprd04.prod.outlook.com
+ ([fe80::9bd:1d31:d6c3:d157]) by VI1PR04MB4800.eurprd04.prod.outlook.com
+ ([fe80::9bd:1d31:d6c3:d157%6]) with mapi id 15.20.1813.017; Thu, 25 Apr 2019
+ 06:56:51 +0000
+From:   Vabhav Sharma <vabhav.sharma@nxp.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [EXT] Re: [PATCH] arm64: drivers: clk: qoriq: increase array size
+ of cmux_to_group
+Thread-Topic: [EXT] Re: [PATCH] arm64: drivers: clk: qoriq: increase array
+ size of cmux_to_group
+Thread-Index: AQHU+q0FP2+bGnUPHkiQJgHncASgPKZL83mAgAB6SPA=
+Date:   Thu, 25 Apr 2019 06:56:51 +0000
+Message-ID: <VI1PR04MB4800C3011CA048CE5CD1E465F33D0@VI1PR04MB4800.eurprd04.prod.outlook.com>
+References: <1556117426-26878-1-git-send-email-vabhav.sharma@nxp.com>
+ <155614807592.15276.17299738374776352204@swboyd.mtv.corp.google.com>
+In-Reply-To: <155614807592.15276.17299738374776352204@swboyd.mtv.corp.google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vabhav.sharma@nxp.com; 
+x-originating-ip: [92.120.0.4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 67e87b25-2995-42ae-89a0-08d6c94b320d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB3119;
+x-ms-traffictypediagnostic: VI1PR04MB3119:
+x-microsoft-antispam-prvs: <VI1PR04MB3119D617E160330AA28B0AB1F33D0@VI1PR04MB3119.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0018A2705B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(136003)(396003)(376002)(39860400002)(13464003)(189003)(199004)(2906002)(53936002)(14444005)(229853002)(478600001)(25786009)(9686003)(4326008)(2201001)(81166006)(8676002)(81156014)(186003)(68736007)(6506007)(53546011)(6116002)(86362001)(14454004)(102836004)(476003)(26005)(8936002)(446003)(3846002)(11346002)(54906003)(76176011)(76116006)(97736004)(99286004)(71190400001)(66066001)(66446008)(66556008)(6246003)(256004)(110136005)(71200400001)(6436002)(316002)(66476007)(486006)(55016002)(7736002)(2501003)(52536014)(74316002)(5660300002)(7696005)(64756008)(44832011)(305945005)(73956011)(66946007)(33656002)(21314003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3119;H:VI1PR04MB4800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xcY0D/nKM8uIqUxjhE2w3eAkFFxnhLlSIqk66LGCIiBvzzhSlAAYYvu+nD2d4IhSRqwsIfli2I1NXPfjzCgLcfcLAW7muhMXNNcQ4wmUd+46Upe5MeS+tWkiRWmP0sNZ9bV01TBwJh/oXlCbgTpdHehdocW8p2NB80H+52NOXIwz4adUD1arowKVJiDRCwh5BRabdnXHYVZvKKhDVt6C3cVGzLLbjkazVena3XnHhcfji5paBGpROWN2E1HcvRbwLmvBtS84iJBgo6GTDkhzenNP8z+KMmvuSuqQS5Wg741pZygz7ASIdvwtPzS7DrFAG7F0RIisiH1FSd5m81GznwYJBcjnsAIsjwJDyafXfDFuC//0/P0hJV0jfNGbo3+j/YRYiNIaEAf7/tAJzSl4N8+73FBPtBfcbUQqs+Fwe60=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424134223.690835713@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67e87b25-2995-42ae-89a0-08d6c94b320d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 06:56:51.8661
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Thomas Gleixner <tglx@linutronix.de> wrote:
-
-> The magic macro DEF_NATIVE() in the paravirt patching code uses inline
-> assembly to generate a data table for patching in the native instructions.
-> 
-> While clever this is falling apart with LTO and even aside of LTO the
-> construct is just working by chance according to GCC folks.
-> 
-> Aside of that the tables are constant data and not some form of magic
-> text.
-> 
-> As these constructs are not subject to frequent changes it is not a
-> maintenance issue to convert them to regular data tables which are
-> initialized with hex bytes.
-> 
-> Create a new set of macros and data structures to store the instruction
-> sequences and convert the code over.
-> 
-> Reported-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
-> -# ifdef CONFIG_PARAVIRT_XXL
-> -DEF_NATIVE(irq, irq_disable, "cli");
-> -DEF_NATIVE(irq, irq_enable, "sti");
-> -DEF_NATIVE(irq, restore_fl, "push %eax; popf");
-> -DEF_NATIVE(irq, save_fl, "pushf; pop %eax");
-> -DEF_NATIVE(cpu, iret, "iret");
-> -DEF_NATIVE(mmu, read_cr2, "mov %cr2, %eax");
-> -DEF_NATIVE(mmu, write_cr3, "mov %eax, %cr3");
-> -DEF_NATIVE(mmu, read_cr3, "mov %cr3, %eax");
-
-> +static const struct patch_xxl patch_data_xxl = {
-> +	.irq_irq_disable	= { 0xfa },		// cli
-> +	.irq_irq_enable		= { 0xfb },		// sti
-> +	.irq_save_fl		= { 0x9c, 0x58 },	// pushf; pop %[re]ax
-> +	.mmu_read_cr2		= { 0x0f, 0x20, 0xd0 },	// mov %cr2, %[re]ax
-> +	.mmu_read_cr3		= { 0x0f, 0x20, 0xd8 },	// mov %cr3, %[re]ax
-> +# ifdef CONFIG_X86_64
-> +	.irq_restore_fl		= { 0x57, 0x9d },	// push %rdi; popfq
-> +	.mmu_write_cr3		= { 0x0f, 0x22, 0xdf },	// mov %rdi, %cr3
-> +	.cpu_wbinvd		= { 0x0f, 0x09 },	// wbinvd
-> +	.cpu_usergs_sysret64	= { 0x0f, 0x01, 0xf8,
-> +				    0x48, 0x0f, 0x07 },	// swapgs; sysretq
-> +	.cpu_swapgs		= { 0x0f, 0x01, 0xf8 },	// swapgs
-> +	.mov64			= { 0x48, 0x89, 0xf8 },	// mov %rdi, %rax
-> +# else
-> +	.irq_restore_fl		= { 0x50, 0x9d },	// push %eax; popf
-> +	.mmu_write_cr3		= { 0x0f, 0x22, 0xd8 },	// mov %eax, %cr3
-> +	.cpu_iret		= { 0xcf },		// iret
-> +# endif
-
-I think these open-coded hexa versions are somewhat fragile as well, how 
-about putting these into a .S file and controlling the sections in an LTO 
-safe manner there?
-
-That will also allow us to write proper asm, and global labels can be 
-used to extract the patchlets and their length?
-
-Thanks,
-
-	Ingo
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlcGhlbiBCb3lkIDxz
+Ym95ZEBrZXJuZWwub3JnPg0KPiBTZW50OiBUaHVyc2RheSwgQXByaWwgMjUsIDIwMTkgNDo1MSBB
+TQ0KPiBUbzogbGludXgtY2xrQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgVmFiaGF2IFNoYXJtYQ0KPiA8dmFiaGF2LnNoYXJtYUBueHAuY29tPg0KPiBDYzog
+bXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207IFlvZ2VzaCBOYXJheWFuIEdhdXINCj4gPHlvZ2VzaG5h
+cmF5YW4uZ2F1ckBueHAuY29tPjsgVmFiaGF2IFNoYXJtYQ0KPiA8dmFiaGF2LnNoYXJtYUBueHAu
+Y29tPg0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIXSBhcm02NDogZHJpdmVyczogY2xrOiBx
+b3JpcTogaW5jcmVhc2UgYXJyYXkgc2l6ZSBvZg0KPiBjbXV4X3RvX2dyb3VwDQo+IA0KPiBDYXV0
+aW9uOiBFWFQgRW1haWwNCj4gDQo+IFlvdXIgc3ViamVjdCBzaG91bGQgYmUgImNsazogcW9yaXE6
+IEluY3JlYXNlIGFycmF5IHNpemUgb2YgY211eF90b19ncm91cCINCk9rLCBJIHdpbGwgdXBkYXRl
+IGl0DQo+IA0KPiBRdW90aW5nIFZhYmhhdiBTaGFybWEgKDIwMTktMDQtMjQgMDc6NTA6MTMpDQo+
+ID4gRnJvbTogWW9nZXNoIEdhdXIgPHlvZ2VzaG5hcmF5YW4uZ2F1ckBueHAuY29tPg0KPiA+DQo+
+ID4gSW5jcmVhc2Ugc2l6ZSBvZiBjbXV4X3RvX2dyb3VwIGFycmF5LCB0byBhY2NvbWRhdGUgZW50
+cnkgb2YNCj4gPiAtMSB0ZXJtaW5hdGlvbi4NCj4gPg0KPiA+IEFkZGVkIC0xLCB0ZXJtaW5hdGVk
+LCBlbnRyeSBmb3IgNDA4MF9jbXV4X2dycFguDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZb2dl
+c2ggR2F1ciA8eW9nZXNobmFyYXlhbi5nYXVyQG54cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+VmFiaGF2IFNoYXJtYSA8dmFiaGF2LnNoYXJtYUBueHAuY29tPg0KPiA+IEFja2VkLWJ5OiBTY290
+dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0Pg0KPiA+IEFja2VkLWJ5OiBTdGVwaGVuIEJveWQgPHNi
+b3lkQGtlcm5lbC5vcmc+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvY2xrL2Nsay1xb3JpcS5jIHwg
+NCArKy0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
+KC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvY2xrLXFvcmlxLmMgYi9kcml2
+ZXJzL2Nsay9jbGstcW9yaXEuYyBpbmRleA0KPiA+IDEyMTJhOWIuLmY2NjA2Y2YgMTAwNjQ0DQo+
+ID4gLS0tIGEvZHJpdmVycy9jbGsvY2xrLXFvcmlxLmMNCj4gPiArKysgYi9kcml2ZXJzL2Nsay9j
+bGstcW9yaXEuYw0KPiA+IEBAIC03OSw3ICs3OSw3IEBAIHN0cnVjdCBjbG9ja2dlbl9jaGlwaW5m
+byB7DQo+ID4gICAgICAgICBjb25zdCBzdHJ1Y3QgY2xvY2tnZW5fbXV4aW5mbyAqY211eF9ncm91
+cHNbMl07DQo+ID4gICAgICAgICBjb25zdCBzdHJ1Y3QgY2xvY2tnZW5fbXV4aW5mbyAqaHdhY2Nl
+bFtOVU1fSFdBQ0NFTF07DQo+ID4gICAgICAgICB2b2lkICgqaW5pdF9wZXJpcGgpKHN0cnVjdCBj
+bG9ja2dlbiAqY2cpOw0KPiA+IC0gICAgICAgaW50IGNtdXhfdG9fZ3JvdXBbTlVNX0NNVVhdOyAv
+KiAtMSB0ZXJtaW5hdGVzIGlmIGZld2VyIHRoYW4NCj4gTlVNX0NNVVggKi8NCj4gPiArICAgICAg
+IGludCBjbXV4X3RvX2dyb3VwW05VTV9DTVVYKzFdOyAvKiBhcnJheSBzaG91bGQgYmUgLTENCj4g
+PiArIHRlcm1pbmF0ZWQgKi8NCj4gDQo+IFBsZWFzZSBwdXQgc3BhY2UgYXJvdW5kIHRoYXQgKy4N
+Ck9rLCBJIHdpbGwgdXBkYXRlIGl0DQo+IA0KPiA+ICAgICAgICAgdTMyIHBsbF9tYXNrOyAgIC8q
+IDEgPDwgbiBiaXQgc2V0IGlmIFBMTCBuIGlzIHZhbGlkICovDQo+ID4gICAgICAgICB1MzIgZmxh
+Z3M7ICAgICAgLyogQ0dfeHh4ICovDQo+ID4gIH07DQo+ID4gQEAgLTYwMSw3ICs2MDEsNyBAQCBz
+dGF0aWMgY29uc3Qgc3RydWN0IGNsb2NrZ2VuX2NoaXBpbmZvIGNoaXBpbmZvW10gPSB7DQo+ID4g
+ICAgICAgICAgICAgICAgICAgICAgICAgJnA0MDgwX2NtdXhfZ3JwMSwgJnA0MDgwX2NtdXhfZ3Jw
+Mg0KPiA+ICAgICAgICAgICAgICAgICB9LA0KPiA+ICAgICAgICAgICAgICAgICAuY211eF90b19n
+cm91cCA9IHsNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAwLCAwLCAwLCAwLCAxLCAxLCAx
+LCAxDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgMCwgMCwgMCwgMCwgMSwgMSwgMSwgMSwg
+LTENCj4gPiAgICAgICAgICAgICAgICAgfSwNCj4gPiAgICAgICAgICAgICAgICAgLnBsbF9tYXNr
+ID0gMHgxZiwNCj4gPiAgICAgICAgIH0sDQo+IA0KPiBEaWQgeW91IHdhbnQgdGhpcyBwYXRjaCB0
+byBnbyB0aHJvdWdoIGNsayB0cmVlPyBJIHNlZW0gdG8gaGF2ZSBhY2tlZCBpdCwNCj4gd2hpY2gg
+SSBkb24ndCByZW1lbWJlci4gVXN1YWxseSB3aGVuIEkgYWNrIHNvbWV0aGluZyBJIGFzc3VtZSBp
+dCdzIGdvaW5nDQo+IHRocm91Z2ggc29tZSBvdGhlciB0cmVlLg0KWWVzICwgcGxlYXNlIGhlbHAg
+dG8gbWVyZ2UgaXQNClRoaXMgUGF0Y2ggd2FzIHNlbnQgZWFybGllciBhcyBhIHBhcnQgb2YgYWRk
+aW5nIE5YUCBMWDIxNjBBIFNvQyBzdXBwb3J0LCByZXZpZXdlZCBhbmQgYWNrZWQgYnV0IGRyb3Bw
+ZWQgZHVyaW5nIG1lcmdlIHdpbmRvdy4gU28gSSBicmVhayB0aGUgY2xvY2sgcGF0Y2hlcyBpbnRv
+IHR3byBwYXRjaCB0byBsZXQgY2xrIG1haW50YWluZXJzIG1lcmdlIGl0Lg0K
