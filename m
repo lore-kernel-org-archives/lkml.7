@@ -2,128 +2,201 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB65C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819A7C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42DCB206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E31206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:21:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Dt4u28Bj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfDYOTx (ORCPT
+        id S1727460AbfDYOVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:19:53 -0400
-Received: from mga14.intel.com ([192.55.52.115]:56141 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfDYOTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:19:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 07:19:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
-   d="scan'208";a="143549570"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Apr 2019 07:19:44 -0700
-Date:   Thu, 25 Apr 2019 07:19:44 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        Thu, 25 Apr 2019 10:21:35 -0400
+Received: from mail.efficios.com ([167.114.142.138]:38316 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfDYOVe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:21:34 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id A26D51D98DD;
+        Thu, 25 Apr 2019 10:21:33 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id Y57XpTG9ZkeC; Thu, 25 Apr 2019 10:21:32 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id D0B661D98D7;
+        Thu, 25 Apr 2019 10:21:32 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D0B661D98D7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1556202092;
+        bh=hChOmBoqO3NUzgFtXBDTLegXBKfZ7EYkQrqnF5s/I1w=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Dt4u28BjWtCETk37x3nT3EkpvJZv+7swpd9lWV7Rz+vKw8A8KjSr11szUPWEbwPeY
+         ujrtud6snk0Feg/rD37fl52ku3+XpWRaYQI9pw2wY7VhY1gdlJZDZKmizKwWFNtODt
+         N9dDuIl5/X65gu05uYdHyha/b+cMSEqDM4CJcHykhwnZb4Fdy3cjyNJy6Jm81zxnBp
+         RFUx289ieZW0Ak4ld6ahc2wCkM9QDrnwWEZQi/YY60N4esAhcdkzfw4QSCluVcZpC+
+         mNDIiVpseNe8KpGOnheIpKKM4qXckhgRljLx8NJOjvxrRHY13Fl7kQojKf2lb8sHJw
+         53Mda7pwNBmOQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id F5CD6uwdSYD1; Thu, 25 Apr 2019 10:21:32 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id B09F71D98D0;
+        Thu, 25 Apr 2019 10:21:32 -0400 (EDT)
+Date:   Thu, 25 Apr 2019 10:21:32 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-Message-ID: <20190425141944.GA31197@linux.intel.com>
-References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
- <20190424143238.GB18442@linux.intel.com>
- <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
- <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
- <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
- <be509b34ba01a22845363aeb0b0f053f25c2d9c1.camel@intel.com>
- <7568a794-2e91-c84c-5b64-d33e394f0e2b@linux.intel.com>
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-mips <linux-mips@linux-mips.org>
+Message-ID: <1183307732.352.1556202092390.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190424220609.4kryfcgsv46iu3ds@pburton-laptop>
+References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com> <20190424152502.14246-11-mathieu.desnoyers@efficios.com> <20190424220609.4kryfcgsv46iu3ds@pburton-laptop>
+Subject: Re: [RFC PATCH for 5.2 10/10] rseq/selftests: mips: use break
+ instruction for RSEQ_SIG
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7568a794-2e91-c84c-5b64-d33e394f0e2b@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: rseq/selftests: mips: use break instruction for RSEQ_SIG
+Thread-Index: AQHU+rH+AJnCxtNxUESFNInzrhwEUaZL3nOAgK8p+5Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 03:07:35PM +0800, Like Xu wrote:
-> On 2019/4/25 14:30, Xiaoyao Li wrote:
-> >>>Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes is
-> >>>that we cannot assmue the reserved bits 31:16 of ECX is always 0 for the
-> >>>future generation.
+----- On Apr 24, 2019, at 6:06 PM, Paul Burton paul.burton@mips.com wrote:
 
-It doesn't matter if future CPUs use 31:16 for other things since this
-code only cares about whether or not CPUID.1F exists.  The check
-entry->eax >= 0x1f ensures that CPUID.1F will return zeros if the leaf
-does *NOT* exist, ergo the check against CPUID.1F.ECX only needs to
-look for a non-zero value.  CPUID.1F.ECX is the logical choice for
-detecting support because it is guaranteed to be non-zero if the leaf
-actually exists (because bits 15:8 will be non-zero).  Whether or not
-bits 31:16 are non-zero is irrelevant.
-
-> >>
-> >>It's true cause the statement in public spec is not "Reserved = 0" but
-> >>"Bits 31 - 16: Reserved".
-> >>
-> >>>
-> >>>In my opinion, Sean's codes is OK and much simple and clear.
-> >>
-> >>If the host cpuid.0.eax is greater than 0x1f but actually it doesn't
-> >>have multi-chip packaging technology and we may want to expose
-> >>entry->eax to some value smaller than 0x1f but greater than 0x14, much
-> >>effort needs to apply on Sean's code.
-> >>
-> >>My improvement is good to overwrite cpuid.0.eax in future usage
-> >>from the perspective of kvm feature setting not just from value check.
-> >
-> >Alright, there is something wrong in your code that you haven't realised.
-> >
-> >When you do
-> >	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
-> >
-> >it changes the entry->eax if entry->eax > 0x14. So you cannot directly use
-> >cpuid_ecx(0x1f). At least, you need to cache the value of entry->eax, like:
-> >	
-> >	u32 max_leaf = entry->eax;
-> >	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
-> >	
-> >	//...leaf between 0x14 and 0x1f
-> >	
-> >	if (max_leaf >= 0x1f && (cpuid_ecx(0x1f) & 0x0000ff00))
-> >  		entry->eax = 0x1f;
+> Hi Mathieu,
 > 
-> The cache value make no sense on this.
-
-Xiaoyao is pointing out that by limiting entry->eax to 0x14 (or 0xd), then
-it can't be used to detect support for CPUID.1F since KVM will have lost
-the required information.
-
-> >However, handling in increasing order in totally wrong. Since it's to report the
-> >max the leaf supported, we should handle in descending order, which is what Sean
-> >does.
+> On Wed, Apr 24, 2019 at 11:25:02AM -0400, Mathieu Desnoyers wrote:
+>> diff --git a/tools/testing/selftests/rseq/rseq-mips.h
+>> b/tools/testing/selftests/rseq/rseq-mips.h
+>> index fe3eabcdcbe5..eb53a6adfbbb 100644
+>> --- a/tools/testing/selftests/rseq/rseq-mips.h
+>> +++ b/tools/testing/selftests/rseq/rseq-mips.h
+>> @@ -7,7 +7,11 @@
+>>   * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>>   */
+>>  
+>> -#define RSEQ_SIG	0x53053053
+>> +/*
+>> + * RSEQ_SIG uses the break instruction. The instruction pattern is
+>> + *	0350000d        break    0x350
+>> + */
+>> +#define RSEQ_SIG	0x0350000d
 > 
-> There is no need to check "entry->eax >= 0x1f" before "setting entry->eax =
-> 0x1f" if and only if cpuid_ecx(0x1f) meets requirements.
+> My apologies for taking a while to get back to you on the various ISAs &
+> endian issues here, but I think we'll want this to be something like:
+> 
+> #if defined(__nanomips__)
+> # ifdef __MIPSEL__
+> #  define RSEQ_SIG	0x03500010
+> # else
+> #  define RSEQ_SIG	0x00100350
+> # endif
+> #elif defined(__mips_micromips)
+> # ifdef __MIPSEL__
+> #  define RSEQ_SIG	0xd4070000
+> # else
+> #  define RSEQ_SIG	0x0000d407
+> # endif
+> #else
+> # define RSEQ_SIG	0x0350000d
+> #endif
+> 
+> For plain old MIPS the .word directive will be fine endian-wise, but for
+> microMIPS & nanoMIPS we need to take into account that the instruction
+> stream is encoded as 16b halfwords & swap those accordingly for little
+> endian.
 
-entry->eax absolutely needs to be checked, otherwise you have no idea what
-CPUID leaf is actually being consumed.  For example, a CPU with a maximum
-basic CPUID leaf of 0xB will report information that is indistinguishable
-from the actual CPUID.1F, i.e. KVM will incorrectly think the CPU supports
-CPUID.1F regardless of what heuristic is used to detect a "valid" CPUID.1F
-if it only looks at the result of CPUID.1F.
+Considering that we have micromips and nanomips already, I guess something
+along the lines of "picomips" is not that far away...
 
-> An increasing manner helps to overwrite this value on demand in a flat code
-> flow (easy to understand and maintain) not an if-else_if-else flow.
+I've tried to figure out if we could find a way to have RSEQ_SIG left undefined
+if it's not on the plain mips environment, but could not find anything that
+would be #defined on plain mips, but #undefined on both micromips and nanomips.
 
-Maybe in the future the code will need to be refactored as more cases are
-added, but for now an if-else is quite readable.  Worry about the future
-when it happens. :-)
+What I'd like to do is e.g.:
+
+#if defined(__nanomips__)
+# ifdef __MIPSEL__
+#  define RSEQ_SIG	0x03500010
+# else
+#  define RSEQ_SIG	0x00100350
+# endif
+#elif defined(__mips_micromips)
+# ifdef __MIPSEL__
+#  define RSEQ_SIG	0xd4070000
+# else
+#  define RSEQ_SIG	0x0000d407
+# endif
+#elif defined(__mips__)
+# define RSEQ_SIG	0x0350000d
+#else
+/* Leave RSEQ_SIG as is. */
+#endif
+
+The idea here is to not allow code targeting future MIPS ISA to compile
+with the wrong signature.
+
+The delta between compiling without/with -mmicromips on a gcc-8 compiler
+is only:
+
+> #define __mips_micromips 1
+
+Some interesting delta when compiling for plain little-endian mips with
+gcc-8 compared to the nanomips compiler is:
+
+< #define __mips__ 1
+< #define _mips 1
+< #define MIPSEL 1
+
+> #define __nanomips__ 1
+
+< #define __mips_isa_rev 2
+> #define __mips_isa_rev 6
+
+So let's say we have a picomips introduced in the future, can we rely
+on it not defining __mips__ like the nanomips compiler does ? If so,
+my "#elif defined(__mips__)" approach would indeed leave RSEQ_SIG undefined
+as expected.
+
+Thoughts ?
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
