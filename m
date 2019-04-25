@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15291C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE1DC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0159208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4614721908
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbfDYIib (ORCPT
+        id S1729752AbfDYIie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 04:38:31 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55497 "EHLO
+        Thu, 25 Apr 2019 04:38:34 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60043 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729533AbfDYIi1 (ORCPT
+        with ESMTP id S1729619AbfDYIib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 04:38:27 -0400
+        Thu, 25 Apr 2019 04:38:31 -0400
 X-Originating-IP: 90.88.147.33
 Received: from localhost.localdomain (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B71C92001D;
-        Thu, 25 Apr 2019 08:38:22 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id AAA2820006;
+        Thu, 25 Apr 2019 08:38:26 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
@@ -41,9 +41,9 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Tomasz Figa <tfiga@chromium.org>,
         Alexandre Courbot <acourbot@chromium.org>,
         Nicolas Dufresne <nicolas@ndufresne.ca>
-Subject: [PATCH v4 2/4] media: pixfmt: Add HEVC slice pixel format
-Date:   Thu, 25 Apr 2019 10:37:50 +0200
-Message-Id: <20190425083752.4973-3-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v4 3/4] media: pixfmt: Document the HEVC slice pixel format
+Date:   Thu, 25 Apr 2019 10:37:51 +0200
+Message-Id: <20190425083752.4973-4-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190425083752.4973-1-paul.kocialkowski@bootlin.com>
 References: <20190425083752.4973-1-paul.kocialkowski@bootlin.com>
@@ -54,40 +54,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce the V4L2_PIX_FMT_HEVC_SLICE pixel format, which currently
-describes an output buffer with enough appended slice data for
-producing one decoded frame with a stateless video decoder.
-
-This will need to be reworked (along with the controls and the core) to
-allow passing slice data individually, as it is the natural decoding
-unit in HEVC.
-
-We also need to figure out the description of the possible source data:
-* Compressed slice data only, with slice controls attached;
-* Slice data in Annex-B format (with raw slice header), without slice
-  controls attached;
-* Slice data in Annex-B format (with raw slice header), with slice
-  controls attached.
+Document the current state of the HEVC slice pixel format.
+The format will need to evolve in the future, which is why it is
+not part of the public API.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- include/media/hevc-ctrls.h | 3 +++
- 1 file changed, 3 insertions(+)
+ .../media/uapi/v4l/pixfmt-compressed.rst      | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/include/media/hevc-ctrls.h b/include/media/hevc-ctrls.h
-index 9ea013c88afc..2de83d9f6d47 100644
---- a/include/media/hevc-ctrls.h
-+++ b/include/media/hevc-ctrls.h
-@@ -11,6 +11,9 @@
- #ifndef _HEVC_CTRLS_H_
- #define _HEVC_CTRLS_H_
- 
-+/* The pixel format isn't stable at the moment and will likely be renamed. */
-+#define V4L2_PIX_FMT_HEVC_SLICE v4l2_fourcc('S', '2', '6', '5') /* HEVC parsed slices */
+diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+index 4b701fc7653e..9d4195723c3e 100644
+--- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
++++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+@@ -143,6 +143,27 @@ Compressed Formats
+       - ``V4L2_PIX_FMT_HEVC``
+       - 'HEVC'
+       - HEVC/H.265 video elementary stream.
++    * .. _V4L2-PIX-FMT-HEVC-SLICE:
 +
- #define V4L2_CID_MPEG_VIDEO_HEVC_SPS		(V4L2_CID_MPEG_BASE + 1008)
- #define V4L2_CID_MPEG_VIDEO_HEVC_PPS		(V4L2_CID_MPEG_BASE + 1009)
- #define V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS	(V4L2_CID_MPEG_BASE + 1010)
++      - ``V4L2_PIX_FMT_HEVC_SLICE``
++      - 'S265'
++      - HEVC parsed slice data, as extracted from the HEVC bitstream.
++	This format is adapted for stateless video decoders that implement a
++	HEVC pipeline (using the :ref:`codec` and :ref:`media-request-api`).
++	Metadata associated with the frame to decode is required to be passed
++	through the following controls :
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_SPS``
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_PPS``
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS``
++	See the :ref:`associated Codec Control IDs <v4l2-mpeg-hevc>`.
++	Buffers associated with this pixel format must contain the appropriate
++	number of macroblocks to decode a full corresponding frame.
++
++	.. note::
++
++	   This format is not yet part of the public kernel API and it
++	   is expected to change.
++
+     * .. _V4L2-PIX-FMT-FWHT:
+ 
+       - ``V4L2_PIX_FMT_FWHT``
 -- 
 2.21.0
 
