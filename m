@@ -2,218 +2,261 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D8EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3634C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6444206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042ED206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:56:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EZX2iUrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfDYOy0 (ORCPT
+        id S1727806AbfDYO4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:54:26 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.78]:15034 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726155AbfDYOyZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:54:25 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 8F58AA139F
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:54:24 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id JflYhKead2qH7JflYhevU1; Thu, 25 Apr 2019 09:54:24 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.223] (port=57752 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hJflY-002jNo-4y; Thu, 25 Apr 2019 09:54:24 -0500
-Subject: Re: [PATCH net-next] amd-xgbe: Mark expected switch fall-throughs
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-References: <20190424160823.GA20314@embeddedor>
- <bfb7c017-e7df-5fa3-d946-32ee3b94fa53@amd.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <1cd135d4-df0f-ee31-d85f-5f47c8037f2d@embeddedor.com>
-Date:   Thu, 25 Apr 2019 09:54:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 25 Apr 2019 10:56:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41096 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbfDYO4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:56:03 -0400
+Received: from zn.tnic (p200300EC2F0E43001D86563D61B131D5.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:4300:1d86:563d:61b1:31d5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6DBDB1EC09F1;
+        Thu, 25 Apr 2019 16:56:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1556204161;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=HlhU7sVeqBudDbuFGfe1q1xxgBNWTsEvOFUEN3Hx9qc=;
+        b=EZX2iUrAL1jGoWk4d0wowQq6cHPBzQ1pep1GN1x+P4/QtsOKoApZ/6VJSzc0pbGe/xgP6h
+        /0DQZ3KApl/kgaAvLznv18Dx5enAJnLPeGB8QEDxCRkcjmDtlPchX7ngxfsgttZCF9vNOP
+        wDsd417heLz1HgucXYYqdMTHup08E+0=
+From:   Borislav Petkov <bp@alien8.de>
+To:     linux-edac <linux-edac@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: [PATCH] Revert "EDAC/amd64: Support more than two controllers for chip select handling"
+Date:   Thu, 25 Apr 2019 16:55:54 +0200
+Message-Id: <20190425145554.5091-1-bp@alien8.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <bfb7c017-e7df-5fa3-d946-32ee3b94fa53@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.223
-X-Source-L: No
-X-Exim-ID: 1hJflY-002jNo-4y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.127.223]:57752
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Borislav Petkov <bp@suse.de>
 
-On 4/25/19 8:12 AM, Lendacky, Thomas wrote:
-[..]
->>   ^~~~
->>
->> Warning level 3 was used: -Wimplicit-fallthrough=3
->>
->> Notice that, in this particular case, the code comments are modified
->> in accordance with what GCC is expecting to find.
->>
->> This patch is part of the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/net/ethernet/amd/xgbe/xgbe-drv.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
->> index 0cc911f928b1..3dd0cecddba8 100644
->> --- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
->> +++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
->> @@ -1612,7 +1612,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
->>  	/* PTP v2, UDP, any kind of event packet */
->>  	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
->>  		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
->> -	/* PTP v1, UDP, any kind of event packet */
->> +		/* Fall through - to PTP v1, UDP, any kind of event packet */
-> 
-> If the compiler doesn't have a problem with adding just an indented
-> "Fall through" comment and leaving the original comment in place, I would
-> prefer that. It seems clearer to me.
-> 
+This reverts commit 0a227af521d6df5286550b62f4b591417170b4ea.
 
-This is the other alternative:
+Unfortunately, this commit caused wrong detection of chip select sizes
+on some F17h client machines:
 
-diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
-index 0cc911f928b1..f913bf404baa 100644
---- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
-+++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
-@@ -1613,6 +1613,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
-        case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
-                XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
-        /* PTP v1, UDP, any kind of event packet */
-+               /* Fall through */
-        case HWTSTAMP_FILTER_PTP_V1_L4_EVENT:
-                XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
-                XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
-@@ -1624,6 +1625,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
-        case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
-                XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
-        /* PTP v1, UDP, Sync packet */
-+               /* Fall through */
-        case HWTSTAMP_FILTER_PTP_V1_L4_SYNC:
-                XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
-                XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
-@@ -1635,6 +1637,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
-        case HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ:
-                XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
-        /* PTP v1, UDP, Delay_req packet */
-+               /* Fall through */
-        case HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ:
-                XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
-                XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
+  --- 00-rc6+     2019-02-14 14:28:03.126622904 +0100
+  +++ 01-rc4+     2019-04-14 21:06:16.060614790 +0200
+   EDAC amd64: MC: 0:     0MB 1:     0MB
+  -EDAC amd64: MC: 2: 16383MB 3: 16383MB
+  +EDAC amd64: MC: 2:     0MB 3: 2097151MB
+   EDAC amd64: MC: 4:     0MB 5:     0MB
+   EDAC amd64: MC: 6:     0MB 7:     0MB
+   EDAC MC: UMC1 chip selects:
+   EDAC amd64: MC: 0:     0MB 1:     0MB
+  -EDAC amd64: MC: 2: 16383MB 3: 16383MB
+  +EDAC amd64: MC: 2:     0MB 3: 2097151MB
+   EDAC amd64: MC: 4:     0MB 5:     0MB
+   EDAC amd64: MC: 6:     0MB 7:     0M
 
+Revert it for now until it has been solved properly.
 
-The thing is that the fall-through comments have to be placed at the
-very bottom of each case.
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+---
+ drivers/edac/amd64_edac.c | 113 ++++++++++++++++++--------------------
+ drivers/edac/amd64_edac.h |   5 +-
+ 2 files changed, 56 insertions(+), 62 deletions(-)
 
-Which do you prefer?
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 4c0239aeff2f..e2a99466faaa 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -941,94 +941,89 @@ static void prep_chip_selects(struct amd64_pvt *pvt)
+ 	} else if (pvt->fam == 0x15 && pvt->model == 0x30) {
+ 		pvt->csels[0].b_cnt = pvt->csels[1].b_cnt = 4;
+ 		pvt->csels[0].m_cnt = pvt->csels[1].m_cnt = 2;
+-	} else if (pvt->fam >= 0x17) {
+-		int umc;
+-
+-		for_each_umc(umc) {
+-			pvt->csels[umc].b_cnt = 8;
+-			pvt->csels[umc].m_cnt = 4;
+-		}
+-
+ 	} else {
+ 		pvt->csels[0].b_cnt = pvt->csels[1].b_cnt = 8;
+ 		pvt->csels[0].m_cnt = pvt->csels[1].m_cnt = 4;
+ 	}
+ }
+ 
+-static void read_umc_base_mask(struct amd64_pvt *pvt)
+-{
+-	int cs, umc;
+-
+-	for_each_umc(umc) {
+-		u32 umc_base_reg = get_umc_base(umc) + UMCCH_BASE_ADDR;
+-		u32 umc_mask_reg = get_umc_base(umc) + UMCCH_ADDR_MASK;
+-
+-		for_each_chip_select(cs, 0, pvt) {
+-			u32 *base = &pvt->csels[umc].csbases[cs];
+-			u32 *mask = &pvt->csels[umc].csmasks[cs];
+-
+-			u32 base_reg = umc_base_reg + (cs * 4);
+-			u32 mask_reg = umc_mask_reg + ((cs >> 1) * 4);
+-
+-			if (!amd_smn_read(pvt->mc_node_id, base_reg, base))
+-				edac_dbg(0, "  DCSB%d[%d]=0x%08x reg: 0x%x\n",
+-					 umc, cs, *base, base_reg);
+-
+-			if (!amd_smn_read(pvt->mc_node_id, mask_reg, mask))
+-				edac_dbg(0, "    DCSM%d[%d]=0x%08x reg: 0x%x\n",
+-					 umc, cs, *mask, mask_reg);
+-		}
+-	}
+-}
+-
+ /*
+  * Function 2 Offset F10_DCSB0; read in the DCS Base and DCS Mask registers
+  */
+ static void read_dct_base_mask(struct amd64_pvt *pvt)
+ {
+-	int cs;
++	int base_reg0, base_reg1, mask_reg0, mask_reg1, cs;
+ 
+ 	prep_chip_selects(pvt);
+ 
+-	if (pvt->umc)
+-		return read_umc_base_mask(pvt);
++	if (pvt->umc) {
++		base_reg0 = get_umc_base(0) + UMCCH_BASE_ADDR;
++		base_reg1 = get_umc_base(1) + UMCCH_BASE_ADDR;
++		mask_reg0 = get_umc_base(0) + UMCCH_ADDR_MASK;
++		mask_reg1 = get_umc_base(1) + UMCCH_ADDR_MASK;
++	} else {
++		base_reg0 = DCSB0;
++		base_reg1 = DCSB1;
++		mask_reg0 = DCSM0;
++		mask_reg1 = DCSM1;
++	}
+ 
+ 	for_each_chip_select(cs, 0, pvt) {
+-		int reg0   = DCSB0 + (cs * 4);
+-		int reg1   = DCSB1 + (cs * 4);
++		int reg0   = base_reg0 + (cs * 4);
++		int reg1   = base_reg1 + (cs * 4);
+ 		u32 *base0 = &pvt->csels[0].csbases[cs];
+ 		u32 *base1 = &pvt->csels[1].csbases[cs];
+ 
+-		if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, base0))
+-			edac_dbg(0, "  DCSB0[%d]=0x%08x reg: F2x%x\n",
+-				 cs, *base0, reg0);
++		if (pvt->umc) {
++			if (!amd_smn_read(pvt->mc_node_id, reg0, base0))
++				edac_dbg(0, "  DCSB0[%d]=0x%08x reg: 0x%x\n",
++					 cs, *base0, reg0);
+ 
+-		if (pvt->fam == 0xf)
+-			continue;
++			if (!amd_smn_read(pvt->mc_node_id, reg1, base1))
++				edac_dbg(0, "  DCSB1[%d]=0x%08x reg: 0x%x\n",
++					 cs, *base1, reg1);
++		} else {
++			if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, base0))
++				edac_dbg(0, "  DCSB0[%d]=0x%08x reg: F2x%x\n",
++					 cs, *base0, reg0);
++
++			if (pvt->fam == 0xf)
++				continue;
+ 
+-		if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, base1))
+-			edac_dbg(0, "  DCSB1[%d]=0x%08x reg: F2x%x\n",
+-				 cs, *base1, (pvt->fam == 0x10) ? reg1
+-							: reg0);
++			if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, base1))
++				edac_dbg(0, "  DCSB1[%d]=0x%08x reg: F2x%x\n",
++					 cs, *base1, (pvt->fam == 0x10) ? reg1
++								: reg0);
++		}
+ 	}
+ 
+ 	for_each_chip_select_mask(cs, 0, pvt) {
+-		int reg0   = DCSM0 + (cs * 4);
+-		int reg1   = DCSM1 + (cs * 4);
++		int reg0   = mask_reg0 + (cs * 4);
++		int reg1   = mask_reg1 + (cs * 4);
+ 		u32 *mask0 = &pvt->csels[0].csmasks[cs];
+ 		u32 *mask1 = &pvt->csels[1].csmasks[cs];
+ 
+-		if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, mask0))
+-			edac_dbg(0, "    DCSM0[%d]=0x%08x reg: F2x%x\n",
+-				 cs, *mask0, reg0);
++		if (pvt->umc) {
++			if (!amd_smn_read(pvt->mc_node_id, reg0, mask0))
++				edac_dbg(0, "    DCSM0[%d]=0x%08x reg: 0x%x\n",
++					 cs, *mask0, reg0);
+ 
+-		if (pvt->fam == 0xf)
+-			continue;
++			if (!amd_smn_read(pvt->mc_node_id, reg1, mask1))
++				edac_dbg(0, "    DCSM1[%d]=0x%08x reg: 0x%x\n",
++					 cs, *mask1, reg1);
++		} else {
++			if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, mask0))
++				edac_dbg(0, "    DCSM0[%d]=0x%08x reg: F2x%x\n",
++					 cs, *mask0, reg0);
+ 
+-		if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, mask1))
+-			edac_dbg(0, "    DCSM1[%d]=0x%08x reg: F2x%x\n",
+-				 cs, *mask1, (pvt->fam == 0x10) ? reg1
+-							: reg0);
++			if (pvt->fam == 0xf)
++				continue;
++
++			if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, mask1))
++				edac_dbg(0, "    DCSM1[%d]=0x%08x reg: F2x%x\n",
++					 cs, *mask1, (pvt->fam == 0x10) ? reg1
++								: reg0);
++		}
+ 	}
+ }
+ 
+diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
+index 4dce6a2ac75f..8f66472f7adc 100644
+--- a/drivers/edac/amd64_edac.h
++++ b/drivers/edac/amd64_edac.h
+@@ -96,7 +96,6 @@
+ /* Hardware limit on ChipSelect rows per MC and processors per system */
+ #define NUM_CHIPSELECTS			8
+ #define DRAM_RANGES			8
+-#define NUM_CONTROLLERS			8
+ 
+ #define ON true
+ #define OFF false
+@@ -352,8 +351,8 @@ struct amd64_pvt {
+ 	u32 dbam0;		/* DRAM Base Address Mapping reg for DCT0 */
+ 	u32 dbam1;		/* DRAM Base Address Mapping reg for DCT1 */
+ 
+-	/* one for each DCT/UMC */
+-	struct chip_select csels[NUM_CONTROLLERS];
++	/* one for each DCT */
++	struct chip_select csels[2];
+ 
+ 	/* DRAM base and limit pairs F1x[78,70,68,60,58,50,48,40] */
+ 	struct dram_range ranges[DRAM_RANGES];
+-- 
+2.21.0
 
-Thanks
---
-Gustavo
-
-> Thanks,
-> Tom
-> 
->>  	case HWTSTAMP_FILTER_PTP_V1_L4_EVENT:
->>  		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
->>  		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
->> @@ -1623,7 +1623,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
->>  	/* PTP v2, UDP, Sync packet */
->>  	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
->>  		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
->> -	/* PTP v1, UDP, Sync packet */
->> +		/* Fall through - to PTP v1, UDP, Sync packet */
->>  	case HWTSTAMP_FILTER_PTP_V1_L4_SYNC:
->>  		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
->>  		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
->> @@ -1634,7 +1634,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
->>  	/* PTP v2, UDP, Delay_req packet */
->>  	case HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ:
->>  		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
->> -	/* PTP v1, UDP, Delay_req packet */
->> +		/* Fall through - to PTP v1, UDP, Delay_req packet */
->>  	case HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ:
->>  		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
->>  		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
->>
