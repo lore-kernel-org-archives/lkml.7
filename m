@@ -2,174 +2,123 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B6DC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0095EC282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DF9214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:26:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LrsaIVHM"
+	by mail.kernel.org (Postfix) with ESMTP id CDC39217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfDYF0L (ORCPT
+        id S1729146AbfDYFaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 01:26:11 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35990 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbfDYF0L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 01:26:11 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l6so4189020ljb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 22:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZqrnuBYTaaY8syoPhX9eR5gol4bj2h9xnq4EpWuGaPg=;
-        b=LrsaIVHMkk9u5Xc+2w1+9CC1P0LpYNyiwu8/f79vTyQhbQd9rKIuEPKsHd0yCOvYKD
-         5GRcBORNoz4VENMPSJo5MlmGx/LTUQSw7MzcWyiascSbhD50nsCs6KpQzITozgfdJpgc
-         f0GenyGWPf/g18GC5CWLbO9q2+LrFVFd39L+WGWo52Bxuw+9t/l4Xc8aM+zquV8KSOGX
-         73EmZ7CcJdLsITOEYWZW6X5hBLnxGQtoUjQEtthjILzAWBSBirWOuEGedbTRiZ4OapKq
-         wmfn0aGb/HI4PoIt71EZYjh4NwgZgpacFvtrgQaBJvW9ap+FBbor1G90QVWxMp/2O/kY
-         Gf6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZqrnuBYTaaY8syoPhX9eR5gol4bj2h9xnq4EpWuGaPg=;
-        b=CIu0KpF4QqoMYPXJQmej0QacZL/CE+FT5HKItQmXo7VaK7BFoDPR/of8a/EjLXj+0/
-         0Kl1+ZrPfRxM1WNbMhuGsRqIHHsFBskcivVLhbmeiWaeKAVPgNkdcOvXEOBjJfYs1dbc
-         ux0PEcSSWdp7ZVpZMSS3S4x8VW+waCxzq4SP+l7NjktSL6Gm0GLH1yvTtj7JyrY4UW/h
-         igPCcEX2iXPY4LYiUxnvPTTVbc0NpSjsAwNgG2e9yCLnYmcgmW/Cu1Co1tg9LJ4tSe2S
-         eEnmUqVR8m+BQu0JCobpf21bVTiCsISxnub0HxvaXSHzVZAj3bQHHl/pF8WC9JFELLoV
-         /0sg==
-X-Gm-Message-State: APjAAAUWCL3JXWRP6mTDaQXEWgc8ggAWTAhgWbUr/+NgR0p06OIiFmK/
-        1BcH+hpBGEGOKFW+NcGvQb/qciPunaHF7BJKm/ktQA==
-X-Google-Smtp-Source: APXvYqwEmabGXyc5wb8/VHcO67GMik/bLZSBpnNfx1E5kWpKV7weplTVh8GSsWSHERb43Gg5bRRjZSxKjMLmeZsWKZM=
-X-Received: by 2002:a2e:9993:: with SMTP id w19mr4326087lji.111.1556169968824;
- Wed, 24 Apr 2019 22:26:08 -0700 (PDT)
+        Thu, 25 Apr 2019 01:30:12 -0400
+Received: from namei.org ([65.99.196.166]:35708 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbfDYFaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 01:30:12 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x3P5U7pC024926;
+        Thu, 25 Apr 2019 05:30:07 GMT
+Date:   Thu, 25 Apr 2019 15:30:07 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Kees Cook <keescook@chromium.org>
+cc:     Tycho Andersen <tycho@tycho.ws>, stable@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] selftests/seccomp: Prepare for exclusive seccomp
+ flags
+In-Reply-To: <20190424163756.40001-2-keescook@chromium.org>
+Message-ID: <alpine.LRH.2.21.1904251530010.26472@namei.org>
+References: <20190424163756.40001-1-keescook@chromium.org> <20190424163756.40001-2-keescook@chromium.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190424170924.797924502@linuxfoundation.org>
-In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 25 Apr 2019 10:55:54 +0530
-Message-ID: <CA+G9fYsNWE=qd1aZJ+cUhaZEzB3KP5d6CWmB7O_bKJFXG3vf3A@mail.gmail.com>
-Subject: Re: [PATCH 5.0 000/115] 5.0.10-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019 at 23:04, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.0.10 release.
-> There are 115 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri 26 Apr 2019 05:07:37 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.0.10-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.0.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On Wed, 24 Apr 2019, Kees Cook wrote:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> Some seccomp flags will become exclusive, so the selftest needs to
+> be adjusted to mask those out and test them individually for the "all
+> flags" tests.
+> 
+> Cc: stable@vger.kernel.org # v5.0+
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Summary
-------------------------------------------------------------------------
 
-kernel: 5.0.10-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.0.y
-git commit: 058cd3811b12d43363fbf20f6c7963e67b4802c6
-git describe: v5.0.9-116-g058cd3811b12
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.0-oe/bui=
-ld/v5.0.9-116-g058cd3811b12
+Acked-by: James Morris <jamorris@linux.microsoft.com>
 
-No regressions (compared to build v5.0.9)
+> ---
+>  tools/testing/selftests/seccomp/seccomp_bpf.c | 34 ++++++++++++++-----
+>  1 file changed, 25 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> index f69d2ee29742..5019cdae5d0b 100644
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@ -2166,11 +2166,14 @@ TEST(detect_seccomp_filter_flags)
+>  				 SECCOMP_FILTER_FLAG_LOG,
+>  				 SECCOMP_FILTER_FLAG_SPEC_ALLOW,
+>  				 SECCOMP_FILTER_FLAG_NEW_LISTENER };
+> -	unsigned int flag, all_flags;
+> +	unsigned int exclusive[] = {
+> +				SECCOMP_FILTER_FLAG_TSYNC,
+> +				SECCOMP_FILTER_FLAG_NEW_LISTENER };
+> +	unsigned int flag, all_flags, exclusive_mask;
+>  	int i;
+>  	long ret;
+>  
+> -	/* Test detection of known-good filter flags */
+> +	/* Test detection of individual known-good filter flags */
+>  	for (i = 0, all_flags = 0; i < ARRAY_SIZE(flags); i++) {
+>  		int bits = 0;
+>  
+> @@ -2197,16 +2200,29 @@ TEST(detect_seccomp_filter_flags)
+>  		all_flags |= flag;
+>  	}
+>  
+> -	/* Test detection of all known-good filter flags */
+> -	ret = seccomp(SECCOMP_SET_MODE_FILTER, all_flags, NULL);
+> -	EXPECT_EQ(-1, ret);
+> -	EXPECT_EQ(EFAULT, errno) {
+> -		TH_LOG("Failed to detect that all known-good filter flags (0x%X) are supported!",
+> -		       all_flags);
+> +	/*
+> +	 * Test detection of all known-good filter flags combined. But
+> +	 * for the exclusive flags we need to mask them out and try them
+> +	 * individually for the "all flags" testing.
+> +	 */
+> +	exclusive_mask = 0;
+> +	for (i = 0; i < ARRAY_SIZE(exclusive); i++)
+> +		exclusive_mask |= exclusive[i];
+> +	for (i = 0; i < ARRAY_SIZE(exclusive); i++) {
+> +		flag = all_flags & ~exclusive_mask;
+> +		flag |= exclusive[i];
+> +
+> +		ret = seccomp(SECCOMP_SET_MODE_FILTER, flag, NULL);
+> +		EXPECT_EQ(-1, ret);
+> +		EXPECT_EQ(EFAULT, errno) {
+> +			TH_LOG("Failed to detect that all known-good filter flags (0x%X) are supported!",
+> +			       flag);
+> +		}
+>  	}
+>  
+> -	/* Test detection of an unknown filter flag */
+> +	/* Test detection of an unknown filter flags, without exclusives. */
+>  	flag = -1;
+> +	flag &= ~exclusive_mask;
+>  	ret = seccomp(SECCOMP_SET_MODE_FILTER, flag, NULL);
+>  	EXPECT_EQ(-1, ret);
+>  	EXPECT_EQ(EINVAL, errno) {
+> 
 
-No fixes (compared to build v5.0.9)
+-- 
+James Morris
+<jmorris@namei.org>
 
-Ran 25039 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-dio-tests
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
