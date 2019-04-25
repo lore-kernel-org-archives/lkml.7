@@ -2,95 +2,83 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F371AC282E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED2FC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88AD217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556176737;
-	bh=iPKphjaAT+PGTk5ikCxL3rBInlIALV7+ItOmRAXDPSs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1kkxPKNxU3stylj0MuuBpca5tNiE3c4mNbPMsHJdr3jYb5vYHWLOPafdjX4favNxL
-	 6EzBnPzwsr3gIHDZlp4gS1Ht3DmuWEUGFi4OU2khSEHtNL0fjOX6abnJNJwGdNUM6+
-	 JuwSjUNjIFaHi7iGg3Kgjx7StFYNWEBYXcdQEkj4=
+	by mail.kernel.org (Postfix) with ESMTP id 96B6D218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbfDYHS4 (ORCPT
+        id S1730147AbfDYHTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:18:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbfDYHS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:18:56 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2480B2077C;
-        Thu, 25 Apr 2019 07:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556176735;
-        bh=iPKphjaAT+PGTk5ikCxL3rBInlIALV7+ItOmRAXDPSs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qrcZlZVa++0FEYHswBZnka7JO+bTXZozHVeoXo6OmjRE27Yd3KHBR0SB7bZn2jfLu
-         yDIcxf4QpeKc+OIM7Tt0Iv+vE+higBllo63F4Vdq4U0m6QjWA+Mdzol75iWYunOo+I
-         jVyqJjZp35u/rcq+aixY/FHKgeivpyzsd/KDfq0A=
-Date:   Thu, 25 Apr 2019 09:18:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.0 000/115] 5.0.10-stable review
-Message-ID: <20190425071853.GA4120@kroah.com>
-References: <20190424170924.797924502@linuxfoundation.org>
- <CA+G9fYsNWE=qd1aZJ+cUhaZEzB3KP5d6CWmB7O_bKJFXG3vf3A@mail.gmail.com>
+        Thu, 25 Apr 2019 03:19:11 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:33541 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725970AbfDYHTL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 03:19:11 -0400
+Received: from [192.168.2.10] ([212.251.195.8])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id JYevhQJ7SZVjxJYeyhdeWd; Thu, 25 Apr 2019 09:19:09 +0200
+Subject: Re: [PATCH v2 3/4] media: dt-bindings: aspeed-video: Add missing
+ memory-region property
+To:     Rob Herring <robh@kernel.org>, Eddie James <eajames@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org,
+        mark.rutland@arm.com, mchehab@kernel.org
+References: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
+ <1556119020-7609-4-git-send-email-eajames@linux.ibm.com>
+ <20190424211732.GA18914@bogus>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <6a8601d6-ad30-132c-f47a-adc3b4d39958@xs4all.nl>
+Date:   Thu, 25 Apr 2019 09:19:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <20190424211732.GA18914@bogus>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYsNWE=qd1aZJ+cUhaZEzB3KP5d6CWmB7O_bKJFXG3vf3A@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCtoo9rYKWTgylJx6KmzVfVLqTrto/bB6UeLKqHf9zL8ZzPwCid3pO9BmHnAPlED9zWODgDhOQAOrc+aEN8Z6jx0OYDr8BptTz7gjDTFN79VpD0v5ecM
+ HRQnOk0lHl4CSyM0drczI7olrrZNz5p01lOsCmhI0gEY+40w+BmUmXzhqnN8L3hE1v+T9WAO8V+GHWngqT+9AHvTCLQXx1n0Tz1DKCawMWz9IK7oW0Du/vuk
+ 06uIjqJnQJzE38u4cPJfUWEUS7wLkxEa5ep5Yqpb/LLKeHt7qgh98UXZ4oUAVL1hiZ0R6vbpVn7rN9zuy6DAm7jEU8PGDqpauoAFyYSSqwZ+riTVHXwpFMkQ
+ RAROPyOSTUmTZ3jcCHgQ/Jss7HB8GJh8dkuTgKyz7JrV3LEhatR+qAuN4lxPLV7UdI4Uu2dVSphUR/Jn2uXp3Y0s4SPoRPuf+UdAvl5TrjgsnjgLYtJKGD/R
+ BbR32C0+Gskl3iZ4GmYhzMaAZ8hmjYGM7WStsA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 10:55:54AM +0530, Naresh Kamboju wrote:
-> On Wed, 24 Apr 2019 at 23:04, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.0.10 release.
-> > There are 115 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri 26 Apr 2019 05:07:37 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.10-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
+On 4/24/19 11:17 PM, Rob Herring wrote:
+> On Wed, 24 Apr 2019 10:16:59 -0500, Eddie James wrote:
+>> Missed documenting this property in the initial commit.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>> Changes since v1:
+>>  - Add missing semi-colon
+>>
+>>  Documentation/devicetree/bindings/media/aspeed-video.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
+> 
 
-Thanks for testing 4 of these and letting me know.
+I noticed the same when I was processing this patch. I've added back your
+'Reviewed-by' tag.
 
-greg k-h
+So there is no need to repost, Eddie. Just remember this for the next
+time :-)
+
+Regards,
+
+	Hans
