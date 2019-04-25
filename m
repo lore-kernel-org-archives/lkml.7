@@ -2,220 +2,116 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3127EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D15C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4932B20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91ACB206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:29:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556227749;
+	bh=fXKxNIi5a/B3PpIuMmHIVsGGXiZch2q1OaB5IXDPSNk=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=sepBZDVDLRni1kiPbGSkWLsmPgbLDSuwBhJebcPGm/U9aXX3VTTG++VJkEdO6QS7n
+	 csBV//wIbRUmQ/4/5QTmGOVxI8e1dxHlP108yGkprnyBpa09XUwDgE7y3VhMXakBAJ
+	 zmP+lhZywiRw4HqsE9PjX9FdOQTe1r+N6nEqrC3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbfDYV2u (ORCPT
+        id S1728684AbfDYV3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 17:28:50 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:60816 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbfDYV2t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 17:28:49 -0400
-Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hJlus-0003GQ-15; Thu, 25 Apr 2019 23:28:26 +0200
-Date:   Thu, 25 Apr 2019 23:28:24 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <dima@arista.com>
-cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv3 05/27] timerfd/timens: Take into account ns clock
- offsets
-In-Reply-To: <20190425161416.26600-6-dima@arista.com>
-Message-ID: <alpine.DEB.2.21.1904252207170.1768@nanos.tec.linutronix.de>
-References: <20190425161416.26600-1-dima@arista.com> <20190425161416.26600-6-dima@arista.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 25 Apr 2019 17:29:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbfDYV3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 17:29:07 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97B6D20675;
+        Thu, 25 Apr 2019 21:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556227746;
+        bh=fXKxNIi5a/B3PpIuMmHIVsGGXiZch2q1OaB5IXDPSNk=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=d7U0G8hsoBgurdZXSYEozG88nOcjAM6GmHc6kdo0draNUpwZ3Sh1kyhKw3Ok9k3th
+         CugbSicsafaalHPHFjkbB1iU+u22qXon6IreJaxb6OSms4P/WPolzUnPeVmjSHUZ88
+         y9qNxLQjqSSaYBBpRvcuFUfdIWCS9blUklzpC+Do=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <31e17283-c374-f16e-df95-09aaf1854435@linaro.org>
+References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1548700381-22376-6-git-send-email-jorge.ramirez-ortiz@linaro.org> <155085910216.77512.12604271825136479370@swboyd.mtv.corp.google.com> <31e17283-c374-f16e-df95-09aaf1854435@linaro.org>
+Cc:     vkoul@kernel.org, niklas.cassel@linaro.org,
+        georgi.djakov@linaro.org, amit.kucheria@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 05/14] clk: qcom: apcs-msm8916: get parent clock names from DT
+To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>,
+        andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org,
+        david.brown@linaro.org, enric.balletbo@collabora.com,
+        heiko@sntech.de, horms+renesas@verge.net.au,
+        jagan@amarulasolutions.com, jassisinghbrar@gmail.com,
+        mark.rutland@arm.com, mturquette@baylibre.com, olof@lixom.net,
+        robh+dt@kernel.org, sibis@codeaurora.org, will.deacon@arm.com
+Message-ID: <155622774551.15276.4140891469702307355@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 25 Apr 2019 14:29:05 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019, Dmitry Safonov wrote:
-> From: Andrei Vagin <avagin@gmail.com>
-> 
-> Make timerfd respect timens offsets.
-> Provide a helper timens_ktime_to_host() that is useful to wire up
-> timens to different kernel subsystems.
+Quoting Jorge Ramirez (2019-04-22 04:44:50)
+> On 2/22/19 19:11, Stephen Boyd wrote:
+> > Quoting Jorge Ramirez-Ortiz (2019-01-28 10:32:52)
+> >> @@ -61,6 +65,25 @@ static int qcom_apcs_msm8916_clk_probe(struct platf=
+orm_device *pdev)
+> >>         if (!a53cc)
+> >>                 return -ENOMEM;
+> >> =20
+> >> +       /* check if the parent names are present in the device tree */
+> >=20
+> > This looks odd.
+> >=20
+> >> +       ret =3D devm_clk_bulk_get(parent, ARRAY_SIZE(pclks), pclks);
+> >> +       if (ret =3D=3D -EPROBE_DEFER)
+> >> +               return ret;
+> >=20
+> > Why can't we use of_clk_parent_fill() if we know this is always a DT
+> > platform?  The parent clks may not be registered at the time of probe?
+>=20
+> yes, and AFAICS the important thing at this point is that the clock is
+> registered hence the handling of defer.
+>=20
+> I could use of_clk_parent_fill and then - if needed - call
+> devm_clk_bulk_get but I am not sure of the gains of doing it (wouldnt
+> this just make the code more confusing?)
 
-Yet another changelog which lacks meat.
+Yeah of_clk_parent_fill() isn't the best approach. But it at least keeps
+this driver from using clk consumer APIs?
 
-> @@ -179,6 +180,8 @@ static int timerfd_setup(struct timerfd_ctx *ctx, int flags,
->  	htmode = (flags & TFD_TIMER_ABSTIME) ?
->  		HRTIMER_MODE_ABS: HRTIMER_MODE_REL;
->  
-> +	htmode |= HRTIMER_MODE_NS;
+>=20
+>=20
+> > Maybe this series should wait for the parent registration stuff I'm
+> > working on so that this can be made simpler.
+>=20
+> the need for the clock name is not intrinsic to this driver (the driver
+> itself doesnt use these names) but it just feeds these to the framework.
+>=20
+> I was looking into your parent registration code and I am not sure how
+> can I use it in this particular driver other than simply removing the
+> names and hoping that things are handled properly at the lower
+> levels.... could you clarify please?
+>=20
 
-Without looking further this time. My gut reaction is that this is
-wrong. Name space adjustment is only valid for absolute timers not for
-relative timers.
+I think so. I've forgotten the context of this patch, but the general
+idea would be to specify the parents with clock-names or DT index in the
+DT node for the clks registered here and not use of_clk_parent_fill() or
+do any sort of devm_clk_bulk_get() calls. Then the framework will take
+care of finding the parents for the clks and hooking things up properly
+for the parent-child relationship.
 
-Aside of that the name sucks. MODE_NS is really not intuitive. It could be
-NanoSeconds or whatever and quite some time(r) functions have a _ns element
-already. Please look for something more inuitive and clearly related to
-namespaces. We are not short of letters.
-
->  	texp = timespec64_to_ktime(ktmr->it_value);
->  	ctx->expired = 0;
->  	ctx->ticks = 0;
-> @@ -197,9 +200,10 @@ static int timerfd_setup(struct timerfd_ctx *ctx, int flags,
->  
->  	if (texp != 0) {
->  		if (isalarm(ctx)) {
-> -			if (flags & TFD_TIMER_ABSTIME)
-> +			if (flags & TFD_TIMER_ABSTIME) {
-> +				texp = timens_ktime_to_host(clockid, texp);
-
-You are not serious about that inline function here? It's huge and
-pointless bloat because the only time affected here is boot time, but the
-compiler does not know that.
-
->  				alarm_start(&ctx->t.alarm, texp);
-
-Make that:
-
-   alarm_start_namespace(.....)
-
-and that does:
-
-void alarm_start_namespace(struct alarm *alarm, ktime_t expires)
-{
-	if (alarm->type == ALARM_BOOTTIME)
-		expires = timens_sub_boottime(expires);
-	alarm_start(alarm, expires);
-}
-
-Hmm?
-
-> -			else
-> +			} else
->  				alarm_start_relative(&ctx->t.alarm, texp);
->  		} else {
->  			hrtimer_start(&ctx->t.tmr, texp, htmode);
-> diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-> index 2e8957eac4d4..4b9c89c797ee 100644
-> --- a/include/linux/hrtimer.h
-> +++ b/include/linux/hrtimer.h
-> @@ -38,6 +38,7 @@ enum hrtimer_mode {
->  	HRTIMER_MODE_REL	= 0x01,
->  	HRTIMER_MODE_PINNED	= 0x02,
->  	HRTIMER_MODE_SOFT	= 0x04,
-> +	HRTIMER_MODE_NS		= 0x08,
->  
->  	HRTIMER_MODE_ABS_PINNED = HRTIMER_MODE_ABS | HRTIMER_MODE_PINNED,
->  	HRTIMER_MODE_REL_PINNED = HRTIMER_MODE_REL | HRTIMER_MODE_PINNED,
-> diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-> index 5f0da6858b10..988414f7f791 100644
-> --- a/include/linux/time_namespace.h
-> +++ b/include/linux/time_namespace.h
-> @@ -56,6 +56,41 @@ static inline void timens_add_boottime(struct timespec64 *ts)
->                  *ts = timespec64_add(*ts, ns_offsets->monotonic_boottime_offset);
->  }
->  
-> +static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
-> +{
-> +	struct timens_offsets *ns_offsets = current->nsproxy->time_ns->offsets;
-> +	struct timespec64 *offset;
-> +	ktime_t koff;
-> +
-> +	if (!ns_offsets)
-> +		return tim;
-> +
-> +	switch (clockid) {
-> +		case CLOCK_MONOTONIC:
-> +		case CLOCK_MONOTONIC_RAW:
-> +		case CLOCK_MONOTONIC_COARSE:
-
-What's the point of COARSE and RAW? Neither of them can be used to arm
-timers.
-
-> +			offset = &ns_offsets->monotonic_time_offset;
-> +			break;
-> +		case CLOCK_BOOTTIME:
-> +		case CLOCK_BOOTTIME_ALARM:
-> +			offset = &ns_offsets->monotonic_boottime_offset;
-> +			break;
-> +		default:
-> +			return tim;
-> +	}
-> +
-> +	koff = timespec64_to_ktime(*offset);
-
-What about storing both the timespec and the ktime_t representation?
-
-> +	if (tim < koff)
-> +		tim = 0;
-> +	else if (KTIME_MAX - tim < -koff)
-> +		tim = KTIME_MAX;
-
-Blink!?! This is completely nonobvious and you're going to stare at it in
-disbelief half a year from now. Comments exist for a reason.
-
-> +	else
-> +		tim = ktime_sub(tim, koff);
-> +
-> +	return tim;
-
-This whole thing is way too large for inlining.
-
-Please create a function which does the magic substraction, something like
-ktime_sub_namespace_offset() and invoke it from the proper places, i.e. the
-alarmtimer one.
-
-> @@ -1069,6 +1070,8 @@ static int __hrtimer_start_range_ns(struct hrtimer *timer, ktime_t tim,
->  
->  	if (mode & HRTIMER_MODE_REL)
->  		tim = ktime_add_safe(tim, base->get_time());
-> +	else if (mode & HRTIMER_MODE_NS)
-> +		tim = timens_ktime_to_host(base->clockid, tim);
-
-You can do the same as for alarmtime above:
-
-hrtimer_start_namespace(struct hrtimer *timer, ktime_t tim,
-			const enum hrtimer_mode mode)
-{
-	if (mode & HRTIMER_MODE_ABS) {
-		switch(timer->base->clockid) {
-		case CLOCK_MONOTONIC:
-			tim = timens_sub_monotonic(tim);
-			break;
-		case CLOCK_BOOTTIME:
-			tim = timens_sub_boottime(tim);
-			break;
-		}
-	}
-	hrtimer_start(timer, tim, mode);
-}
-
-Thanks,
-
-	tglx
