@@ -2,104 +2,209 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFBCC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CECC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA92205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:48:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bP6bPGly"
+	by mail.kernel.org (Postfix) with ESMTP id 3757E20891
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:49:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556214585;
+	bh=k7j/1g7qfQNqTMzadjTDghyn+ZldaWg22WWJRpeAVjE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=f4jE4MpExCsjEC9WlIrc1/JI/FeY2l3U7vYOQVin8TxZcqyB681Q4YPgD7BcirWPh
+	 5L2oYK0j4wD4iVm1EbmkgbkDzA5fZt9rZD07YXkAWrZKK+g2cB0cajB7gMiYqXatye
+	 MHT2kph/o0Fv115323rup0+6AiPiayEMlZY/3Sp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbfDYRsL (ORCPT
+        id S1730102AbfDYRtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 13:48:11 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35878 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfDYRsL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 13:48:11 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b1so605546wru.3;
-        Thu, 25 Apr 2019 10:48:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rl0JjKXh0YYqRBSZQrO5S0v5n/X6/3QU5poyjtVrKDY=;
-        b=bP6bPGlyEx0DZtB6iXTYYeQQZnmK/dIdau/jEKCM1R75LW/5mCPWRazi5LqIMgsImF
-         GWGPL7ea9HcgWFuuQkQp4Py6t2lYE275vtHZTfIimcr4v5xejiTTcF3VNkqaX9MNiTuK
-         rbZeskufPAiRXsUPv5xowBx63XbYpKWfATpx4Brm1Pf9QxfZ4CFkPsg/fH11xBHYkIvt
-         /QMFvbnoV9i0izC2eAaraTn1BmU2iC7YOgGbvijOCSOP7s9aPi59ZdRhHBdrFO2qhHij
-         hEqEyvPJk70N6RWpa7mcMEf8nrdK55Alt+YsH5ULellX/LTHntuxvDYr2AlB7TkHxMys
-         95iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rl0JjKXh0YYqRBSZQrO5S0v5n/X6/3QU5poyjtVrKDY=;
-        b=BYZNLYRdSj75ZD7e1+EerBmIZpHkqejw1trsSu9Vp2rF9LHgExkDOzMvcVY3BxnuHA
-         rYFUxAfrWjfWnh3C2809YQe2GQOSUWoE6JnElQRqNItnAwm0EuW1ou8kydhjP3KVsU6J
-         WQPRrj79BOMQsZ4oiQ4n8GVHtRi5HN1LvDuDU5874KwPeRdgEYRbR3C6K2MVTBnk5qoa
-         caHNd2l8PU0igD8tSrwXr/eaGrzbNQOsx1QoLNQFoKUNVUt1n7ds1+HzXkt1HACtuajb
-         cplwYDmQUsDHAih9zAFJDMTIqqm46zEd5XFfG+4Rl5VotGAskjDlv/J+um9gfMBBiuDD
-         mOKQ==
-X-Gm-Message-State: APjAAAXwNjg+TYBJgTKqXry2VhjHBGK2IUkzoLu32JWoVWbFpsG236Zl
-        te9WAzMSwU6JgrJIheoonc932o2zoXo=
-X-Google-Smtp-Source: APXvYqznG/b0ScdYZjr4fQjQuOm1YU53pND/mD7vajEXB9gJMopI27YekpllD8q7kBl3iypC1UVfnQ==
-X-Received: by 2002:a5d:6b07:: with SMTP id v7mr26431645wrw.311.1556214489477;
-        Thu, 25 Apr 2019 10:48:09 -0700 (PDT)
-Received: from kwango.redhat.com (ovpn-brq.redhat.com. [213.175.37.11])
-        by smtp.gmail.com with ESMTPSA id 62sm29221012wrm.18.2019.04.25.10.48.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 10:48:08 -0700 (PDT)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph fixes for 5.1-rc7
-Date:   Thu, 25 Apr 2019 19:47:39 +0200
-Message-Id: <20190425174739.27604-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        Thu, 25 Apr 2019 13:49:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730040AbfDYRtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 13:49:43 -0400
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 163FE212F5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 17:49:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556214582;
+        bh=k7j/1g7qfQNqTMzadjTDghyn+ZldaWg22WWJRpeAVjE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AeH32e9gKFK/kCCx4QBmNaIi9VoX2FsuBBARmXxzEEqAq3z+dTBgxGXKkfzqgpS2g
+         FQvNLn104ZeAtZnGYEoMQykDgBtX2JkgpaAcwQf50dFeJYDfVGi/ds5EZelPMhPuJQ
+         LX+mBbOazigTfZCu8jlaN1AH+IO5vQx7DoIF8kgQ=
+Received: by mail-wm1-f47.google.com with SMTP id h18so438247wml.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 10:49:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAWVYnb4UGihoVZ+b7ZFU9vfQyVsqV+eTYC6zbIUjryFXhZ7RgDr
+        SO2SDXQG7rvHjuGJJ0ATnjiyK2V+Uvt1n+NGN1p4+g==
+X-Google-Smtp-Source: APXvYqw7Ywzyncv+PKRVYxY/vhezc7Wd5dx6UuqT0xaAqOy5z7OerjoOtysy1gdphkM0v0uvRZhvaq7RWJSxejWAJfc=
+X-Received: by 2002:a7b:c182:: with SMTP id y2mr4262844wmi.83.1556214579825;
+ Thu, 25 Apr 2019 10:49:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190422185805.1169-1-rick.p.edgecombe@intel.com>
+ <20190422185805.1169-4-rick.p.edgecombe@intel.com> <20190425162620.GA5199@zn.tnic>
+ <B7809434-CEBE-4664-ACE7-BA2412163CC4@gmail.com>
+In-Reply-To: <B7809434-CEBE-4664-ACE7-BA2412163CC4@gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 25 Apr 2019 10:49:27 -0700
+X-Gmail-Original-Message-ID: <CALCETrVkEJuTwYnC4kc7Xk_KEeKGGtuDErNyfL=Oa_CZp+=yOA@mail.gmail.com>
+Message-ID: <CALCETrVkEJuTwYnC4kc7Xk_KEeKGGtuDErNyfL=Oa_CZp+=yOA@mail.gmail.com>
+Subject: Re: [PATCH v4 03/23] x86/mm: Introduce temporary mm structs
+To:     Nadav Amit <nadav.amit@gmail.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Damian Tometzki <linux_dti@icloud.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>, Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        "Dock, Deneen T" <deneen.t.dock@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Apr 25, 2019 at 10:37 AM Nadav Amit <nadav.amit@gmail.com> wrote:
+>
+> > On Apr 25, 2019, at 9:26 AM, Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > On Mon, Apr 22, 2019 at 11:57:45AM -0700, Rick Edgecombe wrote:
+> >> From: Andy Lutomirski <luto@kernel.org>
+> >>
+> >> Using a dedicated page-table for temporary PTEs prevents other cores
+> >> from using - even speculatively - these PTEs, thereby providing two
+> >> benefits:
+> >>
+> >> (1) Security hardening: an attacker that gains kernel memory writing
+> >> abilities cannot easily overwrite sensitive data.
+> >>
+> >> (2) Avoiding TLB shootdowns: the PTEs do not need to be flushed in
+> >> remote page-tables.
+> >>
+> >> To do so a temporary mm_struct can be used. Mappings which are private
+> >> for this mm can be set in the userspace part of the address-space.
+> >> During the whole time in which the temporary mm is loaded, interrupts
+> >> must be disabled.
+> >>
+> >> The first use-case for temporary mm struct, which will follow, is for
+> >> poking the kernel text.
+> >>
+> >> [ Commit message was written by Nadav Amit ]
+> >>
+> >> Cc: Kees Cook <keescook@chromium.org>
+> >> Cc: Dave Hansen <dave.hansen@intel.com>
+> >> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >> Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+> >> Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
+> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> >> Signed-off-by: Nadav Amit <namit@vmware.com>
+> >> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> >> ---
+> >> arch/x86/include/asm/mmu_context.h | 33 ++++++++++++++++++++++++++++++
+> >> 1 file changed, 33 insertions(+)
+> >>
+> >> diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm=
+/mmu_context.h
+> >> index 19d18fae6ec6..d684b954f3c0 100644
+> >> --- a/arch/x86/include/asm/mmu_context.h
+> >> +++ b/arch/x86/include/asm/mmu_context.h
+> >> @@ -356,4 +356,37 @@ static inline unsigned long __get_current_cr3_fas=
+t(void)
+> >>      return cr3;
+> >> }
+> >>
+> >> +typedef struct {
+> >> +    struct mm_struct *prev;
+> >> +} temp_mm_state_t;
+> >> +
+> >> +/*
+> >> + * Using a temporary mm allows to set temporary mappings that are not=
+ accessible
+> >> + * by other cores. Such mappings are needed to perform sensitive memo=
+ry writes
+> >
+> > s/cores/CPUs/g
+> >
+> > Yeah, the concept of a thread of execution we call a CPU in the kernel,
+> > I'd say. No matter if it is one of the hyperthreads or a single thread
+> > in core.
+> >
+> >> + * that override the kernel memory protections (e.g., W^X), without e=
+xposing the
+> >> + * temporary page-table mappings that are required for these write op=
+erations to
+> >> + * other cores.
+> >
+> > Ditto.
+> >
+> >> Using temporary mm also allows to avoid TLB shootdowns when the
+> >
+> > Using a ..
+> >
+> >> + * mapping is torn down.
+> >> + *
+> >
+> > Nice commenting.
+> >
+> >> + * Context: The temporary mm needs to be used exclusively by a single=
+ core. To
+> >> + *          harden security IRQs must be disabled while the temporary=
+ mm is
+> >                             ^
+> >                             ,
+> >
+> >> + *          loaded, thereby preventing interrupt handler bugs from ov=
+erriding
+> >> + *          the kernel memory protection.
+> >> + */
+> >> +static inline temp_mm_state_t use_temporary_mm(struct mm_struct *mm)
+> >> +{
+> >> +    temp_mm_state_t state;
+> >> +
+> >> +    lockdep_assert_irqs_disabled();
+> >> +    state.prev =3D this_cpu_read(cpu_tlbstate.loaded_mm);
+> >> +    switch_mm_irqs_off(NULL, mm, current);
+> >> +    return state;
+> >> +}
+> >> +
+> >> +static inline void unuse_temporary_mm(temp_mm_state_t prev)
+> >> +{
+> >> +    lockdep_assert_irqs_disabled();
+> >> +    switch_mm_irqs_off(NULL, prev.prev, current);
+> >
+> > I think this code would be more readable if you call that
+> > temp_mm_state_t variable "temp_state" and the mm_struct pointer "mm" an=
+d
+> > then you have:
+> >
+> >       switch_mm_irqs_off(NULL, temp_state.mm, current);
+> >
+> > And above you'll have:
+> >
+> >       temp_state.mm =3D ...
+>
+> Andy, please let me know whether you are fine with this change and I=E2=
+=80=99ll
+> incorporate it.
 
-The following changes since commit 085b7755808aa11f78ab9377257e1dad2e6fa4bb:
 
-  Linux 5.1-rc6 (2019-04-21 10:45:57 -0700)
-
-are available in the Git repository at:
-
-  https://github.com/ceph/ceph-client.git tags/ceph-for-5.1-rc7
-
-for you to fetch changes up to 37659182bff1eeaaeadcfc8f853c6d2b6dbc3f47:
-
-  ceph: fix ci->i_head_snapc leak (2019-04-23 21:37:54 +0200)
-
-----------------------------------------------------------------
-dentry name handling fixes from Jeff and a memory leak fix from Zheng.
-Both are old issues, marked for stable.
-
-----------------------------------------------------------------
-Jeff Layton (3):
-      ceph: only use d_name directly when parent is locked
-      ceph: ensure d_name stability in ceph_dentry_hash()
-      ceph: handle the case where a dentry has been renamed on outstanding req
-
-Yan, Zheng (1):
-      ceph: fix ci->i_head_snapc leak
-
- fs/ceph/dir.c        |  6 ++++-
- fs/ceph/inode.c      | 16 +++++++++++-
- fs/ceph/mds_client.c | 70 +++++++++++++++++++++++++++++++++++++++++++---------
- fs/ceph/snap.c       |  7 +++++-
- 4 files changed, 85 insertions(+), 14 deletions(-)
+I'm okay with it.
