@@ -2,201 +2,105 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3159C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E19C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943B3214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D157214C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yC5dRReB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rISgOv/h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbfDYJEs (ORCPT
+        id S1726594AbfDYJGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 05:04:48 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46613 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbfDYJEh (ORCPT
+        Thu, 25 Apr 2019 05:06:20 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43854 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfDYJGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 05:04:37 -0400
-Received: by mail-lf1-f67.google.com with SMTP id k18so16891848lfj.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 02:04:35 -0700 (PDT)
+        Thu, 25 Apr 2019 05:06:19 -0400
+Received: by mail-wr1-f67.google.com with SMTP id a12so5948450wrq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 02:06:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+vO/H92ltJAN7Sc2E9gRf3gzSgRQawDyXMnQqUjpfmc=;
-        b=yC5dRReBJJI91/9zHctiDbBK59FaHXwQvaYJBTJebSGUCyuzX/iD6Buf3sCzCASEqs
-         NmeLl71rKWz3ChLuH3k8bRaYGUa9bkODHy531ZOa+0dPu6nMNXfg6d/fMpKJT1VJf0SS
-         igBn8+5X2lfYrp6Y3N2KYQklvlU/tpTdiCLvl78TcSITlhpLRvJ0WVshNKmVCovDJsBY
-         r3K73wXOzmWETpoYQVNMLcSKBlpxpmQ31bh9p14BxZnG0PHtdHILwcx4IjLygixHEQU8
-         XcFxD9itxPzWX8dF3ZUDS1TuceFbeyme+Mg1cA37EQog0ybfvN9XnIbN3mjxxh7t25wf
-         +Mfw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=PKlaTnAlCgVIzuGnj77yzvrLkhPjokOBr925naoIOJU=;
+        b=rISgOv/hpFgSTOrSIUazBAq+4GfMNKFMtYdwx3WjMXXY6AxRoUKfJoaEpDZwN4y0px
+         gvNU9YvmZxmqEW5AxzLlY1OpMm0Mx9F+8/O59xZwAd0wODXqTiYWjnQS+fneuxz1x/Qd
+         /6cWkFRloaNtfXckBVPelR0/Sj0cf1neWxi11e6DVryTxWWRjCOnS6vYEEjcEPyreOMC
+         u8LNlfAJt7Dk/q3FoawHGUe06fxgzVhcDl6q29FMIiHfC+Tz7IVLEYkTV7Y8wDncJ3IR
+         qhTTYYLG8o9VpDC2rQ/KLzaA6yFIwoBOepEeD391vCDMkPqN4WUiRWsQ13MvPzFmLMKO
+         3KrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=+vO/H92ltJAN7Sc2E9gRf3gzSgRQawDyXMnQqUjpfmc=;
-        b=nlzZGJMI9Z/42Me+bXpPyWAgSxxWmaN8uqmXLN7T3UASATmyNVdrg6yWR43QlpRSo6
-         xJgg0a0Z2Y52ltNoFrXSaWzCB9epVD+L6x9TbjmS15BeyWDvlo15KHN6WOtLhSv0JFWM
-         /kO+hVbcWBIn3xJgmdXH1v6sbuWheDIlJ6+Gy3W2vcCylewKE8+hp75B0zl3KO3ER517
-         Fq7czv9CcS4xmfRVKDTDSLGnfrPj7b7o9MIdX+j2cXos0vbhloSarALzM2dkqbee0B9X
-         0wd93DA7MeAzwOYQWv9nqFVcbfGbDQM577lbpsob7chOh8IMuV/aYH22RCEww6ASSAWf
-         eWIQ==
-X-Gm-Message-State: APjAAAUBKutjTbYHPwWnI2SWzwAcjzVn7cSkl8PALgAXOzQVoaF6bVy1
-        nThjmlPvKbh04hDTCPy7fhNFDQ==
-X-Google-Smtp-Source: APXvYqzk3cC5yBbK4/5Bi8xvesd2ymcePZ07SfwUeHdRpIavXWYij45EEO0csvL4Ao/ccnoOMwwZSA==
-X-Received: by 2002:ac2:5088:: with SMTP id f8mr21568780lfm.107.1556183075155;
-        Thu, 25 Apr 2019 02:04:35 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id v26sm4517353lja.60.2019.04.25.02.04.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 02:04:34 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 4/4] PM / Domains: Allow to attach a CPU via genpd_dev_pm_attach_by_id|name()
-Date:   Thu, 25 Apr 2019 11:04:13 +0200
-Message-Id: <20190425090413.10700-5-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190425090413.10700-1-ulf.hansson@linaro.org>
-References: <20190425090413.10700-1-ulf.hansson@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=PKlaTnAlCgVIzuGnj77yzvrLkhPjokOBr925naoIOJU=;
+        b=fpH3FD42omJ96GTFQQbgqIPjZtBmoSOY77AqRHFx3VHP0xq06lCGrLkwL3DjzWtCB7
+         UeKfkGbVFRF0BDP4rtKV+iN+aW2L2WZs166mSJ0q9PigH0u6sbmDR0eLgzJ0+sgeC0Ta
+         +NnOjZwNBMrAGgrOkug7vPlNnDRci+zrLt+NTehmgnOOgq8iXAXy+tQUwxRZoDXWnQyO
+         Q6Zx02X2YxQ60Zf4SUQMIxfzxjo8MhoNAR/r+CET5wWsCL/1kvlOyzouMcPlbn5Abukb
+         mTaF1TdXLDI412HKSe3Likww3ISQTE6V9SNzkT5IP5Ovm6V6OSeoBXYJxT6z/eftdwB/
+         h+cg==
+X-Gm-Message-State: APjAAAVjiZN9Al6d0UXk6Sh02UAIOoLtNU4QpXLrIXLO0CBbL3Aew0Ak
+        kqnAiM2k/v+19fpvf3WBY88HMw==
+X-Google-Smtp-Source: APXvYqzLq/S1hvu10+HbLsXVMDpTNkKa8JPB1mEoi6/BoF6xV/06t57mFlFy0JbcSFTVCDOd+Bxc1Q==
+X-Received: by 2002:a05:6000:118a:: with SMTP id g10mr3662785wrx.233.1556183177948;
+        Thu, 25 Apr 2019 02:06:17 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id s2sm14765072wrr.50.2019.04.25.02.06.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Apr 2019 02:06:16 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 10:06:15 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 7/7] mfd: cros_ec: differentiate SCP from EC by
+ feature bit.
+Message-ID: <20190425090615.GG14758@dell>
+References: <20190412071851.60332-1-pihsun@chromium.org>
+ <20190412071851.60332-8-pihsun@chromium.org>
+ <9bf20470-e5f6-7c12-9cc3-d9c6041a3bf8@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9bf20470-e5f6-7c12-9cc3-d9c6041a3bf8@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Attaching a device via genpd_dev_pm_attach_by_id|name() makes genpd to
-allocate a virtual device that it attaches instead. This leads to a problem
-in case the base device belongs to a CPU. More precisely, it means
-genpd_get_cpu() compares against the virtual device, thus it fails to find
-a matching CPU device.
+On Mon, 15 Apr 2019, Enric Balletbo i Serra wrote:
+> On 12/4/19 9:18, Pi-Hsun Shih wrote:
+> > System Companion Processor (SCP) is Cortex M4 co-processor on some
+> > MediaTek platform that can run EC-style firmware. Since a SCP and EC
+> > would both exist on a system, and use the cros_ec_dev driver, we need to
+> > differentiate between them for the userspace, or they would both be
+> > registered at /dev/cros_ec, causing a conflict.
+> > 
+> > Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> 
+> Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> 
+> Lee, there are several patches touching these files right now so you could have
+> to solve some trivial conflicts. If you want I send a series with all that apply
+> cleanly just let me know.
 
-Address this limitation, by passing the base device to genpd_get_cpu()
-rather than the virtual device. Moreover, to deal with detach correctly
-from genpd_remove_device(), let's store the CPU number in the struct
-generic_pm_domain_data, as to be able to clear the corresponding bit in the
-cpumask for the genpd.
+It would be ideal if you could bundle them to avoid conflicts.
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- drivers/base/power/domain.c | 20 ++++++++++----------
- include/linux/pm_domain.h   |  1 +
- 2 files changed, 11 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index da1c99178943..3d899e8abd58 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -1499,10 +1499,11 @@ static int genpd_get_cpu(struct generic_pm_domain *genpd, struct device *dev)
- 	return -1;
- }
- 
--static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev)
-+static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
-+			    struct device *base_dev)
- {
- 	struct generic_pm_domain_data *gpd_data;
--	int ret, cpu;
-+	int ret;
- 
- 	dev_dbg(dev, "%s()\n", __func__);
- 
-@@ -1513,7 +1514,7 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev)
- 	if (IS_ERR(gpd_data))
- 		return PTR_ERR(gpd_data);
- 
--	cpu = genpd_get_cpu(genpd, dev);
-+	gpd_data->cpu = genpd_get_cpu(genpd, base_dev);
- 
- 	ret = genpd->attach_dev ? genpd->attach_dev(genpd, dev) : 0;
- 	if (ret)
-@@ -1521,7 +1522,7 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev)
- 
- 	genpd_lock(genpd);
- 
--	genpd_set_cpumask(genpd, cpu);
-+	genpd_set_cpumask(genpd, gpd_data->cpu);
- 	dev_pm_domain_set(dev, &genpd->domain);
- 
- 	genpd->device_count++;
-@@ -1549,7 +1550,7 @@ int pm_genpd_add_device(struct generic_pm_domain *genpd, struct device *dev)
- 	int ret;
- 
- 	mutex_lock(&gpd_list_lock);
--	ret = genpd_add_device(genpd, dev);
-+	ret = genpd_add_device(genpd, dev, dev);
- 	mutex_unlock(&gpd_list_lock);
- 
- 	return ret;
-@@ -1561,14 +1562,13 @@ static int genpd_remove_device(struct generic_pm_domain *genpd,
- {
- 	struct generic_pm_domain_data *gpd_data;
- 	struct pm_domain_data *pdd;
--	int cpu, ret = 0;
-+	int ret = 0;
- 
- 	dev_dbg(dev, "%s()\n", __func__);
- 
- 	pdd = dev->power.subsys_data->domain_data;
- 	gpd_data = to_gpd_data(pdd);
- 	dev_pm_qos_remove_notifier(dev, &gpd_data->nb);
--	cpu = genpd_get_cpu(genpd, dev);
- 
- 	genpd_lock(genpd);
- 
-@@ -1580,7 +1580,7 @@ static int genpd_remove_device(struct generic_pm_domain *genpd,
- 	genpd->device_count--;
- 	genpd->max_off_time_changed = true;
- 
--	genpd_clear_cpumask(genpd, cpu);
-+	genpd_clear_cpumask(genpd, gpd_data->cpu);
- 	dev_pm_domain_set(dev, NULL);
- 
- 	list_del_init(&pdd->list_node);
-@@ -2256,7 +2256,7 @@ int of_genpd_add_device(struct of_phandle_args *genpdspec, struct device *dev)
- 		goto out;
- 	}
- 
--	ret = genpd_add_device(genpd, dev);
-+	ret = genpd_add_device(genpd, dev, dev);
- 
- out:
- 	mutex_unlock(&gpd_list_lock);
-@@ -2426,7 +2426,7 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
- 
- 	dev_dbg(dev, "adding to PM domain %s\n", pd->name);
- 
--	ret = genpd_add_device(pd, dev);
-+	ret = genpd_add_device(pd, dev, base_dev);
- 	mutex_unlock(&gpd_list_lock);
- 
- 	if (ret < 0) {
-diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index bc82e74560ee..0e8e356bed6a 100644
---- a/include/linux/pm_domain.h
-+++ b/include/linux/pm_domain.h
-@@ -175,6 +175,7 @@ struct generic_pm_domain_data {
- 	struct pm_domain_data base;
- 	struct gpd_timing_data td;
- 	struct notifier_block nb;
-+	int cpu;
- 	unsigned int performance_state;
- 	void *data;
- };
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
