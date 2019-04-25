@@ -2,96 +2,107 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ED2C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61821C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3C720679
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2F920679
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:57:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RXYo+p/N";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QZ6RkZhX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V8BnXMDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbfDYQ4I (ORCPT
+        id S1728926AbfDYQ5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:56:08 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33528 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfDYQ4I (ORCPT
+        Thu, 25 Apr 2019 12:57:01 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:42595 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727478AbfDYQ5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:56:08 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A01826058E; Thu, 25 Apr 2019 16:56:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556211367;
-        bh=9eRvulVlbXBMxvEM3hAkuZAFM7cLKLUpXX0LT4/fs40=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=RXYo+p/NUTrx3R1Ki7MmkUpNk+H/mSL0nxr7EFgm6OwRQbKVNmqkmyOvMhd4rYc8X
-         cdBCXo1gnXo+3pa0/yWEOsYiQiljYlUghuTdXfZaBBw5AgS+PrwoCqs9RIDy18rL7c
-         9OKo7ndguDSwZGaQvo/f4pa9brd3YAx+5Xl8LHNw=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27DB960252;
-        Thu, 25 Apr 2019 16:56:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556211367;
-        bh=9eRvulVlbXBMxvEM3hAkuZAFM7cLKLUpXX0LT4/fs40=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=QZ6RkZhXHMkoDJKqL79MfPto+ZvJiSOA+C6dhtT+Lz/rct5fFtV1pVycx2O9M2uuM
-         QkLLk3joC1ioMP3Y0zx3I8P8VbL0mH5UNw6wXeqeybsJ8G/RKK38Y0fRuc244pep6N
-         okiQ2vfXMQdgCxr0yaYWMoZorzsgjdoOKVBEWOyA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 27DB960252
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 25 Apr 2019 12:57:00 -0400
+Received: by mail-ua1-f65.google.com with SMTP id h4so208713uaj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lhjVqPrexfBwwSFeYo5d0b9deTZm5zd8YIOKCbvOido=;
+        b=V8BnXMDMeWX1zzuigvaZ4qzb59d97nPAyFg89UKBbAYtsyI19824929pswa+TZ65JO
+         ZmtBHSaHG77ynAPaVGkwtSKm4glA+lxbgY1fJrtLXXHn9g2uCYgdHqAURUVw8EGDY4Bi
+         CFIu9ACAkSmEBMlAO0/lj2XIkjZhK7DLzsVJE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lhjVqPrexfBwwSFeYo5d0b9deTZm5zd8YIOKCbvOido=;
+        b=TNT10FF/lpxJM2YFCeWPdT+7rHxOpTbGXUypw0tnXU5ay5rLZmBjlB8huc9lO2A+Dy
+         4ST5CmahOnS1xLFc8/XtK6nFQ6s6Rxb6+nEoUIkG443JyEqfwz9qyeAG2acBXszjE1vv
+         EOZlkxdVP5Xcfo0K34/hurFHggT7Mci+PCgLYt79JNWPeaakpSatuWdk4vjeXQ/LJq79
+         2D8kl3vUhXAwwAbYLOF+mZJxw3PZgxCRdq/2pKZ/Omc80d06lq3/RUfxRgV1E2PmKaDj
+         aQK7/D8HOT4yIYzRNfR0qNtDH6+8zL3PSA4DuAQ3Aey223IZ0D34pddBWJhKlcoQQ9nx
+         Mdcg==
+X-Gm-Message-State: APjAAAXSEnsD0su54X2Drp7AQ5cfyvH+Tkjo2+be1F/2rKLC7fk9UBKH
+        OfuL2UxBMK8G65ajNzkmAOXvlQ5e+y0=
+X-Google-Smtp-Source: APXvYqykLuwDhviLR6u3bfWoMzsXoJXpsIZjZ4iKhv4cbqOAg+/u2UjAanZTAcI76umcOlT0aS80UA==
+X-Received: by 2002:ab0:6592:: with SMTP id v18mr20989088uam.63.1556211418638;
+        Thu, 25 Apr 2019 09:56:58 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id b197sm22700859vkd.9.2019.04.25.09.56.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 09:56:56 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id w13so294056vsc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:56:56 -0700 (PDT)
+X-Received: by 2002:a67:eecb:: with SMTP id o11mr21602235vsp.66.1556211415479;
+ Thu, 25 Apr 2019 09:56:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2 wireless-drivers-next] rtlwifi: rtl8723ae: Fix missing
- break in switch statement
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190416151722.GA31598@embeddedor>
-References: <20190416151722.GA31598@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Ping-Ke Shih <pkshih@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190425165607.A01826058E@smtp.codeaurora.org>
-Date:   Thu, 25 Apr 2019 16:56:07 +0000 (UTC)
+References: <20190424231237.14776-1-keescook@chromium.org> <20190424231237.14776-8-keescook@chromium.org>
+ <1ca5ee52-ab07-9142-2e45-44df1e94276e@kernel.org>
+In-Reply-To: <1ca5ee52-ab07-9142-2e45-44df1e94276e@kernel.org>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Thu, 25 Apr 2019 09:56:44 -0700
+X-Gmail-Original-Message-ID: <CAGXu5j+F1iSu5GDG_FCykABXkH_gXcF=zjwwyev1vTDCXRLoVg@mail.gmail.com>
+Message-ID: <CAGXu5j+F1iSu5GDG_FCykABXkH_gXcF=zjwwyev1vTDCXRLoVg@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] selftests: Remove KSFT_TAP_LEVEL
+To:     shuah <shuah@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Serge Hallyn <serge@hallyn.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+On Thu, Apr 25, 2019 at 9:36 AM shuah <shuah@kernel.org> wrote:
+>
+> On 4/24/19 5:12 PM, Kees Cook wrote:
+> > Since sub-testing can now be detected by indentation level, this removes
+> > KSFT_TAP_LEVEL so that subtests report their TAP header for later parsing.
+>
+> Does this take into ksft_print_header() getenv logic to avoid printing
+> TAP headers from tests when they fork? e.g timers tests do that a lot.
 
-> Add missing break statement in order to prevent the code from falling
-> through to case 0x1025, and erroneously setting rtlhal->oem_id to
-> RT_CID_819X_ACER when rtlefuse->eeprom_svid is equal to 0x10EC and
-> none of the cases in switch (rtlefuse->eeprom_smid) match.
-> 
-> This bug was found thanks to the ongoing efforts to enable
-> -Wimplicit-fallthrough.
-> 
-> Fixes: 238ad2ddf34b ("rtlwifi: rtl8723ae: Clean up the hardware info routine")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+I didn't change the ksft_print_header() code, in case you want it back
+in the future. But nothing sets that variable any more in my series:
 
-Patch applied to wireless-drivers-next.git, thanks.
+$ git grep KSFT_TAP_LEVEL
+tools/testing/selftests/kselftest.h:    if (!(getenv("KSFT_TAP_LEVEL")))
 
-84242b82d81c rtlwifi: rtl8723ae: Fix missing break in switch statement
+I don't see the timers tests using print_header() at all, actually...
+
+$ cd tools/testing/kselftest/timers
+$ git grep print_header | wc -l
+0
 
 -- 
-https://patchwork.kernel.org/patch/10903325/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Kees Cook
