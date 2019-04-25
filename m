@@ -2,222 +2,655 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C49C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9A9C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F80720645
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:24:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AAYrDUkT"
+	by mail.kernel.org (Postfix) with ESMTP id 175902084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387803AbfDYLYg (ORCPT
+        id S1727113AbfDYLZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:24:36 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:30678 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387545AbfDYLYE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:24:04 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190425112401epoutp0154f3efce8b08a5c57f52a4872319583e~Ys976J_2g1904819048epoutp01f;
-        Thu, 25 Apr 2019 11:24:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190425112401epoutp0154f3efce8b08a5c57f52a4872319583e~Ys976J_2g1904819048epoutp01f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556191441;
-        bh=4S6KChIBk/IqG41ydTdXRNYQIbozJTHYfmrQ7Y29Fy0=;
-        h=From:To:Cc:Subject:Date:In-reply-to:References:From;
-        b=AAYrDUkThUv+58pIWELgbqysEharMon4iX4btuzrVtKp++QDF6hYi4CWunIcsFtY/
-         CNqeYCEVVKIxChsSGsGf8P3WOJThjnRHs1NWJ4pPFigqo4GEaPR7uAYt8oR3skGl99
-         uLhEryKhRDC4G4GFbgAb+BIS+yEDk+j/28ZeXuMU=
-Received: from epsmges1p2.samsung.com (unknown [182.195.42.54]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190425112400epcas1p468414a681f5575952ec05e4abb0f1f1b~Ys97bOP_X2380823808epcas1p4H;
-        Thu, 25 Apr 2019 11:24:00 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B5.D7.04142.0D891CC5; Thu, 25 Apr 2019 20:24:00 +0900 (KST)
-Received: from epsmgms2p1new.samsung.com (unknown [182.195.42.142]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190425112400epcas1p26e7634f95a185a83c31470006d291161~Ys97JOliC0718107181epcas1p22;
-        Thu, 25 Apr 2019 11:24:00 +0000 (GMT)
-X-AuditID: b6c32a36-ce1ff7000000102e-7d-5cc198d09ab8
-Received: from epmmp2 ( [203.254.227.17]) by epsmgms2p1new.samsung.com
-        (Symantec Messaging Gateway) with SMTP id 1E.BF.03598.0D891CC5; Thu, 25 Apr
-        2019 20:24:00 +0900 (KST)
-Received: from test-PowerEdge-R720.sa.corp.samsungelectronics.net
-        ([107.108.221.212]) by mmp2.samsung.com (Oracle Communications Messaging
-        Server 7.0.5.31.0 64bit (built May  5 2014)) with ESMTPA id
-        <0PQI007Z2KZ7JR40@mmp2.samsung.com>; Thu, 25 Apr 2019 20:24:00 +0900 (KST)
-From:   Kanchan Joshi <joshi.k@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org
-Cc:     prakash.v@samsung.com, anshul@samsung.com,
-        Kanchan Joshi <joshi.k@samsung.com>
-Subject: [PATCH v5 4/7] block: introduce write-hint to stream-id conversion
-Date:   Thu, 25 Apr 2019 16:49:59 +0530
-Message-id: <1556191202-3245-5-git-send-email-joshi.k@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-reply-to: <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCmru6FGQdjDL59MLP4PX0Kq8XR/2/Z
-        LPbe0raYOe8Om8WevSdZLC7vmsNmMX/ZU3aLK1MWMTtweGxeUu/Rt2UVo8fnTXIBzFFcNimp
-        OZllqUX6dglcGa8n7GIpmKlYcfrde/YGxibpLkZODgkBE4nOh4dYuhi5OIQEdjBKXJn4Esr5
-        zijxq3suE0xVy+79bBCJDYwSX38vZwVJCAlMZ5I4dSyui5GDg01AU+LC5FKQGhGBOYwSy/ZN
-        YwapYRYIkVjxZBULiC0s4C2xec4vsDiLgKrEyZ4XbCC9vAJOEgs+CEPskpO4ea4TrIRTwFni
-        xY9nTCAzJQQ62CRer1/ADlHkIvHsWBsLSK+EgLTEpaO2EOFiiV93jjJD1TNKXG+YyQKRsJe4
-        uOcvE8Q9fBLvvvawQvTySnS0CUGUeEjsebedCeLHaYwS0961M05glFjAyLCKUSy1oDg3PbXY
-        sMBIrzgxt7g0L10vOT93EyM4qrTMdjAuOudziFGAg1GJh1ch8kCMEGtiWXFl7iFGCQ5mJRFe
-        ddODMUK8KYmVValF+fFFpTmpxYcYpTlYlMR51zs4xwgJpCeWpGanphakFsFkmTg4pRoYJYs/
-        XV3wPPi63bOZFcwnZgrMTlnqf+eej/9jmyX98jPbYlJX3H+6nOnSNYZNT3/dXy1SznjJ9NeH
-        Q4dv7md/svW6wJ5H3C6pP+c+7rnAOH8LTw9z9Y35S9jseR5aRFlKH90QvGP22/Jbakqvr235
-        J7r35+rl7zMOzll7carTmmdsJj8OrVyU/r9SiaU4I9FQi7moOBEAwGk3waYCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphluLIzCtJLcpLzFFi42I5/e+xoO6FGQdjDH7PV7X4PX0Kq8XR/2/Z
-        LPbe0raYOe8Om8WevSdZLC7vmsNmMX/ZU3aLK1MWMTtweGxeUu/Rt2UVo8fnTXIBzFFcNimp
-        OZllqUX6dglcGa8n7GIpmKlYcfrde/YGxibpLkZODgkBE4mW3fvZuhi5OIQE1jFKNM3dxQLh
-        zGSSePzzIVMXIwcHm4CmxIXJpSBxEYE5jBI9u9ezgnQzC4RIzHr2mA3EFhbwltg85xcziM0i
-        oCpxsucFG0gvr4CTxIIPwhDL5CRunusEK+EUcJZ48eMZE4gtBFRybdom9gmMPAsYGVYxSqYW
-        FOem5xYbFRjmpZbrFSfmFpfmpesl5+duYgSGzbbDWn07GO8viT/EKMDBqMTDeyH2QIwQa2JZ
-        cWXuIUYJDmYlEV5104MxQrwpiZVVqUX58UWlOanFhxilOViUxHlv5x2LFBJITyxJzU5NLUgt
-        gskycXBKNTBK35jqYRryorTJ/l/dC+mrZ36Z/1r234L5tnRJxmetrby97jvnGB7c9WJtVGQ2
-        x8mitqwisQNL2q+xy33qnNYkWD3fbueeaNvUprj3dZOPKW25t7Ioa8KpFw28yU2fTvx6Lv77
-        /YFZbdyaH+6V8x08tmP2JIncDQ6WzFVbvgXdeCpoZmvz4e0eJZbijERDLeai4kQA1T38wRcC
-        AAA=
-X-CMS-MailID: 20190425112400epcas1p26e7634f95a185a83c31470006d291161
-CMS-TYPE: 101P
-X-CMS-RootMailID: 20190425112400epcas1p26e7634f95a185a83c31470006d291161
-References: <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
-        <CGME20190425112400epcas1p26e7634f95a185a83c31470006d291161@epcas1p2.samsung.com>
+        Thu, 25 Apr 2019 07:25:05 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:48474 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbfDYLZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 07:25:04 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 125CE204DF;
+        Thu, 25 Apr 2019 13:25:01 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id EC57E20564;
+        Thu, 25 Apr 2019 13:25:00 +0200 (CEST)
+Subject: Re: [PATCH v2 00/13] qcom: dts: thermal cleanups
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+References: <cover.1553853990.git.amit.kucheria@linaro.org>
+ <5583cae1-8fea-724a-24a4-59b38a205ac3@free.fr>
+ <CAP245DUNo02QUkGDPFfzow9535GKO9x6ZusETRjEgTmnHL4D2g@mail.gmail.com>
+ <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr>
+ <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
+ <903fa0a6-5c40-97b4-1c01-fd84f3e51c62@free.fr>
+ <8e53ea22-d248-8c63-bcda-15b502eb9699@free.fr>
+ <CAHLCerPj6MQ0LeqUHM_91NOW1cP0z75DD7oBnR7Q3-8rpCmnww@mail.gmail.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <fa265928-d858-80e8-5055-5605fc39fe33@free.fr>
+Date:   Thu, 25 Apr 2019 13:25:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAHLCerPj6MQ0LeqUHM_91NOW1cP0z75DD7oBnR7Q3-8rpCmnww@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Apr 25 13:25:01 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch moves write-hint-to-stream-id conversion in block-layer.
-Earlier this was done by driver (nvme). For user write-hints, conversion
-is of the form "streamid = write-hint - 1". For kernel write-hints,
-streams are allocated in top-to-bottom fashion. This has the effect of
-mapping user-hints to lower range of stream-ids and kernel-hints to upper
-range of stream-ids.
-Conversion takes stream limit (maintained in request queue) into
-account. Write-hints beyond the exposed limit turn to 0.
-A new field 'streamid' has been added in request, while 'write-hint'
-field has been removed. For merging checks, 'bi_write_hint' (of bio) is
-used instead.
+On 25/04/2019 08:31, Amit Kucheria wrote:
 
-Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
----
- block/blk-core.c         | 29 ++++++++++++++++++++++++++++-
- block/blk-merge.c        |  4 ++--
- drivers/nvme/host/core.c |  7 ++-----
- include/linux/blkdev.h   |  2 +-
- 4 files changed, 33 insertions(+), 9 deletions(-)
+> Andy, patches 1 and 2 fix problems that already exist upstream. They
+> were not introduced by my series.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index a55389b..0485c20 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -730,6 +730,33 @@ bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
- 	return false;
- }
- 
-+enum rw_hint blk_write_hint_to_streamid(struct request *req,
-+					struct bio *bio)
-+{
-+	enum rw_hint streamid, write_hint, nr_streams;
-+	struct request_queue *q = req->q;
-+
-+	nr_streams = q->limits.nr_streams;
-+
-+	write_hint = bio->bi_write_hint;
-+
-+	if (!nr_streams || write_hint == WRITE_LIFE_NOT_SET ||
-+	    write_hint == WRITE_LIFE_NONE)
-+		streamid = 0;
-+	else if (write_hint < WRITE_LIFE_KERN_MIN) { /*user-space hints*/
-+		streamid = write_hint - 1;
-+		if (streamid > nr_streams)
-+			streamid = 0;
-+	} else { /* kernel hints */
-+		streamid = write_hint - WRITE_LIFE_KERN_MIN + 1;
-+		if (streamid > (nr_streams - BLK_MAX_USER_HINTS))
-+			streamid = 0;
-+		else
-+			streamid = nr_streams - streamid + 1;
-+	}
-+	return streamid;
-+}
-+
- void blk_init_request_from_bio(struct request *req, struct bio *bio)
- {
- 	if (bio->bi_opf & REQ_RAHEAD)
-@@ -737,7 +764,7 @@ void blk_init_request_from_bio(struct request *req, struct bio *bio)
- 
- 	req->__sector = bio->bi_iter.bi_sector;
- 	req->ioprio = bio_prio(bio);
--	req->write_hint = bio->bi_write_hint;
-+	req->streamid = blk_write_hint_to_streamid(req, bio);
- 	blk_rq_bio_prep(req->q, req, bio);
- }
- EXPORT_SYMBOL_GPL(blk_init_request_from_bio);
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 1c9d4f0..1435634 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -832,7 +832,7 @@ static struct request *attempt_merge(struct request_queue *q,
- 	 * Don't allow merge of different write hints, or for a hint with
- 	 * non-hint IO.
- 	 */
--	if (req->write_hint != next->write_hint)
-+	if (req->bio->bi_write_hint != next->bio->bi_write_hint)
- 		return NULL;
- 
- 	if (req->ioprio != next->ioprio)
-@@ -964,7 +964,7 @@ bool blk_rq_merge_ok(struct request *rq, struct bio *bio)
- 	 * Don't allow merge of different write hints, or for a hint with
- 	 * non-hint IO.
- 	 */
--	if (rq->write_hint != bio->bi_write_hint)
-+	if (rq->bio->bi_write_hint != bio->bi_write_hint)
- 		return false;
- 
- 	if (rq->ioprio != bio_prio(bio))
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 2c43e12..f3000d9 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -530,12 +530,9 @@ static void nvme_assign_write_stream(struct nvme_ctrl *ctrl,
- 				     struct request *req, u16 *control,
- 				     u32 *dsmgmt)
- {
--	enum rw_hint streamid = req->write_hint;
-+	enum rw_hint streamid = req->streamid;
- 
--	if (streamid == WRITE_LIFE_NOT_SET || streamid == WRITE_LIFE_NONE)
--		streamid = 0;
--	else {
--		streamid--;
-+	if (streamid != 0) {
- 		if (WARN_ON_ONCE(streamid > ctrl->nr_streams))
- 			return;
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 5b6cb9747..9cf8a40 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -216,7 +216,7 @@ struct request {
- 	unsigned short nr_integrity_segments;
- #endif
- 
--	unsigned short write_hint;
-+	unsigned short streamid;
- 	unsigned short ioprio;
- 
- 	unsigned int extra_len;	/* length of alignment and padding */
--- 
-2.7.4
+On IRC, you wrote: "can you send me the same output against mainline
+(or linux-next) w/o my patches applied?"
 
+$ git show 58ad5ab73152
+commit 58ad5ab731521a80a848033512467675de06b1f2
+Merge: 596a434369f6 10518bb15940
+Author: Andy Gross <agross@kernel.org>
+Date:   Tue Apr 9 23:08:50 2019 -0500
+
+    Merge branch 'arm64-thermal-for-5.2' into arm64-for-5.2
+
+$ git revert -m 1 58ad5ab73152
+
+
+Below, I only see an error when reading /sys/class/thermal/thermal_zone9/temp
+(/sys/class/thermal/thermal_zone9/type = pm8998)
+
+
+# for F in $(find /sys/class/thermal/thermal_zone?/ /sys/class/thermal/thermal_zone??/ -type f); do echo $F; cat $F; done
+/sys/class/thermal/thermal_zone0/uevent
+/sys/class/thermal/thermal_zone0/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone0/mode
+enabled
+/sys/class/thermal/thermal_zone0/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone0/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone0/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone0/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone0/power/control
+auto
+/sys/class/thermal/thermal_zone0/available_policies
+step_wise
+/sys/class/thermal/thermal_zone0/policy
+step_wise
+/sys/class/thermal/thermal_zone0/trip_point_1_type
+critical
+/sys/class/thermal/thermal_zone0/k_d
+0
+/sys/class/thermal/thermal_zone0/sustainable_power
+0
+/sys/class/thermal/thermal_zone0/type
+cpu-thermal0
+/sys/class/thermal/thermal_zone0/offset
+0
+/sys/class/thermal/thermal_zone0/slope
+1
+/sys/class/thermal/thermal_zone0/trip_point_0_type
+passive
+/sys/class/thermal/thermal_zone0/k_po
+0
+/sys/class/thermal/thermal_zone0/integral_cutoff
+0
+/sys/class/thermal/thermal_zone0/k_i
+0
+/sys/class/thermal/thermal_zone0/trip_point_1_temp
+110000
+/sys/class/thermal/thermal_zone0/k_pu
+0
+/sys/class/thermal/thermal_zone0/temp
+31000
+/sys/class/thermal/thermal_zone0/trip_point_1_hyst
+2000
+/sys/class/thermal/thermal_zone0/trip_point_0_temp
+75000
+/sys/class/thermal/thermal_zone1/uevent
+/sys/class/thermal/thermal_zone1/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone1/mode
+enabled
+/sys/class/thermal/thermal_zone1/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone1/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone1/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone1/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone1/power/control
+auto
+/sys/class/thermal/thermal_zone1/available_policies
+step_wise
+/sys/class/thermal/thermal_zone1/policy
+step_wise
+/sys/class/thermal/thermal_zone1/trip_point_1_type
+critical
+/sys/class/thermal/thermal_zone1/k_d
+0
+/sys/class/thermal/thermal_zone1/sustainable_power
+0
+/sys/class/thermal/thermal_zone1/type
+cpu-thermal1
+/sys/class/thermal/thermal_zone1/offset
+0
+/sys/class/thermal/thermal_zone1/slope
+1
+/sys/class/thermal/thermal_zone1/trip_point_0_type
+passive
+/sys/class/thermal/thermal_zone1/k_po
+0
+/sys/class/thermal/thermal_zone1/integral_cutoff
+0
+/sys/class/thermal/thermal_zone1/k_i
+0
+/sys/class/thermal/thermal_zone1/trip_point_1_temp
+110000
+/sys/class/thermal/thermal_zone1/k_pu
+0
+/sys/class/thermal/thermal_zone1/temp
+32000
+/sys/class/thermal/thermal_zone1/trip_point_1_hyst
+2000
+/sys/class/thermal/thermal_zone1/trip_point_0_temp
+75000
+/sys/class/thermal/thermal_zone2/uevent
+/sys/class/thermal/thermal_zone2/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone2/mode
+enabled
+/sys/class/thermal/thermal_zone2/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone2/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone2/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone2/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone2/power/control
+auto
+/sys/class/thermal/thermal_zone2/available_policies
+step_wise
+/sys/class/thermal/thermal_zone2/policy
+step_wise
+/sys/class/thermal/thermal_zone2/trip_point_1_type
+critical
+/sys/class/thermal/thermal_zone2/k_d
+0
+/sys/class/thermal/thermal_zone2/sustainable_power
+0
+/sys/class/thermal/thermal_zone2/type
+cpu-thermal2
+/sys/class/thermal/thermal_zone2/offset
+0
+/sys/class/thermal/thermal_zone2/slope
+1
+/sys/class/thermal/thermal_zone2/trip_point_0_type
+passive
+/sys/class/thermal/thermal_zone2/k_po
+0
+/sys/class/thermal/thermal_zone2/integral_cutoff
+0
+/sys/class/thermal/thermal_zone2/k_i
+0
+/sys/class/thermal/thermal_zone2/trip_point_1_temp
+110000
+/sys/class/thermal/thermal_zone2/k_pu
+0
+/sys/class/thermal/thermal_zone2/temp
+30700
+/sys/class/thermal/thermal_zone2/trip_point_1_hyst
+2000
+/sys/class/thermal/thermal_zone2/trip_point_0_temp
+75000
+/sys/class/thermal/thermal_zone3/uevent
+/sys/class/thermal/thermal_zone3/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone3/mode
+enabled
+/sys/class/thermal/thermal_zone3/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone3/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone3/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone3/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone3/power/control
+auto
+/sys/class/thermal/thermal_zone3/available_policies
+step_wise
+/sys/class/thermal/thermal_zone3/policy
+step_wise
+/sys/class/thermal/thermal_zone3/trip_point_1_type
+critical
+/sys/class/thermal/thermal_zone3/k_d
+0
+/sys/class/thermal/thermal_zone3/sustainable_power
+0
+/sys/class/thermal/thermal_zone3/type
+cpu-thermal3
+/sys/class/thermal/thermal_zone3/offset
+0
+/sys/class/thermal/thermal_zone3/slope
+1
+/sys/class/thermal/thermal_zone3/trip_point_0_type
+passive
+/sys/class/thermal/thermal_zone3/k_po
+0
+/sys/class/thermal/thermal_zone3/integral_cutoff
+0
+/sys/class/thermal/thermal_zone3/k_i
+0
+/sys/class/thermal/thermal_zone3/trip_point_1_temp
+110000
+/sys/class/thermal/thermal_zone3/k_pu
+0
+/sys/class/thermal/thermal_zone3/temp
+31000
+/sys/class/thermal/thermal_zone3/trip_point_1_hyst
+2000
+/sys/class/thermal/thermal_zone3/trip_point_0_temp
+75000
+/sys/class/thermal/thermal_zone4/uevent
+/sys/class/thermal/thermal_zone4/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone4/mode
+enabled
+/sys/class/thermal/thermal_zone4/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone4/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone4/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone4/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone4/power/control
+auto
+/sys/class/thermal/thermal_zone4/available_policies
+step_wise
+/sys/class/thermal/thermal_zone4/policy
+step_wise
+/sys/class/thermal/thermal_zone4/trip_point_1_type
+critical
+/sys/class/thermal/thermal_zone4/k_d
+0
+/sys/class/thermal/thermal_zone4/sustainable_power
+0
+/sys/class/thermal/thermal_zone4/type
+cpu-thermal4
+/sys/class/thermal/thermal_zone4/offset
+0
+/sys/class/thermal/thermal_zone4/slope
+1
+/sys/class/thermal/thermal_zone4/trip_point_0_type
+passive
+/sys/class/thermal/thermal_zone4/k_po
+0
+/sys/class/thermal/thermal_zone4/integral_cutoff
+0
+/sys/class/thermal/thermal_zone4/k_i
+0
+/sys/class/thermal/thermal_zone4/trip_point_1_temp
+110000
+/sys/class/thermal/thermal_zone4/k_pu
+0
+/sys/class/thermal/thermal_zone4/temp
+32000
+/sys/class/thermal/thermal_zone4/trip_point_1_hyst
+2000
+/sys/class/thermal/thermal_zone4/trip_point_0_temp
+75000
+/sys/class/thermal/thermal_zone5/uevent
+/sys/class/thermal/thermal_zone5/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone5/mode
+enabled
+/sys/class/thermal/thermal_zone5/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone5/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone5/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone5/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone5/power/control
+auto
+/sys/class/thermal/thermal_zone5/available_policies
+step_wise
+/sys/class/thermal/thermal_zone5/policy
+step_wise
+/sys/class/thermal/thermal_zone5/trip_point_1_type
+critical
+/sys/class/thermal/thermal_zone5/k_d
+0
+/sys/class/thermal/thermal_zone5/sustainable_power
+0
+/sys/class/thermal/thermal_zone5/type
+cpu-thermal5
+/sys/class/thermal/thermal_zone5/offset
+0
+/sys/class/thermal/thermal_zone5/slope
+1
+/sys/class/thermal/thermal_zone5/trip_point_0_type
+passive
+/sys/class/thermal/thermal_zone5/k_po
+0
+/sys/class/thermal/thermal_zone5/integral_cutoff
+0
+/sys/class/thermal/thermal_zone5/k_i
+0
+/sys/class/thermal/thermal_zone5/trip_point_1_temp
+110000
+/sys/class/thermal/thermal_zone5/k_pu
+0
+/sys/class/thermal/thermal_zone5/temp
+30400
+/sys/class/thermal/thermal_zone5/trip_point_1_hyst
+2000
+/sys/class/thermal/thermal_zone5/trip_point_0_temp
+75000
+/sys/class/thermal/thermal_zone6/uevent
+/sys/class/thermal/thermal_zone6/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone6/mode
+enabled
+/sys/class/thermal/thermal_zone6/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone6/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone6/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone6/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone6/power/control
+auto
+/sys/class/thermal/thermal_zone6/available_policies
+step_wise
+/sys/class/thermal/thermal_zone6/policy
+step_wise
+/sys/class/thermal/thermal_zone6/trip_point_1_type
+critical
+/sys/class/thermal/thermal_zone6/k_d
+0
+/sys/class/thermal/thermal_zone6/sustainable_power
+0
+/sys/class/thermal/thermal_zone6/type
+cpu-thermal6
+/sys/class/thermal/thermal_zone6/offset
+0
+/sys/class/thermal/thermal_zone6/slope
+1
+/sys/class/thermal/thermal_zone6/trip_point_0_type
+passive
+/sys/class/thermal/thermal_zone6/k_po
+0
+/sys/class/thermal/thermal_zone6/integral_cutoff
+0
+/sys/class/thermal/thermal_zone6/k_i
+0
+/sys/class/thermal/thermal_zone6/trip_point_1_temp
+110000
+/sys/class/thermal/thermal_zone6/k_pu
+0
+/sys/class/thermal/thermal_zone6/temp
+31200
+/sys/class/thermal/thermal_zone6/trip_point_1_hyst
+2000
+/sys/class/thermal/thermal_zone6/trip_point_0_temp
+75000
+/sys/class/thermal/thermal_zone7/uevent
+/sys/class/thermal/thermal_zone7/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone7/mode
+enabled
+/sys/class/thermal/thermal_zone7/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone7/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone7/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone7/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone7/power/control
+auto
+/sys/class/thermal/thermal_zone7/available_policies
+step_wise
+/sys/class/thermal/thermal_zone7/policy
+step_wise
+/sys/class/thermal/thermal_zone7/trip_point_1_type
+critical
+/sys/class/thermal/thermal_zone7/k_d
+0
+/sys/class/thermal/thermal_zone7/sustainable_power
+0
+/sys/class/thermal/thermal_zone7/type
+cpu-thermal7
+/sys/class/thermal/thermal_zone7/offset
+0
+/sys/class/thermal/thermal_zone7/slope
+1
+/sys/class/thermal/thermal_zone7/trip_point_0_type
+passive
+/sys/class/thermal/thermal_zone7/k_po
+0
+/sys/class/thermal/thermal_zone7/integral_cutoff
+0
+/sys/class/thermal/thermal_zone7/k_i
+0
+/sys/class/thermal/thermal_zone7/trip_point_1_temp
+110000
+/sys/class/thermal/thermal_zone7/k_pu
+0
+/sys/class/thermal/thermal_zone7/temp
+30600
+/sys/class/thermal/thermal_zone7/trip_point_1_hyst
+2000
+/sys/class/thermal/thermal_zone7/trip_point_0_temp
+75000
+/sys/class/thermal/thermal_zone8/uevent
+/sys/class/thermal/thermal_zone8/passive
+0
+/sys/class/thermal/thermal_zone8/mode
+enabled
+/sys/class/thermal/thermal_zone8/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone8/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone8/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone8/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone8/power/control
+auto
+/sys/class/thermal/thermal_zone8/available_policies
+step_wise
+/sys/class/thermal/thermal_zone8/policy
+step_wise
+/sys/class/thermal/thermal_zone8/k_d
+0
+/sys/class/thermal/thermal_zone8/sustainable_power
+0
+/sys/class/thermal/thermal_zone8/type
+gpu-thermal
+/sys/class/thermal/thermal_zone8/offset
+0
+/sys/class/thermal/thermal_zone8/slope
+1
+/sys/class/thermal/thermal_zone8/k_po
+0
+/sys/class/thermal/thermal_zone8/integral_cutoff
+0
+/sys/class/thermal/thermal_zone8/k_i
+0
+/sys/class/thermal/thermal_zone8/k_pu
+0
+/sys/class/thermal/thermal_zone8/temp
+30600
+/sys/class/thermal/thermal_zone9/uevent
+/sys/class/thermal/thermal_zone9/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone9/mode
+disabled
+/sys/class/thermal/thermal_zone9/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone9/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone9/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone9/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone9/power/control
+auto
+/sys/class/thermal/thermal_zone9/available_policies
+step_wise
+/sys/class/thermal/thermal_zone9/policy
+step_wise
+/sys/class/thermal/thermal_zone9/trip_point_1_type
+critical
+/sys/class/thermal/thermal_zone9/k_d
+0
+/sys/class/thermal/thermal_zone9/sustainable_power
+0
+/sys/class/thermal/thermal_zone9/type
+pm8998
+/sys/class/thermal/thermal_zone9/offset
+0
+/sys/class/thermal/thermal_zone9/slope
+1
+/sys/class/thermal/thermal_zone9/trip_point_0_type
+passive
+/sys/class/thermal/thermal_zone9/k_po
+0
+/sys/class/thermal/thermal_zone9/integral_cutoff
+0
+/sys/class/thermal/thermal_zone9/k_i
+0
+/sys/class/thermal/thermal_zone9/trip_point_1_temp
+125000
+/sys/class/thermal/thermal_zone9/k_pu
+0
+/sys/class/thermal/thermal_zone9/temp
+cat: read error: Invalid argument
+/sys/class/thermal/thermal_zone9/trip_point_1_hyst
+2000
+/sys/class/thermal/thermal_zone9/trip_point_0_temp
+105000
+/sys/class/thermal/thermal_zone10/uevent
+/sys/class/thermal/thermal_zone10/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone10/passive
+0
+/sys/class/thermal/thermal_zone10/mode
+enabled
+/sys/class/thermal/thermal_zone10/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone10/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone10/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone10/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone10/power/control
+auto
+/sys/class/thermal/thermal_zone10/available_policies
+step_wise
+/sys/class/thermal/thermal_zone10/policy
+step_wise
+/sys/class/thermal/thermal_zone10/k_d
+0
+/sys/class/thermal/thermal_zone10/sustainable_power
+0
+/sys/class/thermal/thermal_zone10/type
+battery-thermal
+/sys/class/thermal/thermal_zone10/offset
+0
+/sys/class/thermal/thermal_zone10/slope
+1
+/sys/class/thermal/thermal_zone10/trip_point_0_type
+critical
+/sys/class/thermal/thermal_zone10/k_po
+0
+/sys/class/thermal/thermal_zone10/integral_cutoff
+0
+/sys/class/thermal/thermal_zone10/k_i
+0
+/sys/class/thermal/thermal_zone10/k_pu
+0
+/sys/class/thermal/thermal_zone10/temp
+32300
+/sys/class/thermal/thermal_zone10/trip_point_0_temp
+60000
+/sys/class/thermal/thermal_zone11/uevent
+/sys/class/thermal/thermal_zone11/trip_point_0_hyst
+2000
+/sys/class/thermal/thermal_zone11/mode
+enabled
+/sys/class/thermal/thermal_zone11/power/runtime_active_time
+0
+/sys/class/thermal/thermal_zone11/power/runtime_status
+unsupported
+/sys/class/thermal/thermal_zone11/power/autosuspend_delay_ms
+cat: read error: Input/output error
+/sys/class/thermal/thermal_zone11/power/runtime_suspended_time
+0
+/sys/class/thermal/thermal_zone11/power/control
+auto
+/sys/class/thermal/thermal_zone11/available_policies
+step_wise
+/sys/class/thermal/thermal_zone11/policy
+step_wise
+/sys/class/thermal/thermal_zone11/trip_point_1_type
+critical
+/sys/class/thermal/thermal_zone11/k_d
+0
+/sys/class/thermal/thermal_zone11/sustainable_power
+0
+/sys/class/thermal/thermal_zone11/type
+skin-thermal
+/sys/class/thermal/thermal_zone11/offset
+0
+/sys/class/thermal/thermal_zone11/slope
+1
+/sys/class/thermal/thermal_zone11/trip_point_0_type
+passive
+/sys/class/thermal/thermal_zone11/k_po
+0
+/sys/class/thermal/thermal_zone11/integral_cutoff
+0
+/sys/class/thermal/thermal_zone11/k_i
+0
+/sys/class/thermal/thermal_zone11/trip_point_1_temp
+70000
+/sys/class/thermal/thermal_zone11/k_pu
+0
+/sys/class/thermal/thermal_zone11/temp
+29900
+/sys/class/thermal/thermal_zone11/trip_point_1_hyst
+2000
+/sys/class/thermal/thermal_zone11/trip_point_0_temp
+44000
