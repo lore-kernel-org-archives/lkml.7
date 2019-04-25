@@ -2,124 +2,160 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D19C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A41C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B71C206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556215319;
-	bh=LGzEwlUiSMEgTFyv0b5ZRM6Qgw/1TC9W6c6qhcF49us=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yueIw0n/GsAfoFsoEEUDt0OYsqbYiHC7WqugvVGOEFVPGjSKGOnRjuthAEdwtdQfO
-	 u9uMH+nhHxsrvgPXlsOH5T6tgssKT3Mp97Y8kBXzwz5gUJrxeUJmiVVzUWpU2jRHu1
-	 YZXA5vkLUtX4v/iyCSarQ79KPYOl5xqIkqfQNaZU=
+	by mail.kernel.org (Postfix) with ESMTP id 81C52206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:02:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tC5ZOID9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbfDYSB4 (ORCPT
+        id S1728736AbfDYSC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:01:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51030 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbfDYSB4 (ORCPT
+        Thu, 25 Apr 2019 14:02:57 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43440 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbfDYSC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:01:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LGzEwlUiSMEgTFyv0b5ZRM6Qgw/1TC9W6c6qhcF49us=; b=UnEIpkAeAB1nUK0JKvHZYoMF1
-        vHlN0ab9v/Kvs3zjaLxancxcmj/FyOeogp1pL+E9I3cLpzcC+L9+Equ36DIwpCZtidce6CEgEYZbc
-        e/ZgxVN8/jmSTsoQZHiu45Qdyabxcav1gjCbTicPuxUE75RPf/B8Cs/0NG5nCh1FJ7pCg=;
-Received: from 94.197.120.235.threembb.co.uk ([94.197.120.235] helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hJigp-0003pT-0M; Thu, 25 Apr 2019 18:01:43 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id BDD2F441D3B; Thu, 25 Apr 2019 19:01:35 +0100 (BST)
-Date:   Thu, 25 Apr 2019 19:01:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RESEND PATCH 0/7] Introduce bus domains controller framework
-Message-ID: <20190425180135.GA23183@sirena.org.uk>
-References: <20190318100605.29120-1-benjamin.gaignard@st.com>
- <20190318104343.GA15574@e107155-lin>
- <CA+M3ks6bsiGXCKEQmaFmzBRhWPVhV5wBjVhgyfCa-25DohnsOg@mail.gmail.com>
- <20190423132116.GA3892@e107155-lin>
- <b36d8e3b-926c-11ce-747c-74124c09d13b@st.com>
- <20190423135550.GB3892@e107155-lin>
- <c8a23e26-79af-eb0f-80bc-5360f30b2a37@st.com>
+        Thu, 25 Apr 2019 14:02:57 -0400
+Received: by mail-ed1-f67.google.com with SMTP id j20so657854edq.10;
+        Thu, 25 Apr 2019 11:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9IJnPFFfqF5t2wcC8dkV/NWGoxMSwbbdc8FnPdnQUR4=;
+        b=tC5ZOID9EB1SeXeD/Z4o+xtjFgErtN/PNins69L8MZlBdieMy9b/uZOxdbtJtmOJS9
+         NaT4QLTMgMo+FcgeWCHme6XnuBOHtnpElZp+UginXCEZv11JIZR0TQkNO+YOMGeIgPSr
+         AxoR5zw0nRSLmd/9Y7wHNpHJbjKne89JYpoe1JkZRdfX/kgtn4PTBoZWoz+pttZOf+iM
+         25bzT2H7TA7aESfVsrpu0GLj9ngHpJWS4ddA/B8gqw3SGHrg8zh5kPUzkp/UNzON6gz7
+         wJU528P+55NHuZJ+IOgmms82AwZlLHPjg3jeqSXY0ggiDKLxZLfMl3oDD4XjcgMV4Ldc
+         Qhvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9IJnPFFfqF5t2wcC8dkV/NWGoxMSwbbdc8FnPdnQUR4=;
+        b=LkDhqlIMrmxNBWo9ELtfk+hovrFeAX4S1/3rMxnf+jt1Vo04ZrRKAOGFMkLRV9faEX
+         sPUSrytcaxlB0utTbAoAQ0u2ftLAK7Ih267ZVqYeVoSnRei3eAP7l626uDllWt0C1e00
+         BeLxwhmaspqjSBxN9XOsevDLdLl72B+53qTRUu+UiOS5gqfFB5tNyGV5sU6z4zEgSx+R
+         hNmhjq/a6upbzjxPu1ZtoalzOI1qv9EI/iuvrcM7ooaQJcrylFGWcyJnIj4V23KGbrkN
+         /i0DWkz2qWoyVCJrYBwJXrm93TEmwNajI9ZWiLQtvwktqb0AV8Q3fVVej5RAnttSTVUh
+         C2wg==
+X-Gm-Message-State: APjAAAV93dZeekkDYfjNpiIeqD9P9XX1DNRqClHvUetsjB2e+8zeAd+c
+        0Sg7e2B+/GC9AMmy0Us6/OE=
+X-Google-Smtp-Source: APXvYqxC5DfgtncGoTzyMm7Sf903kzpWsBQAMeaTsy45Qy8OKYatFuquVeyxMP33A5I4X9t4NmGicg==
+X-Received: by 2002:a17:906:6a14:: with SMTP id o20mr13951622ejr.147.1556215375091;
+        Thu, 25 Apr 2019 11:02:55 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id x14sm6614892edm.1.2019.04.25.11.02.53
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 11:02:54 -0700 (PDT)
+Subject: Re: [PATCHv3 16/27] x86/vdso: Switch image on
+ setns()/unshare()/clone()
+To:     Jann Horn <jannh@google.com>, Dmitry Safonov <dima@arista.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        Linux API <linux-api@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>
+References: <20190425161416.26600-1-dima@arista.com>
+ <20190425161416.26600-17-dima@arista.com>
+ <CAG48ez3M6aLNda+dmviba4CVDBSx0nTknp4JiophDKmqpHYh_A@mail.gmail.com>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <3ea03d61-67f8-3014-55cd-66fe9f77a166@gmail.com>
+Date:   Thu, 25 Apr 2019 19:02:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
-Content-Disposition: inline
-In-Reply-To: <c8a23e26-79af-eb0f-80bc-5360f30b2a37@st.com>
-X-Cookie: But they went to MARS around 1953!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAG48ez3M6aLNda+dmviba4CVDBSx0nTknp4JiophDKmqpHYh_A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/25/19 6:53 PM, Jann Horn wrote:
+> On Thu, Apr 25, 2019 at 6:15 PM Dmitry Safonov <dima@arista.com> wrote:
+>> As it has been discussed on timens RFC, adding a new conditional branch
+>> `if (inside_time_ns)` on VDSO for all processes is undesirable.
+>> It will add a penalty for everybody as branch predictor may mispredict
+>> the jump. Also there are instruction cache lines wasted on cmp/jmp.
+>>
+>> Those effects of introducing time namespace are very much unwanted
+>> having in mind how much work have been spent on micro-optimisation
+>> vdso code.
+>>
+>> Addressing those problems, there are two versions of VDSO's .so:
+>> for host tasks (without any penalty) and for processes inside of time
+>> namespace with clk_to_ns() that subtracts offsets from host's time.
+>>
+>> Whenever a user does setns()/unshare() or clone() with CLONE_TIMENS,
+>> change VDSO image in mm and zap existing VVAR/VDSO page tables.
+>> They will be re-faulted with corresponding image and VVAR offsets.
+> [...]
+>> +#ifdef CONFIG_TIME_NS
+>> +int vdso_join_timens(struct task_struct *task, bool inside_ns)
+> 
+> The parameter "inside_ns" is never used, right?
 
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oh, yes - leftover from the previous version, where the image was
+swapped in the callback. Will remove it.
 
-On Tue, Apr 23, 2019 at 02:17:23PM +0000, Benjamin GAIGNARD wrote:
-> On 4/23/19 3:55 PM, Sudeep Holla wrote:
+> 
+>> +{
+>> +       struct mm_struct *mm = task->mm;
+>> +       struct vm_area_struct *vma;
+>> +
+>> +       if (down_write_killable(&mm->mmap_sem))
+>> +               return -EINTR;
+>> +
+>> +       for (vma = mm->mmap; vma; vma = vma->vm_next) {
+>> +               unsigned long size = vma->vm_end - vma->vm_start;
+>> +
+>> +               if (vma_is_special_mapping(vma, &vvar_mapping))
+>> +                       zap_page_range(vma, vma->vm_start, size);
+>> +               if (vma_is_special_mapping(vma, &vdso_mapping))
+>> +                       zap_page_range(vma, vma->vm_start, size);
+> 
+> Nit: This could be rewritten as:
+> 
+> if (vma_is_special_mapping(vma, &vvar_mapping) ||
+>     vma_is_special_mapping(vma, &vdso_mapping))
+>         zap_page_range(vma, vma->vm_start, size);
 
-> > The above statement makes me wonder if Cortex-M4 firmware is really
-> > non-secure, if so why does it need such an isolation from other masters
-> > like Cortex-A7. For me Cortex-M4 is secure and Cortex-A7 can execute
-> > in non-secure hence Cortex-M4 needs to be isolated from Cortex-A7 as
-> > mentioned in the above excerpts from the datasheet.
+Yes. I thought it looks better with two if's rather than with a longer
+line, but I don't mind - will change.
 
-> Cortex-M4 firmware is non-secure, it could be a free RTOS.
-> ETZPC doesn't isolate Cortex M4 or A7 but control which of them have=20
-> access to hardware blocks.
-> For example ETZPC controls if M4 or A7 can have access to I2C hardware=20
-> blocks. The goal is to make sure
-> firmware running on each side don't use the hardware blocks of the other=
-=20
-> side.
+> 
+>> +       }
+>> +
+>> +       up_write(&mm->mmap_sem);
+>> +       return 0;
+>> +}
+> [...]
+> 
 
-The goal AIUI is mainly for robustness rather than security - trying to
-mitigate against any bugs that might happen, making them more apparent
-during development and mititgating their impact if they slip through.
-
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzB9f4ACgkQJNaLcl1U
-h9C3AQf+JEx5gIZpa4oKQafH3ehGuxAN8cQgk8nykr1vrakaKt3y31SoPmnC2og4
-9g7b2Enf+wIvS1wVdoTrDsjXHcLEDyMoiS3aMhr0MNdz0rAHLDIOvTNZR+Pom5OO
-5362rWiov/eh/Da+mchsORTZQFoYI58n2aH1hfNvt7zAJS8D/wJRfKdNVt7uX+8L
-EFyKKjbj9HKnc5EypxOXk1XMTlpQed598NOKwC8wvT+gtOfLOXZopFkRoE/fOHe4
-Plohm0974l1m1+Wc2UYIPlHt38sEDKmrVlj90sHX3xW+EkXo6u6vyJNHF4SaUHo0
-7L8YqQgJ5OvPLcaKmVJZj9rpigwQXA==
-=xjPB
------END PGP SIGNATURE-----
-
---NzB8fVQJ5HfG6fxh--
+Thanks,
+          Dmitry
