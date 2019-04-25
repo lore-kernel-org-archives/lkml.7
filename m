@@ -2,169 +2,88 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0462C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9158BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65D2E20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF5A206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:42:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="b1RIx+Mo";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P6HE5NAT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbfDYQk6 (ORCPT
+        id S1728412AbfDYQmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:40:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44494 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbfDYQk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:40:58 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 25 Apr 2019 12:42:46 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55176 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfDYQmp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 12:42:45 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D29266077A; Thu, 25 Apr 2019 16:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556210564;
+        bh=dDlU680sfNkZ6mFUB0/9to0eOLdv1q/WmS0YAu/rZCg=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=b1RIx+Moj81fnMgD7VaZwznpQkXHNbbngxxaPERclu46BXz6bJR3fIFwIZ9wgshkC
+         NhkLtcoH1VLiULdF5cAXbQ7wPobBHHJf5gujYFgyIqkv0gOu8J+bqi62aWl9bmi3yu
+         Z6iZMTTXKLr0P4Y70LyUC76ip+bVIjM9ryrEI3ZM=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ADEB9DC8E8;
-        Thu, 25 Apr 2019 16:40:57 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5EAE160C70;
-        Thu, 25 Apr 2019 16:40:55 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 25 Apr 2019 18:40:56 +0200 (CEST)
-Date:   Thu, 25 Apr 2019 18:40:54 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/1] rcu/sync: simplify the state machine
-Message-ID: <20190425164054.GA21309@redhat.com>
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 987AF6034D;
+        Thu, 25 Apr 2019 16:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556210564;
+        bh=dDlU680sfNkZ6mFUB0/9to0eOLdv1q/WmS0YAu/rZCg=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=P6HE5NATeLx715tOwdK1RpFHfrvMZNz2qfm2xNE2bFhvSV8LAbjUyV1zF7sH9L8Xo
+         G3M1qunAgq13/wp6edP2GbFaIR/waMl3uCzJqDTu0jKLeYvK1so5syJL4tbGyqrzDI
+         svhMVGnATDbFZEDVccTp6LDJZ65ptG6h0YBeolxM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 987AF6034D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 25 Apr 2019 16:40:57 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] rsi: Fix NULL pointer dereference in kmalloc
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190323204916.8368-1-pakki001@umn.edu>
+References: <20190323204916.8368-1-pakki001@umn.edu>
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     pakki001@umn.edu, kjlu@umn.edu,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190425164244.D29266077A@smtp.codeaurora.org>
+Date:   Thu, 25 Apr 2019 16:42:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let me finally try to close the gestalt ;)
+Aditya Pakki <pakki001@umn.edu> wrote:
 
-This version doesn't add the new features yet, and it doesn't remove the
-"must die" rcu_sync_enter_start(). But with this patch we are ready, just
-I think that this should come as a separate change.
+> kmalloc can fail in rsi_register_rates_channels but memcpy still attempts
+> to write to channels. The patch replaces these calls with kmemdup and
+> passes the error upstream.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-To simplify the review, see the the most important parts of the code with
-the patch applied below.
+Patch applied to wireless-drivers-next.git, thanks.
 
-Oleg.
--------------------------------------------------------------------------------
+d5414c2355b2 rsi: Fix NULL pointer dereference in kmalloc
 
-struct rcu_sync {
-	int			gp_state;
-	int			gp_count;
-	wait_queue_head_t	gp_wait;
+-- 
+https://patchwork.kernel.org/patch/10866983/
 
-	struct rcu_head		cb_head;
-};
-
-enum { GP_IDLE = 0, GP_ENTER, GP_PASSED, GP_EXIT, GP_REPLAY };
-
-#define	rss_lock	gp_wait.lock
-
-static void rcu_sync_call(struct rcu_sync *rsp)
-{
-	call_rcu(&rsp->cb_head, rcu_sync_func);
-}
-
-static void rcu_sync_func(struct rcu_head *rcu)
-{
-	struct rcu_sync *rsp = container_of(rcu, struct rcu_sync, cb_head);
-	unsigned long flags;
-
-	WARN_ON_ONCE(rsp->gp_state == GP_IDLE);
-	WARN_ON_ONCE(rsp->gp_state == GP_PASSED);
-
-	spin_lock_irqsave(&rsp->rss_lock, flags);
-	if (rsp->gp_count) {
-		/*
-		 * We're at least a GP after the GP_IDLE->GP_ENTER transition.
-		 */
-		rsp->gp_state = GP_PASSED;
-		wake_up_locked(&rsp->gp_wait);
-	} else if (rsp->gp_state == GP_REPLAY) {
-		/*
-		 * A new rcu_sync_exit() has happened; requeue the callback to
-		 * catch a later GP.
-		 */
-		rsp->gp_state = GP_EXIT;
-		rcu_sync_call(rsp);
-	} else {
-		/*
-		 * We're at least a GP after the last rcu_sync_exit(); eveybody
-		 * will now have observed the write side critical section.
-		 * Let 'em rip!.
-		 */
-		rsp->gp_state = GP_IDLE;
-	}
-	spin_unlock_irqrestore(&rsp->rss_lock, flags);
-}
-
-void rcu_sync_enter(struct rcu_sync *rsp)
-{
-	int gp_state;
-
-	spin_lock_irq(&rsp->rss_lock);
-	gp_state = rsp->gp_state;
-	if (gp_state == GP_IDLE) {
-		rsp->gp_state = GP_ENTER;
-		WARN_ON_ONCE(rsp->gp_count);
-		/*
-		 * Note that we could simply do rcu_sync_call(rsp) here and
-		 * avoid the "if (gp_state == GP_IDLE)" block below.
-		 *
-		 * However, synchronize_rcu() can be faster if rcu_expedited
-		 * or rcu_blocking_is_gp() is true.
-		 *
-		 * Another reason is that we can't wait for rcu callback if
-		 * we are called at early boot time but this shouldn't happen.
-		 */
-	}
-	rsp->gp_count++;
-	spin_unlock_irq(&rsp->rss_lock);
-
-	if (gp_state == GP_IDLE) {
-		/*
-		 * See the comment above, this simply does the "synchronous"
-		 * call_rcu(rcu_sync_func) which does GP_ENTER -> GP_PASSED.
-		 */
-		synchronize_rcu();
-		rcu_sync_func(&rsp->cb_head);
-		/* Not really needed, wait_event() would see GP_PASSED. */
-		return;
-	}
-
-	wait_event(rsp->gp_wait, rsp->gp_state >= GP_PASSED);
-}
-
-void rcu_sync_exit(struct rcu_sync *rsp)
-{
-	WARN_ON_ONCE(rsp->gp_state == GP_IDLE);
-	WARN_ON_ONCE(rsp->gp_count == 0);
-
-	spin_lock_irq(&rsp->rss_lock);
-	if (!--rsp->gp_count) {
-		if (rsp->gp_state == GP_PASSED) {
-			rsp->gp_state = GP_EXIT;
-			rcu_sync_call(rsp);
-		} else if (rsp->gp_state == GP_EXIT) {
-			rsp->gp_state = GP_REPLAY;
-		}
-	}
-	spin_unlock_irq(&rsp->rss_lock);
-}
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
