@@ -2,93 +2,113 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56ABCC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409A3C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B796F2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556217130;
-	bh=z+yQA0Bkw3i2gZWKQD9IiMLJ8Q7nYzQvxvTgRxnX9Pw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=13jz+a+xKXfFmvCTBDefajEhS9+LsPkgo/WUMYNRHjCygLp5HHRj6zPIkvVK+fnuZ
-	 Gkeg/aBxuLmayDEGS0Rbao3QdKiwBvuqqjtAlzfaVbCYA+Hpe0nxDiB0ZIDJIm4Jiz
-	 tqJpCXOZOdqp3xvWQGi/KG5IzbuNZlbpnvybvHio=
+	by mail.kernel.org (Postfix) with ESMTP id B33EE20891
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbfDYScJ (ORCPT
+        id S1730540AbfDYScR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:32:09 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39446 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbfDYScI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:32:08 -0400
-Received: by mail-io1-f66.google.com with SMTP id c3so818997iok.6
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qRiXf/0AYjA/HeJ3hn69dFn+gRAD63InC7f0LHnEv2A=;
-        b=g/NW8K/Rl3bJgPwNV4/apOk+RAmb767Pp6QeYb0Ukvw9Olpg6qMdJPe6cfVWDLsSpI
-         X9NAtA2t8Q0a248dGAosXHDucfXt3l+rdEgeR+GwnpmMufuynHzYlIB8C1DJ2qmMCVT+
-         7g8Sl+2+ZVmayQmCH5+t2KUF0tI+8x+DGmRk8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qRiXf/0AYjA/HeJ3hn69dFn+gRAD63InC7f0LHnEv2A=;
-        b=SAS8BezPoF9uovS2nlTDA3qISuoSOHW/wVEzNB5KKDbuJ0TNQT8OBpX3SE7aQ2kxCy
-         IssFKsVXQCa3SkRJzszQCb74LPYhJOVmhMjpRnXG7QzhTh0r6kxXodOWXrO1jYRnSp3o
-         OM0tzWXJ59vhoa8JH7sgdnZMR455Gf3RoEPksml735phPiJ7lAREWtNIoFEODD6lO81z
-         cgHcc1X+SdZYQYKCZLjodrbx3kC16XnVWnAR03eyrqmrC/+2eR8Ffkx2ioZq6+7WVI6i
-         yqncE09Gf4qL/K0akC/jPVPEdQF82SFoVJxcnvZ45iIECFB5WJvn8qUXJmv293LvtMOL
-         GWMA==
-X-Gm-Message-State: APjAAAUovJKuRu1NBUbAY/Fwvf5PROBxs2HRiJVpybmJL0YMCyUK2KyC
-        KoXXvYKwR1u06jc3J28aQtdorJXHrn/FW98mRSRWkA==
-X-Google-Smtp-Source: APXvYqwej6qE3E04G4TsNJlk8Q/dY+5xJeOGqPhanQxSpDI5vFBNey6YoTqGKCay6lTDFy39faHDhZtUVIFz3Pax2P4=
-X-Received: by 2002:a05:6602:12:: with SMTP id b18mr13838300ioa.224.1556217128154;
- Thu, 25 Apr 2019 11:32:08 -0700 (PDT)
+        Thu, 25 Apr 2019 14:32:17 -0400
+Received: from mga01.intel.com ([192.55.52.88]:58858 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730259AbfDYScR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 14:32:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 11:32:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
+   d="scan'208";a="134378949"
+Received: from ray.jf.intel.com (HELO [10.7.201.17]) ([10.7.201.17])
+  by orsmga007.jf.intel.com with ESMTP; 25 Apr 2019 11:32:15 -0700
+Subject: Re: [v3 1/2] device-dax: fix memory and resource leak if hotplug
+ fails
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
+        sashal@kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        akpm@linux-foundation.org, mhocko@suse.com,
+        dave.hansen@linux.intel.com, dan.j.williams@intel.com,
+        keith.busch@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, zwisler@kernel.org, thomas.lendacky@amd.com,
+        ying.huang@intel.com, fengguang.wu@intel.com, bp@suse.de,
+        bhelgaas@google.com, baiyaowei@cmss.chinamobile.com, tiwai@suse.de,
+        jglisse@redhat.com, david@redhat.com
+References: <20190425175440.9354-1-pasha.tatashin@soleen.com>
+ <20190425175440.9354-2-pasha.tatashin@soleen.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <67dba1e2-155c-f572-81dd-a6d589d0e8a5@intel.com>
+Date:   Thu, 25 Apr 2019 11:32:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190424001544.7188-1-prsriva02@gmail.com> <20190424001544.7188-2-prsriva02@gmail.com>
- <d38f32f8-7078-f205-ba11-9c4266ee40e8@linux.vnet.ibm.com> <4c313367-22dc-9532-54b5-cd3a79deb625@linux.microsoft.com>
-In-Reply-To: <4c313367-22dc-9532-54b5-cd3a79deb625@linux.microsoft.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 25 Apr 2019 11:31:57 -0700
-Message-ID: <CAADWXX8NC-PFJmuvQbNXn49CYjvyn-e0rtH_EoUfCvuJHTwHAQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5 RFC] use event name instead of enum to make the
- call generic
-To:     prsriva <prsriva@linux.microsoft.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        inux-security-module@vger.kernel.org, zohar@linux.ibm.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com,
-        Prakhar Srivastava <prsriva@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190425175440.9354-2-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 10:19 AM prsriva <prsriva@linux.microsoft.com> wrote:
->
-> I will fix the comments and send out the patchset with a cover letter.
-> Thankyou for pointing this out.
+On 4/25/19 10:54 AM, Pavel Tatashin wrote:
+>  	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
+> -	if (rc)
+> +	if (rc) {
+> +		release_resource(new_res);
+> +		kfree(new_res);
+>  		return rc;
+> +	}
 
-Please trim the emails you reply to rather than quoting everything.
+Looks good to me:
 
-But the real reason I'm reacting to this email is because it was
-marked as spam, because your SMTP setup is incorrect, and you don't go
-through the proper MS SMTP server. As a result, you don't get the
-proper DKIM signature for verification of the microsoft.com email
-address, and sane email clients will mark your emails as spam.
-
-Please fix.
-
-                    Linus
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
