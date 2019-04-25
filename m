@@ -2,139 +2,114 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BB9C282E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A106C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3EF921904
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA140218AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="X6NNWrL9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3kRAaV2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbfDYG6E (ORCPT
+        id S1729937AbfDYG7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 02:58:04 -0400
-Received: from mail-eopbgr790050.outbound.protection.outlook.com ([40.107.79.50]:40475
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725970AbfDYG6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 02:58:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+0qV9vlD4xm4ZshGXZucDsmzsZQ8oSpjxNyeHtIW7rg=;
- b=X6NNWrL99HmyA8qo0JGDDypcW4xNhSsIFlXYU/+FdTj+6IV8jOHlergG+lkKWMEicyIu2V3KL0OAwvuhwd3Zdow0siIx5ll/py1VlfxGXUCaPwv3zfaBdOwSjGD39m/maCXEfBcaAEVi72Cq2YZHG/54yAK5liAQWyM1sp2zQEo=
-Received: from DM5PR12MB1546.namprd12.prod.outlook.com (10.172.36.23) by
- DM5PR12MB2440.namprd12.prod.outlook.com (52.132.141.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Thu, 25 Apr 2019 06:57:58 +0000
-Received: from DM5PR12MB1546.namprd12.prod.outlook.com
- ([fe80::70fc:f26c:1e22:73ba]) by DM5PR12MB1546.namprd12.prod.outlook.com
- ([fe80::70fc:f26c:1e22:73ba%10]) with mapi id 15.20.1835.010; Thu, 25 Apr
- 2019 06:57:58 +0000
-From:   "Koenig, Christian" <Christian.Koenig@amd.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Paul Mackerras <paulus@samba.org>
-CC:     open list <linux-kernel@vger.kernel.org>,
-        "open list:AMD KFD" <dri-devel@lists.freedesktop.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        "open list:8169 10/100/1000 GIGABIT ETHERNET DRIVER" 
-        <netdev@vger.kernel.org>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 5/9] drm/amdkfd: use helper pci_dev_id
-Thread-Topic: [PATCH v2 5/9] drm/amdkfd: use helper pci_dev_id
-Thread-Index: AQHU+tJqN6rnfclWa0ObxfBB+As4QqZMcr0A
-Date:   Thu, 25 Apr 2019 06:57:58 +0000
-Message-ID: <60b20405-8876-5e9d-0a81-b3df4ee6a87a@amd.com>
-References: <2e1f9a57-6d08-d017-24da-3e6b97fa2449@gmail.com>
- <50613002-d5a2-2522-b183-4ab156686fce@gmail.com>
-In-Reply-To: <50613002-d5a2-2522-b183-4ab156686fce@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-x-clientproxiedby: AM0PR02CA0014.eurprd02.prod.outlook.com
- (2603:10a6:208:3e::27) To DM5PR12MB1546.namprd12.prod.outlook.com
- (2603:10b6:4:8::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b0581616-36bc-4275-de80-08d6c94b597e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB2440;
-x-ms-traffictypediagnostic: DM5PR12MB2440:
-x-microsoft-antispam-prvs: <DM5PR12MB24407CFE6229E31C17130222833D0@DM5PR12MB2440.namprd12.prod.outlook.com>
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(136003)(39860400002)(199004)(189003)(81166006)(5660300002)(102836004)(186003)(6116002)(6486002)(64756008)(65806001)(256004)(66476007)(66556008)(65956001)(64126003)(6246003)(478600001)(4326008)(2906002)(53936002)(229853002)(36756003)(68736007)(31686004)(66446008)(6512007)(72206003)(76176011)(81156014)(14454004)(66946007)(6506007)(71200400001)(71190400001)(65826007)(52116002)(8676002)(11346002)(99286004)(46003)(7416002)(86362001)(386003)(446003)(486006)(97736004)(2616005)(7736002)(31696002)(4744005)(110136005)(58126008)(6436002)(54906003)(305945005)(316002)(476003)(73956011)(25786009)(8936002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB2440;H:DM5PR12MB1546.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: W9iukjP/SAPyj2DlF/0jrxbYj0A+u+nJYbZICWfg4/dyLk6mw7KvCA+ZBxiyY++GLDut6OHDxFWf1LfIHi4YcL4Ef4EVwn91B639g3Ri42BpNQ/pVXJSmBOL89d3Tsn62x9umHdoLS53wSqp1aqETlG+c9Mtzfh2sJOSZLYJ0SMchuOStbrFyGGDrtflorV1IkjQzchWoyyPeWZTAf2hbZiVA6z61RJ6NriVzVYuKhMDF50cA8bMto/3Gp9N6O/jI0EMeB+zgRtbGwpJSPuw1udX/gYgkqdSx5dC6Y+5RUiGWutRJbBt4q9uSFYfWPhuKTwYFfV+CwV3xdHKorKMPFp9RqvPUk2/NFeBVzVywc0uBGhkyU+Hi4/XQcETG7G+eq9C6wT6NoU6UVfiDgIm4r2kaHjbMNcX3Ks5SXObuW4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F36A8201B3B6F94F8F611443161D8B87@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 25 Apr 2019 02:59:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47258 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfDYG7t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 02:59:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7SBdbneTIvlthhDhg6TpFypFUS7+gOMvyzOHEIcI3nc=; b=3kRAaV2gxYu2GzuzIzRUU/xjJ
+        mbLxblsafMZZXtjyP64G0UJ8HEE8ASi7/DFavQceu3cX3Mg8ck+jY1HOjPfo0lttqkDI8T8KGgCh7
+        oZ8gC5fE6D1iQFye1WrxtGajJeC69R09VBJgQQ5yzWpX/hIGpY9l547N8+Ltoc//WA9mVQGeu4BNN
+        B5v/19vS/MICl/jBC3RQmTUIzj2uCb2QZqJHFfaN+Qz+tj+UXJHm+pQGQTmyhAN45SEvP6PHqDQ+9
+        FWbbhQUyVNeXLXrluUd8ubuA/d99ikN5PFaN8gb96+7NRwHIXst7WlUWD4LNJ7xADlY1vCdwpwA4B
+        dFPZiTcRA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJYLu-0008Qg-2d; Thu, 25 Apr 2019 06:59:26 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5407B20D0A201; Thu, 25 Apr 2019 08:59:23 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 08:59:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "akiyks@gmail.com" <akiyks@gmail.com>,
+        "andrea.parri@amarulasolutions.com" 
+        <andrea.parri@amarulasolutions.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        "dlustig@nvidia.com" <dlustig@nvidia.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "j.alglave@ucl.ac.uk" <j.alglave@ucl.ac.uk>,
+        "luc.maranget@inria.fr" <luc.maranget@inria.fr>,
+        "npiggin@gmail.com" <npiggin@gmail.com>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+Subject: Re: [RFC][PATCH 1/5] mips/atomic: Fix cmpxchg64 barriers
+Message-ID: <20190425065923.GT11158@hirez.programming.kicks-ass.net>
+References: <20190424123656.484227701@infradead.org>
+ <20190424124421.579563933@infradead.org>
+ <20190424210019.knq4nijg3xoqxzhg@pburton-laptop>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0581616-36bc-4275-de80-08d6c94b597e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 06:57:58.9287
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2440
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424210019.knq4nijg3xoqxzhg@pburton-laptop>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW0gMjQuMDQuMTkgdW0gMjE6MTQgc2NocmllYiBIZWluZXIgS2FsbHdlaXQ6DQo+IFVzZSBuZXcg
-aGVscGVyIHBjaV9kZXZfaWQoKSB0byBzaW1wbGlmeSB0aGUgY29kZS4NCj4NCj4gU2lnbmVkLW9m
-Zi1ieTogSGVpbmVyIEthbGx3ZWl0IDxoa2FsbHdlaXQxQGdtYWlsLmNvbT4NCg0KQWNrZWQtYnk6
-IENocmlzdGlhbiBLw7ZuaWcgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4NCg0KPiAtLS0NCj4g
-ICBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRfdG9wb2xvZ3kuYyB8IDMgKy0tDQo+ICAg
-MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRrZmQva2ZkX3RvcG9sb2d5LmMgYi9kcml2
-ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRfdG9wb2xvZ3kuYw0KPiBpbmRleCAyY2IwOWUwODgu
-Ljc2OWRiYzdiZSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRrZmQva2Zk
-X3RvcG9sb2d5LmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRrZmQva2ZkX3RvcG9s
-b2d5LmMNCj4gQEAgLTEyNzIsOCArMTI3Miw3IEBAIGludCBrZmRfdG9wb2xvZ3lfYWRkX2Rldmlj
-ZShzdHJ1Y3Qga2ZkX2RldiAqZ3B1KQ0KPiAgIA0KPiAgIAlkZXYtPm5vZGVfcHJvcHMudmVuZG9y
-X2lkID0gZ3B1LT5wZGV2LT52ZW5kb3I7DQo+ICAgCWRldi0+bm9kZV9wcm9wcy5kZXZpY2VfaWQg
-PSBncHUtPnBkZXYtPmRldmljZTsNCj4gLQlkZXYtPm5vZGVfcHJvcHMubG9jYXRpb25faWQgPSBQ
-Q0lfREVWSUQoZ3B1LT5wZGV2LT5idXMtPm51bWJlciwNCj4gLQkJZ3B1LT5wZGV2LT5kZXZmbik7
-DQo+ICsJZGV2LT5ub2RlX3Byb3BzLmxvY2F0aW9uX2lkID0gcGNpX2Rldl9pZChncHUtPnBkZXYp
-Ow0KPiAgIAlkZXYtPm5vZGVfcHJvcHMubWF4X2VuZ2luZV9jbGtfZmNvbXB1dGUgPQ0KPiAgIAkJ
-YW1kZ3B1X2FtZGtmZF9nZXRfbWF4X2VuZ2luZV9jbG9ja19pbl9taHooZGV2LT5ncHUtPmtnZCk7
-DQo+ICAgCWRldi0+bm9kZV9wcm9wcy5tYXhfZW5naW5lX2Nsa19jY29tcHV0ZSA9DQoNCg==
+On Wed, Apr 24, 2019 at 09:00:25PM +0000, Paul Burton wrote:
+> Hi Peter,
+> 
+> On Wed, Apr 24, 2019 at 02:36:57PM +0200, Peter Zijlstra wrote:
+> > There were no memory barriers on cmpxchg64() _at_all_. Fix this.
+> 
+> This does looks problematic, but it's worth noting that this code path
+> is only applicable to 32b kernels running on 64b CPUs which is pretty
+> rare. The commit message as-is suggests to me that all configurations
+> are broken, which isn't the case (at least, not in this respect :) ).
+
+OK, I hadn't gone through the ifdef selection process. I just
+encountered this cmpxchg implementation and noted a significant lack of
+barriers.
+
+> > 
+> > Cc: Paul Burton <paul.burton@mips.com>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  arch/mips/include/asm/cmpxchg.h |    6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > --- a/arch/mips/include/asm/cmpxchg.h
+> > +++ b/arch/mips/include/asm/cmpxchg.h
+> > @@ -290,9 +290,11 @@ static inline unsigned long __cmpxchg64(
+> >  	 * will cause a build error unless cpu_has_64bits is a		\
+> >  	 * compile-time constant 1.					\
+> >  	 */								\
+> > -	if (cpu_has_64bits && kernel_uses_llsc)				\
+> > +	if (cpu_has_64bits && kernel_uses_llsc) {			\
+> > +		smp_mb__before_llsc();					\
+> >  		__res = __cmpxchg64((ptr), __old, __new);		\
+> > -	else								\
+> > +		smp_llsc_mb();						\
+> > +	} else								\
+> >  		__res = __cmpxchg64_unsupported();			\
+> 
+> It would be good to also add braces around the else block, and I believe
+> checkpatch should be complaining about that ("braces {} should be used
+> on all arms of this statement").
+
+You're right, I'll fix up.
