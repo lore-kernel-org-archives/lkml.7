@@ -2,162 +2,117 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAFAC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CE9C282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53557217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35F7F217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:19:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SR/pJRTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbfDYFQg (ORCPT
+        id S1729015AbfDYFTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 01:16:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60372 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728972AbfDYFQf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 01:16:35 -0400
-Received: from mail-pg1-f198.google.com ([209.85.215.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hJWkL-0005Fg-NE
-        for linux-kernel@vger.kernel.org; Thu, 25 Apr 2019 05:16:33 +0000
-Received: by mail-pg1-f198.google.com with SMTP id e12so13624625pgh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 22:16:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=1KXHauvhLR2XJXnUSb0nmr8aDrvOQhGb1tQ04wF2KCE=;
-        b=AmWc/ujU57Vhgx6XKT1rfNDOEnQ61V3lXYHz7176Gn0XC2pDmmk4CP3lWhkAmpAhpf
-         PEUdOOiQ9D07RxBSdO8T+ItcdDm0getRjsUv0+AFz89hGvfY4QMU2h1DO/qQHF4pRJ7r
-         qzbCf0JnL0a2muLcS6N/pE4V9ZZEsNdUIxrhmx1oDqK3tCjbtUolKc6Yu4tZ+ccpeKxz
-         VMIdPUbTNk/oDzW+3Ts/iu/C6yaxO03T3nqDunSvOyrqQJZxkAtgZp4BWmNHjoHjw+Kb
-         lR2oAL+geSTmd3Z+2KH222WMmkTFSio9xroFj2W3gHWQVtiSbEJNQCJnxSaAZlCqP0Tb
-         YXew==
-X-Gm-Message-State: APjAAAVRI19hC2EEu/Gzw3Zm2CraaaSABpzWO7f+DBDUkoHmSS8RIDwd
-        8h5xaZW77aMCEBg1ThKrqaKYZXnmS+Xnx3d588L1+gGnd7uTOcwfd0mqwivdgY4Uz8iQzxTGNGY
-        Y2XzkheSuhcFB9m2KNNHofdS4gFWArpKj64KPCaLwTw==
-X-Received: by 2002:a62:1c87:: with SMTP id c129mr13133371pfc.113.1556169392272;
-        Wed, 24 Apr 2019 22:16:32 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwEhloLsHibTeQEQt0D12RYIFb7XMAFJ7ADwhLP/wouz2mG08C/i3MMT3ng4LDCKqAxdiX7IQ==
-X-Received: by 2002:a62:1c87:: with SMTP id c129mr13133314pfc.113.1556169391529;
-        Wed, 24 Apr 2019 22:16:31 -0700 (PDT)
-Received: from [10.101.46.46] (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id p3sm5369124pff.63.2019.04.24.22.16.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 22:16:30 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] pinctrl: intel: Clear interrupt status in unmask callback
-From:   Kai Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <Ld9SLAo--3-1@tutanota.com>
-Date:   Thu, 25 Apr 2019 13:16:25 +0800
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hdegoede <hdegoede@redhat.com>,
-        Linux Gpio <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <14E5638C-0C4C-4406-BF91-8DF48377F3DB@canonical.com>
-References: <20190422044539.16085-1-kai.heng.feng@canonical.com>
- <Ld5HCy5--3-1@tutanota.com>
- <EA207DE8-E89A-427B-B910-A36170A76031@canonical.com>
- <Ld8QGex--3-1@tutanota.com> <20190423090816.GN2654@lahna.fi.intel.com>
- <Ld8ZLG1--3-1@tutanota.com>
- <3BE5F007-CD9C-486A-90EE-326AAB807D5B@canonical.com>
- <Ld9SLAo--3-1@tutanota.com>
-To:     hotwater438@tutanota.com
-X-Mailer: Apple Mail (2.3445.104.8)
+        Thu, 25 Apr 2019 01:19:12 -0400
+Received: from mail-eopbgr30071.outbound.protection.outlook.com ([40.107.3.71]:17022
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725942AbfDYFTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 01:19:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zuxQ8ul2eKExo4ZIFTuRm555FPWrI/4prFYeRiad8pY=;
+ b=SR/pJRTeSNoW5fpznV/Xk+Xw9wNkhaDKz5NgIPXZtn8wVJ2eJMXoooZq1BptnMFXrnYIU4G1tLQmVbvbrqkdpfIesLjaxYZ3nqh5vHnYbocKJv9u4GABoGuMuZOEupqq2tC9iYzRJRRkOKQU0KhYtzFNChmyF4OeozJ3iDVva4s=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3946.eurprd04.prod.outlook.com (52.134.72.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.12; Thu, 25 Apr 2019 05:19:08 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.010; Thu, 25 Apr 2019
+ 05:19:07 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH 1/2] clk: imx7ulp: update nic1_bus_clk parent info
+Thread-Topic: [PATCH 1/2] clk: imx7ulp: update nic1_bus_clk parent info
+Thread-Index: AQHU+yZo1imoxnc2yEuB0Vl7xqmoQQ==
+Date:   Thu, 25 Apr 2019 05:19:07 +0000
+Message-ID: <1556169264-31683-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR03CA0070.apcprd03.prod.outlook.com
+ (2603:1096:203:52::34) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b9167b82-fc55-4969-64ca-08d6c93d8a76
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3946;
+x-ms-traffictypediagnostic: DB3PR0402MB3946:
+x-microsoft-antispam-prvs: <DB3PR0402MB394614909D5F9E83BCD5DF6DF53D0@DB3PR0402MB3946.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0018A2705B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(376002)(346002)(39860400002)(199004)(189003)(6506007)(26005)(2616005)(3846002)(66946007)(2906002)(64756008)(81166006)(81156014)(8936002)(476003)(6116002)(66066001)(50226002)(6486002)(8676002)(52116002)(110136005)(102836004)(73956011)(6436002)(14454004)(386003)(66476007)(15650500001)(66446008)(99286004)(66556008)(186003)(478600001)(486006)(14444005)(6512007)(4326008)(71200400001)(53936002)(86362001)(71190400001)(25786009)(256004)(2201001)(5660300002)(97736004)(36756003)(7736002)(316002)(7416002)(305945005)(2501003)(68736007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3946;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sxFFmMqNFAx5BfOqd5VgQKDcdgB0CxZ7UNCMZQEuAgfHitBOfHpRTotdo/LtPhfU6QCAZ/FWf5ocG+u0I+GKU3wwrpwHTyhm/pLudrPYVy9L8FMaUKJpPW8QJLloeE4tssQQt3sY9Ko6jIIA5OVu7gJQ/Qo6Lxzp53HcohuTrlRIDb5NERgv+ybsJN4fzfkbIiZY0xtNH4JxlbIpZ0gN4d2dE6rJmoxW+FcnP0BBXZFi/+k1pGRrFobTiQx3VcUIJypj3KSbDgRVwGB0ljD0IkvhOthUL+qWDF+xOSVdOojHipE7efz82qSnJ1Katyap0tQnLpJNCZ7j6rxAKjXUWKnoNJmxfUPyTELFS2I+vX4553NIoSqlzBsuvISTiPx1me5f2zGasmJaaTpK2zUNOduIjekKm64StnlKCMJTx2Q=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9167b82-fc55-4969-64ca-08d6c93d8a76
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 05:19:07.9171
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3946
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 9:49 PM, <hotwater438@tutanota.com> <hotwater438@tutanota.com> wrote:
-
-> Hi. I did the suggested echo and, if I clearly understood, switched to  
-> s2idle mode without deep-mode.
-> For tests I use 4.19.28 on Debian-like system (Parrot OS).
->
-> If the system defaults to use S2I, then it’s better to stick with it.
->
-> Lots of ODM/OEM don’t really test S3.
-> So S3 is the same as S2 but with deep mode enabled?
-> The default switches to s2idle based on FADT flag and _DSM on relative  
-> new kernels.
-> Are those some SSDT flags?
-> It actually sounds weird to me, why restarting touchpad after deep  
-> suspend affects it work. I mean, if it starts sucessfully at boot, why it  
-> doesn't after suspend? Can we debug it somehow?
-
-Can you see if i2c_hid_hwreset() helps? Refer to [1] as an example.
-
-Anyway, the resume issue is a different bug. If possible please merge this  
-patch.
-
-[1] https://lore.kernel.org/lkml/20190211070040.4569-1-jbroadus@gmail.com/
-
-Kai-Heng
-
->
-> Regards,
-> Vladislav.
-> Apr 23, 2019, 12:47 PM by kai.heng.feng@canonical.com:
-> at 17:40, <hotwater438@tutanota.com> <hotwater438@tutanota.com> wrote:
-> Hi. Thank's for a hint!
-> So catting this file gives me next content:
-> s2idle [deep]
->
-> Which kernel version do you use?
->
->
-> Most systems preload with Windows 8.1 should default to use s2idle.
->
-> So I suppose I have s2idle with deep-mode available?
->
-> I've tried to select deep by creating mem_sleep_default file, but I can't  
-> (Permission error).
->
-> Could you explain how do I switch suspend mode in Linux, if you know?
->
-> # echo s2idle > /sys/power/mem_sleep
-> And to be honest, I don't think that's a correct fix of touchpad problem.
->
->
->
-> Can we somehow cut off the power by hands or send a signal to a system to  
-> shut off a touchpad? Or there are no approaches like that?
->
-> I don’t think it’s possible.
->
-> Kai-Heng
->
-> Regards,
-> Vladislav.
->
->
-> Apr 23, 2019, 12:08 PM by mika.westerberg@linux.intel.com:
-> On Tue, Apr 23, 2019 at 11:00:48AM +0200, hotwater438@tutanota.com wrote:
-> Hi.
->
-> Honestly, I can't find any information about my acpi suspend type.
-> There are no options in my BIOS to change it, and I can't determine
-> which exactly I have. But I suppose I have a S3 because I have suspend
-> issue.
->
-> Can I somehow determine it in Linux? I did a research but found nothing
-> on the internet.
->
-> You can read the default mode from /sys/power/mem_sleep. "s2idle" means,
-> well suspend-to-idle and "deep" means S3.
-
-
+U2luY2UgaS5NWDdVTFAgQjAgY2hpcCwgbmljMV9idXNfY2xrJ3MgcGFyZW50IGlzIGNoYW5nZWQg
+dG8NCmZyb20gbmljMF9jbGsgZGlyZWN0bHksIHVwZGF0ZSBpdCBhY2NvcmRpbmdseS4NCg0KU2ln
+bmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQotLS0NCiBkcml2
+ZXJzL2Nsay9pbXgvY2xrLWlteDd1bHAuYyB8IDIgKy0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
+cnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9j
+bGstaW14N3VscC5jIGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMNCmluZGV4IDY2Njgy
+MTAuLjQyZTQ2NjcgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDd1bHAuYw0K
+KysrIGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMNCkBAIC0xMTUsNyArMTE1LDcgQEAg
+c3RhdGljIHZvaWQgX19pbml0IGlteDd1bHBfY2xrX3NjZzFfaW5pdChzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKm5wKQ0KIA0KIAljbGtzW0lNWDdVTFBfQ0xLX05JQzBfRElWXQk9IGlteF9jbGtfaHdfZGl2
+aWRlcl9mbGFncygibmljMF9jbGsiLAkJIm5pY19zZWwiLCAgYmFzZSArIDB4NDAsIDI0LCA0LCBD
+TEtfU0VUX1JBVEVfUEFSRU5UIHwgQ0xLX0lTX0NSSVRJQ0FMKTsNCiAJY2xrc1tJTVg3VUxQX0NM
+S19OSUMxX0RJVl0JPSBpbXhfY2xrX2h3X2RpdmlkZXJfZmxhZ3MoIm5pYzFfY2xrIiwJCSJuaWMw
+X2NsayIsIGJhc2UgKyAweDQwLCAxNiwgNCwgQ0xLX1NFVF9SQVRFX1BBUkVOVCB8IENMS19JU19D
+UklUSUNBTCk7DQotCWNsa3NbSU1YN1VMUF9DTEtfTklDMV9CVVNfRElWXQk9IGlteF9jbGtfaHdf
+ZGl2aWRlcl9mbGFncygibmljMV9idXNfY2xrIiwJIm5pYzFfY2xrIiwgYmFzZSArIDB4NDAsIDQs
+ICA0LCBDTEtfU0VUX1JBVEVfUEFSRU5UIHwgQ0xLX0lTX0NSSVRJQ0FMKTsNCisJY2xrc1tJTVg3
+VUxQX0NMS19OSUMxX0JVU19ESVZdCT0gaW14X2Nsa19od19kaXZpZGVyX2ZsYWdzKCJuaWMxX2J1
+c19jbGsiLAkibmljMF9jbGsiLCBiYXNlICsgMHg0MCwgNCwgIDQsIENMS19TRVRfUkFURV9QQVJF
+TlQgfCBDTEtfSVNfQ1JJVElDQUwpOw0KIA0KIAljbGtzW0lNWDdVTFBfQ0xLX0dQVV9ESVZdCT0g
+aW14X2Nsa19od19kaXZpZGVyKCJncHVfY2xrIiwgIm5pYzBfY2xrIiwgYmFzZSArIDB4NDAsIDIw
+LCA0KTsNCiANCi0tIA0KMi43LjQNCg0K
