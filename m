@@ -2,152 +2,187 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E67C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E0FC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419DA214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE2D20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:50:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A56APE8o"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RnC5wvFf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388473AbfDYBr6 (ORCPT
+        id S2388503AbfDYBuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 21:47:58 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43640 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388430AbfDYBr6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 21:47:58 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3P1hPbe192509;
-        Thu, 25 Apr 2019 01:46:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=m5ftTYRrPOj/N3lOffaOsUs8i/+eGVM1j6ISGW9DwEo=;
- b=A56APE8ofC8SCuRSVB99zB7aiTYX92gYK342Y0bfoIG+UKXrHFPXBIiu29i2XI9+nR9j
- 9kk+YGbtjxA0rBaTcrqMygEZ1kIoRDwRw1OO/0QFM2ibOEEFIDFn05HDA6f4kW4KRQib
- 82Kvu4qvwja6mR4cZaLnc34sPR8YLhPk8YnsmomT3nC5feMY5NtcOm3+cGRmSDus+Hq4
- AgY/I+MzKnvZhANi530l362688ZQWSqr93r+cof3XuuLlmVjU/0Qt+AdKedmia0dCyN9
- UVXhFNWMVFScl6GqKsiK4OgTUaFkbifggefTHZyYo4S8E33y7XyQHOIxoZde1A3NBx+6 2g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2rytut5hra-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Apr 2019 01:46:46 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3P1kkuG079991;
-        Thu, 25 Apr 2019 01:46:46 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2s0dwf50tu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Apr 2019 01:46:46 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3P1kaV7005547;
-        Thu, 25 Apr 2019 01:46:36 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Apr 2019 18:46:35 -0700
-Date:   Wed, 24 Apr 2019 21:47:05 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christoph Lameter <cl@linux.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH 5/6] powerpc/mmu: drop mmap_sem now that locked_vm is
- atomic
-Message-ID: <20190425014705.k5twrldr5n5a5gsz@ca-dmjordan1.us.oracle.com>
-References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
- <20190402204158.27582-6-daniel.m.jordan@oracle.com>
- <964bd5b0-f1e5-7bf0-5c58-18e75c550841@c-s.fr>
- <20190403164002.hued52o4mga4yprw@ca-dmjordan1.us.oracle.com>
- <20190424021544.ygqa4hvwbyb6nuxp@linux-r8p5>
- <20190424111018.GA16077@mellanox.com>
+        Wed, 24 Apr 2019 21:50:24 -0400
+Received: from mail-eopbgr70047.outbound.protection.outlook.com ([40.107.7.47]:2033
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388113AbfDYBuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 21:50:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CvRGGczhBv9R/JuNzvYp8+4j7dyKqVApPNSTY3OpvdY=;
+ b=RnC5wvFfxcFul91dFf6F+czvzteajMxDNOHENXb164WEOEBFAeNSPEKvor8PSUuA0IUtBX/hK1VIt5VSxm2cUg+H4mwZkluko8Z+aVxLaWjxrk8FCW9C5gKP9Jj9X72unOHxspyQ6gLKgomnafTHy3rSuElL/o1A6olu2h2ykBI=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3801.eurprd04.prod.outlook.com (52.134.65.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.16; Thu, 25 Apr 2019 01:49:39 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.010; Thu, 25 Apr 2019
+ 01:49:39 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [RESEND] input: keyboard: imx: make sure keyboard can always wake
+ up system
+Thread-Topic: [RESEND] input: keyboard: imx: make sure keyboard can always
+ wake up system
+Thread-Index: AQHU6odaZd/8EWsin0yXXO1zjKS4q6ZMPHMg
+Date:   Thu, 25 Apr 2019 01:49:39 +0000
+Message-ID: <DB3PR0402MB39167BC7D996F4FF70B5DD2FF53D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1554341727-16084-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1554341727-16084-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2f5bbced-a2c6-4731-f26d-08d6c9204795
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3801;
+x-ms-traffictypediagnostic: DB3PR0402MB3801:
+x-microsoft-antispam-prvs: <DB3PR0402MB38013559C6964056E3CB2CF1F53D0@DB3PR0402MB3801.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0018A2705B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(396003)(346002)(376002)(199004)(189003)(13464003)(478600001)(53936002)(55016002)(4326008)(76116006)(11346002)(9686003)(2906002)(316002)(99286004)(25786009)(44832011)(476003)(33656002)(486006)(110136005)(68736007)(14454004)(6246003)(2501003)(66476007)(73956011)(66066001)(229853002)(97736004)(7696005)(6436002)(64756008)(66446008)(66556008)(66946007)(305945005)(7736002)(86362001)(71190400001)(52536014)(74316002)(71200400001)(26005)(6506007)(5660300002)(446003)(2201001)(256004)(14444005)(6116002)(3846002)(81156014)(8676002)(81166006)(8936002)(76176011)(53546011)(186003)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3801;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gxrG07kf+ZdehCurIMdDjYpS6vPP88NKy0lQmfajTIcw9//MseFT+iXcVfHAzt5HgjYZuTEw8A9dZYeoorrjfflicfbc84LjYotKsMx2XQeMW4QDgop4q2hbxfvteRuRDIdM7OtSG6ygwyLIy+e3UOZDUd2DPzVvQy4L7VQLMt3q1l7f8ZhuvwEcCmOQnf17nonflDsyBhz+9C2RJPJKqYL1Qgzpr/1/1fqitb37HqM685jJmb2iLl29iAiBqfy7lDAXPqQqsZ5xWhPpMaUcm1hFqwMZCzNovsq1YHXpIc4CcBnI14iRfvHn/pRuZM0F86S/ogyNO60kK5dKO86WU9po55elIvU4PyASM6NCWkrbDplxekITA2d70OGBGg5rCSeWFFUMpmQkxnDZdGC/pXWbytTfKFPLOmeZWbnRcJk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424111018.GA16077@mellanox.com>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9237 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904250010
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9237 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904250010
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f5bbced-a2c6-4731-f26d-08d6c9204795
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 01:49:39.6069
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3801
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 11:10:24AM +0000, Jason Gunthorpe wrote:
-> On Tue, Apr 23, 2019 at 07:15:44PM -0700, Davidlohr Bueso wrote:
-> > Wouldn't the cmpxchg alternative also be exposed the locked_vm changing between
-> > validating the new value and the cmpxchg() and we'd bogusly fail even when there
-> > is still just because the value changed (I'm assuming we don't hold any locks,
-> > otherwise all this is pointless).
+Gentle ping...
 
-That's true, I hadn't considered that we could retry even when there's enough
-locked_vm.  Seems like another one is that RLIMIT_MEMLOCK could change after
-it's read.  I guess nothing's going to be perfect.  :/
+> -----Original Message-----
+> From: Anson Huang
+> Sent: Thursday, April 4, 2019 9:40 AM
+> To: dmitry.torokhov@gmail.com; shawnguo@kernel.org;
+> s.hauer@pengutronix.de; kernel@pengutronix.de; festevam@gmail.com;
+> linux-input@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org
+> Cc: dl-linux-imx <linux-imx@nxp.com>
+> Subject: [RESEND] input: keyboard: imx: make sure keyboard can always
+> wake up system
+>=20
+> There are several scenarios that keyboard can NOT wake up system from
+> suspend, e.g., if a keyboard is depressed between system device suspend
+> phase and device noirq suspend phase, the keyboard ISR will be called and
+> both keyboard depress and release interrupts will be disabled, then
+> keyboard will no longer be able to wake up system. Another scenario would
+> be, if a keyboard is kept depressed, and then system goes into suspend, t=
+he
+> expected behavior would be when keyboard is released, system will be
+> waked up, but current implementation can NOT achieve that, because both
+> depress and release interrupts are disabled in ISR, and the event check i=
+s still
+> in progress.
+>=20
+> To fix these issues, need to make sure keyboard's depress or release
+> interrupt is enabled after noirq device suspend phase, this patch moves t=
+he
+> suspend/resume callback to noirq suspend/resume phase, and enable the
+> corresponding interrupt according to current keyboard status.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/input/keyboard/imx_keypad.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/input/keyboard/imx_keypad.c
+> b/drivers/input/keyboard/imx_keypad.c
+> index cf08f4a..97500a2 100644
+> --- a/drivers/input/keyboard/imx_keypad.c
+> +++ b/drivers/input/keyboard/imx_keypad.c
+> @@ -524,11 +524,12 @@ static int imx_keypad_probe(struct
+> platform_device *pdev)
+>  	return 0;
+>  }
+>=20
+> -static int __maybe_unused imx_kbd_suspend(struct device *dev)
+> +static int __maybe_unused imx_kbd_noirq_suspend(struct device *dev)
+>  {
+>  	struct platform_device *pdev =3D to_platform_device(dev);
+>  	struct imx_keypad *kbd =3D platform_get_drvdata(pdev);
+>  	struct input_dev *input_dev =3D kbd->input_dev;
+> +	unsigned short reg_val =3D readw(kbd->mmio_base + KPSR);
+>=20
+>  	/* imx kbd can wake up system even clock is disabled */
+>  	mutex_lock(&input_dev->mutex);
+> @@ -538,13 +539,20 @@ static int __maybe_unused
+> imx_kbd_suspend(struct device *dev)
+>=20
+>  	mutex_unlock(&input_dev->mutex);
+>=20
+> -	if (device_may_wakeup(&pdev->dev))
+> +	if (device_may_wakeup(&pdev->dev)) {
+> +		if (reg_val & KBD_STAT_KPKD)
+> +			reg_val |=3D KBD_STAT_KRIE;
+> +		if (reg_val & KBD_STAT_KPKR)
+> +			reg_val |=3D KBD_STAT_KDIE;
+> +		writew(reg_val, kbd->mmio_base + KPSR);
+> +
+>  		enable_irq_wake(kbd->irq);
+> +	}
+>=20
+>  	return 0;
+>  }
+>=20
+> -static int __maybe_unused imx_kbd_resume(struct device *dev)
+> +static int __maybe_unused imx_kbd_noirq_resume(struct device *dev)
+>  {
+>  	struct platform_device *pdev =3D to_platform_device(dev);
+>  	struct imx_keypad *kbd =3D platform_get_drvdata(pdev); @@ -568,7
+> +576,9 @@ static int __maybe_unused imx_kbd_resume(struct device *dev)
+>  	return ret;
+>  }
+>=20
+> -static SIMPLE_DEV_PM_OPS(imx_kbd_pm_ops, imx_kbd_suspend,
+> imx_kbd_resume);
+> +static const struct dev_pm_ops imx_kbd_pm_ops =3D {
+> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_kbd_noirq_suspend,
+> +imx_kbd_noirq_resume) };
+>=20
+>  static struct platform_driver imx_keypad_driver =3D {
+>  	.driver		=3D {
+> --
+> 2.7.4
 
-> Well it needs a loop..
-> 
-> again:
->    current_locked = atomic_read(&mm->locked_vm);
->    new_locked = current_locked + npages;
->    if (new_locked < lock_limit)
->       if (cmpxchg(&mm->locked_vm, current_locked, new_locked) != current_locked)
->             goto again;
-> 
-> So it won't have bogus failures as there is no unwind after
-> error. Basically this is a load locked/store conditional style of
-> locking pattern.
-
-This is basically what I have so far.
-
-> > > That's a good idea, and especially worth doing considering that an arbitrary
-> > > number of threads that charge a low amount of locked_vm can fail just because
-> > > one thread charges lots of it.
-> > 
-> > Yeah but the window for this is quite small, I doubt it would be a real issue.
->
-> > What if before doing the atomic_add_return(), we first did the racy new_locked
-> > check for ENOMEM, then do the speculative add and cleanup, if necessary. This
-> > would further reduce the scope of the window where false ENOMEM can occur.
-
-So the upside of this is that there's no retry loop so tasks don't spin under
-heavy contention?  Seems better to always guard against false ENOMEM, at least
-from the locked_vm side if not from the rlimit changing.
-
-> > > pinned_vm appears to be broken the same way, so I can fix it too unless someone
-> > > beats me to it.
-> > 
-> > This should not be a surprise for the rdma folks. Cc'ing Jason nonetheless.
-> 
-> I think we accepted this tiny race as a side effect of removing the
-> lock, which was very beneficial. Really the time window between the
-> atomic failing and unwind is very small, and there are enough other
-> ways a hostile user could DOS locked_vm that I don't think it really
-> matters in practice..
-> 
-> However, the cmpxchg seems better, so a helper to implement that would
-> probably be the best thing to do.
-
-I've collapsed all the locked_vm users into such a helper and am now working on
-converting the pinned_vm users to the same helper.  Taking longer than I
-thought.
