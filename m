@@ -2,133 +2,130 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AECDC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9FCC4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65F120675
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C9C8206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:37:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RucAGgmO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="edaqH3pX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731254AbfDYVhO (ORCPT
+        id S1731272AbfDYVhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 17:37:14 -0400
-Received: from ozlabs.org ([203.11.71.1]:46817 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfDYVhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 17:37:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44qr9z3BhDz9s00;
-        Fri, 26 Apr 2019 07:37:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556228231;
-        bh=eI0mQoy/UHVM3LOzKKqhuAzOw3IoQFx3YRZbn8I+BhU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RucAGgmOZgz1ShSWDTk2Scad7i+eVJTbyYZnRVZql9NXtny6fgHIgydrXAyXX1S2A
-         Nsdk/pflA1EO/l8JnaI+hds5CVJsC+yWHe3QSOEP0liRzKV175jya0Rl2HfX+Sluct
-         bCOJY8yKNiICcY1rz83hrB5mPOLBOQ66JzLBppCcUj8qCYz1xGWUg1/VB+dzPqOE2m
-         hH90L8IuZMDXtvBq5HksZIZcLMYIzg53A9+NrmclL47AUwpWhA05soQc5Ne9wDlmZl
-         OnZHXkK1lEbgq/tpKnSXfDkgBdzesH1veVcY3wxga9aUoPW2HeYct0CibkClezw/V0
-         Gq80jzBMaBtow==
-Date:   Fri, 26 Apr 2019 07:37:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: linux-next: manual merge of the rdma-fixes tree with Linus' tree
-Message-ID: <20190426073709.77e7b0bb@canb.auug.org.au>
+        Thu, 25 Apr 2019 17:37:24 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37252 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731255AbfDYVhX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 17:37:23 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k6so1312317oic.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 14:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RGUgSN/1MuaT0sEkx4/PHOTF00tRdaquGMmXyWySbhU=;
+        b=edaqH3pXiEXpUmitUuXFWk+YsMBzEo/wRbafWYnIriVAmTmf/hZDKMWYzoNNH8oP+R
+         bC+L8TVKnbipZ4SOAofD8rBq1yG2z/wZSk50Q9P9Yr1DrvXxI8TDrkMs++R6/OonwdO9
+         74izLWERfec1GdE1xNOK3wfairC7wD1IwRBd6Vw26OFYxJBjlOnzqt22cTdMjpIcf37o
+         S+DIWo9AGr3T1ABXIchf3VePE0iuwngS8Nc9fclUuQwhkZbwhtqheo4mssjcPl+ztLbU
+         5EcZE3o5HkugWFjrsIq8GzxRoyNKX7lmKmESdN8Ehi+ur56DpKR30L5vQHX/a3wC1u6P
+         D1mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RGUgSN/1MuaT0sEkx4/PHOTF00tRdaquGMmXyWySbhU=;
+        b=LDI6uwGOUvBLvX+Q0ZshEFZPf2jK+j6y3nkb7muYiBP8EXjfduEypBSBcS9R2vDYgs
+         /fzMW8SutMuUeN3CannrprRVbYDWe8MwYbDEPpUJlFe+nIHGAWnFVbYHtFkZqEh6Tkf2
+         Olhx+iixPOXCfdV70bPm+a3WTqNv6W2sWpZ7NGEkCWb2TGhRgm0y6JasdqvLLjsfrw1J
+         mtQhvkXm3ZqmRWBVWLhx+AjXbfi5ysJ2eZJUvq7D9lD6ZCVYQ2AgaCsC6vQ/ATv4T6Z6
+         oyw77pD2lMo17BDNEVq3AzOSC+hoDoIONkuLzkPhnzBK/HfJAEGTr6wKNFuwOqCoZjs8
+         sM6Q==
+X-Gm-Message-State: APjAAAWhlYsiSq8g5qHsZWs5EoXNpSHuOXlAwcV+i6C0ZpWmMYWjDjx8
+        bdy9WH3237Da22KSU4J8wsZY/Z+ca8Xv1aJremW+Ng==
+X-Google-Smtp-Source: APXvYqxNu7qXytlEj2RXMttlfz2eUzqPPX+vSS3fXl27uou+1aPJ+bT6BWbWn9cn6mf63VhaXUUe6QTIeJnzpNOZ4Z8=
+X-Received: by 2002:aca:4586:: with SMTP id s128mr4538562oia.148.1556228242522;
+ Thu, 25 Apr 2019 14:37:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/2ThAo/GKnTkTAEoqNWTyG/4"; protocol="application/pgp-signature"
+References: <20190404220652.19765-1-brendanhiggins@google.com>
+ <20190404220652.19765-15-brendanhiggins@google.com> <20190424185813.xabwr4lt6aunvpsd@gabell>
+In-Reply-To: <20190424185813.xabwr4lt6aunvpsd@gabell>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 25 Apr 2019 14:37:11 -0700
+Message-ID: <CAFd5g45CD7=dMvvRgmLKomirXDWpO59hFSed9A=o0kdBxp7v-w@mail.gmail.com>
+Subject: Re: [PATCH v1 14/17] Documentation: kunit: add documentation for KUnit
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, shuah@kernel.org,
+        yamada.masahiro@socionext.com, Petr Mladek <pmladek@suse.com>,
+        linux-doc@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        linux-kselftest@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Felix Guo <felixguoxiuping@gmail.com>, wfg@linux.intel.com,
+        Joel Stanley <joel@jms.id.au>, Jeff Dike <jdike@addtoit.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kbuild@vger.kernel.org, "Bird, Timothy" <Tim.Bird@sony.com>,
+        linux-um@lists.infradead.org, Steven Rostedt <rostedt@goodmis.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        kunit-dev@googlegroups.com, Richard Weinberger <richard@nod.at>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2ThAo/GKnTkTAEoqNWTyG/4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 24, 2019 at 11:58 AM Masayoshi Mizuma <msys.mizuma@gmail.com> wrote:
+>
+> Hi Brendan,
+>
+> KUNIT_ASSERT_NOT_ERR_OR_NULL() should be replaced to
+> KUNIT_EXPECT_NOT_ERR_OR_NULL(), right?
 
-Hi all,
+Generally speaking, no.
 
-Today's linux-next merge of the rdma-fixes tree got a conflict in:
+There may be places that I have used it improperly, but I think it is
+generally okay to use.
 
-  drivers/infiniband/core/uverbs_main.c
+If you are refering to the discussion with Frank and Stephen in RFC
+v4, my take was that the resolution was that there were some things I
+needed to fix in its implementation, but it is conceptually okay, and
+that Frank doesn't want me to use it in drivers/of/unittest.c.
+Consequently, I fixed the implementation issues that Frank and Stephen
+pointed out, and I am holding off on drivers/of/unittest.c for this
+patchset. The usage in this file should be fine.
 
-between commit:
+>
+> On Thu, Apr 04, 2019 at 03:06:49PM -0700, Brendan Higgins wrote:
+> > Add documentation for KUnit, the Linux kernel unit testing framework.
+> > - Add intro and usage guide for KUnit
+> > - Add API reference
+> >
+> > Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > ---
+>
+> <snip>
 
-  04f5866e41fb ("coredump: fix race condition between mmget_not_zero()/get_=
-task_mm() and core dumping")
+<snip>
 
-from Linus' tree and commit:
-
-  67f269b37f9b ("RDMA/ucontext: Fix regression with disassociate")
-
-from the rdma-fixes tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/infiniband/core/uverbs_main.c
-index f2e7ffe6fc54,db20b6e0f253..000000000000
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@@ -992,9 -1039,7 +1039,9 @@@ void uverbs_user_mmap_disassociate(stru
-  		 * at a time to get the lock ordering right. Typically there
-  		 * will only be one mm, so no big deal.
-  		 */
-- 		down_write(&mm->mmap_sem);
-+ 		down_read(&mm->mmap_sem);
- +		if (!mmget_still_valid(mm))
- +			goto skip_mm;
-  		mutex_lock(&ufile->umap_lock);
-  		list_for_each_entry_safe (priv, next_priv, &ufile->umaps,
-  					  list) {
-@@@ -1006,11 -1051,9 +1053,10 @@@
- =20
-  			zap_vma_ptes(vma, vma->vm_start,
-  				     vma->vm_end - vma->vm_start);
-- 			vma->vm_flags &=3D ~(VM_SHARED | VM_MAYSHARE);
-  		}
-  		mutex_unlock(&ufile->umap_lock);
- +	skip_mm:
-- 		up_write(&mm->mmap_sem);
-+ 		up_read(&mm->mmap_sem);
-  		mmput(mm);
-  	}
-  }
-
---Sig_/2ThAo/GKnTkTAEoqNWTyG/4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzCKIUACgkQAVBC80lX
-0GwHVwf/ZrNV36PBAapIgDy+mi4MTqKAXXdl8vobgt+TdpXfF5AUNsZyvhNh32HO
-yZRVITnyaZx5fofjehE566jxz2nI6x56RXT031szgbVGnbtIViJpSLrTfHutqyTJ
-KiBvMiuaXYk+ELfqA6WML4qV+nh+Zne4fxjUckj0Inj4sOTQk8t0j+S/pAmmKMLO
-GXwX/Speum6UGykYDBzuNdMGDeYDyGcrWF3bWhhvu0PW207rjsft6Ds4EuNGgvws
-GzEQkylx9Y7O5avetSIF6vH2jOhSISWYaw1a2mdMqf/Gzu9f97ziURB6u6+v0BUk
-mKo2TpnH18Hacsr94okzQ0xXtT4sJw==
-=dKKb
------END PGP SIGNATURE-----
-
---Sig_/2ThAo/GKnTkTAEoqNWTyG/4--
+Cheers
