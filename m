@@ -2,257 +2,211 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD43C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373DDC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B406720717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8B1206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:22:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azV7dc2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfDYRTW (ORCPT
+        id S1728812AbfDYRWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 13:19:22 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:48938 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbfDYRTW (ORCPT
+        Thu, 25 Apr 2019 13:22:20 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53247 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfDYRWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 13:19:22 -0400
-Received: from [10.200.156.146] (unknown [131.107.147.146])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 283A630549E3;
-        Thu, 25 Apr 2019 10:19:20 -0700 (PDT)
-Subject: Re: [PATCH v2 2/5 RFC] use event name instead of enum to make the
- call generic
-To:     Nayna <nayna@linux.vnet.ibm.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        inux-security-module@vger.kernel.org
-Cc:     zohar@linux.ibm.com, ebiederm@xmission.com, vgoyal@redhat.com,
-        Prakhar Srivastava <prsriva@microsoft.com>
-References: <20190424001544.7188-1-prsriva02@gmail.com>
- <20190424001544.7188-2-prsriva02@gmail.com>
- <d38f32f8-7078-f205-ba11-9c4266ee40e8@linux.vnet.ibm.com>
-From:   prsriva <prsriva@linux.microsoft.com>
-Message-ID: <4c313367-22dc-9532-54b5-cd3a79deb625@linux.microsoft.com>
-Date:   Thu, 25 Apr 2019 10:19:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <d38f32f8-7078-f205-ba11-9c4266ee40e8@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 25 Apr 2019 13:22:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id j13so287222wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 10:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=bwv4et5cUu4faqc6blPlhyIKYfhBsbfiMqT2Sv67ZlU=;
+        b=azV7dc2V7nv8zLnV545xER2aN+rli+MZMvaS+tpq/65nO08rTw3iMrVUYhTHdOl6Nd
+         okwIXzklNi68w89CA7OKHzsxQW2AqHf/Hs6BZVx5vNofnd+/WpagIucKRlD5kP6R2Z4w
+         QV3LQTMqfAwcMP6U5z16tLBTklkF5InKP8/brGYRO/9vzeS3VeNbNIsBzgzgS6jK6F5c
+         SMMAyNyh3/kxgbrHcWzsvogqCeK42PpM5Oz783Be7+9ZaolpBz2qDhhlbbeQXoOv/arC
+         fFdu/7mdVUMtG0JRX8j6vN5KrWRmx51My78gDwgmmQF/06NpoJmkbCqICR+yeTqadNFO
+         FbEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bwv4et5cUu4faqc6blPlhyIKYfhBsbfiMqT2Sv67ZlU=;
+        b=q2eoaQyaN2Kqz+nh+N/wM6s61jVEG15DDtrCbgBG3NtZhzjPg/pLyBLYhZjl7+Z+u6
+         hIf4nTtO+88I3L/FaJkbaaZHCnxgsdTIDNnf4wSOEs0ciinBdREgscwVSopov64FQMBf
+         jzmyAa7839jIvy/vrc7M3QXUiohZ2+2pW3i3kNstTwbsaXRdd2pOqykmbqTsioQ6QpE0
+         bG5U0AkAaI3EgH7B9P3eIJ2myns10d6KohC/FDqiQcmaG041Kupf733R/JLis8WqileQ
+         Wrm7EwZRNXbxFpUnwx8or+1jUwR2N7SlNFiedkpAiPt9XstXRbFw0xbW2V61z9dhAKse
+         /TTA==
+X-Gm-Message-State: APjAAAUXl96P/NiJinkePXotQJHd7WMjP8mvXpOetfXojp7GNd3IeNNi
+        iqBx/mxo3zAJttDnDIPDsNSVXJz0
+X-Google-Smtp-Source: APXvYqz7EteIkt1PinXdNJYyK68ANDqfYFXQItY39yT0oPGOUzzSOBWSj9JSbtj8W/8WBKxt6/5y8Q==
+X-Received: by 2002:a7b:cd9a:: with SMTP id y26mr4603942wmj.31.1556212937250;
+        Thu, 25 Apr 2019 10:22:17 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id g132sm20624496wme.3.2019.04.25.10.22.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 10:22:16 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH] habanalabs: rename restore to ctx_switch when appropriate
+Date:   Thu, 25 Apr 2019 20:22:14 +0300
+Message-Id: <20190425172214.6501-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-25 4:48 a.m., Nayna wrote:
-> 
-> 
-> On 04/23/2019 08:15 PM, Prakhar Srivastava wrote:
->> From: Prakhar Srivastava <prsriva02@gmail.com>
->>
->> Signed-off-by: Prakhar Srivastava <prsriva@microsoft.com>
->> ---
->>
->> Currently for soft reboot(kexec_file_load) the kernel file and
->> signature is measured by IMA. The cmdline args used to load the kernel
->> is not measured.
->> The boot aggregate that gets calculated will have no change since the
->> EFI loader has not been triggered.
->> Adding the kexec cmdline args measure and kernel version will add some
->> attestable criteria.
->>
-> 
-> Any reason for including the whole commit message after "---"
-> 
-> Anything after "---" is not included in the patch description when patch 
-> is applied.
-> 
-> This comment applies to all the patches in this patchset.
-I will fix the comments and send out the patchset with a cover letter. 
-Thankyou for pointing this out.
-> 
->> remove enums to control type of buffers entries, instead pass the 
->> event name to be used.
-> 
-> Is the last statement meant to be a Changelog from v1-> v2 ? Only the 
-> changelog has to be after "---"
-> 
-> Also, If posting more than one patch, it is preferrable to add a 
-> cover-letter.
-I will add a cover letter alongside fixing the comments. Thankyou!
-> 
-> 
->>   include/linux/ima.h               | 10 ++--------
->>   kernel/kexec_file.c               |  3 +++
->>   security/integrity/ima/ima.h      |  2 +-
->>   security/integrity/ima/ima_main.c | 30 ++++++++++--------------------
->>   4 files changed, 16 insertions(+), 29 deletions(-)
->>
->> diff --git a/include/linux/ima.h b/include/linux/ima.h
->> index 733d0cb9dedc..5e41507c57e5 100644
->> --- a/include/linux/ima.h
->> +++ b/include/linux/ima.h
->> @@ -14,12 +14,6 @@
->>   #include <linux/kexec.h>
->>   struct linux_binprm;
->>
->> -enum __buffer_id {
->> -    KERNEL_VERSION,
->> -    KEXEC_CMDLINE,
->> -    MAX_BUFFER_ID = KEXEC_CMDLINE
->> -} buffer_id;
->> -
-> 
-> Is the v2 version created on top of the v1 version that was posted ?
-> 
-v2 is based off the HEAD of the repo.
-> The v2 version has to be on top of the HEAD of the repository itself, 
-> and not on the v1 version. Only the final reviewed and tested version 
-> makes to the upstream.
-> 
-> Btw, which repository and its branch are you using ?
-> 
-I am basing my changes off IMA branch:
-git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
-> Thanks & Regards,
->        - Nayna
-> 
-> 
-> 
-> 
->>   #ifdef CONFIG_IMA
->>   extern int ima_bprm_check(struct linux_binprm *bprm);
->>   extern int ima_file_check(struct file *file, int mask, int opened);
->> @@ -29,7 +23,7 @@ extern int ima_read_file(struct file *file, enum 
->> kernel_read_file_id id);
->>   extern int ima_post_read_file(struct file *file, void *buf, loff_t 
->> size,
->>                     enum kernel_read_file_id id);
->>   extern void ima_post_path_mknod(struct dentry *dentry);
->> -extern void ima_buffer_check(const void *buff, int size, enum 
->> buffer_id id);
->> +extern void ima_buffer_check(const void *buff, int size, char 
->> *eventname);
->>   #ifdef CONFIG_IMA_KEXEC
->>   extern void ima_add_kexec_buffer(struct kimage *image);
->>   #endif
->> @@ -72,7 +66,7 @@ static inline void ima_post_path_mknod(struct dentry 
->> *dentry)
->>   }
->>
->>   static inline void ima_buffer_check(const void *buff, int size,
->> -            enum buffer_id id)
->> +            char *eventname)
->>   {
->>       return;
->>   }
->> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->> index b118735fea9d..2a5234eb4b28 100644
->> --- a/kernel/kexec_file.c
->> +++ b/kernel/kexec_file.c
->> @@ -182,6 +182,9 @@ kimage_file_prepare_segments(struct kimage *image, 
->> int kernel_fd, int initrd_fd,
->>               ret = -EINVAL;
->>               goto out;
->>           }
->> +
->> +        ima_buffer_check(image->cmdline_buf, cmdline_len - 1,
->> +                "kexec_cmdline");
->>       }
->>
->>       /* Call arch image load handlers */
->> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
->> index b71f2f6f7421..fcade3c103ed 100644
->> --- a/security/integrity/ima/ima.h
->> +++ b/security/integrity/ima/ima.h
->> @@ -181,8 +181,8 @@ enum ima_hooks {
->>       FIRMWARE_CHECK,
->>       KEXEC_KERNEL_CHECK,
->>       KEXEC_INITRAMFS_CHECK,
->> -    BUFFER_CHECK,
->>       POLICY_CHECK,
->> +    BUFFER_CHECK,
->>       MAX_CHECK
->>   };
->>
->> diff --git a/security/integrity/ima/ima_main.c 
->> b/security/integrity/ima/ima_main.c
->> index 6408cadaadbb..da82c705a5ed 100644
->> --- a/security/integrity/ima/ima_main.c
->> +++ b/security/integrity/ima/ima_main.c
->> @@ -160,8 +160,7 @@ void ima_file_free(struct file *file)
->>    * (Instead of using the file hash the buffer hash is used).
->>    * @buff - The buffer that needs to be added to the log
->>    * @size - size of buffer(in bytes)
->> - * @id - buffer id, this is differentiator for the various buffers
->> - * that can be measured.
->> + * @id - eventname, event name to be used for buffer measurement.
->>    *
->>    * The buffer passed is added to the ima logs.
->>    * If the sig template is used, then the sig field contains the buffer.
->> @@ -170,7 +169,7 @@ void ima_file_free(struct file *file)
->>    * On error cases surface errors from ima calls.
->>    */
->>   static int process_buffer_measurement(const void *buff, int size,
->> -                enum buffer_id id)
->> +                char *eventname)
->>   {
->>       int ret = -EINVAL;
->>       struct ima_template_entry *entry = NULL;
->> @@ -185,23 +184,13 @@ static int process_buffer_measurement(const void 
->> *buff, int size,
->>       int violation = 0;
->>       int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
->>
->> -    if (!buff || size ==  0)
->> +    if (!buff || size ==  0 || !eventname)
->>           goto err_out;
->>
->>       if (ima_get_action(NULL, 0, BUFFER_CHECK, &pcr) != IMA_MEASURE)
->>           goto err_out;
->>
->> -    switch (buffer_id) {
->> -    case KERNEL_VERSION:
->> -        name = "Kernel-version";
->> -        break;
->> -    case KEXEC_CMDLINE:
->> -        name = "Kexec-cmdline";
->> -        break;
->> -    default:
->> -        goto err_out;
->> -    }
->> -
->> +    name = eventname;
->>       memset(iint, 0, sizeof(*iint));
->>       memset(&hash, 0, sizeof(hash));
->>
->> @@ -452,15 +441,16 @@ int ima_read_file(struct file *file, enum 
->> kernel_read_file_id read_id)
->>    * ima_buffer_check - based on policy, collect & store buffer 
->> measurement
->>    * @buf: pointer to buffer
->>    * @size: size of buffer
->> - * @buffer_id: caller identifier
->> + * @eventname: caller identifier
->>    *
->>    * Buffers can only be measured, not appraised.  The buffer identifier
->> - * is used as the measurement list entry name (eg. boot_cmdline).
->> + * is used as the measurement list entry name (eg. boot_cmdline,
->> + * kernel_version).
->>    */
->> -void ima_buffer_check(const void *buf, int size, enum buffer_id id)
->> +void ima_buffer_check(const void *buf, int size, char *eventname)
->>   {
->> -    if (buf && size != 0)
->> -        process_buffer_measurement(buf, size, id);
->> +    if (buf && size != 0 && eventname)
->> +        process_buffer_measurement(buf, size, eventname);
->>
->>       return;
->>   }
+This patch only does renaming of certain variables and structure members,
+and their accompanied comments.
+
+This is done to better reflect the actions these variables and members
+represent.
+
+There is no functional change in this patch.
+
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/command_submission.c | 16 ++++++++--------
+ drivers/misc/habanalabs/context.c            |  4 ++--
+ drivers/misc/habanalabs/device.c             |  6 +++---
+ drivers/misc/habanalabs/habanalabs.h         | 17 +++++++++--------
+ 4 files changed, 22 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+index 02c48da0b645..c4ab694b51b5 100644
+--- a/drivers/misc/habanalabs/command_submission.c
++++ b/drivers/misc/habanalabs/command_submission.c
+@@ -601,7 +601,7 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
+ 	void __user *chunks;
+ 	u32 num_chunks;
+ 	u64 cs_seq = ULONG_MAX;
+-	int rc, do_restore;
++	int rc, do_ctx_switch;
+ 	bool need_soft_reset = false;
+ 
+ 	if (hl_device_disabled_or_in_reset(hdev)) {
+@@ -612,9 +612,9 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
+ 		goto out;
+ 	}
+ 
+-	do_restore = atomic_cmpxchg(&ctx->thread_restore_token, 1, 0);
++	do_ctx_switch = atomic_cmpxchg(&ctx->thread_ctx_switch_token, 1, 0);
+ 
+-	if (do_restore || (args->in.cs_flags & HL_CS_FLAGS_FORCE_RESTORE)) {
++	if (do_ctx_switch || (args->in.cs_flags & HL_CS_FLAGS_FORCE_RESTORE)) {
+ 		long ret;
+ 
+ 		chunks = (void __user *)(uintptr_t)args->in.chunks_restore;
+@@ -622,7 +622,7 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
+ 
+ 		mutex_lock(&hpriv->restore_phase_mutex);
+ 
+-		if (do_restore) {
++		if (do_ctx_switch) {
+ 			rc = hdev->asic_funcs->context_switch(hdev, ctx->asid);
+ 			if (rc) {
+ 				dev_err_ratelimited(hdev->dev,
+@@ -678,18 +678,18 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
+ 			}
+ 		}
+ 
+-		ctx->thread_restore_wait_token = 1;
+-	} else if (!ctx->thread_restore_wait_token) {
++		ctx->thread_ctx_switch_wait_token = 1;
++	} else if (!ctx->thread_ctx_switch_wait_token) {
+ 		u32 tmp;
+ 
+ 		rc = hl_poll_timeout_memory(hdev,
+-			(u64) (uintptr_t) &ctx->thread_restore_wait_token,
++			(u64) (uintptr_t) &ctx->thread_ctx_switch_wait_token,
+ 			jiffies_to_usecs(hdev->timeout_jiffies),
+ 			&tmp);
+ 
+ 		if (rc || !tmp) {
+ 			dev_err(hdev->dev,
+-				"restore phase hasn't finished in time\n");
++				"context switch phase didn't finish in time\n");
+ 			rc = -ETIMEDOUT;
+ 			goto out;
+ 		}
+diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
+index 619ace1c4ef7..4804cdcf4c48 100644
+--- a/drivers/misc/habanalabs/context.c
++++ b/drivers/misc/habanalabs/context.c
+@@ -106,8 +106,8 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
+ 
+ 	ctx->cs_sequence = 1;
+ 	spin_lock_init(&ctx->cs_lock);
+-	atomic_set(&ctx->thread_restore_token, 1);
+-	ctx->thread_restore_wait_token = 0;
++	atomic_set(&ctx->thread_ctx_switch_token, 1);
++	ctx->thread_ctx_switch_wait_token = 0;
+ 
+ 	if (is_kernel_ctx) {
+ 		ctx->asid = HL_KERNEL_ASID_ID; /* KMD gets ASID 0 */
+diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+index a88f7be23c7f..0e0b9ec71c80 100644
+--- a/drivers/misc/habanalabs/device.c
++++ b/drivers/misc/habanalabs/device.c
+@@ -710,10 +710,10 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
+ 	for (i = 0 ; i < hdev->asic_prop.completion_queues_count ; i++)
+ 		hl_cq_reset(hdev, &hdev->completion_queue[i]);
+ 
+-	/* Make sure the setup phase for the user context will run again */
++	/* Make sure the context switch phase will run again */
+ 	if (hdev->user_ctx) {
+-		atomic_set(&hdev->user_ctx->thread_restore_token, 1);
+-		hdev->user_ctx->thread_restore_wait_token = 0;
++		atomic_set(&hdev->user_ctx->thread_ctx_switch_token, 1);
++		hdev->user_ctx->thread_ctx_switch_wait_token = 0;
+ 	}
+ 
+ 	/* Finished tear-down, starting to re-initialize */
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index e8bbaf0f26c1..a624d1e1e1e5 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -615,12 +615,13 @@ struct hl_va_range {
+  *                     DRAM mapping.
+  * @cs_lock: spinlock to protect cs_sequence.
+  * @dram_phys_mem: amount of used physical DRAM memory by this context.
+- * @thread_restore_token: token to prevent multiple threads of the same context
+- *				from running the restore phase. Only one thread
+- *				should run it.
+- * @thread_restore_wait_token: token to prevent the threads that didn't run
+- *				the restore phase from moving to their execution
+- *				phase before the restore phase has finished.
++ * @thread_ctx_switch_token: token to prevent multiple threads of the same
++ *				context	from running the context switch phase.
++ *				Only a single thread should run it.
++ * @thread_ctx_switch_wait_token: token to prevent the threads that didn't run
++ *				the context switch phase from moving to their
++ *				execution phase before the context switch phase
++ *				has finished.
+  * @asid: context's unique address space ID in the device's MMU.
+  */
+ struct hl_ctx {
+@@ -640,8 +641,8 @@ struct hl_ctx {
+ 	u64			*dram_default_hops;
+ 	spinlock_t		cs_lock;
+ 	atomic64_t		dram_phys_mem;
+-	atomic_t		thread_restore_token;
+-	u32			thread_restore_wait_token;
++	atomic_t		thread_ctx_switch_token;
++	u32			thread_ctx_switch_wait_token;
+ 	u32			asid;
+ };
+ 
+-- 
+2.17.1
+
