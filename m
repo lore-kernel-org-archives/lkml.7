@@ -2,97 +2,142 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760B8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E33C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7AD220693
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D09620693
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LmNgSdxI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EhGIKPJ6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j1TPVsIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfDYQiI (ORCPT
+        id S1728624AbfDYQiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:38:08 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52250 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfDYQiH (ORCPT
+        Thu, 25 Apr 2019 12:38:21 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:39556 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfDYQiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:38:07 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B7C8D60736; Thu, 25 Apr 2019 16:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556210286;
-        bh=s3VENpXEzwylRROtQ+Nfq/2SG5O7+nthqhNeIrBgFqY=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=LmNgSdxItF/eW3zxYzXQbYe/oTkcS1cLiR6DitaIub7RXZT60DBEMhgdnLb9cj50v
-         ZXxbBmGwrszN5aOLCYNigTGINS1WUWFybjQkkC5xafG9dQLodBItuaxBUmfphE5Skl
-         Dd7aWaAbkSJPhahb7UO7/vdxxq0SyFSgr7n/F7BI=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A69286034D;
-        Thu, 25 Apr 2019 16:38:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556210286;
-        bh=s3VENpXEzwylRROtQ+Nfq/2SG5O7+nthqhNeIrBgFqY=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=EhGIKPJ6GGay4WNLCRB7+HWFpMTthhkJfs8IpuTAvLLXXgnJ888eCf9GeI1j1Tiwa
-         WWqwJKr+6ic1PJ1TiUxuds/g3EdnnJUyAO/yyD3nv+iICD/DSsgBeil9PbsmvZJ6Tw
-         UjSJT9XN759aRZ51CjRJGabPMFL2ThNLe4LdcNug=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A69286034D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 25 Apr 2019 12:38:21 -0400
+Received: by mail-it1-f195.google.com with SMTP id e13so1147687itk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VHDZQTX3nTBqKHo1hwDhNBgtUmmqtkCr53n/vkeR56Q=;
+        b=j1TPVsIhDKAuuO0VpVPCDmktnph6s35mRzixFM1NAho8Fq+Z/s0YMnD9bGYGOLL90T
+         U1eJJrcQHy5O4bCAHLQYw24J83Ik0tKEDl3JU+R9b7H/HBj2Ne7ipEqgVUfSNKuyZQ3x
+         7fiWkfcZlPYtP+Yf7sXyv0eV4KKPScuOZgM44=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VHDZQTX3nTBqKHo1hwDhNBgtUmmqtkCr53n/vkeR56Q=;
+        b=rtZ9fBEGFhBYbl/rdCuNFfLumXrylHr3NRa5solgjA8rZQ4yM3B3XyhC94cPFQH6aK
+         TKWA1zGTbRe+Z7mh1QWL5e0By+y9Uo/WIFMB9zZJjANJfIyFNOVBES22veGLPBTkSW5K
+         v/XK6K3+02Cx11/pKX9r4sC6kJKxeYyHabWCBYg/NwV5jN1xvbbQbuHSMAvuoghRmcVi
+         R3RwJJcsxaocsAvhKPdrHtbI4aD49HFrAV3LKOFkYRnNjPDJiGsNY9G4m/RlWeKgRzlE
+         4xwnlWHUPFfWf+gtlbAbT3sNDooeBySgnBbYs35XS+dZJ3uoItW3PGZ7UNUlY0t/2QUl
+         4SDw==
+X-Gm-Message-State: APjAAAU7WbtfsO8viLlfQ3rgJruz+3FV423KCGDFsFTs6Ezg9wC8pB5T
+        TPDJBIOn/569kVUAI5bIb2HRlxb4YuNYXV6DK+VgOA==
+X-Google-Smtp-Source: APXvYqxNy4UeJbrXeclqdR151+4gMxTbAtwFxtI2swR6YMhD574KAt1e8MS4I5F0GpJLsf1ugAYv69xntqo8PDwhr74=
+X-Received: by 2002:a24:90f:: with SMTP id 15mr4436683itm.100.1556210300671;
+ Thu, 25 Apr 2019 09:38:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] rndis_wlan: use struct_size() helper
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190403182334.GA3986@embeddedor>
-References: <20190403182334.GA3986@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jussi Kivilinna <jussi.kivilinna@iki.fi>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190425163806.B7C8D60736@smtp.codeaurora.org>
-Date:   Thu, 25 Apr 2019 16:38:06 +0000 (UTC)
+References: <20190424232918.243308-1-gwendal@chromium.org> <20190425081232.GA14758@dell>
+ <aa1c0ab7-6491-69a8-936c-26460b78d6c2@collabora.com> <CAPUE2ussoqWAP-1Hpa2mGq-23NuTh=Ai3dssiZYYiqLBDTCJwQ@mail.gmail.com>
+ <0fad0c23-7939-606e-86e1-748dd1115b82@collabora.com>
+In-Reply-To: <0fad0c23-7939-606e-86e1-748dd1115b82@collabora.com>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Thu, 25 Apr 2019 09:38:09 -0700
+Message-ID: <CAPUE2uu7npyi0jgHPLCD-3DWkiKuhRidBgyiVK6O1TesHLqkEg@mail.gmail.com>
+Subject: Re: [PATCH 00/30] Update cros_ec_commands.h
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+On Thu, Apr 25, 2019 at 9:11 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi,
+>
+> cc'ing some ASOC reviewers.
+>
+> On 25/4/19 18:00, Gwendal Grignou wrote:
+> > On Thu, Apr 25, 2019 at 4:19 AM Enric Balletbo i Serra
+> > <enric.balletbo@collabora.com> wrote:
+> >>
+> >> Hi Gwendal, Lee
+> >>
+> >> On 25/4/19 10:12, Lee Jones wrote:
+> >>> On Wed, 24 Apr 2019, Gwendal Grignou wrote:
+> >>>
+> >>>> The interface between CrosEC embedded controller and the host,
+> >>>> described by cros_ec_commands.h, as diverged from what the embedded
+> >>>> controller really support.
+> >>>>
+> >>>> The source of thruth is at
+> >>>> https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
+> >>>>
+> >>>> That include file is converted to remove ACPI and Embedded only code.
+> >>>>
+> >>>> From now on, cros_ec_commands.h will be automatically generated from
+> >>>> the file above, do not modify directly.
+> >>>>
+> >>>> Fell free to squash the commits below.
+> >>>
+> >>> This is going to need a bunch of Chromium reviews (and testing
+> >>> ideally) before I can take this set.
+> >>>
+> >>
+> >> I tested this patchset in different ways. With the full series applied I checked
+> >> that didn't break any cros-ec driver on Kevin, Samus and Veyron devices. I also
+> >> checked via userspace tool that I don't see any problem sending commands and
+> >> finally I checked that applying one-by-one the patches didn't break the build on
+> >> x86 and arm64, there is though, a problem,
+> >>
+> >> [PATCH 24/30] mfd: cros_ec: Update I2S API
+> >>
+> >> introduces a build problem because removes a struct that is currently used by
+> >> the cros_ec_codec driver. I think that at the same time we should update that
+> >> driver with the new struct name.
+> > Sorry, I did not structure this patchset right. The i2s patch is available at
+> > https://patchwork.kernel.org/patch/10877645/
+> >
+>
+> I think would be better squash both patches, otherwise things like bisection
+> would be a pain. The patch then touches two subsystems but won't break
+> compilation, and is pretty simple, so I think should not be a problem go through
+> i.e. the mfd tree.
+I squashed both patches in [PATCH v2 24/30] mfd: cros_ec: Update I2S API
 
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes, in particular in the
-> context in which this code is being used.
-> 
-> So, replace code of the following form:
-> 
-> sizeof(*pmkids) + max_pmkids * sizeof(pmkids->bssid_info[0])
-> 
-> with:
-> 
-> struct_size(pmkids, bssid_info, num_pmkids)
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Thanks for the feedback,
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-d442af2e1bcb rndis_wlan: use struct_size() helper
-
--- 
-https://patchwork.kernel.org/patch/10884341/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Gwendal.
+>
+> > Gwendal.
+> >>
+> >> Once this is fixed,
+> >>
+> >> Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >>
+> >> for the full series.
+> >>
+> >> Thanks,
+> >>  Enric
+> >>
