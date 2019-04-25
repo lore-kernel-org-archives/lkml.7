@@ -2,200 +2,173 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F317C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10167C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E576206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7447206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:34:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556199241;
+	bh=dV9XlTbgLfc6l1Zn76HX5mbGVBC/wqWySpEVS9uzLzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q3DDdyyUnKtpu2kKeaaTXImjJyTbhrlQ3ZhUXjruTKgi4JIaijvpPNd7j0GAjQUyP
+	 41JqEdDI1qJVVTmN939qaNtHWAr1bFNl+ws8TF2YorwORAQjWxC6KIxQamA0CPSW19
+	 aQiwEiB0/8VXu0YHPvEaCuMq64Q9uSAdvDWq51kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbfDYNdd (ORCPT
+        id S1729458AbfDYNeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 09:33:33 -0400
-Received: from shell.v3.sk ([90.176.6.54]:44345 "EHLO shell.v3.sk"
+        Thu, 25 Apr 2019 09:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfDYNdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 09:33:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 068E010308C;
-        Thu, 25 Apr 2019 15:33:28 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id StRKUhF4G9Zo; Thu, 25 Apr 2019 15:33:22 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 7E3FC10308F;
-        Thu, 25 Apr 2019 15:33:22 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id CCA7oOs_8rYC; Thu, 25 Apr 2019 15:33:21 +0200 (CEST)
-Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 2257A10308C;
-        Thu, 25 Apr 2019 15:33:21 +0200 (CEST)
-Message-ID: <3b7fb8442a5e0106f11e328f5bb4f0f46483ccf4.camel@v3.sk>
-Subject: Re: [PATCH v3 14/14] [media] marvell-ccic: provide a clock for the
- sensor
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     jacopo mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>,
-        Libin Yang <lbyang@marvell.com>,
-        Albert Wang <twang13@marvell.com>
-Date:   Thu, 25 Apr 2019 15:33:19 +0200
-In-Reply-To: <20181122200747.GA6788@w540>
-References: <20181120100318.367987-1-lkundrak@v3.sk>
-         <20181120100318.367987-15-lkundrak@v3.sk> <20181122200747.GA6788@w540>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 (3.32.1-1.fc30) 
+        id S1726613AbfDYNd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 09:33:59 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C57ED206C0;
+        Thu, 25 Apr 2019 13:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556199238;
+        bh=dV9XlTbgLfc6l1Zn76HX5mbGVBC/wqWySpEVS9uzLzY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TxKQq1q6alRprReJRDcQULKZSjQgQHbPFr0nCQyrOqWwV4gD+mJhaimtA49Djcm8A
+         LFCeWSVOiNpi+lG1MBCk6JC1guxgj7m957cu56k/lihFiQhZnV1NhQrBHVCevZ0c50
+         +wzLXgTSa36WQWFBl37Ysn/5ZAQNcecf23pepHGY=
+Date:   Thu, 25 Apr 2019 08:33:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>
+Subject: Re: [PATCH v4 2/4] PCI: Fix serious bug when sizing bridges with
+ additional size
+Message-ID: <20190425133356.GB214428@google.com>
+References: <20190417141610.6730-1-nicholas.johnson-opensource@outlook.com.au>
+ <PS2P216MB0642D39B45E16723F74569A480250@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PS2P216MB0642D39B45E16723F74569A480250@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2018-11-23 at 08:44 +0100, jacopo mondi wrote:
-> HI Lubomir,
+On Wed, Apr 17, 2019 at 02:16:50PM +0000, Nicholas Johnson wrote:
+> Change find_free_bus_resource function to not skip assigned resources
+> with non-null parent.
 > 
-> On Tue, Nov 20, 2018 at 11:03:19AM +0100, Lubomir Rintel wrote:
-> > The sensor needs the MCLK clock running when it's being probed. On
-> > platforms where the sensor is instantiated from a DT (MMP2) it is going
-> > to happen asynchronously.
-> > 
-> > Therefore, the current modus operandi, where the bridge driver fiddles
-> > with the sensor power and clock itself is not going to fly. As the comments
-> > wisely note, this doesn't even belong there.
-> > 
-> > Luckily, the ov7670 driver is already able to control its power and
-> > reset lines, we can just drop the MMP platform glue altogether.
-> > 
-> > It also requests the clock via the standard clock subsystem. Good -- let's
-> > set up a clock instance so that the sensor can ask us to enable the clock.
-> > Note that this is pretty dumb at the moment: the clock is hardwired to a
-> > particular frequency and parent. It was always the case.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > 
-> > ---
-> > Changes since v1:
-> > - [kbuild/ia64] depend on COMMON_CLK.
-> > - [smatch] fix bad return in mcam_v4l_open() leading to lock not getting
-> >   released on error.
-> > 
-> >  drivers/media/platform/marvell-ccic/Kconfig   |   2 +
-> >  .../media/platform/marvell-ccic/cafe-driver.c |   9 +-
-> >  .../media/platform/marvell-ccic/mcam-core.c   | 156 +++++++++++++++---
-> >  .../media/platform/marvell-ccic/mcam-core.h   |   3 +
-> >  .../media/platform/marvell-ccic/mmp-driver.c  | 152 ++---------------
-> >  .../linux/platform_data/media/mmp-camera.h    |   2 -
-> >  6 files changed, 161 insertions(+), 163 deletions(-)
-...
-> >  int mccic_register(struct mcam_camera *cam)
-> >  {
-> > +	struct clk_init_data mclk_init = { };
-> >  	int ret;
-> > 
-> >  	/*
-> > @@ -1838,7 +1925,10 @@ int mccic_register(struct mcam_camera *cam)
-> >  	mcam_set_config_needed(cam, 1);
-> >  	cam->pix_format = mcam_def_pix_format;
-> >  	cam->mbus_code = mcam_def_mbus_code;
-> > -	mcam_ctlr_init(cam);
-> > +
-> > +	mcam_clk_enable(cam);
+> Add checks in pbus_size_io and pbus_size_mem to return success if
+> resource returned from find_free_bus_resource is already allocated.
 > 
-> Am I mis-interpreting the clock bindings, or here you expose a clock
-> source, and sensors are supposed to reference it if they need to. It
-> is then the sensor driver that by calling clk_prepare_enable() on the
-> referenced clock triggers the call of the 'enable' function. It seems
-> to me that here you have exposed a clock provider, but the provider
-> itself enables its clocks...
+> This avoids pbus_size_io and pbus_size_mem returning error code to
+> __pci_bus_size_bridges when a resource has been successfully assigned in
+> a previous pass. This fixes the existing behaviour where space for a
+> resource could be reserved multiple times in different parent bridge
+> windows. This also greatly reduces the number of failed BAR messages in
+> dmesg when Linux assigns resources.
 
-What mcam_clk_enable() enables is the clocks for the CCIC IP core; so
-that we're able to access the registers.
+A concrete example for this would be helpful, e.g., a dmesg log
+showing space for a single resource being reserved multiple times in
+different windows.  This is probably too big for a commit log, so you
+could open an issue at bugzilla.kernel.org, attach the complete dmesg
+logs there, maybe include snippets here, and include the URL for more
+details.
 
-(Note to self: we're enabling all the clocks here, we just need the
-"axi" clock, clk_enable(cam->clk[0]), as done elsewhere, should be
-sufficient.)
+General comment: in English text, include "()" on function names as a
+hint to the reader, e.g., you can write
 
-On the other hand, the "mclk" clock provider that is only registered
-below provides the clock for the sensor itself that's provided by the
-CCIC block.
+  Change find_free_bus_resource() to not ...
 
->  Am I confused?
+instead of
 
-Chances are that I am. But maybe you're confusing mcam_clk_enable(cam)
-(consumer, enables the CCIC's input clocks) with mclk_enable()
-(provider, makes CCIC generate the clock for the sensor).
+  Change find_free_bus_resource function ...
 
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> ---
+>  drivers/pci/setup-bus.c | 28 +++++++++++++++++++---------
+>  1 file changed, 19 insertions(+), 9 deletions(-)
 > 
-> Thanks
->    j
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index a1ca8a11f..5b9ee9945 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -752,11 +752,17 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
+>  	}
+>  }
+>  
+> -/* Helper function for sizing routines: find first available
+> -   bus resource of a given type. Note: we intentionally skip
+> -   the bus resources which have already been assigned (that is,
+> -   have non-NULL parent resource). */
+> -static struct resource *find_free_bus_resource(struct pci_bus *bus,
+> +/*
+> + * Helper function for sizing routines: find first bus resource of a given
+> + * type. Note: we do not skip the bus resources which have already been
+> + * assigned (r->parent != NULL). This is because a resource that is already
+> + * assigned (nothing more to be done) will be indistinguishable from one that
+> + * failed due to lack of space if we skip assigned resources. If the caller
+> + * function cannot tell the difference then it might try to place the
+> + * resources in a different window, doubling up on resources or causing
+> + * unforeseeable issues.
+> + */
+> +static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
+>  			 unsigned long type_mask, unsigned long type)
+>  {
+>  	int i;
+> @@ -765,7 +771,7 @@ static struct resource *find_free_bus_resource(struct pci_bus *bus,
+>  	pci_bus_for_each_resource(bus, r, i) {
+>  		if (r == &ioport_resource || r == &iomem_resource)
+>  			continue;
+> -		if (r && (r->flags & type_mask) == type && !r->parent)
+> +		if (r && (r->flags & type_mask) == type)
+>  			return r;
+>  	}
+>  	return NULL;
+> @@ -863,14 +869,16 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
+>  		resource_size_t add_size, struct list_head *realloc_head)
+>  {
+>  	struct pci_dev *dev;
+> -	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
+> -							IORESOURCE_IO);
+> +	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
+> +					IORESOURCE_IO);
+>  	resource_size_t size = 0, size0 = 0, size1 = 0;
+>  	resource_size_t children_add_size = 0;
+>  	resource_size_t min_align, align;
+>  
+>  	if (!b_res)
+>  		return;
+> +	if (b_res->parent)
+> +		return;
+>  
+>  	min_align = window_alignment(bus, IORESOURCE_IO);
+>  	list_for_each_entry(dev, &bus->devices, bus_list) {
+> @@ -975,7 +983,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  	resource_size_t min_align, align, size, size0, size1;
+>  	resource_size_t aligns[18];	/* Alignments from 1Mb to 128Gb */
+>  	int order, max_order;
+> -	struct resource *b_res = find_free_bus_resource(bus,
+> +	struct resource *b_res = find_bus_resource_of_type(bus,
+>  					mask | IORESOURCE_PREFETCH, type);
+>  	resource_size_t children_add_size = 0;
+>  	resource_size_t children_add_align = 0;
+> @@ -983,6 +991,8 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  
+>  	if (!b_res)
+>  		return -ENOSPC;
+> +	if (b_res->parent)
+> +		return 0;
+>  
+>  	memset(aligns, 0, sizeof(aligns));
+>  	max_order = 0;
+> -- 
+> 2.20.1
 > 
-> > +	mcam_ctlr_init(cam); // XXX?
-
-This looks like something I shouldn't have left in place though...
-
-> > +	mcam_clk_disable(cam);
-> > 
-> >  	/*
-> >  	 * Register sensor notifier.
-> > @@ -1857,6 +1947,26 @@ int mccic_register(struct mcam_camera *cam)
-> >  		goto out;
-> >  	}
-> > 
-> > +	/*
-> > +	 * Register sensor master clock.
-> > +	 */
-> > +	mclk_init.parent_names = NULL;
-> > +	mclk_init.num_parents = 0;
-> > +	mclk_init.ops = &mclk_ops;
-> > +	mclk_init.name = "mclk";
-> > +
-> > +	of_property_read_string(cam->dev->of_node, "clock-output-names",
-> > +							&mclk_init.name);
-> > +
-> > +	cam->mclk_hw.init = &mclk_init;
-> > +
-> > +	cam->mclk = devm_clk_register(cam->dev, &cam->mclk_hw);
-> > +	if (IS_ERR(cam->mclk)) {
-> > +		ret = PTR_ERR(cam->mclk);
-> > +		dev_err(cam->dev, "can't register clock\n");
-> > +		goto out;
-> > +	}
-> > +
-> >  	/*
-> >  	 * If so requested, try to get our DMA buffers now.
-> >  	 */
-> > @@ -1884,7 +1994,7 @@ void mccic_shutdown(struct mcam_camera *cam)
-> >  	 */
-> >  	if (!list_empty(&cam->vdev.fh_list)) {
-> >  		cam_warn(cam, "Removing a device with users!\n");
-> > -		mcam_ctlr_power_down(cam);
-> > +		sensor_call(cam, core, s_power, 0);
-> >  	}
-> >  	if (cam->buffer_mode == B_vmalloc)
-> >  		mcam_free_dma_bufs(cam);
-> > @@ -1906,7 +2016,8 @@ void mccic_suspend(struct mcam_camera *cam)
-> >  		enum mcam_state cstate = cam->state;
-> > 
-> >  		mcam_ctlr_stop_dma(cam);
-> > -		mcam_ctlr_power_down(cam);
-> > +		sensor_call(cam, core, s_power, 0);
-> > +		mcam_clk_disable(cam);
-> >  		cam->state = cstate;
-> >  	}
-> >  	mutex_unlock(&cam->s_mutex);
-> > 
-...
-
-Cheers,
-Lubo
-
