@@ -2,114 +2,59 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5B2C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53838C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB29214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2130220675
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbfDYJcH (ORCPT
+        id S1728255AbfDYJdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 05:32:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59050 "EHLO mx1.redhat.com"
+        Thu, 25 Apr 2019 05:33:09 -0400
+Received: from gofer.mess.org ([88.97.38.141]:54649 "EHLO gofer.mess.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbfDYJcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 05:32:07 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 186EE308FE62;
-        Thu, 25 Apr 2019 09:32:07 +0000 (UTC)
-Received: from localhost (ovpn-12-29.pek2.redhat.com [10.72.12.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 35FAF5D705;
-        Thu, 25 Apr 2019 09:32:02 +0000 (UTC)
-Date:   Thu, 25 Apr 2019 17:32:00 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
-        dyoung@redhat.com, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kexec: quiet down kexec reboot
-Message-ID: <20190425093200.GM3584@localhost.localdomain>
-References: <20190423204154.3085-1-pasha.tatashin@soleen.com>
+        id S1727891AbfDYJdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 05:33:08 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 1861C60400; Thu, 25 Apr 2019 10:33:06 +0100 (BST)
+Date:   Thu, 25 Apr 2019 10:33:06 +0100
+From:   Sean Young <sean@mess.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Michael Krufky <mkrufky@linuxtv.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Walls <awalls@md.metrocast.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v9 2/4] [media] cxusb: implement Medion MD95700 digital /
+ analog coexistence
+Message-ID: <20190425093305.jdu53bhmdwri23hv@gofer.mess.org>
+References: <cover.1553903063.git.mail@maciej.szmigiero.name>
+ <07fc8594c942ab527275b29121869ffe77bc1d83.1553903063.git.mail@maciej.szmigiero.name>
+ <9ee14d2c-e8ea-5c3f-1194-f20f25678735@xs4all.nl>
+ <75f07882-1553-b7d8-c15e-9e7cbc19996f@maciej.szmigiero.name>
+ <fb8a5994-4eb7-11b0-d617-52ebecfe4ec0@xs4all.nl>
+ <f673844e-e2a5-3d4c-df8a-eb71100b626d@maciej.szmigiero.name>
+ <05dbc46f-d467-1f63-b1e6-16e4d65b1ac8@xs4all.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190423204154.3085-1-pasha.tatashin@soleen.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 25 Apr 2019 09:32:07 +0000 (UTC)
+In-Reply-To: <05dbc46f-d467-1f63-b1e6-16e4d65b1ac8@xs4all.nl>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/23/19 at 04:41pm, Pavel Tatashin wrote:
-> Here is a regular kexec command sequence and output:
-> =====
-> $ kexec --reuse-cmdline -i --load Image
-> $ kexec -e
-> [  161.342002] kexec_core: Starting new kernel
-> 
-> Welcome to Buildroot
-> buildroot login:
-> =====
-> 
-> Even when "quiet" kernel parameter is specified, "kexec_core: Starting
-> new kernel" is printed.
+On Thu, Apr 25, 2019 at 09:26:05AM +0200, Hans Verkuil wrote:
+> Sean, do you have cxusb hardware that you can use to test this when v11
+> is posted? Just to verify that nothing breaks.
 
-I personally don't like this change very much. 
+Sadly, I'm afraid I do not have any cxusb hardware.
 
-kernel-parameters.txt tells that quiet disables most log messages, but
-not to disable log messages.
 
-	quiet           [KNL] Disable most log messages 
-
-And kexec doesn't print many messages. When 'kexec -e' is executed,
-much critical work need be done in 1st kernel, and also in 2nd kernel
-till printed messages are seen. Sometime it could hang there without a
-notice, because we need shutdown all devices before it. Keeping it can
-at least tell which stage it is?
-
-No strong objection, just we may need enable it manually if silent
-hang is met. Anyone has different opinion? 
-
-Thanks
-Baoquan
-
-> 
-> This message has  KERN_EMERG level, but there is no emergency, it is
-> a normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
-> 
-> Machines that have slow console baud rate benefit from less output.
-> 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> ---
->  kernel/kexec_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index d7140447be75..fe13e86984ec 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1171,7 +1171,7 @@ int kernel_kexec(void)
->  		 * CPU hotplug again; so re-enable it here.
->  		 */
->  		cpu_hotplug_enable();
-> -		pr_emerg("Starting new kernel\n");
-> +		pr_notice("Starting new kernel\n");
->  		machine_shutdown();
->  	}
->  
-> -- 
-> 2.21.0
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Sean
