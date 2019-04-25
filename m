@@ -6,31 +6,33 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEC7C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294ABC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6915206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01136206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbfDYKC1 (ORCPT
+        id S2387615AbfDYKAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:02:27 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:57978 "EHLO
+        Thu, 25 Apr 2019 06:00:13 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:57937 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728935AbfDYKAU (ORCPT
+        with ESMTP id S1729368AbfDYKAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:00:20 -0400
+        Thu, 25 Apr 2019 06:00:12 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hJbAM-0001zT-1S; Thu, 25 Apr 2019 11:59:42 +0200
-Message-Id: <20190425094803.524796783@linutronix.de>
+        id 1hJbA3-0001t5-BV; Thu, 25 Apr 2019 11:59:23 +0200
+Message-Id: <20190425094802.533968922@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 25 Apr 2019 11:45:19 +0200
+Date:   Thu, 25 Apr 2019 11:45:08 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Alexander Potapenko <glider@google.com>,
         Alexey Dobriyan <adobriyan@gmail.com>,
@@ -51,10 +53,7 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Johannes Thumshirn <jthumshirn@suse.de>,
         David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
         Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        linux-btrfs@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
         intel-gfx@lists.freedesktop.org,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -63,7 +62,7 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
         Miroslav Benes <mbenes@suse.cz>, linux-arch@vger.kernel.org
-Subject: [patch V3 26/29] stacktrace: Remove obsolete functions
+Subject: [patch V3 15/29] dm persistent data: Simplify stack trace handling
 References: <20190425094453.875139013@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,74 +71,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No more users of the struct stack_trace based interfaces. Remove them.
-
-Remove the macro stubs for !CONFIG_STACKTRACE as well as they are pointless
-because the storage on the call sites is conditional on CONFIG_STACKTRACE
-already. No point to be 'smart'.
+Replace the indirection through struct stack_trace with an invocation of
+the storage array based interface. This results in less storage space and
+indirection.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: dm-devel@redhat.com
+Cc: Mike Snitzer <snitzer@redhat.com>
+Cc: Alasdair Kergon <agk@redhat.com>
 ---
- include/linux/stacktrace.h |   17 -----------------
- kernel/stacktrace.c        |   14 --------------
- 2 files changed, 31 deletions(-)
+ drivers/md/persistent-data/dm-block-manager.c |   19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
---- a/include/linux/stacktrace.h
-+++ b/include/linux/stacktrace.h
-@@ -36,24 +36,7 @@ extern void save_stack_trace_tsk(struct
- 				struct stack_trace *trace);
- extern int save_stack_trace_tsk_reliable(struct task_struct *tsk,
- 					 struct stack_trace *trace);
--
--extern void print_stack_trace(struct stack_trace *trace, int spaces);
--extern int snprint_stack_trace(char *buf, size_t size,
--			struct stack_trace *trace, int spaces);
--
--#ifdef CONFIG_USER_STACKTRACE_SUPPORT
- extern void save_stack_trace_user(struct stack_trace *trace);
--#else
--# define save_stack_trace_user(trace)              do { } while (0)
--#endif
--
--#else /* !CONFIG_STACKTRACE */
--# define save_stack_trace(trace)			do { } while (0)
--# define save_stack_trace_tsk(tsk, trace)		do { } while (0)
--# define save_stack_trace_user(trace)			do { } while (0)
--# define print_stack_trace(trace, spaces)		do { } while (0)
--# define snprint_stack_trace(buf, size, trace, spaces)	do { } while (0)
--# define save_stack_trace_tsk_reliable(tsk, trace)	({ -ENOSYS; })
- #endif /* CONFIG_STACKTRACE */
+--- a/drivers/md/persistent-data/dm-block-manager.c
++++ b/drivers/md/persistent-data/dm-block-manager.c
+@@ -35,7 +35,10 @@
+ #define MAX_HOLDERS 4
+ #define MAX_STACK 10
  
- #if defined(CONFIG_STACKTRACE) && defined(CONFIG_HAVE_RELIABLE_STACKTRACE)
---- a/kernel/stacktrace.c
-+++ b/kernel/stacktrace.c
-@@ -30,12 +30,6 @@ void stack_trace_print(unsigned long *en
+-typedef unsigned long stack_entries[MAX_STACK];
++struct stack_store {
++	unsigned int	nr_entries;
++	unsigned long	entries[MAX_STACK];
++};
+ 
+ struct block_lock {
+ 	spinlock_t lock;
+@@ -44,8 +47,7 @@ struct block_lock {
+ 	struct task_struct *holders[MAX_HOLDERS];
+ 
+ #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
+-	struct stack_trace traces[MAX_HOLDERS];
+-	stack_entries entries[MAX_HOLDERS];
++	struct stack_store traces[MAX_HOLDERS];
+ #endif
+ };
+ 
+@@ -73,7 +75,7 @@ static void __add_holder(struct block_lo
+ {
+ 	unsigned h = __find_holder(lock, NULL);
+ #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
+-	struct stack_trace *t;
++	struct stack_store *t;
+ #endif
+ 
+ 	get_task_struct(task);
+@@ -81,11 +83,7 @@ static void __add_holder(struct block_lo
+ 
+ #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
+ 	t = lock->traces + h;
+-	t->nr_entries = 0;
+-	t->max_entries = MAX_STACK;
+-	t->entries = lock->entries[h];
+-	t->skip = 2;
+-	save_stack_trace(t);
++	t->nr_entries = stack_trace_save(t->entries, MAX_STACK, 2);
+ #endif
  }
- EXPORT_SYMBOL_GPL(stack_trace_print);
  
--void print_stack_trace(struct stack_trace *trace, int spaces)
--{
--	stack_trace_print(trace->entries, trace->nr_entries, spaces);
--}
--EXPORT_SYMBOL_GPL(print_stack_trace);
--
- /**
-  * stack_trace_snprint - Print the entries in the stack trace into a buffer
-  * @buf:	Pointer to the print buffer
-@@ -72,14 +66,6 @@ int stack_trace_snprint(char *buf, size_
- }
- EXPORT_SYMBOL_GPL(stack_trace_snprint);
+@@ -106,7 +104,8 @@ static int __check_holder(struct block_l
+ 			DMERR("recursive lock detected in metadata");
+ #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
+ 			DMERR("previously held here:");
+-			print_stack_trace(lock->traces + i, 4);
++			stack_trace_print(lock->traces[i].entries,
++					  lock->traces[i].nr_entries, 4);
  
--int snprint_stack_trace(char *buf, size_t size,
--			struct stack_trace *trace, int spaces)
--{
--	return stack_trace_snprint(buf, size, trace->entries,
--				   trace->nr_entries, spaces);
--}
--EXPORT_SYMBOL_GPL(snprint_stack_trace);
--
- /*
-  * Architectures that do not implement save_stack_trace_*()
-  * get these weak aliases and once-per-bootup warnings
+ 			DMERR("subsequent acquisition attempted here:");
+ 			dump_stack();
 
 
