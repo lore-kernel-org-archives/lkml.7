@@ -2,134 +2,141 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3001C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93827C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B012077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DA2205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:53:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="duv0hVS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbfDYTxF (ORCPT
+        id S2387595AbfDYTxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:53:05 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:60536 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfDYTxF (ORCPT
+        Thu, 25 Apr 2019 15:53:13 -0400
+Received: from mail-pf1-f178.google.com ([209.85.210.178]:46766 "EHLO
+        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfDYTxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:53:05 -0400
-Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hJkQE-0001Cn-Bd; Thu, 25 Apr 2019 21:52:42 +0200
-Date:   Thu, 25 Apr 2019 21:52:41 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <dima@arista.com>
-cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@openvz.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv3 03/27] timens: Introduce CLOCK_MONOTONIC offsets
-In-Reply-To: <20190425161416.26600-4-dima@arista.com>
-Message-ID: <alpine.DEB.2.21.1904252118280.1768@nanos.tec.linutronix.de>
-References: <20190425161416.26600-1-dima@arista.com> <20190425161416.26600-4-dima@arista.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 25 Apr 2019 15:53:13 -0400
+Received: by mail-pf1-f178.google.com with SMTP id j11so417287pff.13
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:53:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=4wTPIP01Eutm4pSRisUovUG4tLZPXcoyncmF8Dtkr/o=;
+        b=duv0hVS9q4PL0nUb959Sy54iqO1TJyKiwiwvNvaNb31Lym2cv9PIsIp/lsmWasxgob
+         OVMlSKRsticqdmUBZFyVRkjlEbvrD4gW8FftQaKWqSWByfiG1uu/xu2HvaD+vI9GRQ9f
+         vj3yAN9hbDpY5gO/k+N52FadAafE6SFgLfTHL78qW9jHVqO9z8abEu204Zd/gqyMKXNU
+         d/yjjit05QU53UpWp7+u+uQaRjg5AFdNdKiTZ9cZJRmegI5ugovc/hSCSYhigMfezJk8
+         wF/I+NEgckW116A8ykHwiHdsw5jQ4vm4gvHnEqWOULo9+K5lO/n9leuNMSFS85uZ8U7U
+         5B3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4wTPIP01Eutm4pSRisUovUG4tLZPXcoyncmF8Dtkr/o=;
+        b=XKDt7ptCWlMVmfnhm4DPhv68DFzvka/wouwgEcfZ4rhehrJN4fEQpKOtEuN49hcESr
+         3ZqviIMixu0dOdP+4pJmlasbiiqZcUnEUg7weppCvVJbuT2V4ygyWcWOB9ZMRgn2uyvp
+         a63Izn/pDYmccbtf89TXfXuX/20M+5m4pZijh+ys8PvYsB3+aW/z3WpXXh2E2joLkVSZ
+         om74+5lA4KOnTT5hdig5O2710CF3g18d3IZUU1F77YKI9w1YXrxlDK7/F8YhVILuSLcx
+         dduKhMIBXt7An5Otlpwe7XWInYM/Y4kvEV20Ygum9OPsHYEWJHWvNtSWYqHcC9bnERda
+         g40g==
+X-Gm-Message-State: APjAAAUGklmL1Llj79al3ldb8o+1HQV9ZEkrwCGGJp9FLMir/OS4hsFv
+        LM3xYVaXSsCPlU2dtKQWPOtq/A==
+X-Google-Smtp-Source: APXvYqwbYTHEgzrD9YgKi9QqSPTxhwDPOSUGaiEmhd54m1LZsH2huYDY7+fxQ3Tuv80Hk2F2sDNQgg==
+X-Received: by 2002:a63:ff26:: with SMTP id k38mr39268398pgi.123.1556221992626;
+        Thu, 25 Apr 2019 12:53:12 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id t64sm47261961pfa.86.2019.04.25.12.53.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 12:53:11 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/32] coresight: next v5.1-rc6 
+Date:   Thu, 25 Apr 2019 13:52:38 -0600
+Message-Id: <20190425195310.31562-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019, Dmitry Safonov wrote:
-> From: Andrei Vagin <avagin@openvz.org>
-> 
-> Add monotonic time virtualisation for time namespace.
-> Introduce timespec for monotionic clock into timens offsets and wire
-> clock_gettime() syscall.
+Good day Greg,
 
-That's a bit meager. It should at least explain the concept how this is
-supposed to work.
- 
->  #define CLOCKS_MASK			(CLOCK_REALTIME | CLOCK_MONOTONIC)
->  #define CLOCKS_MONO			CLOCK_MONOTONIC
+Please consider the following for inclusion in the 5.2 cycle when you have
+the time.
 
-Unrelated to this, but those two defines can go away.
-  
-> +#define CLOCK_TIMENS			1024
+Regards,
+Mathieu 
 
-Random number pulled out of thin air without any explanation. Aside of that
-why is this exposed to user space?
+Arnd Bergmann (1):
+  coresight: catu: fix clang build warning
 
-> @@ -77,6 +78,7 @@ int do_clock_gettime(clockid_t which_clock, struct timespec64 *tp)
->  		break;
->  	case CLOCK_MONOTONIC:
->  		ktime_get_ts64(tp);
-> +		timens_add_monotonic(tp);
->  		break;
->  	case CLOCK_BOOTTIME:
->  		ktime_get_boottime_ts64(tp);
-> diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-> index 29176635991f..a047d6b7c768 100644
-> --- a/kernel/time/posix-timers.c
-> +++ b/kernel/time/posix-timers.c
-> @@ -30,6 +30,7 @@
->  #include <linux/hashtable.h>
->  #include <linux/compat.h>
->  #include <linux/nospec.h>
-> +#include <linux/time_namespace.h>
->  
->  #include "timekeeping.h"
->  #include "posix-timers.h"
-> @@ -190,6 +191,8 @@ static int posix_clock_realtime_adj(const clockid_t which_clock,
->  static int posix_ktime_get_ts(clockid_t which_clock, struct timespec64 *tp)
->  {
->  	ktime_get_ts64(tp);
-> +	if (which_clock & CLOCK_TIMENS)
-> +		timens_add_monotonic(tp);
+Mathieu Poirier (20):
+  coresight: pmu: Adding ITRACE property to cs_etm PMU
+  coresight: etm4x: Add kernel configuration for CONTEXTID
+  coresight: etm4x: Skip selector pair 0
+  coresight: etm4x: Configure tracers to emit timestamps
+  coresight: Adding return code to sink::disable() operation
+  coresight: Move reference counting inside sink drivers
+  coresight: Properly address errors in sink::disable() functions
+  coresight: Properly address concurrency in sink::update() functions
+  coresight: perf: Clean up function etm_setup_aux()
+  coresight: perf: Refactor function free_event_data()
+  coresight: Communicate perf event to sink buffer allocation functions
+  coresight: tmc-etr: Refactor function tmc_etr_setup_perf_buf()
+  coresight: tmc-etr: Create per-thread buffer allocation function
+  coresight: tmc-etr: Introduce the notion of process ID to ETR devices
+  coresight: tmc-etr: Introduce the notion of reference counting to ETR
+    devices
+  coresight: tmc-etr: Introduce the notion of IDR to ETR devices
+  coresight: tmc-etr: Allocate and free ETR memory buffers for CPU-wide
+    scenarios
+  coresight: tmc-etr: Add support for CPU-wide trace scenarios
+  coresight: tmc-etf: Add support for CPU-wide trace scenarios
+  coresight: etb10: Add support for CPU-wide trace scenarios
 
-> @@ -1039,7 +1046,7 @@ SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
->  	if (!kc)
->  		return -EINVAL;
->  
-> -	error = kc->clock_get(which_clock, &kernel_tp);
-> +	error = kc->clock_get(which_clock | CLOCK_TIMENS, &kernel_tp);
+Suzuki K Poulose (10):
+  coresight: tmc: Report DMA setup failures
+  coresight: dynamic-replicator: Clean up error handling
+  coresight: replicator: Prepare for merging with dynamic-replicator
+  coresight: dynamic-replicator: Prepare for merging with static
+    replicator
+  coresight: Merge the static and dynamic replicator drivers
+  coresight: Fix freeing up the coresight connections
+  coresight: etb10: Cleanup power management
+  coresight: tpiu: Cleanup power management
+  coresight: catu: Cleanup power management
+  coresight: tmc: Cleanup power management
 
-Bah. After some banging the head against the wall I figured out what you
-are doing here. It's because kc->clock_get() is used in common_timer_get()
-as well and there you don't want the adjustment there. Sorry, but this is
-uncomprehensible and unmaintainable and adds yet another conditional into
-the code flow.
+YueHaibing (1):
+  coresight: catu: Make catu_helper_ops and catu_ops static
 
-The callsite in common_timer_get() has already a comment:
-        /*
-         * The timespec64 based conversion is suboptimal, but it's not
-         * worth to implement yet another callback.
-         */
-        kc->clock_get(timr->it_clock, &ts64);
-        now = timespec64_to_ktime(ts64);
+ drivers/hwtracing/coresight/Kconfig           |   9 +-
+ drivers/hwtracing/coresight/Makefile          |   1 -
+ drivers/hwtracing/coresight/coresight-catu.c  |   7 +-
+ drivers/hwtracing/coresight/coresight-catu.h  |   5 -
+ .../coresight/coresight-dynamic-replicator.c  | 255 -----------------
+ drivers/hwtracing/coresight/coresight-etb10.c |  97 +++++--
+ .../hwtracing/coresight/coresight-etm-perf.c  |  37 ++-
+ drivers/hwtracing/coresight/coresight-etm4x.c | 114 +++++++-
+ .../coresight/coresight-replicator.c          | 232 +++++++++++++--
+ .../hwtracing/coresight/coresight-tmc-etf.c   |  82 ++++--
+ .../hwtracing/coresight/coresight-tmc-etr.c   | 266 +++++++++++++++---
+ drivers/hwtracing/coresight/coresight-tmc.c   |  17 +-
+ drivers/hwtracing/coresight/coresight-tmc.h   |  12 +
+ drivers/hwtracing/coresight/coresight-tpiu.c  |  18 +-
+ drivers/hwtracing/coresight/coresight.c       |  29 +-
+ include/linux/coresight-pmu.h                 |   2 +
+ include/linux/coresight.h                     |   7 +-
+ tools/include/linux/coresight-pmu.h           |   2 +
+ 18 files changed, 774 insertions(+), 418 deletions(-)
+ delete mode 100644 drivers/hwtracing/coresight/coresight-dynamic-replicator.c
 
-So now we have a proper justification to add that extra callback:
-separation of functionality. It's trivial and not a massive code size
-overhead.
+-- 
+2.17.1
 
-Thanks,
-
-	tglx
