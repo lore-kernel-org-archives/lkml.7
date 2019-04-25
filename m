@@ -2,283 +2,261 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24999C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C62CC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D1620811
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556172443;
-	bh=tgSDoVir5vFcmTapauqQMWq5W42gOTfcncrud85+FH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2T2gxqt39/FywmNb4jvNeTZ2DwJ7lrMnWwlysFX6mc5/x72kRmqSKvgk2ouLpmDWG
-	 EeekaVc1uJOuOntEj0VxdNO/DJwA1gZFk2+Q7J8wTwGFAiwvR5tWMQKDdx8RDv0IKa
-	 EX4zEJwrMIVMnKjV83/rUkFu4vMGw8fMG089GGtM=
+	by mail.kernel.org (Postfix) with ESMTP id AF630217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:12:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Gm2rznVV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbfDYGHV (ORCPT
+        id S1729377AbfDYGMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 02:07:21 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53152 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfDYGHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 02:07:21 -0400
-Received: by mail-wm1-f66.google.com with SMTP id j13so7676040wmh.2;
-        Wed, 24 Apr 2019 23:07:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TjBr1NfdwuGVc1XPZioyKxewNiib7C5TjSHGdyk9F6o=;
-        b=gCsxsW3YDxw+OG/aASNs8EbsSzkGN0n1AsVozSQcH74hh9QwVyEKvMYojrLS8/v0wZ
-         0Y5LoN8XhcSbIssqG7a8006vsJQ+zPZL1G3YOWUT/MJw3g0/uDRWH7VxGj/SMKBjQL8n
-         e8yoOT1LFKnp2pLzlHngv0nFkvZDe8gpOKIWbPllkPpY4a07huFle3oVdk/WE+w0uAD+
-         cpUOQzb5mGK5WrSnUH3VbFyzFFXYKNGa2OZEzg/xu6ksicKI1/tB6j9/wKCWK7lZhlZR
-         2eL1jXW82TSzSRb5/ltwud9JyorB3spZdrDYmtBusgMElpLiceuxJz/tlDucs2IeTb+k
-         EtIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TjBr1NfdwuGVc1XPZioyKxewNiib7C5TjSHGdyk9F6o=;
-        b=KaLm/WKN4TtaLaUCNJNNSfSZ4kqBxrAuLv5JD+R/xW08W/+GVijcygmKJpi7fJSoDj
-         UHYdhReYqP8k8rcnIB5rujuj0wFfqUTVEyiYEl9II0vkO8giqoay0t0UP6okiF8l60x1
-         m7k6KUh6puipFqLc5JUL4H/jYHsmYidj6Sv8GFdlUzohlX+tDCabulkegiA5Kn3DSKeb
-         uosSDD0MXsvkgl1gufFSKdG3jiilzqbEJb1UEY/qmzgFiowTBLvFzonvbR8RfnOZ8oa3
-         W9MGL2cRZ8KvSks8MEpTn9xCmcndRrAQigptXb5i6Ap0gZllKMa8KLegWBUF54LCVwoF
-         6a9w==
-X-Gm-Message-State: APjAAAUS5s5M2MXok1drba2Zg4jqrPCvO2hgYFFTyww3OWwKSx00IkCR
-        I4EaYIusUMbkuzYX15lCwP4IiRS6
-X-Google-Smtp-Source: APXvYqxvNPBuV6ipNLYL6lT0STCjGyruVZmlqyOUbnIMN0pZlxToKW7CB9qqxNoAzNcjB42kh3NxuA==
-X-Received: by 2002:a1c:c910:: with SMTP id f16mr1722142wmb.118.1556172438427;
-        Wed, 24 Apr 2019 23:07:18 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id 204sm25587124wmc.1.2019.04.24.23.07.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 23:07:17 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 08:07:15 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v8 10/15] x86/split_lock: Handle #AC exception for split
- lock
-Message-ID: <20190425060715.GB40105@gmail.com>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
- <1556134382-58814-11-git-send-email-fenghua.yu@intel.com>
+        Thu, 25 Apr 2019 02:12:19 -0400
+Received: from mail-eopbgr80051.outbound.protection.outlook.com ([40.107.8.51]:33055
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726229AbfDYGMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 02:12:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RR5G9fC6rqfPdsPz5SmaUJWIxIzm0e3fEslyoMDPxEA=;
+ b=Gm2rznVVcFCy9013KeMKGYPSxXK2TBgpajLKiLFrwrt5WvvGrLmdgwa+uwDt/9NnRq/c1IauMzl+F5rQVBb3rBqamxcifCe4u1YkJ43dPdwp+/TJZJK4FP8vyz3SUb6Vdq7kM0fEGMr8gUjxi83sAvrK6zSBg1zqhWi77CoFNA8=
+Received: from AM0PR08MB4995.eurprd08.prod.outlook.com (10.255.28.224) by
+ AM0PR08MB3986.eurprd08.prod.outlook.com (20.178.118.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.14; Thu, 25 Apr 2019 06:12:09 +0000
+Received: from AM0PR08MB4995.eurprd08.prod.outlook.com
+ ([fe80::58c8:40bf:8f31:2ed9]) by AM0PR08MB4995.eurprd08.prod.outlook.com
+ ([fe80::58c8:40bf:8f31:2ed9%6]) with mapi id 15.20.1813.017; Thu, 25 Apr 2019
+ 06:12:09 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     "emil.velikov@collabora.com" <emil.velikov@collabora.com>,
+        "emil.l.velikov@gmail.com" <emil.l.velikov@gmail.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH] drm/komeda: Constify the usage of
+ komeda_component/pipeline/dev_funcs
+Thread-Topic: [PATCH] drm/komeda: Constify the usage of
+ komeda_component/pipeline/dev_funcs
+Thread-Index: AQHU+y3QT+skjMA5+06zi5PRGCT2bg==
+Date:   Thu, 25 Apr 2019 06:12:09 +0000
+Message-ID: <20190425061110.20314-1-james.qian.wang@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR04CA0076.apcprd04.prod.outlook.com
+ (2603:1096:202:15::20) To AM0PR08MB4995.eurprd08.prod.outlook.com
+ (2603:10a6:208:15a::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e55a6084-c336-4edd-97f1-08d6c944f2fb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR08MB3986;
+x-ms-traffictypediagnostic: AM0PR08MB3986:
+x-ms-exchange-purlcount: 2
+nodisclaimer: True
+x-microsoft-antispam-prvs: <AM0PR08MB39868C77A98B85430C1422CEB33D0@AM0PR08MB3986.eurprd08.prod.outlook.com>
+x-forefront-prvs: 0018A2705B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(346002)(366004)(189003)(199004)(6306002)(53936002)(66946007)(1076003)(25786009)(36756003)(26005)(103116003)(486006)(186003)(6512007)(71190400001)(14444005)(2906002)(71200400001)(305945005)(7736002)(66446008)(64756008)(256004)(2501003)(73956011)(66476007)(66556008)(508600001)(99286004)(66066001)(97736004)(54906003)(110136005)(966005)(6116002)(4326008)(68736007)(3846002)(2201001)(86362001)(6506007)(102836004)(5660300002)(55236004)(52116002)(476003)(2616005)(81166006)(81156014)(50226002)(8676002)(8936002)(386003)(316002)(14454004)(6486002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB3986;H:AM0PR08MB4995.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: r2h3DTBGLxDsqN8452jmKAWGnmKgyzjiX7hxr+6NVlMovoS98Sjl04cBSVhkas+VdAw1Tz4cCG8/XcBA0ZVWs+Cgxk4/OJV3Of0Q5/vmnqEA+FOYC7TyZP6V1D80T/d7BEjLH7EFedHNJgaVCy07Bji9KovUO6oVS399xgZBfqnQLgpc6PrivL+GstWNTsShePzAnciqvX1ijn/VTbjhbkUumZxVI/N7GiFWDeD1SLLFdzywa8WV89vQiXh6NHs1v1MM81V9DL/9KgNj29Mrf+DdC8mDBVJbPsTUoy5icfC8HhWFgFny33KFIset4hh6THH8hacsaRXCxuSs6Izd0G4WPqnNW3RYaFyWf3AWH6ffdYJv1tpBP8ygqD5jc2YWmX2dX1e7L0T9im+El2w9sRimM1Zd/N7vRqLM3fCYGn8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556134382-58814-11-git-send-email-fenghua.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e55a6084-c336-4edd-97f1-08d6c944f2fb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 06:12:09.5380
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3986
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Fenghua Yu <fenghua.yu@intel.com> wrote:
-
-> There may be different considerations on how to handle #AC for split lock,
-> e.g. how to handle system hang caused by split lock issue in firmware,
-> how to emulate faulting instruction, etc. We use a simple method to
-> handle user and kernel split lock and may extend the method in the future.
-> 
-> When #AC exception for split lock is triggered from user process, the
-> process is killed by SIGBUS. To execute the process properly, a user
-> application developer needs to fix the split lock issue.
-> 
-> When #AC exception for split lock is triggered from a kernel instruction,
-> disable split lock detection on local CPU and warn the split lock issue.
-> After the exception, the faulting instruction will be executed and kernel
-> execution continues. Split lock detection is only disabled on the local
-> CPU, not globally. It will be re-enabled if the CPU is offline and then
-> online or through sysfs interface.
-> 
-> A kernel/driver developer should check the warning, which contains helpful
-> faulting address, context, and callstack info, and fix the split lock
-> issues. Then further split lock issues may be captured and fixed.
-> 
-> After bit 29 in MSR_TEST_CTL is set to 1 in kernel, firmware inherits
-> the setting when firmware is executed in S4, S5, run time services, SMI,
-> etc. If there is a split lock operation in firmware, it will triggers
-> #AC and may hang the system depending on how firmware handles the #AC.
-> It's up to a firmware developer to fix split lock issues in firmware.
-> 
-> MSR TEST_CTL value is cached in per CPU msr_test_ctl_cache which will be
-> used in virtualization to avoid costly MSR read.
-> 
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> ---
->  arch/x86/include/asm/cpu.h  |  3 +++
->  arch/x86/kernel/cpu/intel.c | 24 ++++++++++++++++++++++++
->  arch/x86/kernel/traps.c     | 31 ++++++++++++++++++++++++++++++-
->  3 files changed, 57 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-> index 4e03f53fc079..5706461eb60f 100644
-> --- a/arch/x86/include/asm/cpu.h
-> +++ b/arch/x86/include/asm/cpu.h
-> @@ -42,7 +42,10 @@ unsigned int x86_model(unsigned int sig);
->  unsigned int x86_stepping(unsigned int sig);
->  #ifdef CONFIG_CPU_SUP_INTEL
->  void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
-> +DECLARE_PER_CPU(u64, msr_test_ctl_cache);
-> +void handle_split_lock_kernel_mode(void);
->  #else
->  static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
-> +static inline void handle_split_lock_kernel_mode(void) {}
->  #endif
->  #endif /* _ASM_X86_CPU_H */
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index d7e676c2aebf..2cc69217ca7c 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -31,6 +31,9 @@
->  #include <asm/apic.h>
->  #endif
->  
-> +DEFINE_PER_CPU(u64, msr_test_ctl_cache);
-> +EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctl_cache);
-> +
->  /*
->   * Just in case our CPU detection goes bad, or you have a weird system,
->   * allow a way to override the automatic disabling of MPX.
-> @@ -654,6 +657,17 @@ static void init_intel_misc_features(struct cpuinfo_x86 *c)
->  	wrmsrl(MSR_MISC_FEATURES_ENABLES, msr);
->  }
->  
-> +static void init_split_lock_detect(struct cpuinfo_x86 *c)
-> +{
-> +	if (cpu_has(c, X86_FEATURE_SPLIT_LOCK_DETECT)) {
-> +		u64 test_ctl_val;
-> +
-> +		/* Cache MSR TEST_CTL */
-> +		rdmsrl(MSR_TEST_CTL, test_ctl_val);
-> +		this_cpu_write(msr_test_ctl_cache, test_ctl_val);
-> +	}
-> +}
-> +
->  static void init_intel(struct cpuinfo_x86 *c)
->  {
->  	early_init_intel(c);
-> @@ -766,6 +780,8 @@ static void init_intel(struct cpuinfo_x86 *c)
->  	init_intel_energy_perf(c);
->  
->  	init_intel_misc_features(c);
-> +
-> +	init_split_lock_detect(c);
->  }
->  
->  #ifdef CONFIG_X86_32
-> @@ -1060,3 +1076,11 @@ void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
->  	if (ia32_core_cap & CORE_CAP_SPLIT_LOCK_DETECT)
->  		set_split_lock_detect();
->  }
-> +
-> +void handle_split_lock_kernel_mode(void)
-> +{
-> +	/* Warn and disable split lock detection on this CPU */
-> +	msr_clear_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
-> +	this_cpu_and(msr_test_ctl_cache, ~TEST_CTL_SPLIT_LOCK_DETECT);
-> +	WARN_ONCE(1, "split lock operation detected\n");
-
-Please name this more descriptively, such as x86_split_lock_disable() or 
-so.
-
-Also, please reorganize the split lock detection namespace to be less 
-idiosynchratic, use a common x86_split_lock_ prefix and organize the new 
-namespace around that:
-
-    x86_split_lock_init()          // was: init_split_lock_detect
-    x86_split_lock_enable()        // was: set_split_lock_detect
-    x86_split_lock_disable()       // was: handle_split_lock_kernel_mode
-    etc.
-
-> +dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
-> +{
-> +	unsigned int trapnr = X86_TRAP_AC;
-> +	char str[] = "alignment check";
-> +	int signr = SIGBUS;
-> +
-> +	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-> +
-> +	if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) ==
-> +		       NOTIFY_STOP)
-
-Please do not break lines mid-line when it does absolutely nothing to 
-improve readablity. Just ignore checkpatch.
-
-> +	cond_local_irq_enable(regs);
-> +	if (!user_mode(regs) &&
-> +	    static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT)) {
-
-Ditto - in fact this doesn't even violate the col80 rule ...
-
-> +		/*
-> +		 * Only split lock can generate #AC from kernel at this point.
-> +		 * Warn and disable split lock detection on this CPU. The
-> +		 * faulting instruction will be executed without generating
-> +		 * another #AC fault.
-> +		 */
-
-How about explaining all this more clearly:
-
-> +		/*
-> +		 * Only split locks can generate #AC from kernel mode.
-> +              *
-> +		 * The split-lock detection feature is a one-shot
-> +              * debugging facility, so we disable it immediately and 
-> +              * print a warning.
-> +              *
-> +              * This also solves the instruction restart problem: we 
-> +              * return the faulting instruction right after this it 
-> +              * will be executed without generating another #AC fault
-> +              * and getting into an infinite loop, instead it will
-> +              * continue without side effects to the interrupted
-> +              * execution conext.
-> +              *
-> +              * Split-lock detection will remain disabled permanently
-> +              * after this, until the next reboot.
-> +		 */
-
-?
-
-Also, AFAICS this code will disable split-lock detection only on the 
-current CPU - all the other 4,096 CPUs hitting this same lock at the 
-exact same time will happily continue spamming the kernel log as they 
-encounter the same split lock, correct?
-
-While the warning itself uses WARN_ONCE(), that and the underlying 
-BUGFLAG_ONCE mechanism is not an atomic facility.
-
-Instead, please add an explicit, global split_lock_debug bit that the 
-first CPU hitting it disables, and only that CPU is allowed to print a 
-single warning. All other CPUs just disable split-lock debugging silently 
-and continue.
-
-This also solves the race if the split-lock #AC fault is re-triggered by 
-NMI of perf context interrupting one split-lock warning execution while 
-the original WARN_ON() is executing.
-
-Thanks,
-
-	Ingo
+RGVwZW5kcyBvbjoNCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy81
+ODk3Ni8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy81OTg1NS8N
+Cg0KUmVwb3J0ZWQtYnk6IEVtaWwgVmVsaWtvdiA8ZW1pbC5sLnZlbGlrb3ZAZ21haWwuY29tPg0K
+U2lnbmVkLW9mZi1ieTogSmFtZXMgUWlhbiBXYW5nIChBcm0gVGVjaG5vbG9neSBDaGluYSkgPGph
+bWVzLnFpYW4ud2FuZ0Bhcm0uY29tPg0KLS0tDQogZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5
+L2tvbWVkYS9kNzEvZDcxX2NvbXBvbmVudC5jIHwgIDggKysrKy0tLS0NCiBkcml2ZXJzL2dwdS9k
+cm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfZGV2LmMgICAgICAgfCAgNCArKy0tDQogZHJp
+dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfY3J0Yy5jICAgICAgIHwgIDIg
+Ky0NCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kZXYuYyAgICAg
+ICAgfCAgMiArLQ0KIGRyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rl
+di5oICAgICAgICB8ICA2ICsrKy0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21l
+ZGEva29tZWRhX3BpcGVsaW5lLmMgICB8ICA0ICsrLS0NCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
+c3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5oICAgfCAxMCArKysrKy0tLS0tDQogNyBmaWxl
+cyBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9jb21wb25lbnQu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9jb21wb25lbnQu
+Yw0KaW5kZXggMDMxZTVmMzA1YTNjLi42YmFiODE2ZWQ4ZTcgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
+L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMNCisrKyBiL2Ry
+aXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9jb21wb25lbnQuYw0KQEAg
+LTI0NSw3ICsyNDUsNyBAQCBzdGF0aWMgdm9pZCBkNzFfbGF5ZXJfZHVtcChzdHJ1Y3Qga29tZWRh
+X2NvbXBvbmVudCAqYywgc3RydWN0IHNlcV9maWxlICpzZikNCiAJc2VxX3ByaW50ZihzZiwgIiVz
+QURfVl9DUk9QOlx0XHQweCVYXG4iLCBwcmVmaXgsIHZbMl0pOw0KIH0NCiANCi1zdGF0aWMgc3Ry
+dWN0IGtvbWVkYV9jb21wb25lbnRfZnVuY3MgZDcxX2xheWVyX2Z1bmNzID0gew0KK3N0YXRpYyBj
+b25zdCBzdHJ1Y3Qga29tZWRhX2NvbXBvbmVudF9mdW5jcyBkNzFfbGF5ZXJfZnVuY3MgPSB7DQog
+CS51cGRhdGUJCT0gZDcxX2xheWVyX3VwZGF0ZSwNCiAJLmRpc2FibGUJPSBkNzFfbGF5ZXJfZGlz
+YWJsZSwNCiAJLmR1bXBfcmVnaXN0ZXIJPSBkNzFfbGF5ZXJfZHVtcCwNCkBAIC0zOTEsNyArMzkx
+LDcgQEAgc3RhdGljIHZvaWQgZDcxX2NvbXBpel9kdW1wKHN0cnVjdCBrb21lZGFfY29tcG9uZW50
+ICpjLCBzdHJ1Y3Qgc2VxX2ZpbGUgKnNmKQ0KIAlzZXFfcHJpbnRmKHNmLCAiQ1VfVVNFUl9ISUdI
+Olx0XHQweCVYXG4iLCB2WzFdKTsNCiB9DQogDQotc3RhdGljIHN0cnVjdCBrb21lZGFfY29tcG9u
+ZW50X2Z1bmNzIGQ3MV9jb21waXpfZnVuY3MgPSB7DQorc3RhdGljIGNvbnN0IHN0cnVjdCBrb21l
+ZGFfY29tcG9uZW50X2Z1bmNzIGQ3MV9jb21waXpfZnVuY3MgPSB7DQogCS51cGRhdGUJCT0gZDcx
+X2NvbXBpel91cGRhdGUsDQogCS5kaXNhYmxlCT0gZDcxX2NvbXBvbmVudF9kaXNhYmxlLA0KIAku
+ZHVtcF9yZWdpc3Rlcgk9IGQ3MV9jb21waXpfZHVtcCwNCkBAIC00NjcsNyArNDY3LDcgQEAgc3Rh
+dGljIHZvaWQgZDcxX2ltcHJvY19kdW1wKHN0cnVjdCBrb21lZGFfY29tcG9uZW50ICpjLCBzdHJ1
+Y3Qgc2VxX2ZpbGUgKnNmKQ0KIAkJc2VxX3ByaW50ZihzZiwgIklQU19SR0JfWVVWX0NPRUZGJXU6
+XHQweCVYXG4iLCBpLCB2W2ldKTsNCiB9DQogDQotc3RhdGljIHN0cnVjdCBrb21lZGFfY29tcG9u
+ZW50X2Z1bmNzIGQ3MV9pbXByb2NfZnVuY3MgPSB7DQorc3RhdGljIGNvbnN0IHN0cnVjdCBrb21l
+ZGFfY29tcG9uZW50X2Z1bmNzIGQ3MV9pbXByb2NfZnVuY3MgPSB7DQogCS51cGRhdGUJCT0gZDcx
+X2ltcHJvY191cGRhdGUsDQogCS5kaXNhYmxlCT0gZDcxX2NvbXBvbmVudF9kaXNhYmxlLA0KIAku
+ZHVtcF9yZWdpc3Rlcgk9IGQ3MV9pbXByb2NfZHVtcCwNCkBAIC01ODAsNyArNTgwLDcgQEAgc3Rh
+dGljIHZvaWQgZDcxX3RpbWluZ19jdHJscl9kdW1wKHN0cnVjdCBrb21lZGFfY29tcG9uZW50ICpj
+LA0KIAlzZXFfcHJpbnRmKHNmLCAiQlNfVVNFUjpcdFx0MHglWFxuIiwgdls0XSk7DQogfQ0KIA0K
+LXN0YXRpYyBzdHJ1Y3Qga29tZWRhX2NvbXBvbmVudF9mdW5jcyBkNzFfdGltaW5nX2N0cmxyX2Z1
+bmNzID0gew0KK3N0YXRpYyBjb25zdCBzdHJ1Y3Qga29tZWRhX2NvbXBvbmVudF9mdW5jcyBkNzFf
+dGltaW5nX2N0cmxyX2Z1bmNzID0gew0KIAkudXBkYXRlCQk9IGQ3MV90aW1pbmdfY3RybHJfdXBk
+YXRlLA0KIAkuZGlzYWJsZQk9IGQ3MV90aW1pbmdfY3RybHJfZGlzYWJsZSwNCiAJLmR1bXBfcmVn
+aXN0ZXIJPSBkNzFfdGltaW5nX2N0cmxyX2R1bXAsDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcxX2Rldi5jIGIvZHJpdmVycy9ncHUvZHJtL2Fy
+bS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcxX2Rldi5jDQppbmRleCAzNDUwNmVmN2FkNDAuLjNhNzI0
+OGQ0MjM3NiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEv
+ZDcxL2Q3MV9kZXYuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9k
+NzEvZDcxX2Rldi5jDQpAQCAtNTAyLDcgKzUwMiw3IEBAIHN0YXRpYyB2b2lkIGQ3MV9pbml0X2Zt
+dF90Ymwoc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYpDQogCXRhYmxlLT5uX2Zvcm1hdHMgPSBBUlJB
+WV9TSVpFKGQ3MV9mb3JtYXRfY2Fwc190YWJsZSk7DQogfQ0KIA0KLXN0YXRpYyBzdHJ1Y3Qga29t
+ZWRhX2Rldl9mdW5jcyBkNzFfY2hpcF9mdW5jcyA9IHsNCitzdGF0aWMgY29uc3Qgc3RydWN0IGtv
+bWVkYV9kZXZfZnVuY3MgZDcxX2NoaXBfZnVuY3MgPSB7DQogCS5pbml0X2Zvcm1hdF90YWJsZSA9
+IGQ3MV9pbml0X2ZtdF90YmwsDQogCS5lbnVtX3Jlc291cmNlcwk9IGQ3MV9lbnVtX3Jlc291cmNl
+cywNCiAJLmNsZWFudXAJPSBkNzFfY2xlYW51cCwNCkBAIC01MTQsNyArNTE0LDcgQEAgc3RhdGlj
+IHN0cnVjdCBrb21lZGFfZGV2X2Z1bmNzIGQ3MV9jaGlwX2Z1bmNzID0gew0KIAkuZmx1c2gJCT0g
+ZDcxX2ZsdXNoLA0KIH07DQogDQotc3RydWN0IGtvbWVkYV9kZXZfZnVuY3MgKg0KK2NvbnN0IHN0
+cnVjdCBrb21lZGFfZGV2X2Z1bmNzICoNCiBkNzFfaWRlbnRpZnkodTMyIF9faW9tZW0gKnJlZ19i
+YXNlLCBzdHJ1Y3Qga29tZWRhX2NoaXBfaW5mbyAqY2hpcCkNCiB7DQogCWNoaXAtPmFyY2hfaWQJ
+PSBtYWxpZHBfcmVhZDMyKHJlZ19iYXNlLCBHTEJfQVJDSF9JRCk7DQpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfY3J0Yy5jIGIvZHJpdmVycy9n
+cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfY3J0Yy5jDQppbmRleCA2MmZhZDU5ZjVh
+NmEuLjI4NGNlMDc5ZDhjNCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxh
+eS9rb21lZGEva29tZWRhX2NydGMuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5
+L2tvbWVkYS9rb21lZGFfY3J0Yy5jDQpAQCAtMzUwLDcgKzM1MCw3IEBAIHN0YXRpYyBib29sIGtv
+bWVkYV9jcnRjX21vZGVfZml4dXAoc3RydWN0IGRybV9jcnRjICpjcnRjLA0KIAlyZXR1cm4gdHJ1
+ZTsNCiB9DQogDQotc3RhdGljIHN0cnVjdCBkcm1fY3J0Y19oZWxwZXJfZnVuY3Mga29tZWRhX2Ny
+dGNfaGVscGVyX2Z1bmNzID0gew0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2NydGNfaGVscGVy
+X2Z1bmNzIGtvbWVkYV9jcnRjX2hlbHBlcl9mdW5jcyA9IHsNCiAJLmF0b21pY19jaGVjawk9IGtv
+bWVkYV9jcnRjX2F0b21pY19jaGVjaywNCiAJLmF0b21pY19mbHVzaAk9IGtvbWVkYV9jcnRjX2F0
+b21pY19mbHVzaCwNCiAJLmF0b21pY19lbmFibGUJPSBrb21lZGFfY3J0Y19hdG9taWNfZW5hYmxl
+LA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRh
+X2Rldi5jIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmMN
+CmluZGV4IDIwNzVmNGFjNzA3OC4uNDMzNzk0N2RjYTI1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmMNCisrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rldi5jDQpAQCAtMjY5LDcgKzI2OSw3IEBA
+IHN0cnVjdCBrb21lZGFfZGV2ICprb21lZGFfZGV2X2NyZWF0ZShzdHJ1Y3QgZGV2aWNlICpkZXYp
+DQogdm9pZCBrb21lZGFfZGV2X2Rlc3Ryb3koc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYpDQogew0K
+IAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBtZGV2LT5kZXY7DQotCXN0cnVjdCBrb21lZGFfZGV2X2Z1
+bmNzICpmdW5jcyA9IG1kZXYtPmZ1bmNzOw0KKwljb25zdCBzdHJ1Y3Qga29tZWRhX2Rldl9mdW5j
+cyAqZnVuY3MgPSBtZGV2LT5mdW5jczsNCiAJaW50IGk7DQogDQogCXN5c2ZzX3JlbW92ZV9ncm91
+cCgmZGV2LT5rb2JqLCAma29tZWRhX3N5c2ZzX2F0dHJfZ3JvdXApOw0KZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rldi5oIGIvZHJpdmVycy9n
+cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmgNCmluZGV4IDI5ZTAzYzRlMWZm
+Yy4uOTk0YzZlYTMwMzliIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5
+L2tvbWVkYS9rb21lZGFfZGV2LmgNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9r
+b21lZGEva29tZWRhX2Rldi5oDQpAQCAtNjAsNyArNjAsNyBAQCBzdHJ1Y3Qga29tZWRhX2NoaXBf
+aW5mbyB7DQogDQogc3RydWN0IGtvbWVkYV9wcm9kdWN0X2RhdGEgew0KIAl1MzIgcHJvZHVjdF9p
+ZDsNCi0Jc3RydWN0IGtvbWVkYV9kZXZfZnVuY3MgKigqaWRlbnRpZnkpKHUzMiBfX2lvbWVtICpy
+ZWcsDQorCWNvbnN0IHN0cnVjdCBrb21lZGFfZGV2X2Z1bmNzICooKmlkZW50aWZ5KSh1MzIgX19p
+b21lbSAqcmVnLA0KIAkJCQkJICAgICBzdHJ1Y3Qga29tZWRhX2NoaXBfaW5mbyAqaW5mbyk7DQog
+fTsNCiANCkBAIC0xNzMsNyArMTczLDcgQEAgc3RydWN0IGtvbWVkYV9kZXYgew0KIAlzdHJ1Y3Qg
+a29tZWRhX3BpcGVsaW5lICpwaXBlbGluZXNbS09NRURBX01BWF9QSVBFTElORVNdOw0KIA0KIAkv
+KiogQGZ1bmNzOiBjaGlwIGZ1bmNzIHRvIGFjY2VzcyB0byBIVyAqLw0KLQlzdHJ1Y3Qga29tZWRh
+X2Rldl9mdW5jcyAqZnVuY3M7DQorCWNvbnN0IHN0cnVjdCBrb21lZGFfZGV2X2Z1bmNzICpmdW5j
+czsNCiAJLyoqDQogCSAqIEBjaGlwX2RhdGE6DQogCSAqDQpAQCAtMTkyLDcgKzE5Miw3IEBAIGtv
+bWVkYV9wcm9kdWN0X21hdGNoKHN0cnVjdCBrb21lZGFfZGV2ICptZGV2LCB1MzIgdGFyZ2V0KQ0K
+IAlyZXR1cm4gTUFMSURQX0NPUkVfSURfUFJPRFVDVF9JRChtZGV2LT5jaGlwLmNvcmVfaWQpID09
+IHRhcmdldDsNCiB9DQogDQotc3RydWN0IGtvbWVkYV9kZXZfZnVuY3MgKg0KK2NvbnN0IHN0cnVj
+dCBrb21lZGFfZGV2X2Z1bmNzICoNCiBkNzFfaWRlbnRpZnkodTMyIF9faW9tZW0gKnJlZywgc3Ry
+dWN0IGtvbWVkYV9jaGlwX2luZm8gKmNoaXApOw0KIA0KIHN0cnVjdCBrb21lZGFfZGV2ICprb21l
+ZGFfZGV2X2NyZWF0ZShzdHJ1Y3QgZGV2aWNlICpkZXYpOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmMgYi9kcml2ZXJzL2dw
+dS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5jDQppbmRleCBjMzc5NDM5
+YzYxOTQuLmExMzBiNjJmYTZkMSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlz
+cGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0v
+ZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmMNCkBAIC0xMiw3ICsxMiw3IEBADQogLyoq
+IGtvbWVkYV9waXBlbGluZV9hZGQgLSBBZGQgYSBwaXBlbGluZSB0byAma29tZWRhX2RldiAqLw0K
+IHN0cnVjdCBrb21lZGFfcGlwZWxpbmUgKg0KIGtvbWVkYV9waXBlbGluZV9hZGQoc3RydWN0IGtv
+bWVkYV9kZXYgKm1kZXYsIHNpemVfdCBzaXplLA0KLQkJICAgIHN0cnVjdCBrb21lZGFfcGlwZWxp
+bmVfZnVuY3MgKmZ1bmNzKQ0KKwkJICAgIGNvbnN0IHN0cnVjdCBrb21lZGFfcGlwZWxpbmVfZnVu
+Y3MgKmZ1bmNzKQ0KIHsNCiAJc3RydWN0IGtvbWVkYV9waXBlbGluZSAqcGlwZTsNCiANCkBAIC0x
+MzAsNyArMTMwLDcgQEAga29tZWRhX3BpcGVsaW5lX2dldF9jb21wb25lbnQoc3RydWN0IGtvbWVk
+YV9waXBlbGluZSAqcGlwZSwgaW50IGlkKQ0KIHN0cnVjdCBrb21lZGFfY29tcG9uZW50ICoNCiBr
+b21lZGFfY29tcG9uZW50X2FkZChzdHJ1Y3Qga29tZWRhX3BpcGVsaW5lICpwaXBlLA0KIAkJICAg
+ICBzaXplX3QgY29tcF9zeiwgdTMyIGlkLCB1MzIgaHdfaWQsDQotCQkgICAgIHN0cnVjdCBrb21l
+ZGFfY29tcG9uZW50X2Z1bmNzICpmdW5jcywNCisJCSAgICAgY29uc3Qgc3RydWN0IGtvbWVkYV9j
+b21wb25lbnRfZnVuY3MgKmZ1bmNzLA0KIAkJICAgICB1OCBtYXhfYWN0aXZlX2lucHV0cywgdTMy
+IHN1cHBvcnRlZF9pbnB1dHMsDQogCQkgICAgIHU4IG1heF9hY3RpdmVfb3V0cHV0cywgdTMyIF9f
+aW9tZW0gKnJlZywNCiAJCSAgICAgY29uc3QgY2hhciAqbmFtZV9mbXQsIC4uLikNCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5o
+IGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmUuaA0K
+aW5kZXggYjFmODEzYTM0OWE0Li5iYWU4YTMyYjgxYTYgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5oDQorKysgYi9kcml2ZXJz
+L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5oDQpAQCAtMTI0LDcg
+KzEyNCw3IEBAIHN0cnVjdCBrb21lZGFfY29tcG9uZW50IHsNCiAJLyoqDQogCSAqIEBmdW5jczog
+Y2hpcCBmdW5jdGlvbnMgdG8gYWNjZXNzIEhXDQogCSAqLw0KLQlzdHJ1Y3Qga29tZWRhX2NvbXBv
+bmVudF9mdW5jcyAqZnVuY3M7DQorCWNvbnN0IHN0cnVjdCBrb21lZGFfY29tcG9uZW50X2Z1bmNz
+ICpmdW5jczsNCiB9Ow0KIA0KIC8qKg0KQEAgLTM0Niw4ICszNDYsOCBAQCBzdHJ1Y3Qga29tZWRh
+X3BpcGVsaW5lIHsNCiAJc3RydWN0IGtvbWVkYV9pbXByb2MgKmltcHJvYzsNCiAJLyoqIEBjdHJs
+cjogdGltaW5nIGNvbnRyb2xsZXIgKi8NCiAJc3RydWN0IGtvbWVkYV90aW1pbmdfY3RybHIgKmN0
+cmxyOw0KLQkvKiogQGZ1bmNzOiBjaGlwIHBpcGVsaW5lIGZ1bmN0aW9ucyAqLw0KLQlzdHJ1Y3Qg
+a29tZWRhX3BpcGVsaW5lX2Z1bmNzICpmdW5jczsgLyogcHJpdmF0ZSBwaXBlbGluZSBmdW5jdGlv
+bnMgKi8NCisJLyoqIEBmdW5jczogY2hpcCBwcml2YXRlIHBpcGVsaW5lIGZ1bmN0aW9ucyAqLw0K
+Kwljb25zdCBzdHJ1Y3Qga29tZWRhX3BpcGVsaW5lX2Z1bmNzICpmdW5jczsNCiANCiAJLyoqIEBv
+Zl9ub2RlOiBwaXBlbGluZSBkdCBub2RlICovDQogCXN0cnVjdCBkZXZpY2Vfbm9kZSAqb2Zfbm9k
+ZTsNCkBAIC0zOTcsNyArMzk3LDcgQEAgc3RydWN0IGtvbWVkYV9waXBlbGluZV9zdGF0ZSB7DQog
+LyogcGlwZWxpbmUgQVBJcyAqLw0KIHN0cnVjdCBrb21lZGFfcGlwZWxpbmUgKg0KIGtvbWVkYV9w
+aXBlbGluZV9hZGQoc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYsIHNpemVfdCBzaXplLA0KLQkJICAg
+IHN0cnVjdCBrb21lZGFfcGlwZWxpbmVfZnVuY3MgKmZ1bmNzKTsNCisJCSAgICBjb25zdCBzdHJ1
+Y3Qga29tZWRhX3BpcGVsaW5lX2Z1bmNzICpmdW5jcyk7DQogdm9pZCBrb21lZGFfcGlwZWxpbmVf
+ZGVzdHJveShzdHJ1Y3Qga29tZWRhX2RldiAqbWRldiwNCiAJCQkgICAgIHN0cnVjdCBrb21lZGFf
+cGlwZWxpbmUgKnBpcGUpOw0KIGludCBrb21lZGFfYXNzZW1ibGVfcGlwZWxpbmVzKHN0cnVjdCBr
+b21lZGFfZGV2ICptZGV2KTsNCkBAIC00MTEsNyArNDExLDcgQEAgdm9pZCBrb21lZGFfcGlwZWxp
+bmVfZHVtcF9yZWdpc3RlcihzdHJ1Y3Qga29tZWRhX3BpcGVsaW5lICpwaXBlLA0KIHN0cnVjdCBr
+b21lZGFfY29tcG9uZW50ICoNCiBrb21lZGFfY29tcG9uZW50X2FkZChzdHJ1Y3Qga29tZWRhX3Bp
+cGVsaW5lICpwaXBlLA0KIAkJICAgICBzaXplX3QgY29tcF9zeiwgdTMyIGlkLCB1MzIgaHdfaWQs
+DQotCQkgICAgIHN0cnVjdCBrb21lZGFfY29tcG9uZW50X2Z1bmNzICpmdW5jcywNCisJCSAgICAg
+Y29uc3Qgc3RydWN0IGtvbWVkYV9jb21wb25lbnRfZnVuY3MgKmZ1bmNzLA0KIAkJICAgICB1OCBt
+YXhfYWN0aXZlX2lucHV0cywgdTMyIHN1cHBvcnRlZF9pbnB1dHMsDQogCQkgICAgIHU4IG1heF9h
+Y3RpdmVfb3V0cHV0cywgdTMyIF9faW9tZW0gKnJlZywNCiAJCSAgICAgY29uc3QgY2hhciAqbmFt
+ZV9mbXQsIC4uLik7DQotLSANCjIuMTcuMQ0KDQo=
