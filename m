@@ -2,128 +2,135 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AC4C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A528C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C212084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D302081C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfDYOmM (ORCPT
+        id S1727499AbfDYOnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:42:12 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:61175 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725900AbfDYOmM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:42:12 -0400
-X-UUID: 1237c519beb144d0bed54fd807e93833-20190425
-X-UUID: 1237c519beb144d0bed54fd807e93833-20190425
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 809769604; Thu, 25 Apr 2019 22:42:04 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 25 Apr 2019 22:42:03 +0800
-Received: from mtkslt306.mediatek.inc (10.21.14.136) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 25 Apr 2019 22:42:03 +0800
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Felix Fietkau <nbd@nbd.name>
-CC:     Roy Luo <royluo@google.com>, Sean Wang <sean.wang@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH] mt76: fix endianness sparse warnings
-Date:   Thu, 25 Apr 2019 22:42:01 +0800
-Message-ID: <865a5eb36f295fc81e3dcbe95929dcfce4956897.1556203212.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Thu, 25 Apr 2019 10:43:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33236 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725900AbfDYOne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:43:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9078BAEF6;
+        Thu, 25 Apr 2019 14:43:32 +0000 (UTC)
+Message-ID: <1556203394.3587.4.camel@suse.de>
+Subject: Re: [PATCH v6 03/12] mm/sparsemem: Add helpers track active
+ portions of a section at boot
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
+Cc:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Logan Gunthorpe <logang@deltatee.com>, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        david@redhat.com
+Date:   Thu, 25 Apr 2019 16:43:14 +0200
+In-Reply-To: <155552635098.2015392.5460028594173939000.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <155552635098.2015392.5460028594173939000.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix many warnings with incorrect endian assumptions.
+On Wed, 2019-04-17 at 11:39 -0700, Dan Williams wrote:
+> Prepare for hot{plug,remove} of sub-ranges of a section by tracking a
+> section active bitmask, each bit representing 2MB (SECTION_SIZE
+> (128M) /
+> map_active bitmask length (64)). If it turns out that 2MB is too
+> large
+> of an active tracking granularity it is trivial to increase the size
+> of
+> the map_active bitmap.
+> 
+> The implications of a partially populated section is that pfn_valid()
+> needs to go beyond a valid_section() check and read the sub-section
+> active ranges from the bitmask.
+> 
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Hi Dan,
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- drivers/net/wireless/mediatek/mt76/mt7603/mac.c |  2 +-
- drivers/net/wireless/mediatek/mt76/mt7615/mac.c | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+I am still going through the patchset but:
+ 
+> +static unsigned long section_active_mask(unsigned long pfn,
+> +		unsigned long nr_pages)
+> +{
+> +	int idx_start, idx_size;
+> +	phys_addr_t start, size;
+> +
+> +	if (!nr_pages)
+> +		return 0;
+> +
+> +	start = PFN_PHYS(pfn);
+> +	size = PFN_PHYS(min(nr_pages, PAGES_PER_SECTION
+> +				- (pfn & ~PAGE_SECTION_MASK)));
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-index 2f2961ee0a92..af5769d05e6f 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-@@ -627,7 +627,7 @@ mt7603_mac_fill_rx(struct mt7603_dev *dev, struct sk_buff *skb)
- 	status->aggr = unicast &&
- 		       !ieee80211_is_qos_nullfunc(hdr->frame_control);
- 	status->tid = *ieee80211_get_qos_ctl(hdr) & IEEE80211_QOS_CTL_TID_MASK;
--	status->seqno = IEEE80211_SEQ_TO_SN(hdr->seq_ctrl);
-+	status->seqno = IEEE80211_SEQ_TO_SN(__le16_to_cpu(hdr->seq_ctrl));
- 
- 	return 0;
- }
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-index 1bf3e7b5f6a7..4b934b0f5a39 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-@@ -235,7 +235,7 @@ int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
- 	status->aggr = unicast &&
- 		       !ieee80211_is_qos_nullfunc(hdr->frame_control);
- 	status->tid = *ieee80211_get_qos_ctl(hdr) & IEEE80211_QOS_CTL_TID_MASK;
--	status->seqno = IEEE80211_SEQ_TO_SN(hdr->seq_ctrl);
-+	status->seqno = IEEE80211_SEQ_TO_SN(__le16_to_cpu(hdr->seq_ctrl));
- 
- 	return 0;
- }
-@@ -337,7 +337,7 @@ int mt7615_mac_write_txwi(struct mt7615_dev *dev, __le32 *txwi,
- 	struct ieee80211_vif *vif = info->control.vif;
- 	int tx_count = 8;
- 	u8 fc_type, fc_stype, p_fmt, q_idx, omac_idx = 0;
--	u16 fc = le16_to_cpu(hdr->frame_control);
-+	__le16 fc = hdr->frame_control;
- 	u16 seqno = 0;
- 	u32 val;
- 
-@@ -353,8 +353,8 @@ int mt7615_mac_write_txwi(struct mt7615_dev *dev, __le32 *txwi,
- 		tx_count = msta->rate_count;
- 	}
- 
--	fc_type = (fc & IEEE80211_FCTL_FTYPE) >> 2;
--	fc_stype = (fc & IEEE80211_FCTL_STYPE) >> 4;
-+	fc_type = (le16_to_cpu(fc) & IEEE80211_FCTL_FTYPE) >> 2;
-+	fc_stype = (le16_to_cpu(fc) & IEEE80211_FCTL_STYPE) >> 4;
- 
- 	if (ieee80211_is_data(fc)) {
- 		q_idx = skb_get_queue_mapping(skb);
-@@ -468,7 +468,7 @@ void mt7615_txp_skb_unmap(struct mt76_dev *dev,
- 	txp = (struct mt7615_txp *)(txwi + MT_TXD_SIZE);
- 	for (i = 1; i < txp->nbuf; i++)
- 		dma_unmap_single(dev->dev, le32_to_cpu(txp->buf[i]),
--				 le32_to_cpu(txp->len[i]), DMA_TO_DEVICE);
-+				 le16_to_cpu(txp->len[i]), DMA_TO_DEVICE);
- }
- 
- int mt7615_tx_prepare_skb(struct mt76_dev *mdev, void *txwi_ptr,
-@@ -506,7 +506,7 @@ int mt7615_tx_prepare_skb(struct mt76_dev *mdev, void *txwi_ptr,
- 	txp = (struct mt7615_txp *)(txwi + MT_TXD_SIZE);
- 	for (i = 0; i < nbuf; i++) {
- 		txp->buf[i] = cpu_to_le32(tx_info->buf[i + 1].addr);
--		txp->len[i] = cpu_to_le32(tx_info->buf[i + 1].len);
-+		txp->len[i] = cpu_to_le16(tx_info->buf[i + 1].len);
- 	}
- 	txp->nbuf = nbuf;
- 
+We already picked the lowest value in section_active_init, didn't we?
+This min() operations seems redundant to me here.
+
+> +	size = ALIGN(size, SECTION_ACTIVE_SIZE);
+> +
+> +	idx_start = section_active_index(start);
+> +	idx_size = section_active_index(size);
+> +
+> +	if (idx_size == 0)
+> +		return -1;
+> +	return ((1UL << idx_size) - 1) << idx_start;
+> +}
+> +
+> +void section_active_init(unsigned long pfn, unsigned long nr_pages)
+> +{
+> +	int end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
+> +	int i, start_sec = pfn_to_section_nr(pfn);
+> +
+> +	if (!nr_pages)
+> +		return;
+> +
+> +	for (i = start_sec; i <= end_sec; i++) {
+> +		struct mem_section *ms;
+> +		unsigned long mask;
+> +		unsigned long pfns;
+
+s/pfns/nr_pfns/ instead?
+
+> +		pfns = min(nr_pages, PAGES_PER_SECTION
+> +				- (pfn & ~PAGE_SECTION_MASK));
+> +		mask = section_active_mask(pfn, pfns);
+> +
+> +		ms = __nr_to_section(i);
+> +		pr_debug("%s: sec: %d mask: %#018lx\n", __func__, i,
+> mask);
+> +		ms->usage->map_active = mask;
+> +
+> +		pfn += pfns;
+> +		nr_pages -= pfns;
+> +	}
+> +}
+
+Although the code is not very complicated, it could use some comments
+here and there I think.
+
+> +
+>  /* Record a memory area against a node. */
+>  void __init memory_present(int nid, unsigned long start, unsigned
+> long end)
+>  {
+> 
 -- 
-2.18.0
-
+Oscar Salvador
+SUSE L3
