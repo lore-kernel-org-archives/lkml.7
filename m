@@ -2,174 +2,231 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B019C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42077C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F88206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:00:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="glaoCWHO";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="GrUCNbyb"
+	by mail.kernel.org (Postfix) with ESMTP id F40E2217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfDYBAu (ORCPT
+        id S1728670AbfDYBCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 21:00:50 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:40736 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728625AbfDYBAt (ORCPT
+        Wed, 24 Apr 2019 21:02:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44352 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726380AbfDYBCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 21:00:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1556154048; x=1587690048;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=QA3XTFfMyu3oIJAhWpZFNNcQyxJyUceND3Co3CJkAfc=;
-  b=glaoCWHO9YO9dW5aBUE7PhaVh0nMBJtLmJNEQTczgQgyzGj/Wr1rm46h
-   biSD5ykDo8ohgFtYP3e8+Y6qATqZatDEww5izj4LWXGysfcV35kAixf2p
-   LMYzFJp3+amaPRZcVwK6s66fSZ11kVCZlBvhPqye7Vt/Sd3tQrKlmlkdt
-   XDpHMMquJnZ2wvv0uy8oUtPa9D6bJr7kWuT94e0FjSET0SzPfm/Hro/Nm
-   9PA3vFdy91b1JeRxMiwe7RYOzSsb1BY+v9sgu6DJDrWsNerEoV8i2/GwB
-   Pt/nwPQDqYG8cKo2e3XF3N6csGdAJrPiTM4wzO9zMR3iVQy55Lk2D6VXX
-   w==;
-X-IronPort-AV: E=Sophos;i="5.60,391,1549900800"; 
-   d="scan'208";a="212596866"
-Received: from mail-sn1nam01lp2059.outbound.protection.outlook.com (HELO NAM01-SN1-obe.outbound.protection.outlook.com) ([104.47.32.59])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Apr 2019 09:00:48 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B6PCxwYvdpJO0o3MWu+/njJD62V0M4rdHv8UnDU2JPs=;
- b=GrUCNbybWR1pAqExZbcXNUKKDtZ/kccPtnCaaUsSv5Kgw9WxlcJbP4DpJMlutMk4Uwewknk6yvH0bUnSJHWHlTM2387Uy8FTB8zWboK2eRfvSOrX7HIgQ8ccfP91IG1z60E6WflAxWTyWJlBkmMmGHmEmV225Gl3MPvJHqYU4YU=
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com (52.135.120.25) by
- SN6PR04MB5376.namprd04.prod.outlook.com (20.178.6.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Thu, 25 Apr 2019 01:00:47 +0000
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::c95e:c178:8d66:3703]) by SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::c95e:c178:8d66:3703%3]) with mapi id 15.20.1813.017; Thu, 25 Apr 2019
- 01:00:47 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-Subject: Re: [PATCH 1/3] drivers: nvme: target: core: fix build break
-Thread-Topic: [PATCH 1/3] drivers: nvme: target: core: fix build break
-Thread-Index: AQHU+olplXurJu077k6x4MM2ZNk77g==
-Date:   Thu, 25 Apr 2019 01:00:46 +0000
-Message-ID: <SN6PR04MB452772B2864B2074DDB018ED863D0@SN6PR04MB4527.namprd04.prod.outlook.com>
-References: <1556102081-11820-1-git-send-email-info@metux.net>
- <1556102081-11820-2-git-send-email-info@metux.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.63]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a9167e2b-7378-4532-f548-08d6c91973a8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB5376;
-x-ms-traffictypediagnostic: SN6PR04MB5376:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB537609B4CA111B4ED23ED9DE863D0@SN6PR04MB5376.namprd04.prod.outlook.com>
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(396003)(136003)(39860400002)(346002)(189003)(199004)(51914003)(3846002)(229853002)(6116002)(2906002)(8676002)(66556008)(53936002)(66946007)(64756008)(52536014)(66446008)(66476007)(73956011)(81166006)(14454004)(91956017)(33656002)(76116006)(81156014)(6436002)(8936002)(1250700005)(2501003)(6246003)(7736002)(55016002)(9686003)(478600001)(97736004)(4326008)(476003)(305945005)(68736007)(71190400001)(316002)(99286004)(7696005)(71200400001)(102836004)(186003)(74316002)(54906003)(26005)(110136005)(446003)(486006)(5660300002)(72206003)(76176011)(14444005)(53546011)(6506007)(25786009)(66066001)(86362001)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5376;H:SN6PR04MB4527.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rpzrGDhJlU6FcDRLBUI2rRm9bB0XoKBVgqtBukmhYchiXqbH0rHMHwMcEdRUKHf8iU+ctlNz7c+WLu4a7Zz1JO3seIkzKTJdgaR0gaktuqulHjTBvExco4NOFnUPVXNJDsDdHzdGLfirZjJplEsye1MgkPPHPo+8Fua4HfD8MRHC/qHn4bg/eQmum7PhNdQNJeZJAUMi2wm4zMvfyUpzDhInsgJe42P5DUual0SlKoHjmSH+Tp84dWLhPYMakU7XmuZRqDR1KrXgXu8KUz6JR8QgklYApi3wvUDEVLMpyTI74N30P73pszpmgiWd2eC1z2niRWgn2dx3SPtqAeMq/diGnC4ArO1DpfYxYA60Z92p/mikyhWW+XIS7DgWiQ9pUu1FUk8x44kTlYIKXF6k0w7d2doB9RzHUKj3SImoGJk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 24 Apr 2019 21:02:25 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3P0rbYe186363
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 21:02:23 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s2xk91ek6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 21:02:23 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Thu, 25 Apr 2019 02:02:22 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Apr 2019 02:02:18 +0100
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3P12GT328311574
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Apr 2019 01:02:16 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B130780B1;
+        Thu, 25 Apr 2019 01:02:16 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AAED578080;
+        Thu, 25 Apr 2019 01:02:03 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.80.232.248])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 25 Apr 2019 01:02:02 +0000 (GMT)
+References: <87zhrj8kcp.fsf@morokweng.localdomain> <87womn8inf.fsf@morokweng.localdomain> <20190129134750-mutt-send-email-mst@kernel.org> <877eefxvyb.fsf@morokweng.localdomain> <20190204144048-mutt-send-email-mst@kernel.org> <87ef71seve.fsf@morokweng.localdomain> <20190320171027-mutt-send-email-mst@kernel.org> <87tvfvbwpb.fsf@morokweng.localdomain> <20190323165456-mutt-send-email-mst@kernel.org> <87a7go71hz.fsf@morokweng.localdomain> <20190419190258-mutt-send-email-mst@kernel.org>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Michael Roth <mdroth@linux.vnet.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>
+Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+In-reply-to: <20190419190258-mutt-send-email-mst@kernel.org>
+Date:   Wed, 24 Apr 2019 22:01:56 -0300
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9167e2b-7378-4532-f548-08d6c91973a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 01:00:46.9790
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5376
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19042501-8235-0000-0000-00000E869D0D
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010990; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01193942; UDB=6.00625930; IPR=6.00974766;
+ MB=3.00026582; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-25 01:02:21
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042501-8236-0000-0000-00004547C62A
+Message-Id: <875zr228zf.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904250004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the fix Enrico. I'm still wondering on what platform=0A=
-you got this error ?=0A=
-=0A=
-Looks good.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
-=0A=
-On 04/24/2019 03:35 AM, Enrico Weigelt, metux IT consult wrote:=0A=
-> Build breaks:=0A=
->=0A=
->      drivers/nvme/target/core.c: In function 'nvmet_req_alloc_sgl':=0A=
->      drivers/nvme/target/core.c:939:12: error: implicit declaration of \=
-=0A=
-> function 'sgl_alloc'; did you mean 'bio_alloc'? \=0A=
-> [-Werror=3Dimplicit-function-declaration]=0A=
->        req->sg =3D sgl_alloc(req->transfer_len, GFP_KERNEL, &req->sg_cnt)=
-;=0A=
->                  ^~~~~~~~~=0A=
->                  bio_alloc=0A=
->      drivers/nvme/target/core.c:939:10: warning: assignment makes pointer=
- \=0A=
-> from integer without a cast [-Wint-conversion]=0A=
->        req->sg =3D sgl_alloc(req->transfer_len, GFP_KERNEL, &req->sg_cnt)=
-;=0A=
->                ^=0A=
->      drivers/nvme/target/core.c: In function 'nvmet_req_free_sgl':=0A=
->      drivers/nvme/target/core.c:952:3: error: implicit declaration of \=
-=0A=
-> function 'sgl_free'; did you mean 'ida_free'? [-Werror=3Dimplicit-functio=
-n-declaration]=0A=
->         sgl_free(req->sg);=0A=
->         ^~~~~~~~=0A=
->         ida_free=0A=
->=0A=
-> Cause:=0A=
->=0A=
->      1. missing include to <linux/scatterlist.h>=0A=
->      2. SGL_ALLOC needs to be enabled=0A=
->=0A=
-> Therefore adding the missing include, as well as Kconfig dependency.=0A=
->=0A=
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>=0A=
-> ---=0A=
->   drivers/nvme/target/Kconfig | 1 +=0A=
->   drivers/nvme/target/core.c  | 1 +=0A=
->   2 files changed, 2 insertions(+)=0A=
->=0A=
-> diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig=0A=
-> index d94f25c..3ef0a4e 100644=0A=
-> --- a/drivers/nvme/target/Kconfig=0A=
-> +++ b/drivers/nvme/target/Kconfig=0A=
-> @@ -3,6 +3,7 @@ config NVME_TARGET=0A=
->   	tristate "NVMe Target support"=0A=
->   	depends on BLOCK=0A=
->   	depends on CONFIGFS_FS=0A=
-> +	select SGL_ALLOC=0A=
->   	help=0A=
->   	  This enabled target side support for the NVMe protocol, that is=0A=
->   	  it allows the Linux kernel to implement NVMe subsystems and=0A=
-> diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c=0A=
-> index b3e765a..08851f5 100644=0A=
-> --- a/drivers/nvme/target/core.c=0A=
-> +++ b/drivers/nvme/target/core.c=0A=
-> @@ -8,6 +8,7 @@=0A=
->   #include <linux/random.h>=0A=
->   #include <linux/rculist.h>=0A=
->   #include <linux/pci-p2pdma.h>=0A=
-> +#include <linux/scatterlist.h>=0A=
->=0A=
->   #include "nvmet.h"=0A=
->=0A=
->=0A=
-=0A=
+
+Michael S. Tsirkin <mst@redhat.com> writes:
+
+> On Wed, Apr 17, 2019 at 06:42:00PM -0300, Thiago Jung Bauermann wrote:
+>>
+>> Michael S. Tsirkin <mst@redhat.com> writes:
+>>
+>> > On Thu, Mar 21, 2019 at 09:05:04PM -0300, Thiago Jung Bauermann wrote:
+>> >>
+>> >> Michael S. Tsirkin <mst@redhat.com> writes:
+>> >>
+>> >> > On Wed, Mar 20, 2019 at 01:13:41PM -0300, Thiago Jung Bauermann wrote:
+>> >> >> >From what I understand of the ACCESS_PLATFORM definition, the host will
+>> >> >> only ever try to access memory addresses that are supplied to it by the
+>> >> >> guest, so all of the secure guest memory that the host cares about is
+>> >> >> accessible:
+>> >> >>
+>> >> >>     If this feature bit is set to 0, then the device has same access to
+>> >> >>     memory addresses supplied to it as the driver has. In particular,
+>> >> >>     the device will always use physical addresses matching addresses
+>> >> >>     used by the driver (typically meaning physical addresses used by the
+>> >> >>     CPU) and not translated further, and can access any address supplied
+>> >> >>     to it by the driver. When clear, this overrides any
+>> >> >>     platform-specific description of whether device access is limited or
+>> >> >>     translated in any way, e.g. whether an IOMMU may be present.
+>> >> >>
+>> >> >> All of the above is true for POWER guests, whether they are secure
+>> >> >> guests or not.
+>> >> >>
+>> >> >> Or are you saying that a virtio device may want to access memory
+>> >> >> addresses that weren't supplied to it by the driver?
+>> >> >
+>> >> > Your logic would apply to IOMMUs as well.  For your mode, there are
+>> >> > specific encrypted memory regions that driver has access to but device
+>> >> > does not. that seems to violate the constraint.
+>> >>
+>> >> Right, if there's a pre-configured 1:1 mapping in the IOMMU such that
+>> >> the device can ignore the IOMMU for all practical purposes I would
+>> >> indeed say that the logic would apply to IOMMUs as well. :-)
+>> >>
+>> >> I guess I'm still struggling with the purpose of signalling to the
+>> >> driver that the host may not have access to memory addresses that it
+>> >> will never try to access.
+>> >
+>> > For example, one of the benefits is to signal to host that driver does
+>> > not expect ability to access all memory. If it does, host can
+>> > fail initialization gracefully.
+>>
+>> But why would the ability to access all memory be necessary or even
+>> useful? When would the host access memory that the driver didn't tell it
+>> to access?
+>
+> When I say all memory I mean even memory not allowed by the IOMMU.
+
+Yes, but why? How is that memory relevant?
+
+>> >> >> >> > But the name "sev_active" makes me scared because at least AMD guys who
+>> >> >> >> > were doing the sensible thing and setting ACCESS_PLATFORM
+>> >> >> >>
+>> >> >> >> My understanding is, AMD guest-platform knows in advance that their
+>> >> >> >> guest will run in secure mode and hence sets the flag at the time of VM
+>> >> >> >> instantiation. Unfortunately we dont have that luxury on our platforms.
+>> >> >> >
+>> >> >> > Well you do have that luxury. It looks like that there are existing
+>> >> >> > guests that already acknowledge ACCESS_PLATFORM and you are not happy
+>> >> >> > with how that path is slow. So you are trying to optimize for
+>> >> >> > them by clearing ACCESS_PLATFORM and then you have lost ability
+>> >> >> > to invoke DMA API.
+>> >> >> >
+>> >> >> > For example if there was another flag just like ACCESS_PLATFORM
+>> >> >> > just not yet used by anyone, you would be all fine using that right?
+>> >> >>
+>> >> >> Yes, a new flag sounds like a great idea. What about the definition
+>> >> >> below?
+>> >> >>
+>> >> >> VIRTIO_F_ACCESS_PLATFORM_NO_IOMMU This feature has the same meaning as
+>> >> >>     VIRTIO_F_ACCESS_PLATFORM both when set and when not set, with the
+>> >> >>     exception that the IOMMU is explicitly defined to be off or bypassed
+>> >> >>     when accessing memory addresses supplied to the device by the
+>> >> >>     driver. This flag should be set by the guest if offered, but to
+>> >> >>     allow for backward-compatibility device implementations allow for it
+>> >> >>     to be left unset by the guest. It is an error to set both this flag
+>> >> >>     and VIRTIO_F_ACCESS_PLATFORM.
+>> >> >
+>> >> > It looks kind of narrow but it's an option.
+>> >>
+>> >> Great!
+>> >>
+>> >> > I wonder how we'll define what's an iommu though.
+>> >>
+>> >> Hm, it didn't occur to me it could be an issue. I'll try.
+>>
+>> I rephrased it in terms of address translation. What do you think of
+>> this version? The flag name is slightly different too:
+>>
+>>
+>> VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION This feature has the same
+>>     meaning as VIRTIO_F_ACCESS_PLATFORM both when set and when not set,
+>>     with the exception that address translation is guaranteed to be
+>>     unnecessary when accessing memory addresses supplied to the device
+>>     by the driver. Which is to say, the device will always use physical
+>>     addresses matching addresses used by the driver (typically meaning
+>>     physical addresses used by the CPU) and not translated further. This
+>>     flag should be set by the guest if offered, but to allow for
+>>     backward-compatibility device implementations allow for it to be
+>>     left unset by the guest. It is an error to set both this flag and
+>>     VIRTIO_F_ACCESS_PLATFORM.
+>
+> Thanks, I'll think about this approach. Will respond next week.
+
+Thanks!
+
+>> >> > Another idea is maybe something like virtio-iommu?
+>> >>
+>> >> You mean, have legacy guests use virtio-iommu to request an IOMMU
+>> >> bypass? If so, it's an interesting idea for new guests but it doesn't
+>> >> help with guests that are out today in the field, which don't have A
+>> >> virtio-iommu driver.
+>> >
+>> > I presume legacy guests don't use encrypted memory so why do we
+>> > worry about them at all?
+>>
+>> They don't use encrypted memory, but a host machine will run a mix of
+>> secure and legacy guests. And since the hypervisor doesn't know whether
+>> a guest will be secure or not at the time it is launched, legacy guests
+>> will have to be launched with the same configuration as secure guests.
+>
+> OK and so I think the issue is that hosts generally fail if they set
+> ACCESS_PLATFORM and guests do not negotiate it.
+> So you can not just set ACCESS_PLATFORM for everyone.
+> Is that the issue here?
+
+Yes, that is one half of the issue. The other is that even if hosts
+didn't fail, existing legacy guests wouldn't "take the initiative" of
+not negotiating ACCESS_PLATFORM to get the improved performance. They'd
+have to be modified to do that.
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
