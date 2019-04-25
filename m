@@ -2,81 +2,95 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82CCC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1907FC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E07A2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:21:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="T4cWfZpe"
+	by mail.kernel.org (Postfix) with ESMTP id E078B2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:22:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388916AbfDYDVY (ORCPT
+        id S2388944AbfDYDWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 23:21:24 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43449 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388852AbfDYDVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 23:21:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=k32m5LdrP7AHdBZgo4c7ruxKsll/LgGFd6YYIK9Mi18=; b=T4cWfZpeqraC9hbH+4XEXaK3M9
-        w7DwfsahR08l6UoAGnCZcLACEaPxZXfT5j4vixXDzlSGMWYeH1jNylbdgR39gIXiRS7IoWnV1222o
-        sOorYOIgZ/iYwsrCpAbNiuf3ESEofgd2fOR84n4ovW2lB2Fm/VFdTZuy1JTqBcS6Rdfo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hJUwq-0007xq-8J; Thu, 25 Apr 2019 05:21:20 +0200
-Date:   Thu, 25 Apr 2019 05:21:20 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Ong, Boon Leong" <boon.leong.ong@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
-        "Voon, Weifeng" <weifeng.voon@intel.com>
-Subject: Re: [PATCH 4/7] net: stmmac: introducing support for DWC xPCS logics
-Message-ID: <20190425032120.GJ3371@lunn.ch>
-References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
- <1556126241-2774-5-git-send-email-weifeng.voon@intel.com>
- <20190424134136.GO28405@lunn.ch>
- <AF233D1473C1364ABD51D28909A1B1B75C0B0244@pgsmsx114.gar.corp.intel.com>
+        Wed, 24 Apr 2019 23:22:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54996 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388852AbfDYDWh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 23:22:37 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3P394kO146903
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 23:22:36 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s31bd75ys-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 23:22:36 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Thu, 25 Apr 2019 04:22:34 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Apr 2019 04:22:31 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3P3MUPQ57147490
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Apr 2019 03:22:30 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F8EC4C058;
+        Thu, 25 Apr 2019 03:22:30 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44FE84C044;
+        Thu, 25 Apr 2019 03:22:29 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.124.31.152])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 25 Apr 2019 03:22:29 +0000 (GMT)
+Date:   Thu, 25 Apr 2019 08:52:24 +0530
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] stacktrace: Remove superfluous WARN_ONCE() from
+ save_stack_trace_tsk_reliable()
+References: <20190424085550.29612-1-pmladek@suse.com>
+ <20190424085550.29612-3-pmladek@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AF233D1473C1364ABD51D28909A1B1B75C0B0244@pgsmsx114.gar.corp.intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190424085550.29612-3-pmladek@suse.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-TM-AS-GCONF: 00
+x-cbid: 19042503-0008-0000-0000-000002DEE9AF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042503-0009-0000-0000-0000224B40F9
+Message-Id: <20190425032224.GB24416@JAVRIS.in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=784 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904250020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >> +/* MII MMD AN Status defines for C37 AN SGMII Status */
-> >> +#define AN_STAT_C37_AN_CMPLT		BIT(0)	/* AN Complete Intr */
-> >> +#define AN_STAT_C37_AN_FD		BIT(1)	/* Full Duplex */
-> >> +#define AN_STAT_C37_AN_SPEED_SHIFT	2	/* AN Speed shift */
-> >> +#define AN_STAT_C37_AN_SPEED		GENMASK(3, 2)	/* AN Speed */
-> >> +#define AN_STAT_C37_AN_10MBPS		0x0	/* 10 Mbps */
-> >> +#define AN_STAT_C37_AN_100MBPS		0x1	/* 100 Mbps
-> >*/
-> >> +#define AN_STAT_C37_AN_1000MBPS		0x2	/* 1000 Mbps
-> >*/
-> >> +#define AN_STAT_C37_AN_LNKSTS		BIT(4)	/* Link Status */
-> >
-> >Is these are standardized, not proprietary, consider adding them to
-> >include/uapi/linux/mii.h so similar.
+On Wed, Apr 24, 2019 at 10:55:49AM +0200, Petr Mladek wrote:
+> WARN_ONCE() in the generic save_stack_trace_tsk_reliable() is superfluous.
+> The only current user klp_check_stack() writes its own warning when
+> -ENOSYS is returned.
 > 
-> Yeah, it does look very standardized. However, per DW spec, they are
-> vendor-specific register set which uses MDIO_MMD_VEND2 to access.
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
 
-Maybe you can go get the 802.3 standard and check section 37. If these
-registers are the same, they could still be placed in mii.h. What MMD
-you use is a different matter.
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 
-  Andrew
+-- 
+Kamalesh
+
