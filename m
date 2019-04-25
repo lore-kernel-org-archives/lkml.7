@@ -2,99 +2,96 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCA7C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0045C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3953E206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556211165;
-	bh=UXofT20xgzmBYv7GbYFOx7dER5s3KDgC41078w7OyMk=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Z6dOkuNnM0QoXQneH8P+pA/1/oBNE/9ataBFQPdGxS35a8cqCyqoKQGngJJTYkhOY
-	 hQijJOwgWDALcBkcevGpnoiVadWg2OGyhP0vvG6HL10dhZvq8E9UGwCXKcJC+a27/l
-	 1HZ+w9HoySIy69S2PPJOGLf6JkIZIIO4nlJFyMkg=
+	by mail.kernel.org (Postfix) with ESMTP id 5EE81206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:54:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gcrv6Ej+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P9kwccC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfDYQwn (ORCPT
+        id S1727898AbfDYQyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbfDYQwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:52:42 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 25 Apr 2019 12:54:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:32868 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbfDYQyK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 12:54:10 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F37A860275; Thu, 25 Apr 2019 16:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556211250;
+        bh=Xmbd/wLGRR77Qhjh48yYlXdd8nsn1itpws0+qZykH9M=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=gcrv6Ej+9lC/KDTi1Fp+eQtuAe/Oh0Mx3hCQe3WXrPhTJAXsYkO89H5RK1jnDAmwQ
+         L45Iy1qb/1W9iRg6OxEsO1ty+QV4qJf/KDm4R6e7jpwlcuHCSeCjVsQzF+fuThKHHU
+         ZLSIshYlOyYuyi3UBZeqP99KQnptbneq68XoZwzo=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7171120679;
-        Thu, 25 Apr 2019 16:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556211163;
-        bh=UXofT20xgzmBYv7GbYFOx7dER5s3KDgC41078w7OyMk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FmH3Cuzl89A1bY3mX2wn49baxo57E9RqhiwPoIU2aAiMTP4hK37s89tUYWmn7qp/a
-         DuWhacdUjFpge4BsM7KKSN7Q52GZ9EIQ1on/VtlwtQdqTZPi6H+opojetEQIGbfXQS
-         udfA0ZfT07wLnBkNHtZZdVz6Qo22whdPvt1210ik=
-Subject: Re: [PATCH v2 0/8] selftests: Move test output to diagnostic lines
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Serge Hallyn <serge@hallyn.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190424231237.14776-1-keescook@chromium.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <a3ca267e-8e1e-65da-77c8-c7010a39354b@kernel.org>
-Date:   Thu, 25 Apr 2019 10:52:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1B1DC6019D;
+        Thu, 25 Apr 2019 16:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556211249;
+        bh=Xmbd/wLGRR77Qhjh48yYlXdd8nsn1itpws0+qZykH9M=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=P9kwccC5sDuP3URvfvZTJVjQfmvud4khdHRpO6hi6mmi06n8EiDKsmYfg47COT2JN
+         8nHWPYCal++LqEJjzc5lLaf5/iL5IrT1kOaRhVYUfVz8wAmcsNwZbcgbiSGOFF9wh+
+         9jlm8Lux4LU5qe7IzNecsld6kC+Zb7p3bXfJIMuA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1B1DC6019D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190424231237.14776-1-keescook@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 1/1] mwifiex: add support for SD8987 chipset
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190414183641.7539-2-tszucs@protonmail.ch>
+References: <20190414183641.7539-2-tszucs@protonmail.ch>
+To:     =?utf-8?b?VGFtw6FzIFN6xbFjcw==?= <tszucs@protonmail.ch>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org (open list:MARVELL MWIFIEX WIRELESS
+        DRIVER), netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list),
+        Cathy Luo <cluo@marvell.com>,
+        Zhiyuan Yang <yangzy@marvell.com>,
+        James Cao <jcao@marvell.com>,
+        Rakesh Parmar <rakeshp@marvell.com>,
+        Hemantkumar Suthar <shemant@marvell.com>,
+        =?utf-8?b?VGFtw6FzIFN6xbFjcw==?= <tszucs@protonmail.ch>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190425165409.F37A860275@smtp.codeaurora.org>
+Date:   Thu, 25 Apr 2019 16:54:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/19 5:12 PM,  wrote:
-> This refactors the selftest Makefiles to extract the test running logic
-> to be reused between "run_tests" and "emit_tests", while also fixing
-> up the test output to be TAP version 13 compliant:
-> - added "plan" line
-> - fixed result line syntax
-> - moved all test output to be "# "-prefixed as TAP "diagnostic" lines
+Tamás Szűcs wrote:
+
+> This patch adds support for Marvell 88W8987 chipset with SDIO interface.
+> Register offsets and supported feature flags are updated. The corresponding
+> firmware image file shall be "mrvl/sd8987_uapsta.bin".
 > 
-> The prefixing code includes a fallback mode for limited execution
-> environments.
-> 
-> Additionally, the plan lines are fixed for all callers of kselftest.h.
-> 
-> -Kees
-> 
+> Signed-off-by: Tamás Szűcs <tszucs@protonmail.ch>
 
-Kees,
+Patch applied to wireless-drivers-next.git, thanks.
 
-Just about to apply these to a topic branch to do testing and ran into
-checkpatch errors:
+938c7c80c78e mwifiex: add support for SD8987 chipset
 
+-- 
+https://patchwork.kernel.org/patch/10899927/
 
-WARNING: line over 80 characters - a few
-WARNING: Misplaced SPDX-License-Identifier tag - use line 1 instead
-#141: FILE: tools/testing/selftests/kselftest/runner.sh:2:
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-Can fix them and resend - SPDX one is my main concern.
-
-The plan is to apply these to linux-kselftest ksft-tap-refactor topic
-first. I don't want to rush these until we do some testing.
-
-thanks,
--- Shuah
