@@ -2,124 +2,95 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EBFC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175AFC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF2D20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EACA8206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:13:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="bVfgVT+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbfDYOMh (ORCPT
+        id S1727297AbfDYONx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:12:37 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45180 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbfDYOMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:12:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0CFFA78;
-        Thu, 25 Apr 2019 07:12:35 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBC343F5AF;
-        Thu, 25 Apr 2019 07:12:33 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 15:12:31 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     julien.thierry@arm.com, marc.zyngier@arm.com,
-        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        christoffer.dall@arm.com, james.morse@arm.com,
-        suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 2/3] arch/arm64: fpsimd: Introduce
- fpsimd_save_and_flush_cpu_state() and use it
-Message-ID: <20190425141230.GE3567@e103592.cambridge.arm.com>
-References: <20190423135719.11306-1-julien.grall@arm.com>
- <20190423135719.11306-3-julien.grall@arm.com>
- <20190424131719.GS3567@e103592.cambridge.arm.com>
- <97a49fad-380b-4494-9722-03857441ffe5@arm.com>
+        Thu, 25 Apr 2019 10:13:53 -0400
+Received: from smtp89.iad3b.emailsrvr.com ([146.20.161.89]:44808 "EHLO
+        smtp89.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726120AbfDYONx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:13:53 -0400
+Received: from smtp12.relay.iad3b.emailsrvr.com (localhost [127.0.0.1])
+        by smtp12.relay.iad3b.emailsrvr.com (SMTP Server) with ESMTP id C1161C0174;
+        Thu, 25 Apr 2019 10:13:51 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1556201631;
+        bh=ZTDJFDMurbCxWd1zNz+FBNlikriqJ0a3UjAP/wPvR0g=;
+        h=Subject:To:From:Date:From;
+        b=bVfgVT+9y0FnsEUTZxEzhXHPuCaVyTQId6KBhMs1lvXffrUl9r9vVYahO6Xh/S4fR
+         9jlTj4OYQMRqBbPZQiNidD4yhdvxxlTneLs8q4ZNy/2BHkq7nzcKLecljbRC14LKgi
+         jpEZSUsnoSIw/cq2j9NLk75rWQ2p3iJJ0iVC3/u0=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp12.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id AFE1AC01FB;
+        Thu, 25 Apr 2019 10:13:50 -0400 (EDT)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from [10.0.0.62] (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher AES128-SHA)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Thu, 25 Apr 2019 10:13:51 -0400
+Subject: Re: [PATCH] dma-mapping: remove an unnecessary NULL check
+To:     Christoph Hellwig <hch@lst.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org,
+        "kernel-janitors@vger.kernel.org H Hartley Sweeten" 
+        <hsweeten@visionengravers.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+References: <20190424142437.GA29490@mwanda> <20190424142743.GC20974@lst.de>
+From:   Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+Message-ID: <3142dc82-1d4c-5f01-678e-628038d86bd6@mev.co.uk>
+Date:   Thu, 25 Apr 2019 15:13:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <97a49fad-380b-4494-9722-03857441ffe5@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190424142743.GC20974@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 01:37:40PM +0100, Julien Grall wrote:
-> Hi Dave,
+On 24/04/2019 15:27, Christoph Hellwig wrote:
+> On Wed, Apr 24, 2019 at 05:24:37PM +0300, Dan Carpenter wrote:
+>> We already dereferenced "dev" when we called get_dma_ops() so this NULL
+>> check is too late.  We're not supposed to pass NULL "dev" pointers to
+>> dma_alloc_attrs().
 > 
-> On 24/04/2019 14:17, Dave Martin wrote:
-> >On Tue, Apr 23, 2019 at 02:57:18PM +0100, Julien Grall wrote:
-> >>tent-Length: 4295
-> >>Lines: 128
-> >>
-> >>The only external user of fpsimd_save() and fpsimd_flush_cpu_state() is
-> >>the KVM FPSIMD code.
-> >>
-> >>A following patch will introduce a mechanism to acquire owernship of the
-> >>FPSIMD/SVE context for performing context management operations. Rather
-> >>than having to export the new helpers to get/put the context, we can just
-> >>introduce a new function to combine fpsimd_save() and
-> >>fpsimd_flush_cpu_state().
-> >>
-> >>This has also the advantage to remove any external call of fpsimd_save()
-> >>and fpsimd_flush_cpu_state(), so they can be turned static.
-> >>
-> >>Lastly, the new function can also be used in the PM notifier.
-> >>
-> >>Signed-off-by: Julien Grall <julien.grall@arm.com>
-> >>
-> >>---
-> >>     kernel_neon_begin() does not use fpsimd_save_and_flush_cpu_state()
-> >>     because the next patch will modify the function to also grab the
-> >>     FPSIMD/SVE context.
-> >>
-> >>     Changes in v3:
-> >>         - Rework the commit message
-> >>         - Move the prototype of fpsimd_save_and_flush_cpu_state()
-> >>         further down in the header
-> >>         - Remove comment in kvm_arch_vcpu_put_fp()
-> >>
-> >>     Changes in v2:
-> >>         - Patch added
-> >>---
-> >>  arch/arm64/include/asm/fpsimd.h |  5 ++---
-> >>  arch/arm64/kernel/fpsimd.c      | 17 +++++++++++++----
-> >>  arch/arm64/kvm/fpsimd.c         |  4 +---
-> >>  3 files changed, 16 insertions(+), 10 deletions(-)
-> >>
-> >>diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
-> >>index b73d12fcc7f9..c311d36ecffe 100644
-> >>--- a/arch/arm64/include/asm/fpsimd.h
-> >>+++ b/arch/arm64/include/asm/fpsimd.h
-> >>@@ -48,8 +48,6 @@ struct task_struct;
-> >>  extern void fpsimd_save_state(struct user_fpsimd_state *state);
-> >>  extern void fpsimd_load_state(struct user_fpsimd_state *state);
-> >>-extern void fpsimd_save(void);
-> >>-
-> >>  extern void fpsimd_thread_switch(struct task_struct *next);
-> >>  extern void fpsimd_flush_thread(void);
-> >>@@ -63,7 +61,8 @@ extern void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *state,
-> >>  				     void *sve_state, unsigned int sve_vl);
-> >>  extern void fpsimd_flush_task_state(struct task_struct *target);
-> >>-extern void fpsimd_flush_cpu_state(void);
-> >>+
-> >>+extern void fpsimd_save_and_flush_cpu_state(void);
-> >
-> >Nit: You could drop this blank line: these are all "state maintenance"
-> >operations, roughly speaking.
-> >
-> >But don't bother unless you respin for some other reason.
+> Thanks, applied to the dma-mapping for-next tree.
 > 
-> It looks like I will need to make some changes in patch #3. So I will remove
-> the line at the same time.
+>> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+>> ---
+>> There are still at least two drivers which do pass a NULL unfortunately.
+>>
+>> drivers/staging/comedi/drivers/comedi_isadma.c:195 comedi_isadma_alloc() error: NULL dereference inside function 'dma_alloc_coherent()'
+>> drivers/staging/comedi/drivers/comedi_isadma.c:227 comedi_isadma_free() error: NULL dereference inside function 'dma_free_coherent()'
+> 
+> This is staging code.  Per official decree from Linus we can just
+> ignore it, and I tend to do so to keep my sanity.
 
-OK, fair enough.
+So for comedi_isadma, we can just replace the NULL with a pointer to a 
+static dummy device with a 24-bit coherent mask?
 
-Cheers
----Dave
+-- 
+-=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+-=( MEV Ltd. is a company registered in England & Wales. )=-
+-=( Registered number: 02862268.  Registered address:    )=-
+-=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
