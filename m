@@ -6,80 +6,89 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6C6C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A6AC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6529420640
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9F82067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:38:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gmzGM8P1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F75GqaZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731239AbfDYMiH (ORCPT
+        id S1731257AbfDYMiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:38:07 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43886 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbfDYMiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:38:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=q927ClLw5w7p3pAVrQBCiop8lcGdhcp8l7/mkTAxFOE=; b=gmzGM8P1AuUAVsJndC8h4lcGxK
-        p056K208kRPR60Ngg9tr7JTiaIMydJgWFLLfDUohuHw65p+zYMHrC2Fy3otGryBbWQsele2KPIoLG
-        5YzkNjlwlfNAXIi/Fj3ZD7rFd/L7n7qywocsneycqFeVTP5LlWRmzCeTB0Fn6mxZ3aI4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hJddZ-0002d4-H7; Thu, 25 Apr 2019 14:38:01 +0200
-Date:   Thu, 25 Apr 2019 14:38:01 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Voon, Weifeng" <weifeng.voon@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Jose Abreu <joabreu@synopsys.com>
-Subject: Re: [PATCH 0/7] net: stmmac: enable EHL SGMII
-Message-ID: <20190425123801.GD8117@lunn.ch>
-References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
- <20190424134854.GP28405@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC8146EF128@PGSMSX103.gar.corp.intel.com>
+        Thu, 25 Apr 2019 08:38:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34550 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfDYMiJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 08:38:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XqVA4owxqT27GNJpHmX8jhJ7/6kEV8Pt0Cjgq247ZIA=; b=F75GqaZ0A6oPqiHXXkcqEZUNy
+        vN01oasCTw2hO5T9WYTYsdpmSmeGKxDjRjvWjehCxQsfVQPbjhNnENhneodcpMFfI8+HBvhMG9lgr
+        cbQkgELPK0JM/PpPR0GcpEjgjSlCD3GzDkwNSlglBVXoLtKogsozflGgLCqljE8oIJT/Mme2M8kDF
+        4FDiRrYhzpFqmy3jixzpzyXjxzPsM9aQuLiC3cqRrcA9VkHhhE9rl1v9hmAEGKDFmrDmkPxvtY3xd
+        kQb6UAhbvH0GHU/XsiZX0mrrlE34FkEoPk48GH7xB96C53vevv5ihBdHs54mutkR94Qq9prQQ+NWK
+        KqdqHFx5Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJddd-0007Bc-Lv; Thu, 25 Apr 2019 12:38:05 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 179AE29C42D01; Thu, 25 Apr 2019 14:38:04 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 14:38:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Subject: Re: [PATCH RFC] x86 / CPU: Add cpu isolation flag for avoiding
+ disturbance from aperfmperf IPI
+Message-ID: <20190425123804.GU4038@hirez.programming.kicks-ass.net>
+References: <155618921176.2006.3031084313219003524.stgit@buzz>
+ <20190425114503.GP4038@hirez.programming.kicks-ass.net>
+ <8b54ebf5-7daf-2760-7210-e0e945014c9e@yandex-team.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC8146EF128@PGSMSX103.gar.corp.intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <8b54ebf5-7daf-2760-7210-e0e945014c9e@yandex-team.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 07:27:51AM +0000, Voon, Weifeng wrote:
-> > > This patch-set is to enable Ethernet controller (DW Ethernet QoS and
-> > > DW Ethernet PCS) with SGMII interface in Elkhart Lake.
+On Thu, Apr 25, 2019 at 03:27:12PM +0300, Konstantin Khlebnikov wrote:
+> On 25.04.2019 14:45, Peter Zijlstra wrote:
+> > On Thu, Apr 25, 2019 at 01:46:51PM +0300, Konstantin Khlebnikov wrote:
+> > > Sensitive workloads like DPDK polling do not like any interrupts.
+> > > 
+> > > This patch adds flag 'freq' for boot option 'isolcpu': isolcpu=freq,<cpus>.
+> > > 
+> > > Users like show_cpuinfo() fallback to frequency from generic cpufreq
+> > > policy if arch-specific requesting method returns 0.
 > > 
-> > Can the hardware also do 1000BaseX?
+> > Then don't touch that sysfs file?
 > 
-> Yes, it is able to do 1000BaseX.
+> What sysfs file?
 
-I Voon
+/sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq
 
-That means you should not really hard code it to SGMII. Somebody is
-going to connect an SFP or an Ethernet switch and want to use
-1000BaseX.
+> I mean many applications read /proc/cpuinfo and this triggers IPI to all cpus.
 
-At minimum, please add support for phy-mode in the device tree.
+Argh, I missed it was wired into that too :/
 
-Also, when the adjust_link callback passed to phy_connect() is called,
-you can look at the interface type to know if you need to configure it
-to SGMII or 1000BaseX. A copper PHY in an SFP module generally wants
-SGMII, but an optical module wants 1000BaseX. But to properly support
-SPFs the driver needs to swap to phylink, rather than phylib.
+> > I really hate having an option for just this.
+> > 
+> 
+> This could be generalized to 'isolate cpu from unnecessary IPI'.
+> Something like mm pagevec drain also could be avoided.
 
-     Andrew
+Well, that should be a default feature of nohz full, no additional flags
+required.
