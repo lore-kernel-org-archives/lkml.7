@@ -2,126 +2,117 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136DBC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E10BC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7EEE206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B34206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jXgd8d1Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OxvdYPm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbfDYKFW (ORCPT
+        id S1730306AbfDYKFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:05:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38626 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfDYKFW (ORCPT
+        Thu, 25 Apr 2019 06:05:49 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37056 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfDYKFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:05:22 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3PA5DuW031693;
-        Thu, 25 Apr 2019 05:05:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556186713;
-        bh=n6We9u0YVFu6BkGTUjZMuv7muCNOIm37EIbnAFUWC8g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=jXgd8d1YGWqAWDpKPaUvtj++fpSX74D5AGeYkivKJFL+DV4DpwH1wfm+hwtJYzjSf
-         CVlTXFxBNfHkbpOHxIizsc/eHVDQFyv8ovg/TSl+Ji4fQ+zbwJyqK1/jXau56+WE55
-         bjpoXbCZpcaQpISq1iRTb29MIEYHRPxozf5R6wAg=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3PA5DkL006119
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Apr 2019 05:05:13 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 25
- Apr 2019 05:05:13 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 25 Apr 2019 05:05:13 -0500
-Received: from [172.22.129.216] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3PA5A8f033746;
-        Thu, 25 Apr 2019 05:05:10 -0500
-Subject: Re: [RFC PATCH v3 net-next 01/11] net: ethernet: ti: cpts: use
- devm_get_clk_from_child
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>
-References: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
- <1556144667-27997-2-git-send-email-grygorii.strashko@ti.com>
- <20190424224607.GB23779@lunn.ch>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <3aae7697-3b7f-492b-0600-b6d1382511c3@ti.com>
-Date:   Thu, 25 Apr 2019 13:05:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 25 Apr 2019 06:05:49 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h126so6411884lfh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 03:05:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=avBRIgGjfD8aMJUGVQa4EMSBv9FzFJctV8E62EOaDHs=;
+        b=OxvdYPm6akafJsrkBP8uSu/iQZo6XfqY5g3yoqpmudO1pnS7Qf2GztwmfEqWok0a/b
+         PgYu0vYJqJocLq/cB94K0edAgD+eHKktQrX/wPqyy0hBRcg0cwTfkrvgwZLSopWGsvF2
+         H/8FrPQZuDWpX5U68mdDNUSxEU89vvLvZaoD+n8njMSmj4IsZnSLRdtLuzrqKvNEvztF
+         q7COI/OR0U0oEfzU6rvvX08M78v9fR/cnsDAfOXGg2ZBZ/wRusPI8X0dLdsIEeRynoxN
+         l+JpyrOzgrjd9mVAEoWFFPthUk0uKGG/27EDDNC/7irJ9oq08ocajIJw0Ikgq0TmW6ed
+         PA3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=avBRIgGjfD8aMJUGVQa4EMSBv9FzFJctV8E62EOaDHs=;
+        b=LIadCn9mk1hEAEJ5OHf1ZIdK+0Qwm8hpEYjC0Y6t1/lbmRTGdErU6FbzOphe/Ziw3R
+         oJryy2COOZME5ydUdEykOzf66k8Ho9LIsUfbMvWItF/TN9RbOTYKtDAJ/kEgWQQqizLK
+         3kFzNgicxEJSFgk2nPRdsNDIEHH4lFgSqpt+j/Mpd+Q33/GL5CJ4eU/tqgbWC+MyBSi7
+         kO3upzl0dqiUcA918PTKua0RvlHDDoTTwq8W5xImaoLIgcWsamUDssaluepq3pKIQLzb
+         14xHVn7EWhF7Y0OO7bUlVbcQvUFXquCYkKvONfqfVmUUXRU+tK1epbDt9O4NZhw5Jl95
+         eULg==
+X-Gm-Message-State: APjAAAVhdQDE1XQPhCjmfFEjmuouVBe83fLwopEFpWYg5lXaIBcalI4A
+        cLzsmhT8Z+knH40BN+pQ3tpiYL1xFXAom0Gamk/zlw==
+X-Google-Smtp-Source: APXvYqwTBNE1T77HiKmAG3u+0sbQH9C9hOaUDcZyZ8d/xe3vWvdWY0x5es7Zyg+LQWkMIVGqoKtDgVwW01zCrmEtZG4=
+X-Received: by 2002:ac2:43d8:: with SMTP id u24mr20300304lfl.94.1556186747032;
+ Thu, 25 Apr 2019 03:05:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190424224607.GB23779@lunn.ch>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190424170923.452349382@linuxfoundation.org>
+In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 25 Apr 2019 15:35:35 +0530
+Message-ID: <CA+G9fYsu=+A3xyknb-qZ+MqDS4VtTX4cSXe8AtcZYvdfTLu-Ww@mail.gmail.com>
+Subject: Re: [PATCH 4.4 000/168] 4.4.179-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 24 Apr 2019 at 22:48, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.4.179 release.
+> There are 168 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri 26 Apr 2019 05:07:28 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.179-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.179-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: 83003200d9b5aee33e831b6fa85b8c8a2964591d
+git describe: v4.4.178-169-g83003200d9b5
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.178-169-g83003200d9b5
 
 
-On 25.04.19 01:46, Andrew Lunn wrote:
-> On Thu, Apr 25, 2019 at 01:24:17AM +0300, Grygorii Strashko wrote:
->> Use devm_get_clk_from_child() instead of devm_clk_get() and this way allow
->> to group CPTS DT properties in sub-node for better code readability and
->> maintenance.
->>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>  drivers/net/ethernet/ti/cpts.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
->> index 499806ce4cd5..aad118e71b61 100644
->> --- a/drivers/net/ethernet/ti/cpts.c
->> +++ b/drivers/net/ethernet/ti/cpts.c
->> @@ -572,7 +572,7 @@ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
->>  	if (ret)
->>  		return ERR_PTR(ret);
->>  
->> -	cpts->refclk = devm_clk_get(dev, "cpts");
->> +	cpts->refclk = devm_get_clk_from_child(dev, node, "cpts");
->>  	if (IS_ERR(cpts->refclk)) {
->>  		dev_err(dev, "Failed to get cpts refclk\n");
->>  		return ERR_CAST(cpts->refclk);
-> 
-> Hi Grygorii
-> 
-> Does this break backwards compatibility for existing DT blobs?
-> Maybe you need to look in both the old and new locations?
+No regressions (compared to build v4.4.178-169-ge340a9c1b725)
 
-No. It doesn't - default node is cpsw->dev->of_node.
-
-Then Patch 7 changes it fro new driver to 
--	cpsw->cpts = cpts_create(cpsw->dev, cpts_regs, cpsw->dev->of_node);
-+	cpts_node = of_get_child_by_name(cpsw->dev->of_node, "cpts");
-+	if (!cpts_node)
-+		cpts_node = cpsw->dev->of_node;
-+
-+	cpsw->cpts = cpts_create(cpsw->dev, cpts_regs, cpts_node);
-
--- 
-Best regards,
-grygorii
+No fixes (compared to build v4.4.178-169-ge340a9c1b725)
