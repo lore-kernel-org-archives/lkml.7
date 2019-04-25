@@ -2,87 +2,107 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CF0C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0D8C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F5920717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556230015;
-	bh=pTQtAHspL95zxJddIdjsMFYFi1GDq9/62hbgXWVMqjo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qCTWT5EiR3FvYuU6n54wKGFJiEhS7IaoCqDdB25RaGuIZeQ/2glFdcpE2Uk04066G
-	 ZAU6JfgYlkCXzkhsl2cym1OZP264YIoTJYztDeQQT2YDfJXUDRoZu2P45wEh2Xgtqa
-	 sxyCQr3rT1nT68JvwWIpmIMcHG409tc0neT3GKI4=
+	by mail.kernel.org (Postfix) with ESMTP id 41A26206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:08:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NDxI/Dco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbfDYWGy (ORCPT
+        id S1731434AbfDYWIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 18:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfDYWGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 18:06:54 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 710C0206C1;
-        Thu, 25 Apr 2019 22:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556230013;
-        bh=pTQtAHspL95zxJddIdjsMFYFi1GDq9/62hbgXWVMqjo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ails9T8CojwAO9sK1f6aZbChd79rBPu0v09MKfCS9kWfNKaWDQ6o88pvABoz9fOMH
-         hWb5NpD001XQfJi9etUcPuR731QdXDRgtb3iNU0xkiPRhDKhF6aHP+4OBDWLzj492G
-         Yjlt0G9O9yVngR2HUsyXFyvABHSc/E82jEWNEXhc=
-Date:   Thu, 25 Apr 2019 15:06:52 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Joel Savitz <jsavitz@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] fs/proc: add VmTaskSize field to /proc/$$/status
-Message-Id: <20190425150652.627fb21a40c18e1c32ed2125@linux-foundation.org>
-In-Reply-To: <1556225867-458-1-git-send-email-jsavitz@redhat.com>
-References: <1556225867-458-1-git-send-email-jsavitz@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Apr 2019 18:08:01 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:34567 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730866AbfDYWIB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 18:08:01 -0400
+Received: by mail-vs1-f68.google.com with SMTP id n17so824378vsr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 15:08:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ak1U3Odv0aZPvdj1RHbAifHko/b4UA9d9R+tGHvT3SU=;
+        b=NDxI/Dcoa+z67Sw2V2npnR0n2nLQk/jE/p+glUFhp+cEzHige6Tbre3ctX/y6SQsig
+         uug5O/szCEt1CHnTkfEAKjSDYGjryb1jVsODR+WNT9t1Njq+1+d+IbaAfSFAXWbJhIW7
+         BDCBKeeOC735mWGztzLTOm/fI6a0oASUIKxY2/TWciNDCtilbeyY9tCHkDYjHji0a3AT
+         dcvi/Wn4JxpbmHjKlrjtbaY0JJQrnwVhANH5YDQnjvHZh6axscx2KPMqJc/qubAkke6k
+         wmDmIB6QhJmgpMEmroR+dTcuH0nZjZY5TD85mI+ckK+jCzhUbjK7zB1df4fsXioARDSP
+         riXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ak1U3Odv0aZPvdj1RHbAifHko/b4UA9d9R+tGHvT3SU=;
+        b=QPg6zF0nv5NKJDvnZqt53y+CXtnM42EhS4b2cBln6+oQujYlFR/kWEUgsV69zhFsjb
+         yID0n7PoL/PxjmCjD2cGkU5xkK7VfH9gHcwuWIKD6Fo32fVgGSem4CpFAu82ntG2Em2n
+         t2IwrYxeyrs8lt65kP0Jsf+N7J08BYtWsgTbFlJeicAh2DBZ23GVJpPihumQcRqwjbuD
+         CFr9Qr0R4b2OgqH0Q66ZoNYHwPizR7+JJSS6af6m2rqQdQ0rKLSEbONhfhAkRvNQV7LW
+         ++iLNTIxjOAoIPU1lVZyvRh84vxXH2xdxM+nGQzIc29BWENUa4VUK0h7x7rI/rW9YX0k
+         HpGg==
+X-Gm-Message-State: APjAAAVbtPfBwXtwPlqImO50rzq8mQtacnCQxvTui1TQQS6yOfYfYgZM
+        7IwgwKqwVN7yqaOeer4sXufNoV8aBw/DS+9+OUHVsA==
+X-Google-Smtp-Source: APXvYqwLL0ulWY6/Shu+Q4KVbH0+78P/TfqZ3tyM6WydYeim1KubcCWrOF9d6Qa2yTBisiySibskanzuWAjB/2wbBrY=
+X-Received: by 2002:a67:ea0a:: with SMTP id g10mr21694902vso.77.1556230079881;
+ Thu, 25 Apr 2019 15:07:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190425190010.46489-1-joel@joelfernandes.org>
+ <20190425190010.46489-2-joel@joelfernandes.org> <20190425212917.yotnir4uqgpnh764@brauner.io>
+In-Reply-To: <20190425212917.yotnir4uqgpnh764@brauner.io>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Thu, 25 Apr 2019 15:07:48 -0700
+Message-ID: <CAKOZueuPeqnWVCv8NnQNyStWBQLybkr2qqtfQ0MjzsfSQDymzg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] Add selftests for pidfd polling
+To:     Christian Brauner <christian@brauner.io>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
+        Jann Horn <jann@thejh.net>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Michal Hocko <mhocko@suse.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Sandeep Patil <sspatil@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Murray <timmurray@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tycho Andersen <tycho@tycho.ws>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019 16:57:47 -0400 Joel Savitz <jsavitz@redhat.com> wrote:
+On Thu, Apr 25, 2019 at 2:29 PM Christian Brauner <christian@brauner.io> wrote:
+> This timing-based testing seems kinda odd to be honest. Can't we do
+> something better than this?
 
-> Currently, there is no fast mechanism to get the virtual memory size of
-> the current process from userspace. This information is available to the
-> user through several means, one being a linear search of the entire address
-> space. This is the method used by a component of the libhugetlb kernel
-> test, and using the mechanism proposed in this patch, the time complexity
-> of that test would be upgraded to constant time from linear time. This is
-> especially relevant on 64-bit architechtures where a linear search of
-> the address space could take an absurd amount of time. Using this
-> mechanism, the modification to the test component would be portable
-> across all architechtures.
+Agreed. Timing-based tests have a substantial risk of becoming flaky.
+We ought to be able to make these tests fully deterministic and not
+subject to breakage from odd scheduling outcomes. We don't have
+sleepable events for everything, granted, but sleep-waiting on a
+condition with exponential backoff is fine in test code. In general,
+if you start with a robust test, you can insert a sleep(100) anywhere
+and not break the logic. Violating this rule always causes pain sooner
+or later.
 
-Please include all details on the observed performance improvements.
-
->  fs/proc/task_mmu.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-
-Please update Documentation/filesystems/proc.txt.
-
-
+Other thoughts: IMHO, using poll(2) instead of epoll would simplify
+the test code, and I think we can get away with calling
+pthread_exit(3) instead of SYS_exit.
