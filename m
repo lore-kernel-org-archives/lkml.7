@@ -2,238 +2,196 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC90C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE239C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02966214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75261214C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387715AbfDYBS7 (ORCPT
+        id S2387771AbfDYBZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 21:18:59 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40662 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfDYBS7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 21:18:59 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y49so3926004qta.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 18:18:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gSdbl7tiCDChVFi/egk34T6hGKLdbLIMT0F6PPP6KJk=;
-        b=LRGp8HnKuyTQ8iaGOXzJX7efeZ8PRDyPoP/+z9c8f8p16TCTghiIGWOk3J9oRloU1Z
-         yZQIleBd3TYP5m3a4q7RnR9R/g7KOx/l+xTnLzj2yJYjXIvFSybBe0bpD1O78JOIzocz
-         ewB4Bmm7mYCAbaXFF83XrrqpyPFRV13UkvS8Qpfki0cC3bNWYK8Vszx683HkTZ46lJ12
-         ZWrUYogR5x3wehY3Oq4s9C8xBPXDKO6eyaCEes8lOIdK3EzwHzdPXeoOL9VMd7hAyChw
-         iGpxWZJLxeAxCo7HaYK4IqAa3fYAhAl+50JNCTnsBGTO/guWaGEFPmDPIKRwJAgif8FZ
-         jYwA==
-X-Gm-Message-State: APjAAAX4ZniUW3g0wefui788T8FPgi+ximdMXtes5l2gsyQkXUOZ+wOo
-        Ab3H6nWVcN8Ebb2B7M7jTOCVbLqk3q4=
-X-Google-Smtp-Source: APXvYqxKlHSNlPqQN4XmzYneFKkJ/mvtPnQ1lM7Bwy+vkifcs/0Fs/s/gpyQh6mYewhWVUy9oqbl+w==
-X-Received: by 2002:aed:20c4:: with SMTP id 62mr26929160qtb.256.1556155138200;
-        Wed, 24 Apr 2019 18:18:58 -0700 (PDT)
-Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
-        by smtp.gmail.com with ESMTPSA id e6sm9930128qtr.56.2019.04.24.18.18.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 18:18:56 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 21:18:54 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-Message-ID: <20190424210813-mutt-send-email-mst@kernel.org>
-References: <20190129134750-mutt-send-email-mst@kernel.org>
- <877eefxvyb.fsf@morokweng.localdomain>
- <20190204144048-mutt-send-email-mst@kernel.org>
- <87ef71seve.fsf@morokweng.localdomain>
- <20190320171027-mutt-send-email-mst@kernel.org>
- <87tvfvbwpb.fsf@morokweng.localdomain>
- <20190323165456-mutt-send-email-mst@kernel.org>
- <87a7go71hz.fsf@morokweng.localdomain>
- <20190419190258-mutt-send-email-mst@kernel.org>
- <875zr228zf.fsf@morokweng.localdomain>
+        Wed, 24 Apr 2019 21:25:40 -0400
+Received: from mga07.intel.com ([134.134.136.100]:42644 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726380AbfDYBZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 21:25:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 18:21:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,391,1549958400"; 
+   d="scan'208";a="340564573"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Apr 2019 18:21:35 -0700
+Cc:     baolu.lu@linux.intel.com, James Sewart <jamessewart@arista.com>,
+        iommu@lists.linux-foundation.org, Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+Subject: Re: [PATCH v2 3/7] iommu/vt-d: Expose ISA direct mapping region via
+ iommu_get_resv_regions
+To:     Tom Murphy <tmurphy@arista.com>
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+ <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
+ <b6b3dda7-31e3-c1e8-16cb-07feb7d5431d@linux.intel.com>
+ <A489539F-4DD4-438A-AD9A-1A2F50404DB9@arista.com>
+ <fb1565dc-d991-acf9-e275-c0090f69f47e@linux.intel.com>
+ <445F31EA-20F3-481C-B1DF-8B163791FF8C@arista.com>
+ <cf43d26b-f1ee-8469-c17a-e5c412dcfeab@linux.intel.com>
+ <6C211BF1-B5A0-4821-AB42-092B573DE667@arista.com>
+ <8B1FC0C7-9BAC-498D-B1F0-0138EACF75C2@arista.com>
+ <ddcaa472-7bff-ddd3-0518-f2ba694b3279@linux.intel.com>
+ <9AECB54A-2DA7-4ABD-A9B5-0549E108D1AF@arista.com>
+ <abbfecda-8990-315c-ac7a-7f571e86aba2@linux.intel.com>
+ <1D51CB31-089A-4D71-A9C1-E54E50A56C46@arista.com>
+ <1b7d37da-5660-f635-cd2f-619e5573d35a@linux.intel.com>
+ <CAPL0++4w6TDf38fh6LwAADR1w3b+nO5G7rZFM3LjDE-B20zbow@mail.gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <7faf596b-146a-465c-0837-7ed9595e5f0f@linux.intel.com>
+Date:   Thu, 25 Apr 2019 09:15:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zr228zf.fsf@morokweng.localdomain>
+In-Reply-To: <CAPL0++4w6TDf38fh6LwAADR1w3b+nO5G7rZFM3LjDE-B20zbow@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:01:56PM -0300, Thiago Jung Bauermann wrote:
-> 
-> Michael S. Tsirkin <mst@redhat.com> writes:
-> 
-> > On Wed, Apr 17, 2019 at 06:42:00PM -0300, Thiago Jung Bauermann wrote:
-> >>
-> >> Michael S. Tsirkin <mst@redhat.com> writes:
-> >>
-> >> > On Thu, Mar 21, 2019 at 09:05:04PM -0300, Thiago Jung Bauermann wrote:
-> >> >>
-> >> >> Michael S. Tsirkin <mst@redhat.com> writes:
-> >> >>
-> >> >> > On Wed, Mar 20, 2019 at 01:13:41PM -0300, Thiago Jung Bauermann wrote:
-> >> >> >> >From what I understand of the ACCESS_PLATFORM definition, the host will
-> >> >> >> only ever try to access memory addresses that are supplied to it by the
-> >> >> >> guest, so all of the secure guest memory that the host cares about is
-> >> >> >> accessible:
-> >> >> >>
-> >> >> >>     If this feature bit is set to 0, then the device has same access to
-> >> >> >>     memory addresses supplied to it as the driver has. In particular,
-> >> >> >>     the device will always use physical addresses matching addresses
-> >> >> >>     used by the driver (typically meaning physical addresses used by the
-> >> >> >>     CPU) and not translated further, and can access any address supplied
-> >> >> >>     to it by the driver. When clear, this overrides any
-> >> >> >>     platform-specific description of whether device access is limited or
-> >> >> >>     translated in any way, e.g. whether an IOMMU may be present.
-> >> >> >>
-> >> >> >> All of the above is true for POWER guests, whether they are secure
-> >> >> >> guests or not.
-> >> >> >>
-> >> >> >> Or are you saying that a virtio device may want to access memory
-> >> >> >> addresses that weren't supplied to it by the driver?
-> >> >> >
-> >> >> > Your logic would apply to IOMMUs as well.  For your mode, there are
-> >> >> > specific encrypted memory regions that driver has access to but device
-> >> >> > does not. that seems to violate the constraint.
-> >> >>
-> >> >> Right, if there's a pre-configured 1:1 mapping in the IOMMU such that
-> >> >> the device can ignore the IOMMU for all practical purposes I would
-> >> >> indeed say that the logic would apply to IOMMUs as well. :-)
-> >> >>
-> >> >> I guess I'm still struggling with the purpose of signalling to the
-> >> >> driver that the host may not have access to memory addresses that it
-> >> >> will never try to access.
-> >> >
-> >> > For example, one of the benefits is to signal to host that driver does
-> >> > not expect ability to access all memory. If it does, host can
-> >> > fail initialization gracefully.
-> >>
-> >> But why would the ability to access all memory be necessary or even
-> >> useful? When would the host access memory that the driver didn't tell it
-> >> to access?
-> >
-> > When I say all memory I mean even memory not allowed by the IOMMU.
-> 
-> Yes, but why? How is that memory relevant?
+Hi Tom,
 
-It's relevant when driver is not trusted to only supply correct
-addresses. The feature was originally designed to support userspace
-drivers within guests.
-
-> >> >> >> >> > But the name "sev_active" makes me scared because at least AMD guys who
-> >> >> >> >> > were doing the sensible thing and setting ACCESS_PLATFORM
-> >> >> >> >>
-> >> >> >> >> My understanding is, AMD guest-platform knows in advance that their
-> >> >> >> >> guest will run in secure mode and hence sets the flag at the time of VM
-> >> >> >> >> instantiation. Unfortunately we dont have that luxury on our platforms.
-> >> >> >> >
-> >> >> >> > Well you do have that luxury. It looks like that there are existing
-> >> >> >> > guests that already acknowledge ACCESS_PLATFORM and you are not happy
-> >> >> >> > with how that path is slow. So you are trying to optimize for
-> >> >> >> > them by clearing ACCESS_PLATFORM and then you have lost ability
-> >> >> >> > to invoke DMA API.
-> >> >> >> >
-> >> >> >> > For example if there was another flag just like ACCESS_PLATFORM
-> >> >> >> > just not yet used by anyone, you would be all fine using that right?
-> >> >> >>
-> >> >> >> Yes, a new flag sounds like a great idea. What about the definition
-> >> >> >> below?
-> >> >> >>
-> >> >> >> VIRTIO_F_ACCESS_PLATFORM_NO_IOMMU This feature has the same meaning as
-> >> >> >>     VIRTIO_F_ACCESS_PLATFORM both when set and when not set, with the
-> >> >> >>     exception that the IOMMU is explicitly defined to be off or bypassed
-> >> >> >>     when accessing memory addresses supplied to the device by the
-> >> >> >>     driver. This flag should be set by the guest if offered, but to
-> >> >> >>     allow for backward-compatibility device implementations allow for it
-> >> >> >>     to be left unset by the guest. It is an error to set both this flag
-> >> >> >>     and VIRTIO_F_ACCESS_PLATFORM.
-> >> >> >
-> >> >> > It looks kind of narrow but it's an option.
-> >> >>
-> >> >> Great!
-> >> >>
-> >> >> > I wonder how we'll define what's an iommu though.
-> >> >>
-> >> >> Hm, it didn't occur to me it could be an issue. I'll try.
-> >>
-> >> I rephrased it in terms of address translation. What do you think of
-> >> this version? The flag name is slightly different too:
-> >>
-> >>
-> >> VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION This feature has the same
-> >>     meaning as VIRTIO_F_ACCESS_PLATFORM both when set and when not set,
-> >>     with the exception that address translation is guaranteed to be
-> >>     unnecessary when accessing memory addresses supplied to the device
-> >>     by the driver. Which is to say, the device will always use physical
-> >>     addresses matching addresses used by the driver (typically meaning
-> >>     physical addresses used by the CPU) and not translated further. This
-> >>     flag should be set by the guest if offered, but to allow for
-> >>     backward-compatibility device implementations allow for it to be
-> >>     left unset by the guest. It is an error to set both this flag and
-> >>     VIRTIO_F_ACCESS_PLATFORM.
-> >
-> > Thanks, I'll think about this approach. Will respond next week.
+On 4/25/19 7:47 AM, Tom Murphy wrote:
+> I can see two potential problems with these patches that should be addressed:
 > 
-> Thanks!
+> The default domain of a group can be changed to type
+> IOMMU_DOMAIN_IDENTITY via the command line. With these patches we are
+> returning the si_domain for type IOMMU_DOMAIN_IDENTITY. There's a
+> chance the shared si_domain could be freed while it is still being
+> used when a group is freed. For example here in the
+> iommu_group_release:
+> https://github.com/torvalds/linux/blob/cd8dead0c39457e58ec1d36db93aedca811d48f1/drivers/iommu/iommu.c#L376
+> "if (group->default_domain)
+>      iommu_domain_free(group->default_domain);"
 > 
-> >> >> > Another idea is maybe something like virtio-iommu?
-> >> >>
-> >> >> You mean, have legacy guests use virtio-iommu to request an IOMMU
-> >> >> bypass? If so, it's an interesting idea for new guests but it doesn't
-> >> >> help with guests that are out today in the field, which don't have A
-> >> >> virtio-iommu driver.
-> >> >
-> >> > I presume legacy guests don't use encrypted memory so why do we
-> >> > worry about them at all?
-> >>
-> >> They don't use encrypted memory, but a host machine will run a mix of
-> >> secure and legacy guests. And since the hypervisor doesn't know whether
-> >> a guest will be secure or not at the time it is launched, legacy guests
-> >> will have to be launched with the same configuration as secure guests.
-> >
-> > OK and so I think the issue is that hosts generally fail if they set
-> > ACCESS_PLATFORM and guests do not negotiate it.
-> > So you can not just set ACCESS_PLATFORM for everyone.
-> > Is that the issue here?
+> Also now that a domain is attached to a device earlier we should
+> implement the is_attach_deferred call-back and use it to defer the
+> domain attach from iommu driver init to device driver init when iommu
+> is pre-enabled in kdump kernel. like in this commit:
+> https://github.com/torvalds/linux/commit/df3f7a6e8e855e4ff533508807cd7c3723faa51f
 > 
-> Yes, that is one half of the issue. The other is that even if hosts
-> didn't fail, existing legacy guests wouldn't "take the initiative" of
-> not negotiating ACCESS_PLATFORM to get the improved performance. They'd
-> have to be modified to do that.
 
-So there's a non-encrypted guest, hypervisor wants to set
-ACCESS_PLATFORM to allow encrypted guests but that will slow down legacy
-guests since their vIOMMU emulation is very slow.
+Both agreed and should be considered during development.
 
-So enabling support for encryption slows down non-encrypted guests. Not
-great but not the end of the world, considering even older guests that
-don't support ACCESS_PLATFORM are completely broken and you do not seem
-to be too worried by that.
+Best regards,
+Lu Baolu
 
-For future non-encrypted guests, bypassing the emulated IOMMU for when
-that emulated IOMMU is very slow might be solvable in some other way,
-e.g. with virtio-iommu. Which reminds me, could you look at
-virtio-iommu as a solution for some of the issues?
-Review of that patchset from that POV would be appreciated.
-
-> --
-> Thiago Jung Bauermann
-> IBM Linux Technology Center
+> 
+> On Tue, Apr 16, 2019 at 3:24 AM Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>
+>> Hi James,
+>>
+>> On 4/15/19 10:16 PM, James Sewart wrote:
+>>> Hey Lu,
+>>>
+>>>> On 10 Apr 2019, at 06:22, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>>>
+>>>> Hi James,
+>>>>
+>>>> On 4/6/19 2:02 AM, James Sewart wrote:
+>>>>> Hey Lu,
+>>>>> My bad, did some debugging on my end. The issue was swapping out
+>>>>> find_domain for iommu_get_domain_for_dev. It seems in some situations the
+>>>>> domain is not attached to the group but the device is expected to have the
+>>>>> domain still stored in its archdata.
+>>>>> I’ve attached the final patch with find_domain unremoved which seems to
+>>>>> work in my testing.
+>>>>
+>>>> Just looked into your v3 patch set and some thoughts from my end posted
+>>>> here just for your information.
+>>>>
+>>>> Let me post the problems we want to address.
+>>>>
+>>>> 1. When allocating a new group for a device, how should we determine the
+>>>> type of the default domain?
+>>>>
+>>>> 2. If we need to put a device into an existing group which uses a
+>>>> different type of domain from what the device desires to use, we might
+>>>> break the functionality of the device.
+>>>>
+>>>> My new thought is letting the iommu generic code to determine the
+>>>> default domain type (hence my proposed vendor specific default domain
+>>>> type patches could be dropped).
+>>>>
+>>>> If the default domain type is dynamical mapping, and later in iommu_no_mapping(), we determines that we must use an identity domain,
+>>>> we then call iommu_request_dm_for_dev(dev).
+>>>>
+>>>> If the default domain type is identity mapping, and later in
+>>>> iommu_no_mapping(), we determined that we must use a dynamical domain,
+>>>> we then call iommu_request_dma_domain_for_dev(dev).
+>>>>
+>>>> We already have iommu_request_dm_for_dev() in iommu.c. We only need to
+>>>> implement iommu_request_dma_domain_for_dev().
+>>>>
+>>>> With this done, your patch titled "Create an IOMMU group for devices
+>>>> that require an identity map" could also be dropped.
+>>>>
+>>>> Any thoughts?
+>>>
+>>> Theres a couple issues I can think of. iommu_request_dm_for_dev changes
+>>> the domain for all devices within the devices group, if we may have
+>>> devices with different domain requirements in the same group then only the
+>>> last initialised device will get the domain it wants. If we want to add
+>>> iommu_request_dma_domain_for_dev then we would still need another IOMMU
+>>> group for identity domain devices.
+>>
+>> Current solution (a.k.a. v3) for this is to assign a new group to the
+>> device which requires an identity mapped domain. This will break the
+>> functionality of device direct pass-through (to user level). The iommu
+>> group represents the minimum granularity of iommu isolation and
+>> protection. The requirement of identity mapped domain should not be a
+>> factor for a new group.
+>>
+>> Both iomm_request_dma_domain_for_dev() or iommu_request_dm_for_dev()
+>> only support groups with a single device in it.
+>>
+>> The users could choose between domains of DMA type or IDENTITY type for
+>> a group. If multiple devices share a single group and both don't work
+>> for them, they have to disable the IOMMU. This isn't a valid
+>> configuration from IOMMU's point of view.
+>>
+>>>
+>>> Both with v3 and the proposed method here, iommu_should_identity_map is
+>>> determining whether the device requires an identity map. In v3 this is
+>>> called once up front by the generic code to determine for the IOMMU group
+>>> which domain type to use. In the proposed method I think this would happen
+>>> after initial domain allocation and would trigger the domain to be
+>>> replaced with a different domain.
+>>>
+>>> I prefer the solution in v3. What do you think?
+>>
+>> The only concern of solution in v3 from my point of view is some kind of
+>> duplication. Even we can ask the Intel IOMMU driver to tell the default
+>> domain type, we might change it after boot up. For example, for 32-bit
+>> pci devices, we don't know whether it's 64-bit or 32-bit capable during
+>> IOMMU initialization, so we might tell iommu.c to use identity mapped
+>> domain. After boot up, we check it again, and find out that it's only
+>> 32-bit capable (hence only can access physical memory below 4G) and the
+>> default identity domain doesn't work. And we have to change it to DMA
+>> domain via iommu_request_dma_domain_for_dev().
+>>
+>> So to make it simple and straight-forward, we can just let iommu.c to
+>> determine the default domain type and after that the Intel IOMMU driver
+>> could tweak it according to the quirk bits in the driver.
+>>
+>> Best regards,
+>> Lu Baolu
+> 
