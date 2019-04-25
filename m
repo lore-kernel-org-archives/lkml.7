@@ -2,90 +2,168 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56EEC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE68FC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B81206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565DB206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:47:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="P5hcG3MA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfDYKqx (ORCPT
+        id S1730486AbfDYKq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:46:53 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:36449 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728944AbfDYKqx (ORCPT
+        Thu, 25 Apr 2019 06:46:59 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:43162 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728944AbfDYKq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:46:53 -0400
-Received: from [192.168.1.115] ([95.115.19.22]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mcp3E-1gkp2c3gf4-00ZzjB; Thu, 25 Apr 2019 12:46:20 +0200
-Subject: Re: [PATCH v17 1/3] proc: add /proc/<pid>/arch_status
-To:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     mingo@redhat.com, peterz@infradead.org, hpa@zytor.com,
-        ak@linux.intel.com, tim.c.chen@linux.intel.com,
-        dave.hansen@intel.com, arjan@linux.intel.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, aubrey.li@intel.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>
-References: <20190421183529.9141-1-aubrey.li@linux.intel.com>
- <alpine.DEB.2.21.1904242310040.1762@nanos.tec.linutronix.de>
- <da1fcb4f-e856-d31f-7c72-76c969af3935@linux.intel.com>
- <6a9e6bd9-8e1a-9fe5-135d-c7a49697b5a4@metux.net>
- <4456cc68-5120-e820-90ed-cb5b5dfcd760@linux.intel.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <ee1620d5-9650-5bfa-c458-fa2d051522b1@metux.net>
-Date:   Thu, 25 Apr 2019 12:46:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 25 Apr 2019 06:46:58 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 292182E0DDC;
+        Thu, 25 Apr 2019 13:46:55 +0300 (MSK)
+Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 1ntPunexU0-kqUOQVSE;
+        Thu, 25 Apr 2019 13:46:55 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1556189215; bh=lRYvD+k8oEBPJWX5OyPVnoY1l7XxL72FGY8nF6uwy8c=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=P5hcG3MAgHhPg6AHXFqnPrWuQRwHN0GoYFyAoqgd29N396lA2p+XWOiPDuvr0dmwy
+         isosp+JdDFvvocX1csCdS7suJp8uUhoWKW+/CXzmSQXPo4Ii32EF9jsxKB6xoSBeee
+         QacZxuWUFFZtwNikt2+OQCwszaMQ888beF6s2380=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:547a:aec1:8b2f:9dac])
+        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id Z4flB0q0Ey-kp5uOfKg;
+        Thu, 25 Apr 2019 13:46:52 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH RFC] x86 / CPU: Add cpu isolation flag for avoiding
+ disturbance from aperfmperf IPI
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Len Brown <len.brown@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Date:   Thu, 25 Apr 2019 13:46:51 +0300
+Message-ID: <155618921176.2006.3031084313219003524.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <4456cc68-5120-e820-90ed-cb5b5dfcd760@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ZnkALXkHHwZE1EE2jFTNP4RMHM6mt7IN4RNRxxzkIoEJQ8b01n7
- ZlZ+Q04+zSYDioS1BzpbePww5eI0r2ltoqRByeNAFgMDWGoHIaG8ceLYGBIhnWLyZmbLfvb
- nf7rLfpyyST+bpF+XOSLWAJwNQGCWcqO5p7+8GSkpWbvKPooTfmf5M/o9O7dkcEJFiQKeGH
- cTdTPdjQ8jGuZFi9KI9kQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gnYz11fW57A=:yQd8eRO0sQM4pPBuihPDPl
- UYi73k456SbyHl5c4k+eVJ0pDShAUtscC2JtxeODqa3bwBYkb2ge6IOCWFW1hdANRYiI6kQK1
- L9vv53hy+E9RDxrkgURZEQNab9w5QWII8Qs6sObFYMUViFxIs1jcIswvuSMF1kve2qyJ+OmTF
- TFQvoHRVodE0gY1n/kQsM3Q/yGEpoTAbcl+AlNx52w6RFFRSQiAgCPXHb1FYIV6oXhFtHX9bs
- 13b+wsJ/4KFh7mJZpvorsaEhFfy08CnsytO6jtxD0fWzau7OC28aq8EylUvXQX1so9SRywXC9
- +mTpxuOCVHq8ikyau0ZcTG9k5Yi3va5VMFIXLwAks6vjZwzrTSR/jtZpDcuTYSYIJabmXXKmi
- 2cBGKF3F780UsCWIl7ok5RDn19gqXP1UXaAWRqVZrX4Sk60vpmZABsIhU57mpIAjas4SL4rF8
- dcUoII1dmFn2aESU7rY5TDiIkz0026NTn2B757F6DK/cSzT3ROCtgKbuILJmJE1Edz8W0d6FB
- m3fc7AbH9g9HwzNgl/cwu4wb3uaJnd/z5X/LxfZV87pZtcQtugaTjTcg87/ZZWuVZOX1nHx+l
- jPIZDiCq+Bo32535RZ7vhyxxqx3tK2RY1IYIrnqvZhJ5PFtpk4FZ3+F7wg+eXLKKbWupsPmqQ
- 9cbgqG2FD9LHClm0goSw3ZJp68cGEqpHk37lWKnsFyhvUb+l7foyd+WIirz7fYiPk6iZAIB08
- Q0Ej7E6h3YC3JHwAXIe5GNEbLtXoXb1TrH0PUbV4c5PdamRb+I2DDNe2cuY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.04.19 12:42, Li, Aubrey wrote:
-> 
-> Yep, I'll make it disabled by default and not switchable and let arch select it.
-> 
+Sensitive workloads like DPDK polling do not like any interrupts.
 
-That's not quite what I've suggested. Instead:
+This patch adds flag 'freq' for boot option 'isolcpu': isolcpu=freq,<cpus>.
 
-#1: make the switch depend on the arch's that support it
-#2: still leave it selectable to the user, so somebody who doesn't need
-    it, can just disable it.
+Users like show_cpuinfo() fallback to frequency from generic cpufreq
+policy if arch-specific requesting method returns 0.
 
-(I, personally, tend to disable everything I don't need)
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ Documentation/admin-guide/kernel-parameters.txt |    3 +++
+ arch/x86/kernel/cpu/aperfmperf.c                |   12 +++++++++++-
+ include/linux/sched/isolation.h                 |    1 +
+ kernel/sched/isolation.c                        |    6 ++++++
+ 4 files changed, 21 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 2b8ee90bb644..3797cd5c2b2e 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1900,6 +1900,9 @@
+ 			  <cpu number> begins at 0 and the maximum value is
+ 			  "number of CPUs in system - 1".
+ 
++			freq
++			  Do not request current cpu frequency via IPI.
++
+ 			The format of <cpu-list> is described above.
+ 
+ 
+diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
+index 804c49493938..e8fb917980a8 100644
+--- a/arch/x86/kernel/cpu/aperfmperf.c
++++ b/arch/x86/kernel/cpu/aperfmperf.c
+@@ -14,6 +14,7 @@
+ #include <linux/percpu.h>
+ #include <linux/cpufreq.h>
+ #include <linux/smp.h>
++#include <linux/sched/isolation.h>
+ 
+ #include "cpu.h"
+ 
+@@ -86,6 +87,9 @@ unsigned int aperfmperf_get_khz(int cpu)
+ 	if (!static_cpu_has(X86_FEATURE_APERFMPERF))
+ 		return 0;
+ 
++	if (!housekeeping_cpu(cpu, HK_FLAG_FREQ))
++		return 0;
++
+ 	aperfmperf_snapshot_cpu(cpu, ktime_get(), true);
+ 	return per_cpu(samples.khz, cpu);
+ }
+@@ -102,9 +106,12 @@ void arch_freq_prepare_all(void)
+ 	if (!static_cpu_has(X86_FEATURE_APERFMPERF))
+ 		return;
+ 
+-	for_each_online_cpu(cpu)
++	for_each_online_cpu(cpu) {
++		if (!housekeeping_cpu(cpu, HK_FLAG_FREQ))
++			continue;
+ 		if (!aperfmperf_snapshot_cpu(cpu, now, false))
+ 			wait = true;
++	}
+ 
+ 	if (wait)
+ 		msleep(APERFMPERF_REFRESH_DELAY_MS);
+@@ -118,6 +125,9 @@ unsigned int arch_freq_get_on_cpu(int cpu)
+ 	if (!static_cpu_has(X86_FEATURE_APERFMPERF))
+ 		return 0;
+ 
++	if (!housekeeping_cpu(cpu, HK_FLAG_FREQ))
++		return 0;
++
+ 	if (aperfmperf_snapshot_cpu(cpu, ktime_get(), true))
+ 		return per_cpu(samples.khz, cpu);
+ 
+diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+index b0fb1446fe04..88e6013ac8a9 100644
+--- a/include/linux/sched/isolation.h
++++ b/include/linux/sched/isolation.h
+@@ -13,6 +13,7 @@ enum hk_flags {
+ 	HK_FLAG_TICK		= (1 << 4),
+ 	HK_FLAG_DOMAIN		= (1 << 5),
+ 	HK_FLAG_WQ		= (1 << 6),
++	HK_FLAG_FREQ		= (1 << 7),
+ };
+ 
+ #ifdef CONFIG_CPU_ISOLATION
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index b02d148e7672..456b5f1dfa11 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -140,6 +140,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
+ 			continue;
+ 		}
+ 
++		if (!strncmp(str, "freq,", 5)) {
++			str += 5;
++			flags |= HK_FLAG_FREQ;
++			continue;
++		}
++
+ 		pr_warn("isolcpus: Error, unknown flag\n");
+ 		return 0;
+ 	}
 
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
