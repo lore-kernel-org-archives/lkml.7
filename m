@@ -2,92 +2,123 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F369DC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8CCC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F78E206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A799E206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj22L9PA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dFUKT8/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730504AbfDYTwF (ORCPT
+        id S2387522AbfDYTwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:52:05 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33032 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfDYTwE (ORCPT
+        Thu, 25 Apr 2019 15:52:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56096 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfDYTwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:52:04 -0400
-Received: by mail-pg1-f193.google.com with SMTP id k19so379353pgh.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=1aMJ19YFecOaxMFya4ZH3n4hLdnfFu1RgIII04nJVJI=;
-        b=Dj22L9PAiazQqbwdgRTYTFdWPbwAtZTxhikXKkiaOg+pa1ZrbNcbAqBcKlpMbIRvRc
-         v7qyn+MLyotx3UVKTc2Zg9SW931tEt+vwB/lPn8kT/zsXtl2aVEvQFU3lvDIJ/97MDdC
-         BCY340QlcFH9XFInHeb644fFYH2YG/59zLviK6Go40vzCwByRgZwqer4jq8TZsPcCQS5
-         ijk7nEgNeHVRvIdhBz7ucNrV5qtPfbqJY7ZnFf9GUJVPZ0zCBcyzm00jkoU/Zv89nFxw
-         Z7P3j9CexD73eKvnTq/r7S0XNRWgq2etbu2kt1XHL7ZRYgYpXx6FDjuyEI1Zhcb7iBDg
-         dkvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1aMJ19YFecOaxMFya4ZH3n4hLdnfFu1RgIII04nJVJI=;
-        b=eLz4MEvbuMNXnuGSlzmR36Ld65P5uTIkwVSauHOwY0gvIbGed1kiZPuwjaiVeNvUna
-         ooVxaKXKaSqRgaqTpqQVLdJVllEIFad6mjKMuQsLZj4GG1og5+do4ymR77I0OIhdVm1u
-         BtHfoz7M9u7As5ulvV5R8LQeOHqExNJkfcR/a0AMGxJWxGQzOM/ZOZYu7BifBRbmLRTs
-         AFsEnCANsRs5yipbSKD81QWjm4bJbP6JXtnwd7e/pPmpCltz4hvyGiBDWBLpM9OQ5ond
-         RZKbap/4DMw88yqJlKp4f925jXCof+b26ndhnPUmKeSdQvSQOW6xEtbNiobTgXPIJqfO
-         RklA==
-X-Gm-Message-State: APjAAAW/9U0RKZr4u3+esJfEhwpFV2kb2dp2kVBROwVk9FbtFasa+//Z
-        wGvmGuW3+FFOqDad8czOWJw=
-X-Google-Smtp-Source: APXvYqwMTvJx0Le8xgE4jcKYKlpwY1R3kISXtLtW3n6s1D+3LNZDykr0IQm9IPcnaC4aamBKvqvRQg==
-X-Received: by 2002:a63:6888:: with SMTP id d130mr39193416pgc.451.1556221923378;
-        Thu, 25 Apr 2019 12:52:03 -0700 (PDT)
-Received: from localhost.localdomain ([103.87.57.142])
-        by smtp.gmail.com with ESMTPSA id m11sm48649579pgd.12.2019.04.25.12.52.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 12:52:02 -0700 (PDT)
-From:   Vatsala Narang <vatsalanarang@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Julia.Lawall@lip6.fr, straube.linux@gmail.com,
-        Vatsala Narang <vatsalanarang@gmail.com>
-Subject: [PATCH] staging: rtl8723bs: core: Remove return in void function
-Date:   Fri, 26 Apr 2019 01:21:45 +0530
-Message-Id: <20190425195145.25326-1-vatsalanarang@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 25 Apr 2019 15:52:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=f77raPNimqC2AbXVo9+y7MCgUWwUJvpmXp/DKHn5A8k=; b=dFUKT8/yu+sy/k6BIcNFuOQyk
+        X241+AVdHlQr1oL5296ANVIGjxBT5fuiprbRIR+EJYimd1UrmDtKzECRi+xHzmaGZIjXJRdrMBISo
+        DvTn2Pw26f3o8O7xEKc7KwuiFodgqXlUFNw3PwRUyn55LIKtO+aFfeJx5yxEzmVZmS31kpftJIOLU
+        ZyvrK4OUq5quVD3uft1J9D5m4hcXQUAv7YsTvfm8QWy5WjxBkbtWnkVXeKL46RMdtEh3m2l4Skgyi
+        8z2wLAkT+BKOjOln9K1266uNiRHA+vCeb15vxrve4n6QCAWQAkxCTleULJL3xIxdgYJdW7BkC+zIN
+        Nw29h1FaQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJkPl-0007vx-Rq; Thu, 25 Apr 2019 19:52:14 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 26590200D2F43; Thu, 25 Apr 2019 21:52:12 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 21:52:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yuyang Du <duyuyang@gmail.com>
+Cc:     will.deacon@arm.com, mingo@kernel.org, bvanassche@acm.org,
+        ming.lei@redhat.com, frederic@kernel.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 22/28] locking/lockdep: Adjust new bit cases in mark_lock
+Message-ID: <20190425195212.GW12232@hirez.programming.kicks-ass.net>
+References: <20190424101934.51535-1-duyuyang@gmail.com>
+ <20190424101934.51535-23-duyuyang@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424101934.51535-23-duyuyang@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove return in void function to get rid of checkpatch warning.
+On Wed, Apr 24, 2019 at 06:19:28PM +0800, Yuyang Du wrote:
+> The new bit can be any possible lock usage except it is garbage, so the
 
-Signed-off-by: Vatsala Narang <vatsalanarang@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 2 --
- 1 file changed, 2 deletions(-)
+s/except it/except when it/ ?
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 094d61bcb469..67b9aeda7f3a 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -2861,8 +2861,6 @@ void xmit_delivery_enabled_frames(struct adapter *padapter, struct sta_info *pst
- 
- 	/* spin_unlock_bh(&psta->sleep_q.lock); */
- 	spin_unlock_bh(&pxmitpriv->lock);
--
--	return;
- }
- 
- void enqueue_pending_xmitbuf(
--- 
-2.17.1
+> cases in switch can be made simpler. Warn early on if wrong usage bit is
+> passed without taking locks. No functional change.
+> 
+> Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+> ---
+>  kernel/locking/lockdep.c | 21 +++++++--------------
+>  1 file changed, 7 insertions(+), 14 deletions(-)
+> 
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index c08ec88..291cc9c 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -3476,6 +3476,11 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
+>  {
+>  	unsigned int new_mask = 1 << new_bit, ret = 1;
+>  
+> +	if (new_bit >= LOCK_USAGE_STATES) {
+> +		WARN_ON(1);
 
+Does that want to be DEBUG_LOCKS_WARN_ON() ?
+
+> +		return 0;
+> +	}
+> +
+>  	/*
+>  	 * If already set then do not dirty the cacheline,
+>  	 * nor do any checks:
+> @@ -3499,25 +3504,13 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
+>  		return 0;
+>  
+>  	switch (new_bit) {
+> -#define LOCKDEP_STATE(__STATE)			\
+> -	case LOCK_USED_IN_##__STATE:		\
+> -	case LOCK_USED_IN_##__STATE##_READ:	\
+> -	case LOCK_ENABLED_##__STATE:		\
+> -	case LOCK_ENABLED_##__STATE##_READ:
+> -#include "lockdep_states.h"
+> -#undef LOCKDEP_STATE
+> -		ret = mark_lock_irq(curr, this, new_bit);
+> -		if (!ret)
+> -			return 0;
+> -		break;
+>  	case LOCK_USED:
+>  		debug_atomic_dec(nr_unused_locks);
+>  		break;
+>  	default:
+> -		if (!debug_locks_off_graph_unlock())
+> +		ret = mark_lock_irq(curr, this, new_bit);
+> +		if (!ret)
+>  			return 0;
+> -		WARN_ON(1);
+> -		return 0;
+>  	}
+>  
+>  	graph_unlock();
+> -- 
+> 1.8.3.1
+> 
