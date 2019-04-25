@@ -2,228 +2,159 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B07B6C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1E9C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C962077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220576;
-	bh=EOewyryj1zrcIWKvZ4isQHfpoxgDJ66BTUBp7HGRWQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IfSJK59F+srZ3AzNwOkT0rw0kcPyN6ofN0poukKUvHJXioP1VHefsg+c0ksG0D8gt
-	 P4RJZWf1F9Xavir9YKzy4sYOPGL+Ygd6Pg2TeYdHEk8kN5DPHdIWOypd1nhdOtrvyg
-	 1VpMs9SqGzLtmIZ84b1zeXwtG1SxJVY0umZaWo8U=
+	by mail.kernel.org (Postfix) with ESMTP id 1BA4D20685
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:32:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="dMETGq7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfDYT3f (ORCPT
+        id S1727663AbfDYTcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:29:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50253 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbfDYT3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:29:35 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 10so696370wmk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:29:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9swn068NMwgMlcOgr1i2VTceDu71rXceG291N2Z51Og=;
-        b=MYaLlhamNoCazWYKPFFvjKcWJrNRTygEXp58F1gC5+ULbxZFHqvfFb7n0dj2Frs3e7
-         dlee88891C62n8XEwfTNtqXWALHaGq8WvHItn+/jkzjrSFaXsyn35YKzknS5U7sNxu7G
-         lwvqkw9v28vIcys/C7iBcO71z46cNna19omt2vP6eShICakXeRS22Lj1L1J9qaTYMJo8
-         +j2PNWol6BYFOAt7Zy+GpXDMvLqHOrk13ftLGp3ci+mygR7woMK/rS5L0nWTpRW2URN3
-         nrL8ha7MMRHxlAO2C9IyyBYu99aEyFlEecv5ehQ4Di2ZqJ782VCGixfb1LddQ2PXGHse
-         qVuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9swn068NMwgMlcOgr1i2VTceDu71rXceG291N2Z51Og=;
-        b=Gzj6uL+ezextq8i6AvvBUwM4DMwWlcCY3AoheqcaGe5pTPVH0xtmkVLkjRG2HUD+AG
-         u+WrNd3mCkSGkUBvrzZS8DcruHWu05qrKFTSRUhfj6+0rh+/G/HsA53ILbQ0U+V5qAqG
-         IhQno8wlJIv2OEwHycsFfyqJJNhX+yaNC9FlgrjR3Thwg4/nkDWD3xC44oD6fbKBmPeU
-         y+Ev3vR/NJ1muYurYuieljH0MkPfET7L/ueeHr85XoCVVHQclSk15Bj/5E4S2DSP9wBs
-         5xusMefcdmt2G9jQL9dC08wBu2/7uUFgKmRHe9synmi3luF0I7HmhZ3epw9kXHi9g+C9
-         Xdbw==
-X-Gm-Message-State: APjAAAXR02M9xaUiqxyg/ygYv+vfRvapA291x9H2/hNhBNkGqWWpRSB3
-        X6dQaWXpR7hhJjMDCe5U988=
-X-Google-Smtp-Source: APXvYqz6Q5bw/iwHElDCkJqv0QWfQxLQFDRELN6/adq/3BevSGuZZSxkYm9LiQzAyNAVMJ6p7D5HTg==
-X-Received: by 2002:a1c:7008:: with SMTP id l8mr4614332wmc.49.1556220572880;
-        Thu, 25 Apr 2019 12:29:32 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id a13sm7034710wmj.39.2019.04.25.12.29.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 12:29:32 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 21:29:30 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v2] x86/mm/tlb: Remove flush_tlb_info from the stack
-Message-ID: <20190425192930.GA91578@gmail.com>
-References: <20190425180828.24959-1-namit@vmware.com>
+        Thu, 25 Apr 2019 15:32:14 -0400
+Received: from mail-eopbgr140122.outbound.protection.outlook.com ([40.107.14.122]:16846
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726703AbfDYTcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 15:32:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KlDhDYT/8+2r2ZSZanpQBX3ylEdM0qgkMBlkHaV9nGM=;
+ b=dMETGq7VutrP/Xluiu4r/w3KooNxb7Xh3Uaoa5wWlvLSGFTiloF6ZodudbhgSsBpk/v79SOy6jPgOUDJ7dC4w+fdMDI7t0vsX9TqIeXditE5aHEerKMMOmlzI8Ydlc5pdBWPN85Dht4RLF8PGmM2ZLS14cxeqvx1Br40Dj1uuwM=
+Received: from VI1PR02MB4542.eurprd02.prod.outlook.com (20.178.12.74) by
+ VI1PR02MB4096.eurprd02.prod.outlook.com (20.177.58.206) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.12; Thu, 25 Apr 2019 19:32:10 +0000
+Received: from VI1PR02MB4542.eurprd02.prod.outlook.com
+ ([fe80::2891:d814:7bff:fbc7]) by VI1PR02MB4542.eurprd02.prod.outlook.com
+ ([fe80::2891:d814:7bff:fbc7%4]) with mapi id 15.20.1813.017; Thu, 25 Apr 2019
+ 19:32:10 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Serge Semin <fancer.lancer@gmail.com>
+CC:     Peter Korsgaard <peter.korsgaard@barco.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/5] i2c-mux-gpio: Save initial channel number to the idle
+ data field
+Thread-Topic: [PATCH 3/5] i2c-mux-gpio: Save initial channel number to the
+ idle data field
+Thread-Index: AQHU+poRXbeqxvDL/0m7jXZwdC2k26ZL04EAgAE1VACAAD0YAA==
+Date:   Thu, 25 Apr 2019 19:32:10 +0000
+Message-ID: <c30abb31-f6f1-f789-7735-8b11b5d8d4fc@axentia.se>
+References: <20190424123414.25311-1-fancer.lancer@gmail.com>
+ <20190424123414.25311-4-fancer.lancer@gmail.com>
+ <7c8d4751-f5f7-ee2a-c411-a985b81d61a3@axentia.se>
+ <20190425155325.voqlrmbdblo7xhtx@mobilestation>
+In-Reply-To: <20190425155325.voqlrmbdblo7xhtx@mobilestation>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR05CA0231.eurprd05.prod.outlook.com
+ (2603:10a6:3:fa::31) To VI1PR02MB4542.eurprd02.prod.outlook.com
+ (2603:10a6:803:b1::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fddad7e8-0b75-4885-fcf7-08d6c9b4b5aa
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR02MB4096;
+x-ms-traffictypediagnostic: VI1PR02MB4096:
+x-microsoft-antispam-prvs: <VI1PR02MB40966A8EAD3F894ABBD598E1BC3D0@VI1PR02MB4096.eurprd02.prod.outlook.com>
+x-forefront-prvs: 0018A2705B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(376002)(396003)(366004)(346002)(136003)(199004)(189003)(2616005)(11346002)(446003)(476003)(486006)(71190400001)(31686004)(6246003)(97736004)(186003)(26005)(25786009)(76176011)(52116002)(386003)(6506007)(102836004)(53546011)(4326008)(66556008)(66476007)(81166006)(81156014)(66446008)(73956011)(66066001)(64756008)(65806001)(65956001)(6916009)(64126003)(93886005)(8936002)(256004)(8676002)(14444005)(74482002)(6486002)(229853002)(6436002)(65826007)(66946007)(31696002)(86362001)(71200400001)(99286004)(316002)(2906002)(58126008)(54906003)(36756003)(5660300002)(7736002)(305945005)(68736007)(508600001)(14454004)(6512007)(53936002)(3846002)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB4096;H:VI1PR02MB4542.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: fZMu0wM8BYWyX2ERRQinxtHZzT+Mbq83FQ9GwS3Y0PQQ7MVtvf1XVuUSkBNPlU8b5YwGmuGk8wi8M65l7GjVBnfOXN+6Z7ftoLtj8R3LAyp9KCpuC+B175nDtuqfHaL7Y3YtjqnEFcAdrETfpBJZNAZ51R3nKgOhADq6+/KjK9rb9e7ny1B+m9Syvxt7Jfri7DVKSPEEbPBolwYSHFmBHT03z7Y7Xeh1FEM4PG1X0HETCryBC/l6Uk4PYy5jbzdJvp8YXc//PZl3vIvdI+iOsUWutqiKEkMUvSzxgj0rVf75bdCqhWMH7knVSXjEjwsjBlJoUhNCxYlNww9QYOTkmAp7tUP1RT6WPx/bvUfEAyqWNrvAm12ynx+nfObrluEHDkGeqVy/4SlZhGP95UTOcIQXKOPGfOMKVS8Dex7K0hE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5EF4F2A1BFB4F943BB45A3A65C0244C1@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190425180828.24959-1-namit@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: fddad7e8-0b75-4885-fcf7-08d6c9b4b5aa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 19:32:10.1053
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB4096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Nadav Amit <namit@vmware.com> wrote:
-
-> Move flush_tlb_info variables off the stack. This allows to align
-> flush_tlb_info to cache-line and avoid potentially unnecessary cache
-> line movements. It also allows to have a fixed virtual-to-physical
-> translation of the variables, which reduces TLB misses.
-> 
-> Use per-CPU struct for flush_tlb_mm_range() and
-> flush_tlb_kernel_range(). Add debug assertions to ensure there are
-> no nested TLB flushes that might overwrite the per-CPU data. For
-> arch_tlbbatch_flush() use a const struct.
-> 
-> Results when running a microbenchmarks that performs 10^6 MADV_DONTEED
-> operations and touching a page, in which 3 additional threads run a
-> busy-wait loop (5 runs, PTI and retpolines are turned off):
-> 
-> 			base		off-stack
-> 			----		---------
-> avg (usec/op)		1.629		1.570	(-3%)
-> stddev			0.014		0.009
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Nadav Amit <namit@vmware.com>
-> 
-> ---
-> 
-> v1->v2:
-> - Initialize all flush_tlb_info fields [Andy]
-> ---
->  arch/x86/mm/tlb.c | 100 ++++++++++++++++++++++++++++++++++------------
->  1 file changed, 74 insertions(+), 26 deletions(-)
-> 
-> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-> index 487b8474c01c..aac191eb2b90 100644
-> --- a/arch/x86/mm/tlb.c
-> +++ b/arch/x86/mm/tlb.c
-> @@ -634,7 +634,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
->  	this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
->  }
->  
-> -static void flush_tlb_func_local(void *info, enum tlb_flush_reason reason)
-> +static void flush_tlb_func_local(const void *info, enum tlb_flush_reason reason)
->  {
->  	const struct flush_tlb_info *f = info;
->  
-> @@ -722,43 +722,81 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
->   */
->  unsigned long tlb_single_page_flush_ceiling __read_mostly = 33;
->  
-> +static DEFINE_PER_CPU_SHARED_ALIGNED(struct flush_tlb_info, flush_tlb_info);
-> +
-> +#ifdef CONFIG_DEBUG_VM
-> +static DEFINE_PER_CPU(unsigned int, flush_tlb_info_idx);
-> +#endif
-> +
-> +static inline struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
-> +			unsigned long start, unsigned long end,
-> +			unsigned int stride_shift, bool freed_tables,
-> +			u64 new_tlb_gen)
-> +{
-> +	struct flush_tlb_info *info = this_cpu_ptr(&flush_tlb_info);
-> +
-> +#ifdef CONFIG_DEBUG_VM
-> +	/*
-> +	 * Ensure that the following code is non-reentrant and flush_tlb_info
-> +	 * is not overwritten. This means no TLB flushing is initiated by
-> +	 * interrupt handlers and machine-check exception handlers.
-> +	 */
-> +	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
-> +#endif
-
-isn't this effectively VM_BUG_ON()?
-
-> +
-> +	info->start = start;
-> +	info->end = end;
-> +	info->mm = mm;
-> +	info->stride_shift = stride_shift;
-> +	info->freed_tables = freed_tables;
-> +	info->new_tlb_gen = new_tlb_gen;
-
-This pattern is really asking for a bit more tabulation:
-
-	info->start		= start;
-	info->end		= end;
-	info->mm		= mm;
-	info->stride_shift	= stride_shift;
-	info->freed_tables	= freed_tables;
-	info->new_tlb_gen	= new_tlb_gen;
-
-> +static inline void put_flush_tlb_info(void)
-> +{
-> +#ifdef CONFIG_DEBUG_VM
-> +	/* Complete reentrency prevention checks */
-> +	barrier();
-> +	this_cpu_dec(flush_tlb_info_idx);
-> +#endif
-
-In principle this_cpu_dec() should imply a compiler barrier?
-
-> +	if ((end == TLB_FLUSH_ALL) ||
-> +	    ((end - start) >> stride_shift) > tlb_single_page_flush_ceiling) {
-> +		start = 0UL;
-
-Any reason why we cannot use the '0' numeric literal here?
-
-> +		struct flush_tlb_info *info;
-> +
-> +		preempt_disable();
-> +
-> +		info = get_flush_tlb_info(NULL, start, end, 0, false, 0);
-> +
-> +		info = this_cpu_ptr(&flush_tlb_info);
-> +		info->start = start;
-> +		info->end = end;
-> +
-> +		on_each_cpu(do_kernel_range_flush, info, 1);
-> +
-> +		put_flush_tlb_info();
-> +
-> +		preempt_enable();
-
->  	}
->  }
->  
->  void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
->  {
-> -	struct flush_tlb_info info = {
-> +	static const struct flush_tlb_info info = {
->  		.mm = NULL,
->  		.start = 0UL,
->  		.end = TLB_FLUSH_ALL,
-
-Could you please move this now .data global variable just before the 
-function, to make it more apparent what's going on?
-
-Thanks,
-
-	Ingo
+T24gMjAxOS0wNC0yNSAxNzo1MywgU2VyZ2UgU2VtaW4gd3JvdGU6DQo+IE9uIFdlZCwgQXByIDI0
+LCAyMDE5IGF0IDA5OjI2OjIyUE0gKzAwMDAsIFBldGVyIFJvc2luIHdyb3RlOg0KPj4gT24gMjAx
+OS0wNC0yNCAxNDozNCwgU2VyZ2UgU2VtaW4gd3JvdGU6DQo+Pj4gSW4gY2FzZSBpZiB0aGUgaWRs
+ZSBzdGF0ZSBoYXMgYmVlbiBzcGVjaWZpZWQgaW4gdGhlIGRhdGEgc3RydWN0dXJlLA0KPj4+IHRo
+ZSBpZGxlIHZhcmlhYmxlIGlzIGxlZnQgdW50b3VjaGVkIGFzIGJlZm9yZSwgc28gdG8ga2VlcCBh
+IGRlZmF1bHQNCj4+PiBjaGFubmVsIG51bWJlciBlbmFibGVkIGluIHRoZSBtdXggaWRsZSBzdGF0
+ZS4gQnV0IGlmIGEgcGxhdGZvcm0gZG9lc24ndA0KPj4+IHNwZWNpZnkgd2hpY2ggY2hhbm5lbCBp
+cyBnb2luZyB0byBiZSBlbmFibGVkIGJ5IGRlZmF1bHQsIHdlIGFzIGJlZm9yZQ0KPj4+IGRvbid0
+IHNldHVwIHRoZSBkZXNlbGVjdCBjYWxsYmFjaywgYnV0IHRoZSBpbml0aWFsIHN0YXRlIGlzIHNh
+dmVkIGluIHRoZQ0KPj4+IGlkbGUgdmFyaWFibGUgZm9yIGZ1cnRoZXIgaW5pdGlhbGl6YXRpb24u
+IFdlIGNhbiBzYWZlbHkgZG8gdGhpcyBoZXJlDQo+Pj4gc2luY2UgdGhhdCB2YXJpYWJsZSBpcyB1
+c2VkIGZvciBpbml0aWFsIHN0YXRlIHNldHRpbmcgb25seSwgd2hlbiBubw0KPj4+IGlkbGluZyBs
+YW5lIGlzIHNwZWNpZmllZC4NCj4+DQo+PiBXaGlsZSB0aGlzIHN1YnRsZXR5IGlzICptYXliZSog
+b2ssIGEgY29tbWVudCBhYm91dCBpdCBiZWxvbmdzIGluIHRoZQ0KPj4gKmNvZGUqIHdoZXJlIGl0
+IHdpbGwgYmUgc2VlbiB3aGVuIHRoZSBuZXh0IHBlcnNvbiBtYWtlcyBjaGFuZ2VzLg0KPj4NCj4+
+IEJ1dCB3aHkgbm90IGV4dGVuZCB0aGUgc3RydWN0IHdpdGggdGhlIGluaXRpYWwgc3RhdGU/IEhv
+dyBtYW55IG9mDQo+PiB0aGVzZSBtdXhlcyBkbyB5b3UgZXhwZWN0IHRvIGV4aXN0IGluIGEgc3lz
+dGVtPyBNdWx0aXBsaWVkIGJ5IGENCj4+IGNvdXBsZSBvZiBieXRlcy4gV2hvIGNhcmVzPw0KPj4N
+Cj4gDQo+IEkgYWN0dWFsbHkgdGhvdWdodCBhYm91dCB0aGlzIHdoZW4gc3RhcnRlZCB3b3JraW5n
+IG9uIHRoZSBwYXRjaHNldC4NCj4gVGhhdCB0aW1lIHNhdmluZyB0aGUgaW5pdGlhbCB2YWx1ZSBp
+biB0aGUgaWRsZSB2YXJpYWJsZSBzZWVtZWQgbGlrZSBhDQo+IGdvb2QgaWRlYS4gSSBldmVuIHB1
+dCBhIHNtYWxsIGNvbW1lbnQgaW4gdGhlIGNvZGUgYWJvdXQgdGhpcy4NCg0KT2gsIEkgbWlzc2Vk
+IHRoYXQuIENyYXAsIGFuZCBzb3JyeSENCg0KPiBBbnl3YXkgbGV0cyBhZGQgYSBuZXcgZmllbGQg
+dG8gInN0cnVjdCBncGlvbXV4IiBzdHJ1Y3R1cmUgYW5kIHVzZQ0KPiBpdCBhcyBhIGNvbnRhaW5l
+ciBmb3IgaW5pdGlhbCB2YWx1ZS4gSXQgaXMgYWxzbyBhIGdvb2QgYWx0ZXJuYXRpdmUuDQo+IEkn
+bGwgZG8gdGhpcyBpbiBhIHYyIHBhdGNoc2V0Lg0KDQpHb29kLiBUaGFua3MhDQoNCkNoZWVycywN
+ClBldGVyDQoNCj4gLVNlcmdleQ0KPiANCj4+IENoZWVycywNCj4+IFBldGVyDQo+Pg0KPj4+DQo+
+Pj4gVGhlIHJlYXNvbiBvZiB0aGlzIGNoYW5nZSBpcyB0byBwcmVwYXJlIHRoZSBjb2RlIGZvciBm
+dXR1cmUgR1BJT3MgcmVxdWVzdA0KPj4+IHBhdGggYmVpbmcgc3BsaXQgdXAgaW50byBvZi0gYW5k
+IHBsYXQtIGJhc2VkIG1ldGhvZHMuIFRoZSBpZGxlIHZhcmlhYmxlDQo+Pj4gaGVyZSBpcyB1c2Vk
+IGFzIGEgY29udGFpbmVyIG9mIHRoZSBpbml0aWFsIHN0YXRlIGZvciBib3RoIG9mIHRoZSBwYXRo
+cyBpbg0KPj4+IGNhc2Ugb2YgaWRsZS1jaGFubmVsIGlzbid0IHNwZWNpZmllZC4NCj4+Pg0KPj4+
+IFNpZ25lZC1vZmYtYnk6IFNlcmdlIFNlbWluIDxmYW5jZXIubGFuY2VyQGdtYWlsLmNvbT4NCj4+
+PiAtLS0NCj4+PiAgZHJpdmVycy9pMmMvbXV4ZXMvaTJjLW11eC1ncGlvLmMgfCAxNSArKysrKysr
+Ky0tLS0tLS0NCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlv
+bnMoLSkNCj4+Pg0KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtbXV4LWdw
+aW8uYyBiL2RyaXZlcnMvaTJjL211eGVzL2kyYy1tdXgtZ3Bpby5jDQo+Pj4gaW5kZXggYTE0ZmUx
+MzJiMGMzLi41MzVjODNjNDMzNzEgMTAwNjQ0DQo+Pj4gLS0tIGEvZHJpdmVycy9pMmMvbXV4ZXMv
+aTJjLW11eC1ncGlvLmMNCj4+PiArKysgYi9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtbXV4LWdwaW8u
+Yw0KPj4+IEBAIC0xNzEsNyArMTcxLDYgQEAgc3RhdGljIGludCBpMmNfbXV4X2dwaW9fcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4+PiAgCXN0cnVjdCBncGlvbXV4ICptdXg7
+DQo+Pj4gIAlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKnBhcmVudDsNCj4+PiAgCXN0cnVjdCBpMmNfYWRh
+cHRlciAqcm9vdDsNCj4+PiAtCXVuc2lnbmVkIGluaXRpYWxfc3RhdGU7DQo+Pj4gIAlpbnQgaSwg
+cmV0Ow0KPj4+ICANCj4+PiAgCW11eCA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2Yo
+Km11eCksIEdGUF9LRVJORUwpOw0KPj4+IEBAIC0yMDQsMTIgKzIwMywxNCBAQCBzdGF0aWMgaW50
+IGkyY19tdXhfZ3Bpb19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPj4+ICAN
+Cj4+PiAgCW11eGMtPm11eF9sb2NrZWQgPSB0cnVlOw0KPj4+ICANCj4+PiAtCWlmIChtdXgtPmRh
+dGEuaWRsZSAhPSBJMkNfTVVYX0dQSU9fTk9fSURMRSkgew0KPj4+IC0JCWluaXRpYWxfc3RhdGUg
+PSBtdXgtPmRhdGEuaWRsZTsNCj4+PiArCS8qDQo+Pj4gKwkgKiBTZXQgZGVzY2VsZWN0IGNhbGxi
+YWNrIGlmIGlkbGUgc3RhdGUgaGFzIGJlZW4gc2V0dXAgb3RoZXJ3aXNlIGp1c3QNCg0KU3BlbGxp
+bmcgImRlc2VsZWN0Ig0KDQo+Pj4gKwkgKiB1c2UgdGhlIGlkbGUgdmFyaWFibGUgdG8gc3RvcmUg
+dGhlIGluaXRpYWwgbXV4ZXIgdmFsdWUuDQo+Pj4gKwkgKi8NCj4+PiArCWlmIChtdXgtPmRhdGEu
+aWRsZSAhPSBJMkNfTVVYX0dQSU9fTk9fSURMRSkNCj4+PiAgCQltdXhjLT5kZXNlbGVjdCA9IGky
+Y19tdXhfZ3Bpb19kZXNlbGVjdDsNCj4+PiAtCX0gZWxzZSB7DQo+Pj4gLQkJaW5pdGlhbF9zdGF0
+ZSA9IG11eC0+ZGF0YS52YWx1ZXNbMF07DQo+Pj4gLQl9DQo+Pj4gKwllbHNlDQo+Pj4gKwkJbXV4
+LT5kYXRhLmlkbGUgPSBtdXgtPmRhdGEudmFsdWVzWzBdOw0KPj4+ICANCj4+PiAgCWZvciAoaSA9
+IDA7IGkgPCBtdXgtPmRhdGEubl9ncGlvczsgaSsrKSB7DQo+Pj4gIAkJc3RydWN0IGRldmljZSAq
+Z3Bpb19kZXY7DQo+Pj4gQEAgLTIyNCw3ICsyMjUsNyBAQCBzdGF0aWMgaW50IGkyY19tdXhfZ3Bp
+b19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPj4+ICAJCX0NCj4+PiAgDQo+
+Pj4gIAkJcmV0ID0gZ3Bpb19kaXJlY3Rpb25fb3V0cHV0KG11eC0+Z3Bpb19iYXNlICsgbXV4LT5k
+YXRhLmdwaW9zW2ldLA0KPj4+IC0JCQkJCSAgICBpbml0aWFsX3N0YXRlICYgKDEgPDwgaSkpOw0K
+Pj4+ICsJCQkJCSAgICBtdXgtPmRhdGEuaWRsZSAmICgxIDw8IGkpKTsNCj4+PiAgCQlpZiAocmV0
+KSB7DQo+Pj4gIAkJCWRldl9lcnIoJnBkZXYtPmRldiwNCj4+PiAgCQkJCSJGYWlsZWQgdG8gc2V0
+IGRpcmVjdGlvbiBvZiBHUElPICVkIHRvIG91dHB1dFxuIiwNCj4+Pg0KPj4NCg0K
