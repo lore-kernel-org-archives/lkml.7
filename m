@@ -2,97 +2,114 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAEDC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 248F2C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA75E214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1D2217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:19:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="OW30lv7+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sLoZSC3r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbfDYIRk (ORCPT
+        id S1727438AbfDYITg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 04:17:40 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34077 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbfDYIRj (ORCPT
+        Thu, 25 Apr 2019 04:19:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44402 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfDYITg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 04:17:39 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c6so23311000wrm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 01:17:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U9RYUwqYs8GxnXHLt/p3Fz6x5DoO+pRsegYtnMfkhYI=;
-        b=OW30lv7+KMGA1SvNnrC1b9nUxyPmrhzCwlLdnhO49dL4Y2a3DCBE1TGq2LS2gO18ts
-         bNVhuCfsZ2dYI3OqebC2QB1SRjQyM8HndAJuRSFxsqmU2dZMcJZEI7+EKm+0iNNErUvP
-         52/iFBVr5IzSt08jveciUgxVXttQ4d+GdNmM85RPSBT+SIpqMnNYT2HJSqz0kv46BH1Y
-         c1jvlsP+FOxDQ2Eg8X2Aq4+t1Hpdi2lnJoocoAulmgT7hjtdGbSEUapFtuldk2nhAmRd
-         2MrOCtd9qhO2QzTLwNQFqCnF8Bg0YurSosNVvqYW6ASIR/06jfc0vrWzlgJmgrIEY1do
-         1vIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U9RYUwqYs8GxnXHLt/p3Fz6x5DoO+pRsegYtnMfkhYI=;
-        b=qezDImjgos91Hwiir5O3rKOY2KzKVE79tq0mxpxKPVwsWK/d/IpDBbnLbH35uijFRZ
-         WA/99qUz+bsQT3lk1VsIH+rWX3iddlyVN1+BAfV9g9ot/l4CDMDjNBeoLzpmVFaI4zCM
-         skMpCGP2nLtS7A2FdK3dusTztDbL2BVjuUD5b7KfQYmspfgegDwjV8X3WtgR4ZZoGznB
-         sYfqTVDiU0lbuc6xHyN1Y94s3NV7rrWYYC1bKa5Llc0rfza5oKq+lD8/5wJdGcUJBCID
-         PtuKYvUkqdMfEYulqvcSctryWsIasABRs1zRugHaA+bBs9OihCMBxtpjrgs0NEON166R
-         z1Og==
-X-Gm-Message-State: APjAAAX6x+1oiQLoKUb+b20dxDh6JAsB9gLwPt53PHIyr33nxhxlEAJq
-        2/+GkI2h+RMJIJ6WudWjOttjYT0Cm8JcfscxvDUD9A==
-X-Google-Smtp-Source: APXvYqz6cL1WMgmusMQg+hkMCdQCzrq7wzmGiwVnpGvldT/cM4eqPWnf8C8tW1NZQkbZOu5U4n7+NAWd4McNqKXyRO0=
-X-Received: by 2002:a5d:5346:: with SMTP id t6mr4334662wrv.59.1556180257986;
- Thu, 25 Apr 2019 01:17:37 -0700 (PDT)
+        Thu, 25 Apr 2019 04:19:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RhfoKhb76TIyHeM5VaQWRBakrv5QI74DngONPZZhv+8=; b=sLoZSC3rt5frxj7EZl681VLmJ
+        cZ2mP0CA97Sez5G4e3jlQEu2QOzH4LNPC2L4UTy2dPeSHFUwrRCnLhhS0T9nk5dS1TynJc0ak/zEw
+        HYi0kev4GyLJDTtcA1gYZdTwOjiE+X7y2CwkrGm9jS5E1XjW202phfEktFp5NTo24fSuK0KxnRQFC
+        cYdyt5onqHf/EWMvh/PT4fXLymesOWG6JII9XoOSE4R/Y+MXek26JunpaC7nSPugv/Wsdp2aG0UvM
+        BYJD+FDFV495WVMBSMpOd/fR4kVsbEpwyPXzYyoxZ+Mozdq/vQdwPxGxDyUIIRwjLgdSEsIW1VdQh
+        esf/OABVw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJZbR-0007uh-3u; Thu, 25 Apr 2019 08:19:33 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 939D629BA467B; Thu, 25 Apr 2019 10:19:31 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 10:19:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [patch 3/3] x86/paravirt: Replace paravirt patch asm magic
+Message-ID: <20190425081931.GA14281@hirez.programming.kicks-ass.net>
+References: <20190424134115.091452807@linutronix.de>
+ <20190424134223.690835713@linutronix.de>
+ <20190425065209.GA89582@gmail.com>
+ <20190425080810.GY11158@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190425055015.45487-1-anup.patel@wdc.com> <20190425055015.45487-3-anup.patel@wdc.com>
- <20190425055757.GA30545@infradead.org> <CAAhSdy36q1R8HQRG3kXDqj5JoJbO_drignvO7wCHJ3-6wkE5rw@mail.gmail.com>
- <20190425080117.GA3575@infradead.org>
-In-Reply-To: <20190425080117.GA3575@infradead.org>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 25 Apr 2019 13:47:26 +0530
-Message-ID: <CAAhSdy3rEPGHkHEL9gSnEQVArFxXNNfPsbUHrQjqMf+Qbqw0zw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] RISC-V: Add interrupt related SCAUSE defines in asm/csr.h
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425080810.GY11158@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 1:31 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Apr 25, 2019 at 12:46:52PM +0530, Anup Patel wrote:
-> > On Thu, Apr 25, 2019 at 11:28 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > >
-> > > > +#ifdef CONFIG_64BIT
-> > > > +#define SCAUSE_IRQ_FLAG              _AC(0x8000000000000000, UL)
-> > > > +#else
-> > > > +#define SCAUSE_IRQ_FLAG              _AC(0x80000000, UL)
-> > > > +#endif
-> > >
-> > > Please keep the existing defintion that doesn't need an ifdef..
-> >
-> > Sure, will do.
->
-> While we're at it: I don't think we need both INTERRUPT_CAUSE_FLAG and
-> SCAUSE_IRQ_FLAG.
+On Thu, Apr 25, 2019 at 10:08:10AM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 25, 2019 at 08:52:09AM +0200, Ingo Molnar wrote:
+> 
+> > > -# ifdef CONFIG_PARAVIRT_XXL
+> > > -DEF_NATIVE(irq, irq_disable, "cli");
+> > > -DEF_NATIVE(irq, irq_enable, "sti");
+> > > -DEF_NATIVE(irq, restore_fl, "push %eax; popf");
+> > > -DEF_NATIVE(irq, save_fl, "pushf; pop %eax");
+> > > -DEF_NATIVE(cpu, iret, "iret");
+> > > -DEF_NATIVE(mmu, read_cr2, "mov %cr2, %eax");
+> > > -DEF_NATIVE(mmu, write_cr3, "mov %eax, %cr3");
+> > > -DEF_NATIVE(mmu, read_cr3, "mov %cr3, %eax");
+> > 
+> > > +static const struct patch_xxl patch_data_xxl = {
+> > > +	.irq_irq_disable	= { 0xfa },		// cli
+> > > +	.irq_irq_enable		= { 0xfb },		// sti
+> > > +	.irq_save_fl		= { 0x9c, 0x58 },	// pushf; pop %[re]ax
+> > > +	.mmu_read_cr2		= { 0x0f, 0x20, 0xd0 },	// mov %cr2, %[re]ax
+> > > +	.mmu_read_cr3		= { 0x0f, 0x20, 0xd8 },	// mov %cr3, %[re]ax
+> > > +# ifdef CONFIG_X86_64
+> > > +	.irq_restore_fl		= { 0x57, 0x9d },	// push %rdi; popfq
+> > > +	.mmu_write_cr3		= { 0x0f, 0x22, 0xdf },	// mov %rdi, %cr3
+> > > +	.cpu_wbinvd		= { 0x0f, 0x09 },	// wbinvd
+> > > +	.cpu_usergs_sysret64	= { 0x0f, 0x01, 0xf8,
+> > > +				    0x48, 0x0f, 0x07 },	// swapgs; sysretq
+> > > +	.cpu_swapgs		= { 0x0f, 0x01, 0xf8 },	// swapgs
+> > > +	.mov64			= { 0x48, 0x89, 0xf8 },	// mov %rdi, %rax
+> > > +# else
+> > > +	.irq_restore_fl		= { 0x50, 0x9d },	// push %eax; popf
+> > > +	.mmu_write_cr3		= { 0x0f, 0x22, 0xd8 },	// mov %eax, %cr3
+> > > +	.cpu_iret		= { 0xcf },		// iret
+> > > +# endif
+> > 
+> > I think these open-coded hexa versions are somewhat fragile as well, how 
+> > about putting these into a .S file and controlling the sections in an LTO 
+> > safe manner there?
+> > 
+> > That will also allow us to write proper asm, and global labels can be 
+> > used to extract the patchlets and their length?
+> 
+> While I'm not fan either; I think that will be worse still, because it
+> splits the information over multiple files.
+> 
+> The advantage of this form is that it is clear how long the instructions
+> are, which is important for the patching. These immediates have to be
+> shorter than 5 bytes because they overwrite the CALL/JMP to the paravirt
+> function.
+> 
+> /me eyes .cpu_usergs_sysret64 and goes wtf..
 
-Oops, I already send v5. Saw your comment just now.
-
-Regards,
-Anup
+OK, my bad, the indirect CALL/JMP is 6 bytes.. phew.
