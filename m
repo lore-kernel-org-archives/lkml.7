@@ -2,103 +2,110 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A51C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEBBC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6105D2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4A9206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:52:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hnLnV0Fm"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="K9jUC5ZV";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RnSnNj1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbfDYWpI (ORCPT
+        id S1728961AbfDYWww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 18:45:08 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35658 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfDYWpI (ORCPT
+        Thu, 25 Apr 2019 18:52:52 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57506 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfDYWww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 18:45:08 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t21so655524pfh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 15:45:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=q3t7m72xnriC1AtIWYUp+t+avKLKvsO18nYRudIdLpE=;
-        b=hnLnV0Fm4GpZPPZZifuFJOv5LDjcCq0mbhuM/jcZ/0vyr6Yc60Lqblv/WuFTi+U7mu
-         QAfMAtl5b19inEcIlK3vb+mjrMpxvKRr8Xc+52e7+236bXx8ykIsH4UX1ejGqbTvH+4z
-         C9SbfbF5GFGVkacgvSNsO6QstuqtMcgkcTAlhZVm7W1ZFkra3qvPO5Ci3tmD6e6uiJ3u
-         dUBoNHaJTlQ+6SaP4UKLJJVyjJoA48IhxuH/7pTTjJST8G8GnQJV9m3AAajQi00xsT5C
-         i8nb/7PgcRiifOv8Q47j7uBGvFK0wLPnnUVOjRL7LxYFAnO3TwFYXWPGYVw3HSjtvjcT
-         4qgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=q3t7m72xnriC1AtIWYUp+t+avKLKvsO18nYRudIdLpE=;
-        b=oLKzN5JmhgPijbZM0FWc8c5g8c4r2bNJdQJqlSsNrs7OXOI887M9tY6tz2LjCLgzYS
-         vDN70dvl5vCUpgWUojvg6T/d27fnWK8cduVs5et0rGi+ufn4MesrhtU42+uXIJZ/etjQ
-         TE14f/RNlzxjKIRSAXSVAXdJLQtt645ITs6YM+Iz5AzBL7DJrwDs7rVn4DOmptM67KAx
-         BrG031vtg8PXCQ1uVf3HUR/UTPl9I/AB6F1M4hc9Lliw2L9wAKyrWV+VZck/LfH/5CsG
-         1XipzLmzatKORM/2FYvoKMmcyt+tchoUvxUhFn6cTT3AIfGLjYmWTeUO7BEFWTzxTu+U
-         SdOg==
-X-Gm-Message-State: APjAAAUZ609fDK1e3nqNNCsF/KgRcujWG6ucMdFquQQVMMHg4/MADo4l
-        tmi6YtDSYMRYn2yTinB3IFU4BQ==
-X-Google-Smtp-Source: APXvYqy8MdezYsryP8VZmDPZmI5UuvvqQdblYNTP6/HPBb+61+E4ysVJSOb8TErbDzut4iNDM14Teg==
-X-Received: by 2002:a65:654c:: with SMTP id a12mr8537744pgw.101.1556232307137;
-        Thu, 25 Apr 2019 15:45:07 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id h4sm31517875pfo.119.2019.04.25.15.45.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 15:45:06 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 15:45:05 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Joel Savitz <jsavitz@redhat.com>
-cc:     linux-kernel@vger.kernel.org, Rafael Aquini <aquini@redhat.com>
-Subject: Re: [PATCH] mm/oom_killer: Add task UID to info message on an oom
- kill
-In-Reply-To: <1556130013-19021-1-git-send-email-jsavitz@redhat.com>
-Message-ID: <alpine.DEB.2.21.1904251544070.34263@chino.kir.corp.google.com>
-References: <1556130013-19021-1-git-send-email-jsavitz@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 25 Apr 2019 18:52:52 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2B62660252; Thu, 25 Apr 2019 22:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556232771;
+        bh=D5eGQwtPsK+KFB8H0bbBPZv1fYvpokAlLVAkWuAxFGs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=K9jUC5ZVQC5yhos2xgDlNDI15RmnqrfWcAsGcPKz/7Qi0LzVwzRgTAa7M7cXdjFSQ
+         +YE1+sX2Ho58QIRxeBW9qSz/+PSFAcpfrq9goYOQWu6gbUqz8GDqJR7Z7uCMYvuQEr
+         06xFPiRhbSqsiIw6h5C2f8amcDhljAMPsF7/olUg=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 6B4A760746;
+        Thu, 25 Apr 2019 22:52:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556232770;
+        bh=D5eGQwtPsK+KFB8H0bbBPZv1fYvpokAlLVAkWuAxFGs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RnSnNj1To+jl8lzHTtFl0znyUO85DwTDUhMtJHKUprCyApnyHL3uwY/YTv6NLp26A
+         wY8OW5CILNGuuMQ0TWTCrFJ/mNWQb3wX0v8/pmgmwYgKYdUDZV+aKRAQQXKEWDc/6K
+         b2d8YRBcw4M8DyhT1lbLi1FeHFWvn4N0cX2xIcCU=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 25 Apr 2019 15:52:50 -0700
+From:   Abhinav Kumar <abhinavk@codeaurora.org>
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     Rob Clark <robdclark@gmail.com>, freedreno@lists.freedesktop.org,
+        Archit Taneja <architt@codeaurora.org>,
+        David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Sean Paul <sean@poorly.run>, Daniel Mack <daniel@zonque.org>
+Subject: Re: [Freedreno] [PATCH] drm/msm: check for equals 0 only
+In-Reply-To: <1556201031-3676-1-git-send-email-hofrat@osadl.org>
+References: <1556201031-3676-1-git-send-email-hofrat@osadl.org>
+Message-ID: <7dc496f1663fa788977b8b00bce9d695@codeaurora.org>
+X-Sender: abhinavk@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019, Joel Savitz wrote:
-
-> In the event of an oom kill, useful information about the killed
-> process is printed to dmesg. Users, especially system administrators,
-> will find it useful to immediately see the UID of the process.
+On 2019-04-25 07:03, Nicholas Mc Guire wrote:
+> wait_for_completion_timeout() returns 0 on timeout and aleast 1 
+> otherwise
+> so checking for < makes no sense here.
 > 
-> In the following example, abuse_the_ram is the name of a program
-> that attempts to iteratively allocate all available memory until it is
-> stopped by force.
+> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
+> ---
 > 
-> Current message:
+> Problem located with an experimental coccinelle script
 > 
-> Out of memory: Killed process 35389 (abuse_the_ram)
-> total-vm:133718232kB, anon-rss:129624980kB, file-rss:0kB,
-> shmem-rss:0kB
+> While this check does no harm in this form - it should be fixed anyway
+> to comply with the API see: kernel/sched/completion.c
 > 
-> Patched message:
+> Also noticed that get_maintainer.pl will not list 
+> linux-kernel@vger.kernel.org
+> when run on drivers/gpu/drm/msm/dsi/dsi_host.c - is that intentional ?
 > 
-> Out of memory: Killed process 2739 (abuse_the_ram), UID 0,
-> total-vm:133880028kB, anon-rss:129754836kB, file-rss:0kB,
-> shmem-rss:0kB
+> Patch was compile-tested with: qcom_defconfig (implies DRM_MSM_DSI=y)
 > 
-> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
-
-Makes sense, could you add it to the end of the message in case anybody is 
-parsing the current string and we would now break their regex?
-
-This would also need from_kuid(&init_user_ns, task_uid(task)) instead.
+> Patch is against v5.1-rc6 (localversion-next is next-20190424)
+> 
+>  drivers/gpu/drm/msm/dsi/dsi_host.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> index 610183d..dc16067 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> @@ -1049,7 +1049,7 @@ static void dsi_wait4video_done(struct
+> msm_dsi_host *msm_host)
+>  	ret = wait_for_completion_timeout(&msm_host->video_comp,
+>  			msecs_to_jiffies(70));
+> 
+> -	if (ret <= 0)
+> +	if (ret == 0)
+>  		DRM_DEV_ERROR(dev, "wait for video done timed out\n");
+> 
+>  	dsi_intr_ctrl(msm_host, DSI_IRQ_MASK_VIDEO_DONE, 0);
