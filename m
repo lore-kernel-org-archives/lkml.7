@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D73C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A6CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3133D20717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC202077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220418;
-	bh=0VC3POMpamyfDyUqD+EWGGtVBFOxCNwz9mGQpbpgHOA=;
+	s=default; t=1556220425;
+	bh=c1dI8Lm5pogCbPehldSp6FfOR3hKKDRZ43Ug9KrLdnc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=YJAUlQClppukuix3WmD/M2HJaUs9h5t3NRSka8xfaoenO/OSWG2p9hqV71eTnt3wJ
-	 toZFC0MpNjAMIkLCGSxSOpj7DVsJiTlvBYMf23rblLzjejTaAyxVh+RFlAqe5TQL6N
-	 acAd3D8eBVZaeTFoAWHOgTWfC+jKe5gnR4hA6tk8=
+	b=E+a2mqesUWbHIrzffFvkZ/dWIOQ65prf40/qn3S8z2AjKe5+R68oXCcrzZCrzLHKS
+	 eM9Nb2gvEQJTd+mOFf9xbL/oxDj7cx7g/IetXLGbK1XbWfqM3J0lWFtn0Rjk4cF4J/
+	 oDWU1Cjsod+ZTzOWLYvIneCWviqdcRD5lBh5moi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730731AbfDYT04 (ORCPT
+        id S1730735AbfDYT1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:26:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53174 "EHLO
+        Thu, 25 Apr 2019 15:27:03 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52964 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730113AbfDYT0z (ORCPT
+        with ESMTP id S1730509AbfDYT0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:26:55 -0400
+        Thu, 25 Apr 2019 15:26:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Ujin8fPqiBYO8fG0iJPxqJkdDmUEfnPunS2eRUnJRt4=; b=l00VfSMJdDnb
-        EtPO8GNXvA8wh7CiU48RLYEOAFUDxWRAflWZqa/2ndHcUPSrcNcmJ3ENqYj2nKFOeRLoN/EPQwSvP
-        GTEnuY7QLOHNP6OuASEBrZ5KM8YWtfBbqUjHGr9EjCevzxQDkHvXhsMpbg5pDoHwxMWWV/4ulx18x
-        xxguU=;
+        List-Archive; bh=rUCCYlSKF/qclFXhgY+bxsxBF+YN9mSJtdmJVnP9YDE=; b=Ucar5hzjXxDd
+        eZtqZVAxywXhiyPyD5VrtxwGtEUVzdzgcs2iKSVSgQ2uebe9XTkXkQJEzImo6DukvWjPnDcfVzWUS
+        sDoF4yoGIFUbakT/AMtk6mmupYe1qHFf/q/arWWRyYElqQB7S/y15QrFfviMG5/0K2QTjzxU8Wwxl
+        CeMh8=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJk11-0004es-4v; Thu, 25 Apr 2019 19:26:39 +0000
+        id 1hJk10-0004eY-3X; Thu, 25 Apr 2019 19:26:38 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 36C8E441D3D; Thu, 25 Apr 2019 20:26:38 +0100 (BST)
+        id 2B12B441D3C; Thu, 25 Apr 2019 20:26:37 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Cc:     bbrezillon@kernel.org, broonie@kernel.org, dwmw2@infradead.org,
-        kbuild test robot <lkp@intel.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, marek.vasut@gmail.com,
-        Mark Brown <broonie@kernel.org>, michals@xilinx.com,
-        nagasuresh12@gmail.com, richard@nod.at, vigneshr@ti.com
-Subject: Applied "spi: spi-mem: zynq-qspi: Fix build error on architectures missing readsl/writesl" to the spi tree
-In-Reply-To: <1555918009-13172-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: core: Actually put the gpiod after use" to the regulator tree
+In-Reply-To: <20190420113430.9856-1-linus.walleij@linaro.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192638.36C8E441D3D@finisterre.ee.mobilebroadband>
-Date:   Thu, 25 Apr 2019 20:26:38 +0100 (BST)
+Message-Id: <20190425192637.2B12B441D3C@finisterre.ee.mobilebroadband>
+Date:   Thu, 25 Apr 2019 20:26:37 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-mem: zynq-qspi: Fix build error on architectures missing readsl/writesl
+   regulator: core: Actually put the gpiod after use
 
-has been applied to the spi tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.1
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,49 +90,40 @@ to this mail.
 Thanks,
 Mark
 
-From 2a2dd8cafc06d72a6ad12d9726c9e514839a82bf Mon Sep 17 00:00:00 2001
-From: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Date: Mon, 22 Apr 2019 12:56:49 +0530
-Subject: [PATCH] spi: spi-mem: zynq-qspi: Fix build error on architectures
- missing readsl/writesl
+From 78927aa40bc82f32de07323ddc1c9de07ac68180 Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 20 Apr 2019 13:34:30 +0200
+Subject: [PATCH] regulator: core: Actually put the gpiod after use
 
-Alpha and some of the architectures are missing readsl/writesl functions.
-so the zynq-qspi driver won't be able to build on these arches. hence use
-ioread32_rep()/iowrite32_rep() instead of readsl()/writesl().
+I went to great lengths to hand over the management of the GPIO
+descriptors to the regulator core, and some stray rebased
+oneliner in the old patch must have been assuming the devices
+were still doing devres management of it.
 
-Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Reported-by: kbuild test robot <lkp@intel.com>
+We handed the management over to the regulator core, so of
+course the regulator core shall issue gpiod_put() when done.
+
+Sorry for the descriptor leak.
+
+Fixes: 541d052d7215 ("regulator: core: Only support passing enable GPIO descriptors")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-zynq-qspi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/regulator/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi-zynq-qspi.c b/drivers/spi/spi-zynq-qspi.c
-index 8079d0062d03..c6bee67decb5 100644
---- a/drivers/spi/spi-zynq-qspi.c
-+++ b/drivers/spi/spi-zynq-qspi.c
-@@ -407,8 +407,8 @@ static void zynq_qspi_write_op(struct zynq_qspi *xqspi, int txcount,
- 		count = txcount;
- 
- 	if (xqspi->txbuf) {
--		writesl(xqspi->regs + ZYNQ_QSPI_TXD_00_00_OFFSET,
--			xqspi->txbuf, count);
-+		iowrite32_rep(xqspi->regs + ZYNQ_QSPI_TXD_00_00_OFFSET,
-+			      xqspi->txbuf, count);
- 		xqspi->txbuf += count * 4;
- 	} else {
- 		for (k = 0; k < count; k++)
-@@ -433,8 +433,8 @@ static void zynq_qspi_read_op(struct zynq_qspi *xqspi, int rxcount)
- 	if (count > rxcount)
- 		count = rxcount;
- 	if (xqspi->rxbuf) {
--		readsl(xqspi->regs + ZYNQ_QSPI_RXD_OFFSET,
--		       xqspi->rxbuf, count);
-+		ioread32_rep(xqspi->regs + ZYNQ_QSPI_RXD_OFFSET,
-+			     xqspi->rxbuf, count);
- 		xqspi->rxbuf += count * 4;
- 	} else {
- 		for (k = 0; k < count; k++)
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 8573dd0871fd..35a7d020afec 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -2256,6 +2256,7 @@ static void regulator_ena_gpio_free(struct regulator_dev *rdev)
+ 		if (pin->gpiod == rdev->ena_pin->gpiod) {
+ 			if (pin->request_count <= 1) {
+ 				pin->request_count = 0;
++				gpiod_put(pin->gpiod);
+ 				list_del(&pin->list);
+ 				kfree(pin);
+ 				rdev->ena_pin = NULL;
 -- 
 2.20.1
 
