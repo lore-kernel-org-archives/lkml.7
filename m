@@ -2,101 +2,80 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD08C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8E9C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18950217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:12:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IS2uIls8"
+	by mail.kernel.org (Postfix) with ESMTP id D13E1218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556179966;
+	bh=dzvg8r7LenpJPUo2SY6YKZ7erVH9axG3FJkU3QI4yjg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m6NXU66kM8fLnqNqbe7O+3PEf7LE6XUW0q67+0OJLNHT/Hh6MAtTvFezR8q8js8zc
+	 q6yh0rnH1/HCy5hUNHCwRWc+LKWDI0zipWdrRDe+2HruKQHOa7Gws2IA8JC9eE0sC+
+	 agSn1znU1o4i4YCc7Uam+z34V7Fa6x3jBZ3qQDtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730356AbfDYIMh (ORCPT
+        id S1730369AbfDYIMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 04:12:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42437 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfDYIMg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 04:12:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g3so28957125wrx.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 01:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=uJmeP7Qea/a4ET79JBxaJojgiU5pl2yNMY8bcsoS78A=;
-        b=IS2uIls8SPZOBU/Ks8Pk0WHVMSrAR1NL/NM7Gl8rkyK8JOowxUKuHkmQ4bJL75eyyL
-         OaONLthX42eLiDb+AASy0Zs0AWlLebFp9zCiVMMGiAoq1/ioGtMUJ2bVfIvix3fhdKAX
-         QVhttA9KJi7w9zO59hl2xWkeauk8Nw6jJBefnaX1r7sb7dcGbZoj8im5phl3kn7oNRPW
-         JsAqsMG9OYyjrYsdDsqr7fZMWqrrXo8Bbbv92Can8d0IuloVxZxlnB1sHE68C+r7VU33
-         cCo9UtYBPfmB8Y9cbM8YXy30KICPAZhp08Zi4MdaugqPmxN3Gr0IL3V1DbosKFe0uP4E
-         5EbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=uJmeP7Qea/a4ET79JBxaJojgiU5pl2yNMY8bcsoS78A=;
-        b=ionZMalA1lknqtPekzT2VTG5iGaeTGeKlO/lt7pDPnMfY2t144hZLVrof6+4zKx9Il
-         GCSt/AFIz8/H3owUxh0ujtyrEohKuTvKNpLNMPgojTae56v9R5B8xtUh8oJR296cERuy
-         qbPp37Iq/Bw/rzxbv1f81Is9APiZbgrooEF7jx5hMWlMjfW84xshS4ILRo+iqRgL3pEb
-         hmk8yuvtEHqeXKzqC0j2wVRqKCNiiWAYYeEdSnBmW5CFCCU0OFt+BuSKZeJrMVuOnSPK
-         jMJ8VGrxaR+xpRdJkbLXm59kiw2DqA9NdhD8nUbQPQbQW98I2qdXwf2nLB1Y3VKEFOvb
-         RwzA==
-X-Gm-Message-State: APjAAAW2UPzp98qhX7+xkOsHyXniRdXHjMpV37VkurfAG/aiK+1cWoaD
-        pTtKsh0CrHBXjvvZyh8ihMZI3Q==
-X-Google-Smtp-Source: APXvYqx77kz2hmAuc/xPY3cuzW5hKt6zJ/DBFTCMU7tR66QBrYt0ks8bqDlpPFjQPwD14h7gub2ymA==
-X-Received: by 2002:adf:8062:: with SMTP id 89mr25345223wrk.107.1556179954511;
-        Thu, 25 Apr 2019 01:12:34 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id s4sm7080387wrt.94.2019.04.25.01.12.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 01:12:33 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 09:12:32 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     enric.balletbo@collabora.com, bleung@chromium.org,
-        groeck@chromium.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/30] Update cros_ec_commands.h
-Message-ID: <20190425081232.GA14758@dell>
-References: <20190424232918.243308-1-gwendal@chromium.org>
+        Thu, 25 Apr 2019 04:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbfDYIMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 04:12:45 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87632214AE;
+        Thu, 25 Apr 2019 08:12:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556179965;
+        bh=dzvg8r7LenpJPUo2SY6YKZ7erVH9axG3FJkU3QI4yjg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=accFpFd14v2LGIIJKJ6b9ytThaMpTpMStjAAufV9A99BBdLq7g1OSnjMdrNYXYUuS
+         WR+n+MxdVUCkFtI3ZCyM6oQPzJdV8bb1GgUd53TRgcImslp7aTfc+xsi2Ybhh6vC4n
+         Q7qdLb7hLt+UdnyCFwj8jBIjB5kjYT3nM9qRTlvU=
+Date:   Thu, 25 Apr 2019 10:12:42 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.4 051/168] e1000e: fix cyclic resets at link up with
+ active tx
+Message-ID: <20190425081242.GB7745@kroah.com>
+References: <20190424170923.452349382@linuxfoundation.org>
+ <20190424170926.817047361@linuxfoundation.org>
+ <0913eebd-edc7-1d33-0c07-08f9640d65ee@yandex-team.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190424232918.243308-1-gwendal@chromium.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0913eebd-edc7-1d33-0c07-08f9640d65ee@yandex-team.ru>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019, Gwendal Grignou wrote:
+On Wed, Apr 24, 2019 at 08:31:47PM +0300, Konstantin Khlebnikov wrote:
+> Please skip this. It's going to be reverted upstream:
+> https://patchwork.ozlabs.org/patch/1086838/
+> 
+> while original problem fixed differently:
+> https://patchwork.ozlabs.org/patch/1086839/
+> 
+> same for 3.18 branch
 
-> The interface between CrosEC embedded controller and the host,
-> described by cros_ec_commands.h, as diverged from what the embedded
-> controller really support.
-> 
-> The source of thruth is at
-> https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
-> 
-> That include file is converted to remove ACPI and Embedded only code.
-> 
-> From now on, cros_ec_commands.h will be automatically generated from
-> the file above, do not modify directly.
-> 
-> Fell free to squash the commits below.
+Ok, I'll drop it from these two trees.  But note that this commit is
+already in 4.9.168, 4.14.111, 4.19.34, and 5.0.7, so someone should make
+sure to send that revert and "real" fix to the stable tree so we can fix
+the issue in those trees too, when it hits Linus's tree.
 
-This is going to need a bunch of Chromium reviews (and testing
-ideally) before I can take this set.
+thanks,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+greg k-h
