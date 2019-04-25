@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC01C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0D1C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCAA2206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09FE9206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388208AbfDYVqZ (ORCPT
+        id S2388223AbfDYVq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 17:46:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48460 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388181AbfDYVqW (ORCPT
+        Thu, 25 Apr 2019 17:46:27 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56878 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388205AbfDYVqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 17:46:22 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3PLY8Hd082581
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 17:46:21 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s3kxcjr9r-1
+        Thu, 25 Apr 2019 17:46:25 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3PLYuNv143366
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 17:46:24 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s3m2faexs-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 17:46:20 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 17:46:24 -0400
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 25 Apr 2019 22:46:19 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 25 Apr 2019 22:46:21 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 25 Apr 2019 22:46:14 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3PLkDCu46923840
+        Thu, 25 Apr 2019 22:46:17 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3PLkGbB52494340
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Apr 2019 21:46:13 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 263B0A405C;
-        Thu, 25 Apr 2019 21:46:13 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA982A405F;
-        Thu, 25 Apr 2019 21:46:10 +0000 (GMT)
+        Thu, 25 Apr 2019 21:46:16 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 74A6311C052;
+        Thu, 25 Apr 2019 21:46:16 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 00CAC11C04C;
+        Thu, 25 Apr 2019 21:46:14 +0000 (GMT)
 Received: from rapoport-lnx (unknown [9.148.204.209])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 25 Apr 2019 21:46:10 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Fri, 26 Apr 2019 00:46:09 +0300
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 25 Apr 2019 21:46:13 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Fri, 26 Apr 2019 00:46:13 +0300
 From:   Mike Rapoport <rppt@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
@@ -64,234 +64,180 @@ Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
         Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
         linux-security-module@vger.kernel.org, x86@kernel.org,
         Mike Rapoport <rppt@linux.ibm.com>
-Subject: [RFC PATCH 3/7] x86/entry/64: add infrastructure for switching to isolated syscall context
-Date:   Fri, 26 Apr 2019 00:45:50 +0300
+Subject: [RFC PATCH 4/7] x86/sci: hook up isolated system call entry and exit
+Date:   Fri, 26 Apr 2019 00:45:51 +0300
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com>
 References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19042521-0028-0000-0000-000003670D69
+x-cbid: 19042521-4275-0000-0000-0000032E1ABE
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042521-0029-0000-0000-00002426659F
-Message-Id: <1556228754-12996-4-git-send-email-rppt@linux.ibm.com>
+x-cbparentid: 19042521-4276-0000-0000-0000383D6915
+Message-Id: <1556228754-12996-5-git-send-email-rppt@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_18:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=683 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=861 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1904250133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The isolated system calls will use a separate page table that does not map
-the entire kernel. Exception and interrupts entries should switch the
-context to the full kernel page tables and then restore it back to continue
-the execution of the isolated system call.
+When a system call is required to run in an isolated context, the CR3 will
+be switched to the SCI page table a per-cpu variable will contain and
+offset from the original CR3. This offset is used to switch back to the
+full kernel context when a trap occurs during isolated system call.
 
 Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/x86/entry/calling.h               | 65 ++++++++++++++++++++++++++++++++++
- arch/x86/entry/entry_64.S              | 13 +++++--
- arch/x86/include/asm/processor-flags.h |  8 +++++
- arch/x86/include/asm/tlbflush.h        |  8 ++++-
- arch/x86/kernel/asm-offsets.c          |  7 ++++
- 5 files changed, 98 insertions(+), 3 deletions(-)
+ arch/x86/entry/common.c      | 61 ++++++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/process_64.c |  5 ++++
+ kernel/exit.c                |  3 +++
+ 3 files changed, 69 insertions(+)
 
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index efb0d1b..766e74e 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -187,6 +187,56 @@ For 32-bit we have the following conventions - kernel is built with
- #endif
- .endm
+diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+index 7bc105f..8f2a6fd 100644
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -25,12 +25,14 @@
+ #include <linux/uprobes.h>
+ #include <linux/livepatch.h>
+ #include <linux/syscalls.h>
++#include <linux/sci.h>
  
-+#ifdef CONFIG_SYSCALL_ISOLATION
-+
-+#define SCI_PCID_BIT		X86_CR3_SCI_PCID_BIT
-+
-+#define THIS_CPU_sci_syscall   \
-+	PER_CPU_VAR(cpu_sci) + SCI_SYSCALL
-+
-+#define THIS_CPU_sci_cr3_offset   \
-+	PER_CPU_VAR(cpu_sci) + SCI_CR3_OFFSET
-+
-+.macro SAVE_AND_SWITCH_SCI_TO_KERNEL_CR3 scratch_reg:req save_reg:req
-+	ALTERNATIVE "jmp .Ldone_\@", "", X86_FEATURE_SCI
-+	movq	THIS_CPU_sci_syscall, \scratch_reg
-+	cmpq	$0, \scratch_reg
-+	je	.Ldone_\@
-+	movq	%cr3, \scratch_reg
-+	bt	$SCI_PCID_BIT, \scratch_reg
-+	jc	.Lsci_context_\@
-+	xorq	\save_reg, \save_reg
-+	jmp	.Ldone_\@
-+.Lsci_context_\@:
-+	movq	\scratch_reg, \save_reg
-+	addq	THIS_CPU_sci_cr3_offset, \scratch_reg
-+	movq	\scratch_reg, %cr3
-+.Ldone_\@:
-+.endm
-+
-+.macro RESTORE_SCI_CR3 scratch_reg:req save_reg:req
-+	ALTERNATIVE "jmp .Ldone_\@", "", X86_FEATURE_SCI
-+	movq	THIS_CPU_sci_syscall, \scratch_reg
-+	cmpq	$0, \scratch_reg
-+	je	.Ldone_\@
-+	movq	\save_reg, \scratch_reg
-+	cmpq	$0, \scratch_reg
-+	je	.Ldone_\@
-+	xorq	\save_reg, \save_reg
-+	movq	\scratch_reg, %cr3
-+.Ldone_\@:
-+.endm
-+
-+#else /* CONFIG_SYSCALL_ISOLATION */
-+
-+.macro SAVE_AND_SWITCH_SCI_TO_KERNEL_CR3 scratch_reg:req save_reg:req
-+.endm
-+
-+.macro RESTORE_SCI_CR3 scratch_reg:req save_reg:req
-+.endm
-+
-+#endif /* CONFIG_SYSCALL_ISOLATION */
-+
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
+ #include <asm/desc.h>
+ #include <asm/traps.h>
+ #include <asm/vdso.h>
+ #include <linux/uaccess.h>
+ #include <asm/cpufeature.h>
++#include <asm/tlbflush.h>
  
- /*
-@@ -264,6 +314,21 @@ For 32-bit we have the following conventions - kernel is built with
- 	ALTERNATIVE "jmp .Ldone_\@", "", X86_FEATURE_PTI
- 	movq	%cr3, \scratch_reg
- 	movq	\scratch_reg, \save_reg
-+
-+#ifdef CONFIG_SYSCALL_ISOLATION
-+	/*
-+	 * Test the SCI PCID bit. If set, then the SCI page tables are
-+	 * active. If clear CR3 has either the kernel or user page
-+	 * table active.
-+	 */
-+	ALTERNATIVE "jmp .Lcheck_user_pt_\@", "", X86_FEATURE_SCI
-+	bt	$SCI_PCID_BIT, \scratch_reg
-+	jnc	.Lcheck_user_pt_\@
-+	addq	THIS_CPU_sci_cr3_offset, \scratch_reg
-+	movq	\scratch_reg, %cr3
-+	jmp	.Ldone_\@
-+.Lcheck_user_pt_\@:
-+#endif
- 	/*
- 	 * Test the user pagetable bit. If set, then the user page tables
- 	 * are active. If clear CR3 already has the kernel page table
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 1f0efdb..3cef67b 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -543,7 +543,7 @@ ENTRY(interrupt_entry)
- 	ENCODE_FRAME_POINTER 8
- 
- 	testb	$3, CS+8(%rsp)
--	jz	1f
-+	jz	.Linterrupt_entry_kernel
- 
- 	/*
- 	 * IRQ from user mode.
-@@ -559,12 +559,17 @@ ENTRY(interrupt_entry)
- 
- 	CALL_enter_from_user_mode
- 
--1:
-+.Linterrupt_entry_done:
- 	ENTER_IRQ_STACK old_rsp=%rdi save_ret=1
- 	/* We entered an interrupt context - irqs are off: */
- 	TRACE_IRQS_OFF
- 
- 	ret
-+
-+.Linterrupt_entry_kernel:
-+	SAVE_AND_SWITCH_SCI_TO_KERNEL_CR3 scratch_reg=%rax save_reg=%r14
-+	jmp	.Linterrupt_entry_done
-+
- END(interrupt_entry)
- _ASM_NOKPROBE(interrupt_entry)
- 
-@@ -656,6 +661,8 @@ retint_kernel:
- 	 */
- 	TRACE_IRQS_IRETQ
- 
-+	RESTORE_SCI_CR3 scratch_reg=%rax save_reg=%r14
-+
- GLOBAL(restore_regs_and_return_to_kernel)
- #ifdef CONFIG_DEBUG_ENTRY
- 	/* Assert that pt_regs indicates kernel mode. */
-@@ -1263,6 +1270,8 @@ ENTRY(error_entry)
- 	 * for these here too.
- 	 */
- .Lerror_kernelspace:
-+	SAVE_AND_SWITCH_SCI_TO_KERNEL_CR3 scratch_reg=%rax save_reg=%r14
-+
- 	leaq	native_irq_return_iret(%rip), %rcx
- 	cmpq	%rcx, RIP+8(%rsp)
- 	je	.Lerror_bad_iret
-diff --git a/arch/x86/include/asm/processor-flags.h b/arch/x86/include/asm/processor-flags.h
-index 02c2cbd..eca9e17 100644
---- a/arch/x86/include/asm/processor-flags.h
-+++ b/arch/x86/include/asm/processor-flags.h
-@@ -53,4 +53,12 @@
- # define X86_CR3_PTI_PCID_USER_BIT	11
- #endif
- 
-+#ifdef CONFIG_SYSCALL_ISOLATION
-+# if defined(X86_CR3_PTI_PCID_USER_BIT)
-+#  define X86_CR3_SCI_PCID_BIT		(X86_CR3_PTI_PCID_USER_BIT - 1)
-+# else
-+#  define X86_CR3_SCI_PCID_BIT		11
-+# endif
-+#endif
-+
- #endif /* _ASM_X86_PROCESSOR_FLAGS_H */
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index f4204bf..dc69cc4 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -54,7 +54,13 @@
- # define PTI_CONSUMED_PCID_BITS	0
- #endif
- 
--#define CR3_AVAIL_PCID_BITS (X86_CR3_PCID_BITS - PTI_CONSUMED_PCID_BITS)
-+#ifdef CONFIG_SYSCALL_ISOLATION
-+# define SCI_CONSUMED_PCID_BITS	1
-+#else
-+# define SCI_CONSUMED_PCID_BITS	0
-+#endif
-+
-+#define CR3_AVAIL_PCID_BITS (X86_CR3_PCID_BITS - PTI_CONSUMED_PCID_BITS - SCI_CONSUMED_PCID_BITS)
- 
- /*
-  * ASIDs are zero-based: 0->MAX_AVAIL_ASID are valid.  -1 below to account
-diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
-index 168543d..f2c9cd3f 100644
---- a/arch/x86/kernel/asm-offsets.c
-+++ b/arch/x86/kernel/asm-offsets.c
-@@ -18,6 +18,7 @@
- #include <asm/bootparam.h>
- #include <asm/suspend.h>
- #include <asm/tlbflush.h>
-+#include <asm/sci.h>
- 
- #ifdef CONFIG_XEN
- #include <xen/interface/xen.h>
-@@ -105,4 +106,10 @@ static void __used common(void)
- 	OFFSET(TSS_sp0, tss_struct, x86_tss.sp0);
- 	OFFSET(TSS_sp1, tss_struct, x86_tss.sp1);
- 	OFFSET(TSS_sp2, tss_struct, x86_tss.sp2);
-+
-+#ifdef CONFIG_SYSCALL_ISOLATION
-+	/* system calls isolation */
-+	OFFSET(SCI_SYSCALL, sci_percpu_data, sci_syscall);
-+	OFFSET(SCI_CR3_OFFSET, sci_percpu_data, sci_cr3_offset);
-+#endif
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/syscalls.h>
+@@ -269,6 +271,50 @@ __visible inline void syscall_return_slowpath(struct pt_regs *regs)
  }
+ 
+ #ifdef CONFIG_X86_64
++
++#ifdef CONFIG_SYSCALL_ISOLATION
++static inline bool sci_required(unsigned long nr)
++{
++	return false;
++}
++
++static inline unsigned long sci_syscall_enter(unsigned long nr)
++{
++	unsigned long sci_cr3, kernel_cr3;
++	unsigned long asid;
++
++	kernel_cr3 = __read_cr3();
++	asid = kernel_cr3 & ~PAGE_MASK;
++
++	sci_cr3 = build_cr3(current->sci->pgd, 0) & PAGE_MASK;
++	sci_cr3 |= (asid | (1 << X86_CR3_SCI_PCID_BIT));
++
++	current->in_isolated_syscall = 1;
++	current->sci->cr3_offset = kernel_cr3 - sci_cr3;
++
++	this_cpu_write(cpu_sci.sci_syscall, 1);
++	this_cpu_write(cpu_sci.sci_cr3_offset, current->sci->cr3_offset);
++
++	write_cr3(sci_cr3);
++
++	return kernel_cr3;
++}
++
++static inline void sci_syscall_exit(unsigned long cr3)
++{
++	if (cr3) {
++		write_cr3(cr3);
++		current->in_isolated_syscall = 0;
++		this_cpu_write(cpu_sci.sci_syscall, 0);
++		sci_clear_data();
++	}
++}
++#else
++static inline bool sci_required(unsigned long nr) { return false; }
++static inline unsigned long sci_syscall_enter(unsigned long nr) { return 0; }
++static inline void sci_syscall_exit(unsigned long cr3) {}
++#endif
++
+ __visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
+ {
+ 	struct thread_info *ti;
+@@ -286,10 +332,25 @@ __visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
+ 	 */
+ 	nr &= __SYSCALL_MASK;
+ 	if (likely(nr < NR_syscalls)) {
++		unsigned long sci_cr3 = 0;
++
+ 		nr = array_index_nospec(nr, NR_syscalls);
++
++		if (sci_required(nr)) {
++			int err = sci_init(current);
++
++			if (err) {
++				regs->ax = err;
++				goto err_return_from_syscall;
++			}
++			sci_cr3 = sci_syscall_enter(nr);
++		}
++
+ 		regs->ax = sys_call_table[nr](regs);
++		sci_syscall_exit(sci_cr3);
+ 	}
+ 
++err_return_from_syscall:
+ 	syscall_return_slowpath(regs);
+ }
+ #endif
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 6a62f4a..b8aa624 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -55,6 +55,8 @@
+ #include <asm/resctrl_sched.h>
+ #include <asm/unistd.h>
+ #include <asm/fsgsbase.h>
++#include <asm/sci.h>
++
+ #ifdef CONFIG_IA32_EMULATION
+ /* Not included via unistd.h */
+ #include <asm/unistd_32_ia32.h>
+@@ -581,6 +583,9 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+ 
+ 	switch_to_extra(prev_p, next_p);
+ 
++	/* update syscall isolation per-cpu data */
++	sci_switch_to(next_p);
++
+ #ifdef CONFIG_XEN_PV
+ 	/*
+ 	 * On Xen PV, IOPL bits in pt_regs->flags have no effect, and
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 2639a30..8e81353 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -62,6 +62,7 @@
+ #include <linux/random.h>
+ #include <linux/rcuwait.h>
+ #include <linux/compat.h>
++#include <linux/sci.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+@@ -859,6 +860,8 @@ void __noreturn do_exit(long code)
+ 	tsk->exit_code = code;
+ 	taskstats_exit(tsk, group_dead);
+ 
++	sci_exit(tsk);
++
+ 	exit_mm();
+ 
+ 	if (group_dead)
 -- 
 2.7.4
 
