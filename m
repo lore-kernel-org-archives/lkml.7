@@ -7,66 +7,64 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E13C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897BEC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9086420693
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D6420693
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o1MKdoQz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9aDpb17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbfDYQiz (ORCPT
+        id S1729135AbfDYQix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:38:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45263 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728938AbfDYQiw (ORCPT
+        Thu, 25 Apr 2019 12:38:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46766 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfDYQiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:38:52 -0400
-Received: by mail-pl1-f195.google.com with SMTP id o5so47718pls.12;
+        Thu, 25 Apr 2019 12:38:51 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j11so161448pff.13;
         Thu, 25 Apr 2019 09:38:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QhP+0qXLKcIvd8zcsCQWUyMz8HeCpuFq4bHAvM6mNOY=;
-        b=o1MKdoQzNyvSoLwZ2RDlz/2+alYoKBGAHMj4/+rmBEp/bPOrnZo6CMN4psR1ib+0qT
-         bvs0t/QEaaZ+aCbqcwOQrDEOtjvjSR7Mb3hBUkeMabO69OLVUj9WucmwwP8sVXESlXgJ
-         VqimlyttCJHrRDZr7T2vyKRSHcFNOZiIFAuVMUA1try5yQUvou8lIsnPPECIuPmbbk7b
-         YYg+bcGKAVdXh0l2sYp0jLOqVJmn2dl5gc+oPKSDpOUv8PJy6PKceaVlydw2YJ6iWrfR
-         LsKj56nXpPH+xmzdfz0II+4ji17cnul47S0rSyBIr7TtY6CRBCBvJ4/fuyrqrFCfWpVw
-         pfvQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AiihT23zrdWbLxtOhD2zbMQi6WAGbAToxZ3mdyPDSlg=;
+        b=r9aDpb17lhE+Me7t3jhKPyYKwgQgmA9MyZaHuZ3swOmntC2qxh6EiL+sYXxf4gUVdg
+         rkSXZxbSNyQrT3flDP2QpBBugkHxsCsXkzsISY8nwWvRVLpNvYpE9XOnk6qWrFSYOAdp
+         FQE8pI3S1zJHsHPjnuhJbptmAvVz0VdVjnwHmgV0YQBuaeuvrL0NtT57KdUx2yESS1gU
+         2ZY5AYSQ6dez7RlXEXRokIqDOLVw/YPYfl2L3Jez+fEsdHbiw+0QrGwcbK7El8ugwzUg
+         LV/WyjNLQ9auqvMfMHnUbWTDBX+UTEjoc/e3i06iYDIS6HyrCWpFHdsIt9KP7iuM+JKj
+         zIAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QhP+0qXLKcIvd8zcsCQWUyMz8HeCpuFq4bHAvM6mNOY=;
-        b=eqLNPbLKDOFy2GnJuWPQfcskXMtgOcem8Guz1juqd0VIGxQSdIFCSQm++fyXDiv51A
-         DTmZ3noNVBYJ+TE3Q1eyPis/m0vTkXMyqUNL039N/HJV0h2aPOdJapg/VAo9CxGZZ7+K
-         pcNG15Jk3ie29JFZ/opBWQDCm5FxQLjlus2mmWvVyuNkeVdEc8gZ45Z8KsusRp36BV/A
-         4eTdQZNT1GcoAWmpJZ8I1LLDYbZD1CG33S5u5j5qLud2+2LhnQQ3pgeDonZNeNivnIx/
-         jFrlQHws84Nou6IS15smc28VXJJSseRqryk6SbW+HLmozcXnpuHkvzG+ViE6mchwnl+/
-         +sxw==
-X-Gm-Message-State: APjAAAWxGDPyBe32LuaBqrRLIKtvbXZll/u5FjEAwThhFh3XdmY3sHC9
-        I0nrrmfTJJWPS0ahNhge+DI=
-X-Google-Smtp-Source: APXvYqxJHa7Eoe8Mywk7XT/2kzjRZdYUczYsF0opji9chexWdsmUJFKf0badB9V1Qiub9dnFKFOiUw==
-X-Received: by 2002:a17:902:2b81:: with SMTP id l1mr39757318plb.289.1556210331156;
-        Thu, 25 Apr 2019 09:38:51 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id k186sm42003053pfc.137.2019.04.25.09.38.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AiihT23zrdWbLxtOhD2zbMQi6WAGbAToxZ3mdyPDSlg=;
+        b=dKqA4j28ShINGDzWQo9eS52jjqdB8x5kNAvIg9o5ekmkzml5G1P7xFLoonn63BLrce
+         2R5B7GiiVtx3qrQcE3j6VuAhnjkAmxgfMvQ51zi8uzUHS1ygM9B35+zc81bGJzUyBOUf
+         rUvU3iVN95kBcujEqrng9IAjk+OJIIDRa/n2YHwgBf3ZQ9VRRJoTVfcls12oz90gfWUV
+         R6ZNf5xZMTf72ySXbSoLl7hjraD5FMmsuyIMH2VMcFnYGUGmdDElReJ/xEirfsVpysms
+         ylLacXEytvHF0yNj5LLalnhnpx3eDrxPpudkF9sPw40FPEUNLHQltl+pf9LxcdUb9GG2
+         mmRw==
+X-Gm-Message-State: APjAAAVvhQH3YqQSnSIByOsyP5WCDsHxOfAmv+fDq7oit8cdC8fzGXSr
+        9q+EW983AiFBrdjgcCs4/14=
+X-Google-Smtp-Source: APXvYqza05uZ5mX33BSzQt/7WKwFR/uljCuiM7elW4pTsMT/SY/DGUMeVz0kjHUPhg1+tS37gIZ7kg==
+X-Received: by 2002:a63:ee15:: with SMTP id e21mr9189831pgi.180.1556210330178;
         Thu, 25 Apr 2019 09:38:50 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id k186sm42003053pfc.137.2019.04.25.09.38.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 09:38:49 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         gwink@chromium.org
-Subject: [PATCH 2/2] HID: input: add mapping for KEY_KBD_LAYOUT_NEXT
-Date:   Thu, 25 Apr 2019 09:38:46 -0700
-Message-Id: <20190425163846.51730-2-dmitry.torokhov@gmail.com>
+Subject: [PATCH 1/2] Input: add KEY_KBD_LAYOUT_NEXT
+Date:   Thu, 25 Apr 2019 09:38:45 -0700
+Message-Id: <20190425163846.51730-1-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-In-Reply-To: <20190425163846.51730-1-dmitry.torokhov@gmail.com>
-References: <20190425163846.51730-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,27 +72,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HUTRR56 defined a new usage code on consumer page to cycle through
-set of keyboard layouts, let's add this mapping.
+The HID usage tables define a key to cycle through a set of keyboard
+layouts, let's add corresponding keycode.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/hid/hid-input.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/uapi/linux/input-event-codes.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index b607286a0bc8..0579b8d3f912 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -1051,6 +1051,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x28b: map_key_clear(KEY_FORWARDMAIL);	break;
- 		case 0x28c: map_key_clear(KEY_SEND);		break;
+diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+index 64cee116928e..85387c76c24f 100644
+--- a/include/uapi/linux/input-event-codes.h
++++ b/include/uapi/linux/input-event-codes.h
+@@ -606,6 +606,7 @@
+ #define KEY_SCREENSAVER		0x245	/* AL Screen Saver */
+ #define KEY_VOICECOMMAND		0x246	/* Listening Voice Command */
+ #define KEY_ASSISTANT		0x247	/* AL Context-aware desktop assistant */
++#define KEY_KBD_LAYOUT_NEXT	0x248	/* AC Next Keyboard Layout Select */
  
-+		case 0x29d: map_key_clear(KEY_KBD_LAYOUT_NEXT);	break;
-+
- 		case 0x2c7: map_key_clear(KEY_KBDINPUTASSIST_PREV);		break;
- 		case 0x2c8: map_key_clear(KEY_KBDINPUTASSIST_NEXT);		break;
- 		case 0x2c9: map_key_clear(KEY_KBDINPUTASSIST_PREVGROUP);		break;
+ #define KEY_BRIGHTNESS_MIN		0x250	/* Set Brightness to Minimum */
+ #define KEY_BRIGHTNESS_MAX		0x251	/* Set Brightness to Maximum */
 -- 
 2.21.0.593.g511ec345e18-goog
 
