@@ -1,208 +1,146 @@
 Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7BEC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2687C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054BD214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DAC217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556189872;
+	bh=eaVlZ8N3GWs1CEBdmQOH5Ogtl8u+mhqRs16WkXOw+tI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g4/4+wJ56wMHd5sf83SlOGdcXPgxKk0VB59KHhxF7mmWwaMQAUkBYX8k3jiEfJMh8
+	 qn24McToxPPio6lJ6L7ZIEHM7HfsbNdXfEJJFK7RWQmltKIsIsGbpDj9geTkDJmuAZ
+	 Fsh7MpahYVe15QKfIfBURFgGPYFBwkK1lUQaNyns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbfDYK5q (ORCPT
+        id S1730586AbfDYK5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:57:46 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:46426 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730529AbfDYK5q (ORCPT
+        Thu, 25 Apr 2019 06:57:52 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42118 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730529AbfDYK5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:57:46 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 25 Apr 2019 13:57:43 +0300
-Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.134.136.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x3PAvhbY006894;
-        Thu, 25 Apr 2019 13:57:43 +0300
-Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id x3PAvgDt005433;
-        Thu, 25 Apr 2019 13:57:42 +0300
-Received: (from moshe@localhost)
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id x3PAvaFk005428;
-        Thu, 25 Apr 2019 13:57:36 +0300
-From:   Moshe Shemesh <moshe@mellanox.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next] devlink: Execute devlink health recover as a work
-Date:   Thu, 25 Apr 2019 13:57:03 +0300
-Message-Id: <1556189823-5368-1-git-send-email-moshe@mellanox.com>
-X-Mailer: git-send-email 1.8.4.3
+        Thu, 25 Apr 2019 06:57:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id g3so29644571wrx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 03:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e8/2tKwCpipacdDupHWNWjFErjsYGD1OSlqjsGXNll8=;
+        b=GlQe4qUQNjiVWly3gGxorH39jhOEsnIC3sYAifh4l/Lkdd1fYsaeKco8QNWSnukd3O
+         XatlbsnoA+B7yfgobw9tQRwEWfjAHBWSr0OdTBrpf5v+y7/ATh9PJYqpEZz4fpkcBb1P
+         xCAHEI/y8jZrmWBQOanaprAdsdB7ojrQAlUbgdgKBXiEA6NtDJNzCGslfNFX1AJs2M/a
+         Z2v2fIyx0UJi58EwGxXbkOS0awJY8j132SgoeoP7Mf81Zb+8tzftMOXW8MHd8ESkqfVM
+         YNaPEyW+Zx9O448oUI+RW6jJCuwaQSBSRBDn3pqkz75JD71hqO6yjhEZJkY58eI/HsIw
+         EBHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e8/2tKwCpipacdDupHWNWjFErjsYGD1OSlqjsGXNll8=;
+        b=agD4U6u3xN+RkPX7VR2dNA0nxug6F33g+mHAfCFQ669cnwzC4TfxTSDXfPOxGCdfQP
+         uMuzYxuzoJ4L98G77EwUAXVyStWU8s5wvbb0h5TxZvIxZo01x7Y8zSK9JsYrpYS2vlg6
+         zahPQLlW5cBhVPTDQzr+Z87hSj6TDNSiVs7ZMvShyONi/dqvZjsBo+DwAJ07XsShXzfp
+         L1FG+enc8UhkFxKt3JmIIw3hCrMWXLodnLhNl/LULUeYQgFBCWt/VONnDfShKuGYCBFU
+         QUShXzrW4j+ETtRFIoD7RChn7KtXtu5KOdVxNddgkRzhFB6XoIuvmNvqGb3pQuhYc/RU
+         7u6w==
+X-Gm-Message-State: APjAAAUaSm+N71+iOG1G2BB4fzTcWYId+zN1glbOCwX6/rPSWhC8YE5K
+        WA522vKCT3uHDD53MUzTz3Q=
+X-Google-Smtp-Source: APXvYqwSXMSbhS9Z2K9rK7fywG63eecqYYeJ/OD+8nQw+8tvK894wr2J0aFQcIKVwBi1WHUH5OulLg==
+X-Received: by 2002:a5d:6988:: with SMTP id g8mr4044912wru.117.1556189868754;
+        Thu, 25 Apr 2019 03:57:48 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id u15sm5796551wrt.40.2019.04.25.03.57.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Apr 2019 03:57:47 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 12:57:45 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: x86/paravirt: Detect over-sized patching bugs in
+ paravirt_patch_call()
+Message-ID: <20190425105745.GA29840@gmail.com>
+References: <20190424134115.091452807@linutronix.de>
+ <20190424134223.690835713@linutronix.de>
+ <20190425065209.GA89582@gmail.com>
+ <alpine.DEB.2.21.1904250921010.1762@nanos.tec.linutronix.de>
+ <20190425081012.GA115378@gmail.com>
+ <20190425091717.GA72229@gmail.com>
+ <20190425092131.GL4038@hirez.programming.kicks-ass.net>
+ <20190425095039.GC115378@gmail.com>
+ <20190425102210.GM4038@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425102210.GM4038@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Different reporters have different rules in the driver and are being
-created/destroyed during different stages of driver load/unload/running.
-So during execution of a reporter recover the flow can go through
-another reporter's destroy and create. Such flow leads to deadlock
-trying to lock a mutex already held if the flow was triggered by devlink
-recover command.
-To avoid such deadlock, we execute the recover flow from a workqueue.
-Once the recover work is done successfully the reporter health state and
-recover counter are being updated.
 
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
----
- include/net/devlink.h |  1 +
- net/core/devlink.c    | 70 +++++++++++++++++++++++++++++++++++----------------
- 2 files changed, 50 insertions(+), 21 deletions(-)
+* Peter Zijlstra <peterz@infradead.org> wrote:
 
-diff --git a/include/net/devlink.h b/include/net/devlink.h
-index 4f5e416..820b327 100644
---- a/include/net/devlink.h
-+++ b/include/net/devlink.h
-@@ -32,6 +32,7 @@ struct devlink {
- 	struct list_head region_list;
- 	u32 snapshot_id;
- 	struct list_head reporter_list;
-+	struct workqueue_struct *reporters_wq;
- 	struct devlink_dpipe_headers *dpipe_headers;
- 	const struct devlink_ops *ops;
- 	struct device *dev;
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index 7b91605..8ee380e 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -4422,6 +4422,7 @@ struct devlink_health_reporter {
- 	u64 error_count;
- 	u64 recovery_count;
- 	u64 last_recovery_ts;
-+	struct work_struct recover_work;
- };
- 
- void *
-@@ -4443,6 +4444,40 @@ struct devlink_health_reporter {
- 	return NULL;
- }
- 
-+static int
-+devlink_health_reporter_recover(struct devlink_health_reporter *reporter,
-+				void *priv_ctx)
-+{
-+	int err;
-+
-+	if (!reporter->ops->recover)
-+		return -EOPNOTSUPP;
-+
-+	err = reporter->ops->recover(reporter, priv_ctx);
-+	if (err)
-+		return err;
-+
-+	reporter->recovery_count++;
-+	reporter->health_state = DEVLINK_HEALTH_REPORTER_STATE_HEALTHY;
-+	reporter->last_recovery_ts = jiffies;
-+
-+	trace_devlink_health_reporter_state_update(reporter->devlink,
-+						   reporter->ops->name,
-+						   reporter->health_state);
-+	return 0;
-+}
-+
-+static void
-+devlink_health_reporter_recover_work(struct work_struct *work)
-+{
-+	struct devlink_health_reporter *reporter;
-+
-+	reporter = container_of(work, struct devlink_health_reporter,
-+				recover_work);
-+
-+	devlink_health_reporter_recover(reporter, NULL);
-+}
-+
- /**
-  *	devlink_health_reporter_create - create devlink health reporter
-  *
-@@ -4483,6 +4518,8 @@ struct devlink_health_reporter *
- 	reporter->devlink = devlink;
- 	reporter->graceful_period = graceful_period;
- 	reporter->auto_recover = auto_recover;
-+	INIT_WORK(&reporter->recover_work,
-+		  devlink_health_reporter_recover_work);
- 	mutex_init(&reporter->dump_lock);
- 	list_add_tail(&reporter->list, &devlink->reporter_list);
- unlock:
-@@ -4505,6 +4542,7 @@ struct devlink_health_reporter *
- 	mutex_unlock(&reporter->devlink->lock);
- 	if (reporter->dump_fmsg)
- 		devlink_fmsg_free(reporter->dump_fmsg);
-+	cancel_work_sync(&reporter->recover_work);
- 	kfree(reporter);
- }
- EXPORT_SYMBOL_GPL(devlink_health_reporter_destroy);
-@@ -4526,26 +4564,6 @@ struct devlink_health_reporter *
- }
- EXPORT_SYMBOL_GPL(devlink_health_reporter_state_update);
- 
--static int
--devlink_health_reporter_recover(struct devlink_health_reporter *reporter,
--				void *priv_ctx)
--{
--	int err;
--
--	if (!reporter->ops->recover)
--		return -EOPNOTSUPP;
--
--	err = reporter->ops->recover(reporter, priv_ctx);
--	if (err)
--		return err;
--
--	reporter->recovery_count++;
--	reporter->health_state = DEVLINK_HEALTH_REPORTER_STATE_HEALTHY;
--	reporter->last_recovery_ts = jiffies;
--
--	return 0;
--}
--
- static void
- devlink_health_dump_clear(struct devlink_health_reporter *reporter)
- {
-@@ -4813,7 +4831,11 @@ static int devlink_nl_cmd_health_reporter_recover_doit(struct sk_buff *skb,
- 	if (!reporter)
- 		return -EINVAL;
- 
--	return devlink_health_reporter_recover(reporter, NULL);
-+	if (!reporter->ops->recover)
-+		return -EOPNOTSUPP;
-+
-+	queue_work(devlink->reporters_wq, &reporter->recover_work);
-+	return 0;
- }
- 
- static int devlink_nl_cmd_health_reporter_diagnose_doit(struct sk_buff *skb,
-@@ -5234,6 +5256,11 @@ struct devlink *devlink_alloc(const struct devlink_ops *ops, size_t priv_size)
- 	INIT_LIST_HEAD(&devlink->param_list);
- 	INIT_LIST_HEAD(&devlink->region_list);
- 	INIT_LIST_HEAD(&devlink->reporter_list);
-+	devlink->reporters_wq = create_singlethread_workqueue("devlink_reporters");
-+	if (!devlink->reporters_wq) {
-+		kfree(devlink);
-+		return NULL;
-+	}
- 	mutex_init(&devlink->lock);
- 	return devlink;
- }
-@@ -5278,6 +5305,7 @@ void devlink_unregister(struct devlink *devlink)
- void devlink_free(struct devlink *devlink)
- {
- 	mutex_destroy(&devlink->lock);
-+	destroy_workqueue(devlink->reporters_wq);
- 	WARN_ON(!list_empty(&devlink->reporter_list));
- 	WARN_ON(!list_empty(&devlink->region_list));
- 	WARN_ON(!list_empty(&devlink->param_list));
--- 
-1.8.3.1
+> On Thu, Apr 25, 2019 at 11:50:39AM +0200, Ingo Molnar wrote:
+> > 
+> > * Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > On Thu, Apr 25, 2019 at 11:17:17AM +0200, Ingo Molnar wrote:
+> > > > It basically means that we silently won't do any patching and the kernel 
+> > > > will crash later on in mysterious ways, because paravirt patching is 
+> > > > usually relied on.
+> > > 
+> > > That's OK. The compiler emits an indirect CALL/JMP to the pv_ops
+> > > structure contents. That _should_ stay valid and function correctly at
+> > > all times.
+> > 
+> > It might result in a correctly executing kernel in terms of code 
+> > generation, but it doesn't result in a viable kernel: some of the places 
+> > rely on the patching going through and don't know what to do when it 
+> > doesn't and misbehave or crash in interesting ways.
+> > 
+> > Guess how I know this. ;-)
+> 
+> What sites would that be? It really should work AFAIK.
 
+So for example I tried to increasing the size of one of the struct 
+patch_xxl members:
+
+--- a/arch/x86/kernel/paravirt_patch.c
++++ b/arch/x86/kernel/paravirt_patch.c
+@@ -28,7 +28,7 @@ struct patch_xxl {
+ 	const unsigned char	irq_restore_fl[2];
+ # ifdef CONFIG_X86_64
+ 	const unsigned char	cpu_wbinvd[2];
+-	const unsigned char	cpu_usergs_sysret64[6];
++	const unsigned char	cpu_usergs_sysret64[60];
+ 	const unsigned char	cpu_swapgs[3];
+ 	const unsigned char	mov64[3];
+ # else
+
+Which with the vanilla kernel crashes on boot much, much later:
+
+[    2.478026] PANIC: double fault, error_code: 0x0
+
+But in any case, even if many of the others will work if the patching 
+fails silently, is there any case where we'd treat patching failure as an 
+acceptable case?
+
+BUG_ON() in paravirt kernels is an easily debuggable condition and beats 
+the above kinds of symptoms. But I can turn it into a WARN_ON_ONCE() if 
+you think that's better?
+
+Thanks,
+
+	Ingo
