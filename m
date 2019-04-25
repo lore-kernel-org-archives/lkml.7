@@ -2,253 +2,109 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1657C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CB8C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A21220685
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:17:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UKUKcSHk"
+	by mail.kernel.org (Postfix) with ESMTP id 66B9920717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556216276;
+	bh=TfUmuNaJuYstbYjt2cXXyzlWso/wZbKBoh9mLr+1OgY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RM6ru9rLiZ5JeDWrpcrNxaS135UbSF10dwYqBfAStB1DmPEUe17/ZslgkYrEocRyR
+	 zGYjYHcaw1qR4NZsi+JrmhNc0JLVN/1Hxb6J4O7nT09bHgIy9QSLS+nvsSCXD741BM
+	 TV3Fs/S5qk2M+CHSi2wylnoI2zUn5WkWFQiONCx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbfDYSRJ (ORCPT
+        id S1729624AbfDYSRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:17:09 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37499 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfDYSRJ (ORCPT
+        Thu, 25 Apr 2019 14:17:54 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49698 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbfDYSRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:17:09 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c16so379871otn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:17:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X/sTePWjq2L9TZHfFnLANGY9Vc9Ld/v1fuSl15X5db4=;
-        b=UKUKcSHktJDdIsxDIpDsOP4acQySLTpP8DE5287kwixieJnBuGzdsBwfDmJdUfXPHL
-         tMSFOQmyjp5kjU4SweyUjk4WI2f3nCYviJ9/N0BDiB0NvwQ23oRhslvQ0T95qFjG3nVU
-         vDjEEVMSfH37GVgWbyqnsYU0b/f9dZsTaL6+VzzABKmS7/AOjmLhSZimK/rdEaIijHsI
-         Pdcy1R8TBRGrTV/pR9hDv4R+PvS1uIo/Y+3SIFm182aE1TFwESvEEr/kIWaVlyUbXdG+
-         H2eXcMxa9mnXEb/tgz2Kw46i5ZUtbu3gcd0iDnbuie8b7to8eC3E2koZyPUuFE8kFPTH
-         Qkjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X/sTePWjq2L9TZHfFnLANGY9Vc9Ld/v1fuSl15X5db4=;
-        b=WIPxiD10aSmXVg7G1TvLJwnsR6FEZz+lui57Kq9Y6FOqtHGeIe8JlJq9p9MrFVT1HB
-         tRtjfTYr0+LPyrV2INycZROHRTSNQwhpvcw66Aq8+YWO3LFPVUAgwmedQegwYTmgteXD
-         9U18qyxzu9hmrlpxqxl9Gh6sskXr/TIcXYSmbPWOlZjFF+ZBBFr4codGP6LUDeon+JtG
-         6eORfT5NghYgZPje3H/qeXsvsibyRI63Gy0L/9Otndt7l4eV5WnJO5tVke89LZAUQh+j
-         3b2T9TyxLnkG+/WawfgdNiUReX19XNb4fl22N+RXCLXdMlOMGwL4kvjx3MxJR05E93sq
-         aDFQ==
-X-Gm-Message-State: APjAAAVhb3UpdrRuG9g5LUAr+eBBFdktIxxX2oH3MJJjf2SB1xnd29VK
-        E6r1h9ZOMl6XTd84a7WF0ppeNcmqtyZoSDJrTaIazg==
-X-Google-Smtp-Source: APXvYqy2LBPXvlss1uiHsH//34CS/I8r+sfJ3YfxiEi5z0Kbn3MIvw2kMazpQulErM4X5fXrZ0QtQkJybjc3mu9kBXk=
-X-Received: by 2002:a9d:53cc:: with SMTP id i12mr3734402oth.242.1556216228160;
- Thu, 25 Apr 2019 11:17:08 -0700 (PDT)
+        Thu, 25 Apr 2019 14:17:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MdJ1sN/LBuMiDfptCYjNzhlbJmjNI/eJu8NWCJerpuo=; b=LVJeP6NvCWPq5LXTCrh9hr8UY
+        4uNzLxuVfH7LYh+qQCal7/0eY5Z3exBdDA1QL/WncjKD084ZW1Xy/egBe07jb+ROHEWQ6tnB2ShXq
+        TavH0G0VbI2lqTtORiKZXHo5cc/OqAB9PwpCG32BQ12+DzGYGDszol0TNDPsEIsJhTf18=;
+Received: from 94.197.120.252.threembb.co.uk ([94.197.120.252] helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hJiwJ-00045I-5f; Thu, 25 Apr 2019 18:17:48 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 1EFEA441D3B; Thu, 25 Apr 2019 19:17:36 +0100 (BST)
+Date:   Thu, 25 Apr 2019 19:17:36 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Stephen Boyd <sboyd@kernel.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        enric.balletbo@collabora.com, khilman@baylibre.com,
+        matthew.hart@linaro.org, mgalka@collabora.com,
+        tomeu.vizoso@collabora.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: clk/clk-next boot bisection: v5.1-rc1-142-ga55b079c961b on panda
+Message-ID: <20190425181736.GD23183@sirena.org.uk>
+References: <5cbe596c.1c69fb81.e252.b9d0@mx.google.com>
+ <155598159898.15276.8408514960097680895@swboyd.mtv.corp.google.com>
+ <20190423144028.GA8007@atomide.com>
+ <20190425172807.GW2803@sirena.org.uk>
+ <9d076ce7-ce9b-07d9-21c7-e3e2eddf2fdb@collabora.com>
 MIME-Version: 1.0
-References: <20190425161416.26600-1-dima@arista.com> <20190425161416.26600-20-dima@arista.com>
-In-Reply-To: <20190425161416.26600-20-dima@arista.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 25 Apr 2019 20:16:41 +0200
-Message-ID: <CAG48ez1ws9qXyNHfScY1RoajG=pquFe4y9QpM1c_xtPSeC2SNA@mail.gmail.com>
-Subject: Re: [PATCHv3 19/27] timens/fs/proc: Introduce /proc/pid/timens_offsets
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        Linux API <linux-api@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6WlEvdN9Dv0WHSBl"
+Content-Disposition: inline
+In-Reply-To: <9d076ce7-ce9b-07d9-21c7-e3e2eddf2fdb@collabora.com>
+X-Cookie: But they went to MARS around 1953!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 6:15 PM Dmitry Safonov <dima@arista.com> wrote:
-> API to set time namespace offsets for children processes, i.e.:
-> echo "clockid off_ses off_nsec" > /proc/self/timens_offsets
-[...]
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 6a803a0b75df..76d58e9b5178 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-[...]
-> @@ -1521,6 +1522,103 @@ static const struct file_operations proc_pid_sched_autogroup_operations = {
->
->  #endif /* CONFIG_SCHED_AUTOGROUP */
->
-> +#ifdef CONFIG_TIME_NS
-> +static int timens_offsets_show(struct seq_file *m, void *v)
-> +{
-> +       struct inode *inode = m->private;
-> +       struct task_struct *p;
-> +
-> +       p = get_proc_task(inode);
 
-(FYI, this could also be "p = get_proc_task(file_inode(m->file));".
-But this works, too.)
+--6WlEvdN9Dv0WHSBl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +       if (!p)
-> +               return -ESRCH;
-> +       proc_timens_show_offsets(p, m);
-> +
-> +       put_task_struct(p);
-> +
-> +       return 0;
-> +}
-> +
-> +static ssize_t
-> +timens_offsets_write(struct file *file, const char __user *buf,
-> +           size_t count, loff_t *ppos)
-> +{
-> +       struct inode *inode = file_inode(file);
-> +       struct proc_timens_offset offsets[2];
-> +       char *kbuf = NULL, *pos, *next_line;
-> +       struct task_struct *p;
-> +       int ret, noffsets;
-> +
-> +       /* Only allow < page size writes at the beginning of the file */
-> +       if ((*ppos != 0) || (count >= PAGE_SIZE))
-> +               return -EINVAL;
-> +
-> +       /* Slurp in the user data */
-> +       kbuf = memdup_user_nul(buf, count);
-> +       if (IS_ERR(kbuf))
-> +               return PTR_ERR(kbuf);
-> +
-> +       /* Parse the user data */
-> +       ret = -EINVAL;
-> +       noffsets = 0;
-> +       pos = kbuf;
-> +       for (; pos; pos = next_line) {
-> +               struct proc_timens_offset *off = &offsets[noffsets];
-> +               int err;
-> +
-> +               /* Find the end of line and ensure I don't look past it */
-> +               next_line = strchr(pos, '\n');
-> +               if (next_line) {
-> +                       *next_line = '\0';
-> +                       next_line++;
-> +                       if (*next_line == '\0')
-> +                               next_line = NULL;
-> +               }
-> +
-> +               err = sscanf(pos, "%u %lld %lu", &off->clockid,
-> +                               &off->val.tv_sec, &off->val.tv_nsec);
-> +               if (err != 3 || off->val.tv_nsec >= NSEC_PER_SEC)
-> +                       goto out;
-> +               if (noffsets++ == ARRAY_SIZE(offsets))
-> +                       break;
+On Thu, Apr 25, 2019 at 06:44:16PM +0100, Guillaume Tucker wrote:
 
-This is equivalent to:
+> Also there aren't that many bisections, maybe a couple per month.
+> I think we could cc the KernelCI reports mailing list, or maybe
+> have a new list, for people who want to receive all the bisection
+> reports.  There should be more as we keep adding trees and
+> especially when we start bisecting test suite results, not just
+> boots.
 
-if (noffsets == ARRAY_SIZE(offsets))
-        break;
-noffsets++;
+This is the sort of thing that tends to go in phases as subsystems get
+worked on IME - if something is getting disruptive work done on it you
+can get a lot of issues for a while.  You'd also see a lot more reports
+if all boards got reported.
 
-So we can reach the start of the loop with
-noffsets==ARRAY_SIZE(offsets), right? Which means that an
-out-of-bounds write can happen?
+--6WlEvdN9Dv0WHSBl
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I think that for code like this, it makes sense to write the increment
-and the check out separately so that it's easier to spot problems;
-e.g. like this:
+-----BEGIN PGP SIGNATURE-----
 
-noffsets++;
-if (noffsets == ARRAY_SIZE(offsets))
-        break;
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzB+b0ACgkQJNaLcl1U
+h9AAiwf8C1JIM8NxRZSN+SFwEgEAMU6EST1TKEwGRQIh+m8CJKne13iND/8ieE7b
+c6mbRJK472H2q/2uiDlyZEPifypfBovRxEiW/v3kafnM6kqQiGSwzD8/rJXpl7d2
+xqZBlt6jQktc5Gkgru7BOclLzkNmpKvMSduH4mfCC9slH/dBd0G7ima8LFSUw6sv
+SvqUJF9lmcPCeuy2hVJJe0jvOeC2Oj55dh9yBc2WjoC+b/r5qSvdzT2hOKzfD6GL
+2ryawlKkkkQgzs5C20wl/2DsC8wCLs70AtIaPcBv0oAMej34WOAW8qOU7OKAc5J+
+pQjY347mXGQW0tKc03UGLelRNl1f9w==
+=FLJ0
+-----END PGP SIGNATURE-----
 
-> +       }
-> +
-> +       ret = -ESRCH;
-> +       p = get_proc_task(inode);
-> +       if (!p)
-> +               goto out;
-> +       ret = proc_timens_set_offset(p, offsets, noffsets);
-> +       put_task_struct(p);
-> +       if (ret)
-> +               goto out;
-> +
-> +       ret = count;
-> +out:
-> +       kfree(kbuf);
-> +       return ret;
-> +}
-> +
-> +static int timens_offsets_open(struct inode *inode, struct file *filp)
-> +{
-> +       int ret;
-> +
-> +       ret = single_open(filp, timens_offsets_show, NULL);
-> +       if (!ret) {
-> +               struct seq_file *m = filp->private_data;
-> +
-> +               m->private = inode;
-> +       }
-> +       return ret;
-> +}
-
-Why did you write it like this? Wouldn't the following be equivalent?
-
-static int timens_offsets_open(struct inode *inode, struct file *file)
-{
-        return single_open(file, timens_offsets_show, inode);
-}
-
-(But also, you can reach the inode of a seq_file as file_inode(m->file).)
-
-[...]
-> diff --git a/kernel/time_namespace.c b/kernel/time_namespace.c
-> index e806accc4eaf..9ad4b63c4ed2 100644
-> --- a/kernel/time_namespace.c
-> +++ b/kernel/time_namespace.c
-[...]
-> +
-> +int proc_timens_set_offset(struct task_struct *p,
-> +                          struct proc_timens_offset *offsets, int noffsets)
-> +{
-> +       struct ns_common *ns;
-> +       struct time_namespace *time_ns;
-> +       struct timens_offsets *ns_offsets;
-> +       struct timespec64 *offset;
-> +       struct timespec64 tp;
-> +       int i, err;
-> +
-> +       ns = timens_for_children_get(p);
-> +       if (!ns)
-> +               return -ESRCH;
-> +       time_ns = to_time_ns(ns);
-> +
-> +       if (!time_ns->offsets || time_ns->initialized ||
-> +           !ns_capable(time_ns->user_ns, CAP_SYS_TIME)) {
-
-Capability checks in VFS read/write handlers are bad. Please pass
-through the file pointer to this function and replace the call with
-"file_ns_capable(file, time_ns->user_ns, CAP_SYS_TIME)".
-
-> +               put_time_ns(time_ns);
-> +               return -EPERM;
-> +       }
-[...]
-> +}
+--6WlEvdN9Dv0WHSBl--
