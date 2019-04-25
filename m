@@ -1,111 +1,123 @@
 Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C73C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01A6C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF45A206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556221534;
-	bh=bPEAUJDyBvUf8AltpxAry/bQks3Hu97PoWYxCg9+Hl0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fmoj9R1MBdKgk5VRNfQ5+0DNcj8K18jY3AN+pNXq5kffNbc9S9W4g2GBjVsZpHIZi
-	 zDbScBw8BpO3/ky/qouE/Mf9a55HH6RiP/oPXd/u5rRJAbKwCcx1BdkB/HKZ/idXhd
-	 dyunOAjZQ7JlR0Mo5WJomN4ltDD19SlTM1ltALEs=
+	by mail.kernel.org (Postfix) with ESMTP id 1BB86206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbfDYTpc (ORCPT
+        id S1730228AbfDYTqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:45:32 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35856 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfDYTpc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:45:32 -0400
-Received: by mail-wm1-f65.google.com with SMTP id h18so909301wml.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:45:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rXk5Ga/40fhOgGWBcQAdXFUoBO2iyNeEsE+jvULtyeA=;
-        b=bOcTCgpklpQ/GOOSTjxYyPgYsma1GNyuLOyZaDr05F/RJYv8w8uHa1l3at/LKxFv3P
-         0IWbc9dtYfkyaYSm4ojTiLIwGZNh/SxGqFFml07y0OrZjoqt6Zi0cDe9cX8a0aF5+AUG
-         C8xqiLDpkmJ0Pm12b9Iuer4zb6ay38TEb/aytcSUYvcFogO5Dp1BghKwVHBy/mF2yCVt
-         t3obrrU1SbSDMLJjlMgwFYxzTM+UKQcur8lcaTG/ubt4kyPhEhZDqAsj5oqFSsIV6YH9
-         /TDXN1x/FERLHLWMYZPxa1XlAL0Ah3+RRFTr39og7HKI1FOu0E0hJaB3tfqA9terrfdD
-         9VaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rXk5Ga/40fhOgGWBcQAdXFUoBO2iyNeEsE+jvULtyeA=;
-        b=f6AQ0tKShCaACV4Jhrq/ORqhJCDuN+tTggdIwaR2XHLti2mpZUBz8bcdvsIsRuwu3t
-         SJGJ3lA5MMFY/11WtXxuF08bt+k50GKyhN9hBQWZbAzy5RbaZwF3svCoPrOCB8dlZ7rj
-         yrhcvSUXKOTYKoeNPdfJ8B4DJsbC5mCEf+flsySfwNUNqdMQZid/nTBvvthMxmxmpBOx
-         5W+ZMnc/xGCSMpWRxALMALjifcItG1KgsOCWa5xECZ4tQMaHJ3Atid+eFJB1geH7Cy9r
-         V8wLojfYuO8fQT9EvCfDYsLyDN2S1vP3yNcA6VdxdCxW0SaWckvb8g38xGG1YNbtAfhO
-         Ac6w==
-X-Gm-Message-State: APjAAAWeln8rZzXubTFjlV4fK8jSVhA5sHwQ4Twf2HlOMq6zQwS3/Sfg
-        6gdto9n8EIKl7GrNhkSUzwM=
-X-Google-Smtp-Source: APXvYqyCn6yb/OK3xDIWaessZ+rR3jRw9xGHN6Hx3ucvCCb4URKS/J8MeLWvXfdS0xlcZWicmrTfIA==
-X-Received: by 2002:a1c:9991:: with SMTP id b139mr5038817wme.53.1556221530560;
-        Thu, 25 Apr 2019 12:45:30 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id y125sm34217832wmc.39.2019.04.25.12.45.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 12:45:29 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 21:45:27 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Zhao, Yakui" <yakui.zhao@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, Jason Chen CJ <jason.cj.chen@intel.com>
-Subject: Re: [RFC PATCH v5 3/4] x86/acrn: Use HYPERVISOR_CALLBACK_VECTOR for
- ACRN guest upcall vector
-Message-ID: <20190425194527.GA52659@gmail.com>
-References: <1556067260-9128-1-git-send-email-yakui.zhao@intel.com>
- <1556067260-9128-4-git-send-email-yakui.zhao@intel.com>
- <20190425071700.GB57256@gmail.com>
- <a206d93b-9c9e-3cfd-d34f-b9d373edb09e@intel.com>
+        Thu, 25 Apr 2019 15:46:09 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:28184 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726206AbfDYTqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 15:46:09 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id 674304CF59;
+        Thu, 25 Apr 2019 21:46:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id 3e0jGezFJOCG; Thu, 25 Apr 2019 21:45:43 +0200 (CEST)
+Date:   Fri, 26 Apr 2019 05:45:25 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH RESEND v5 0/5] namei: vfs flags to restrict path
+ resolution
+Message-ID: <20190425194525.5d66uzfqfxmorx2n@yavin>
+References: <20190320143717.2523-1-cyphar@cyphar.com>
+ <CALCETrV-Q4qZXGeavBPQbF6-VVz7hqvjRkbhFeYmbGiQgu5Omg@mail.gmail.com>
+ <20190325130429.dbrgjxnvq3w5cpb3@yavin>
+ <CAGXu5jKPrarixQkWWXOBCu6kRRpQd0aaJsPJbvsAyh0Wvc620A@mail.gmail.com>
+ <20190424153806.64qkkmkudzodxnz2@yavin>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mgp24gaplbeperzh"
 Content-Disposition: inline
-In-Reply-To: <a206d93b-9c9e-3cfd-d34f-b9d373edb09e@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190424153806.64qkkmkudzodxnz2@yavin>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Zhao, Yakui <yakui.zhao@intel.com> wrote:
+--mgp24gaplbeperzh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > > +	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR,
-> > > +			acrn_hv_callback_vector);
-> > 
-> > Why is this on two lines, not a single line?
-> 
-> At first it used the long function name for acrn_hv_callback_vector.
-> As it exceeds 80 columns, it is split into two lines.
+On 2019-04-25, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> On 2019-04-23, Kees Cook <keescook@chromium.org> wrote:
+> > This series provides solutions to so many different race and confusion
+> > issues, I'd really like to see it land. What's the next step here? Is
+> > this planned to go directly to Linus for v5.2, or is it going to live
+> > in -mm for a while? I'd really like to see this moving forward.
+>=20
+> Given some of the security requirements of this interface, I think
+> getting it to live in -mm wouldn't be a bad idea so folks can shake the
+> bugs out before it's depended on by container runtimes.
 
-No, it doesn't exceed 80 columns - the last character of that line is on 
-column 71.
+Scratch my mention of -mm, it should be in Al's tree since it touches
+quite a few of the namei seqlocks. My point was that it should live in
+someone's tree for a little bit before it goes into a release.
 
-> > Does the hypervisor model the APIC EOI command, i.e. does it require the
-> > APIC to be acked? I.e. would not acking the APIC create an IRQ storm?
-> 
-> The hypervisor requires that the APIC EOI should be acked. If the EOI APIC
-> is not acked, the APIC ISR bit for the HYPERVISOR_CALLBACK_VECTOR will not
-> be cleared and then it will block the interrupt whose vector is lower than
-> HYPERVISOR_CALLBACK_VECTOR.
+I will put together a PoC of a resolveat(2) variation of this series and
+re-send it out with both versions.
 
-Ok!
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-Thanks,
+--mgp24gaplbeperzh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	Ingo
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzCDlUACgkQSnvnv3De
+m5+dTBAAkJaalB1ZAlNLaIBqNJeW7q7mu/h9lSLPEiXvdvYaaX7vsxdRP+qw733+
+70e5zLtSp63rWZ+C1qC+X29jPP6sqxoYIbSrufbpBGXFl0DqWh2bdibbyJ0OfMgl
+uWQRnlzgKF9OsdXWHUOe6vyaL5OrBYM27mgCZ0DRzOrULUbTcYn2C3iYFI6sIwwq
+9i58pEVwTosNB48fvvmP97ANjZrdpIfovNCELQJL//uQTGTRIYc31lRn5bxJw31R
+kZAO9hv2khQZnBQmiB/AntAnYzAjOeaT1I2EgbO4eDXmb1VOzBlO7VzlkPDy34Wj
+EiyVktScI1Fr/ckbyQ2f0HJVXwYIE6Qh7kodot8ZY3BcYQUpptW6BTffvU7qqra8
+LUScCOdgyOf4A3iTJM3/HdnWkTCOnbbwMHQf97sQlJN3+SnBelrz++bQ8d4Pnlci
+IXDQkTvaJPzmehd8iBEfqdoSb5H0ipxmIr1OZgdvBskQ1X3zRMhemSKfGU2umC7p
+Dt5qTpiuwmMdqN/mzb6rd/OQCiww3vHaPWn0cY9ppPQyaqn5M7vVd38B0sJ2RfRm
+n7ojrJ6Hrl3Tl30N0LXlS8EXTEF2gOFznn/beWig+SIoF1WRBX+YdD+N03h940C2
+/D7ioE/0fOukT/9ZM4Aco28Y4b2GLI36jlmEFGSDRzzwuEtb4UU=
+=niPy
+-----END PGP SIGNATURE-----
+
+--mgp24gaplbeperzh--
