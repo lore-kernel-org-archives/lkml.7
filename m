@@ -2,111 +2,119 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E68CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0370EC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC2F2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:41:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fyJ/rizP"
+	by mail.kernel.org (Postfix) with ESMTP id 67B882053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfDYSls (ORCPT
+        id S1728577AbfDYSmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:41:48 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44372 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbfDYSls (ORCPT
+        Thu, 25 Apr 2019 14:42:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55186 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726324AbfDYSmO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:41:48 -0400
-Received: by mail-oi1-f193.google.com with SMTP id l7so855748oil.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xcxdzp5rfcZaAhi7zsbzX1v7vbGmzyJu023Nr18WuYg=;
-        b=fyJ/rizPP3EwhDxQOiwAQZWVKUx0ZV8//ebph0sK2g0cyJTPYLHpKOTrWazOJEpN3M
-         IbtXZeE5ayfvHr6mgWvVg3LhrYFXIphrD1FKEAMISvSSfoRbNDMEE5d0DtbQM/EdXTqh
-         +RkqGql9L75zjnOT1MMN9FoQiWln9IZqvDJGIbF+2Ox8Iqnl3aNwuou6llrnKKGt7Kq8
-         sFLO0Jl1HnR27h8b1lyCd5naInuQ07u7JGbYwvlDbDhSiOzVnSEMd8OASszhED2/q724
-         Y8HfzraVmvncKjLqvMw2bBxPxG60UHzh4XOFwktYyrl6gEibGixrHzFtz19y8J85Q96w
-         91Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xcxdzp5rfcZaAhi7zsbzX1v7vbGmzyJu023Nr18WuYg=;
-        b=B0ASPSVB3w30dcLlDBMoeuYq8r2VGLeNQuiErWF/0bW8Tb3ExO/aR+u5yD6HGJf585
-         zuvyGw1j3d3l7acFGx/NkvHhjG0whE2OZXPDP4lILMD+jfD3PhpdcAnEOQQXXMF4PNe2
-         bJedHQuxsb5MV6KehCPmZXMcANZdz7Pf6xKA6Okk7oGNw0p9yy+G7gWfD8wAMebVfnNa
-         mQA7VDu4F7DLqi1OV2KZh/AwJ1VOlVZbLs6S9EmMuRlR2hoEHnlFgzMivL/G8CKEsy52
-         69+CZ4wZ2XV9PU8TFtsQOcphLRyFeM5Uo1ovvaJ0GMCVcBDjNbfRS46bghPLEQnybFQw
-         VeuA==
-X-Gm-Message-State: APjAAAW8zW8sxW12bmNCy216IXGDz0SjF+bB5V+uDo6WQ+YUJNiDft9y
-        n3+2uk/u17e+PuguicQF43j+plOu6DoBwLczQ01bJA==
-X-Google-Smtp-Source: APXvYqzD2NSDIIHhHXjMgET0U2HDFJ0JWoq23dTNuhnPgg9Emv5j+rmKH84ZZMBJibS59glACitCJJo7rlUIVsM1Np0=
-X-Received: by 2002:aca:dcd7:: with SMTP id t206mr4457535oig.68.1556217707324;
- Thu, 25 Apr 2019 11:41:47 -0700 (PDT)
+        Thu, 25 Apr 2019 14:42:14 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3PIdN2s004038
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 14:42:13 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s3fcf7ydu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 14:42:08 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.vnet.ibm.com>;
+        Thu, 25 Apr 2019 19:42:00 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Apr 2019 19:41:55 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3PIfsYE12976250
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Apr 2019 18:41:54 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 92F00AE06B;
+        Thu, 25 Apr 2019 18:41:54 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD97BAE05F;
+        Thu, 25 Apr 2019 18:41:53 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.80.220.75])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Apr 2019 18:41:53 +0000 (GMT)
+Subject: Re: [PATCH v2 2/5 RFC] use event name instead of enum to make the
+ call generic
+To:     prsriva <prsriva@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, inux-security-module@vger.kernel.org,
+        zohar@linux.ibm.com, ebiederm@xmission.com, vgoyal@redhat.com,
+        Prakhar Srivastava <prsriva@microsoft.com>
+References: <20190424001544.7188-1-prsriva02@gmail.com>
+ <20190424001544.7188-2-prsriva02@gmail.com>
+ <d38f32f8-7078-f205-ba11-9c4266ee40e8@linux.vnet.ibm.com>
+ <4c313367-22dc-9532-54b5-cd3a79deb625@linux.microsoft.com>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Date:   Thu, 25 Apr 2019 14:41:53 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190425161416.26600-1-dima@arista.com> <20190425161416.26600-13-dima@arista.com>
-In-Reply-To: <20190425161416.26600-13-dima@arista.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 25 Apr 2019 20:41:19 +0200
-Message-ID: <CAG48ez1NSNWx1vixsHrxkqyafEu1i=qC4dQwBLXc+gLnBM2Y0Q@mail.gmail.com>
-Subject: Re: [PATCHv3 12/27] x86/vdso: Restrict splitting VVAR VMA
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        Linux API <linux-api@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4c313367-22dc-9532-54b5-cd3a79deb625@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19042518-0060-0000-0000-000003340E27
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010994; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01194288; UDB=6.00626142; IPR=6.00975117;
+ MB=3.00026596; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-25 18:41:58
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042518-0061-0000-0000-00004917CE00
+Message-Id: <ccdcd117-9b34-ba01-b087-561642447af4@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904250114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 6:17 PM Dmitry Safonov <dima@arista.com> wrote:
-> Although, time namespace can work with VVAR VMA split, it seems worth
-> to forbid splitting VVAR resulting in stricter ABI and reducing amount
-> of corner-cases to consider while working further on VDSO.
-[...]
-> diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-> index babc4e7a519c..ff9875a4d53b 100644
-> --- a/arch/x86/entry/vdso/vma.c
-> +++ b/arch/x86/entry/vdso/vma.c
-[...]
-> +static int vvar_mremap(const struct vm_special_mapping *sm,
-> +               struct vm_area_struct *new_vma)
-> +{
-> +       unsigned long new_size = new_vma->vm_end - new_vma->vm_start;
-> +       const struct vdso_image *image = current->mm->context.vdso_image;
 
-Using current->mm in here is a bit awkward. So far the ->mremap
-handler can only be invoked for `current`, but still, maybe
-new_vma->vm_mm would be better here?
 
-> +       if (new_size != -image->sym_vvar_start)
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
-[...]
+On 04/25/2019 01:19 PM, prsriva wrote:
+> On 2019-04-25 4:48 a.m., Nayna wrote:
+>>
+>>
+>> On 04/23/2019 08:15 PM, Prakhar Srivastava wrote:
+>>> From: Prakhar Srivastava <prsriva02@gmail.com>
+>>>
+>>> Signed-off-by: Prakhar Srivastava <prsriva@microsoft.com>
+>>> ---
+>>>
+>> The v2 version has to be on top of the HEAD of the repository itself, 
+>> and not on the v1 version. Only the final reviewed and tested version 
+>> makes to the upstream.
+>>
+>> Btw, which repository and its branch are you using ?
+>>
+> I am basing my changes off IMA branch:
+> git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+
+Ok. Please use either next-integrity branch or James Morris next-general 
+or next-testing.
+
+Thanks & Regards,
+       - Nayna
+
+
