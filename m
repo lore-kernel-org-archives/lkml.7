@@ -2,83 +2,116 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF156C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B37C282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8922F218FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4EA206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387430AbfDYJ77 (ORCPT
+        id S2387530AbfDYKAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 05:59:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34206 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729329AbfDYJ75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 05:59:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CCEC0AEDB;
-        Thu, 25 Apr 2019 09:59:55 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 59B971E15BE; Thu, 25 Apr 2019 11:59:55 +0200 (CEST)
-Date:   Thu, 25 Apr 2019 11:59:55 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Chengguang Xu <cgxu519@gmx.com>
-Cc:     jack@suse.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] quota: fix wrong indentation
-Message-ID: <20190425095955.GA23471@quack2.suse.cz>
-References: <20190419054601.23752-1-cgxu519@gmx.com>
+        Thu, 25 Apr 2019 06:00:03 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:57848 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729336AbfDYKAA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 06:00:00 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hJb9q-0001r1-8n; Thu, 25 Apr 2019 11:59:10 +0200
+Message-Id: <20190425094801.683039030@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Thu, 25 Apr 2019 11:44:59 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
+        David Rientjes <rientjes@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-arch@vger.kernel.org
+Subject: [patch V3 06/29] latency_top: Simplify stack trace handling
+References: <20190425094453.875139013@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190419054601.23752-1-cgxu519@gmx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 19-04-19 13:46:01, Chengguang Xu wrote:
-> We need to check return code only when calling ->read_dqblk(),
-> so fix it properly.
-> 
-> Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
+Replace the indirection through struct stack_trace with an invocation of
+the storage array based interface.
 
-Thanks. Added to my tree.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ kernel/latencytop.c |   17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
-								Honza
+--- a/kernel/latencytop.c
++++ b/kernel/latencytop.c
+@@ -141,20 +141,6 @@ account_global_scheduler_latency(struct
+ 	memcpy(&latency_record[i], lat, sizeof(struct latency_record));
+ }
+ 
+-/*
+- * Iterator to store a backtrace into a latency record entry
+- */
+-static inline void store_stacktrace(struct task_struct *tsk,
+-					struct latency_record *lat)
+-{
+-	struct stack_trace trace;
+-
+-	memset(&trace, 0, sizeof(trace));
+-	trace.max_entries = LT_BACKTRACEDEPTH;
+-	trace.entries = &lat->backtrace[0];
+-	save_stack_trace_tsk(tsk, &trace);
+-}
+-
+ /**
+  * __account_scheduler_latency - record an occurred latency
+  * @tsk - the task struct of the task hitting the latency
+@@ -191,7 +177,8 @@ void __sched
+ 	lat.count = 1;
+ 	lat.time = usecs;
+ 	lat.max = usecs;
+-	store_stacktrace(tsk, &lat);
++
++	stack_trace_save_tsk(tsk, lat.backtrace, LT_BACKTRACEDEPTH, 0);
+ 
+ 	raw_spin_lock_irqsave(&latency_lock, flags);
+ 
 
-> ---
->  fs/quota/dquot.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-> index fc20e06c56ba..934b8f3f9e57 100644
-> --- a/fs/quota/dquot.c
-> +++ b/fs/quota/dquot.c
-> @@ -424,10 +424,11 @@ int dquot_acquire(struct dquot *dquot)
->  	struct quota_info *dqopt = sb_dqopt(dquot->dq_sb);
-> 
->  	mutex_lock(&dquot->dq_lock);
-> -	if (!test_bit(DQ_READ_B, &dquot->dq_flags))
-> +	if (!test_bit(DQ_READ_B, &dquot->dq_flags)) {
->  		ret = dqopt->ops[dquot->dq_id.type]->read_dqblk(dquot);
-> -	if (ret < 0)
-> -		goto out_iolock;
-> +		if (ret < 0)
-> +			goto out_iolock;
-> +	}
->  	/* Make sure flags update is visible after dquot has been filled */
->  	smp_mb__before_atomic();
->  	set_bit(DQ_READ_B, &dquot->dq_flags);
-> --
-> 2.20.1
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
