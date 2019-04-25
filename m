@@ -7,117 +7,149 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4298C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFF2C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72725217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED1B02084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:24:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hPwRA2z/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rKK8QIMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730935AbfDYLYB (ORCPT
+        id S2387579AbfDYLYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:24:01 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:54309 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727416AbfDYLYA (ORCPT
+        Thu, 25 Apr 2019 07:24:03 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:33259 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730913AbfDYLYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:24:00 -0400
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190425112356epoutp0241c59a3d1d9bb5101b36ed6214063732~Ys93cum5Q1144111441epoutp02Y;
-        Thu, 25 Apr 2019 11:23:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190425112356epoutp0241c59a3d1d9bb5101b36ed6214063732~Ys93cum5Q1144111441epoutp02Y
+        Thu, 25 Apr 2019 07:24:01 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190425112359epoutp04655bdbd95c99277ee127d522430461f2~Ys95zQs4S0936909369epoutp04h;
+        Thu, 25 Apr 2019 11:23:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190425112359epoutp04655bdbd95c99277ee127d522430461f2~Ys95zQs4S0936909369epoutp04h
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556191436;
-        bh=a2P0lf+DiayoNKdNvyjb4q1Kc0v/LfWtzOzEep8KjgU=;
+        s=mail20170921; t=1556191439;
+        bh=KLOEKjb5V5E+T1HtUcoX4RHlie7JdKqebqAxB4h+Ixw=;
         h=From:To:Cc:Subject:Date:In-reply-to:References:From;
-        b=hPwRA2z/bhnm9RYLLODycRwErUA1v2MIjW8Ukk5UMGPli1mDJo/cGTn88QbFOJGXO
-         3RBr+ySnnMnwR81HgcJd92PhsGj4eHN6zRy1hOMdUWVVQVuJnmOalNBdJVWkdN8+uE
-         +7byW7KT+TQ1SMwXBNEeYUMplpDW+XqM3V7PAYd8=
-Received: from epsmges2p4.samsung.com (unknown [182.195.42.72]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-        20190425112355epcas2p3f4375e6c54426beaa92f424d5a4df42d~Ys92lI5MA3170231702epcas2p3O;
-        Thu, 25 Apr 2019 11:23:55 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A3.9C.04207.BC891CC5; Thu, 25 Apr 2019 20:23:55 +0900 (KST)
-Received: from epsmgms2p2new.samsung.com (unknown [182.195.42.143]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20190425112355epcas2p11e197c8fc33698feb7150d1f4148407e~Ys92Unmtp1705417054epcas2p17;
-        Thu, 25 Apr 2019 11:23:55 +0000 (GMT)
-X-AuditID: b6c32a48-689ff7000000106f-7f-5cc198cbbdef
-Received: from epmmp2 ( [203.254.227.17]) by epsmgms2p2new.samsung.com
-        (Symantec Messaging Gateway) with SMTP id 87.4D.03620.BC891CC5; Thu, 25 Apr
-        2019 20:23:55 +0900 (KST)
+        b=rKK8QIMbjRaNrbD0uYlU7ZyFFoZbdVig7RvapLtWC+5C1KKwF9OAHZNTCvmTJuq5E
+         iw/5yXQsDPbKEu1bP++k6q8ZGaGRM/2o8JtGXBhDGF2dJ8BT+RtKCIKVqCkSTNHfdK
+         2JMDhd5m1nuanjJij5C6ysDma0H5iDJ7r2cZ3RWw=
+Received: from epsmges1p3.samsung.com (unknown [182.195.42.55]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190425112358epcas1p1a77b97033ef3e40fad5746b6919d9d3f~Ys95YKGMe2830228302epcas1p1R;
+        Thu, 25 Apr 2019 11:23:58 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A4.9E.04143.EC891CC5; Thu, 25 Apr 2019 20:23:58 +0900 (KST)
+Received: from epsmgms2p1new.samsung.com (unknown [182.195.42.142]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190425112358epcas1p13da4f182241366c309cb2c76df3fb048~Ys95AHiQQ3094630946epcas1p1z;
+        Thu, 25 Apr 2019 11:23:58 +0000 (GMT)
+X-AuditID: b6c32a37-f31ff7000000102f-28-5cc198ce5896
+Received: from epmmp2 ( [203.254.227.17]) by epsmgms2p1new.samsung.com
+        (Symantec Messaging Gateway) with SMTP id 6D.BF.03598.EC891CC5; Thu, 25 Apr
+        2019 20:23:58 +0900 (KST)
 Received: from test-PowerEdge-R720.sa.corp.samsungelectronics.net
         ([107.108.221.212]) by mmp2.samsung.com (Oracle Communications Messaging
         Server 7.0.5.31.0 64bit (built May  5 2014)) with ESMTPA id
-        <0PQI007Z2KZ7JR40@mmp2.samsung.com>; Thu, 25 Apr 2019 20:23:55 +0900 (KST)
+        <0PQI007Z2KZ7JR40@mmp2.samsung.com>; Thu, 25 Apr 2019 20:23:58 +0900 (KST)
 From:   Kanchan Joshi <joshi.k@samsung.com>
 To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
         linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
         linux-ext4@vger.kernel.org
 Cc:     prakash.v@samsung.com, anshul@samsung.com,
         Kanchan Joshi <joshi.k@samsung.com>
-Subject: [PATCH v5 2/7] block: increase stream count for in-kernel use
-Date:   Thu, 25 Apr 2019 16:49:57 +0530
-Message-id: <1556191202-3245-3-git-send-email-joshi.k@samsung.com>
+Subject: [PATCH v5 3/7] block: introduce API to register stream information
+ with block-layer
+Date:   Thu, 25 Apr 2019 16:49:58 +0530
+Message-id: <1556191202-3245-4-git-send-email-joshi.k@samsung.com>
 X-Mailer: git-send-email 2.7.4
 In-reply-to: <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKIsWRmVeSWpSXmKPExsWy7bCmhe7pGQdjDA7c0bb4PX0Kq8XR/2/Z
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCmnu65GQdjDN5f1bX4PX0Kq8XR/2/Z
         LPbe0raYOe8Om8WevSdZLC7vmsNmMX/ZU3aLK1MWMTtweGxeUu/Rt2UVo8fnTXIBzFFcNimp
-        OZllqUX6dglcGXue/GcsOMpacabpBGsD40mWLkZODgkBE4mbK78ydTFycQgJ7GCUeP7yHwuE
-        851RomvBMXaYqi+3+qGqNjBK7FhzmxnCmc4ksfv5dKAWDg42AU2JC5NLQeIiAnMYJZbtm8YM
-        0s0sECKx4skqsBphATeJvgtVIGEWAVWJ17c2sYLYvAJOEs2NX1khlslJ3DzXCdbKKeAs8eLH
-        M7DFEgKNbBIfd3dCFblIvFqykgnClpZ4tmojI4RdLPHrzlFmiIYORonrDTOhHrWXuLjnLxPE
-        QXwSHYf/soMcJCHAK9HRJgRR4iEx++lKqMemMUq8m7SYbQKjxAJGhlWMYqkFxbnpqcVGBSZ6
-        xYm5xaV56XrJ+bmbGMGRpeWxg/HAOZ9DjAIcjEo8vAqRB2KEWBPLiitzDzFKcDArifCqmx6M
-        EeJNSaysSi3Kjy8qzUktPsQozcGiJM77UHputJBAemJJanZqakFqEUyWiYNTqoFRqbC80bzd
-        cUL/Z47N8m8uGm5bK3L+5vNrM00sUlc0XhV5mNqSwvX80WeBUyeYX3yIlnzw9J7V2+bYhi0V
-        vcy2O8OufZm/d8Px1wkKrsXtD61vzHrzWenl+eaVv2NXB25pzHk6+frDN7OXNnEHrXW7H/GI
-        28js84et3zUWWqzhTd17vav1tv+tm0osxRmJhlrMRcWJANU/jFWoAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphluLIzCtJLcpLzFFi42I5/e+xoO7pGQdjDA7dlbH4PX0Kq8XR/2/Z
+        OZllqUX6dglcGRumb2QsWM9f8X31KpYGxp88XYycHBICJhLdR5ewdjFycQgJ7GCU+HTnKTtI
+        QkjgO6PEvtWVMEWT/p5ngSjawChx8fpmNghnOpPE9lcdQBkODjYBTYkLk0tB4iICcxgllu2b
+        xgzSzSwQIrHiySoWEFtYIE7iV/dBMJtFQFXiy5HdYNt4BZwkXu34xQqxTU7i5rlOsF5OAWeJ
+        Fz+eMYEMlRDoYZOYdfAzI0SRi8Tki0eZQBZLCEhLXDpqCxEulvh15ygzRH0Ho8T1hpksEAl7
+        iYt7/jJBHMQn8e5rDytEL69ER5sQhOkh8WmmPsRf04Babzxlm8AosYCRYRWjWGpBcW56arFh
+        gbFecWJucWleul5yfu4mRnBUaZnvYNxwzucQowAHoxIPr0LkgRgh1sSy4srcQ4wSHMxKIrzq
+        pgdjhHhTEiurUovy44tKc1KLDzFKc7AoifOud3COERJITyxJzU5NLUgtgskycXBKNTD2brP1
+        VRa1vcoe++gcf+KFzhemHw395K9KWu9/uDhxZ6X2SW99374w/sQvR48vd2A8wBd/SuHIdxOh
+        mJzQtp8fC7b/zMpuvuZ/U7Pk3LQjq9ZrOjC7y13rW/729CP5/ogt5vt4dMIVpW3srNvu7V4t
+        tDHR586ECT6nGsTuPX9qo5V2bMF5yzdKLMUZiYZazEXFiQB+MoyApgIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplluLIzCtJLcpLzFFi42I5/e+xoO65GQdjDNY9FLT4PX0Kq8XR/2/Z
         LPbe0raYOe8Om8WevSdZLC7vmsNmMX/ZU3aLK1MWMTtweGxeUu/Rt2UVo8fnTXIBzFFcNimp
-        OZllqUX6dglcGXue/GcsOMpacabpBGsD40mWLkZODgkBE4kvt/qZuhi5OIQE1jFK/H1wlQ3C
-        mckkcWz5OiCHg4NNQFPiwuRSkLiIwBxGiZ7d61lBupkFQiRmPXsMViMs4CbRd6EKJMwioCrx
-        +tYmsBJeASeJ5savrBDL5CRunutkBrE5BZwlXvx4xgRiCwHVXJu2iX0CI88CRoZVjJKpBcW5
-        6bnFRgVGeanlesWJucWleel6yfm5mxiBYbPtsFb/DsbHS+IPMQpwMCrx8CpEHogRYk0sK67M
-        PcQowcGsJMKrbnowRog3JbGyKrUoP76oNCe1+BCjNAeLkjgvf/6xSCGB9MSS1OzU1ILUIpgs
-        EwenVAOj5CyWp/G1y43lX7fOfP3Ob7pTUerH9pnzOtwMpW2TGFOCDiVFqPWvbVSXW8di+sWh
-        YvGhVf+2FW9t7Wku6tdQN/bbPZPDqrvHKPTSVzOu3y77jZIeCIgcSnPun/GE0XTRv3gZd6aH
-        J40u7Kzh2SH/6qtm5+m1B7/Z5OhsTlFddf/+Xr25soeVWIozEg21mIuKEwE2tYWXFwIAAA==
-X-CMS-MailID: 20190425112355epcas2p11e197c8fc33698feb7150d1f4148407e
-CMS-TYPE: 102P
-X-CMS-RootMailID: 20190425112355epcas2p11e197c8fc33698feb7150d1f4148407e
+        OZllqUX6dglcGRumb2QsWM9f8X31KpYGxp88XYycHBICJhKT/p5n6WLk4hASWMco8er5GVYI
+        ZyaTxIkr19i6GDk42AQ0JS5MLgWJiwjMYZTo2b2eFaSbWSBEYtazx2wgtrBAnMSv7oMsIDaL
+        gKrElyO72UFsXgEniVc7frFCbJOTuHmukxnE5hRwlnjx4xkTiC0EVHNt2ib2CYw8CxgZVjFK
+        phYU56bnFhsVGOallusVJ+YWl+al6yXn525iBAbOtsNafTsY7y+JP8QowMGoxMN7IfZAjBBr
+        YllxZe4hRgkOZiURXnXTgzFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeW/nHYsUEkhPLEnNTk0t
+        SC2CyTJxcEo1MKqKHRMwVcmc+M3TVWPD298sO2VmuxjeP2LAZrTl4+SNB05kxCtZV2rmt+ZK
+        P328+9Waq5fFP0v+rbq3Rtgge+KXacrJKR6cS7qe9n9ZYnptx/WJk344a23dYPNW6e3EC/Iu
+        JtXNe7Y92GoRrin19qd2h80Rlvt37q+L/Nn0eJ+Td8Lutsv1McVKLMUZiYZazEXFiQDt5mUU
+        GAIAAA==
+X-CMS-MailID: 20190425112358epcas1p13da4f182241366c309cb2c76df3fb048
+CMS-TYPE: 101P
+X-CMS-RootMailID: 20190425112358epcas1p13da4f182241366c309cb2c76df3fb048
 References: <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
-        <CGME20190425112355epcas2p11e197c8fc33698feb7150d1f4148407e@epcas2p1.samsung.com>
+        <CGME20190425112358epcas1p13da4f182241366c309cb2c76df3fb048@epcas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This bumps up stream count to support in-kernel hints.
+This introduces stream limit (count of streams supported by underlying
+driver) in request-queue.
 
 Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
 ---
- include/linux/blkdev.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ block/blk-settings.c   | 12 ++++++++++++
+ include/linux/blkdev.h |  2 ++
+ 2 files changed, 14 insertions(+)
 
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index 6375afa..6023229 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -231,6 +231,18 @@ void blk_queue_max_discard_sectors(struct request_queue *q,
+ EXPORT_SYMBOL(blk_queue_max_discard_sectors);
+ 
+ /**
++ * blk_queue_stream_limits - set stream parameters
++ * @q:  the request queue for the device
++ * @nr_streams: number of streams supported by device
++ **/
++void blk_queue_stream_limits(struct request_queue *q,
++		unsigned short nr_streams)
++{
++	q->limits.nr_streams = nr_streams;
++}
++EXPORT_SYMBOL(blk_queue_stream_limits);
++
++/**
+  * blk_queue_max_write_same_sectors - set max sectors for a single write same
+  * @q:  the request queue for the device
+  * @max_write_same_sectors: maximum number of sectors to write per command
 diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 317ab30..2826225 100644
+index 2826225..5b6cb9747 100644
 --- a/include/linux/blkdev.h
 +++ b/include/linux/blkdev.h
-@@ -565,7 +565,9 @@ struct request_queue {
- 
- 	struct work_struct	release_work;
- 
--#define BLK_MAX_WRITE_HINTS	5
-+#define BLK_MAX_USER_HINTS     (WRITE_LIFE_KERN_MIN - 2)
-+#define BLK_MAX_KERN_HINTS     4
-+#define BLK_MAX_WRITE_HINTS    (1 + BLK_MAX_USER_HINTS + BLK_MAX_KERN_HINTS)
- 	u64			write_hints[BLK_MAX_WRITE_HINTS];
+@@ -340,6 +340,7 @@ struct queue_limits {
+ 	unsigned char		discard_misaligned;
+ 	unsigned char		raid_partial_stripes_expensive;
+ 	enum blk_zoned_model	zoned;
++	unsigned short		nr_streams;
  };
  
+ #ifdef CONFIG_BLK_DEV_ZONED
+@@ -1064,6 +1065,7 @@ extern void blk_queue_dma_alignment(struct request_queue *, int);
+ extern void blk_queue_update_dma_alignment(struct request_queue *, int);
+ extern void blk_queue_rq_timeout(struct request_queue *, unsigned int);
+ extern void blk_queue_write_cache(struct request_queue *q, bool enabled, bool fua);
++extern void blk_queue_stream_limits(struct request_queue *q, unsigned short);
+ 
+ /*
+  * Number of physical segments as sent to the device.
 -- 
 2.7.4
 
