@@ -2,175 +2,121 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F00C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19985C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6824206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36CD720717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbfDYWQG (ORCPT
+        id S1731503AbfDYWR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 18:16:06 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:56594 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731436AbfDYWQG (ORCPT
+        Thu, 25 Apr 2019 18:17:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37108 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726360AbfDYWR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 18:16:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id s184so1147369iod.23
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 15:16:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=R+ggdNsXuoQ3Cj3CcJ/qJ96u8p1Y9O8+GCH7BMvWhmM=;
-        b=UxlxKdY4/443FLIb1btmP/IJ+h7SaQxt7raSkfVcM7WI6xH8nNdw2q3WBrj8aZSTtK
-         usBRWB/J4whuiMv+faN71k2X4gmUxWhrn8XN8fKNgQhu4MHq2jGLB2w1031oCnhqcZRj
-         LJ0uHxV6XwGBzfrmxkjvvAGM61hjNeW8sRHPSfKh4OLOHFdgBfFnp+5IXWY7Y6KjkR4h
-         eaEbXe2SAMapFUg+0EwKPTQDusF2EZikhAL6nBYjBLHDChZZlUntgB2AQTayM8xUHmot
-         aj3URNYsN/82JFX+U0WvTEIpBihIxei8n81IaZQDJZPkWkU3J/p/A1KSbsyK1KuPuolz
-         0bjw==
-X-Gm-Message-State: APjAAAVOSlHf9EqQ0HZgIz2B1s5yhjN6/w6p9HcowWf3mpoEqEYSmFrT
-        0aCKqy5wdWaTvZF/e86J+B/ZKVFAKYqV/9BKYNf0r9nyiG7C
-X-Google-Smtp-Source: APXvYqwMGR0J0P88P5qPypdcoJb2sS7tVqxKlPieXVz44f2R12afyrcMP9AAOuzRKQAGtV85ea16zYzT6cB09Gn3YdyEfjrUPaQi
+        Thu, 25 Apr 2019 18:17:58 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3PMBndP122053
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 18:17:56 -0400
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s3kq2bt29-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 18:17:56 -0400
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tyreld@linux.vnet.ibm.com>;
+        Thu, 25 Apr 2019 23:17:56 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Apr 2019 23:17:52 +0100
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3PMHpNj18088082
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Apr 2019 22:17:51 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 32938AC0AD;
+        Thu, 25 Apr 2019 22:17:51 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA857AC0AC;
+        Thu, 25 Apr 2019 22:17:49 +0000 (GMT)
+Received: from oc6857751186.ibm.com (unknown [9.85.155.229])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Apr 2019 22:17:49 +0000 (GMT)
+Subject: Re: [PATCH v2] powerpc/pseries: Use correct event modifier in
+ rtas_parse_epow_errlog()
+To:     Yue Haibing <yuehaibing@huawei.com>, benh@kernel.crashing.org,
+        paulus@samba.org, mpe@ellerman.id.au, mahesh@linux.vnet.ibm.com,
+        npiggin@gmail.com, ganeshgr@linux.ibm.com, anton@samba.org,
+        ruscur@russell.cc
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190423143533.26952-1-yuehaibing@huawei.com>
+ <20190424021739.20916-1-yuehaibing@huawei.com>
+From:   Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Date:   Thu, 25 Apr 2019 15:17:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:52c4:: with SMTP id d187mr4042952jab.98.1556230564804;
- Thu, 25 Apr 2019 15:16:04 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 15:16:04 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000101b30587622a69@google.com>
-Subject: BUG: unable to handle page fault for address = ADDR
-From:   syzbot <syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dvyukov@google.com,
-        gnomes@lxorguk.ukuu.org.uk, gregkh@linuxfoundation.org,
-        jslaby@suse.com, linux-kernel@vger.kernel.org, mhocko@suse.com,
-        netdev@vger.kernel.org, penguin-kernel@I-love.SAKURA.ne.jp,
-        penguin-kernel@i-love.sakura.ne.jp, peter@hurleysoftware.com,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        vegard.nossum@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190424021739.20916-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042522-0040-0000-0000-000004E72284
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010995; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01194360; UDB=6.00626185; IPR=6.00975189;
+ MB=3.00026600; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-25 22:17:54
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042522-0041-0000-0000-000008F322B9
+Message-Id: <48912eeb-1c5b-f401-fd12-ed568bc371ea@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_18:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904250136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 04/23/2019 07:17 PM, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> rtas_parse_epow_errlog() should pass 'modifier' to
+> handle_system_shutdown, because event modifier only use
+> bottom 4 bits.
+> 
+> Fixes: 55fc0c561742 ("powerpc/pseries: Parse and handle EPOW interrupts")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
 
-syzbot found the following crash on:
+Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-HEAD commit:    c392798a Add linux-next specific files for 20190424
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14772c42a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=37a4076eb047eef5
-dashboard link: https://syzkaller.appspot.com/bug?extid=45474c076a4927533d2e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1369c242a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ee2e88a00000
+> v2: fix compile issue by 'event_modifier'-->'modifier'
+> ---
+>  arch/powerpc/platforms/pseries/ras.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
+> index c97d153..744604d 100644
+> --- a/arch/powerpc/platforms/pseries/ras.c
+> +++ b/arch/powerpc/platforms/pseries/ras.c
+> @@ -285,7 +285,7 @@ static void rtas_parse_epow_errlog(struct rtas_error_log *log)
+>  		break;
+> 
+>  	case EPOW_SYSTEM_SHUTDOWN:
+> -		handle_system_shutdown(epow_log->event_modifier);
+> +		handle_system_shutdown(modifier);
+>  		break;
+> 
+>  	case EPOW_SYSTEM_HALT:
+> 
 
-The bug was bisected to:
-
-commit bcdd0ca8cb8730573afebcaae4138f8f4c8eaa20
-Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Date:   Wed Apr 25 11:12:31 2018 +0000
-
-     tty: Use __GFP_NOFAIL for tty_ldisc_get()
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=157d9014a00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=177d9014a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=137d9014a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com
-Fixes: bcdd0ca8cb87 ("tty: Use __GFP_NOFAIL for tty_ldisc_get()")
-
-  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441149
-Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffd8ae1c38 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441149
-RDX: 0000000020000140 RSI: 0000000000005423 RDI: 0000000000000003
-RBP: 00007fffd8ae1c50 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
-R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
-BUG: unable to handle page fault for address = fffffffffffffff4
-#PF: supervisor-privileged read access from kernel code
-#PF: error_code(0x0000) - not-present page
-PGD 8870067 P4D 8870067 PUD 8872067 PMD 0
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 7949 Comm: syz-executor714 Not tainted 5.1.0-rc6-next-20190424  
-#30
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:slhc_free+0x31/0xb0 drivers/net/slip/slhc.c:159
-Code: 54 49 89 fc e8 c0 b3 15 fd 4d 85 e4 74 77 e8 b6 b3 15 fd 4c 89 e2 48  
-b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 75 6d <4d> 8b 2c 24 4d  
-85 ed 74 0d e8 91 b3 15 fd 4c 89 ef e8 09 5b 4e fd
-RSP: 0018:ffff8880a3e7f9f0 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: fffffffffffffff4 RCX: 1ffff1101426e1c6
-RDX: 1ffffffffffffffe RSI: ffffffff845b7bea RDI: fffffffffffffff4
-RBP: ffff8880a3e7fa00 R08: ffff8880a1370540 R09: ffff8880a1370e30
-R10: 0000000000000000 R11: 0000000000000000 R12: fffffffffffffff4
-R13: ffff88809f531040 R14: 00000000ffffff97 R15: ffff8880a3dff2c0
-FS:  0000555556f4d880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffffffffffff4 CR3: 000000008b56d000 CR4: 00000000001406e0
-Call Trace:
-  sl_alloc_bufs drivers/net/slip/slip.c:196 [inline]
-  slip_open+0xe16/0x1138 drivers/net/slip/slip.c:821
-  tty_ldisc_open.isra.0+0x8b/0xe0 drivers/tty/tty_ldisc.c:469
-  tty_set_ldisc+0x2d7/0x690 drivers/tty/tty_ldisc.c:596
-  tiocsetd drivers/tty/tty_io.c:2332 [inline]
-  tty_ioctl+0x5dc/0x15c0 drivers/tty/tty_io.c:2592
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441149
-Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffd8ae1c38 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441149
-RDX: 0000000020000140 RSI: 0000000000005423 RDI: 0000000000000003
-RBP: 00007fffd8ae1c50 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
-R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
-CR2: fffffffffffffff4
----[ end trace c314d2d667c67584 ]---
-RIP: 0010:slhc_free+0x31/0xb0 drivers/net/slip/slhc.c:159
-Code: 54 49 89 fc e8 c0 b3 15 fd 4d 85 e4 74 77 e8 b6 b3 15 fd 4c 89 e2 48  
-b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 75 6d <4d> 8b 2c 24 4d  
-85 ed 74 0d e8 91 b3 15 fd 4c 89 ef e8 09 5b 4e fd
-RSP: 0018:ffff8880a3e7f9f0 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: fffffffffffffff4 RCX: 1ffff1101426e1c6
-RDX: 1ffffffffffffffe RSI: ffffffff845b7bea RDI: fffffffffffffff4
-RBP: ffff8880a3e7fa00 R08: ffff8880a1370540 R09: ffff8880a1370e30
-R10: 0000000000000000 R11: 0000000000000000 R12: fffffffffffffff4
-R13: ffff88809f531040 R14: 00000000ffffff97 R15: ffff8880a3dff2c0
-FS:  0000555556f4d880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffffffffffff4 CR3: 000000008b56d000 CR4: 00000000001406e0
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
