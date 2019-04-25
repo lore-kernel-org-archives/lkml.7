@@ -7,55 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B895C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB87C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F9A20878
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A325E2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220404;
-	bh=NHJl0SUxgxyYXWzpQsIDofzeLJcgRWFO1HQIBByzqj4=;
+	s=default; t=1556220408;
+	bh=i7o4/KAM9w/j/vrlfjnm2Z7x9k/q7+qiT0YqaCAJeuE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=0ptzCGAuJjx3x0KnVJ/23avXbD6GMdj/qQJ80sWfA/qSKyFPOiWI9xrgwNUfXTAhZ
-	 LO2Yo76085ZfcCyKL2BEV7WkcmGFaMqw2EdjpeBYzhxo1VecPNfjhMjg7HMbqcnkyD
-	 UqowXRUem0N6B7pCKD8RCuPgcawyiLB3sZhHBD4M=
+	b=U29+lsis82RVsz73G4CBXGIJrFnrb7p4W+E6KABJARNBg0f5oIaYbdKoRxBqe7G24
+	 jk27EeyT7dQVjG/pK4sSTnrIOH9aT8n7CzTUZUiLrE87VBXbbJAUsA6ytAc+NcC/+F
+	 EwO4TEsgik9093fmUz72QGdUsGdbs7/85SI5KF+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbfDYT0n (ORCPT
+        id S1730607AbfDYT0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:26:43 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52582 "EHLO
+        Thu, 25 Apr 2019 15:26:47 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52844 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728710AbfDYT0k (ORCPT
+        with ESMTP id S1730509AbfDYT0q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:26:40 -0400
+        Thu, 25 Apr 2019 15:26:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=0x8Te4hhEI/xHQ81yHY2umN/dm6b1QkiuOwRSKt2718=; b=jVa+AwOyI/tU
-        6/oY5p6SQXhKOHbUYbi0bexXOU8/Ex0nWWnnJIDsoCubQWikOWd1gWIMBBoeZNPf3WCJTBM7YSq/Q
-        5ATS31HrzhWU3apdyfvAFf/DKAQpNa0IbzGMYYs6gtZTrzkqH+4QcrXMtrEqD1TjKCTFMyuUdRt2K
-        5Y0g0=;
+        List-Archive; bh=RMQxBYecru7AZfpWdXHlmx2fBKOoa/neKiWA/f5l0AE=; b=RjFuQph2QzcV
+        KXPI5ZWdn304VDtW/s1PoxJSda8QM9A4JDKqJUjZX8X0jx9IjwEeVoXaKjZBW2u0MgarYq1deScks
+        67oEajqIQaokOdWsgsSZEZYIXU1T7fIqnnuO71P2zIz/CT6W//ysZyvwU/Ord3zHwTphaE1vKyqi3
+        izY4s=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJk0y-0004e5-Lz; Thu, 25 Apr 2019 19:26:36 +0000
+        id 1hJk13-0004fI-2q; Thu, 25 Apr 2019 19:26:41 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id A0209441D3C; Thu, 25 Apr 2019 20:26:35 +0100 (BST)
+        id 2DB17441D3D; Thu, 25 Apr 2019 20:26:40 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     broonie@kernel.org, jorge.ramirez-ortiz@linaro.org,
-        khasim.mohammed@linaro.org, lgirdwood@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: core: do not report EPROBE_DEFER as error but as debug" to the regulator tree
-In-Reply-To: <20190417192443.6501-1-jorge.ramirez-ortiz@linaro.org>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Applied "spi: stm32: return the get_irq error" to the spi tree
+In-Reply-To: <1556109524-21874-1-git-send-email-fabien.dessenne@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192635.A0209441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu, 25 Apr 2019 20:26:35 +0100 (BST)
+Message-Id: <20190425192640.2DB17441D3D@finisterre.ee.mobilebroadband>
+Date:   Thu, 25 Apr 2019 20:26:40 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: core: do not report EPROBE_DEFER as error but as debug
+   spi: stm32: return the get_irq error
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.1
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -88,48 +91,37 @@ to this mail.
 Thanks,
 Mark
 
-From 4d0a83b904f4b2b9b814ad950472b50e7e803716 Mon Sep 17 00:00:00 2001
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Date: Wed, 17 Apr 2019 21:24:43 +0200
-Subject: [PATCH] regulator: core: do not report EPROBE_DEFER as error but as
- debug
+From adb366f61af4486cafb5234aa820721543e21780 Mon Sep 17 00:00:00 2001
+From: Fabien Dessenne <fabien.dessenne@st.com>
+Date: Wed, 24 Apr 2019 14:38:44 +0200
+Subject: [PATCH] spi: stm32: return the get_irq error
 
-Temporary failures to get a regulator (EPROBE_DEFER) should be logged
-as debug information instead of errors.
+During probe, return the "get_irq" error value instead of -ENOENT. This
+allows the driver to be defer probed if needed.
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Acked-by: Amelie Delaunay <amelie.delaunay@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/spi/spi-stm32.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 5a9ebcf7fe7a..08ccabe07fe3 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -4345,8 +4345,6 @@ int regulator_bulk_get(struct device *dev, int num_consumers,
- 						      consumers[i].supply);
- 		if (IS_ERR(consumers[i].consumer)) {
- 			ret = PTR_ERR(consumers[i].consumer);
--			dev_err(dev, "Failed to get supply '%s': %d\n",
--				consumers[i].supply, ret);
- 			consumers[i].consumer = NULL;
- 			goto err;
- 		}
-@@ -4355,6 +4353,13 @@ int regulator_bulk_get(struct device *dev, int num_consumers,
- 	return 0;
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 4186ed20d796..b222ce8d083e 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -1839,8 +1839,9 @@ static int stm32_spi_probe(struct platform_device *pdev)
  
- err:
-+	if (ret != -EPROBE_DEFER)
-+		dev_err(dev, "Failed to get supply '%s': %d\n",
-+			consumers[i].supply, ret);
-+	else
-+		dev_dbg(dev, "Failed to get supply '%s', deferring\n",
-+			consumers[i].supply);
-+
- 	while (--i >= 0)
- 		regulator_put(consumers[i].consumer);
- 
+ 	spi->irq = platform_get_irq(pdev, 0);
+ 	if (spi->irq <= 0) {
+-		dev_err(&pdev->dev, "no irq: %d\n", spi->irq);
+-		ret = -ENOENT;
++		ret = spi->irq;
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "failed to get irq: %d\n", ret);
+ 		goto err_master_put;
+ 	}
+ 	ret = devm_request_threaded_irq(&pdev->dev, spi->irq,
 -- 
 2.20.1
 
