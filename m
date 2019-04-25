@@ -2,238 +2,156 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91824C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ACBC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299A820685
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782CD20685
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:09:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pj90B39I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbfDYSIb (ORCPT
+        id S1730312AbfDYSI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:08:31 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36555 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726006AbfDYSIa (ORCPT
+        Thu, 25 Apr 2019 14:08:58 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41421 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729242AbfDYSI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:08:30 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 25 Apr 2019 11:08:28 -0700
-Received: from htb-2n-eng-dhcp405.eng.vmware.com (unknown [10.33.114.36])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 4F2F5B1F03;
-        Thu, 25 Apr 2019 14:08:29 -0400 (EDT)
-From:   Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>
-CC:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Nadav Amit <namit@vmware.com>,
-        Dave Hansen <dave.hansen@intel.com>
-Subject: [PATCH v2] x86/mm/tlb: Remove flush_tlb_info from the stack
-Date:   Thu, 25 Apr 2019 11:08:28 -0700
-Message-ID: <20190425180828.24959-1-namit@vmware.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 25 Apr 2019 14:08:58 -0400
+Received: by mail-ed1-f66.google.com with SMTP id m4so687120edd.8;
+        Thu, 25 Apr 2019 11:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LcuPp4VUMGvYfJkfS+lOt3bGBCBLd3jhg06YeoQI2NA=;
+        b=Pj90B39IUsQmToWi+41j2bmcG1nscOWV8JIvTnofJCKc4gfraf2kfkzFt1SmLDRva8
+         wEEv4+CUxoUTruREkBE93zm8h0xa8nqsUXS1NbFzEvy3tC1Xv42WG00uhhBJgF81Cz5o
+         /Tm78yZJyV2ggXlXnw74K0f0CiPnu+KEVqBEr1fmHk1at6We5bU4RQ9aJDKCxIuylIdX
+         VRXfWnlP931VuXJSluPcBkU0q33JltvgKwElnuxwofyE+Waezd4g+O3XgrJ0T96UhwPP
+         WHLaFK6Dycu7KVmSwfmS5jS59U7q1n68koEBnBCOGpURp/O+4otlToHvD8uHhMKlbteL
+         mA1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LcuPp4VUMGvYfJkfS+lOt3bGBCBLd3jhg06YeoQI2NA=;
+        b=kwj30yXhgG+Zeim7nCKGUHOVfCHDiTUHHsurt70Tx3LzoM/k+ukRyXUKuVcepYZ1LB
+         v0BB2oIThJEeT/0484QtuVMnJ/2+m1ZTfJW34wUGJwOcu8QDfXOHXuswuiABqbkwXISe
+         NL48HN/rxzvowqZ0pggAB79o3XSgbhNYMtwO2BxQQyE5mZmEHb/DXGB23gY3RdPXAVgc
+         zgJ1gw2yZVnaPPgch7ZBbDjZtdjKV8A53nwXmYHUhi7t5E5BRG3gIzXeLJek97PpUfTP
+         1RfZAOBP93eOdfuCjsKi1MzK79yJ2SHfCOqKeK2eA7v17glWQCamJtmYboOINXiI+nue
+         9eJA==
+X-Gm-Message-State: APjAAAWUIPIKyl2yJRhKHCyq/4MpqXHlhhQaRKTRcT6Ky6fKjxdEi1vq
+        bBoknbwD+nbn++lcxSDky1Q=
+X-Google-Smtp-Source: APXvYqwMSwLG4/WQc5qq/qJyDyiTxG9/gf0x3H/9KV9WcKpGeO6mmoMxQZvi5lZI6IX7q7WpFmZN1Q==
+X-Received: by 2002:a17:906:1f12:: with SMTP id w18mr1951824ejj.95.1556215736138;
+        Thu, 25 Apr 2019 11:08:56 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id ka15sm2910408ejb.11.2019.04.25.11.08.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Apr 2019 11:08:55 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 11:08:53 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Coly Li <colyli@suse.de>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Shenghui Wang <shhuiw@foxmail.com>,
+        Hannes Reinecke <hare@suse.com>, linux-bcache@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bcache: avoid clang -Wunintialized warning
+Message-ID: <20190425180853.GA4507@archlinux-i9>
+References: <20190322143507.1256436-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: namit@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322143507.1256436-1-arnd@arndb.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move flush_tlb_info variables off the stack. This allows to align
-flush_tlb_info to cache-line and avoid potentially unnecessary cache
-line movements. It also allows to have a fixed virtual-to-physical
-translation of the variables, which reduces TLB misses.
+On Fri, Mar 22, 2019 at 03:35:00PM +0100, Arnd Bergmann wrote:
+> clang has identified a code path in which it thinks a
+> variable may be unused:
+> 
+> drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
+>       [-Werror,-Wsometimes-uninitialized]
+>                         fifo_pop(&ca->free_inc, bucket);
+>                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+>  #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+>                                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
+>         if (_r) {                                                       \
+>             ^~
+> drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
+>                         allocator_wait(ca, bch_allocator_push(ca, bucket));
+>                                                                   ^~~~~~
+> drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
+>                 if (cond)                                               \
+>                     ^~~~
+> drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
+>                         fifo_pop(&ca->free_inc, bucket);
+>                         ^
+> drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+>  #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+>                                 ^
+> drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
+>         if (_r) {                                                       \
+>         ^
+> drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
+>                         long bucket;
+>                                    ^
+> 
+> This cannot happen in practice because we only enter the loop
+> if there is at least one element in the list.
+> 
+> Slightly rearranging the code makes this clearer to both the
+> reader and the compiler, which avoids the warning.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/md/bcache/alloc.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+> index 5002838ea476..f8986effcb50 100644
+> --- a/drivers/md/bcache/alloc.c
+> +++ b/drivers/md/bcache/alloc.c
+> @@ -327,10 +327,11 @@ static int bch_allocator_thread(void *arg)
+>  		 * possibly issue discards to them, then we add the bucket to
+>  		 * the free list:
+>  		 */
+> -		while (!fifo_empty(&ca->free_inc)) {
+> +		while (1) {
+>  			long bucket;
+>  
+> -			fifo_pop(&ca->free_inc, bucket);
+> +			if (!fifo_pop(&ca->free_inc, bucket))
+> +				break;
+>  
+>  			if (ca->discard) {
+>  				mutex_unlock(&ca->set->bucket_lock);
+> -- 
+> 2.20.0
+> 
 
-Use per-CPU struct for flush_tlb_mm_range() and
-flush_tlb_kernel_range(). Add debug assertions to ensure there are
-no nested TLB flushes that might overwrite the per-CPU data. For
-arch_tlbbatch_flush() use a const struct.
+Hi all,
 
-Results when running a microbenchmarks that performs 10^6 MADV_DONTEED
-operations and touching a page, in which 3 additional threads run a
-busy-wait loop (5 runs, PTI and retpolines are turned off):
+Could someone please review/pick this up? This is one of two remaining
+-Wsometimes-uninitialized warnings among arm, arm64, and x86_64
+all{yes,mod}config and I'd like to get it turned on as soon as possible
+to catch more bugs.
 
-			base		off-stack
-			----		---------
-avg (usec/op)		1.629		1.570	(-3%)
-stddev			0.014		0.009
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Nadav Amit <namit@vmware.com>
-
----
-
-v1->v2:
-- Initialize all flush_tlb_info fields [Andy]
----
- arch/x86/mm/tlb.c | 100 ++++++++++++++++++++++++++++++++++------------
- 1 file changed, 74 insertions(+), 26 deletions(-)
-
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 487b8474c01c..aac191eb2b90 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -634,7 +634,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
- 	this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
- }
- 
--static void flush_tlb_func_local(void *info, enum tlb_flush_reason reason)
-+static void flush_tlb_func_local(const void *info, enum tlb_flush_reason reason)
- {
- 	const struct flush_tlb_info *f = info;
- 
-@@ -722,43 +722,81 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
-  */
- unsigned long tlb_single_page_flush_ceiling __read_mostly = 33;
- 
-+static DEFINE_PER_CPU_SHARED_ALIGNED(struct flush_tlb_info, flush_tlb_info);
-+
-+#ifdef CONFIG_DEBUG_VM
-+static DEFINE_PER_CPU(unsigned int, flush_tlb_info_idx);
-+#endif
-+
-+static inline struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
-+			unsigned long start, unsigned long end,
-+			unsigned int stride_shift, bool freed_tables,
-+			u64 new_tlb_gen)
-+{
-+	struct flush_tlb_info *info = this_cpu_ptr(&flush_tlb_info);
-+
-+#ifdef CONFIG_DEBUG_VM
-+	/*
-+	 * Ensure that the following code is non-reentrant and flush_tlb_info
-+	 * is not overwritten. This means no TLB flushing is initiated by
-+	 * interrupt handlers and machine-check exception handlers.
-+	 */
-+	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
-+#endif
-+
-+	info->start = start;
-+	info->end = end;
-+	info->mm = mm;
-+	info->stride_shift = stride_shift;
-+	info->freed_tables = freed_tables;
-+	info->new_tlb_gen = new_tlb_gen;
-+
-+	return info;
-+}
-+
-+static inline void put_flush_tlb_info(void)
-+{
-+#ifdef CONFIG_DEBUG_VM
-+	/* Complete reentrency prevention checks */
-+	barrier();
-+	this_cpu_dec(flush_tlb_info_idx);
-+#endif
-+}
-+
- void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 				unsigned long end, unsigned int stride_shift,
- 				bool freed_tables)
- {
-+	struct flush_tlb_info *info;
-+	u64 new_tlb_gen;
- 	int cpu;
- 
--	struct flush_tlb_info info = {
--		.mm = mm,
--		.stride_shift = stride_shift,
--		.freed_tables = freed_tables,
--	};
--
- 	cpu = get_cpu();
- 
--	/* This is also a barrier that synchronizes with switch_mm(). */
--	info.new_tlb_gen = inc_mm_tlb_gen(mm);
--
- 	/* Should we flush just the requested range? */
--	if ((end != TLB_FLUSH_ALL) &&
--	    ((end - start) >> stride_shift) <= tlb_single_page_flush_ceiling) {
--		info.start = start;
--		info.end = end;
--	} else {
--		info.start = 0UL;
--		info.end = TLB_FLUSH_ALL;
-+	if ((end == TLB_FLUSH_ALL) ||
-+	    ((end - start) >> stride_shift) > tlb_single_page_flush_ceiling) {
-+		start = 0UL;
-+		end = TLB_FLUSH_ALL;
- 	}
- 
-+	/* This is also a barrier that synchronizes with switch_mm(). */
-+	new_tlb_gen = inc_mm_tlb_gen(mm);
-+
-+	info = get_flush_tlb_info(mm, start, end, stride_shift, freed_tables,
-+				  new_tlb_gen);
-+
- 	if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
--		VM_WARN_ON(irqs_disabled());
-+		lockdep_assert_irqs_enabled();
- 		local_irq_disable();
--		flush_tlb_func_local(&info, TLB_LOCAL_MM_SHOOTDOWN);
-+		flush_tlb_func_local(info, TLB_LOCAL_MM_SHOOTDOWN);
- 		local_irq_enable();
- 	}
- 
- 	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids)
--		flush_tlb_others(mm_cpumask(mm), &info);
-+		flush_tlb_others(mm_cpumask(mm), info);
- 
-+	put_flush_tlb_info();
- 	put_cpu();
- }
- 
-@@ -787,22 +825,32 @@ static void do_kernel_range_flush(void *info)
- 
- void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- {
--
- 	/* Balance as user space task's flush, a bit conservative */
- 	if (end == TLB_FLUSH_ALL ||
- 	    (end - start) > tlb_single_page_flush_ceiling << PAGE_SHIFT) {
- 		on_each_cpu(do_flush_tlb_all, NULL, 1);
- 	} else {
--		struct flush_tlb_info info;
--		info.start = start;
--		info.end = end;
--		on_each_cpu(do_kernel_range_flush, &info, 1);
-+		struct flush_tlb_info *info;
-+
-+		preempt_disable();
-+
-+		info = get_flush_tlb_info(NULL, start, end, 0, false, 0);
-+
-+		info = this_cpu_ptr(&flush_tlb_info);
-+		info->start = start;
-+		info->end = end;
-+
-+		on_each_cpu(do_kernel_range_flush, info, 1);
-+
-+		put_flush_tlb_info();
-+
-+		preempt_enable();
- 	}
- }
- 
- void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- {
--	struct flush_tlb_info info = {
-+	static const struct flush_tlb_info info = {
- 		.mm = NULL,
- 		.start = 0UL,
- 		.end = TLB_FLUSH_ALL,
--- 
-2.19.1
-
+Thanks,
+Nathan
