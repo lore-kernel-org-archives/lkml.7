@@ -4,60 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D91C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8299C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1722077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18AB212F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220433;
-	bh=7rTmrTrxhop8MUj70t6sLTQCqwUpQACvHEsmSi+y6sk=;
+	s=default; t=1556220437;
+	bh=ErdVazcKg+QDoFRHsDSgn+oYh+4HCb9kdnfZthFYi1U=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=SjKtAgiRMJ6w4dByV6mR09QsoubeG3z1hLjsgB88uR8SANces8N/Jk7dvj43SVUUy
-	 8bfpXgjXWnp4xtfEvJwydAIHJuykhxUc7efGn3k4TyJhKKHWIVHrqFfCzQwXnXtWgP
-	 uTWhjyJrk9Cx1r1sdqUyrtug1H2LWxpXmJK0Z+2g=
+	b=pOufThOkNJBmPtsCm6yG04P7lSveHM0J9WhiIjIpcpHRER07OgPYOXKflqKmQXb2Y
+	 LK/HERvjAkQndzTCCdjoVDvnEYk46F5xVtuseYGtWnxNvFhiJanjRziMjw+dvKbQiE
+	 k3YqZ7PFbFLV1EL8uH5qkcGJVKGU3G/jZ6wPlplY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbfDYT0q (ORCPT
+        id S1730527AbfDYT0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:26:46 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52678 "EHLO
+        Thu, 25 Apr 2019 15:26:45 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52500 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729417AbfDYT0l (ORCPT
+        with ESMTP id S1726280AbfDYT0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:26:41 -0400
+        Thu, 25 Apr 2019 15:26:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=VqilEpU0zcs5UID60f+ZH1pJ3ZhXj2B3wEwvevnvqGU=; b=HysAUfxATRFm
-        1BAWCJVbQlgiL+rB1RzR869KWBJunD1c9mqTEcpJ26dXd5rM0DUKKgetoVdKYVmrMwnN2aTwgJZ13
-        QbdV8UuUFFJcDmmt2JVcydWRR0NDyyNvU5dsO5hefth7WsjTk9z5GOYIgJkwjVnB1UhRnrMXzEktk
-        R185Q=;
+        List-Archive; bh=pT4ivZO2GuwNMUQ901+2XgWhRT/NBbQ/poic4mSUhgI=; b=RERy54h/6Nmd
+        Uzyr2SXuE4N2kBH0tETFhlBn+KvBRy/5LGmUoku0pUr//ordGrJi9N+sG4AZKAwgQX2TqOzWNwWXO
+        EiY1XRQLhPMSw3Sli/cx6agG+gQW59pJNwWQIWoHxvqGkMYc4rIAdEJX382NiF+hmwRoall2PVvZR
+        5ijK8=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJk0z-0004eV-JO; Thu, 25 Apr 2019 19:26:37 +0000
+        id 1hJk0x-0004dn-Lq; Thu, 25 Apr 2019 19:26:35 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id AC64A441D3D; Thu, 25 Apr 2019 20:26:36 +0100 (BST)
+        id 9A1C9441D3D; Thu, 25 Apr 2019 20:26:34 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
+Cc:     Gyungoh Yoo <gyungoh@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Mark Zhang <markz@nvidia.com>,
-        Venkat Reddy Talla <vreddytalla@nvidia.com>
-Subject: Applied "regulator: max77620: Fix regulator info setting for max20024" to the regulator tree
-In-Reply-To: <20190422053531.23123-1-axel.lin@ingics.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: sky81452: Constify sky81452_reg_ops" to the regulator tree
+In-Reply-To: <20190420072001.16900-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192636.AC64A441D3D@finisterre.ee.mobilebroadband>
-Date:   Thu, 25 Apr 2019 20:26:36 +0100 (BST)
+Message-Id: <20190425192634.9A1C9441D3D@finisterre.ee.mobilebroadband>
+Date:   Thu, 25 Apr 2019 20:26:34 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: max77620: Fix regulator info setting for max20024
+   regulator: sky81452: Constify sky81452_reg_ops
 
 has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,36 +87,32 @@ to this mail.
 Thanks,
 Mark
 
-From 734008e714d8c757613c43ff57c1bf7ef1bb5b5d Mon Sep 17 00:00:00 2001
+From fa20b70e4c847e761a426e67d6495c39e1453656 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Mon, 22 Apr 2019 13:35:31 +0800
-Subject: [PATCH] regulator: max77620: Fix regulator info setting for max20024
+Date: Sat, 20 Apr 2019 15:20:00 +0800
+Subject: [PATCH] regulator: sky81452: Constify sky81452_reg_ops
 
-Current code always set pmic->rinfo[id] = &max77620_regs_info[id];
-It should set to either max77620_regs_info or max20024_regs_info
-depends on the chip_id.
+sky81452_reg_ops is never changed, make it const.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/max77620-regulator.c | 2 +-
+ drivers/regulator/sky81452-regulator.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
-index 1607ac673e44..0ad91a7f9cb9 100644
---- a/drivers/regulator/max77620-regulator.c
-+++ b/drivers/regulator/max77620-regulator.c
-@@ -803,7 +803,7 @@ static int max77620_regulator_probe(struct platform_device *pdev)
- 			continue;
+diff --git a/drivers/regulator/sky81452-regulator.c b/drivers/regulator/sky81452-regulator.c
+index 647860611916..eb2b60968a1a 100644
+--- a/drivers/regulator/sky81452-regulator.c
++++ b/drivers/regulator/sky81452-regulator.c
+@@ -34,7 +34,7 @@
+ #define SKY81452_LEN	0x40
+ #define SKY81452_LOUT	0x1F
  
- 		rdesc = &rinfo[id].desc;
--		pmic->rinfo[id] = &max77620_regs_info[id];
-+		pmic->rinfo[id] = &rinfo[id];
- 		pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
- 		pmic->reg_pdata[id].active_fps_src = -1;
- 		pmic->reg_pdata[id].active_fps_pd_slot = -1;
+-static struct regulator_ops sky81452_reg_ops = {
++static const struct regulator_ops sky81452_reg_ops = {
+ 	.list_voltage = regulator_list_voltage_linear_range,
+ 	.map_voltage = regulator_map_voltage_linear_range,
+ 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
 -- 
 2.20.1
 
