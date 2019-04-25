@@ -2,111 +2,109 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BE2C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB0EC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC563212F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:30:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrLE8l1m"
+	by mail.kernel.org (Postfix) with ESMTP id 5C419212F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfDYNal (ORCPT
+        id S1728047AbfDYNar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 09:30:41 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33975 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfDYNai (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 09:30:38 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h5so17516758lfm.1;
-        Thu, 25 Apr 2019 06:30:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lNFirraLM7s7j9AxHTJl4hrxwW7TmyqVI4M5YpiegmQ=;
-        b=GrLE8l1mB8/Ns8BSizCMIvBMrnUj0jRKn1jlhkVlCeoGqniNofIWXvfjsWclfGEtCG
-         zl5PjUk3Gl4mRB3+oh6Si9hXe93GGp5TcE2S0TN/n97+Klm1wAcd87lFuiASCL+IDfOt
-         eWtqTPtiTbKh6ZoufpDkHeMote2aaIESsOAISEZINKUSBxAWh2ZvmhYuDlSUsW9XXjoB
-         +sbzWkagY3tCD0LEUE5nHYNqxPcMzjV6p5rur0lHeJVSmKl0GkajcxGSA5E+tFH5N7+q
-         gd8bPndXUe8jXeT/oIyKIeUSt0mgQRwYXuUwtI2ZV/KA0vRlLozWkHRfhbNKqyB2Tg/v
-         cQeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lNFirraLM7s7j9AxHTJl4hrxwW7TmyqVI4M5YpiegmQ=;
-        b=F2TUX1VRAzN6zoozgHNThG6Cfmgvqqt4ahpNTTlKNUreZz/9YHiVRLNYiEA0pt1zHs
-         b5gA4fC7qitRIoFflp3zSUll8sqsjq4BP9KR64m1FLP44Qbc9K+wJZQeeF0HA+WPaJ2k
-         MwXHFjFSEDGqrkU2TrLqSv2oN+I+KCBRB2MgriA2+0l1WmG/MhLk8bbcmqCEPaB/E54Z
-         hzrisuIIaTuXJmQM5A5Lp/M+LJfAtqy9NduaagD9I9OA5j8rocD1K4qroXanjvcph9T0
-         3wkl2aAzTidtU1CFls1OKpITpXj/wGDU225VvycJoU6frN+3JqI87JYp1K9PvxwMO+9X
-         fS5A==
-X-Gm-Message-State: APjAAAUOl1jviDHnqaXzFfm/ZvcHG7Kq6ZF1JBe9rHUZ6C69GctGMtPe
-        v6BXjnHWZg39xU6Jspfaug4=
-X-Google-Smtp-Source: APXvYqzlgKsvEYbH0JjN7vHcwyejNN9RCstjg0TXjF88R9xPdiFc2sPZNz7WjdVzrK+ozyZf44MW6A==
-X-Received: by 2002:ac2:4192:: with SMTP id z18mr19409461lfh.96.1556199036455;
-        Thu, 25 Apr 2019 06:30:36 -0700 (PDT)
-Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id k21sm4647237ljk.21.2019.04.25.06.30.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 06:30:35 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1] clk: Add missing stubs for a few functions
-Date:   Thu, 25 Apr 2019 16:28:37 +0300
-Message-Id: <20190425132837.18389-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 25 Apr 2019 09:30:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54203 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbfDYNaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 09:30:46 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1C46B30BCE5A;
+        Thu, 25 Apr 2019 13:30:46 +0000 (UTC)
+Received: from treble (ovpn-123-99.rdu2.redhat.com [10.10.123.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 73C7760923;
+        Thu, 25 Apr 2019 13:30:34 +0000 (UTC)
+Date:   Thu, 25 Apr 2019 08:30:32 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
+        David Rientjes <rientjes@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-arch@vger.kernel.org
+Subject: Re: [patch V3 24/29] tracing: Remove the last struct stack_trace
+ usage
+Message-ID: <20190425133032.ds27oje6nxswvdji@treble>
+References: <20190425094453.875139013@linutronix.de>
+ <20190425094803.340000461@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190425094803.340000461@linutronix.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 25 Apr 2019 13:30:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compilation fails if any of undeclared clk_set_*() functions are in use
-and CONFIG_HAVE_CLK=n.
+On Thu, Apr 25, 2019 at 11:45:17AM +0200, Thomas Gleixner wrote:
+> Simplify the stack retrieval code by using the storage array based
+> interface.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_stack.c |   37 ++++++++++++++++---------------------
+>  1 file changed, 16 insertions(+), 21 deletions(-)
+> 
+> --- a/kernel/trace/trace_stack.c
+> +++ b/kernel/trace/trace_stack.c
+> @@ -23,11 +23,7 @@
+>  static unsigned long stack_dump_trace[STACK_TRACE_ENTRIES];
+>  static unsigned stack_trace_index[STACK_TRACE_ENTRIES];
+>  
+> -struct stack_trace stack_trace_max = {
+> -	.max_entries		= STACK_TRACE_ENTRIES,
+> -	.entries		= &stack_dump_trace[0],
+> -};
+> -
+> +static unsigned int stack_trace_entries;
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- include/linux/clk.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+"stack_trace_entries" -> "nr_stack_trace_entries"
 
-diff --git a/include/linux/clk.h b/include/linux/clk.h
-index d8bc1a856b39..f689fc58d7be 100644
---- a/include/linux/clk.h
-+++ b/include/linux/clk.h
-@@ -811,6 +811,22 @@ static inline bool clk_has_parent(struct clk *clk, struct clk *parent)
- 	return true;
- }
- 
-+static inline int clk_set_rate_range(struct clk *clk, unsigned long min,
-+				     unsigned long max)
-+{
-+	return 0;
-+}
-+
-+static inline int clk_set_min_rate(struct clk *clk, unsigned long rate)
-+{
-+	return 0;
-+}
-+
-+static inline int clk_set_max_rate(struct clk *clk, unsigned long rate)
-+{
-+	return 0;
-+}
-+
- static inline int clk_set_parent(struct clk *clk, struct clk *parent)
- {
- 	return 0;
 -- 
-2.21.0
-
+Josh
