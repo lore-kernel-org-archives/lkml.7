@@ -4,57 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2E9C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B895C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7B02088F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F9A20878
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220399;
-	bh=vOgp/86+Vk73VJuCKacxNSdDH0V873KDEK1YwlSqhM8=;
+	s=default; t=1556220404;
+	bh=NHJl0SUxgxyYXWzpQsIDofzeLJcgRWFO1HQIBByzqj4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=m1yposo0dAUYPTTZKLw3jEJO3N9pJ+dy6B0rl3zAi750o3cufbJ8lXk8ENIxHq6nP
-	 TFoxzHZQodjw+Xlatmd1zqdZfD99rdbjGjvN3YV3NjKwkmPBBnO7V/TgxmYOD7t7+V
-	 1+d3vPlfW7wv5s23IhV+JZpota+y5s22S9abS5xA=
+	b=0ptzCGAuJjx3x0KnVJ/23avXbD6GMdj/qQJ80sWfA/qSKyFPOiWI9xrgwNUfXTAhZ
+	 LO2Yo76085ZfcCyKL2BEV7WkcmGFaMqw2EdjpeBYzhxo1VecPNfjhMjg7HMbqcnkyD
+	 UqowXRUem0N6B7pCKD8RCuPgcawyiLB3sZhHBD4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfDYT0i (ORCPT
+        id S1730463AbfDYT0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:26:38 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52490 "EHLO
+        Thu, 25 Apr 2019 15:26:43 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52582 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfDYT0h (ORCPT
+        with ESMTP id S1728710AbfDYT0k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:26:37 -0400
+        Thu, 25 Apr 2019 15:26:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=4Gm+Q11ReSsNhXvJxo3k0XlLNE2brjVzhensPkNREhc=; b=f37+acn9n/Ke
-        qOIjwsVVWGZYBnieYjHf8dVoOo5UwOXuHbIhd2BgR2JPEmPsM0ryGYBW2CUKNrd7poyOUfO7Fzrpq
-        XbYWxF+/wr22GBgXTlNczSDbuMLv4yfv2jjzSAvuXS5t8ggzdWtaywMOMtWd21h8MX/1w6RchnldT
-        alOhI=;
+        List-Archive; bh=0x8Te4hhEI/xHQ81yHY2umN/dm6b1QkiuOwRSKt2718=; b=jVa+AwOyI/tU
+        6/oY5p6SQXhKOHbUYbi0bexXOU8/Ex0nWWnnJIDsoCubQWikOWd1gWIMBBoeZNPf3WCJTBM7YSq/Q
+        5ATS31HrzhWU3apdyfvAFf/DKAQpNa0IbzGMYYs6gtZTrzkqH+4QcrXMtrEqD1TjKCTFMyuUdRt2K
+        5Y0g0=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJk0x-0004di-3g; Thu, 25 Apr 2019 19:26:35 +0000
+        id 1hJk0y-0004e5-Lz; Thu, 25 Apr 2019 19:26:36 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 1E3F2441D3C; Thu, 25 Apr 2019 20:26:34 +0100 (BST)
+        id A0209441D3C; Thu, 25 Apr 2019 20:26:35 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Gyungoh Yoo <gyungoh@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: sky81452: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: <20190420072001.16900-2-axel.lin@ingics.com>
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     broonie@kernel.org, jorge.ramirez-ortiz@linaro.org,
+        khasim.mohammed@linaro.org, lgirdwood@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: core: do not report EPROBE_DEFER as error but as debug" to the regulator tree
+In-Reply-To: <20190417192443.6501-1-jorge.ramirez-ortiz@linaro.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192634.1E3F2441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu, 25 Apr 2019 20:26:34 +0100 (BST)
+Message-Id: <20190425192635.A0209441D3C@finisterre.ee.mobilebroadband>
+Date:   Thu, 25 Apr 2019 20:26:35 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: sky81452: Switch to SPDX identifier
+   regulator: core: do not report EPROBE_DEFER as error but as debug
 
 has been applied to the regulator tree at
 
@@ -87,49 +88,48 @@ to this mail.
 Thanks,
 Mark
 
-From f6aec550bc370191bc349b85d9cb0a8b4ab64c54 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Sat, 20 Apr 2019 15:20:01 +0800
-Subject: [PATCH] regulator: sky81452: Switch to SPDX identifier
+From 4d0a83b904f4b2b9b814ad950472b50e7e803716 Mon Sep 17 00:00:00 2001
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Date: Wed, 17 Apr 2019 21:24:43 +0200
+Subject: [PATCH] regulator: core: do not report EPROBE_DEFER as error but as
+ debug
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Temporary failures to get a regulator (EPROBE_DEFER) should be logged
+as debug information instead of errors.
+
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/sky81452-regulator.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+ drivers/regulator/core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/sky81452-regulator.c b/drivers/regulator/sky81452-regulator.c
-index eb2b60968a1a..177dede82a61 100644
---- a/drivers/regulator/sky81452-regulator.c
-+++ b/drivers/regulator/sky81452-regulator.c
-@@ -1,21 +1,9 @@
--/*
-- * sky81452-regulator.c	SKY81452 regulator driver
-- *
-- * Copyright 2014 Skyworks Solutions Inc.
-- * Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2
-- * as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License along
-- * with this program; if not, see <http://www.gnu.org/licenses/>.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// sky81452-regulator.c	SKY81452 regulator driver
-+//
-+// Copyright 2014 Skyworks Solutions Inc.
-+// Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 5a9ebcf7fe7a..08ccabe07fe3 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -4345,8 +4345,6 @@ int regulator_bulk_get(struct device *dev, int num_consumers,
+ 						      consumers[i].supply);
+ 		if (IS_ERR(consumers[i].consumer)) {
+ 			ret = PTR_ERR(consumers[i].consumer);
+-			dev_err(dev, "Failed to get supply '%s': %d\n",
+-				consumers[i].supply, ret);
+ 			consumers[i].consumer = NULL;
+ 			goto err;
+ 		}
+@@ -4355,6 +4353,13 @@ int regulator_bulk_get(struct device *dev, int num_consumers,
+ 	return 0;
  
- #include <linux/module.h>
- #include <linux/kernel.h>
+ err:
++	if (ret != -EPROBE_DEFER)
++		dev_err(dev, "Failed to get supply '%s': %d\n",
++			consumers[i].supply, ret);
++	else
++		dev_dbg(dev, "Failed to get supply '%s', deferring\n",
++			consumers[i].supply);
++
+ 	while (--i >= 0)
+ 		regulator_put(consumers[i].consumer);
+ 
 -- 
 2.20.1
 
