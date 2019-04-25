@@ -2,357 +2,136 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89374C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36CDC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DFA206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA11206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="crdakZE8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fkPgD8W8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbfDYTKH (ORCPT
+        id S1728177AbfDYTKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:10:07 -0400
-Received: from mail-eopbgr740052.outbound.protection.outlook.com ([40.107.74.52]:57728
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726249AbfDYTKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:10:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cGN+2eGnFRjQKKRet0DhCtdHwhr+g4OStM4ZwhGCD9I=;
- b=crdakZE8t1c58kfX53aUFY+7aG1ypFDGu7WYjfYvFVrIAbcyYtu021d2Zh82nuC0Tor5SLUDimkQKTYvkAUe40a7XXtToxDblsEa2IcoN/i4eZSR1rUwBB/rCS459xM8FJ85Z0TbtG1+pBxalDLr9An6BgNJR7IYTVbtEyp79wU=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4662.namprd05.prod.outlook.com (52.135.233.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.9; Thu, 25 Apr 2019 19:08:17 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::e862:1b1b:7665:8094]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::e862:1b1b:7665:8094%3]) with mapi id 15.20.1835.010; Thu, 25 Apr 2019
- 19:08:17 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Julien Freche <jfreche@vmware.com>,
-        Pv-drivers <Pv-drivers@vmware.com>,
-        Jason Wang <jasowang@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH v3 1/4] mm/balloon_compaction: list interfaces
-Thread-Topic: [PATCH v3 1/4] mm/balloon_compaction: list interfaces
-Thread-Index: AQHU+mwdinHS3UiOtEKcnmatxdvta6ZLVFgAgAHrSAA=
-Date:   Thu, 25 Apr 2019 19:08:17 +0000
-Message-ID: <77127A20-8B02-4C1F-A746-6378A160D12B@vmware.com>
-References: <20190423234531.29371-1-namit@vmware.com>
- <20190423234531.29371-2-namit@vmware.com>
- <20190424092829-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190424092829-mutt-send-email-mst@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 77370d01-82c2-4c89-81c8-08d6c9b16023
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB4662;
-x-ms-traffictypediagnostic: BYAPR05MB4662:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <BYAPR05MB46626B388BEF9A0A7B0C1976D03D0@BYAPR05MB4662.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(396003)(376002)(39860400002)(136003)(189003)(199004)(4326008)(305945005)(68736007)(316002)(14444005)(26005)(446003)(102836004)(186003)(66066001)(14454004)(5660300002)(33656002)(6506007)(478600001)(25786009)(53546011)(97736004)(36756003)(99286004)(6246003)(76176011)(66946007)(76116006)(73956011)(64756008)(66446008)(11346002)(82746002)(81156014)(86362001)(3846002)(6512007)(71200400001)(83716004)(66556008)(66476007)(71190400001)(53936002)(6436002)(7736002)(256004)(81166006)(6916009)(229853002)(8936002)(6486002)(486006)(8676002)(6116002)(54906003)(2616005)(476003)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4662;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DzjKMmLSinPfv+4M/fs6qfqOT0w5c75ymM0cGb8xCZzI+WEW+tJy335Ie6a1p129rXHF3MP9Z7WIyVihCUH/VucE/OQotZRQfMFFpExUywwYIjomsEy/YLFt37rKCLJUzzSRy6ottqUUPfz8NAx20FO5NL93b8ntdfyXAsFf6A2bi6mb1gAThSYN/CSAl0gxZlKcHlI2vKV62bQmZHlqXIi3DhghdsGqGEOSZS6Dj+hXceihZHKZOXyKmbuNgn2l+7FnPRypLjbRUajPfy9kkNtdT0ByglHCRkIsfeXV1XnBpGGbQJowbwfQKhMPrsJ8hIhAL+WDYsGussKGD6UvmluTcuCScTpuD/7jIzwbxDlol+C3s0bKdihoyWpD72RfFenw8VfvYt/Drmsjsa0HkT7k7dvnxJ2j4rwMzSHfofM=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6DCBC4D19BB59F4481A64E7CC85E0804@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 25 Apr 2019 15:10:55 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43602 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbfDYTKz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 15:10:55 -0400
+Received: by mail-ot1-f65.google.com with SMTP id u15so483485otq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:10:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GrSjICGdFukVSLuxDiGtomfIl3TPtlXUnZpZ6fCg/qw=;
+        b=fkPgD8W8lX022MkhF/yUtZ1+dvS48KSSxSV2y4HHeJTWfntwGD6EywJKWDX25LVXDh
+         poP1QZuJbGlLkArqM9Bp1MURWK3JfAP4FMktiWhytcSxb3tIWDWKE9JtO1m+TVntBvoo
+         qN+gSh6mpZ4e8B454ZYgBJxuyD4mfx3rfTGCwP+zBsHKxK5qm5AcHsrjK0ZuZ/x8LCz4
+         6mcETpfuCWlGQQiW+GVaunRSQmWNMzmgKi2Rzir7qXvC3nVHPFgCThZD9pA2zHbRLtoq
+         g2ONB3LoDMJng5WcddzhMMUqTLjxZW7/HZbTSSEuvldfrQ+4RjvPyLXIncZd3+WPUhO2
+         XfFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GrSjICGdFukVSLuxDiGtomfIl3TPtlXUnZpZ6fCg/qw=;
+        b=MZRBs9Hmn+Wb08RdngZoUxX6s6smWe0OYFa6ACQZQj45maIQEnCuOv47/P7ySmLQbp
+         BcpzgtJ3NSDJZNPeA3MoEF3ytD9RArzMVoH/h6rIMIwykEYFJzfrORk2Cpd487nSw9pd
+         lNw0P39mOq9ZZsDpRQdARzi7xFl84HiU4Vmahpbo68uqn4edkSO+84C7MBcppxEdVLsQ
+         yyKiv6NxXB7AlqQktQ6FSu0kDoOouBl/b/mRDhnXNYWpJi3RzbxYnz8Vbpav68teEJJM
+         O8oFWvp53UQaN+L/foJKBh1wFAhA8TQN+19US3zOHwIWDUqruoxHS0KG8JUyJ0s/QcWz
+         x2tQ==
+X-Gm-Message-State: APjAAAX8BEo8bet/RPCuMSLl6XBlueA+hm23wAlg8bAXHTq95QymEhsw
+        nEeITYM/fJZ77z9/Rcz4WWSBd4ptvXaMe6fhIxLO4w==
+X-Google-Smtp-Source: APXvYqwxkyDyTRT80Lv0e5x7HTxTBli5UZLKQvcmMIbvQ3U6N9g9KdK6ys0yEB1h8Mg+DM53gihANYWlGEefX/mZS14=
+X-Received: by 2002:a9d:6a18:: with SMTP id g24mr258872otn.35.1556219454285;
+ Thu, 25 Apr 2019 12:10:54 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77370d01-82c2-4c89-81c8-08d6c9b16023
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 19:08:17.6759
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4662
+References: <20190425161416.26600-1-dima@arista.com> <20190425161416.26600-2-dima@arista.com>
+In-Reply-To: <20190425161416.26600-2-dima@arista.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 25 Apr 2019 21:10:28 +0200
+Message-ID: <CAG48ez2h5Khw1tcizUKywtqEuUWpHsrGcWF+KN+X119B4MvmoA@mail.gmail.com>
+Subject: Re: [PATCHv3 01/27] ns: Introduce Time Namespace
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        Linux API <linux-api@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Apr 24, 2019, at 6:49 AM, Michael S. Tsirkin <mst@redhat.com> wrote:
->=20
-> On Tue, Apr 23, 2019 at 04:45:28PM -0700, Nadav Amit wrote:
->> Introduce interfaces for ballooning enqueueing and dequeueing of a list
->> of pages. These interfaces reduce the overhead of storing and restoring
->> IRQs by batching the operations. In addition they do not panic if the
->> list of pages is empty.
->>=20
->> Cc: "Michael S. Tsirkin" <mst@redhat.com>
->> Cc: Jason Wang <jasowang@redhat.com>
->> Cc: linux-mm@kvack.org
->> Cc: virtualization@lists.linux-foundation.org
->> Reviewed-by: Xavier Deguillard <xdeguillard@vmware.com>
->> Signed-off-by: Nadav Amit <namit@vmware.com>
->=20
->=20
-> Looks good overall. Two minor comments below.
->=20
->=20
->> ---
->> include/linux/balloon_compaction.h |   4 +
->> mm/balloon_compaction.c            | 144 +++++++++++++++++++++--------
->> 2 files changed, 110 insertions(+), 38 deletions(-)
->>=20
->> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_=
-compaction.h
->> index f111c780ef1d..430b6047cef7 100644
->> --- a/include/linux/balloon_compaction.h
->> +++ b/include/linux/balloon_compaction.h
->> @@ -64,6 +64,10 @@ extern struct page *balloon_page_alloc(void);
->> extern void balloon_page_enqueue(struct balloon_dev_info *b_dev_info,
->> 				 struct page *page);
->> extern struct page *balloon_page_dequeue(struct balloon_dev_info *b_dev_=
-info);
->> +extern size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_=
-info,
->> +				      struct list_head *pages);
->> +extern size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_=
-info,
->> +				     struct list_head *pages, size_t n_req_pages);
->>=20
->> static inline void balloon_devinfo_init(struct balloon_dev_info *balloon=
-)
->> {
->> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
->> index ef858d547e2d..a2995002edc2 100644
->> --- a/mm/balloon_compaction.c
->> +++ b/mm/balloon_compaction.c
->> @@ -10,6 +10,105 @@
->> #include <linux/export.h>
->> #include <linux/balloon_compaction.h>
->>=20
->> +static void balloon_page_enqueue_one(struct balloon_dev_info *b_dev_inf=
-o,
->> +				     struct page *page)
->> +{
->> +	/*
->> +	 * Block others from accessing the 'page' when we get around to
->> +	 * establishing additional references. We should be the only one
->> +	 * holding a reference to the 'page' at this point. If we are not, the=
-n
->> +	 * memory corruption is possible and we should stop execution.
->> +	 */
->> +	BUG_ON(!trylock_page(page));
->> +	list_del(&page->lru);
->> +	balloon_page_insert(b_dev_info, page);
->> +	unlock_page(page);
->> +	__count_vm_event(BALLOON_INFLATE);
->> +}
->> +
->> +/**
->> + * balloon_page_list_enqueue() - inserts a list of pages into the ballo=
-on page
->> + *				 list.
->> + * @b_dev_info: balloon device descriptor where we will insert a new pa=
-ge to
->> + * @pages: pages to enqueue - allocated using balloon_page_alloc.
->> + *
->> + * Driver must call it to properly enqueue a balloon pages before defin=
-itively
->> + * removing it from the guest system.
->> + *
->> + * Return: number of pages that were enqueued.
->> + */
->> +size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_info,
->> +				 struct list_head *pages)
->> +{
->> +	struct page *page, *tmp;
->> +	unsigned long flags;
->> +	size_t n_pages =3D 0;
->> +
->> +	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
->> +	list_for_each_entry_safe(page, tmp, pages, lru) {
->> +		balloon_page_enqueue_one(b_dev_info, page);
->> +		n_pages++;
->> +	}
->> +	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
->> +	return n_pages;
->> +}
->> +EXPORT_SYMBOL_GPL(balloon_page_list_enqueue);
->> +
->> +/**
->> + * balloon_page_list_dequeue() - removes pages from balloon's page list=
- and
->> + *				 returns a list of the pages.
->> + * @b_dev_info: balloon device decriptor where we will grab a page from=
-.
->> + * @pages: pointer to the list of pages that would be returned to the c=
-aller.
->> + * @n_req_pages: number of requested pages.
->> + *
->> + * Driver must call this function to properly de-allocate a previous en=
-listed
->> + * balloon pages before definetively releasing it back to the guest sys=
-tem.
->> + * This function tries to remove @n_req_pages from the ballooned pages =
-and
->> + * return them to the caller in the @pages list.
->> + *
->> + * Note that this function may fail to dequeue some pages temporarily e=
-mpty due
->> + * to compaction isolated pages.
->> + *
->> + * Return: number of pages that were added to the @pages list.
->> + */
->> +size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
->> +				 struct list_head *pages, size_t n_req_pages)
->> +{
->> +	struct page *page, *tmp;
->> +	unsigned long flags;
->> +	size_t n_pages =3D 0;
->> +
->> +	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
->> +	list_for_each_entry_safe(page, tmp, &b_dev_info->pages, lru) {
->> +		if (n_pages =3D=3D n_req_pages)
->> +			break;
->> +
->> +		/*
->> +		 * Block others from accessing the 'page' while we get around
->=20
-> should be "get around to" - same as in other places
->=20
->=20
->> +		 * establishing additional references and preparing the 'page'
->> +		 * to be released by the balloon driver.
->> +		 */
->> +		if (!trylock_page(page))
->> +			continue;
->> +
->> +		if (IS_ENABLED(CONFIG_BALLOON_COMPACTION) &&
->> +		    PageIsolated(page)) {
->> +			/* raced with isolation */
->> +			unlock_page(page);
->> +			continue;
->> +		}
->> +		balloon_page_delete(page);
->> +		__count_vm_event(BALLOON_DEFLATE);
->> +		unlock_page(page);
->> +		list_add(&page->lru, pages);
->=20
-> I'm not sure whether this list_add must be under the page lock,
-> but enqueue does list_del under page lock, so I think it's
-> a good idea to keep dequeue consistent, operating in the
-> reverse order of enqueue.
->=20
->> +		++n_pages;
->> +	}
->> +	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
->> +
->> +	return n_pages;
->> +}
->> +EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
->> +
->> /*
->>  * balloon_page_alloc - allocates a new page for insertion into the ball=
-oon
->>  *			  page list.
->> @@ -43,17 +142,9 @@ void balloon_page_enqueue(struct balloon_dev_info *b=
-_dev_info,
->> {
->> 	unsigned long flags;
->>=20
->> -	/*
->> -	 * Block others from accessing the 'page' when we get around to
->> -	 * establishing additional references. We should be the only one
->> -	 * holding a reference to the 'page' at this point.
->> -	 */
->> -	BUG_ON(!trylock_page(page));
->> 	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
->> -	balloon_page_insert(b_dev_info, page);
->> -	__count_vm_event(BALLOON_INFLATE);
->> +	balloon_page_enqueue_one(b_dev_info, page);
->> 	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
->> -	unlock_page(page);
->> }
->> EXPORT_SYMBOL_GPL(balloon_page_enqueue);
->>=20
->> @@ -70,36 +161,13 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
->>  */
->> struct page *balloon_page_dequeue(struct balloon_dev_info *b_dev_info)
->> {
->> -	struct page *page, *tmp;
->> 	unsigned long flags;
->> -	bool dequeued_page;
->> +	LIST_HEAD(pages);
->> +	int n_pages;
->>=20
->> -	dequeued_page =3D false;
->> -	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
->> -	list_for_each_entry_safe(page, tmp, &b_dev_info->pages, lru) {
->> -		/*
->> -		 * Block others from accessing the 'page' while we get around
->> -		 * establishing additional references and preparing the 'page'
->> -		 * to be released by the balloon driver.
->> -		 */
->> -		if (trylock_page(page)) {
->> -#ifdef CONFIG_BALLOON_COMPACTION
->> -			if (PageIsolated(page)) {
->> -				/* raced with isolation */
->> -				unlock_page(page);
->> -				continue;
->> -			}
->> -#endif
->> -			balloon_page_delete(page);
->> -			__count_vm_event(BALLOON_DEFLATE);
->> -			unlock_page(page);
->> -			dequeued_page =3D true;
->> -			break;
->> -		}
->> -	}
->> -	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
->> +	n_pages =3D balloon_page_list_dequeue(b_dev_info, &pages, 1);
->>=20
->> -	if (!dequeued_page) {
->> +	if (n_pages !=3D 1) {
->> 		/*
->> 		 * If we are unable to dequeue a balloon page because the page
->> 		 * list is empty and there is no isolated pages, then something
->> @@ -112,9 +180,9 @@ struct page *balloon_page_dequeue(struct balloon_dev=
-_info *b_dev_info)
->> 			     !b_dev_info->isolated_pages))
->> 			BUG();
->> 		spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
->> -		page =3D NULL;
->> +		return NULL;
->> 	}
->> -	return page;
->> +	return list_first_entry(&pages, struct page, lru);
->> }
->> EXPORT_SYMBOL_GPL(balloon_page_dequeue);
->>=20
->> --=20
->> 2.19.1
->=20
->=20
-> With above addressed:
->=20
-> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+On Thu, Apr 25, 2019 at 6:14 PM Dmitry Safonov <dima@arista.com> wrote:
+> Time Namespace isolates clock values.
+>
+> The kernel provides access to several clocks CLOCK_REALTIME,
+> CLOCK_MONOTONIC, CLOCK_BOOTTIME, etc.
+>
+> CLOCK_REALTIME
+>       System-wide clock that measures real (i.e., wall-clock) time.
+>
+> CLOCK_MONOTONIC
+>       Clock that cannot be set and represents monotonic time since
+>       some unspecified starting point.
+>
+> CLOCK_BOOTTIME
+>       Identical to CLOCK_MONOTONIC, except it also includes any time
+>       that the system is suspended.
+>
+> For many users, the time namespace means the ability to changes date and
+> time in a container (CLOCK_REALTIME).
+>
+> But in a context of the checkpoint/restore functionality, monotonic and
+> bootime clocks become interesting. Both clocks are monotonic with
+> unspecified staring points. These clocks are widely used to measure time
+> slices and set timers. After restoring or migrating processes, we have to
+> guarantee that they never go backward. In an ideal case, the behavior of
+> these clocks should be the same as for a case when a whole system is
+> suspended. All this means that we need to be able to set CLOCK_MONOTONIC
+> and CLOCK_BOOTTIME clocks, what can be done by adding per-namespace
+> offsets for clocks.
+>
+> A time namespace is similar to a pid namespace in a way how it is
+> created: unshare(CLONE_NEWTIME) system call creates a new time namespace,
+> but doesn't set it to the current process. Then all children of
+> the process will be born in the new time namespace, or a process can
+> use the setns() system call to join a namespace.
+>
+> This scheme allows setting clock offsets for a namespace, before any
+> processes appear in it.
 
-Thank you, Michael.
+Is there a check anywhere to make sure that you can't use
+clone(CLONE_VM) after calling unshare(CLONE_NEWTIME), and that you
+can't use clone(CLONE_VM|CLONE_NEWTIME)? Those things probably
+shouldn't be allowed, right?
 
-I addressed your feedback and I will send another version shortly.
+CLONE_NEWPID has similar rules; from the clone.2 manpage:
 
+       EINVAL CLONE_THREAD was specified, but the current process previously
+              called unshare(2) with the CLONE_NEWPID flag or used setns(2)
+              to reassociate itself with a PID namespace.
+[...]
+       EINVAL One (or both) of CLONE_NEWPID or CLONE_NEWUSER and one (or
+              both) of CLONE_THREAD or CLONE_PARENT were specified in flags.
