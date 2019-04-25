@@ -2,112 +2,136 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0AFC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FC9C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE76F206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:29:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lO6qF6x/"
+	by mail.kernel.org (Postfix) with ESMTP id E73D8206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbfDYU3r (ORCPT
+        id S1731059AbfDYUai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 16:29:47 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53170 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbfDYU3q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 16:29:46 -0400
-Received: by mail-it1-f193.google.com with SMTP id x132so2308438itf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 13:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OeRjZGIi29J9UcGvV4ntvpRnkfTKsCp6AYnhMmfL4PQ=;
-        b=lO6qF6x/lsmtbgZV7Bw2GdcM06jup7E4clccinkLC7oVx6jtRxGjeWolacT+lr/2f8
-         oUEWqQrVXjfAqipfNz0HRbf108oLI5dZ03xBc8ZWzK2S6+hjw7ZYo3/zGCrFlhQDx/9E
-         T+yHpyYho4gisZp2aEMZZtURuZC62A5hRh7ON5uOxwYCLxTAOiESvK/stRcCcmONoPjK
-         nXBHASXzEntp/r4hNSR2RsB3e4SgCtVSN1/sTOrRtaGT8XpIIeAlqnTzqxKQveAWz4zB
-         84vJH2Ab7t1rA96aTrVHCLO4zJrj2YR+r6jUKFnjnFdlhrUeg790QgMv79o8iy9wvQrV
-         jg2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OeRjZGIi29J9UcGvV4ntvpRnkfTKsCp6AYnhMmfL4PQ=;
-        b=LC2ZARfcC8c8ELVMdIFzzhWsR1NF0zj/+kJtVUGxONG5rTQbmeTegk/iYnonE/XgYU
-         owoJdj0Hmhms6dmajkhuC7ZIKVew40BKg75PmA+M6iTbnFcDqqG04PovVk4EzCucLIx0
-         HLB+Xj4OJ0YG+StXzUoYLKenV2gKIfk3AboPvKo5abzm7WBM5m+2ZOZ9r6Rdtz6FaGv6
-         Qh5xDuECdB1DMlDRgJcKu5waQT9cnsAb4qpgv4XGwh6cp6btLudgMWcxNHSbCv6RvW1M
-         5SxBE4D2h+FoJZ4cM9xTRebIU52fJkZzavaZU3ofed7nX7NDD5QGdlyKlNaebCCm+Ejs
-         kufg==
-X-Gm-Message-State: APjAAAVLe63WYNfzP9cqJny03dzDmdWW2ElIIExKztovYFaaF8aBj+Hg
-        eoZDv7t3unQvmM18JU6eeP0lSVdM+Th6EBBhXgnSkFSUcM4=
-X-Google-Smtp-Source: APXvYqxCCyQ8DGk96WCnOlOChzZ2LUpTOEO0t7U28XHmQuV7D6Ak8m/yQN8PJ18mYwH7ldueo1fA0A+bC6+AwLEozUE=
-X-Received: by 2002:a02:c955:: with SMTP id u21mr29477992jao.105.1556224185529;
- Thu, 25 Apr 2019 13:29:45 -0700 (PDT)
+        Thu, 25 Apr 2019 16:30:38 -0400
+Received: from mga09.intel.com ([134.134.136.24]:12496 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726490AbfDYUah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 16:30:37 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 13:30:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
+   d="scan'208";a="165116162"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Apr 2019 13:30:35 -0700
+Date:   Thu, 25 Apr 2019 13:22:26 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v8 05/15] x86/msr-index: Define MSR_IA32_CORE_CAPABILITY
+ and split lock detection bit
+Message-ID: <20190425202226.GD64477@romley-ivt3.sc.intel.com>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
+ <1556134382-58814-6-git-send-email-fenghua.yu@intel.com>
+ <20190425054511.GA40105@gmail.com>
+ <20190425190148.GA64477@romley-ivt3.sc.intel.com>
+ <20190425194714.GA58719@gmail.com>
+ <20190425195154.GC64477@romley-ivt3.sc.intel.com>
+ <20190425200830.GD58719@gmail.com>
 MIME-Version: 1.0
-References: <20190424191440.170422-1-matthewgarrett@google.com> <0100016a55209db0-efc46978-fa1e-48be-b17a-fcb6b58ae882-000000@email.amazonses.com>
-In-Reply-To: <0100016a55209db0-efc46978-fa1e-48be-b17a-fcb6b58ae882-000000@email.amazonses.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Thu, 25 Apr 2019 13:29:32 -0700
-Message-ID: <CACdnJuuZ37Bs7NtzdN-AiPhZy7B+EMphutDxxYFTu6k=j1ugqw@mail.gmail.com>
-Subject: Re: [PATCH] mm: Allow userland to request that the kernel clear
- memory on release
-To:     Christopher Lameter <cl@linux.com>
-Cc:     linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425200830.GD58719@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 8:32 AM Christopher Lameter <cl@linux.com> wrote:
->
-> On Wed, 24 Apr 2019, Matthew Garrett wrote:
->
-> > Applications that hold secrets and wish to avoid them leaking can use
-> > mlock() to prevent the page from being pushed out to swap and
-> > MADV_DONTDUMP to prevent it from being included in core dumps. Applications
-> > can also use atexit() handlers to overwrite secrets on application exit.
-> > However, if an attacker can reboot the system into another OS, they can
-> > dump the contents of RAM and extract secrets. We can avoid this by setting
->
-> Well nothing in this patchset deals with that issue.... That hole still
-> exists afterwards. So is it worth to have this functionality?
+On Thu, Apr 25, 2019 at 10:08:30PM +0200, Ingo Molnar wrote:
+> 
+> * Fenghua Yu <fenghua.yu@intel.com> wrote:
+> 
+> > On Thu, Apr 25, 2019 at 09:47:14PM +0200, Ingo Molnar wrote:
+> > > 
+> > > * Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > > 
+> > > > On Thu, Apr 25, 2019 at 07:45:11AM +0200, Ingo Molnar wrote:
+> > > > > 
+> > > > > * Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > > > > 
+> > > > > > A new MSR_IA32_CORE_CAPABILITY (0xcf) is defined. Each bit in the MSR
+> > > > > > enumerates a model specific feature. Currently bit 5 enumerates split
+> > > > > > lock detection. When bit 5 is 1, split lock detection is supported.
+> > > > > > When the bit is 0, split lock detection is not supported.
+> > > > > > 
+> > > > > > Please check the latest Intel 64 and IA-32 Architectures Software
+> > > > > > Developer's Manual for more detailed information on the MSR and the
+> > > > > > split lock detection bit.
+> > > > > > 
+> > > > > > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > > > > > ---
+> > > > > >  arch/x86/include/asm/msr-index.h | 3 +++
+> > > > > >  1 file changed, 3 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> > > > > > index ca5bc0eacb95..f65ef6f783d2 100644
+> > > > > > --- a/arch/x86/include/asm/msr-index.h
+> > > > > > +++ b/arch/x86/include/asm/msr-index.h
+> > > > > > @@ -59,6 +59,9 @@
+> > > > > >  #define MSR_PLATFORM_INFO_CPUID_FAULT_BIT	31
+> > > > > >  #define MSR_PLATFORM_INFO_CPUID_FAULT		BIT_ULL(MSR_PLATFORM_INFO_CPUID_FAULT_BIT)
+> > > > > >  
+> > > > > > +#define MSR_IA32_CORE_CAPABILITY	0x000000cf
+> > > > > > +#define CORE_CAP_SPLIT_LOCK_DETECT	BIT(5)     /* Detect split lock */
+> > > > > 
+> > > > > Please don't put comments into definitions.
+> > > > 
+> > > > I'll remove the comment and change definitions of the MSR and the split lock
+> > > > detection bit as following:
+> > > > 
+> > > > +#define MSR_IA32_CORE_CAPABILITY                       0x000000cf
+> > > > +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT 5
+> > > > +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT)
+> > > > 
+> > > > Are these right changes?
+> > > 
+> > > I suspect it could be shortened to CORE_CAP as you (partly) did it 
+> > > originally.
+> > 
+> > IA32_CORE_CAPABILITY is the MSR's exact name in the latest SDM (in Table 2-14):
+> > https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+> > 
+> > So can I define the MSR and the bits as follows?
+> > 
+> > +#define MSR_IA32_CORE_CAP                       0x000000cf
+> > +#define MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT_BIT 5
+> > +#define MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT_BIT)
+> 
+> Yeah, I suppose that looks OK.
 
-On UEFI systems we can set the MOR bit and the firmware will overwrite
-RAM on reboot. However, this can take a long time, which makes it
-difficult to justify doing by default. We want userland to be able to
-assert that secrets have been cleared from RAM and then clear the MOR
-flag, but we can't do that if applications can terminate in a way that
-prevents them from clearing their secrets.
+Should I also change the feature definition 'X86_FEATURE_CORE_CAPABILITY' to
+'X86_FEATURE_CORE_CAP' in cpufeatures.h in patch #0006 to match the
+MSR definition here? Or should I still keep the current feature definition?
 
-> > Unfortunately, if an application exits uncleanly, its secrets may still be
-> > present in RAM. This can't be easily fixed in userland (eg, if the OOM
-> > killer decides to kill a process holding secrets, we're not going to be able
-> > to avoid that), so this patch adds a new flag to madvise() to allow userland
-> > to request that the kernel clear the covered pages whenever the page
-> > reference count hits zero. Since vm_flags is already full on 32-bit, it
-> > will only work on 64-bit systems.
->
-> But then the pages are cleared anyways when reallocated to another
-> process. This just clears it sooner before reuse. So it will reduce the
-> time that a page contains the secret sauce in case the program is
-> aborted and cannot run its exit handling.
+Thanks.
 
-On a mostly idle system there's a real chance that nothing will end up
-re-using the page before a reboot happens.
-
-> Is that realy worth extending system calls and adding kernel handling for
-> this? Maybe the answer is yes given our current concern about anything
-> related to "security".
-
-If I didn't think it was worth it, I wouldn't be proposing it :)
+-Fenghua
