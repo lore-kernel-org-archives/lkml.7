@@ -2,27 +2,27 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF56C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42595C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79403217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190FA214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfDYKMs (ORCPT
+        id S1727627AbfDYKNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:12:48 -0400
-Received: from regular1.263xmail.com ([211.150.70.206]:38620 "EHLO
+        Thu, 25 Apr 2019 06:13:05 -0400
+Received: from regular1.263xmail.com ([211.150.70.199]:47654 "EHLO
         regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfDYKMq (ORCPT
+        with ESMTP id S1726810AbfDYKMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:12:46 -0400
+        Thu, 25 Apr 2019 06:12:42 -0400
 Received: from zhangqing?rock-chips.com (unknown [192.168.167.13])
-        by regular1.263xmail.com (Postfix) with ESMTP id 195E326E;
-        Thu, 25 Apr 2019 18:12:40 +0800 (CST)
+        by regular1.263xmail.com (Postfix) with ESMTP id 50CC33A6;
+        Thu, 25 Apr 2019 18:12:37 +0800 (CST)
 X-263anti-spam: KSV:0;BIG:0;
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
@@ -33,9 +33,9 @@ X-SKE-CHECKED: 1
 X-ANTISPAM-LEVEL: 2
 Received: from localhost.localdomain (unknown [58.22.7.114])
         by smtp.263.net (postfix) whith ESMTP id P797T140025968707328S1556187150403323_;
-        Thu, 25 Apr 2019 18:12:40 +0800 (CST)
+        Thu, 25 Apr 2019 18:12:36 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <d5425a7d9f6a76ad4bdfd0736e219b86>
+X-UNIQUE-TAG: <4b18b9a9acc4d47317024e427ffd35dd>
 X-RL-SENDER: zhangqing@rock-chips.com
 X-SENDER: zhangqing@rock-chips.com
 X-LOGIN-NAME: zhangqing@rock-chips.com
@@ -52,9 +52,9 @@ Cc:     rui.zhang@intel.com, edubezval@gmail.com,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
         Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v3 0/4] clk: rockchip: support clock controller for px30 SoC
-Date:   Thu, 25 Apr 2019 18:12:30 +0800
-Message-Id: <1556187154-22632-5-git-send-email-zhangqing@rock-chips.com>
+Subject: [PATCH v2 1/3] thermal: rockchip: fix up the tsadc pinctrl setting error
+Date:   Thu, 25 Apr 2019 18:12:27 +0800
+Message-Id: <1556187154-22632-2-git-send-email-zhangqing@rock-chips.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556187154-22632-1-git-send-email-zhangqing@rock-chips.com>
 References: <1556187154-22632-1-git-send-email-zhangqing@rock-chips.com>
@@ -63,37 +63,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change in V3:
-[PATCH v3 1/4]: Correct description
-[PATCH v3 2/4]: Use an SPDX tag instead.
-[PATCH v3 3/4]: Use an SPDX tag instead,
-		parent_rate might overflow and fix it.
-		fix up the checkpatch warning.
-		add more CMPOSITE_xxx_HALFdiv.
+Explicitly use the pinctrl to set/unset the right mode
+instead of relying on the pinctrl init mode.
+And it requires setting the tshut polarity before select pinctrl.
 
-Change in V2:
-[PATCH v2 2/4]: modify the Author name
-[PATCH v2 3/4]: provide a bit more explanation for commit message
+When the temperature sensor mode is set to 0, it will automatically
+reset the board via the Clock-Reset-Unit (CRU) if the over temperature
+threshold is reached. However, when the pinctrl initializes, it does a
+transition to "otp_out" which may lead the SoC restart all the time.
 
-Elaine Zhang (4):
-  dt-bindings: add bindings for px30 clock controller
-  clk: rockchip: add dt-binding header for px30
-  clk: rockchip: add support for half divider
-  clk: rockchip: add clock controller for px30
+"otp_out" IO may be connected to the RESET circuit on the hardware.
+If the IO is in the wrong state, it will trigger RESET.
+(similar to the effect of pressing the RESET button)
+which will cause the soc to restart all the time.
 
- .../bindings/clock/rockchip,px30-cru.txt           |   66 ++
- drivers/clk/rockchip/Makefile                      |    2 +
- drivers/clk/rockchip/clk-half-divider.c            |  231 +++++
- drivers/clk/rockchip/clk-px30.c                    | 1080 ++++++++++++++++++++
- drivers/clk/rockchip/clk.c                         |   10 +
- drivers/clk/rockchip/clk.h                         |  126 ++-
- include/dt-bindings/clock/px30-cru.h               |  389 +++++++
- 7 files changed, 1903 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,px30-cru.txt
- create mode 100644 drivers/clk/rockchip/clk-half-divider.c
- create mode 100644 drivers/clk/rockchip/clk-px30.c
- create mode 100644 include/dt-bindings/clock/px30-cru.h
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+---
+ drivers/thermal/rockchip_thermal.c | 37 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 34 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+index 9c7643d62ed7..03ff494f2864 100644
+--- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -172,6 +172,9 @@ struct rockchip_thermal_data {
+ 	int tshut_temp;
+ 	enum tshut_mode tshut_mode;
+ 	enum tshut_polarity tshut_polarity;
++	struct pinctrl *pinctrl;
++	struct pinctrl_state *gpio_state;
++	struct pinctrl_state *otp_state;
+ };
+ 
+ /**
+@@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+ 		return error;
+ 	}
+ 
++	thermal->chip->control(thermal->regs, false);
++
+ 	error = clk_prepare_enable(thermal->clk);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+@@ -1267,6 +1272,31 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+ 	thermal->chip->initialize(thermal->grf, thermal->regs,
+ 				  thermal->tshut_polarity);
+ 
++	if (thermal->tshut_mode == TSHUT_MODE_GPIO) {
++		thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
++		if (IS_ERR(thermal->pinctrl)) {
++			dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
++			panic("panic_on_find thermal pinctrl...\n");
++			return PTR_ERR(thermal->pinctrl);
++		}
++
++		thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
++							   "gpio");
++		if (IS_ERR_OR_NULL(thermal->gpio_state)) {
++			dev_err(&pdev->dev, "failed to find thermal gpio state\n");
++			return -EINVAL;
++		}
++
++		thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
++							  "otpout");
++		if (IS_ERR_OR_NULL(thermal->otp_state)) {
++			dev_err(&pdev->dev, "failed to find thermal otpout state\n");
++			return -EINVAL;
++		}
++
++		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
++	}
++
+ 	for (i = 0; i < thermal->chip->chn_num; i++) {
+ 		error = rockchip_thermal_register_sensor(pdev, thermal,
+ 						&thermal->sensors[i],
+@@ -1337,8 +1367,8 @@ static int __maybe_unused rockchip_thermal_suspend(struct device *dev)
+ 
+ 	clk_disable(thermal->pclk);
+ 	clk_disable(thermal->clk);
+-
+-	pinctrl_pm_select_sleep_state(dev);
++	if (thermal->tshut_mode == TSHUT_MODE_GPIO)
++		pinctrl_select_state(thermal->pinctrl, thermal->gpio_state);
+ 
+ 	return 0;
+ }
+@@ -1383,7 +1413,8 @@ static int __maybe_unused rockchip_thermal_resume(struct device *dev)
+ 	for (i = 0; i < thermal->chip->chn_num; i++)
+ 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+ 
+-	pinctrl_pm_select_default_state(dev);
++	if (thermal->tshut_mode == TSHUT_MODE_GPIO)
++		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
+ 
+ 	return 0;
+ }
 -- 
 1.9.1
 
