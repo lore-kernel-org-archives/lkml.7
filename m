@@ -2,107 +2,198 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0D8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAA0C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A26206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:08:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NDxI/Dco"
+	by mail.kernel.org (Postfix) with ESMTP id E85BC206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731434AbfDYWIB (ORCPT
+        id S1731482AbfDYWLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 18:08:01 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:34567 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730866AbfDYWIB (ORCPT
+        Thu, 25 Apr 2019 18:11:35 -0400
+Received: from gateway34.websitewelcome.com ([192.185.149.105]:45862 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731460AbfDYWLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 18:08:01 -0400
-Received: by mail-vs1-f68.google.com with SMTP id n17so824378vsr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 15:08:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ak1U3Odv0aZPvdj1RHbAifHko/b4UA9d9R+tGHvT3SU=;
-        b=NDxI/Dcoa+z67Sw2V2npnR0n2nLQk/jE/p+glUFhp+cEzHige6Tbre3ctX/y6SQsig
-         uug5O/szCEt1CHnTkfEAKjSDYGjryb1jVsODR+WNT9t1Njq+1+d+IbaAfSFAXWbJhIW7
-         BDCBKeeOC735mWGztzLTOm/fI6a0oASUIKxY2/TWciNDCtilbeyY9tCHkDYjHji0a3AT
-         dcvi/Wn4JxpbmHjKlrjtbaY0JJQrnwVhANH5YDQnjvHZh6axscx2KPMqJc/qubAkke6k
-         wmDmIB6QhJmgpMEmroR+dTcuH0nZjZY5TD85mI+ckK+jCzhUbjK7zB1df4fsXioARDSP
-         riXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ak1U3Odv0aZPvdj1RHbAifHko/b4UA9d9R+tGHvT3SU=;
-        b=QPg6zF0nv5NKJDvnZqt53y+CXtnM42EhS4b2cBln6+oQujYlFR/kWEUgsV69zhFsjb
-         yID0n7PoL/PxjmCjD2cGkU5xkK7VfH9gHcwuWIKD6Fo32fVgGSem4CpFAu82ntG2Em2n
-         t2IwrYxeyrs8lt65kP0Jsf+N7J08BYtWsgTbFlJeicAh2DBZ23GVJpPihumQcRqwjbuD
-         CFr9Qr0R4b2OgqH0Q66ZoNYHwPizR7+JJSS6af6m2rqQdQ0rKLSEbONhfhAkRvNQV7LW
-         ++iLNTIxjOAoIPU1lVZyvRh84vxXH2xdxM+nGQzIc29BWENUa4VUK0h7x7rI/rW9YX0k
-         HpGg==
-X-Gm-Message-State: APjAAAVbtPfBwXtwPlqImO50rzq8mQtacnCQxvTui1TQQS6yOfYfYgZM
-        7IwgwKqwVN7yqaOeer4sXufNoV8aBw/DS+9+OUHVsA==
-X-Google-Smtp-Source: APXvYqwLL0ulWY6/Shu+Q4KVbH0+78P/TfqZ3tyM6WydYeim1KubcCWrOF9d6Qa2yTBisiySibskanzuWAjB/2wbBrY=
-X-Received: by 2002:a67:ea0a:: with SMTP id g10mr21694902vso.77.1556230079881;
- Thu, 25 Apr 2019 15:07:59 -0700 (PDT)
+        Thu, 25 Apr 2019 18:11:35 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 6A37D16A859
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 17:11:33 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Jmabhn96vdnCeJmabhYLIw; Thu, 25 Apr 2019 17:11:33 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.223] (port=36162 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hJmab-002inf-1v; Thu, 25 Apr 2019 17:11:33 -0500
+To:     Vatsala Narang <vatsalanarang@gmail.com>,
+        gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Julia.Lawall@lip6.fr
+References: <20190425183320.23962-1-vatsalanarang@gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] staging: rtl8192u: ieee80211: Replace bit shifting with
+ BIT macro
+Message-ID: <c118ed83-2dbb-af38-4e6a-20a74ad2905a@embeddedor.com>
+Date:   Thu, 25 Apr 2019 17:11:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190425190010.46489-1-joel@joelfernandes.org>
- <20190425190010.46489-2-joel@joelfernandes.org> <20190425212917.yotnir4uqgpnh764@brauner.io>
-In-Reply-To: <20190425212917.yotnir4uqgpnh764@brauner.io>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Thu, 25 Apr 2019 15:07:48 -0700
-Message-ID: <CAKOZueuPeqnWVCv8NnQNyStWBQLybkr2qqtfQ0MjzsfSQDymzg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] Add selftests for pidfd polling
-To:     Christian Brauner <christian@brauner.io>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
-        Jann Horn <jann@thejh.net>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Michal Hocko <mhocko@suse.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Sandeep Patil <sspatil@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Murray <timmurray@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tycho Andersen <tycho@tycho.ws>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190425183320.23962-1-vatsalanarang@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.223
+X-Source-L: No
+X-Exim-ID: 1hJmab-002inf-1v
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.127.223]:36162
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 2:29 PM Christian Brauner <christian@brauner.io> wrote:
-> This timing-based testing seems kinda odd to be honest. Can't we do
-> something better than this?
+Hi Vatsala,
 
-Agreed. Timing-based tests have a substantial risk of becoming flaky.
-We ought to be able to make these tests fully deterministic and not
-subject to breakage from odd scheduling outcomes. We don't have
-sleepable events for everything, granted, but sleep-waiting on a
-condition with exponential backoff is fine in test code. In general,
-if you start with a robust test, you can insert a sleep(100) anywhere
-and not break the logic. Violating this rule always causes pain sooner
-or later.
+On 4/25/19 1:33 PM, Vatsala Narang wrote:
+> Challenge suggested by coccinelle.
+> 
 
-Other thoughts: IMHO, using poll(2) instead of epoll would simplify
-the test code, and I think we can get away with calling
-pthread_exit(3) instead of SYS_exit.
+I think you mean *change*.
+
+See more comments below...
+
+
+> Replace bit shifting on 1 with the BIT(x) macro.
+> Coccinelle script:
+> 
+> @@
+> expression c;
+> @@
+> 
+> -(1 << c)
+> +BIT(c)
+> 
+> Signed-off-by: Vatsala Narang <vatsalanarang@gmail.com>
+> ---
+>  drivers/staging/rtl8192u/ieee80211/ieee80211_wx.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_wx.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_wx.c
+> index fa59c712c74b..c44662f03a6b 100644
+> --- a/drivers/staging/rtl8192u/ieee80211/ieee80211_wx.c
+> +++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_wx.c
+> @@ -86,7 +86,7 @@ static inline char *rtl819x_translate_scan(struct ieee80211_device *ieee,
+>  	/* Add the protocol name */
+>  	iwe.cmd = SIOCGIWNAME;
+>  	for(i=0; i<ARRAY_SIZE(ieee80211_modes); i++) {
+> -		if(network->mode&(1<<i)) {
+> +		if(network->mode&BIT(i)) {
+
+A space is required before the open parenthesis: 'if ('.  Also, add
+spaces around operators, in this case around '&'.
+
+>  			sprintf(pname,ieee80211_modes[i].mode_string,ieee80211_modes[i].mode_size);
+>  			pname +=ieee80211_modes[i].mode_size;
+>  		}
+> @@ -394,7 +394,7 @@ int ieee80211_wx_set_encode(struct ieee80211_device *ieee,
+>  		sec.key_sizes[key] = len;
+>  		(*crypt)->ops->set_key(sec.keys[key], len, NULL,
+>  				       (*crypt)->priv);
+> -		sec.flags |= (1 << key);
+> +		sec.flags |= BIT(key);
+>  		/* This ensures a key will be activated if no key is
+>  		 * explicitely set */
+
+You could send a separate patch to fix the typo in the above
+comment: explicitely -> explicitly.
+
+I encourage you to adopt the practice of running checkpatch.pl
+on your patches before submitting them.
+
+Thanks
+--
+Gustavo
+
+>  		if (key == sec.active_key)
+> @@ -415,7 +415,7 @@ int ieee80211_wx_set_encode(struct ieee80211_device *ieee,
+>  			(*crypt)->ops->set_key(sec.keys[key], 13, NULL,
+>  					       (*crypt)->priv);
+>  			sec.key_sizes[key] = 13;
+> -			sec.flags |= (1 << key);
+> +			sec.flags |= BIT(key);
+>  		}
+>  
+>  		/* No key data - just set the default TX key index */
+> @@ -636,7 +636,7 @@ int ieee80211_wx_set_encode_ext(struct ieee80211_device *ieee,
+>  	if (ext->alg != IW_ENCODE_ALG_NONE) {
+>  		//memcpy(sec.keys[idx], ext->key, ext->key_len);
+>  		sec.key_sizes[idx] = ext->key_len;
+> -		sec.flags |= (1 << idx);
+> +		sec.flags |= BIT(idx);
+>  		if (ext->alg == IW_ENCODE_ALG_WEP) {
+>  		      //  sec.encode_alg[idx] = SEC_ALG_WEP;
+>  			sec.flags |= SEC_LEVEL;
+> 
