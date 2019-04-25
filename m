@@ -2,99 +2,69 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55881C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6420C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D3120717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E6C9206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:01:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sP5RmOvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbfDYOAq (ORCPT
+        id S1729408AbfDYOBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:00:46 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44890 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbfDYOAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:00:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D360A78;
-        Thu, 25 Apr 2019 07:00:45 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42D263F246;
-        Thu, 25 Apr 2019 07:00:43 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 15:00:40 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alex Matveev <alxmtvv@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] arm64: sysreg: Make mrs_s and msr_s macros work with
- Clang and LTO
-Message-ID: <20190425140040.GC23796@fuggles.cambridge.arm.com>
-References: <20190424165537.GA48378@beast>
+        Thu, 25 Apr 2019 10:01:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47002 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfDYOBR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:01:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HLbIk0s5M1du/mMNoAlatmEicBx7uPR77M+SYxINoG8=; b=sP5RmOvOcvvGGRHwWpF2YIktL
+        C/EjF6AMsJnW5ybyAIwEi6e5hHRlRMNQ3lRplb9qGJJFyvkvnrpB37IXNGKOFn+wy7gkVnH+t59s0
+        zGSKR+tUyS3OgSENYuAVXEVlkbWhZkWzjtNA+9+qZau47KxaQhn2KBZcW3fNow1kiDBDPxZY6M2qU
+        pf69qRoX/qpjFsl0rqP+wPAqi44slpLsV/1S35rGNPR5QLvWs0bOp5aLKZcFV3jZ9ffrPIuC7ANYy
+        2jpctX2v5OD/JJiKf0BvCroFiOXnckGewaWxRsHa24CIVGlzWXSU5cDijR85kMBf82YkjSsSnoX/G
+        73VhYBMCA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJew4-0003A0-Io; Thu, 25 Apr 2019 14:01:12 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DE91E29C42EE0; Thu, 25 Apr 2019 16:01:10 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 16:01:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yuyang Du <duyuyang@gmail.com>
+Cc:     will.deacon@arm.com, mingo@kernel.org, bvanassche@acm.org,
+        ming.lei@redhat.com, frederic@kernel.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/28] locking/lockdep: Add description and explanation
+ in lockdep design doc
+Message-ID: <20190425140110.GS12232@hirez.programming.kicks-ass.net>
+References: <20190424101934.51535-1-duyuyang@gmail.com>
+ <20190424101934.51535-3-duyuyang@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190424165537.GA48378@beast>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <20190424101934.51535-3-duyuyang@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 09:55:37AM -0700, Kees Cook wrote:
-> Clang's integrated assembler does not allow assembly macros defined
-> in one inline asm block using the .macro directive to be used across
-> separate asm blocks. LLVM developers consider this a feature and not a
-> bug, recommending code refactoring:
-> 
->   https://bugs.llvm.org/show_bug.cgi?id=19749
-> 
-> As binutils doesn't allow macros to be redefined, this change uses
-> UNDEFINE_MRS_S and UNDEFINE_MSR_S to define corresponding macros
-> in-place and workaround gcc and clang limitations on redefining macros
-> across different assembler blocks.
-> 
-> Specifically, the current state after preprocessing looks like this:
-> 
-> asm volatile(".macro mXX_s ... .endm");
-> void f()
-> {
-> 	asm volatile("mXX_s a, b");
-> }
-> 
-> With GCC, it gives macro redefinition error because sysreg.h is included
-> in multiple source files, and assembler code for all of them is later
-> combined for LTO (I've seen an intermediate file with hundreds of
-> identical definitions).
-> 
-> With clang, it gives macro undefined error because clang doesn't allow
-> sharing macros between inline asm statements.
-> 
-> I also seem to remember catching another sort of undefined error with
-> GCC due to reordering of macro definition asm statement and generated
-> asm code for function that uses the macro.
-> 
-> The solution with defining and undefining for each use, while certainly
-> not elegant, satisfies both GCC and clang, LTO and non-LTO.
-> 
-> Co-developed-by: Alex Matveev <alxmtvv@gmail.com>
-> Co-developed-by: Yury Norov <ynorov@caviumnetworks.com>
-> Co-developed-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v5: include register declaration in macro (rutland)
+On Wed, Apr 24, 2019 at 06:19:08PM +0800, Yuyang Du wrote:
+> +Unlike a lock instance, a lock-class itself never goes away: when a
+> +lock-class's instance is used for the first time after bootup the class gets
+> +registered, and all (subsequent) instances of that lock-class will be mapped
+> +to the lock-class.
 
-Cheers all, I've picked this up for 5.2 with the two Reviewed-by tags.
-
-Will
+That's not entirely accurate anymore. Bart van Assche recently added
+lockdep_{,un}register_key().
