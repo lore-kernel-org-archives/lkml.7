@@ -2,132 +2,308 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796FAC282E3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE72C10F03
 	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0273A20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37B720640
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Vap53Xh7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSjFsIys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731210AbfDYMgN (ORCPT
+        id S1731195AbfDYMfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:36:13 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:49463 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfDYMgM (ORCPT
+        Thu, 25 Apr 2019 08:35:30 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:33950 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfDYMf3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:36:12 -0400
-X-IronPort-AV: E=Sophos;i="5.60,393,1549954800"; 
-   d="scan'208";a="31033441"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 25 Apr 2019 05:36:10 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.38) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Thu, 25 Apr 2019 05:36:07 -0700
+        Thu, 25 Apr 2019 08:35:29 -0400
+Received: by mail-it1-f193.google.com with SMTP id z17so1956895itc.1;
+        Thu, 25 Apr 2019 05:35:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WI+lVwDp73NV/VWk7hHw9QyxFK3Ep312eKmOewrk6M4=;
- b=Vap53Xh7U17BZDxAnda1edrC08visKbMvlnx0z3kcH0jpUdozB2+3FYTvcTJ8nKz1yQPh2xjhJLd65TlGhi+0RSsCIBRKFXo+1SeK8kLIVUD0/p/ev7pmzt3HKlLdPWhUjykIynyZ1RDBXEuZE4CPPJ80Fot4QSRmMt8Fgx33xQ=
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
- MWHPR11MB1726.namprd11.prod.outlook.com (10.169.237.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Thu, 25 Apr 2019 12:36:05 +0000
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::f01a:9325:7a65:cdb4]) by MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::f01a:9325:7a65:cdb4%4]) with mapi id 15.20.1813.017; Thu, 25 Apr 2019
- 12:36:05 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <bbrezillon@kernel.org>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <thierry.reding@gmail.com>,
-        <lee.jones@linaro.org>
-CC:     <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <Claudiu.Beznea@microchip.com>
-Subject: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Thread-Topic: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
-Thread-Index: AQHU+2NzxFOsw6p3b0iYuTBfPVB4RQ==
-Date:   Thu, 25 Apr 2019 12:36:05 +0000
-Message-ID: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0802CA0024.eurprd08.prod.outlook.com
- (2603:10a6:800:aa::34) To MWHPR11MB1549.namprd11.prod.outlook.com
- (2603:10b6:301:c::17)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Claudiu.Beznea@microchip.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dbd72eb1-eed8-4c40-e363-08d6c97a957c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR11MB1726;
-x-ms-traffictypediagnostic: MWHPR11MB1726:
-x-microsoft-antispam-prvs: <MWHPR11MB172683C4311877A5352AB3E6873D0@MWHPR11MB1726.namprd11.prod.outlook.com>
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(39850400004)(346002)(376002)(199004)(189003)(81156014)(7416002)(81166006)(97736004)(2201001)(53936002)(5660300002)(8676002)(2501003)(2906002)(86362001)(50226002)(305945005)(6436002)(68736007)(6486002)(72206003)(107886003)(71190400001)(14454004)(6512007)(8936002)(478600001)(186003)(66066001)(26005)(14444005)(256004)(476003)(7736002)(71200400001)(486006)(110136005)(54906003)(6506007)(386003)(6116002)(102836004)(66476007)(66446008)(66946007)(66556008)(36756003)(73956011)(64756008)(4326008)(52116002)(316002)(99286004)(3846002)(2616005)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1726;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fkByWaEUo3AtDzssXCgZ0cpTS9aOEunnu4OQl45f6SfEjTXRTHM/b4hA08/v80XQpho+tjhj3cnb6/s3PnSJc5mQ8vYM0fnKEbStoloARmxXHfppfiAkuKvKXHsKL6NAip1wt8q994MaO2bGZZ5pZ/NTLC9C0PG+41shtvcAhErie9wwsHE3ncHD52cxQaql2CjcDP6ZS96gbViEFrK3BO0B4s7Jtc47fk5pCRiWh98nk8r8M5CJkhuvUGGYH/fneHmgG2GS5xA+v2Vjd8hx0bpKlaHny9h3Nvb9VLca86P1FbhbzgIoPdNR0T4QgQa5qL1sNunSWKanPYSnHvTYp1DceDwmPRukVHXVL4tevxVZ2z0GgPvzckF5Al9JRuXtdrgtZgJUFcIBdRTq1MHi1CyinJN6InMgj4A7pDfkDVs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fOcYQHum18NNlljzaO1YwxdCM3i4CjuyZIdAXwLufoE=;
+        b=aSjFsIys2J5esEsyzc79k1dG5qnmG8A2lXMTcUqO1ohPptp/oCwqsJ9e7kg8/fDxi3
+         G/cLc9kGuFe4DwW7ntilekfTLvZ1KVavvvXqYdJTouOgMianjrSn7as6fkJgnhG4aUGg
+         Pt/+IFTpb61/emS3jyVYl93lC0qymTl6Okf5W0xGcC7VOK/iX/nmnKdFt8+Saf+fAZZ3
+         8R4T18hXWftlNb1XYERXsx5398G5xmzTdqDl9gj7uisqQfhJWuAXFVK+y3o67dIv4uDJ
+         Kj2+MXUgpB+MHM3p9KLP9BaCwqzBpH5UJYhIax2dDToa+VGagCJGVG9psgeTjVjwsE/M
+         mubg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fOcYQHum18NNlljzaO1YwxdCM3i4CjuyZIdAXwLufoE=;
+        b=k3UXmK9AkddBIbL4Ca4GIpHjjv+dNDyE2wOALRX88kYWjgcs1Vx3gtTG7TNxJR2pk2
+         hrhLb1o+90OOdfdZnm8dMKPwHyJJrTwWuI6O6RaE5AyNRIGTZlBKz+hjRzZZORFnfMOi
+         BjWbIbeK5OWio4PzXMA7owhJM4eXwX0b46LONUFUD7txUoYJSR+go8kXc5IMDWBLUwAD
+         oWuK3HxT7LuLTcZTCUNkM76r4orsWapMXNrh+GkNF6c3/q6ZrgNm4WYMjbJ8u+2gaMby
+         I0/2xYOqUZb61A4KCDIuLiyN5Y4sQ2vVIODOi4tl+vAU8DUBOmIG2khqPl6xl3zYFVIj
+         +TZA==
+X-Gm-Message-State: APjAAAW2gE7IGR7a995voyWGE7qM17oJkfCXBtrqgrKBh9J9PrMOuPba
+        MBOpkQal2HGK6f9gvNtg1WHnKbSebVCYOOoOrLdCPoMS
+X-Google-Smtp-Source: APXvYqzEMGNZ6CH/B6NGFe5XfAUjOP0LqY705BVWtVSqkxNMrnYVEP4GM5F15MG+hKgiEaHe5GtjIX6VG/bT5vAUSrY=
+X-Received: by 2002:a05:660c:88d:: with SMTP id o13mr3713498itk.29.1556195728333;
+ Thu, 25 Apr 2019 05:35:28 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbd72eb1-eed8-4c40-e363-08d6c97a957c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 12:36:05.4760
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1726
-X-OriginatorOrg: microchip.com
+References: <20181205004228.10714-1-peter.hutterer@who-t.net>
+ <20181205004228.10714-8-peter.hutterer@who-t.net> <CAM4jgCqAh9Pck-9i8F5tO4-Kzpu+SjH-mQnGYThadSf-3b1ikw@mail.gmail.com>
+ <CA+jURcuhBRYiqFYHDgK8dDycrPgvzkujTRZfnmYraiHvwE+e6w@mail.gmail.com>
+ <CAM4jgCo483upCJWUnpP45zh2LzQWqAZmQREf2622p49a1vbnnA@mail.gmail.com>
+ <CAM4jgCqj5gs-q7VKLm90p0a01k_tYAqxA=zxsmShxv4PSGBJ4A@mail.gmail.com>
+ <CAO-hwJK7pFvuYZJTKgwkj794=xinekDgN_eLBSViw3v_dWAecw@mail.gmail.com>
+ <CAM4jgCrYBr+M+F2iAn8-pPFjiZQ-nPT_H16WcyPKp2PFCM=qhQ@mail.gmail.com>
+ <CAO-hwJJkyK_qPEL37QLd3kLuwB2rFBk+5FWg1UCfgr-FzxZ5aw@mail.gmail.com>
+ <CAM4jgCrLRxOx-qtq8Wfbc1xmYkNHG9vsRSk_BBK5OPgkLyVYnQ@mail.gmail.com>
+ <CAO-hwJ+r1TUQLZqdpNFD4AWC3URro3=Tc56gjV52i=aWrCbL8A@mail.gmail.com>
+ <CAM4jgCrT7fAm1gi0L=Ux1GyxdH26cP8e_Dy36dEHF6Lf2F0rAQ@mail.gmail.com> <CAO-hwJKYtNMYEY1iFm-Nh0_+ZJBvPrXmBUPftwbuFd0ugqWVww@mail.gmail.com>
+In-Reply-To: <CAO-hwJKYtNMYEY1iFm-Nh0_+ZJBvPrXmBUPftwbuFd0ugqWVww@mail.gmail.com>
+From:   =?UTF-8?Q?Cl=C3=A9ment_VUCHENER?= <clement.vuchener@gmail.com>
+Date:   Thu, 25 Apr 2019 14:35:17 +0200
+Message-ID: <CAM4jgCpckiame+H4nXJ3iRQAP4BTKHVQCQxGA0xQ8TJf+-JY3Q@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] HID: logitech: Enable high-resolution scrolling on
+ Logitech mice
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Harry Cutts <hcutts@chromium.org>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nestor Lopez Casado <nlopezcasad@logitech.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQoNCkhp
-LA0KDQpUaGVzZSBwYXRjaGVzIGFkZHMgc3VwcG9ydCBmb3IgU0FNOVg2MCdzIExDRCBjb250cm9s
-bGVyLg0KDQpGaXJzdCBwYXRjaGVzIGFkZCBvcHRpb24gdG8gc3BlY2lmeSBpZiBjb250cm9sbGVy
-IGNsb2NrIHNvdXJjZSBpcyBmaXhlZC4NClNlY29uZCBwYXRjaCBhdm9pZCBhIHZhcmlhYmxlIGlu
-aXRpYWxpemF0aW9uIGluIGF0bWVsX2hsY2RjX2NydGNfbW9kZV9zZXRfbm9mYigpLg0KVGhlIDNy
-ZCBhZGQgY29tcGF0aWJsZXMgaW4gcHdtLWF0bWVsLWhsY2RjIGRyaXZlci4NClRoZSA0dGggcGF0
-Y2ggZW5hYmxlcyBzeXNfY2xrIGluIHByb2JlIHNpbmNlIFNBTTlYNjAgbmVlZHMgdGhpcy4NClNw
-ZWNpZmljIHN1cHBvcnQgd2FzIGFkZGVkIGFsc28gaW4gc3VzcGVuZC9yZXN1bWUgaG9va3MuDQpU
-aGUgNXRoIHBhdGNoIGFkZHMgU0FNOVg2MCdzIExDRCBjb25maWd1cmF0aW9uIGFuZCBlbmFibGVk
-IGl0Lg0KDQpJIHRvb2sgdGhlIGNoYW5nZXMgb2YgdGhpcyBzZXJpZXMgYW5kIGludHJvZHVjZWQg
-YWxzbyBhIGZpeA0KKHRoaXMgaXMgdGhlIDZ0aCBwYXRjaCBpbiB0aGlzIHNlcmllcykgLSBpZiB5
-b3Ugd2FudCB0byBzZW5kIGl0IHNlcGFyYXRlbHkNCkkgd291bGQgZ2xhZGx5IGRvIGl0Lg0KDQpJ
-IHJlc2VuZCB0aGlzIHRvIGFsc28gaW5jbHVkZSBMZWUgSm9uZXMgZm9yIHB3bS1hdG1lbC1obGNk
-YyBjaGFuZ2VzLg0KDQpUaGFuayB5b3UsDQpDbGF1ZGl1IEJlem5lYQ0KDQpDaGFuZ2VzIGluIHYz
-Og0KLSBrZWVwIGNvbXBhdGlibGUgc3RyaW5nIG9uIHBhdGNoIDMvNiBvbiBhIHNpbmdsZSBsaW5l
-IChJIGtlZXAgaGVyZSBhIHRhYg0KICBpbiBmcm9udCBvZiAiLmNvbXBhdGlibGUiIHRvIGJlIGFs
-aWduZWQgd2l0aCB0aGUgcmVzdCBvZiB0aGUgY29kZSBpbg0KICBhdG1lbF9obGNkY19kdF9pZHNb
-XSkNCi0gcGF0Y2hlcyA0LzcgYW5kIDMvNyBmcm9tIHYyIHdlcmUgYXBwbGllZCBzbyByZW1vdmUg
-dGhlbSBmcm9tIHRoaXMgdmVyc2lvbg0KLSBhZGQgYSBmaXggZm9yIGF0bWVsX2hsY2RjIChwYXRj
-aCA2LzYpDQoNCkNoYW5nZXMgaW4gdjI6DQotIHVzZSAifCIgb3BlcmF0b3IgaW4gcGF0Y2ggMS83
-IHRvIHNldCBBVE1FTF9ITENEQ19DTEtTRUwgb24gY2ZnDQotIGNvbGxlY3QgQWNrZWQtYnksIFJl
-dmlld2VkLWJ5IHRhZ3MNCg0KQ2xhdWRpdSBCZXpuZWEgKDQpOg0KICBkcm06IGF0bWVsLWhsY2Rj
-OiBhZGQgY29uZmlnIG9wdGlvbiBmb3IgY2xvY2sgc2VsZWN0aW9uDQogIGRybTogYXRtZWwtaGxj
-ZGM6IGF2b2lkIGluaXRpYWxpemluZyBjZmcgd2l0aCB6ZXJvDQogIHB3bTogYXRtZWwtaGxjZGM6
-IGFkZCBjb21wYXRpYmxlIGZvciBTQU05WDYwIEhMQ0RDJ3MgUFdNDQogIGRybS9hdG1lbC1oY2xj
-ZGM6IHJldmVydCBzaGlmdCBieSA4DQoNClNhbmRlZXAgU2hlcmlrZXIgTWFsbGlrYXJqdW4gKDIp
-Og0KICBkcm06IGF0bWVsLWhsY2RjOiBlbmFibGUgc3lzX2NsayBkdXJpbmcgaW5pdGFsaXphdGlv
-bi4NCiAgZHJtOiBhdG1lbC1obGNkYzogYWRkIHNhbTl4NjAgTENEIGNvbnRyb2xsZXINCg0KIGRy
-aXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNkY19jcnRjLmMgIHwgIDE4ICsrLS0N
-CiBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfZGMuYyAgICB8IDEyMCAr
-KysrKysrKysrKysrKysrKysrKysrKy0NCiBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRt
-ZWxfaGxjZGNfZGMuaCAgICB8ICAgMiArDQogZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0
-bWVsX2hsY2RjX3BsYW5lLmMgfCAgIDIgKy0NCiBkcml2ZXJzL3B3bS9wd20tYXRtZWwtaGxjZGMu
-YyAgICAgICAgICAgICAgICAgICB8ICAgMSArDQogNSBmaWxlcyBjaGFuZ2VkLCAxMzIgaW5zZXJ0
-aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pDQoNCi0tIA0KMi43LjQNCg0K
+Le jeu. 25 avr. 2019 =C3=A0 11:35, Benjamin Tissoires
+<benjamin.tissoires@redhat.com> a =C3=A9crit :
+>
+> On Thu, Apr 25, 2019 at 11:29 AM Cl=C3=A9ment VUCHENER
+> <clement.vuchener@gmail.com> wrote:
+> >
+> > Le jeu. 25 avr. 2019 =C3=A0 10:45, Benjamin Tissoires
+> > <benjamin.tissoires@redhat.com> a =C3=A9crit :
+> > >
+> > > On Thu, Apr 25, 2019 at 10:25 AM Cl=C3=A9ment VUCHENER
+> > > <clement.vuchener@gmail.com> wrote:
+> > > >
+> > > > Le jeu. 25 avr. 2019 =C3=A0 09:40, Benjamin Tissoires
+> > > > <benjamin.tissoires@redhat.com> a =C3=A9crit :
+> > > > >
+> > > > > Hi Cl=C3=A9ment,
+> > > > >
+> > > > > On Wed, Apr 24, 2019 at 5:34 PM Cl=C3=A9ment VUCHENER
+> > > > > <clement.vuchener@gmail.com> wrote:
+> > > > > >
+> > > > > > Hi Benjamin,
+> > > > > >
+> > > > > > I tried again to add hi-res wheel support for the G500 with Han=
+s de
+> > > > > > Goede's latest patch series you've just merged in for-5.2/logit=
+ech, it
+> > > > > > is much better but there is still some issues.
+> > > > > >
+> > > > > > The first one is the device index, I need to use device index 0
+> > > > > > instead 0xff. I added a quick and dirty quirk (stealing in the
+> > > > > > QUIRK_CLASS range since the normal quirk range looks full) to c=
+hange
+> > > > > > the device index assigned in __hidpp_send_report. After that th=
+e
+> > > > > > device is correctly initialized and the wheel multiplier is set=
+.
+> > > > >
+> > > > > Hmm, maybe we should restrain a little bit the reserved quirks...
+> > > > > But actually, .driver_data and .quirks are both unsigned long, so=
+ you
+> > > > > should be able to use the 64 bits.
+> > > >
+> > > > Only on 64 bits architectures, or is the kernel forcing long intege=
+rs
+> > > > to be 64 bits everywhere?
+> > >
+> > > Damnit, you are correct, there is no such enforcement :/
+> > >
+> > > >
+> > > > >
+> > > > > >
+> > > > > > The second issue is that wheel values are not actually scaled
+> > > > > > according to the multiplier. I get 7/8 full scroll event for ea=
+ch
+> > > > > > wheel step. I think it happens because the mouse is split in tw=
+o
+> > > > > > devices. The first device has the wheel events, and the second =
+device
+> > > > > > has the HID++ reports. The wheel multiplier is only set on the =
+second
+> > > > > > device (where the hi-res mode is enabled) and does not affect t=
+he
+> > > > > > wheel events from the first one.
+> > > > >
+> > > > > I would think this have to do with the device not accepting the
+> > > > > command instead. Can you share some raw logs of the events (ideal=
+ly
+> > > > > with hid-recorder from
+> > > > > https://gitlab.freedesktop.org/libevdev/hid-tools)?
+> > > >
+> > > > I already checked with usbmon and double-checked by querying the
+> > > > register. The flag is set and accepted by the device and it behaves
+> > > > accordingly: it sends about 8 wheel events per step.
+> > >
+> > > OK, that's what I wanted to see.
+> > >
+> > > >
+> > > > hid-recorder takes hidraw nodes as parameters, how do I use it to
+> > > > record the initialization by the driver?
+> > >
+> > > You can't. But it doesn't really matter here because I wanted to chec=
+k
+> > > what your mouse is actually sending after the initialization.
+> > >
+> > > So if I read correctly: the mouse is sending high res data but
+> > > evemu-recorder shows one REL_WHEEL event every 7/8 clicks?
+> >
+> > It is HID++ 1.0, there is no special high res data report, it sends
+> > standard HID mouse wheel report, but more of them.
+> >
+> > To be clear, here is a recording using the modified kernel. I moved
+> > the wheel one step up (8 events are generated), then one step down (8
+> > events again + a 2-event bump).
+> >
+> > # EVEMU 1.3
+> [snipped]
+> > E: 1.975014 8 00 00 00 00 00 00 01 00
+> >
+> > The hi-res events should +/-15 instead of +/-120, and less REL_WHEEL
+> > events should be generated. This looks like the multiplier is set to 1
+> > instead of 8.
+> >
+> > kernel log shows the multiplier is set but only for one of the two devi=
+ces:
+> >
+> > input: Logitech G500 as
+> > /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.0/0003:046D:C068.0006/i=
+nput/input25
+> > hid-generic 0003:046D:C068.0006: input,hidraw5: USB HID v1.11 Mouse
+> > [Logitech G500] on usb-0000:00:14.0-2/input0
+> > input: Logitech G500 Keyboard as
+> > /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.1/0003:046D:C068.0007/i=
+nput/input26
+> > input: Logitech G500 Consumer Control as
+> > /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.1/0003:046D:C068.0007/i=
+nput/input27
+> > hid-generic 0003:046D:C068.0007: input,hiddev97,hidraw6: USB HID v1.11
+> > Keyboard [Logitech G500] on usb-0000:00:14.0-2/input1
+> > input: Logitech G500 as
+> > /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.0/0003:046D:C068.0006/i=
+nput/input30
+> > logitech-hidpp-device 0003:046D:C068.0006: input,hidraw5: USB HID
+> > v1.11 Mouse [Logitech G500] on usb-0000:00:14.0-2/input0
+> > logitech-hidpp-device 0003:046D:C068.0007: HID++ 1.0 device connected.
+> > logitech-hidpp-device 0003:046D:C068.0007: multiplier =3D 8
+> > input: Logitech G500 as
+> > /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.1/0003:046D:C068.0007/i=
+nput/input31
+> > logitech-hidpp-device 0003:046D:C068.0007: input,hiddev97,hidraw6: USB
+> > HID v1.11 Keyboard [Logitech G500] on usb-0000:00:14.0-2/input1
+> >
+>
+> Oh, now I see. And yes you are correct.
+>
+> I wonder if we should not consider the mouse in hid-logitech-dj then.
+> And let hid-logitech-dj merge the 2 nodes together into one hidpp
+> device, and so we are facing a "regular" HID++ device which is
+> consistent.
+
+This would change how userspace see the devices, isn't it? And I don't
+like the dj hidraw nodes, they mess with the device index: you get
+answers with a device index different from the one used in the
+corresponding request.
+
+>
+> Unfortunately, I am not sure I'll have the time to work on it this week :=
+/
+>
+> Cheers,
+> Benjamin
+>
+> > >
+> > > > > > Le mer. 19 d=C3=A9c. 2018 =C3=A0 21:35, Benjamin Tissoires
+> > > > > > <benjamin.tissoires@redhat.com> a =C3=A9crit :
+> > > > > > >
+> > > > > > > On Wed, Dec 19, 2018 at 11:57 AM Cl=C3=A9ment VUCHENER
+> > > > > > > <clement.vuchener@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > Le sam. 15 d=C3=A9c. 2018 =C3=A0 15:45, Cl=C3=A9ment VUCHEN=
+ER
+> > > > > > > > <clement.vuchener@gmail.com> a =C3=A9crit :
+> > > > > > > > >
+> > > > > > > > > Le ven. 14 d=C3=A9c. 2018 =C3=A0 19:37, Harry Cutts <hcut=
+ts@chromium.org> a =C3=A9crit :
+> > > > > > > > > >
+> > > > > > > > > > Hi Clement,
+> > > > > > > > > >
+> > > > > > > > > > On Fri, 14 Dec 2018 at 05:47, Cl=C3=A9ment VUCHENER
+> > > > > > > > > > <clement.vuchener@gmail.com> wrote:
+> > > > > > > > > > > Hi, The G500s (and the G500 too, I think) does suppor=
+t the "scrolling
+> > > > > > > > > > > acceleration" bit. If I set it, I get around 8 events=
+ for each wheel
+> > > > > > > > > > > "click", this is what this driver expects, right? If =
+I understood
+> > > > > > > > > > > correctly, I should try this patch with the
+> > > > > > > > > > > HIDPP_QUIRK_HI_RES_SCROLL_1P0 quirk set for my mouse.
+> > > > > > > > > >
+> > > > > > > > > > Thanks for the info! Yes, that should work.
+> > > > > > > > >
+> > > > > > > > > Well, it is not that simple. I get "Device not connected"=
+ errors for
+> > > > > > > > > both interfaces of the mouse.
+> > > > > > > >
+> > > > > > > > I suspect the device is not responding because the hid devi=
+ce is not
+> > > > > > > > started. When is hid_hw_start supposed to be called? It is =
+called
+> > > > > > > > early for HID_QUIRK_CLASS_G920 but later for other device. =
+So the
+> > > > > > > > device is not started when hidpp_is_connected is called. Is=
+ this
+> > > > > > > > because most of the device in this driver are not real HID =
+devices but
+> > > > > > > > DJ devices? How should non-DJ devices be treated?
+> > > > > > >
+> > > > > > > Hi Clement,
+> > > > > > >
+> > > > > > > I have a series I sent last September that allows to support =
+non DJ
+> > > > > > > devices on logitech-hidpp
+> > > > > > > (https://patchwork.kernel.org/project/linux-input/list/?serie=
+s=3D16359).
+> > > > > > >
+> > > > > > > In its current form, with the latest upstream kernel, the ser=
+ies will
+> > > > > > > oops during the .event() callback, which is easy enough to fi=
+x.
+> > > > > > > However, I am currently trying to make it better as a second =
+or third
+> > > > > > > reading made me realized that there was a bunch of non-sense =
+in it and
+> > > > > > > a proper support would require slightly more work for the non=
+ unifying
+> > > > > > > receiver case.
+> > > > > > >
+> > > > > > > I hope I'll be able to send out something by the end of the w=
+eek.
+> > > > > > >
+> > > > > > > Cheers,
+> > > > > > > Benjamin
