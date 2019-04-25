@@ -4,37 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82B4C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616C4C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5379420644
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E9E20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387896AbfDYMo2 (ORCPT
+        id S2387883AbfDYMoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:44:28 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6693 "EHLO huawei.com"
+        Thu, 25 Apr 2019 08:44:25 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6696 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731399AbfDYMoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731398AbfDYMoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Apr 2019 08:44:17 -0400
 Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3AC70B4E357C1B479CB3;
+        by Forcepoint Email with ESMTP id 48B0D4CF03BBE59A1931;
         Thu, 25 Apr 2019 20:44:14 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 25 Apr 2019 20:44:06 +0800
+ 14.3.439.0; Thu, 25 Apr 2019 20:44:05 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <nhorman@redhat.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>
-Subject: [PATCH V3 net-next 10/11] net: hns3: prevent double free in hns3_put_ring_config()
-Date:   Thu, 25 Apr 2019 20:42:54 +0800
-Message-ID: <1556196175-65389-11-git-send-email-tanhuazhong@huawei.com>
+        liuzhongzhu <liuzhongzhu@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH V3 net-next 09/11] net: hns3: extend the loopback state acquisition time
+Date:   Thu, 25 Apr 2019 20:42:53 +0800
+Message-ID: <1556196175-65389-10-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556196175-65389-1-git-send-email-tanhuazhong@huawei.com>
 References: <1556196175-65389-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,75 +48,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a check for the hns3_put_ring_config() to prevent
-double free, and for more readable, move the NULL assignment of
-priv->ring_data into the hns3_put_ring_config().
+From: liuzhongzhu <liuzhongzhu@huawei.com>
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+The test results show that the maximum time of hardware return
+to mac link state is 500MS.The software needs to set twice the
+maximum time of hardware return state (1000MS).
+
+If not modified, the loopback test returns probability failure.
+
+Signed-off-by: liuzhongzhu <liuzhongzhu@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 7dc281c..b0f31eb 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -3487,6 +3487,7 @@ static int hns3_get_ring_config(struct hns3_nic_priv *priv)
- 	}
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 4d5568e..effe89fa 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -5337,8 +5337,8 @@ static int hclge_set_serdes_loopback(struct hclge_dev *hdev, bool en,
+ #define HCLGE_SERDES_RETRY_MS	10
+ #define HCLGE_SERDES_RETRY_NUM	100
  
- 	devm_kfree(&pdev->dev, priv->ring_data);
-+	priv->ring_data = NULL;
- 	return ret;
- }
+-#define HCLGE_MAC_LINK_STATUS_MS   20
+-#define HCLGE_MAC_LINK_STATUS_NUM  10
++#define HCLGE_MAC_LINK_STATUS_MS   10
++#define HCLGE_MAC_LINK_STATUS_NUM  100
+ #define HCLGE_MAC_LINK_STATUS_DOWN 0
+ #define HCLGE_MAC_LINK_STATUS_UP   1
  
-@@ -3495,12 +3496,16 @@ static void hns3_put_ring_config(struct hns3_nic_priv *priv)
- 	struct hnae3_handle *h = priv->ae_handle;
- 	int i;
- 
-+	if (!priv->ring_data)
-+		return;
-+
- 	for (i = 0; i < h->kinfo.num_tqps; i++) {
- 		devm_kfree(priv->dev, priv->ring_data[i].ring);
- 		devm_kfree(priv->dev,
- 			   priv->ring_data[i + h->kinfo.num_tqps].ring);
- 	}
- 	devm_kfree(priv->dev, priv->ring_data);
-+	priv->ring_data = NULL;
- }
- 
- static int hns3_alloc_ring_memory(struct hns3_enet_ring *ring)
-@@ -3920,8 +3925,6 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
- 
- 	hns3_dbg_uninit(handle);
- 
--	priv->ring_data = NULL;
--
- out_netdev_free:
- 	free_netdev(netdev);
- }
-@@ -4268,12 +4271,10 @@ static int hns3_reset_notify_init_enet(struct hnae3_handle *handle)
- 	hns3_uninit_all_ring(priv);
- err_uninit_vector:
- 	hns3_nic_uninit_vector_data(priv);
--	priv->ring_data = NULL;
- err_dealloc_vector:
- 	hns3_nic_dealloc_vector_data(priv);
- err_put_ring:
- 	hns3_put_ring_config(priv);
--	priv->ring_data = NULL;
- 
- 	return ret;
- }
-@@ -4335,7 +4336,6 @@ static int hns3_reset_notify_uninit_enet(struct hnae3_handle *handle)
- 		netdev_err(netdev, "uninit ring error\n");
- 
- 	hns3_put_ring_config(priv);
--	priv->ring_data = NULL;
- 
- 	return ret;
- }
 -- 
 2.7.4
 
