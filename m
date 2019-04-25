@@ -2,119 +2,88 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2A0C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 23:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E81C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 23:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F81C20717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 23:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF052084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 23:19:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ABdGz3Zs";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="YXAzZlg5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="EbEVvKpd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbfDYXTF (ORCPT
+        id S1727397AbfDYXTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 19:19:05 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:56712 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725970AbfDYXTF (ORCPT
+        Thu, 25 Apr 2019 19:19:21 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:45644 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfDYXTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 19:19:05 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B78D88EE128;
-        Thu, 25 Apr 2019 16:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1556234342;
-        bh=fMxWW2XE8pJ3bJdRRHAaQs1JoNnXt48P1mEGYbiDo9s=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ABdGz3ZshXma0aCBC9ltamj6CDJob0Nmf3SgYLhXzfln2Kkv0X3XN9yp38y+ynK2v
-         BhOYfukRKIprcRD/7+L6dmoxpH9FTUPig+UKFrjqXcwwKcQGd9WF18L9Vv55Jm9XSv
-         MAKuO14E+JZeRa2GfNIUCyJSDSi8OkxEfMdU/D58=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bnOL8x0gA6Fv; Thu, 25 Apr 2019 16:19:01 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id EF2CB8EE0AB;
-        Thu, 25 Apr 2019 16:18:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1556234340;
-        bh=fMxWW2XE8pJ3bJdRRHAaQs1JoNnXt48P1mEGYbiDo9s=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=YXAzZlg55SJpB/+onn2s9I2iXx3YwcLNN53U9BvpaQGvX8DrWwxcl+fpVfHWUN48I
-         BCVIo409pYRU5G3jbv/LKmMvjuE5flMrJJRf5dO4dQxV6SlWYcR98/bCqxFValwNiN
-         t6JL2S3Vjo/Bqnc5wSZgcLnf8wcxWZNlGRVcwChQ=
-Message-ID: <1556234338.2788.1.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2 2/5 RFC] use event name instead of enum to make the
- call generic
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     James Morris <jmorris@namei.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     prsriva <prsriva@linux.microsoft.com>,
-        Nayna <nayna@linux.vnet.ibm.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        inux-security-module@vger.kernel.org, zohar@linux.ibm.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com,
-        Prakhar Srivastava <prsriva@microsoft.com>
-Date:   Thu, 25 Apr 2019 16:18:58 -0700
-In-Reply-To: <alpine.LRH.2.21.1904260833140.7315@namei.org>
-References: <20190424001544.7188-1-prsriva02@gmail.com>
-         <20190424001544.7188-2-prsriva02@gmail.com>
-         <d38f32f8-7078-f205-ba11-9c4266ee40e8@linux.vnet.ibm.com>
-         <4c313367-22dc-9532-54b5-cd3a79deb625@linux.microsoft.com>
-         <CAADWXX8NC-PFJmuvQbNXn49CYjvyn-e0rtH_EoUfCvuJHTwHAQ@mail.gmail.com>
-         <alpine.LRH.2.21.1904260833140.7315@namei.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Apr 2019 19:19:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1556234357; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3kkzXoVmj9Y9EGf7wfTEm385M7zBToZLwy97XnNzQF0=;
+        b=EbEVvKpdiCdTyIaaHKDD7T+HXSl4le/DoZ2JoxTxAhpqjPnuseBmrbWSVrLAuAh7dP8TPr
+        qs7+cq9c74NMvKvzh+MQ3DiYW+RkSqxkLZZ4PsXac5VvRaGdOiPf3LCXqgagbKvSzby02c
+        dtwqA6hmZmxZQPVpdEdroEQw4/Hz5kE=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3 2/3] drm: Add bus flag for Sharp-specific signals
+Date:   Fri, 26 Apr 2019 01:18:53 +0200
+Message-Id: <20190425231854.24479-2-paul@crapouillou.net>
+In-Reply-To: <20190425231854.24479-1-paul@crapouillou.net>
+References: <20190425231854.24479-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-04-26 at 08:34 +1000, James Morris wrote:
-> On Thu, 25 Apr 2019, Linus Torvalds wrote:
-> 
-> > On Thu, Apr 25, 2019 at 10:19 AM prsriva <prsriva@linux.microsoft.c
-> > om> wrote:
-> > > 
-> > > I will fix the comments and send out the patchset with a cover
-> > > letter. Thankyou for pointing this out.
-> > 
-> > Please trim the emails you reply to rather than quoting everything.
-> > 
-> > But the real reason I'm reacting to this email is because it was
-> > marked as spam, because your SMTP setup is incorrect, and you don't
-> > go through the proper MS SMTP server. As a result, you don't get
-> > the proper DKIM signature for verification of the microsoft.com
-> > email address, and sane email clients will mark your emails as
-> > spam.
-> > 
-> > Please fix.
-> 
-> It's the correct SMTP server for linux.microsoft.com.
-> 
-> linux.microsoft.com.	3600	IN	TXT	"v=spf1
-> ip4:13.77.154.182 -all"
-> linux.microsoft.com.	3600	IN	TXT	"v=DMARC
-> 1;p=none;pct=100;rua=mailto:jamorris@microsoft.com"
+Add the DRM_BUS_FLAG_SHARP_SIGNALS to the drm_bus_flags enum.
 
-That's not the correct location: DMARC records should be at the _dmarc.
-subdomain.  without this you'll inherit the dmarc policy of
-_dmarc.microsoft.com
+This flags can be used when the display must be driven with the
+Sharp-specific signals SPL, CLS, REV, PS.
 
-> We don't have DKIM set up yet.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-If you advertise DMARC, you're expected to have DKIM working for spam
-purposes.  On the other hand, if you don't advertise DMARC, google will
-probably still bin all your email as spam.
+Notes:
+    v3: New patch
 
-James
+ include/drm/drm_connector.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index 02a131202add..ac7d58fd1e03 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -323,6 +323,8 @@ enum drm_panel_orientation {
+  *					edge of the pixel clock
+  * @DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE:	Sync signals are sampled on the falling
+  *					edge of the pixel clock
++ * @DRM_BUS_FLAG_SHARP_SIGNALS:		Set if the Sharp-specific signals
++ *					(SPL, CLS, PS, REV) must be used
+  */
+ enum drm_bus_flags {
+ 	DRM_BUS_FLAG_DE_LOW = BIT(0),
+@@ -341,6 +343,7 @@ enum drm_bus_flags {
+ 	DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE = DRM_BUS_FLAG_SYNC_NEGEDGE,
+ 	DRM_BUS_FLAG_SYNC_SAMPLE_POSEDGE = DRM_BUS_FLAG_SYNC_NEGEDGE,
+ 	DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE = DRM_BUS_FLAG_SYNC_POSEDGE,
++	DRM_BUS_FLAG_SHARP_SIGNALS = BIT(8),
+ };
+ 
+ /**
+-- 
+2.21.0.593.g511ec345e18
 
