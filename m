@@ -2,82 +2,106 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71966C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB910C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD97620717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556218249;
-	bh=qxF/lXiqo6cG/57oiaUteES7Mb3jGcT9riQl/ZNu7G0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VpDdXIJA0J5gqUSs/toMgjmhfax/BjapMUlQj9dT9knieeKFp2AjQ5SDsgz03aAIX
-	 E1IUyuLbSBTt4Gw8ff6JDNGOkKYCHkmL96XxTX6bUR8qlY6xiqqgn8ME+CbcuQqHnF
-	 28A7bte5dwSZt73BW1DCN43H1nCurMXtwHyhd+yo=
+	by mail.kernel.org (Postfix) with ESMTP id 4BD6420717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:51:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="H7Bd7bG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbfDYSus (ORCPT
+        id S1729769AbfDYSvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:50:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbfDYSur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:50:47 -0400
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 553E42146E
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 18:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556218247;
-        bh=qxF/lXiqo6cG/57oiaUteES7Mb3jGcT9riQl/ZNu7G0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=B80m5djWcvM7FGaP9bH9idT/TL1WS/EHA4jDB/C7IhZYKiFdAU/tL5dCTYG4mDLCC
-         FmVlwVFYbPgQubjIzVfut7u2Nlev8TV0PaxqR/vZeywXp3Gv9GrW04uP+MKzsAO/CM
-         eDqIZ/o8Hs2Y2Q27kvf8uMZURy9vktZA7OmI+eRI=
-Received: by mail-wm1-f41.google.com with SMTP id n25so659811wmk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:50:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAVyhnOHDAS/7+VsHLP7PahPAF3Tm3KG75SREMOfNk4Zx9HUXaBw
-        pUh4rxyv/yCrXa39J6Oh5pglb3v+k7PsHe4f6CQFdw==
-X-Google-Smtp-Source: APXvYqydoeh+i3DNI6lzmXpy6tzeBOndTDk0R2/se/sGzaRsHorj4pk/wGQxi9a/avUEXgkxmLJWcSm/uTKW/r8FzjA=
-X-Received: by 2002:a1c:eb18:: with SMTP id j24mr4882651wmh.32.1556218245380;
- Thu, 25 Apr 2019 11:50:45 -0700 (PDT)
+        Thu, 25 Apr 2019 14:51:50 -0400
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:39576 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfDYSvt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 14:51:49 -0400
+Received: by mail-ed1-f43.google.com with SMTP id k45so810902edb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b55P2IFv2UpxlgvURrxCcFTUbkVb37FoCTfo/TcEgTE=;
+        b=H7Bd7bG1fJeV3A7INUqsw/yC6Tcx2LmSaWfrxZGHChZtX9HVJ7LWkiMwAStQzY1A6C
+         e24kQ8YYbrhBrBPegRC0b9Le06WH/iz/3/Tb9vPHtsQSfj/7EC6gZ+JFDVIQQAlBndJo
+         NIJQBoajtzB8lRybkTxj5S/QajeNkN6FOkAIsnrct7YcTs9idIKsQd2EZD0LinOY1wPR
+         ketwMV/wqOn8l22PoVtns2mz+U6LYkCkn02WCKWghRaCrl1nL+81/ToLl4nmbcTdxoLN
+         /medWc+TUcgxQAQvDM7+8Vz9OFaSYGcHjgAa1VBRCMiEYYOVhIQ+mOykud+6mW8u+/SI
+         yPVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b55P2IFv2UpxlgvURrxCcFTUbkVb37FoCTfo/TcEgTE=;
+        b=hZOB5czyFRvfMFhD06jHP5gZ9CmYXNU1R7UilrtiFXM8r6vDucTsA5wfzxSw5eS9VX
+         VbnLNTXcmabKFJtKmxAZXooIaT+uzH5QBZJD2OZAb+h3yCRCPhxa2Mw3hUCaxm9Sv9VH
+         fwgZpU1dXpa90awRdpZLA694X9BEolcZ2XwQJ2zsNIipCgD68VIVSVkRCTiawtHpz4kI
+         L2PSNe+z1V/ecmPJSi4qsMqA5g2UjjOFhv3/Rx16MkKTNOZr6LElpctGrxjKvkuR5YMu
+         TF1TsxxdFNLJtcT0fU6imtI3RHaKYv6s1ksCVkvxwqpapALUz/Aa78kTZl5W/9MwCDTz
+         3APA==
+X-Gm-Message-State: APjAAAWCcrjiQvz1hDK7cGYkg04qD+8GeNVdMkYhYMiBDbHHCewxjqD4
+        TlkFzEvcWaHt7drTjhx4+0DNizl+c7RfvzMbUcLmiQ==
+X-Google-Smtp-Source: APXvYqxfNCds1kl6313Ad4+cJxM/dXtmhN6kZ83GGVN0OsY6b4YD/uFBtltwpNCLN5C76jVxd/HWZ8/Eth051yXAoBU=
+X-Received: by 2002:aa7:cf8f:: with SMTP id z15mr22750446edx.190.1556218307805;
+ Thu, 25 Apr 2019 11:51:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190425180828.24959-1-namit@vmware.com>
-In-Reply-To: <20190425180828.24959-1-namit@vmware.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 25 Apr 2019 11:50:32 -0700
-X-Gmail-Original-Message-ID: <CALCETrVmUQ2=qddwh=CHtkaZPn1JMoN9ce=Dv5rNUvFbqjHzUw@mail.gmail.com>
-Message-ID: <CALCETrVmUQ2=qddwh=CHtkaZPn1JMoN9ce=Dv5rNUvFbqjHzUw@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/mm/tlb: Remove flush_tlb_info from the stack
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+References: <20190425175440.9354-1-pasha.tatashin@soleen.com>
+ <20190425175440.9354-2-pasha.tatashin@soleen.com> <67dba1e2-155c-f572-81dd-a6d589d0e8a5@intel.com>
+In-Reply-To: <67dba1e2-155c-f572-81dd-a6d589d0e8a5@intel.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 25 Apr 2019 14:51:37 -0400
+Message-ID: <CA+CK2bC5G0DrBpHuaV5xrAAZUKHVwN2N++eiV++SH2gvvbKGHA@mail.gmail.com>
+Subject: Re: [v3 1/2] device-dax: fix memory and resource leak if hotplug fails
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>
+        linux-mm <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        David Hildenbrand <david@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 11:08 AM Nadav Amit <namit@vmware.com> wrote:
+On Thu, Apr 25, 2019 at 2:32 PM Dave Hansen <dave.hansen@intel.com> wrote:
 >
-> Move flush_tlb_info variables off the stack. This allows to align
-> flush_tlb_info to cache-line and avoid potentially unnecessary cache
-> line movements. It also allows to have a fixed virtual-to-physical
-> translation of the variables, which reduces TLB misses.
+> On 4/25/19 10:54 AM, Pavel Tatashin wrote:
+> >       rc = add_memory(numa_node, new_res->start, resource_size(new_res));
+> > -     if (rc)
+> > +     if (rc) {
+> > +             release_resource(new_res);
+> > +             kfree(new_res);
+> >               return rc;
+> > +     }
 >
-> Use per-CPU struct for flush_tlb_mm_range() and
-> flush_tlb_kernel_range(). Add debug assertions to ensure there are
-> no nested TLB flushes that might overwrite the per-CPU data. For
-> arch_tlbbatch_flush() use a const struct.
+> Looks good to me:
 >
+> Reviewed-by: Dave Hansen <dave.hansen@intel.com>
 
-I like this version of the patch.
+Thank you Dave.
+
+Pasha
