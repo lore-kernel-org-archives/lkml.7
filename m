@@ -2,74 +2,102 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424E6C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B48C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11358218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E62218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GCTH4fIO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Om/tjs+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfDYMTC (ORCPT
+        id S1728889AbfDYMUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:19:02 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43809 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbfDYMTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:19:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=HSbgQvEs8ufHCJFyDaygGtbcXzayI98z9Nsepy4UI2Y=; b=GCTH4fIOf2uNVp6cnt5jeuv3Ra
-        5QoJKO55D48v5PW4MaTJeWkDEHHQckuVbEoL435QtTxKlz14rq3p8raKlxtkub0tvMXs0YR1KOVMf
-        aC47iqqn8VkhN5EGcHspp3jhVkcDRQYndCijf8cns/OlMaczAfCF5JR2ZaOXluvHkIKI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hJdL2-0002AV-OQ; Thu, 25 Apr 2019 14:18:52 +0200
-Date:   Thu, 25 Apr 2019 14:18:52 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>
-Subject: Re: [RFC PATCH v3 net-next 01/11] net: ethernet: ti: cpts: use
- devm_get_clk_from_child
-Message-ID: <20190425121852.GA8117@lunn.ch>
-References: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
- <1556144667-27997-2-git-send-email-grygorii.strashko@ti.com>
- <20190424224607.GB23779@lunn.ch>
- <3aae7697-3b7f-492b-0600-b6d1382511c3@ti.com>
+        Thu, 25 Apr 2019 08:20:20 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:50251 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfDYMUU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 08:20:20 -0400
+Received: by mail-it1-f195.google.com with SMTP id q14so12038583itk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 05:20:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=Ff5AtzwwT3/+/+DhAf7emgB+G9uyqnQ39QFzfiHlnCY=;
+        b=Om/tjs+cIisp8QHDq6CzrUaiOLSXRjROsCaIOMcfRT7mExJkBP94D6lLaZqgBjmK7E
+         IhxDMxIDh6ZRbqEyX+oeKocEyjgq0RWG29jCZumjVsCAVAXZmywYbn8qZHxE9DhMM3Q7
+         fC1vizrABzM9jaOPzrsHF9sfKzMnciSxuLttMK5ICCOzSw+9+mhdDFphZxs9Kbmvhu6N
+         TtmlT4ceZoENTs/l/PFUspaub2hvQijbD14amJ0ZUDUxSKdhU2LZjV78hiJHAhlwPqKP
+         oHiUMJIna1eVjx/uNAdb9JzIrhaX9BexQ+YAQR6sEGBjxhOtpiNgU2kAWR9Sat6WPilD
+         sfhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=Ff5AtzwwT3/+/+DhAf7emgB+G9uyqnQ39QFzfiHlnCY=;
+        b=Z5qmjRMTaupWjCVfQ9McKUoBOTfIWzObB/F4vJ0sMtBl3BfSCAuFSd2/SzHuxC1Xdo
+         tTfkekhZeNPmtb2TOq8+qIo5n7sEG57gxLC/JxZkOsNF9rI0wUJF5jgqBUnIi5ETY2wQ
+         Im9h5Dst33f1PWHMTQdYnAkmJUWnPMeAuNkJ/Cbhl1RvxTQTSHzbAfkoMA2jxpiJJPIp
+         JRmJMEyIw3edpXYBIXtdYc6vbzmUa0FVJxaIVUns1l8KEsFTLFunYO6D17bXNcncudO/
+         ET8Oo7T+h9iFwoKjfBboLPpe//wTg4ORJNwpEV3jif+III4Z2ibjFss+r1zCR2lXCLFa
+         k8HQ==
+X-Gm-Message-State: APjAAAUaEs+seQKTXUy+ku2BtMdETznQpWNF2IoKCdfcir0Z9JeF2l5B
+        Vv2PuXSmb2UVw47FuAKoRhaK61JLpKYYeWwn+dz7NlpgqwE=
+X-Google-Smtp-Source: APXvYqzvwgFEFTx/KOu9/KRtMQB8bZPew2d9yQi0ISoduzu75d/y4B7m7oOTvlB/BIjiqYUpckQCHfBQ76huRI/Tbss=
+X-Received: by 2002:a24:7350:: with SMTP id y77mr3050214itb.52.1556194819534;
+ Thu, 25 Apr 2019 05:20:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3aae7697-3b7f-492b-0600-b6d1382511c3@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+From:   Uros Bizjak <ubizjak@gmail.com>
+Date:   Thu, 25 Apr 2019 14:20:08 +0200
+Message-ID: <CAFULd4ZDbg5jFkLzRnEgnVgRwRJa+OG2EvGYUEFQ0RASux2qqg@mail.gmail.com>
+Subject: Re: x86: Use named address spaces in asm/percpu.h
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Hi Grygorii
-> > 
-> > Does this break backwards compatibility for existing DT blobs?
-> > Maybe you need to look in both the old and new locations?
-> 
-> No. It doesn't - default node is cpsw->dev->of_node.
+> * Ingo Molnar <mingo@kernel.org> wrote:
+>
+>> Not all GCC versions seem to like this series:
+>>
+>>  In file included from arch/x86/mm/tlb.c:12:0:
+>>  arch/x86/mm/tlb.c: In function =E2=80=98switch_mm_irqs_off=E2=80=99:
+>>  ./arch/x86/include/asm/mmu_context.h:210:28: internal compiler error: S=
+egmentation fault
+>>   #define switch_mm_irqs_off switch_mm_irqs_off
+>>  arch/x86/mm/tlb.c:183:6: note: in expansion of macro =E2=80=98switch_mm=
+_irqs_off=E2=80=99
+>>   void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next=
+,
+>>  Please submit a full bug report,
+>>  with preprocessed source if appropriate.
+>>  See <file:///usr/share/doc/gcc-7/README.Bugs> for instructions.
+>>
+>> gcc version 7.3.0 (Ubuntu 7.3.0-16ubuntu3)
+>
+> That's with a 32-bit kernel, config attached.
 
-O.K. great. Maybe mention this in the commit message if there is a v2.
+I am resurrecting an old thread at [1] that tried to introduce named
+address spaces in asm/percpu.h. The thread ended with the above
+message [2], but no bugreport was ever filled to GCC's bugzilla. Can
+please someone from linux  community file a PR with a failing testcase
+to GCC Bugzilla, so we (the GCC community) can analyze the problem and
+eventually fix the compiler?
 
-     Thanks
-        Andrew
+[1] https://lkml.org/lkml/2018/9/12/646
+[2] https://lkml.org/lkml/2018/9/12/1052
+[3] https://gcc.gnu.org/bugs/
+
+Thanks,
+Uros.
