@@ -2,120 +2,135 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39451C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01D3C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D0520679
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E1620679
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="e340SQfE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BwP49ySy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfDYNOc (ORCPT
+        id S1727276AbfDYNQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 09:14:32 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37013 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfDYNOc (ORCPT
+        Thu, 25 Apr 2019 09:16:48 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46702 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbfDYNQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 09:14:32 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w37so1462328edw.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 06:14:31 -0700 (PDT)
+        Thu, 25 Apr 2019 09:16:48 -0400
+Received: by mail-qk1-f194.google.com with SMTP id w73so10794723qkb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 06:16:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g75BwLN4R8xuSeRdoXz2tu6AoMbM+mYXbYPKXRT0R7U=;
-        b=e340SQfEyWzBjupqs5uoZrKWC6KzrCsgk8PNiSgHHC/rNbfjMlG98ZoPFPIcLa7fn8
-         oWiP3IOSkx8W3rbMVKRJYkt7z84sdwF409bw9AEeRz5aaUh301mlXy0Fn9lxeZetcI9I
-         bwBhLdZO6UENXBfvNTheRZlIQoEFJt0g80VK9n4xjZXgaDDm0qmGJgxbiRndS/+yYi5U
-         qhe1JHVYSZu77LOMOze/zVQxUhVuUC5n7Or3ggG0FV8CaENAG6O/9WJVNrLrWv6lmLsD
-         6nrhGjZvN1rqq3O3U2kvEf8g2fgi9IeZNT3zINXfaAnGInLaYNNvcUhOsxYqBXc5eXpf
-         F1Aw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YvpcsYxKpblRj5+jchkadP+EIMWVQeoHvjsvGTTCyfU=;
+        b=BwP49ySy1oK+txg9tILWwHgxJATEKK4Jywj0sHWsKnrD6rqjmliO1SD9A30rz5M+SC
+         SKY0ZV8kAK04gcX4MM0QbJveGD/sAHEWSt/6fHw5A30J6Utxv+SmFN5lQdqOANJz+kL/
+         uc1Tmds5YYAa0qAbik8Lu/IEBwQVP7WeLuqHPmnIf4QhPf3aculo1Hm14D7N2GSpvIhe
+         JHDEGs0JLEaaonEZ2ROFnPpv3Ve3AkCdvD/Bt6vD04nhx5YQg2bVo3I4MlMlqsgHB912
+         d5qmZO1drFGV140WZL5Jw/7XF8tC4Mfd5ivB8MtuutPbI/YOPFT1b6OryFMCQXW5rk1R
+         B7yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g75BwLN4R8xuSeRdoXz2tu6AoMbM+mYXbYPKXRT0R7U=;
-        b=nzrBnGeEbXVuKxmKHS3egD9kyZeT+ZDlbB39lUS6JSV2esU4kitCPmCVHB6jx7lx/9
-         5zqun4RQkNngU7O8mHkj9H7g1lt7zZ+KBsZhp9XPmekrC1vCECoM2R/UF1UgJy9GCWRo
-         Qs6YM5rD1+9WkK+/tHPCZK3j1dOTVHUVcNvahsEnrP5b2oRCQpbu6AXWaVb45SmVeiWh
-         j/YuBb+DXtTcRszAUC63PJRKrQ/qx5i1X2zJISXOKZHQyaBoMau7N/LIRuja2GXABnDR
-         RKTxwLRyAtYCdBtLKTrHPn4Q/HbY0GeOO4wRqenqcbDab/k0AcEKQdYVuaWwTGZ8be5n
-         m79g==
-X-Gm-Message-State: APjAAAVl3vuOY5x10QMp+dkDzOmDGoC9cIjymSPu1Kxie4OTpLi02g8o
-        SFj8sLTXvmbdxN/VFmXQ/NFILg==
-X-Google-Smtp-Source: APXvYqx461iGgPD7H5ml0vBOQ/llJxZghfujB/gVtwo+HSE0ZOyd1BLxwIl+M+g9k9NADQBzeIhvHQ==
-X-Received: by 2002:a17:906:288f:: with SMTP id o15mr7735725ejd.282.1556198070461;
-        Thu, 25 Apr 2019 06:14:30 -0700 (PDT)
-Received: from brauner.io ([193.96.224.243])
-        by smtp.gmail.com with ESMTPSA id e21sm3476770edd.23.2019.04.25.06.14.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Apr 2019 06:14:29 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 15:14:28 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Zhenliang Wei <weizhenliang@huawei.com>
-Cc:     ebiederm@xmission.com, oleg@redhat.com, colona@arista.com,
-        akpm@linux-foundation.org, arnd@arndb.de, tglx@linutronix.de,
-        deepa.kernel@gmail.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v5] signal: trace_signal_deliver when signal_group_exit
-Message-ID: <20190425131427.xhlzntanu22tyhvu@brauner.io>
-References: <20190425025812.91424-1-weizhenliang@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YvpcsYxKpblRj5+jchkadP+EIMWVQeoHvjsvGTTCyfU=;
+        b=Qchjh2W8y1mI3vUS3rWFpf7MdRzD8ANCZsQxfBEHYM9SAZcUPdljLTQRZZcTLEKsEF
+         Ixfmwtmjgddt9NLQ7suGHSUAwpc8GfrsVY2ZBKVkz1cJhndQpNS2CT+bzLe/azNTjIP0
+         ALPCTIRBGLipwxXCMxv8Qrf4vL+ntSnUOj0giiZ4yMV7BRkOZ7AMX8DcHegz7pLoECbJ
+         w3HaTNVCJ6a+iZJHSUWSyNDZ5B8RbwCXXt4cvomGU3ve190Ke0PhU5crplbpK77A3/1i
+         Cne4p+eEBdWCrILpdoq3gfo7bI1dH2o4z1kuCDa2XTe6UO9SGgBVoY9C0nl8WsOcn0ED
+         RW1Q==
+X-Gm-Message-State: APjAAAVTE6EmmUKxRlHXS5696eD5GgWZ2tFcKgKiXSluDCnB3DH5caIP
+        SAnirKmHCyIAZ65TEZK2nfwfdhYU5nRU2WShggaYdw==
+X-Google-Smtp-Source: APXvYqwTnLIRWJLwG6Gy5cAbJMVOpWMRQzdhJIoRjlH0tStq4oIRKnwHBwVrNFgLO/4TYmUMdRwN/PrHwADYrw+FW24=
+X-Received: by 2002:ae9:ee10:: with SMTP id i16mr26572798qkg.109.1556198206901;
+ Thu, 25 Apr 2019 06:16:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190425025812.91424-1-weizhenliang@huawei.com>
-User-Agent: NeoMutt/20180716
+References: <cover.1553853990.git.amit.kucheria@linaro.org>
+ <5583cae1-8fea-724a-24a4-59b38a205ac3@free.fr> <CAP245DUNo02QUkGDPFfzow9535GKO9x6ZusETRjEgTmnHL4D2g@mail.gmail.com>
+ <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr> <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
+ <903fa0a6-5c40-97b4-1c01-fd84f3e51c62@free.fr> <8e53ea22-d248-8c63-bcda-15b502eb9699@free.fr>
+ <CAHLCerPj6MQ0LeqUHM_91NOW1cP0z75DD7oBnR7Q3-8rpCmnww@mail.gmail.com> <0e2ffc33-1ffd-2eb2-e6a7-117b3f14c2e7@free.fr>
+In-Reply-To: <0e2ffc33-1ffd-2eb2-e6a7-117b3f14c2e7@free.fr>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 25 Apr 2019 18:46:35 +0530
+Message-ID: <CAP245DXBPS-ARxHGKeaj6E_z-fQp9m8QOXBzJuNHEABUkdJhRw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] qcom: dts: thermal cleanups
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 10:58:12AM +0800, Zhenliang Wei wrote:
-> In the fixes commit, removing SIGKILL from each thread signal mask
-> and executing "goto fatal" directly will skip the call to
-> "trace_signal_deliver". At this point, the delivery tracking of the SIGKILL
-> signal will be inaccurate.
-> 
-> Therefore, we need to add trace_signal_deliver before "goto fatal"
-> after executing sigdelset.
-> 
-> Note: SEND_SIG_NOINFO matches the fact that SIGKILL doesn't have any info.
-> 
-> Reviewed-by: Christian Brauner <christian@brauner.io>
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> Cc: <stable@vger.kernel.org>
-> Fixes: cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
+On Thu, Apr 25, 2019 at 6:36 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+>
+> On 25/04/2019 08:31, Amit Kucheria wrote:
+>
+> > [PATCH 3/3] arm64: dts: msm8998: thermal: Restrict thermal zone name length to under 20
+> >
+> > The thermal core restricts names of thermal zones to under 20
+> > characters. Fix the names for a couple of msm8998 thermal zones.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/msm8998.dtsi | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > index 062a93a12198..01757829d5f3 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > @@ -536,7 +536,7 @@
+> >                       };
+> >               };
+> >
+> > -             cluster0-mhm-thermal {
+> > +             clust0-mhm-thermal {
+> >                       polling-delay-passive = <250>;
+> >                       polling-delay = <1000>;
+> >
+> > @@ -551,7 +551,7 @@
+> >                       };
+> >               };
+> >
+> > -             cluster1-mhm-thermal {
+> > +             clust1-mhm-thermal {
+> >                       polling-delay-passive = <250>;
+> >                       polling-delay = <1000>;
+> >
+>
+> Wouldn't it be better to drop the "-thermal" suffix than to chop characters
+> off from the actual description?
 
-Thanks for the patience! I think this is now ready to be picked up. :)
+Probably a good idea, but it will perturb my OCD and cause a large
+search and replace to replace all thermal zones names in this series.
+:-) I want to keep it consistent across all boards.
 
-Christian
+I don't think Andy would like that too much.
 
-> 
-> Signed-off-by: Zhenliang Wei <weizhenliang@huawei.com>
-> ---
->  kernel/signal.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 227ba170298e..429f5663edd9 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2441,6 +2441,8 @@ bool get_signal(struct ksignal *ksig)
->  	if (signal_group_exit(signal)) {
->  		ksig->info.si_signo = signr = SIGKILL;
->  		sigdelset(&current->pending.signal, SIGKILL);
-> +		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
-> +				&sighand->action[SIGKILL - 1]);
->  		recalc_sigpending();
->  		goto fatal;
->  	}
-> -- 
-> 2.14.1.windows.1
-> 
-> 
+> Or would it make sense to increase the 20-char limit to 24?
+> => Probably impossible without breaking the user-space ABI, since
+> THERMAL_NAME_LENGTH is defined in include/uapi/linux/thermal.h
+
+Yes, I abandoned that path quickly after seeing where this was
+defined, but I have a follow-on patch to make this a compile-time bug
+rather than wondering why the thermal zone failed at runtime.
+
+> Anyway, for msm8998 patches, you have my
+>
+> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+
+Thanks a lot for testing.
