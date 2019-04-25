@@ -4,55 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FAEC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99231C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5006F20717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C102F2088F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220359;
-	bh=7zaHMpFvzdfAJedQih+4GJzqbFLpLYnJP0h2U17SoXA=;
+	s=default; t=1556220360;
+	bh=7rTmrTrxhop8MUj70t6sLTQCqwUpQACvHEsmSi+y6sk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=vanmN53dfccOrh9VnhR1AwYX1kcAbK8Ub+CDHez7qBOFPU95ulZ0TLfIi0/ZTDTsL
-	 egHM9oV2aMsb8/aHDY4oqSRJey+LCJI59mBftNvjA+jS17Ww9z7JNmKHGowKt9zMXq
-	 6Kd0i9hE8twU7HdmbHzhATdSqRH3r5hT3B/VgSf4=
+	b=A5CKlNrSgUPwWg+yjS7vMZY8yZL8tJqkRbfA9yLeJdoLRrluY0ii374nT6N7sZk9N
+	 5bYvvNWAcA5Z6aDNvZeE2hcEEo1WpzzyJ0m8yt/vM8cinWVci3xOUei7Z/aN4aJN/x
+	 n9X41PClXSksV8epVuQ46NaAnB1k0E4wAga1oEvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfDYTYq (ORCPT
+        id S2387489AbfDYTZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:24:46 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48944 "EHLO
+        Thu, 25 Apr 2019 15:25:59 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49188 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbfDYTYo (ORCPT
+        with ESMTP id S1726638AbfDYTYr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:24:44 -0400
+        Thu, 25 Apr 2019 15:24:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=eymhM/QjBk+uV0rS+9duOTLFjE7MvaW67Ovfry8MXAs=; b=KmsnfGWpebnX
-        YdIfhqO5n0XNuIsT56xvewxGiSagrvoPkgHDfRTSMYTa90xvKmN9aSiJV7Nnly8iYMpILSnlZbS1V
-        qtDzNuiwlcCQODPhrV93apKJuFAxjJfF9Uir3mOw9EpqoPe6NtjlPWQ89L3kfz15HLS5mmVPlvY34
-        CEEvo=;
+        List-Archive; bh=VqilEpU0zcs5UID60f+ZH1pJ3ZhXj2B3wEwvevnvqGU=; b=H8UEbZa2SqVk
+        l/ev5+WYoHuNGyWIP+JwsWI9J96tVH1OsBNLydS5am77fVOduKPWqduQ34sqXMf5F6uflrv612QK3
+        lF/HRXGVo4a4pkO5EIBZRWqd55B9Bgap9eg+0Rb8oCUg4DKnDJVqbW2qVLy1HkiG1PMy6ZWlTEuOe
+        h8ESU=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJjz5-0004ZD-7w; Thu, 25 Apr 2019 19:24:39 +0000
+        id 1hJjz8-0004Zo-Pk; Thu, 25 Apr 2019 19:24:42 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 3D0F4441D3B; Thu, 25 Apr 2019 20:24:38 +0100 (BST)
+        id 7E77B441D3F; Thu, 25 Apr 2019 20:24:41 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regmap: add proper SPDX identifiers on files that did not have them." to the regmap tree
-In-Reply-To: 
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Mark Zhang <markz@nvidia.com>,
+        Venkat Reddy Talla <vreddytalla@nvidia.com>
+Subject: Applied "regulator: max77620: Fix regulator info setting for max20024" to the regulator tree
+In-Reply-To: <20190422053531.23123-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192438.3D0F4441D3B@finisterre.ee.mobilebroadband>
-Date:   Thu, 25 Apr 2019 20:24:38 +0100 (BST)
+Message-Id: <20190425192441.7E77B441D3F@finisterre.ee.mobilebroadband>
+Date:   Thu, 25 Apr 2019 20:24:41 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regmap: add proper SPDX identifiers on files that did not have them.
+   regulator: max77620: Fix regulator info setting for max20024
 
-has been applied to the regmap tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.1
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -85,413 +90,36 @@ to this mail.
 Thanks,
 Mark
 
-From 37613fa5b762a73073de3c2e23baa4a1da337e71 Mon Sep 17 00:00:00 2001
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date: Thu, 25 Apr 2019 20:06:18 +0200
-Subject: [PATCH] regmap: add proper SPDX identifiers on files that did not
- have them.
+From 734008e714d8c757613c43ff57c1bf7ef1bb5b5d Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Mon, 22 Apr 2019 13:35:31 +0800
+Subject: [PATCH] regulator: max77620: Fix regulator info setting for max20024
 
-There were a few files in the regmap code that did not have SPDX
-identifiers on them, so fix that up.  At the same time, remove the "free
-form" text that specified the license of the file, as that is impossible
-for any tool to properly parse.
+Current code always set pmic->rinfo[id] = &max77620_regs_info[id];
+It should set to either max77620_regs_info or max20024_regs_info
+depends on the chip_id.
 
-Also, as Mark loves // comment markers, convert all of the headers to be
-the same to make things look consistent :)
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/base/regmap/internal.h        |  5 +----
- drivers/base/regmap/regcache-flat.c   | 18 +++++++----------
- drivers/base/regmap/regcache-lzo.c    | 18 +++++++----------
- drivers/base/regmap/regcache-rbtree.c | 18 +++++++----------
- drivers/base/regmap/regcache.c        | 18 +++++++----------
- drivers/base/regmap/regmap-ac97.c     | 22 +++++---------------
- drivers/base/regmap/regmap-debugfs.c  | 18 +++++++----------
- drivers/base/regmap/regmap-i2c.c      | 18 +++++++----------
- drivers/base/regmap/regmap-irq.c      | 18 +++++++----------
- drivers/base/regmap/regmap-mmio.c     | 22 +++++---------------
- drivers/base/regmap/regmap-spi.c      | 18 +++++++----------
- drivers/base/regmap/regmap-spmi.c     | 29 +++++++++------------------
- drivers/base/regmap/regmap-w1.c       | 16 ++++++---------
- drivers/base/regmap/regmap.c          | 18 +++++++----------
- 14 files changed, 90 insertions(+), 166 deletions(-)
+ drivers/regulator/max77620-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/regmap/internal.h b/drivers/base/regmap/internal.h
-index a98fced9bff8..3d80c4b43f72 100644
---- a/drivers/base/regmap/internal.h
-+++ b/drivers/base/regmap/internal.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Register map access API internal header
-  *
-  * Copyright 2011 Wolfson Microelectronics plc
-  *
-  * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
+diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
+index 1607ac673e44..0ad91a7f9cb9 100644
+--- a/drivers/regulator/max77620-regulator.c
++++ b/drivers/regulator/max77620-regulator.c
+@@ -803,7 +803,7 @@ static int max77620_regulator_probe(struct platform_device *pdev)
+ 			continue;
  
- #ifndef _REGMAP_INTERNAL_H
-diff --git a/drivers/base/regmap/regcache-flat.c b/drivers/base/regmap/regcache-flat.c
-index bc6cd88b8cc6..b7e4b2464102 100644
---- a/drivers/base/regmap/regcache-flat.c
-+++ b/drivers/base/regmap/regcache-flat.c
-@@ -1,14 +1,10 @@
--/*
-- * Register cache access API - flat caching support
-- *
-- * Copyright 2012 Wolfson Microelectronics plc
-- *
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register cache access API - flat caching support
-+//
-+// Copyright 2012 Wolfson Microelectronics plc
-+//
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
- 
- #include <linux/device.h>
- #include <linux/seq_file.h>
-diff --git a/drivers/base/regmap/regcache-lzo.c b/drivers/base/regmap/regcache-lzo.c
-index 4ff311374c4a..fc14e8b9344f 100644
---- a/drivers/base/regmap/regcache-lzo.c
-+++ b/drivers/base/regmap/regcache-lzo.c
-@@ -1,14 +1,10 @@
--/*
-- * Register cache access API - LZO caching support
-- *
-- * Copyright 2011 Wolfson Microelectronics plc
-- *
-- * Author: Dimitris Papastamos <dp@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register cache access API - LZO caching support
-+//
-+// Copyright 2011 Wolfson Microelectronics plc
-+//
-+// Author: Dimitris Papastamos <dp@opensource.wolfsonmicro.com>
- 
- #include <linux/device.h>
- #include <linux/lzo.h>
-diff --git a/drivers/base/regmap/regcache-rbtree.c b/drivers/base/regmap/regcache-rbtree.c
-index 9cbb4b0cd01b..cfa29dc89bbf 100644
---- a/drivers/base/regmap/regcache-rbtree.c
-+++ b/drivers/base/regmap/regcache-rbtree.c
-@@ -1,14 +1,10 @@
--/*
-- * Register cache access API - rbtree caching support
-- *
-- * Copyright 2011 Wolfson Microelectronics plc
-- *
-- * Author: Dimitris Papastamos <dp@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register cache access API - rbtree caching support
-+//
-+// Copyright 2011 Wolfson Microelectronics plc
-+//
-+// Author: Dimitris Papastamos <dp@opensource.wolfsonmicro.com>
- 
- #include <linux/debugfs.h>
- #include <linux/device.h>
-diff --git a/drivers/base/regmap/regcache.c b/drivers/base/regmap/regcache.c
-index 773560348337..a93cafd7be4f 100644
---- a/drivers/base/regmap/regcache.c
-+++ b/drivers/base/regmap/regcache.c
-@@ -1,14 +1,10 @@
--/*
-- * Register cache access API
-- *
-- * Copyright 2011 Wolfson Microelectronics plc
-- *
-- * Author: Dimitris Papastamos <dp@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register cache access API
-+//
-+// Copyright 2011 Wolfson Microelectronics plc
-+//
-+// Author: Dimitris Papastamos <dp@opensource.wolfsonmicro.com>
- 
- #include <linux/bsearch.h>
- #include <linux/device.h>
-diff --git a/drivers/base/regmap/regmap-ac97.c b/drivers/base/regmap/regmap-ac97.c
-index c03ebfd4c731..b9f76bdf74a9 100644
---- a/drivers/base/regmap/regmap-ac97.c
-+++ b/drivers/base/regmap/regmap-ac97.c
-@@ -1,20 +1,8 @@
--/*
-- * Register map access API - AC'97 support
-- *
-- * Copyright 2013 Linaro Ltd.  All rights reserved.
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register map access API - AC'97 support
-+//
-+// Copyright 2013 Linaro Ltd.  All rights reserved.
- 
- #include <linux/clk.h>
- #include <linux/err.h>
-diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-index fc45c2bb961a..263f82516ff4 100644
---- a/drivers/base/regmap/regmap-debugfs.c
-+++ b/drivers/base/regmap/regmap-debugfs.c
-@@ -1,14 +1,10 @@
--/*
-- * Register map access API - debugfs
-- *
-- * Copyright 2011 Wolfson Microelectronics plc
-- *
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register map access API - debugfs
-+//
-+// Copyright 2011 Wolfson Microelectronics plc
-+//
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
- 
- #include <linux/slab.h>
- #include <linux/mutex.h>
-diff --git a/drivers/base/regmap/regmap-i2c.c b/drivers/base/regmap/regmap-i2c.c
-index 056acde5e7d3..ac9b31c57967 100644
---- a/drivers/base/regmap/regmap-i2c.c
-+++ b/drivers/base/regmap/regmap-i2c.c
-@@ -1,14 +1,10 @@
--/*
-- * Register map access API - I2C support
-- *
-- * Copyright 2011 Wolfson Microelectronics plc
-- *
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register map access API - I2C support
-+//
-+// Copyright 2011 Wolfson Microelectronics plc
-+//
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
- 
- #include <linux/regmap.h>
- #include <linux/i2c.h>
-diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
-index 5059748afd4c..c4dcfca01faa 100644
---- a/drivers/base/regmap/regmap-irq.c
-+++ b/drivers/base/regmap/regmap-irq.c
-@@ -1,14 +1,10 @@
--/*
-- * regmap based irq_chip
-- *
-- * Copyright 2011 Wolfson Microelectronics plc
-- *
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// regmap based irq_chip
-+//
-+// Copyright 2011 Wolfson Microelectronics plc
-+//
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
- 
- #include <linux/device.h>
- #include <linux/export.h>
-diff --git a/drivers/base/regmap/regmap-mmio.c b/drivers/base/regmap/regmap-mmio.c
-index 8741fb5f8f54..af967d8f975e 100644
---- a/drivers/base/regmap/regmap-mmio.c
-+++ b/drivers/base/regmap/regmap-mmio.c
-@@ -1,20 +1,8 @@
--/*
-- * Register map access API - MMIO support
-- *
-- * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register map access API - MMIO support
-+//
-+// Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
- 
- #include <linux/clk.h>
- #include <linux/err.h>
-diff --git a/drivers/base/regmap/regmap-spi.c b/drivers/base/regmap/regmap-spi.c
-index c7150dd264d5..c1894e93c378 100644
---- a/drivers/base/regmap/regmap-spi.c
-+++ b/drivers/base/regmap/regmap-spi.c
-@@ -1,14 +1,10 @@
--/*
-- * Register map access API - SPI support
-- *
-- * Copyright 2011 Wolfson Microelectronics plc
-- *
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register map access API - SPI support
-+//
-+// Copyright 2011 Wolfson Microelectronics plc
-+//
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
- 
- #include <linux/regmap.h>
- #include <linux/spi/spi.h>
-diff --git a/drivers/base/regmap/regmap-spmi.c b/drivers/base/regmap/regmap-spmi.c
-index 0bfb8ed244d5..cdf12d2aa3a1 100644
---- a/drivers/base/regmap/regmap-spmi.c
-+++ b/drivers/base/regmap/regmap-spmi.c
-@@ -1,22 +1,13 @@
--/*
-- * Register map access API - SPMI support
-- *
-- * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-- *
-- * Based on regmap-i2c.c:
-- * Copyright 2011 Wolfson Microelectronics plc
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 and
-- * only version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register map access API - SPMI support
-+//
-+// Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-+//
-+// Based on regmap-i2c.c:
-+// Copyright 2011 Wolfson Microelectronics plc
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-+
- #include <linux/regmap.h>
- #include <linux/spmi.h>
- #include <linux/module.h>
-diff --git a/drivers/base/regmap/regmap-w1.c b/drivers/base/regmap/regmap-w1.c
-index e6c64b0be5b2..3a7d30b8c3ac 100644
---- a/drivers/base/regmap/regmap-w1.c
-+++ b/drivers/base/regmap/regmap-w1.c
-@@ -1,13 +1,9 @@
--/*
-- * Register map access API - W1 (1-Wire) support
-- *
-- * Copyright (c) 2017 Radioavionica Corporation
-- * Author: Alex A. Mihaylov <minimumlaw@rambler.ru>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register map access API - W1 (1-Wire) support
-+//
-+// Copyright (c) 2017 Radioavionica Corporation
-+// Author: Alex A. Mihaylov <minimumlaw@rambler.ru>
- 
- #include <linux/regmap.h>
- #include <linux/module.h>
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 42d8404bc8cc..f1025452bb39 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1,14 +1,10 @@
--/*
-- * Register map access API
-- *
-- * Copyright 2011 Wolfson Microelectronics plc
-- *
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Register map access API
-+//
-+// Copyright 2011 Wolfson Microelectronics plc
-+//
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
- 
- #include <linux/device.h>
- #include <linux/slab.h>
+ 		rdesc = &rinfo[id].desc;
+-		pmic->rinfo[id] = &max77620_regs_info[id];
++		pmic->rinfo[id] = &rinfo[id];
+ 		pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
+ 		pmic->reg_pdata[id].active_fps_src = -1;
+ 		pmic->reg_pdata[id].active_fps_pd_slot = -1;
 -- 
 2.20.1
 
