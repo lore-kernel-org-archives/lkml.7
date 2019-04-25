@@ -2,88 +2,262 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB01C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10E1C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D53F206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C2220651
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EmFwySRp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZFalyVNg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L0QFsk2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbfDYQwF (ORCPT
+        id S1728097AbfDYQwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:52:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59664 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbfDYQwF (ORCPT
+        Thu, 25 Apr 2019 12:52:12 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:34031 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbfDYQwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:52:05 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A437460388; Thu, 25 Apr 2019 16:52:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556211124;
-        bh=Z+kUg9a6fzVaBBilsOvolccOgQuMnpcrrWCSI3rrZkg=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=EmFwySRpMa2m66wkP0dYYiuzzooaAVo2DVOAcoveRO4Exfuc2cqR05S8xQsprSN2H
-         i46byCuPylgSzLcqlMLqqYw0zJyYYBlAsDjLxICkknjCmC9uYaqVt/mKtycGv/u4pL
-         i7zGh7go+MgiIMrhR2rjzTCnRfYqzoa3XnVcY2Gk=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6336E6019D;
-        Thu, 25 Apr 2019 16:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556211124;
-        bh=Z+kUg9a6fzVaBBilsOvolccOgQuMnpcrrWCSI3rrZkg=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=ZFalyVNgSIdmeftqj8xNsyM/3re01UFPgvdrpciTPrn50AR2drYFYrIIKDFJh9TJQ
-         HLU2Alys8QFrt4ucXEKjRAhyQjTRG8Awu9whZp1RsVkvAZ2Lprp0tti3fqQi8lZvrl
-         73iBUPoybRkWF/xaKFL0IFf29RiyfDa5G1hJz2Pg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6336E6019D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 25 Apr 2019 12:52:10 -0400
+Received: by mail-vk1-f195.google.com with SMTP id x84so131957vkd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:52:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EZ8tRF+aoxm1zntt48sw71BElxmVHs50I4f77OyGIb0=;
+        b=L0QFsk2zpu60nGtsaC+yhC8DkT2YI5z/0KUD3b98yNQG+RizhxSvgOnpzb+hMtF4Nb
+         tzXMeLvM9xnDY7NujFpNf6WO7Yeo4N6ZNRDXmEj5AUTxMjzANvxfI23ZWam8UuXb78jF
+         2QS6AizQLO/rlWVPlJ19LDf9iSNSXsig4zNl8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EZ8tRF+aoxm1zntt48sw71BElxmVHs50I4f77OyGIb0=;
+        b=jerAuxikkS+yTB1tpwpVVFmE3KDVVThKAtIxZu8qeqZ7iIFLLnl164WpAEkgA4GeaS
+         CyN3u89UlCKvNfWdlgRTYRTqtsJRpgLOmV9NveoQoc88z0h2PP5kiTiV8KxTNCx/yy0V
+         nQaTRMztobmTE9npVXGY6k0KScgOvjPrwc8+gQIOzlZKLx20zl5uUwHAcdFIje5ywk7j
+         kMrkWE/t6+UWo4vO2rnUegrRVsB04JoGPSStxv0Y2M6rmfzugtDRPC7tIjSUl/32qPjj
+         ih+IAHgUc9sjr05i675QEvopKXYbHXnm7HFT1cgUy+BtPsbjrC8SUGU4aYPt4yvVzPP3
+         he4A==
+X-Gm-Message-State: APjAAAXN/rDau8TwproaGDNgkOHFX5H2F+CcMTyMCRwc5Fs18xkPNTBS
+        UfOohUBeX9w3/jDoCbol0K8zUe+Vgh4=
+X-Google-Smtp-Source: APXvYqwWU+vD0Qne/KHM5nKJWaBrLkz+dWkx2qTkb/Q8O6388FZYaLYFNLrTMBUsOcHQC1lN8pmRKg==
+X-Received: by 2002:a1f:d345:: with SMTP id k66mr21787288vkg.10.1556211129298;
+        Thu, 25 Apr 2019 09:52:09 -0700 (PDT)
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
+        by smtp.gmail.com with ESMTPSA id z192sm12634539vkd.45.2019.04.25.09.52.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 09:52:09 -0700 (PDT)
+Received: by mail-ua1-f47.google.com with SMTP id g16so218868uad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:52:08 -0700 (PDT)
+X-Received: by 2002:ab0:1646:: with SMTP id l6mr20225564uae.75.1556211127783;
+ Thu, 25 Apr 2019 09:52:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] mwl8k: fix error handling in mwl8k_post_cmd()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1554499598-29351-1-git-send-email-khoroshilov@ispras.ru>
-References: <1554499598-29351-1-git-send-email-khoroshilov@ispras.ru>
-To:     Alexey Khoroshilov <khoroshilov@ispras.ru>
-Cc:     Lennert Buytenhek <buytenh@wantstofly.org>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190425165204.A437460388@smtp.codeaurora.org>
-Date:   Thu, 25 Apr 2019 16:52:04 +0000 (UTC)
+References: <20190424203408.GA11386@beast> <20190425054242.GA7816@gmail.com>
+In-Reply-To: <20190425054242.GA7816@gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Thu, 25 Apr 2019 09:51:54 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jKWQtmt+tN9rwdCWP=7pL6GYU4DmDW4R7ViQV8r1m1J=g@mail.gmail.com>
+Message-ID: <CAGXu5jKWQtmt+tN9rwdCWP=7pL6GYU4DmDW4R7ViQV8r1m1J=g@mail.gmail.com>
+Subject: Re: [PATCH v2] binfmt_elf: Update READ_IMPLIES_EXEC logic for modern CPUs
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hector Marco-Gisbert <hecmargi@upv.es>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Will Deacon <will.deacon@arm.com>, X86 ML <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexey Khoroshilov <khoroshilov@ispras.ru> wrote:
+On Wed, Apr 24, 2019 at 10:42 PM Ingo Molnar <mingo@kernel.org> wrote:
+> Just to make clear, is the change from the old behavior, in essence:
+>
+>
+>                CPU: | lacks NX  | has NX, ia32     | has NX, x86_64   |
+>   ELF:              |           |                  |                  |
+>   ------------------------------|------------------|------------------|
+>   missing GNU_STACK | exec-all  | exec-all         | exec-none        |
+> - GNU_STACK == RWX  | exec-all  | exec-all         | exec-all         |
+> + GNU_STACK == RWX  | exec-all  | exec-stack       | exec-stack       |
+>   GNU_STACK == RW   | exec-all  | exec-none        | exec-none        |
+> [...]
+>    'exec-all'  : all user mappings are executable
 
-> If pci_map_single() fails in mwl8k_post_cmd(),
-> it returns -ENOMEM immediately, while cleanup is required.
-> 
-> Found by Linux Driver Verification project (linuxtesting.org).
-> 
-> Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+For extreme clarity, this should be:
 
-Patch applied to wireless-drivers-next.git, thanks.
+'exec-all' : all PROT_READ user mappings are executable, except when
+backed by files on a noexec-filesystem.
 
-d1717282afd5 mwl8k: fix error handling in mwl8k_post_cmd()
+>    'exec-none' : only PROT_EXEC user mappings are executable
+>    'exec-stack': only the stack and PROT_EXEC user mappings are executable
+
+Thanks for helping clarify this. I spent last evening trying to figure
+out a better way to explain/illustrate this series; my prior patch
+combines too many things into a single change. One thing I noticed is
+the "lacks NX" column is wrong: for "lack NX", our current state is
+"don't care". If we _add_ RIE for the "lacks NX" case unconditionally,
+we may cause unexpected problems[1]. More on this below...
+
+But yes, your above diff for "has NX" is roughly correct. I'll walk
+through each piece I'm thinking about. Here is the current state:
+
+               CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
+  ELF:              |            |                  |                |
+  -------------------------------|------------------|----------------|
+  missing GNU_STACK | exec-all   | exec-all         | exec-all       |
+  GNU_STACK == RWX  | exec-all   | exec-all         | exec-all       |
+  GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
+
+*this column has no architecture effect: NX markings are ignored by
+hardware, but may have behavioral effects when "wants X" collides with
+"cannot be X" constraints in memory permission flags, as in [1].
+
+
+I want to make three changes, listed in increasing risk levels.
+
+First, I want to split "missing GNU_STACK" and "GNU_STACK == RWX",
+which is currently causing expected behavior for driver mmap
+regions[1], etc:
+
+               CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
+  ELF:              |            |                  |                |
+  -------------------------------|------------------|----------------|
+  missing GNU_STACK | exec-all   | exec-all         | exec-all       |
+- GNU_STACK == RWX  | exec-all   | exec-all         | exec-all       |
++ GNU_STACK == RWX  | exec-stack | exec-stack       | exec-stack     |
+  GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
+
+AFAICT, this has the least risk. I'm not aware of any situation where
+GNU_STACK==RWX is supposed to mean MORE than that. As Jann researched,
+even thread stacks will be treated correctly[2]. The risk would be
+discovering some use-case where a program was executing memory that it
+had not explicitly marked as executable. For ELFs marked with
+GNU_STACK, this seems unlikely (I hope).
+
+
+Second, I want to split the behavior of "missing GNU_STACK" between
+ia32 and x86_64. The reasonable(?) default for x86_64 memory is for it
+to be NX. For the very rare x86_64 systems that do not have NX, this
+shouldn't change anything because they still fall into the "don't
+care" column. It would look like this:
+
+               CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
+  ELF:              |            |                  |                |
+  -------------------------------|------------------|----------------|
+- missing GNU_STACK | exec-all   | exec-all         | exec-all       |
++ missing GNU_STACK | exec-all  | exec-all         | exec-none      |
+  GNU_STACK == RWX  | exec-stack | exec-stack       | exec-stack     |
+  GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
+
+This carries some risk that there are ancient x86_64 binaries that
+still behave like their even more ancient ia32 counterparts, and
+expect to be able to execute any memory. I would _hope_ this is rare,
+but I have no way to actually know if things like this exist in the
+real world.
+
+
+Third, I want to have the "lacks NX" column actually reflect reality.
+Right now on such a system, memory permissions will show "not
+executable" but there is actually no architectural checking for these
+permissions. I think the true nature of such a system should be
+reflected in the reported permissions. It would look like this:
+
+               CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
+  ELF:              |            |                  |                |
+  -------------------------------|------------------|----------------|
+  missing GNU_STACK | exec-all   | exec-all         | exec-none      |
+- GNU_STACK == RWX  | exec-stack | exec-stack       | exec-stack     |
+- GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
++ GNU_STACK == RWX  | exec-all   | exec-stack       | exec-stack     |
++ GNU_STACK == RW   | exec-all   | exec-none        | exec-none      |
+
+This carries the largest risk because it effectively enables
+READ_IMPLIES_EXEC on all processes for such systems. I worry this
+might trip as-yet-unseen problems like in [1], for only cosmetic
+improvements.
+
+My intention was to split up the series and likely not even bother
+with the third change, since it feels like too high a risk to me. What
+do you think?
+
+> In particular, what is the policy for write-only and exec-only mappings,
+> what does read-implies-exec do for them?
+
+First it manifests here, which is used for stack and brk:
+
+#define VM_DATA_DEFAULT_FLAGS \
+        (((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0 ) | \
+         VM_READ | VM_WRITE | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
+
+above is used in do_brk_flags(), and is picked up by
+VM_STACK_DEFAULT_FLAGS, visible in VM_STACK_FLAGS for
+setup_arg_pages()'s stack creation.
+
+READ_IMPLIES_EXEC itself is checked directly in mmap, with noexec
+checks that also clear VM_MAYEXEC:
+
+        if ((prot & PROT_READ) && (current->personality & READ_IMPLIES_EXEC))
+                if (!(file && path_noexec(&file->f_path)))
+                        prot |= PROT_EXEC;
+...
+                        if (path_noexec(&file->f_path)) {
+                                if (vm_flags & VM_EXEC)
+                                        return -EPERM;
+                                vm_flags &= ~VM_MAYEXEC;
+
+The above is where we discussed adding some kind of check for device
+driver memory mapping in [1] (or getting distros to mount /dev noexec,
+which seems to break other things...), but I'd rather just fix
+READ_IMPLIES_EXEC.
+
+Write-only would ignore READ_IMPLIES_EXEC, but mprotect() rechecks it
+if PROT_READ gets added later:
+
+        const bool rier = (current->personality & READ_IMPLIES_EXEC) &&
+                                (prot & PROT_READ);
+...
+                /* Does the application expect PROT_READ to imply PROT_EXEC */
+                if (rier && (vma->vm_flags & VM_MAYEXEC))
+                        prot |= PROT_EXEC;
+
+> Also, it would be nice to define it precisely what 'stack' means in this
+> context: it's only the ELF loader defined process stack - other stacks
+> such as any thread stacks, signal stacks or alt-stacks depend on the C
+> library - or does the kernel policy extend there too?
+
+Correct: this is only the ELF loader stack. Thread stacks are (and
+always have been) on their own. But as Jann found in [2], they should
+be unchanged by anything here.
+
+> I.e. it would be nice to clarify all this, because it's still rather
+> confusing and ambiguous right now.
+
+Agreed. I've been trying to pick it apart too, hopefully this helps.
+
+-Kees
+
+[1] https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
+[2] https://lore.kernel.org/patchwork/patch/464875/
 
 -- 
-https://patchwork.kernel.org/patch/10887851/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Kees Cook
