@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4948BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D72DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F3920717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB822067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfDYOd3 (ORCPT
+        id S1726173AbfDYOdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:33:29 -0400
+        Thu, 25 Apr 2019 10:33:32 -0400
 Received: from mga17.intel.com ([192.55.52.151]:50006 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbfDYOd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:33:28 -0400
+        id S1725900AbfDYOdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:33:31 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 07:33:28 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 07:33:30 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
-   d="scan'208";a="134317349"
+   d="scan'208";a="134317356"
 Received: from aubrey-skl.sh.intel.com ([10.239.53.6])
-  by orsmga007.jf.intel.com with ESMTP; 25 Apr 2019 07:33:25 -0700
+  by orsmga007.jf.intel.com with ESMTP; 25 Apr 2019 07:33:28 -0700
 From:   Aubrey Li <aubrey.li@linux.intel.com>
 To:     tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
         hpa@zytor.com
@@ -37,19 +37,49 @@ Cc:     ak@linux.intel.com, tim.c.chen@linux.intel.com,
         linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
         Aubrey Li <aubrey.li@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v18 1/3] proc: add /proc/<pid>/arch_status
-Date:   Thu, 25 Apr 2019 22:32:17 +0800
-Message-Id: <20190425143219.102258-1-aubrey.li@linux.intel.com>
+Subject: [PATCH v18 2/3] x86,/proc/pid/arch_status: Add AVX-512 usage elapsed time
+Date:   Thu, 25 Apr 2019 22:32:18 +0800
+Message-Id: <20190425143219.102258-2-aubrey.li@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190425143219.102258-1-aubrey.li@linux.intel.com>
+References: <20190425143219.102258-1-aubrey.li@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The architecture specific information of the running processes
-could be useful to the userland. Add /proc/<pid>/arch_status
-interface support to examine process architecture specific
-information externally.
+AVX-512 components use could cause core turbo frequency drop. So
+it's useful to expose AVX-512 usage elapsed time as a heuristic hint
+for the user space job scheduler to cluster the AVX-512 using tasks
+together.
+
+Tensorflow example:
+$ while [ 1 ]; do cat /proc/tid/arch_status | grep AVX512; sleep 1; done
+AVX512_elapsed_ms:      4
+AVX512_elapsed_ms:      8
+AVX512_elapsed_ms:      4
+
+This means that 4 milliseconds have elapsed since the AVX512 usage
+of tensorflow task was detected when the task was scheduled out.
+
+Or:
+$ cat /proc/tid/arch_status | grep AVX512
+AVX512_elapsed_ms:      -1
+
+The number '-1' indicates that no AVX512 usage recorded before
+thus the task unlikely has frequency drop issue.
+
+User space tools may want to further check by:
+
+$ perf stat --pid <pid> -e core_power.lvl2_turbo_license -- sleep 1
+
+ Performance counter stats for process id '3558':
+
+     3,251,565,961      core_power.lvl2_turbo_license
+
+       1.004031387 seconds time elapsed
+
+Non-zero counter value confirms that the task causes frequency drop.
 
 Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -63,67 +93,84 @@ Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Linux API <linux-api@vger.kernel.org>
 ---
- fs/proc/Kconfig         | 4 ++++
- fs/proc/base.c          | 6 ++++++
- include/linux/proc_fs.h | 9 +++++++++
- 3 files changed, 19 insertions(+)
+ arch/x86/Kconfig             |  1 +
+ arch/x86/kernel/fpu/xstate.c | 47 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-index 817c02b13b1d..d80ebf19d5f1 100644
---- a/fs/proc/Kconfig
-+++ b/fs/proc/Kconfig
-@@ -97,3 +97,7 @@ config PROC_CHILDREN
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 5ad92419be19..d5a9c5ddd453 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -208,6 +208,7 @@ config X86
+ 	select USER_STACKTRACE_SUPPORT
+ 	select VIRT_TO_BUS
+ 	select X86_FEATURE_NAMES		if PROC_FS
++	select PROC_PID_ARCH_STATUS		if PROC_FS
  
- 	  Say Y if you are running any user-space software which takes benefit from
- 	  this interface. For example, rkt is such a piece of software.
+ config INSTRUCTION_DECODER
+ 	def_bool y
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index d7432c2b1051..fcaaf21aa015 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -7,6 +7,8 @@
+ #include <linux/cpu.h>
+ #include <linux/mman.h>
+ #include <linux/pkeys.h>
++#include <linux/seq_file.h>
++#include <linux/proc_fs.h>
+ 
+ #include <asm/fpu/api.h>
+ #include <asm/fpu/internal.h>
+@@ -1243,3 +1245,48 @@ int copy_user_to_xstate(struct xregs_state *xsave, const void __user *ubuf)
+ 
+ 	return 0;
+ }
 +
-+config PROC_PID_ARCH_STATUS
-+	def_bool n
-+	depends on PROC_FS
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 6a803a0b75df..8c71eba47031 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -3061,6 +3061,9 @@ static const struct pid_entry tgid_base_stuff[] = {
- #ifdef CONFIG_STACKLEAK_METRICS
- 	ONE("stack_depth", S_IRUGO, proc_stack_depth),
- #endif
-+#ifdef CONFIG_PROC_PID_ARCH_STATUS
-+	ONE("arch_status", S_IRUGO, proc_pid_arch_status),
-+#endif
- };
- 
- static int proc_tgid_base_readdir(struct file *file, struct dir_context *ctx)
-@@ -3449,6 +3452,9 @@ static const struct pid_entry tid_base_stuff[] = {
- #ifdef CONFIG_LIVEPATCH
- 	ONE("patch_state",  S_IRUSR, proc_pid_patch_state),
- #endif
-+#ifdef CONFIG_PROC_PID_ARCH_STATUS
-+	ONE("arch_status", S_IRUGO, proc_pid_arch_status),
-+#endif
- };
- 
- static int proc_tid_base_readdir(struct file *file, struct dir_context *ctx)
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index 52a283ba0465..a705aa2d03f9 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -75,6 +75,15 @@ struct proc_dir_entry *proc_create_net_single_write(const char *name, umode_t mo
- 						    void *data);
- extern struct pid *tgid_pidfd_to_pid(const struct file *file);
- 
 +#ifdef CONFIG_PROC_PID_ARCH_STATUS
 +/*
-+ * The architecture which selects CONFIG_PROC_PID_ARCH_STATUS must
-+ * provide proc_pid_arch_status() definition.
++ * Report the amount of time elapsed in millisecond since last AVX512
++ * use in the task.
++ */
++static void avx512_status(struct seq_file *m, struct task_struct *task)
++{
++	unsigned long timestamp = READ_ONCE(task->thread.fpu.avx512_timestamp);
++	long delta;
++
++	if (!timestamp) {
++		/*
++		 * Report -1 if no AVX512 usage
++		 */
++		delta = -1;
++	} else {
++		delta = (long)(jiffies - timestamp);
++		/*
++		 * Cap to LONG_MAX if time difference > LONG_MAX
++		 */
++		if (delta < 0)
++			delta = LONG_MAX;
++		delta = jiffies_to_msecs(delta);
++	}
++
++	seq_put_decimal_ll(m, "AVX512_elapsed_ms:\t", delta);
++	seq_putc(m, '\n');
++}
++
++/*
++ * Report architecture specific information
 + */
 +int proc_pid_arch_status(struct seq_file *m, struct pid_namespace *ns,
-+			struct pid *pid, struct task_struct *task);
-+#endif /* CONFIG_PROC_PID_ARCH_STATUS */
++			struct pid *pid, struct task_struct *task)
++{
++	/*
++	 * Report AVX512 state if the processor and build option supported.
++	 */
++	if (cpu_feature_enabled(X86_FEATURE_AVX512F))
++		avx512_status(m, task);
 +
- #else /* CONFIG_PROC_FS */
- 
- static inline void proc_root_init(void)
++	return 0;
++}
++#endif /* CONFIG_PROC_PID_ARCH_STATUS */
 -- 
 2.17.1
 
