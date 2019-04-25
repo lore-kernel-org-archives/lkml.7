@@ -2,100 +2,177 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7CFC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835CBC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68ED20717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAE920717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:09:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pwj22uaK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730956AbfDYUJp (ORCPT
+        id S2387558AbfDYUJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 16:09:45 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:51480 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729918AbfDYUJp (ORCPT
+        Thu, 25 Apr 2019 16:09:54 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34232 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbfDYUJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 16:09:45 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hJkgg-0006nb-4G; Thu, 25 Apr 2019 20:09:42 +0000
-Date:   Thu, 25 Apr 2019 21:09:42 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Ceph fixes for 5.1-rc7
-Message-ID: <20190425200941.GW2217@ZenIV.linux.org.uk>
-References: <20190425174739.27604-1-idryomov@gmail.com>
- <CAHk-=wgPBx9xPWY7obK60=RTnOF3Ln0j9XkhYbekML=Fi3bFXg@mail.gmail.com>
- <342ef35feb1110197108068d10e518742823a210.camel@kernel.org>
+        Thu, 25 Apr 2019 16:09:54 -0400
+Received: by mail-lf1-f67.google.com with SMTP id h5so746618lfm.1;
+        Thu, 25 Apr 2019 13:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MqYNe3Q4on3UBY8kthiYRWhIUXpNxgBemqe9d+/Z800=;
+        b=Pwj22uaK2z+VatUB1i82o+bln9TXRmhDS6iM2vgbK1aJ1bviNJDW6Tr8EttllXbJBy
+         jQgijOwDK9oXJeUIh+wjSlQsUfu/3tFi1fLWk5cdpHnxG6xm+8ECK7joy+jTqZrDgbzt
+         IJbcatJdwswFsBwyQZUptAuK5MvVSKMvLus1qV1aoOzEVkZHFAfUcsWIGiNAUahEbZq8
+         f31TxUJpzU7s3ErNgEGUX4fEltOUEbbSQZwftBYbbMNtt9pfdAsTLhfwLfLKroYtNkgN
+         60dEGKary8w0B7G18SDyBd6+lMpA9KrdHre01bczojjgpIDScv7pvKvxm/KUh1ls5utA
+         LFTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MqYNe3Q4on3UBY8kthiYRWhIUXpNxgBemqe9d+/Z800=;
+        b=HtjfsiTtWAB3fWoeMSmPvoIOmJ+RK3DRWTRAnxsmVFfjGdn81bDOHkrWMqmuwobdqx
+         r+axLvy+fDqZ991ixLoYzkSQbfY8ku6oJ7SVVRPwrEV50yvRFUBnZM6d7X52YYdVZm3X
+         ykVf886GyvzozeqkbxGejsznQkgQelmomXa6805v+syrR5jfyoovOLhPG3uWYfpBl/q6
+         kBXdFnWvfhSilQA2TQ4C2BHc+AQIHfqUcJGWN6xBh53Fb3n06qfNmzo0j0/JBqgjxjmH
+         8mCgWGJ2/V+L+24V6QdiloH5peMJYlAdNjj+g41YYvTXHnV8+DEoUXRz0tHV1ycbo8qq
+         Ggog==
+X-Gm-Message-State: APjAAAVJVgHvtzYjoBUN0TaFusNetAjqMmsq16/SgkKq3qMGmedUmawM
+        W2zuWiCHjLykaBxx5iZQjmc=
+X-Google-Smtp-Source: APXvYqx/Q/rQDwGxAw90r+FsGi3mefsBH5iJ/Dy4V9fRVockVu+OiSzzd6HjyGyyDfspqX/nbg2K+A==
+X-Received: by 2002:a19:a40f:: with SMTP id q15mr19103277lfc.121.1556222992019;
+        Thu, 25 Apr 2019 13:09:52 -0700 (PDT)
+Received: from mobilestation ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id 30sm5130963lfr.22.2019.04.25.13.09.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Apr 2019 13:09:51 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 23:09:49 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Peter Korsgaard <peter.korsgaard@barco.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] i2c-mux-gpio: Return an error if no config data found
+Message-ID: <20190425200948.bj5h7svga727havo@mobilestation>
+References: <20190424123414.25311-1-fancer.lancer@gmail.com>
+ <20190424123414.25311-3-fancer.lancer@gmail.com>
+ <4e7c9184-03a2-f1d3-2ed0-a761d76b9654@axentia.se>
+ <20190425154736.emjumxqimzgvzrla@mobilestation>
+ <3366ab5c-ced5-cfe1-c93e-d50ce795c2aa@axentia.se>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <342ef35feb1110197108068d10e518742823a210.camel@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3366ab5c-ced5-cfe1-c93e-d50ce795c2aa@axentia.se>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 02:23:59PM -0400, Jeff Layton wrote:
-
-> I took a quick look at the dcache code to see if we had something like
-> that before I did this, but I guess I didn't look closely enough. Those
-> routines do look nicer than my hand-rolled version.
+On Thu, Apr 25, 2019 at 07:28:52PM +0000, Peter Rosin wrote:
+> On 2019-04-25 17:47, Serge Semin wrote:
+> > On Wed, Apr 24, 2019 at 09:25:50PM +0000, Peter Rosin wrote:
+> >> On 2019-04-24 14:34, Serge Semin wrote:
+> >>> It's pointless and might be even errors prone to proceed with further
+> >>> initialization if neither of- no platform-based settings were discovered.
+> >>> Just return an error in this case.
+> >>>
+> >>> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> >>> ---
+> >>>  drivers/i2c/muxes/i2c-mux-gpio.c | 12 +++++++-----
+> >>>  1 file changed, 7 insertions(+), 5 deletions(-)
+> >>>
+> >>> diff --git a/drivers/i2c/muxes/i2c-mux-gpio.c b/drivers/i2c/muxes/i2c-mux-gpio.c
+> >>> index 24cf6ec02e75..a14fe132b0c3 100644
+> >>> --- a/drivers/i2c/muxes/i2c-mux-gpio.c
+> >>> +++ b/drivers/i2c/muxes/i2c-mux-gpio.c
+> >>> @@ -132,7 +132,7 @@ static int i2c_mux_gpio_probe_dt(struct gpiomux *mux,
+> >>>  static int i2c_mux_gpio_probe_dt(struct gpiomux *mux,
+> >>>  					struct platform_device *pdev)
+> >>>  {
+> >>> -	return 0;
+> >>> +	return -EINVAL;
+> >>>  }
+> >>>  #endif
+> >>>  
+> >>> @@ -142,6 +142,9 @@ static int i2c_mux_gpio_probe_plat(struct gpiomux *mux,
+> >>>  	struct i2c_mux_gpio_platform_data *data = dev_get_platdata(&pdev->dev);
+> >>>  	struct gpio_chip *gpio;
+> >>>  
+> >>> +	if (!data)
+> >>> +		return -EINVAL;
+> >>> +
+> >>>  	/*
+> >>>  	 * If a GPIO chip name is provided, the GPIO pin numbers provided are
+> >>>  	 * relative to its base GPIO number. Otherwise they are absolute.
+> >>> @@ -175,11 +178,10 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+> >>>  	if (!mux)
+> >>>  		return -ENOMEM;
+> >>>  
+> >>> -	if (!dev_get_platdata(&pdev->dev))
+> >>> +	ret = i2c_mux_gpio_probe_plat(mux, pdev);
+> >>> +	if (ret)
+> >>>  		ret = i2c_mux_gpio_probe_dt(mux, pdev);
+> >>> -	else
+> >>> -		ret = i2c_mux_gpio_probe_plat(mux, pdev);
+> >>> -	if (ret < 0)
+> >>> +	if (ret)
+> >>>  		return ret;
+> >>
+> >> I notice that after this patch, all probe failures from non-dt configs
+> >> will return -EINVAL from the dummy i2c_mux_gpio_probe_dt that gets
+> >> called on i2c_mux_gpio_probe_plat failure.
+> >>
+> >> So, any -EPROBE_DEFER is now lost. That probably doesn't fly.
+> >>
+> > 
+> > So what do you suggest then?
 > 
-> I'll look at spinning up a patch to switch that over in the near future.
+> I don't know, I'm just pointing out that you are breaking probe-defer.
+> 
+> >                              We can return to something like:
+> > if (dev_get_platdata(&pdev->dev))
+> >     ret = i2c_mux_gpio_probe_plat(mux, pdev);
+> > else
+> >     ret = i2c_mux_gpio_probe_dt(mux, pdev);
+> > 
+> > In this case there is no falling back to dt. Just either plat- or of-based
+> > initialization. The same can be done for i2c_mux_gpio_request_*() methods.
+> 
+> Works for me, I fail to see why it is interesting with a fallback
+> anyway? If you supply platform data, that is supposed to take
+> precedence. No?
+> 
+> If the platform data fails, I'd rather not have the code run into the
+> weeds attempting stuff that's not even supposed to work...
+> 
 
-Jeff asked to put the name length in there; looking at the existing users,
-it does make sense.  I propose turning struct name_snapshot into
+Yeah, you are right. Adding fallback pattern here was a bad idea.
+I'll fix it in the next patchset version.
 
-struct name_snapshot {
-        struct qstr name;
-        unsigned char inline_name[DNAME_INLINE_LEN];
-};
+-Sergey
 
-with
-void take_dentry_name_snapshot(struct name_snapshot *name, struct dentry *dentry)
-{
-        spin_lock(&dentry->d_lock);
-	name->name = dentry->d_name;
-        if (unlikely(dname_external(dentry))) {
-                struct external_name *p = external_name(dentry);
-                atomic_inc(&p->u.count);
-        } else {
-                memcpy(name->inline_name, dentry->d_iname,
-                       dentry->d_name.len + 1);
-                name->name.name = name->inline_name;
-        }
-	spin_unlock(&dentry->d_lock);
-}
-
-and callers adjusted, initially simply by turning snapshot.name into
-snapshot.name.name.  Next step: overlayfs call site becoming
-        take_dentry_name_snapshot(&name, real);
-        this = lookup_one_len(name.name.name, connected, name.name.len);
-Next: snotify stuff switched to passing struct qstr * - fsnotify_move()
-first, then fsnotify().  That one would
-	* leave callers passing NULL alone
-	* have the callers passing snapshot.name.name pass &snapshot.name
-	* fsnotify_dirent() pass the entire &dentry->d_name, not just
-dentry->d_name.name (that's dependent upon parent being held exclusive;
-devpts plays fast and loose here, relying upon the lack of any kind of
-renames, explicit or implicit, in that fs)
-	* ditto for remaining call in fsnotify_move() (both parents
-are locked in all callers, thankfully)
-	* ditto for fsnotify_link()
-	* kernfs callers in kernfs_notify_workfn() would grow strlen().
-Next: send_to_group() and ->handle_event() instances switched to passing
-struct qstr *.
-Next: inotify_handle_event() doesn't need to bother with strlen().
-Next: audit_update_watch() and audit_compare_dname_path() switched to
-struct qstr *.  Callers in __audit_inode_child() pass the entire
-&dentry->d_name.  strlen() inside audit_compare_dname_path() goes away.
-
-Objections?
+> Cheers,
+> Peter
+> 
+> > -Sergey
+> > 
+> >> Cheers,
+> >> Peter
+> >>
+> >>>  
+> >>>  	parent = i2c_get_adapter(mux->data.parent);
+> >>>
+> >>
+> 
