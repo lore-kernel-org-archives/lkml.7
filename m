@@ -3,35 +3,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5A9C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED29AC282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E8A206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53DB206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387739AbfDYKBq (ORCPT
+        id S2387694AbfDYKA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:01:46 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58147 "EHLO
+        Thu, 25 Apr 2019 06:00:27 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:57988 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbfDYKBo (ORCPT
+        with ESMTP id S1729434AbfDYKAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:01:44 -0400
+        Thu, 25 Apr 2019 06:00:25 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hJbAK-0001yx-7e; Thu, 25 Apr 2019 11:59:40 +0200
-Message-Id: <20190425094803.437950229@linutronix.de>
+        id 1hJbAF-0001xP-E1; Thu, 25 Apr 2019 11:59:35 +0200
+Message-Id: <20190425094803.162400595@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 25 Apr 2019 11:45:18 +0200
+Date:   Thu, 25 Apr 2019 11:45:15 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
         Steven Rostedt <rostedt@goodmis.org>,
         Alexander Potapenko <glider@google.com>,
         Alexey Dobriyan <adobriyan@gmail.com>,
@@ -63,8 +62,9 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Jani Nikula <jani.nikula@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
-        linux-arch@vger.kernel.org
-Subject: [patch V3 25/29] livepatch: Simplify stack trace retrieval
+        Miroslav Benes <mbenes@suse.cz>, linux-arch@vger.kernel.org
+Subject: [patch V3 22/29] tracing: Make ftrace_trace_userstack() static and
+ conditional
 References: <20190425094453.875139013@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -73,71 +73,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the indirection through struct stack_trace by using the storage
-array based interfaces.
+It's only used in trace.c and there is absolutely no point in compiling it
+in when user space stack traces are not supported.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Miroslav Benes <mbenes@suse.cz>
+Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
 ---
- kernel/livepatch/transition.c |   22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ kernel/trace/trace.c |   14 ++++++++------
+ kernel/trace/trace.h |    8 --------
+ 2 files changed, 8 insertions(+), 14 deletions(-)
 
---- a/kernel/livepatch/transition.c
-+++ b/kernel/livepatch/transition.c
-@@ -202,15 +202,15 @@ void klp_update_patch_state(struct task_
-  * Determine whether the given stack trace includes any references to a
-  * to-be-patched or to-be-unpatched function.
-  */
--static int klp_check_stack_func(struct klp_func *func,
--				struct stack_trace *trace)
-+static int klp_check_stack_func(struct klp_func *func, unsigned long *entries,
-+				unsigned int nr_entries)
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -159,6 +159,8 @@ static union trace_eval_map_item *trace_
+ #endif /* CONFIG_TRACE_EVAL_MAP_FILE */
+ 
+ static int tracing_set_tracer(struct trace_array *tr, const char *buf);
++static void ftrace_trace_userstack(struct ring_buffer *buffer,
++				   unsigned long flags, int pc);
+ 
+ #define MAX_TRACER_SIZE		100
+ static char bootup_tracer_buf[MAX_TRACER_SIZE] __initdata;
+@@ -2905,9 +2907,10 @@ void trace_dump_stack(int skip)
+ }
+ EXPORT_SYMBOL_GPL(trace_dump_stack);
+ 
++#ifdef CONFIG_USER_STACKTRACE_SUPPORT
+ static DEFINE_PER_CPU(int, user_stack_count);
+ 
+-void
++static void
+ ftrace_trace_userstack(struct ring_buffer *buffer, unsigned long flags, int pc)
  {
- 	unsigned long func_addr, func_size, address;
- 	struct klp_ops *ops;
- 	int i;
- 
--	for (i = 0; i < trace->nr_entries; i++) {
--		address = trace->entries[i];
-+	for (i = 0; i < nr_entries; i++) {
-+		address = entries[i];
- 
- 		if (klp_target_state == KLP_UNPATCHED) {
- 			 /*
-@@ -254,29 +254,25 @@ static int klp_check_stack_func(struct k
- static int klp_check_stack(struct task_struct *task, char *err_buf)
+ 	struct trace_event_call *call = &event_user_stack;
+@@ -2958,13 +2961,12 @@ ftrace_trace_userstack(struct ring_buffe
+  out:
+ 	preempt_enable();
+ }
+-
+-#ifdef UNUSED
+-static void __trace_userstack(struct trace_array *tr, unsigned long flags)
++#else /* CONFIG_USER_STACKTRACE_SUPPORT */
++static void ftrace_trace_userstack(struct ring_buffer *buffer,
++				   unsigned long flags, int pc)
  {
- 	static unsigned long entries[MAX_STACK_ENTRIES];
--	struct stack_trace trace;
- 	struct klp_object *obj;
- 	struct klp_func *func;
--	int ret;
-+	int ret, nr_entries;
+-	ftrace_trace_userstack(tr, flags, preempt_count());
+ }
+-#endif /* UNUSED */
++#endif /* !CONFIG_USER_STACKTRACE_SUPPORT */
  
--	trace.skip = 0;
--	trace.nr_entries = 0;
--	trace.max_entries = MAX_STACK_ENTRIES;
--	trace.entries = entries;
--	ret = save_stack_trace_tsk_reliable(task, &trace);
-+	ret = stack_trace_save_tsk_reliable(task, entries, ARRAY_SIZE(entries));
- 	WARN_ON_ONCE(ret == -ENOSYS);
--	if (ret) {
-+	if (ret < 0) {
- 		snprintf(err_buf, STACK_ERR_BUF_SIZE,
- 			 "%s: %s:%d has an unreliable stack\n",
- 			 __func__, task->comm, task->pid);
- 		return ret;
- 	}
-+	nr_entries = ret;
+ #endif /* CONFIG_STACKTRACE */
  
- 	klp_for_each_object(klp_transition_patch, obj) {
- 		if (!obj->patched)
- 			continue;
- 		klp_for_each_func(obj, func) {
--			ret = klp_check_stack_func(func, &trace);
-+			ret = klp_check_stack_func(func, entries, nr_entries);
- 			if (ret) {
- 				snprintf(err_buf, STACK_ERR_BUF_SIZE,
- 					 "%s: %s:%d is sleeping on function %s\n",
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -782,17 +782,9 @@ void update_max_tr_single(struct trace_a
+ #endif /* CONFIG_TRACER_MAX_TRACE */
+ 
+ #ifdef CONFIG_STACKTRACE
+-void ftrace_trace_userstack(struct ring_buffer *buffer, unsigned long flags,
+-			    int pc);
+-
+ void __trace_stack(struct trace_array *tr, unsigned long flags, int skip,
+ 		   int pc);
+ #else
+-static inline void ftrace_trace_userstack(struct ring_buffer *buffer,
+-					  unsigned long flags, int pc)
+-{
+-}
+-
+ static inline void __trace_stack(struct trace_array *tr, unsigned long flags,
+ 				 int skip, int pc)
+ {
 
 
