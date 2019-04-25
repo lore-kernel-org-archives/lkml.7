@@ -2,120 +2,97 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83395C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0EFC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF5A2081C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bvQI9jRK"
+	by mail.kernel.org (Postfix) with ESMTP id 96B5D2081C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:01:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfDYPBn (ORCPT
+        id S1728109AbfDYPBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:01:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58470 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfDYPBm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:01:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UHTIv2bYWCMmrceWnwUo0Fh9FKFnrseI4vreb5e9FKc=; b=bvQI9jRKJKedhApGQGL7NC7Us
-        ZTmouNizaDjyj/BFyna/0u54CTi/1wmbXgavf7Q+B7ARBQBne4dlXFL2pNCBauGrzvLiU05/W7wOO
-        ZyZgJSVDU0U5W9XdFs4Wb9J4Ejlq4ZW+68Te8Szx5Vxz3a37YDHnzmxIsP8S2LU0u4mOmTphrGeiX
-        fpuuBC69Gbvs+yjGC1GN/LtJlniccf+WmkfxyOqCoBkGD+nd7IgVYcoY6t0eVf1lEJzjUFCgvUBlc
-        yKqIt2ZIREwAPWIdBcF+zvIwaKjYjz1mru5T3SoOoGGh5xd7cYT8bfc/mWtaHP6OfEqFgA01bpSlP
-        jWoO65ebw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJfsb-0002iU-TR; Thu, 25 Apr 2019 15:01:41 +0000
-Subject: Re: [PATCH] docs/vm: add documentation of memory models
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1556101715-31966-1-git-send-email-rppt@linux.ibm.com>
- <a4def881-1df0-6835-4b9a-dc957c979683@infradead.org>
- <20190425082239.GC10625@rapoport-lnx>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <2b97f4db-78c0-1cad-bdf5-948720e8094f@infradead.org>
-Date:   Thu, 25 Apr 2019 08:01:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 25 Apr 2019 11:01:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43316 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfDYPBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 11:01:46 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0EAF3301EA81;
+        Thu, 25 Apr 2019 15:01:43 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 67BC45DE82;
+        Thu, 25 Apr 2019 15:01:37 +0000 (UTC)
+Subject: [PATCH 0/6] vfs: Make icache searchable under RCU [ver #2]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     Jan Harkes <jaharkes@cs.cmu.edu>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        codalist@coda.cs.cmu.edu, coda@cs.cmu.edu,
+        linux-ext4@vger.kernel.org, linux-afs@lists.infradead.org,
+        dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-ext4@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 25 Apr 2019 16:01:36 +0100
+Message-ID: <155620449631.4720.8762546550728087460.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-In-Reply-To: <20190425082239.GC10625@rapoport-lnx>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 25 Apr 2019 15:01:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/25/19 1:22 AM, Mike Rapoport wrote:
-> Hi Randy,
-> 
-> On Wed, Apr 24, 2019 at 06:08:46PM -0700, Randy Dunlap wrote:
->> On 4/24/19 3:28 AM, Mike Rapoport wrote:
->>> Describe what {FLAT,DISCONTIG,SPARSE}MEM are and how they manage to
->>> maintain pfn <-> struct page correspondence.
->>>
->>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
->>> ---
->>>  Documentation/vm/index.rst        |   1 +
->>>  Documentation/vm/memory-model.rst | 171 ++++++++++++++++++++++++++++++++++++++
->>>  2 files changed, 172 insertions(+)
->>>  create mode 100644 Documentation/vm/memory-model.rst
->>>
->>
->> Hi Mike,
->> I have a few minor edits below...
-> 
-> I kinda expected those ;-)
-> 
->>> diff --git a/Documentation/vm/memory-model.rst b/Documentation/vm/memory-model.rst
->>> new file mode 100644
->>> index 0000000..914c52a
->>> --- /dev/null
->>> +++ b/Documentation/vm/memory-model.rst
-> 
-> ...
-> 
->>> +
->>> +With FLATMEM, the conversion between a PFN and the `struct page` is
->>> +straightforward: `PFN - ARCH_PFN_OFFSET` is an index to the
->>> +`mem_map` array.
->>> +
->>> +The `ARCH_PFN_OFFSET` defines the first page frame number for
->>> +systems that their physical memory does not start at 0.
->>
->> s/that/when/ ?  Seems awkward as is.
-> 
-> Yeah, it is awkward. How about
-> 
-> The `ARCH_PFN_OFFSET` defines the first page frame number for
-> systems with physical memory starting at address different from 0.
 
-OK.  Thanks.
+Hi Al
 
->>> +
->>> +DISCONTIGMEM
->>> +============
->>> +
->>
->> thanks.
->> -- 
->> ~Randy
->>
-> 
+Here are some patches that make the icache searchable under RCU.  This
+benefits ext4 (which can use it to find an inode to update the timestamps on)
+and afs (which can use it to find a vnode to invalidate the callback promise
+on).
+
+It might also benefit NTFS, if its use ilookup5_nowait() can be substituted
+for.  I'm not sure whether it actually needs to wait for inodes that are
+undergoing deletion.
+
+The first patch in the series attempts to fix the non-use of locking in Coda
+when it moves an inode between buckets because it needs to update the search
+key.
+
+Changes:
+
+ (v2)
+	Remove the old rehashing code from coda.
+	Use READ_ONCE() in ext4 to access i_state.
+	Minor fixes.
+
+The patches can also be found on the following branch:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=icache-rcu
+
+Thanks,
+David
+---
+David Howells (6):
+      vfs, coda: Fix the lack of locking in FID replacement inode rehashing
+      vfs: Change inode_hash_lock to a seqlock
+      vfs: Allow searching of the icache under RCU conditions
+      afs: Use RCU inode cache search for callback resolution
+      ext4: Search for an inode to update under the RCU lock if we can
+      vfs: Delete find_inode_nowait()
 
 
--- 
-~Randy
+ fs/afs/callback.c  |   12 ++
+ fs/coda/cnode.c    |   16 ++-
+ fs/ext4/inode.c    |   54 +++++----
+ fs/inode.c         |  307 ++++++++++++++++++++++++++++++++++++----------------
+ include/linux/fs.h |   11 +-
+ 5 files changed, 264 insertions(+), 136 deletions(-)
+
