@@ -2,325 +2,69 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F465C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F3DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3DA2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2129F206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfDYPSI (ORCPT
+        id S1728034AbfDYPT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:18:08 -0400
-Received: from mail.netline.ch ([148.251.143.178]:49731 "EHLO
-        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfDYPSI (ORCPT
+        Thu, 25 Apr 2019 11:19:28 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:46864 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727586AbfDYPT2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:18:08 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by netline-mail3.netline.ch (Postfix) with ESMTP id CB9E72AA103;
-        Thu, 25 Apr 2019 17:18:03 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
-Received: from netline-mail3.netline.ch ([127.0.0.1])
-        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id q6nTEBXTV1DD; Thu, 25 Apr 2019 17:18:03 +0200 (CEST)
-Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
-        by netline-mail3.netline.ch (Postfix) with ESMTPSA id B8EC52A6042;
-        Thu, 25 Apr 2019 17:18:02 +0200 (CEST)
-Received: from [::1]
-        by thor with esmtp (Exim 4.92)
-        (envelope-from <michel@daenzer.net>)
-        id 1hJg8Q-0002t5-86; Thu, 25 Apr 2019 17:18:02 +0200
-Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     Alexandre Courbot <acourbot@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
- <20190418081816.GO13337@phenom.ffwll.local>
- <8265f098722d0cd5aae606d7ee6d955f168ac8f3.camel@ndufresne.ca>
- <987372acff18f4c66191ee52fa69dc2917e4a605.camel@bootlin.com>
- <1d6fb659-0516-41db-257b-258e6116a4f2@daenzer.net>
- <7479b8df108c66b1711eb89efbfeb4a16480533d.camel@ndufresne.ca>
- <8e091392-2365-6c52-1fc2-84ebdc9e83fe@daenzer.net>
- <93c8e6834728b7e5979013df757017d309ee6a89.camel@bootlin.com>
- <CAKMK7uFewmCuc97Qp_2zzk9YvMPmK8zE=a6XGszsLq+SLy-vJA@mail.gmail.com>
- <9230d330e3b57af0643abc834bcf207095cc4bd7.camel@ndufresne.ca>
- <65a37cec-5040-e2f0-5cd5-c9c3111827ad@daenzer.net>
- <e572f31653301f0a479fe1373b3dfd5ada8e49f3.camel@ndufresne.ca>
-From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
- mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
- LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
- 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
- /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
- WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
- Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
- V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
- AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
- ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
- AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
- jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
- qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
- bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
- CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
- GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
- YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
- Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
-Message-ID: <24ee7263-a868-bcfe-d4aa-0e9d8e2f6ee5@daenzer.net>
-Date:   Thu, 25 Apr 2019 17:17:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 25 Apr 2019 11:19:28 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hJg9X-0001v8-7D; Thu, 25 Apr 2019 15:19:11 +0000
+Date:   Thu, 25 Apr 2019 16:19:11 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-afs@lists.infradead.org, linux-ext4@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] vfs: Allow searching of the icache under RCU
+ conditions [ver #2]
+Message-ID: <20190425151911.GR2217@ZenIV.linux.org.uk>
+References: <155620449631.4720.8762546550728087460.stgit@warthog.procyon.org.uk>
+ <155620453168.4720.4510967359017466912.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <e572f31653301f0a479fe1373b3dfd5ada8e49f3.camel@ndufresne.ca>
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="2VcJrharQhz1ikiIY67gmutUhQ3MOiXtA"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155620453168.4720.4510967359017466912.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---2VcJrharQhz1ikiIY67gmutUhQ3MOiXtA
-Content-Type: multipart/mixed; boundary="XMy5e4t38JTHemRMdAyY23YSxjokCppP8";
- protected-headers="v1"
-From: =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-To: Nicolas Dufresne <nicolas@ndufresne.ca>, Daniel Vetter <daniel@ffwll.ch>,
- Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: Alexandre Courbot <acourbot@chromium.org>,
- Maxime Ripard <maxime.ripard@bootlin.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- dri-devel <dri-devel@lists.freedesktop.org>, Tomasz Figa
- <tfiga@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Dave Airlie <airlied@redhat.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>,
- "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>
-Message-ID: <24ee7263-a868-bcfe-d4aa-0e9d8e2f6ee5@daenzer.net>
-Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
-References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
- <20190418081816.GO13337@phenom.ffwll.local>
- <8265f098722d0cd5aae606d7ee6d955f168ac8f3.camel@ndufresne.ca>
- <987372acff18f4c66191ee52fa69dc2917e4a605.camel@bootlin.com>
- <1d6fb659-0516-41db-257b-258e6116a4f2@daenzer.net>
- <7479b8df108c66b1711eb89efbfeb4a16480533d.camel@ndufresne.ca>
- <8e091392-2365-6c52-1fc2-84ebdc9e83fe@daenzer.net>
- <93c8e6834728b7e5979013df757017d309ee6a89.camel@bootlin.com>
- <CAKMK7uFewmCuc97Qp_2zzk9YvMPmK8zE=a6XGszsLq+SLy-vJA@mail.gmail.com>
- <9230d330e3b57af0643abc834bcf207095cc4bd7.camel@ndufresne.ca>
- <65a37cec-5040-e2f0-5cd5-c9c3111827ad@daenzer.net>
- <e572f31653301f0a479fe1373b3dfd5ada8e49f3.camel@ndufresne.ca>
-In-Reply-To: <e572f31653301f0a479fe1373b3dfd5ada8e49f3.camel@ndufresne.ca>
+On Thu, Apr 25, 2019 at 04:02:11PM +0100, David Howells wrote:
+> Allow searching of the inode cache under RCU conditions - but with a
+> footnote that this is redone under lock under certain conditions.
+> 
+> The following changes are made:
+> 
+>  (1) Use hlist_add_head_rcu() and hlist_del_init_rcu() to add and remove
+>      an inode to/from a bucket.
+> 
+>  (2) In rehash_inode(), called by Coda to change the identifying parameters
+>      on an inode during resolution of disconnected operation, lock
+>      inode_hash_lock with write_seqlock(), which takes the spinlock and
+>      bumps the sequence counter.
+> 
+>  (3) Provide __find_inode_rcu() and __find_inode_by_ino rcu() which do an
+>      RCU-safe crawl through a hash bucket.
+> 
+>  (4) Provide find_inode_rcu() and find_inode_by_ino_rcu() which do a
+>      read_seqbegin_or_lock() conditional lock-loop on inode_hash_lock to
+>      cover searching the icache.  Normally this will work without needing
+>      to retry, but in case (4), where an inode may be moved between lists,
+>      we need to retry with the lock held.
 
---XMy5e4t38JTHemRMdAyY23YSxjokCppP8
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: quoted-printable
-
-On 2019-04-24 7:43 p.m., Nicolas Dufresne wrote:
-> Le mercredi 24 avril 2019 =C3=A0 18:54 +0200, Michel D=C3=A4nzer a =C3=A9=
-crit :
->> On 2019-04-24 5:44 p.m., Nicolas Dufresne wrote:
->>> Le mercredi 24 avril 2019 =C3=A0 17:06 +0200, Daniel Vetter a =C3=A9c=
-rit :
->>>> On Wed, Apr 24, 2019 at 4:41 PM Paul Kocialkowski
->>>> <paul.kocialkowski@bootlin.com> wrote:
->>>>> On Wed, 2019-04-24 at 16:39 +0200, Michel D=C3=A4nzer wrote:
->>>>>> On 2019-04-24 2:01 p.m., Nicolas Dufresne wrote:
->>>>>>> Rendering a video stream is more complex then what you describe h=
-ere.
->>>>>>> Whenever there is a unexpected delay (late delivery of a frame as=
- an
->>>>>>> example) you may endup in situation where one frame is ready afte=
-r the
->>>>>>> targeted vblank. If there is another frame that targets the follo=
-wing
->>>>>>> vblank that gets ready on-time, the previous frame should be repl=
-aced
->>>>>>> by the most recent one.
->>>>>>>
->>>>>>> With fences, what happens is that even if you received the next f=
-rame
->>>>>>> on time, naively replacing it is not possible, because we don't k=
-now
->>>>>>> when the fence for the next frame will be signalled. If you simpl=
-y
->>>>>>> always replace the current frame, you may endup skipping a lot mo=
-re
->>>>>>> vblank then what you expect, and that results in jumpy playback.
->>>>>>
->>>>>> So you want to be able to replace a queued flip with another one t=
-hen.
->>>>>> That doesn't necessarily require allowing more than one flip to be=
-
->>>>>> queued ahead of time.
->>>>>
->>>>> There might be other ways to do it, but this one has plenty of
->>>>> advantages.
->>>>
->>>> The point of kms (well one of the reasons) was to separate the
->>>> implementation of modesetting for specific hw from policy decisions
->>>> like which frames to drop and how to schedule them. Kernel gives
->>>> tools, userspace implements the actual protocols.
->>>>
->>>> There's definitely a bit a gap around scheduling flips for a specifi=
-c
->>>> frame or allowing to cancel/overwrite an already scheduled flip, but=
-
->>>> no one yet has come up with a clear proposal for new uapi + example
->>>> implementation + userspace implementation + big enough support from
->>>> other compositors that this is what they want too.
->>
->> Actually, the ATOMIC_AMEND patches propose a way to replace a schedule=
-d
->> flip?
->>
->>
->>>>>> Note that this can also be done in userspace with explicit fencing=
- (by
->>>>>> only selecting a frame and submitting it to the kernel after all
->>>>>> corresponding fences have signalled), at least to some degree, but=
- the
->>>>>> kernel should be able to do it up to a later point in time and mor=
-e
->>>>>> reliably, with less risk of missing a flip for a frame which becom=
-es
->>>>>> ready just in time.
->>>>>
->>>>> Indeed, but it would be great if we could do that with implicit fen=
-cing
->>>>> as well.
->>>>
->>>> 1. extract implicit fences from dma-buf. This part is just an idea,
->>>> but easy to implement once we have someone who actually wants this.
->>>> All we need is a new ioctl on the dma-buf to export the fences from
->>>> the reservation_object as a sync_file (either the exclusive or the
->>>> shared ones, selected with a flag).
->>>> 2. do the exact same frame scheduling as with explicit fencing
->>>> 3. supply explicit fences in your atomic ioctl calls - these should
->>>> overrule any implicit fences (assuming correct kernel drivers, but w=
-e
->>>> have helpers so you can assume they all work correctly).
->>>>
->>>> By design this is possible, it's just that no one yet bothered enoug=
-h
->>>> to make it happen.
->>>> -Daniel
->>>
->>> I'm not sure I understand the workflow of this one. I'm all in favour=
-
->>> leaving the hard work to userspace. Note that I have assumed explicit=
-
->>> fences from the start, I don't think implicit fence will ever exist i=
-n
->>> v4l2, but I might be wrong. What I understood is that there was a
->>> previous attempt in the past but it raised more issues then it actual=
-ly
->>> solved. So that being said, how do handle exactly the follow use case=
-s:
->>>
->>>  - A frame was lost by capture driver, but it was schedule as being t=
-he
->>> next buffer to render (normally previous frame should remain).
->>
->> Userspace just doesn't call into the kernel to flip to the lost frame,=
-
->> so the previous one remains.
->=20
-> We are stuck in a loop you a me. Considering v4l2 to drm, where fences
-> don't exist on v4l2, it makes very little sense to bring up fences if
-> we are to wait on the fence in userspace.
-
-It makes sense insofar as no V4L specific code would be needed to make
-sure that the contents of a buffer produced via V4L aren't consumed
-before they're ready to be.
-
-
->>>  - The scheduled frame is late for the next vblank (didn't signal on-=
-
->>> time), a new one may be better for the next vlbank, but we will only
->>> know when it's fence is signaled.
->>
->> Userspace only selects a frame and submits it to the kernel after all
->> its fences have signalled.
->>
->>> Better in this context means the the presentation time of this frame =
-is
->>> closer to the next vblank time. Keep in mind that the idea is to
->>> schedule the frames before they are signal, in order to make the usag=
-e
->>> of the fence useful in lowering the latency.
->>
->> Fences are about signalling completion, not about low latency.
->=20
-> It can be used to remove a roundtrip with userspace at a very time
-> sensitive moment. If you pass a dmabuf with it's unsignalled fence to a=
-
-> kernel driver, the driver can start the job on this dmabuf as soon as
-> the fence is signalled. If you always wait on a fence in userspace, you=
-
-> have to wait for the userspace process to be scheduled,
-
-I doubt this magically works without something like that (e.g. a
-workqueue, which runs in normal process context) in the kernel either. :)=
-
-
-> then userspace will setup the drm atomic request or similar action, whi=
-ch
-> may take some time and may require another process in the kernel to hav=
-e
-> to be schedule. This effectively adds some variable delay, a gap where
-> nothing is happening between two operations. This time is lost and
-> contributes to the overall operation latency.
-
-It only increases latency if it causes a flip to miss its target vblank,
-and it's not possible to know this happens at an unacceptable rate
-without trying. The prudent approach is to at least prototype a solution
-with as much complexity as possible in userspace first. If that turns
-out to perform too badly, then we can think about how to improve it by
-adding complexity in the kernel.
-
-
-> The benefit of fences we are looking for is being able to setup before
-> the fence is signalled the operations on various compatible drivers.
-> This way, on the time critical moment a driver can be feed more jobs,
-> there is no userspace rountrip involved.
-
-That is possible with other operations, just not with page flipping yet.
-
-
---=20
-Earthling Michel D=C3=A4nzer               |              https://www.amd=
-=2Ecom
-Libre software enthusiast             |             Mesa and X developer
-
-
---XMy5e4t38JTHemRMdAyY23YSxjokCppP8--
-
---2VcJrharQhz1ikiIY67gmutUhQ3MOiXtA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQSwn681vpFFIZgJURRaga+OatuyAAUCXMHPpAAKCRBaga+Oatuy
-AMleAKCXj7uOVv+7unsA8XmBgHL4l+RIngCfQdfL/h1glH56Axxq+FXY52D93Cc=
-=R+QT
------END PGP SIGNATURE-----
-
---2VcJrharQhz1ikiIY67gmutUhQ3MOiXtA--
+Hmm...  Why do these stores to ->i_state need WRITE_ONCE, while an arseload
+of similar in fs/fs-writeback.c does not?
