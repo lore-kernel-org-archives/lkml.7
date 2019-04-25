@@ -2,124 +2,166 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE729C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEFFC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379F22067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556207604;
-	bh=ho5TyauY3lJuFVAthLKFJ6Y7hIL31mARg19a8JCHiUk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=td/jJMNF/1DcvYUEX+f0lYy/uTpoxKHb2+GV/1QPKcFaRk+QExqiaPZhC1VekPzcE
-	 ooaISA/wlvodEqi5p5G6l5e6KtlXoxCoyCDbUIaeGXaMqkt9yLYS/ACCLZ8ykONl1j
-	 GzR/1LUsFLuKWE3hg0670DVCg61KGVmC6Wt5Up1o=
+	by mail.kernel.org (Postfix) with ESMTP id 1BB0A2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:53:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHScPrOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbfDYPxW (ORCPT
+        id S1729390AbfDYPxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:53:22 -0400
-Received: from casper.infradead.org ([85.118.1.10]:44084 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbfDYPxV (ORCPT
+        Thu, 25 Apr 2019 11:53:33 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46650 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbfDYPxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:53:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=E3NXYmNospchyn56GjhuUUM3hrUac73tHVKaHCldfOk=; b=Bonx4HPMYcr3a2nktGqFVhvpkC
-        Lm7Jv3Ti63Kv4EMBUFae5lI4ptDC5RAI5ElUhwvqH9DfP8HL3oLak9sqkNi1SrdMbInWhlezS4ZQv
-        TaB3dxTt/lLAd7hovrVYa5w4+CCJd72lsXCzDbUllvhVuoJLaU1Hl5+LKJVzv+MI7D167ykTh2GZK
-        d6OPs3hXZSnLAXf1R6CrpdOPA9x9rme1ywi76UowaMUx1f609U55StEwsjKOyqNJVxN4cMGncdYB6
-        KnVvdda0AmWSEMwWetcrVOOCMdnwjzCP88m9Y10yNoScW0lTGYk+7ZUQxJpbglecBDUogb5ukJzjR
-        1L7XLtaQ==;
-Received: from [179.95.39.209] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJggS-0007pK-Bs; Thu, 25 Apr 2019 15:53:12 +0000
-Date:   Thu, 25 Apr 2019 12:53:01 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-fsdevel@vger.kernel.org,
-        y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Sterba <dsterba@suse.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devel@driverdev.osuosl.org, qat-linux@intel.com,
-        linux-crypto@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        amd-gfx@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Sean Young <sean@mess.org>
-Subject: Re: [PATCH v3 12/26] compat_ioctl: move more drivers to
- compat_ptr_ioctl
-Message-ID: <20190425125301.5165cf15@coco.lan>
-In-Reply-To: <20190425153534.GS2217@ZenIV.linux.org.uk>
-References: <20190416202013.4034148-1-arnd@arndb.de>
-        <20190416202701.127745-1-arnd@arndb.de>
-        <20190425122153.450fc094@coco.lan>
-        <20190425153534.GS2217@ZenIV.linux.org.uk>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 25 Apr 2019 11:53:32 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h21so56259ljk.13;
+        Thu, 25 Apr 2019 08:53:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7mKO1sNcxUG5B0HF/jxYbDkD3Eqq+BtfQRzXDYHu7Ck=;
+        b=DHScPrOvqXHnvnh7EIM15zo2VP91EjuoZvIM/Ig95zp2Y40+wPhL4V3zlRVIlZuI/c
+         0Sh4C1BcJ7mzwle3IdePtUhN1QVmw4fQJzWmvTYmxAERo4RZm8dp1uUhCzDjvKypW7ii
+         iADNDi3h1llqJWd/is7108KSGBF96hvZvoKpN0nMSG+WP5Wo5sX+psGrRsTvBn6DNtDO
+         RJBGH2uHTTg/2JdwG8WCzwqnpjoQmftDA30q3SQSu8kVZdzFX/3p5OJI5obKRh9fuBYg
+         6BoPV6b1OFGwVCPG0kLZdjTNVMCD4k6dk4iMAjRLZb7U2erGkh7039E/RvL4Kxiyi3KX
+         A+sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7mKO1sNcxUG5B0HF/jxYbDkD3Eqq+BtfQRzXDYHu7Ck=;
+        b=TDBWBkWBblFw3qHNF464mQ+gKB5j08/iRfh48dFRWF9fuaQGMIAMooPiS06P8XZplA
+         RHzrpyNI8iq3t5SYB6HZRfYjJ8yz3r1rA6fatdPPPb/WDUWzmuJe20291UtUUQAQ88t5
+         Pfzn9ONvV+OKE3Fv7jhwLrNaRJb10YZi8arfiObn35jsBN+5uFWwGCpB3BG+jaMdwRJp
+         cLAHa8uNukeeCJxmv7n2kfqgL1eJAXBDRtZAlC4aly2IH8WHMtPmOrdig3wjZIVj5e3Q
+         VwFDYlcLN6YOPTwMvypnWRIYtLrBcAJi005IfsIfJiGiHjYHORw8NuQSovWggbJazcAf
+         vD5Q==
+X-Gm-Message-State: APjAAAX5qsvzpBmLDv8HO3tb8xMwNTO49jc1IdEJ6/GpPw6unS8QcJHL
+        rKD6blhcgQIp9BC+J6+afXC2rZbW
+X-Google-Smtp-Source: APXvYqxHgT73XRwYYR5D1dYn7ltiheSbDJzxHqMWAwJTzG74Mt5nIjsiVmixTUeROy36q036f/wSSg==
+X-Received: by 2002:a2e:9c51:: with SMTP id t17mr21482292ljj.104.1556207609524;
+        Thu, 25 Apr 2019 08:53:29 -0700 (PDT)
+Received: from mobilestation ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id q6sm6127367lfj.36.2019.04.25.08.53.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Apr 2019 08:53:28 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 18:53:26 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Peter Korsgaard <peter.korsgaard@barco.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/5] i2c-mux-gpio: Save initial channel number to the
+ idle data field
+Message-ID: <20190425155325.voqlrmbdblo7xhtx@mobilestation>
+References: <20190424123414.25311-1-fancer.lancer@gmail.com>
+ <20190424123414.25311-4-fancer.lancer@gmail.com>
+ <7c8d4751-f5f7-ee2a-c411-a985b81d61a3@axentia.se>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c8d4751-f5f7-ee2a-c411-a985b81d61a3@axentia.se>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 25 Apr 2019 16:35:34 +0100
-Al Viro <viro@zeniv.linux.org.uk> escreveu:
-
-> On Thu, Apr 25, 2019 at 12:21:53PM -0300, Mauro Carvalho Chehab wrote:
+On Wed, Apr 24, 2019 at 09:26:22PM +0000, Peter Rosin wrote:
+> On 2019-04-24 14:34, Serge Semin wrote:
+> > In case if the idle state has been specified in the data structure,
+> > the idle variable is left untouched as before, so to keep a default
+> > channel number enabled in the mux idle state. But if a platform doesn't
+> > specify which channel is going to be enabled by default, we as before
+> > don't setup the deselect callback, but the initial state is saved in the
+> > idle variable for further initialization. We can safely do this here
+> > since that variable is used for initial state setting only, when no
+> > idling lane is specified.
 > 
-> > If I understand your patch description well, using compat_ptr_ioctl
-> > only works if the driver is not for s390, right?  
+> While this subtlety is *maybe* ok, a comment about it belongs in the
+> *code* where it will be seen when the next person makes changes.
 > 
-> No; s390 is where "oh, just set ->compat_ioctl same as ->unlocked_ioctl
-> and be done with that; compat_ptr() is a no-op anyway" breaks.  IOW,
-> s390 is the reason for having compat_ptr_ioctl() in the first place;
-> that thing works on all biarch architectures, as long as all stuff
-> handled by ->ioctl() takes pointer to arch-independent object as
-> argument.  IOW,
-> 	argument ignored => OK
-> 	any arithmetical type => no go, compat_ptr() would bugger it
-> 	pointer to int => OK
-
-That's the case for all LIRC ioctls: they all use a pointer to u32
-argument.
-
-> 	pointer to string => OK
-> 	pointer to u64 => OK
-> 	pointer to struct {u64 addr; char s[11];} => OK
-> 	pointer to long => needs explicit handler
-> 	pointer to struct {void *addr; char s[11];} => needs explicit handler
-> 	pointer to struct {int x; u64 y;} => needs explicit handler on amd64
-> For "just use ->unlocked_ioctl for ->ioctl" we have
-> 	argument ignored => OK
-> 	any arithmetical type => OK
-> 	any pointer => instant breakage on s390, in addtion to cases that break
-> with compat_ptr_ioctl().
+> But why not extend the struct with the initial state? How many of
+> these muxes do you expect to exist in a system? Multiplied by a
+> couple of bytes. Who cares?
 > 
-> Probably some form of that ought to go into commit message for compat_ptr_ioctl()
-> introduction...
 
-Agreed.
+I actually thought about this when started working on the patchset.
+That time saving the initial value in the idle variable seemed like a
+good idea. I even put a small comment in the code about this.
 
-Thanks,
-Mauro
+Anyway lets add a new field to "struct gpiomux" structure and use
+it as a container for initial value. It is also a good alternative.
+I'll do this in a v2 patchset.
+
+-Sergey
+
+> Cheers,
+> Peter
+> 
+> > 
+> > The reason of this change is to prepare the code for future GPIOs request
+> > path being split up into of- and plat- based methods. The idle variable
+> > here is used as a container of the initial state for both of the paths in
+> > case of idle-channel isn't specified.
+> > 
+> > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> > ---
+> >  drivers/i2c/muxes/i2c-mux-gpio.c | 15 ++++++++-------
+> >  1 file changed, 8 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/muxes/i2c-mux-gpio.c b/drivers/i2c/muxes/i2c-mux-gpio.c
+> > index a14fe132b0c3..535c83c43371 100644
+> > --- a/drivers/i2c/muxes/i2c-mux-gpio.c
+> > +++ b/drivers/i2c/muxes/i2c-mux-gpio.c
+> > @@ -171,7 +171,6 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+> >  	struct gpiomux *mux;
+> >  	struct i2c_adapter *parent;
+> >  	struct i2c_adapter *root;
+> > -	unsigned initial_state;
+> >  	int i, ret;
+> >  
+> >  	mux = devm_kzalloc(&pdev->dev, sizeof(*mux), GFP_KERNEL);
+> > @@ -204,12 +203,14 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+> >  
+> >  	muxc->mux_locked = true;
+> >  
+> > -	if (mux->data.idle != I2C_MUX_GPIO_NO_IDLE) {
+> > -		initial_state = mux->data.idle;
+> > +	/*
+> > +	 * Set descelect callback if idle state has been setup otherwise just
+> > +	 * use the idle variable to store the initial muxer value.
+> > +	 */
+> > +	if (mux->data.idle != I2C_MUX_GPIO_NO_IDLE)
+> >  		muxc->deselect = i2c_mux_gpio_deselect;
+> > -	} else {
+> > -		initial_state = mux->data.values[0];
+> > -	}
+> > +	else
+> > +		mux->data.idle = mux->data.values[0];
+> >  
+> >  	for (i = 0; i < mux->data.n_gpios; i++) {
+> >  		struct device *gpio_dev;
+> > @@ -224,7 +225,7 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+> >  		}
+> >  
+> >  		ret = gpio_direction_output(mux->gpio_base + mux->data.gpios[i],
+> > -					    initial_state & (1 << i));
+> > +					    mux->data.idle & (1 << i));
+> >  		if (ret) {
+> >  			dev_err(&pdev->dev,
+> >  				"Failed to set direction of GPIO %d to output\n",
+> > 
+> 
