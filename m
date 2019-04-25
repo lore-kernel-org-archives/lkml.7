@@ -2,102 +2,105 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC52C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D265C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB6B214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C63820656
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:14:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556187261;
+	bh=a22G66B5D/LmRZKM87Q8YD/ptccO6erKbrQ5kNn8BKo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Rdm2yIRIkb7cAnV7o0JNhudqK8xnFEN06LkGkm9jEK6dE5kAq6G/F8yQxbBHiVksP
+	 Hdgl4GnLGnPXHf1NpXXPiuNCA3H3sLlHlZenbtqdLC8QubDenFoqEea1kwkAHbEpeN
+	 hOOqQJ4GBkCN7RkVHS4Tzgt9AAYTYqZXAgINdEgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfDYKNn (ORCPT
+        id S1727035AbfDYKOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:13:43 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39898 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfDYKNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:13:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABA34374;
-        Thu, 25 Apr 2019 03:13:42 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6DDD3F5C1;
-        Thu, 25 Apr 2019 03:13:40 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 11:13:35 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        mark.rutland@arm.com, robh+dt@kernel.org, sachin.ghadi@sifive.com,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/2] RISC-V: Add DT documentation for SiFive L2 Cache
- Controller
-Message-ID: <20190425101318.GA8469@e107155-lin>
-References: <1556171696-7741-1-git-send-email-yash.shah@sifive.com>
- <1556171696-7741-2-git-send-email-yash.shah@sifive.com>
+        Thu, 25 Apr 2019 06:14:20 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46416 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfDYKOT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 06:14:19 -0400
+Received: by mail-oi1-f194.google.com with SMTP id l12so5785766oie.13;
+        Thu, 25 Apr 2019 03:14:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9PFhRHLh905/ae2n9ldFIZhiiWQtx1no+9jBJyJ29Hw=;
+        b=cE3FseffrbnqAEznhjHR1lwUVxJASt64koah1nGdUGQ07U9CTHFmA2RBhH+7G2LPem
+         1noKcCvq0N3QhhhraYTo+fnFm94LZMX3s7snZuws2Pgw7eTpgjOHCCMXeCg7zdd/0EQa
+         B64qzzVC4FgfjLK1mpxv0kvd3nixo9cVb9PnDbFpksJB0yooOCOXEgocwK3N/5YEKHUh
+         R2LyztR1nzpYQO8Pv1GbOhm9qSES2rM0ri/yZfvyayZzcVrZYjkJEdhnXZLd5BWKVsqH
+         0cKEnOQgtar403ijJhHjOflYCWTvDoGoK23Foh6UAlum+g/grDCaK6DdJ8IDaLzvi3iD
+         NF7Q==
+X-Gm-Message-State: APjAAAV5HD9LUto8cSFgbFrzjOj8sLTnqP8euIfW3jtN5QJVtFLvf5HY
+        pklZdgmSd5gviP14QQRYqcnycEBY+CsfpcDszuM=
+X-Google-Smtp-Source: APXvYqxR4nfgOudsylfecHigcgh+E+S0uhjeP+wNgjqANYOXzRk4nj+KoayVOgqpUynhhjaMVwV2hbrF0XsVXS8i8Tc=
+X-Received: by 2002:aca:6c47:: with SMTP id h68mr2869874oic.57.1556187258168;
+ Thu, 25 Apr 2019 03:14:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556171696-7741-2-git-send-email-yash.shah@sifive.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190425090413.10700-1-ulf.hansson@linaro.org>
+ <CAJZ5v0jxGcFu-aqvyR4UgjRuCwB9q9fZCiXf+D3NL3TJ5OVEPA@mail.gmail.com> <CAPDyKFqP+92wwscW2V3352DVS1QM=DjMZ3e0uty1eQ4=5JyHWA@mail.gmail.com>
+In-Reply-To: <CAPDyKFqP+92wwscW2V3352DVS1QM=DjMZ3e0uty1eQ4=5JyHWA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 Apr 2019 12:14:07 +0200
+Message-ID: <CAJZ5v0jTRF1wvcYTxfSd59ByhnzXdLL8CVg1qnUfQhAj1L1qLA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] PM / Domains: Improve support for CPUs in genpd
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 11:24:55AM +0530, Yash Shah wrote:
-> Add device tree bindings for SiFive FU540 L2 cache controller driver
-> 
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> new file mode 100644
-> index 0000000..15132e2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> @@ -0,0 +1,53 @@
-> +SiFive L2 Cache Controller
-> +--------------------------
-> +The SiFive Level 2 Cache Controller is used to provide access to fast copies
-> +of memory for masters in a Core Complex. The Level 2 Cache Controller also
-> +acts as directory-based coherency manager.
-> +
-> +Required Properties:
-> +--------------------
-> +- compatible: Should be "sifive,fu540-c000-ccache"
-> +
-> +- cache-block-size: Specifies the block size in bytes of the cache
-> +
-> +- cache-level: Should be set to 2 for a level 2 cache
-> +
-> +- cache-sets: Specifies the number of associativity sets of the cache
-> +
-> +- cache-size: Specifies the size in bytes of the cache
-> +
-> +- cache-unified: Specifies the cache is a unified cache
-> +
-> +- interrupt-parent: Must be core interrupt controller
-> +
-> +- interrupts: Must contain 3 entries (DirError, DataError and DataFail signals)
-> +
-> +- reg: Physical base address and size of L2 cache controller registers map
-> +
-> +- reg-names: Should be "control"
-> +
+On Thu, Apr 25, 2019 at 12:11 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Thu, 25 Apr 2019 at 11:56, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Thu, Apr 25, 2019 at 11:04 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > >
+> > > Recently genpd was extended to cope with devices belonging to CPUs. However,
+> > > attaching CPU devices via genpd_dev_pm_attach_by_id|name() doesn't work,
+> > > because of the virtual device that genpd allocates in this path.
+> > >
+> > > In this series, this limitation is addressed, together with a few other related
+> > > fixes/cleanups.
+> > >
+> > > Ulf Hansson (4):
+> > >   PM / Domains: Use the base device for
+> > >     driver_deferred_probe_check_state()
+> > >   PM / Domains: Drop unused in-parameter to some genpd functions
+> > >   PM / Domains: Search for the CPU device outside the genpd lock
+> > >   PM / Domains: Allow to attach a CPU via
+> > >     genpd_dev_pm_attach_by_id|name()
+> > >
+> > >  drivers/base/power/domain.c | 73 ++++++++++++++++++-------------------
+> > >  include/linux/pm_domain.h   |  1 +
+> > >  2 files changed, 36 insertions(+), 38 deletions(-)
+> >
+> > Are there any dependencies between this and the series you've recently posted?
+>
+> Yep. I should have stated that, sorry. This should be applied on top.
 
-It would be good if you mark the properties that are present in DT
-specification and those that are added for sifive,fu540-c000-ccache
-explicitly. Also I assume you can retain the stardard "cache" compatible
-in addition to above. I am interested to see if the cacheinfo infrastructure
-can be used without any issues.
-
---
-Regards,
-Sudeep
+On top of which series?
