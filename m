@@ -2,109 +2,94 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB0EC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC53C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C419212F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56093212F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:30:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZHGu9KxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfDYNar (ORCPT
+        id S1728185AbfDYNaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 09:30:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54203 "EHLO mx1.redhat.com"
+        Thu, 25 Apr 2019 09:30:55 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53079 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfDYNaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 09:30:46 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726321AbfDYNay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 09:30:54 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1C46B30BCE5A;
-        Thu, 25 Apr 2019 13:30:46 +0000 (UTC)
-Received: from treble (ovpn-123-99.rdu2.redhat.com [10.10.123.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 73C7760923;
-        Thu, 25 Apr 2019 13:30:34 +0000 (UTC)
-Date:   Thu, 25 Apr 2019 08:30:32 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
-        David Rientjes <rientjes@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Miroslav Benes <mbenes@suse.cz>, linux-arch@vger.kernel.org
-Subject: Re: [patch V3 24/29] tracing: Remove the last struct stack_trace
- usage
-Message-ID: <20190425133032.ds27oje6nxswvdji@treble>
-References: <20190425094453.875139013@linutronix.de>
- <20190425094803.340000461@linutronix.de>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44qdNq59gLz9sCJ;
+        Thu, 25 Apr 2019 23:30:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556199052;
+        bh=V14iJdPhrORl8KMhPieoEv/H4hcKcbgv/4rYY9L4t3U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZHGu9KxWwp57ERgRT3W/j99QOnWQdmKYpP9D4zhW+yn1sVggxpcIC9pdtSYWZ5nWz
+         KwSxCzgNzeT+wmJquu39OxSaEL8P0Dwz5N9xoPfkUabHrlvdbPCF7u7+7q9fEjLVu0
+         XWg7g1BSZpz8WNebCbldElgZbElJvrPBmT8Q53XMHb+9ueJRSJCetNySyHxYBuJu6B
+         sOdZ8t1J35EfM6QE3ibuoGo6JujZ1AaGlec80GeMmgW6ADpIJFOxnEsu0HTFL2lLYm
+         5M1XnRmdh5J83t0x2L30vUeA6RoROyIe5hW+fDAFdgg0Elbf/FvfXKDvHdZb8WfaXf
+         eoSm9z34QYznQ==
+Date:   Thu, 25 Apr 2019 23:30:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the printk tree
+Message-ID: <20190425233049.7e2283b0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190425094803.340000461@linutronix.de>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 25 Apr 2019 13:30:46 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Yyontrw5S2VclYYMUmXe8cu"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 11:45:17AM +0200, Thomas Gleixner wrote:
-> Simplify the stack retrieval code by using the storage array based
-> interface.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_stack.c |   37 ++++++++++++++++---------------------
->  1 file changed, 16 insertions(+), 21 deletions(-)
-> 
-> --- a/kernel/trace/trace_stack.c
-> +++ b/kernel/trace/trace_stack.c
-> @@ -23,11 +23,7 @@
->  static unsigned long stack_dump_trace[STACK_TRACE_ENTRIES];
->  static unsigned stack_trace_index[STACK_TRACE_ENTRIES];
->  
-> -struct stack_trace stack_trace_max = {
-> -	.max_entries		= STACK_TRACE_ENTRIES,
-> -	.entries		= &stack_dump_trace[0],
-> -};
-> -
-> +static unsigned int stack_trace_entries;
+--Sig_/Yyontrw5S2VclYYMUmXe8cu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-"stack_trace_entries" -> "nr_stack_trace_entries"
+Hi all,
 
--- 
-Josh
+In commit
+
+  e43bb4d0feb8 ("vsprintf: Consistent %pK handling for kptr_restrict =3D=3D=
+ 0")
+
+Fixes tag
+
+  Fixes: commit ef0010a30935de4e0211 ("vsprintf: don't use 'restricted_poin=
+ter()' when not restricting")
+
+has these problem(s):
+
+  - leading word 'commit' unexpected
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Yyontrw5S2VclYYMUmXe8cu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzBtokACgkQAVBC80lX
+0GwzZAf+Kdqa0CTbOnVe/SKI3EepZ2UY9VNLICynylv8/TmjgE4Shi4G8jo2+1rm
+z/tuNRhW+EluAMupigRBJHqfsgMJ74oSXaAfLudjXQW16dkWCJ8w6d4zqvb58YFL
+LL7qvquL3bO2YSgxT9D/Mb42JFtx0RXvsMSzQ8ME81sEEw7nRfrTiAjiYhnH8aQv
+R8Oii3VToXX78TuGfZTGbR10tezKlUzNcUhSaTVGzlN0wNzFM2VVt3PNpcf31P6u
+nbYNrhZq5hw1XH2cB7te3TbwNm2wqqGyzSi42QJWtnqhkGLVcppo3UF8A4dONTbq
+Dgg3LuAXY3EhnTJNgumRNHO0zIdU8Q==
+=vlVq
+-----END PGP SIGNATURE-----
+
+--Sig_/Yyontrw5S2VclYYMUmXe8cu--
