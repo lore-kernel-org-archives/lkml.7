@@ -5,68 +5,95 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0843C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AF6C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF11F20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB247217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:51:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfDYKvD (ORCPT
+        id S1730543AbfDYKvW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:51:03 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58462 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729031AbfDYKvC (ORCPT
+        Thu, 25 Apr 2019 06:51:22 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55869 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730516AbfDYKvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:51:02 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hJbxq-0003Cs-2m; Thu, 25 Apr 2019 12:50:50 +0200
-Date:   Thu, 25 Apr 2019 12:50:49 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>, mingo@redhat.com,
-        peterz@infradead.org, hpa@zytor.com, ak@linux.intel.com,
-        tim.c.chen@linux.intel.com, dave.hansen@intel.com,
-        arjan@linux.intel.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, aubrey.li@intel.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v17 1/3] proc: add /proc/<pid>/arch_status
-In-Reply-To: <ee1620d5-9650-5bfa-c458-fa2d051522b1@metux.net>
-Message-ID: <alpine.DEB.2.21.1904251249200.1960@nanos.tec.linutronix.de>
-References: <20190421183529.9141-1-aubrey.li@linux.intel.com> <alpine.DEB.2.21.1904242310040.1762@nanos.tec.linutronix.de> <da1fcb4f-e856-d31f-7c72-76c969af3935@linux.intel.com> <6a9e6bd9-8e1a-9fe5-135d-c7a49697b5a4@metux.net> <4456cc68-5120-e820-90ed-cb5b5dfcd760@linux.intel.com>
- <ee1620d5-9650-5bfa-c458-fa2d051522b1@metux.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 25 Apr 2019 06:51:21 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-111-G6KENlWINbCq7VHD7b97yw-1; Thu, 25 Apr 2019 11:51:18 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 25 Apr 2019 11:52:30 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 25 Apr 2019 11:52:30 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Fenghua Yu' <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        "Xiaoyao Li " <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "Michael Chan" <michael.chan@broadcom.com>
+CC:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: RE: [PATCH v8 13/15] x86/split_lock: Enable split lock detection by
+ default
+Thread-Topic: [PATCH v8 13/15] x86/split_lock: Enable split lock detection by
+ default
+Thread-Index: AQHU+tYCJUyDFc/Zd0WR7kUsRI2JUKZMsyTw
+Date:   Thu, 25 Apr 2019 10:52:30 +0000
+Message-ID: <762682ba43a0468897ff5ddbf6633d58@AcuMS.aculab.com>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
+ <1556134382-58814-14-git-send-email-fenghua.yu@intel.com>
+In-Reply-To: <1556134382-58814-14-git-send-email-fenghua.yu@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MC-Unique: G6KENlWINbCq7VHD7b97yw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019, Enrico Weigelt, metux IT consult wrote:
+From:  Fenghua Yu
+> Sent: 24 April 2019 20:33
+> A split locked access locks bus and degrades overall memory access
+> performance. When split lock detection feature is enumerated, enable
+> the feature by default by writing 1 to bit 29 in MSR TEST_CTL to find
+> any split lock issue.
 
-> On 25.04.19 12:42, Li, Aubrey wrote:
-> > 
-> > Yep, I'll make it disabled by default and not switchable and let arch select it.
-> > 
-> 
-> That's not quite what I've suggested. Instead:
-> 
-> #1: make the switch depend on the arch's that support it
+You can't enable this by default until ALL the known potentially
+misaligned locked memory operations have been fixed.
 
-No. That's what select is for.
+AFAICT you've only fixed the ones that have actually faulted.
+You've not even fixed the other ones in the same source files
+as ones you've 'fixed'.
 
-> #2: still leave it selectable to the user, so somebody who doesn't need
->     it, can just disable it.
+You need to do a code audit of all the in-tree kernel code
+that uses locked operations - especially the 'bit' ones
+since a lot of code casts the bitmap address - so it probably
+isn't long aligned.
 
-Well, the number of knobs is exploding over time and the number of people
-actually tweaking them is close to 0. So no, we don't want to have the
-extra tunable for everything and the world.
+	David
 
-Thanks,
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-	tglx
