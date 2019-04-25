@@ -2,95 +2,81 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDB2C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED8BC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04672206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:49:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oglEPlSe"
+	by mail.kernel.org (Postfix) with ESMTP id DD476206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556221791;
+	bh=5+UzOGZVxGDsNphbonQceRHhUCczCcg9VVkdUolF98k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jMQ/4OwwjiMQCbWeUh42mBvZpihTXDVOczkRraZJqYUExiFjAJlXO1vyX15L9zNht
+	 8tn2h/MuM/eiBVetqSdRJx6DEi6cxp2gef1gOq6vwy6Yp/veornv5+XZvCJwsWyaD2
+	 6qjaXfIbQyZfyUNOfGTDTWjQ8LxkcdT9mk7/qznQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730483AbfDYTtN (ORCPT
+        id S1730551AbfDYTtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:49:13 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:34155 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730086AbfDYTtM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:49:12 -0400
-Received: by mail-pg1-f202.google.com with SMTP id z7so411224pgc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=I1Vs0ZSRMZjDsdASMFkMZlhVl8C0QGbmST5lDUWt2ew=;
-        b=oglEPlSeAX9urBWfXYgouRdR1MFLbZpWIlMsU39Vnlq4bbZuw04+mfqmB/YCPgun8g
-         se4hdoMGNBo7Yqm1G+Kk13aI5uWHnRF91S0W9dJ1P7bHL+WQZu13Rkp03XgHcJN2BWM5
-         yU4DT2MKIx4A6hWWTQJjzrSJnS79Dgu2fdqz3Jt9+f4jcjfRCkplOHwWsFhi5UXoDpt5
-         JaYjAvNJLddKvrgwVynBWH/YzPaOwhmjJoLe0gLSxA7GlIDlHPxKbXQ5PuBQIH4ZLA/t
-         sWfmDcKi5dMGtQR0VyWegGgJmu2LJ2g8KdpiPBK2z+twRmTC2ZA8gsJ25uHIE+e5sK7s
-         i3Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=I1Vs0ZSRMZjDsdASMFkMZlhVl8C0QGbmST5lDUWt2ew=;
-        b=YVnaEOFU5Nj0HAikCswYnwOcghvFckLt64qUMy6ZxgnjqVXLYlnlqRVJMdo2wE8Hqt
-         U9AdO7RAAmLZ5rzIaGd3HcUGxbI70MJP1cvOSDavsplxSu754hLCh6rJY9cdrY+CLkKe
-         jwRxSWOU6/8+esr+q5M+/wgjFeYXFuO0G/l3fUvWJpkSJwaAx8Rb9Mlo6IqmqF2KuWfY
-         RaW65NwwAL9zn+cHzgkJBEL3GOlvZNj6mpusFLvoKoRFCoEK1MivquHI//cRitnCpsYn
-         ykQT2tYdqPESfu9YUaNuRcgDnslq4Xb1L9dKAN0d9LEXC+QjMWaxxW96hTRI+zyljcs/
-         AO+A==
-X-Gm-Message-State: APjAAAXDnn97E2SFphxracHpJjP6tJe/Y8sfSHX+0NPU3wKvbkg0gorx
-        1NkdvBt3HLKhWDog6wZG/Y54y2ZRfBNR
-X-Google-Smtp-Source: APXvYqwwxi+eWcusnqq45pTCCNwbbLt8sPbjR930l9ckz9fDJdrJ3XYJsCqF1YypuOm6GIHhpxNiM29Q5GMp
-X-Received: by 2002:a63:d816:: with SMTP id b22mr38533659pgh.349.1556221751817;
- Thu, 25 Apr 2019 12:49:11 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 12:49:03 -0700
-Message-Id: <20190425194903.144569-1-venture@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH 2/2] ARM: dts: aspeed: quanta-q71: Enable p2a node
-From:   Patrick Venture <venture@google.com>
-To:     venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        joel@jms.id.au, andrew@aj.id.au
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        arm@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 25 Apr 2019 15:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbfDYTtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 15:49:49 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6711206BF;
+        Thu, 25 Apr 2019 19:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556221789;
+        bh=5+UzOGZVxGDsNphbonQceRHhUCczCcg9VVkdUolF98k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OZLq+uyxlePppjoXloRfx0bLLnG0lL45KuktDHBi/j41RbYZGXDBCVz2S16U2BhzE
+         j2vCSvFhMFWcWQ4ASX4bRjY0KL8q0GwBaqSRYsw6OeWgNksV0apT2fdoTSPYtDR3d1
+         CW9RjecOFoBarLwW8X9S2jF5fF/j5cSdR3eXksOo=
+Date:   Thu, 25 Apr 2019 21:49:46 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Chengguang Xu <cgxu519@gmx.com>
+Cc:     dan.carpenter@oracle.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] chardev: set variable ret to -EBUSY before checking
+ minor range overlap
+Message-ID: <20190425194946.GA15196@kroah.com>
+References: <20190405135306.10188-1-cgxu519@gmx.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190405135306.10188-1-cgxu519@gmx.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the aspeed-p2a-ctrl node and configure with memory-region to
-enable mmap access.
+On Fri, Apr 05, 2019 at 09:53:06PM +0800, Chengguang Xu wrote:
+> When allocating dynamic major, the minor range overlap check
+> in __register_chrdev_region() will not fail, so actually
+> there is no real case to passing non negative error code to
+> caller. However, set variable ret to -EBUSY before chekcking
+> minor range overlap will avoid false-positive warning from
+> code analyzing tool(like Smatch) and also make the code more
+> easy to understand.
+> 
+> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
+> ---
+>  fs/char_dev.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Signed-off-by: Patrick Venture <venture@google.com>
----
- arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+What tree was this patch made against?  I can't seem to apply it
+anywhere :(
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-index 0d7c6339da465..a68ff0675c28a 100644
---- a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-@@ -112,6 +112,11 @@
- 			&pinctrl_ddcclk_default &pinctrl_ddcdat_default>;
- };
- 
-+&p2a {
-+	status = "okay";
-+	memory-region = <&vga_memory>;
-+};
-+
- &ibt {
- 	status = "okay";
- };
--- 
-2.21.0.593.g511ec345e18-goog
+Please fix up and resend.
 
+thanks,
+
+greg k-h
