@@ -2,117 +2,145 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F97C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 00:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8318EC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 00:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD64214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 00:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F10208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 00:44:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHC2cPC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfDYAlf (ORCPT
+        id S1728132AbfDYAoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 20:41:35 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:45294 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfDYAle (ORCPT
+        Wed, 24 Apr 2019 20:44:55 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41034 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfDYAoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 20:41:34 -0400
-Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
-        with ESMTP id S23993062AbfDYAladQ7Kx (ORCPT
-        <rfc822;linux-api@vger.kernel.org> + 1 other);
-        Thu, 25 Apr 2019 02:41:30 +0200
-Date:   Thu, 25 Apr 2019 01:41:30 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@linux-mips.org>
-To:     Paul Burton <paul.burton@mips.com>
-cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Carlos O'Donell <codonell@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        heiko carstens <heiko.carstens@de.ibm.com>,
-        gor <gor@linux.ibm.com>, schwidefsky <schwidefsky@de.ibm.com>,
-        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup
- and thread creation (v7)
-In-Reply-To: <20190424231303.zu2irxd5g3v7yqey@pburton-laptop>
-Message-ID: <alpine.LFD.2.21.1904250022240.18194@eddie.linux-mips.org>
-References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com> <20190212194253.1951-2-mathieu.desnoyers@efficios.com> <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com> <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com>
- <602718e0-7375-deb7-b6e6-2d17022173c5@redhat.com> <20190404214151.6ogrm34dok52az4h@pburton-laptop> <1031613720.1496.1555613900993.JavaMail.zimbra@efficios.com> <1103046939.521.1556118342613.JavaMail.zimbra@efficios.com>
- <20190424231303.zu2irxd5g3v7yqey@pburton-laptop>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Wed, 24 Apr 2019 20:44:54 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d9so4229873pls.8;
+        Wed, 24 Apr 2019 17:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZByeP/U/Xsd+bzaA85yvOt7T/npZJcZ57cO9BOcxw9k=;
+        b=MHC2cPC9MLaoJAmE0CQN2S97KWBqkPkLXs9f+lzC+8TPecWG2IM3XWlk4gYZd7AaMD
+         20TYn191QK9PLMw5yBzhtLf8+6iS2/O0pVoQsRgHp8Gv3kflNQwkNfGQpgaJPoTiRu8c
+         FNW52u2xkj2adCr8HGTYq9Q0v7rjOgp9dRdAcDno1UnknHgKYjI1faCRBpBfpQ8Srb9J
+         njMYRHV1PqkT1MLU4IsSFYCM0U39NGDM8i6nKuv5Dxs9ZUKp1AkPpOCKq5JF6a0bZzlM
+         XnTkPt5GY3LlwDkH16Usygfj4fExjFxgSQbr+8Deb9GM8KqE6wDqdnLNbCa88ymTeLaK
+         ECeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZByeP/U/Xsd+bzaA85yvOt7T/npZJcZ57cO9BOcxw9k=;
+        b=nKkGsa4nxvgp5JjVhahYr3MSusuwt/ZieckZkcywRKtXHb1xpLlYOGE+mOYNgYfuWP
+         akR2nYz2sxPA2t4vOQzS/b7mKYl2C4rHH5f7JLB5t19vi9AZKb9zr42AXSBBi/hJE+pr
+         g8Isuzoorgt/gBLzWYT9HseVWWxyatgbzfPiDaEVh/IKC3frf1OESg/yOReHp5cvC5tT
+         /R1Dnu4AkB1bYaK2hRxiy1ob2RKQrSk9fOn5aPH0t8b/pc+C48IVnrI+AvI45RM9sbah
+         LpIuo/5lBshLzZs1auJhpV4r92RbHbCc6JoaNuduJgrfDNTstiO4WB08apghVLWmoty0
+         aZUw==
+X-Gm-Message-State: APjAAAXWfHzE6M56ikzKyXK6opIo5ZaXfKTdOvK3LUcAYln2YZ2ecSOg
+        AA2Z+S5xK3lMghXarHzXJCg=
+X-Google-Smtp-Source: APXvYqwiA2jiYqMbnX8meUdO/rblXtj9B6eFO73auf+KnxKT4SbqW+4arNMPnXTszoQF0bAOgYPKww==
+X-Received: by 2002:a17:902:b617:: with SMTP id b23mr33814911pls.73.1556153093960;
+        Wed, 24 Apr 2019 17:44:53 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id j9sm42583869pfc.43.2019.04.24.17.44.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 17:44:52 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 00:44:51 +0000
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>, rjw@rjwysocki.net,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v5 20/23] Documentation: ACPI: move cppc_sysfs.txt to
+ admin-guide/acpi and convert to reST
+Message-ID: <20190425004450.qdajhnzlanufxhx3@mail.google.com>
+References: <20190424175306.25880-1-changbin.du@gmail.com>
+ <20190424175306.25880-21-changbin.du@gmail.com>
+ <20190424151236.776d9678@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424151236.776d9678@coco.lan>
+User-Agent: NeoMutt/20180716-508-7c9a6d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019, Paul Burton wrote:
-
-> > > Any idea why 0x7273 is not accepted by my assembler ?
+On Wed, Apr 24, 2019 at 03:12:36PM -0300, Mauro Carvalho Chehab wrote:
+> Em Thu, 25 Apr 2019 01:53:03 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
 > 
-> I don't know why the assembler wants a smaller immediate than the
-> instruction encoding allows... There's a comment in the binutils file
-> include/opcode/mips.h that reads:
+> > This converts the plain text documentation to reStructuredText format and
+> > add it to Sphinx TOC tree. No essential content change.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  .../acpi/cppc_sysfs.rst}                      | 71 ++++++++++---------
+> >  Documentation/admin-guide/acpi/index.rst      |  1 +
+> >  2 files changed, 40 insertions(+), 32 deletions(-)
+> >  rename Documentation/{acpi/cppc_sysfs.txt => admin-guide/acpi/cppc_sysfs.rst} (51%)
+> > 
+> > diff --git a/Documentation/acpi/cppc_sysfs.txt b/Documentation/admin-guide/acpi/cppc_sysfs.rst
+> > similarity index 51%
+> > rename from Documentation/acpi/cppc_sysfs.txt
+> > rename to Documentation/admin-guide/acpi/cppc_sysfs.rst
+> > index f20fb445135d..a4b99afbe331 100644
+> > --- a/Documentation/acpi/cppc_sysfs.txt
+> > +++ b/Documentation/admin-guide/acpi/cppc_sysfs.rst
+> > @@ -1,5 +1,11 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> >  
+> > -	Collaborative Processor Performance Control (CPPC)
+> > +==================================================
+> > +Collaborative Processor Performance Control (CPPC)
+> > +==================================================
+> > +
+> > +CPPC
+> > +====
+> >  
+> >  CPPC defined in the ACPI spec describes a mechanism for the OS to manage the
+> >  performance of a logical processor on a contigious and abstract performance
+> > @@ -10,31 +16,28 @@ For more details on CPPC please refer to the ACPI specification at:
+> >  
+> >  http://uefi.org/specifications
+> >  
+> > -Some of the CPPC registers are exposed via sysfs under:
+> > -
+> > -/sys/devices/system/cpu/cpuX/acpi_cppc/
 > 
-> > A breakpoint instruction uses OP, CODE and SPEC (10 bits of the
-> > breakpoint instruction are not defined; Kane says the breakpoint code
-> > field in BREAK is 20 bits; yet MIPS assemblers and debuggers only use
-> > ten bits).  An optional two-operand form of break/sdbbp allows the
-> > lower ten bits to be set too, and MIPS32 and later architectures allow
-> > 20 bits to be set with a signal operand (using CODE20).
 > 
-> I suspect there's some history here that predates my involvement (or
-> possibly just predates me).
+> > -
+> > -for each cpu X
+> 
+> Yeah, there it is: you're removing those two lines.
+>
+They are indented, see below diffs. I did remove "-----...." two lines.
+> > +Some of the CPPC registers are exposed via sysfs under::
+> >  
+> > ---------------------------------------------------------------------------------
+> > +  /sys/devices/system/cpu/cpuX/acpi_cppc/
+> 
+> As per my reply to v4.
+> 
+> Thanks,
+> Mauro
 
- A useful explanation is in the Linux kernel (always good to look there), 
-in arch/mips/kernel/traps.c:
-
-	/*
-	 * There is the ancient bug in the MIPS assemblers that the break
-	 * code starts left to bit 16 instead to bit 6 in the opcode.
-	 * Gas is bug-compatible, but not always, grrr...
-	 * We handle both cases with a simple heuristics.  --macro
-	 */
-
-Unfortunately the bug has been carried over to the microMIPS instruction 
-encoding in libopcodes for no reason (i.e. likely by copying the table 
-mechanically without analysing it) and I didn't catch it when upstreaming.  
-We should have permitted setting all bits in the 20-bit code field in the 
-microMIPS encoding with a single operand, but you need two, like with the 
-regular MIPS instruction set.
-
- The note on the MIPS32 assembly ISA permitting to set all the 20 bits 
-with a single operand is a stale comment referring to the situation before 
-binutils commit 1586d91e32ea ("/ 0 should send SIGFPE not SIGTRAP..."), 
-<https://sourceware.org/ml/binutils/2004-07/msg00260.html>, which 
-addressed a user ABI compatibility issue as discussed upthread here: 
-<https://sourceware.org/ml/binutils/2004-06/msg00188.html> and previously: 
-<https://www.linux-mips.org/cgi-bin/mesg.cgi?a=linux-mips&i=40C9F5A4.2050606%40avtrex.com>.
-
- As this is my mistake with the stale note, I have applied a fix to 
-binutils now, commit cd0923370be1 ("MIPS/include: opcode/mips.h: Update 
-stale comment for CODE20 operand"), so that it is clear that it is only 
-SDBBP that accepts a single 20-bit operand for the code field (for the 
-MIPS32 and later ISAs).
-
- FWIW,
-
-  Maciej
+-- 
+Cheers,
+Changbin Du
