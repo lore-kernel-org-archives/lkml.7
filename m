@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCF6C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC73EC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294EB20895
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA41120878
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220290;
-	bh=9xmlY3DexbugznO8Z4DbRjdBF8cijgJt282o9EzpIQ4=;
+	s=default; t=1556220293;
+	bh=H5WCzhbmj2by4Y9S5ogQQPVbCVtMDoUvOjiQqDw54ro=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=VUDA1uqBXGNsNMgneSatUjgtRIYw3MaUmDxy18D5bzyc3pvEc/Dd4GQ9/kGfwPK57
-	 WLr8a4XetOOV+3hZSTOojfXtexXUipgc9nFuXzpbBVtgYvzDNt9+pJBlfTkFrXYvNp
-	 RW+uwttbdKWkA+XKqKtCUaFrI98F3BFPIBFwhD1U=
+	b=AzW7e3wPDQz1HU8OrRZZgPpssVEAp8kjZOCuOtYZWOO3B6rUYwiSAOxkp+FTel8J1
+	 LJkhC6S16Y1XWmU3e+rqGazC2IE54mHJdd3INdmwfqNzEd9iXFApClGLhuC/ojXR2e
+	 TSsp0db6eY3/iUV5dGOHv6ugZz0U5qFICQPX0AKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbfDYTYs (ORCPT
+        id S1728395AbfDYTYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:24:48 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49064 "EHLO
+        Thu, 25 Apr 2019 15:24:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49232 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfDYTYp (ORCPT
+        with ESMTP id S1727179AbfDYTYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:24:45 -0400
+        Thu, 25 Apr 2019 15:24:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=7P7Fcdr3Jch6igwZvJGgwCOgS4eSQxwg8yxeVUEu0K8=; b=QtaflUXrafS4
-        FtT3wXKQcwYPvdNJHxa1nRJM9BcxyRqQ4R1v3pre0TTSVHaTrgq7MEB5PajMef8kLjyCON0cLK0zJ
-        crI5RC8osfxnmZCHGU7WGm1g1Do7+tvRfYp2VH/o05OgpZAxB1BFC3VfSFKnTjlziSgFE15ml8Vgl
-        2vpTo=;
+        List-Archive; bh=BEpTm4OOklfiV4a5BvaAAc5vHXwdDqEt83iDK9RL0BA=; b=VUcB/dc/VWur
+        4hUBUefQ7x6/Il5B9ODhIN9mSLUaynb4Fo6+UQ+VUGbjnskTEAUzw5k3cjNG8LeGbo1X8Zyj88Z2c
+        wziby9YCHgKJ3+MxTfHuUeSwYZX4vcdqLLX6Oy5N0Z9WDO0zxb1IGZnodvjKErbugMue9H1uV96YN
+        oq25k=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJjz1-0004Ym-8F; Thu, 25 Apr 2019 19:24:35 +0000
+        id 1hJjz5-0004Yg-2d; Thu, 25 Apr 2019 19:24:39 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 368FD441D3C; Thu, 25 Apr 2019 20:24:34 +0100 (BST)
+        id 19363441D3D; Thu, 25 Apr 2019 20:24:33 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     alsa-devel@alsa-project.org, baolin.wang@linaro.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
-        orsonzhai@gmail.com, perex@perex.cz, robh+dt@kernel.org,
-        tiwai@suse.com, zhang.lyra@gmail.com
-Subject: Applied "dt-bindings: ASoC: Add Spreadtrum multi-channel data transfer support" to the asoc tree
-In-Reply-To: <fd223d1dcf5be1f83863e881fa3db931b5c84601.1555917711.git.baolin.wang@linaro.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "ASoC: doc: simple-card: Add pin-switches property" to the asoc tree
+In-Reply-To: <20190420104553.5071-1-paul@crapouillou.net>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192434.368FD441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu, 25 Apr 2019 20:24:34 +0100 (BST)
+Message-Id: <20190425192433.19363441D3D@finisterre.ee.mobilebroadband>
+Date:   Thu, 25 Apr 2019 20:24:33 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt-bindings: ASoC: Add Spreadtrum multi-channel data transfer support
+   ASoC: doc: simple-card: Add pin-switches property
 
 has been applied to the asoc tree at
 
@@ -90,52 +90,33 @@ to this mail.
 Thanks,
 Mark
 
-From c634d3ffc6b2c3b15ea79ffe0a761ce08b4da71a Mon Sep 17 00:00:00 2001
-From: Baolin Wang <baolin.wang@linaro.org>
-Date: Tue, 23 Apr 2019 10:26:21 +0800
-Subject: [PATCH] dt-bindings: ASoC: Add Spreadtrum multi-channel data transfer
- support
+From 6b903f9bdd98093a2c1ea79df07e86decfda3b04 Mon Sep 17 00:00:00 2001
+From: Paul Cercueil <paul@crapouillou.net>
+Date: Sat, 20 Apr 2019 12:45:51 +0200
+Subject: [PATCH] ASoC: doc: simple-card: Add pin-switches property
 
-On Spreadtrum platform, the audio subsystem will use the multi-channel
-data transfer controller to transfer sound stream between audio subsystem
-and other AP/CP subsystem.
+The simple-audio-card,pin-switches property can contain the list of
+widget names for which pin switches must be created.
 
-It can support 10 DAC channel and 10 ADC channel, and each channel has
-512 bytes depth data fifo. Moreover each channel can be used DMA mode
-or interrupt mode to transfer data.
-
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/sound/sprd-mcdt.txt   | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/sprd-mcdt.txt
+ Documentation/devicetree/bindings/sound/simple-card.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/sprd-mcdt.txt b/Documentation/devicetree/bindings/sound/sprd-mcdt.txt
-new file mode 100644
-index 000000000000..274ba0acbfd6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/sprd-mcdt.txt
-@@ -0,0 +1,19 @@
-+Spreadtrum Multi-Channel Data Transfer Binding
-+
-+The Multi-channel data transfer controller is used for sound stream
-+transmission between audio subsystem and other AP/CP subsystem. It
-+supports 10 DAC channel and 10 ADC channel, and each channel can be
-+configured with DMA mode or interrupt mode.
-+
-+Required properties:
-+- compatible: Should be "sprd,sc9860-mcdt".
-+- reg: Should contain registers address and length.
-+- interrupts: Should contain one interrupt shared by all channel.
-+
-+Example:
-+
-+mcdt@41490000 {
-+	compatible = "sprd,sc9860-mcdt";
-+	reg = <0 0x41490000 0 0x170>;
-+	interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+};
+diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
+index 4629c8f8a6b6..79954cd6e37b 100644
+--- a/Documentation/devicetree/bindings/sound/simple-card.txt
++++ b/Documentation/devicetree/bindings/sound/simple-card.txt
+@@ -24,6 +24,8 @@ Optional properties:
+ 					  a microphone is attached.
+ - simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
+ 					  as amplifiers, to be added to the sound card.
++- simple-audio-card,pin-switches	: List of strings containing the widget names for
++					  which pin switches must be created.
+ 
+ Optional subnodes:
+ 
 -- 
 2.20.1
 
