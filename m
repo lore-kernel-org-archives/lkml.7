@@ -2,179 +2,132 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25582C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D93C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98986206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:21:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iaApaGFc"
+	by mail.kernel.org (Postfix) with ESMTP id 887BA206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbfDYSVb (ORCPT
+        id S1730466AbfDYSVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:21:31 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:47040 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730040AbfDYSVa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:21:30 -0400
-Received: by mail-pl1-f195.google.com with SMTP id o7so178121pll.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:21:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DbfVxgdfCkhec35GU1HQ4GzG8kpZ8WlM4OxO53B8PaE=;
-        b=iaApaGFcj6uU2U94JYwH+aiYpAs7mH4qgTvb/UfwCTNP1OssqnPAGZHW7IpbqdtiYp
-         PyIuw9vaPpUD6RIQXKUtWGkSMvCzm3i5yCj4lH+X4560EZv9zmEXdNBAESbJ9v6+aOSV
-         X++1ZxWBxs4iDNmx5gM00p77NUpD85HuuGe1GibMkOsENpkcOtmd35qt73CJhLIM2Cxh
-         a+YNZry3+A1b2YcezOlSUbKGZ40TC2qUo3zcSW0L78XJYGbf9QzXqwIe3rG3oTfp9RuT
-         k/Xqvp8/Oqyzg8Z9HdPmDsNmRNrhpxw6FrYQDR5AVepA2k3Jr9F8F8rwF1ZGAqfF04q/
-         AXYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DbfVxgdfCkhec35GU1HQ4GzG8kpZ8WlM4OxO53B8PaE=;
-        b=rD7WsT6CNp6oxGVE01/a9PVEHWZlACStHagFUIKD74CcclNT8W3q2mWvlJEf3zjVdA
-         QPMrTdq59/IsCFESEJW1etYyujLGqv4fRxJleTOx5pEKaGLwgiw7ylg7pJ9t8i/wFnwk
-         sJqhSr8bJ/+XZ0Lxxo4LkJo0sJAx0sz//DtcCQuPMh06LYLseZ0Vf9HELrAteEjq5X75
-         rJ/3VK7P3uBCk7PshBKAITonhXJ0BwLtjMocb94X/1NIeams+9sS4f3MUKY25CzOmO1J
-         vTHyBs/IAzMCOB6z8ePLtju66NjB/PeFXT4fwlb+hLIkzoXHjameoJZjDl5A+i8Q2onK
-         ZVhw==
-X-Gm-Message-State: APjAAAXmCbwf8rCFdNMtjRNjS9hRRC1MKuC4YtU+aQH0WImgnOK12xCW
-        GaV8pq9v77z3gqLBYIsP1lzGPA==
-X-Google-Smtp-Source: APXvYqx49q90L/wWwW5GuHsq/Eb9SbYDthv2PbvdhVaz1WB1tjR5W5Iz+vYFKxKh8VhUnwu/NtNifA==
-X-Received: by 2002:a17:902:b617:: with SMTP id b23mr38726843pls.73.1556216488899;
-        Thu, 25 Apr 2019 11:21:28 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id a18sm12011087pfg.177.2019.04.25.11.21.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 11:21:26 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 11:21:21 -0700
-From:   Benson Leung <bleung@google.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Paul Mackerras <paulus@samba.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:AMD KFD" <dri-devel@lists.freedesktop.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        "open list:8169 10/100/1000 GIGABIT ETHERNET DRIVER" 
-        <netdev@vger.kernel.org>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 9/9] platform/chrome: chromeos_laptop: use helper
- pci_dev_id
-Message-ID: <20190425182121.GA175682@google.com>
-References: <2e1f9a57-6d08-d017-24da-3e6b97fa2449@gmail.com>
- <e882f58b-0808-952e-d293-5e8cc3f04c97@gmail.com>
+        Thu, 25 Apr 2019 14:21:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35550 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730040AbfDYSVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 14:21:36 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 13085E951D;
+        Thu, 25 Apr 2019 18:21:36 +0000 (UTC)
+Received: from laptop.jcline.org (unknown [10.13.105.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BE3B260C9A;
+        Thu, 25 Apr 2019 18:21:35 +0000 (UTC)
+Received: from laptop.jcline.org (localhost [IPv6:::1])
+        by laptop.jcline.org (Postfix) with ESMTPS id 480DF45E552C;
+        Thu, 25 Apr 2019 14:21:35 -0400 (EDT)
+Date:   Thu, 25 Apr 2019 14:21:34 -0400
+From:   Jeremy Cline <jcline@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Robert Holmes <robeholmes@gmail.com>, jeyu@kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        keyrings@vger.kernel.org, stable@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [PATCH v2] KEYS: Make use of platform keyring for module
+ signature verify
+Message-ID: <20190425182134.GA7823@laptop.jcline.org>
+References: <1556116431-7129-1-git-send-email-robeholmes@gmail.com>
+ <1556193350.3894.92.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e882f58b-0808-952e-d293-5e8cc3f04c97@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1556193350.3894.92.camel@linux.ibm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 25 Apr 2019 18:21:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 25, 2019 at 07:55:50AM -0400, Mimi Zohar wrote:
+> On Wed, 2019-04-24 at 14:33 +0000, Robert Holmes wrote:
+> > This patch completes commit 278311e417be ("kexec, KEYS: Make use of
+> > platform keyring for signature verify") which, while adding the
+> > platform keyring for bzImage verification, neglected to also add
+> > this keyring for module verification.
+> > 
+> > As such, kernel modules signed with keys from the MokList variable
+> > were not successfully verified.
+> 
+> Using the platform keyring keys for verifying kernel modules was not
+> neglected, but rather intentional.  This patch description should
+> clearly explain the reason for needing to verify kernel module
+> signatures based on the pre-boot keys.  (Hint: verifying kernel
+> modules based on the pre-boot keys was previously rejected.)
 
-Hi Heiner,
+So the background for this patch is that Fedora, which carries the
+lockdown patch set, recently regressed[0] with respect to user-signed
+modules. Previously, we carried a patch that added all the pre-boot keys
+to the secondary keyring. That way users could add a machine owner key
+and use secure boot and lockdown with their self-signed 3rd party modules.
 
-On Wed, Apr 24, 2019 at 09:17:19PM +0200, Heiner Kallweit wrote:
-> Use new helper pci_dev_id() to simplify the code.
->=20
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Since the pre-boot keys are now loaded into the platform keyring, I
+suggested that Robert submit the patch upstream, but since the lockdown
+patches aren't upstream perhaps it doesn't make much sense to pick this
+up and Fedora should continue carrying it.
 
-Acked-By: Benson Leung <bleung@chromium.org>
+[0] https://bugzilla.redhat.com/show_bug.cgi?id=1701096
 
-> ---
->  drivers/platform/chrome/chromeos_laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/chrome/chromeos_laptop.c b/drivers/platform=
-/chrome/chromeos_laptop.c
-> index 24326eecd..7abbb6167 100644
-> --- a/drivers/platform/chrome/chromeos_laptop.c
-> +++ b/drivers/platform/chrome/chromeos_laptop.c
-> @@ -125,7 +125,7 @@ static bool chromeos_laptop_match_adapter_devid(struc=
-t device *dev, u32 devid)
->  		return false;
-> =20
->  	pdev =3D to_pci_dev(dev);
-> -	return devid =3D=3D PCI_DEVID(pdev->bus->number, pdev->devfn);
-> +	return devid =3D=3D pci_dev_id(pdev);
->  }
-> =20
->  static void chromeos_laptop_check_adapter(struct i2c_adapter *adapter)
-> --=20
-> 2.21.0
->=20
->=20
+Regards,
+Jeremy
 
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6gYDF28Li+nEiKLaHwn1ewov5lgFAlzB+qEACgkQHwn1ewov
-5lip2g//eS1J0w28ODQxNNXn6vFg16ufHWY3pS3fpqOzY2iOnxmiL4V9a8qXXgs6
-Nb7+tl1LTqFgN10TKr4KcYiPShVug0uz3SX9Gx6sI8d0C8Cy74QrQf4wQp48cg6I
-0J0BgM0Icd6QdpdrNYZrcRmFJc7FY16i30SMAuINtfcnqgw4oU6hSG3qNXjqNrFG
-2VUUjZHpvbAwWso0xToWjfK0TNPQXSslFKi+ROjvWlL+y0TGUBbcMbxviAp1H35X
-CuT5Ijknh8FdG+NaMFnGXf6JvzGORNgXlAon15XEbKDf25/K/JyyDh9nJuPesOwG
-MmYEiWj29dwg3/8rKvuWpuJVqWplC4x+ZCFvvEaDFeoxZuoLVc5QkVMRkupxwoA7
-Ux1/Q9A7YS7OjOPhN2DikJIn2hEJnEyCBU2PdKEZToCUJ/C2gA+WqHyNXcflOldD
-PBJSisoYM4LcuV1hhhfXUU/n/BgVPbmYWfvyQpHEbDpnlnDxMb+LheCgDlBn9mAh
-QBD82gS5LcMo20071hVEqReV4zBzOc+S+h/4OxYW2HCNyn3qwztqYOge2oM/ezQ8
-CV98H+KfIw+dYK8Vi40O9C05+NRkcAY/RaZzjQMyDJG2KxcO1mZhdhhbzCBRuS0o
-pj3CU8ScPFa+s0qe7xk/Pac8fR6hmcse8jaJKX7in5MDKQNQ2CY=
-=Oshd
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
+> > 
+> > Signed-off-by: Robert Holmes <robeholmes@gmail.com>
+> > Cc: linux-integrity@vger.kernel.org
+> > Cc: keyrings@vger.kernel.org
+> > Cc: stable@vger.kernel.org
+> > ---
+> >  kernel/module_signing.c | 16 ++++++++++++----
+> >  1 file changed, 12 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/kernel/module_signing.c b/kernel/module_signing.c
+> > index 6b9a926fd86b..cf94220e9154 100644
+> > --- a/kernel/module_signing.c
+> > +++ b/kernel/module_signing.c
+> > @@ -49,6 +49,7 @@ int mod_verify_sig(const void *mod, struct load_info *info)
+> >  {
+> >  	struct module_signature ms;
+> >  	size_t sig_len, modlen = info->len;
+> > +	int ret;
+> > 
+> >  	pr_devel("==>%s(,%zu)\n", __func__, modlen);
+> > 
+> > @@ -82,8 +83,15 @@ int mod_verify_sig(const void *mod, struct load_info *info)
+> >  		return -EBADMSG;
+> >  	}
+> > 
+> > -	return verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+> > -				      VERIFY_USE_SECONDARY_KEYRING,
+> > -				      VERIFYING_MODULE_SIGNATURE,
+> > -				      NULL, NULL);
+> > +	ret = verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+> > +				     VERIFY_USE_SECONDARY_KEYRING,
+> > +				     VERIFYING_MODULE_SIGNATURE,
+> > +				     NULL, NULL);
+> > +	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
+> > +		ret = verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+> > +					     VERIFY_USE_PLATFORM_KEYRING,
+> > +					     VERIFYING_MODULE_SIGNATURE,
+> > +					     NULL, NULL);
+> > +	}
+> > +	return ret;
+> >  }
+> 
