@@ -2,139 +2,97 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACE2C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A5BC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC4F206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA09B217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:35:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+04xdjl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tVNVK6lj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfDYHeu (ORCPT
+        id S1730351AbfDYHe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:34:50 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:37794 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfDYHet (ORCPT
+        Thu, 25 Apr 2019 03:34:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59512 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfDYHe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:34:49 -0400
-Received: by mail-yb1-f193.google.com with SMTP id p134so8091534ybc.4;
-        Thu, 25 Apr 2019 00:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jync8zT3pYBQlUFkiBZNXqfiHjID5+lBGeoKEA5uWfI=;
-        b=P+04xdjlbqoPGTzo5FzfMh0+S6grgnpxLsoaONtUmmHj8RrK0LgzY82reoG1bJ8AnZ
-         tTLaWStqXtJ30RMVMAs5cw5OOSWwvkyoNJsMbBE1NjM4+bDD0p9h916C1HnxolvBEzAA
-         x9+tkDxJLOe3yAbvzHQOfhmdfhXRQ7NKfq/yPkdAD1xEeDD99Fka/hSxZjd6nAF7le4c
-         x8wW0XRshBrFH7nQevMcVCoirZSHIxyXi2saS+HzB9dS6xiU833Sq2i4lvIn3L/eaKFj
-         jIrZkN5qJNlUC11IOGQmp/s47LFfuF40tvXwGaL7YS4OD/KiuBMeRJuo1Z5oUSweA4GU
-         LZtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jync8zT3pYBQlUFkiBZNXqfiHjID5+lBGeoKEA5uWfI=;
-        b=na8s/Yawpata+5Jbb2tHhJgRO6BzUL7AItb9f9v3piKX6JT35tutWwW/jVJXyhstJh
-         BzrtlptV+GywMjMqAXngTWpacO7hMJwtpJ9DTK8/3Q0AfGgadR/rKuwQKPZNcw+le6ja
-         AEv83MnQpnnQPZSupNKQL/ZB1Au4SYlsx5gkKC8KzcOJb5vhtrgHXLbuXyKKMbj3h83U
-         NnPEgDEs657n7FqN695XMB801QhuuV+JnG3mlZR/uzp527cCeaoZ8XTj676P+XMuY9bz
-         i+lxRV9ONxchckV7O1O+CRU+H1tSCU7vMy8c8lB6zl378f8EJ65izTuYkVAonrSMo8/z
-         sS6w==
-X-Gm-Message-State: APjAAAWndokScijQ98yLYeLMpsL5cAS0PsH02CnY5hlHXY+ehMWlaQ3U
-        cfwcE/tBiDCKSFzUg6fEYXQhd2nQcypE1Bhgow2gmulKHcs=
-X-Google-Smtp-Source: APXvYqwb4Hil9w9Z1eOkhJJEnuKDKMpletRk92eJ0TIqZ3W0s35d7vzNiUCDvKgQYh+qdA/ROuimal60GREYO00mh34=
-X-Received: by 2002:a25:d7c1:: with SMTP id o184mr30575996ybg.147.1556177688563;
- Thu, 25 Apr 2019 00:34:48 -0700 (PDT)
+        Thu, 25 Apr 2019 03:34:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=h67vG0bl/xud0pkDbwWxlwJcQ5+GKV0iRLlkLH6pnJU=; b=tVNVK6ljLmjwJn8v4OP0XDQ6q
+        pwibaRzMjqzP7Q5Gemz2z/hy/UMYneC2oCbyREnySjVl9pDNt5xS/xdTHfGslnlOdEuAophF/aI2/
+        OfzxVN59fkZ/2p+U9fHnohe+pJ47BOa37JQjGWnaTFntrdErLZ2fOjW7a3phJqG5eEqcT5E8LYs9l
+        oNv9t3xri9tRgcVbm/P8OxtiW0DXAspr4WmBKxbw13LRpPgTH0Wz7GPi+O2oPNbtzNLFlRyz10BY8
+        P1N9/himo61F2GusKQWHYSu4fTgd7kX7pXSKbBX1rzs/gBIJNCf3VfeES/cKW5/x4qnHzVZhDYXVB
+        Sz9Hcncxg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJYu4-0000BE-Dv; Thu, 25 Apr 2019 07:34:44 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BACE220D0A200; Thu, 25 Apr 2019 09:34:42 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 09:34:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "akiyks@gmail.com" <akiyks@gmail.com>,
+        "andrea.parri@amarulasolutions.com" 
+        <andrea.parri@amarulasolutions.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        "dlustig@nvidia.com" <dlustig@nvidia.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "j.alglave@ucl.ac.uk" <j.alglave@ucl.ac.uk>,
+        "luc.maranget@inria.fr" <luc.maranget@inria.fr>,
+        "npiggin@gmail.com" <npiggin@gmail.com>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+Subject: Re: [RFC][PATCH 4/5] mips/atomic: Fix smp_mb__{before,after}_atomic()
+Message-ID: <20190425073442.GW11158@hirez.programming.kicks-ass.net>
+References: <20190424123656.484227701@infradead.org>
+ <20190424124421.751367532@infradead.org>
+ <20190424212422.bykvyho3jqw6jz6w@pburton-laptop>
 MIME-Version: 1.0
-References: <20190411154534.25563-1-peron.clem@gmail.com> <20190411154534.25563-3-peron.clem@gmail.com>
- <CAJiuCcc2CrEBQEoon9p=pitrjqoy6tzOSjhjBY3=oXNCHdiZ5A@mail.gmail.com> <20190423160545.muolantrdppz35rz@flea>
-In-Reply-To: <20190423160545.muolantrdppz35rz@flea>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 25 Apr 2019 09:34:36 +0200
-Message-ID: <CAJiuCce_KZzYx5T3bq3i_PHGGSts_=Fh==c0CvqsuHhdqmsG-w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: h6: add r_watchog node
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424212422.bykvyho3jqw6jz6w@pburton-laptop>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019 at 18:05, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> On Fri, Apr 19, 2019 at 09:00:42PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi,
-> >
-> > On Thu, 11 Apr 2019 at 17:34, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
-.com> wrote:
-> > >
-> > > Allwinner H6 has a r_watchdog similar to A64.
-> > >
-> > > Declare it in the device-tree.
-> > >
-> > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm6=
-4/boot/dts/allwinner/sun50i-h6.dtsi
-> > > index 5c2f5451227b..66dc684a378e 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > @@ -622,6 +622,13 @@
-> > >                         #reset-cells =3D <1>;
-> > >                 };
-> > >
-> > > +               r_watchdog: watchdog@7020400 {
-> > > +                       compatible =3D "allwinner,sun50i-a64-wdt",
-> > > +                                    "allwinner,sun6i-a31-wdt";
-> > > +                       reg =3D <0x07020400 0x20>;
-> > > +                       interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HI=
-GH>;
-> > > +               };
-> >
-> > I have set the same compatible as A64 because regarding the User
-> > Manual they have exactly the same memory mapping.
-> > However we don't know really if it's the same IP version, maybe there
-> > will be an errata one day.
-> > So I would like to know if it's better to define the h6-wdt also
-> >   compatible =3D  "allwinner,sun50i-h6-wdt", "allwinner,sun50i-a64-wdt"=
-,
-> >                                  "allwinner,sun6i-a31-wdt";
-> >
-> > I would say Yes, but with this logic we would have to had a new
-> > compatible each time there is a  new SoC.
->
-Hi,
+On Wed, Apr 24, 2019 at 09:24:31PM +0000, Paul Burton wrote:
+> Hi Peter,
+> 
+> On Wed, Apr 24, 2019 at 02:37:00PM +0200, Peter Zijlstra wrote:
+> > --- a/arch/mips/include/asm/barrier.h
+> > +++ b/arch/mips/include/asm/barrier.h
+> > @@ -230,9 +238,6 @@
+> >  #define nudge_writes() mb()
+> >  #endif
+> >  
+> > -#define __smp_mb__before_atomic()	__smp_mb__before_llsc()
+> > -#define __smp_mb__after_atomic()	smp_llsc_mb()
+> > -
+> >  /*
+> >   * Some Loongson 3 CPUs have a bug wherein execution of a memory access (load,
+> >   * store or pref) in between an ll & sc can cause the sc instruction to
+> 
+> I think this bit should be part of patch 3, where you currently add a
+> second definition of these 2 macros.
 
-> Why not just having the A31 compatible?
-H6 has a lightly differences in registers with A31 but it's the same
-as 64 (WDOG_KEY_FIELD)
+Whoops, indeed.
 
-As the A64 is already introduced if think it's a good solution to reuse it.
+> Otherwise this one looks reasonable to me.
 
-Cl=C3=A9ment
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Great, thanks!
