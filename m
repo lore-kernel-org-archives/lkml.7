@@ -1,304 +1,132 @@
 Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22A7C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA09C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8182084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7A5206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556213621;
+	bh=QLSbqHxG/0q8XH8MdX1Gda0er9CbZaWjSlGpOKXAU10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D052asl0w200ipDtkCqynyTz4fuf8Vnw++SdaUpdcOg2sSDmEmJMsNzGN1zC9sYw0
+	 LCieXx4AOaR8w7hCx0ELgN24IpnnO3Fz0NlpX1TVRk8tBi7TIh2KerDFwwr94OUWlm
+	 DUnLZyoL2bfMLCT3759F3z7l0gqs6j6C7MvFCy04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbfDYRaJ (ORCPT
+        id S1729410AbfDYRdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 13:30:09 -0400
-Received: from foss.arm.com ([217.140.101.70]:49158 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728118AbfDYRaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 13:30:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93CD280D;
-        Thu, 25 Apr 2019 10:30:08 -0700 (PDT)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A95A3F246;
-        Thu, 25 Apr 2019 10:30:06 -0700 (PDT)
-Subject: Re: [PATCH v2 32/36] coresight: Support for ACPI bindings
-To:     mathieu.poirier@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, mike.leach@linaro.org,
-        rjw@rjwysocki.net, robert.walker@arm.com
-References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
- <1555344260-12375-33-git-send-email-suzuki.poulose@arm.com>
- <20190425165010.GA4080@xps15>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <6e3c92e9-2a9f-353d-67ab-612434dab676@arm.com>
-Date:   Thu, 25 Apr 2019 18:30:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 25 Apr 2019 13:33:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42355 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbfDYRdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 13:33:39 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g3so502594wrx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 10:33:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dZHYHqpu9SWa5ODyfZe83JOj5HsHBUXs/KvHWmSE064=;
+        b=purKpi5qU3/RaZEldCRCVgJK+0A7OJS3xEuMw1RWfPYP3+MPpNgO/b5CMMavL12jIt
+         VlWMvArWcR+YlJsQ9UM2ch0BBHDKnHCNcNebphQNRYw7AZg19TtZIU1CCKIULyQomYoh
+         YINqsWxmB/VjecNXejyqb4tlYgvdCWxElAbyI0QOzqyTcMVzS2WJuMunPnGkq6iI1D2i
+         8Lnu4u03c80W6nnY92KCJyPNmZqwkqGwPpm7o8FmEfg2kwJ3cBr/nBpKmywKNt7s3uG3
+         ffT/6vEEGZTIznnxWkgA1HIXGM966gfQh0U+e7Nw2D7OH5EMgGfNRsr6WU4g8v1CgCkg
+         uuvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dZHYHqpu9SWa5ODyfZe83JOj5HsHBUXs/KvHWmSE064=;
+        b=a2NLHfsbs9Y2pgJk+rtU39am4/tR+vgNB6HfPMb8aRrW5sSwtX5cUOTWsQP9RU/5Cm
+         exe5q8rugIPHcJWBiwtGBI7xCW0V2OS6Nwje2RiB4f8iRChoprSKVm1VLYU3Q1SO9/Cr
+         GyfxaD2iEGwEcXEt1v5k53fw/S86qCPY1QSLfezquxqCImn5FgyWmDKglIjQTiVbpmxS
+         QV4gi8Em8NES2xf3L19RMttwiDUJP64j2h9+5td6uCpT67Q2b+MtSCBX6Kt9yVVzWbS0
+         IAYuwPebAVzMD1qZPP80b9MadB4/VKjaqOs8xdmrzzcLhwFPERWDJngCAgE2VG6895wk
+         HhQQ==
+X-Gm-Message-State: APjAAAWYQrLMN7keQqloTMBpYejVNGE6RRHS4kr25Egv8JRTUn0Bs5i4
+        sqUPQZs3RR3FQCAIX6c8wBI=
+X-Google-Smtp-Source: APXvYqx5kLY1P1bebUiseZYz3806gpfmstV+Is8wASNUCbLCdWHxr0M1/Fj0p09XBD0kEHrOraXBLw==
+X-Received: by 2002:adf:eb87:: with SMTP id t7mr1206647wrn.39.1556213617459;
+        Thu, 25 Apr 2019 10:33:37 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id v13sm41988211wrg.46.2019.04.25.10.33.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Apr 2019 10:33:36 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 19:33:33 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        rui.zhang@intel.com, linux-kernel@vger.kernel.org,
+        amit.kachhap@gmail.com, viresh.kumar@linaro.org,
+        javi.merino@kernel.org, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        nicolas.dechesne@linaro.org, bjorn.andersson@linaro.org,
+        dietmar.eggemann@arm.com, Quentin Perret <quentin.perret@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
+Message-ID: <20190425173333.GA4081@gmail.com>
+References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+ <20190417053626.GA47282@gmail.com>
+ <5CB75FD9.3070207@linaro.org>
+ <20190417182932.GB5140@gmail.com>
+ <20190424163424.GG4038@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190425165010.GA4080@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424163424.GG4038@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+* Peter Zijlstra <peterz@infradead.org> wrote:
 
-On 25/04/2019 17:50, Mathieu Poirier wrote:
-> On Mon, Apr 15, 2019 at 05:04:15PM +0100, Suzuki K Poulose wrote:
->> Add support for parsing the ACPI platform description
->> for CoreSight. The connections are encoded in a DSD graph
->> property with CoreSight specific variation of the property.
->>
->> The ETMs are listed as the children device of the respective
->> CPU.
->>
->> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-...
-
->> +/*
->> + * acpi_validate_dsd_graph	- Make sure the given _DSD graph conforms
->> + * to the ACPI _DSD Graph specification.
->> + *
->> + * ACPI Devices Graph property has the following format:
->> + *	Revision	- Integer, must be 0
->> + *	NumberOfGraphs	- Integer, N indicating the following list.
->> + *	Graph[1],
->> + *	 ...
->> + *	Graph[N]
->> + *
->> + * And each Graph entry has the following format:
->> + *	GraphID		- Integer, identifying a graph the device belongs to.
->> + *	UUID		- UUID identifying the specification that governs
->> + *			  this graph. (e.g, see is_acpi_coresight_graph())
->> + *	NumberOfLinks	- Number "N" of connections on this node of the graph.
->> + *	Links[1]
->> + *	...
->> + *	Links[N]
->> + */
->> +static inline bool acpi_validate_dsd_graph(const union acpi_object *graph)
->> +{
->> +	int i, n;
->> +	const union acpi_object *rev, *nr_graphs;
->> +
->> +	/* The graph must contain at least the Revision and Number of Graphs */
->> +	if (graph->package.count < 2)
->> +		return false;
->> +
->> +	rev = &graph->package.elements[0];
->> +	nr_graphs = &graph->package.elements[1];
->> +
->> +	if (rev->type != ACPI_TYPE_INTEGER ||
->> +	    nr_graphs->type != ACPI_TYPE_INTEGER)
->> +		return false;
->> +
->> +	/* We only support revision 0 */
->> +	if (rev->integer.value != 0)
->> +		return false;
->> +
->> +	n = nr_graphs->integer.value;
->> +	/* Make sure the package has right number of elements */
->> +	if (graph->package.count != (n + 2))
->> +		return false;
->> +
->> +	/* Each entry must be a graph package with at least 3 members */
+> On Wed, Apr 17, 2019 at 08:29:32PM +0200, Ingo Molnar wrote:
+> > Assuming PeterZ & Rafael & Quentin doesn't hate the whole thermal load 
+> > tracking approach. 
 > 
-> Please mention what the 3 members must be to avoid having to go back to the
-> specs all the time.
-
-Actually this is explained in the comment above. Graph entry contains :
-GraphID, UUID and number of links. I could add make it explicit here,
-just like I did it for the "Revision and Number of Graphs" above.
-
+> I seem to remember competing proposals, and have forgotten everything
+> about them; the cover letter also didn't have references to them or
+> mention them in any way.
 > 
->> +	for (i = 2; i < n + 2; i++) {
->> +		const union acpi_object *obj = &graph->package.elements[i];
->> +
->> +		if (obj->type != ACPI_TYPE_PACKAGE ||
->> +		    obj->package.count < 3)
->> +			return false;
->> +	}
->> +
->> +	return true;
->> +}
-
-
->> +
->> +/* acpi_get_dsd_graph	- Find the _DSD Graph property for the given device. */
->> +const union acpi_object *
->> +acpi_get_dsd_graph(struct acpi_device *adev)
->> +{
->> +	int i;
->> +	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER };
->> +	acpi_status status;
->> +	const union acpi_object *dsd;
->> +
->> +	status = acpi_evaluate_object_typed(adev->handle, "_DSD", NULL,
->> +					    &buf, ACPI_TYPE_PACKAGE);
->> +	if (ACPI_FAILURE(status))
->> +		return NULL;
->> +
->> +	dsd = buf.pointer;
+> As to the averaging and period, I personally prefer a PELT signal with
+> the windows lined up, if that really is too short a window, then a PELT
+> like signal with a natural multiple of the PELT period would make sense,
+> such that the windows still line up nicely.
 > 
-> Please add a comment to mention that a _DSD package consists of tuples, i.e a
-> UUID and a package to explain the += 2.
-> 
+> Mixing different averaging methods and non-aligned windows just makes me
+> uncomfortable.
 
-Sure, it took me a while to figure that out myself.
+Yeah, so the problem with PELT is that while it nicely approximates 
+variable-period decay calculations with plain additions, shifts and table 
+lookups (i.e. accelerates pow()), AFAICS the most important decay 
+parameter is fixed: the speed of decay, the dampening factor, which is 
+fixed at 32:
 
->> +static inline bool
->> +acpi_validate_coresight_graph(const union acpi_object *cs_graph)
->> +{
->> +	int nlinks;
->> +
->> +	nlinks = cs_graph->package.elements[2].integer.value;
-> 
-> As you did in acpi_validate_dsd_graph(), please add the rational for the + 3.
+  Documentation/scheduler/sched-pelt.c
 
-Sure.
+  #define HALFLIFE 32
 
->> +	if (cs_graph->package.count != (nlinks + 3))
->> +		return false;
->> +	/* The links are validated in acpi_coresight_parse_link() */
->> +	return true;
->> +}
->> +
->> +/*
->> + * acpi_get_coresight_graph	- Parse the device _DSD tables and find
->> + * the Graph property matching the CoreSight Graphs.
->> + *
->> + * Returns the pointer to the CoreSight Graph Package when found. Otherwise
->> + * returns NULL.
->> + */
->> +const union acpi_object *
->> +acpi_get_coresight_graph(struct acpi_device *adev)
->> +{
->> +	const union acpi_object *graph_list, *graph;
->> +	int i, nr_graphs;
->> +
->> +	graph_list = acpi_get_dsd_graph(adev);
->> +	if (!graph_list)
->> +		return graph_list;
->> +
->> +	nr_graphs = graph_list->package.elements[1].integer.value;
-> 
-> In what kind of scenario nr_graphs would be more than 1?  From what I've seen in
-> DEN0067 and the implementation in patch 37 it shouldn't be the case.  As such I
-> would treat nr_graphs != 1 as an error.
+Right?
 
-The device could be part of multiple graphs theoretically. However, for
-CoreSight we have only one graph, which shows the ATB connections. I could
-enforce that here.
+Thara's numbers suggest that there's high sensitivity to the speed of 
+decay. By using PELT we'd be using whatever averaging speed there is 
+within PELT.
 
+Now we could make that parametric of course, but that would both 
+complicate the PELT lookup code (one more dimension) and would negatively 
+affect code generation in a number of places.
 
-> 
-> I must admit I had a really hard time following the hard coded .element[]
-> throughout the code.  With time I was able to verify them all but it would
-> really help if the example of an ACPI device description was given at the
-> top of the file, just before the ACPI Graph UUID.  The following taken from
-> DEN0067 did the trick for me:
+Thanks,
 
-I understand the pain. It is indeed a bit tricky. I will add an example graph
-property.
-
-> 
-> Device ( FUN1 ) { // Funnel 1 described in \SB scope
->    Name (_HID , " ARMHC9FF ")
->    Name (_CID , " ARMHC500 ")
->    Name (_CRS , ResourceTemplate () {
->    Memory32Fixed ( ReadWrite , 0 x208c0000 , 0 x1000 )
->    })
-> 
->    Name (_DSD , Package () {
->      ToUUID (" ab02a46b -74 c7 -45a2 -bd68 - f7d344ef2153 ") ,
->      Package () {
->        0 , // Revision
->        1 , // Number of graphs
->        Package () {
->          1 , // GraphID // CoreSight graphs UUID
->          ToUUID ("3 ecbc8b6 -1 d0e -4 fb3 -8107 - e627f805c6cd ") ,
->          3 , // Number of links
->          Package () {0 , 0 , // output port 0 connected
->               \_SB.RPL0 ,1} , // to input port 0 on RPL0 .
->          Package () {0 , 0 , // input port 0 connected
->               \_SB.ETF0 ,0} , // to output port 0 on ETF0 .
->          Package () {1 , 0 , // input port 1 connected
->               \_SB.ETF1 ,0} // to output port 0 on ETF1 .
->          }
->      }
->    })
-> 
-
-...
-
->> +/*
->> + * acpi_coresigh_get_cpu - Find the logical CPU id of the CPU associated
->> + * with this coresight device. With ACPI bindings, the CoreSight components
->> + * are listed as child device of the associated CPU.
->> + *
->> + * Returns the logical CPU id when found. Otherwise returns < 0.
-> 
-> As far as I can tell this function can't return < 0.
-> 
-
-You're right. I will fix the comment.
-
->> +static struct coresight_platform_data *
->> +acpi_get_coresight_platform_data(struct device *dev,
->> +				 struct coresight_platform_data *pdata)
->> +{
->> +	int rc = -EINVAL;
->> +	struct acpi_device *adev;
->> +
->> +	adev = ACPI_COMPANION(dev);
->> +	if (!adev)
->> +		goto out;
->> +
->> +	rc = acpi_coresight_parse_graph(adev, pdata);
->> +	if (rc)
->> +		goto out;
-> 
-> The goto statement is not needed here.
-> 
-
-OK
-
->> +out:
->> +	if (rc)
->> +		return ERR_PTR(rc);
->> +	return pdata;
->> +}
->> +
->> +#else
->> +
->> +static inline struct coresight_platform_data *
->> +acpi_get_coresight_platform_data(struct device *dev,
->> +				 struct coresight_platform_data *pdata)
->> +{
->> +	return NULL;
->> +}
->> +
->> +static inline int acpi_coresight_get_cpu(struct device *dev)
->> +{
->> +	return 0;
->> +}
->> +#endif
->> +
-> 
-> Function of_coresight_get_cpu() and of_get_coresight_platform_data() will also
-> need a stub if CONFIG_OF=n.
->
-
-Yep, agreed.
-
-Thank you so much for the review !
-Suzuki
+	Ingo
