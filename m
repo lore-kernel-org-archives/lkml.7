@@ -2,196 +2,135 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE239C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF8AC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75261214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE7E214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:35:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="qQs56Uko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387771AbfDYBZk (ORCPT
+        id S2388075AbfDYBfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 21:25:40 -0400
-Received: from mga07.intel.com ([134.134.136.100]:42644 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbfDYBZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 21:25:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 18:21:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,391,1549958400"; 
-   d="scan'208";a="340564573"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Apr 2019 18:21:35 -0700
-Cc:     baolu.lu@linux.intel.com, James Sewart <jamessewart@arista.com>,
-        iommu@lists.linux-foundation.org, Dmitry Safonov <dima@arista.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>
-Subject: Re: [PATCH v2 3/7] iommu/vt-d: Expose ISA direct mapping region via
- iommu_get_resv_regions
-To:     Tom Murphy <tmurphy@arista.com>
-References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
- <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
- <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
- <b6b3dda7-31e3-c1e8-16cb-07feb7d5431d@linux.intel.com>
- <A489539F-4DD4-438A-AD9A-1A2F50404DB9@arista.com>
- <fb1565dc-d991-acf9-e275-c0090f69f47e@linux.intel.com>
- <445F31EA-20F3-481C-B1DF-8B163791FF8C@arista.com>
- <cf43d26b-f1ee-8469-c17a-e5c412dcfeab@linux.intel.com>
- <6C211BF1-B5A0-4821-AB42-092B573DE667@arista.com>
- <8B1FC0C7-9BAC-498D-B1F0-0138EACF75C2@arista.com>
- <ddcaa472-7bff-ddd3-0518-f2ba694b3279@linux.intel.com>
- <9AECB54A-2DA7-4ABD-A9B5-0549E108D1AF@arista.com>
- <abbfecda-8990-315c-ac7a-7f571e86aba2@linux.intel.com>
- <1D51CB31-089A-4D71-A9C1-E54E50A56C46@arista.com>
- <1b7d37da-5660-f635-cd2f-619e5573d35a@linux.intel.com>
- <CAPL0++4w6TDf38fh6LwAADR1w3b+nO5G7rZFM3LjDE-B20zbow@mail.gmail.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <7faf596b-146a-465c-0837-7ed9595e5f0f@linux.intel.com>
-Date:   Thu, 25 Apr 2019 09:15:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 21:35:19 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:40469 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387733AbfDYBfT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 21:35:19 -0400
+Received: by mail-it1-f194.google.com with SMTP id k64so9572164itb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 18:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3bpnT0MKJFDMp8yH3bNjp+BARmsLopErc5UrP8dj8Fk=;
+        b=qQs56Ukocl78Sf5FuGfxht/IptjPjK+pks9kLVauKAGQJud0FXwEZiSmAapugG+0uB
+         GkxbjbIuN1E+6GTaNxrMogrZL/G2BpRDkO9Z7nfp5ZCVaivUk23l7c7ZbPtQEiBJ2PZq
+         Uq+sANwEAuSRVA1kZf9HZJHifa+0udTWlR8Y8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3bpnT0MKJFDMp8yH3bNjp+BARmsLopErc5UrP8dj8Fk=;
+        b=mlt2GuI0aF3NOke+So29tmtA3k2l62KVoofkyPN79n0vwUr+NJQ8sE2xcZgCms1Pja
+         dK6W9R7tWWCZABug/gplEe/WE/nN1misQy1P6TRULRmRelxzH8DfpZFFFUyWMCeqBT5j
+         xue/S7yufvfhSXmF6uqqZZLjVNtzozYZdVEfQDuXAYeixXG3/OydENnzN9kVdNym08cB
+         b+7JUOd6War5isMgmJqFmZSyqokesLb5BzgDbkmDChIJyxpxsTOid+bzMfTTojbDDbEA
+         tX3uhC0+1YpzysG/p9biMZSQXBg/BtfOpDeIaIl7nrKOYCBfwADEYsyJe81KfWJNjJBk
+         Tuog==
+X-Gm-Message-State: APjAAAWsfWZraeVIfgIjCbrwLAJkyvXfiBXRyyOq+oWfgQSTL8NqJaph
+        sqDiTDbvfJwxIXa2TDDFkUlUn+iZ9i7ybk+5IBuK1Q==
+X-Google-Smtp-Source: APXvYqy9S367pYw9RPDTzptJgtuOYTSS/K3PA1N7EYCSEjXz8IvMuuq3AvTeUmzsptcuZsgIb7q2BKeNu4pcp96cwLI=
+X-Received: by 2002:a02:c043:: with SMTP id u3mr15408649jam.35.1556156118300;
+ Wed, 24 Apr 2019 18:35:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAPL0++4w6TDf38fh6LwAADR1w3b+nO5G7rZFM3LjDE-B20zbow@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1556055738-14838-1-git-send-email-dagmcr@gmail.com>
+In-Reply-To: <1556055738-14838-1-git-send-email-dagmcr@gmail.com>
+From:   Matt Ranostay <matt.ranostay@konsulko.com>
+Date:   Thu, 25 Apr 2019 09:35:07 +0800
+Message-ID: <CAJCx=gkykSjn7uf67s2_NqB+-FYWF_oA_PknB7LcX5QRD_mp9Q@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: temperature: maxim_thermocouple: declare missing
+ of table
+To:     Daniel Gomez <dagmcr@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>, javier@dowhile0.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+On Wed, Apr 24, 2019 at 5:42 AM Daniel Gomez <dagmcr@gmail.com> wrote:
+>
+> Add missing <of_device_id> table for SPI driver relying on SPI
+> device match since compatible is in a DT binding or in a DTS.
+>
+> Before this patch:
+> modinfo drivers/iio/temperature/maxim_thermocouple.ko | grep alias
+> alias:          spi:max31855
+> alias:          spi:max6675
+>
+> After this patch:
+> modinfo drivers/iio/temperature/maxim_thermocouple.ko | grep alias
+> alias:          spi:max31855
+> alias:          spi:max6675
+> alias:          of:N*T*Cmaxim,max31855C*
+> alias:          of:N*T*Cmaxim,max31855
+> alias:          of:N*T*Cmaxim,max6675C*
+> alias:          of:N*T*Cmaxim,max6675
 
-On 4/25/19 7:47 AM, Tom Murphy wrote:
-> I can see two potential problems with these patches that should be addressed:
-> 
-> The default domain of a group can be changed to type
-> IOMMU_DOMAIN_IDENTITY via the command line. With these patches we are
-> returning the si_domain for type IOMMU_DOMAIN_IDENTITY. There's a
-> chance the shared si_domain could be freed while it is still being
-> used when a group is freed. For example here in the
-> iommu_group_release:
-> https://github.com/torvalds/linux/blob/cd8dead0c39457e58ec1d36db93aedca811d48f1/drivers/iommu/iommu.c#L376
-> "if (group->default_domain)
->      iommu_domain_free(group->default_domain);"
-> 
-> Also now that a domain is attached to a device earlier we should
-> implement the is_attach_deferred call-back and use it to defer the
-> domain attach from iommu driver init to device driver init when iommu
-> is pre-enabled in kdump kernel. like in this commit:
-> https://github.com/torvalds/linux/commit/df3f7a6e8e855e4ff533508807cd7c3723faa51f
-> 
+Heh oops I missed that somehow in initial development.
 
-Both agreed and should be considered during development.
+Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
 
-Best regards,
-Lu Baolu
-
-> 
-> On Tue, Apr 16, 2019 at 3:24 AM Lu Baolu <baolu.lu@linux.intel.com> wrote:
->>
->> Hi James,
->>
->> On 4/15/19 10:16 PM, James Sewart wrote:
->>> Hey Lu,
->>>
->>>> On 10 Apr 2019, at 06:22, Lu Baolu <baolu.lu@linux.intel.com> wrote:
->>>>
->>>> Hi James,
->>>>
->>>> On 4/6/19 2:02 AM, James Sewart wrote:
->>>>> Hey Lu,
->>>>> My bad, did some debugging on my end. The issue was swapping out
->>>>> find_domain for iommu_get_domain_for_dev. It seems in some situations the
->>>>> domain is not attached to the group but the device is expected to have the
->>>>> domain still stored in its archdata.
->>>>> I’ve attached the final patch with find_domain unremoved which seems to
->>>>> work in my testing.
->>>>
->>>> Just looked into your v3 patch set and some thoughts from my end posted
->>>> here just for your information.
->>>>
->>>> Let me post the problems we want to address.
->>>>
->>>> 1. When allocating a new group for a device, how should we determine the
->>>> type of the default domain?
->>>>
->>>> 2. If we need to put a device into an existing group which uses a
->>>> different type of domain from what the device desires to use, we might
->>>> break the functionality of the device.
->>>>
->>>> My new thought is letting the iommu generic code to determine the
->>>> default domain type (hence my proposed vendor specific default domain
->>>> type patches could be dropped).
->>>>
->>>> If the default domain type is dynamical mapping, and later in iommu_no_mapping(), we determines that we must use an identity domain,
->>>> we then call iommu_request_dm_for_dev(dev).
->>>>
->>>> If the default domain type is identity mapping, and later in
->>>> iommu_no_mapping(), we determined that we must use a dynamical domain,
->>>> we then call iommu_request_dma_domain_for_dev(dev).
->>>>
->>>> We already have iommu_request_dm_for_dev() in iommu.c. We only need to
->>>> implement iommu_request_dma_domain_for_dev().
->>>>
->>>> With this done, your patch titled "Create an IOMMU group for devices
->>>> that require an identity map" could also be dropped.
->>>>
->>>> Any thoughts?
->>>
->>> Theres a couple issues I can think of. iommu_request_dm_for_dev changes
->>> the domain for all devices within the devices group, if we may have
->>> devices with different domain requirements in the same group then only the
->>> last initialised device will get the domain it wants. If we want to add
->>> iommu_request_dma_domain_for_dev then we would still need another IOMMU
->>> group for identity domain devices.
->>
->> Current solution (a.k.a. v3) for this is to assign a new group to the
->> device which requires an identity mapped domain. This will break the
->> functionality of device direct pass-through (to user level). The iommu
->> group represents the minimum granularity of iommu isolation and
->> protection. The requirement of identity mapped domain should not be a
->> factor for a new group.
->>
->> Both iomm_request_dma_domain_for_dev() or iommu_request_dm_for_dev()
->> only support groups with a single device in it.
->>
->> The users could choose between domains of DMA type or IDENTITY type for
->> a group. If multiple devices share a single group and both don't work
->> for them, they have to disable the IOMMU. This isn't a valid
->> configuration from IOMMU's point of view.
->>
->>>
->>> Both with v3 and the proposed method here, iommu_should_identity_map is
->>> determining whether the device requires an identity map. In v3 this is
->>> called once up front by the generic code to determine for the IOMMU group
->>> which domain type to use. In the proposed method I think this would happen
->>> after initial domain allocation and would trigger the domain to be
->>> replaced with a different domain.
->>>
->>> I prefer the solution in v3. What do you think?
->>
->> The only concern of solution in v3 from my point of view is some kind of
->> duplication. Even we can ask the Intel IOMMU driver to tell the default
->> domain type, we might change it after boot up. For example, for 32-bit
->> pci devices, we don't know whether it's 64-bit or 32-bit capable during
->> IOMMU initialization, so we might tell iommu.c to use identity mapped
->> domain. After boot up, we check it again, and find out that it's only
->> 32-bit capable (hence only can access physical memory below 4G) and the
->> default identity domain doesn't work. And we have to change it to DMA
->> domain via iommu_request_dma_domain_for_dev().
->>
->> So to make it simple and straight-forward, we can just let iommu.c to
->> determine the default domain type and after that the Intel IOMMU driver
->> could tweak it according to the quirk bits in the driver.
->>
->> Best regards,
->> Lu Baolu
-> 
+>
+> Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+> Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+> ---
+>  drivers/iio/temperature/maxim_thermocouple.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/iio/temperature/maxim_thermocouple.c b/drivers/iio/temperature/maxim_thermocouple.c
+> index c31b963..c613a64 100644
+> --- a/drivers/iio/temperature/maxim_thermocouple.c
+> +++ b/drivers/iio/temperature/maxim_thermocouple.c
+> @@ -10,6 +10,8 @@
+>  #include <linux/init.h>
+>  #include <linux/mutex.h>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/spi/spi.h>
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/trigger.h>
+> @@ -262,9 +264,17 @@ static const struct spi_device_id maxim_thermocouple_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(spi, maxim_thermocouple_id);
+>
+> +static const struct of_device_id maxim_thermocouple_of_match[] = {
+> +        { .compatible = "maxim,max6675" },
+> +        { .compatible = "maxim,max31855" },
+> +        { },
+> +};
+> +MODULE_DEVICE_TABLE(of, maxim_thermocouple_of_match);
+> +
+>  static struct spi_driver maxim_thermocouple_driver = {
+>         .driver = {
+>                 .name   = MAXIM_THERMOCOUPLE_DRV_NAME,
+> +               .of_match_table = maxim_thermocouple_of_match,
+>         },
+>         .probe          = maxim_thermocouple_probe,
+>         .remove         = maxim_thermocouple_remove,
+> --
+> 2.7.4
+>
