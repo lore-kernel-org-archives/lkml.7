@@ -2,262 +2,143 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10E1C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F633C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00C2220651
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6B820679
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L0QFsk2z"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Bp5hfexs";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YRTGJ4a6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbfDYQwM (ORCPT
+        id S1728276AbfDYQwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:52:12 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:34031 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727951AbfDYQwK (ORCPT
+        Thu, 25 Apr 2019 12:52:33 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60528 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbfDYQwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:52:10 -0400
-Received: by mail-vk1-f195.google.com with SMTP id x84so131957vkd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EZ8tRF+aoxm1zntt48sw71BElxmVHs50I4f77OyGIb0=;
-        b=L0QFsk2zpu60nGtsaC+yhC8DkT2YI5z/0KUD3b98yNQG+RizhxSvgOnpzb+hMtF4Nb
-         tzXMeLvM9xnDY7NujFpNf6WO7Yeo4N6ZNRDXmEj5AUTxMjzANvxfI23ZWam8UuXb78jF
-         2QS6AizQLO/rlWVPlJ19LDf9iSNSXsig4zNl8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EZ8tRF+aoxm1zntt48sw71BElxmVHs50I4f77OyGIb0=;
-        b=jerAuxikkS+yTB1tpwpVVFmE3KDVVThKAtIxZu8qeqZ7iIFLLnl164WpAEkgA4GeaS
-         CyN3u89UlCKvNfWdlgRTYRTqtsJRpgLOmV9NveoQoc88z0h2PP5kiTiV8KxTNCx/yy0V
-         nQaTRMztobmTE9npVXGY6k0KScgOvjPrwc8+gQIOzlZKLx20zl5uUwHAcdFIje5ywk7j
-         kMrkWE/t6+UWo4vO2rnUegrRVsB04JoGPSStxv0Y2M6rmfzugtDRPC7tIjSUl/32qPjj
-         ih+IAHgUc9sjr05i675QEvopKXYbHXnm7HFT1cgUy+BtPsbjrC8SUGU4aYPt4yvVzPP3
-         he4A==
-X-Gm-Message-State: APjAAAXN/rDau8TwproaGDNgkOHFX5H2F+CcMTyMCRwc5Fs18xkPNTBS
-        UfOohUBeX9w3/jDoCbol0K8zUe+Vgh4=
-X-Google-Smtp-Source: APXvYqwWU+vD0Qne/KHM5nKJWaBrLkz+dWkx2qTkb/Q8O6388FZYaLYFNLrTMBUsOcHQC1lN8pmRKg==
-X-Received: by 2002:a1f:d345:: with SMTP id k66mr21787288vkg.10.1556211129298;
-        Thu, 25 Apr 2019 09:52:09 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id z192sm12634539vkd.45.2019.04.25.09.52.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 09:52:09 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id g16so218868uad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:52:08 -0700 (PDT)
-X-Received: by 2002:ab0:1646:: with SMTP id l6mr20225564uae.75.1556211127783;
- Thu, 25 Apr 2019 09:52:07 -0700 (PDT)
+        Thu, 25 Apr 2019 12:52:33 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CCE6F60A05; Thu, 25 Apr 2019 16:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556211151;
+        bh=mPkCligBzxQpDHwei4iLDe7tTNSG09r+LZiG/Z9mEeE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=Bp5hfexsZmFvgd4xaF00cy8QORpwARaGqBk9PWJ0NjOpDprYk6+AK6AtOYPGqfdhX
+         eWe2Llfgygq0YsVmHR2r7w2Ue1wwRx6xm7jgh4Bn4W3sOlwQ1+NGCUiiZ3OhtK6Z74
+         JvtaB3QvRGruoCWJ4ATb30ZJ2UlWmnx8p78Pw/zo=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCC5060A50;
+        Thu, 25 Apr 2019 16:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556211151;
+        bh=mPkCligBzxQpDHwei4iLDe7tTNSG09r+LZiG/Z9mEeE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=YRTGJ4a6JOtQhD1vdDoZEdfluOVLjh2QMtz5ADVE3rA9lGfMKFfmXPmPupThpBAeD
+         OAkmIRCajRV7lt5zNnBymdQ6Z8r3jbpuI6hdSmOMDd1cU45GEzDufXc202VMhzAiJ0
+         vO9R10I4vx/sZkYk5UvojW18BjTHEg47j8urgvDM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CCC5060A50
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190424203408.GA11386@beast> <20190425054242.GA7816@gmail.com>
-In-Reply-To: <20190425054242.GA7816@gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 25 Apr 2019 09:51:54 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jKWQtmt+tN9rwdCWP=7pL6GYU4DmDW4R7ViQV8r1m1J=g@mail.gmail.com>
-Message-ID: <CAGXu5jKWQtmt+tN9rwdCWP=7pL6GYU4DmDW4R7ViQV8r1m1J=g@mail.gmail.com>
-Subject: Re: [PATCH v2] binfmt_elf: Update READ_IMPLIES_EXEC logic for modern CPUs
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Will Deacon <will.deacon@arm.com>, X86 ML <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] at76c50x-usb: Don't register led_trigger if
+ usb_register_driver failed
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190408034529.27500-1-yuehaibing@huawei.com>
+References: <20190408034529.27500-1-yuehaibing@huawei.com>
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190425165231.CCE6F60A05@smtp.codeaurora.org>
+Date:   Thu, 25 Apr 2019 16:52:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:42 PM Ingo Molnar <mingo@kernel.org> wrote:
-> Just to make clear, is the change from the old behavior, in essence:
->
->
->                CPU: | lacks NX  | has NX, ia32     | has NX, x86_64   |
->   ELF:              |           |                  |                  |
->   ------------------------------|------------------|------------------|
->   missing GNU_STACK | exec-all  | exec-all         | exec-none        |
-> - GNU_STACK == RWX  | exec-all  | exec-all         | exec-all         |
-> + GNU_STACK == RWX  | exec-all  | exec-stack       | exec-stack       |
->   GNU_STACK == RW   | exec-all  | exec-none        | exec-none        |
-> [...]
->    'exec-all'  : all user mappings are executable
+Yue Haibing <yuehaibing@huawei.com> wrote:
 
-For extreme clarity, this should be:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> Syzkaller report this:
+> 
+> [ 1213.468581] BUG: unable to handle kernel paging request at fffffbfff83bf338
+> [ 1213.469530] #PF error: [normal kernel read fault]
+> [ 1213.469530] PGD 237fe4067 P4D 237fe4067 PUD 237e60067 PMD 1c868b067 PTE 0
+> [ 1213.473514] Oops: 0000 [#1] SMP KASAN PTI
+> [ 1213.473514] CPU: 0 PID: 6321 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
+> [ 1213.473514] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+> [ 1213.473514] RIP: 0010:strcmp+0x31/0xa0
+> [ 1213.473514] Code: 00 00 00 00 fc ff df 55 53 48 83 ec 08 eb 0a 84 db 48 89 ef 74 5a 4c 89 e6 48 89 f8 48 89 fa 48 8d 6f 01 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28 38 d0 7f 04 84 c0 75 50 48 89 f0 48 89 f2 0f b6 5d
+> [ 1213.473514] RSP: 0018:ffff8881f2b7f950 EFLAGS: 00010246
+> [ 1213.473514] RAX: 1ffffffff83bf338 RBX: ffff8881ea6f7240 RCX: ffffffff825350c6
+> [ 1213.473514] RDX: 0000000000000000 RSI: ffffffffc1ee19c0 RDI: ffffffffc1df99c0
+> [ 1213.473514] RBP: ffffffffc1df99c1 R08: 0000000000000001 R09: 0000000000000004
+> [ 1213.473514] R10: 0000000000000000 R11: ffff8881de353f00 R12: ffff8881ee727900
+> [ 1213.473514] R13: dffffc0000000000 R14: 0000000000000001 R15: ffffffffc1eeaaf0
+> [ 1213.473514] FS:  00007fa66fa01700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
+> [ 1213.473514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 1213.473514] CR2: fffffbfff83bf338 CR3: 00000001ebb9e005 CR4: 00000000007606f0
+> [ 1213.473514] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [ 1213.473514] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [ 1213.473514] PKRU: 55555554
+> [ 1213.473514] Call Trace:
+> [ 1213.473514]  led_trigger_register+0x112/0x3f0
+> [ 1213.473514]  led_trigger_register_simple+0x7a/0x110
+> [ 1213.473514]  ? 0xffffffffc1c10000
+> [ 1213.473514]  at76_mod_init+0x77/0x1000 [at76c50x_usb]
+> [ 1213.473514]  do_one_initcall+0xbc/0x47d
+> [ 1213.473514]  ? perf_trace_initcall_level+0x3a0/0x3a0
+> [ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
+> [ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
+> [ 1213.473514]  do_init_module+0x1b5/0x547
+> [ 1213.473514]  load_module+0x6405/0x8c10
+> [ 1213.473514]  ? module_frob_arch_sections+0x20/0x20
+> [ 1213.473514]  ? kernel_read_file+0x1e6/0x5d0
+> [ 1213.473514]  ? find_held_lock+0x32/0x1c0
+> [ 1213.473514]  ? cap_capable+0x1ae/0x210
+> [ 1213.473514]  ? __do_sys_finit_module+0x162/0x190
+> [ 1213.473514]  __do_sys_finit_module+0x162/0x190
+> [ 1213.473514]  ? __ia32_sys_init_module+0xa0/0xa0
+> [ 1213.473514]  ? __mutex_unlock_slowpath+0xdc/0x690
+> [ 1213.473514]  ? wait_for_completion+0x370/0x370
+> [ 1213.473514]  ? vfs_write+0x204/0x4a0
+> [ 1213.473514]  ? do_syscall_64+0x18/0x450
+> [ 1213.473514]  do_syscall_64+0x9f/0x450
+> [ 1213.473514]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [ 1213.473514] RIP: 0033:0x462e99
+> [ 1213.473514] Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+> [ 1213.473514] RSP: 002b:00007fa66fa00c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> [ 1213.473514] RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+> [ 1213.473514] RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
+> [ 1213.473514] RBP: 00007fa66fa00c70 R08: 0000000000000000 R09: 0000000000000000
+> [ 1213.473514] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa66fa016bc
+> [ 1213.473514] R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
+> 
+> If usb_register failed, no need to call led_trigger_register_simple.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 1264b951463a ("at76c50x-usb: add driver")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-'exec-all' : all PROT_READ user mappings are executable, except when
-backed by files on a noexec-filesystem.
+Patch applied to wireless-drivers-next.git, thanks.
 
->    'exec-none' : only PROT_EXEC user mappings are executable
->    'exec-stack': only the stack and PROT_EXEC user mappings are executable
-
-Thanks for helping clarify this. I spent last evening trying to figure
-out a better way to explain/illustrate this series; my prior patch
-combines too many things into a single change. One thing I noticed is
-the "lacks NX" column is wrong: for "lack NX", our current state is
-"don't care". If we _add_ RIE for the "lacks NX" case unconditionally,
-we may cause unexpected problems[1]. More on this below...
-
-But yes, your above diff for "has NX" is roughly correct. I'll walk
-through each piece I'm thinking about. Here is the current state:
-
-               CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
-  ELF:              |            |                  |                |
-  -------------------------------|------------------|----------------|
-  missing GNU_STACK | exec-all   | exec-all         | exec-all       |
-  GNU_STACK == RWX  | exec-all   | exec-all         | exec-all       |
-  GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
-
-*this column has no architecture effect: NX markings are ignored by
-hardware, but may have behavioral effects when "wants X" collides with
-"cannot be X" constraints in memory permission flags, as in [1].
-
-
-I want to make three changes, listed in increasing risk levels.
-
-First, I want to split "missing GNU_STACK" and "GNU_STACK == RWX",
-which is currently causing expected behavior for driver mmap
-regions[1], etc:
-
-               CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
-  ELF:              |            |                  |                |
-  -------------------------------|------------------|----------------|
-  missing GNU_STACK | exec-all   | exec-all         | exec-all       |
-- GNU_STACK == RWX  | exec-all   | exec-all         | exec-all       |
-+ GNU_STACK == RWX  | exec-stack | exec-stack       | exec-stack     |
-  GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
-
-AFAICT, this has the least risk. I'm not aware of any situation where
-GNU_STACK==RWX is supposed to mean MORE than that. As Jann researched,
-even thread stacks will be treated correctly[2]. The risk would be
-discovering some use-case where a program was executing memory that it
-had not explicitly marked as executable. For ELFs marked with
-GNU_STACK, this seems unlikely (I hope).
-
-
-Second, I want to split the behavior of "missing GNU_STACK" between
-ia32 and x86_64. The reasonable(?) default for x86_64 memory is for it
-to be NX. For the very rare x86_64 systems that do not have NX, this
-shouldn't change anything because they still fall into the "don't
-care" column. It would look like this:
-
-               CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
-  ELF:              |            |                  |                |
-  -------------------------------|------------------|----------------|
-- missing GNU_STACK | exec-all   | exec-all         | exec-all       |
-+ missing GNU_STACK | exec-all  | exec-all         | exec-none      |
-  GNU_STACK == RWX  | exec-stack | exec-stack       | exec-stack     |
-  GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
-
-This carries some risk that there are ancient x86_64 binaries that
-still behave like their even more ancient ia32 counterparts, and
-expect to be able to execute any memory. I would _hope_ this is rare,
-but I have no way to actually know if things like this exist in the
-real world.
-
-
-Third, I want to have the "lacks NX" column actually reflect reality.
-Right now on such a system, memory permissions will show "not
-executable" but there is actually no architectural checking for these
-permissions. I think the true nature of such a system should be
-reflected in the reported permissions. It would look like this:
-
-               CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
-  ELF:              |            |                  |                |
-  -------------------------------|------------------|----------------|
-  missing GNU_STACK | exec-all   | exec-all         | exec-none      |
-- GNU_STACK == RWX  | exec-stack | exec-stack       | exec-stack     |
-- GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
-+ GNU_STACK == RWX  | exec-all   | exec-stack       | exec-stack     |
-+ GNU_STACK == RW   | exec-all   | exec-none        | exec-none      |
-
-This carries the largest risk because it effectively enables
-READ_IMPLIES_EXEC on all processes for such systems. I worry this
-might trip as-yet-unseen problems like in [1], for only cosmetic
-improvements.
-
-My intention was to split up the series and likely not even bother
-with the third change, since it feels like too high a risk to me. What
-do you think?
-
-> In particular, what is the policy for write-only and exec-only mappings,
-> what does read-implies-exec do for them?
-
-First it manifests here, which is used for stack and brk:
-
-#define VM_DATA_DEFAULT_FLAGS \
-        (((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0 ) | \
-         VM_READ | VM_WRITE | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
-
-above is used in do_brk_flags(), and is picked up by
-VM_STACK_DEFAULT_FLAGS, visible in VM_STACK_FLAGS for
-setup_arg_pages()'s stack creation.
-
-READ_IMPLIES_EXEC itself is checked directly in mmap, with noexec
-checks that also clear VM_MAYEXEC:
-
-        if ((prot & PROT_READ) && (current->personality & READ_IMPLIES_EXEC))
-                if (!(file && path_noexec(&file->f_path)))
-                        prot |= PROT_EXEC;
-...
-                        if (path_noexec(&file->f_path)) {
-                                if (vm_flags & VM_EXEC)
-                                        return -EPERM;
-                                vm_flags &= ~VM_MAYEXEC;
-
-The above is where we discussed adding some kind of check for device
-driver memory mapping in [1] (or getting distros to mount /dev noexec,
-which seems to break other things...), but I'd rather just fix
-READ_IMPLIES_EXEC.
-
-Write-only would ignore READ_IMPLIES_EXEC, but mprotect() rechecks it
-if PROT_READ gets added later:
-
-        const bool rier = (current->personality & READ_IMPLIES_EXEC) &&
-                                (prot & PROT_READ);
-...
-                /* Does the application expect PROT_READ to imply PROT_EXEC */
-                if (rier && (vma->vm_flags & VM_MAYEXEC))
-                        prot |= PROT_EXEC;
-
-> Also, it would be nice to define it precisely what 'stack' means in this
-> context: it's only the ELF loader defined process stack - other stacks
-> such as any thread stacks, signal stacks or alt-stacks depend on the C
-> library - or does the kernel policy extend there too?
-
-Correct: this is only the ELF loader stack. Thread stacks are (and
-always have been) on their own. But as Jann found in [2], they should
-be unchanged by anything here.
-
-> I.e. it would be nice to clarify all this, because it's still rather
-> confusing and ambiguous right now.
-
-Agreed. I've been trying to pick it apart too, hopefully this helps.
-
--Kees
-
-[1] https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
-[2] https://lore.kernel.org/patchwork/patch/464875/
+09ac2694b047 at76c50x-usb: Don't register led_trigger if usb_register_driver failed
 
 -- 
-Kees Cook
+https://patchwork.kernel.org/patch/10888765/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
