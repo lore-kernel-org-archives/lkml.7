@@ -2,103 +2,117 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A08C282E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CE4C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CC92081C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A648A20890
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b31aDRzb"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="RG6efg+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbfDYMay (ORCPT
+        id S1731159AbfDYMay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 25 Apr 2019 08:30:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48666 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfDYMax (ORCPT
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43102 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbfDYMax (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Apr 2019 08:30:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Inf2qACcqPy97pfp+Sm859gMSIWx2DI40CRDFzl9SmU=; b=b31aDRzb0lYUxD8Fc77E2v6IL
-        gqaeZvshn9TjFfBrAxWEqHokbRrlrNxlS6+z5oUzy+uvmpAJSrnenAIACV+OE+NI9z7IEfHLhc2oN
-        Tleu79NaKaolQlKWutmW0yNmoPK+sbKVqLymdd++0DBOR+rdQaWg21MinQyb82Y7IC0w+OZYYDEpB
-        TYTWzhKXdjCMgW2VbJVxJLkszX91gIoXyKPjpECX5MCobHWZidW73lbsgZ9NMOPxgH1ZZsva50N6f
-        WfgAKoXBAuEKAynAWitfqFTawARuG7G8VZwqaOcT+kWH2PnkRdLf8PLIp0yAJ8JZj7o1VXSrQXExg
-        EMlw5N40w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJdWZ-0003JG-7j; Thu, 25 Apr 2019 12:30:47 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AE6E229C42EF0; Thu, 25 Apr 2019 14:30:45 +0200 (CEST)
-Date:   Thu, 25 Apr 2019 14:30:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: x86/paravirt: Detect over-sized patching bugs in
- paravirt_patch_call()
-Message-ID: <20190425123045.GD14281@hirez.programming.kicks-ass.net>
-References: <20190424134223.690835713@linutronix.de>
- <20190425065209.GA89582@gmail.com>
- <alpine.DEB.2.21.1904250921010.1762@nanos.tec.linutronix.de>
- <20190425081012.GA115378@gmail.com>
- <20190425091717.GA72229@gmail.com>
- <20190425092131.GL4038@hirez.programming.kicks-ass.net>
- <20190425095039.GC115378@gmail.com>
- <20190425102210.GM4038@hirez.programming.kicks-ass.net>
- <20190425105745.GA29840@gmail.com>
- <20190425114004.GN4038@hirez.programming.kicks-ass.net>
+Received: by mail-ed1-f68.google.com with SMTP id j20so18971285edq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 05:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=67R0k05803KguupIDta7Ra/6RBriLS9l4FIpl33TABc=;
+        b=RG6efg+wINT5PtOxJThnJ7/GhcdJnGb39Z4ZiVojLVulIllPY6WegbUX1iE+KXv7ix
+         hw7G3Q35WeIJFBq6h+DTKCSoq6Caf3U4HMLnir6Y2Fpepl+Yg62BlPdyDc+AfIeAdC6G
+         T5q6JA5VpPnsEZbc1Y3THNGipkJEYTCX5YvtGmIytNOobkbu5pJOI8FPfiRA+c2salf8
+         qIjHlzsMeZbUV6ujc/e+TQwLohjwZU6jQscEF+qeF4JPVtvV/MenGzVv1/zUdUKvFb4o
+         XQFGsXg+neKHnqNqXD/JaZm33914fdkJ2/qSt+EWsmhg8bcDYJt8SzWMQ5M1Jr4er9q8
+         DqAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=67R0k05803KguupIDta7Ra/6RBriLS9l4FIpl33TABc=;
+        b=Nn54y9zeRvg7jHG7hpxTViV3Y3UMrmhxU2gW6pFuqhcw/JW2BsmEHrL+O9ehgmGq/C
+         u0KSqjxINk9bbWA2OeufDxFbhhzXFq0kdgzBDwRw0zuBGpEqWuDD9nuZq860ZBXuvZ5N
+         5zrWfpV9/AGrlGyBnCM3MMA0Imyd63aWDnvI0uebdq0230j8vpLQ2po86kFS78asnrEE
+         VxIIKON3mn6bHIGEvI9lF5HKwo4gBxRFjgOY8LSRa18zj0bVhoLn8op8jG++BPpBPo1/
+         mexTOFjEXRecpKW/o9Q6UgoC09ueGh78DXAq5JA2KOJyd6cOTsk1inUDYpKNUpiRiAmm
+         RzaQ==
+X-Gm-Message-State: APjAAAXVD+uaL11ZhUv1wmS6t4BPI54snCIlxDfxN9C9FD/nKRf1tWYg
+        edlSBPBY4MyqHVJO7zdClThVllN4yzvOk4buZhJHhA==
+X-Google-Smtp-Source: APXvYqwiC0RYDcdWaH93fKry+qe407e7uBBkYjvENxoUhOgx5lCTLYYQiqnziqtuQkVFJZxzsIpjW4zsSKchIjg+TPc=
+X-Received: by 2002:a50:b68a:: with SMTP id d10mr1779006ede.79.1556195451949;
+ Thu, 25 Apr 2019 05:30:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190425114004.GN4038@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190421014429.31206-1-pasha.tatashin@soleen.com>
+ <20190421014429.31206-3-pasha.tatashin@soleen.com> <4ad3c587-6ab8-1307-5a13-a3e73cf569a5@redhat.com>
+ <CAPcyv4h3+hU=MmB=RCc5GZmjLW_ALoVg_C4Z7aw8NQ=1LzPKaw@mail.gmail.com>
+ <CA+CK2bDB5o4+NMc7==_ipVAZoEo7fdrkjZ4etU0LUCqxnmN-Rg@mail.gmail.com> <180d6250-8a6a-0b5d-642a-ec6648cb45b1@redhat.com>
+In-Reply-To: <180d6250-8a6a-0b5d-642a-ec6648cb45b1@redhat.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 25 Apr 2019 08:30:40 -0400
+Message-ID: <CA+CK2bBt0vHr9D+BuvM=GmjCMESu5iBiUTdvid_TaoE6j2daQg@mail.gmail.com>
+Subject: Re: [v2 2/2] device-dax: "Hotremove" persistent memory that is used
+ like normal RAM
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 01:40:04PM +0200, Peter Zijlstra wrote:
-> So this then fails to patch the immediate; but the compiler emitted:
-> 
-> 175:       ff 25 00 00 00 00       jmpq   *0x0(%rip)        # 17b <syscall_return_via_sysret+0x75>
-> 		177: R_X86_64_PC32      pv_ops+0xfc
-> 
-> and pv_ops+0xfc is (+4 because of reloc magic):
-> 
-> void               (*usergs_sysret64)(void);                             /* 0x100   0x8 */
-> 
-> which defaults to:
-> 
-> arch/x86/kernel/paravirt.c:     .cpu.usergs_sysret64    = native_usergs_sysret64,
-> 
-> which in turn reads like:
-> 
-> 0000000000000000 <native_usergs_sysret64>:
-> 0:       0f 01 f8                swapgs
-> 3:       48 0f 07                sysretq
-> 
-> So I _really_ don't understand how:
-> 
-> > Which with the vanilla kernel crashes on boot much, much later:
-> > 
-> > [    2.478026] PANIC: double fault, error_code: 0x0
-> 
-> happens.
+>
+> Yes, also I think you can let go of the device_lock in
+> check_memblocks_offline_cb, lock_device_hotplug() should take care of
+> this (see Documentation/core-api/memory-hotplug.rst - "locking internals")
+>
+Hi David,
 
-Just spoke to Juergen on IRC; the most likely explanation is that
-(because of PTI) the pv_ops table isn't mapped in the user page-tables
-and therefore the indirect jump comes unstuck.
+Thank you for your comments. I went through memory-hotplug.rst, and I
+still think that device_lock() is needed here. In this particular case
+it can be replaced with something like READ_ONCE(), but for simplicity
+it is better to have device_lock()/device_unlock() as this is not a
+performance critical code.
 
+I do not see any lock ordering issues with this code, as we are
+holding lock_device_hotplug() first that prevents userland from
+adding/removing memory during this check.
 
+https://soleen.com/source/xref/linux/arch/powerpc/platforms/powernv/memtrace.c?r=98fa15f3#248
+
+Here we have a similar code:
+lock_device_hotplug();
+   online_mem_block();
+    device_online()
+     device_lock(dev);
+
+Pasha
