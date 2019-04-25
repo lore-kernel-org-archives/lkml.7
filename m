@@ -2,95 +2,169 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EE5C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B3DC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A57217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5ED217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:06:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="eKhdo0U7"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="raQQIWLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbfDYFE3 (ORCPT
+        id S1728951AbfDYFGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 01:04:29 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43275 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbfDYFE3 (ORCPT
+        Thu, 25 Apr 2019 01:06:16 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]:39410 "EHLO
+        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728933AbfDYFGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 01:04:29 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a12so5047550wrq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 22:04:27 -0700 (PDT)
+        Thu, 25 Apr 2019 01:06:15 -0400
+Received: by mail-qk1-f177.google.com with SMTP id f125so7463496qke.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 22:06:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b5ZliQNL3dHlGlonyzY7/r/CLr+V6C8KSnOz63CTxII=;
-        b=eKhdo0U7s5plIJ+LRJ1d9Lll7ykJncW5GJs5IJWk7tTVQ+OWSKARiKQ8fyi5Hfx+8Q
-         BkaKhcBBYU27CcHHoVQADYBovQByoA9mFs9LiJYGjK2Y+avu8mCsXa3FRp4q4E7ZG8r8
-         wfcr/ZE7ACuH3eGXkfjjCs2twKKHRiqfD12AGBBwFseMO5wkr07H0k9ZDXA/63yOsC43
-         tn8PeR8XmKkCCT/FiF3OAP82qkmI/Pmvll8k4AETGJhiXaPS47cZeZV8XXGuqEGHWiBz
-         ZruDcGsRam5K2eUG73F+wSKxxDduqMQD0B5fUEh238PdTnNqwdDMCzVrNB1JNM9BFwC0
-         Y/xw==
+        d=lca.pw; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=RFHcL3/I5oViWNDB29N5Vv3s3iXZS3vLHz926lnu8dY=;
+        b=raQQIWLl3ZVWFZPAq2ChQx8oBHR6CzyZSpOrVFMO//pEN1XQJvZ/zhaLhuDoRJ2JxM
+         3Tng4pQ+bP5xY9oTLY8W6/7hec5pOK4THU+8VMJ8GnOlAq9pX+wFy2onyl8OPOpAo9oq
+         05nUl9cEtUu7BTPrXX44uuVdKhaCUcxlfX343JebiSS1jc1A4GWqc3jcOIz/pw5mgYH8
+         IfYGEGFVRu3ckRKf+vpMvUFJyfn8EEFkJL0ZyGecLO9fTeH51cqB+kHqEHGp9UYOS4KA
+         Vaec0jpx7pc/8Jmgl+jDvqfhj3USv+r7mlvCFOusmurA1lCeHvYPsxJi/SIVTYl5aS4l
+         s/0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b5ZliQNL3dHlGlonyzY7/r/CLr+V6C8KSnOz63CTxII=;
-        b=Xi+tEDMmElJf1DeT3q371qUoGnxRDAccwVuim7ikRiSU3nVFDVR58pauHzFu0RBNeC
-         V0NoNjVIeGdWgfBmRmoelRw3MnXrLHWava//YwcXcBt31NuFfTikm+91Yst56BHa9sk9
-         RQmlKkANiCtQ28UWAAlc8OZjh5jDL9HeczokI9YmDmafcbB0odY9umO/Qw+u2r/1SXxP
-         nr9AgZt/hm3hOTgr2sd9xfvoP5dnD1xQlu4MzQQKnK4TW6UTn25hSSidiDPgyCJS/ci+
-         aVGYtBQpqG0jPPh2kU0RLDpMqKYJTl2/uEpQ//UyWFGWSumpjrvSewp5MxkTMppczIUf
-         l/og==
-X-Gm-Message-State: APjAAAUiPdtBGRnkwpdhUF3gWdHl6rsKEVn0jHm2ilIrJza1lLRzHSlm
-        WCbtmlSjr3wuDBOYQgX58Nk2pmwHzF+ruxxdsjXMUg==
-X-Google-Smtp-Source: APXvYqwZHNErCTPnMk7vC6/kS4w/2oRBGMRTilcbpa0G0qAxiWNgZrd1jRBW6f7Vf107yki0xgMwvT1YXtuLZKfJfgw=
-X-Received: by 2002:a5d:5108:: with SMTP id s8mr21951551wrt.99.1556168667185;
- Wed, 24 Apr 2019 22:04:27 -0700 (PDT)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=RFHcL3/I5oViWNDB29N5Vv3s3iXZS3vLHz926lnu8dY=;
+        b=Msbw1NxojPRI7c2CSyuCyGQXr1Weq0IkJyxIggxlh3xZIMDF4SAyJhgu0A3r6xxl0h
+         ApQZvR6Iw5PYAUALUOYW3AFleG9s7cnOpyHy1hEl576oXYwTS+JOIBQslme/u3RWDf+a
+         slXjsbaKN5SOBoan7RV2z5eowcksyivi+1Lhncx+81XosmWdDNIgdQvjWZ9nIvKzd9MQ
+         mi5C8bhZSSLKWsNzOeRkS8tjQwT1rf99pqVMkd3lzDCudpdZlo0Kn2OhuRzY+Jm3yEPY
+         gOrAdba2GWeSDW/N21RbKroNTBZ9Rqhly/DNW9Zz4zPXlY/i8n5FqFlI4C4ahO6Tf59W
+         d/7Q==
+X-Gm-Message-State: APjAAAX9H0tr3+MDsfx73Hib5xoME/ZicNfh0acs3seu0YGTO8YHSDvc
+        XZQhq0kRk5IK2bhfRx+p8wI4qQ==
+X-Google-Smtp-Source: APXvYqxUMu+OqZjph/dbZarDsgd5i+hqlV71t0YgzIN4bwMZuUdWtLrjpLgui0bh/7lV3TtMUl+ikQ==
+X-Received: by 2002:a37:4814:: with SMTP id v20mr28284942qka.36.1556168774051;
+        Wed, 24 Apr 2019 22:06:14 -0700 (PDT)
+Received: from ovpn-121-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id m31sm14030646qtm.46.2019.04.24.22.06.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 22:06:13 -0700 (PDT)
+To:     Jens Axboe <axboe@kernel.dk>, hch@lst.de
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>, dan.j.williams@intel.com
+From:   Qian Cai <cai@lca.pw>
+Subject: bio_iov_iter_get_pages() + page_alloc.shuffle=1 migrating failures
+Message-ID: <38bef24c-3839-11b0-a192-6cf511d8b268@lca.pw>
+Date:   Thu, 25 Apr 2019 01:06:11 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190415093648.7525-1-anup.patel@wdc.com> <20190415093648.7525-3-anup.patel@wdc.com>
- <20190424062947.GB10400@infradead.org> <CAAhSdy1Xc9AjPKY0RzLL_qsBs6wax23fi2BTVtMhuS0mAoKZmQ@mail.gmail.com>
- <20190424150135.GA19543@infradead.org>
-In-Reply-To: <20190424150135.GA19543@infradead.org>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 25 Apr 2019 10:34:16 +0530
-Message-ID: <CAAhSdy0xydwViJW8yCPTLrgkNGjwd4J8P-=4b2P4AfGemmyKyw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] RISC-V: Add interrupt related SCAUSE defines in asm/csr.h
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 8:31 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Wed, Apr 24, 2019 at 12:15:45PM +0530, Anup Patel wrote:
-> > We need these defines for programming HIDELEG CSR in KVM kernel module
-> > so it will be used at multiple places.
-> >
-> > >
-> > > http://git.infradead.org/users/hch/misc.git/commitdiff/1221f5c32345ebe7ea2c1cd6e8a01ad4b422aaba
-> >
-> > You can certainly use these defines in your nommu commit by using
-> > "#ifdef CONFIG_M_MODE" in switch case of do_IRQ().
->
-> Or just keep them in the current format even when you move them, as
-> that allows everything to work with a single ifdef at their point
-> of declaration..
+Memory offline [1] starts to fail on linux-next on ppc64le with
+page_alloc.shuffle=1 where the "echo offline" command hangs with lots of
+migrating failures below. It seems in migrate_page_move_mapping()
 
-Sure, will do. I will send v4 soon.
+	if (!mapping) {
+		/* Anonymous page without mapping */
+		if (page_count(page) != expected_count)
+			return -EAGAIN;
 
-Regards,
-Anup
+It expected count=1 but actual count=2.
+
+There are two ways to make the problem go away. One is to remove this line in
+__shuffle_free_memory(),
+
+	shuffle_zone(z);
+
+The other is reverting some bio commits. Bisecting so far indicates the culprit
+is in one of those (the 3rd commit looks more suspicious than the others).
+
+block: only allow contiguous page structs in a bio_vec
+block: don't allow multiple bio_iov_iter_get_pages calls per bio
+block: change how we get page references in bio_iov_iter_get_pages
+
+[  446.578064] migrating pfn 2003d5eaa failed ret:22
+[  446.578066] page:c00a00800f57aa80 count:2 mapcount:0 mapping:c000001db4c827e9
+index:0x13c08a
+[  446.578220] anon
+[  446.578222] flags: 0x83fffc00008002e(referenced|uptodate|dirty|active|swapbacked)
+[  446.578347] raw: 083fffc00008002e c00a00800f57f808 c00a00800f579f88
+c000001db4c827e9
+[  446.944807] raw: 000000000013c08a 0000000000000000 00000002ffffffff
+c00020141a738008
+[  446.944883] page dumped because: migration failure
+[  446.944948] page->mem_cgroup:c00020141a738008
+[  446.945024] page allocated via order 0, migratetype Movable, gfp_mask
+0x100cca(GFP_HIGHUSER_MOVABLE)
+[  446.945148]  prep_new_page+0x390/0x3a0
+[  446.945228]  get_page_from_freelist+0xd9c/0x1bf0
+[  446.945292]  __alloc_pages_nodemask+0x1cc/0x1780
+[  446.945335]  alloc_pages_vma+0xc0/0x360
+[  446.945401]  do_anonymous_page+0x244/0xb20
+[  446.945472]  __handle_mm_fault+0xcf8/0xfb0
+[  446.945532]  handle_mm_fault+0x1c0/0x2b0
+[  446.945615]  __get_user_pages+0x3ec/0x690
+[  446.945652]  get_user_pages_unlocked+0x104/0x2f0
+[  446.945693]  get_user_pages_fast+0xb0/0x200
+[  446.945762]  iov_iter_get_pages+0xf4/0x6a0
+[  446.945802]  bio_iov_iter_get_pages+0xc0/0x450
+[  446.945876]  blkdev_direct_IO+0x2e0/0x630
+[  446.945941]  generic_file_read_iter+0xbc/0x230
+[  446.945990]  blkdev_read_iter+0x50/0x80
+[  446.946031]  aio_read+0x128/0x1d0
+[  446.946082] migrating pfn 2003d5fe0 failed ret:22
+[  446.946084] page:c00a00800f57f800 count:2 mapcount:0 mapping:c000001db4c827e9
+index:0x13c19e
+[  446.946239] anon
+[  446.946241] flags: 0x83fffc00008002e(referenced|uptodate|dirty|active|swapbacked)
+[  446.946384] raw: 083fffc00008002e c000200deb3dfa28 c00a00800f57aa88
+c000001db4c827e9
+[  446.946497] raw: 000000000013c19e 0000000000000000 00000002ffffffff
+c00020141a738008
+[  446.946605] page dumped because: migration failure
+[  446.946662] page->mem_cgroup:c00020141a738008
+[  446.946724] page allocated via order 0, migratetype Movable, gfp_mask
+0x100cca(GFP_HIGHUSER_MOVABLE)
+[  446.946846]  prep_new_page+0x390/0x3a0
+[  446.946899]  get_page_from_freelist+0xd9c/0x1bf0
+[  446.946959]  __alloc_pages_nodemask+0x1cc/0x1780
+[  446.947047]  alloc_pages_vma+0xc0/0x360
+[  446.947101]  do_anonymous_page+0x244/0xb20
+[  446.947143]  __handle_mm_fault+0xcf8/0xfb0
+[  446.947200]  handle_mm_fault+0x1c0/0x2b0
+[  446.947256]  __get_user_pages+0x3ec/0x690
+[  446.947306]  get_user_pages_unlocked+0x104/0x2f0
+[  446.947366]  get_user_pages_fast+0xb0/0x200
+[  446.947458]  iov_iter_get_pages+0xf4/0x6a0
+[  446.947515]  bio_iov_iter_get_pages+0xc0/0x450
+[  446.947588]  blkdev_direct_IO+0x2e0/0x630
+[  446.947636]  generic_file_read_iter+0xbc/0x230
+[  446.947703]  blkdev_read_iter+0x50/0x80
+[  446.947758]  aio_read+0x128/0x1d0
+
+[1]
+i=0
+found=0
+for mem in $(ls -d /sys/devices/system/memory/memory*); do
+        i=$((i + 1))
+        echo "iteration: $i"
+        echo offline > $mem/state
+        if [ $? -eq 0 ] && [ $found -eq 0 ]; then
+                found=1
+                continue
+        fi
+        echo online > $mem/state
+done
