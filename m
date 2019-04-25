@@ -2,259 +2,164 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598EAC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C73C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3FA2081C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:33:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OPzMGLlO"
+	by mail.kernel.org (Postfix) with ESMTP id BC2A2205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbfDYPdZ (ORCPT
+        id S1730202AbfDYPd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:33:25 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45720 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727668AbfDYPdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:33:23 -0400
-Received: by mail-pg1-f194.google.com with SMTP id y3so14777pgk.12;
-        Thu, 25 Apr 2019 08:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SiNk3x+W/BJ3dxXGT9anGpXBInjJatxrO4dxNV7Y5gk=;
-        b=OPzMGLlOARPY2cG9nPBcD320RyElIGwznb0vbjTW3Vz4xNJbHPqnawn3yra9NnLjOM
-         23iafwCOM5xBWVPtwnFJBXKLeDozafkKMUiQdR2clZkE1yjXROlTW213rAe+Qr6Kp34m
-         EMzlcfMEhvt2NMms52jgJTb5Gf7ILlVz5YmM2/Ho6Zajxxi5kmc4pcNuanspWVpS9AtG
-         0z6awoBru6FJoalGp3QxFPvg7p4DYzzPsWdvWrWU62d5N/oLcSd5sBDcnXTq3Gspf5os
-         oISwywVg+Ea9N+/Jo2VfjUzfnNom6hJue3Z4YbvbwG/OgZZ+oS9pbdkjiVPpGeLhTeiT
-         4ekw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SiNk3x+W/BJ3dxXGT9anGpXBInjJatxrO4dxNV7Y5gk=;
-        b=kn/GDwCV/G5ZFCEXbN9wAWaWdyJur0hTsgHdjJASezxOjiyzXwBeG+zPY+a6luw+SB
-         NA4x1Ev9h446lOFpyisDKJY5Eiqru2pURfJIWYo8uwIkevo7ZjzIp4IuO+ub1nLOfy6g
-         ZVwJXnVcoNbGAeEgsG8COyMugx9Z3oENiy5cKlscITkC7R5jPGG/i1QrSF8bX/zbdr7R
-         jbT5VRDByXMe8Hv/dQ0+QJeWxuswwIqT5kky3aenN5IYTMkCE1CcG4bfheynRVELkGYM
-         C72wveRLTk9BN8w/YohJbIC5Iu2byUS5BtNs6vezsFgiROOWRuo/SFIMhSGCnFFQy7PK
-         NyLg==
-X-Gm-Message-State: APjAAAVYOcPldtVslWWFffPhaBh+mUy/MX15MX5RiixCr4zpg/Gid6xd
-        mIJbGag6SGXqU55uByFLFl4=
-X-Google-Smtp-Source: APXvYqzfbke8vxzy2xzMUC1R20hz9OOeC10ULwX5vi07cpuyw3J9zWHUHa3mhL5NjaskoQ1CfzUhYw==
-X-Received: by 2002:a62:424f:: with SMTP id p76mr40746220pfa.141.1556206400995;
-        Thu, 25 Apr 2019 08:33:20 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id c14sm2643363pgj.94.2019.04.25.08.33.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 08:33:20 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     rjw@rjwysocki.net, Jonathan Corbet <corbet@lwn.net>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 18/24] Documentation: ACPI: move aml-debugger.txt to firmware-guide/acpi and convert to reST
-Date:   Thu, 25 Apr 2019 23:31:11 +0800
-Message-Id: <20190425153117.16057-19-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190425153117.16057-1-changbin.du@gmail.com>
-References: <20190425153117.16057-1-changbin.du@gmail.com>
+        Thu, 25 Apr 2019 11:33:28 -0400
+Received: from mga17.intel.com ([192.55.52.151]:53982 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730136AbfDYPdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 11:33:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 08:33:23 -0700
+X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
+   d="scan'208";a="137410325"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.255.28.123]) ([10.255.28.123])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 25 Apr 2019 08:33:21 -0700
+Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
+References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
+ <20190424143238.GB18442@linux.intel.com>
+ <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
+ <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
+ <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
+ <be509b34ba01a22845363aeb0b0f053f25c2d9c1.camel@intel.com>
+ <7568a794-2e91-c84c-5b64-d33e394f0e2b@linux.intel.com>
+ <20190425141944.GA31197@linux.intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <5203b6ee-4a14-64b7-0237-dae2a977054d@linux.intel.com>
+Date:   Thu, 25 Apr 2019 23:33:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190425141944.GA31197@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation to reStructuredText format and
-add it to Sphinx TOC tree. No essential content change.
+On 2019/4/25 22:19, Sean Christopherson wrote:
+> On Thu, Apr 25, 2019 at 03:07:35PM +0800, Like Xu wrote:
+>> On 2019/4/25 14:30, Xiaoyao Li wrote:
+>>>>> Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes is
+>>>>> that we cannot assmue the reserved bits 31:16 of ECX is always 0 for the
+>>>>> future generation.
+> 
+> It doesn't matter if future CPUs use 31:16 for other things since this
+> code only cares about whether or not CPUID.1F exists.  The check
+> entry->eax >= 0x1f ensures that CPUID.1F will return zeros if the leaf
+> does *NOT* exist, ergo the check against CPUID.1F.ECX only needs to
+> look for a non-zero value.  CPUID.1F.ECX is the logical choice for
+> detecting support because it is guaranteed to be non-zero if the leaf
+> actually exists (because bits 15:8 will be non-zero).  Whether or not
+> bits 31:16 are non-zero is irrelevant.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/acpi/aml-debugger.txt           | 66 ----------------
- .../firmware-guide/acpi/aml-debugger.rst      | 75 +++++++++++++++++++
- Documentation/firmware-guide/acpi/index.rst   |  1 +
- 3 files changed, 76 insertions(+), 66 deletions(-)
- delete mode 100644 Documentation/acpi/aml-debugger.txt
- create mode 100644 Documentation/firmware-guide/acpi/aml-debugger.rst
+Here is a case:
 
-diff --git a/Documentation/acpi/aml-debugger.txt b/Documentation/acpi/aml-debugger.txt
-deleted file mode 100644
-index 75ebeb64ab29..000000000000
---- a/Documentation/acpi/aml-debugger.txt
-+++ /dev/null
-@@ -1,66 +0,0 @@
--The AML Debugger
--
--Copyright (C) 2016, Intel Corporation
--Author: Lv Zheng <lv.zheng@intel.com>
--
--
--This document describes the usage of the AML debugger embedded in the Linux
--kernel.
--
--1. Build the debugger
--
--   The following kernel configuration items are required to enable the AML
--   debugger interface from the Linux kernel:
--
--   CONFIG_ACPI_DEBUGGER=y
--   CONFIG_ACPI_DEBUGGER_USER=m
--
--   The userspace utilities can be built from the kernel source tree using
--   the following commands:
--
--   $ cd tools
--   $ make acpi
--
--   The resultant userspace tool binary is then located at:
--
--     tools/power/acpi/acpidbg
--
--   It can be installed to system directories by running "make install" (as a
--   sufficiently privileged user).
--
--2. Start the userspace debugger interface
--
--   After booting the kernel with the debugger built-in, the debugger can be
--   started by using the following commands:
--
--   # mount -t debugfs none /sys/kernel/debug
--   # modprobe acpi_dbg
--   # tools/power/acpi/acpidbg
--
--   That spawns the interactive AML debugger environment where you can execute
--   debugger commands.
--
--   The commands are documented in the "ACPICA Overview and Programmer Reference"
--   that can be downloaded from
--
--   https://acpica.org/documentation
--
--   The detailed debugger commands reference is located in Chapter 12 "ACPICA
--   Debugger Reference".  The "help" command can be used for a quick reference.
--
--3. Stop the userspace debugger interface
--
--   The interactive debugger interface can be closed by pressing Ctrl+C or using
--   the "quit" or "exit" commands.  When finished, unload the module with:
--
--   # rmmod acpi_dbg
--
--   The module unloading may fail if there is an acpidbg instance running.
--
--4. Run the debugger in a script
--
--   It may be useful to run the AML debugger in a test script. "acpidbg" supports
--   this in a special "batch" mode.  For example, the following command outputs
--   the entire ACPI namespace:
--
--   # acpidbg -b "namespace"
-diff --git a/Documentation/firmware-guide/acpi/aml-debugger.rst b/Documentation/firmware-guide/acpi/aml-debugger.rst
-new file mode 100644
-index 000000000000..a889d43bc6c5
---- /dev/null
-+++ b/Documentation/firmware-guide/acpi/aml-debugger.rst
-@@ -0,0 +1,75 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. include:: <isonum.txt>
-+
-+================
-+The AML Debugger
-+================
-+
-+:Copyright: |copy| 2016, Intel Corporation
-+:Author: Lv Zheng <lv.zheng@intel.com>
-+
-+
-+This document describes the usage of the AML debugger embedded in the Linux
-+kernel.
-+
-+1. Build the debugger
-+=====================
-+
-+The following kernel configuration items are required to enable the AML
-+debugger interface from the Linux kernel::
-+
-+   CONFIG_ACPI_DEBUGGER=y
-+   CONFIG_ACPI_DEBUGGER_USER=m
-+
-+The userspace utilities can be built from the kernel source tree using
-+the following commands::
-+
-+   $ cd tools
-+   $ make acpi
-+
-+The resultant userspace tool binary is then located at::
-+
-+   tools/power/acpi/acpidbg
-+
-+It can be installed to system directories by running "make install" (as a
-+sufficiently privileged user).
-+
-+2. Start the userspace debugger interface
-+=========================================
-+
-+After booting the kernel with the debugger built-in, the debugger can be
-+started by using the following commands::
-+
-+   # mount -t debugfs none /sys/kernel/debug
-+   # modprobe acpi_dbg
-+   # tools/power/acpi/acpidbg
-+
-+That spawns the interactive AML debugger environment where you can execute
-+debugger commands.
-+
-+The commands are documented in the "ACPICA Overview and Programmer Reference"
-+that can be downloaded from
-+
-+https://acpica.org/documentation
-+
-+The detailed debugger commands reference is located in Chapter 12 "ACPICA
-+Debugger Reference".  The "help" command can be used for a quick reference.
-+
-+3. Stop the userspace debugger interface
-+========================================
-+
-+The interactive debugger interface can be closed by pressing Ctrl+C or using
-+the "quit" or "exit" commands.  When finished, unload the module with::
-+
-+   # rmmod acpi_dbg
-+
-+The module unloading may fail if there is an acpidbg instance running.
-+
-+4. Run the debugger in a script
-+===============================
-+
-+It may be useful to run the AML debugger in a test script. "acpidbg" supports
-+this in a special "batch" mode.  For example, the following command outputs
-+the entire ACPI namespace::
-+
-+   # acpidbg -b "namespace"
-diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-index 287a7cbd82ac..e9f253d54897 100644
---- a/Documentation/firmware-guide/acpi/index.rst
-+++ b/Documentation/firmware-guide/acpi/index.rst
-@@ -16,6 +16,7 @@ ACPI Support
-    method-tracing
-    DSD-properties-rules
-    debug
-+   aml-debugger
-    gpio-properties
-    i2c-muxes
-    acpi-lid
--- 
-2.20.1
+one future CPU may have "cpuid.0.eax > 0x1f" but not use multi-chip 
+packaging technology thus its CPUID.1F leaf **could** not exist to 
+expose multi-die info and it still use cpuid.0B leaf.
+
+So the entry->eax >= 0x1f check is true and cpuid_ecx(0x1f) check is 
+true as well due to default return value. (one of my machines for 
+cpuid.1f.ecx would return 0x00000064 without cpuid.1f support).
+
+When we only cares about whether or not CPUID.1F exists,
+we may need (cpuid_ecx(0x1f) & 0x0000ff00) != 0 or just follow what host 
+check_extended_topology_leaf() does.
+
+> 
+>>>>
+>>>> It's true cause the statement in public spec is not "Reserved = 0" but
+>>>> "Bits 31 - 16: Reserved".
+>>>>
+>>>>>
+>>>>> In my opinion, Sean's codes is OK and much simple and clear.
+>>>>
+>>>> If the host cpuid.0.eax is greater than 0x1f but actually it doesn't
+>>>> have multi-chip packaging technology and we may want to expose
+>>>> entry->eax to some value smaller than 0x1f but greater than 0x14, much
+>>>> effort needs to apply on Sean's code.
+>>>>
+>>>> My improvement is good to overwrite cpuid.0.eax in future usage
+>>> >from the perspective of kvm feature setting not just from value check.
+>>>
+>>> Alright, there is something wrong in your code that you haven't realised.
+>>>
+>>> When you do
+>>> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+>>>
+>>> it changes the entry->eax if entry->eax > 0x14. So you cannot directly use
+>>> cpuid_ecx(0x1f). At least, you need to cache the value of entry->eax, like:
+>>> 	
+>>> 	u32 max_leaf = entry->eax;
+>>> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+>>> 	
+>>> 	//...leaf between 0x14 and 0x1f
+>>> 	
+>>> 	if (max_leaf >= 0x1f && (cpuid_ecx(0x1f) & 0x0000ff00))
+>>>   		entry->eax = 0x1f;
+>>
+>> The cache value make no sense on this.
+> 
+> Xiaoyao is pointing out that by limiting entry->eax to 0x14 (or 0xd), then
+> it can't be used to detect support for CPUID.1F since KVM will have lost
+> the required information.
+
+The point is that its existence does not really depend on cpuid.0.eax> = 
+0x1f. My test machine (CLX-AP, two die in one package) has cpuid.0.eax = 
+0x16 but does have CPUID.1F support (a bit strange on BIOS).
+
+> 
+>>> However, handling in increasing order in totally wrong. Since it's to report the
+>>> max the leaf supported, we should handle in descending order, which is what Sean
+>>> does.
+>>
+>> There is no need to check "entry->eax >= 0x1f" before "setting entry->eax =
+>> 0x1f" if and only if cpuid_ecx(0x1f) meets requirements.
+> 
+> entry->eax absolutely needs to be checked, otherwise you have no idea what
+> CPUID leaf is actually being consumed.  For example, a CPU with a maximum
+> basic CPUID leaf of 0xB will report information that is indistinguishable
+> from the actual CPUID.1F, i.e. KVM will incorrectly think the CPU supports
+> CPUID.1F regardless of what heuristic is used to detect a "valid" CPUID.1F
+> if it only looks at the result of CPUID.1F.
+
+Based on what I mentioned, just reconsider this proposal:
+
+case 0:
+     entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+     if ((cpuid_ecx(0x1f) & 0x0000ff00)) != 0)
+         entry->eax = 0x1f;
+
+It increases the cpuid.0.ecx value along with the minimized feature 
+requirement in a natural and readable way. Why don't we design a little 
+bit future ahead of time?
+
+> 
+>> An increasing manner helps to overwrite this value on demand in a flat code
+>> flow (easy to understand and maintain) not an if-else_if-else flow.
+> 
+> Maybe in the future the code will need to be refactored as more cases are
+> added, but for now an if-else is quite readable.  Worry about the future
+> when it happens. :-)
+> 
 
