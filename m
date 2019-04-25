@@ -2,179 +2,106 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46127C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B554BC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1E0217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556173294;
-	bh=KzsvbSXtAZglpSiDkrawF7Fgm7iL1cJUnwlavfuuukE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hVJ8XaEcjLjM+YWsRZPRsaZs6YNxtDu/fsPHEE8wYfNc7MJgz6TVYrQpHRBamVTX7
-	 TLxx6rvZxfQR/M9XuFGTH3WHyvCnK3PAQOI3I9iVNk2djvJuxiSy9k3CsAYeXFwqu5
-	 gW0LqSDVlHXf/0wzZ56M5udC9l74hN0D/bfqvwHA=
+	by mail.kernel.org (Postfix) with ESMTP id 7CEDF214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbfDYGVc (ORCPT
+        id S1729569AbfDYG1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 02:21:32 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45889 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfDYGVc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 02:21:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s15so28501894wra.12;
-        Wed, 24 Apr 2019 23:21:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=m1pgCWwdqyKknkvAF6L18eDp6l+cHvclRUpF4alMIQ8=;
-        b=sq+n4RvUQfMkHKkvmbvcgayveNf0gikTUAwNyo3QwzL28LMMerFXkHtNVDkIFlCtCv
-         VKx+pUOnLZ3+kwlKbd0SCzsIUQT/7NU5tzhH9PGlG0Ef00lB3lQzPE53CrzZesmZnxin
-         SO4uvXQB6Pn0GdjUprGo/6srOedDddRyDuLxYRJlN6mA2uWjdXq5ghreRpXsJ9CVHUwB
-         lSw3lKWwKLwY755Q50Lu2n6Twz+MvfFgOimXhvEh9ptaEj0AiV9GE2AWBDmZShuJmy5N
-         1hjGJfTAPM+fj1hSuD0h96u0qHZqa/rW8sKx3lLWmjKay3zG/n8dCN4bj1IZtWHYJwKi
-         A+TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m1pgCWwdqyKknkvAF6L18eDp6l+cHvclRUpF4alMIQ8=;
-        b=nuOGhbemwvPxTp6OCe/7xBUGPTrelerpSjoN0S19ZdxkvfhoiKvaeLvMo4iqDEDNLA
-         x8D4art+LSjrOLlb+CeUTzLwm0P4Q/EIQ9IeKFOx01cCVwCjiYRHcsK8jDJjqWFB4W2K
-         89ntyfIpGmlhYmB6sjPK+zv/YiSAtAxTCL27TaxszBZIJ4/0f5jd549hJXSCt1qPj7hu
-         FJjAztO3P1ZmaUbrBt8ENaWBq5+JuavfauWH0EgL475rBrbJvJOu2P8FGFunn1+qOb7S
-         DEsG4g+mhjktr/oRZgVTGFK8Ms9aUjIRUs2i55yw8rsk3o24FziFSqJ+e9kUApzF0XwG
-         eKsw==
-X-Gm-Message-State: APjAAAW3kFJApQtW9ax0yL9rYVUydL8WL5Ulk71sWTdcH7LhDLTpwQxn
-        oG2QlihQYZqlhyXSxj4m84w=
-X-Google-Smtp-Source: APXvYqykn3Y2vZe4/tStgGa9wNbHWAH22+vzkdT8zFMp5ejn62iMa5ZEzClCuRFxrP0yEVO1smILZQ==
-X-Received: by 2002:a5d:4a4f:: with SMTP id v15mr23278639wrs.5.1556173290027;
-        Wed, 24 Apr 2019 23:21:30 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id x192sm33789071wmf.48.2019.04.24.23.21.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 23:21:29 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 08:21:26 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v8 09/15] x86/split_lock: Define MSR TEST_CTL register
-Message-ID: <20190425062126.GC40105@gmail.com>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
- <1556134382-58814-10-git-send-email-fenghua.yu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556134382-58814-10-git-send-email-fenghua.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 25 Apr 2019 02:27:25 -0400
+Received: from mga05.intel.com ([192.55.52.43]:24717 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbfDYG1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 02:27:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 23:27:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,392,1549958400"; 
+   d="scan'208";a="294379939"
+Received: from junxiaochang.bj.intel.com ([10.238.135.157])
+  by orsmga004.jf.intel.com with ESMTP; 24 Apr 2019 23:27:21 -0700
+From:   junxiao.chang@intel.com
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        junxiao.chang@intel.com, lili.li@intel.com
+Subject: [PATCH] platform: release resource itself instead of resource tree
+Date:   Thu, 25 Apr 2019 14:24:18 +0800
+Message-Id: <1556173458-9318-1-git-send-email-junxiao.chang@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Junxiao Chang <junxiao.chang@intel.com>
 
-* Fenghua Yu <fenghua.yu@intel.com> wrote:
+When platform device is deleted or there is error in adding
+device, platform device resources should be released. Currently
+API release_resource is used to release platform device resources.
+However, this API releases not only platform resource itself but
+also its child resources. It might release resources which are
+still in use. Calling remove_resource only releases current
+resource itself, not resource tree, it moves its child resources
+to up level.
 
-> Setting bit 29 in MSR TEST_CTL (0x33) enables split lock detection and
-> clearing the bit disables split lock detection.
-> 
-> Define the MSR and the bit. The definitions will be used in enabling or
-> disabling split lock detection.
-> 
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> ---
->  arch/x86/include/asm/msr-index.h | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> index f65ef6f783d2..296eeb761ab6 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -39,6 +39,10 @@
->  
->  /* Intel MSRs. Some also available on other CPUs */
->  
-> +#define MSR_TEST_CTL				0x00000033
-> +#define TEST_CTL_SPLIT_LOCK_DETECT_SHIFT	29
-> +#define TEST_CTL_SPLIT_LOCK_DETECT		BIT(29)
+For example, platform device 1 and device 2 are registered, then only
+device 1 is unregistered in below code:
 
-Three problems:
+  ...
+  // Register platform test device 1, resource 0xfed1a000 ~ 0xfed1afff
+  pdev1 = platform_device_register_full(&pdevinfo1);
 
- - Is MSR_TEST_CTL is not really a canonical MSR name... A quick look at 
-   msr-index reveals the prevailing nomenclature:
+  // Register platform test device 2, resource 0xfed1a200 ~ 0xfed1a2ff
+  pdev2 = platform_device_register_full(&pdevinfo2);
 
-     dagon:~/tip> git grep -h 'define MSR' arch/x86/include/asm/msr-index.h | cut -d_ -f1-2 | sort -n | uniq -c | sort -n | tail -10
-       8 #define MSR_K8
-       8 #define MSR_MTRRfix4K
-      12 #define MSR_CORE
-      13 #define MSR_IDT
-      14 #define MSR_K7
-      16 #define MSR_PKG
-      19 #define MSR_F15H
-      33 #define MSR_AMD64
-      83 #define MSR_P4
-     163 #define MSR_IA32
+  // Now platform device 2 resource should be device 1 resource's child
 
-   I.e. this shouldn't this be something like MSR_IA32_TEST_CTL - or this 
-   the name the Intel SDM uses? (I haven't checked.)
+  // Unregister device 1 only
+  platform_device_unregister(pdev1);
+  ...
 
- - The canonical way to define MSR capabilities is to use the MSR's name 
-   as a prefix. I.e.:
+Platform device 2 resource will be released as well because its
+parent resource(device 1's resource) is released, this is not expected.
+If using API remove_resource, device 2 resource will not be released.
 
-        MSR_TEST_CTL
-        MSR_TEST_CTL_SPLIT_LOCK_DETECT_BIT
-        MSR_TEST_CTL_SPLIT_LOCK_DETECT
-        etc.
+This change fixed an intel pmc platform device resource issue when
+intel pmc ipc kernel module is inserted/removed for twice.
 
-   Instead of the random mixture of MSR_ prefixed and non-prefixed 
-   MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT and 
-   TEST_CTL_SPLIT_LOCK_DETECT names.
+Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
+---
+ drivers/base/platform.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- - Finally, this is not how we define bits - the _SHIFT postfix is actively
-   confusing as we usually denote _SHIFT values with something that is 
-   used in a bit-shift operation, which this isn't. Instead the proper 
-   scheme is to postfix the bit number with _BIT and the mask with _MASK, 
-   i.e. something like:
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index dab0a5a..5fd1a41 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -461,7 +461,7 @@ int platform_device_add(struct platform_device *pdev)
+ 	while (--i >= 0) {
+ 		struct resource *r = &pdev->resource[i];
+ 		if (r->parent)
+-			release_resource(r);
++			remove_resource(r);
+ 	}
+ 
+  err_out:
+@@ -492,7 +492,7 @@ void platform_device_del(struct platform_device *pdev)
+ 		for (i = 0; i < pdev->num_resources; i++) {
+ 			struct resource *r = &pdev->resource[i];
+ 			if (r->parent)
+-				release_resource(r);
++				remove_resource(r);
+ 		}
+ 	}
+ }
+-- 
+2.7.4
 
-     #define MSR_TEST_CTL				0x00000033
-     #define MSR_TEST_CTL_SPLIT_LOCK_DETECT_BIT		29
-     #define MSR_TEST_CTL_SPLIT_LOCK_DETECT		BIT(MSR_TEST_CTL_SPLIT_LOCK_DETECT_BIT)
-
-Note how this cleans up actual usage:
-
-+       msr_set_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
-+       this_cpu_or(msr_test_ctl_cache, TEST_CTL_SPLIT_LOCK_DETECT);
-
--       msr_set_bit(MSR_TEST_CTL, MSR_TEST_CTL_SPLIT_LOCK_DETECT_BIT);
--       this_cpu_or(msr_test_ctl_cache, MSR_TEST_CTL_SPLIT_LOCK_DETECT);
-
-Frankly, this kind of disorganized code in a v8 submission is *really* 
-disappointing, it's not like it's hard to look up these patterns and 
-practices in existing code...
-
-Sigh.
-
-Thanks,
-
-	Ingo
