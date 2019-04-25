@@ -2,123 +2,117 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1911DC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E14C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CC920644
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D5A20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731276AbfDYMlF (ORCPT
+        id S1731283AbfDYMmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:41:05 -0400
-Received: from mga07.intel.com ([134.134.136.100]:8990 "EHLO mga07.intel.com"
+        Thu, 25 Apr 2019 08:42:01 -0400
+Received: from mga03.intel.com ([134.134.136.65]:62207 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbfDYMlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:41:05 -0400
+        id S1725965AbfDYMmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 08:42:00 -0400
 X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 05:41:04 -0700
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 05:42:00 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,393,1549958400"; 
-   d="scan'208";a="145753111"
-Received: from shbuild888.sh.intel.com (HELO localhost) ([10.239.147.114])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Apr 2019 05:41:03 -0700
-Date:   Thu, 25 Apr 2019 20:44:55 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v3] panic: add an option to replay all the printk message
- in buffer
-Message-ID: <20190425124455.j2c7vwpyve77fuqb@shbuild888>
-References: <1556095872-36838-1-git-send-email-feng.tang@intel.com>
- <20190425110517.cafkeexdr6r4b25v@pathway.suse.cz>
+   d="asc'?scan'208";a="134292877"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga007.jf.intel.com with ESMTP; 25 Apr 2019 05:41:54 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Douglas Anderson <dianders@chromium.org>,
+        Minas Harutyunyan <hminas@synopsys.com>, heiko@sntech.de
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Artur Petrosyan <Arthur.Petrosyan@synopsys.com>,
+        amstan@chromium.org, linux-rockchip@lists.infradead.org,
+        William Wu <william.wu@rock-chips.com>,
+        linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Randy Li <ayaka@soulik.info>, zyw@rock-chips.com,
+        mka@chromium.org, ryandcase@chromium.org,
+        Amelie Delaunay <amelie.delaunay@st.com>, jwerner@chromium.org,
+        dinguyen@opensource.altera.com,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] USB: dwc2: Don't turn off the usbphy in suspend if wakeup is enabled
+In-Reply-To: <20190418001356.124334-5-dianders@chromium.org>
+References: <20190418001356.124334-1-dianders@chromium.org> <20190418001356.124334-5-dianders@chromium.org>
+Date:   Thu, 25 Apr 2019 15:41:50 +0300
+Message-ID: <87mukes1dd.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190425110517.cafkeexdr6r4b25v@pathway.suse.cz>
-User-Agent: NeoMutt/20170609 (1.8.3)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 25, 2019 at 01:05:17PM +0200, Petr Mladek wrote:
-> On Wed 2019-04-24 16:51:12, Feng Tang wrote:
-> > Currently on panic, kernel will lower the loglevel and print out
-> > pending printk msg only with console_flush_on_panic().
-> > 
-> > Add an option for users to configure the "panic_print" to replay
-> > all dmesg in buffer, some of which they may have never seen due
-> > to the loglevel setting, which will help panic debugging .
-> > 
-> > diff --git a/kernel/panic.c b/kernel/panic.c
-> > index b9f004e..b9c0eb3 100644
-> > --- a/kernel/panic.c
-> > +++ b/kernel/panic.c
-> > @@ -53,6 +53,7 @@ int panic_suppress_printk;
-> >  #define PANIC_PRINT_TIMER_INFO		0x00000004
-> >  #define PANIC_PRINT_LOCK_INFO		0x00000008
-> >  #define PANIC_PRINT_FTRACE_INFO		0x00000010
-> > +#define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
-> >  unsigned long panic_print;
-> >  
-> >  ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-> > @@ -136,6 +137,11 @@ EXPORT_SYMBOL(nmi_panic);
-> >  
-> >  static void panic_print_sys_info(void)
-> >  {
-> > +	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
-> > +		console_flush_on_panic(CONSOLE_REPLAY_ALL);
-> > +	else
-> > +		console_flush_on_panic(CONSOLE_FLUSH_PENDING);
-> > +
-> >  	if (panic_print & PANIC_PRINT_TASK_INFO)
-> >  		show_state();
-> >  
-> > @@ -279,8 +285,6 @@ void panic(const char *fmt, ...)
-> >  	 * panic() is not being callled from OOPS.
-> >  	 */
-> >  	debug_locks_off();
-> > -	console_flush_on_panic();
-> 
-> I would prefer if we keep it here. It is a very important
-> operation that plays a role in many panic/printk related
-> bugs. We should not hide it in an "unrelated"
-> function.
-> 
-> The name "panic_print_sys_info" suggests that it
-> just shows some additional information.
-> 
-> I guess that you wanted to avoid flushing some messages
-> twice. IMHO, it is not a big deal. In many situations,
-> console_flush_on_panic(CONSOLE_FLUSH_PENDING) will
-> do nothing or it would handle just few lines.
+Douglas Anderson <dianders@chromium.org> writes:
 
-Yes, that was one of my consideration. I got your point
-and will send a v4, though Andrew has taken the v3.
+> If the 'snps,need-phy-for-wake' is set in the device tree then:
+>
+> - We know that we can wakeup, so call device_set_wakeup_capable().
+>   The USB core will use this knowledge to enable wakeup by default.
+> - We know that we should keep the PHY on during suspend if something
+>   on our root hub needs remote wakeup.  This requires the patch (USB:
+>   Export usb_wakeup_enabled_descendants()).  Note that we don't keep
+>   the PHY on at suspend time if it's not needed because it would be a
+>   power draw.
+>
+> If we later find some users of dwc2 that can support wakeup without
+> keeping the PHY on we may want to add a way to call
+> device_set_wakeup_capable() without keeping the PHY on at suspend
+> time.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 
-> 
-> Also people might decide to do a forced reboot when
-> the console is slow and it takes ages to print
-> everything. Then it might be useful to handle
-> the few "most" important lines before starting
-> from beginning.
-> 
-> Other than that I am fine with the patch. I give up
-> on bike shedding about the header line ;-)
-	:)
+checking file drivers/usb/dwc2/core.h
+Hunk #1 FAILED at 861.
+Hunk #2 FAILED at 1049.
+2 out of 2 hunks FAILED
+checking file drivers/usb/dwc2/platform.c
+Hunk #3 FAILED at 487.
+Hunk #4 succeeded at 513 (offset -9 lines).
+Hunk #5 succeeded at 543 (offset -9 lines).
+Hunk #6 succeeded at 556 (offset -9 lines).
+1 out of 6 hunks FAILED
 
-Thanks,
-Feng
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlzBqw4ACgkQzL64meEa
+mQbVCxAApSaX0S5csF9prSld7aWLI8sHAR7AKO7ORr1SGmtZrsW/68If6MgGPheM
+GRpQpq+UhyxqXnwUm3jcn+DXWaYC4p1K0r/SCksJRiUiF1CaxW46IH7fuCtYLqcD
+SQWTEg6Co8rpLXNe6YWAiGiT1Z1cFyL2CFZKiy6jn5yN3jd3nIpbGs4gFpc0GAzp
+mm1RJL1iSkuuDKm8+SlAcLAxxn/l2ARFMthzVvDSvwcFUmhpZyK15KkH5NFBZuEX
+m+aIz75H2Cd7hwhOvKiV+3UahD6VlOBV9Va8GaQv5MHsm3Cris7L2+PzUK6289BK
+slOQyh/X5xSPyixnbQ7ytEgC9+h4mgSwHJAdbTfkU1GHSvse/DhkKF9lLM7AcaRh
+EdF2MdIeeyqyHx0OrdMvoBGWHhy2m8C04dW2+YBKeIFEwhfZkPkw1SvIwpo7f8It
+ffTghKVOjYaK/TbR5ohAesqo+/yKmG+GgmfQZlcQ6sFALVBxmj+aaFSMo6R125j8
+CvH3zVfXYsgnz4iYcKkz1VXyddu0NDD0Ml6A1L7pq1dwxINaukkk68QyC9euMAF0
+SdsGIGIWl20/2tDKjtkTzIdRujTnDPbNqiiOyMviQvo30KxZcfNMPzMtV96MJ13U
+X5PjJyRNxe4yULEUuXrnGCvTwD/mIif/3OJfh6n0SW28cD2A/dA=
+=+55D
+-----END PGP SIGNATURE-----
+--=-=-=--
