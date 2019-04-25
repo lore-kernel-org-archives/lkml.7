@@ -2,175 +2,124 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CDAC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93D0C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADFD206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556222274;
-	bh=M0klb38CAfwmfeRnmU/cPc3te8MCDlrFMp+XvcriVtI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MyWDiHwPaTHrKMOEGo0qsyB9vAhvOEFscSb4a0YQd+VvEpxAwWGoWzDs6Zc0ur5wd
-	 YsmQafYxKDhCJyXgE52dEFwk6kKy8yE8ze8DCud5WS542GtbS8dR/YHJfQ/s//4nes
-	 d2ND7PCb4c3UXg8VN/Q3ia/DZqPPhI9VgVoEJBq8=
+	by mail.kernel.org (Postfix) with ESMTP id C17BD206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730794AbfDYT5x (ORCPT
+        id S1730800AbfDYUAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:57:53 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42200 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfDYT5x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:57:53 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w139so1061069oie.9;
-        Thu, 25 Apr 2019 12:57:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q+ZqzLPdQ6UxCMOOHKP9B7YQ4swKS1G4qWBFIt51nI0=;
-        b=RtvB3vbjrHl40Wwur/LAwQ/2nMZ0nHW0xRTRfe+X+jI9uLlvgLPRn9wadoD5sq9dK+
-         oj7qiovxQV3G6eK6cSIwqHWHSqAdyfVuubdsA0qq8vzVQ0t2tIk7TwFirScwfy+HtpAW
-         mRtHHgQljJd2YsYQqA9jCtMdEbSyPYcgm6ntlOBJMCpHnFoyh0x15qPm9kc5Pr4W2ZcC
-         uBp1Dhe+HlTNKxe8+55hlk8jDUeRVPmQWjmAAv25dD69I/PkzRjGOowXBVcQoyLJq3cX
-         p58l/HkxrazIopFNtGAt+Y8ygfmnpaj1GdWxx8uv5ioFe+7VAIj4bNvvaCCzN0Z92NDP
-         YEdw==
-X-Gm-Message-State: APjAAAUYCxSbY4tFjr4QtWMGDQEHAVJPXo8hs1IUJPy9DWorIc681L7v
-        2eGDmRNT7Z6JIQITq5xhSg==
-X-Google-Smtp-Source: APXvYqws+IT22HvmUSol1kl5L/dHeIPkCQ71NEVYtJ9VVyntv8s8Sl5K3c2g+pxIBr2jTJOGHYpESw==
-X-Received: by 2002:aca:4c47:: with SMTP id z68mr1368440oia.64.1556222272113;
-        Thu, 25 Apr 2019 12:57:52 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p14sm9141466otq.34.2019.04.25.12.57.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 12:57:51 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 14:57:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        cw00.choi@samsung.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
-        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
-        willy.mh.wolff.ml@gmail.com
-Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add Exynos5422
- DMC device description
-Message-ID: <20190425195750.GA26031@bogus>
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
- <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
+        Thu, 25 Apr 2019 16:00:07 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60345 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbfDYUAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 16:00:07 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 13:00:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
+   d="scan'208";a="226727456"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga001.jf.intel.com with ESMTP; 25 Apr 2019 13:00:04 -0700
+Date:   Thu, 25 Apr 2019 12:51:54 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v8 05/15] x86/msr-index: Define MSR_IA32_CORE_CAPABILITY
+ and split lock detection bit
+Message-ID: <20190425195154.GC64477@romley-ivt3.sc.intel.com>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
+ <1556134382-58814-6-git-send-email-fenghua.yu@intel.com>
+ <20190425054511.GA40105@gmail.com>
+ <20190425190148.GA64477@romley-ivt3.sc.intel.com>
+ <20190425194714.GA58719@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190425194714.GA58719@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 04:19:24PM +0200, Lukasz Luba wrote:
-> The patch adds description for DT binding for a new Exynos5422 Dynamic
-> Memory Controller device.
+On Thu, Apr 25, 2019 at 09:47:14PM +0200, Ingo Molnar wrote:
 > 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> * Fenghua Yu <fenghua.yu@intel.com> wrote:
 > 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> new file mode 100644
-> index 0000000..133b3cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> @@ -0,0 +1,73 @@
-> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
-> +
-> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
-> +memory chips are connected. The driver is to monitor the controller in runtime
-> +and switch frequency and voltage. To monitor the usage of the controller in
-> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
-> +is able to measure the current load of the memory.
-> +When 'userspace' governor is used for the driver, an application is able to
-> +switch the DMC and memory frequency.
-> +
-> +Required properties for DMC device for Exynos5422:
-> +- compatible: Should be "samsung,exynos5422-bus".
-> +- clock-names : the name of clock used by the bus, "bus".
-> +- clocks : phandles for clock specified in "clock-names" property.
-> +- devfreq-events : phandles for PPMU devices connected to this DMC.
-> +- vdd-supply : phandle for voltage regulator which is connected.
-> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
-> +- operating-points-v2 : phandle for OPPs described in v2 definition.
-> +- device-handle : phandle of the connected DRAM memory device. For more
-> +	information please refer to Documentation
-
-The memory node(s) should be a child of the memory controller IMO.
-
-> +- devfreq-events : phandles of the PPMU events used by the controller.
-> +
-> +Example:
-> +
-> +	ppmu_dmc0_0: ppmu@10d00000 {
-> +		compatible = "samsung,exynos-ppmu";
-> +		reg = <0x10d00000 0x2000>;
-> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
-> +		clock-names = "ppmu";
-> +		status = "okay";
-
-Don't show 'status' in examples.
-
-> +		events {
-> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
-> +				event-name = "ppmu-event3-dmc0_0";
-> +			};
-> +		};
-> +	};
-> +
-> +	dmc: memory-controller@10c20000 {
-> +		compatible = "samsung,exynos5422-dmc";
-> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
-> +			<0x10000000 0x1000>, <0x10030000 0x1000>;
-> +		clocks = 	<&clock CLK_FOUT_SPLL>,
-> +				<&clock CLK_MOUT_SCLK_SPLL>,
-> +				<&clock CLK_FF_DOUT_SPLL2>,
-> +				<&clock CLK_FOUT_BPLL>,
-> +				<&clock CLK_MOUT_BPLL>,
-> +				<&clock CLK_SCLK_BPLL>,
-> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
-> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
-> +				<&clock CLK_MOUT_MCLK_CDREX>,
-> +				<&clock CLK_DOUT_CLK2X_PHY0>,
-> +				<&clock CLK_CLKM_PHY0>,
-> +				<&clock CLK_CLKM_PHY1>;
-> +		clock-names =	"fout_spll",
-> +				"mout_sclk_spll",
-> +				"ff_dout_spll2",
-> +				"fout_bpll",
-> +				"mout_bpll",
-> +				"sclk_bpll",
-> +				"mout_mx_mspll_ccore",
-> +				"mout_mx_mspll_ccore_phy",
-> +				"mout_mclk_cdrex",
-> +				"dout_clk2x_phy0",
-> +				"clkm_phy0",
-> +			        "clkm_phy1";
-> +		status = "okay";
-> +		operating-points-v2 = <&dmc_opp_table>;
-> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
-> +		operating-points-v2 = <&dmc_opp_table>;
-> +		device-handle = <&samsung_K3QF2F20DB>;
-> +		vdd-supply = <&buck1_reg>;
-> +	};
-> -- 
-> 2.7.4
+> > On Thu, Apr 25, 2019 at 07:45:11AM +0200, Ingo Molnar wrote:
+> > > 
+> > > * Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > > 
+> > > > A new MSR_IA32_CORE_CAPABILITY (0xcf) is defined. Each bit in the MSR
+> > > > enumerates a model specific feature. Currently bit 5 enumerates split
+> > > > lock detection. When bit 5 is 1, split lock detection is supported.
+> > > > When the bit is 0, split lock detection is not supported.
+> > > > 
+> > > > Please check the latest Intel 64 and IA-32 Architectures Software
+> > > > Developer's Manual for more detailed information on the MSR and the
+> > > > split lock detection bit.
+> > > > 
+> > > > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > > > ---
+> > > >  arch/x86/include/asm/msr-index.h | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > > 
+> > > > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> > > > index ca5bc0eacb95..f65ef6f783d2 100644
+> > > > --- a/arch/x86/include/asm/msr-index.h
+> > > > +++ b/arch/x86/include/asm/msr-index.h
+> > > > @@ -59,6 +59,9 @@
+> > > >  #define MSR_PLATFORM_INFO_CPUID_FAULT_BIT	31
+> > > >  #define MSR_PLATFORM_INFO_CPUID_FAULT		BIT_ULL(MSR_PLATFORM_INFO_CPUID_FAULT_BIT)
+> > > >  
+> > > > +#define MSR_IA32_CORE_CAPABILITY	0x000000cf
+> > > > +#define CORE_CAP_SPLIT_LOCK_DETECT	BIT(5)     /* Detect split lock */
+> > > 
+> > > Please don't put comments into definitions.
+> > 
+> > I'll remove the comment and change definitions of the MSR and the split lock
+> > detection bit as following:
+> > 
+> > +#define MSR_IA32_CORE_CAPABILITY                       0x000000cf
+> > +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT 5
+> > +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT)
+> > 
+> > Are these right changes?
 > 
+> I suspect it could be shortened to CORE_CAP as you (partly) did it 
+> originally.
+
+IA32_CORE_CAPABILITY is the MSR's exact name in the latest SDM (in Table 2-14):
+https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+
+So can I define the MSR and the bits as follows?
+
++#define MSR_IA32_CORE_CAP                       0x000000cf
++#define MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT_BIT 5
++#define MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT_BIT)
+
+Thanks.
+
+-Fenghua
