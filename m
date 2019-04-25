@@ -2,75 +2,67 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00232C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D6BC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43B221908
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556186363;
-	bh=jdQqa7Sf60L2sC2sHzY7dgwhy6jwDMony/OjebD6UGk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i06j0TsxxD06mOSDFSMjeHi46r8fAUrwyi8uvkTosxRR/kajCgbu5TdoanfIOZNrM
-	 Cr4JJ92DTXTw1FMeVEsFGVB5qStBgqfywUHxJiibm5AC98o2GHG4KEAiu6ZwHsihuo
-	 X5E16hK2EmhvAmTLrMs30FSTp/2/N05e4zidY3jE=
+	by mail.kernel.org (Postfix) with ESMTP id DCB0A2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbfDYJ7W (ORCPT
+        id S1729090AbfDYJ71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 05:59:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728077AbfDYJ7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 05:59:22 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CE7B21908;
-        Thu, 25 Apr 2019 09:59:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556186361;
-        bh=jdQqa7Sf60L2sC2sHzY7dgwhy6jwDMony/OjebD6UGk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ffnOENPetviFjeA88vNdyLhWnzFR+qceMU+u2niFw0U/HtPfmIKTqEpxwhdldDefg
-         HimqxxzR87gx8HAGtPZp8406YkxhIIMszM9jdwleJ8s5pxoaod3DMilabi1pMzJb/6
-         pOQN20MzpaSThNl0WCMwdCga4ji33MyIplB6lxE4=
-Date:   Thu, 25 Apr 2019 11:59:19 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL 0/3] stm class/intel_th: Fixes for v5.1
-Message-ID: <20190425095919.GA8481@kroah.com>
-References: <20190417073536.63014-1-alexander.shishkin@linux.intel.com>
- <8736m6za90.fsf@ashishki-desk.ger.corp.intel.com>
+        Thu, 25 Apr 2019 05:59:27 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39390 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728077AbfDYJ7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 05:59:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39222374;
+        Thu, 25 Apr 2019 02:59:24 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 109E23F5AF;
+        Thu, 25 Apr 2019 02:59:21 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 10:59:19 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andreas Schwab <schwab@suse.de>,
+        Anup Patel <anup@brainfault.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 3/4] RISC-V: Support nr_cpus command line option.
+Message-ID: <20190425095919.GB6585@e107155-lin>
+References: <20190424214801.18880-1-atish.patra@wdc.com>
+ <20190424214801.18880-4-atish.patra@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8736m6za90.fsf@ashishki-desk.ger.corp.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190424214801.18880-4-atish.patra@wdc.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 12:48:11PM +0300, Alexander Shishkin wrote:
-> Alexander Shishkin <alexander.shishkin@linux.intel.com> writes:
+On Wed, Apr 24, 2019 at 02:48:00PM -0700, Atish Patra wrote:
+> If nr_cpus command line option is set, maximum possible cpu should be
+> set to that value.
 > 
-> > Hi Greg,
-> 
-> Hi Greg,
-> 
-> This seems to have fallen through the cracks. Unless you picked it up
-> already, should I resend these as a part of my pull request for v5.2
-> instead? Both fixes are not v5.1 specific and will have to go to stable
-> either way.
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-I just picked these up a few hours ago :)
+FWIW,
 
-thanks,
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 
-greg k-h
+--
+Regards,
+Sudeep
