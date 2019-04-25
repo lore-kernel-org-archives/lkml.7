@@ -4,60 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99231C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2E9C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C102F2088F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7B02088F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220360;
-	bh=7rTmrTrxhop8MUj70t6sLTQCqwUpQACvHEsmSi+y6sk=;
+	s=default; t=1556220399;
+	bh=vOgp/86+Vk73VJuCKacxNSdDH0V873KDEK1YwlSqhM8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=A5CKlNrSgUPwWg+yjS7vMZY8yZL8tJqkRbfA9yLeJdoLRrluY0ii374nT6N7sZk9N
-	 5bYvvNWAcA5Z6aDNvZeE2hcEEo1WpzzyJ0m8yt/vM8cinWVci3xOUei7Z/aN4aJN/x
-	 n9X41PClXSksV8epVuQ46NaAnB1k0E4wAga1oEvw=
+	b=m1yposo0dAUYPTTZKLw3jEJO3N9pJ+dy6B0rl3zAi750o3cufbJ8lXk8ENIxHq6nP
+	 TFoxzHZQodjw+Xlatmd1zqdZfD99rdbjGjvN3YV3NjKwkmPBBnO7V/TgxmYOD7t7+V
+	 1+d3vPlfW7wv5s23IhV+JZpota+y5s22S9abS5xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387489AbfDYTZ7 (ORCPT
+        id S1729329AbfDYT0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:25:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49188 "EHLO
+        Thu, 25 Apr 2019 15:26:38 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52490 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfDYTYr (ORCPT
+        with ESMTP id S1726229AbfDYT0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:24:47 -0400
+        Thu, 25 Apr 2019 15:26:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=VqilEpU0zcs5UID60f+ZH1pJ3ZhXj2B3wEwvevnvqGU=; b=H8UEbZa2SqVk
-        l/ev5+WYoHuNGyWIP+JwsWI9J96tVH1OsBNLydS5am77fVOduKPWqduQ34sqXMf5F6uflrv612QK3
-        lF/HRXGVo4a4pkO5EIBZRWqd55B9Bgap9eg+0Rb8oCUg4DKnDJVqbW2qVLy1HkiG1PMy6ZWlTEuOe
-        h8ESU=;
+        List-Archive; bh=4Gm+Q11ReSsNhXvJxo3k0XlLNE2brjVzhensPkNREhc=; b=f37+acn9n/Ke
+        qOIjwsVVWGZYBnieYjHf8dVoOo5UwOXuHbIhd2BgR2JPEmPsM0ryGYBW2CUKNrd7poyOUfO7Fzrpq
+        XbYWxF+/wr22GBgXTlNczSDbuMLv4yfv2jjzSAvuXS5t8ggzdWtaywMOMtWd21h8MX/1w6RchnldT
+        alOhI=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJjz8-0004Zo-Pk; Thu, 25 Apr 2019 19:24:42 +0000
+        id 1hJk0x-0004di-3g; Thu, 25 Apr 2019 19:26:35 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 7E77B441D3F; Thu, 25 Apr 2019 20:24:41 +0100 (BST)
+        id 1E3F2441D3C; Thu, 25 Apr 2019 20:26:34 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
+Cc:     Gyungoh Yoo <gyungoh@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Mark Zhang <markz@nvidia.com>,
-        Venkat Reddy Talla <vreddytalla@nvidia.com>
-Subject: Applied "regulator: max77620: Fix regulator info setting for max20024" to the regulator tree
-In-Reply-To: <20190422053531.23123-1-axel.lin@ingics.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: sky81452: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190420072001.16900-2-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192441.7E77B441D3F@finisterre.ee.mobilebroadband>
-Date:   Thu, 25 Apr 2019 20:24:41 +0100 (BST)
+Message-Id: <20190425192634.1E3F2441D3C@finisterre.ee.mobilebroadband>
+Date:   Thu, 25 Apr 2019 20:26:34 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: max77620: Fix regulator info setting for max20024
+   regulator: sky81452: Switch to SPDX identifier
 
 has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,36 +87,49 @@ to this mail.
 Thanks,
 Mark
 
-From 734008e714d8c757613c43ff57c1bf7ef1bb5b5d Mon Sep 17 00:00:00 2001
+From f6aec550bc370191bc349b85d9cb0a8b4ab64c54 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Mon, 22 Apr 2019 13:35:31 +0800
-Subject: [PATCH] regulator: max77620: Fix regulator info setting for max20024
-
-Current code always set pmic->rinfo[id] = &max77620_regs_info[id];
-It should set to either max77620_regs_info or max20024_regs_info
-depends on the chip_id.
+Date: Sat, 20 Apr 2019 15:20:01 +0800
+Subject: [PATCH] regulator: sky81452: Switch to SPDX identifier
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/max77620-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/sky81452-regulator.c | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
-index 1607ac673e44..0ad91a7f9cb9 100644
---- a/drivers/regulator/max77620-regulator.c
-+++ b/drivers/regulator/max77620-regulator.c
-@@ -803,7 +803,7 @@ static int max77620_regulator_probe(struct platform_device *pdev)
- 			continue;
+diff --git a/drivers/regulator/sky81452-regulator.c b/drivers/regulator/sky81452-regulator.c
+index eb2b60968a1a..177dede82a61 100644
+--- a/drivers/regulator/sky81452-regulator.c
++++ b/drivers/regulator/sky81452-regulator.c
+@@ -1,21 +1,9 @@
+-/*
+- * sky81452-regulator.c	SKY81452 regulator driver
+- *
+- * Copyright 2014 Skyworks Solutions Inc.
+- * Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 2
+- * as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License along
+- * with this program; if not, see <http://www.gnu.org/licenses/>.
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// sky81452-regulator.c	SKY81452 regulator driver
++//
++// Copyright 2014 Skyworks Solutions Inc.
++// Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
  
- 		rdesc = &rinfo[id].desc;
--		pmic->rinfo[id] = &max77620_regs_info[id];
-+		pmic->rinfo[id] = &rinfo[id];
- 		pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
- 		pmic->reg_pdata[id].active_fps_src = -1;
- 		pmic->reg_pdata[id].active_fps_pd_slot = -1;
+ #include <linux/module.h>
+ #include <linux/kernel.h>
 -- 
 2.20.1
 
