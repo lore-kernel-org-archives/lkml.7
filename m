@@ -2,107 +2,357 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF89C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89374C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AC7206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DFA206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="crdakZE8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbfDYTJ7 (ORCPT
+        id S1730318AbfDYTKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:09:59 -0400
-Received: from mga04.intel.com ([192.55.52.120]:50488 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbfDYTJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:09:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 12:09:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
-   d="scan'208";a="165095414"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Apr 2019 12:09:58 -0700
-Date:   Thu, 25 Apr 2019 12:01:48 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v8 05/15] x86/msr-index: Define MSR_IA32_CORE_CAPABILITY
- and split lock detection bit
-Message-ID: <20190425190148.GA64477@romley-ivt3.sc.intel.com>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
- <1556134382-58814-6-git-send-email-fenghua.yu@intel.com>
- <20190425054511.GA40105@gmail.com>
+        Thu, 25 Apr 2019 15:10:07 -0400
+Received: from mail-eopbgr740052.outbound.protection.outlook.com ([40.107.74.52]:57728
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726249AbfDYTKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 15:10:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cGN+2eGnFRjQKKRet0DhCtdHwhr+g4OStM4ZwhGCD9I=;
+ b=crdakZE8t1c58kfX53aUFY+7aG1ypFDGu7WYjfYvFVrIAbcyYtu021d2Zh82nuC0Tor5SLUDimkQKTYvkAUe40a7XXtToxDblsEa2IcoN/i4eZSR1rUwBB/rCS459xM8FJ85Z0TbtG1+pBxalDLr9An6BgNJR7IYTVbtEyp79wU=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4662.namprd05.prod.outlook.com (52.135.233.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.9; Thu, 25 Apr 2019 19:08:17 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e862:1b1b:7665:8094]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e862:1b1b:7665:8094%3]) with mapi id 15.20.1835.010; Thu, 25 Apr 2019
+ 19:08:17 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Julien Freche <jfreche@vmware.com>,
+        Pv-drivers <Pv-drivers@vmware.com>,
+        Jason Wang <jasowang@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH v3 1/4] mm/balloon_compaction: list interfaces
+Thread-Topic: [PATCH v3 1/4] mm/balloon_compaction: list interfaces
+Thread-Index: AQHU+mwdinHS3UiOtEKcnmatxdvta6ZLVFgAgAHrSAA=
+Date:   Thu, 25 Apr 2019 19:08:17 +0000
+Message-ID: <77127A20-8B02-4C1F-A746-6378A160D12B@vmware.com>
+References: <20190423234531.29371-1-namit@vmware.com>
+ <20190423234531.29371-2-namit@vmware.com>
+ <20190424092829-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190424092829-mutt-send-email-mst@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 77370d01-82c2-4c89-81c8-08d6c9b16023
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB4662;
+x-ms-traffictypediagnostic: BYAPR05MB4662:
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR05MB46626B388BEF9A0A7B0C1976D03D0@BYAPR05MB4662.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0018A2705B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(396003)(376002)(39860400002)(136003)(189003)(199004)(4326008)(305945005)(68736007)(316002)(14444005)(26005)(446003)(102836004)(186003)(66066001)(14454004)(5660300002)(33656002)(6506007)(478600001)(25786009)(53546011)(97736004)(36756003)(99286004)(6246003)(76176011)(66946007)(76116006)(73956011)(64756008)(66446008)(11346002)(82746002)(81156014)(86362001)(3846002)(6512007)(71200400001)(83716004)(66556008)(66476007)(71190400001)(53936002)(6436002)(7736002)(256004)(81166006)(6916009)(229853002)(8936002)(6486002)(486006)(8676002)(6116002)(54906003)(2616005)(476003)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4662;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: DzjKMmLSinPfv+4M/fs6qfqOT0w5c75ymM0cGb8xCZzI+WEW+tJy335Ie6a1p129rXHF3MP9Z7WIyVihCUH/VucE/OQotZRQfMFFpExUywwYIjomsEy/YLFt37rKCLJUzzSRy6ottqUUPfz8NAx20FO5NL93b8ntdfyXAsFf6A2bi6mb1gAThSYN/CSAl0gxZlKcHlI2vKV62bQmZHlqXIi3DhghdsGqGEOSZS6Dj+hXceihZHKZOXyKmbuNgn2l+7FnPRypLjbRUajPfy9kkNtdT0ByglHCRkIsfeXV1XnBpGGbQJowbwfQKhMPrsJ8hIhAL+WDYsGussKGD6UvmluTcuCScTpuD/7jIzwbxDlol+C3s0bKdihoyWpD72RfFenw8VfvYt/Drmsjsa0HkT7k7dvnxJ2j4rwMzSHfofM=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6DCBC4D19BB59F4481A64E7CC85E0804@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190425054511.GA40105@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77370d01-82c2-4c89-81c8-08d6c9b16023
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 19:08:17.6759
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4662
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 07:45:11AM +0200, Ingo Molnar wrote:
-> 
-> * Fenghua Yu <fenghua.yu@intel.com> wrote:
-> 
-> > A new MSR_IA32_CORE_CAPABILITY (0xcf) is defined. Each bit in the MSR
-> > enumerates a model specific feature. Currently bit 5 enumerates split
-> > lock detection. When bit 5 is 1, split lock detection is supported.
-> > When the bit is 0, split lock detection is not supported.
-> > 
-> > Please check the latest Intel 64 and IA-32 Architectures Software
-> > Developer's Manual for more detailed information on the MSR and the
-> > split lock detection bit.
-> > 
-> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> > ---
-> >  arch/x86/include/asm/msr-index.h | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> > index ca5bc0eacb95..f65ef6f783d2 100644
-> > --- a/arch/x86/include/asm/msr-index.h
-> > +++ b/arch/x86/include/asm/msr-index.h
-> > @@ -59,6 +59,9 @@
-> >  #define MSR_PLATFORM_INFO_CPUID_FAULT_BIT	31
-> >  #define MSR_PLATFORM_INFO_CPUID_FAULT		BIT_ULL(MSR_PLATFORM_INFO_CPUID_FAULT_BIT)
-> >  
-> > +#define MSR_IA32_CORE_CAPABILITY	0x000000cf
-> > +#define CORE_CAP_SPLIT_LOCK_DETECT	BIT(5)     /* Detect split lock */
-> 
-> Please don't put comments into definitions.
+> On Apr 24, 2019, at 6:49 AM, Michael S. Tsirkin <mst@redhat.com> wrote:
+>=20
+> On Tue, Apr 23, 2019 at 04:45:28PM -0700, Nadav Amit wrote:
+>> Introduce interfaces for ballooning enqueueing and dequeueing of a list
+>> of pages. These interfaces reduce the overhead of storing and restoring
+>> IRQs by batching the operations. In addition they do not panic if the
+>> list of pages is empty.
+>>=20
+>> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+>> Cc: Jason Wang <jasowang@redhat.com>
+>> Cc: linux-mm@kvack.org
+>> Cc: virtualization@lists.linux-foundation.org
+>> Reviewed-by: Xavier Deguillard <xdeguillard@vmware.com>
+>> Signed-off-by: Nadav Amit <namit@vmware.com>
+>=20
+>=20
+> Looks good overall. Two minor comments below.
+>=20
+>=20
+>> ---
+>> include/linux/balloon_compaction.h |   4 +
+>> mm/balloon_compaction.c            | 144 +++++++++++++++++++++--------
+>> 2 files changed, 110 insertions(+), 38 deletions(-)
+>>=20
+>> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_=
+compaction.h
+>> index f111c780ef1d..430b6047cef7 100644
+>> --- a/include/linux/balloon_compaction.h
+>> +++ b/include/linux/balloon_compaction.h
+>> @@ -64,6 +64,10 @@ extern struct page *balloon_page_alloc(void);
+>> extern void balloon_page_enqueue(struct balloon_dev_info *b_dev_info,
+>> 				 struct page *page);
+>> extern struct page *balloon_page_dequeue(struct balloon_dev_info *b_dev_=
+info);
+>> +extern size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_=
+info,
+>> +				      struct list_head *pages);
+>> +extern size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_=
+info,
+>> +				     struct list_head *pages, size_t n_req_pages);
+>>=20
+>> static inline void balloon_devinfo_init(struct balloon_dev_info *balloon=
+)
+>> {
+>> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+>> index ef858d547e2d..a2995002edc2 100644
+>> --- a/mm/balloon_compaction.c
+>> +++ b/mm/balloon_compaction.c
+>> @@ -10,6 +10,105 @@
+>> #include <linux/export.h>
+>> #include <linux/balloon_compaction.h>
+>>=20
+>> +static void balloon_page_enqueue_one(struct balloon_dev_info *b_dev_inf=
+o,
+>> +				     struct page *page)
+>> +{
+>> +	/*
+>> +	 * Block others from accessing the 'page' when we get around to
+>> +	 * establishing additional references. We should be the only one
+>> +	 * holding a reference to the 'page' at this point. If we are not, the=
+n
+>> +	 * memory corruption is possible and we should stop execution.
+>> +	 */
+>> +	BUG_ON(!trylock_page(page));
+>> +	list_del(&page->lru);
+>> +	balloon_page_insert(b_dev_info, page);
+>> +	unlock_page(page);
+>> +	__count_vm_event(BALLOON_INFLATE);
+>> +}
+>> +
+>> +/**
+>> + * balloon_page_list_enqueue() - inserts a list of pages into the ballo=
+on page
+>> + *				 list.
+>> + * @b_dev_info: balloon device descriptor where we will insert a new pa=
+ge to
+>> + * @pages: pages to enqueue - allocated using balloon_page_alloc.
+>> + *
+>> + * Driver must call it to properly enqueue a balloon pages before defin=
+itively
+>> + * removing it from the guest system.
+>> + *
+>> + * Return: number of pages that were enqueued.
+>> + */
+>> +size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_info,
+>> +				 struct list_head *pages)
+>> +{
+>> +	struct page *page, *tmp;
+>> +	unsigned long flags;
+>> +	size_t n_pages =3D 0;
+>> +
+>> +	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
+>> +	list_for_each_entry_safe(page, tmp, pages, lru) {
+>> +		balloon_page_enqueue_one(b_dev_info, page);
+>> +		n_pages++;
+>> +	}
+>> +	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
+>> +	return n_pages;
+>> +}
+>> +EXPORT_SYMBOL_GPL(balloon_page_list_enqueue);
+>> +
+>> +/**
+>> + * balloon_page_list_dequeue() - removes pages from balloon's page list=
+ and
+>> + *				 returns a list of the pages.
+>> + * @b_dev_info: balloon device decriptor where we will grab a page from=
+.
+>> + * @pages: pointer to the list of pages that would be returned to the c=
+aller.
+>> + * @n_req_pages: number of requested pages.
+>> + *
+>> + * Driver must call this function to properly de-allocate a previous en=
+listed
+>> + * balloon pages before definetively releasing it back to the guest sys=
+tem.
+>> + * This function tries to remove @n_req_pages from the ballooned pages =
+and
+>> + * return them to the caller in the @pages list.
+>> + *
+>> + * Note that this function may fail to dequeue some pages temporarily e=
+mpty due
+>> + * to compaction isolated pages.
+>> + *
+>> + * Return: number of pages that were added to the @pages list.
+>> + */
+>> +size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
+>> +				 struct list_head *pages, size_t n_req_pages)
+>> +{
+>> +	struct page *page, *tmp;
+>> +	unsigned long flags;
+>> +	size_t n_pages =3D 0;
+>> +
+>> +	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
+>> +	list_for_each_entry_safe(page, tmp, &b_dev_info->pages, lru) {
+>> +		if (n_pages =3D=3D n_req_pages)
+>> +			break;
+>> +
+>> +		/*
+>> +		 * Block others from accessing the 'page' while we get around
+>=20
+> should be "get around to" - same as in other places
+>=20
+>=20
+>> +		 * establishing additional references and preparing the 'page'
+>> +		 * to be released by the balloon driver.
+>> +		 */
+>> +		if (!trylock_page(page))
+>> +			continue;
+>> +
+>> +		if (IS_ENABLED(CONFIG_BALLOON_COMPACTION) &&
+>> +		    PageIsolated(page)) {
+>> +			/* raced with isolation */
+>> +			unlock_page(page);
+>> +			continue;
+>> +		}
+>> +		balloon_page_delete(page);
+>> +		__count_vm_event(BALLOON_DEFLATE);
+>> +		unlock_page(page);
+>> +		list_add(&page->lru, pages);
+>=20
+> I'm not sure whether this list_add must be under the page lock,
+> but enqueue does list_del under page lock, so I think it's
+> a good idea to keep dequeue consistent, operating in the
+> reverse order of enqueue.
+>=20
+>> +		++n_pages;
+>> +	}
+>> +	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
+>> +
+>> +	return n_pages;
+>> +}
+>> +EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
+>> +
+>> /*
+>>  * balloon_page_alloc - allocates a new page for insertion into the ball=
+oon
+>>  *			  page list.
+>> @@ -43,17 +142,9 @@ void balloon_page_enqueue(struct balloon_dev_info *b=
+_dev_info,
+>> {
+>> 	unsigned long flags;
+>>=20
+>> -	/*
+>> -	 * Block others from accessing the 'page' when we get around to
+>> -	 * establishing additional references. We should be the only one
+>> -	 * holding a reference to the 'page' at this point.
+>> -	 */
+>> -	BUG_ON(!trylock_page(page));
+>> 	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
+>> -	balloon_page_insert(b_dev_info, page);
+>> -	__count_vm_event(BALLOON_INFLATE);
+>> +	balloon_page_enqueue_one(b_dev_info, page);
+>> 	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
+>> -	unlock_page(page);
+>> }
+>> EXPORT_SYMBOL_GPL(balloon_page_enqueue);
+>>=20
+>> @@ -70,36 +161,13 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
+>>  */
+>> struct page *balloon_page_dequeue(struct balloon_dev_info *b_dev_info)
+>> {
+>> -	struct page *page, *tmp;
+>> 	unsigned long flags;
+>> -	bool dequeued_page;
+>> +	LIST_HEAD(pages);
+>> +	int n_pages;
+>>=20
+>> -	dequeued_page =3D false;
+>> -	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
+>> -	list_for_each_entry_safe(page, tmp, &b_dev_info->pages, lru) {
+>> -		/*
+>> -		 * Block others from accessing the 'page' while we get around
+>> -		 * establishing additional references and preparing the 'page'
+>> -		 * to be released by the balloon driver.
+>> -		 */
+>> -		if (trylock_page(page)) {
+>> -#ifdef CONFIG_BALLOON_COMPACTION
+>> -			if (PageIsolated(page)) {
+>> -				/* raced with isolation */
+>> -				unlock_page(page);
+>> -				continue;
+>> -			}
+>> -#endif
+>> -			balloon_page_delete(page);
+>> -			__count_vm_event(BALLOON_DEFLATE);
+>> -			unlock_page(page);
+>> -			dequeued_page =3D true;
+>> -			break;
+>> -		}
+>> -	}
+>> -	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
+>> +	n_pages =3D balloon_page_list_dequeue(b_dev_info, &pages, 1);
+>>=20
+>> -	if (!dequeued_page) {
+>> +	if (n_pages !=3D 1) {
+>> 		/*
+>> 		 * If we are unable to dequeue a balloon page because the page
+>> 		 * list is empty and there is no isolated pages, then something
+>> @@ -112,9 +180,9 @@ struct page *balloon_page_dequeue(struct balloon_dev=
+_info *b_dev_info)
+>> 			     !b_dev_info->isolated_pages))
+>> 			BUG();
+>> 		spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
+>> -		page =3D NULL;
+>> +		return NULL;
+>> 	}
+>> -	return page;
+>> +	return list_first_entry(&pages, struct page, lru);
+>> }
+>> EXPORT_SYMBOL_GPL(balloon_page_dequeue);
+>>=20
+>> --=20
+>> 2.19.1
+>=20
+>=20
+> With above addressed:
+>=20
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-I'll remove the comment and change definitions of the MSR and the split lock
-detection bit as following:
+Thank you, Michael.
 
-+#define MSR_IA32_CORE_CAPABILITY                       0x000000cf
-+#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT 5
-+#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT)
+I addressed your feedback and I will send another version shortly.
 
-Are these right changes?
-
-Thanks.
-
--Fenghua
