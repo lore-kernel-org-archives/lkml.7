@@ -2,85 +2,124 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8EBC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EBFC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906B220644
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:11:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Q1ftzGys"
+	by mail.kernel.org (Postfix) with ESMTP id 2FF2D20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfDYOLt (ORCPT
+        id S1727061AbfDYOMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:11:49 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29708 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726074AbfDYOLt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:11:49 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3PDuwv1030065;
-        Thu, 25 Apr 2019 16:11:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=tAwrT9TCGh3VrIjt0sfUMRAdMzZhO68z/jF8P5ayLxM=;
- b=Q1ftzGysZFDwi4WfEGtdjRhcIo/whFfUwBmmFPJbE8eumsYPqVWKItUjBpi82C6qsOCv
- d9kXTP2+b/3N/fS3gczcMWksZNHIJISLlCdKFey9S0z4Pcp8sxUcxjbqd+wspnP4NbU6
- myn7mvqTaKK86r6avmBfjuUlXmSbGi1dYMpn0ZfCTcB9gpuv4LIg1UEmyvCBEwLmZ8rX
- 5Lha86E3fudxZo1Ro0FEK1igL3pGegDSkqW3bAgsZi6pilSNjLUn7a/1j8Bm13yvbq3l
- kdxqSyn3+8mDoQVtymSYhQffixxwQlt0YCS/kcEC8QIiQaKZs//ZglTYg5uhg66L7oBB hw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2ryrj6dqfq-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 25 Apr 2019 16:11:31 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4BE1E4D;
-        Thu, 25 Apr 2019 14:10:44 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1ED5427E6;
-        Thu, 25 Apr 2019 14:10:44 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Apr
- 2019 16:10:44 +0200
-Received: from localhost (10.201.23.16) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Apr 2019 16:10:43
- +0200
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <alexandre.torgue@st.com>, <robh@kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
-Subject: [Linux-stm32][PATCH 0/4] ARM: dts: stm32: add i2s and sai support on stm32mp157c
-Date:   Thu, 25 Apr 2019 16:10:36 +0200
-Message-ID: <1556201440-5540-1-git-send-email-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 25 Apr 2019 10:12:37 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45180 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726255AbfDYOMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:12:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0CFFA78;
+        Thu, 25 Apr 2019 07:12:35 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBC343F5AF;
+        Thu, 25 Apr 2019 07:12:33 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 15:12:31 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     julien.thierry@arm.com, marc.zyngier@arm.com,
+        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        christoffer.dall@arm.com, james.morse@arm.com,
+        suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 2/3] arch/arm64: fpsimd: Introduce
+ fpsimd_save_and_flush_cpu_state() and use it
+Message-ID: <20190425141230.GE3567@e103592.cambridge.arm.com>
+References: <20190423135719.11306-1-julien.grall@arm.com>
+ <20190423135719.11306-3-julien.grall@arm.com>
+ <20190424131719.GS3567@e103592.cambridge.arm.com>
+ <97a49fad-380b-4494-9722-03857441ffe5@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.16]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_11:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97a49fad-380b-4494-9722-03857441ffe5@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support of STM32 SAI and I2S on stm32mp157c
+On Thu, Apr 25, 2019 at 01:37:40PM +0100, Julien Grall wrote:
+> Hi Dave,
+> 
+> On 24/04/2019 14:17, Dave Martin wrote:
+> >On Tue, Apr 23, 2019 at 02:57:18PM +0100, Julien Grall wrote:
+> >>tent-Length: 4295
+> >>Lines: 128
+> >>
+> >>The only external user of fpsimd_save() and fpsimd_flush_cpu_state() is
+> >>the KVM FPSIMD code.
+> >>
+> >>A following patch will introduce a mechanism to acquire owernship of the
+> >>FPSIMD/SVE context for performing context management operations. Rather
+> >>than having to export the new helpers to get/put the context, we can just
+> >>introduce a new function to combine fpsimd_save() and
+> >>fpsimd_flush_cpu_state().
+> >>
+> >>This has also the advantage to remove any external call of fpsimd_save()
+> >>and fpsimd_flush_cpu_state(), so they can be turned static.
+> >>
+> >>Lastly, the new function can also be used in the PM notifier.
+> >>
+> >>Signed-off-by: Julien Grall <julien.grall@arm.com>
+> >>
+> >>---
+> >>     kernel_neon_begin() does not use fpsimd_save_and_flush_cpu_state()
+> >>     because the next patch will modify the function to also grab the
+> >>     FPSIMD/SVE context.
+> >>
+> >>     Changes in v3:
+> >>         - Rework the commit message
+> >>         - Move the prototype of fpsimd_save_and_flush_cpu_state()
+> >>         further down in the header
+> >>         - Remove comment in kvm_arch_vcpu_put_fp()
+> >>
+> >>     Changes in v2:
+> >>         - Patch added
+> >>---
+> >>  arch/arm64/include/asm/fpsimd.h |  5 ++---
+> >>  arch/arm64/kernel/fpsimd.c      | 17 +++++++++++++----
+> >>  arch/arm64/kvm/fpsimd.c         |  4 +---
+> >>  3 files changed, 16 insertions(+), 10 deletions(-)
+> >>
+> >>diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
+> >>index b73d12fcc7f9..c311d36ecffe 100644
+> >>--- a/arch/arm64/include/asm/fpsimd.h
+> >>+++ b/arch/arm64/include/asm/fpsimd.h
+> >>@@ -48,8 +48,6 @@ struct task_struct;
+> >>  extern void fpsimd_save_state(struct user_fpsimd_state *state);
+> >>  extern void fpsimd_load_state(struct user_fpsimd_state *state);
+> >>-extern void fpsimd_save(void);
+> >>-
+> >>  extern void fpsimd_thread_switch(struct task_struct *next);
+> >>  extern void fpsimd_flush_thread(void);
+> >>@@ -63,7 +61,8 @@ extern void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *state,
+> >>  				     void *sve_state, unsigned int sve_vl);
+> >>  extern void fpsimd_flush_task_state(struct task_struct *target);
+> >>-extern void fpsimd_flush_cpu_state(void);
+> >>+
+> >>+extern void fpsimd_save_and_flush_cpu_state(void);
+> >
+> >Nit: You could drop this blank line: these are all "state maintenance"
+> >operations, roughly speaking.
+> >
+> >But don't bother unless you respin for some other reason.
+> 
+> It looks like I will need to make some changes in patch #3. So I will remove
+> the line at the same time.
 
-Olivier Moysan (4):
-  ARM: dts: stm32: add sai support on stm32mp157c
-  ARM: dts: stm32: add sai pins muxing on stm32mp157
-  ARM: dts: stm32: add i2s support on stm32mp157c
-  ARM: dts: stm32: add i2s pins muxing on stm32mp157
+OK, fair enough.
 
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi |  92 +++++++++++++++++
- arch/arm/boot/dts/stm32mp157c.dtsi        | 158 ++++++++++++++++++++++++++++++
- 2 files changed, 250 insertions(+)
-
--- 
-2.7.4
-
+Cheers
+---Dave
