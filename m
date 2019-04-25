@@ -2,132 +2,144 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C95C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61DCC282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B456205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B770205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387942AbfDYMoo (ORCPT
+        id S2387958AbfDYMou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:44:44 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6697 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731420AbfDYMoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:44:18 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4D801C9D683CF5B5B4DF;
-        Thu, 25 Apr 2019 20:44:14 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 25 Apr 2019 20:44:04 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <nhorman@redhat.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>
-Subject: [PATCH V3 net-next 06/11] net: hns3: use a reserved byte to identify need_resp flag
-Date:   Thu, 25 Apr 2019 20:42:50 +0800
-Message-ID: <1556196175-65389-7-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556196175-65389-1-git-send-email-tanhuazhong@huawei.com>
-References: <1556196175-65389-1-git-send-email-tanhuazhong@huawei.com>
+        Thu, 25 Apr 2019 08:44:50 -0400
+Received: from mga01.intel.com ([192.55.52.88]:35426 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387943AbfDYMor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 08:44:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 05:44:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,393,1549958400"; 
+   d="scan'208";a="340714255"
+Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Apr 2019 05:44:46 -0700
+From:   "Zhao, Yakui" <yakui.zhao@intel.com>
+Subject: Re: [RFC PATCH v5 3/4] x86/acrn: Use HYPERVISOR_CALLBACK_VECTOR for
+ ACRN guest upcall vector
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, Jason Chen CJ <jason.cj.chen@intel.com>
+References: <1556067260-9128-1-git-send-email-yakui.zhao@intel.com>
+ <1556067260-9128-4-git-send-email-yakui.zhao@intel.com>
+ <20190425071700.GB57256@gmail.com>
+Message-ID: <a206d93b-9c9e-3cfd-d34f-b9d373edb09e@intel.com>
+Date:   Thu, 25 Apr 2019 20:42:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190425071700.GB57256@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch uses a reserved byte in the hclge_mbx_vf_to_pf_cmd
-to save the need_resp flag, so when PF received the mailbox,
-it can use it to decise whether send a response to VF.
 
-For hclge_set_vf_uc_mac_addr(), it should use mbx_need_resp flag
-to decide whether send response to VF.
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 5 ++++-
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c   | 7 +++----
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 2 ++
- 3 files changed, 9 insertions(+), 5 deletions(-)
+On 2019年04月25日 15:17, Ingo Molnar wrote:
+> 
+> * Zhao Yakui <yakui.zhao@intel.com> wrote:
+> 
+>> Linux kernel uses the HYPERVISOR_CALLBACK_VECTOR for hypervisor upcall
+>> vector. And it is already used for Xen and HyperV.
+> 
+> English sentences should not be started with 'and'.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-index 8b6191f..83e19c6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-@@ -84,12 +84,15 @@ struct hclgevf_mbx_resp_status {
- struct hclge_mbx_vf_to_pf_cmd {
- 	u8 rsv;
- 	u8 mbx_src_vfid; /* Auto filled by IMP */
--	u8 rsv1[2];
-+	u8 mbx_need_resp;
-+	u8 rsv1[1];
- 	u8 msg_len;
- 	u8 rsv2[3];
- 	u8 msg[HCLGE_MBX_MAX_MSG_SIZE];
- };
- 
-+#define HCLGE_MBX_NEED_RESP_BIT		BIT(0)
-+
- struct hclge_mbx_pf_to_vf_cmd {
- 	u8 dest_vfid;
- 	u8 rsv[3];
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index 24386bd..fe48c56 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -212,8 +212,7 @@ static int hclge_set_vf_promisc_mode(struct hclge_vport *vport,
- }
- 
- static int hclge_set_vf_uc_mac_addr(struct hclge_vport *vport,
--				    struct hclge_mbx_vf_to_pf_cmd *mbx_req,
--				    bool gen_resp)
-+				    struct hclge_mbx_vf_to_pf_cmd *mbx_req)
- {
- 	const u8 *mac_addr = (const u8 *)(&mbx_req->msg[2]);
- 	struct hclge_dev *hdev = vport->back;
-@@ -249,7 +248,7 @@ static int hclge_set_vf_uc_mac_addr(struct hclge_vport *vport,
- 		return -EIO;
- 	}
- 
--	if (gen_resp)
-+	if (mbx_req->mbx_need_resp & HCLGE_MBX_NEED_RESP_BIT)
- 		hclge_gen_resp_to_vf(vport, mbx_req, status, NULL, 0);
- 
- 	return 0;
-@@ -597,7 +596,7 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
- 					ret);
- 			break;
- 		case HCLGE_MBX_SET_UNICAST:
--			ret = hclge_set_vf_uc_mac_addr(vport, req, true);
-+			ret = hclge_set_vf_uc_mac_addr(vport, req);
- 			if (ret)
- 				dev_err(&hdev->pdev->dev,
- 					"PF fail(%d) to set VF UC MAC Addr\n",
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-index 3c22639..30f2e93 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-@@ -98,6 +98,8 @@ int hclgevf_send_mbx_msg(struct hclgevf_dev *hdev, u16 code, u16 subcode,
- 	}
- 
- 	hclgevf_cmd_setup_basic_desc(&desc, HCLGEVF_OPC_MBX_VF_TO_PF, false);
-+	req->mbx_need_resp |= need_resp ? HCLGE_MBX_NEED_RESP_BIT :
-+					  ~HCLGE_MBX_NEED_RESP_BIT;
- 	req->msg[0] = code;
- 	req->msg[1] = subcode;
- 	memcpy(&req->msg[2], msg_data, msg_len);
--- 
-2.7.4
+OK. I will remove it.
 
+> 
+>> After ACRN hypervisor is detected, it will also use this defined vector
+>> to notify ACRN guest.
+> 
+> Missing 'the', twice.
+
+OK. It will be added.
+
+> 
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef _ASM_X86_ACRN_H
+>> +#define _ASM_X86_ACRN_H
+>> +
+>> +void acrn_hv_callback_vector(void);
+> 
+> Please mark these with 'extern', as customary in x86 headers.
+
+OK. The "extern" will be added.
+
+> 
+>>   
+>> +#include <linux/interrupt.h>
+>> +#include <asm/acrn.h>
+>> +#include <asm/desc.h>
+>>   #include <asm/hypervisor.h>
+>> +#include <asm/irq_regs.h>
+>>   
+>>   static uint32_t __init acrn_detect(void)
+>>   {
+>> @@ -18,6 +22,8 @@ static uint32_t __init acrn_detect(void)
+>>   
+>>   static void __init acrn_init_platform(void)
+>>   {
+>> +	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR,
+>> +			acrn_hv_callback_vector);
+> 
+> Why is this on two lines, not a single line?
+
+At first it used the long function name for acrn_hv_callback_vector.
+As it exceeds 80 columns, it is split into two lines.
+I will check it and see whether it can be fit into one single line.
+If it is ok, it will be in one single line.
+
+> 
+>> +static void (*acrn_intr_handler)(void);
+>> +
+>> +__visible void __irq_entry acrn_hv_vector_handler(struct pt_regs *regs)
+>> +{
+>> +	struct pt_regs *old_regs = set_irq_regs(regs);
+>> +
+>> +	entering_ack_irq();
+> 
+> Does the hypervisor model the APIC EOI command, i.e. does it require the
+> APIC to be acked? I.e. would not acking the APIC create an IRQ storm?
+
+The hypervisor requires that the APIC EOI should be acked. If the EOI 
+APIC is not acked, the APIC ISR bit for the HYPERVISOR_CALLBACK_VECTOR 
+will not be cleared and then it will block the interrupt whose vector is 
+lower than HYPERVISOR_CALLBACK_VECTOR.
+
+> 
+>> +	inc_irq_stat(irq_hv_callback_count);
+>> +
+>> +	if (acrn_intr_handler)
+>> +		acrn_intr_handler();
+> 
+> Nothing appears to be setting acrn_intr_handler, so this will never
+> execute anything? Is more code relying on this?
+
+Nothing will be done in this patch.
+Later the driver part code will be added and it needs to add/remove the 
+corresponding driver handler. It is similar to vmbus_handler in 
+hyperv_vector_handler.
+
+> 
+> Thanks,
+> 
+> 	Ingo
+> 
