@@ -4,63 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBE2C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48887C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032B420651
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E72920651
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:16:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="YG0oyt1P"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="dCYJ/nKn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbfDYQQi (ORCPT
+        id S1727342AbfDYQO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:16:38 -0400
-Received: from mail-ed1-f50.google.com ([209.85.208.50]:34134 "EHLO
-        mail-ed1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbfDYQO2 (ORCPT
+        Thu, 25 Apr 2019 12:14:26 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45289 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727225AbfDYQOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:14:28 -0400
-Received: by mail-ed1-f50.google.com with SMTP id a6so426702edv.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:14:27 -0700 (PDT)
+        Thu, 25 Apr 2019 12:14:24 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k92so356865edc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:14:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=h9Q94xTTcevLLXvPD5iKQ146v4lVALmWfST8zwXY3LM=;
-        b=YG0oyt1PngBeS9TkHOIfUrhXiXEecTVmtTd/sfmRAC9wN0WJpD1laa2SdJydXrokN3
-         m6GGMhJDUYt0dOGs6TQzEiuuaQbDxIwowc82bSp32it2eAqXmROHgikGVh8SqZlfwuua
-         P4ZOtaG4jDs85gmnObwjAWkJva7eR9RAFCBgLfwVjbnl239t10SGbN8b+t4gZ5U7Kx1I
-         BybSf4E9ESukaJ8KT/msD2+FKBVlcGikJlPlfhNz7sRrASo6BuZ9Wot7VouNXG+Vpc2m
-         7N0hqUxPoOrbGOTmg/JtSau6Kg1HIWHhnGU///he0j+KetPb6V3W795ZN4AQRhXyNKU0
-         JcYg==
+        bh=H6Lue2fs7EPgALS/pp1oegphEcm3E73zVKwrzX/cgPI=;
+        b=dCYJ/nKnKpbfI1Mmm4siEnuKpdgi3yylvOrWRRgGvqQcGZk46luPE03HG1r3Iat977
+         mgA3DoKgLqTWrAHjTF6XrMM5RTGJ06G1B43ZUgZ3zBTjdEsDNoPr5QVQBT8GqUROFzhA
+         qRwFQYIRm0OgQgHgEszhDWkpvaOBrQB8BBbjR/DgGfLFTW9M2wXRIlKfQIBHzDT/Rdtw
+         s3pTbHAPK4we8BcrSCcNBE/Qr/z2foyBMLngJFezFqmYEBYL5Wsz9XM5ZtBBMaJXysgj
+         guqRBZuPz84fwAA4y7/u1trCmxQF9pbqADMWAMt9UH/mXWNBg6/tJoJizQyzCgTpbOxN
+         xBAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=h9Q94xTTcevLLXvPD5iKQ146v4lVALmWfST8zwXY3LM=;
-        b=WdGe8qmNRJKvG2u2gbrzhvTq/I7LMT6jvIBCIp21YBdUSmFdO4r91aI1RqKHvgLZMo
-         9FDGqaEHqFGWsW8Da3Znlbqqe88JdcMTj6SqeMuQBHX2NYHzedOogMbuhXWplSCziKuW
-         LnCjTrbwpin16wI5L4IJG4AyrTR6F/oyN57FHOArP45JTynwBdPkmoTJCrCiBSV+U6Tw
-         aaKvDXC/PelRu3+pegx6aClMToNRBOQ/12ZLVSfzrWG6IgNGnEO0Opc/ZLx9ZNQR80++
-         ttGO8PXXWg/wuE9kBivKL7o72GG7E/SfQEI3/wCDVyvUrPtEudAEC+2t3DBUGDE9X0kF
-         RIjw==
-X-Gm-Message-State: APjAAAVLyJc5DiEt3fH8podToU9ewFx6TWu++i88yfMLt08M+n9GhzAK
-        CFYnTuiX0TK2ExIwb6CAj0u0yxWtV5w=
-X-Google-Smtp-Source: APXvYqxT8fhupq7fTmFd6IbqlAvrfcGwZL5nxLLaZozIv3j77V8ISNjpX3cl3AyPoStaVOMs+kOEBw==
-X-Received: by 2002:a50:9dc8:: with SMTP id l8mr25335851edk.180.1556208866417;
-        Thu, 25 Apr 2019 09:14:26 -0700 (PDT)
+        bh=H6Lue2fs7EPgALS/pp1oegphEcm3E73zVKwrzX/cgPI=;
+        b=B9MFQgkdqjyDTtPwwIXcsoEtMO96ttLa6C2kiOklYw4sY74mbYNbNGJWe4E6pmo1DV
+         c9hGjNz4BB+20LNRPVosCEcd1SA+TieyCHWF5n8GR9p/XVOnhXXL/YitNq0Jwp8zKh4y
+         4LDBxiXLQJ62CK1jCFArz660QwwsIfo8DzEdCBPsGYKHPoZ/UZpkl7uqHqqN3XGPA+E0
+         rDxC3WF7o6HN12NWVbzkIj37obKjNU0/2YIIpD9GAZ+JzZDcgDin57T69xeokDpksUGL
+         dBpokt+3BpPyVFXdXYNLR6/sDwx8pKiYKsdMv1HqHJPmn1qJtxmAq3wk4iiSR2qG3IzO
+         c2hQ==
+X-Gm-Message-State: APjAAAUfVz1Q7jm+sdIb/kLES6X4YukDwdebLaVixBXEqjutJBElSVTN
+        vw8onoRcTtnVljlmlN4OTtiQMqhZDjg=
+X-Google-Smtp-Source: APXvYqzVFn3+Uc8mfzA13lYwGm8UYSDJSL5Go8Uznpq5Kkgu0gVf0uXaKsfMtmKiTTVcahuScj8G9w==
+X-Received: by 2002:a17:906:3641:: with SMTP id r1mr9055199ejb.155.1556208861645;
+        Thu, 25 Apr 2019 09:14:21 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id br19sm4147042ejb.48.2019.04.25.09.14.24
+        by smtp.gmail.com with ESMTPSA id br19sm4147042ejb.48.2019.04.25.09.14.20
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Apr 2019 09:14:25 -0700 (PDT)
+        Thu, 25 Apr 2019 09:14:21 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
+Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
         Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
         Andy Lutomirski <luto@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Christian Brauner <christian.brauner@ubuntu.com>,
@@ -75,9 +74,9 @@ Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv3 05/27] timerfd/timens: Take into account ns clock offsets
-Date:   Thu, 25 Apr 2019 17:13:54 +0100
-Message-Id: <20190425161416.26600-6-dima@arista.com>
+Subject: [PATCHv3 02/27] timens: Add timens_offsets
+Date:   Thu, 25 Apr 2019 17:13:51 +0100
+Message-Id: <20190425161416.26600-3-dima@arista.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190425161416.26600-1-dima@arista.com>
 References: <20190425161416.26600-1-dima@arista.com>
@@ -88,147 +87,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+From: Andrei Vagin <avagin@openvz.org>
 
-Make timerfd respect timens offsets.
-Provide a helper timens_ktime_to_host() that is useful to wire up
-timens to different kernel subsystems.
+Introduce offsets for time namespace. They will contain an adjustment
+needed to convert clocks to/from host's.
+
+Allocate one page for each time namespace that will be premapped into
+userspace among vvar pages.
 
 Signed-off-by: Andrei Vagin <avagin@openvz.org>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- fs/timerfd.c                   |  8 +++++--
- include/linux/hrtimer.h        |  1 +
- include/linux/time_namespace.h | 40 ++++++++++++++++++++++++++++++++++
- kernel/time/hrtimer.c          |  3 +++
- 4 files changed, 50 insertions(+), 2 deletions(-)
+ MAINTAINERS                    |  1 +
+ include/linux/time_namespace.h |  1 +
+ include/linux/timens_offsets.h |  8 ++++++++
+ kernel/time_namespace.c        | 14 ++++++++++++--
+ 4 files changed, 22 insertions(+), 2 deletions(-)
+ create mode 100644 include/linux/timens_offsets.h
 
-diff --git a/fs/timerfd.c b/fs/timerfd.c
-index 6a6fc8aa1de7..a55ade09eee1 100644
---- a/fs/timerfd.c
-+++ b/fs/timerfd.c
-@@ -26,6 +26,7 @@
- #include <linux/syscalls.h>
- #include <linux/compat.h>
- #include <linux/rcupdate.h>
-+#include <linux/time_namespace.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b50720361de7..6a57d94963f6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12397,6 +12397,7 @@ S:	Maintained
+ F:	fs/timerfd.c
+ F:	include/linux/timer*
+ F:	include/linux/time_namespace.h
++F:	include/linux/timens_offsets.h
+ F:	kernel/time_namespace.c
+ F:	kernel/time/*timer*
  
- struct timerfd_ctx {
- 	union {
-@@ -179,6 +180,8 @@ static int timerfd_setup(struct timerfd_ctx *ctx, int flags,
- 	htmode = (flags & TFD_TIMER_ABSTIME) ?
- 		HRTIMER_MODE_ABS: HRTIMER_MODE_REL;
- 
-+	htmode |= HRTIMER_MODE_NS;
-+
- 	texp = timespec64_to_ktime(ktmr->it_value);
- 	ctx->expired = 0;
- 	ctx->ticks = 0;
-@@ -197,9 +200,10 @@ static int timerfd_setup(struct timerfd_ctx *ctx, int flags,
- 
- 	if (texp != 0) {
- 		if (isalarm(ctx)) {
--			if (flags & TFD_TIMER_ABSTIME)
-+			if (flags & TFD_TIMER_ABSTIME) {
-+				texp = timens_ktime_to_host(clockid, texp);
- 				alarm_start(&ctx->t.alarm, texp);
--			else
-+			} else
- 				alarm_start_relative(&ctx->t.alarm, texp);
- 		} else {
- 			hrtimer_start(&ctx->t.tmr, texp, htmode);
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 2e8957eac4d4..4b9c89c797ee 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -38,6 +38,7 @@ enum hrtimer_mode {
- 	HRTIMER_MODE_REL	= 0x01,
- 	HRTIMER_MODE_PINNED	= 0x02,
- 	HRTIMER_MODE_SOFT	= 0x04,
-+	HRTIMER_MODE_NS		= 0x08,
- 
- 	HRTIMER_MODE_ABS_PINNED = HRTIMER_MODE_ABS | HRTIMER_MODE_PINNED,
- 	HRTIMER_MODE_REL_PINNED = HRTIMER_MODE_REL | HRTIMER_MODE_PINNED,
 diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index 5f0da6858b10..988414f7f791 100644
+index 9507ed7072fe..b6985aa87479 100644
 --- a/include/linux/time_namespace.h
 +++ b/include/linux/time_namespace.h
-@@ -56,6 +56,41 @@ static inline void timens_add_boottime(struct timespec64 *ts)
-                 *ts = timespec64_add(*ts, ns_offsets->monotonic_boottime_offset);
- }
+@@ -8,6 +8,7 @@
+ #include <linux/nsproxy.h>
+ #include <linux/ns_common.h>
+ #include <linux/err.h>
++#include <linux/timens_offsets.h>
  
-+static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
-+{
-+	struct timens_offsets *ns_offsets = current->nsproxy->time_ns->offsets;
-+	struct timespec64 *offset;
-+	ktime_t koff;
+ struct user_namespace;
+ extern struct user_namespace init_user_ns;
+diff --git a/include/linux/timens_offsets.h b/include/linux/timens_offsets.h
+new file mode 100644
+index 000000000000..7d7cb68ea778
+--- /dev/null
++++ b/include/linux/timens_offsets.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_TIME_OFFSETS_H
++#define _LINUX_TIME_OFFSETS_H
 +
-+	if (!ns_offsets)
-+		return tim;
++struct timens_offsets {
++};
 +
-+	switch (clockid) {
-+		case CLOCK_MONOTONIC:
-+		case CLOCK_MONOTONIC_RAW:
-+		case CLOCK_MONOTONIC_COARSE:
-+			offset = &ns_offsets->monotonic_time_offset;
-+			break;
-+		case CLOCK_BOOTTIME:
-+		case CLOCK_BOOTTIME_ALARM:
-+			offset = &ns_offsets->monotonic_boottime_offset;
-+			break;
-+		default:
-+			return tim;
-+	}
-+
-+	koff = timespec64_to_ktime(*offset);
-+	if (tim < koff)
-+		tim = 0;
-+	else if (KTIME_MAX - tim < -koff)
-+		tim = KTIME_MAX;
-+	else
-+		tim = ktime_sub(tim, koff);
-+
-+	return tim;
-+}
-+
-+
- #else
- static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
++#endif
+diff --git a/kernel/time_namespace.c b/kernel/time_namespace.c
+index 8c600df9771d..4828447721ec 100644
+--- a/kernel/time_namespace.c
++++ b/kernel/time_namespace.c
+@@ -13,6 +13,7 @@
+ #include <linux/user_namespace.h>
+ #include <linux/proc_ns.h>
+ #include <linux/sched/task.h>
++#include <linux/mm.h>
+ 
+ static struct ucounts *inc_time_namespaces(struct user_namespace *ns)
  {
-@@ -82,6 +117,11 @@ static inline int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *ts
+@@ -46,6 +47,7 @@ static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
+ {
+ 	struct time_namespace *ns;
+ 	struct ucounts *ucounts;
++	struct page *page;
+ 	int err;
  
- static inline void timens_add_monotonic(struct timespec64 *ts) {}
- static inline void timens_add_boottime(struct timespec64 *ts) {}
+ 	err = -ENOSPC;
+@@ -58,15 +60,22 @@ static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
+ 	if (!ns)
+ 		goto fail_dec;
+ 
++	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
++	if (!page)
++		goto fail_free;
++	ns->offsets = page_address(page);
++	BUILD_BUG_ON(sizeof(*ns->offsets) > PAGE_SIZE);
 +
-+static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
-+{
-+	return tim;
-+}
- #endif
+ 	err = ns_alloc_inum(&ns->ns);
+ 	if (err)
+-		goto fail_free;
++		goto fail_page;
  
- #endif /* _LINUX_TIMENS_H */
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 41dfff23c1f9..484a0efec1df 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -42,6 +42,7 @@
- #include <linux/timer.h>
- #include <linux/freezer.h>
- #include <linux/compat.h>
-+#include <linux/time_namespace.h>
+ 	ns->ucounts = ucounts;
+ 	ns->ns.ops = &timens_operations;
+ 	ns->user_ns = get_user_ns(user_ns);
+ 	return ns;
+-
++fail_page:
++	free_page((unsigned long)ns->offsets);
+ fail_free:
+ 	kfree(ns);
+ fail_dec:
+@@ -94,6 +103,7 @@ void free_time_ns(struct kref *kref)
+ 	struct time_namespace *ns;
  
- #include <linux/uaccess.h>
- 
-@@ -1069,6 +1070,8 @@ static int __hrtimer_start_range_ns(struct hrtimer *timer, ktime_t tim,
- 
- 	if (mode & HRTIMER_MODE_REL)
- 		tim = ktime_add_safe(tim, base->get_time());
-+	else if (mode & HRTIMER_MODE_NS)
-+		tim = timens_ktime_to_host(base->clockid, tim);
- 
- 	tim = hrtimer_update_lowres(timer, tim, mode);
- 
+ 	ns = container_of(kref, struct time_namespace, kref);
++	free_page((unsigned long)ns->offsets);
+ 	dec_time_namespaces(ns->ucounts);
+ 	put_user_ns(ns->user_ns);
+ 	ns_free_inum(&ns->ns);
 -- 
 2.21.0
 
