@@ -2,94 +2,258 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6CBC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4850C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56D720891
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:04:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kYf8Jbep"
+	by mail.kernel.org (Postfix) with ESMTP id D6E89206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:04:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556226284;
+	bh=+798x25nfFegpVgkyNNWYBMNUd9McM8+pfP/W5fD3AQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iV9xEY/ngIkTM3ouAlVNR5H0rAa9AaEIyvXVioVNTBpScKwvPOJqWhHTnWrrTkLFT
+	 z+zd6pP4tjsyElcHxLQ7d06ywvc4r5JmCW6KvtRI2Vsyk21ywC1siukHAcJsI3fTXO
+	 CbOosSrRCPsT48LLdMGPj4JQLWxhcqQZXOOj6zpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbfDYVEB (ORCPT
+        id S1730014AbfDYVEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 17:04:01 -0400
-Received: from ozlabs.org ([203.11.71.1]:40857 "EHLO ozlabs.org"
+        Thu, 25 Apr 2019 17:04:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726429AbfDYVEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 17:04:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726429AbfDYVEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 17:04:42 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44qqRg1CTpz9s5c;
-        Fri, 26 Apr 2019 07:03:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556226239;
-        bh=AQqLdTT3EpVs6eV8Yxssaga1dRXPblM6FLeESahrvog=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kYf8JbepnHp/K3y4+WUtCBia2uQ4IKrRmIIXCBGDo6KO/m0LJwExqx19n0g4D0hHb
-         +cUKvYmywc2kYP3OX5KBq1FELtSrJXwFBFf3l7WiuPs3zdf6K/A02gXtN2eCKXYW83
-         6C2GdYwMwdEQ4VBNhQc2ma7wUdgoetS+IrkR/reEHjWaWRvgvV6rEvOaDwnjXFaf7L
-         spSUZBzq1/cwCCa5hHR9eYYwVQmI7HMlwE3hDxGcUyJwbCM7rFpBxtf6M4hxVyEWVj
-         XQI3mS6Iau7N3AdtDa0JPvJ2qXqQnidFZdPzHi3bvxFqq9bWW3tkUNUD+mYNzk27Tt
-         m78gaNvQfdMSg==
-Date:   Fri, 26 Apr 2019 07:03:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pan Bian <bianpan2016@163.com>
-Subject: linux-next: Fixes tag needs some work in the ext4 tree
-Message-ID: <20190426070356.12bc948b@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id D261F2077C;
+        Thu, 25 Apr 2019 21:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556226281;
+        bh=+798x25nfFegpVgkyNNWYBMNUd9McM8+pfP/W5fD3AQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0x8K9RLsy0je4RtZsbgNHGjcOThZ3rNmcxD1ogs32W6PH112kT7l4oUxBhddOsnJi
+         GSisxoIyoOzUVKBM8TvJajdC7/Ga0tokSl0TaEzhjBYJHnQ4zaa+IYhqYUlHvPiKln
+         O30mMvqnW+OZ1BUp/nlDzLdR4FvaCXBqww4vDQsk=
+Date:   Thu, 25 Apr 2019 16:04:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20190425210439.GG11428@google.com>
+References: <20190316161243.29517-1-repk@triplefau.lt>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/DBQp7vhJ5VvQRHA3bRBhE9c"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190316161243.29517-1-repk@triplefau.lt>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DBQp7vhJ5VvQRHA3bRBhE9c
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Remi,
 
-Hi all,
+On Sat, Mar 16, 2019 at 05:12:43PM +0100, Remi Pommarel wrote:
+> The PCI_EXP_LNKSTA_LT flag in the emulated root device's PCI_EXP_LNKSTA
+> config register does not reflect the actual link training state and is
+> always cleared. The Link Training and Status State Machine (LTSSM) flag
+> in LMI config register could be used as a link training indicator.
 
-In commit
+LMI?  I assume this is an Aardvark-specific register?  Maybe "Aardvark
+LMI register", since the other things here are generic PCIe registers?
 
-  8c380ab4b7b5 ("ext4: avoid drop reference to iloc.bh twice")
+Is this a hardware erratum?  I know advk does some software emulation,
+but it looks like the Aardvark PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKSTA
+register is awfully close to being exactly the PCIe-defined
+PCI_EXP_LNKSTA, so the difference seems like a mistake.
 
-Fixes tag
+> Indeed if the LTSSM is in L0 or upper state then link training has
+> completed (see [1]).
+> 
+> Unfortunately because setting the PCI_EXP_LINCTL_RL flag does not
 
-  Fixes: fb265c9cb49e("ext4: add ext4_sb_bread() to disambiguate ENOMEM cas=
-es")
+s/PCI_EXP_LINCTL_RL/PCI_EXP_LNKCTL_RL/
 
-has these problem(s):
+> instantly imply a LTSSM state change (e.g. L0s to recovery state
+> transition takes some time), LTSSM can be in L0 but link training has
+> not finished yet. Thus a lower L0 LTSSM state followed by a L0 or upper
+> state sequence has to be seen to be sure that link training has been
+> done.
+> 
+> Because one may not call a pcie conf register read on LNKSTA after
+> doing a retrain link or may miss the link down state due to timing, a
+> 20ms timeout is used. Passing this timeout link is considered retrained.
 
-  - missing space between the SHA1 and the subject.
+It sounds like reading and/or writing some registers during a retrain
+causes some sort of EL1 error?  Is this a separate erratum?  Is there
+a list of the registers and operations (read/write) that are affected?
+The backtrace below suggests that it's actually a read of LNKCAP or
+LNKCTL (not LNKSTA) that caused the error.
 
---=20
-Cheers,
-Stephen Rothwell
+It sounds like there are really two problems:
 
---Sig_/DBQp7vhJ5VvQRHA3bRBhE9c
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+  1) Reading PCI_EXP_LNKSTA (or the Aardvark equivalent) doesn't give
+     valid data for PCI_EXP_LNKSTA_LT.
 
------BEGIN PGP SIGNATURE-----
+  2) Sometimes config reads cause EL1 errors.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzCILwACgkQAVBC80lX
-0GwkMgf/REGx9yNQdztKQVhV6UK7n7NcYd33GssrwvqTCFpjT2TM1YuvRMD7n0Hk
-O+c31fER12zqGJpmZI3w3NuRHOQOjevjK99T0Rh6RdIXXimnfGsnvj1VUaFtR1e6
-AcfCLm8NLUtsYpmFeb8aN5dMEMMU2n1edvpcnmD9CFAd21K/g7vCejcvvnNHWJNh
-iv12G6SogukKAIbmRV1MQTvGQ2UaIxSJuiBfGU8rLFliEsd6Dgaz3sb+d4hGCjQJ
-6Ekxdj8gv9a6h7NEjhbybJVIwac96FpP/+mgGCIx+vRCPccZpeeITtkZGvbSm9Rw
-VnGDY4AljDgePswRpl/26bK5jQ2tLQ==
-=pAF1
------END PGP SIGNATURE-----
+If that's the case and if it's possible, can you split this into a
+patch for each issue?
 
---Sig_/DBQp7vhJ5VvQRHA3bRBhE9c--
+> This fixes boot hang or kernel panic with the following callstack due to
+> ASPM setup doing a link re-train and polling for PCI_EXP_LNKSTA_LT flag
+> to be cleared before using it.
+> 
+> -------------------- 8< -------------------
+> 	[    0.915389]  dump_backtrace+0x0/0x140
+> 	[    0.915391]  show_stack+0x14/0x20
+> 	[    0.915393]  dump_stack+0x90/0xb4
+> 	[    0.915394]  panic+0x134/0x2c0
+> 	[    0.915396]  nmi_panic+0x6c/0x70
+> 	[    0.915398]  arm64_serror_panic+0x74/0x80
+> 	[    0.915400]  is_valid_bugaddr+0x0/0x8
+> 	[    0.915402]  el1_error+0x7c/0xe4
+> 	[    0.915404]  advk_pcie_rd_conf+0x4c/0x250
+> 	[    0.915406]  pci_bus_read_config_word+0x7c/0xd0
+> 	[    0.915408]  pcie_capability_read_word+0x90/0xc8
+> 	[    0.915410]  pcie_get_aspm_reg+0x68/0x118
+> 	[    0.915412]  pcie_aspm_init_link_state+0x460/0xa98
+
+This backtrace doesn't make sense to me as being related to this
+issue.  You said above that the bug was that PCI_EXP_LNKSTA_LT is not
+updated.  But apparently even *reading* a register at the wrong time
+causes this EL1 error.  And pcie_get_aspm_reg() doesn't even read
+LNKSTA; it only reads LNKCAP and LNKCTL.
+
+BTW, if you're including a backtrace in a commit log, you can strip
+out the timestamps and the "cut" lines because they don't contribute
+information that's relevant in this context.
+
+> 	[    0.915414]  pci_scan_slot+0xe8/0x100
+> 	[    0.915416]  pci_scan_child_bus_extend+0x50/0x288
+> 	[    0.915418]  pci_scan_bridge_extend+0x348/0x4f0
+> 	[    0.915420]  pci_scan_child_bus_extend+0x1dc/0x288
+> 	[    0.915423]  pci_scan_root_bus_bridge+0xc4/0xe0
+> 	[    0.915424]  pci_host_probe+0x14/0xa8
+> 	[    0.915426]  advk_pcie_probe+0x838/0x910
+> 	[...]
+> -------------------- 8< -------------------
+> 
+> [1] "PCI Express Base Specification", REV. 2.1
+>     PCI Express, March 4 2009, Table 4-7
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+> Changes since v1:
+>   - Rename retraining flag field
+>   - Fix DEVCTL register writing
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 33 ++++++++++++++++++++++++++-
+>  1 file changed, 32 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index eb58dfdaba1b..47b707b5fc2c 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -180,6 +180,7 @@
+>  #define LINK_WAIT_MAX_RETRIES		10
+>  #define LINK_WAIT_USLEEP_MIN		90000
+>  #define LINK_WAIT_USLEEP_MAX		100000
+> +#define LINK_RETRAIN_DELAY_MAX		(20 * HZ / 1000) /* 20 ms */
+>  
+>  #define MSI_IRQ_NUM			32
+>  
+> @@ -199,6 +200,8 @@ struct advk_pcie {
+>  	u16 msi_msg;
+>  	int root_bus_nr;
+>  	struct pci_bridge_emul bridge;
+> +	unsigned long rl_deadline; /* Retrain link jiffies deadline */
+> +	u8 rl_asked; /* Retraining has been asked and is in transition */
+>  };
+>  
+>  static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64 reg)
+> @@ -400,6 +403,19 @@ static int advk_pcie_wait_pio(struct advk_pcie *pcie)
+>  	return -ETIMEDOUT;
+>  }
+>  
+> +static int advk_pcie_link_retraining(struct advk_pcie *pcie)
+> +{
+> +	if (!advk_pcie_link_up(pcie)) {
+> +		pcie->rl_asked = 0;
+> +		return 1;
+> +	}
+> +
+> +	if (pcie->rl_asked && time_before(jiffies, pcie->rl_deadline))
+> +		return 1;
+> +
+> +	pcie->rl_asked = 0;
+> +	return 0;
+> +}
+>  
+>  static pci_bridge_emul_read_status_t
+>  advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+> @@ -426,11 +442,19 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	}
+>  
+> +	case PCI_EXP_LNKCTL: {
+
+Don't you mean PCI_EXP_LNKSTA here?
+
+> +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
+> +			~(PCI_EXP_LNKSTA_LT << 16);
+> +		if (advk_pcie_link_retraining(pcie))
+> +			val |= (PCI_EXP_LNKSTA_LT << 16);
+> +		*value = val;
+> +		return PCI_BRIDGE_EMUL_HANDLED;
+> +	}
+> +
+>  	case PCI_CAP_LIST_ID:
+>  	case PCI_EXP_DEVCAP:
+>  	case PCI_EXP_DEVCTL:
+>  	case PCI_EXP_LNKCAP:
+> -	case PCI_EXP_LNKCTL:
+
+If you did mean PCI_EXP_LNKSTA above, I suppose you would leave
+PCI_EXP_LNKCTL here?
+
+>  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	default:
+> @@ -447,8 +471,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+>  
+>  	switch (reg) {
+>  	case PCI_EXP_DEVCTL:
+> +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> +		break;
+
+What's the purpose of this DEVCTL change?  Could it be a separate patch?
+I can't tell that it's related to the PCI_EXP_LNKSTA_LT issue.
+
+>  	case PCI_EXP_LNKCTL:
+>  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> +		if (new & PCI_EXP_LNKCTL_RL) {
+> +			pcie->rl_asked = 1;
+> +			pcie->rl_deadline = jiffies + LINK_RETRAIN_DELAY_MAX;
+> +		}
+>  		break;
+>  
+>  	case PCI_EXP_RTCTL:
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
