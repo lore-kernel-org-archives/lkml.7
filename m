@@ -2,210 +2,77 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057F3C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CEBC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A30F20717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:33:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ip5euGH5"
+	by mail.kernel.org (Postfix) with ESMTP id B98D120717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbfDYWdj (ORCPT
+        id S1728869AbfDYWeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 18:33:39 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44538 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfDYWdi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 18:33:38 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h18so834511lfj.11;
-        Thu, 25 Apr 2019 15:33:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pnwO3ii3JkeNPr1hcPvBi2/3rAZyjNVc0qQJMLcBg4g=;
-        b=Ip5euGH5ClT6AoUA5raCFKXkbcxLmgokJBIzGPetkjCvSyh5LUm+5Z4/znxyoCTBkB
-         pFPNA8XT+sXH8Ilsngg8XjNO5NCeCsd1aPC3SkGgf5d8utzFj3I2Y2sduj374kdyj5GK
-         gz5WaB4lK55ytGG18Dcg9olkULhHEqrrUuNtnY7vzPmNfaTD7s2YLCoJU19mxbpxh0Bg
-         Ekzx7RtMMYQJ7/1IdwaC7X+xPdAC/z7w+V1LfT/AycK+/AIksQdFmBXLVB5CvExv0vtF
-         IiQVvhd07S3UHi3wB2M5o2BUd4Yj3hiVS34IXQ9br346v8Q+LJpeMnvIpae2rL2EEOzT
-         4xCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pnwO3ii3JkeNPr1hcPvBi2/3rAZyjNVc0qQJMLcBg4g=;
-        b=ia3APpy1zO2A1hGtSF+7eChJPPUhJBY1aYWy8uanepkraUwvMTinzwvLPL8dBBjejB
-         ge/OetlIoYEZd2uVXepMhlh7eqfEFaDqopHfNaNIRruKfnW21f2591z3oODPTjcYt5Rc
-         W0Vyq5id7A1aD4l6S+WkmJPrmDIbrM+x7sQR4Ckzi2lSiZrbJZp6yO3j0PKf4Hqx7MdH
-         0xv9neowEyDLtAyMkVFJ9m07Jmx6wXOZ3uQ+xBJt6szKjHq5IACGj5HM4S1mYVpQdLEb
-         78TId9C6XtMJDaloFFRutlJeZNHLD6uqld/hw0Hn6Ke5xP7v+rECffYOmBg/ukOh3f7r
-         vo2A==
-X-Gm-Message-State: APjAAAXdE0OegSuIhsCvjMc83D4CA2mrtJbr8uzx49UBD+6hPt+xB5V2
-        hNi8aLV8UvWOmM9vZKvvEik=
-X-Google-Smtp-Source: APXvYqxXdekO9jgCOogXP8lb3phLNHUabTl1NErTJUk8047mQrXyHuF3/yms97bic05946xEgMMx8g==
-X-Received: by 2002:ac2:533c:: with SMTP id f28mr19303555lfh.73.1556231615812;
-        Thu, 25 Apr 2019 15:33:35 -0700 (PDT)
-Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id m21sm5257382lfj.47.2019.04.25.15.33.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 15:33:34 -0700 (PDT)
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Richard Leitner <richard.leitner@skidata.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] usb: usb251xb: Lock i2c-bus segment the hub resides
-Date:   Fri, 26 Apr 2019 01:32:56 +0300
-Message-Id: <20190425223256.20270-1-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: 20190424144914.10580-1-fancer.lancer@gmail.com
-References: 
+        Thu, 25 Apr 2019 18:34:44 -0400
+Received: from namei.org ([65.99.196.166]:35848 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbfDYWen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 18:34:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x3PMYTXI008976;
+        Thu, 25 Apr 2019 22:34:29 GMT
+Date:   Fri, 26 Apr 2019 08:34:29 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     prsriva <prsriva@linux.microsoft.com>,
+        Nayna <nayna@linux.vnet.ibm.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        inux-security-module@vger.kernel.org, zohar@linux.ibm.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com,
+        Prakhar Srivastava <prsriva@microsoft.com>
+Subject: Re: [PATCH v2 2/5 RFC] use event name instead of enum to make the
+ call generic
+In-Reply-To: <CAADWXX8NC-PFJmuvQbNXn49CYjvyn-e0rtH_EoUfCvuJHTwHAQ@mail.gmail.com>
+Message-ID: <alpine.LRH.2.21.1904260833140.7315@namei.org>
+References: <20190424001544.7188-1-prsriva02@gmail.com> <20190424001544.7188-2-prsriva02@gmail.com> <d38f32f8-7078-f205-ba11-9c4266ee40e8@linux.vnet.ibm.com> <4c313367-22dc-9532-54b5-cd3a79deb625@linux.microsoft.com>
+ <CAADWXX8NC-PFJmuvQbNXn49CYjvyn-e0rtH_EoUfCvuJHTwHAQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SMBus slave configuration is activated by CFG_SEL[1:0]=0x1 pins
-state. This is the mode the hub is supposed to be to let this driver
-work correctly. But a race condition might happen right after reset
-is cleared due to CFG_SEL[0] pin being multiplexed with SMBus SCL
-function. In case if the reset pin is handled by a i2c GPIO expander,
-which is also placed at the same i2c-bus segment as the usb251x
-SMB-interface connected to, then the hub reset clearance might
-cause the CFG_SEL[0] being latched in unpredictable state. So
-sometimes the hub configuration mode might be 0x1 (as expected),
-but sometimes being 0x0, which doesn't imply to have the hub SMBus-slave
-interface activated and consequently causes this driver failure.
+On Thu, 25 Apr 2019, Linus Torvalds wrote:
 
-In order to fix the problem we must make sure the GPIO-reset chip doesn't
-reside the same i2c-bus segment as the SMBus-interface of the hub. If
-it doesn't, we can safely block the segment for the time the reset is
-cleared to prevent anyone generating a traffic at the i2c-bus SCL lane
-connected to the CFG_SEL[0] pin. But if it does, nothing we can do, so
-just return an error. If we locked the i2c-bus segment and tried to
-communicate with the GPIO-expander, it would cause a deadlock. If we didn't
-lock the i2c-bus segment, it would randomly cause the CFG_SEL[0] bit flip.
+> On Thu, Apr 25, 2019 at 10:19 AM prsriva <prsriva@linux.microsoft.com> wrote:
+> >
+> > I will fix the comments and send out the patchset with a cover letter.
+> > Thankyou for pointing this out.
+> 
+> Please trim the emails you reply to rather than quoting everything.
+> 
+> But the real reason I'm reacting to this email is because it was
+> marked as spam, because your SMTP setup is incorrect, and you don't go
+> through the proper MS SMTP server. As a result, you don't get the
+> proper DKIM signature for verification of the microsoft.com email
+> address, and sane email clients will mark your emails as spam.
+> 
+> Please fix.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It's the correct SMTP server for linux.microsoft.com.
 
----
-Changelog v2
-- Execute the check code only if GPIOLIB is enabled (reported by
-  a build robot).
+linux.microsoft.com.	3600	IN	TXT	"v=spf1 ip4:13.77.154.182 -all"
+linux.microsoft.com.	3600	IN	TXT	"v=DMARC1;p=none;pct=100;rua=mailto:jamorris@microsoft.com"
 
----
- drivers/usb/misc/usb251xb.c | 62 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
 
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index 04684849d683..cdc80e8c2d8a 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/nls.h>
-@@ -222,11 +223,51 @@ static const struct usb251xb_data usb2517i_data = {
- 	.product_str = "USB2517i",
- };
- 
-+#ifdef CONFIG_GPIOLIB
-+static int usb251xb_check_dev_children(struct device *dev, void *child)
-+{
-+	if (dev->type == &i2c_adapter_type) {
-+		return device_for_each_child(dev, child,
-+					     usb251xb_check_dev_children);
-+	}
-+
-+	return (dev == child);
-+}
-+
-+static int usb251x_check_gpio_chip(struct usb251xb *hub)
-+{
-+	struct gpio_chip *gc = gpiod_to_chip(hub->gpio_reset);
-+	struct i2c_adapter *adap = hub->i2c->adapter;
-+	int ret;
-+
-+	if (!hub->gpio_reset)
-+		return 0;
-+
-+	if (!gc)
-+		return -EINVAL;
-+
-+	ret = usb251xb_check_dev_children(&adap->dev, gc->parent);
-+	if (ret) {
-+		dev_err(hub->dev, "Reset GPIO chip is at the same i2c-bus\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+#else
-+static int usb251x_check_gpio_chip(struct usb251xb *hub)
-+{
-+	return 0;
-+}
-+#endif
-+
- static void usb251xb_reset(struct usb251xb *hub, int state)
- {
- 	if (!hub->gpio_reset)
- 		return;
- 
-+	i2c_lock_bus(hub->i2c->adapter, I2C_LOCK_SEGMENT);
-+
- 	gpiod_set_value_cansleep(hub->gpio_reset, state);
- 
- 	/* wait for hub recovery/stabilization */
-@@ -234,6 +275,8 @@ static void usb251xb_reset(struct usb251xb *hub, int state)
- 		usleep_range(500, 750);	/* >=500us at power on */
- 	else
- 		usleep_range(1, 10);	/* >=1us at power down */
-+
-+	i2c_unlock_bus(hub->i2c->adapter, I2C_LOCK_SEGMENT);
- }
- 
- static int usb251xb_connect(struct usb251xb *hub)
-@@ -621,6 +664,25 @@ static int usb251xb_probe(struct usb251xb *hub)
- 		}
- 	}
- 
-+	/*
-+	 * usb251x SMBus-slave SCL lane is muxed with CFG_SEL0 pin. So if anyone
-+	 * tries to work with the bus at the moment the hub reset is released,
-+	 * it may cause an invalid config being latched by usb251x. Particularly
-+	 * one of the config modes makes the hub loading a default registers
-+	 * value without SMBus-slave interface activation. If the hub
-+	 * accidentally gets this mode, this will cause the driver SMBus-
-+	 * functions failure. Normally we could just lock the SMBus-segment the
-+	 * hub i2c-interface resides for the device-specific reset timing. But
-+	 * the GPIO controller, which is used to handle the hub reset, might be
-+	 * placed at the same i2c-bus segment. In this case an error should be
-+	 * returned since we can't safely use the GPIO controller to clear the
-+	 * reset state (it may affect the hub configuration) and we can't lock
-+	 * the i2c-bus segment (it will cause a deadlock).
-+	 */
-+	err = usb251x_check_gpio_chip(hub);
-+	if (err)
-+		return err;
-+
- 	err = usb251xb_connect(hub);
- 	if (err) {
- 		dev_err(dev, "Failed to connect hub (%d)\n", err);
+We don't have DKIM set up yet.
+
 -- 
-2.21.0
+James Morris
+<jmorris@namei.org>
 
