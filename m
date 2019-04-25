@@ -2,90 +2,130 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DD3C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62004C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A481A2084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB08720717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:11:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k+HE2G33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfDYRL3 (ORCPT
+        id S1728803AbfDYRLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 13:11:29 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:43263 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfDYRL3 (ORCPT
+        Thu, 25 Apr 2019 13:11:36 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:45919 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfDYRLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 13:11:29 -0400
-Received: from oxbaltgw05.schlund.de ([172.19.246.11]) by
- mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MD9Ox-1hSCLR1rYP-009AJI; Thu, 25 Apr 2019 19:11:12 +0200
-Date:   Thu, 25 Apr 2019 19:11:11 +0200 (CEST)
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Jeremy Linton <jeremy.linton@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     mlangsdo@redhat.com, suzuki.poulose@arm.com, marc.zyngier@arm.com,
-        catalin.marinas@arm.com, julien.thierry@arm.com,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        Andre.Przywara@arm.com, Dave.Martin@arm.com,
-        shankerd@codeaurora.org
-Message-ID: <1375455768.808427.1556212271639@email.ionos.de>
-In-Reply-To: <20190415212129.1112-10-jeremy.linton@arm.com>
-References: <20190415212129.1112-1-jeremy.linton@arm.com>
- <20190415212129.1112-10-jeremy.linton@arm.com>
-Subject: Re: [v8 09/10] arm64: add sysfs vulnerability show for speculative
- store bypass
+        Thu, 25 Apr 2019 13:11:35 -0400
+Received: by mail-vs1-f68.google.com with SMTP id o10so282944vsp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 10:11:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lcyOU7ZwkJVqSoqQ41D9CfXRO6/IIRiCI85pPcRiMBM=;
+        b=k+HE2G33XzagDRH2hhFSXLMAVAzaRFMw+JJBpvcr17WlVZR015M+qSvE7rz1wcjPXV
+         Z/P4EgPfzOag13g8G6LuO3FQB3fzQKXY902T8gNn86/aeY7Cgu18QtNOQ4BRqrQuUZQt
+         rke6FbYxTBfxCMxqVTUgLZu/demazCDfN4XI0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lcyOU7ZwkJVqSoqQ41D9CfXRO6/IIRiCI85pPcRiMBM=;
+        b=b8ki6BLSSYZpijVaG84hcvmhfNoxdFaawbmQ/8F52/Ox23wHJSMN5t4RjpFodr0Zpl
+         9289PpkySM5ZdFK0sUTS7WLbaG13D0QZnrNtFXRFMWBzZ/CwPvzNwZFmxzofGxnQ3hfd
+         otKGvwSqd7utjMqbxS8X59bNyDfvW3SRjF9DGVQ2Dm+BVRKVFa42ygRqMVw/C5b64p8F
+         nDexCvLhxYIZ7R5BpAeXVsO0dc2LXqzYTStXleFne3jtWt19jwpwrUzF+zqLBZykwqfS
+         HPj1bJv9vYvnk7DC4uMUT9SfEKPI4G3N7jxFJy+xXLrE+YQYWLTwf89DD6Kc8tqFXBfi
+         AxIA==
+X-Gm-Message-State: APjAAAX0ZMiYyA8uepPRh+AA6p+JHfBDRYXk4K1kTz886VdZ5v8aIqOh
+        ueN4FmwBcLtGesqy4DNud19mIkVj75w=
+X-Google-Smtp-Source: APXvYqxyVIUXDkqImoe2hipuemx78UNU8J8kU4c3JDA7L+AZIyAjS2GWnTv5To7qQVMJ+KiKx133sw==
+X-Received: by 2002:a67:b106:: with SMTP id w6mr21973867vsl.16.1556212293366;
+        Thu, 25 Apr 2019 10:11:33 -0700 (PDT)
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com. [209.85.221.176])
+        by smtp.gmail.com with ESMTPSA id n202sm6583893vke.5.2019.04.25.10.11.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 10:11:32 -0700 (PDT)
+Received: by mail-vk1-f176.google.com with SMTP id h71so137134vkf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 10:11:32 -0700 (PDT)
+X-Received: by 2002:a1f:3458:: with SMTP id b85mr21127933vka.4.1556212291639;
+ Thu, 25 Apr 2019 10:11:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Medium
-X-Mailer: Open-Xchange Mailer v7.8.4-Rev54
-X-Originating-Client: open-xchange-appsuite
-X-Provags-ID: V03:K1:EiwVhB3XXpe5Oux+q614hCOdrvLuQGrnO8GGL3/xbZcxZB66jeP
- 2XUTmYwWTClu/ijBWkfrNG9zxOszrtmhgX6tooI+bv1jOIgOvGerroF0Nc/HUjAHBgcbY8b
- Gs9YLOy3WfZwhjyfueGlniJIoshi/IYxp1voAnZkVGVwnuK26T7SAY6c4lJq7nNpFK3Cq9z
- Z2s+fNc/AlZxykK+Y8DIg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1lppWUuFHUA=:PffeInm+yTx1FG9of4fjBs
- Av09yqD3QH6snduQEbdiil+BWZuOvSzOgIArXW32O1Hh/uOgyLUFXT18vJwv9RTPkslw7MAIQ
- x6FNU9zrq+/Lssc/+Be4nbBVq61W+mcdBWY3xkkM15/DPKEHvW9IlrXotvsccA0PcwkaGuwm9
- l7enK/8pqG8dy+UptK5uvurJazcEWxIyhb0/rAwZK6o9bYO0vuzo9hDb+wI5boD1WHo3jOg03
- Bo1smk0tMmXbwxjBrE4+BnpHor3rzDIWv0E7X0Y1Wjx3vqwxlgnNsiwdXkOsR9kieLNKzCplH
- 6ktRDM3Uy9+NdeiPoyPTxDAciJn9yfO+FqirhqjNZElcNIGQ6hrnKeY0xA26Kd10HTbBBAk80
- iLXSmdzGGJ1fGGulVgeWOGzvVuqCeiZVkouJVaQWADrSFYbCe4C+sAo7wSoXC5H3H2GfAsDqk
- 2W3vbso7pLY2DVH52BpG7uWX0LJAbTBsZ9xq4KWbgpK9vjT/MyAM4dVlLI/sdu4BiavW9bHAb
- dKk695/QTNV96cP1M7ZomqzNc8AnMP6YQCtRd9omUw574/c78FkdX17HceyYVSjkDJ916Fs17
- hzc7Yt5QJOgp67nlBsNVf+7J/NsoiUMhLN37vqzoqPjsD5zLP3ozKcmKnZGshSrCeL/5oApbm
- 5ArfqR1XsTCjZtRaIp4i3FCoZaf9NNQKPke5RUj3pkFaRfCrDcXyhPyo7X/tP5RzK1aP5WMKE
- 0iLIZYyYtbMV1PdAPvPXCV4mIsBbUZnrNv12C103RWpeTfPMB7aV7knZEi8=
+References: <20190424231237.14776-1-keescook@chromium.org> <a3ca267e-8e1e-65da-77c8-c7010a39354b@kernel.org>
+ <CAGXu5jJChvx-_E8RMTi3ioUZGuQGViy6gcAMpmvYZzms=zc6dQ@mail.gmail.com>
+In-Reply-To: <CAGXu5jJChvx-_E8RMTi3ioUZGuQGViy6gcAMpmvYZzms=zc6dQ@mail.gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Thu, 25 Apr 2019 10:11:20 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jLoOJydOOxmmiYYL2k_0K-MOD6j=gV8_4BUNhTTyWNsVQ@mail.gmail.com>
+Message-ID: <CAGXu5jLoOJydOOxmmiYYL2k_0K-MOD6j=gV8_4BUNhTTyWNsVQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/8] selftests: Move test output to diagnostic lines
+To:     shuah <shuah@kernel.org>, Joe Perches <joe@perches.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Serge Hallyn <serge@hallyn.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 25, 2019 at 10:05 AM Kees Cook <keescook@chromium.org> wrote:
+> WARNING: Misplaced SPDX-License-Identifier tag - use line 1 instead
+> #37: FILE: tools/testing/selftests/kselftest/runner.sh:2:
+>  # SPDX-License-Identifier: GPL-2.0
+>
+> This is a shell script. It can't be on line 1:
+>
+> $ head -n3 tools/testing/selftests/kselftest/runner.sh
+> #!/bin/sh
+> # SPDX-License-Identifier: GPL-2.0
+> #
+>
+> That looks like a bug in checkpatch not resetting the expected line or
+> something.
 
-> Jeremy Linton <jeremy.linton@arm.com> hat am 15. April 2019 um 23:21 geschrieben:
-> 
-> 
-> Return status based on ssbd_state and __ssb_safe. If the
-> mitigation is disabled, or the firmware isn't responding then
-> return the expected machine state based on a whitelist of known
-> good cores.
-> 
-> Given a heterogeneous machine, the overall machine vulnerability
-> defaults to safe but is reset to unsafe when we miss the whitelist
-> and the firmware doesn't explicitly tell us the core is safe.
-> In order to make that work we delay transitioning to vulnerable
-> until we know the firmware isn't responding to avoid a case
-> where we miss the whitelist, but the firmware goes ahead and
-> reports the core is not vulnerable. If all the cores in the
-> machine have SSBS, then __ssb_safe will remain true.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+It doesn't like patch 3 and doesn't notice that diff offset starts at line 2:
 
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+diff --git a/tools/testing/selftests/kselftest/runner.sh
+b/tools/testing/selftests/kselftest/runner.sh
+index e1117d703887..f12b0a631273 100644
+--- a/tools/testing/selftests/kselftest/runner.sh
++++ b/tools/testing/selftests/kselftest/runner.sh
+@@ -2,17 +2,20 @@
+ # SPDX-License-Identifier: GPL-2.0
+ #
+ # Runs a set of tests in a given subdirectory.
++export KSFT_TAP_LEVEL=1
 
-on a Raspberry Pi 3 B
+Joe, looks like the problem is here:
+
+                if ($realline == $checklicenseline) {
+realline == 2, checklicenseline == 1
+so this is skipped, including the "#!/" check to move checklicenseline to 2.
+then:
+                if ($realline != $checklicenseline &&
+                    $rawline =~ /\bSPDX-License-Identifier:/ &&
+realline == 2, checklicenseline == 1
+throws warning.
+
+Seems like checklicenseline should be unconditionally set to 2 for
+".sh" files? I don't see a way to fix this for just missing the #!/
+line from a context diff, though...
+
+-- 
+Kees Cook
