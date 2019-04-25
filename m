@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E341AC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C620C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2015C20891
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF5B205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUL3wLbT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hdk3XlQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387531AbfDYPcK (ORCPT
+        id S2387569AbfDYPcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:32:10 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39810 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387427AbfDYPcJ (ORCPT
+        Thu, 25 Apr 2019 11:32:18 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40055 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387427AbfDYPcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:32:09 -0400
-Received: by mail-pl1-f195.google.com with SMTP id e92so9486535plb.6;
-        Thu, 25 Apr 2019 08:32:09 -0700 (PDT)
+        Thu, 25 Apr 2019 11:32:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b3so11284089plr.7;
+        Thu, 25 Apr 2019 08:32:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ydaAtanhe5luQq8qrhQiH95JS2NmsbhYg1m6ekwdf5o=;
-        b=KUL3wLbTWkZ/awIyUBXXP9ac/jSSDNu3AYL9u+nQRWFMeHakhphPZ1wxSCkmAqOR8F
-         5+Zu5d/LjV9ur73c0TTstD9iFQfbPRxljSjbx/ljhkL/Idm8ucEuEhk4I60ugxbpMI+3
-         wGZ5Q/hvtHYcFLIBBPPrS7aD6xXffzHc2QSgdtU8D8MGLTPVX51s1F+aaHJ/j1Bb1SSw
-         jsrcnbQYcZ6ByyQdwQPNc8crfWBKu/Bk8vvI8scVR6T3Tw0PP7mS2Jb1NjMHIKGXWL70
-         Feoz6FjMeBFHgwqatHYMHvBkhs/KxDvgD/szIbBUVQ2FfhcM/fMQ0vdVWjyncKzg6SwP
-         D90Q==
+        bh=TaCx91wAcR4ikyNBIoUaFJho1ovTMWA1CQykmERd8P8=;
+        b=Hdk3XlQRCv7evnLRIrBqNI6dKOKM/IAtVLukmn4hOfboTFMosGg/1qHBBboME7fsSV
+         mgsDQX6YOUt0C+CyWn01xtR/CLYxDQkE815BTUxlY5LDT8bmCi0rWztMl8rKEvgLS0L7
+         HfT7yxZLK9PY8kxOLlVDTOfzpBIKYvNh1cJnM+uNyYnW854EQcaSuS443iIyiZ2U6Dnp
+         thbuNE2QdB4pFr0CyyZGzY4sv0dTTgCYS/Wyqc4BiX7X7kTPIkrEwFd3FSquz/okgL4k
+         An3nopJ2X09KuovKvKoLAPsyju3Z1PmebkjS/ctlAdK/v94yun4Je6bVUtP7qhTfsBYG
+         BiJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ydaAtanhe5luQq8qrhQiH95JS2NmsbhYg1m6ekwdf5o=;
-        b=Hb+4/FcTI73p7AJLxCvaIRTNY3ivA3q0jSsAD6bh0DK44GlUMuuBskXNkoUd94z3vQ
-         2OLHB3CwgJu55bDX022431Mt9TKybs9wg1L8xNyKaqH8fv5T15fgJVwshQi0gFQVQpwE
-         KBYI53GK4PJaME3QVyLjMLik7ybvd5jtYRu241vz29GwhCgcDYxAcg2fEWyHO7LTy+OQ
-         /lqOFO7ZELgTJr/VyH1CT+yG2pt8MMw64oBJWHxfXZ/yNXOVvzFD7LC2YqyLTOrzOMB2
-         +Z1e6dYdM3H03vWEf3rQkUa57c2yWTYoXF83jBeDWPIRyLIP9gxHOLYxfImVv0Ik44/2
-         9IVg==
-X-Gm-Message-State: APjAAAVfGGz15vD9aaHtYH6q6qpzkKfG/DY6oDPWQMAR5IzSCN4GdXf2
-        20K1BVXUFCUXTqOuIdVquus=
-X-Google-Smtp-Source: APXvYqwm0yZSg35X3LIazXcrJL8hxnm+1neXBMlhHHKv6ctFLzmozDzwjXR32bGKzWRmKzMGEQlCUg==
-X-Received: by 2002:a17:902:2c01:: with SMTP id m1mr41198162plb.22.1556206329043;
-        Thu, 25 Apr 2019 08:32:09 -0700 (PDT)
+        bh=TaCx91wAcR4ikyNBIoUaFJho1ovTMWA1CQykmERd8P8=;
+        b=NVC1zDzdp24D/y+XbuwLMstc38LhKTBTAkg7wN9hiQW3WtbrUcwtKjlJ0D9GmtG/Go
+         1t4UGEmdPVuW4ekesGf+yx7PzIhwMoIX8PfkXz1KheezZGE1y8kNW/EFDQ9MVWPX/tRi
+         f2oCj9v7SrIQbvnVFLsHF7HJ4Y41COWLaVn2gGWtBlx9/gLe8rxl/PaXVLaSsn4yuBj8
+         T4X3kABzI5FcJKKV0ju6pBx2FUvzMMB/8yw0NacTD9f8fOYhJuLDSNJsa02hzypCdB1d
+         WugxvgDjt0Zpbj9PkiIztBHZZWHVU7Msl12rDWMTs2OxYG2Kwg2VSWGppq9sWi9dVS5w
+         zkMg==
+X-Gm-Message-State: APjAAAUHYnesxlrycXLZzKg1LJjJmZTgXoWFD1cU7sbio2eNTD3xNHq3
+        SHEgHtC5Zjr/H0XMep/MEh0=
+X-Google-Smtp-Source: APXvYqx68euL3s8ftKjiMXZ0iaWeLPJXtLVsDDr36kkfZtCXIn3smjJr6dZt5olwjZ/tgq7YYFOqfw==
+X-Received: by 2002:a17:902:6843:: with SMTP id f3mr14305386pln.218.1556206334772;
+        Thu, 25 Apr 2019 08:32:14 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id c14sm2643363pgj.94.2019.04.25.08.32.04
+        by smtp.gmail.com with ESMTPSA id c14sm2643363pgj.94.2019.04.25.08.32.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 08:32:08 -0700 (PDT)
+        Thu, 25 Apr 2019 08:32:14 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     rjw@rjwysocki.net, Jonathan Corbet <corbet@lwn.net>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
         linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 06/24] Documentation: ACPI: move scan_handlers.txt to driver-api/acpi and convert to reST
-Date:   Thu, 25 Apr 2019 23:30:59 +0800
-Message-Id: <20190425153117.16057-7-changbin.du@gmail.com>
+Subject: [PATCH v6 07/24] Documentation: ACPI: move DSD-properties-rules.txt to firmware-guide/acpi and covert to reST
+Date:   Thu, 25 Apr 2019 23:31:00 +0800
+Message-Id: <20190425153117.16057-8-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190425153117.16057-1-changbin.du@gmail.com>
 References: <20190425153117.16057-1-changbin.du@gmail.com>
@@ -82,65 +82,87 @@ add it to Sphinx TOC tree. No essential content change.
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/driver-api/acpi/index.rst       |  1 +
- .../acpi/scan_handlers.rst}                   | 24 ++++++++++++-------
- 2 files changed, 16 insertions(+), 9 deletions(-)
- rename Documentation/{acpi/scan_handlers.txt => driver-api/acpi/scan_handlers.rst} (90%)
+ .../acpi/DSD-properties-rules.rst}            | 21 +++++++++++--------
+ Documentation/firmware-guide/acpi/index.rst   |  1 +
+ 2 files changed, 13 insertions(+), 9 deletions(-)
+ rename Documentation/{acpi/DSD-properties-rules.txt => firmware-guide/acpi/DSD-properties-rules.rst} (88%)
 
-diff --git a/Documentation/driver-api/acpi/index.rst b/Documentation/driver-api/acpi/index.rst
-index 12649947b19b..ace0008e54c2 100644
---- a/Documentation/driver-api/acpi/index.rst
-+++ b/Documentation/driver-api/acpi/index.rst
-@@ -6,3 +6,4 @@ ACPI Support
-    :maxdepth: 2
- 
-    linuxized-acpica
-+   scan_handlers
-diff --git a/Documentation/acpi/scan_handlers.txt b/Documentation/driver-api/acpi/scan_handlers.rst
-similarity index 90%
-rename from Documentation/acpi/scan_handlers.txt
-rename to Documentation/driver-api/acpi/scan_handlers.rst
-index 3246ccf15992..7a197b3a33fc 100644
---- a/Documentation/acpi/scan_handlers.txt
-+++ b/Documentation/driver-api/acpi/scan_handlers.rst
-@@ -1,7 +1,13 @@
+diff --git a/Documentation/acpi/DSD-properties-rules.txt b/Documentation/firmware-guide/acpi/DSD-properties-rules.rst
+similarity index 88%
+rename from Documentation/acpi/DSD-properties-rules.txt
+rename to Documentation/firmware-guide/acpi/DSD-properties-rules.rst
+index 3e4862bdad98..4306f29b6103 100644
+--- a/Documentation/acpi/DSD-properties-rules.txt
++++ b/Documentation/firmware-guide/acpi/DSD-properties-rules.rst
+@@ -1,8 +1,11 @@
 +.. SPDX-License-Identifier: GPL-2.0
-+.. include:: <isonum.txt>
 +
-+==================
- ACPI Scan Handlers
-+==================
-+
-+:Copyright: |copy| 2012, Intel Corporation
++==================================
+ _DSD Device Properties Usage Rules
+-----------------------------------
++==================================
  
--Copyright (C) 2012, Intel Corporation
--Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-+:Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ Properties, Property Sets and Property Subsets
+-----------------------------------------------
++==============================================
  
- During system initialization and ACPI-based device hot-add, the ACPI namespace
- is scanned in search of device objects that generally represent various pieces
-@@ -30,14 +36,14 @@ to configure that link so that the kernel can use it.
- Those additional configuration tasks usually depend on the type of the hardware
- component represented by the given device node which can be determined on the
- basis of the device node's hardware ID (HID).  They are performed by objects
--called ACPI scan handlers represented by the following structure:
-+called ACPI scan handlers represented by the following structure::
+ The _DSD (Device Specific Data) configuration object, introduced in ACPI 5.1,
+ allows any type of device configuration data to be provided via the ACPI
+@@ -18,7 +21,7 @@ specific type) associated with it.
  
--struct acpi_scan_handler {
--	const struct acpi_device_id *ids;
--	struct list_head list_node;
--	int (*attach)(struct acpi_device *dev, const struct acpi_device_id *id);
--	void (*detach)(struct acpi_device *dev);
--};
-+	struct acpi_scan_handler {
-+		const struct acpi_device_id *ids;
-+		struct list_head list_node;
-+		int (*attach)(struct acpi_device *dev, const struct acpi_device_id *id);
-+		void (*detach)(struct acpi_device *dev);
-+	};
+ In the ACPI _DSD context it is an element of the sub-package following the
+ generic Device Properties UUID in the _DSD return package as specified in the
+-Device Properties UUID definition document [1].
++Device Properties UUID definition document [1]_.
  
- where ids is the list of IDs of device nodes the given handler is supposed to
- take care of, list_node is the hook to the global list of ACPI scan handlers
+ It also may be regarded as the definition of a key and the associated data type
+ that can be returned by _DSD in the Device Properties UUID sub-package for a
+@@ -33,14 +36,14 @@ Property subsets are nested collections of properties.  Each of them is
+ associated with an additional key (name) allowing the subset to be referred
+ to as a whole (and to be treated as a separate entity).  The canonical
+ representation of property subsets is via the mechanism specified in the
+-Hierarchical Properties Extension UUID definition document [2].
++Hierarchical Properties Extension UUID definition document [2]_.
+ 
+ Property sets may be hierarchical.  That is, a property set may contain
+ multiple property subsets that each may contain property subsets of its
+ own and so on.
+ 
+ General Validity Rule for Property Sets
+----------------------------------------
++=======================================
+ 
+ Valid property sets must follow the guidance given by the Device Properties UUID
+ definition document [1].
+@@ -73,7 +76,7 @@ suitable for the ACPI environment and consequently they cannot belong to a valid
+ property set.
+ 
+ Property Sets and Device Tree Bindings
+---------------------------------------
++======================================
+ 
+ It often is useful to make _DSD return property sets that follow Device Tree
+ bindings.
+@@ -91,7 +94,7 @@ expected to automatically work in the ACPI environment regardless of their
+ contents.
+ 
+ References
+-----------
++==========
+ 
+-[1] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
+-[2] http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf
++.. [1] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
++.. [2] http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf
+diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+index 868bd25a3398..0e05b843521c 100644
+--- a/Documentation/firmware-guide/acpi/index.rst
++++ b/Documentation/firmware-guide/acpi/index.rst
+@@ -10,3 +10,4 @@ ACPI Support
+    namespace
+    enumeration
+    osi
++   DSD-properties-rules
 -- 
 2.20.1
 
