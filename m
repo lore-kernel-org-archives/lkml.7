@@ -2,204 +2,208 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8960DC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1DFC282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52106214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48CF2214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730684AbfDYLIB convert rfc822-to-8bit (ORCPT
+        id S1730698AbfDYLIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:08:01 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:32998 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfDYLIA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:08:00 -0400
-Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 47D02CF35C;
-        Thu, 25 Apr 2019 13:16:09 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] Bluetooth: Ignore CC events not matching the last HCI
- command
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190425063812.14509-1-jprvita@endlessm.com>
-Date:   Thu, 25 Apr 2019 13:07:57 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>, bgodavar@codeaurora.org,
-        ytkim@qca.qualcomm.com, "David S. Miller" <davem@davemloft.net>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        =?utf-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <C4118FC8-1589-44D5-97C4-E18892448985@holtmann.org>
-References: <CA+A7VXVa9pFizfQ8C8QUS=3=YDjojmScOKPS=Yhcx-w8G=wsVw@mail.gmail.com>
- <20190425063812.14509-1-jprvita@endlessm.com>
-To:     =?utf-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Thu, 25 Apr 2019 07:08:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41156 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbfDYLIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 07:08:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C07F374;
+        Thu, 25 Apr 2019 04:08:35 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A95A23F5C1;
+        Thu, 25 Apr 2019 04:08:33 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 12:08:30 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Ellie Reeves <ellierevves@gmail.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20190425110830.GC10833@e121166-lin.cambridge.arm.com>
+References: <20190316161243.29517-1-repk@triplefau.lt>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190316161243.29517-1-repk@triplefau.lt>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joao,
+On Sat, Mar 16, 2019 at 05:12:43PM +0100, Remi Pommarel wrote:
+> The PCI_EXP_LNKSTA_LT flag in the emulated root device's PCI_EXP_LNKSTA
+> config register does not reflect the actual link training state and is
+> always cleared. The Link Training and Status State Machine (LTSSM) flag
+> in LMI config register could be used as a link training indicator.
+> Indeed if the LTSSM is in L0 or upper state then link training has
+> completed (see [1]).
+> 
+> Unfortunately because setting the PCI_EXP_LINCTL_RL flag does not
+> instantly imply a LTSSM state change (e.g. L0s to recovery state
+> transition takes some time), LTSSM can be in L0 but link training has
+> not finished yet. Thus a lower L0 LTSSM state followed by a L0 or upper
+> state sequence has to be seen to be sure that link training has been
+> done.
 
-> This commit makes the kernel not send the next queued HCI command until
-> a command complete arrives for the last HCI command sent to the
-> controller. This change avoids a problem with some buggy controllers
-> (seen on two SKUs of QCA9377) that send an extra command complete event
-> for the previous command after the kernel had already sent a new HCI
-> command to the controller.
+Hi Remi,
+
+I am a bit confused, so you are saying that the LTSSM flag in the
+LMI config register can't be used to detect when training is completed ?
+
+Certainly it can't be used by ASPM core that relies on:
+
+PCI_EXP_LNKSTA_LT flag
+
+in the PCI_EXP_LNKSTA register, and that's what you are setting through
+this timeout mechanism IIUC.
+
+Please elaborate on that.
+
+I am picking Bjorn's brain on this patch since what you are doing
+seems quite arbitrary and honestly it is a bit of a hack.
+
+I wonder whether it is not better to avoid advertising ASPM support.
+
+Lorenzo
+
+> Because one may not call a pcie conf register read on LNKSTA after
+> doing a retrain link or may miss the link down state due to timing, a
+> 20ms timeout is used. Passing this timeout link is considered retrained.
 > 
-> The problem was reproduced when starting an active scanning procedure,
-> where an extra command complete event arrives for the LE_SET_RANDOM_ADDR
-> command. When this happends the kernel ends up not processing the
-> command complete for the following commmand, LE_SET_SCAN_PARAM, and
-> ultimately behaving as if a passive scanning procedure was being
-> performed, when in fact controller is performing an active scanning
-> procedure. This makes it impossible to discover BLE devices as no device
-> found events are sent to userspace.
+> This fixes boot hang or kernel panic with the following callstack due to
+> ASPM setup doing a link re-train and polling for PCI_EXP_LNKSTA_LT flag
+> to be cleared before using it.
 > 
-> This problem is reproducible on 100% of the attempts on the affected
-> controllers. The extra command complete event can be seen at timestamp
-> 27.420131 on the btmon logs bellow.
+> -------------------- 8< -------------------
+> 	[    0.915389]  dump_backtrace+0x0/0x140
+> 	[    0.915391]  show_stack+0x14/0x20
+> 	[    0.915393]  dump_stack+0x90/0xb4
+> 	[    0.915394]  panic+0x134/0x2c0
+> 	[    0.915396]  nmi_panic+0x6c/0x70
+> 	[    0.915398]  arm64_serror_panic+0x74/0x80
+> 	[    0.915400]  is_valid_bugaddr+0x0/0x8
+> 	[    0.915402]  el1_error+0x7c/0xe4
+> 	[    0.915404]  advk_pcie_rd_conf+0x4c/0x250
+> 	[    0.915406]  pci_bus_read_config_word+0x7c/0xd0
+> 	[    0.915408]  pcie_capability_read_word+0x90/0xc8
+> 	[    0.915410]  pcie_get_aspm_reg+0x68/0x118
+> 	[    0.915412]  pcie_aspm_init_link_state+0x460/0xa98
+> 	[    0.915414]  pci_scan_slot+0xe8/0x100
+> 	[    0.915416]  pci_scan_child_bus_extend+0x50/0x288
+> 	[    0.915418]  pci_scan_bridge_extend+0x348/0x4f0
+> 	[    0.915420]  pci_scan_child_bus_extend+0x1dc/0x288
+> 	[    0.915423]  pci_scan_root_bus_bridge+0xc4/0xe0
+> 	[    0.915424]  pci_host_probe+0x14/0xa8
+> 	[    0.915426]  advk_pcie_probe+0x838/0x910
+> 	[...]
+> -------------------- 8< -------------------
 > 
-> Bluetooth monitor ver 5.50
-> = Note: Linux version 5.0.0+ (x86_64)                                  0.352340
-> = Note: Bluetooth subsystem version 2.22                               0.352343
-> = New Index: 80:C5:F2:8F:87:84 (Primary,USB,hci0)               [hci0] 0.352344
-> = Open Index: 80:C5:F2:8F:87:84                                 [hci0] 0.352345
-> = Index Info: 80:C5:F2:8F:87:84 (Qualcomm)                      [hci0] 0.352346
-> @ MGMT Open: bluetoothd (privileged) version 1.14             {0x0001} 0.352347
-> @ MGMT Open: btmon (privileged) version 1.14                  {0x0002} 0.352366
-> @ MGMT Open: btmgmt (privileged) version 1.14                {0x0003} 27.302164
-> @ MGMT Command: Start Discovery (0x0023) plen 1       {0x0003} [hci0] 27.302310
->        Address type: 0x06
->          LE Public
->          LE Random
-> < HCI Command: LE Set Random Address (0x08|0x0005) plen 6   #1 [hci0] 27.302496
->        Address: 15:60:F2:91:B2:24 (Non-Resolvable)
->> HCI Event: Command Complete (0x0e) plen 4                 #2 [hci0] 27.419117
->      LE Set Random Address (0x08|0x0005) ncmd 1
->        Status: Success (0x00)
-> < HCI Command: LE Set Scan Parameters (0x08|0x000b) plen 7  #3 [hci0] 27.419244
->        Type: Active (0x01)
->        Interval: 11.250 msec (0x0012)
->        Window: 11.250 msec (0x0012)
->        Own address type: Random (0x01)
->        Filter policy: Accept all advertisement (0x00)
->> HCI Event: Command Complete (0x0e) plen 4                 #4 [hci0] 27.420131
->      LE Set Random Address (0x08|0x0005) ncmd 1
->        Status: Success (0x00)
-> < HCI Command: LE Set Scan Enable (0x08|0x000c) plen 2      #5 [hci0] 27.420259
->        Scanning: Enabled (0x01)
->        Filter duplicates: Enabled (0x01)
->> HCI Event: Command Complete (0x0e) plen 4                 #6 [hci0] 27.420969
->      LE Set Scan Parameters (0x08|0x000b) ncmd 1
->        Status: Success (0x00)
->> HCI Event: Command Complete (0x0e) plen 4                 #7 [hci0] 27.421983
->      LE Set Scan Enable (0x08|0x000c) ncmd 1
->        Status: Success (0x00)
-> @ MGMT Event: Command Complete (0x0001) plen 4        {0x0003} [hci0] 27.422059
->      Start Discovery (0x0023) plen 1
->        Status: Success (0x00)
->        Address type: 0x06
->          LE Public
->          LE Random
-> @ MGMT Event: Discovering (0x0013) plen 2             {0x0003} [hci0] 27.422067
->        Address type: 0x06
->          LE Public
->          LE Random
->        Discovery: Enabled (0x01)
-> @ MGMT Event: Discovering (0x0013) plen 2             {0x0002} [hci0] 27.422067
->        Address type: 0x06
->          LE Public
->          LE Random
->        Discovery: Enabled (0x01)
-> @ MGMT Event: Discovering (0x0013) plen 2             {0x0001} [hci0] 27.422067
->        Address type: 0x06
->          LE Public
->          LE Random
->        Discovery: Enabled (0x01)
+> [1] "PCI Express Base Specification", REV. 2.1
+>     PCI Express, March 4 2009, Table 4-7
 > 
-> Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 > ---
-> include/net/bluetooth/hci_core.h | 1 +
-> net/bluetooth/hci_core.c         | 5 +++++
-> net/bluetooth/hci_event.c        | 3 +++
-> 3 files changed, 9 insertions(+)
+> Changes since v1:
+>   - Rename retraining flag field
+>   - Fix DEVCTL register writing
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 33 ++++++++++++++++++++++++++-
+>  1 file changed, 32 insertions(+), 1 deletion(-)
 > 
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> index 094e61e07030..85bed4e916d3 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -364,6 +364,7 @@ struct hci_dev {
-> 	struct sk_buff_head	cmd_q;
-> 
-> 	struct sk_buff		*sent_cmd;
-> +	__u8			sent_cmd_pending_cc;
-
-is there anything wrong with a bool type? And frankly using a flag seems more safe than just a boolean.
-
-> 
-> 	struct mutex		req_lock;
-> 	wait_queue_head_t	req_wait_q;
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index d6b2540ba7f8..37893b0c6077 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -4380,9 +4380,13 @@ void hci_req_cmd_complete(struct hci_dev *hdev, u16 opcode, u8 status,
-> 		if (test_bit(HCI_INIT, &hdev->flags) && opcode == HCI_OP_RESET)
-> 			hci_resend_last(hdev);
-> 
-> +		bt_dev_err(hdev,
-> +			   "unexpected CC event for opcode 0x%4.4x", opcode);
-
-Have you tested this? This will cause many error from tools like hciconfig or hcitool.
-
-> 		return;
-> 	}
-> 
-> +	hdev->sent_cmd_pending_cc = 0;
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index eb58dfdaba1b..47b707b5fc2c 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -180,6 +180,7 @@
+>  #define LINK_WAIT_MAX_RETRIES		10
+>  #define LINK_WAIT_USLEEP_MIN		90000
+>  #define LINK_WAIT_USLEEP_MAX		100000
+> +#define LINK_RETRAIN_DELAY_MAX		(20 * HZ / 1000) /* 20 ms */
+>  
+>  #define MSI_IRQ_NUM			32
+>  
+> @@ -199,6 +200,8 @@ struct advk_pcie {
+>  	u16 msi_msg;
+>  	int root_bus_nr;
+>  	struct pci_bridge_emul bridge;
+> +	unsigned long rl_deadline; /* Retrain link jiffies deadline */
+> +	u8 rl_asked; /* Retraining has been asked and is in transition */
+>  };
+>  
+>  static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64 reg)
+> @@ -400,6 +403,19 @@ static int advk_pcie_wait_pio(struct advk_pcie *pcie)
+>  	return -ETIMEDOUT;
+>  }
+>  
+> +static int advk_pcie_link_retraining(struct advk_pcie *pcie)
+> +{
+> +	if (!advk_pcie_link_up(pcie)) {
+> +		pcie->rl_asked = 0;
+> +		return 1;
+> +	}
 > +
-> 	/* If the command succeeded and there's still more commands in
-> 	 * this request the request is not yet complete.
-> 	 */
-> @@ -4493,6 +4497,7 @@ static void hci_cmd_work(struct work_struct *work)
-> 
-> 		hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
-> 		if (hdev->sent_cmd) {
-> +			hdev->sent_cmd_pending_cc = 1;
-> 			atomic_dec(&hdev->cmd_cnt);
-> 			hci_send_frame(hdev, skb);
-> 			if (test_bit(HCI_RESET, &hdev->flags))
-
-Fun part is actually that even commands injected via hcitool etc. will be added to the sent_cmd queue unless they are vendor specific commands. However some manufactures choose to use command complete for their vendor commands as well (others don’t).
-
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index 609fd6871c5a..7541a4bc9444 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -3404,6 +3404,9 @@ static void hci_cmd_complete_evt(struct hci_dev *hdev, struct sk_buff *skb,
-> 	hci_req_cmd_complete(hdev, *opcode, *status, req_complete,
-> 			     req_complete_skb);
-> 
-> +	if (hdev->sent_cmd_pending_cc)
-> +		return;
+> +	if (pcie->rl_asked && time_before(jiffies, pcie->rl_deadline))
+> +		return 1;
 > +
-> 	if (atomic_read(&hdev->cmd_cnt) && !skb_queue_empty(&hdev->cmd_q))
-> 		queue_work(hdev->workqueue, &hdev->cmd_work);
-
-I rather see this done super cleanly. We have a pending cmd request from the kernel, make sure it gets answered with the corresponding command complete or command status and not just some other event. If there is a command complete or command status for a command that we don’t have pending, then ignore.
-
-Frankly, you are just hacking around here.
-
-Regards
-
-Marcel
-
+> +	pcie->rl_asked = 0;
+> +	return 0;
+> +}
+>  
+>  static pci_bridge_emul_read_status_t
+>  advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+> @@ -426,11 +442,19 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	}
+>  
+> +	case PCI_EXP_LNKCTL: {
+> +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
+> +			~(PCI_EXP_LNKSTA_LT << 16);
+> +		if (advk_pcie_link_retraining(pcie))
+> +			val |= (PCI_EXP_LNKSTA_LT << 16);
+> +		*value = val;
+> +		return PCI_BRIDGE_EMUL_HANDLED;
+> +	}
+> +
+>  	case PCI_CAP_LIST_ID:
+>  	case PCI_EXP_DEVCAP:
+>  	case PCI_EXP_DEVCTL:
+>  	case PCI_EXP_LNKCAP:
+> -	case PCI_EXP_LNKCTL:
+>  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	default:
+> @@ -447,8 +471,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+>  
+>  	switch (reg) {
+>  	case PCI_EXP_DEVCTL:
+> +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> +		break;
+> +
+>  	case PCI_EXP_LNKCTL:
+>  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> +		if (new & PCI_EXP_LNKCTL_RL) {
+> +			pcie->rl_asked = 1;
+> +			pcie->rl_deadline = jiffies + LINK_RETRAIN_DELAY_MAX;
+> +		}
+>  		break;
+>  
+>  	case PCI_EXP_RTCTL:
+> -- 
+> 2.20.1
+> 
