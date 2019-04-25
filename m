@@ -2,87 +2,99 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD48DC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E13C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F60420693
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9086420693
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="W7cULGLb";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TYwyiF38"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o1MKdoQz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbfDYQio (ORCPT
+        id S1729266AbfDYQiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:38:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52446 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfDYQin (ORCPT
+        Thu, 25 Apr 2019 12:38:55 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45263 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728938AbfDYQiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:38:43 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3BB7E607DE; Thu, 25 Apr 2019 16:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556210323;
-        bh=f/SlGReMnHfevwanich/a22n0gvsnwVify2i8KLyHWc=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=W7cULGLbJWA+2D8NygyEhmp/E1Brxxf1js4p55f6qsipOnnRgbDOtKuSJ6ZZojiFX
-         ag1prSRNGDZeZXY6zycMBxj9NbSBbuk4bMgfQLM7wefp6c6JnK7LC4+0kBb9xoM2NQ
-         aqEeUfeENYNMr7EnxTcQnESqCQ/YqlB+ufJCwK9w=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 532B56034D;
-        Thu, 25 Apr 2019 16:38:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556210322;
-        bh=f/SlGReMnHfevwanich/a22n0gvsnwVify2i8KLyHWc=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=TYwyiF380szAWL/H5gWmiaxSXu8KhLNAKdLmuQoHlCIHF8R+UPQ4xVZlOs/TC5VjV
-         LXG5Mv1GmoADYHUTPLoRXr+dsF6/py4p4P9tefhf9A9QmRljmzmFVUmH8SbSTUCpE7
-         g0YtEPk0Jml1fx5i3vzrxLf5vuOi58wAw0UpOk0E=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 532B56034D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 25 Apr 2019 12:38:52 -0400
+Received: by mail-pl1-f195.google.com with SMTP id o5so47718pls.12;
+        Thu, 25 Apr 2019 09:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QhP+0qXLKcIvd8zcsCQWUyMz8HeCpuFq4bHAvM6mNOY=;
+        b=o1MKdoQzNyvSoLwZ2RDlz/2+alYoKBGAHMj4/+rmBEp/bPOrnZo6CMN4psR1ib+0qT
+         bvs0t/QEaaZ+aCbqcwOQrDEOtjvjSR7Mb3hBUkeMabO69OLVUj9WucmwwP8sVXESlXgJ
+         VqimlyttCJHrRDZr7T2vyKRSHcFNOZiIFAuVMUA1try5yQUvou8lIsnPPECIuPmbbk7b
+         YYg+bcGKAVdXh0l2sYp0jLOqVJmn2dl5gc+oPKSDpOUv8PJy6PKceaVlydw2YJ6iWrfR
+         LsKj56nXpPH+xmzdfz0II+4ji17cnul47S0rSyBIr7TtY6CRBCBvJ4/fuyrqrFCfWpVw
+         pfvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QhP+0qXLKcIvd8zcsCQWUyMz8HeCpuFq4bHAvM6mNOY=;
+        b=eqLNPbLKDOFy2GnJuWPQfcskXMtgOcem8Guz1juqd0VIGxQSdIFCSQm++fyXDiv51A
+         DTmZ3noNVBYJ+TE3Q1eyPis/m0vTkXMyqUNL039N/HJV0h2aPOdJapg/VAo9CxGZZ7+K
+         pcNG15Jk3ie29JFZ/opBWQDCm5FxQLjlus2mmWvVyuNkeVdEc8gZ45Z8KsusRp36BV/A
+         4eTdQZNT1GcoAWmpJZ8I1LLDYbZD1CG33S5u5j5qLud2+2LhnQQ3pgeDonZNeNivnIx/
+         jFrlQHws84Nou6IS15smc28VXJJSseRqryk6SbW+HLmozcXnpuHkvzG+ViE6mchwnl+/
+         +sxw==
+X-Gm-Message-State: APjAAAWxGDPyBe32LuaBqrRLIKtvbXZll/u5FjEAwThhFh3XdmY3sHC9
+        I0nrrmfTJJWPS0ahNhge+DI=
+X-Google-Smtp-Source: APXvYqxJHa7Eoe8Mywk7XT/2kzjRZdYUczYsF0opji9chexWdsmUJFKf0badB9V1Qiub9dnFKFOiUw==
+X-Received: by 2002:a17:902:2b81:: with SMTP id l1mr39757318plb.289.1556210331156;
+        Thu, 25 Apr 2019 09:38:51 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id k186sm42003053pfc.137.2019.04.25.09.38.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 09:38:50 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gwink@chromium.org
+Subject: [PATCH 2/2] HID: input: add mapping for KEY_KBD_LAYOUT_NEXT
+Date:   Thu, 25 Apr 2019 09:38:46 -0700
+Message-Id: <20190425163846.51730-2-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+In-Reply-To: <20190425163846.51730-1-dmitry.torokhov@gmail.com>
+References: <20190425163846.51730-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ray_cs: Check return value of pcmcia_register_driver
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190306114614.19116-1-yuehaibing@huawei.com>
-References: <20190306114614.19116-1-yuehaibing@huawei.com>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190425163843.3BB7E607DE@smtp.codeaurora.org>
-Date:   Thu, 25 Apr 2019 16:38:43 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yue Haibing <yuehaibing@huawei.com> wrote:
+HUTRR56 defined a new usage code on consumer page to cycle through
+set of keyboard layouts, let's add this mapping.
 
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> init_ray_cs does not check value of pcmcia_register_driver,
-> if it fails, there maybe cause a NULL pointer dereference in
-> exit_ray_cs.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/hid/hid-input.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-444efbde3281 ray_cs: Check return value of pcmcia_register_driver
-
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index b607286a0bc8..0579b8d3f912 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1051,6 +1051,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x28b: map_key_clear(KEY_FORWARDMAIL);	break;
+ 		case 0x28c: map_key_clear(KEY_SEND);		break;
+ 
++		case 0x29d: map_key_clear(KEY_KBD_LAYOUT_NEXT);	break;
++
+ 		case 0x2c7: map_key_clear(KEY_KBDINPUTASSIST_PREV);		break;
+ 		case 0x2c8: map_key_clear(KEY_KBDINPUTASSIST_NEXT);		break;
+ 		case 0x2c9: map_key_clear(KEY_KBDINPUTASSIST_PREVGROUP);		break;
 -- 
-https://patchwork.kernel.org/patch/10840927/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.21.0.593.g511ec345e18-goog
 
