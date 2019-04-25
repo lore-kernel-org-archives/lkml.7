@@ -2,206 +2,313 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C48C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6CEC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7640C217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556173883;
-	bh=wHRXN5XEZCV0yKXXFctP1aLZqAPPzegTUGTtpGvu3IU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2vFuPraMTXS7E58sx9mxTxHUZKrXTbCv24EVIumYsu0+0Y2ZuOL58rSWZ34o44vHj
-	 XyW0kfzByA5qagc6/G4nlQP52SFV/m49YI+2Fh8fLnbPTbYzP883BOKYJydnZ11Hwp
-	 93Xwmb/qYLaVpuUOdbmqOYayiMaDDTQwD9lLmF9c=
+	by mail.kernel.org (Postfix) with ESMTP id 11940217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:31:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BvVcTjsg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387402AbfDYGbW (ORCPT
+        id S1729651AbfDYGbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 02:31:22 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40703 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfDYGbV (ORCPT
+        Thu, 25 Apr 2019 02:31:39 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:38085 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfDYGbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 02:31:21 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h4so28575911wre.7;
-        Wed, 24 Apr 2019 23:31:19 -0700 (PDT)
+        Thu, 25 Apr 2019 02:31:39 -0400
+Received: by mail-ua1-f67.google.com with SMTP id t15so6890590uao.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 23:31:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nkV8EKpA5YNJLAoU8Dqidj432hCPaA90eLlXB6QVb1E=;
-        b=KgJ3uI1n9SBz4stP5z6Js3knEMvrOfq6LYbMgolbQ1HeC3Bp+76DRsuh5KgU7DaFKG
-         Etu2mAeu/OLBFYK64QbXt+rXWx1aKBPRMU1VDOwI/1BG+sPEfHxXdB5Hik9UZKUEDMsM
-         L+xowW1PMCIYvz3W4SR15XjKABFeDcGjmorCwpLd10IK5X3VO6M3Jo03FzEX7KPB7dhT
-         AbCCbva+Sp9+Pf8zbzlQjJXwUdtgpBoxgn26VQvIzmLulVhnJso/l8LMOMYBTD7nyDwC
-         tr8NJsLZ2v2rEn43NH6HjlmWGsY9iqY6tSohupEsK6QKtRp6u65JY9ue23p9ZCIuYxzY
-         JkGg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DsWrY5rLCYMwsmN6y8s5YmSBG5RMEFfsiL0kEIJ+uHE=;
+        b=BvVcTjsg6aQ/vKUyZA2wIskC3DRTeRM1ROL3T+e5YqlkSPEUFT3Cvcbw5L3aUM0OCJ
+         LO/wdTyZgs7ncEAilZ+HUMMvwH6Hi+3y3Z9UBVjevkB3I3izPVtdOy+rzrp5syEf+czu
+         2vjwlYIqy5Ymmge8c2FwVFT+Ub0O5EQ9+cOW+oI4y0W7PAZb64DcWJ9COpfD2PK2D/tU
+         Wd9Gcjmgc7nml25I5E+Dya8iZO/AXUaMvwjonYk/EbiYUuN3L9e6O36KE0sKOb+owlSR
+         7TRPlC+kdaepmtWkC/Ad0GrE6a1O7ME0WOPohQFpr9rpN5aVv0qocfv4y157wTa3xHcQ
+         ZLtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nkV8EKpA5YNJLAoU8Dqidj432hCPaA90eLlXB6QVb1E=;
-        b=apVeHQyLd1xBge5nm8y6TYsjvs8/QBBVgf+L1t4ybQHyRTwn9tVpz4xT68YSO6Eyd2
-         zTDnHabE65hIdqJDq9SygrdVzB/d7C8TD4NsD8q4qFX67t42ikT3LU15ZTPlYKJKjg0F
-         MBmXIfTqKUEnus8TbfUjH01e2tld45Vf/qMLN6ije6QiL49oCT1l8YPIyt6vnfvrfO7h
-         S00kTcuAeCTcK5Qq3lXnjSbZaDe+R9hppNft3In9IMHI+AyPblqhMqXyptOprWCa+Mc6
-         vb/gUrkFVN9GbsXAJ1B4W5MNwX+HXCNtJuTeF9hftyKi1UhTwWUV87PrN4BqpH/+7Z8F
-         rSAA==
-X-Gm-Message-State: APjAAAWN2OGFYP85WXH+SRBUmySrH1uDVjfzxRY8OwI/HFD+Iwer0S1H
-        lRs01w7N/o+gxqtbcWpXBjU=
-X-Google-Smtp-Source: APXvYqw0ahPLji+D1kmmCplVReoZg3Pv/dg7a9eF+tYrBEeQmujFjwicRtO3g/lE7Kj7dwxppvg36A==
-X-Received: by 2002:adf:b60a:: with SMTP id f10mr23463310wre.116.1556173878697;
-        Wed, 24 Apr 2019 23:31:18 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id s9sm4181953wrm.22.2019.04.24.23.31.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 23:31:17 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 08:31:15 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v8 15/15] x86/split_lock: Add a sysfs interface to
- enable/disable split lock detection during run time
-Message-ID: <20190425063115.GD40105@gmail.com>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
- <1556134382-58814-16-git-send-email-fenghua.yu@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DsWrY5rLCYMwsmN6y8s5YmSBG5RMEFfsiL0kEIJ+uHE=;
+        b=cBzZYpmCzlpXAlhYwTmIW8vDE+/iuG5eGsRWCeZMQpH+zt9RvoHgfNG/qJKV6y7rtO
+         Y/SrJF7+bCzFEZKKuPvfidBNxrKoGeFcaorMnEC6UZSEz/jqq89Wd0gBMnvlnP9K1MG1
+         HBX5b26N1S6HqpjHTynIiC6AHhJFu9RIMXcr7LIfSd7KLbTQJbdW0JkpUiENrpfN4tBH
+         0ihAg9wYc8G88GCNKnL6y1YBG/GZogofjS00ECkSEqlA0A9RYRfk6FQAkRRe2O2lqXQy
+         qoCMgFhFUekqypF4QAYUBCEasHx1X3d8gx9hhFM047k6+0P/oPJDhVr9bDUh8RQ6J+eU
+         dtYg==
+X-Gm-Message-State: APjAAAVG6neCZy7i40+3MBg8HHs+3rVEsb7HDAxd6O7OSQp9bQicWPIx
+        27dn0BIa/hYSemdBsTSkG7M758hMEv18vuEX4dApxg==
+X-Google-Smtp-Source: APXvYqzs79V97XmW9k+25z9oHG0lb59Wg3advClSdz/IglhclRiEXSaO+WftnNnFpHzrkdSG/C7twwjStrSXAkxdHQA=
+X-Received: by 2002:ab0:7694:: with SMTP id v20mr2008378uaq.60.1556173897438;
+ Wed, 24 Apr 2019 23:31:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556134382-58814-16-git-send-email-fenghua.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1553853990.git.amit.kucheria@linaro.org>
+ <5583cae1-8fea-724a-24a4-59b38a205ac3@free.fr> <CAP245DUNo02QUkGDPFfzow9535GKO9x6ZusETRjEgTmnHL4D2g@mail.gmail.com>
+ <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr> <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
+ <903fa0a6-5c40-97b4-1c01-fd84f3e51c62@free.fr> <8e53ea22-d248-8c63-bcda-15b502eb9699@free.fr>
+In-Reply-To: <8e53ea22-d248-8c63-bcda-15b502eb9699@free.fr>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 25 Apr 2019 12:01:25 +0530
+Message-ID: <CAHLCerPj6MQ0LeqUHM_91NOW1cP0z75DD7oBnR7Q3-8rpCmnww@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] qcom: dts: thermal cleanups
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Content-Type: multipart/mixed; boundary="000000000000610ac3058754f8f5"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--000000000000610ac3058754f8f5
+Content-Type: text/plain; charset="UTF-8"
 
-* Fenghua Yu <fenghua.yu@intel.com> wrote:
+Marc, can you please test these 3 patches on top of my original series?
 
-> To workaround or debug a split lock issue, the administrator may need to
-> disable or enable split lock detection during run time without rebooting
-> the system.
-> 
-> The interface /sys/device/system/cpu/split_lock_detect is added to allow
-> the administrator to disable or enable split lock detection and show
-> current split lock detection setting.
-> 
-> Writing [yY1] or [oO][nN] to the file enables split lock detection and
-> writing [nN0] or [oO][fF] disables split lock detection. Split lock
-> detection is enabled or disabled on all CPUs.
-> 
-> Reading the file returns current global split lock detection setting:
-> 0: disabled
-> 1: enabled
-> 
-> Add an ABI document entry for /sys/devices/system/cpu/split_lock_detect.
-> 
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> ---
-> Not sure if the justification for the sysfs knob is valid. If not, this
-> patch could be removed from this patch set.
-> 
->  .../ABI/testing/sysfs-devices-system-cpu      | 22 ++++++++
->  arch/x86/kernel/cpu/intel.c                   | 52 ++++++++++++++++++-
->  2 files changed, 72 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> index 9605dbd4b5b5..aad7b1698065 100644
-> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> @@ -67,6 +67,28 @@ Description:	Discover NUMA node a CPU belongs to
->  		/sys/devices/system/cpu/cpu42/node2 -> ../../node/node2
->  
->  
-> +What:		/sys/devices/system/cpu/split_lock_detect
-> +Date:		March 2019
-> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-> +Description:	(RW) Control split lock detection on Intel Tremont and
-> +		future CPUs
-> +
-> +		Reads return split lock detection status:
-> +			0: disabled
-> +			1: enabled
-> +
-> +		Writes enable or disable split lock detection:
-> +			The first character is one of 'Nn0' or [oO][fF] for off
-> +			disables the feature.
-> +			The first character is one of 'Yy1' or [oO][nN] for on
-> +			enables the feature.
-> +
-> +		Please note the interface only shows or controls global setting.
-> +		During run time, split lock detection on one CPU may be
-> +		disabled if split lock operation in kernel code happens on
-> +		the CPU. The interface doesn't show or control split lock
-> +		detection on individual CPU.
+Andy, patches 1 and 2 fix problems that already exist upstream. They
+were not introduced by my series.
+Patch 3 fixes an issue with my series where the name of the thermal
+zone was too long. You can choose to fold it into the patch titled
+"arm64: dts: msm8998: thermal: Add temperature sensors near major
+peripherals" or add it as a new patch with a Fixes tag.
 
-I.e. implementation and possible actual state are out of sync. Why?
+On Wed, Apr 24, 2019 at 8:00 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+>
+> On 23/04/2019 15:10, Marc Gonzalez wrote:
+>
+> > Sure. I can give you a Tested-by once everything works on the MEDIABOX I have.
+> >
+> > You mention the 4 thermal_zone*/temp failures.
+> >
+> > What about the cluster0-mhm-thermal and cluster1-mhm-thermal failures?
+>
+> I have synced up with today's linux-next.
 
-Also, if it's a global flag, why waste memory on putting a sysfs knob 
-into every CPU's sysfs file?
+Thanks for the report. Can you add the attached couple of patches and retest?
 
-Finally, why is a debugging facility in sysfs, why not a debugfs knob? 
-Using a sysctl would solve the percpu vs. global confusion as well ...
+> # dmesg | grep thermal
+> Failed to build cluster0-mhm-thermal zone -22
+> Failed to build cluster1-mhm-thermal zone -22
 
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -35,6 +35,7 @@
->  DEFINE_PER_CPU(u64, msr_test_ctl_cache);
->  EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctl_cache);
->  
-> +static DEFINE_MUTEX(split_lock_detect_mutex);
->  static bool split_lock_detect_enable;
+This one turned out to be a silly one, The name of the thermal zone is
+restricted to under 20 characters. Fixed that with patch 3.
 
-'enable' is a verb in plain form - which we use for function names.
+> # for F in $(find /sys/class/thermal/thermal_zone?/ /sys/class/thermal/thermal_zone??/ -type f); do echo $F; cat $F; done
+> /sys/class/thermal/thermal_zone0/uevent
+> /sys/class/thermal/thermal_zone0/trip_point_0_hyst
+> 2000
+> /sys/class/thermal/thermal_zone0/mode
+> enabled
+> /sys/class/thermal/thermal_zone0/power/runtime_active_time
+> 0
+> /sys/class/thermal/thermal_zone0/power/runtime_status
+> unsupported
 
-For variable names that denotes current state we typically use past 
-tense, i.e. 'enabled'.
+<snip>
 
-(The only case where we'd us the split_lock_detect_enable name for a flag 
-if it's a flag to trigger some sort of enabling action - which this 
-isn't.)
+> /sys/class/thermal/thermal_zone8/type
+> gpu-thermal-bottom
+> /sys/class/thermal/thermal_zone8/offset
+> 0
+> /sys/class/thermal/thermal_zone8/slope
+> 1
+> /sys/class/thermal/thermal_zone8/trip_point_0_type
+> hot
+> /sys/class/thermal/thermal_zone8/k_po
+> 0
+> /sys/class/thermal/thermal_zone8/integral_cutoff
+> 0
+> /sys/class/thermal/thermal_zone8/k_i
+> 0
+> /sys/class/thermal/thermal_zone8/k_pu
+> 0
+> /sys/class/thermal/thermal_zone8/temp
+> cat: read error: Invalid argument
 
-Please review the whole series for various naming mishaps.
+Patch 2 should fix this and thermal_zone9 below.
 
-> +	mutex_lock(&split_lock_detect_mutex);
-> +
-> +	split_lock_detect_enable = val;
-> +
-> +	/* Update the split lock detection setting in MSR on all online CPUs. */
-> +	on_each_cpu(split_lock_update_msr, NULL, 1);
-> +
-> +	if (split_lock_detect_enable)
-> +		pr_info("enabled\n");
-> +	else
-> +		pr_info("disabled\n");
-> +
-> +	mutex_unlock(&split_lock_detect_mutex);
+> /sys/class/thermal/thermal_zone8/trip_point_0_temp
+> 90000
+> /sys/class/thermal/thermal_zone9/uevent
+> /sys/class/thermal/thermal_zone9/trip_point_0_hyst
+> 2000
+> /sys/class/thermal/thermal_zone9/passive
+> 0
+> /sys/class/thermal/thermal_zone9/mode
+> disabled
+> /sys/class/thermal/thermal_zone9/power/runtime_active_time
+> 0
+> /sys/class/thermal/thermal_zone9/power/runtime_status
+> unsupported
+> /sys/class/thermal/thermal_zone9/power/autosuspend_delay_ms
+> cat: read error: Input/output error
+> /sys/class/thermal/thermal_zone9/power/runtime_suspended_time
+> 0
+> /sys/class/thermal/thermal_zone9/power/control
+> auto
+> /sys/class/thermal/thermal_zone9/available_policies
+> step_wise
+> /sys/class/thermal/thermal_zone9/policy
+> step_wise
+> /sys/class/thermal/thermal_zone9/k_d
+> 0
+> /sys/class/thermal/thermal_zone9/sustainable_power
+> 0
+> /sys/class/thermal/thermal_zone9/type
+> gpu-thermal-top
+> /sys/class/thermal/thermal_zone9/offset
+> 0
+> /sys/class/thermal/thermal_zone9/slope
 
-Instead of a mutex, please just use the global atomic debug flag which 
-controls the warning printout. By using that flag both for the WARN()ing 
-and for controlling MSR state all the races are solved and the code is 
-simplified.
+<snip>
 
+> /sys/class/thermal/thermal_zone18/available_policies
+> step_wise
+> /sys/class/thermal/thermal_zone18/policy
+> step_wise
+> /sys/class/thermal/thermal_zone18/k_d
+> 0
+> /sys/class/thermal/thermal_zone18/sustainable_power
+> 0
+> /sys/class/thermal/thermal_zone18/type
+> battery-thermal
 
-Thanks,
+This look wrong. TSENS shouldn't have board-specific thermal zones.
 
-	Ingo
+<snip>
+
+> /sys/class/thermal/thermal_zone19/k_d
+> 0
+> /sys/class/thermal/thermal_zone19/sustainable_power
+> 0
+> /sys/class/thermal/thermal_zone19/type
+> skin-thermal
+
+And this too. See patch 1 to fix this existing issue (not introduced
+by my series).
+
+--000000000000610ac3058754f8f5
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-arm64-dts-msm8998-mtp-thermal-Remove-skin-and-batter.patch"
+Content-Disposition: attachment; 
+	filename="0001-arm64-dts-msm8998-mtp-thermal-Remove-skin-and-batter.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_juw7920c0>
+X-Attachment-Id: f_juw7920c0
+
+RnJvbSA5NDY5OGUxOWI2MzI5ZTk4NDA0ZmY5YjljYzBjOTBhMzA2MmZhNWU1IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpNZXNzYWdlLUlkOiA8OTQ2OThlMTliNjMyOWU5ODQwNGZmOWI5Y2MwYzkw
+YTMwNjJmYTVlNS4xNTU2MTY5NjM3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+CkZyb206
+IEFtaXQgS3VjaGVyaWEgPGFtaXQua3VjaGVyaWFAbGluYXJvLm9yZz4KRGF0ZTogVGh1LCAyNSBB
+cHIgMjAxOSAwMToyMjo1MCArMDUzMApTdWJqZWN0OiBbUEFUQ0ggMS8yXSBhcm02NDogZHRzOiBt
+c204OTk4LW10cDogdGhlcm1hbDogUmVtb3ZlIHNraW4gYW5kIGJhdHRlcnkKIHRoZXJtYWwgem9u
+ZXMKClRoZSBtc204OTk4LW10cCBkb2Vzbid0IGhhdmUgVFNFTlMtYmFzZWQgc2Vuc29ycyB3aXJl
+ZCB1cCBmb3Igc2tpbiBhbmQKYmF0dGVyeSB0aGVybWFsIHpvbmVzLiBUU0VOUyBzZW5zb3JzIHNo
+b3VsZCBiZSBjb21tb24gYWNyb3NzIGFsbCBib2FyZHMKdXNpbmcgdGhlIFNvQyBhbmQgc2hvdWxk
+bid0IGJlIGJvYXJkLXNwZWNpZmljIGFzIHRoZXNlIGVudHJpZXMuCgpUaGV5IGFsc28gc2hvdyB0
+aGUgZm9sbG93aW5nIGVycm9yIHdoZW4gdHJ5aW5nIHRvIHJlYWQgdGhlIHRlbXBlcmF0dXJlCgog
+ICBjYXQ6IHJlYWQgZXJyb3I6IEludmFsaWQgYXJndW1lbnQKClJlbW92ZSB0aGVzZSBib2FyZC1z
+cGVjaWZpYyBlcnJvbmVvdXMgdGhlcm1hbCB6b25lcy4KCkZpeGVzOiA0NDQ5YjZmMjQ4ZDkgKCJh
+cm02NDogZHRzOiBxY29tOiBtc204OTk4OiBBZGQgdHNlbnMgYW5kIHRoZXJtYWwtem9uZXMiKQpT
+aWduZWQtb2ZmLWJ5OiBBbWl0IEt1Y2hlcmlhIDxhbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+Ci0t
+LQogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL21zbTg5OTgtbXRwLmR0c2kgfCAzOCAtLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDM4IGRlbGV0aW9ucygtKQoKZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4LW10cC5kdHNpIGIvYXJjaC9h
+cm02NC9ib290L2R0cy9xY29tL21zbTg5OTgtbXRwLmR0c2kKaW5kZXggZjA5MDEwNjdiMDQzLi42
+MGJkZjc0ODVmMGUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4
+LW10cC5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4LW10cC5kdHNp
+CkBAIC0xNSw0NCArMTUsNiBAQAogCQlzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjExNTIwMG44IjsK
+IAl9OwogCi0JdGhlcm1hbC16b25lcyB7Ci0JCWJhdHRlcnktdGhlcm1hbCB7Ci0JCQlwb2xsaW5n
+LWRlbGF5LXBhc3NpdmUgPSA8MjUwPjsKLQkJCXBvbGxpbmctZGVsYXkgPSA8MTAwMD47Ci0KLQkJ
+CXRoZXJtYWwtc2Vuc29ycyA9IDwmdHNlbnMwIDA+OwotCi0JCQl0cmlwcyB7Ci0JCQkJYmF0dGVy
+eV9jcml0OiB0cmlwMCB7Ci0JCQkJCXRlbXBlcmF0dXJlID0gPDYwMDAwPjsKLQkJCQkJaHlzdGVy
+ZXNpcyA9IDwyMDAwPjsKLQkJCQkJdHlwZSA9ICJjcml0aWNhbCI7Ci0JCQkJfTsKLQkJCX07Ci0J
+CX07Ci0KLQkJc2tpbi10aGVybWFsIHsKLQkJCXBvbGxpbmctZGVsYXktcGFzc2l2ZSA9IDwyNTA+
+OwotCQkJcG9sbGluZy1kZWxheSA9IDwxMDAwPjsKLQotCQkJdGhlcm1hbC1zZW5zb3JzID0gPCZ0
+c2VuczEgNT47Ci0KLQkJCXRyaXBzIHsKLQkJCQlza2luX2FsZXJ0OiB0cmlwMCB7Ci0JCQkJCXRl
+bXBlcmF0dXJlID0gPDQ0MDAwPjsKLQkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsKLQkJCQkJdHlw
+ZSA9ICJwYXNzaXZlIjsKLQkJCQl9OwotCi0JCQkJc2tpcF9jcml0OiB0cmlwMSB7Ci0JCQkJCXRl
+bXBlcmF0dXJlID0gPDcwMDAwPjsKLQkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsKLQkJCQkJdHlw
+ZSA9ICJjcml0aWNhbCI7Ci0JCQkJfTsKLQkJCX07Ci0JCX07Ci0JfTsKLQogCXZwaF9wd3I6IHZw
+aC1wd3ItcmVndWxhdG9yIHsKIAkJY29tcGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwogCQly
+ZWd1bGF0b3ItbmFtZSA9ICJ2cGhfcHdyIjsKLS0gCjIuMTcuMQoK
+--000000000000610ac3058754f8f5
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0002-arm64-dts-msm8998-thermal-Fix-number-of-supported-se.patch"
+Content-Disposition: attachment; 
+	filename="0002-arm64-dts-msm8998-thermal-Fix-number-of-supported-se.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_juw7921h1>
+X-Attachment-Id: f_juw7921h1
+
+RnJvbSBlZGE3ZGEyZDAwOThkNjYxNzY3MWU2NzY1ODIyNmUzYzVmYjA3MDQ1IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpNZXNzYWdlLUlkOiA8ZWRhN2RhMmQwMDk4ZDY2MTc2NzFlNjc2NTgyMjZl
+M2M1ZmIwNzA0NS4xNTU2MTY5NjM3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+CkluLVJl
+cGx5LVRvOiA8OTQ2OThlMTliNjMyOWU5ODQwNGZmOWI5Y2MwYzkwYTMwNjJmYTVlNS4xNTU2MTY5
+NjM3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+ClJlZmVyZW5jZXM6IDw5NDY5OGUxOWI2
+MzI5ZTk4NDA0ZmY5YjljYzBjOTBhMzA2MmZhNWU1LjE1NTYxNjk2MzcuZ2l0LmFtaXQua3VjaGVy
+aWFAbGluYXJvLm9yZz4KRnJvbTogQW1pdCBLdWNoZXJpYSA8YW1pdC5rdWNoZXJpYUBsaW5hcm8u
+b3JnPgpEYXRlOiBUaHUsIDI1IEFwciAyMDE5IDAxOjUyOjQ0ICswNTMwClN1YmplY3Q6IFtQQVRD
+SCAyLzJdIGFybTY0OiBkdHM6IG1zbTg5OTg6IHRoZXJtYWw6IEZpeCBudW1iZXIgb2Ygc3VwcG9y
+dGVkCiBzZW5zb3JzCgptc204OTk4IGhhcyAyMiBzZW5zb3JzIGNvbm5lY3RlZCBpbiB0b3RhbCwg
+MTQgb24gdGhlIDFzdCBjb250cm9sbGVyLCA4Cm9uIHRoZSAybmQgY29udHJvbGxlci4gSW5jcmVh
+c2UgdGhlIG51bWJlciB0byBhbGxvdyBzZW5zb3JzIHdpdGggSUQgMTIKYW5kIDEzIHRvIGJlIHJl
+Z2lzdGVyZWQuCgpTaWduZWQtb2ZmLWJ5OiBBbWl0IEt1Y2hlcmlhIDxhbWl0Lmt1Y2hlcmlhQGxp
+bmFyby5vcmc+Ci0tLQogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL21zbTg5OTguZHRzaSB8IDIg
+Ky0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4LmR0c2kgYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL3Fjb20vbXNtODk5OC5kdHNpCmluZGV4IDk5ODAxN2Q0ZDg0Ny4uMDYyYTkzYTEy
+MTk4IDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vbXNtODk5OC5kdHNpCisr
+KyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4LmR0c2kKQEAgLTc0NSw3ICs3NDUs
+NyBAQAogCQkJcmVnID0gPDB4MTBhYjAwMCAweDEwMDA+LCAvKiBUTSAqLwogCQkJICAgICAgPDB4
+MTBhYTAwMCAweDEwMDA+OyAvKiBTUk9UICovCiAKLQkJCSNxY29tLHNlbnNvcnMgPSA8MTI+Owor
+CQkJI3Fjb20sc2Vuc29ycyA9IDwxND47CiAJCQkjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8MT47
+CiAJCX07CiAKLS0gCjIuMTcuMQoK
+--000000000000610ac3058754f8f5
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0003-arm64-dts-msm8998-thermal-Restrict-thermal-zone-name.patch"
+Content-Disposition: attachment; 
+	filename="0003-arm64-dts-msm8998-thermal-Restrict-thermal-zone-name.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_juw9kjgr2>
+X-Attachment-Id: f_juw9kjgr2
+
+RnJvbSA0M2VlMDExMDA2NTYyYmFjMzA5MWZiYmU1NjNkZjg4MzQ2MGU5OGE2IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpNZXNzYWdlLUlkOiA8NDNlZTAxMTAwNjU2MmJhYzMwOTFmYmJlNTYzZGY4
+ODM0NjBlOThhNi4xNTU2MTczNTA3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+CkluLVJl
+cGx5LVRvOiA8OTQ2OThlMTliNjMyOWU5ODQwNGZmOWI5Y2MwYzkwYTMwNjJmYTVlNS4xNTU2MTcz
+NTA3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+ClJlZmVyZW5jZXM6IDw5NDY5OGUxOWI2
+MzI5ZTk4NDA0ZmY5YjljYzBjOTBhMzA2MmZhNWU1LjE1NTYxNzM1MDcuZ2l0LmFtaXQua3VjaGVy
+aWFAbGluYXJvLm9yZz4KRnJvbTogQW1pdCBLdWNoZXJpYSA8YW1pdC5rdWNoZXJpYUBsaW5hcm8u
+b3JnPgpEYXRlOiBUaHUsIDI1IEFwciAyMDE5IDExOjUzOjI3ICswNTMwClN1YmplY3Q6IFtQQVRD
+SCAzLzNdIGFybTY0OiBkdHM6IG1zbTg5OTg6IHRoZXJtYWw6IFJlc3RyaWN0IHRoZXJtYWwgem9u
+ZSBuYW1lCiBsZW5ndGggdG8gdW5kZXIgMjAKClRoZSB0aGVybWFsIGNvcmUgcmVzdHJpY3RzIG5h
+bWVzIG9mIHRoZXJtYWwgem9uZXMgdG8gdW5kZXIgMjAKY2hhcmFjdGVycy4gRml4IHRoZSBuYW1l
+cyBmb3IgYSBjb3VwbGUgb2YgbXNtODk5OCB0aGVybWFsIHpvbmVzLgoKU2lnbmVkLW9mZi1ieTog
+QW1pdCBLdWNoZXJpYSA8YW1pdC5rdWNoZXJpYUBsaW5hcm8ub3JnPgotLS0KIGFyY2gvYXJtNjQv
+Ym9vdC9kdHMvcWNvbS9tc204OTk4LmR0c2kgfCA0ICsrLS0KIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
+c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290
+L2R0cy9xY29tL21zbTg5OTguZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4
+LmR0c2kKaW5kZXggMDYyYTkzYTEyMTk4Li4wMTc1NzgyOWQ1ZjMgMTAwNjQ0Ci0tLSBhL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4LmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0
+cy9xY29tL21zbTg5OTguZHRzaQpAQCAtNTM2LDcgKzUzNiw3IEBACiAJCQl9OwogCQl9OwogCi0J
+CWNsdXN0ZXIwLW1obS10aGVybWFsIHsKKwkJY2x1c3QwLW1obS10aGVybWFsIHsKIAkJCXBvbGxp
+bmctZGVsYXktcGFzc2l2ZSA9IDwyNTA+OwogCQkJcG9sbGluZy1kZWxheSA9IDwxMDAwPjsKIApA
+QCAtNTUxLDcgKzU1MSw3IEBACiAJCQl9OwogCQl9OwogCi0JCWNsdXN0ZXIxLW1obS10aGVybWFs
+IHsKKwkJY2x1c3QxLW1obS10aGVybWFsIHsKIAkJCXBvbGxpbmctZGVsYXktcGFzc2l2ZSA9IDwy
+NTA+OwogCQkJcG9sbGluZy1kZWxheSA9IDwxMDAwPjsKIAotLSAKMi4xNy4xCgo=
+--000000000000610ac3058754f8f5--
