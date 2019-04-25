@@ -2,168 +2,131 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE68FC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF6AC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565DB206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:47:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="P5hcG3MA"
+	by mail.kernel.org (Postfix) with ESMTP id D856720811
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbfDYKq7 (ORCPT
+        id S1730493AbfDYKtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:46:59 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:43162 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728944AbfDYKq6 (ORCPT
+        Thu, 25 Apr 2019 06:49:23 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40388 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728944AbfDYKtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:46:58 -0400
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 292182E0DDC;
-        Thu, 25 Apr 2019 13:46:55 +0300 (MSK)
-Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
-        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 1ntPunexU0-kqUOQVSE;
-        Thu, 25 Apr 2019 13:46:55 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1556189215; bh=lRYvD+k8oEBPJWX5OyPVnoY1l7XxL72FGY8nF6uwy8c=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=P5hcG3MAgHhPg6AHXFqnPrWuQRwHN0GoYFyAoqgd29N396lA2p+XWOiPDuvr0dmwy
-         isosp+JdDFvvocX1csCdS7suJp8uUhoWKW+/CXzmSQXPo4Ii32EF9jsxKB6xoSBeee
-         QacZxuWUFFZtwNikt2+OQCwszaMQ888beF6s2380=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:547a:aec1:8b2f:9dac])
-        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id Z4flB0q0Ey-kp5uOfKg;
-        Thu, 25 Apr 2019 13:46:52 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH RFC] x86 / CPU: Add cpu isolation flag for avoiding
- disturbance from aperfmperf IPI
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     Len Brown <len.brown@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-Date:   Thu, 25 Apr 2019 13:46:51 +0300
-Message-ID: <155618921176.2006.3031084313219003524.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 25 Apr 2019 06:49:23 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3PAf26R030566
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 06:49:21 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s39c6dtgs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 06:49:21 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Thu, 25 Apr 2019 11:49:19 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Apr 2019 11:49:17 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3PAnGMs46792952
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Apr 2019 10:49:16 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0525A5204F;
+        Thu, 25 Apr 2019 10:49:16 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.112])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id BACCA52051;
+        Thu, 25 Apr 2019 10:49:15 +0000 (GMT)
+Date:   Thu, 25 Apr 2019 12:49:14 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dhowells@redhat.com
+Subject: Re: [PATCH 26/27] debugfs: Restrict debugfs when the kernel is
+ locked down
+References: <20190306235913.6631-1-matthewgarrett@google.com>
+ <20190306235913.6631-27-matthewgarrett@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190306235913.6631-27-matthewgarrett@google.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19042510-0020-0000-0000-000003356F81
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042510-0021-0000-0000-00002187DAA4
+Message-Id: <your-ad-here.call-01556189354-ext-1943@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904250068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sensitive workloads like DPDK polling do not like any interrupts.
+On Wed, Mar 06, 2019 at 03:59:12PM -0800, Matthew Garrett wrote:
+> From: David Howells <dhowells@redhat.com>
+> 
+>  static int open_proxy_open(struct inode *inode, struct file *filp)
+>  {
+>  	struct dentry *dentry = F_DENTRY(filp);
+> @@ -147,6 +166,11 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
+>  		return r == -EIO ? -ENOENT : r;
+>  
+>  	real_fops = debugfs_real_fops(filp);
+> +
+> +	r = -EPERM;
+> +	if (debugfs_is_locked_down(inode, filp, real_fops))
+> +		goto out;
+> +
+>  	real_fops = fops_get(real_fops);
+>  	if (!real_fops) {
+>  		/* Huh? Module did not clean up after itself at exit? */
+> @@ -272,6 +296,10 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
+>  		return r == -EIO ? -ENOENT : r;
+>  
+>  	real_fops = debugfs_real_fops(filp);
+> +	r = -EPERM;
+> +	if (debugfs_is_locked_down(inode, filp, real_fops))
+> +		goto out;
+> +
+>  	real_fops = fops_get(real_fops);
+>  	if (!real_fops) {
+>  		/* Huh? Module did not cleanup after itself at exit? */
 
-This patch adds flag 'freq' for boot option 'isolcpu': isolcpu=freq,<cpus>.
+Please be aware that this patch has been known to cause problems in
+distributions which picked this patch series already:
+ubuntu:
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1807686
+fedora:
+https://bugzilla.redhat.com/show_bug.cgi?id=1658675
+as well as rhel 8.
 
-Users like show_cpuinfo() fallback to frequency from generic cpufreq
-policy if arch-specific requesting method returns 0.
+I've sent around this potential fix which has been picked by the
+distributions (offered via bugzillas), but went apparently unnoticed
+at lkml:
+https://lkml.org/lkml/2018/11/21/634
+https://lkml.org/lkml/2018/11/21/635
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- Documentation/admin-guide/kernel-parameters.txt |    3 +++
- arch/x86/kernel/cpu/aperfmperf.c                |   12 +++++++++++-
- include/linux/sched/isolation.h                 |    1 +
- kernel/sched/isolation.c                        |    6 ++++++
- 4 files changed, 21 insertions(+), 1 deletion(-)
+"""
+With "debugfs: Restrict debugfs when the kernel is locked down"
+return code "r" is unconditionally set to -EPERM, which stays like that
+until function return if no "open" file operation defined, effectivelly
+resulting in "Operation not permitted" for all such files despite kernel
+lock down status or CONFIG_LOCK_DOWN_KERNEL being enabled.
+"""
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 2b8ee90bb644..3797cd5c2b2e 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1900,6 +1900,9 @@
- 			  <cpu number> begins at 0 and the maximum value is
- 			  "number of CPUs in system - 1".
- 
-+			freq
-+			  Do not request current cpu frequency via IPI.
-+
- 			The format of <cpu-list> is described above.
- 
- 
-diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
-index 804c49493938..e8fb917980a8 100644
---- a/arch/x86/kernel/cpu/aperfmperf.c
-+++ b/arch/x86/kernel/cpu/aperfmperf.c
-@@ -14,6 +14,7 @@
- #include <linux/percpu.h>
- #include <linux/cpufreq.h>
- #include <linux/smp.h>
-+#include <linux/sched/isolation.h>
- 
- #include "cpu.h"
- 
-@@ -86,6 +87,9 @@ unsigned int aperfmperf_get_khz(int cpu)
- 	if (!static_cpu_has(X86_FEATURE_APERFMPERF))
- 		return 0;
- 
-+	if (!housekeeping_cpu(cpu, HK_FLAG_FREQ))
-+		return 0;
-+
- 	aperfmperf_snapshot_cpu(cpu, ktime_get(), true);
- 	return per_cpu(samples.khz, cpu);
- }
-@@ -102,9 +106,12 @@ void arch_freq_prepare_all(void)
- 	if (!static_cpu_has(X86_FEATURE_APERFMPERF))
- 		return;
- 
--	for_each_online_cpu(cpu)
-+	for_each_online_cpu(cpu) {
-+		if (!housekeeping_cpu(cpu, HK_FLAG_FREQ))
-+			continue;
- 		if (!aperfmperf_snapshot_cpu(cpu, now, false))
- 			wait = true;
-+	}
- 
- 	if (wait)
- 		msleep(APERFMPERF_REFRESH_DELAY_MS);
-@@ -118,6 +125,9 @@ unsigned int arch_freq_get_on_cpu(int cpu)
- 	if (!static_cpu_has(X86_FEATURE_APERFMPERF))
- 		return 0;
- 
-+	if (!housekeeping_cpu(cpu, HK_FLAG_FREQ))
-+		return 0;
-+
- 	if (aperfmperf_snapshot_cpu(cpu, ktime_get(), true))
- 		return per_cpu(samples.khz, cpu);
- 
-diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
-index b0fb1446fe04..88e6013ac8a9 100644
---- a/include/linux/sched/isolation.h
-+++ b/include/linux/sched/isolation.h
-@@ -13,6 +13,7 @@ enum hk_flags {
- 	HK_FLAG_TICK		= (1 << 4),
- 	HK_FLAG_DOMAIN		= (1 << 5),
- 	HK_FLAG_WQ		= (1 << 6),
-+	HK_FLAG_FREQ		= (1 << 7),
- };
- 
- #ifdef CONFIG_CPU_ISOLATION
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index b02d148e7672..456b5f1dfa11 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -140,6 +140,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
- 			continue;
- 		}
- 
-+		if (!strncmp(str, "freq,", 5)) {
-+			str += 5;
-+			flags |= HK_FLAG_FREQ;
-+			continue;
-+		}
-+
- 		pr_warn("isolcpus: Error, unknown flag\n");
- 		return 0;
- 	}
+I would appreciate if you consider that change, possibly just
+squashing into yours.
 
