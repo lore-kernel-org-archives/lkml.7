@@ -2,175 +2,120 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFBEC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83395C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9EC82081C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF5A2081C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="u3MWtAQP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bvQI9jRK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfDYPBg (ORCPT
+        id S1728016AbfDYPBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:01:36 -0400
-Received: from mail-eopbgr700081.outbound.protection.outlook.com ([40.107.70.81]:5409
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726074AbfDYPBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:01:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lVyb9JWrd39RJ55bMtyrfIe5cc9vzEMA9t5QWigR8ZE=;
- b=u3MWtAQP5agq2ID7WGw+JurNZa+BWmBfvHboqe3icmgLgxtWBBgTWrB8hissfw5XAXQfN/cbGCIfBWTeAMrLdY1tqKFrNl0f59TQi4KtBFl3SkyDv9ZnVSurHWwGJIjVfHeCjojv9CPQMRnlbz0D78SIELqbJOSWp0v9mX2gslA=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB2937.namprd12.prod.outlook.com (20.179.104.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Thu, 25 Apr 2019 15:01:31 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::c96d:c1dd:fd7a:ffd6]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::c96d:c1dd:fd7a:ffd6%4]) with mapi id 15.20.1835.010; Thu, 25 Apr 2019
- 15:01:31 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH net-next] amd-xgbe: Mark expected switch fall-throughs
-Thread-Topic: [PATCH net-next] amd-xgbe: Mark expected switch fall-throughs
-Thread-Index: AQHU+rgGgWv1Qho1SUuKqNVzktWrWKZM250AgAAcewCAAAH9gA==
-Date:   Thu, 25 Apr 2019 15:01:31 +0000
-Message-ID: <b3e7066f-1338-7047-1d49-df7da472d039@amd.com>
-References: <20190424160823.GA20314@embeddedor>
- <bfb7c017-e7df-5fa3-d946-32ee3b94fa53@amd.com>
- <1cd135d4-df0f-ee31-d85f-5f47c8037f2d@embeddedor.com>
-In-Reply-To: <1cd135d4-df0f-ee31-d85f-5f47c8037f2d@embeddedor.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0501CA0059.namprd05.prod.outlook.com
- (2603:10b6:803:41::36) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:182::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1c0c99ac-b1e7-45e6-baa4-08d6c98ee693
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2937;
-x-ms-traffictypediagnostic: DM6PR12MB2937:
-x-microsoft-antispam-prvs: <DM6PR12MB2937D0F107638F09EC5E38C2EC3D0@DM6PR12MB2937.namprd12.prod.outlook.com>
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(39860400002)(346002)(366004)(376002)(136003)(396003)(199004)(189003)(6246003)(31696002)(476003)(31686004)(66066001)(6512007)(6506007)(53546011)(386003)(102836004)(26005)(6116002)(3846002)(446003)(6486002)(6436002)(76176011)(97736004)(2616005)(86362001)(486006)(5660300002)(11346002)(229853002)(186003)(53936002)(66556008)(68736007)(2906002)(36756003)(14444005)(256004)(110136005)(4326008)(54906003)(81166006)(25786009)(64756008)(66476007)(8936002)(66446008)(478600001)(305945005)(99286004)(72206003)(71200400001)(14454004)(52116002)(316002)(81156014)(73956011)(8676002)(71190400001)(7736002)(66946007)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2937;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DlApmSU7MlLLiqNERBIXk/xZw4XxKKeloPDvtQ8BTg4vBtFfd44qK8Npl9mK+4sMFvhZ7ZfPgKW5J1a+3ITbWJNh5afNMbJmMfbHTQ64CCrHuaZ7c2PaLBq2TeCwRxZy86SIHFTCBZ1ZD/FTDPxGYc6c+nDAio3as35b6cujqqm+mQn2+W++mpdWe31D4wuNeSsX7cTfsvjRhFYY+zIIBClODO6rO25GmDnXTxxUrXMGq+nxsJMrJWxTJ5G/R7oS2dEZucqAt9Q8b5nylL16nGGq9011pAv9/t0fOUW4t8C4EQDlAae4iWBjHe6QdU+ZsLw5Zpo9jOL7vqg9LqvDLTW2ZL8XEpozYsOMY42xwtQEFG6UShiH36Pi8DWmBFeoXHjUo6gPAxgQHctD2fI2yt5KnyrrqwQlG211M9SW2zM=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1BF02941602A4749BB2201DC0E9B6F71@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 25 Apr 2019 11:01:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58470 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfDYPBm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 11:01:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UHTIv2bYWCMmrceWnwUo0Fh9FKFnrseI4vreb5e9FKc=; b=bvQI9jRKJKedhApGQGL7NC7Us
+        ZTmouNizaDjyj/BFyna/0u54CTi/1wmbXgavf7Q+B7ARBQBne4dlXFL2pNCBauGrzvLiU05/W7wOO
+        ZyZgJSVDU0U5W9XdFs4Wb9J4Ejlq4ZW+68Te8Szx5Vxz3a37YDHnzmxIsP8S2LU0u4mOmTphrGeiX
+        fpuuBC69Gbvs+yjGC1GN/LtJlniccf+WmkfxyOqCoBkGD+nd7IgVYcoY6t0eVf1lEJzjUFCgvUBlc
+        yKqIt2ZIREwAPWIdBcF+zvIwaKjYjz1mru5T3SoOoGGh5xd7cYT8bfc/mWtaHP6OfEqFgA01bpSlP
+        jWoO65ebw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJfsb-0002iU-TR; Thu, 25 Apr 2019 15:01:41 +0000
+Subject: Re: [PATCH] docs/vm: add documentation of memory models
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1556101715-31966-1-git-send-email-rppt@linux.ibm.com>
+ <a4def881-1df0-6835-4b9a-dc957c979683@infradead.org>
+ <20190425082239.GC10625@rapoport-lnx>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <2b97f4db-78c0-1cad-bdf5-948720e8094f@infradead.org>
+Date:   Thu, 25 Apr 2019 08:01:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c0c99ac-b1e7-45e6-baa4-08d6c98ee693
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 15:01:31.3556
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2937
+In-Reply-To: <20190425082239.GC10625@rapoport-lnx>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8yNS8xOSA5OjU0IEFNLCBHdXN0YXZvIEEuIFIuIFNpbHZhIHdyb3RlOg0KPiBIaSwNCj4g
-DQo+IE9uIDQvMjUvMTkgODoxMiBBTSwgTGVuZGFja3ksIFRob21hcyB3cm90ZToNCj4gWy4uXQ0K
-Pj4+ICAgXn5+fg0KPj4+DQo+Pj4gV2FybmluZyBsZXZlbCAzIHdhcyB1c2VkOiAtV2ltcGxpY2l0
-LWZhbGx0aHJvdWdoPTMNCj4+Pg0KPj4+IE5vdGljZSB0aGF0LCBpbiB0aGlzIHBhcnRpY3VsYXIg
-Y2FzZSwgdGhlIGNvZGUgY29tbWVudHMgYXJlIG1vZGlmaWVkDQo+Pj4gaW4gYWNjb3JkYW5jZSB3
-aXRoIHdoYXQgR0NDIGlzIGV4cGVjdGluZyB0byBmaW5kLg0KPj4+DQo+Pj4gVGhpcyBwYXRjaCBp
-cyBwYXJ0IG9mIHRoZSBvbmdvaW5nIGVmZm9ydHMgdG8gZW5hYmxlDQo+Pj4gLVdpbXBsaWNpdC1m
-YWxsdGhyb3VnaC4NCj4+Pg0KPj4+IFNpZ25lZC1vZmYtYnk6IEd1c3Rhdm8gQS4gUi4gU2lsdmEg
-PGd1c3Rhdm9AZW1iZWRkZWRvci5jb20+DQo+Pj4gLS0tDQo+Pj4gIGRyaXZlcnMvbmV0L2V0aGVy
-bmV0L2FtZC94Z2JlL3hnYmUtZHJ2LmMgfCA2ICsrKy0tLQ0KPj4+ICAxIGZpbGUgY2hhbmdlZCwg
-MyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbmV0L2V0aGVybmV0L2FtZC94Z2JlL3hnYmUtZHJ2LmMgYi9kcml2ZXJzL25ldC9ldGhl
-cm5ldC9hbWQveGdiZS94Z2JlLWRydi5jDQo+Pj4gaW5kZXggMGNjOTExZjkyOGIxLi4zZGQwY2Vj
-ZGRiYTggMTAwNjQ0DQo+Pj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvYW1kL3hnYmUveGdi
-ZS1kcnYuYw0KPj4+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2FtZC94Z2JlL3hnYmUtZHJ2
-LmMNCj4+PiBAQCAtMTYxMiw3ICsxNjEyLDcgQEAgc3RhdGljIGludCB4Z2JlX3NldF9od3RzdGFt
-cF9zZXR0aW5ncyhzdHJ1Y3QgeGdiZV9wcnZfZGF0YSAqcGRhdGEsDQo+Pj4gIAkvKiBQVFAgdjIs
-IFVEUCwgYW55IGtpbmQgb2YgZXZlbnQgcGFja2V0ICovDQo+Pj4gIAljYXNlIEhXVFNUQU1QX0ZJ
-TFRFUl9QVFBfVjJfTDRfRVZFTlQ6DQo+Pj4gIAkJWEdNQUNfU0VUX0JJVFMobWFjX3RzY3IsIE1B
-Q19UU0NSLCBUU1ZFUjJFTkEsIDEpOw0KPj4+IC0JLyogUFRQIHYxLCBVRFAsIGFueSBraW5kIG9m
-IGV2ZW50IHBhY2tldCAqLw0KPj4+ICsJCS8qIEZhbGwgdGhyb3VnaCAtIHRvIFBUUCB2MSwgVURQ
-LCBhbnkga2luZCBvZiBldmVudCBwYWNrZXQgKi8NCj4+DQo+PiBJZiB0aGUgY29tcGlsZXIgZG9l
-c24ndCBoYXZlIGEgcHJvYmxlbSB3aXRoIGFkZGluZyBqdXN0IGFuIGluZGVudGVkDQo+PiAiRmFs
-bCB0aHJvdWdoIiBjb21tZW50IGFuZCBsZWF2aW5nIHRoZSBvcmlnaW5hbCBjb21tZW50IGluIHBs
-YWNlLCBJIHdvdWxkDQo+PiBwcmVmZXIgdGhhdC4gSXQgc2VlbXMgY2xlYXJlciB0byBtZS4NCj4+
-DQo+IA0KPiBUaGlzIGlzIHRoZSBvdGhlciBhbHRlcm5hdGl2ZToNCj4gDQo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL25ldC9ldGhlcm5ldC9hbWQveGdiZS94Z2JlLWRydi5jIGIvZHJpdmVycy9uZXQv
-ZXRoZXJuZXQvYW1kL3hnYmUveGdiZS1kcnYuYw0KPiBpbmRleCAwY2M5MTFmOTI4YjEuLmY5MTNi
-ZjQwNGJhYSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvYW1kL3hnYmUveGdi
-ZS1kcnYuYw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9hbWQveGdiZS94Z2JlLWRydi5j
-DQo+IEBAIC0xNjEzLDYgKzE2MTMsNyBAQCBzdGF0aWMgaW50IHhnYmVfc2V0X2h3dHN0YW1wX3Nl
-dHRpbmdzKHN0cnVjdCB4Z2JlX3Bydl9kYXRhICpwZGF0YSwNCj4gICAgICAgICBjYXNlIEhXVFNU
-QU1QX0ZJTFRFUl9QVFBfVjJfTDRfRVZFTlQ6DQo+ICAgICAgICAgICAgICAgICBYR01BQ19TRVRf
-QklUUyhtYWNfdHNjciwgTUFDX1RTQ1IsIFRTVkVSMkVOQSwgMSk7DQo+ICAgICAgICAgLyogUFRQ
-IHYxLCBVRFAsIGFueSBraW5kIG9mIGV2ZW50IHBhY2tldCAqLw0KPiArICAgICAgICAgICAgICAg
-LyogRmFsbCB0aHJvdWdoICovDQo+ICAgICAgICAgY2FzZSBIV1RTVEFNUF9GSUxURVJfUFRQX1Yx
-X0w0X0VWRU5UOg0KPiAgICAgICAgICAgICAgICAgWEdNQUNfU0VUX0JJVFMobWFjX3RzY3IsIE1B
-Q19UU0NSLCBUU0lQVjRFTkEsIDEpOw0KPiAgICAgICAgICAgICAgICAgWEdNQUNfU0VUX0JJVFMo
-bWFjX3RzY3IsIE1BQ19UU0NSLCBUU0lQVjZFTkEsIDEpOw0KPiBAQCAtMTYyNCw2ICsxNjI1LDcg
-QEAgc3RhdGljIGludCB4Z2JlX3NldF9od3RzdGFtcF9zZXR0aW5ncyhzdHJ1Y3QgeGdiZV9wcnZf
-ZGF0YSAqcGRhdGEsDQo+ICAgICAgICAgY2FzZSBIV1RTVEFNUF9GSUxURVJfUFRQX1YyX0w0X1NZ
-TkM6DQo+ICAgICAgICAgICAgICAgICBYR01BQ19TRVRfQklUUyhtYWNfdHNjciwgTUFDX1RTQ1Is
-IFRTVkVSMkVOQSwgMSk7DQo+ICAgICAgICAgLyogUFRQIHYxLCBVRFAsIFN5bmMgcGFja2V0ICov
-DQo+ICsgICAgICAgICAgICAgICAvKiBGYWxsIHRocm91Z2ggKi8NCj4gICAgICAgICBjYXNlIEhX
-VFNUQU1QX0ZJTFRFUl9QVFBfVjFfTDRfU1lOQzoNCj4gICAgICAgICAgICAgICAgIFhHTUFDX1NF
-VF9CSVRTKG1hY190c2NyLCBNQUNfVFNDUiwgVFNJUFY0RU5BLCAxKTsNCj4gICAgICAgICAgICAg
-ICAgIFhHTUFDX1NFVF9CSVRTKG1hY190c2NyLCBNQUNfVFNDUiwgVFNJUFY2RU5BLCAxKTsNCj4g
-QEAgLTE2MzUsNiArMTYzNyw3IEBAIHN0YXRpYyBpbnQgeGdiZV9zZXRfaHd0c3RhbXBfc2V0dGlu
-Z3Moc3RydWN0IHhnYmVfcHJ2X2RhdGEgKnBkYXRhLA0KPiAgICAgICAgIGNhc2UgSFdUU1RBTVBf
-RklMVEVSX1BUUF9WMl9MNF9ERUxBWV9SRVE6DQo+ICAgICAgICAgICAgICAgICBYR01BQ19TRVRf
-QklUUyhtYWNfdHNjciwgTUFDX1RTQ1IsIFRTVkVSMkVOQSwgMSk7DQo+ICAgICAgICAgLyogUFRQ
-IHYxLCBVRFAsIERlbGF5X3JlcSBwYWNrZXQgKi8NCj4gKyAgICAgICAgICAgICAgIC8qIEZhbGwg
-dGhyb3VnaCAqLw0KPiAgICAgICAgIGNhc2UgSFdUU1RBTVBfRklMVEVSX1BUUF9WMV9MNF9ERUxB
-WV9SRVE6DQo+ICAgICAgICAgICAgICAgICBYR01BQ19TRVRfQklUUyhtYWNfdHNjciwgTUFDX1RT
-Q1IsIFRTSVBWNEVOQSwgMSk7DQo+ICAgICAgICAgICAgICAgICBYR01BQ19TRVRfQklUUyhtYWNf
-dHNjciwgTUFDX1RTQ1IsIFRTSVBWNkVOQSwgMSk7DQo+IA0KPiANCj4gVGhlIHRoaW5nIGlzIHRo
-YXQgdGhlIGZhbGwtdGhyb3VnaCBjb21tZW50cyBoYXZlIHRvIGJlIHBsYWNlZCBhdCB0aGUNCj4g
-dmVyeSBib3R0b20gb2YgZWFjaCBjYXNlLg0KDQpBaCwgdGhhdCdzIHRvbyBiYWQuICBJIHdhcyBo
-b3BpbmcgdG8gYmUgYWJsZSB0byBwdXQgdGhlIGZhbGwtdGhyb3VnaA0KY29tbWVudCBwcmlvciB0
-byB0aGUgY2FzZSBjb21tZW50Lg0KDQo+IA0KPiBXaGljaCBkbyB5b3UgcHJlZmVyPw0KDQpJIHBy
-ZWZlciB5b3VyIG9yaWdpbmFsIHBhdGNoIG92ZXIgdGhpcyBvbmUuDQoNClRoYW5rcyBmb3IgY2hl
-Y2tpbmcgaW50byB0aGlzIQ0KDQpUb20NCg0KPiANCj4gVGhhbmtzDQo+IC0tDQo+IEd1c3Rhdm8N
-Cj4gDQo+PiBUaGFua3MsDQo+PiBUb20NCj4+DQo+Pj4gIAljYXNlIEhXVFNUQU1QX0ZJTFRFUl9Q
-VFBfVjFfTDRfRVZFTlQ6DQo+Pj4gIAkJWEdNQUNfU0VUX0JJVFMobWFjX3RzY3IsIE1BQ19UU0NS
-LCBUU0lQVjRFTkEsIDEpOw0KPj4+ICAJCVhHTUFDX1NFVF9CSVRTKG1hY190c2NyLCBNQUNfVFND
-UiwgVFNJUFY2RU5BLCAxKTsNCj4+PiBAQCAtMTYyMyw3ICsxNjIzLDcgQEAgc3RhdGljIGludCB4
-Z2JlX3NldF9od3RzdGFtcF9zZXR0aW5ncyhzdHJ1Y3QgeGdiZV9wcnZfZGF0YSAqcGRhdGEsDQo+
-Pj4gIAkvKiBQVFAgdjIsIFVEUCwgU3luYyBwYWNrZXQgKi8NCj4+PiAgCWNhc2UgSFdUU1RBTVBf
-RklMVEVSX1BUUF9WMl9MNF9TWU5DOg0KPj4+ICAJCVhHTUFDX1NFVF9CSVRTKG1hY190c2NyLCBN
-QUNfVFNDUiwgVFNWRVIyRU5BLCAxKTsNCj4+PiAtCS8qIFBUUCB2MSwgVURQLCBTeW5jIHBhY2tl
-dCAqLw0KPj4+ICsJCS8qIEZhbGwgdGhyb3VnaCAtIHRvIFBUUCB2MSwgVURQLCBTeW5jIHBhY2tl
-dCAqLw0KPj4+ICAJY2FzZSBIV1RTVEFNUF9GSUxURVJfUFRQX1YxX0w0X1NZTkM6DQo+Pj4gIAkJ
-WEdNQUNfU0VUX0JJVFMobWFjX3RzY3IsIE1BQ19UU0NSLCBUU0lQVjRFTkEsIDEpOw0KPj4+ICAJ
-CVhHTUFDX1NFVF9CSVRTKG1hY190c2NyLCBNQUNfVFNDUiwgVFNJUFY2RU5BLCAxKTsNCj4+PiBA
-QCAtMTYzNCw3ICsxNjM0LDcgQEAgc3RhdGljIGludCB4Z2JlX3NldF9od3RzdGFtcF9zZXR0aW5n
-cyhzdHJ1Y3QgeGdiZV9wcnZfZGF0YSAqcGRhdGEsDQo+Pj4gIAkvKiBQVFAgdjIsIFVEUCwgRGVs
-YXlfcmVxIHBhY2tldCAqLw0KPj4+ICAJY2FzZSBIV1RTVEFNUF9GSUxURVJfUFRQX1YyX0w0X0RF
-TEFZX1JFUToNCj4+PiAgCQlYR01BQ19TRVRfQklUUyhtYWNfdHNjciwgTUFDX1RTQ1IsIFRTVkVS
-MkVOQSwgMSk7DQo+Pj4gLQkvKiBQVFAgdjEsIFVEUCwgRGVsYXlfcmVxIHBhY2tldCAqLw0KPj4+
-ICsJCS8qIEZhbGwgdGhyb3VnaCAtIHRvIFBUUCB2MSwgVURQLCBEZWxheV9yZXEgcGFja2V0ICov
-DQo+Pj4gIAljYXNlIEhXVFNUQU1QX0ZJTFRFUl9QVFBfVjFfTDRfREVMQVlfUkVROg0KPj4+ICAJ
-CVhHTUFDX1NFVF9CSVRTKG1hY190c2NyLCBNQUNfVFNDUiwgVFNJUFY0RU5BLCAxKTsNCj4+PiAg
-CQlYR01BQ19TRVRfQklUUyhtYWNfdHNjciwgTUFDX1RTQ1IsIFRTSVBWNkVOQSwgMSk7DQo+Pj4N
-Cg==
+On 4/25/19 1:22 AM, Mike Rapoport wrote:
+> Hi Randy,
+> 
+> On Wed, Apr 24, 2019 at 06:08:46PM -0700, Randy Dunlap wrote:
+>> On 4/24/19 3:28 AM, Mike Rapoport wrote:
+>>> Describe what {FLAT,DISCONTIG,SPARSE}MEM are and how they manage to
+>>> maintain pfn <-> struct page correspondence.
+>>>
+>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>>> ---
+>>>  Documentation/vm/index.rst        |   1 +
+>>>  Documentation/vm/memory-model.rst | 171 ++++++++++++++++++++++++++++++++++++++
+>>>  2 files changed, 172 insertions(+)
+>>>  create mode 100644 Documentation/vm/memory-model.rst
+>>>
+>>
+>> Hi Mike,
+>> I have a few minor edits below...
+> 
+> I kinda expected those ;-)
+> 
+>>> diff --git a/Documentation/vm/memory-model.rst b/Documentation/vm/memory-model.rst
+>>> new file mode 100644
+>>> index 0000000..914c52a
+>>> --- /dev/null
+>>> +++ b/Documentation/vm/memory-model.rst
+> 
+> ...
+> 
+>>> +
+>>> +With FLATMEM, the conversion between a PFN and the `struct page` is
+>>> +straightforward: `PFN - ARCH_PFN_OFFSET` is an index to the
+>>> +`mem_map` array.
+>>> +
+>>> +The `ARCH_PFN_OFFSET` defines the first page frame number for
+>>> +systems that their physical memory does not start at 0.
+>>
+>> s/that/when/ ?  Seems awkward as is.
+> 
+> Yeah, it is awkward. How about
+> 
+> The `ARCH_PFN_OFFSET` defines the first page frame number for
+> systems with physical memory starting at address different from 0.
+
+OK.  Thanks.
+
+>>> +
+>>> +DISCONTIGMEM
+>>> +============
+>>> +
+>>
+>> thanks.
+>> -- 
+>> ~Randy
+>>
+> 
+
+
+-- 
+~Randy
