@@ -2,208 +2,100 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44004C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661DAC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C0C2084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF7C20717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:13:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556212436;
+	bh=8R3D7I9mS1uYDHUzbKNuvFwzHBe1Yd1gkshcJwCaWYU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2kGqQ56AG653ld4CzGnKFv4wTn8zl301fv7gjFWFSGkk/zn1dQ39/bzCiVsiUHHYd
+	 3LpeEGZXDAlQa6VLMKZ75d4yijFGCemDvux1+T+3tsN5LAfSiW4pulxsE3B+rdE3pU
+	 E0ejvNUuvZgjdXOT3hoxjqfue2/zXwtpg93aq5rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbfDYRNE (ORCPT
+        id S1729358AbfDYRNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 13:13:04 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48794 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbfDYRND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 13:13:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB1B780D;
-        Thu, 25 Apr 2019 10:13:02 -0700 (PDT)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14AD33F246;
-        Thu, 25 Apr 2019 10:13:00 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     julien.thierry@arm.com, marc.zyngier@arm.com,
-        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        christoffer.dall@arm.com, james.morse@arm.com,
-        suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org
-References: <20190423135719.11306-1-julien.grall@arm.com>
- <20190423135719.11306-4-julien.grall@arm.com>
- <20190424131734.GT3567@e103592.cambridge.arm.com>
- <ab9294b0-a360-df28-ca5c-ba4974f6c5a5@arm.com>
- <20190425163937.GI3567@e103592.cambridge.arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <971994b0-052e-6a93-3949-0b05d2b558e5@arm.com>
-Date:   Thu, 25 Apr 2019 18:12:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 25 Apr 2019 13:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726991AbfDYRNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 13:13:54 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C20320717;
+        Thu, 25 Apr 2019 17:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556212434;
+        bh=8R3D7I9mS1uYDHUzbKNuvFwzHBe1Yd1gkshcJwCaWYU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KA5gBe335jk/bmdniropErZmjCpoJz2PG/zDLQOdTVFNzst5PAcRcvucqiJDd+erv
+         IUPeNUyLDFz4/8iVD+fWhdZFutcfmTSiG92BHhzRK/7GdlcXsre7iW0dDrapdTc4VD
+         UOs0Gsvvqkca2I0y7fYpiy0kMfjaS6DIAmEtBNNo=
+Date:   Thu, 25 Apr 2019 19:13:51 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ian Abbott <abbotti@mev.co.uk>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: comedi: comedi_isadma: Use a non-NULL device
+ for DMA API
+Message-ID: <20190425171351.GB11105@kroah.com>
+References: <20190425162644.21947-1-abbotti@mev.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190425163937.GI3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425162644.21947-1-abbotti@mev.co.uk>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
-
-On 25/04/2019 17:39, Dave Martin wrote:
-> On Thu, Apr 25, 2019 at 04:57:26PM +0100, Julien Grall wrote:
->> Hi Dave,
->>
->> On 24/04/2019 14:17, Dave Martin wrote:
->>> On Tue, Apr 23, 2019 at 02:57:19PM +0100, Julien Grall wrote:
->>>> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
->>>> index 5313aa257be6..6168d06bbd20 100644
->>>> --- a/arch/arm64/kernel/fpsimd.c
->>>> +++ b/arch/arm64/kernel/fpsimd.c
->>>> @@ -92,7 +92,8 @@
->>>>    * To prevent this from racing with the manipulation of the task's FPSIMD state
->>>>    * from task context and thereby corrupting the state, it is necessary to
->>>>    * protect any manipulation of a task's fpsimd_state or TIF_FOREIGN_FPSTATE
->>>> - * flag with local_bh_disable() unless softirqs are already masked.
->>>> + * flag with {, __}get_cpu_fpsimd_context(). This will still allow softirqs to
->>>> + * run but prevent them to use FPSIMD.
->>>>    *
->>>>    * For a certain task, the sequence may look something like this:
->>>>    * - the task gets scheduled in; if both the task's fpsimd_cpu field
->>>> @@ -155,6 +156,56 @@ extern void __percpu *efi_sve_state;
->>>>   #endif /* ! CONFIG_ARM64_SVE */
->>>> +DEFINE_PER_CPU(bool, fpsimd_context_busy);
->>>> +EXPORT_PER_CPU_SYMBOL(fpsimd_context_busy);
->>>> +
->>>> +static void __get_cpu_fpsimd_context(void)
->>>> +{
->>>> +	bool busy = __this_cpu_xchg(fpsimd_context_busy, true);
->>>> +
->>>> +	WARN_ON(busy);
->>>> +}
->>>> +
->>>> +/*
->>>> + * Claim ownership of the CPU FPSIMD context for use by the calling context.
->>>> + *
->>>> + * The caller may freely modify FPSIMD context until *put_cpu_fpsimd_context()
->>>> + * is called.
->>>
->>> Nit: it may be better to say "freely manipulate the FPSIMD context
->>> metadata".
->>>
->>> get_cpu_fpsimd_context() isn't enough to allow the FPSIMD regs to be
->>> safely trashed, because they may still contain live data (or an up to
->>> date copy) for some task.
->>
->> Good point, I will update the comment.
->>
->>>
->>> (For that you also need fpsimd_save_and_flush_cpu_state(), or just use
->>> kernel_neon_begin() instead.)
->>>
->>> [...]
->>>
->>>> @@ -922,6 +971,8 @@ void fpsimd_thread_switch(struct task_struct *next)
->>>>   	if (!system_supports_fpsimd())
->>>>   		return;
->>>> +	__get_cpu_fpsimd_context();
->>>> +
->>>>   	/* Save unsaved fpsimd state, if any: */
->>>>   	fpsimd_save();
->>>> @@ -936,6 +987,8 @@ void fpsimd_thread_switch(struct task_struct *next)
->>>>   	update_tsk_thread_flag(next, TIF_FOREIGN_FPSTATE,
->>>>   			       wrong_task || wrong_cpu);
->>>> +
->>>> +	__put_cpu_fpsimd_context();
->>>
->>> There should be a note in the commit message explaining why these are
->>> here.
->>>
->>> Are they actually needed, other than to keep
->>> WARN_ON(have_cpu_fpsimd_context()) happy elsewhere?
->>
->> It depends on how fpsimd_thread_switch() is called. I will answer more below.
->>
->>>
->>> Does PREEMPT_RT allow non-threaded softirqs to execute while we're in
->>> this code?
->>
->> This has nothing to do with PREEMPT_RT. Softirqs might be executed after
->> handling interrupt (see irq_exit()).
->>
->> A call to preempt_disable() will not be enough to prevent softirqs, you
->> actually need to either mask interrupts or have BH disabled.
->>
->> fpsimd_thread_switch() seems to be only called from the context switch code.
->> AFAICT, interrupt will be masked. Therefore, holding the FPSIMD CPU is not
->> necessary. However...
->>
->>>
->>>
->>> OTOH, if the overall effect on performance remains positive, we can
->>> probably argue that these operations make the code more self-describing
->>> and help guard against mistakes during future maintanence, even if
->>> they're not strictly needed today.
->>
->> .... I think it would help guard against mistakes. The more I haven't seen
->> any performance impact in the benchmark.
+On Thu, Apr 25, 2019 at 05:26:44PM +0100, Ian Abbott wrote:
+> The "comedi_isadma" module calls `dma_alloc_coherent()` and
+> `dma_free_coherent()` with a NULL device pointer which is no longer
+> allowed.  If the `hw_dev` member of the `struct comedi_device` has been
+> set to a valid device, that can be used instead.  Unfortunately, all the
+> current users of the "comedi_isadma" module leave the `hw_dev` member
+> set to NULL.  In that case, use a static dummy fallback device structure
+> with the coherent DMA mask set to the ISA bus limit of 16MB.
 > 
-> Which generally seems a good thing.  The commit message should explain
-> that these are being added for hygiene rather than necessity here,
-> though.
-
-I will update the commit message.
-
+> Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+> ---
+>  drivers/staging/comedi/drivers/comedi_isadma.c | 15 +++++++++++++--
+>  drivers/staging/comedi/drivers/comedi_isadma.h |  3 +++
+>  2 files changed, 16 insertions(+), 2 deletions(-)
 > 
->> [...]
->>
->>>> -/*
->>>> - * Save the FPSIMD state to memory and invalidate cpu view.
->>>> - * This function must be called with softirqs (and preemption) disabled.
->>>> - */
->>>> +/* Save the FPSIMD state to memory and invalidate cpu view. */
->>>>   void fpsimd_save_and_flush_cpu_state(void)
->>>>   {
->>>> +	get_cpu_fpsimd_context();
->>>>   	fpsimd_save();
->>>>   	fpsimd_flush_cpu_state();
->>>> +	put_cpu_fpsimd_context();
->>>>   }
->>>
->>> Again, are these added just to keep WARN_ON()s happy?
->>
->> !preemptible() is not sufficient to prevent softirq running. You also need
->> to have either interrupt masked or BH disabled.
-> 
-> So, why was the code safe before this series?  (In fact, _was_ it safe?)
-> 
-> AFAICT, we have local_irq_disable() around context switch, which covers
-> preempt notifiers (where kvm_arch_vcpu_put_fp() gets called) and
-> fpsimd_thread_switch(): this is what prevents softirqs from firing.
+> diff --git a/drivers/staging/comedi/drivers/comedi_isadma.c b/drivers/staging/comedi/drivers/comedi_isadma.c
+> index b77dc8d5d3ff..8929952516a1 100644
+> --- a/drivers/staging/comedi/drivers/comedi_isadma.c
+> +++ b/drivers/staging/comedi/drivers/comedi_isadma.c
+> @@ -14,6 +14,16 @@
+>  
+>  #include "comedi_isadma.h"
+>  
+> +/*
+> + * Fallback device used when hardware device is NULL.
+> + * This can be removed after drivers have been converted to use isa_driver.
+> + */
+> +static struct device fallback_dev = {
+> +	.init_name = "comedi_isadma fallback device",
+> +	.coherent_dma_mask = DMA_BIT_MASK(24),
+> +	.dma_mask = &fallback_dev.coherent_dma_mask,
+> +};
 
-That's correct, both callers of the function will have IRQs masked. Also, the 
-function fpsimd_save() contained:
-     WARN_ON(!in_softirq() && !irqs_disabled());
+Ick, no, static struct device are a very bad idea as this is a reference
+counted structure and making it static can cause odd problems.
 
-So we were covered in case of misuse.
+Why not just create a "real" one?  Or better yet, use the real device
+for the comedi device as all of these drivers should have one now.
 
-> 
-> So, while it's clean to have get/put here, I still don't see why they're
-> required.
-> 
-> I think the arguments are basically similar to fpsimd_thread_switch().
-> Since fpsimd_save_and_flush_cpu_state() and fpsimd_thread_switch() are
-> called from similar contexts, is makes sense to keep them aligned.
+thanks,
 
-Yes, this is for hygiene rather than a real bug (thought the WARN_ON() in 
-fpsimd_save() would fire). I will update the message accordingly.
-
-Cheers,
-
--- 
-Julien Grall
+greg k-h
