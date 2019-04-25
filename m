@@ -2,107 +2,99 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0EBC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B806C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87FA206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE022077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:44:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mnkRIXNM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfDYNoS (ORCPT
+        id S1728274AbfDYNoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 25 Apr 2019 09:44:21 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45719 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728075AbfDYNoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Apr 2019 09:44:18 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7132 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725900AbfDYNoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 09:44:15 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 77AAD680724757E101C1;
-        Thu, 25 Apr 2019 21:44:12 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.20) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Apr 2019
- 21:44:02 +0800
-To:     <pablo@netfilter.org>, <kadlec@blackhole.kfki.hu>, <fw@strlen.de>,
-        <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <netfilter-devel@vger.kernel.org>,
-        <coreteam@netfilter.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dsahern@gmail.com>
-CC:     Mingfangsen <mingfangsen@huawei.com>
-From:   linmiaohe <linmiaohe@huawei.com>
-Subject: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Message-ID: <212e4feb-39de-2627-9948-bbb117ff4d4e@huawei.com>
-Date:   Thu, 25 Apr 2019 21:43:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44qdhG49xnz9s7T;
+        Thu, 25 Apr 2019 23:44:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556199855;
+        bh=WVoazcyfpfOaufJuimR0JPrqfOqP6mSSsVI02WTMYfo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mnkRIXNM6iyinVv3VCtFmelSvAP1YOg5/JzpTr7xDJxfyrT6s7fTcx2/HUP3Mj/VH
+         IjFGAk0qjod22ZIdQMkdVibIl3lljOokHG8AJxSmZzNDa92g9fj0j4+qnmX6ipY9OA
+         Ax40UTHCBhwugV6K/roDaYqMvjr9URfrCw+yx9q2eCfOWwx3lOenN57r2aPoAVngq9
+         LzmCUX7Cz6j3SPfc8w1cuSP6++nsWwC8zyy7sCX7M7OTVqR6yDuzFTYi/fjAB80Fyj
+         vq26NoPBz6kcuj1KM7FpxzGKzaxHH603V5wSiwIAHZDkdLO26rNDFearciC2C6dEP8
+         wKblTTBqcJvbg==
+Date:   Thu, 25 Apr 2019 23:44:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Xen Devel <Xen-devel@lists.xensource.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mao Wenan <maowenan@huawei.com>
+Subject: linux-next: Fixes tag needs some work in the xen-tip tree
+Message-ID: <20190425234412.5725f6ea@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.20]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/yTS9kI8Gluz2kwcJOhaw92Q"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+--Sig_/yTS9kI8Gluz2kwcJOhaw92Q
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
-ipv4/ipv6 packets will be dropped because in device is
-vrf but out device is an enslaved device. So failed with
-the check of the rpfilter.
+Hi all,
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- net/ipv4/netfilter/ipt_rpfilter.c  |  1 +
- net/ipv6/netfilter/ip6t_rpfilter.c | 10 +++++++++-
- 2 files changed, 10 insertions(+), 1 deletion(-)
+In commit
 
-diff --git a/net/ipv4/netfilter/ipt_rpfilter.c b/net/ipv4/netfilter/ipt_rpfilter.c
-index 0b10d8812828..6e07cd0ecbec 100644
---- a/net/ipv4/netfilter/ipt_rpfilter.c
-+++ b/net/ipv4/netfilter/ipt_rpfilter.c
-@@ -81,6 +81,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
- 	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
- 	flow.flowi4_tos = RT_TOS(iph->tos);
- 	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
-+	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
+  8a46b39f3aff ("xenbus: drop useless LIST_HEAD in xenbus_write_watch() and=
+ xenbus_file_write()")
 
- 	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par), info->flags) ^ invert;
- }
-diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
-index c3c6b09acdc4..a28c81322148 100644
---- a/net/ipv6/netfilter/ip6t_rpfilter.c
-+++ b/net/ipv6/netfilter/ip6t_rpfilter.c
-@@ -58,7 +58,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
- 	if (rpfilter_addr_linklocal(&iph->saddr)) {
- 		lookup_flags |= RT6_LOOKUP_F_IFACE;
- 		fl6.flowi6_oif = dev->ifindex;
--	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
-+	} else if (((flags & XT_RPFILTER_LOOSE) == 0) ||
-+		   (netif_is_l3_master(dev)) ||
-+		   (netif_is_l3_slave(dev)))
- 		fl6.flowi6_oif = dev->ifindex;
+Fixes tag
 
- 	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags);
-@@ -73,6 +75,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
- 		goto out;
- 	}
+  Fixes: 1107ba885e469("xen: add xenfs to allow usermode <-> Xen interactio=
+n")
 
-+	if (netif_is_l3_master(dev)) {
-+		dev = dev_get_by_index_rcu(dev_net(dev), IP6CB(skb)->iif);
-+		if (!dev)
-+			goto out;
-+	}
-+
- 	if (rt->rt6i_idev->dev == dev || (flags & XT_RPFILTER_LOOSE))
- 		ret = true;
-  out:
--- 
-2.19.1
+has these problem(s):
 
+  - missing space between the SHA1 and the subject
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/yTS9kI8Gluz2kwcJOhaw92Q
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzBuawACgkQAVBC80lX
+0GysZQf/XHecL4TEvcykV8YYeoQmha6sT5PZ73Ue8Cn5LoL9F3e5+wqrzlr6oZUE
+DPZvpR+rmC3TlSTJy99hzerkLJvYuk6YJklTdysL293h4hIK+Zv5luCKaJQiJBvH
+YO7le5b/2qVJFy7AVK4XQFd+dHKr4WJgiOVS/kqudFpfFPLrFVA04bZLmhwe0tN+
+l6qoYzhDWZtisW3717k8jYiCmiozZruQwK/M9T3BMSvrL8Q1Y1RuhE1lfEkDv75y
+1rS1ukKgi9ndiH90Q1UtT99hH5XbEdaEbVafZpvrY6nFOzFxJ5CJSJcQU+p2Yc+g
+4MMXpsPVFOGa30f+oQ2yUjslhblaxw==
+=evb/
+-----END PGP SIGNATURE-----
+
+--Sig_/yTS9kI8Gluz2kwcJOhaw92Q--
