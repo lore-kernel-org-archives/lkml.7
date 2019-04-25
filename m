@@ -2,176 +2,107 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252A8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422CAC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E51020717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C4B2084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:29:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pExlI/QS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfDYO2y (ORCPT
+        id S1727584AbfDYO33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:28:54 -0400
-Received: from shell.v3.sk ([90.176.6.54]:44518 "EHLO shell.v3.sk"
+        Thu, 25 Apr 2019 10:29:29 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:29332 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfDYO2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:28:54 -0400
+        id S1725937AbfDYO32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:29:28 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44qfhP5GCMz9v06X;
+        Thu, 25 Apr 2019 16:29:25 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=pExlI/QS; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id V_UJf2bk2lNM; Thu, 25 Apr 2019 16:29:25 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44qfhP3ppvz9v06V;
+        Thu, 25 Apr 2019 16:29:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1556202565; bh=ZAk5oInFteIZFLfsYCErnhXj4xJ5HcEpKVF+oTA5mHo=;
+        h=From:Subject:To:Cc:Date:From;
+        b=pExlI/QSxTsT5a/b0I+Iga4XMKht5bLQs2e5x9FFnamAj2c/FCkoZpkhFGfCbf2fJ
+         RkFqNMLBSlYe2lYx/FxzJtDZkc9ANmikQL6cE7nh4UcY0ZiCNPJhlNiHNqJqBJiZ+f
+         Ykwn2pYBCpFK6bl/LyTi8UUf+SGzlShAxrvXN9dU=
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id EB596103095;
-        Thu, 25 Apr 2019 16:28:49 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Cp4cTpcxYXrp; Thu, 25 Apr 2019 16:28:46 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 0EB08103096;
-        Thu, 25 Apr 2019 16:28:46 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id mVBNlyvfa4b2; Thu, 25 Apr 2019 16:28:45 +0200 (CEST)
-Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id C951F103095;
-        Thu, 25 Apr 2019 16:28:44 +0200 (CEST)
-Message-ID: <b00ee1e4c394f5d71612eb4b0207f91e9d24b793.camel@v3.sk>
-Subject: Re: [PATCH v3 05/14] media: dt-bindings: marvell,mmp2-ccic: Add
- Marvell MMP2 camera
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     jacopo mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>,
-        Libin Yang <lbyang@marvell.com>,
-        Albert Wang <twang13@marvell.com>
-Date:   Thu, 25 Apr 2019 16:28:44 +0200
-In-Reply-To: <20181122200341.GA8279@w540>
-References: <20181120100318.367987-1-lkundrak@v3.sk>
-         <20181120100318.367987-6-lkundrak@v3.sk> <20181122200341.GA8279@w540>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 (3.32.1-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1A4518B931;
+        Thu, 25 Apr 2019 16:29:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id vHbBjXE-_eMi; Thu, 25 Apr 2019 16:29:27 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E835A8B923;
+        Thu, 25 Apr 2019 16:29:26 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 89E4266276; Thu, 25 Apr 2019 14:29:26 +0000 (UTC)
+Message-Id: <cover.1556202028.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 00/11] Reduce ifdef mess in slice.c
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        aneesh.kumar@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 25 Apr 2019 14:29:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2018-11-22 at 21:08 +0100, jacopo mondi wrote:
-> Hi Lubomir,
-> 
-> On Tue, Nov 20, 2018 at 11:03:10AM +0100, Lubomir Rintel wrote:
-> > Add Marvell MMP2 camera host interface.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > 
-> > ---
-> > Changes since v2:
-> > - Added #clock-cells, clock-names, port
-> > 
-> >  .../bindings/media/marvell,mmp2-ccic.txt      | 37 +++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> > new file mode 100644
-> > index 000000000000..e5e8ca90e7f7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> > @@ -0,0 +1,37 @@
-> > +Marvell MMP2 camera host interface
-> > +
-> > +Required properties:
-> > + - compatible: Should be "marvell,mmp2-ccic"
-> > + - reg: register base and size
-> > + - interrupts: the interrupt number
-> > + - #clock-cells: must be 0
-> > + - any required generic properties defined in video-interfaces.txt
-> 
-> I don't think video-interfaces applies here. It described bindings to
-> be used for endpoint and port nodes.
+This series is a split out of the v1 series "Reduce ifdef mess in hugetlbpage.c and slice.c".
 
-Yes. Will fix.
+It is also rebased after the series from Aneesh to reduce context size for Radix.
 
-> > +
-> > +Optional properties:
-> > + - clocks: input clock (see clock-bindings.txt)
-> 
-> What do you think of:
-> "reference to the input clock as specified by clock-bindings.txt"
+See http://kisskb.ellerman.id.au/kisskb/branch/chleroy/head/f263887b4ca31f4bb0fe77823e301c28ba27c796/ for wide compilation.
 
-Sounds good; I'll use that.
+Christophe Leroy (11):
+  powerpc/mm: fix erroneous duplicate slb_addr_limit init
+  powerpc/mm: no slice for nohash/64
+  powerpc/mm: hand a context_t over to slice_mask_for_size() instead of
+    mm_struct
+  powerpc/mm: move slice_mask_for_size() into mmu.h
+  powerpc/mm: get rid of mm_ctx_slice_mask_xxx()
+  powerpc/mm: remove unnecessary #ifdef CONFIG_PPC64
+  powerpc/mm: remove a couple of #ifdef CONFIG_PPC_64K_PAGES in
+    mm/slice.c
+  powerpc/8xx: get rid of #ifdef CONFIG_HUGETLB_PAGE for slices
+  powerpc/mm: define get_slice_psize() all the time
+  powerpc/mm: define subarch SLB_ADDR_LIMIT_DEFAULT
+  powerpc/mm: drop slice DEBUG
 
-> > + - clock-names: names of the clocks used, may include "axi", "func" and
-> > +                "phy"
-> 
-> "may include" is abit vague. Which clock should the interface be
-> powered from, and in which case?
+ arch/powerpc/include/asm/book3s/64/mmu.h     |  29 +++---
+ arch/powerpc/include/asm/book3s/64/slice.h   |   2 +
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h |  51 +++++------
+ arch/powerpc/include/asm/nohash/32/slice.h   |   2 +
+ arch/powerpc/include/asm/nohash/64/slice.h   |  12 ---
+ arch/powerpc/include/asm/slice.h             |   9 +-
+ arch/powerpc/kernel/setup-common.c           |   6 --
+ arch/powerpc/mm/hash_utils_64.c              |   2 +-
+ arch/powerpc/mm/hugetlbpage.c                |   4 +-
+ arch/powerpc/mm/slice.c                      | 132 ++++-----------------------
+ arch/powerpc/mm/tlb_nohash.c                 |   4 +-
+ arch/powerpc/platforms/Kconfig.cputype       |   4 +
+ 12 files changed, 69 insertions(+), 188 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/nohash/64/slice.h
 
-I did this somewhat intentionally, because the hardware documentation
-is secret and the only clue about the clocks comes from what is
-actually implemented in the driver.
-
-I think I can still improve it somehow though, without too much risk of
-stating things incorrectly.
-
-> > + - clock-output-names: should contain the name of the clock driving the
-> > +                       sensor master clock MCLK
-> 
-> This is a property for the clock provider part, and I will just list
-> the only clock this interfaces provides here:
-> 
->     - clock-output-names: Optional clock source for sensors. Shall be "mclk".
-
-Thanks, will fix in next patch version.
-
-> See a comment on patch 14 on the use of the clock provider part.
-> 
-> > +
-> > +Required subnodes:
-> > + - port: the parallel bus interface port with a single endpoint linked to
-> > +         the sensor's endpoint as described in video-interfaces.txt
-> > +
-> > +Example:
-> > +
-> > +	camera0: camera@d420a000 {
-> > +		compatible = "marvell,mmp2-ccic";
-> > +		reg = <0xd420a000 0x800>;
-> > +		interrupts = <42>;
-> > +		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
-> > +		clock-names = "axi";
-> > +		#clock-cells = <0>;
-> > +		clock-output-names = "mclk";
-> > +
-> > +		port {
-> > +			camera0_0: endpoint {
-> > +				remote-endpoint = <&ov7670_0>;
-> 
-> I'm debated, your sensor does not support configuring the parallel bus,
-> that's fine, but as "bindings describe hardware" shouldn't you list
-> here the bus configurations the HW interface supports and list their default
-> values? Or there are none for real in this platform?
-
-Hard to tell, given Marvell won't publish the documentation.
-
-The driver seems to have some rudimentary support for bus-type of
-<V4L2_MBUS_CSI2_DPHY>, but I have no idea whether it's on MMP2
-hardware. The 16x documentation, that may or may not be relevant, only
-lists parallel formats.
-
-I'd prefer not to take risks of making wrong guesses and don't list I
-can not verify to be correct.
-
-> Thanks
->   j
-
-There are points above I have not responded to. I'll address them in
-the next version of the patch.
-
-Thank you
-Lubo
+-- 
+2.13.3
 
