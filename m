@@ -2,91 +2,146 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7376CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10487C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678662077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:39:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jsdx1Trn"
+	by mail.kernel.org (Postfix) with ESMTP id 129942077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:39:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556224782;
+	bh=/28ppytH3HP+D/aqKJqUpHxLpqH0aIkrA1BELlrObfw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=WBUr4aHuLl20X9k3vp3+Af+AGUJwlxVL1V0l+CzZyM5N3/uDCgTQ90KCIcKD1xVmt
+	 OZIwKs0NhTP6aeCM8SDcpr9Jo4vieUCcUK1Vsl2y3suebmDnfJUrUfKyd0Sb1IBh0n
+	 bbhRZO976I6+EEjDRRqtcMCKus2I3VdiUTPxT0T4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387852AbfDYUjO (ORCPT
+        id S2387872AbfDYUjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 16:39:14 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:55077 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387630AbfDYUjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 16:39:13 -0400
-Received: by mail-it1-f193.google.com with SMTP id a190so2320993ite.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 13:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vt2MHREG2YW1b5Y4ynxE1gZ24ZdGV1+JspuK5nI83KY=;
-        b=Jsdx1TrnktYnmyKJsMoo7doVO3TxeEBSjygL1I8pQFFrqJHvtTA0+4/DoMGGiJy+GT
-         A7sWMEm4PwyOBlSMEEUdsHPzBga0UipypP3GbzjLxYtga9A+g8JkIS3a70LfV/C6L9aG
-         TMwa/YU3l0WdUGELor4qWqYgRECWqjTyMNGDdGpHBfJghrWxL7XHM19HYRBU18oOMMS3
-         aB8vF4Q6pX7IGeAU65ylVKhmQt/0SVoCqjGpJWBjYUHBfRyD0Nj8Kjgp7x6JE56s+x2R
-         XIbINGd4KfGBgzrwtqf0LxgoBKsZ89A/rI4n4oWDjimxd4VjNJBV9uke/xdhZlXWOjeZ
-         sMHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vt2MHREG2YW1b5Y4ynxE1gZ24ZdGV1+JspuK5nI83KY=;
-        b=JaDvwAUiIC7gBRTns9P3/iqYd6c/q1HF4cp1DnfpfnDElInDtvOe+9GdxyXUZo+l95
-         6e7Dr7kIBH1Lgui0QiJ7//qzLAEgNf1lce4TV/qr9+3KKmWLzA+LAqP70ziV70yuzZWN
-         GLEc919f08QSKre3rbdZaKFbJ72BFb/Ub2bkU0kVrqdQNX9AIcLOQ9P82PMpQy3/x4mj
-         nmiHQXCYnqSwBSXh+U+F2RAi4R7MvFLLAR9pcjztmpgAijyknEMBP5okrHWATuU0pslt
-         i7U9A5rGbN5yPiEMu2AreVa1PWqvanW9eGMj+Xx5ZcGFqhjsrglr8gWUxXM8+fSg2n36
-         9hng==
-X-Gm-Message-State: APjAAAUoiy2cHYyLB6D22ZKmnYscKRX08hToDbCUOcFozNppuLKDNV0l
-        go49Ahnt7l4bEuexLsnBn1Ed8cSY/23udtxqGJ7S8w==
-X-Google-Smtp-Source: APXvYqyb9X1rNLIny8GhZh4mbLQoW30LUgL2p7h5j1bdxa54QREd5fTxckJy1RdiyszL2i5qiQCRVH0oo67LjR2oCp4=
-X-Received: by 2002:a02:ad07:: with SMTP id s7mr18510295jan.103.1556224752679;
- Thu, 25 Apr 2019 13:39:12 -0700 (PDT)
+        Thu, 25 Apr 2019 16:39:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387630AbfDYUjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 16:39:40 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAA1E20717;
+        Thu, 25 Apr 2019 20:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556224779;
+        bh=/28ppytH3HP+D/aqKJqUpHxLpqH0aIkrA1BELlrObfw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YWjuyCgtlmQHRBC0Mb2C03tvRm1SQJ6mkzi1VStf7up2hEVJefmSO1xOTcfgtp7L2
+         v4Jh/zeSh1bAn3+bBodT3cQ22g9t+oM865AofFM/tRvdQA7wz2IOGvHbjYLAgs9ub0
+         LZ9cV4bgt9TDdegQgm4hbnrGo3Lp+8B9phVhgzbg=
+Subject: Re: [PATCH v2 0/8] selftests: Move test output to diagnostic lines
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Serge Hallyn <serge@hallyn.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, shuah <shuah@kernel.org>
+References: <20190424231237.14776-1-keescook@chromium.org>
+ <a3ca267e-8e1e-65da-77c8-c7010a39354b@kernel.org>
+ <CAGXu5jJChvx-_E8RMTi3ioUZGuQGViy6gcAMpmvYZzms=zc6dQ@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <1afe0a17-c539-6ef2-ecff-f4ade4a865e7@kernel.org>
+Date:   Thu, 25 Apr 2019 14:39:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CACdnJuup-y1xAO93wr+nr6ARacxJ9YXgaceQK9TLktE7shab1w@mail.gmail.com>
- <20190424211038.204001-1-matthewgarrett@google.com> <20190425121410.GC1144@dhcp22.suse.cz>
- <20190425123755.GX12751@dhcp22.suse.cz>
-In-Reply-To: <20190425123755.GX12751@dhcp22.suse.cz>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Thu, 25 Apr 2019 13:39:01 -0700
-Message-ID: <CACdnJuutwmBn_ASY1N1+ZK8g4MbpjTnUYbarR+CPhC5BAy0oZA@mail.gmail.com>
-Subject: Re: [PATCH V2] mm: Allow userland to request that the kernel clear
- memory on release
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAGXu5jJChvx-_E8RMTi3ioUZGuQGViy6gcAMpmvYZzms=zc6dQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 5:37 AM Michal Hocko <mhocko@kernel.org> wrote:
-> Besides that you inherently assume that the user would do mlock because
-> you do not try to wipe the swap content. Is this intentional?
+On 4/25/19 11:05 AM, Kees Cook wrote:
+> On Thu, Apr 25, 2019 at 9:52 AM shuah <shuah@kernel.org> wrote:
+>>
+>> On 4/24/19 5:12 PM,  wrote:
+>>> This refactors the selftest Makefiles to extract the test running logic
+>>> to be reused between "run_tests" and "emit_tests", while also fixing
+>>> up the test output to be TAP version 13 compliant:
+>>> - added "plan" line
+>>> - fixed result line syntax
+>>> - moved all test output to be "# "-prefixed as TAP "diagnostic" lines
+>>>
+>>> The prefixing code includes a fallback mode for limited execution
+>>> environments.
+>>>
+>>> Additionally, the plan lines are fixed for all callers of kselftest.h.
+>>>
+>>> -Kees
+>>>
+>>
+>> Kees,
+>>
+>> Just about to apply these to a topic branch to do testing and ran into
+>> checkpatch errors:
+>>
+>>
+>> WARNING: line over 80 characters - a few
+> 
+> I only saw one, which is on a string which kernel coding style says to
+> leave unsplit:
+> 
+> WARNING: line over 80 characters
+> #55: FILE: tools/testing/selftests/kselftest/runner.sh:19:
+> +               echo "$TEST_HDR_MSG: Warning: file $TEST is not
+> executable, correct this."
+> 
+>> WARNING: Misplaced SPDX-License-Identifier tag - use line 1 instead
+>> #141: FILE: tools/testing/selftests/kselftest/runner.sh:2:
+> 
+> WARNING: Misplaced SPDX-License-Identifier tag - use line 1 instead
+> #37: FILE: tools/testing/selftests/kselftest/runner.sh:2:
+>   # SPDX-License-Identifier: GPL-2.0
+> 
+> This is a shell script. It can't be on line 1:
+> 
+> $ head -n3 tools/testing/selftests/kselftest/runner.sh
+> #!/bin/sh
+> # SPDX-License-Identifier: GPL-2.0
+> #
+> 
+> That looks like a bug in checkpatch not resetting the expected line or
+> something.
+> 
+>> Can fix them and resend - SPDX one is my main concern.
+> 
+> These appear to be false positives; I don't think I need to fix them?
+> Let me know what you think.
+> 
+>> The plan is to apply these to linux-kselftest ksft-tap-refactor topic
+>> first. I don't want to rush these until we do some testing.
+> 
+> Absolutely. :)
+> 
+> Thanks!
+> 
 
-Yes, given MADV_DONTDUMP doesn't imply mlock I thought it'd be more
-consistent to keep those independent.
+Kees,
 
-> Another question would be regarding the targeted user API. There are
-> some attempts to make all the freed memory to be zeroed/poisoned. Are
-> users who would like to use this feature also be interested in using
-> system wide setting as well?
+Pushed all 8 patches to 
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+ksft-tap-refactor topic branch
 
-I think that depends on the performance overhead of a global setting,
-but it's also influenced by the semantics around when the freeing
-occurs, which is something I haven't nailed down yet. If the
-expectation is that the page is freed whenever the process exits, even
-if the page is in use somewhere else, then we'd still want this to be
-separate to poisoning on final page free.
+I will have time to test tomorrow.
+
+thanks,
+-- Shuah
+
+
