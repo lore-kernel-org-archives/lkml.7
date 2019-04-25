@@ -2,185 +2,1135 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41930C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE0FC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0287A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:38:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="AER/bTPn";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="VQMQE2cb"
+	by mail.kernel.org (Postfix) with ESMTP id 6ACD3208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbfDYIii (ORCPT
+        id S1729827AbfDYIim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 04:38:38 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:63209 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729712AbfDYIig (ORCPT
+        Thu, 25 Apr 2019 04:38:42 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:46327 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729702AbfDYIij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 04:38:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1556181515; x=1587717515;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=qWrl5iluoHriyffRoGf9OGiYcTMqaJKbW95CDI7FhBc=;
-  b=AER/bTPngljpCJXBi8c75VxzDG0bg1jgVeQhouKsSn9+f+tBCfKl0MMR
-   EPHvywcHtXQqoS7RmZzm5dG2dbV54tYRaDC6fGEQwb8x7lfO87th/N5pD
-   cSXYBcTdId6wOuqS7ZIGswhq5/B4JhaC+ZbyVWQ38QXPLZFTF9MyDnRHm
-   0eLkNqB6QPTf7pPKMZ1VYiCnJaSkNoiNTkmnqo9SRudMgPvlk4H/tIp+r
-   gmHFXqzvHtGmCK4xChy8iJ4Qiv3Gym5nuhNnZUTtrog61SVRu5ayZTVPX
-   iaeLZFDKvml7c1scmUzqv5JLHdoFqDbdQjhiDXBMfy4K7V366Iosoo7u9
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,393,1549900800"; 
-   d="scan'208";a="106780573"
-Received: from mail-co1nam03lp2057.outbound.protection.outlook.com (HELO NAM03-CO1-obe.outbound.protection.outlook.com) ([104.47.40.57])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Apr 2019 16:38:34 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qWrl5iluoHriyffRoGf9OGiYcTMqaJKbW95CDI7FhBc=;
- b=VQMQE2cb/JnMGmI7ZF/nytSReL1Rq5YKSKJGtjg0dFd4h9pZR3OtsAGl8oHpoQm62qbx6ofhrF7MuLaExkDquIArIXKj/bUHhgHoMed5ylJEmfDatitANOvudKYg+0NopSazCXgy6vkAjytmmkXdvq9UfoJUo9QmufdwXz8LGQs=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB5485.namprd04.prod.outlook.com (20.178.248.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Thu, 25 Apr 2019 08:38:31 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::ad2f:3a0f:2de1:6fb2]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::ad2f:3a0f:2de1:6fb2%5]) with mapi id 15.20.1813.017; Thu, 25 Apr 2019
- 08:38:31 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-CC:     Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v6 1/3] RISC-V: Use tabs to align macro values in asm/csr.h
-Thread-Topic: [PATCH v6 1/3] RISC-V: Use tabs to align macro values in
- asm/csr.h
-Thread-Index: AQHU+0JCFWfNFu2mTUG+uCuJd9l6jg==
-Date:   Thu, 25 Apr 2019 08:38:30 +0000
-Message-ID: <20190425083804.11991-2-anup.patel@wdc.com>
-References: <20190425083804.11991-1-anup.patel@wdc.com>
-In-Reply-To: <20190425083804.11991-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MA1PR0101CA0039.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::25) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [129.253.179.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8d06a88e-893a-49fb-5646-08d6c9596502
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5485;
-x-ms-traffictypediagnostic: MN2PR04MB5485:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <MN2PR04MB54857DD676AC8B199E3674208D3D0@MN2PR04MB5485.namprd04.prod.outlook.com>
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(366004)(346002)(396003)(376002)(189003)(199004)(76176011)(66446008)(14444005)(186003)(6506007)(86362001)(14454004)(25786009)(44832011)(11346002)(6116002)(486006)(476003)(64756008)(386003)(3846002)(2171002)(66476007)(66556008)(316002)(5660300002)(54906003)(446003)(68736007)(256004)(102836004)(2906002)(52116002)(2616005)(110136005)(26005)(66946007)(53936002)(1076003)(4326008)(73956011)(6512007)(71190400001)(8936002)(36756003)(99286004)(81166006)(6486002)(66066001)(8676002)(6436002)(71200400001)(305945005)(72206003)(97736004)(7736002)(478600001)(50226002)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5485;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: I2VXiQuSsQAcecLsxy3jS7cmvO46gnhzK8Pm6PGp5swsklGeUHrSxzWkbSWAnwLO0+pRp6UuWBVtSScOJReTEr9dSAM4y9mwqm6mzjoH3Ng+04NdjBel2B7RI7e+tIBXbBo7NSAIA4WEyvImFjQcn+PmSBeKJ4LkgGcv/PUKC2r8mkkPFcLt3C02De1ZCcNBZmZyOcXAf4Xagclc6wAugSjvXPd2UxW4rFPMdwxxjdw6lTcvBFPCieux6+6BDFh3Pyi1CyKBUe/nnV7gCG2j+PuxZ5VUQ2ntNs63NKxyn3456qTal1z3E8GqZ8ZpUeby0UOgpP1c6yT4KmeqqJU088KR5dgepoAuloi7fJ7FnCGsX1sSDd2yvl9Xn620rwMHghXRA6OA6SbrdkFhzj5/QlHCqS8cLvCejr9N3IQrsT8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 25 Apr 2019 04:38:39 -0400
+X-Originating-IP: 90.88.147.33
+Received: from localhost.localdomain (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id BCE2B20012;
+        Thu, 25 Apr 2019 08:38:29 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+Subject: [PATCH v4 4/4] media: cedrus: Add HEVC/H.265 decoding support
+Date:   Thu, 25 Apr 2019 10:37:52 +0200
+Message-Id: <20190425083752.4973-5-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190425083752.4973-1-paul.kocialkowski@bootlin.com>
+References: <20190425083752.4973-1-paul.kocialkowski@bootlin.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d06a88e-893a-49fb-5646-08d6c9596502
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 08:38:30.9142
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5485
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIHNwYWNpbmcgYmV0d2VlbiBtYWNybyBuYW1lIGFuZCB2YWx1ZSBpcyBub3QgY29uc2lzdGVu
-dCBpbg0KYXNtL2Nzci5oLiBUaGlzIHBhdGNoIGJlYXV0aWZpZXMgYXNtL2Nzci5oIGJ5IHVzaW5n
-IHRhYnMgdG8gYWxpZ24NCm1hY3JvIHZhbHVlcyBpbnN0ZWFkIG9mIHNwYWNlcy4NCg0KU2lnbmVk
-LW9mZi1ieTogQW51cCBQYXRlbCA8YW51cC5wYXRlbEB3ZGMuY29tPg0KUmV2aWV3ZWQtYnk6IENo
-cmlzdG9waCBIZWxsd2lnIDxoY2hAbHN0LmRlPg0KLS0tDQogYXJjaC9yaXNjdi9pbmNsdWRlL2Fz
-bS9jc3IuaCB8IDc2ICsrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmls
-ZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspLCAzOCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdp
-dCBhL2FyY2gvcmlzY3YvaW5jbHVkZS9hc20vY3NyLmggYi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNt
-L2Nzci5oDQppbmRleCAyOGEwZDFjYjM3NGMuLjJhZTU0YTczODZmMSAxMDA2NDQNCi0tLSBhL2Fy
-Y2gvcmlzY3YvaW5jbHVkZS9hc20vY3NyLmgNCisrKyBiL2FyY2gvcmlzY3YvaW5jbHVkZS9hc20v
-Y3NyLmgNCkBAIC0xNyw1NCArMTcsNTQgQEANCiAjaW5jbHVkZSA8bGludXgvY29uc3QuaD4NCiAN
-CiAvKiBTdGF0dXMgcmVnaXN0ZXIgZmxhZ3MgKi8NCi0jZGVmaW5lIFNSX1NJRQlfQUMoMHgwMDAw
-MDAwMiwgVUwpIC8qIFN1cGVydmlzb3IgSW50ZXJydXB0IEVuYWJsZSAqLw0KLSNkZWZpbmUgU1Jf
-U1BJRQlfQUMoMHgwMDAwMDAyMCwgVUwpIC8qIFByZXZpb3VzIFN1cGVydmlzb3IgSUUgKi8NCi0j
-ZGVmaW5lIFNSX1NQUAlfQUMoMHgwMDAwMDEwMCwgVUwpIC8qIFByZXZpb3VzbHkgU3VwZXJ2aXNv
-ciAqLw0KLSNkZWZpbmUgU1JfU1VNCV9BQygweDAwMDQwMDAwLCBVTCkgLyogU3VwZXJ2aXNvciBt
-YXkgYWNjZXNzIFVzZXIgTWVtb3J5ICovDQotDQotI2RlZmluZSBTUl9GUyAgICAgICAgICAgX0FD
-KDB4MDAwMDYwMDAsIFVMKSAvKiBGbG9hdGluZy1wb2ludCBTdGF0dXMgKi8NCi0jZGVmaW5lIFNS
-X0ZTX09GRiAgICAgICBfQUMoMHgwMDAwMDAwMCwgVUwpDQotI2RlZmluZSBTUl9GU19JTklUSUFM
-ICAgX0FDKDB4MDAwMDIwMDAsIFVMKQ0KLSNkZWZpbmUgU1JfRlNfQ0xFQU4gICAgIF9BQygweDAw
-MDA0MDAwLCBVTCkNCi0jZGVmaW5lIFNSX0ZTX0RJUlRZICAgICBfQUMoMHgwMDAwNjAwMCwgVUwp
-DQotDQotI2RlZmluZSBTUl9YUyAgICAgICAgICAgX0FDKDB4MDAwMTgwMDAsIFVMKSAvKiBFeHRl
-bnNpb24gU3RhdHVzICovDQotI2RlZmluZSBTUl9YU19PRkYgICAgICAgX0FDKDB4MDAwMDAwMDAs
-IFVMKQ0KLSNkZWZpbmUgU1JfWFNfSU5JVElBTCAgIF9BQygweDAwMDA4MDAwLCBVTCkNCi0jZGVm
-aW5lIFNSX1hTX0NMRUFOICAgICBfQUMoMHgwMDAxMDAwMCwgVUwpDQotI2RlZmluZSBTUl9YU19E
-SVJUWSAgICAgX0FDKDB4MDAwMTgwMDAsIFVMKQ0KKyNkZWZpbmUgU1JfU0lFCQlfQUMoMHgwMDAw
-MDAwMiwgVUwpIC8qIFN1cGVydmlzb3IgSW50ZXJydXB0IEVuYWJsZSAqLw0KKyNkZWZpbmUgU1Jf
-U1BJRQkJX0FDKDB4MDAwMDAwMjAsIFVMKSAvKiBQcmV2aW91cyBTdXBlcnZpc29yIElFICovDQor
-I2RlZmluZSBTUl9TUFAJCV9BQygweDAwMDAwMTAwLCBVTCkgLyogUHJldmlvdXNseSBTdXBlcnZp
-c29yICovDQorI2RlZmluZSBTUl9TVU0JCV9BQygweDAwMDQwMDAwLCBVTCkgLyogU3VwZXJ2aXNv
-ciBVc2VyIE1lbW9yeSBBY2Nlc3MgKi8NCisNCisjZGVmaW5lIFNSX0ZTCQlfQUMoMHgwMDAwNjAw
-MCwgVUwpIC8qIEZsb2F0aW5nLXBvaW50IFN0YXR1cyAqLw0KKyNkZWZpbmUgU1JfRlNfT0ZGCV9B
-QygweDAwMDAwMDAwLCBVTCkNCisjZGVmaW5lIFNSX0ZTX0lOSVRJQUwJX0FDKDB4MDAwMDIwMDAs
-IFVMKQ0KKyNkZWZpbmUgU1JfRlNfQ0xFQU4JX0FDKDB4MDAwMDQwMDAsIFVMKQ0KKyNkZWZpbmUg
-U1JfRlNfRElSVFkJX0FDKDB4MDAwMDYwMDAsIFVMKQ0KKw0KKyNkZWZpbmUgU1JfWFMJCV9BQygw
-eDAwMDE4MDAwLCBVTCkgLyogRXh0ZW5zaW9uIFN0YXR1cyAqLw0KKyNkZWZpbmUgU1JfWFNfT0ZG
-CV9BQygweDAwMDAwMDAwLCBVTCkNCisjZGVmaW5lIFNSX1hTX0lOSVRJQUwJX0FDKDB4MDAwMDgw
-MDAsIFVMKQ0KKyNkZWZpbmUgU1JfWFNfQ0xFQU4JX0FDKDB4MDAwMTAwMDAsIFVMKQ0KKyNkZWZp
-bmUgU1JfWFNfRElSVFkJX0FDKDB4MDAwMTgwMDAsIFVMKQ0KIA0KICNpZm5kZWYgQ09ORklHXzY0
-QklUDQotI2RlZmluZSBTUl9TRCAgIF9BQygweDgwMDAwMDAwLCBVTCkgLyogRlMvWFMgZGlydHkg
-Ki8NCisjZGVmaW5lIFNSX1NECQlfQUMoMHg4MDAwMDAwMCwgVUwpIC8qIEZTL1hTIGRpcnR5ICov
-DQogI2Vsc2UNCi0jZGVmaW5lIFNSX1NEICAgX0FDKDB4ODAwMDAwMDAwMDAwMDAwMCwgVUwpIC8q
-IEZTL1hTIGRpcnR5ICovDQorI2RlZmluZSBTUl9TRAkJX0FDKDB4ODAwMDAwMDAwMDAwMDAwMCwg
-VUwpIC8qIEZTL1hTIGRpcnR5ICovDQogI2VuZGlmDQogDQogLyogU0FUUCBmbGFncyAqLw0KLSNp
-ZiBfX3Jpc2N2X3hsZW4gPT0gMzINCi0jZGVmaW5lIFNBVFBfUFBOICAgICBfQUMoMHgwMDNGRkZG
-RiwgVUwpDQotI2RlZmluZSBTQVRQX01PREVfMzIgX0FDKDB4ODAwMDAwMDAsIFVMKQ0KLSNkZWZp
-bmUgU0FUUF9NT0RFICAgIFNBVFBfTU9ERV8zMg0KKyNpZm5kZWYgQ09ORklHXzY0QklUDQorI2Rl
-ZmluZSBTQVRQX1BQTglfQUMoMHgwMDNGRkZGRiwgVUwpDQorI2RlZmluZSBTQVRQX01PREVfMzIJ
-X0FDKDB4ODAwMDAwMDAsIFVMKQ0KKyNkZWZpbmUgU0FUUF9NT0RFCVNBVFBfTU9ERV8zMg0KICNl
-bHNlDQotI2RlZmluZSBTQVRQX1BQTiAgICAgX0FDKDB4MDAwMDBGRkZGRkZGRkZGRiwgVUwpDQot
-I2RlZmluZSBTQVRQX01PREVfMzkgX0FDKDB4ODAwMDAwMDAwMDAwMDAwMCwgVUwpDQotI2RlZmlu
-ZSBTQVRQX01PREUgICAgU0FUUF9NT0RFXzM5DQorI2RlZmluZSBTQVRQX1BQTglfQUMoMHgwMDAw
-MEZGRkZGRkZGRkZGLCBVTCkNCisjZGVmaW5lIFNBVFBfTU9ERV8zOQlfQUMoMHg4MDAwMDAwMDAw
-MDAwMDAwLCBVTCkNCisjZGVmaW5lIFNBVFBfTU9ERQlTQVRQX01PREVfMzkNCiAjZW5kaWYNCiAN
-CiAvKiBJbnRlcnJ1cHQgRW5hYmxlIGFuZCBJbnRlcnJ1cHQgUGVuZGluZyBmbGFncyAqLw0KLSNk
-ZWZpbmUgU0lFX1NTSUUgX0FDKDB4MDAwMDAwMDIsIFVMKSAvKiBTb2Z0d2FyZSBJbnRlcnJ1cHQg
-RW5hYmxlICovDQotI2RlZmluZSBTSUVfU1RJRSBfQUMoMHgwMDAwMDAyMCwgVUwpIC8qIFRpbWVy
-IEludGVycnVwdCBFbmFibGUgKi8NCi0jZGVmaW5lIFNJRV9TRUlFIF9BQygweDAwMDAwMjAwLCBV
-TCkgLyogRXh0ZXJuYWwgSW50ZXJydXB0IEVuYWJsZSAqLw0KLQ0KLSNkZWZpbmUgRVhDX0lOU1Rf
-TUlTQUxJR05FRCAgICAgMA0KLSNkZWZpbmUgRVhDX0lOU1RfQUNDRVNTICAgICAgICAgMQ0KLSNk
-ZWZpbmUgRVhDX0JSRUFLUE9JTlQgICAgICAgICAgMw0KLSNkZWZpbmUgRVhDX0xPQURfQUNDRVNT
-ICAgICAgICAgNQ0KLSNkZWZpbmUgRVhDX1NUT1JFX0FDQ0VTUyAgICAgICAgNw0KLSNkZWZpbmUg
-RVhDX1NZU0NBTEwgICAgICAgICAgICAgOA0KLSNkZWZpbmUgRVhDX0lOU1RfUEFHRV9GQVVMVCAg
-ICAgMTINCi0jZGVmaW5lIEVYQ19MT0FEX1BBR0VfRkFVTFQgICAgIDEzDQotI2RlZmluZSBFWENf
-U1RPUkVfUEFHRV9GQVVMVCAgICAxNQ0KKyNkZWZpbmUgU0lFX1NTSUUJX0FDKDB4MDAwMDAwMDIs
-IFVMKSAvKiBTb2Z0d2FyZSBJbnRlcnJ1cHQgRW5hYmxlICovDQorI2RlZmluZSBTSUVfU1RJRQlf
-QUMoMHgwMDAwMDAyMCwgVUwpIC8qIFRpbWVyIEludGVycnVwdCBFbmFibGUgKi8NCisjZGVmaW5l
-IFNJRV9TRUlFCV9BQygweDAwMDAwMjAwLCBVTCkgLyogRXh0ZXJuYWwgSW50ZXJydXB0IEVuYWJs
-ZSAqLw0KKw0KKyNkZWZpbmUgRVhDX0lOU1RfTUlTQUxJR05FRAkwDQorI2RlZmluZSBFWENfSU5T
-VF9BQ0NFU1MJCTENCisjZGVmaW5lIEVYQ19CUkVBS1BPSU5UCQkzDQorI2RlZmluZSBFWENfTE9B
-RF9BQ0NFU1MJCTUNCisjZGVmaW5lIEVYQ19TVE9SRV9BQ0NFU1MJNw0KKyNkZWZpbmUgRVhDX1NZ
-U0NBTEwJCTgNCisjZGVmaW5lIEVYQ19JTlNUX1BBR0VfRkFVTFQJMTINCisjZGVmaW5lIEVYQ19M
-T0FEX1BBR0VfRkFVTFQJMTMNCisjZGVmaW5lIEVYQ19TVE9SRV9QQUdFX0ZBVUxUCTE1DQogDQog
-I2lmbmRlZiBfX0FTU0VNQkxZX18NCiANCi0tIA0KMi4xNy4xDQoNCg==
+This introduces support for HEVC/H.265 to the Cedrus VPU driver, with
+both uni-directional and bi-directional prediction modes supported.
+
+Field-coded (interlaced) pictures, custom quantization matrices and
+10-bit output are not supported at this point.
+
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+---
+ drivers/staging/media/sunxi/cedrus/Makefile   |   2 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.c   |  31 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.h   |  18 +
+ .../staging/media/sunxi/cedrus/cedrus_dec.c   |   9 +
+ .../staging/media/sunxi/cedrus/cedrus_h265.c  | 532 ++++++++++++++++++
+ .../staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +
+ .../staging/media/sunxi/cedrus/cedrus_regs.h  | 290 ++++++++++
+ .../staging/media/sunxi/cedrus/cedrus_video.c |  10 +
+ 8 files changed, 891 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+
+diff --git a/drivers/staging/media/sunxi/cedrus/Makefile b/drivers/staging/media/sunxi/cedrus/Makefile
+index aaf141fc58b6..186cb6d01b67 100644
+--- a/drivers/staging/media/sunxi/cedrus/Makefile
++++ b/drivers/staging/media/sunxi/cedrus/Makefile
+@@ -1,4 +1,4 @@
+ obj-$(CONFIG_VIDEO_SUNXI_CEDRUS) += sunxi-cedrus.o
+ 
+ sunxi-cedrus-y = cedrus.o cedrus_video.o cedrus_hw.o cedrus_dec.o \
+-		 cedrus_mpeg2.o cedrus_h264.o
++		 cedrus_mpeg2.o cedrus_h264.o cedrus_h265.o
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+index d613f5c24a2f..b7b7646a8c43 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+@@ -70,6 +70,24 @@ static const struct cedrus_control cedrus_controls[] = {
+ 		.codec		= CEDRUS_CODEC_H264,
+ 		.required	= true,
+ 	},
++	{
++		.id		= V4L2_CID_MPEG_VIDEO_HEVC_SPS,
++		.elem_size	= sizeof(struct v4l2_ctrl_hevc_sps),
++		.codec		= CEDRUS_CODEC_H265,
++		.required	= true,
++	},
++	{
++		.id		= V4L2_CID_MPEG_VIDEO_HEVC_PPS,
++		.elem_size	= sizeof(struct v4l2_ctrl_hevc_pps),
++		.codec		= CEDRUS_CODEC_H265,
++		.required	= true,
++	},
++	{
++		.id		= V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS,
++		.elem_size	= sizeof(struct v4l2_ctrl_hevc_slice_params),
++		.codec		= CEDRUS_CODEC_H265,
++		.required	= true,
++	},
+ };
+ 
+ #define CEDRUS_CONTROLS_COUNT	ARRAY_SIZE(cedrus_controls)
+@@ -309,6 +327,7 @@ static int cedrus_probe(struct platform_device *pdev)
+ 
+ 	dev->dec_ops[CEDRUS_CODEC_MPEG2] = &cedrus_dec_ops_mpeg2;
+ 	dev->dec_ops[CEDRUS_CODEC_H264] = &cedrus_dec_ops_h264;
++	dev->dec_ops[CEDRUS_CODEC_H265] = &cedrus_dec_ops_h265;
+ 
+ 	mutex_init(&dev->dev_mutex);
+ 
+@@ -416,19 +435,23 @@ static const struct cedrus_variant sun8i_a33_cedrus_variant = {
+ };
+ 
+ static const struct cedrus_variant sun8i_h3_cedrus_variant = {
+-	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
++	.capabilities	= CEDRUS_CAPABILITY_UNTILED |
++			  CEDRUS_CAPABILITY_H265_DEC,
+ };
+ 
+ static const struct cedrus_variant sun50i_a64_cedrus_variant = {
+-	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
++	.capabilities	= CEDRUS_CAPABILITY_UNTILED |
++			  CEDRUS_CAPABILITY_H265_DEC,
+ };
+ 
+ static const struct cedrus_variant sun50i_h5_cedrus_variant = {
+-	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
++	.capabilities	= CEDRUS_CAPABILITY_UNTILED |
++			  CEDRUS_CAPABILITY_H265_DEC,
+ };
+ 
+ static const struct cedrus_variant sun50i_h6_cedrus_variant = {
+-	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
++	.capabilities	= CEDRUS_CAPABILITY_UNTILED |
++			  CEDRUS_CAPABILITY_H265_DEC,
+ 	.quirks		= CEDRUS_QUIRK_NO_DMA_OFFSET,
+ };
+ 
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+index bef79f630520..05de29b52fca 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+@@ -27,12 +27,14 @@
+ #define CEDRUS_NAME			"cedrus"
+ 
+ #define CEDRUS_CAPABILITY_UNTILED	BIT(0)
++#define CEDRUS_CAPABILITY_H265_DEC	BIT(1)
+ 
+ #define CEDRUS_QUIRK_NO_DMA_OFFSET	BIT(0)
+ 
+ enum cedrus_codec {
+ 	CEDRUS_CODEC_MPEG2,
+ 	CEDRUS_CODEC_H264,
++	CEDRUS_CODEC_H265,
+ 	CEDRUS_CODEC_LAST,
+ };
+ 
+@@ -68,6 +70,12 @@ struct cedrus_mpeg2_run {
+ 	const struct v4l2_ctrl_mpeg2_quantization	*quantization;
+ };
+ 
++struct cedrus_h265_run {
++	const struct v4l2_ctrl_hevc_sps			*sps;
++	const struct v4l2_ctrl_hevc_pps			*pps;
++	const struct v4l2_ctrl_hevc_slice_params	*slice_params;
++};
++
+ struct cedrus_run {
+ 	struct vb2_v4l2_buffer	*src;
+ 	struct vb2_v4l2_buffer	*dst;
+@@ -75,6 +83,7 @@ struct cedrus_run {
+ 	union {
+ 		struct cedrus_h264_run	h264;
+ 		struct cedrus_mpeg2_run	mpeg2;
++		struct cedrus_h265_run	h265;
+ 	};
+ };
+ 
+@@ -113,6 +122,14 @@ struct cedrus_ctx {
+ 			void		*neighbor_info_buf;
+ 			dma_addr_t	neighbor_info_buf_dma;
+ 		} h264;
++		struct {
++			void		*mv_col_buf;
++			dma_addr_t	mv_col_buf_addr;
++			ssize_t		mv_col_buf_size;
++			ssize_t		mv_col_buf_unit_size;
++			void		*neighbor_info_buf;
++			dma_addr_t	neighbor_info_buf_addr;
++		} h265;
+ 	} codec;
+ };
+ 
+@@ -157,6 +174,7 @@ struct cedrus_dev {
+ 
+ extern struct cedrus_dec_ops cedrus_dec_ops_mpeg2;
+ extern struct cedrus_dec_ops cedrus_dec_ops_h264;
++extern struct cedrus_dec_ops cedrus_dec_ops_h265;
+ 
+ static inline void cedrus_write(struct cedrus_dev *dev, u32 reg, u32 val)
+ {
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+index bdad87eb9d79..c6d0ef66cdd0 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+@@ -59,6 +59,15 @@ void cedrus_device_run(void *priv)
+ 			V4L2_CID_MPEG_VIDEO_H264_SPS);
+ 		break;
+ 
++	case V4L2_PIX_FMT_HEVC_SLICE:
++		run.h265.sps = cedrus_find_control_data(ctx,
++			V4L2_CID_MPEG_VIDEO_HEVC_SPS);
++		run.h265.pps = cedrus_find_control_data(ctx,
++			V4L2_CID_MPEG_VIDEO_HEVC_PPS);
++		run.h265.slice_params = cedrus_find_control_data(ctx,
++			V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+new file mode 100644
+index 000000000000..fd4d86b02156
+--- /dev/null
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+@@ -0,0 +1,532 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Cedrus VPU driver
++ *
++ * Copyright (C) 2013 Jens Kuske <jenskuske@gmail.com>
++ * Copyright (C) 2018 Paul Kocialkowski <paul.kocialkowski@bootlin.com>
++ * Copyright (C) 2018 Bootlin
++ */
++
++#include <linux/types.h>
++
++#include <media/videobuf2-dma-contig.h>
++
++#include "cedrus.h"
++#include "cedrus_hw.h"
++#include "cedrus_regs.h"
++
++/*
++ * These are the sizes for side buffers required by the hardware for storing
++ * internal decoding metadata. They match the values used by the early BSP
++ * implementations, that were initially exposed in libvdpau-sunxi.
++ * Subsequent BSP implementations seem to double the neighbor info buffer size
++ * for the H6 SoC, which may be related to 10 bit H265 support.
++ */
++#define CEDRUS_H265_NEIGHBOR_INFO_BUF_SIZE	(397 * SZ_1K)
++#define CEDRUS_H265_ENTRY_POINTS_BUF_SIZE	(4 * SZ_1K)
++#define CEDRUS_H265_MV_COL_BUF_UNIT_CTB_SIZE	160
++
++struct cedrus_h265_sram_frame_info {
++	__le32	top_pic_order_cnt;
++	__le32	bottom_pic_order_cnt;
++	__le32	top_mv_col_buf_addr;
++	__le32	bottom_mv_col_buf_addr;
++	__le32	luma_addr;
++	__le32	chroma_addr;
++} __packed;
++
++struct cedrus_h265_sram_pred_weight {
++	__s8	delta_weight;
++	__s8	offset;
++} __packed;
++
++static enum cedrus_irq_status cedrus_h265_irq_status(struct cedrus_ctx *ctx)
++{
++	struct cedrus_dev *dev = ctx->dev;
++	u32 reg;
++
++	reg = cedrus_read(dev, VE_DEC_H265_STATUS);
++	reg &= VE_DEC_H265_STATUS_CHECK_MASK;
++
++	if (reg & VE_DEC_H265_STATUS_CHECK_ERROR ||
++	    !(reg & VE_DEC_H265_STATUS_SUCCESS))
++		return CEDRUS_IRQ_ERROR;
++
++	return CEDRUS_IRQ_OK;
++}
++
++static void cedrus_h265_irq_clear(struct cedrus_ctx *ctx)
++{
++	struct cedrus_dev *dev = ctx->dev;
++
++	cedrus_write(dev, VE_DEC_H265_STATUS, VE_DEC_H265_STATUS_CHECK_MASK);
++}
++
++static void cedrus_h265_irq_disable(struct cedrus_ctx *ctx)
++{
++	struct cedrus_dev *dev = ctx->dev;
++	u32 reg = cedrus_read(dev, VE_DEC_H265_CTRL);
++
++	reg &= ~VE_DEC_H265_CTRL_IRQ_MASK;
++
++	cedrus_write(dev, VE_DEC_H265_CTRL, reg);
++}
++
++static void cedrus_h265_sram_write_offset(struct cedrus_dev *dev, u32 offset)
++{
++	cedrus_write(dev, VE_DEC_H265_SRAM_OFFSET, offset);
++}
++
++static void cedrus_h265_sram_write_data(struct cedrus_dev *dev, void *data,
++					unsigned int size)
++{
++	u32 *word = data;
++
++	while (size >= sizeof(u32)) {
++		cedrus_write(dev, VE_DEC_H265_SRAM_DATA, *word++);
++		size -= sizeof(u32);
++	}
++}
++
++static inline dma_addr_t
++cedrus_h265_frame_info_mv_col_buf_addr(struct cedrus_ctx *ctx,
++				       unsigned int index, unsigned int field)
++{
++	return ctx->codec.h265.mv_col_buf_addr + index *
++	       ctx->codec.h265.mv_col_buf_unit_size +
++	       field * ctx->codec.h265.mv_col_buf_unit_size / 2;
++}
++
++static void cedrus_h265_frame_info_write_single(struct cedrus_ctx *ctx,
++						unsigned int index,
++						bool field_pic,
++						u32 pic_order_cnt[],
++						int buffer_index)
++{
++	struct cedrus_dev *dev = ctx->dev;
++	dma_addr_t dst_luma_addr = cedrus_dst_buf_addr(ctx, buffer_index, 0);
++	dma_addr_t dst_chroma_addr = cedrus_dst_buf_addr(ctx, buffer_index, 1);
++	dma_addr_t mv_col_buf_addr[2] = {
++		cedrus_h265_frame_info_mv_col_buf_addr(ctx, buffer_index, 0),
++		cedrus_h265_frame_info_mv_col_buf_addr(ctx, buffer_index,
++						       field_pic ? 1 : 0)
++	};
++	u32 offset = VE_DEC_H265_SRAM_OFFSET_FRAME_INFO +
++		     VE_DEC_H265_SRAM_OFFSET_FRAME_INFO_UNIT * index;
++	struct cedrus_h265_sram_frame_info frame_info = {
++		.top_pic_order_cnt = cpu_to_le32(pic_order_cnt[0]),
++		.bottom_pic_order_cnt = cpu_to_le32(field_pic ?
++						    pic_order_cnt[1] :
++						    pic_order_cnt[0]),
++		.top_mv_col_buf_addr =
++			cpu_to_le32(VE_DEC_H265_SRAM_DATA_ADDR_BASE(mv_col_buf_addr[0])),
++		.bottom_mv_col_buf_addr = cpu_to_le32(field_pic ?
++			VE_DEC_H265_SRAM_DATA_ADDR_BASE(mv_col_buf_addr[1]) :
++			VE_DEC_H265_SRAM_DATA_ADDR_BASE(mv_col_buf_addr[0])),
++		.luma_addr = cpu_to_le32(VE_DEC_H265_SRAM_DATA_ADDR_BASE(dst_luma_addr)),
++		.chroma_addr = cpu_to_le32(VE_DEC_H265_SRAM_DATA_ADDR_BASE(dst_chroma_addr)),
++	};
++
++	cedrus_h265_sram_write_offset(dev, offset);
++	cedrus_h265_sram_write_data(dev, &frame_info, sizeof(frame_info));
++}
++
++static void cedrus_h265_frame_info_write_dpb(struct cedrus_ctx *ctx,
++					     const struct v4l2_hevc_dpb_entry *dpb,
++					     u8 num_active_dpb_entries)
++{
++	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx,
++					       V4L2_BUF_TYPE_VIDEO_CAPTURE);
++	unsigned int i;
++
++	for (i = 0; i < num_active_dpb_entries; i++) {
++		int buffer_index = vb2_find_timestamp(vq, dpb[i].timestamp, 0);
++		u32 pic_order_cnt[2] = {
++			dpb[i].pic_order_cnt[0],
++			dpb[i].pic_order_cnt[1]
++		};
++
++		cedrus_h265_frame_info_write_single(ctx, i, dpb[i].field_pic,
++						    pic_order_cnt,
++						    buffer_index);
++	}
++}
++
++static void cedrus_h265_ref_pic_list_write(struct cedrus_dev *dev,
++					   const struct v4l2_hevc_dpb_entry *dpb,
++					   const u8 list[],
++					   u8 num_ref_idx_active,
++					   u32 sram_offset)
++{
++	unsigned int i;
++	u32 word = 0;
++
++	cedrus_h265_sram_write_offset(dev, sram_offset);
++
++	for (i = 0; i < num_ref_idx_active; i++) {
++		unsigned int shift = (i % 4) * 8;
++		unsigned int index = list[i];
++		u8 value = list[i];
++
++		if (dpb[index].rps == V4L2_HEVC_DPB_ENTRY_RPS_LT_CURR)
++			value |= VE_DEC_H265_SRAM_REF_PIC_LIST_LT_REF;
++
++		/* Each SRAM word gathers up to 4 references. */
++		word |= value << shift;
++
++		/* Write the word to SRAM and clear it for the next batch. */
++		if ((i % 4) == 3 || i == (num_ref_idx_active - 1)) {
++			cedrus_h265_sram_write_data(dev, &word, sizeof(word));
++			word = 0;
++		}
++	}
++}
++
++static void cedrus_h265_pred_weight_write(struct cedrus_dev *dev,
++					  const s8 delta_luma_weight[],
++					  const s8 luma_offset[],
++					  const s8 delta_chroma_weight[][2],
++					  const s8 chroma_offset[][2],
++					  u8 num_ref_idx_active,
++					  u32 sram_luma_offset,
++					  u32 sram_chroma_offset)
++{
++	struct cedrus_h265_sram_pred_weight pred_weight[2] = { { 0 } };
++	unsigned int i, j;
++
++	cedrus_h265_sram_write_offset(dev, sram_luma_offset);
++
++	for (i = 0; i < num_ref_idx_active; i++) {
++		unsigned int index = i % 2;
++
++		pred_weight[index].delta_weight = delta_luma_weight[i];
++		pred_weight[index].offset = luma_offset[i];
++
++		if (index == 1 || i == (num_ref_idx_active - 1))
++			cedrus_h265_sram_write_data(dev, (u32 *)&pred_weight,
++						    sizeof(pred_weight));
++	}
++
++	cedrus_h265_sram_write_offset(dev, sram_chroma_offset);
++
++	for (i = 0; i < num_ref_idx_active; i++) {
++		for (j = 0; j < 2; j++) {
++			pred_weight[j].delta_weight = delta_chroma_weight[i][j];
++			pred_weight[j].offset = chroma_offset[i][j];
++		}
++
++		cedrus_h265_sram_write_data(dev, &pred_weight,
++					    sizeof(pred_weight));
++	}
++}
++
++static void cedrus_h265_setup(struct cedrus_ctx *ctx,
++			      struct cedrus_run *run)
++{
++	struct cedrus_dev *dev = ctx->dev;
++	const struct v4l2_ctrl_hevc_sps *sps;
++	const struct v4l2_ctrl_hevc_pps *pps;
++	const struct v4l2_ctrl_hevc_slice_params *slice_params;
++	const struct v4l2_hevc_pred_weight_table *pred_weight_table;
++	dma_addr_t src_buf_addr;
++	dma_addr_t src_buf_end_addr;
++	u32 chroma_log2_weight_denom;
++	u32 output_pic_list_index;
++	u32 pic_order_cnt[2];
++	u32 reg;
++
++	sps = run->h265.sps;
++	pps = run->h265.pps;
++	slice_params = run->h265.slice_params;
++	pred_weight_table = &slice_params->pred_weight_table;
++
++	/* MV column buffer size and allocation. */
++	if (!ctx->codec.h265.mv_col_buf_size) {
++		unsigned int num_buffers =
++			run->dst->vb2_buf.vb2_queue->num_buffers;
++		unsigned int log2_max_luma_coding_block_size =
++			sps->log2_min_luma_coding_block_size_minus3 + 3 +
++			sps->log2_diff_max_min_luma_coding_block_size;
++		unsigned int ctb_size_luma =
++			1 << log2_max_luma_coding_block_size;
++
++		/*
++		 * Each CTB requires a MV col buffer with a specific unit size.
++		 * Since the address is given with missing lsb bits, 1 KiB is
++		 * added to each buffer to ensure proper alignment.
++		 */
++		ctx->codec.h265.mv_col_buf_unit_size =
++			DIV_ROUND_UP(ctx->src_fmt.width, ctb_size_luma) *
++			DIV_ROUND_UP(ctx->src_fmt.height, ctb_size_luma) *
++			CEDRUS_H265_MV_COL_BUF_UNIT_CTB_SIZE + SZ_1K;
++
++		ctx->codec.h265.mv_col_buf_size = num_buffers *
++			ctx->codec.h265.mv_col_buf_unit_size;
++
++		ctx->codec.h265.mv_col_buf =
++			dma_alloc_coherent(dev->dev,
++					   ctx->codec.h265.mv_col_buf_size,
++					   &ctx->codec.h265.mv_col_buf_addr,
++					   GFP_KERNEL);
++		if (!ctx->codec.h265.mv_col_buf) {
++			ctx->codec.h265.mv_col_buf_size = 0;
++			// TODO: Abort the process here.
++			return;
++		}
++	}
++
++	/* Activate H265 engine. */
++	cedrus_engine_enable(dev, CEDRUS_CODEC_H265);
++
++	/* Source offset and length in bits. */
++
++	reg = slice_params->data_bit_offset;
++	cedrus_write(dev, VE_DEC_H265_BITS_OFFSET, reg);
++
++	reg = slice_params->bit_size - slice_params->data_bit_offset;
++	cedrus_write(dev, VE_DEC_H265_BITS_LEN, reg);
++
++	/* Source beginning and end addresses. */
++
++	src_buf_addr = vb2_dma_contig_plane_dma_addr(&run->src->vb2_buf, 0);
++
++	reg = VE_DEC_H265_BITS_ADDR_BASE(src_buf_addr);
++	reg |= VE_DEC_H265_BITS_ADDR_VALID_SLICE_DATA;
++	reg |= VE_DEC_H265_BITS_ADDR_LAST_SLICE_DATA;
++	reg |= VE_DEC_H265_BITS_ADDR_FIRST_SLICE_DATA;
++
++	cedrus_write(dev, VE_DEC_H265_BITS_ADDR, reg);
++
++	src_buf_end_addr = src_buf_addr +
++			   DIV_ROUND_UP(slice_params->bit_size, 8);
++
++	reg = VE_DEC_H265_BITS_END_ADDR_BASE(src_buf_end_addr);
++	cedrus_write(dev, VE_DEC_H265_BITS_END_ADDR, reg);
++
++	/* Coding tree block address: start at the beginning. */
++	reg = VE_DEC_H265_DEC_CTB_ADDR_X(0) | VE_DEC_H265_DEC_CTB_ADDR_Y(0);
++	cedrus_write(dev, VE_DEC_H265_DEC_CTB_ADDR, reg);
++
++	cedrus_write(dev, VE_DEC_H265_TILE_START_CTB, 0);
++	cedrus_write(dev, VE_DEC_H265_TILE_END_CTB, 0);
++
++	/* Clear the number of correctly-decoded coding tree blocks. */
++	cedrus_write(dev, VE_DEC_H265_DEC_CTB_NUM, 0);
++
++	/* Initialize bitstream access. */
++	cedrus_write(dev, VE_DEC_H265_TRIGGER, VE_DEC_H265_TRIGGER_INIT_SWDEC);
++
++	/* Bitstream parameters. */
++
++	reg = VE_DEC_H265_DEC_NAL_HDR_NAL_UNIT_TYPE(slice_params->nal_unit_type) |
++	      VE_DEC_H265_DEC_NAL_HDR_NUH_TEMPORAL_ID_PLUS1(slice_params->nuh_temporal_id_plus1);
++
++	cedrus_write(dev, VE_DEC_H265_DEC_NAL_HDR, reg);
++
++	reg = VE_DEC_H265_DEC_SPS_HDR_STRONG_INTRA_SMOOTHING_ENABLE_FLAG(sps->strong_intra_smoothing_enabled_flag) |
++	      VE_DEC_H265_DEC_SPS_HDR_SPS_TEMPORAL_MVP_ENABLED_FLAG(sps->sps_temporal_mvp_enabled_flag) |
++	      VE_DEC_H265_DEC_SPS_HDR_SAMPLE_ADAPTIVE_OFFSET_ENABLED_FLAG(sps->sample_adaptive_offset_enabled_flag) |
++	      VE_DEC_H265_DEC_SPS_HDR_AMP_ENABLED_FLAG(sps->amp_enabled_flag) |
++	      VE_DEC_H265_DEC_SPS_HDR_MAX_TRANSFORM_HIERARCHY_DEPTH_INTRA(sps->max_transform_hierarchy_depth_intra) |
++	      VE_DEC_H265_DEC_SPS_HDR_MAX_TRANSFORM_HIERARCHY_DEPTH_INTER(sps->max_transform_hierarchy_depth_inter) |
++	      VE_DEC_H265_DEC_SPS_HDR_LOG2_DIFF_MAX_MIN_TRANSFORM_BLOCK_SIZE(sps->log2_diff_max_min_luma_transform_block_size) |
++	      VE_DEC_H265_DEC_SPS_HDR_LOG2_MIN_TRANSFORM_BLOCK_SIZE_MINUS2(sps->log2_min_luma_transform_block_size_minus2) |
++	      VE_DEC_H265_DEC_SPS_HDR_LOG2_DIFF_MAX_MIN_LUMA_CODING_BLOCK_SIZE(sps->log2_diff_max_min_luma_coding_block_size) |
++	      VE_DEC_H265_DEC_SPS_HDR_LOG2_MIN_LUMA_CODING_BLOCK_SIZE_MINUS3(sps->log2_min_luma_coding_block_size_minus3) |
++	      VE_DEC_H265_DEC_SPS_HDR_BIT_DEPTH_CHROMA_MINUS8(sps->bit_depth_chroma_minus8) |
++	      VE_DEC_H265_DEC_SPS_HDR_SEPARATE_COLOUR_PLANE_FLAG(sps->separate_colour_plane_flag) |
++	      VE_DEC_H265_DEC_SPS_HDR_CHROMA_FORMAT_IDC(sps->chroma_format_idc);
++
++	cedrus_write(dev, VE_DEC_H265_DEC_SPS_HDR, reg);
++
++	reg = VE_DEC_H265_DEC_PCM_CTRL_PCM_ENABLED_FLAG(sps->pcm_enabled_flag) |
++	      VE_DEC_H265_DEC_PCM_CTRL_PCM_LOOP_FILTER_DISABLED_FLAG(sps->pcm_loop_filter_disabled_flag) |
++	      VE_DEC_H265_DEC_PCM_CTRL_LOG2_DIFF_MAX_MIN_PCM_LUMA_CODING_BLOCK_SIZE(sps->log2_diff_max_min_pcm_luma_coding_block_size) |
++	      VE_DEC_H265_DEC_PCM_CTRL_LOG2_MIN_PCM_LUMA_CODING_BLOCK_SIZE_MINUS3(sps->log2_min_pcm_luma_coding_block_size_minus3) |
++	      VE_DEC_H265_DEC_PCM_CTRL_PCM_SAMPLE_BIT_DEPTH_CHROMA_MINUS1(sps->pcm_sample_bit_depth_chroma_minus1) |
++	      VE_DEC_H265_DEC_PCM_CTRL_PCM_SAMPLE_BIT_DEPTH_LUMA_MINUS1(sps->pcm_sample_bit_depth_luma_minus1);
++
++	cedrus_write(dev, VE_DEC_H265_DEC_PCM_CTRL, reg);
++
++	reg = VE_DEC_H265_DEC_PPS_CTRL0_PPS_CR_QP_OFFSET(pps->pps_cr_qp_offset) |
++	      VE_DEC_H265_DEC_PPS_CTRL0_PPS_CB_QP_OFFSET(pps->pps_cb_qp_offset) |
++	      VE_DEC_H265_DEC_PPS_CTRL0_INIT_QP_MINUS26(pps->init_qp_minus26) |
++	      VE_DEC_H265_DEC_PPS_CTRL0_DIFF_CU_QP_DELTA_DEPTH(pps->diff_cu_qp_delta_depth) |
++	      VE_DEC_H265_DEC_PPS_CTRL0_CU_QP_DELTA_ENABLED_FLAG(pps->cu_qp_delta_enabled_flag) |
++	      VE_DEC_H265_DEC_PPS_CTRL0_TRANSFORM_SKIP_ENABLED_FLAG(pps->transform_skip_enabled_flag) |
++	      VE_DEC_H265_DEC_PPS_CTRL0_CONSTRAINED_INTRA_PRED_FLAG(pps->constrained_intra_pred_flag) |
++	      VE_DEC_H265_DEC_PPS_CTRL0_SIGN_DATA_HIDING_FLAG(pps->sign_data_hiding_enabled_flag);
++
++	cedrus_write(dev, VE_DEC_H265_DEC_PPS_CTRL0, reg);
++
++	reg = VE_DEC_H265_DEC_PPS_CTRL1_LOG2_PARALLEL_MERGE_LEVEL_MINUS2(pps->log2_parallel_merge_level_minus2) |
++	      VE_DEC_H265_DEC_PPS_CTRL1_PPS_LOOP_FILTER_ACROSS_SLICES_ENABLED_FLAG(pps->pps_loop_filter_across_slices_enabled_flag) |
++	      VE_DEC_H265_DEC_PPS_CTRL1_LOOP_FILTER_ACROSS_TILES_ENABLED_FLAG(pps->loop_filter_across_tiles_enabled_flag) |
++	      VE_DEC_H265_DEC_PPS_CTRL1_ENTROPY_CODING_SYNC_ENABLED_FLAG(pps->entropy_coding_sync_enabled_flag) |
++	      VE_DEC_H265_DEC_PPS_CTRL1_TILES_ENABLED_FLAG(0) |
++	      VE_DEC_H265_DEC_PPS_CTRL1_TRANSQUANT_BYPASS_ENABLE_FLAG(pps->transquant_bypass_enabled_flag) |
++	      VE_DEC_H265_DEC_PPS_CTRL1_WEIGHTED_BIPRED_FLAG(pps->weighted_bipred_flag) |
++	      VE_DEC_H265_DEC_PPS_CTRL1_WEIGHTED_PRED_FLAG(pps->weighted_pred_flag);
++
++	cedrus_write(dev, VE_DEC_H265_DEC_PPS_CTRL1, reg);
++
++	reg = VE_DEC_H265_DEC_SLICE_HDR_INFO0_PICTURE_TYPE(slice_params->pic_struct) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_FIVE_MINUS_MAX_NUM_MERGE_CAND(slice_params->five_minus_max_num_merge_cand) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_NUM_REF_IDX_L1_ACTIVE_MINUS1(slice_params->num_ref_idx_l1_active_minus1) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_NUM_REF_IDX_L0_ACTIVE_MINUS1(slice_params->num_ref_idx_l0_active_minus1) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_COLLOCATED_REF_IDX(slice_params->collocated_ref_idx) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_COLLOCATED_FROM_L0_FLAG(slice_params->collocated_from_l0_flag) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_CABAC_INIT_FLAG(slice_params->cabac_init_flag) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_MVD_L1_ZERO_FLAG(slice_params->mvd_l1_zero_flag) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_SLICE_SAO_CHROMA_FLAG(slice_params->slice_sao_chroma_flag) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_SLICE_SAO_LUMA_FLAG(slice_params->slice_sao_luma_flag) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_SLICE_TEMPORAL_MVP_ENABLE_FLAG(slice_params->slice_temporal_mvp_enabled_flag) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_COLOUR_PLANE_ID(slice_params->colour_plane_id) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_SLICE_TYPE(slice_params->slice_type) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_DEPENDENT_SLICE_SEGMENT_FLAG(pps->dependent_slice_segment_flag) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO0_FIRST_SLICE_SEGMENT_IN_PIC_FLAG(1);
++
++	cedrus_write(dev, VE_DEC_H265_DEC_SLICE_HDR_INFO0, reg);
++
++	reg = VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_TC_OFFSET_DIV2(slice_params->slice_tc_offset_div2) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_BETA_OFFSET_DIV2(slice_params->slice_beta_offset_div2) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_DEBLOCKING_FILTER_DISABLED_FLAG(slice_params->slice_deblocking_filter_disabled_flag) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_LOOP_FILTER_ACROSS_SLICES_ENABLED_FLAG(slice_params->slice_loop_filter_across_slices_enabled_flag) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_POC_BIGEST_IN_RPS_ST(slice_params->num_rps_poc_st_curr_after == 0) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_CR_QP_OFFSET(slice_params->slice_cr_qp_offset) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_CB_QP_OFFSET(slice_params->slice_cb_qp_offset) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_QP_DELTA(slice_params->slice_qp_delta);
++
++	cedrus_write(dev, VE_DEC_H265_DEC_SLICE_HDR_INFO1, reg);
++
++	chroma_log2_weight_denom = pred_weight_table->luma_log2_weight_denom +
++				   pred_weight_table->delta_chroma_log2_weight_denom;
++	reg = VE_DEC_H265_DEC_SLICE_HDR_INFO2_NUM_ENTRY_POINT_OFFSETS(0) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO2_CHROMA_LOG2_WEIGHT_DENOM(chroma_log2_weight_denom) |
++	      VE_DEC_H265_DEC_SLICE_HDR_INFO2_LUMA_LOG2_WEIGHT_DENOM(pred_weight_table->luma_log2_weight_denom);
++
++	cedrus_write(dev, VE_DEC_H265_DEC_SLICE_HDR_INFO2, reg);
++
++	/* Decoded picture size. */
++
++	reg = VE_DEC_H265_DEC_PIC_SIZE_WIDTH(ctx->src_fmt.width) |
++	      VE_DEC_H265_DEC_PIC_SIZE_HEIGHT(ctx->src_fmt.height);
++
++	cedrus_write(dev, VE_DEC_H265_DEC_PIC_SIZE, reg);
++
++	/* Scaling list. */
++
++	reg = VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
++	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_CTRL0, reg);
++
++	/* Neightbor information address. */
++	reg = VE_DEC_H265_NEIGHBOR_INFO_ADDR_BASE(ctx->codec.h265.neighbor_info_buf_addr);
++	cedrus_write(dev, VE_DEC_H265_NEIGHBOR_INFO_ADDR, reg);
++
++	/* Write decoded picture buffer in pic list. */
++	cedrus_h265_frame_info_write_dpb(ctx, slice_params->dpb,
++					 slice_params->num_active_dpb_entries);
++
++	/* Output frame. */
++
++	output_pic_list_index = V4L2_HEVC_DPB_ENTRIES_NUM_MAX;
++	pic_order_cnt[0] = slice_params->slice_pic_order_cnt;
++	pic_order_cnt[1] = slice_params->slice_pic_order_cnt;
++
++	cedrus_h265_frame_info_write_single(ctx, output_pic_list_index,
++					    slice_params->pic_struct != 0,
++					    pic_order_cnt,
++					    run->dst->vb2_buf.index);
++
++	cedrus_write(dev, VE_DEC_H265_OUTPUT_FRAME_IDX, output_pic_list_index);
++
++	/* Reference picture list 0 (for P/B frames). */
++	if (slice_params->slice_type != V4L2_HEVC_SLICE_TYPE_I) {
++		cedrus_h265_ref_pic_list_write(dev, slice_params->dpb,
++					       slice_params->ref_idx_l0,
++					       slice_params->num_ref_idx_l0_active_minus1 + 1,
++					       VE_DEC_H265_SRAM_OFFSET_REF_PIC_LIST0);
++
++		if (pps->weighted_pred_flag || pps->weighted_bipred_flag)
++			cedrus_h265_pred_weight_write(dev,
++						      pred_weight_table->delta_luma_weight_l0,
++						      pred_weight_table->luma_offset_l0,
++						      pred_weight_table->delta_chroma_weight_l0,
++						      pred_weight_table->chroma_offset_l0,
++						      slice_params->num_ref_idx_l0_active_minus1 + 1,
++						      VE_DEC_H265_SRAM_OFFSET_PRED_WEIGHT_LUMA_L0,
++						      VE_DEC_H265_SRAM_OFFSET_PRED_WEIGHT_CHROMA_L0);
++	}
++
++	/* Reference picture list 1 (for B frames). */
++	if (slice_params->slice_type == V4L2_HEVC_SLICE_TYPE_B) {
++		cedrus_h265_ref_pic_list_write(dev, slice_params->dpb,
++					       slice_params->ref_idx_l1,
++					       slice_params->num_ref_idx_l1_active_minus1 + 1,
++					       VE_DEC_H265_SRAM_OFFSET_REF_PIC_LIST1);
++
++		if (pps->weighted_bipred_flag)
++			cedrus_h265_pred_weight_write(dev,
++						      pred_weight_table->delta_luma_weight_l1,
++						      pred_weight_table->luma_offset_l1,
++						      pred_weight_table->delta_chroma_weight_l1,
++						      pred_weight_table->chroma_offset_l1,
++						      slice_params->num_ref_idx_l1_active_minus1 + 1,
++						      VE_DEC_H265_SRAM_OFFSET_PRED_WEIGHT_LUMA_L1,
++						      VE_DEC_H265_SRAM_OFFSET_PRED_WEIGHT_CHROMA_L1);
++	}
++
++	/* Enable appropriate interruptions. */
++	cedrus_write(dev, VE_DEC_H265_CTRL, VE_DEC_H265_CTRL_IRQ_MASK);
++}
++
++static int cedrus_h265_start(struct cedrus_ctx *ctx)
++{
++	struct cedrus_dev *dev = ctx->dev;
++
++	/* The buffer size is calculated at setup time. */
++	ctx->codec.h265.mv_col_buf_size = 0;
++
++	ctx->codec.h265.neighbor_info_buf =
++		dma_alloc_coherent(dev->dev, CEDRUS_H265_NEIGHBOR_INFO_BUF_SIZE,
++				   &ctx->codec.h265.neighbor_info_buf_addr,
++				   GFP_KERNEL);
++	if (!ctx->codec.h265.neighbor_info_buf)
++		return -ENOMEM;
++
++	return 0;
++}
++
++static void cedrus_h265_stop(struct cedrus_ctx *ctx)
++{
++	struct cedrus_dev *dev = ctx->dev;
++
++	if (ctx->codec.h265.mv_col_buf_size > 0) {
++		dma_free_coherent(dev->dev, ctx->codec.h265.mv_col_buf_size,
++				  ctx->codec.h265.mv_col_buf,
++				  ctx->codec.h265.mv_col_buf_addr);
++
++		ctx->codec.h265.mv_col_buf_size = 0;
++	}
++
++	dma_free_coherent(dev->dev, CEDRUS_H265_NEIGHBOR_INFO_BUF_SIZE,
++			  ctx->codec.h265.neighbor_info_buf,
++			  ctx->codec.h265.neighbor_info_buf_addr);
++}
++
++static void cedrus_h265_trigger(struct cedrus_ctx *ctx)
++{
++	struct cedrus_dev *dev = ctx->dev;
++
++	cedrus_write(dev, VE_DEC_H265_TRIGGER, VE_DEC_H265_TRIGGER_DEC_SLICE);
++}
++
++struct cedrus_dec_ops cedrus_dec_ops_h265 = {
++	.irq_clear	= cedrus_h265_irq_clear,
++	.irq_disable	= cedrus_h265_irq_disable,
++	.irq_status	= cedrus_h265_irq_status,
++	.setup		= cedrus_h265_setup,
++	.start		= cedrus_h265_start,
++	.stop		= cedrus_h265_stop,
++	.trigger	= cedrus_h265_trigger,
++};
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+index 748f7f673547..bdcaffde8d1c 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+@@ -50,6 +50,10 @@ int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec codec)
+ 		reg |= VE_MODE_DEC_H264;
+ 		break;
+ 
++	case CEDRUS_CODEC_H265:
++		reg |= VE_MODE_DEC_H265;
++		break;
++
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+index 3e9931416e45..87651d6b6227 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+@@ -18,10 +18,17 @@
+  * * MC: Motion Compensation
+  * * STCD: Start Code Detect
+  * * SDRT: Scale Down and Rotate
++ * * WB: Writeback
++ * * BITS/BS: Bitstream
++ * * MB: Macroblock
++ * * CTU: Coding Tree Unit
++ * * CTB: Coding Tree Block
++ * * IDX: Index
+  */
+ 
+ #define VE_ENGINE_DEC_MPEG			0x100
+ #define VE_ENGINE_DEC_H264			0x200
++#define VE_ENGINE_DEC_H265			0x500
+ 
+ #define VE_MODE					0x00
+ 
+@@ -232,6 +239,289 @@
+ #define VE_DEC_MPEG_ROT_LUMA			(VE_ENGINE_DEC_MPEG + 0xcc)
+ #define VE_DEC_MPEG_ROT_CHROMA			(VE_ENGINE_DEC_MPEG + 0xd0)
+ 
++#define VE_DEC_H265_DEC_NAL_HDR			(VE_ENGINE_DEC_H265 + 0x00)
++
++#define VE_DEC_H265_DEC_NAL_HDR_NUH_TEMPORAL_ID_PLUS1(v) \
++	(((v) << 6) & GENMASK(8, 6))
++#define VE_DEC_H265_DEC_NAL_HDR_NAL_UNIT_TYPE(v) \
++	((v) & GENMASK(5, 0))
++
++#define VE_DEC_H265_DEC_SPS_HDR			(VE_ENGINE_DEC_H265 + 0x04)
++
++#define VE_DEC_H265_DEC_SPS_HDR_STRONG_INTRA_SMOOTHING_ENABLE_FLAG(v) \
++	((v) ? BIT(26) : 0)
++#define VE_DEC_H265_DEC_SPS_HDR_SPS_TEMPORAL_MVP_ENABLED_FLAG(v) \
++	((v) ? BIT(25) : 0)
++#define VE_DEC_H265_DEC_SPS_HDR_SAMPLE_ADAPTIVE_OFFSET_ENABLED_FLAG(v) \
++	((v) ? BIT(24) : 0)
++#define VE_DEC_H265_DEC_SPS_HDR_AMP_ENABLED_FLAG(v) \
++	((v) ? BIT(23) : 0)
++#define VE_DEC_H265_DEC_SPS_HDR_MAX_TRANSFORM_HIERARCHY_DEPTH_INTRA(v) \
++	(((v) << 20) & GENMASK(22, 20))
++#define VE_DEC_H265_DEC_SPS_HDR_MAX_TRANSFORM_HIERARCHY_DEPTH_INTER(v) \
++	(((v) << 17) & GENMASK(19, 17))
++#define VE_DEC_H265_DEC_SPS_HDR_LOG2_DIFF_MAX_MIN_TRANSFORM_BLOCK_SIZE(v) \
++	(((v) << 15) & GENMASK(16, 15))
++#define VE_DEC_H265_DEC_SPS_HDR_LOG2_MIN_TRANSFORM_BLOCK_SIZE_MINUS2(v) \
++	(((v) << 13) & GENMASK(14, 13))
++#define VE_DEC_H265_DEC_SPS_HDR_LOG2_DIFF_MAX_MIN_LUMA_CODING_BLOCK_SIZE(v) \
++	(((v) << 11) & GENMASK(12, 11))
++#define VE_DEC_H265_DEC_SPS_HDR_LOG2_MIN_LUMA_CODING_BLOCK_SIZE_MINUS3(v) \
++	(((v) << 9) & GENMASK(10, 9))
++#define VE_DEC_H265_DEC_SPS_HDR_BIT_DEPTH_CHROMA_MINUS8(v) \
++	(((v) << 6) & GENMASK(8, 6))
++#define VE_DEC_H265_DEC_SPS_HDR_BIT_DEPTH_LUMA_MINUS8(v) \
++	(((v) << 3) & GENMASK(5, 3))
++#define VE_DEC_H265_DEC_SPS_HDR_SEPARATE_COLOUR_PLANE_FLAG(v) \
++	((v) ? BIT(2) : 0)
++#define VE_DEC_H265_DEC_SPS_HDR_CHROMA_FORMAT_IDC(v) \
++	((v) & GENMASK(1, 0))
++
++#define VE_DEC_H265_DEC_PIC_SIZE		(VE_ENGINE_DEC_H265 + 0x08)
++
++#define VE_DEC_H265_DEC_PIC_SIZE_WIDTH(w)	(((w) << 0) & GENMASK(13, 0))
++#define VE_DEC_H265_DEC_PIC_SIZE_HEIGHT(h)	(((h) << 16) & GENMASK(29, 16))
++
++#define VE_DEC_H265_DEC_PCM_CTRL		(VE_ENGINE_DEC_H265 + 0x0c)
++
++#define VE_DEC_H265_DEC_PCM_CTRL_PCM_ENABLED_FLAG(v) \
++	((v) ? BIT(15) : 0)
++#define VE_DEC_H265_DEC_PCM_CTRL_PCM_LOOP_FILTER_DISABLED_FLAG(v) \
++	((v) ? BIT(14) : 0)
++#define VE_DEC_H265_DEC_PCM_CTRL_LOG2_DIFF_MAX_MIN_PCM_LUMA_CODING_BLOCK_SIZE(v) \
++	(((v) << 10) & GENMASK(11, 10))
++#define VE_DEC_H265_DEC_PCM_CTRL_LOG2_MIN_PCM_LUMA_CODING_BLOCK_SIZE_MINUS3(v) \
++	(((v) << 8) & GENMASK(9, 8))
++#define VE_DEC_H265_DEC_PCM_CTRL_PCM_SAMPLE_BIT_DEPTH_CHROMA_MINUS1(v) \
++	(((v) << 4) & GENMASK(7, 4))
++#define VE_DEC_H265_DEC_PCM_CTRL_PCM_SAMPLE_BIT_DEPTH_LUMA_MINUS1(v) \
++	(((v) << 0) & GENMASK(3, 0))
++
++#define VE_DEC_H265_DEC_PPS_CTRL0		(VE_ENGINE_DEC_H265 + 0x10)
++
++#define VE_DEC_H265_DEC_PPS_CTRL0_PPS_CR_QP_OFFSET(v) \
++	(((v) << 24) & GENMASK(29, 24))
++#define VE_DEC_H265_DEC_PPS_CTRL0_PPS_CB_QP_OFFSET(v) \
++	(((v) << 16) & GENMASK(21, 16))
++#define VE_DEC_H265_DEC_PPS_CTRL0_INIT_QP_MINUS26(v) \
++	(((v) << 8) & GENMASK(14, 8))
++#define VE_DEC_H265_DEC_PPS_CTRL0_DIFF_CU_QP_DELTA_DEPTH(v) \
++	(((v) << 4) & GENMASK(5, 4))
++#define VE_DEC_H265_DEC_PPS_CTRL0_CU_QP_DELTA_ENABLED_FLAG(v) \
++	((v) ? BIT(3) : 0)
++#define VE_DEC_H265_DEC_PPS_CTRL0_TRANSFORM_SKIP_ENABLED_FLAG(v) \
++	((v) ? BIT(2) : 0)
++#define VE_DEC_H265_DEC_PPS_CTRL0_CONSTRAINED_INTRA_PRED_FLAG(v) \
++	((v) ? BIT(1) : 0)
++#define VE_DEC_H265_DEC_PPS_CTRL0_SIGN_DATA_HIDING_FLAG(v) \
++	((v) ? BIT(0) : 0)
++
++#define VE_DEC_H265_DEC_PPS_CTRL1		(VE_ENGINE_DEC_H265 + 0x14)
++
++#define VE_DEC_H265_DEC_PPS_CTRL1_LOG2_PARALLEL_MERGE_LEVEL_MINUS2(v) \
++	(((v) << 8) & GENMASK(10, 8))
++#define VE_DEC_H265_DEC_PPS_CTRL1_PPS_LOOP_FILTER_ACROSS_SLICES_ENABLED_FLAG(v) \
++	((v) ? BIT(6) : 0)
++#define VE_DEC_H265_DEC_PPS_CTRL1_LOOP_FILTER_ACROSS_TILES_ENABLED_FLAG(v) \
++	((v) ? BIT(5) : 0)
++#define VE_DEC_H265_DEC_PPS_CTRL1_ENTROPY_CODING_SYNC_ENABLED_FLAG(v) \
++	((v) ? BIT(4) : 0)
++#define VE_DEC_H265_DEC_PPS_CTRL1_TILES_ENABLED_FLAG(v) \
++	((v) ? BIT(3) : 0)
++#define VE_DEC_H265_DEC_PPS_CTRL1_TRANSQUANT_BYPASS_ENABLE_FLAG(v) \
++	((v) ? BIT(2) : 0)
++#define VE_DEC_H265_DEC_PPS_CTRL1_WEIGHTED_BIPRED_FLAG(v) \
++	((v) ? BIT(1) : 0)
++#define VE_DEC_H265_DEC_PPS_CTRL1_WEIGHTED_PRED_FLAG(v) \
++	((v) ? BIT(0) : 0)
++
++#define VE_DEC_H265_SCALING_LIST_CTRL0		(VE_ENGINE_DEC_H265 + 0x18)
++
++#define VE_DEC_H265_SCALING_LIST_CTRL0_ENABLED_FLAG(v) \
++	((v) ? BIT(31) : 0)
++#define VE_DEC_H265_SCALING_LIST_CTRL0_SRAM	(0 << 30)
++#define VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT	(1 << 30)
++
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0		(VE_ENGINE_DEC_H265 + 0x20)
++
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_PICTURE_TYPE(v) \
++	(((v) << 28) & GENMASK(29, 28))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_FIVE_MINUS_MAX_NUM_MERGE_CAND(v) \
++	(((v) << 24) & GENMASK(26, 24))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_NUM_REF_IDX_L1_ACTIVE_MINUS1(v) \
++	(((v) << 20) & GENMASK(23, 20))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_NUM_REF_IDX_L0_ACTIVE_MINUS1(v) \
++	(((v) << 16) & GENMASK(19, 16))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_COLLOCATED_REF_IDX(v) \
++	(((v) << 12) & GENMASK(15, 12))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_COLLOCATED_FROM_L0_FLAG(v) \
++	((v) ? BIT(11) : 0)
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_CABAC_INIT_FLAG(v) \
++	((v) ? BIT(10) : 0)
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_MVD_L1_ZERO_FLAG(v) \
++	((v) ? BIT(9) : 0)
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_SLICE_SAO_CHROMA_FLAG(v) \
++	((v) ? BIT(8) : 0)
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_SLICE_SAO_LUMA_FLAG(v) \
++	((v) ? BIT(7) : 0)
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_SLICE_TEMPORAL_MVP_ENABLE_FLAG(v) \
++	((v) ? BIT(6) : 0)
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_COLOUR_PLANE_ID(v) \
++	(((v) << 4) & GENMASK(5, 4))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_SLICE_TYPE(v) \
++	(((v) << 2) & GENMASK(3, 2))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_DEPENDENT_SLICE_SEGMENT_FLAG(v) \
++	((v) ? BIT(1) : 0)
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO0_FIRST_SLICE_SEGMENT_IN_PIC_FLAG(v) \
++	((v) ? BIT(0) : 0)
++
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO1		(VE_ENGINE_DEC_H265 + 0x24)
++
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_TC_OFFSET_DIV2(v) \
++	(((v) << 28) & GENMASK(31, 28))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_BETA_OFFSET_DIV2(v) \
++	(((v) << 24) & GENMASK(27, 24))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_DEBLOCKING_FILTER_DISABLED_FLAG(v) \
++	((v) ? BIT(23) : 0)
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_LOOP_FILTER_ACROSS_SLICES_ENABLED_FLAG(v) \
++	((v) ? BIT(22) : 0)
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_POC_BIGEST_IN_RPS_ST(v) \
++	((v) ? BIT(21) : 0)
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_CR_QP_OFFSET(v) \
++	(((v) << 16) & GENMASK(20, 16))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_CB_QP_OFFSET(v) \
++	(((v) << 8) & GENMASK(12, 8))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO1_SLICE_QP_DELTA(v) \
++	((v) & GENMASK(6, 0))
++
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO2		(VE_ENGINE_DEC_H265 + 0x28)
++
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO2_NUM_ENTRY_POINT_OFFSETS(v) \
++	(((v) << 8) & GENMASK(21, 8))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO2_CHROMA_LOG2_WEIGHT_DENOM(v) \
++	(((v) << 4) & GENMASK(6, 4))
++#define VE_DEC_H265_DEC_SLICE_HDR_INFO2_LUMA_LOG2_WEIGHT_DENOM(v) \
++	(((v) << 0) & GENMASK(2, 0))
++
++#define VE_DEC_H265_DEC_CTB_ADDR		(VE_ENGINE_DEC_H265 + 0x2c)
++
++#define VE_DEC_H265_DEC_CTB_ADDR_Y(y)		(((y) << 16) & GENMASK(25, 16))
++#define VE_DEC_H265_DEC_CTB_ADDR_X(x)		(((x) << 0) & GENMASK(9, 0))
++
++#define VE_DEC_H265_CTRL			(VE_ENGINE_DEC_H265 + 0x30)
++
++#define VE_DEC_H265_CTRL_DDR_CONSISTENCY_EN	BIT(31)
++#define VE_DEC_H265_CTRL_STCD_EN		BIT(25)
++#define VE_DEC_H265_CTRL_EPTB_DEC_BYPASS_EN	BIT(24)
++#define VE_DEC_H265_CTRL_TQ_BYPASS_EN		BIT(12)
++#define VE_DEC_H265_CTRL_VLD_BYPASS_EN		BIT(11)
++#define VE_DEC_H265_CTRL_NCRI_CACHE_DISABLE	BIT(10)
++#define VE_DEC_H265_CTRL_ROTATE_SCALE_OUT_EN	BIT(9)
++#define VE_DEC_H265_CTRL_MC_NO_WRITEBACK	BIT(8)
++#define VE_DEC_H265_CTRL_VLD_DATA_REQ_IRQ_EN	BIT(2)
++#define VE_DEC_H265_CTRL_ERROR_IRQ_EN		BIT(1)
++#define VE_DEC_H265_CTRL_FINISH_IRQ_EN		BIT(0)
++#define VE_DEC_H265_CTRL_IRQ_MASK \
++	(VE_DEC_H265_CTRL_FINISH_IRQ_EN | VE_DEC_H265_CTRL_ERROR_IRQ_EN | \
++	 VE_DEC_H265_CTRL_VLD_DATA_REQ_IRQ_EN)
++
++#define VE_DEC_H265_TRIGGER			(VE_ENGINE_DEC_H265 + 0x34)
++
++#define VE_DEC_H265_TRIGGER_STCD_VC1		(0x02 << 4)
++#define VE_DEC_H265_TRIGGER_STCD_AVS		(0x01 << 4)
++#define VE_DEC_H265_TRIGGER_STCD_HEVC		(0x00 << 4)
++#define VE_DEC_H265_TRIGGER_DEC_SLICE		(0x08 << 0)
++#define VE_DEC_H265_TRIGGER_INIT_SWDEC		(0x07 << 0)
++#define VE_DEC_H265_TRIGGER_BYTE_ALIGN		(0x06 << 0)
++#define VE_DEC_H265_TRIGGER_GET_VLCUE		(0x05 << 0)
++#define VE_DEC_H265_TRIGGER_GET_VLCSE		(0x04 << 0)
++#define VE_DEC_H265_TRIGGER_FLUSH_BITS		(0x03 << 0)
++#define VE_DEC_H265_TRIGGER_GET_BITS		(0x02 << 0)
++#define VE_DEC_H265_TRIGGER_SHOW_BITS		(0x01 << 0)
++
++#define VE_DEC_H265_STATUS			(VE_ENGINE_DEC_H265 + 0x38)
++
++#define VE_DEC_H265_STATUS_STCD			BIT(24)
++#define VE_DEC_H265_STATUS_STCD_BUSY		BIT(21)
++#define VE_DEC_H265_STATUS_WB_BUSY		BIT(20)
++#define VE_DEC_H265_STATUS_BS_DMA_BUSY		BIT(19)
++#define VE_DEC_H265_STATUS_IQIT_BUSY		BIT(18)
++#define VE_DEC_H265_STATUS_INTER_BUSY		BIT(17)
++#define VE_DEC_H265_STATUS_MORE_DATA		BIT(16)
++#define VE_DEC_H265_STATUS_VLD_BUSY		BIT(14)
++#define VE_DEC_H265_STATUS_DEBLOCKING_BUSY	BIT(13)
++#define VE_DEC_H265_STATUS_DEBLOCKING_DRAM_BUSY	BIT(12)
++#define VE_DEC_H265_STATUS_INTRA_BUSY		BIT(11)
++#define VE_DEC_H265_STATUS_SAO_BUSY		BIT(10)
++#define VE_DEC_H265_STATUS_MVP_BUSY		BIT(9)
++#define VE_DEC_H265_STATUS_SWDEC_BUSY		BIT(8)
++#define VE_DEC_H265_STATUS_OVER_TIME		BIT(3)
++#define VE_DEC_H265_STATUS_VLD_DATA_REQ		BIT(2)
++#define VE_DEC_H265_STATUS_ERROR		BIT(1)
++#define VE_DEC_H265_STATUS_SUCCESS		BIT(0)
++#define VE_DEC_H265_STATUS_STCD_TYPE_MASK	GENMASK(23, 22)
++#define VE_DEC_H265_STATUS_CHECK_MASK \
++	(VE_DEC_H265_STATUS_SUCCESS | VE_DEC_H265_STATUS_ERROR | \
++	 VE_DEC_H265_STATUS_VLD_DATA_REQ)
++#define VE_DEC_H265_STATUS_CHECK_ERROR \
++	(VE_DEC_H265_STATUS_ERROR | VE_DEC_H265_STATUS_VLD_DATA_REQ)
++
++#define VE_DEC_H265_DEC_CTB_NUM			(VE_ENGINE_DEC_H265 + 0x3c)
++
++#define VE_DEC_H265_BITS_ADDR			(VE_ENGINE_DEC_H265 + 0x40)
++
++#define VE_DEC_H265_BITS_ADDR_FIRST_SLICE_DATA	BIT(30)
++#define VE_DEC_H265_BITS_ADDR_LAST_SLICE_DATA	BIT(29)
++#define VE_DEC_H265_BITS_ADDR_VALID_SLICE_DATA	BIT(28)
++#define VE_DEC_H265_BITS_ADDR_BASE(a)		(((a) >> 8) & GENMASK(27, 0))
++
++#define VE_DEC_H265_BITS_OFFSET			(VE_ENGINE_DEC_H265 + 0x44)
++#define VE_DEC_H265_BITS_LEN			(VE_ENGINE_DEC_H265 + 0x48)
++
++#define VE_DEC_H265_BITS_END_ADDR		(VE_ENGINE_DEC_H265 + 0x4c)
++
++#define VE_DEC_H265_BITS_END_ADDR_BASE(a)	((a) >> 8)
++
++#define VE_DEC_H265_SDRT_CTRL			(VE_ENGINE_DEC_H265 + 0x50)
++#define VE_DEC_H265_SDRT_LUMA_ADDR		(VE_ENGINE_DEC_H265 + 0x54)
++#define VE_DEC_H265_SDRT_CHROMA_ADDR		(VE_ENGINE_DEC_H265 + 0x58)
++
++#define VE_DEC_H265_OUTPUT_FRAME_IDX		(VE_ENGINE_DEC_H265 + 0x5c)
++
++#define VE_DEC_H265_NEIGHBOR_INFO_ADDR		(VE_ENGINE_DEC_H265 + 0x60)
++
++#define VE_DEC_H265_NEIGHBOR_INFO_ADDR_BASE(a)	((a) >> 8)
++
++#define VE_DEC_H265_ENTRY_POINT_OFFSET_ADDR	(VE_ENGINE_DEC_H265 + 0x64)
++#define VE_DEC_H265_TILE_START_CTB		(VE_ENGINE_DEC_H265 + 0x68)
++#define VE_DEC_H265_TILE_END_CTB		(VE_ENGINE_DEC_H265 + 0x6c)
++
++#define VE_DEC_H265_LOW_ADDR			(VE_ENGINE_DEC_H265 + 0x80)
++
++#define VE_DEC_H265_LOW_ADDR_PRIMARY_CHROMA(a) \
++	(((a) << 24) & GENMASK(31, 24))
++#define VE_DEC_H265_LOW_ADDR_SECONDARY_CHROMA(a) \
++	(((a) << 16) & GENMASK(23, 16))
++#define VE_DEC_H265_LOW_ADDR_ENTRY_POINTS_BUF(a) \
++	(((a) << 0) & GENMASK(7, 0))
++
++#define VE_DEC_H265_SRAM_OFFSET			(VE_ENGINE_DEC_H265 + 0xe0)
++
++#define VE_DEC_H265_SRAM_OFFSET_PRED_WEIGHT_LUMA_L0	0x00
++#define VE_DEC_H265_SRAM_OFFSET_PRED_WEIGHT_CHROMA_L0	0x20
++#define VE_DEC_H265_SRAM_OFFSET_PRED_WEIGHT_LUMA_L1	0x60
++#define VE_DEC_H265_SRAM_OFFSET_PRED_WEIGHT_CHROMA_L1	0x80
++#define VE_DEC_H265_SRAM_OFFSET_FRAME_INFO		0x400
++#define VE_DEC_H265_SRAM_OFFSET_FRAME_INFO_UNIT		0x20
++#define VE_DEC_H265_SRAM_OFFSET_SCALING_LISTS		0x800
++#define VE_DEC_H265_SRAM_OFFSET_REF_PIC_LIST0		0xc00
++#define VE_DEC_H265_SRAM_OFFSET_REF_PIC_LIST1		0xc10
++
++#define VE_DEC_H265_SRAM_DATA			(VE_ENGINE_DEC_H265 + 0xe4)
++
++#define VE_DEC_H265_SRAM_DATA_ADDR_BASE(a)	((a) >> 8)
++#define VE_DEC_H265_SRAM_REF_PIC_LIST_LT_REF	BIT(7)
++
+ #define VE_H264_SPS			0x200
+ #define VE_H264_SPS_MBS_ONLY			BIT(18)
+ #define VE_H264_SPS_MB_ADAPTIVE_FRAME_FIELD	BIT(17)
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+index e2b530b1a956..6cc65d85cf98 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+@@ -41,6 +41,11 @@ static struct cedrus_format cedrus_formats[] = {
+ 		.pixelformat	= V4L2_PIX_FMT_H264_SLICE_RAW,
+ 		.directions	= CEDRUS_DECODE_SRC,
+ 	},
++	{
++		.pixelformat	= V4L2_PIX_FMT_HEVC_SLICE,
++		.directions	= CEDRUS_DECODE_SRC,
++		.capabilities	= CEDRUS_CAPABILITY_H265_DEC,
++	},
+ 	{
+ 		.pixelformat	= V4L2_PIX_FMT_SUNXI_TILED_NV12,
+ 		.directions	= CEDRUS_DECODE_DST,
+@@ -105,6 +110,7 @@ static void cedrus_prepare_format(struct v4l2_pix_format *pix_fmt)
+ 	switch (pix_fmt->pixelformat) {
+ 	case V4L2_PIX_FMT_MPEG2_SLICE:
+ 	case V4L2_PIX_FMT_H264_SLICE_RAW:
++	case V4L2_PIX_FMT_HEVC_SLICE:
+ 		/* Zero bytes per line for encoded source. */
+ 		bytesperline = 0;
+ 
+@@ -473,6 +479,10 @@ static int cedrus_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 		ctx->current_codec = CEDRUS_CODEC_H264;
+ 		break;
+ 
++	case V4L2_PIX_FMT_HEVC_SLICE:
++		ctx->current_codec = CEDRUS_CODEC_H265;
++		break;
++
+ 	default:
+ 		return -EINVAL;
+ 	}
+-- 
+2.21.0
+
