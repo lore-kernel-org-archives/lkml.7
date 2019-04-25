@@ -2,157 +2,200 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A893C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F317C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B78D206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:33:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=yehs2007@zoho.com header.b="bXrYeNvL"
+	by mail.kernel.org (Postfix) with ESMTP id 0E576206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbfDYNdG (ORCPT
+        id S1729438AbfDYNdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 09:33:06 -0400
-Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25562 "EHLO
-        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfDYNdG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 09:33:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1556199135; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=eWqfyXO8bSYbwmTzglfVYw+G/bc6uVPSXgV5zpMbyd7/pGbZhY2C4p6Zx/3xQ07gSQTbQ7QBjDoQztUEN43XbvCoav5utwf4Y6hSejHXI8QxATegVAkffENNvDa+nxC9R8/39YdeutrHh9rcvJ7uLLtQ+tAtMjwhMHecPJgVCGA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1556199135; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=FIxzx8ufezxHUGnlKslImct4gA4BATVr8SFi532iUlo=; 
-        b=d9OV3+NJDXlItys5pHhkC/VLL+o7bwgYHmjNITIsiZ9lHIbK8jUot8r9KHTo2t+mUz6UHA1rPC0ytXTUrBkjSH/kQaND7wu1+0KCgbtEjJFg2xGAxQGcH7rZEJg2JeSe9HxyM3AqTr5959b4zOaUNu0+bm/rk3TCgE/+QnvLG18=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=yehs2007@zoho.com;
-        dmarc=pass header.from=<yehs2007@zoho.com> header.from=<yehs2007@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=Uu/tQ2GZuXQyCOgwBxFlEy0JwTFbrHsYg9eEvdWDl/0UBeMWleQYQdFsjYNkvxGcnpof3gGumjLR
-    oN/jgJT81Dm5XaClA0ViAt0M9a4mqFgo8qhmW/y8R6zvfec7vsko  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1556199135;
-        s=default; d=zoho.com; i=yehs2007@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=3402; bh=FIxzx8ufezxHUGnlKslImct4gA4BATVr8SFi532iUlo=;
-        b=bXrYeNvL0TOjnFTMiTnmT+bnNUFNf0hxn8sWUNIyn4/PSq+9HhDK3yaaWAu791FW
-        psGIvA6dgbJEMiJeindrjvzrtg8FSwj3Fnv+d4v6fgOSF/dcUTJW4ng55+ASEnPFrpd
-        mkiZBmdnm/G2roZhkUVTiXsb7FjRgIMsRNtP6W5k=
-Received: from YEHS1XR3054QMS.lenovo.com (123.120.108.196 [123.120.108.196]) by mx.zohomail.com
-        with SMTPS id 1556199133111253.18143767731408; Thu, 25 Apr 2019 06:32:13 -0700 (PDT)
-From:   Huaisheng Ye <yehs2007@zoho.com>
-To:     mpatocka@redhat.com, snitzer@redhat.com, agk@redhat.com
-Cc:     prarit@redhat.com, chengnt@lenovo.com, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, Huaisheng Ye <yehs1@lenovo.com>
-Subject: [PATCH v2 4/4] dm writecache: avoid unnecessary lookups in writecache_find_entry
-Date:   Thu, 25 Apr 2019 21:31:20 +0800
-Message-Id: <20190425133120.13088-5-yehs2007@zoho.com>
-X-Mailer: git-send-email 2.17.0.windows.1
-In-Reply-To: <20190425133120.13088-1-yehs2007@zoho.com>
-References: <20190425133120.13088-1-yehs2007@zoho.com>
-X-ZohoMailClient: External
+        Thu, 25 Apr 2019 09:33:33 -0400
+Received: from shell.v3.sk ([90.176.6.54]:44345 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfDYNdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 09:33:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 068E010308C;
+        Thu, 25 Apr 2019 15:33:28 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id StRKUhF4G9Zo; Thu, 25 Apr 2019 15:33:22 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 7E3FC10308F;
+        Thu, 25 Apr 2019 15:33:22 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id CCA7oOs_8rYC; Thu, 25 Apr 2019 15:33:21 +0200 (CEST)
+Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 2257A10308C;
+        Thu, 25 Apr 2019 15:33:21 +0200 (CEST)
+Message-ID: <3b7fb8442a5e0106f11e328f5bb4f0f46483ccf4.camel@v3.sk>
+Subject: Re: [PATCH v3 14/14] [media] marvell-ccic: provide a clock for the
+ sensor
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     jacopo mondi <jacopo@jmondi.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>,
+        Libin Yang <lbyang@marvell.com>,
+        Albert Wang <twang13@marvell.com>
+Date:   Thu, 25 Apr 2019 15:33:19 +0200
+In-Reply-To: <20181122200747.GA6788@w540>
+References: <20181120100318.367987-1-lkundrak@v3.sk>
+         <20181120100318.367987-15-lkundrak@v3.sk> <20181122200747.GA6788@w540>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 (3.32.1-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huaisheng Ye <yehs1@lenovo.com>
+On Fri, 2018-11-23 at 08:44 +0100, jacopo mondi wrote:
+> HI Lubomir,
+> 
+> On Tue, Nov 20, 2018 at 11:03:19AM +0100, Lubomir Rintel wrote:
+> > The sensor needs the MCLK clock running when it's being probed. On
+> > platforms where the sensor is instantiated from a DT (MMP2) it is going
+> > to happen asynchronously.
+> > 
+> > Therefore, the current modus operandi, where the bridge driver fiddles
+> > with the sensor power and clock itself is not going to fly. As the comments
+> > wisely note, this doesn't even belong there.
+> > 
+> > Luckily, the ov7670 driver is already able to control its power and
+> > reset lines, we can just drop the MMP platform glue altogether.
+> > 
+> > It also requests the clock via the standard clock subsystem. Good -- let's
+> > set up a clock instance so that the sensor can ask us to enable the clock.
+> > Note that this is pretty dumb at the moment: the clock is hardwired to a
+> > particular frequency and parent. It was always the case.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > 
+> > ---
+> > Changes since v1:
+> > - [kbuild/ia64] depend on COMMON_CLK.
+> > - [smatch] fix bad return in mcam_v4l_open() leading to lock not getting
+> >   released on error.
+> > 
+> >  drivers/media/platform/marvell-ccic/Kconfig   |   2 +
+> >  .../media/platform/marvell-ccic/cafe-driver.c |   9 +-
+> >  .../media/platform/marvell-ccic/mcam-core.c   | 156 +++++++++++++++---
+> >  .../media/platform/marvell-ccic/mcam-core.h   |   3 +
+> >  .../media/platform/marvell-ccic/mmp-driver.c  | 152 ++---------------
+> >  .../linux/platform_data/media/mmp-camera.h    |   2 -
+> >  6 files changed, 161 insertions(+), 163 deletions(-)
+...
+> >  int mccic_register(struct mcam_camera *cam)
+> >  {
+> > +	struct clk_init_data mclk_init = { };
+> >  	int ret;
+> > 
+> >  	/*
+> > @@ -1838,7 +1925,10 @@ int mccic_register(struct mcam_camera *cam)
+> >  	mcam_set_config_needed(cam, 1);
+> >  	cam->pix_format = mcam_def_pix_format;
+> >  	cam->mbus_code = mcam_def_mbus_code;
+> > -	mcam_ctlr_init(cam);
+> > +
+> > +	mcam_clk_enable(cam);
+> 
+> Am I mis-interpreting the clock bindings, or here you expose a clock
+> source, and sensors are supposed to reference it if they need to. It
+> is then the sensor driver that by calling clk_prepare_enable() on the
+> referenced clock triggers the call of the 'enable' function. It seems
+> to me that here you have exposed a clock provider, but the provider
+> itself enables its clocks...
 
-Only when entry has been found, that would only be necessary to check the
-lowest or highest seq-count.
+What mcam_clk_enable() enables is the clocks for the CCIC IP core; so
+that we're able to access the registers.
 
-Add local variable "found" in writecache_find_entry, if no entry has been
-found, it is meaningless that having a useless rb_prev or rb_next.
+(Note to self: we're enabling all the clocks here, we just need the
+"axi" clock, clk_enable(cam->clk[0]), as done elsewhere, should be
+sufficient.)
 
-This patch is not designed for fixing logical error. That is used for
-optimizing the behavior of writecache_find_entry.
+On the other hand, the "mclk" clock provider that is only registered
+below provides the clock for the sensor itself that's provided by the
+CCIC block.
 
-Give an example to illustrate the point below.
-Suppose that is the case, here is a normal READ bio comes to writecache_map.
-And because of bio's direction is READ, writecache_find_entry would be called
-with flags WFE_RETURN_FOLLOWING.
+>  Am I confused?
 
-Now there are two scenarios,
-1. writecache_find_entry successfully get an existing entry by searching
-   rb_tree, we could call it HIT. Then the first 'while' will be finished by
-   'break'. Next it will move to second 'while' loop, because of the flags
-   hasn't been marked as WFE_LOWEST_SEQ. writecache_find_entry will try to
-   return an entry with HIGHEST_SEQ, if there are other entries which has same
-   original_sector in rb_tree.
-   For this situation, the current code is okay to deal with that.
+Chances are that I am. But maybe you're confusing mcam_clk_enable(cam)
+(consumer, enables the CCIC's input clocks) with mclk_enable()
+(provider, makes CCIC generate the clock for the sensor).
 
-2. writecache_find_entry couldn't get an existing entry from rb_tree, we
-   could call it MISS. Because of same flags WFE_RETURN_FOLLOWING,
-   writecache_find_entry will get other entry, which's original_sector will
-   slightly larger than input parameter block, with big probability.
-   For this scenario, function writecache_find_entry doesn't need to enter
-   second 'while' loop. But current code would still try to check there were
-   other entry with same original_sector.
-   So the additional rb_next or rb_prev is unnecessary by this case, also the
-   code doesn't need to compare the original_sector of 'e2' with parameter
-   'block'.
+> 
+> Thanks
+>    j
+> 
+> > +	mcam_ctlr_init(cam); // XXX?
 
-This patch is designed to optimize the second case. so it could skip the
-second 'while' loop when the block is missed from rb_tree.
+This looks like something I shouldn't have left in place though...
 
-Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
----
- drivers/md/dm-writecache.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+> > +	mcam_clk_disable(cam);
+> > 
+> >  	/*
+> >  	 * Register sensor notifier.
+> > @@ -1857,6 +1947,26 @@ int mccic_register(struct mcam_camera *cam)
+> >  		goto out;
+> >  	}
+> > 
+> > +	/*
+> > +	 * Register sensor master clock.
+> > +	 */
+> > +	mclk_init.parent_names = NULL;
+> > +	mclk_init.num_parents = 0;
+> > +	mclk_init.ops = &mclk_ops;
+> > +	mclk_init.name = "mclk";
+> > +
+> > +	of_property_read_string(cam->dev->of_node, "clock-output-names",
+> > +							&mclk_init.name);
+> > +
+> > +	cam->mclk_hw.init = &mclk_init;
+> > +
+> > +	cam->mclk = devm_clk_register(cam->dev, &cam->mclk_hw);
+> > +	if (IS_ERR(cam->mclk)) {
+> > +		ret = PTR_ERR(cam->mclk);
+> > +		dev_err(cam->dev, "can't register clock\n");
+> > +		goto out;
+> > +	}
+> > +
+> >  	/*
+> >  	 * If so requested, try to get our DMA buffers now.
+> >  	 */
+> > @@ -1884,7 +1994,7 @@ void mccic_shutdown(struct mcam_camera *cam)
+> >  	 */
+> >  	if (!list_empty(&cam->vdev.fh_list)) {
+> >  		cam_warn(cam, "Removing a device with users!\n");
+> > -		mcam_ctlr_power_down(cam);
+> > +		sensor_call(cam, core, s_power, 0);
+> >  	}
+> >  	if (cam->buffer_mode == B_vmalloc)
+> >  		mcam_free_dma_bufs(cam);
+> > @@ -1906,7 +2016,8 @@ void mccic_suspend(struct mcam_camera *cam)
+> >  		enum mcam_state cstate = cam->state;
+> > 
+> >  		mcam_ctlr_stop_dma(cam);
+> > -		mcam_ctlr_power_down(cam);
+> > +		sensor_call(cam, core, s_power, 0);
+> > +		mcam_clk_disable(cam);
+> >  		cam->state = cstate;
+> >  	}
+> >  	mutex_unlock(&cam->s_mutex);
+> > 
+...
 
-diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-index ddf1732..047ae09 100644
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -537,14 +537,18 @@ static struct wc_entry *writecache_find_entry(struct dm_writecache *wc,
- {
- 	struct wc_entry *e;
- 	struct rb_node *node = wc->tree.rb_node;
-+	bool found = false;
- 
- 	if (unlikely(!node))
- 		return NULL;
- 
- 	while (1) {
- 		e = container_of(node, struct wc_entry, rb_node);
--		if (read_original_sector(wc, e) == block)
-+		if (read_original_sector(wc, e) == block) {
-+			found = true;
- 			break;
-+		}
-+
- 		node = (read_original_sector(wc, e) >= block ?
- 			e->rb_node.rb_left : e->rb_node.rb_right);
- 		if (unlikely(!node)) {
-@@ -564,7 +568,8 @@ static struct wc_entry *writecache_find_entry(struct dm_writecache *wc,
- 		}
- 	}
- 
--	while (1) {
-+	/* only need to check lowest or highest seq-count when entry has been found */
-+	while (found) {
- 		struct wc_entry *e2;
- 		if (flags & WFE_LOWEST_SEQ)
- 			node = rb_prev(&e->rb_node);
-@@ -577,6 +582,9 @@ static struct wc_entry *writecache_find_entry(struct dm_writecache *wc,
- 			return e;
- 		e = e2;
- 	}
-+
-+	/* no entry has been found, return the following entry */
-+	return e;
- }
- 
- static void writecache_insert_entry(struct dm_writecache *wc, struct wc_entry *ins)
--- 
-1.8.3.1
-
+Cheers,
+Lubo
 
