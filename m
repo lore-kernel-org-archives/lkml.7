@@ -2,203 +2,112 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB03C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FC2C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C672B206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556221726;
-	bh=de1daFi5i6dpqL1aUK1wa5Lb46ywcBRyjOcNKpuPhCQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R8mAF9ugFPXPUNC6+GYHyTXcd6tjy8t8E3AbCiPEiWsN1DwaThaZixitq/QA8Leil
-	 y/NqgoDpcNkE0vnR12A1w9OlKYUSo6pdevVwDOu4Ak3Pmp2A1LXriu88iWTYw32EnJ
-	 ral+CNO4JgzgjzihiOtRdWlUW0eZ2Tugv751BUQE=
+	by mail.kernel.org (Postfix) with ESMTP id B2AB0215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:48:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HwKxCamA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbfDYTsp (ORCPT
+        id S1730421AbfDYTs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:48:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45927 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfDYTsn (ORCPT
+        Thu, 25 Apr 2019 15:48:58 -0400
+Received: from mail-ot1-f73.google.com ([209.85.210.73]:44723 "EHLO
+        mail-ot1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbfDYTs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:48:43 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s15so969453wra.12
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:48:41 -0700 (PDT)
+        Thu, 25 Apr 2019 15:48:58 -0400
+Received: by mail-ot1-f73.google.com with SMTP id w3so518354otg.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:48:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=zpbM72a9jAXoeFXtBUNjGKK0Y7i3TL6zbnrT40gmTQ8=;
-        b=CzuzaxaENx8Uwt3sQHZ4dKJKTuOwsqKNGUyXwatzrt0+5yKjDyOMQO8X23zHjUsBtF
-         Jt7DG2EZpzmXzGRQErXr6A7RRbq/RXEC1e7ff3jjGxXNlQFcuxGwkI75LOvwU1SlPkaS
-         x73p2k9UVXo6Wtf7otDvV/IvL5lIo2eKtN1zleGE6aTNGEJaeenP/Eu1HKgjhfJZOjjk
-         gZU14c3VtBng8utwPsUk7wdDQAB12K2RMtqRFEn0k1GAboVBsuD1X+oW/SUlU7nw+ZZh
-         nk47kWxws2O4Ltl5+hKq0sKjPJhnKau3n6JTYrXpsK+XMmnpvXB+i8CDXP4862ax/g4L
-         MxiA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=KQMVZFBYV3l7bj2x5noGMtlzW2OP8eFi+jkangDmvwU=;
+        b=HwKxCamAoHOE6nUFmXQ8v/yFGaMkGY4T09T8MB7vAvXMSDsBD6K89hPOV94dn38H7R
+         qnMHn1xN9rryCO0LGRp3pJCqxh/d4tp8xRAjZWI5T9z1oV+5G3NW/RXDlL6/v2bJAWik
+         s/2yq1WF7xOaipb0jRRQKBJCihnxbwQyvSAHmn5B4qyIVM5+E7vlZ1R3AA3SgUYxd2tx
+         WkcvZ2wJjoUZXterXYUKr8kk6tAKycr6LnkvNkJ+1f7tBXNY84B5AYvBiYyvpwZSZtjv
+         vkw4Rg2roGNov0FgmD/HW8F+dk1llV3+Bs9yBnP4n5DOMNAmc3ZH+eBpw0EQrZmMAb79
+         PX5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=zpbM72a9jAXoeFXtBUNjGKK0Y7i3TL6zbnrT40gmTQ8=;
-        b=McDTdgRl2SpXil4H7teh2k8ALICJxyrtCiQZM0/Iljkjb+HadpwtHnuFUK3IZNukk0
-         bOgUN3wNDBtRBs2FbLPI0I/oZ7CtnQzPwlB3xrR0GYa95Mizv6TQgQHSCx7EPOy1N4SC
-         BRZ4EvNKf6Y3HDeVID3k4MmzzX91nOJAWeMUEh6CF/mX8DxwVpiJi11tKfc3GIbnDM8r
-         GyfmtbRCpE8iXJKwj6LiJnzdGTatEVu71DFURrOWVVX3TlBZ8jBHvalkhZK1EWsQxp9R
-         EbzXlxxVJxy/i6f7ViRGeo6wmxnmIBUPH2d25NaOOaPBD2WZHlBGMCt9IAfVyP9xod+z
-         Q6vg==
-X-Gm-Message-State: APjAAAXvTDKTbKMi0LhEEFUiDiuuSd6bN0PxaumkXVYD80YNU0CSQwFv
-        HF+6sjrcRqaGuYkovZpFNc4=
-X-Google-Smtp-Source: APXvYqz80KABTmrXmcu4rSkMZJQlnI7epR4/+fcjEc46wazqFU7LS9WzoKoDF69QgES42X1O9wpsjg==
-X-Received: by 2002:adf:fc51:: with SMTP id e17mr9298047wrs.243.1556221720494;
-        Thu, 25 Apr 2019 12:48:40 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id i18sm21275500wrm.7.2019.04.25.12.48.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 12:48:39 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 21:48:37 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v2] x86/mm/tlb: Remove flush_tlb_info from the stack
-Message-ID: <20190425194837.GB58719@gmail.com>
-References: <20190425180828.24959-1-namit@vmware.com>
- <20190425192930.GA91578@gmail.com>
- <82E44F4A-E52D-4666-95B5-C6248A14A442@vmware.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <82E44F4A-E52D-4666-95B5-C6248A14A442@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=KQMVZFBYV3l7bj2x5noGMtlzW2OP8eFi+jkangDmvwU=;
+        b=aS4MvbHSw8U1/14X+ML6+od1AO+xr63UHr14KrIrvAnKj/aC7cAPiJzOPv6ZdrsEZA
+         ivZuwRxto02aDl+JuYRVoCFE7ay/HxjMKlXS20xGoj/lyO5yNw32XtWuEMfVfP3e4qOt
+         xs6cEKtcNZWSB6RVnydH9/hiimAd50a75EMRw75bEaHkfg3U8DswkVabQheZjDipjVQn
+         fMbxYhYZHuLT4nNWd3V9884EO50LZT3b82y4MKoitftGx5EskUKeYeuxdsPzgo45jUay
+         yFEWhTeJDAY60ypEjWFvi+LzbPhO/CBLNUKeBU84jRkOfYT6lit4cYIrf6UJHKFFg0qd
+         slVw==
+X-Gm-Message-State: APjAAAWfacfg5ws47uL7oZlPCuwlBGAFQhNis3+JVhR8dDzsocT5Ds8g
+        Y32z+lUTdpJyYaK+RPV5Q2om5jhWz+hO
+X-Google-Smtp-Source: APXvYqxkecb+/acwzzKQ9MUPwhZ5gBo/wMvGEdXfYC8QdGg/6XfZ0F4qH1j+ozU73r5nAUIGPGvn1+J6kWdd
+X-Received: by 2002:a9d:6ad1:: with SMTP id m17mr10625475otq.108.1556221737304;
+ Thu, 25 Apr 2019 12:48:57 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 12:48:53 -0700
+Message-Id: <20190425194853.140617-1-venture@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+Subject: [PATCH 1/2] ARM: dts: aspeed: Add aspeed-p2a-ctrl node
+From:   Patrick Venture <venture@google.com>
+To:     venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, andrew@aj.id.au
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        arm@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a node for the aspeed-p2a-ctrl module.  This node, when enabled will
+disable the PCI-to-AHB bridge and then allow control of this bridge via
+ioctls, and access via mmap.
 
-* Nadav Amit <namit@vmware.com> wrote:
+Signed-off-by: Patrick Venture <venture@google.com>
+---
+ arch/arm/boot/dts/aspeed-g4.dtsi | 4 ++++
+ arch/arm/boot/dts/aspeed-g5.dtsi | 5 +++++
+ 2 files changed, 9 insertions(+)
 
-> > On Apr 25, 2019, at 12:29 PM, Ingo Molnar <mingo@kernel.org> wrote:
-> > 
-> > 
-> > * Nadav Amit <namit@vmware.com> wrote:
-> > 
-> >> Move flush_tlb_info variables off the stack. This allows to align
-> >> flush_tlb_info to cache-line and avoid potentially unnecessary cache
-> >> line movements. It also allows to have a fixed virtual-to-physical
-> >> translation of the variables, which reduces TLB misses.
-> >> 
-> >> Use per-CPU struct for flush_tlb_mm_range() and
-> >> flush_tlb_kernel_range(). Add debug assertions to ensure there are
-> >> no nested TLB flushes that might overwrite the per-CPU data. For
-> >> arch_tlbbatch_flush() use a const struct.
-> >> 
-> >> Results when running a microbenchmarks that performs 10^6 MADV_DONTEED
-> >> operations and touching a page, in which 3 additional threads run a
-> >> busy-wait loop (5 runs, PTI and retpolines are turned off):
-> >> 
-> >> 			base		off-stack
-> >> 			----		---------
-> >> avg (usec/op)		1.629		1.570	(-3%)
-> >> stddev			0.014		0.009
-> >> 
-> >> Cc: Peter Zijlstra <peterz@infradead.org>
-> >> Cc: Andy Lutomirski <luto@kernel.org>
-> >> Cc: Dave Hansen <dave.hansen@intel.com>
-> >> Cc: Borislav Petkov <bp@alien8.de>
-> >> Cc: Thomas Gleixner <tglx@linutronix.de>
-> >> Signed-off-by: Nadav Amit <namit@vmware.com>
-> >> 
-> >> ---
-> >> 
-> >> v1->v2:
-> >> - Initialize all flush_tlb_info fields [Andy]
-> >> ---
-> >> arch/x86/mm/tlb.c | 100 ++++++++++++++++++++++++++++++++++------------
-> >> 1 file changed, 74 insertions(+), 26 deletions(-)
-> >> 
-> >> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-> >> index 487b8474c01c..aac191eb2b90 100644
-> >> --- a/arch/x86/mm/tlb.c
-> >> +++ b/arch/x86/mm/tlb.c
-> >> @@ -634,7 +634,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
-> >> 	this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
-> >> }
-> >> 
-> >> -static void flush_tlb_func_local(void *info, enum tlb_flush_reason reason)
-> >> +static void flush_tlb_func_local(const void *info, enum tlb_flush_reason reason)
-> >> {
-> >> 	const struct flush_tlb_info *f = info;
-> >> 
-> >> @@ -722,43 +722,81 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
-> >>  */
-> >> unsigned long tlb_single_page_flush_ceiling __read_mostly = 33;
-> >> 
-> >> +static DEFINE_PER_CPU_SHARED_ALIGNED(struct flush_tlb_info, flush_tlb_info);
-> >> +
-> >> +#ifdef CONFIG_DEBUG_VM
-> >> +static DEFINE_PER_CPU(unsigned int, flush_tlb_info_idx);
-> >> +#endif
-> >> +
-> >> +static inline struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
-> >> +			unsigned long start, unsigned long end,
-> >> +			unsigned int stride_shift, bool freed_tables,
-> >> +			u64 new_tlb_gen)
-> >> +{
-> >> +	struct flush_tlb_info *info = this_cpu_ptr(&flush_tlb_info);
-> >> +
-> >> +#ifdef CONFIG_DEBUG_VM
-> >> +	/*
-> >> +	 * Ensure that the following code is non-reentrant and flush_tlb_info
-> >> +	 * is not overwritten. This means no TLB flushing is initiated by
-> >> +	 * interrupt handlers and machine-check exception handlers.
-> >> +	 */
-> >> +	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
-> >> +#endif
-> > 
-> > isn't this effectively VM_BUG_ON()?
-> 
-> Not exactly. When CONFIG_DEBUG_VM is off we get
-> 
-> 	#define VM_BUG_ON(cond) BUILD_BUG_ON_INVALID(cond)
-> 
-> This will cause the build to fail since flush_tlb_info_idx is not defined in
-> when CONFIG_DEBUG_VM is off.
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index 9549f867aa1ef..0b7bc6072aed0 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -165,6 +165,10 @@
+ 					compatible = "aspeed,g4-pinctrl";
+ 				};
+ 
++				p2a: p2a-control {
++					compatible = "aspeed,ast2400-p2a-ctrl";
++					status = "disabled";
++				};
+ 			};
+ 
+ 			rng: hwrng@1e6e2078 {
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 3e4ed081505cc..5f01befcca1e2 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -212,6 +212,11 @@
+ 					aspeed,external-nodes = <&gfx &lhc>;
+ 
+ 				};
++
++				p2a: p2a-control {
++					compatible = "aspeed,ast2500-p2a-ctrl";
++					status = "disabled";
++				};
+ 			};
+ 
+ 			rng: hwrng@1e6e2078 {
+-- 
+2.21.0.593.g511ec345e18-goog
 
-Ugh, so VM_BUG_ON() should really be named VM_BUILD_BUG_ON()?
-
-Anyway, agreed.
-
-> >> +static inline void put_flush_tlb_info(void)
-> >> +{
-> >> +#ifdef CONFIG_DEBUG_VM
-> >> +	/* Complete reentrency prevention checks */
-> >> +	barrier();
-> >> +	this_cpu_dec(flush_tlb_info_idx);
-> >> +#endif
-> > 
-> > In principle this_cpu_dec() should imply a compiler barrier?
-> 
-> this_cpu_dec() is eventually expanded to the macro of percpu_add_op(). And
-> the inline assembly does not have a “memory” clobber, so I don’t think so.
-
-I think that's a bug and PeterZ is fixing those.
-
-Thanks,
-
-	Ingo
