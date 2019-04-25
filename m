@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9006CC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F62C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E67D206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFB82146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:53:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gwNLFIBD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hnak5X4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387628AbfDYTxS (ORCPT
+        id S2387647AbfDYTxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:53:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46849 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387602AbfDYTxQ (ORCPT
+        Thu, 25 Apr 2019 15:53:19 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39688 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfDYTxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:53:16 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n2so346405pgg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:53:16 -0700 (PDT)
+        Thu, 25 Apr 2019 15:53:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l18so363277pgj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:53:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4lhsES5zrfmug+wtErL+IQRdyF1VD03Excx4/nk2IFg=;
-        b=gwNLFIBD7Wlzfx1grISAVu4PM/6mAnUJ3raeI1DsQCgo9cxK6BUfEdhsW6huBUZqMY
-         eyzBFsoEoHvoCD7+D2stG7psx3D/GJKWewnck0g6mQRId8LKle1QP7Pg839lD8zDlOzG
-         b48ZslCc7V6r8729eh/R1JFiog6JjBW+hCnTzEO3K98cidLQV4tmE4SEkVkFLoCskxlE
-         yZIL4orKRU4mD+y7Jc9+0IfIIPeHSOQa/BFFB/QNbP3s82jvXVtc1FGaq2R4TE8R3ogN
-         THphlqzFAtjWEw3UldGknPLKqJlkQXzyeRN2+TSZUx+MSSolI4ExnGVzWK4nkcWXLNMv
-         B7zQ==
+        bh=yUNxZtf++bgU2RFogSdv+irhpIUzYqSjyRPAcofgUZU=;
+        b=hnak5X4E/hZZbEFX99+vRgNXoePpmOAP923nVhGZ7MH9BwK2J14Eu3zuanxRnWdAOi
+         lLvSLt3sFv8303VxkTXhJsyX+hR31R2JHb3aYUGiWZaF9+QuobQ/bPNEKFofNuk7CAuS
+         l/a8BJCWVPsb21p6vIRXFkIBz1N4A1+VkhdkECnV8A0y1oEv9/PFFWNydd956Z43Tmlp
+         H7ydOFfEy34NovHwiea7/qn26y73dtLTRsmcoO9AOWBg0FT0H4lXj+LXVEumgg0NgJod
+         DZVHXhBeLaiIDiY3GHAFbMFjYPL82wgdvx6+uPKLJO6gPrhAybEeeXa6hX/wypQTvRPL
+         vHLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4lhsES5zrfmug+wtErL+IQRdyF1VD03Excx4/nk2IFg=;
-        b=L+PHMK42GiaZ0Hq8AUcmSoaIFf6v503HSXt9ngaD4G+rT6O9OnygNIZN3JjWHPe5c0
-         miUeYMDkKP/yLYc7lgJSesoYuuHcpyJRD4a9zhK5qEdfalg2/7OskLXwH89LBvSEVP7E
-         IKP1z74b+H4d53cxIk/wTZO4Y9JfBMqXjRRgNUuEj9/VcjGZBQCUEOsVoDA5YZHj4WWH
-         SOWQlVqjZTUF2M2gTYOAUPKsDZ60WfFIuH0mS/KpTTyiqqR0t2PwbbihJHoZ6JOFcRt6
-         UUtLHqrwIwjHg2/FsPPet1ASATySjs5jG/vcyPn6u9Bu1RCZ/Eq4K81Zp29KK4S/jHmE
-         QaBw==
-X-Gm-Message-State: APjAAAX2pNb2SW0F/ne5ZEs4ObSBsv1Zmp7FWgjdv8gI483FWLFBWC8I
-        F7L5OFkh8RF8LLNtmbny4SkLvw==
-X-Google-Smtp-Source: APXvYqxIq85rShwEMf71gOmVMzHLyIwyEa4wPFvXqxorDVVEcqqJ7ORNmcQm7r46wHJOLIx/YPNJ8A==
-X-Received: by 2002:aa7:8dc2:: with SMTP id j2mr3872589pfr.82.1556221996361;
-        Thu, 25 Apr 2019 12:53:16 -0700 (PDT)
+        bh=yUNxZtf++bgU2RFogSdv+irhpIUzYqSjyRPAcofgUZU=;
+        b=XGJgexlt0PTaCVdkaow+pRCWfBzBkAwn50rjIYt3VIS0ZegNYKzwZidRvrCaFLyUd4
+         Q462MDVeWaK95gXbtyHuvFfsiKa/XiIDxMwyqVNwbC480Ig1YM9LMRrLmqQjwMyRkadt
+         bpp272alLinnYE1qZgC8n/e5+Og61M9XkDfrg9oXkzqbDI8g9HQRv6AsGA+jnBirF/xp
+         azgsZpMey316Iocc72y4BdsLoNR/p29coZD/QcFOj7CFc61Z2lH2I2TNRkW/ySnRc/6i
+         cz/T41lb/3/GiJ7RkmJBiFTHUd2Z9SFxJln12DczRnPV4oPVWqRudltmKOZ9//f/Bs16
+         ahaQ==
+X-Gm-Message-State: APjAAAVBFDzx2Y280pHVzSV0zSbzrHYP5+PQsPRmkklsxePOCqH3bD62
+        SsGH7hXwgxCq+BpHUtM7BgtcYQ==
+X-Google-Smtp-Source: APXvYqyGJdz1zNDQLN0cTezZDdGJDMX4PbrZ0Plo9kjOOKOPowvgURVdeiHtsK1NLnblSVQHPY0foQ==
+X-Received: by 2002:a65:6659:: with SMTP id z25mr38915123pgv.10.1556221993963;
+        Thu, 25 Apr 2019 12:53:13 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id t64sm47261961pfa.86.2019.04.25.12.53.15
+        by smtp.gmail.com with ESMTPSA id t64sm47261961pfa.86.2019.04.25.12.53.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 12:53:15 -0700 (PDT)
+        Thu, 25 Apr 2019 12:53:13 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/32] coresight: tmc: Report DMA setup failures
-Date:   Thu, 25 Apr 2019 13:52:41 -0600
-Message-Id: <20190425195310.31562-4-mathieu.poirier@linaro.org>
+Subject: [PATCH 01/32] coresight: catu: fix clang build warning
+Date:   Thu, 25 Apr 2019 13:52:39 -0600
+Message-Id: <20190425195310.31562-2-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190425195310.31562-1-mathieu.poirier@linaro.org>
 References: <20190425195310.31562-1-mathieu.poirier@linaro.org>
@@ -69,43 +69,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-If we failed to setup the DMA mask for TMC-ETR, report the
-error before failing the probe.
+Clang points out a syntax error, as the etr_catu_buf_ops structure is
+declared 'static' before the type is known:
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+In file included from drivers/hwtracing/coresight/coresight-tmc-etr.c:12:
+drivers/hwtracing/coresight/coresight-catu.h:116:40: warning: tentative definition of variable with internal linkage has incomplete non-array type 'const struct etr_buf_operations' [-Wtentative-definition-incomplete-type]
+static const struct etr_buf_operations etr_catu_buf_ops;
+                                       ^
+drivers/hwtracing/coresight/coresight-catu.h:116:21: note: forward declaration of 'struct etr_buf_operations'
+static const struct etr_buf_operations etr_catu_buf_ops;
+
+This seems worth fixing in the code, so replace pointer to the empty
+constant structure with a NULL pointer. We need an extra NULL pointer
+check here, but the result should be better object code otherwise,
+avoiding the silly empty structure.
+
+Fixes: 434d611cddef ("coresight: catu: Plug in CATU as a backend for ETR buffer")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+[Fixed line over 80 characters]
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-catu.h    | 5 -----
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 5 +++--
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
-index 2a02da3d630f..647b6aa93554 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc.c
-@@ -340,6 +340,8 @@ static inline bool tmc_etr_can_use_sg(struct tmc_drvdata *drvdata)
- static int tmc_etr_setup_caps(struct tmc_drvdata *drvdata,
- 			     u32 devid, void *dev_caps)
- {
-+	int rc;
-+
- 	u32 dma_mask = 0;
- 
- 	/* Set the unadvertised capabilities */
-@@ -369,7 +371,10 @@ static int tmc_etr_setup_caps(struct tmc_drvdata *drvdata,
- 		dma_mask = 40;
- 	}
- 
--	return dma_set_mask_and_coherent(drvdata->dev, DMA_BIT_MASK(dma_mask));
-+	rc = dma_set_mask_and_coherent(drvdata->dev, DMA_BIT_MASK(dma_mask));
-+	if (rc)
-+		dev_err(drvdata->dev, "Failed to setup DMA mask: %d\n", rc);
-+	return rc;
+diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
+index 1b281f0dcccc..1d2ad183fd92 100644
+--- a/drivers/hwtracing/coresight/coresight-catu.h
++++ b/drivers/hwtracing/coresight/coresight-catu.h
+@@ -109,11 +109,6 @@ static inline bool coresight_is_catu_device(struct coresight_device *csdev)
+ 	return true;
  }
  
- static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+-#ifdef CONFIG_CORESIGHT_CATU
+ extern const struct etr_buf_operations etr_catu_buf_ops;
+-#else
+-/* Dummy declaration for the CATU ops */
+-static const struct etr_buf_operations etr_catu_buf_ops;
+-#endif
+ 
+ #endif
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index f684283890d3..cf7a32ce209d 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -772,7 +772,8 @@ static inline void tmc_etr_disable_catu(struct tmc_drvdata *drvdata)
+ static const struct etr_buf_operations *etr_buf_ops[] = {
+ 	[ETR_MODE_FLAT] = &etr_flat_buf_ops,
+ 	[ETR_MODE_ETR_SG] = &etr_sg_buf_ops,
+-	[ETR_MODE_CATU] = &etr_catu_buf_ops,
++	[ETR_MODE_CATU] = IS_ENABLED(CONFIG_CORESIGHT_CATU)
++						? &etr_catu_buf_ops : NULL,
+ };
+ 
+ static inline int tmc_etr_mode_alloc_buf(int mode,
+@@ -786,7 +787,7 @@ static inline int tmc_etr_mode_alloc_buf(int mode,
+ 	case ETR_MODE_FLAT:
+ 	case ETR_MODE_ETR_SG:
+ 	case ETR_MODE_CATU:
+-		if (etr_buf_ops[mode]->alloc)
++		if (etr_buf_ops[mode] && etr_buf_ops[mode]->alloc)
+ 			rc = etr_buf_ops[mode]->alloc(drvdata, etr_buf,
+ 						      node, pages);
+ 		if (!rc)
 -- 
 2.17.1
 
