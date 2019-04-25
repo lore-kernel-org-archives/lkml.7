@@ -3,99 +3,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA7AC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558A9C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9AF20678
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEA520678
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbfDYND4 (ORCPT
+        id S1729365AbfDYNEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 09:03:56 -0400
-Received: from mga06.intel.com ([134.134.136.31]:42337 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbfDYND4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 09:03:56 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 06:03:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,393,1549958400"; 
-   d="asc'?scan'208";a="226593208"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga001.jf.intel.com with ESMTP; 25 Apr 2019 06:03:53 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     "Zengtao \(B\)" <prime.zeng@hisilicon.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: RE: [PATCH] usb: dwc3: gadget: issue a stop command for ISOC endpoint
-In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED24E7D8F2@dggemm526-mbx.china.huawei.com>
-References: <1548064976-30196-1-git-send-email-prime.zeng@hisilicon.com> <87tvi2juh4.fsf@linux.intel.com> <678F3D1BB717D949B966B68EAEB446ED24E4CEE3@dggemm526-mbx.china.huawei.com> <87o98ajso9.fsf@linux.intel.com> <678F3D1BB717D949B966B68EAEB446ED24E7D8F2@dggemm526-mbx.china.huawei.com>
-Date:   Thu, 25 Apr 2019 16:03:49 +0300
-Message-ID: <878svys0cq.fsf@linux.intel.com>
+        Thu, 25 Apr 2019 09:04:33 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:59091 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfDYNEd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 09:04:33 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hJe2t-000626-P5; Thu, 25 Apr 2019 15:04:11 +0200
+Date:   Thu, 25 Apr 2019 15:04:10 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     David Laight <David.Laight@ACULAB.COM>
+cc:     'Fenghua Yu' <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: RE: [PATCH v8 13/15] x86/split_lock: Enable split lock detection by
+ default
+In-Reply-To: <551673e41ac649689243cbe060364b0d@AcuMS.aculab.com>
+Message-ID: <alpine.DEB.2.21.1904251501430.1960@nanos.tec.linutronix.de>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com> <1556134382-58814-14-git-send-email-fenghua.yu@intel.com> <762682ba43a0468897ff5ddbf6633d58@AcuMS.aculab.com> <alpine.DEB.2.21.1904251255590.1960@nanos.tec.linutronix.de>
+ <551673e41ac649689243cbe060364b0d@AcuMS.aculab.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Thu, 25 Apr 2019, David Laight wrote:
+> From: Thomas Gleixne]
+> > Sent: 25 April 2019 11:59
+> > On Thu, 25 Apr 2019, David Laight wrote:
+> > 
+> > > From:  Fenghua Yu
+> > > > Sent: 24 April 2019 20:33
+> > > > A split locked access locks bus and degrades overall memory access
+> > > > performance. When split lock detection feature is enumerated, enable
+> > > > the feature by default by writing 1 to bit 29 in MSR TEST_CTL to find
+> > > > any split lock issue.
+> > >
+> > > You can't enable this by default until ALL the known potentially
+> > > misaligned locked memory operations have been fixed.
+> > 
+> > Errm? The result will be a WARN_ON() printed and no further damage.
+> 
+> ISTR something about sending SIGSEGV to userspace.
 
+Nope. If the #AC originates from kernel then a warning is printed and the
+detection is disabled.
 
-(please, avoid top-posting)
+Userspace is a different story. We cannot audit all user space upfront,
+right?
 
-Hi,
+> > It's not making anything worse than it is now. In fact we just should add a
+> > 
+> >     WARN_ON_ONCE(!aligned_to_long(p)) to all the xxx_bit() operations.
+> > 
+> > so we catch them even when they do not trigger that #AC thingy.
+> 
+> That will explode the kernel code size.
 
-"Zengtao (B)" <prime.zeng@hisilicon.com> writes:
+So what? We have enough debug options which make the kernel big. One more
+does not really matter.
 
-> Hi balbi:
->
-> I got this issue in the UVC application, and I think this issue still exi=
-st in the=20
-> latest dwc3 driver.
->
-> And we should issue an stop command and the queue is empty when it's=20
-> ISOC transfer, otherwise we will end up with MISS ISOC error for all the=
-=20
-> upcoming transfers.
->
-> So I think you can test the UVC application with the latest driver.
+Thanks,
 
-right. Then what do I do? How do you load the driver, how do you start
-the application? When do you plug the cable?
-
-Please, provide exact steps so I can try to replicate the problem.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlzBsDUACgkQzL64meEa
-mQaZXBAAwKJa0FMOB7+f02bktLuU5i+vLrmTbXoojizgu3L18mKmhsv3H7oqSXFQ
-avSmiMrb1f/Wx0nYYAWC1m6U2l4ce13PjGHQNzUx6zdT/PrajxldDERsEZI+q8PE
-LU+7O0qxEUbLbuWCrwivbrOj4JKu9bZ0jTuJsvFgR5GgBc0uKudL+2jYXeoskDF3
-RxPMp3vxjMZfatS4EVK53bUlvf5g3ezYJ1uypcoGtSlVlRZXR3VFRD9LE7FJUpMd
-gLT6ujqb5PLCoSXblvU0zw+XlP/yL1SyZBXkNzM2Rqhal2qCMABphZtoDsJx1xME
-YEY6z6XaDPCK3u7oN0BGuzcuVWSeB9JSN+aIpU7Ga371lFz5h1PZyg0+FxlZCCri
-xsEnlNZTek0Rg9YqS4AH0lFZmmdFvsACg2qGiQis9GAzgl0BL2trETw/WImfR9gD
-Hl7QCILVTLIxnqu+YjXJZUTpqD3oHz/JePLGs5iiZFpwYKA/+eeMOchOtmdZ++nP
-csWZVjOSOWBBNclIeXR52/UN6J1dEd3qy/vX8wACF+Dabv6Juy4hZF3M15Rynv+X
-KuC0E3HN4r0C5XH3iYPWSjiUfcKF7LsG0y5FlTiYR0SGyM53Q1Ft3s62TEZVqwCD
-g7b7v/EiLwcNqge/+kZs1Q9330DzVdkTOb4Etlxz6p5h3BcSXpw=
-=ye3h
------END PGP SIGNATURE-----
---=-=-=--
+	tglx
