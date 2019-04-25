@@ -2,209 +2,84 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A5DC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28E6C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B322084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:31:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jdEaSoZL"
+	by mail.kernel.org (Postfix) with ESMTP id 14711206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbfDYPbm (ORCPT
+        id S1729264AbfDYPbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:31:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46464 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfDYPbl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:31:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n2so10028pgg.13;
+        Thu, 25 Apr 2019 11:31:47 -0400
+Received: from foss.arm.com ([217.140.101.70]:46574 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbfDYPbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 11:31:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B20D4A78;
+        Thu, 25 Apr 2019 08:31:45 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAC243F557;
         Thu, 25 Apr 2019 08:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=V9nzDmKVs6B2fvIsmgDPfkl3yh4fpAvQzb9wSqlneGU=;
-        b=jdEaSoZLj73TAFcApF7rENFfh01EaZJ0MNw6sKz8qO15YAR2btCXKvoiH1ROxCGsmb
-         LOjTQbz38X/Ftk6b4J/+ARuHkYBbKB5BnqRTU39PzG+B6msfh55wIGebHkA9y8pYfKu4
-         72rC5xAyZd89c0tOIx+kSIt3oPYnMECIjaLg1n02H2oHHqb/NTUIybYqAQVNn1aqZ0GF
-         BF6zEoDnbSA8lMewxePuT7QCf2njcJKBoj1YCO6yn9hb4T3nKoHtuCS0vuKkylh8B+uF
-         vpwNnGtVMAww5FJ0RY3PEh83mNV4QKwPOVG4U5rHqDrPowmSWBIo/hH8b5WGpgryg2sa
-         uzCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=V9nzDmKVs6B2fvIsmgDPfkl3yh4fpAvQzb9wSqlneGU=;
-        b=bQTqMJfSzI2EjffFz6/tby9Wk4vQ4Cyo2wudkYv8/yXNuOLyov4zYo3MLRw/IWfcFu
-         ImYdRO18hXwIgN3+qcCXsPL0K8R+RMIGHtFrKvAqGJeGK53oIyaAEgBZHUeSee1bRfA5
-         0qn9O8JUw1JvDV0F2TbAtYw99kdfKBIBFgLiB4LW6rTxtf4Nkn+I/OydaBkZ70VCZgKo
-         vohsk6PH8tjhIG79QIrRWHs6B7LSW91l542iTBJ+U05GdVgB1hPsDrSjRr7ftKGHovm9
-         Qc4rbjuaU6BPPcaqFqPBJ3sYtwvRtlbKvci+u8EneU0J1nb+PmJaXr5wdOGb+A0PojKS
-         cEGA==
-X-Gm-Message-State: APjAAAXJm/V6wQGrqI63Oy+Bwh2N0ycjupcahucMiOUljZBv0ROL8j6p
-        0U5Zd7WJ3k/dgQ6Jt4MGUC4=
-X-Google-Smtp-Source: APXvYqzFTgC2Jvs/yOKKDftQRRa8InUlkgNmWcPljHcVsijce2GVeWByOsQVXdkq/P8gVAE9yeSpqw==
-X-Received: by 2002:a63:5d44:: with SMTP id o4mr37785200pgm.15.1556206300285;
-        Thu, 25 Apr 2019 08:31:40 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id c14sm2643363pgj.94.2019.04.25.08.31.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 08:31:39 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     rjw@rjwysocki.net, Jonathan Corbet <corbet@lwn.net>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 01/24] Documentation: add Linux ACPI to Sphinx TOC tree
-Date:   Thu, 25 Apr 2019 23:30:54 +0800
-Message-Id: <20190425153117.16057-2-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190425153117.16057-1-changbin.du@gmail.com>
-References: <20190425153117.16057-1-changbin.du@gmail.com>
+Date:   Thu, 25 Apr 2019 16:31:38 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
+        sashal@kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        akpm@linux-foundation.org, dave.hansen@linux.intel.com,
+        dan.j.williams@intel.com, keith.busch@intel.com,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
+        thomas.lendacky@amd.com, ying.huang@intel.com,
+        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
+        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com,
+        catalin.marinas@arm.com, rppt@linux.vnet.ibm.com,
+        ard.biesheuvel@linaro.org, andrew.murray@arm.com,
+        james.morse@arm.com, marc.zyngier@arm.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: configurable sparsemem section size
+Message-ID: <20190425153138.GC25193@fuggles.cambridge.arm.com>
+References: <20190423203843.2898-1-pasha.tatashin@soleen.com>
+ <20190425152550.GY12751@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425152550.GY12751@dhcp22.suse.cz>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add below index.rst files for ACPI subsystem. More docs will be added later.
-  o admin-guide/acpi/index.rst
-  o driver-api/acpi/index.rst
-  o firmware-guide/index.rst
+On Thu, Apr 25, 2019 at 05:25:50PM +0200, Michal Hocko wrote:
+> On Tue 23-04-19 16:38:43, Pavel Tatashin wrote:
+> > sparsemem section size determines the maximum size and alignment that
+> > is allowed to offline/online memory block. The bigger the size the less
+> > the clutter in /sys/devices/system/memory/*. On the other hand, however,
+> > there is less flexability in what granules of memory can be added and
+> > removed.
+> > 
+> > Recently, it was enabled in Linux to hotadd persistent memory that
+> > can be either real NV device, or reserved from regular System RAM
+> > and has identity of devdax.
+> > 
+> > The problem is that because ARM64's section size is 1G, and devdax must
+> > have 2M label section, the first 1G is always missed when device is
+> > attached, because it is not 1G aligned.
+> > 
+> > Allow, better flexibility by making section size configurable.
+> 
+> Is there any inherent reason (64k page size?) that enforces such a large
+> memsection?
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/admin-guide/acpi/index.rst    | 10 ++++++++++
- Documentation/admin-guide/index.rst         |  1 +
- Documentation/driver-api/acpi/index.rst     |  7 +++++++
- Documentation/driver-api/index.rst          |  1 +
- Documentation/firmware-guide/acpi/index.rst |  9 +++++++++
- Documentation/firmware-guide/index.rst      | 13 +++++++++++++
- Documentation/index.rst                     | 10 ++++++++++
- 7 files changed, 51 insertions(+)
- create mode 100644 Documentation/admin-guide/acpi/index.rst
- create mode 100644 Documentation/driver-api/acpi/index.rst
- create mode 100644 Documentation/firmware-guide/acpi/index.rst
- create mode 100644 Documentation/firmware-guide/index.rst
+I gave *vague* memories of running out of bits in the page flags if we
+changed this, but that was a while back. If that's no longer the case,
+then I'm open to changing the value, but I really don't want to expose
+it as a Kconfig option as proposed in this patch. People won't have a
+clue what to set and it doesn't help at all with the single-Image effort.
 
-diff --git a/Documentation/admin-guide/acpi/index.rst b/Documentation/admin-guide/acpi/index.rst
-new file mode 100644
-index 000000000000..3e041206089d
---- /dev/null
-+++ b/Documentation/admin-guide/acpi/index.rst
-@@ -0,0 +1,10 @@
-+============
-+ACPI Support
-+============
-+
-+Here we document in detail how to interact with various mechanisms in
-+the Linux ACPI support.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 0a491676685e..5b8286fdd91b 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -77,6 +77,7 @@ configure specific aspects of kernel behavior to your liking.
-    LSM/index
-    mm/index
-    perf-security
-+   acpi/index
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/driver-api/acpi/index.rst b/Documentation/driver-api/acpi/index.rst
-new file mode 100644
-index 000000000000..898b0c60671a
---- /dev/null
-+++ b/Documentation/driver-api/acpi/index.rst
-@@ -0,0 +1,7 @@
-+============
-+ACPI Support
-+============
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index c0b600ed9961..aa87075c7846 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -56,6 +56,7 @@ available subsections can be seen below.
-    slimbus
-    soundwire/index
-    fpga/index
-+   acpi/index
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-new file mode 100644
-index 000000000000..0ec7d072ba22
---- /dev/null
-+++ b/Documentation/firmware-guide/acpi/index.rst
-@@ -0,0 +1,9 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+============
-+ACPI Support
-+============
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-diff --git a/Documentation/firmware-guide/index.rst b/Documentation/firmware-guide/index.rst
-new file mode 100644
-index 000000000000..5355784ca0a2
---- /dev/null
-+++ b/Documentation/firmware-guide/index.rst
-@@ -0,0 +1,13 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============================
-+The Linux kernel firmware guide
-+===============================
-+
-+This section describes the ACPI subsystem in Linux from firmware perspective.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   acpi/index
-+
-diff --git a/Documentation/index.rst b/Documentation/index.rst
-index 80a421cb935e..fdfa85c56a50 100644
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-@@ -35,6 +35,16 @@ trying to get it to work optimally on a given system.
- 
-    admin-guide/index
- 
-+Firmware-related documentation
-+------------------------------
-+The following holds information on the kernel's expectations regarding the
-+platform firmwares.
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   firmware-guide/index
-+
- Application-developer documentation
- -----------------------------------
- 
--- 
-2.20.1
-
+Will
