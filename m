@@ -2,150 +2,100 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EF7C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B070EC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A5F218AD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:15:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNiyrxKK"
+	by mail.kernel.org (Postfix) with ESMTP id 87B1F2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388836AbfDYDPW (ORCPT
+        id S2388873AbfDYDSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 23:15:22 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40739 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388178AbfDYDPV (ORCPT
+        Wed, 24 Apr 2019 23:18:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39738 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388178AbfDYDSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 23:15:21 -0400
-Received: by mail-lf1-f68.google.com with SMTP id o16so5507296lfl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 20:15:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o+Wa4CNacz7cfEZTyoG1CeJ1cikij3QMnhVi8x3t1b4=;
-        b=GNiyrxKKAUbGnY0S3nMtyLScCEyeMDRpLrWTHw3KPXvI87ij64s6qVx5om9C028UFo
-         cJFuVJ9TlMYwKiJJSa40XpZhr8QLAneXn/k+pIi1bqlrYksvUyc4BgQjxDRhyu9UrUEH
-         Pl8mWFxfnK3pjWR1SA2vdtVQQ1XLEfOHUCMvO2EDk6AHWqORDhX4NOgMafnohxr2XGH6
-         vaGmOmhrwZn9A9HTDaarH95m9hvVUaNmONHB1Ma10WL8ji7sc6TP0hARvj9z+ElMWjJt
-         Eh4NWAe2HAK8FQKPPrKoFnFOC2w5mFPTCp4vpYCMJ8VY2rdXARFmFkum3bG+sLPIWH0G
-         BAFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o+Wa4CNacz7cfEZTyoG1CeJ1cikij3QMnhVi8x3t1b4=;
-        b=PmIFtE1cJjlLjjq0L+TddnlibeumnPJabJpHK5kZEjbHN0Z09LNYxWdSI+a7ABTM8d
-         Mt48TThMRgcLInmm/iBrMJmJ7lVzvjAnyUdd0P2G+GOhe5vyuZcrYQSX8utrRdsbnmGc
-         GbWGsazyZiy0mpENnC+qhMhTY76XbnXNuLE9mLUj6Ax4//0UPb8xGd9GY3IuDy84FUrM
-         4hS67kT3pLlEB0uIlD/T+88dfMDKKyuPN2/5jfj2AtGur10OFLRq41H1BQ1olqQNa3Ry
-         xYFsjF5hCWnJra+VD6AD+D09lC8L6K+ps439nRiiitGdAVADNLlNXbDuH7uuyF9r38u9
-         vmuQ==
-X-Gm-Message-State: APjAAAUusmWG+Ug5Ly1PKAupc+TcwJ3qZTrPJMeKMPh57DxNcR3jjJT3
-        QdYqZb6xim8eLxGu27m48ef00N8Yw2uoKqdV+k0=
-X-Google-Smtp-Source: APXvYqyXMTforawxalfSCSNARq8MGn6MektaSYGL0hZr13LCTqTzU7qeyJA5fGfJBM/JpE22d2b7B+2jNNsgM2u/wKs=
-X-Received: by 2002:a19:c113:: with SMTP id r19mr19471920lff.64.1556162119935;
- Wed, 24 Apr 2019 20:15:19 -0700 (PDT)
+        Wed, 24 Apr 2019 23:18:45 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3P394eo146998
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 23:18:44 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s31bd72k6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 23:18:44 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Thu, 25 Apr 2019 04:18:42 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Apr 2019 04:18:40 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3P3IcIV49676478
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Apr 2019 03:18:39 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B978A52054;
+        Thu, 25 Apr 2019 03:18:38 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.124.31.152])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 867335205F;
+        Thu, 25 Apr 2019 03:18:37 +0000 (GMT)
+Date:   Thu, 25 Apr 2019 08:48:32 +0530
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] livepatch: Convert error about unsupported reliable
+ stacktrace into a warning
+References: <20190424085550.29612-1-pmladek@suse.com>
+ <20190424085550.29612-2-pmladek@suse.com>
 MIME-Version: 1.0
-References: <cover.1556025155.git.vpillai@digitalocean.com>
- <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com> <20190424140013.GA14594@sinkpad>
-In-Reply-To: <20190424140013.GA14594@sinkpad>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Thu, 25 Apr 2019 11:15:08 +0800
-Message-ID: <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-To:     Julien Desfossez <jdesfossez@digitalocean.com>
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424085550.29612-2-pmladek@suse.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-TM-AS-GCONF: 00
+x-cbid: 19042503-0012-0000-0000-00000313E92A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042503-0013-0000-0000-0000214C40D6
+Message-Id: <20190425031832.GA24416@JAVRIS.in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=974 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904250020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:00 PM Julien Desfossez
-<jdesfossez@digitalocean.com> wrote:
->
-> On 24-Apr-2019 09:13:10 PM, Aubrey Li wrote:
-> > On Wed, Apr 24, 2019 at 12:18 AM Vineeth Remanan Pillai
-> > <vpillai@digitalocean.com> wrote:
-> > >
-> > > Second iteration of the core-scheduling feature.
-> > >
-> > > This version fixes apparent bugs and performance issues in v1. This
-> > > doesn't fully address the issue of core sharing between processes
-> > > with different tags. Core sharing still happens 1% to 5% of the time
-> > > based on the nature of workload and timing of the runnable processes.
-> > >
-> > > Changes in v2
-> > > -------------
-> > > - rebased on mainline commit: 6d906f99817951e2257d577656899da02bb33105
-> >
-> > Thanks to post v2, based on this version, here is my benchmarks result.
-> >
-> > Environment setup
-> > --------------------------
-> > Skylake server, 2 numa nodes, 104 CPUs (HT on)
-> > cgroup1 workload, sysbench (CPU intensive non AVX workload)
-> > cgroup2 workload, gemmbench (AVX512 workload)
-> >
-> > Case 1: task number < CPU num
-> > --------------------------------------------
-> > 36 sysbench threads in cgroup1
-> > 36 gemmbench threads in cgroup2
-> >
-> > core sched off:
-> > - sysbench 95th percentile latency(ms): avg = 4.952, stddev = 0.55342
-> > core sched on:
-> > - sysbench 95th percentile latency(ms): avg = 3.549, stddev = 0.04449
-> >
-> > Due to core cookie matching, sysbench tasks won't be affect by AVX512
-> > tasks, latency has ~28% improvement!!!
-> >
-> > Case 2: task number > CPU number
-> > -------------------------------------------------
-> > 72 sysbench threads in cgroup1
-> > 72 gemmbench threads in cgroup2
-> >
-> > core sched off:
-> > - sysbench 95th percentile latency(ms): avg = 11.914, stddev = 3.259
-> > core sched on:
-> > - sysbench 95th percentile latency(ms): avg = 13.289, stddev = 4.863
-> >
-> > So not only power, now security and performance is a pair of contradictions.
-> > Due to core cookie not matching and forced idle introduced, latency has ~12%
-> > regression.
-> >
-> > Any comments?
->
-> Would it be possible to post the results with HT off as well ?
+On Wed, Apr 24, 2019 at 10:55:48AM +0200, Petr Mladek wrote:
+> The commit d0807da78e11d46f ("livepatch: Remove immediate feature") caused
+> that any livepatch was refused when reliable stacktraces were not supported
+> on the given architecture.
+> 
+> The limitation is too strong. User space processes are safely migrated
+> even when entering or leaving the kernel. Kthreads transition would
+> need to get forced. But it is safe when:
+> 
+>    + The livepatch does not change the semantic of the code.
+>    + Callbacks do not depend on a safely finished transition.
+> 
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
 
-What's the point here to turn HT off? The latency is sensitive to the
-relationship
-between the task number and CPU number. Usually less CPU number, more run
-queue wait time, and worse result.
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 
-Thanks,
--Aubrey
+-- 
+Kamalesh
+
