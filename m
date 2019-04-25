@@ -2,96 +2,85 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897BEC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC858C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D6420693
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58AE420693
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:39:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9aDpb17"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iHK8fTJU";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IWtuMgT0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbfDYQix (ORCPT
+        id S1729350AbfDYQjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:38:53 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46766 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfDYQiv (ORCPT
+        Thu, 25 Apr 2019 12:39:12 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52682 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727147AbfDYQjM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:38:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j11so161448pff.13;
-        Thu, 25 Apr 2019 09:38:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AiihT23zrdWbLxtOhD2zbMQi6WAGbAToxZ3mdyPDSlg=;
-        b=r9aDpb17lhE+Me7t3jhKPyYKwgQgmA9MyZaHuZ3swOmntC2qxh6EiL+sYXxf4gUVdg
-         rkSXZxbSNyQrT3flDP2QpBBugkHxsCsXkzsISY8nwWvRVLpNvYpE9XOnk6qWrFSYOAdp
-         FQE8pI3S1zJHsHPjnuhJbptmAvVz0VdVjnwHmgV0YQBuaeuvrL0NtT57KdUx2yESS1gU
-         2ZY5AYSQ6dez7RlXEXRokIqDOLVw/YPYfl2L3Jez+fEsdHbiw+0QrGwcbK7El8ugwzUg
-         LV/WyjNLQ9auqvMfMHnUbWTDBX+UTEjoc/e3i06iYDIS6HyrCWpFHdsIt9KP7iuM+JKj
-         zIAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AiihT23zrdWbLxtOhD2zbMQi6WAGbAToxZ3mdyPDSlg=;
-        b=dKqA4j28ShINGDzWQo9eS52jjqdB8x5kNAvIg9o5ekmkzml5G1P7xFLoonn63BLrce
-         2R5B7GiiVtx3qrQcE3j6VuAhnjkAmxgfMvQ51zi8uzUHS1ygM9B35+zc81bGJzUyBOUf
-         rUvU3iVN95kBcujEqrng9IAjk+OJIIDRa/n2YHwgBf3ZQ9VRRJoTVfcls12oz90gfWUV
-         R6ZNf5xZMTf72ySXbSoLl7hjraD5FMmsuyIMH2VMcFnYGUGmdDElReJ/xEirfsVpysms
-         ylLacXEytvHF0yNj5LLalnhnpx3eDrxPpudkF9sPw40FPEUNLHQltl+pf9LxcdUb9GG2
-         mmRw==
-X-Gm-Message-State: APjAAAVvhQH3YqQSnSIByOsyP5WCDsHxOfAmv+fDq7oit8cdC8fzGXSr
-        9q+EW983AiFBrdjgcCs4/14=
-X-Google-Smtp-Source: APXvYqza05uZ5mX33BSzQt/7WKwFR/uljCuiM7elW4pTsMT/SY/DGUMeVz0kjHUPhg1+tS37gIZ7kg==
-X-Received: by 2002:a63:ee15:: with SMTP id e21mr9189831pgi.180.1556210330178;
-        Thu, 25 Apr 2019 09:38:50 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id k186sm42003053pfc.137.2019.04.25.09.38.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 09:38:49 -0700 (PDT)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gwink@chromium.org
-Subject: [PATCH 1/2] Input: add KEY_KBD_LAYOUT_NEXT
-Date:   Thu, 25 Apr 2019 09:38:45 -0700
-Message-Id: <20190425163846.51730-1-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+        Thu, 25 Apr 2019 12:39:12 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 18E2360736; Thu, 25 Apr 2019 16:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556210351;
+        bh=PZpQLBcyzlZ7DgLRWE9xhgSQNiMv2360fySLfO+mGDM=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=iHK8fTJUic5vgvxla3EDi+Sq6sVO/sAhitlsAKxahQWSgn9d0ybc6HdVZ2JP8NYMS
+         ewa2e9bWjTRPXv0D/w6SR2cdAvqK/kvkzO5sR0pnd23A0wBaBpJgP30jspX3Kr9Feg
+         MFKucAC186a4Rzz6lAE8r/n56J8Oc0wPg4escjog=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28FA2601B4;
+        Thu, 25 Apr 2019 16:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556210350;
+        bh=PZpQLBcyzlZ7DgLRWE9xhgSQNiMv2360fySLfO+mGDM=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=IWtuMgT01qgiSjIh4X0ETWqyaBB8dKKwxh7T/eN8sKdYcWntD8lL0op1U1/nJJ1Ew
+         xiEmUVFhJ8WSLI09+VBq/vttwkIEHTiYaiXNgFfYAtj2Nr0Z/2MwotBUKeNvz6zfcf
+         pJ1YUrTympQ8ZdCRSmQEIkmG9tH0CoArWzmChGBA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28FA2601B4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ray_cs: use remove_proc_subtree to simplify procfs code
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190306114812.30480-1-yuehaibing@huawei.com>
+References: <20190306114812.30480-1-yuehaibing@huawei.com>
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190425163911.18E2360736@smtp.codeaurora.org>
+Date:   Thu, 25 Apr 2019 16:39:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HID usage tables define a key to cycle through a set of keyboard
-layouts, let's add corresponding keycode.
+Yue Haibing <yuehaibing@huawei.com> wrote:
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- include/uapi/linux/input-event-codes.h | 1 +
- 1 file changed, 1 insertion(+)
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> Use remove_proc_subtree to remove the whole subtree
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-index 64cee116928e..85387c76c24f 100644
---- a/include/uapi/linux/input-event-codes.h
-+++ b/include/uapi/linux/input-event-codes.h
-@@ -606,6 +606,7 @@
- #define KEY_SCREENSAVER		0x245	/* AL Screen Saver */
- #define KEY_VOICECOMMAND		0x246	/* Listening Voice Command */
- #define KEY_ASSISTANT		0x247	/* AL Context-aware desktop assistant */
-+#define KEY_KBD_LAYOUT_NEXT	0x248	/* AC Next Keyboard Layout Select */
- 
- #define KEY_BRIGHTNESS_MIN		0x250	/* Set Brightness to Minimum */
- #define KEY_BRIGHTNESS_MAX		0x251	/* Set Brightness to Maximum */
+Patch applied to wireless-drivers-next.git, thanks.
+
+3b6edcb3fffe ray_cs: use remove_proc_subtree to simplify procfs code
+
 -- 
-2.21.0.593.g511ec345e18-goog
+https://patchwork.kernel.org/patch/10840991/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
