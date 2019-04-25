@@ -2,106 +2,126 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB910C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8CBC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD6420717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BA520717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="H7Bd7bG1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hf+Bkb9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbfDYSvu (ORCPT
+        id S1729652AbfDYSwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:51:50 -0400
-Received: from mail-ed1-f43.google.com ([209.85.208.43]:39576 "EHLO
-        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfDYSvt (ORCPT
+        Thu, 25 Apr 2019 14:52:00 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41203 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfDYSwA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:51:49 -0400
-Received: by mail-ed1-f43.google.com with SMTP id k45so810902edb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:51:48 -0700 (PDT)
+        Thu, 25 Apr 2019 14:52:00 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c12so796056wrt.8;
+        Thu, 25 Apr 2019 11:51:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b55P2IFv2UpxlgvURrxCcFTUbkVb37FoCTfo/TcEgTE=;
-        b=H7Bd7bG1fJeV3A7INUqsw/yC6Tcx2LmSaWfrxZGHChZtX9HVJ7LWkiMwAStQzY1A6C
-         e24kQ8YYbrhBrBPegRC0b9Le06WH/iz/3/Tb9vPHtsQSfj/7EC6gZ+JFDVIQQAlBndJo
-         NIJQBoajtzB8lRybkTxj5S/QajeNkN6FOkAIsnrct7YcTs9idIKsQd2EZD0LinOY1wPR
-         ketwMV/wqOn8l22PoVtns2mz+U6LYkCkn02WCKWghRaCrl1nL+81/ToLl4nmbcTdxoLN
-         /medWc+TUcgxQAQvDM7+8Vz9OFaSYGcHjgAa1VBRCMiEYYOVhIQ+mOykud+6mW8u+/SI
-         yPVQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7iwea6UpuDboaEVy8ociq8XRsqFyNOF/vHgsyWf4dgA=;
+        b=hf+Bkb9m8NLLL5hDqFic7RZEANH+j98J5H9UgtXBds6WNIi+3sv+i5a1DfD5hSePIZ
+         RBeFDoguz1UB8ufC1Vo7jdxoWKmyWKx8+8ocv5lsn5Kbz93rInJM4ICVRzDkdBGnigLz
+         86DhRkl3Fp0MZydkTnkJwr6pp2v5I2AMIzJbRq4Wilo44ypjb8pAvUJ6j37Fml1UK0mi
+         g+PwdRFNCdgC0bnBxuK+H6LGrx2xdBB2GKvnHZSUPSUO5QKesxIaRDz5lbMMT1a8IOlH
+         zwPY+IVZG1hab7QNqpsOasSR4Ik5TabJPYpVkDZgEo8fw2eNRfzWeS7vcpbfYQEMLu4g
+         SW0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b55P2IFv2UpxlgvURrxCcFTUbkVb37FoCTfo/TcEgTE=;
-        b=hZOB5czyFRvfMFhD06jHP5gZ9CmYXNU1R7UilrtiFXM8r6vDucTsA5wfzxSw5eS9VX
-         VbnLNTXcmabKFJtKmxAZXooIaT+uzH5QBZJD2OZAb+h3yCRCPhxa2Mw3hUCaxm9Sv9VH
-         fwgZpU1dXpa90awRdpZLA694X9BEolcZ2XwQJ2zsNIipCgD68VIVSVkRCTiawtHpz4kI
-         L2PSNe+z1V/ecmPJSi4qsMqA5g2UjjOFhv3/Rx16MkKTNOZr6LElpctGrxjKvkuR5YMu
-         TF1TsxxdFNLJtcT0fU6imtI3RHaKYv6s1ksCVkvxwqpapALUz/Aa78kTZl5W/9MwCDTz
-         3APA==
-X-Gm-Message-State: APjAAAWCcrjiQvz1hDK7cGYkg04qD+8GeNVdMkYhYMiBDbHHCewxjqD4
-        TlkFzEvcWaHt7drTjhx4+0DNizl+c7RfvzMbUcLmiQ==
-X-Google-Smtp-Source: APXvYqxfNCds1kl6313Ad4+cJxM/dXtmhN6kZ83GGVN0OsY6b4YD/uFBtltwpNCLN5C76jVxd/HWZ8/Eth051yXAoBU=
-X-Received: by 2002:aa7:cf8f:: with SMTP id z15mr22750446edx.190.1556218307805;
- Thu, 25 Apr 2019 11:51:47 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7iwea6UpuDboaEVy8ociq8XRsqFyNOF/vHgsyWf4dgA=;
+        b=Y4iV+Ah+vIhoPKzuynX/lox0nUGaIQUrlrQnXKpfFWQfyuc5P+9db0tMCDcpOwMCIw
+         34utTDUc+t/AO5WcH4xCx348DGc/3D9gflmuS/XV4ZqsA4Syyzin9FIqzBLoGgUf4vfX
+         gBdXrOkf3Vh7t8hZyMQvGfqayTVUdwdWFHEkd8p8Hn2+uNsePJAc/LPBuFgscuToqt8W
+         2aNhUlnWwCimmdeR4N5rgQaLP2rDn3XoDjJMKBFsZM2tj8S6s30tTczCA9i70dLhyfwG
+         3DG+cl7ypi0+k/gsQ0GJe0KkVQxMh8DLnhzSozq+GsWyGRROy8awSvShe2aRXfuJRpT4
+         9sJg==
+X-Gm-Message-State: APjAAAVyCkOoiNL89h+sT2LvjfvfWtRoWyVD4qAJnI/C/jHSy2xwXGlS
+        DemXhPO3I62nD0khw7hPgz2nOA9zpG0=
+X-Google-Smtp-Source: APXvYqwl8aW+j/Xkj+Gx8Ipsa3ilMij5r6HrE5jIYGEt99797Zu3dLk4pCcbW/s4Pg8n8gaY2Kvqlg==
+X-Received: by 2002:a5d:5308:: with SMTP id e8mr27774863wrv.126.1556218318295;
+        Thu, 25 Apr 2019 11:51:58 -0700 (PDT)
+Received: from [192.168.20.141] ([194.99.104.18])
+        by smtp.gmail.com with ESMTPSA id c2sm21286136wrr.13.2019.04.25.11.51.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 11:51:57 -0700 (PDT)
+Subject: Re: [PATCH v3 08/11] platform/x86: asus-wmi: Enhance detection of
+ thermal data
+To:     "Pawnikar, Sumeet R" <sumeet.r.pawnikar@intel.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        "acpi4asus-user@lists.sourceforge.net" 
+        <acpi4asus-user@lists.sourceforge.net>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+ <7595c4f0-3dbb-2fe5-4daf-4b9a266f67d7@gmail.com>
+ <3C3E65E75D9910479323816378A812E7414CDE12@BGSMSX104.gar.corp.intel.com>
+From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Message-ID: <a5d5f899-d218-b581-b187-f783759b6afa@gmail.com>
+Date:   Thu, 25 Apr 2019 20:51:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190425175440.9354-1-pasha.tatashin@soleen.com>
- <20190425175440.9354-2-pasha.tatashin@soleen.com> <67dba1e2-155c-f572-81dd-a6d589d0e8a5@intel.com>
-In-Reply-To: <67dba1e2-155c-f572-81dd-a6d589d0e8a5@intel.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 25 Apr 2019 14:51:37 -0400
-Message-ID: <CA+CK2bC5G0DrBpHuaV5xrAAZUKHVwN2N++eiV++SH2gvvbKGHA@mail.gmail.com>
-Subject: Re: [v3 1/2] device-dax: fix memory and resource leak if hotplug fails
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3C3E65E75D9910479323816378A812E7414CDE12@BGSMSX104.gar.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 2:32 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 4/25/19 10:54 AM, Pavel Tatashin wrote:
-> >       rc = add_memory(numa_node, new_res->start, resource_size(new_res));
-> > -     if (rc)
-> > +     if (rc) {
-> > +             release_resource(new_res);
-> > +             kfree(new_res);
-> >               return rc;
-> > +     }
->
-> Looks good to me:
->
-> Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+On 24.04.19 20:25, Pawnikar, Sumeet R wrote:
+>> +	/*
+>> +	 * If the temperature value in deci-Kelvin is near the absolute
+>> +	 * zero temperature, something is clearly wrong.
+>> +	 */
+>> +	if (!value || value == 1)
+>> +		return 0;
+> Do you still need to return 0 in case of wrong/failure case ? 
+> Shouldn't you return error here ? 
 
-Thank you Dave.
+Yes, I think 0 is right there, it's not an error condition in the check
+itself (such as IO or memory error). The function returns two values: check
+result in asus->asus_hwmon_thermal_available and error code.
 
-Pasha
+This is still a successful negative result. The 0 or 1 (as added in this
+patch) there merely indicates that the temperature measurement is not
+available this way. It is safe to assume that no device that does provide
+temperature will return 0.1 K. The temperature measurement is not critical
+for driver operation so the driver proceeds without it.
+
+One could return ENODEV when the check result is negative, but that would
+just move the actual check and assignment further to asus_wmi_fan_init.
+
+This is how it might look like in DSDT in this case:
+Method (TMPR, 0, NotSerialized)
+{
+    Return (One)
+}
+..
+If ((IIA0 == 0x00110011))
+{
+    Return ((TMPR () & 0xFFFF))
+}
+
+This is indeed the right method ID but it's nothing there.
+
+Regards,
+Yurii
