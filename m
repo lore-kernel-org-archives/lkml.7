@@ -2,220 +2,74 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A5EC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784D3C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12E4217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CE72218AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:45:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EDS0NaQv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l6kubrtF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731009AbfDYLmL (ORCPT
+        id S1728347AbfDYLpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:42:11 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:58594 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730995AbfDYLmL (ORCPT
+        Thu, 25 Apr 2019 07:45:09 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50364 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728096AbfDYLpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:42:11 -0400
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x3PBfl5j010199
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 20:41:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x3PBfl5j010199
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556192508;
-        bh=PEyKvsigasIphtxPTOs11OBqRzrk+f+qGvaXFUVQNmM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EDS0NaQv5qxdGGpird/IXTdlEtKmdeKDKe7yOI06L1uyu3aCxA8x7ie4fx5khj7PZ
-         I575DpT1BvFGZ76ZCXmZkFCQFAkAz2YSg+4u8KUGRQ6nsI2lic9rQwOah//IBXDIuG
-         OCzaaHl8RvcAwByHs+DqVgv+gq2r/YpOYrv0ob1fuLTyPbMIAiTKg7PzfIcalby86r
-         AkMGXZKBlhzjAU2Yf+XsL/L7n4b/OZ20r31iJyXiLxqKXAK782fPHCPZWOOZFEsLmZ
-         MTTu58P9CPyV8aFvwQcQQhhv41xf12AnYppz6hfPQ6hLGxNd5xExXvUQJYu5+032fn
-         MyyeKUa5mCdiQ==
-X-Nifty-SrcIP: [209.85.222.53]
-Received: by mail-ua1-f53.google.com with SMTP id n16so7116518uae.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 04:41:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAWr06bBWdl/jsXdeQ5Mh+Ctx4NDrG0zAtsVWladknmiJ1Z1vx6U
-        Igq7LexDL+xIg4pibSbUMZqzamC49dUG0NO4U2I=
-X-Google-Smtp-Source: APXvYqzzXr6YqxV2J2i5qCTMKVmisezKDg4sPv7s/6K6MSd4kzvPbk/pPJD/P/VbM1o/vWUdRE4d4iqfWvo4avU+MfI=
-X-Received: by 2002:ab0:7493:: with SMTP id n19mr6200372uap.121.1556192506815;
- Thu, 25 Apr 2019 04:41:46 -0700 (PDT)
+        Thu, 25 Apr 2019 07:45:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PXW0zjc+QZqqxwY4xge6SlA/EvH1F7LJxeuc7zi905k=; b=l6kubrtFR18S/OM1Bxe2uBnlR
+        6hCy2qQgNuLbnsYBpgKX8VZTKMu+anTJcrkMFXGKRxjLbxsJ2w9GzNuLCPqGLZae7D30PJlIphspn
+        RxuWpNknHeM3D/jbVYEaPTfJo6ztIVDsMG713lPJ6rD4i65l2EeKo91EICbJwWJ+/DBUSFrTIjUYR
+        JVcrL5MBxnruvEbHN3oi3G/jscsKN87aBOvPeAdXbmoh0L9p89UHKcJrOzBbca3mIq1YFPMP+HxNO
+        EgbSQnll2gmO0uQoEYScvSXykaI2n2UqRur1NYp902blIcsgUV7z3G7EC98wLc0zeLsklYm/4ucO7
+        f4gN9UwIA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJcoK-0003SC-Af; Thu, 25 Apr 2019 11:45:04 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1A68D20D0A201; Thu, 25 Apr 2019 13:45:03 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 13:45:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Subject: Re: [PATCH RFC] x86 / CPU: Add cpu isolation flag for avoiding
+ disturbance from aperfmperf IPI
+Message-ID: <20190425114503.GP4038@hirez.programming.kicks-ass.net>
+References: <155618921176.2006.3031084313219003524.stgit@buzz>
 MIME-Version: 1.0
-References: <cover.1403291930.git.luto@amacapital.net> <a424b189ce3ced85fe1e82d032a20e765e0fe0d3.1403291930.git.luto@amacapital.net>
-In-Reply-To: <a424b189ce3ced85fe1e82d032a20e765e0fe0d3.1403291930.git.luto@amacapital.net>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 25 Apr 2019 20:41:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATXWYLovDGGn6cJgM61W1qF3d4RJfaiOJpH49WqTFPskQ@mail.gmail.com>
-Message-ID: <CAK7LNATXWYLovDGGn6cJgM61W1qF3d4RJfaiOJpH49WqTFPskQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] x86,vdso: Create .build-id links for unstripped
- vdso files
-To:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Josh Boyer <jwboyer@fedoraproject.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155618921176.2006.3031084313219003524.stgit@buzz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Thu, Apr 25, 2019 at 01:46:51PM +0300, Konstantin Khlebnikov wrote:
+> Sensitive workloads like DPDK polling do not like any interrupts.
+> 
+> This patch adds flag 'freq' for boot option 'isolcpu': isolcpu=freq,<cpus>.
+> 
+> Users like show_cpuinfo() fallback to frequency from generic cpufreq
+> policy if arch-specific requesting method returns 0.
 
-On Sat, Jun 21, 2014 at 4:23 AM Andy Lutomirski <luto@amacapital.net> wrote:
->
-> With this change, doing 'make vdso_install' and telling gdb:
->
-> set debug-file-directory /lib/modules/KVER/vdso
->
-> will enable vdso debugging with symbols.  This is useful for
-> testing, but kernel RPM builds will probably want to manually delete
-> these symlinks or otherwise do something sensible when they strip
-> the vdso/*.so files.
->
-> If ld does not support --build-id, then the symlinks will not be
-> created.
->
-> Note that kernel packagers that use vdso_install may need to adjust
-> their packaging scripts to accomdate this change.  For example,
-> Fedora's scripts create build-id symlinks themselves in a different
-> location, so the spec should probably be updated to remove the
-> symlinks created by make vdso_install.
->
-> Signed-off-by: Andy Lutomirski <luto@amacapital.net>
-> ---
+Then don't touch that sysfs file?
 
-I was looking into this, but
-I am not familiar enough with this area.
-
-
-Could you tell me how it works?
-
-
-I use Ubuntu 18.04 LTS.
-Luckily, it has build-id symlinks by default,
-so I should be able to test it easily.
-
-
-
-masahiro@pug:~$ uname -r
-4.15.0-47-generic
-masahiro@pug:~$ cd /lib/modules/4.15.0-47-generic/vdso/
-masahiro@pug:/lib/modules/4.15.0-47-generic/vdso$ file vdso64.so
-vdso64.so: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV),
-dynamically linked,
-BuildID[sha1]=d742540fb9ded5c3650dbe9ae20c0f39e386464c, with
-debug_info, not stripped
-masahiro@pug:/lib/modules/4.15.0-47-generic/vdso$ ls -l
-.build-id/d7/42540fb9ded5c3650dbe9ae20c0f39e386464c.debug
-lrwxrwxrwx 1 root root 15 Mar 13 13:37
-.build-id/d7/42540fb9ded5c3650dbe9ae20c0f39e386464c.debug ->
-../../vdso64.so
-
-
-I dumped the vdso embedded in the kernel,
-and I confirmed its build-id matches
-to the one of unstripped vdso.
-
-
-So, I expect the vdso with symbol info will be automatically loaded
-by setting debug-file-directory to /lib/modules/4.15.0-47-generic/vdso.
-Am I right?
-
-If it works as expected, how should it look like?
-
-I started gdb like this:
-
-$ gdb date
-
-Then, I did:
-
-(gdb) set debug-file-directory
-/usr/lib/debug:/lib/modules/4.15.0-47-generic/vdso
-(gdb) show debug-file-directory
-The directory where separate debug symbols are searched for is
-"/usr/lib/debug:/lib/modules/4.15.0-47-generic/vdso".
-(gdb) run
-
-
-The list of shared library looks like follows:
-
-
-(gdb) info sharedlibrary
-From                To                  Syms Read   Shared Object Library
-0x00007ffff7dd5f10  0x00007ffff7df4b20  Yes         /lib64/ld-linux-x86-64.so.2
-0x00007ffff7a052d0  0x00007ffff7b7dc3c  Yes
-/lib/x86_64-linux-gnu/libc.so.6
-                                        No          linux-vdso.so.1
-
-
-
-The first two shared objects shows "Yes" because debug info
-is available under /usr/lib/debug/lib/x86_64-linux-gnu/
-and associated by .gnu_debuglink.
-
-
-linux-vdso.so.1 shows "No".
-Does it mean no symbol was included ?
-
-
-Thank you.
-
-Masahiro Yamada
-
-
-
-
->  arch/x86/vdso/Makefile | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/vdso/Makefile b/arch/x86/vdso/Makefile
-> index 2c1ca98..68a15c4 100644
-> --- a/arch/x86/vdso/Makefile
-> +++ b/arch/x86/vdso/Makefile
-> @@ -169,14 +169,24 @@ quiet_cmd_vdso = VDSO    $@
->                  sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
->
->  VDSO_LDFLAGS = -fPIC -shared $(call cc-ldoption, -Wl$(comma)--hash-style=sysv) \
-> -       -Wl,-Bsymbolic $(LTO_CFLAGS)
-> +       $(call cc-ldoption, -Wl$(comma)--build-id) -Wl,-Bsymbolic $(LTO_CFLAGS)
->  GCOV_PROFILE := n
->
->  #
-> -# Install the unstripped copies of vdso*.so.
-> +# Install the unstripped copies of vdso*.so.  If our toolchain supports
-> +# build-id, install .build-id links as well.
->  #
->  quiet_cmd_vdso_install = INSTALL $(@:install_%=%)
-> -      cmd_vdso_install = cp $< $(MODLIB)/vdso/$(@:install_%=%)
-> +define cmd_vdso_install
-> +       cp $< "$(MODLIB)/vdso/$(@:install_%=%)"; \
-> +       if readelf -n $< |grep -q 'Build ID'; then \
-> +         buildid=`readelf -n $< |grep 'Build ID' |sed -e 's/^.*Build ID: \(.*\)$$/\1/'`; \
-> +         first=`echo $$buildid | cut -b-2`; \
-> +         last=`echo $$buildid | cut -b3-`; \
-> +         mkdir -p "$(MODLIB)/vdso/.build-id/$$first"; \
-> +         ln -sf "../../$(@:install_%=%)" "$(MODLIB)/vdso/.build-id/$$first/$$last.debug"; \
-> +       fi
-> +endef
->
->  vdso_img_insttargets := $(vdso_img_sodbg:%.dbg=install_%)
->
-> --
-> 1.9.3
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+I really hate having an option for just this.
