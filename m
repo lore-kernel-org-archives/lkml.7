@@ -2,480 +2,656 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EACC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 23:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEADC4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 23:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB352067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 23:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556235066;
-	bh=DQtmMb8bTPWL2zfJw0ixnUTOcJSx0o0yI3MzYtQQZkw=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=JSgwduQ+kUy9VCbJrufo4pynbw/uPyVDhLNlQL2PHNiWVt7hGL0LM2ne0IF+O5qNT
-	 2zvUEjdY6keoOm9FB1be1Cp8BGvOKuPi3oQNoD0oA3b/t34NaC89wIuQ7Wr4M+KShF
-	 VIp/3IhQyGKxn1hzK849RyStZ1EhOXwnXNhxOHV0=
+	by mail.kernel.org (Postfix) with ESMTP id 312372067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 23:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfDYXbE (ORCPT
+        id S1728460AbfDYXbm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 19:31:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52866 "EHLO mail.kernel.org"
+        Thu, 25 Apr 2019 19:31:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:63698 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbfDYXbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 19:31:03 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDEC62067C;
-        Thu, 25 Apr 2019 23:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556235062;
-        bh=DQtmMb8bTPWL2zfJw0ixnUTOcJSx0o0yI3MzYtQQZkw=;
-        h=Date:From:To:Subject:From;
-        b=UtVMI8UtlAZlA5xPvHC4LXZ3uk7fmISZs5qLw9eawYLqepp5CVrWVIdZQC6WUBlrv
-         M8VtKtJxcKQgxHNPHueHZCI7d0VEUC/lU4z1NE7n6ztC2lVwkNDRUynZq5lAivcUo9
-         mrMDthO5XBL8q4E11l2Is6M4qtnmri6l7XRiGqjQ=
-Date:   Thu, 25 Apr 2019 16:31:01 -0700
-From:   akpm@linux-foundation.org
-To:     broonie@kernel.org, mhocko@suse.cz, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org
-Subject:  mmotm 2019-04-25-16-30 uploaded
-Message-ID: <20190425233101.nCgrB%akpm@linux-foundation.org>
-User-Agent: s-nail v14.9.10
+        id S1726781AbfDYXbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 19:31:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 16:31:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,395,1549958400"; 
+   d="scan'208";a="137529764"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by orsmga008.jf.intel.com with ESMTP; 25 Apr 2019 16:31:41 -0700
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.36]) by
+ ORSMSX110.amr.corp.intel.com ([169.254.10.28]) with mapi id 14.03.0415.000;
+ Thu, 25 Apr 2019 16:31:40 -0700
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
+Subject: RE: [RFC PATCH v2 2/3] x86/vdso: Modify __vdso_sgx_enter_enclave()
+ to allow parameter passing on untrusted stack
+Thread-Topic: [RFC PATCH v2 2/3] x86/vdso: Modify __vdso_sgx_enter_enclave()
+ to allow parameter passing on untrusted stack
+Thread-Index: AQHU+matyNoQriQPGU6st/wnFLevQqZMIbUAgAFPh/A=
+Date:   Thu, 25 Apr 2019 23:31:40 +0000
+Message-ID: <960B34DE67B9E140824F1DCDEC400C0F4E87FD17@ORSMSX116.amr.corp.intel.com>
+References: <cover.1555965327.git.cedric.xing@intel.com>
+ <20190424062623.4345-3-cedric.xing@intel.com>
+ <20190424190446.GE18442@linux.intel.com>
+In-Reply-To: <20190424190446.GE18442@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTZhMjc1NzMtOGY2ZS00YWViLWE2YWEtNzc0MWI5OWQ3ZDQ0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicWMxQzZZMWk1ZUEwNFhcL1Nuak9EV3owNUk4RWtZNWhRM3JJM2FNdVFkaWhhS3RpODBJOG1NaTFMRisyUGtLQ1kifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2019-04-25-16-30 has been uploaded to
+Hi Sean,
 
-   http://www.ozlabs.org/~akpm/mmotm/
+> AIUI, you and Andy had an off-list discussion regarding rewriting
+> __vdso_sgx_enter_enclave() vs. providing a second vDSO function.  Can
+> you
+> please summarize the discussion so that it's clear why you're pursuing a
+> single function?
+> 
+> In the end I probably agree that's it's desirable to have a single ABI
+> and
+> vDSO function since the cost is basically that the non-callback case
+> needs
+> to pass params via the stack instead of registers, but I do miss the
+> simplicity of separate implementations.
+> 
 
-mmotm-readme.txt says
+The major reason is we don't want to maintain 2 different ABIs (preserving %rsp vs. %rbp). Given the new one covers all known use cases, we prefer not to keep the other one.
 
-README for mm-of-the-moment:
+> > Here's the summary of API/ABI changes in this patch. More details
+> could be
+> > found in arch/x86/entry/vdso/vsgx_enter_enclave.S.
+> > * 'struct sgx_enclave_exception' is renamed to 'struct
+> sgx_enclave_exinfo'
+> >   because it is filled upon both AEX (i.e. exceptions) and normal
+> enclave
+> >   exits.
+> > * __vdso_sgx_enter_enclave() anchors its frame using %rbp (instead
+> of %rsp in
+> >   the previous implementation).
+> > * __vdso_sgx_enter_enclave() takes one more parameter - a callback
+> function to
+> >   be invoked upon enclave exits. This callback is optional, and if not
+> >   supplied, will cause __vdso_sgx_enter_enclave() to return upon
+> enclave exits
+> >   (same behavior as previous implementation).
+> > * The callback function is given as a parameter the value of %rsp at
+> enclave
+> >   exit to address data "pushed" by the enclave. A positive value
+> returned by
+> >   the callback will be treated as an ENCLU leaf for re-entering the
+> enclave,
+> >   while a zero or negative value will be passed through as the return
+> >   value of __vdso_sgx_enter_enclave() to its caller. It's also safe to
+> >   leave callback by longjmp() or by throwing a C++ exception.
+> >
+> > Signed-off-by: Cedric Xing <cedric.xing@intel.com>
+> > ---
+> >  arch/x86/entry/vdso/vsgx_enter_enclave.S | 175 ++++++++++++++++------
+> -
+> >  arch/x86/include/uapi/asm/sgx.h          |  14 +-
+> >  2 files changed, 128 insertions(+), 61 deletions(-)
+> >
+> > diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> > index fe0bf6671d6d..debecb0d785c 100644
+> > --- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> > +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> > @@ -19,83 +19,150 @@
+> >   * __vdso_sgx_enter_enclave() - Enter an SGX enclave
+> >   *
+> >   * @leaf:	**IN \%eax** - ENCLU leaf, must be EENTER or ERESUME
+> > - * @tcs:	**IN \%rbx** - TCS, must be non-NULL
+> > - * @ex_info:	**IN \%rcx** - Optional 'struct sgx_enclave_exception'
+> pointer
+> > + * @tcs:	**IN 0x08(\%rsp)** - TCS, must be non-NULL
+> > + * @ex_info:	**IN 0x10(\%rsp)** - Optional 'struct
+> sgx_enclave_exinfo'
+> > + *				     pointer
+> > + * @callback:	**IN 0x18(\%rsp)** - Optional callback function to
+> be called on
+> > + *				     enclave exit or exception
+> >   *
+> >   * Return:
+> >   *  **OUT \%eax** -
+> > - *  %0 on a clean entry/exit to/from the enclave, %-EINVAL if ENCLU
+> leaf is
+> > - *  not allowed or if TCS is NULL, %-EFAULT if ENCLU or the enclave
+> faults
+> > + *  %0 on a clean entry/exit to/from the enclave, %-EINVAL if ENCLU
+> leaf is not
+> > + *  allowed, %-EFAULT if ENCLU or the enclave faults, or a non-
+> positive value
+> > + *  returned from ``callback`` (if one is supplied).
+> >   *
+> >   * **Important!**  __vdso_sgx_enter_enclave() is **NOT** compliant
+> with the
+> > - * x86-64 ABI, i.e. cannot be called from standard C code.   As noted
+> above,
+> > - * input parameters must be passed via ``%eax``, ``%rbx`` and
+> ``%rcx``, with
+> > - * the return value passed via ``%eax``.  All registers except
+> ``%rsp`` must
+> > - * be treated as volatile from the caller's perspective, including
+> but not
+> > - * limited to GPRs, EFLAGS.DF, MXCSR, FCW, etc...  Conversely, the
+> enclave
+> > - * being run **must** preserve the untrusted ``%rsp`` and stack.
+> > + * x86-64 ABI, i.e. cannot be called from standard C code. As noted
+> above,
+> > + * input parameters must be passed via ``%eax``, ``8(%rsp)``,
+> ``0x10(%rsp)`` and
+> > + * ``0x18(%rsp)``, with the return value passed via ``%eax``. All
+> other
+> > + * registers will be passed through to the enclave as is. All
+> registers except
+> > + * ``%rbp`` must be treated as volatile from the caller's perspective,
+> including
+> 
+> Hmm, this is my fault since I wrote the original comment, but stating
+> "All registers except %rbp must be treated as volatile" is confusing,
+> e.g.
+> at first I thought it meant that the assembly blob was mucking with the
+> registers and that they couldn't be used to pass information out of the
+> enclave.
+> 
+> Maybe something like:
+> 
+>  * Register ABI:
+>  *  - As noted above, input parameters are passed via %eax and the stack.
+>  *  - The return value is passed via %eax.
+>  *  - %rbx and %rcx must be treated as volatile as they are modified as
+> part of
+>  *    enclaves transitions and are used as scratch regs.
+>  *  - %rbp **must** be preserved by the enclave in all cases, as it is
+> used to
+>  *    reference paramaters when handling enclave exits.
+>  *  - %rdx, %rdi, %rsi and %r8-%r15 may be freely modified by the
+> enclave
+>  *    and will not be passed back to the caller untouched.
+>  *  - %rsp is saved/restored across __vdso_sgx_enter_enclave(), but is
+> passed
+>  *    as-is to the callback if one is provided, i.e. the enclave may use
+> u_rsp
+>  *    to pass information to its associated callback.
+>  *
+>  * Callback ABI:
+>  *  <more information about callback ABI>
+>  *
 
-http://www.ozlabs.org/~akpm/mmotm/
+Really appreciated! I'll update the comments in the next revision.
 
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
+> 
+> > + * but not limited to GPRs, EFLAGS.DF, MXCSR, FCW, etc... Conversely,
+> the
+> > + * enclave being run **must** preserve the untrusted ``%rbp``.
+> > + *
+> > + * ``callback`` has the following signature:
+> > + * int callback(long rdi, long rsi, long rdx,
+> > + *		struct sgx_enclave_exinfo *exinfo, long r8, long r9,
+> > + *		void *tcs, long ursp);
+> > + * ``callback`` **shall** follow x86_64 ABI. All GPRs **except**
+> ``%rax``,
+> > + * ``%rbx`` and ``rcx`` are passed through to ``callback``. ``%rdi``,
+> ``%rsi``,
+> > + * ``%rdx``, ``%r8``, ``%r9``, along with the value of ``%rsp`` when
+> the enclave
+> > + * exited/excepted, can be accessed directly as input parameters,
+> while other
+> > + * GPRs can be accessed in assembly if needed.  A positive value
+> returned from
+> > + * ``callback`` will be treated as an ENCLU leaf (e.g. EENTER/ERESUME)
+> to
+> > + * reenter the enclave (without popping the extra data pushed by the
+> enclave off
+> > + * the stack), while 0 (zero) or a negative return value will be
+> passed back to
+> > + * the caller of __vdso_sgx_enter_enclave(). It is also safe to leave
+> > + * ``callback`` via ``longjmp()`` or by throwing a C++ exception.
+> >   */
+> 
+> While this may format nicely in .rst (I haven't checked), it's damn near
+> unreadable in its raw form.  Escaping '%' in kernel-doc is unresolved at
+> this point, but this definitely is an argument for allowing the %CONST
+> interpretation to be disabled entirely.
+> 
 
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-http://ozlabs.org/~akpm/mmotm/series
+I know very little about kernel-doc. Not quite sure which markup means what. Or if you don't mind, could you just write up the whole thing (you have written half of it in your email already) so I can include it into my next revision?
+ 
+> longjmp() is probably the only thing that needs to be explicitly marked,
+> I think it would be better to simply say "the callback" instead of using
+> ``callback``, i.e. use regular English instead of referencing the param.
+> 
 
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
+Are you suggesting not to mention C++ exception here?
+ 
+> > -__vdso_sgx_enter_enclave(u32 leaf, void *tcs,
+> > -			 struct sgx_enclave_exception *ex_info)
+> > +typedef int (*sgx_callback)(long rdi, long rsi, long rdx,
+> > +			    struct sgx_enclave_exinfo *exinfo, long r8,
+> > +			    long r9, void *tcs, long ursp);
+> > +int __vdso_sgx_enter_enclave(int leaf, void *tcs,
+> > +			     struct sgx_enclave_exinfo *exinfo,
+> > +			     sgx_callback callback)
+> >  {
+> > -	if (leaf != SGX_EENTER && leaf != SGX_ERESUME)
+> > -		return -EINVAL;
+> > -
+> > -	if (!tcs)
+> > -		return -EINVAL;
+> > -
+> > -	try {
+> > -		ENCLU[leaf];
+> > -	} catch (exception) {
+> > -		if (e)
+> > -			*e = exception;
+> > -		return -EFAULT;
+> > +	while (leaf == EENTER || leaf == ERESUME) {
+> 
+> This gives the impression that looping is the common case.  I'd prefer
+> using 'goto' to show that the common case is a simple fall through
+> whereas
+> the callback case can effectively loop on ENCLU.
 
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
+Looping IMO is indeed the common case. Just think of the case of an enclave making a sequence of o-calls. 
+ 
+> 
+> > +		int rc;
+> > +		try {
+> > +			ENCLU[leaf];
+> > +			rc = 0;
+> > +			if (exinfo)
+> > +				exinfo->leaf = EEXIT;
+> > +		} catch (exception) {
+> > +			rc = -EFAULT;
+> > +			if (exinfo)
+> > +				*exinfo = exception;
+> > +		}
+> > +
+> > +		leaf = callback ? (*callback)(
+> > +			rdi, rsi, rdx, exinfo, r8, r9, tcs, ursp) : rc;
+> >  	}
+> >
+> > -	return 0;
+> > +	return leaf > 0 ? -EINVAL : leaf;
+> >  }
+> >  #endif
+> >  ENTRY(__vdso_sgx_enter_enclave)
+> > -	/* EENTER <= leaf <= ERESUME */
+> > +	/* Prolog */
+> > +	.cfi_startproc
+> > +	push	%rbp
+> > +	.cfi_adjust_cfa_offset	8
+> > +	.cfi_rel_offset		%rbp, 0
+> > +	mov	%rsp, %rbp
+> > +	.cfi_def_cfa_register	%rbp
+> > +
+> > +1:	/* EENTER <= leaf <= ERESUME */
+> >  	cmp	$0x2, %eax
+> > -	jb	bad_input
+> > -
+> > +	jb	6f
+> >  	cmp	$0x3, %eax
+> > -	ja	bad_input
+> > +	ja	6f
+> >
+> > -	/* TCS must be non-NULL */
+> > -	test	%rbx, %rbx
+> > -	je	bad_input
+> > +	/* Load TCS and AEP */
+> > +	mov	0x10(%rbp), %rbx
+> > +	lea	2f(%rip), %rcx
+> >
+> > -	/* Save @exception_info */
+> > -	push	%rcx
+> > +	/* Single ENCLU serving as both EENTER and AEP (ERESUME) */
+> > +2:	enclu
+> >
+> > -	/* Load AEP for ENCLU */
+> > -	lea	1f(%rip),  %rcx
+> > -1:	enclu
+> > +	/* EEXIT path */
+> > +	xor	%ebx, %ebx
+> > +3:	mov	0x18(%rbp), %rcx
+> 
+> @exinfo is optional, i.e. %ecx needs to be tested before its used.
+> 
+> > +	jrcxz	4f
 
+The above instruction (i.e. jrcxz) does test %rcx.
 
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
+> 
+> I dislike the number of flags and values that are stashed away only to
+> be consumed later, it makes the code hard to follow.  AFAICT, a lot of
+> the shenanigans are done to reuse code because exinfo was overloaded,
+> but that's actually pointless, i.e. it's unnecessarily complex.
+> 
+> Overlading the struct is pointless becase if you make it mandatory when
+> using a callback then it can be nullified (when passed to the callback)
+> to indicate EEXIT.  If it's still optional, then the callback needs an
+> extra param to explicitly indicate EEXIT vs. -EFAULT, otherwise the
+> callback has no indication whatsover of why it was invoked.
+> 
+> My preference is for the latter since it's more explicit and obvious.
 
-http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/
+I wouldn't nullify @exinfo at EEXIT because that could be used as a "context" pointer to the callback.
 
+Making it optionally because the callback can still use other registers (e.g. %rdi) determine the reason without it. For example, an enclave may set %rdi to non-zero to signify o-call/e-ret while zero (as set by AEX) would indicate an exception. My intention is not to impose unnecessary restrictions on applications.
 
+> 
+> Tangetially related, I'm not opposed to renaming it
+> 'struct sgx_enclave_exception_info' for clarity.
 
-The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
+I'd still prefer sgx_enclave_exinfo to imply its use in both _ex_it and _ex_ception cases, for the reason stated above.
 
-A git copy of this tree is available at
+> 
+> > +	mov	%eax, EX_LEAF(%rcx)
+> > +	jnc	4f
+> > +	mov	%di, EX_TRAPNR(%rcx)
+> > +	mov	%si, EX_ERROR_CODE(%rcx)
+> > +	mov	%rdx, EX_ADDRESS(%rcx)
+> 
+> My strong preference would be to organize the code to separate the
+> various
+> flows, i.e. happy common case, invalid input, exception handler and
+> callback invocation.  And make the common case a straight shot so that
+> it's more obvious what happens in the happy non-callback case.
 
-	http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/
+I'd prefer more concise code. After all, this is assembly without optimization done by the compiler. If it were for C, I'd agree with you because either case would end up in roughly the same code (in terms of code size or efficiency) due to the optimizer.
 
-and use of this tree is similar to
-http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/, described above.
+> >
+> > -	add	$0x8, %rsp
+> > -	xor	%eax, %eax
+> > +4:	/* Call *callback if supplied */
+> > +	mov	0x20(%rbp), %rax
+> > +	test	%rax, %rax
+> > +	/* At this point, %ebx holds the effective return value, which
+> shall be
+> > +	 * returned if no callback is specified */
+> 
+> Use kernel-doc format for multi-line comments.  Missing punctionation at
+> the end.  Blank lines between logical blocks would also help readability.
+> 
+> E.g.:
+> 
+> 4:      /* Call *callback if supplied */
+>         mov     0x20(%rbp), %rax
+>         test    %rax, %rax
+> 
+>         /*
+>          * At this point, %ebx holds the effective return value, which
+> shall be
+>          * returned if no callback is specified.
+>          */
+>         cmovz   %rbx, %rax
+>         jz      7f
 
+I know very little about kernel-doc. Would you please point me to documents describing it? What you suggested here will of course be incorporated into my next revision. 
 
-This mmotm tree contains the following patches against 5.1-rc6:
-(patches marked "*" will be included in linux-next)
+> > +	cmovz	%rbx, %rax
+> > +	jz	7f
+> > +	/* Align stack per x86_64 ABI. The original %rsp is saved in %rbx
+> to be
+> > +	 * restored after *callback returns. */
+> > +	mov	%rsp, %rbx
+> > +	and	$-0x10, %rsp
+> > +	/* Clear RFLAGS.DF per x86_64 ABI */
+> > +	cld
+> > +	/* Parameters for *callback */
+> > +	push	%rbx
+> > +	push	0x10(%rbp)
+> > +	/* Call *%rax via retpoline */
+> > +	call	40f
+> 
+> Another case of stashing a value it consuming it later.  This one is
+> especially brutal since %rax was loaded with CMOVcc, which means the
+> reader needs to backtrack even further to understand what %rax contains
+> at this point.
 
-  origin.patch
-* mm-add-sys-kernel-slab-cache-cache_dma32.patch
-* userfaultfd-use-rcu-to-free-the-task-struct-when-fork-fails.patch
-* mm-memory_hotplug-drop-memory-device-reference-after-find_memory_block.patch
-* zram-pass-down-the-bvec-we-need-to-read-into-in-the-work-struct.patch
-* lib-kconfigdebug-fix-build-error-without-config_block.patch
-* lib-test_vmalloc-do-not-create-cpumask_t-variable-on-stack.patch
-* mm-do-not-boost-watermarks-to-avoid-fragmentation-for-the-discontig-memory-model.patch
-* mm-page_alloc-always-use-a-captured-page-regardless-of-compaction-result.patch
-* mm-page_alloc-avoid-potential-null-pointer-dereference.patch
-* mm-page_alloc-fix-never-set-alloc_nofragment-flag.patch
-* fs-proc-proc_sysctlc-fix-a-null-pointer-dereference.patch
-* prctl-fix-false-positive-in-validate_prctl_map.patch
-* scripts-spellingtxt-add-more-typos-to-spellingtxt-and-sort.patch
-* arch-sh-boards-mach-dreamcast-irqc-remove-duplicate-header.patch
-* debugobjects-move-printk-out-of-db-lock-critical-sections.patch
-* ocfs2-use-common-file-type-conversion.patch
-* ocfs2-fix-ocfs2-read-inode-data-panic-in-ocfs2_iget.patch
-* ocfs2-add-last-unlock-times-in-locking_state.patch
-* ocfs2-clear-zero-in-unaligned-direct-io.patch
-* ocfs2-clear-zero-in-unaligned-direct-io-checkpatch-fixes.patch
-* ocfs2-wait-for-recovering-done-after-direct-unlock-request.patch
-* ocfs2-checkpoint-appending-truncate-log-transaction-before-flushing.patch
-* ramfs-support-o_tmpfile.patch
-  mm.patch
-* list-add-function-list_rotate_to_front.patch
-* slob-respect-list_head-abstraction-layer.patch
-* slob-use-slab_list-instead-of-lru.patch
-* slub-add-comments-to-endif-pre-processor-macros.patch
-* slub-use-slab_list-instead-of-lru.patch
-* slab-use-slab_list-instead-of-lru.patch
-* mm-remove-stale-comment-from-page-struct.patch
-* slub-remove-useless-kmem_cache_debug-before-remove_full.patch
-* mm-slab-remove-unneed-check-in-cpuup_canceled.patch
-* slub-update-the-comment-about-slab-frozen.patch
-* slab-fix-an-infinite-loop-in-leaks_show.patch
-* slab-fix-an-infinite-loop-in-leaks_show-fix.patch
-* mm-vmscan-drop-zone-id-from-kswapd-tracepoints.patch
-* mm-cma_debugc-fix-the-break-condition-in-cma_maxchunk_get.patch
-* userfaultfd-sysctl-add-vmunprivileged_userfaultfd.patch
-* userfaultfd-sysctl-add-vmunprivileged_userfaultfd-fix.patch
-* page-cache-store-only-head-pages-in-i_pages.patch
-* page-cache-store-only-head-pages-in-i_pages-fix.patch
-* page-cache-store-only-head-pages-in-i_pages-fix-fix.patch
-* mm-page_alloc-disallow-__gfp_comp-in-alloc_pages_exact.patch
-* mm-move-recent_rotated-pages-calculation-to-shrink_inactive_list.patch
-* mm-move-nr_deactivate-accounting-to-shrink_active_list.patch
-* mm-move-nr_deactivate-accounting-to-shrink_active_list-fix.patch
-* mm-remove-pages_to_free-argument-of-move_active_pages_to_lru.patch
-* mm-generalize-putback-scan-functions.patch
-* mm-gup-replace-get_user_pages_longterm-with-foll_longterm.patch
-* mm-gup-replace-get_user_pages_longterm-with-foll_longterm-v3.patch
-* mm-gup-change-write-parameter-to-flags-in-fast-walk.patch
-* mm-gup-change-gup-fast-to-use-flags-rather-than-a-write-bool.patch
-* mm-gup-add-foll_longterm-capability-to-gup-fast.patch
-* mm-gup-add-foll_longterm-capability-to-gup-fast-v3.patch
-* ib-hfi1-use-the-new-foll_longterm-flag-to-get_user_pages_fast.patch
-* ib-hfi1-use-the-new-foll_longterm-flag-to-get_user_pages_fast-v3.patch
-* ib-qib-use-the-new-foll_longterm-flag-to-get_user_pages_fast.patch
-* ib-mthca-use-the-new-foll_longterm-flag-to-get_user_pages_fast.patch
-* mmmemory_hotplug-unlock-1gb-hugetlb-on-x86_64.patch
-* mmmemory_hotplug-drop-redundant-hugepage_migration_supported-check.patch
-* mm-memory_hotplug-fix-the-wrong-usage-of-n_high_memory.patch
-* mm-compaction-fix-an-undefined-behaviour.patch
-* mm-compaction-fix-an-undefined-behaviour-fix.patch
-* mm-cma-fix-the-bitmap-status-to-show-failed-allocation-reason.patch
-* mm-compaction-show-gfp-flag-names-in-try_to_compact_pages-tracepoint.patch
-* mm-compaction-some-tracepoints-should-be-defined-only-when-config_compaction-is-set.patch
-* mm-change-mm_update_next_owner-to-update-mm-owner-with-write_once.patch
-* mm-isolation-remove-redundant-pfn_valid_within-in-__first_valid_page.patch
-* mm-vmscan-add-tracepoints-for-node-reclaim.patch
-* mm-memcontrol-track-lru-counts-in-the-vmstats-array.patch
-* mm-memcontrol-replace-zone-summing-with-lruvec_page_state.patch
-* mm-memcontrol-replace-node-summing-with-memcg_page_state.patch
-* mm-memcontrol-push-down-mem_cgroup_node_nr_lru_pages.patch
-* mm-memcontrol-push-down-mem_cgroup_nr_lru_pages.patch
-* mm-memcontrol-quarantine-the-mem_cgroup_nr_lru_pages-api.patch
-* mm-cma-fix-crash-on-cma-allocation-if-bitmap-allocation-fails.patch
-* initramfs-free-initrd-memory-if-opening-initrdimage-fails.patch
-* initramfs-cleanup-initrd-freeing.patch
-* initramfs-factor-out-a-helper-to-populate-the-initrd-image.patch
-* initramfs-cleanup-populate_rootfs.patch
-* initramfs-cleanup-populate_rootfs-fix.patch
-* initramfs-move-the-legacy-keepinitrd-parameter-to-core-code.patch
-* initramfs-proide-a-generic-free_initrd_mem-implementation.patch
-* initramfs-poison-freed-initrd-memory.patch
-* init-provide-a-generic-free_initmem-implementation.patch
-* hexagon-switch-over-to-generic-free_initmem.patch
-* init-free_initmem-poison-freed-init-memory.patch
-* riscv-switch-over-to-generic-free_initmem.patch
-* sh-advertise-gigantic-page-support.patch
-* sparc-advertise-gigantic-page-support.patch
-* mm-simplify-memory_isolation-compaction-cma-into-contig_alloc.patch
-* hugetlb-allow-to-free-gigantic-pages-regardless-of-the-configuration.patch
-* mm-introduce-put_user_page-placeholder-versions.patch
-* mm-page_mkclean-vs-madv_dontneed-race.patch
-* mm-vmscan-drop-may_writepage-and-classzone_idx-from-direct-reclaim-begin-template.patch
-* mem-hotplug-fix-node-spanned-pages-when-we-have-a-node-with-only-zone_movable.patch
-* hugetlbfs-fix-potential-over-underflow-setting-node-specific-nr_hugepages.patch
-* mm-hugetlb-get-rid-of-nodemask_alloc.patch
-* mm-__pagevec_lru_add_fn-typo-fix.patch
-* mm-balloon-drop-unused-function-stubs.patch
-* mm-sparse-clean-up-the-obsolete-code-comment.patch
-* drivers-base-memoryc-clean-up-relicts-in-function-parameters.patch
-* huegtlbfs-on-restore-reserve-error-path-retain-subpool-reservation.patch
-* hugetlb-use-same-fault-hash-key-for-shared-and-private-mappings.patch
-* mm-change-locked_vms-type-from-unsigned-long-to-atomic64_t.patch
-* vfio-type1-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
-* vfio-spapr_tce-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
-* fpga-dlf-afu-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
-* powerpc-mmu-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
-* kvm-book3s-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
-* mm-hmm-select-mmu-notifier-when-selecting-hmm-v2.patch
-* mm-hmm-use-reference-counting-for-hmm-struct-v3.patch
-* mm-hmm-do-not-erase-snapshot-when-a-range-is-invalidated.patch
-* mm-hmm-improve-and-rename-hmm_vma_get_pfns-to-hmm_range_snapshot-v2.patch
-* mm-hmm-improve-and-rename-hmm_vma_fault-to-hmm_range_fault-v3.patch
-* mm-hmm-improve-driver-api-to-work-and-wait-over-a-range-v3.patch
-* mm-hmm-add-default-fault-flags-to-avoid-the-need-to-pre-fill-pfns-arrays-v2.patch
-* mm-hmm-mirror-hugetlbfs-snapshoting-faulting-and-dma-mapping-v3.patch
-* mm-hmm-mirror-hugetlbfs-snapshoting-faulting-and-dma-mapping-v3-fix.patch
-* mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem-v3.patch
-* mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem-v3-fix.patch
-* mm-hmm-add-helpers-to-test-if-mm-is-still-alive-or-not.patch
-* mm-hmm-add-an-helper-function-that-fault-pages-and-map-them-to-a-device-v3.patch
-* mm-hmm-add-an-helper-function-that-fault-pages-and-map-them-to-a-device-v3-fix.patch
-* mm-hmm-convert-various-hmm_pfn_-to-device_entry-which-is-a-better-name.patch
-* mm-mmu_notifier-helper-to-test-if-a-range-invalidation-is-blockable.patch
-* mm-mmu_notifier-convert-user-range-blockable-to-helper-function.patch
-* mm-mmu_notifier-convert-mmu_notifier_range-blockable-to-a-flags.patch
-* mm-mmu_notifier-contextual-information-for-event-enums.patch
-* mm-mmu_notifier-contextual-information-for-event-triggering-invalidation-v2.patch
-* mm-mmu_notifier-use-correct-mmu_notifier-events-for-each-invalidation.patch
-* mm-mmu_notifier-pass-down-vma-and-reasons-why-mmu-notifier-is-happening-v2.patch
-* mm-mmu_notifier-mmu_notifier_range_update_to_read_only-helper.patch
-* mm-enable-error-injection-at-add_to_page_cache.patch
-* mm-enable-error-injection-at-add_to_page_cache-fix.patch
-* mm-rmap-use-the-pramapcount-to-do-the-check.patch
-* mm-use-mm_zero_struct_page-from-sparc-on-all-64b-architectures.patch
-* mm-drop-meminit_pfn_in_nid-as-it-is-redundant.patch
-* mm-implement-new-zone-specific-memblock-iterator.patch
-* mm-initialize-max_order_nr_pages-at-a-time-instead-of-doing-larger-sections.patch
-* mm-memory_hotplug-cleanup-memory-offline-path.patch
-* mm-memory_hotplug-provide-a-more-generic-restrictions-for-memory-hotplug.patch
-* mm-memory_hotplug-provide-a-more-generic-restrictions-for-memory-hotplug-fix.patch
-* mm-filemap-fix-minor-typo.patch
-* mm-memory_hotplug-release-memory-resource-after-arch_remove_memory.patch
-* mm-memory_hotplug-release-memory-resource-after-arch_remove_memory-fix.patch
-* mm-memory_hotplug-make-unregister_memory_section-never-fail.patch
-* mm-memory_hotplug-make-__remove_section-never-fail.patch
-* mm-memory_hotplug-make-__remove_pages-and-arch_remove_memory-never-fail.patch
-* mm-fix-false-positive-overcommit_guess-failures.patch
-* mm-remove-redundant-default-n-from-kconfig-s.patch
-* mm-introduce-new-vm_map_pages-and-vm_map_pages_zero-api.patch
-* arm-mm-dma-mapping-convert-to-use-vm_map_pages.patch
-* drivers-firewire-core-isoc-convert-to-use-vm_map_pages_zero.patch
-* drm-rockchip-rockchip_drm_gemc-convert-to-use-vm_map_pages.patch
-* drm-xen-xen_drm_front_gemc-convert-to-use-vm_map_pages.patch
-* iommu-dma-iommuc-convert-to-use-vm_map_pages.patch
-* videobuf2-videobuf2-dma-sgc-convert-to-use-vm_map_pages.patch
-* xen-gntdevc-convert-to-use-vm_map_pages.patch
-* xen-privcmd-bufc-convert-to-use-vm_map_pages_zero.patch
-* x86-numa-always-initialize-all-possible-nodes.patch
-* mm-be-more-verbose-about-zonelist-initialization.patch
-* fs-syncc-sync_file_range2-may-use-wb_sync_all-writeback.patch
-* mm-simplify-shrink_inactive_list.patch
-* mm-hmm-add-arch_has_hmm_mirror-arch_has_hmm_device-kconfig.patch
-* mm-refactor-__vunmap-to-avoid-duplicated-call-to-find_vm_area.patch
-* mm-show-number-of-vmalloc-pages-in-proc-meminfo.patch
-* mm-remove-might_sleep-in-__remove_vm_area.patch
-* mm-page_alloc-remove-unnecessary-parameter-in-rmqueue_pcplist.patch
-* z3fold-introduce-helper-functions.patch
-* z3fold-improve-compression-by-extending-search.patch
-* z3fold-add-structure-for-buddy-handles.patch
-* z3fold-support-page-migration.patch
-* z3fold-support-page-migration-fix.patch
-* hugetlbfs-always-use-address-space-in-inode-for-resv_map-pointer.patch
-* memblock-make-keeping-memblock-memory-opt-in-rather-than-opt-out.patch
-* mm-vmscan-dont-disable-irq-again-when-count-pgrefill-for-memcg.patch
-* mm-kconfig-update-memory-model-help-text.patch
-* mm-vmscan-simplify-trace_reclaim_flags-and-trace_shrink_flags.patch
-* memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work.patch
-* memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-* psi-introduce-state_mask-to-represent-stalled-psi-states.patch
-* psi-make-psi_enable-static.patch
-* psi-rename-psi-fields-in-preparation-for-psi-trigger-addition.patch
-* psi-rename-psi-fields-in-preparation-for-psi-trigger-addition-v6.patch
-* psi-split-update_stats-into-parts.patch
-* psi-track-changed-states.patch
-* refactor-header-includes-to-allow-kthreadh-inclusion-in-psi_typesh.patch
-* psi-introduce-psi-monitor.patch
-* mm-add-priority-threshold-to-__purge_vmap_area_lazy.patch
-* mm-vmap-keep-track-of-free-blocks-for-vmap-allocation.patch
-* mm-vmap-keep-track-of-free-blocks-for-vmap-allocation-v3.patch
-* mm-vmap-keep-track-of-free-blocks-for-vmap-allocation-v4.patch
-* mm-vmap-add-debug_augment_propagate_check-macro.patch
-* mm-vmap-add-debug_augment_propagate_check-macro-v4.patch
-* mm-vmap-add-debug_augment_lowest_match_check-macro.patch
-* mm-vmap-add-debug_augment_lowest_match_check-macro-v4.patch
-* mm-proportional-memorylowmin-reclaim.patch
-* mm-make-memoryemin-the-baseline-for-utilisation-determination.patch
-* mm-make-memoryemin-the-baseline-for-utilisation-determination-fix.patch
-* mm-add-probe_user_read.patch
-* mm-add-probe_user_read-fix.patch
-* powerpc-use-probe_user_read.patch
-* mm-vmalloc-convert-vmap_lazy_nr-to-atomic_long_t.patch
-* mm-shuffle-initial-free-memory-to-improve-memory-side-cache-utilization.patch
-* mm-shuffle-initial-free-memory-to-improve-memory-side-cache-utilization-fix.patch
-* mm-shuffle-initial-free-memory-to-improve-memory-side-cache-utilization-fix-2.patch
-* mm-move-buddy-list-manipulations-into-helpers.patch
-* mm-move-buddy-list-manipulations-into-helpers-fix.patch
-* mm-move-buddy-list-manipulations-into-helpers-fix2.patch
-* mm-maintain-randomization-of-page-free-lists.patch
-* mm-maintain-randomization-of-page-free-lists-checkpatch-fixes.patch
-* mm-vmscan-remove-unused-lru_pages-argument.patch
-* mm-mincore-make-mincore-more-conservative.patch
-* mm-mincore-make-mincore-more-conservative-v2.patch
-* mm-dont-expose-page-to-fast-gup-before-its-ready.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* fs-select-avoid-clang-stack-usage-warning.patch
-* kdb-get-rid-of-broken-attempt-to-print-ccversion-in-kdb-summary.patch
-* remove-spdx-with-linux-syscall-note-from-kernel-space-headers.patch
-* arm-prevent-tracing-ipi_cpu_backtrace.patch
-* arm64-mark-__cpus_have_const_cap-as-__always_inline.patch
-* mips-mark-mult_sh_align_mod-as-__always_inline.patch
-* s390-cpacf-mark-scpacf_query-as-__always_inline.patch
-* mtd-rawnand-vf610_nfc-add-initializer-to-avoid-wmaybe-uninitialized.patch
-* mips-mark-__fls-and-__ffs-as-__always_inline.patch
-* arm-mark-setup_machine_tags-stub-as-__init-__noreturn.patch
-* powerpc-prom_init-mark-prom_getprop-and-prom_getproplen-as-__init.patch
-* powerpc-mm-radix-mark-__radix__flush_tlb_range_psize-as-__always_inline.patch
-* powerpc-mm-radix-mark-as-__tlbie_pid-and-friends-as__always_inline.patch
-* compiler-allow-all-arches-to-enable-config_optimize_inlining.patch
-* notifiers-double-register-detection.patch
-* kernel-latencytopc-remove-unnecessary-checks-for-latencytop_enabled.patch
-* kernel-latencytopc-rename-clear_all_latency_tracing-to-clear_tsk_latency_tracing.patch
-* byteorder-sanity-check-toolchain-vs-kernel-endianess.patch
-* kernel-userc-clean-up-some-leftover-code.patch
-* byteorder-sanity-check-toolchain-vs-kernel-endianess-checkpatch-fixes.patch
-* linux-deviceh-use-unique-identifier-for-each-struct-_ddebug.patch
-* linux-neth-use-unique-identifier-for-each-struct-_ddebug.patch
-* linux-printkh-use-unique-identifier-for-each-struct-_ddebug.patch
-* dynamic_debug-introduce-accessors-for-string-members-of-struct-_ddebug.patch
-* dynamic_debug-drop-use-of-bitfields-in-struct-_ddebug.patch
-* dynamic_debug-introduce-config_dynamic_debug_relative_pointers.patch
-* dynamic_debug-add-asm-generic-implementation-for-dynamic_debug_relative_pointers.patch
-* x86-64-select-dynamic_debug_relative_pointers.patch
-* arm64-select-dynamic_debug_relative_pointers.patch
-* powerpc-select-dynamic_debug_relative_pointers-for-ppc64.patch
-* lib-bitmapc-remove-unused-export_symbols.patch
-* lib-bitmapc-guard-exotic-bitmap-functions-by-config_numa.patch
-* lib-genallocc-export-symbol-addr_in_gen_pool.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr-fix.patch
-* lib-plist-rename-debug_pi_list-to-debug_plist.patch
-* lib-sort-make-swap-functions-more-generic.patch
-* lib-sort-use-more-efficient-bottom-up-heapsort-variant.patch
-* lib-sort-avoid-indirect-calls-to-built-in-swap.patch
-* lib-list_sort-simplify-and-remove-max_list_length_bits.patch
-* lib-list_sort-simplify-and-remove-max_list_length_bits-fix.patch
-* lib-list_sort-optimize-number-of-calls-to-comparison-function.patch
-* lib-move-mathematic-helpers-to-separate-folder.patch
-* lib-move-mathematic-helpers-to-separate-folder-fix.patch
-* lib-math-move-int_pow-from-pwm_blc-for-wider-use.patch
-* lib-make-bitmap_parselist_user-a-wrapper-on-bitmap_parselist.patch
-* lib-rework-bitmap_parselist.patch
-* lib-rework-bitmap_parselist-v5.patch
-* lib-test_bitmap-switch-test_bitmap_parselist-to-ktime_get.patch
-* lib-test_bitmap-add-testcases-for-bitmap_parselist.patch
-* lib-test_bitmap-add-testcases-for-bitmap_parselist-v5.patch
-* lib-test_bitmap-add-tests-for-bitmap_parselist_user.patch
-* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
-* bitopsh-sanitize-rotate-primitives.patch
-* lib-test_vmallocc-test_func-eliminate-local-ret.patch
-* checkpatch-dont-interpret-stack-dumps-as-commit-ids.patch
-* checkpatch-fix-something.patch
-* fs-binfmt_elfc-remove-unneeded-initialization-of-mm-start_stack.patch
-* elf-make-scope-of-pos-variable-smaller.patch
-* elf-free-pt_interp-filename-asap.patch
-* elf-free-pt_interp-filename-asap-fix.patch
-* elf-delete-trailing-return-in-functions-returning-void.patch
-* elf-save-1-indent-level.patch
-* elf-move-variables-initialization-closer-to-their-usage.patch
-* elf-extract-prot_-calculations.patch
-* elf-init-pt_regs-pointer-later.patch
-* binfmt_elf-move-brk-out-of-mmap-when-doing-direct-loader-exec.patch
-* init-introduce-debug_misc-option.patch
-* powerpc-replace-config_debug_kernel-with-config_debug_misc.patch
-* mips-replace-config_debug_kernel-with-config_debug_misc.patch
-* xtensa-replace-config_debug_kernel-with-config_debug_misc.patch
-* net-replace-config_debug_kernel-with-config_debug_misc.patch
-* autofs-fix-some-word-usage-odities-in-autofstxt.patch
-* autofs-update-autofstxt-for-strictexpire-mount-option.patch
-* autofs-update-autofs_exp_leaves-description.patch
-* autofs-update-mount-control-expire-desription-with-autofs_exp_forced.patch
-* autofs-add-description-of-ignore-pseudo-mount-option.patch
-* reiserfs-add-comment-to-explain-endianness-issue-in-xattr_hash.patch
-* reiserfs-add-comment-to-explain-endianness-issue-in-xattr_hash-checkpatch-fixes.patch
-* fat-issue-flush-after-the-writeback-of-fat.patch
-* signal-annotate-implicit-fall-through.patch
-* exec-move-recursion_depth-out-of-critical-sections.patch
-* exec-move-struct-linux_binprm-buf.patch
-* exec-test-recursion_depth.patch
-* cpumask-fix-double-string-traverse-in-cpumask_parse.patch
-* cpumask-fix-double-string-traverse-in-cpumask_parse-fix.patch
-* rapidio-fix-a-null-pointer-derefenrece-when-create_workqueue-fails.patch
-* kernel-sysctlc-switch-to-bitmap_zalloc.patch
-* sysctl-return-einval-if-val-violates-minmax.patch
-* test_sysctl-remove-superfluous-test_reqs.patch
-* test_sysctl-load-module-before-testing-for-it.patch
-* test_sysctl-ignore-diff-output-on-verify_diff_w.patch
-* test_sysctl-allow-graceful-use-on-older-kernels.patch
-* test_sysctl-add-proc_do_large_bitmap-test-case.patch
-* test_sysctl-add-proc_do_large_bitmap-test-case-fix.patch
-* sysctl-fix-proc_do_large_bitmap-for-large-input-buffers.patch
-* convert-struct-pid-count-to-refcount_t.patch
-* convert-struct-pid-count-to-refcount_t-fix.patch
-* eventfd-prepare-id-to-userspace-via-fdinfo.patch
-* gcov-clang-move-common-gcc-code-into-gcc_basec.patch
-* gcov-docs-add-a-note-on-gcc-vs-clang-differences.patch
-* gcov-clang-support.patch
-* gcov-clang-support-checkpatch-fixes.patch
-* panic-avoid-the-extra-noise-dmesg.patch
-* panic-reboot-allow-specifying-reboot_mode-for-panic-only.patch
-* panic-add-an-option-to-replay-all-the-printk-message-in-buffer.patch
-* panic-add-an-option-to-replay-all-the-printk-message-in-buffer-v4.patch
-* pps-descriptor-based-gpio.patch
-* dt-bindings-pps-pps-gpio-pps-echo-implementation.patch
-* pps-pps-gpio-pps-echo-implementation.patch
-* scripts-gdb-find-vmlinux-where-it-was-before.patch
-* scripts-gdb-add-kernel-config-dumping-command.patch
-* scripts-gdb-add-kernel-config-dumping-command-v2.patch
-* scripts-gdb-add-rb-tree-iterating-utilities.patch
-* scripts-gdb-add-rb-tree-iterating-utilities-v2.patch
-* scripts-gdb-add-a-timer-list-command.patch
-* scripts-gdb-add-a-timer-list-command-v2.patch
-* scripts-gdb-silence-pep8-checks.patch
-* scripts-gdb-add-hlist-utilities.patch
-* scripts-gdb-initial-clk-support-lx-clk-summary.patch
-* scripts-gdb-add-lx_clk_core_lookup-function.patch
-* ipc-prevent-lockup-on-alloc_msg-and-free_msg.patch
-* ipc-mqueue-remove-redundant-wq-task-assignment.patch
-* ipc-mqueue-optimize-msg_get.patch
-* ipc-allow-boot-time-extension-of-ipcmni-from-32k-to-16m.patch
-* ipc-conserve-sequence-numbers-in-ipcmni_extend-mode.patch
-* ipc-do-cyclic-id-allocation-for-the-ipc-object.patch
-* ipc-do-cyclic-id-allocation-for-the-ipc-object-fix.patch
-  linux-next.patch
-  linux-next-rejects.patch
-  linux-next-git-rejects.patch
-* pinctrl-fix-pxa2xxc-build-warnings.patch
-* fs-coda-psdevc-remove-duplicate-header.patch
-* include-replace-tsk-to-task-in-linux-sched-signalh.patch
-* fs-cachefiles-nameic-remove-duplicate-header.patch
-* fs-block_devc-remove-duplicate-header.patch
-* treewide-replace-include-asm-sizesh-with-include-linux-sizesh.patch
-* arch-remove-asm-sizesh-amd-asm-generic-sizesh.patch
-* mm-rename-ambiguously-named-memorystat-counters-and-functions.patch
-* mm-rename-ambiguously-named-memorystat-counters-and-functions-fix.patch
-* mm-consider-subtrees-in-memoryevents.patch
-* fsl_hypervisor-dereferencing-error-pointers-in-ioctl.patch
-* fsl_hypervisor-prevent-integer-overflow-in-ioctl.patch
-* mm-memcontrol-make-cgroup-stats-and-events-query-api-explicitly-local.patch
-* mm-memcontrol-make-cgroup-stats-and-events-query-api-explicitly-local-fix.patch
-* mm-memcontrol-move-stat-event-counting-functions-out-of-line.patch
-* mm-memcontrol-fix-recursive-statistics-correctness-scalabilty.patch
-* mm-memcontrol-fix-numa-round-robin-reclaim-at-intermediate-level.patch
-* fix-read-buffer-overflow-in-delta-ipc.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  slab-leaks3-default-y.patch
-  workaround-for-a-pci-restoring-bug.patch
+%rax was loaded only 2 instructions ago, while what %rbx is containing is described in the comment immediately above it. I think I have done my best to make it readable. After all, this is assembly so can't expect something like giving proper names to variables in C because that just can't be done in assembly.
+
+> 
+> > +	/* Restore %rsp to its original value left off by the enclave from
+> last
+> > +	 * exit */
+> > +	mov	%rbx, %rsp
+> > +	/* Positive return value from *callback will be interpreted as an
+> ENCLU
+> > +	 * leaf, while a non-positive value will be interpreted as the
+> return
+> > +	 * value to be passed back to the caller. */
+> 
+> Please use imperative mood in the comments, i.e. simply state what the
+> code is doing.  E.g. "will be interpreted" makes it sound like something
+> else is processing the callback's return value.
+
+Will do in the next revision.
+
+> > +	jmp	1b
+> > +40:	/* retpoline */
+> > +	call	42f
+> > +41:	pause
+> > +	lfence
+> > +	jmp	41b
+> > +42:	mov	%rax, (%rsp)
+> >  	ret
+> >
+> > -bad_input:
+> > -	mov     $(-EINVAL), %rax
+> > -	ret
+> > +5:	/* Exception path */
+> > +	mov	$-EFAULT, %ebx
+> > +	stc
+> > +	jmp	3b
+> >
+> > -.pushsection .fixup, "ax"
+> > -	/* Re-load @exception_info and fill it (if it's non-NULL) */
+> > -2:	pop	%rcx
+> > -	test    %rcx, %rcx
+> > -	je      3f
+> > +6:	/* Unsupported ENCLU leaf */
+> > +	cmp	$0, %eax
+> > +	jle	7f
+> > +	mov	$-EINVAL, %eax
+> >
+> > -	mov	%eax, EX_LEAF(%rcx)
+> > -	mov	%di,  EX_TRAPNR(%rcx)
+> > -	mov	%si,  EX_ERROR_CODE(%rcx)
+> > -	mov	%rdx, EX_ADDRESS(%rcx)
+> > -3:	mov	$(-EFAULT), %rax
+> > +7:	/* Epilog */
+> > +	leave
+> > +	.cfi_def_cfa		%rsp, 8
+> >  	ret
+> > -.popsection
+> > +	.cfi_endproc
+> >
+> > -_ASM_VDSO_EXTABLE_HANDLE(1b, 2b)
+> > +_ASM_VDSO_EXTABLE_HANDLE(2b, 5b)
+> >
+> >  ENDPROC(__vdso_sgx_enter_enclave)
+> 
+> Putting everything together, sans comments, I'd prefer something like
+> the
+> following.  Pasted in raw code as that'll hopefully be easier to review
+> and discuss than a diff.
+> 
+> Note, swapping 'long rc' and '... *e' would allow the callback flow
+> to save one memory access, but IMO the exception info belongs at the end
+> since it's optional.
+
+You have probably misunderstood my code. 'ret' is _not_ passed while @exinfo is passed in %rcx. exinfo->leaf implies the reason of the callback.
+
+Or are you suggesting to add 'ret' as one more parameter to the callback? I don't think it necessary because exinfo contains everything the callback would ever need.
+
+> #ifdef SGX_KERNEL_DOC
+> typedef int (*sgx_callback)(long rdi, long rsi, long rdx, long ret, long
+> r8,
+> 			    long r9, void *tcs, long ursp,
+> 			    struct sgx_enclave_exception_info *e);
+> int __vdso_sgx_enter_enclave(int leaf, void *tcs,
+> 				struct sgx_enclave_exception_info *e,
+> 				sgx_callback callback)
+> {
+> 	int ret;
+> 
+> enter_enclave:
+> 	if (leaf != EENTER && leaf != ERESUME) {
+> 		ret = -EINVAL;
+> 		goto out;
+> 	}
+> 
+> 	try {
+> 		ENCLU[leaf];
+> 		ret = 0;
+> 	} catch (exception) {
+> 		ret = -EFAULT;
+> 		if (e)
+> 			*e = exception;
+> 	}
+> 	if (callback)
+> 		goto do_callback;
+> out:
+> 	return ret;
+> 
+> do_callback:
+> 	leaf = (*callback)(rdi, rsi, rdx, ret, r8, r9, e, tcs, ursp);
+> 	if (leaf <= 0)
+> 		goto out;
+> 	goto enter_enclave;
+> }
+> #endif
+> ENTRY(__vdso_sgx_enter_enclave)
+> 	/* Prolog */
+> 	.cfi_startproc
+> 	push	%rbp
+> 	.cfi_adjust_cfa_offset	8
+> 	.cfi_rel_offset		%rbp, 0
+> 	mov	%rsp, %rbp
+> 	.cfi_def_cfa_register	%rbp
+> 
+> 1:	/* EENTER <= leaf <= ERESUME */
+> 	cmp	$0x2, %eax
+> 	jb	5f
+> 	cmp	$0x3, %eax
+> 	ja	5f
+> 
+> 	/* Load TCS and AEP */
+> 	mov	0x10(%rbp), %rbx
+> 	lea	2f(%rip), %rcx
+> 
+> 	/* Single ENCLU serving as both EENTER and AEP (ERESUME) */
+> 2:	enclu
+> 
+> 	/* EEXIT branches here unless the enclave is doing something fancy.
+> */
+> 	xor	%eax, %eax
+> 
+> 3:	cmp	$0, 0x20(%rbp)
+> 	jne	8f
+> 
+> 4:	leave
+> 	.cfi_def_cfa		%rsp, 8
+> 	ret
+> 
+> 5:	mov	$(-EINVAL), %rax
+> 	jmp	4b
+> 
+> 6:	mov	0x18(%rbp), %rcx
+> 	test    %rcx, %rcx
+> 	je	7f
+> 
+> 	/* Fill optional exception info. */
+> 	mov	%eax, EX_LEAF(%rcx)
+> 	mov	%di,  EX_TRAPNR(%rcx)
+> 	mov	%si,  EX_ERROR_CODE(%rcx)
+> 	mov	%rdx, EX_ADDRESS(%rcx)
+> 7:	mov	$(-EFAULT), %rax
+> 	jmp	3b
+> 
+> 8:	/*
+> 	 * Align stack per x86_64 ABI.  Save the original %rsp in %rbx to
+> be
+> 	 * restored after the callback returns.
+> 	 */
+> 	mov	%rsp, %rbx
+> 	and	$-0x10, %rsp
+> 
+> 	/* Push @e, u_rsp and @tcs as parameters to the callback. */
+> 	push	0x18(%rbp)
+> 	push	%rbx
+> 	push	0x10(%rbp)
+> 
+> 	/* Pass the "return value" to the callback via %rcx. */
+> 	mov	%rax, %rcx
+> 
+> 	/* Clear RFLAGS.DF per x86_64 ABI */
+> 	cld
+> 
+> 	/* Load the callback pointer to %rax and invoke it via retpoline.
+> */
+> 	mov	0x20(%rbp), %rax
+> 	call	40f
+> 
+> 	/* Restore %rsp to its post-exit value. */
+> 	mov	%rbx, %rsp
+> 
+> 	/*
+> 	 * If the return from callback is zero or negative, return
+> immediately,
+> 	 * otherwise attempt to re-execute ENCLU with the return
+> interpreted as
+> 	 * the requested ENCLU leaf.
+> 	 */
+> 	cmp	$0, %eax
+> 	jle	4b
+> 	jmp	1b
+> 
+> 40:	/* retpoline */
+> 	call	42f
+> 41:	pause
+> 	lfence
+> 	jmp	41b
+> 42:	mov	%rax, (%rsp)
+> 	ret
+> 	.cfi_endproc
+> 
+> _ASM_VDSO_EXTABLE_HANDLE(2b, 6b)
+> 
+> ENDPROC(__vdso_sgx_enter_enclave)
+
+Your code will work. The only missing thing is a ".cfi_def_cfa %rbp, 16" after 'ret' instruction in block 4. I decided to keep "leave; ret" at the end to avoid confusion around the frame pointer. As you may also notice, GCC generated code usually does the same thing. 
+
+-Cedric
