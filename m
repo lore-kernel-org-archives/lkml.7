@@ -2,97 +2,114 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A5BC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E19C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA09B217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B9C206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tVNVK6lj"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="iLk0Ehxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbfDYHe7 (ORCPT
+        id S1727308AbfDYHi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:34:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59512 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfDYHe7 (ORCPT
+        Thu, 25 Apr 2019 03:38:58 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]:37800 "EHLO
+        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfDYHi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:34:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=h67vG0bl/xud0pkDbwWxlwJcQ5+GKV0iRLlkLH6pnJU=; b=tVNVK6ljLmjwJn8v4OP0XDQ6q
-        pwibaRzMjqzP7Q5Gemz2z/hy/UMYneC2oCbyREnySjVl9pDNt5xS/xdTHfGslnlOdEuAophF/aI2/
-        OfzxVN59fkZ/2p+U9fHnohe+pJ47BOa37JQjGWnaTFntrdErLZ2fOjW7a3phJqG5eEqcT5E8LYs9l
-        oNv9t3xri9tRgcVbm/P8OxtiW0DXAspr4WmBKxbw13LRpPgTH0Wz7GPi+O2oPNbtzNLFlRyz10BY8
-        P1N9/himo61F2GusKQWHYSu4fTgd7kX7pXSKbBX1rzs/gBIJNCf3VfeES/cKW5/x4qnHzVZhDYXVB
-        Sz9Hcncxg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJYu4-0000BE-Dv; Thu, 25 Apr 2019 07:34:44 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BACE220D0A200; Thu, 25 Apr 2019 09:34:42 +0200 (CEST)
-Date:   Thu, 25 Apr 2019 09:34:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "akiyks@gmail.com" <akiyks@gmail.com>,
-        "andrea.parri@amarulasolutions.com" 
-        <andrea.parri@amarulasolutions.com>,
-        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
-        "dlustig@nvidia.com" <dlustig@nvidia.com>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "j.alglave@ucl.ac.uk" <j.alglave@ucl.ac.uk>,
-        "luc.maranget@inria.fr" <luc.maranget@inria.fr>,
-        "npiggin@gmail.com" <npiggin@gmail.com>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-Subject: Re: [RFC][PATCH 4/5] mips/atomic: Fix smp_mb__{before,after}_atomic()
-Message-ID: <20190425073442.GW11158@hirez.programming.kicks-ass.net>
-References: <20190424123656.484227701@infradead.org>
- <20190424124421.751367532@infradead.org>
- <20190424212422.bykvyho3jqw6jz6w@pburton-laptop>
+        Thu, 25 Apr 2019 03:38:58 -0400
+Received: by mail-qk1-f180.google.com with SMTP id c1so12472674qkk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 00:38:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TfvjY+zDqv6pZ1IB6rCy8tV4fyw/efPkbRlraVU4XAU=;
+        b=iLk0EhxoyNOLXrk91r7oQEoj8JysVGxcc3JYPy7RLgkDym3NcZQNhss7hAYCwVn4Ry
+         b+pqPcJf5XhW3oi0D5lmScAoB2LJoPQC+89DZibUsl80eVbzaNwkEH14zOsuJD6taHhl
+         bnXvadM4JcMnvDkecSgx23eNdnE1VY6eT5jOOnSqX3DIdvDirDrpgDVTsPLSPB7Evvel
+         Vb1mF8TX6EUJEXpfZaAaWA5zU3OBHbNoS4CRdnOTtw0IZgrAcPhU812h7n9kplcoUAOQ
+         SDwxZ9siGrr7LYTTgIniVan03o2o/KFDq3CpvBgX8qI8+fVodV7AYx4DNgMIpCjkkVMo
+         jbDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TfvjY+zDqv6pZ1IB6rCy8tV4fyw/efPkbRlraVU4XAU=;
+        b=JGPuVizOIu0EehSgJn+mlJj9+v8myAduk66oJyLMKZ+1Lm52epdyLx/QR5+xdzH+YQ
+         6xqfaGNXpdN1UO8WLjut19KNKD4yPChnuBPGwcJwUL8W6XITOrWjdGt1yAC2PtBd46co
+         DR//Bfp/kU+nUi8nqkcN3A7wtNl7O9e8CubR3AhLZkTswGMq6fwrcS4zPLvuDwjyGvcz
+         i8rg37sFIZ00LoTnx3AUh6gQzidM65an5qkO6YeTd4BmQuONZnszcOO//QyVu4kYoXP4
+         oQUyQHvk6ta0n+ocN6//c7j6PlT63P90FqO91NHA6PBKsPOHwnpyhNQvvTs1QLcJ3vxd
+         Cxbw==
+X-Gm-Message-State: APjAAAV33COFEFyvMAII9ZHwLYSnVQ5ttSnIVCPrU8f79EnbRBx20pzf
+        NYPhcOgeaUud6ehE1cbit1407e2QV+/+YhK8C7Ie2w==
+X-Google-Smtp-Source: APXvYqyFkuYiZW++luERGRFMhrxkRmsn6Fuso9f/wgvJVWlG9sYuxmBgjCmy2l6w5kgoU2nkMsC9T35tktP5PyzDpHs=
+X-Received: by 2002:a05:620a:35c:: with SMTP id t28mr28046449qkm.24.1556177936957;
+ Thu, 25 Apr 2019 00:38:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424212422.bykvyho3jqw6jz6w@pburton-laptop>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAD8Lp47JYdZzbV9F+asNwvSfLF_po_J7ir6R_Vb-Dab21_=Krw@mail.gmail.com>
+ <20190424112153.GB16077@mellanox.com>
+In-Reply-To: <20190424112153.GB16077@mellanox.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Thu, 25 Apr 2019 15:38:45 +0800
+Message-ID: <CAD8Lp47uacAFKTz8dtpDq3AXuQE9UKoBtw9VqxZdLeL5UoHCXA@mail.gmail.com>
+Subject: Re: sg_dma_page_iter offset & length considerations
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "imre.deak@intel.com" <imre.deak@intel.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 09:24:31PM +0000, Paul Burton wrote:
-> Hi Peter,
-> 
-> On Wed, Apr 24, 2019 at 02:37:00PM +0200, Peter Zijlstra wrote:
-> > --- a/arch/mips/include/asm/barrier.h
-> > +++ b/arch/mips/include/asm/barrier.h
-> > @@ -230,9 +238,6 @@
-> >  #define nudge_writes() mb()
-> >  #endif
-> >  
-> > -#define __smp_mb__before_atomic()	__smp_mb__before_llsc()
-> > -#define __smp_mb__after_atomic()	smp_llsc_mb()
-> > -
-> >  /*
-> >   * Some Loongson 3 CPUs have a bug wherein execution of a memory access (load,
-> >   * store or pref) in between an ll & sc can cause the sc instruction to
-> 
-> I think this bit should be part of patch 3, where you currently add a
-> second definition of these 2 macros.
+On Wed, Apr 24, 2019 at 7:22 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
+> A driver that simply wants a SGL with a capped max size (ie 4k?)
+> should use the dma_set_max_seg_size() API and just never get a SGE
+> with a larger length.
 
-Whoops, indeed.
+That sounds like exactly what we want here. However I tried that
+function and it seems to have no effect. Larger SGEs still appear just
+as readily as before.
 
-> Otherwise this one looks reasonable to me.
+I tried to find the code that honours the value set here, but didn't
+find anything. Sure there are some non-x86 archs and some iommu
+drivers that appear to do something with it, but in this case
+(standard Intel x86_64) it seems like nothing observes/honours this
+value.
 
-Great, thanks!
+That did lead me back to the similarly-named mmc_host.max_seg_size
+though, which is passed through to blk_queue_max_segment_size().
+That is documented as "Enables a low level driver to set an upper
+limit on the size of a coalesced segment", but perhaps I don't fully
+grasp what it means by "coalesced segment".
+
+The alcor driver currently has:
+    mmc->max_segs = 64;
+    mmc->max_seg_size = 240 * 512;
+
+which I had interpreted to mean "we can accept a sglist with maximum
+64 entries, and if you sum the size of all entries in that sglist, the
+total must not exceed 240 sectors". i.e. with "coalesced" referring to
+the overall sum; the description does not suggest to me that we can
+influence the size of an individual segment here.
+
+Other mmc drivers may also share a similar interpretation, e.g. see atmel-mci.c:
+    mmc->max_seg_size = mmc->max_blk_size * mmc->max_segs;
+
+but I just experimented with the driver again, and setting
+mmc_host.max_seg_size to 4096 does seem to do what we want here. Now
+we get multi-entry sg lists but each sge is max 4096 bytes in size.
+
+I'll do some more verification and then send a patch along these
+lines. Thanks for your comments!
+
+Daniel
