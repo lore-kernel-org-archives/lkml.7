@@ -3,106 +3,167 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC88C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698BEC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8943217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AB8E218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfDYHkh (ORCPT
+        id S1727564AbfDYHl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:40:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44202 "EHLO mx1.redhat.com"
+        Thu, 25 Apr 2019 03:41:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59220 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727004AbfDYHkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:40:37 -0400
+        id S1727004AbfDYHl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 03:41:27 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E2D2130882A5;
-        Thu, 25 Apr 2019 07:40:36 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9FDF01001DDE;
-        Thu, 25 Apr 2019 07:40:33 +0000 (UTC)
-Subject: Re: [PATCH v2 09/19] iommu/vt-d: Enlightened PASID allocation
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556062279-64135-10-git-send-email-jacob.jun.pan@linux.intel.com>
- <143adac1-d58b-dde6-593b-74ea71da73c8@redhat.com>
- <A2975661238FB949B60364EF0F2C257439E840F5@SHSMSX104.ccr.corp.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <c847182b-6e5c-5344-a162-29e273a489fb@redhat.com>
-Date:   Thu, 25 Apr 2019 09:40:31 +0200
+        by mx1.redhat.com (Postfix) with ESMTPS id 088BD2D813;
+        Thu, 25 Apr 2019 07:41:26 +0000 (UTC)
+Received: from [10.36.117.163] (ovpn-117-163.ams2.redhat.com [10.36.117.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 858D21001DE4;
+        Thu, 25 Apr 2019 07:41:21 +0000 (UTC)
+Subject: Re: [v2 2/2] device-dax: "Hotremove" persistent memory that is used
+ like normal RAM
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20190421014429.31206-1-pasha.tatashin@soleen.com>
+ <20190421014429.31206-3-pasha.tatashin@soleen.com>
+ <4ad3c587-6ab8-1307-5a13-a3e73cf569a5@redhat.com>
+ <CAPcyv4h3+hU=MmB=RCc5GZmjLW_ALoVg_C4Z7aw8NQ=1LzPKaw@mail.gmail.com>
+ <CA+CK2bDB5o4+NMc7==_ipVAZoEo7fdrkjZ4etU0LUCqxnmN-Rg@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <180d6250-8a6a-0b5d-642a-ec6648cb45b1@redhat.com>
+Date:   Thu, 25 Apr 2019 09:41:20 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <A2975661238FB949B60364EF0F2C257439E840F5@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <CA+CK2bDB5o4+NMc7==_ipVAZoEo7fdrkjZ4etU0LUCqxnmN-Rg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 25 Apr 2019 07:40:37 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 25 Apr 2019 07:41:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Liu,
-
-On 4/25/19 9:12 AM, Liu, Yi L wrote:
-> Hi Eric,
-> 
->> From: Auger Eric [mailto:eric.auger@redhat.com]
->> Sent: Thursday, April 25, 2019 1:28 AM
->> To: Jacob Pan <jacob.jun.pan@linux.intel.com>; iommu@lists.linux-foundation.org;
->> Subject: Re: [PATCH v2 09/19] iommu/vt-d: Enlightened PASID allocation
->>
->> Hi Jacob,
->>
->> On 4/24/19 1:31 AM, Jacob Pan wrote:
->>> From: Lu Baolu <baolu.lu@linux.intel.com>
+On 24.04.19 23:34, Pavel Tatashin wrote:
+>>>> +static int
+>>>> +offline_memblock_cb(struct memory_block *mem, void *arg)
 >>>
->>> If Intel IOMMU runs in caching mode, a.k.a. virtual IOMMU, the IOMMU
->>> driver should rely on the emulation software to allocate and free
->>> PASID IDs.
->> Do we make the decision depending on the CM or depending on the VCCAP_REG?
+>>> Function name suggests that you are actually trying to offline memory
+>>> here. Maybe check_memblocks_offline_cb(), just like we have in
+>>> mm/memory_hotplug.c.
+> 
+> Makes sense, I will rename to check_memblocks_offline_cb()
+> 
+>>>> +     lock_device_hotplug();
+>>>> +     rc = walk_memory_range(start_pfn, end_pfn, dev, offline_memblock_cb);
+>>>> +     unlock_device_hotplug();
+>>>> +
+>>>> +     /*
+>>>> +      * If admin has not offlined memory beforehand, we cannot hotremove dax.
+>>>> +      * Unfortunately, because unbind will still succeed there is no way for
+>>>> +      * user to hotremove dax after this.
+>>>> +      */
+>>>> +     if (rc)
+>>>> +             return rc;
+>>>
+>>> Can't it happen that there is a race between you checking if memory is
+>>> offline and an admin onlining memory again? maybe pull the
+>>> remove_memory() into the locked region, using __remove_memory() instead.
 >>
->> VCCAP_REG description says:
->>
->> If Set, software must use Virtual Command Register interface to allocate and free
->> PASIDs.
+>> I think the race is ok. The admin gets to keep the pieces of allowing
+>> racing updates to the state and the kernel will keep the range active
+>> until the next reboot.
 > 
-> The answer is it depends on the ECAP.VCS and then the PASID allocation bit in
-> VCCAP_REG. But VCS bit implies the iommu is a software implementation
-> (vIOMMU) of vt-d architecture. Pls refer to the descriptions of "Virtual
-> Command Support" in vt-d 3.0 spec.
+> Thank you for noticing this. I will pull it into locking region.
+> Because, __remove_memory() has this code:
 > 
-> "Hardware implementations of this architecture report a value of 0
-> in this field. Software implementations (emulation) of this
-> architecture may report VCS=1."
+> 1868   ret = walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1), NULL,
+> 1869   check_memblock_offlined_cb);
+> 1870   if (ret)
+> 1871      BUG();
+> 
 
-OK I understand. But strictly speaking a vIOMMU may not implement CM.
-But that's nitpicking ;-)
+Yes, also I think you can let go of the device_lock in
+check_memblocks_offline_cb, lock_device_hotplug() should take care of
+this (see Documentation/core-api/memory-hotplug.rst - "locking internals")
 
-Thanks
+Cheers!
 
-Eric
-> 
-> Thanks,
-> Yi Liu
-> 
+-- 
+
+Thanks,
+
+David / dhildenb
