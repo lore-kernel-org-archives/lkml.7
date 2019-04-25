@@ -2,174 +2,219 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10974C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0922C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D777A218AD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:58:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qguydYpD"
+	by mail.kernel.org (Postfix) with ESMTP id 94F8E2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbfDYF62 (ORCPT
+        id S1729379AbfDYGCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 01:58:28 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33603 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726790AbfDYF62 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 01:58:28 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j11so16545750lfm.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 22:58:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fVrcKGlNw1yGG70zsmIktYA+1roXIuFxt4ihMpw/G1Q=;
-        b=qguydYpDbsbYd2XOy7jVOSO9+APBmrN2YqAVrLfbm7cLG+AHM4JnIcR//SD5RTBeYU
-         7s+ppFcKkG1iE0uWoBAbdiyBBkDF5kHJ6UAqjf0kHEZdep6mKYmQrfiq+bRu3vVKx/8q
-         GMDHP2uMl2bzQluSVl1hZH4CZlU+7J6hE8MIUnPUK3TgAsY5pXSTOTyOwNLXersD0AzJ
-         KxyNJf9u6k4XFF1j/DnenmhSgjjTUCugdubjnXSIJ3Cf/7s5/Kc7VUvbkQ+AV3DAcl6o
-         mm+CiUdHvuQn8pf83WbqRsupnsqXb7dD0797aQuBl1PTmgjZfOHFj0qEq53yjhNbknoT
-         12UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fVrcKGlNw1yGG70zsmIktYA+1roXIuFxt4ihMpw/G1Q=;
-        b=gyOKPolRTEfFEdlq9/VHjzreNJV9JD9wC5HC/+jtfgvmggaDuvb+rllJY9R+1d12L1
-         Qx7/9wa5fExHAXhROr3NvVkllwOcCLef3udfok80bpVoDekL05sIZ+41CiYnpM/eTazA
-         lGerBM3Qnjb57D+vi7nZxytfJe/wzEp5C5Mk3VOGICKQ3YZJc7wwFKMmFzkMtXE7RZ6I
-         zfDUMSSJ4ocU4NlehhSQscL7e2sh2+VAC0BZcxsDFyzUEhARug7r1qJd6C1+Ovwm8fHz
-         mM1kXa+QnNX3nfZ37sqn04U5rWSCiETmB7BnrBannQvL20FwBM01zppsGfDbr00iTY5r
-         iA8A==
-X-Gm-Message-State: APjAAAXaR23PfbrIxjbrPMe+Ji35SdoRgsoPWSGQCOcNrMuRVg5VpxyL
-        3cf/4fmaNkMj7HeINowAa0bEjF6IT1bdA3zTihfDqw==
-X-Google-Smtp-Source: APXvYqzBHYj2i4TcdY3Ofz4LdYBZ2/tJise1sI+uayR+OXC7NJ3RqOTlcfCholHhQ698hp8DKRG0yAgE1fTo4Jcf/10=
-X-Received: by 2002:a19:1949:: with SMTP id 70mr11719825lfz.103.1556171905826;
- Wed, 24 Apr 2019 22:58:25 -0700 (PDT)
+        Thu, 25 Apr 2019 02:02:43 -0400
+Received: from mga05.intel.com ([192.55.52.43]:23355 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727099AbfDYGCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 02:02:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 23:02:42 -0700
+X-IronPort-AV: E=Sophos;i="5.60,392,1549958400"; 
+   d="scan'208";a="137261928"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.239.196.186]) ([10.239.196.186])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 24 Apr 2019 23:02:41 -0700
+Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
+References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
+ <20190424143238.GB18442@linux.intel.com>
+ <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
+ <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
+Date:   Thu, 25 Apr 2019 14:02:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190424170906.751869122@linuxfoundation.org>
-In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 25 Apr 2019 11:28:14 +0530
-Message-ID: <CA+G9fYucTJ1QWSmERRU0wXESHYvn6hXbzCqrMV1+1dF+Hygw=A@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/70] 4.14.114-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019 at 22:57, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.114 release.
-> There are 70 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri 26 Apr 2019 05:07:32 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.114-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 2019/4/25 12:18, Xiaoyao Li wrote:
+> On Thu, 2019-04-25 at 10:58 +0800, Like Xu wrote:
+>> On 2019/4/24 22:32, Sean Christopherson wrote:
+>>> Now that I understand how min() works...
+>>>
+>>> On Mon, Apr 22, 2019 at 02:40:34PM +0800, Like Xu wrote:
+>>>> Expose Intel V2 Extended Topology Enumeration Leaf to guest only when
+>>>> host system has multiple software-visible die within each package.
+>>>>
+>>>> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+>>>> ---
+>>>>    arch/x86/kvm/cpuid.c | 13 +++++++++++++
+>>>>    1 file changed, 13 insertions(+)
+>>>>
+>>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>>>> index fd39516..9fc14f2 100644
+>>>> --- a/arch/x86/kvm/cpuid.c
+>>>> +++ b/arch/x86/kvm/cpuid.c
+>>>> @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
+>>>>    	return xcr0;
+>>>>    }
+>>>>    
+>>>> +/* We need to check if the host cpu has multi-chip packaging technology.
+>>>> */
+>>>> +static bool kvm_supported_intel_mcp(void)
+>>>> +{
+>>>> +	u32 eax, ignored;
+>>>> +
+>>>> +	cpuid_count(0x1f, 0, &eax, &ignored, &ignored, &ignored);
+>>>
+>>> This is broken because of how CPUID works for unsupported input leafs:
+>>>
+>>>     If a value entered for CPUID.EAX is higher than the maximum input value
+>>>     for basic or extended function for that processor then the data for the
+>>>     highest basic information leaf is returned.
+>>>
+>>> For example, my system with a max basic leaf of 0x16 returns 0x00000e74
+>>> for CPUID.1F.EAX.
+>>
+>> You're right and the cpuid.1f.eax check is unreliable after I checked a
+>> few machines.
+>>
+>>>
+>>>> +
+>>>> +	return boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && (eax != 0);
+>>>
+>>> Checking 'eax != 0' is broken as it will be '0' when SMT is disabled.  ecx
+>>> is the obvious choice since bits 15:8 are guaranteed to be non-zero when
+>>> the leaf is valid.
+>>
+>> I agree with this and ecx[15:8] makes sense.
+>>
+>>>
+>>> I think we can skip the vendor check.  AFAIK, CPUID.1F isn't used by AMD,
+>>> and since AMD and Intel try to maintain a semblance of CPUID compatibility
+>>> it seems more likely that AMD/Hygon would implement CPUID.1F as-is rather
+>>> than repurpose it to mean something else entirely.
+>>
+>> If it's true, let's skip the vendor check.
+>>
+>> // I have to mention that AMD already has MCP CPUs.
+>>
+>>>
+>>>> +}
+>>>> +
+>>>>    #define F(x) bit(X86_FEATURE_##x)
+>>>>    
+>>>>    int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>>>> @@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct
+>>>> kvm_cpuid_entry2 *entry, u32 function,
+>>>>    	switch (function) {
+>>>>    	case 0:
+>>>>    		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 :
+>>>> 0xd));
+>>>> +		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry->eax;
+>>>
+>>> If we put everything together, I think the code can be reduced to:
+>>>
+>>> 		/* comment about multi-chip leaf... */
+>>> 		if (entry->eax >= 0x1f && cpuid_ecx(0x1f))
+>>> 			entry->eax = 0x1f;
+>>> 		else
+>>> 			entry->eax = min(entry->eax,
+>>> 					 (u32)(f_intel_pt ? 0x14 : 0xd));
+>>
+>> Based on:
+>>
+>> 	ECX Bits 07 - 00: Level number. Same value in ECX input.
+>> 	Bits 15 - 08: Level type.
+>> 	Bits 31 - 16: Reserved.
+>>
+>> how about using an increasing order:
+>>
+>> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+>>
+>> 	// ... more checks when eax is between 0x14 and 0x1f if any
+>>
+>> 	/* Check if the host cpu has multi-chip packaging technology.*/
+>> 	if (((cpuid_ecx(0x1f) >> 8) & 0xff) != 0)
+>> 		entry->eax = 0x1f;
+> 
+> As Sean pointed out, you cannot rely on the output of cpuid.1f to indicate the
+> existence of leaf 1f. If maximum basic leaf supported is smaller than 1f, the
+> data returned by cpuid_ecx(0x1f) is the actual highest basic information leaf of
+> the hardware.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+I don't think so.
 
-Summary
-------------------------------------------------------------------------
+> So using "entry->eax >= 0x1f" from cpuid.0H is and only is the right way to
+> check the existence of leaf 1f.
+> 
+> We can simply use (cpuid_ecx(0x1f) & 0x0000ff00) to avoid the unnecessory
+> shifting operation.
 
-kernel: 4.14.114-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 68dd4895dd2accf3ed604dd5a2248e4fd804831b
-git describe: v4.14.113-71-g68dd4895dd2a
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.113-71-g68dd4895dd2a
+I borrowed this "unnecessory" shifting operation from host 
+check_extended_topology_leaf() and we may do better on this.
 
-No regressions (compared to build v4.14.113)
+> Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes is that we
+> cannot assmue the reserved bits 31:16 of ECX is always 0 for the future
+> generation.
 
-No fixes (compared to build v4.14.113)
+It's true cause the statement in public spec is not "Reserved = 0" but 
+"Bits 31 - 16: Reserved".
 
+> 
+> In my opinion, Sean's codes is OK and much simple and clear.
 
-Ran 23414 total tests in the following environments and test suites.
+If the host cpuid.0.eax is greater than 0x1f but actually it doesn't
+have multi-chip packaging technology and we may want to expose 
+entry->eax to some value smaller than 0x1f but greater than 0x14, much 
+effort needs to apply on Sean's code.
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+My improvement is good to overwrite cpuid.0.eax in future usage
+from the perspective of kvm feature setting not just from value check.
 
-Test Suites
------------
-* install-android-platform-tools-r2600
-* kselftest
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kvm-unit-tests
-* libhugetlbfs
-* ltp-commands-tests
-* ltp-fs-tests
-* ltp-math-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
+> All need to do is using (cpuid_ecx(0x1f) & 0x0000ff00) to verify the leaf.1f is
+> valid.
+> 
+> Thanks,
+> -Xiaoyao
+>> 	// ... more checks when eax greater than 0x1f if any
+>>
+>> are we OK with it?
+>>
+>>>>    		break;
+>>>>    	case 1:
+>>>>    		entry->edx &= kvm_cpuid_1_edx_x86_features;
+>>>> @@ -544,6 +555,8 @@ static inline int __do_cpuid_ent(struct
+>>>> kvm_cpuid_entry2 *entry, u32 function,
+>>>>    		entry->edx = edx.full;
+>>>>    		break;
+>>>>    	}
+>>>> +	/* function 0x1f has additional index. */
+>>>> +	case 0x1f:
+>>>>    	/* function 0xb has additional index. */
+>>>>    	case 0xb: {
+>>>>    		int i, level_type;
+>>>> -- 
+>>>> 1.8.3.1
+>>>>
+>>
+>>
+> 
+> 
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
