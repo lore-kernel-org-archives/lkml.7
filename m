@@ -2,193 +2,149 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 977BFC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 04:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704F8C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 04:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B19217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 04:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383CE217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 04:24:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XkGh3k76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfDYEWI (ORCPT
+        id S1728817AbfDYEYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 00:22:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:18333 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbfDYEWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 00:22:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 21:22:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,392,1549958400"; 
-   d="scan'208";a="145650632"
-Received: from lxy-dell.sh.intel.com ([10.239.159.145])
-  by fmsmga007.fm.intel.com with ESMTP; 24 Apr 2019 21:22:06 -0700
-Message-ID: <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
-Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Like Xu <like.xu@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
-Date:   Thu, 25 Apr 2019 12:18:50 +0800
-In-Reply-To: <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
-References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
-         <20190424143238.GB18442@linux.intel.com>
-         <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Apr 2019 00:24:55 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44817 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbfDYEYy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 00:24:54 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y12so7823958plk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 21:24:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MZ0ZquoXjXt5YQFZ1wMrrbk19uCV0UUA3XVrwhRs4M8=;
+        b=XkGh3k76hbcbOi/MX/s5uM85MbIjTe3GUxlo97a63B6spbtzwdVlSgqGQXtjd+FQ4Z
+         O2e0Hmuq0LfxKhMmVzxHgOO4xZMCCPu/vn9jVrRMN5/GktnGisXEKCThoq7xuEM/wXfd
+         6aU2FluO5NEww6Z7vACix3Mn9QlFWYRlnUHMwHM9n1Hn3BxkB6Yn4/P8xnFaRxAlbHFa
+         mp693inIHUcCexOMa50f1BzGR/XXpajPkRwLS5uVeZTwse31B/M/0J4lvP+FiuPt22br
+         fqzkpQ59MSaLPPNw4dZjjgngY7g2dHBpgOIC6QS3/Yfpd/NnjKRoBeJQ8hPuBmVLH7HI
+         a/Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MZ0ZquoXjXt5YQFZ1wMrrbk19uCV0UUA3XVrwhRs4M8=;
+        b=ZOZfUbkpMhs/lUrVQA/e8YvvbgvP8Mh1NUasTO3yLA1yV50YHgYg5R9mxaXMWMEraW
+         UMEvAablNIfBbnbtJSx5B8qKyJ5x3q2iIiqvTtwVTw973rmaFxhI/1aKp2XWyjTu7Rs1
+         pDR6y6coMX5REcKl0K67x8Nja7ozOwUwunaAQgSI7MxVMGraH2deHntaKQ4gLO1X4wca
+         mHirAAGd2n9LPVXpF7u1fuu1fwsdY7FcT5CbQb9nS7zOqzEispzfN70mn0VlUHWQcnsk
+         scXI8UOiRIZNdE/Dl2MJOPrn8f8Tr+E8YGlro7NLGiMc/zsrTmAV3L0qulVHmRAWf6cO
+         +uKw==
+X-Gm-Message-State: APjAAAWRj+BDWgv5+8noAc1cjNOmO5mtAgwDvSo/ATL9r87Xv/OIylV4
+        ul21y9/Ul3WNJ2YBL4Y0FxR4jQ==
+X-Google-Smtp-Source: APXvYqwVyaHQRyRc/H1q1tzitljEXvhQueIXGZNsgusbQEPPcU4cH+xz6ecZzeYFl2Ach6N34UnmOA==
+X-Received: by 2002:a17:902:1d4a:: with SMTP id u10mr11040129plu.272.1556166293565;
+        Wed, 24 Apr 2019 21:24:53 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m23sm28564839pfa.117.2019.04.24.21.24.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 21:24:52 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 21:24:50 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org,
+        sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, rjw@rjwysocki.net, jcrouse@codeaurora.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: opp: Introduce bandwidth-MBps
+ bindings
+Message-ID: <20190425042450.GB2867@tuxbook-pro>
+References: <20190423132823.7915-1-georgi.djakov@linaro.org>
+ <20190423132823.7915-2-georgi.djakov@linaro.org>
+ <e35223d0-80ac-5236-2b8d-7f46cd3a1581@codeaurora.org>
+ <20190424064942.v5g6jr5l3xy5z3xv@vireshk-i7>
+ <dd6f055c-e7df-13e8-72aa-2973d3c664d0@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd6f055c-e7df-13e8-72aa-2973d3c664d0@codeaurora.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-04-25 at 10:58 +0800, Like Xu wrote:
-> On 2019/4/24 22:32, Sean Christopherson wrote:
-> > Now that I understand how min() works...
-> > 
-> > On Mon, Apr 22, 2019 at 02:40:34PM +0800, Like Xu wrote:
-> > > Expose Intel V2 Extended Topology Enumeration Leaf to guest only when
-> > > host system has multiple software-visible die within each package.
+On Wed 24 Apr 02:00 PDT 2019, Sibi Sankar wrote:
+> On 4/24/19 12:19 PM, Viresh Kumar wrote:
+> > On 24-04-19, 12:16, Rajendra Nayak wrote:
+> > > On 4/23/2019 6:58 PM, Georgi Djakov wrote:
+[..]
+> > > > +/ {
+> > > > +	cpus {
+> > > > +		CPU0: cpu@0 {
+> > > > +			compatible = "arm,cortex-a53", "arm,armv8";
+> > > > +			...
+> > > > +			operating-points-v2 = <&cpu_opp_table>;
+> > > > +			/* path between CPU and DDR memory and CPU and L3 */
+> > > > +			interconnects = <&noc MASTER_CPU &noc SLAVE_DDR>,
+> > > > +					<&noc MASTER_CPU &noc SLAVE_L3>;
+> > > > +		};
+> > > > +	};
+> > > > +
+> > > > +	cpu_opp_table: cpu_opp_table {
+> > > > +		compatible = "operating-points-v2";
+> > > > +		opp-shared;
+> > > > +
+> > > > +		opp-200000000 {
+> > > > +			opp-hz = /bits/ 64 <200000000>;
+> > > > +			/* CPU<->DDR bandwidth: 457 MB/s average, 1525 MB/s peak */
+> > > > +			 * CPU<->L3 bandwidth: 914 MB/s average, 3050 MB/s peak */
+> > > > +			bandwidth-MBps = <457 1525>, <914 3050>;
 > > > 
-> > > Signed-off-by: Like Xu <like.xu@linux.intel.com>
-> > > ---
-> > >   arch/x86/kvm/cpuid.c | 13 +++++++++++++
-> > >   1 file changed, 13 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > > index fd39516..9fc14f2 100644
-> > > --- a/arch/x86/kvm/cpuid.c
-> > > +++ b/arch/x86/kvm/cpuid.c
-> > > @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
-> > >   	return xcr0;
-> > >   }
-> > >   
-> > > +/* We need to check if the host cpu has multi-chip packaging technology.
-> > > */
-> > > +static bool kvm_supported_intel_mcp(void)
-> > > +{
-> > > +	u32 eax, ignored;
-> > > +
-> > > +	cpuid_count(0x1f, 0, &eax, &ignored, &ignored, &ignored);
+> > > Should this also have a bandwidth-MBps-name perhaps? Without that I guess we assume
+> > > the order in which we specify the interconnects is the same as the order here?
 > > 
-> > This is broken because of how CPUID works for unsupported input leafs:
-> > 
-> >    If a value entered for CPUID.EAX is higher than the maximum input value
-> >    for basic or extended function for that processor then the data for the
-> >    highest basic information leaf is returned.
-> > 
-> > For example, my system with a max basic leaf of 0x16 returns 0x00000e74
-> > for CPUID.1F.EAX.
+> > Right, so I suggested not to add the -name property and to rely on the
+> > order. Though I missed that he hasn't mentioned the order thing here.
 > 
-> You're right and the cpuid.1f.eax check is unreliable after I checked a 
-> few machines.
+> by skipping names, aren't we forced to specify all the specified paths
+> bandwidths for each opp even if it is redundant? i.e if the first/second
+> icc path doesn't have to change across a few opps but if the other path
+> does need to change this scheme would force it to be included and will
+> try to set the first/second path again.
 > 
-> > 
-> > > +
-> > > +	return boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && (eax != 0);
-> > 
-> > Checking 'eax != 0' is broken as it will be '0' when SMT is disabled.  ecx
-> > is the obvious choice since bits 15:8 are guaranteed to be non-zero when
-> > the leaf is valid.
 > 
-> I agree with this and ecx[15:8] makes sense.
-> 
-> > 
-> > I think we can skip the vendor check.  AFAIK, CPUID.1F isn't used by AMD,
-> > and since AMD and Intel try to maintain a semblance of CPUID compatibility
-> > it seems more likely that AMD/Hygon would implement CPUID.1F as-is rather
-> > than repurpose it to mean something else entirely.
-> 
-> If it's true, let's skip the vendor check.
-> 
-> // I have to mention that AMD already has MCP CPUs.
-> 
-> > 
-> > > +}
-> > > +
-> > >   #define F(x) bit(X86_FEATURE_##x)
-> > >   
-> > >   int kvm_update_cpuid(struct kvm_vcpu *vcpu)
-> > > @@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct
-> > > kvm_cpuid_entry2 *entry, u32 function,
-> > >   	switch (function) {
-> > >   	case 0:
-> > >   		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 :
-> > > 0xd));
-> > > +		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry->eax;
-> > 
-> > If we put everything together, I think the code can be reduced to:
-> > 
-> > 		/* comment about multi-chip leaf... */
-> > 		if (entry->eax >= 0x1f && cpuid_ecx(0x1f))
-> > 			entry->eax = 0x1f;
-> > 		else
-> > 			entry->eax = min(entry->eax,
-> > 					 (u32)(f_intel_pt ? 0x14 : 0xd));
-> 
-> Based on:
-> 
-> 	ECX Bits 07 - 00: Level number. Same value in ECX input.
-> 	Bits 15 - 08: Level type.
-> 	Bits 31 - 16: Reserved.
-> 
-> how about using an increasing order:
-> 
-> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
-> 
-> 	// ... more checks when eax is between 0x14 and 0x1f if any
-> 
-> 	/* Check if the host cpu has multi-chip packaging technology.*/
-> 	if (((cpuid_ecx(0x1f) >> 8) & 0xff) != 0)
-> 		entry->eax = 0x1f;
-
-As Sean pointed out, you cannot rely on the output of cpuid.1f to indicate the
-existence of leaf 1f. If maximum basic leaf supported is smaller than 1f, the
-data returned by cpuid_ecx(0x1f) is the actual highest basic information leaf of
-the hardware.
-So using "entry->eax >= 0x1f" from cpuid.0H is and only is the right way to
-check the existence of leaf 1f.
-
-We can simply use (cpuid_ecx(0x1f) & 0x0000ff00) to avoid the unnecessory
-shifting operation.
-Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes is that we
-cannot assmue the reserved bits 31:16 of ECX is always 0 for the future
-generation.
-
-In my opinion, Sean's codes is OK and much simple and clear.
-All need to do is using (cpuid_ecx(0x1f) & 0x0000ff00) to verify the leaf.1f is
-valid.
-
-Thanks,
--Xiaoyao
-> 	// ... more checks when eax greater than 0x1f if any
-> 
-> are we OK with it?
-> 
-> > >   		break;
-> > >   	case 1:
-> > >   		entry->edx &= kvm_cpuid_1_edx_x86_features;
-> > > @@ -544,6 +555,8 @@ static inline int __do_cpuid_ent(struct
-> > > kvm_cpuid_entry2 *entry, u32 function,
-> > >   		entry->edx = edx.full;
-> > >   		break;
-> > >   	}
-> > > +	/* function 0x1f has additional index. */
-> > > +	case 0x1f:
-> > >   	/* function 0xb has additional index. */
-> > >   	case 0xb: {
-> > >   		int i, level_type;
-> > > -- 
-> > > 1.8.3.1
-> > > 
-> 
+> e.g: Here the first path does not have to change across these two opps
+> but have to specified nonetheless since we omit names.
 > 
 
+If this is a pair in the middle of the list, we would either have to
+define how non-specified values are inherited from neighbouring nodes or
+you will get different behavior if you're coming from a lower or a
+higher opp.
+
+I think it looks clearer to just be explicit and repeat the values.
+
+Regards,
+Bjorn
+
+> +		opp-1200000000 {
+> +			opp-hz = /bits/ 64 <1200000000>;
+> +			bandwidth-MBps = <457 1525>, <914 3050>;
+> +		};
+> +		opp-1400000000 {
+> +			opp-hz = /bits/ 64 <1400000000>;
+> +			bandwidth-MBps = <457 1525>, <1828 6102>;
+> +		};
