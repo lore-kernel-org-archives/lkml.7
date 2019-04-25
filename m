@@ -2,183 +2,202 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C533C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753A7C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D50217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F486217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730220AbfDYHd1 (ORCPT
+        id S1730258AbfDYHdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:33:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60130 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbfDYHd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:33:27 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C2BCE3002619;
-        Thu, 25 Apr 2019 07:33:26 +0000 (UTC)
-Received: from hp-dl380pg8-02.lab.eng.pek2.redhat.com (hp-dl380pg8-02.lab.eng.pek2.redhat.com [10.73.8.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5DA021001DDB;
-        Thu, 25 Apr 2019 07:33:21 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, jasowang@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ppandit@redhat.com
-Subject: [PATCH net] vhost_net: fix possible infinite loop
-Date:   Thu, 25 Apr 2019 03:33:19 -0400
-Message-Id: <1556177599-56248-1-git-send-email-jasowang@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 25 Apr 2019 07:33:26 +0000 (UTC)
+        Thu, 25 Apr 2019 03:33:37 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:58967 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730224AbfDYHdg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 03:33:36 -0400
+Received: from [192.168.2.10] ([212.251.195.8])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id JYsshQP5TZVjxJYsvhdikA; Thu, 25 Apr 2019 09:33:34 +0200
+Subject: Re: [PATCH v9 3/4] [media] cxusb: add analog mode support for Medion
+ MD95700
+To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc:     Michael Krufky <mkrufky@linuxtv.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Walls <awalls@md.metrocast.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org
+References: <cover.1553903063.git.mail@maciej.szmigiero.name>
+ <0c30210a0d946cac6b17755e7d255541ff535023.1553903063.git.mail@maciej.szmigiero.name>
+ <b33ebf2a-9507-9940-4474-6f37af4d8010@xs4all.nl>
+ <3927f261-9052-0b89-62c2-6fe8b4876ba1@maciej.szmigiero.name>
+ <5c01b351-7ea0-b057-32c7-1029af700fe5@xs4all.nl>
+ <611fe1d8-6dc6-fc16-6071-3af5dc285b22@maciej.szmigiero.name>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <904a5107-3188-6f55-35a1-2a3076de8f18@xs4all.nl>
+Date:   Thu, 25 Apr 2019 09:33:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <611fe1d8-6dc6-fc16-6071-3af5dc285b22@maciej.szmigiero.name>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFmB1YW5QKJbeV+Uz27fg3+OFmSjy/V8raIEYkFVwZYmUske5XO1iLwjqrvpz+9+yQAl98mFSKSa5by8EcW5WaqciPPI7IZM8BlXQXTVlU/vlQcsrNbb
+ aNGyqEHTfej2/5VGhr6NHdd4q+96vlf/OHUp12ViUSIngWgFWDzU3axeI/oxEpDqBugZ0C3jaHR0uXPy/QpvHmEHs3+kySIuG+jNxqOjH328jdmJ7HTqoZgh
+ 7+xN5qrAp1pLzaTzOzTl02S8dcP9U2U4+cutN50bMegIvxwV9ooYwfTjsds4JO6efHTrTDVZyS3IlT1cWQ9lbQ+L5bA18P/s4YP9cB4XaalwUmhB64PDsSKl
+ c/d6gPWA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the rx buffer is too small for a packet, we will discard the vq
-descriptor and retry it for the next packet:
+On 4/24/19 10:58 PM, Maciej S. Szmigiero wrote:
+> On 24.04.2019 15:06, Hans Verkuil wrote:
+>> On 4/16/19 1:40 AM, Maciej S. Szmigiero wrote:
+>>> On 12.04.2019 11:22, Hans Verkuil wrote:
+>>>> On 3/30/19 12:51 AM, Maciej S. Szmigiero wrote:
+>>>>> This patch adds support for analog part of Medion 95700 in the cxusb
+>>>>> driver.
+>>>>>
+>>>>> What works:
+>>>>> * Video capture at various sizes with sequential fields,
+>>>>> * Input switching (TV Tuner, Composite, S-Video),
+>>>>> * TV and radio tuning,
+>>>>> * Video standard switching and auto detection,
+>>>>> * Radio mode switching (stereo / mono),
+>>>>> * Unplugging while capturing,
+>>>>> * DVB / analog coexistence.
+>>>>>
+>>>>> What does not work yet:
+>>>>> * Audio,
+>>>>> * VBI,
+>>>>> * Picture controls.
+>>>>>
+>>>>> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+>>>>> ---
+> (..)
+>>> In this case the code above simply tries first the bigger PAL capture
+>>> resolution then the smaller NTSC one.
+>>> Which one will be accepted by the cx25840 depends on the currently set
+>>> broadcast standard and parameters of the last signal that was received,
+>>> at least one of these resolutions seem to work even without any
+>>> signal being received since the chip was powered up.
+>>>
+>>> This way the API guarantees should be kept by the driver.
+>>
+>> This is basically a work-around for a cx25840 bug.
+>>
+>> In any case, since the driver initializes to PAL the 720x576 resolution
+>> should be fine.
+>>
+>> BTW, I noticed that cxdev->norm is initialized to 0. Why isn't that
+>> PAL?
+> 
+> cxdev->norm is initialized to 0 since this will allow autodetection on
+> the default Composite input (Composite and S-Video inputs accept any
+> standard that a cx25840 chip can accept, including NTSC and SECAM).
+> 
+> The tuner and tda9887 are initialized to PAL since it is all they can
+> accept.
 
-while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
-					      &busyloop_intr))) {
-...
-	/* On overrun, truncate and discard */
-	if (unlikely(headcount > UIO_MAXIOV)) {
-		iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
-		err = sock->ops->recvmsg(sock, &msg,
-					 1, MSG_DONTWAIT | MSG_TRUNC);
-		pr_debug("Discarded rx packet: len %zd\n", sock_len);
-		continue;
-	}
-...
-}
+Never autodetect. Just initialize it to PAL.
 
-This makes it possible to trigger a infinite while..continue loop
-through the co-opreation of two VMs like:
+You can't rely on autodetect since changing the standard will also change
+the resolution and therefor change the buffer sizes.
 
-1) Malicious VM1 allocate 1 byte rx buffer and try to slow down the
-   vhost process as much as possible e.g using indirect descriptors or
-   other.
-2) Malicious VM2 generate packets to VM1 as fast as possible
+Instead userspace just calls s_std explicitly. Even better if the driver
+would support VIDIOC_QUERYSTD, but it seems that was never implented in
+cx25840.
 
-Fixing this by checking against weight at the end of RX and TX
-loop. This also eliminate other similar cases when:
+Regards,
 
-- userspace is consuming the packets in the meanwhile
-- theoretical TOCTOU attack if guest moving avail index back and forth
-  to hit the continue after vhost find guest just add new buffers
+	Hans
 
-This addresses CVE-2019-3900.
-
-Fixes: d8316f3991d20 ("vhost: fix total length when packets are too short")
-Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vhost/net.c | 41 +++++++++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index df51a35..fb46e6b 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -778,8 +778,9 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
- 	int err;
- 	int sent_pkts = 0;
- 	bool sock_can_batch = (sock->sk->sk_sndbuf == INT_MAX);
-+	bool next_round = false;
- 
--	for (;;) {
-+	do {
- 		bool busyloop_intr = false;
- 
- 		if (nvq->done_idx == VHOST_NET_BATCH)
-@@ -845,11 +846,10 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
- 		vq->heads[nvq->done_idx].id = cpu_to_vhost32(vq, head);
- 		vq->heads[nvq->done_idx].len = 0;
- 		++nvq->done_idx;
--		if (vhost_exceeds_weight(++sent_pkts, total_len)) {
--			vhost_poll_queue(&vq->poll);
--			break;
--		}
--	}
-+	} while (!(next_round = vhost_exceeds_weight(++sent_pkts, total_len)));
-+
-+	if (next_round)
-+		vhost_poll_queue(&vq->poll);
- 
- 	vhost_tx_batch(net, nvq, sock, &msg);
- }
-@@ -873,8 +873,9 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
- 	struct vhost_net_ubuf_ref *uninitialized_var(ubufs);
- 	bool zcopy_used;
- 	int sent_pkts = 0;
-+	bool next_round = false;
- 
--	for (;;) {
-+	do {
- 		bool busyloop_intr;
- 
- 		/* Release DMAs done buffers first */
-@@ -951,11 +952,10 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
- 		else
- 			vhost_zerocopy_signal_used(net, vq);
- 		vhost_net_tx_packet(net);
--		if (unlikely(vhost_exceeds_weight(++sent_pkts, total_len))) {
--			vhost_poll_queue(&vq->poll);
--			break;
--		}
--	}
-+	} while (!(next_round = vhost_exceeds_weight(++sent_pkts, total_len)));
-+
-+	if (next_round)
-+		vhost_poll_queue(&vq->poll);
- }
- 
- /* Expects to be always run from workqueue - which acts as
-@@ -1134,6 +1134,7 @@ static void handle_rx(struct vhost_net *net)
- 	struct iov_iter fixup;
- 	__virtio16 num_buffers;
- 	int recv_pkts = 0;
-+	bool next_round = false;
- 
- 	mutex_lock_nested(&vq->mutex, VHOST_NET_VQ_RX);
- 	sock = vq->private_data;
-@@ -1153,8 +1154,11 @@ static void handle_rx(struct vhost_net *net)
- 		vq->log : NULL;
- 	mergeable = vhost_has_feature(vq, VIRTIO_NET_F_MRG_RXBUF);
- 
--	while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
--						      &busyloop_intr))) {
-+	do {
-+		sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
-+						      &busyloop_intr);
-+		if (!sock_len)
-+			break;
- 		sock_len += sock_hlen;
- 		vhost_len = sock_len + vhost_hlen;
- 		headcount = get_rx_bufs(vq, vq->heads + nvq->done_idx,
-@@ -1239,12 +1243,9 @@ static void handle_rx(struct vhost_net *net)
- 			vhost_log_write(vq, vq_log, log, vhost_len,
- 					vq->iov, in);
- 		total_len += vhost_len;
--		if (unlikely(vhost_exceeds_weight(++recv_pkts, total_len))) {
--			vhost_poll_queue(&vq->poll);
--			goto out;
--		}
--	}
--	if (unlikely(busyloop_intr))
-+	} while (!(next_round = vhost_exceeds_weight(++recv_pkts, total_len)));
-+
-+	if (unlikely(busyloop_intr || next_round))
- 		vhost_poll_queue(&vq->poll);
- 	else
- 		vhost_net_enable_vq(net, vq);
--- 
-1.8.3.1
+> 
+>>>
+>>>>> +int cxusb_medion_analog_init(struct dvb_usb_device *dvbdev)
+>>>>> +{
+>>>>> +	struct cxusb_medion_dev *cxdev = dvbdev->priv;
+>>>>> +	u8 tuner_analog_msg_data[] = { 0x9c, 0x60, 0x85, 0x54 };
+>>>>> +	struct i2c_msg tuner_analog_msg = { .addr = 0x61, .flags = 0,
+>>>>> +					    .buf = tuner_analog_msg_data,
+>>>>> +					    .len =
+>>>>> +					    sizeof(tuner_analog_msg_data) };
+>>>>> +	struct v4l2_subdev_format subfmt;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	/* switch tuner to analog mode so IF demod will become accessible */
+>>>>> +	ret = i2c_transfer(&dvbdev->i2c_adap, &tuner_analog_msg, 1);
+>>>>> +	if (ret != 1)
+>>>>> +		dev_warn(&dvbdev->udev->dev,
+>>>>> +			 "tuner analog switch failed (%d)\n", ret);
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * cx25840 might have lost power during mode switching so we need
+>>>>> +	 * to set it again
+>>>>> +	 */
+>>>>> +	ret = v4l2_subdev_call(cxdev->cx25840, core, reset, 0);
+>>>>> +	if (ret != 0)
+>>>>> +		dev_warn(&dvbdev->udev->dev,
+>>>>> +			 "cx25840 reset failed (%d)\n", ret);
+>>>>> +
+>>>>> +	ret = v4l2_subdev_call(cxdev->cx25840, video, s_routing,
+>>>>> +			       CX25840_COMPOSITE1, 0, 0);
+>>>>> +	if (ret != 0)
+>>>>> +		dev_warn(&dvbdev->udev->dev,
+>>>>> +			 "cx25840 initial input setting failed (%d)\n", ret);
+>>>>> +
+>>>>> +	/* composite */
+>>>>> +	cxdev->input = 1;
+>>>>> +	cxdev->norm = 0;
+>>>>> +
+>>>>> +	/* TODO: setup audio samples insertion */
+>>>>> +
+>>>>> +	ret = v4l2_subdev_call(cxdev->cx25840, core, s_io_pin_config,
+>>>>> +			       sizeof(cxusub_medion_pin_config) /
+>>>>> +			       sizeof(cxusub_medion_pin_config[0]),
+>>>>> +			       cxusub_medion_pin_config);
+>>>>> +	if (ret != 0)
+>>>>> +		dev_warn(&dvbdev->udev->dev,
+>>>>> +			"cx25840 pin config failed (%d)\n", ret);
+>>>>> +
+>>>>> +	/* make sure that we aren't in radio mode */
+>>>>> +	v4l2_subdev_call(cxdev->tda9887, video, s_std, V4L2_STD_PAL);
+>>>>> +	v4l2_subdev_call(cxdev->tuner, video, s_std, V4L2_STD_PAL);
+>>>>> +	v4l2_subdev_call(cxdev->cx25840, video, s_std, cxdev->norm);
+>>>>> +
+>>>>> +	memset(&subfmt, 0, sizeof(subfmt));
+>>>>> +	subfmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+>>>>> +	subfmt.format.width = cxdev->width;
+>>>>> +	subfmt.format.height = cxdev->height;
+>>>>> +	subfmt.format.code = MEDIA_BUS_FMT_FIXED;
+>>>>> +	subfmt.format.field = V4L2_FIELD_SEQ_TB;
+>>>>> +	subfmt.format.colorspace = V4L2_COLORSPACE_SMPTE170M;
+>>>>> +
+>>>>> +	ret = v4l2_subdev_call(cxdev->cx25840, pad, set_fmt, NULL, &subfmt);
+>>>>> +	if (ret != 0) {
+>>>>> +		subfmt.format.width = 640;
+>>>>> +		subfmt.format.height = 480;
+>>>>
+>>>> Why the fallback to 640x480?
+>>>
+>>> This resolution seems to work even without any signal being received,
+>>> and it is a sensible NTSC-like resolution so it makes a good fallback
+>>> if restoring the previously used resolution has failed.
+>>
+>> But it is really a work-around for a cx25840 bug. Just fix set_fmt
+>> and you should not need this anymore.
+>>
+>> Regards.
+>>
+>> 	Hans
+> 
+> Thanks,
+> Maciej
+> 
 
