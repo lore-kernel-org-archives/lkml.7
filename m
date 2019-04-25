@@ -2,137 +2,140 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8733C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7864EC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666C7206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:35:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Oh6TGp7g";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="QtNhmkru"
+	by mail.kernel.org (Postfix) with ESMTP id 3D043206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbfDYNfK (ORCPT
+        id S1729846AbfDYNgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 09:35:10 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:52281 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfDYNfK (ORCPT
+        Thu, 25 Apr 2019 09:36:02 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35736 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727416AbfDYNgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 09:35:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1556199402; x=1587735402;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=36j7G1Da2dpPvO+9ydhJPf4NyaB4Rn4PcarmYY7mZk0=;
-  b=Oh6TGp7grahjVdmIFxBJuBkrHjNNiLHOM6TD8N/QPHeKgaQ3IDwvOi9v
-   MveZQawyc9egAQeRvaFHfitphOo3GvqwfsxgEt2K87d/Dw/FIsauyXgFX
-   vCZtwA5jAcy4qB0k6iWEKTOJqUxJeWeZbXMMssC8FWW6NlAoSEzUR1PU2
-   QSWWgco2Sz1yTiadBQfC3yQh4vMDHC5Bry/NDpHKmRRFL+NNuCS086rxd
-   P77v/89T1J/OXY9QL7canBOWJF7MJ27l6rbO6TT/Ps/sggDptL1YKOJMr
-   xBeo5Vc9GhY7+pgw+qzj0+UtnKslmpJcej7M96VOLHA/80tQFOx9jnqHO
-   w==;
-X-IronPort-AV: E=Sophos;i="5.60,393,1549900800"; 
-   d="scan'208";a="205942685"
-Received: from mail-by2nam01lp2056.outbound.protection.outlook.com (HELO NAM01-BY2-obe.outbound.protection.outlook.com) ([104.47.34.56])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Apr 2019 21:36:40 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=36j7G1Da2dpPvO+9ydhJPf4NyaB4Rn4PcarmYY7mZk0=;
- b=QtNhmkru5w+837EKmn2XT0tcrCYWQLgagNZGde4lv+pbCrHBRB8CIheFxXjvYMvAiNBAr3k67IUTwrY4NcRNt6zNhJWpihXhJUxkujoyQFdzVY+owhNiKG4hfUqCCnd4tj6ODVrn/plWT/SySnNUFs1cPgn66PePYFwn8pXf3Sc=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB5631.namprd04.prod.outlook.com (20.178.255.206) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Thu, 25 Apr 2019 13:35:06 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::ad2f:3a0f:2de1:6fb2]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::ad2f:3a0f:2de1:6fb2%5]) with mapi id 15.20.1813.017; Thu, 25 Apr 2019
- 13:35:06 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-CC:     Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [PATCH] tty: Don't force RISCV SBI console as preferred console
-Thread-Topic: [PATCH] tty: Don't force RISCV SBI console as preferred console
-Thread-Index: AQHU+2uxkGjV+x23F0K05mNsSIEedQ==
-Date:   Thu, 25 Apr 2019 13:35:06 +0000
-Message-ID: <20190425133435.56065-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BM1PR01CA0138.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:40::32) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [49.207.55.22]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 26d70f3c-4ee4-4339-a9eb-08d6c982d3e1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5631;
-x-ms-traffictypediagnostic: MN2PR04MB5631:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <MN2PR04MB5631D3A88549F6133226D86A8D3D0@MN2PR04MB5631.namprd04.prod.outlook.com>
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(136003)(346002)(39860400002)(376002)(189003)(199004)(81166006)(81156014)(2616005)(8936002)(110136005)(2171002)(50226002)(6116002)(3846002)(54906003)(97736004)(6436002)(8676002)(386003)(6506007)(305945005)(86362001)(36756003)(6486002)(7736002)(6512007)(186003)(25786009)(14444005)(26005)(1076003)(256004)(99286004)(5660300002)(486006)(2906002)(73956011)(55236004)(71200400001)(14454004)(71190400001)(52116002)(66476007)(66556008)(64756008)(4326008)(476003)(316002)(66066001)(72206003)(102836004)(53936002)(68736007)(44832011)(66446008)(478600001)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5631;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Wq6uKU5r3Ny5pcyPe1OuHotEmuYTuDZSRv6Q1mIbxc4r+ZbsE52lQB9bDwHRuwML/UddVVuqn18r6rdSc0Qc0W2kSgHzYVzIun5n55Ro7vKX567297ktvWruXtPvdMMXY2XSfBsnDS064OWnKCX9Q4qI/Widml6lSO06D2FzM/tH2MI8nae+6Sm9BRmu0kStyDUvHkbBbPWMZKNctcrPSr4XOy03vsvwLzzO7RgQmuAQh+8Zz3ss0AeT1igrNoG9iVAw/GrfOHhnP2cZIZz8YmrGFr8Q7bWtANS10hVGfPG1vljdqItmNbOmMJ927/g4V+RxwNc8Md1nkWonyAPJNQUszFBIEWpwndaImubmgy3WkSfQaxzRlx75n7YzuSiJrpzx1ymFnBhQOMg87ECAR0jlh+zzB/eba+3slXOQ0E8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 25 Apr 2019 09:36:02 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t21so11213969pfh.2;
+        Thu, 25 Apr 2019 06:36:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=l17uPVGpdSiv8IfUe123oAga8SuqeCZI9ns3aS/aHQA=;
+        b=ryb0Q2U9tiVUN1bI5XWSJ90q5fQ4ie8ePv9WxyV5xOVSDETrnAg2Rk8VdyPjObzv1Q
+         xv1G4/mElBy2e/39+3BFLP0k6dMBantUKchoErrXZhyfGRKPUmQRaxYHdP5zHvc7I7Ic
+         NJ+El10aMxrwrnA4mPsCspUec6UbBEFcr3MdjmRGQQryrKUhwUt7ygzy/5MNnMS8rSb9
+         9Awig+pVqoA5rzZIDSyQj3ldD0OEZjgGINCaBEFq+BZCOmi9Y/z/OJx8PmfCtTx8paLu
+         yq6rmjn2j73p0JEyk6t08xSyX/BaKfwNcm6wVllOqQtmmde9aOhFofKX8BR0j3Z1SLWc
+         nTDA==
+X-Gm-Message-State: APjAAAVyj9dg2hhhckXJ0wG4reUdIRjivtYLwee51X0luoHt0iEHl7a0
+        tqc6KrIjMxw4dIEbhctE66sNLQtPZ1E=
+X-Google-Smtp-Source: APXvYqwHF3LQd/hbE3iZGRyRB+bjoYMXBy+7bjmZVXvZiX7ckqln8SC8m5F8s/LsOHji83tNZFdrIg==
+X-Received: by 2002:a63:2ad3:: with SMTP id q202mr19144778pgq.423.1556199360860;
+        Thu, 25 Apr 2019 06:36:00 -0700 (PDT)
+Received: from asus.site ([2601:647:4000:5dd1:a41e:80b4:deb3:fb66])
+        by smtp.gmail.com with ESMTPSA id r145sm48531119pgr.84.2019.04.25.06.35.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 06:35:59 -0700 (PDT)
+Subject: Re: regression -next -- scsi: sd: Rely on the driver core for
+ asynchronous probing was Re: next-20190408..0418: Suspend/resume problems on
+ Thinkpad X60
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, lduncan@suse.com, hare@suse.com,
+        mcgrof@kernel.org, jthumshirn@suse.de, hch@lst.de,
+        gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
+        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org, hdegoede@redhat.com,
+        linux-ide@vger.kernel.org
+References: <20190408173928.GB13260@amd> <20190412102812.GA24977@amd>
+ <20190423102239.GA15531@amd> <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
+ <20190424095431.GA32457@amd> <20190424104850.GC32457@amd>
+ <20190424202119.GA26357@amd> <20190424204832.GA3111@amd>
+ <20190424205150.GA4582@amd> <1556139361.161891.140.camel@acm.org>
+ <20190425073343.GA19600@amd>
+From:   Bart Van Assche <bvanassche@acm.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <360f6936-ee21-a036-9bd4-93ecfee829e2@acm.org>
+Date:   Thu, 25 Apr 2019 06:35:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26d70f3c-4ee4-4339-a9eb-08d6c982d3e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 13:35:06.2931
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5631
+In-Reply-To: <20190425073343.GA19600@amd>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIExpbnV4IGtlcm5lbCB3aWxsIGF1dG8tZGlzYWJsZXMgYWxsIGJvb3QgY29uc29sZXMgd2hl
-bmV2ZXIgaXQNCmdldHMgYSBwcmVmZXJyZWQgcmVhbCBjb25zb2xlLg0KDQpDdXJyZW50bHkgb24g
-UklTQy1WIHN5c3RlbXMsIGlmIHdlIGhhdmUgYSByZWFsIGNvbnNvbGUgd2hpY2ggaXMgbm90DQpS
-SVNDViBTQkkgY29uc29sZSB0aGVuIGJvb3QgY29uc29sZXMgKHN1Y2ggYXMgZWFybHljb249c2Jp
-KSBhcmUgbm90DQphdXRvLWRpc2FibGVkIHdoZW4gYSByZWFsIGNvbnNvbGUgKHR0eVMwIG9yIHR0
-eVNJRjApIGlzIGF2YWlsYWJsZS4NClRoaXMgcmVzdWx0cyBpbiBkdXBsaWNhdGUgcHJpbnRzIGF0
-IGJvb3QtdGltZSBhZnRlciBrZXJuZWwgc3RhcnRzDQp1c2luZyByZWFsIGNvbnNvbGUgKGkuZS4g
-dHR5UzAgb3IgdHR5U0lGMCkgaWYgImVhcmx5Y29uPSIga2VybmVsDQpwYXJhbWV0ZXIgd2FzIHBh
-c3NlZCBieSBib290bG9hZGVyLg0KDQpUaGUgcmVhc29uIGZvciBhYm92ZSBpc3N1ZSBpcyB0aGF0
-IFJJU0NWIFNCSSBjb25zb2xlIGFsd2F5cyBhZGRzDQppdHNlbGYgYXMgcHJlZmVycmVkIGNvbnNv
-bGUgd2hpY2ggaXMgY2F1c2luZyBvdGhlciByZWFsIGNvbnNvbGVzDQp0byBiZSBub3QgdXNlZCBh
-cyBwcmVmZXJyZWQgY29uc29sZS4NCg0KSWRlYWxseSAiY29uc29sZT0iIGtlcm5lbCBwYXJhbWV0
-ZXIgcGFzc2VkIGJ5IGJvb3Rsb2FkZXJzIHNob3VsZA0KYmUgdGhlIG9uZSBzZWxlY3RpbmcgYSBw
-cmVmZXJyZWQgcmVhbCBjb25zb2xlLg0KDQpUaGlzIHBhdGNoIGZpeGVzIGFib3ZlIGlzc3VlIGJ5
-IG5vdCBmb3JjaW5nIFJJU0NWIFNCSSBjb25zb2xlIGFzDQpwcmVmZXJyZWQgY29uc29sZS4NCg0K
-Rml4ZXM6IGFmYTZiMWNjZmFkNSAoInR0eTogTmV3IFJJU0MtViBTQkkgY29uc29sZSBkcml2ZXIi
-KQ0KQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcNClNpZ25lZC1vZmYtYnk6IEFudXAgUGF0ZWwg
-PGFudXAucGF0ZWxAd2RjLmNvbT4NCi0tLQ0KIGRyaXZlcnMvdHR5L2h2Yy9odmNfcmlzY3Zfc2Jp
-LmMgfCAxIC0NCiAxIGZpbGUgY2hhbmdlZCwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy90dHkvaHZjL2h2Y19yaXNjdl9zYmkuYyBiL2RyaXZlcnMvdHR5L2h2Yy9odmNfcmlz
-Y3Zfc2JpLmMNCmluZGV4IDc1MTU1YmRlMmI4OC4uMzFmNTNmYTc3ZTRhIDEwMDY0NA0KLS0tIGEv
-ZHJpdmVycy90dHkvaHZjL2h2Y19yaXNjdl9zYmkuYw0KKysrIGIvZHJpdmVycy90dHkvaHZjL2h2
-Y19yaXNjdl9zYmkuYw0KQEAgLTUzLDcgKzUzLDYgQEAgZGV2aWNlX2luaXRjYWxsKGh2Y19zYmlf
-aW5pdCk7DQogc3RhdGljIGludCBfX2luaXQgaHZjX3NiaV9jb25zb2xlX2luaXQodm9pZCkNCiB7
-DQogCWh2Y19pbnN0YW50aWF0ZSgwLCAwLCAmaHZjX3NiaV9vcHMpOw0KLQlhZGRfcHJlZmVycmVk
-X2NvbnNvbGUoImh2YyIsIDAsIE5VTEwpOw0KIA0KIAlyZXR1cm4gMDsNCiB9DQotLSANCjIuMTcu
-MQ0KDQo=
+On 4/25/19 12:33 AM, Pavel Machek wrote:
+> On Wed 2019-04-24 13:56:01, Bart Van Assche wrote:
+>> On Wed, 2019-04-24 at 22:51 +0200, Pavel Machek wrote:
+>>> Unfortunately, that one does not revert cleanly on top of -next.
+>>
+>> Can you try the following:
+>>
+>> git revert d16ece577bf2cee7f94bab75a0d967bcb89dd2a7 &&
+>>   git revert 21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3
+>>
+>> I will see whether I can come up with a better way to analyze what is
+>> going on. I had not expected that these patches would cause any suspend/
+>> resume problems.
+> 
+> Not even d16ece reverts:
+> 
+> pavel@duo:/data/l/linux-next-32$ git show  | head -3
+> commit 76c938fcaa4b4a5d8f05fa907925d5043834964e
+> Author: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date:   Tue Apr 23 20:24:59 2019 +1000
+> pavel@duo:/data/l/linux-next-32$ git revert
+> d16ece577bf2cee7f94bab75a0d967bcb89dd2a7
+> error: could not revert d16ece5... scsi: sd: Inline sd_probe_part2()
+> hint: after resolving the conflicts, mark the corrected paths
+> hint: with 'git add <paths>' or 'git rm <paths>'
+> hint: and commit the result with 'git commit'
+
+There has been a non-trivial merge between the block and scsi trees in
+linux-next. That's probably what prevents these patches to revert
+cleanly. How about performing the following tests:
+* Build, boot and test Martin's latest for-5.2 branch
+(git://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git; branch
+5.2/scsi-queue).
+* If suspend/resume does not work reliably with that branch, revert the
+two patches above, rebuild, reboot and retest.
+
+Thanks,
+
+Bart.
