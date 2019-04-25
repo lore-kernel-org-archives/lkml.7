@@ -2,185 +2,206 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705C8C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C48C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E056217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XHS7tGut"
+	by mail.kernel.org (Postfix) with ESMTP id 7640C217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556173883;
+	bh=wHRXN5XEZCV0yKXXFctP1aLZqAPPzegTUGTtpGvu3IU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2vFuPraMTXS7E58sx9mxTxHUZKrXTbCv24EVIumYsu0+0Y2ZuOL58rSWZ34o44vHj
+	 XyW0kfzByA5qagc6/G4nlQP52SFV/m49YI+2Fh8fLnbPTbYzP883BOKYJydnZ11Hwp
+	 93Xwmb/qYLaVpuUOdbmqOYayiMaDDTQwD9lLmF9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbfDYGaB (ORCPT
+        id S2387402AbfDYGbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 02:30:01 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:34805 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfDYGaB (ORCPT
+        Thu, 25 Apr 2019 02:31:22 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40703 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfDYGbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 02:30:01 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190425062959euoutp012edc366a81c9943cb3379d309fe07f69~Yo9Ni5TXp1063910639euoutp01W
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 06:29:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190425062959euoutp012edc366a81c9943cb3379d309fe07f69~Yo9Ni5TXp1063910639euoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556173799;
-        bh=aVKIJGn6mAUxqF3A7GqWgRxXjBKT2wUUu1wHqAd8nXA=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=XHS7tGutDDjdblNRt0d3pE1uvATKJCsDKsMCaGQ89ybo4vcS2gRSZf9fdR35x2h7r
-         H4p46LAmROorEVAriLt6reKm0lNqnV4brlk60G6+wZY3FMxQD9Ka+0XLO0RWQiGUqL
-         DoK6otVQDIfIMmfWRLqCiDFCvg7LCiYDV72WGGUk=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190425062959eucas1p13aa3cc48c82f4f889c91ab010d5e37e1~Yo9ND6fsK2838628386eucas1p15;
-        Thu, 25 Apr 2019 06:29:59 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 9A.46.04298.6E351CC5; Thu, 25
-        Apr 2019 07:29:58 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190425062958eucas1p2fe667b077e638ef6fdc5703ea42e84d7~Yo9MXu2pN3009330093eucas1p2u;
-        Thu, 25 Apr 2019 06:29:58 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190425062958eusmtrp130bf70ad964a876afe814bdf2284a4a7~Yo9MJuAfH3004630046eusmtrp1d;
-        Thu, 25 Apr 2019 06:29:58 +0000 (GMT)
-X-AuditID: cbfec7f2-f2dff700000010ca-50-5cc153e60ea1
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 9C.B3.04146.5E351CC5; Thu, 25
-        Apr 2019 07:29:58 +0100 (BST)
-Received: from [106.120.50.25] (unknown [106.120.50.25]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190425062957eusmtip21ebc171be57c8ed58715f8127be2235b~Yo9LwO-Hu2394523945eusmtip2D;
-        Thu, 25 Apr 2019 06:29:57 +0000 (GMT)
-Subject: Re: [PATCH v2] clocksource: exynos_mct: Increase priority over ARM
- arch timer
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <30b83273-5c79-5118-b4c7-ba1d93e1022e@samsung.com>
-Date:   Thu, 25 Apr 2019 08:29:56 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Thu, 25 Apr 2019 02:31:21 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h4so28575911wre.7;
+        Wed, 24 Apr 2019 23:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nkV8EKpA5YNJLAoU8Dqidj432hCPaA90eLlXB6QVb1E=;
+        b=KgJ3uI1n9SBz4stP5z6Js3knEMvrOfq6LYbMgolbQ1HeC3Bp+76DRsuh5KgU7DaFKG
+         Etu2mAeu/OLBFYK64QbXt+rXWx1aKBPRMU1VDOwI/1BG+sPEfHxXdB5Hik9UZKUEDMsM
+         L+xowW1PMCIYvz3W4SR15XjKABFeDcGjmorCwpLd10IK5X3VO6M3Jo03FzEX7KPB7dhT
+         AbCCbva+Sp9+Pf8zbzlQjJXwUdtgpBoxgn26VQvIzmLulVhnJso/l8LMOMYBTD7nyDwC
+         tr8NJsLZ2v2rEn43NH6HjlmWGsY9iqY6tSohupEsK6QKtRp6u65JY9ue23p9ZCIuYxzY
+         JkGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nkV8EKpA5YNJLAoU8Dqidj432hCPaA90eLlXB6QVb1E=;
+        b=apVeHQyLd1xBge5nm8y6TYsjvs8/QBBVgf+L1t4ybQHyRTwn9tVpz4xT68YSO6Eyd2
+         zTDnHabE65hIdqJDq9SygrdVzB/d7C8TD4NsD8q4qFX67t42ikT3LU15ZTPlYKJKjg0F
+         MBmXIfTqKUEnus8TbfUjH01e2tld45Vf/qMLN6ije6QiL49oCT1l8YPIyt6vnfvrfO7h
+         S00kTcuAeCTcK5Qq3lXnjSbZaDe+R9hppNft3In9IMHI+AyPblqhMqXyptOprWCa+Mc6
+         vb/gUrkFVN9GbsXAJ1B4W5MNwX+HXCNtJuTeF9hftyKi1UhTwWUV87PrN4BqpH/+7Z8F
+         rSAA==
+X-Gm-Message-State: APjAAAWN2OGFYP85WXH+SRBUmySrH1uDVjfzxRY8OwI/HFD+Iwer0S1H
+        lRs01w7N/o+gxqtbcWpXBjU=
+X-Google-Smtp-Source: APXvYqw0ahPLji+D1kmmCplVReoZg3Pv/dg7a9eF+tYrBEeQmujFjwicRtO3g/lE7Kj7dwxppvg36A==
+X-Received: by 2002:adf:b60a:: with SMTP id f10mr23463310wre.116.1556173878697;
+        Wed, 24 Apr 2019 23:31:18 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id s9sm4181953wrm.22.2019.04.24.23.31.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 23:31:17 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 08:31:15 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v8 15/15] x86/split_lock: Add a sysfs interface to
+ enable/disable split lock detection during run time
+Message-ID: <20190425063115.GD40105@gmail.com>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
+ <1556134382-58814-16-git-send-email-fenghua.yu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190321082608.21366-1-m.szyprowski@samsung.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRj13b27u44md5u2B0uFSaZZmtDHhUIq/DHIH5EUVkLOvKi0qezq
-        SiMUrdAhmmWl89s+HebHFDMJcWaaSa5tYaVphUOXsTK/SH9Yzmvlv3Oe5xzOc15eEpMY+d5k
-        UnIao0lWquSEEG/vWzLvmowyxeweHw2hW0qb+PS7+Sk+XTXnQ5vNzQLaODHMp22dFQRdau7i
-        0a3GW9ghUmE05BOKj8PPCMX3oSGBovVelqKwzYAUc0bfY8Rp4cF4RpWkZTSh4bHCxNa830Rq
-        udfFu0slvGzUJ9YhkgRqDwxV+uuQkJRQjxA0V1YIODKPwPGrFnFkDoFh8j7668ib9ePmDxHY
-        65x8jjgRrDhsqyJ3UkpFQ7ttnHBhTyoQWqwjmEuEUTU8mFloxF0LggoDnVO3JhJR4fBy0Chw
-        YZzaBiX6ZcKV5kXFQN3cukQMA2X2Nav7qvzKRBHmwhjlB0+cFetYBiP2ap4rC6guAdh+jK4Z
-        gIqAojLTOpbCdH+bgMNbYfBmAc4ZchF8GXos4EgBAltOKeJUB+B5v4XvugijgqCpM5QbHwZn
-        1RjBPYsHvHeKuSM84Eb7HYwbiyDvmoRTB4C+v/FfrOmNFbuO5PoN1fQb6ug31NH/z61BuAHJ
-        mHRWncCwYcnMhRBWqWbTkxNCzqWojWj1Jw2u9M92oAVrXA+iSCTfJMqO646R8JVaNkPdg4DE
-        5J6i7XtNMRJRvDIjk9GknNWkqxi2B20hcblMdMnt8xkJlaBMY84zTCqj+bvlke7e2UhmDRif
-        GZdSbmJpoTYxeJbcvy9aL168nDN5chrK8U9ZV0+MRj71v43CfR1lesL201IdhRfbFnu15qwj
-        loZynYflbUdt0qI42PDg2/HQXF73zuLXXzvY6aObVQM0/WJMHVH/ymemOUgaGRvY1jtRYj+V
-        +yE7M2nKlO9oqF9WynE2URm2A9Owyj8LtqiBRQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xe7rPgg/GGDydx2ixccZ6VovrX56z
-        Wsz7LGtx/vwGdotNj6+xWlzeNYfNYsb5fUwWmzdNZXbg8Ni0qpPN4861PWwe786dY/fYvKTe
-        o2/LKkaPz5vkAtii9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMy
-        y1KL9O0S9DI2d/xnK5gtWrH45xSmBsZjgl2MHBwSAiYSHZ/kuxi5OIQEljJKXLv5la2LkRMo
-        LiNxcloDK4QtLPHnWhcbRNFrRokP1/4xgSSEBSIktl2+B9YgIqAhsfHSLWaQImaBBUwSh9Zu
-        ZILomMgosXX6CbAqNgFDia63XWA2r4CdxInTm9hBbBYBVYkps36BxUUFYiROTN3CDlEjKHFy
-        5hMWEJsTqL7lcT8ziM0sYCYxb/NDKFteYvvbOVC2uMStJ/OZJjAKzULSPgtJyywkLbOQtCxg
-        ZFnFKJJaWpybnltsqFecmFtcmpeul5yfu4kRGIfbjv3cvIPx0sbgQ4wCHIxKPLwnwg7ECLEm
-        lhVX5h5ilOBgVhLhVTc9GCPEm5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cAUkVcSb2hqaG5h
-        aWhubG5sZqEkztshANQkkJ5YkpqdmlqQWgTTx8TBKdXAGJUwi3mPRk2h67RykU9yewMfLNnC
-        oXresSszzXL9xrDuPdGnTr6VNlzrcTE1av7pHhOttKud/T9PHmu+rbxHvHyj+8osuR0Kz+Im
-        FP48zfMpX/u0RZ/DNZaHl5ISEq04NvBZGx766/nFYY7X+1OiwW8TBOwEX2vWz5jII2maPa/n
-        DMOJWeISSizFGYmGWsxFxYkARwyz8dkCAAA=
-X-CMS-MailID: 20190425062958eucas1p2fe667b077e638ef6fdc5703ea42e84d7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190321082621eucas1p16d48ef152cd76edb7d46e8c773fa000e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190321082621eucas1p16d48ef152cd76edb7d46e8c773fa000e
-References: <CGME20190321082621eucas1p16d48ef152cd76edb7d46e8c773fa000e@eucas1p1.samsung.com>
-        <20190321082608.21366-1-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556134382-58814-16-git-send-email-fenghua.yu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All
 
-On 2019-03-21 09:26, Marek Szyprowski wrote:
-> Exynos Multi-Core Timer driver (exynos_mct) must be started before ARM
-> Architected Timers (arch_timer), because they both share some common
-> hardware blocks (global system counter) and turning on MCT is needed
-> to get ARM Architected Timer working properly. Increase MCT timer rating
-> and hotplug priority over ARM Archictected timer driver to achieve that.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+* Fenghua Yu <fenghua.yu@intel.com> wrote:
 
-Thomas: could you comment or accept this change? Daniel said that he 
-leaves this for you: https://patchwork.kernel.org/patch/10814921/#22486971
-
+> To workaround or debug a split lock issue, the administrator may need to
+> disable or enable split lock detection during run time without rebooting
+> the system.
+> 
+> The interface /sys/device/system/cpu/split_lock_detect is added to allow
+> the administrator to disable or enable split lock detection and show
+> current split lock detection setting.
+> 
+> Writing [yY1] or [oO][nN] to the file enables split lock detection and
+> writing [nN0] or [oO][fF] disables split lock detection. Split lock
+> detection is enabled or disabled on all CPUs.
+> 
+> Reading the file returns current global split lock detection setting:
+> 0: disabled
+> 1: enabled
+> 
+> Add an ABI document entry for /sys/devices/system/cpu/split_lock_detect.
+> 
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 > ---
-> v2: added comments about the relation to ARM arch timer
->      rebased onto v5.1-rc1
-> v1: https://patchwork.kernel.org/patch/10814921/
-> ---
->   drivers/clocksource/exynos_mct.c | 4 ++--
->   include/linux/cpuhotplug.h       | 2 +-
->   2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
-> index 34bd250d46c6..6aa10cbc1d59 100644
-> --- a/drivers/clocksource/exynos_mct.c
-> +++ b/drivers/clocksource/exynos_mct.c
-> @@ -209,7 +209,7 @@ static void exynos4_frc_resume(struct clocksource *cs)
->   
->   static struct clocksource mct_frc = {
->   	.name		= "mct-frc",
-> -	.rating		= 400,
-> +	.rating		= 450,	/* use value higher than ARM arch timer */
->   	.read		= exynos4_frc_read,
->   	.mask		= CLOCKSOURCE_MASK(32),
->   	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
-> @@ -464,7 +464,7 @@ static int exynos4_mct_starting_cpu(unsigned int cpu)
->   	evt->set_state_oneshot_stopped = set_state_shutdown;
->   	evt->tick_resume = set_state_shutdown;
->   	evt->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
-> -	evt->rating = 450;
-> +	evt->rating = 500;	/* use value higher than ARM arch timer */
->   
->   	exynos4_mct_write(TICK_BASE_CNT, mevt->base + MCT_L_TCNTB_OFFSET);
->   
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index e78281d07b70..53fb48de9589 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -115,10 +115,10 @@ enum cpuhp_state {
->   	CPUHP_AP_PERF_ARM_ACPI_STARTING,
->   	CPUHP_AP_PERF_ARM_STARTING,
->   	CPUHP_AP_ARM_L2X0_STARTING,
-> +	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
->   	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
->   	CPUHP_AP_ARM_GLOBAL_TIMER_STARTING,
->   	CPUHP_AP_JCORE_TIMER_STARTING,
-> -	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
->   	CPUHP_AP_ARM_TWD_STARTING,
->   	CPUHP_AP_QCOM_TIMER_STARTING,
->   	CPUHP_AP_TEGRA_TIMER_STARTING,
+> Not sure if the justification for the sysfs knob is valid. If not, this
+> patch could be removed from this patch set.
+> 
+>  .../ABI/testing/sysfs-devices-system-cpu      | 22 ++++++++
+>  arch/x86/kernel/cpu/intel.c                   | 52 ++++++++++++++++++-
+>  2 files changed, 72 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> index 9605dbd4b5b5..aad7b1698065 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> @@ -67,6 +67,28 @@ Description:	Discover NUMA node a CPU belongs to
+>  		/sys/devices/system/cpu/cpu42/node2 -> ../../node/node2
+>  
+>  
+> +What:		/sys/devices/system/cpu/split_lock_detect
+> +Date:		March 2019
+> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+> +Description:	(RW) Control split lock detection on Intel Tremont and
+> +		future CPUs
+> +
+> +		Reads return split lock detection status:
+> +			0: disabled
+> +			1: enabled
+> +
+> +		Writes enable or disable split lock detection:
+> +			The first character is one of 'Nn0' or [oO][fF] for off
+> +			disables the feature.
+> +			The first character is one of 'Yy1' or [oO][nN] for on
+> +			enables the feature.
+> +
+> +		Please note the interface only shows or controls global setting.
+> +		During run time, split lock detection on one CPU may be
+> +		disabled if split lock operation in kernel code happens on
+> +		the CPU. The interface doesn't show or control split lock
+> +		detection on individual CPU.
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+I.e. implementation and possible actual state are out of sync. Why?
 
+Also, if it's a global flag, why waste memory on putting a sysfs knob 
+into every CPU's sysfs file?
+
+Finally, why is a debugging facility in sysfs, why not a debugfs knob? 
+Using a sysctl would solve the percpu vs. global confusion as well ...
+
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -35,6 +35,7 @@
+>  DEFINE_PER_CPU(u64, msr_test_ctl_cache);
+>  EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctl_cache);
+>  
+> +static DEFINE_MUTEX(split_lock_detect_mutex);
+>  static bool split_lock_detect_enable;
+
+'enable' is a verb in plain form - which we use for function names.
+
+For variable names that denotes current state we typically use past 
+tense, i.e. 'enabled'.
+
+(The only case where we'd us the split_lock_detect_enable name for a flag 
+if it's a flag to trigger some sort of enabling action - which this 
+isn't.)
+
+Please review the whole series for various naming mishaps.
+
+> +	mutex_lock(&split_lock_detect_mutex);
+> +
+> +	split_lock_detect_enable = val;
+> +
+> +	/* Update the split lock detection setting in MSR on all online CPUs. */
+> +	on_each_cpu(split_lock_update_msr, NULL, 1);
+> +
+> +	if (split_lock_detect_enable)
+> +		pr_info("enabled\n");
+> +	else
+> +		pr_info("disabled\n");
+> +
+> +	mutex_unlock(&split_lock_detect_mutex);
+
+Instead of a mutex, please just use the global atomic debug flag which 
+controls the warning printout. By using that flag both for the WARN()ing 
+and for controlling MSR state all the races are solved and the code is 
+simplified.
+
+
+Thanks,
+
+	Ingo
