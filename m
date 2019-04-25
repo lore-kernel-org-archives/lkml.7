@@ -5,220 +5,219 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8B9C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C49C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E244120645
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F80720645
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aNPZ16MP"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AAYrDUkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387770AbfDYLYW (ORCPT
+        id S2387803AbfDYLYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:24:22 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:30713 "EHLO
+        Thu, 25 Apr 2019 07:24:36 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:30678 "EHLO
         mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387624AbfDYLYL (ORCPT
+        with ESMTP id S2387545AbfDYLYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:24:11 -0400
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190425112408epoutp01b2d61ce0294a373a6259eb77e27ed697~Ys_CzMAyq1921819218epoutp01S;
-        Thu, 25 Apr 2019 11:24:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190425112408epoutp01b2d61ce0294a373a6259eb77e27ed697~Ys_CzMAyq1921819218epoutp01S
+        Thu, 25 Apr 2019 07:24:04 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190425112401epoutp0154f3efce8b08a5c57f52a4872319583e~Ys976J_2g1904819048epoutp01f;
+        Thu, 25 Apr 2019 11:24:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190425112401epoutp0154f3efce8b08a5c57f52a4872319583e~Ys976J_2g1904819048epoutp01f
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556191448;
-        bh=C76dKk0NmGHl/Qu5kKDvvmvO7y5dIxg97utO9LWSE00=;
+        s=mail20170921; t=1556191441;
+        bh=4S6KChIBk/IqG41ydTdXRNYQIbozJTHYfmrQ7Y29Fy0=;
         h=From:To:Cc:Subject:Date:In-reply-to:References:From;
-        b=aNPZ16MPX4xsbeNO6I6B3SQWrijtqOKpEIzqKZLrebADGg0GJad7qHA8Mna5Asyjt
-         k8CYuCdzh4dW75C0iY1pUociQm861LX1Vzw6934qBefxD7kD9ctcnbqf0J8oUe0x2O
-         FLoKzXf17FcwJXalpY2MacLmkFGXB+182z2jTEaI=
-Received: from epsmges2p3.samsung.com (unknown [182.195.42.71]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-        20190425112408epcas2p30eecd8269be3909764b5a2e35ad36a9b~Ys_CbZvyq3170231702epcas2p3k;
-        Thu, 25 Apr 2019 11:24:08 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A8.C9.04206.8D891CC5; Thu, 25 Apr 2019 20:24:08 +0900 (KST)
-Received: from epsmgms2p2new.samsung.com (unknown [182.195.42.143]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20190425112408epcas2p2ddba9fdf175645dd2647da191eac5e1c~Ys_CRhRhI0083200832epcas2p2G;
-        Thu, 25 Apr 2019 11:24:08 +0000 (GMT)
-X-AuditID: b6c32a47-14bff7000000106e-f1-5cc198d8b568
-Received: from epmmp2 ( [203.254.227.17]) by epsmgms2p2new.samsung.com
-        (Symantec Messaging Gateway) with SMTP id BB.4D.03620.8D891CC5; Thu, 25 Apr
-        2019 20:24:08 +0900 (KST)
+        b=AAYrDUkThUv+58pIWELgbqysEharMon4iX4btuzrVtKp++QDF6hYi4CWunIcsFtY/
+         CNqeYCEVVKIxChsSGsGf8P3WOJThjnRHs1NWJ4pPFigqo4GEaPR7uAYt8oR3skGl99
+         uLhEryKhRDC4G4GFbgAb+BIS+yEDk+j/28ZeXuMU=
+Received: from epsmges1p2.samsung.com (unknown [182.195.42.54]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190425112400epcas1p468414a681f5575952ec05e4abb0f1f1b~Ys97bOP_X2380823808epcas1p4H;
+        Thu, 25 Apr 2019 11:24:00 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B5.D7.04142.0D891CC5; Thu, 25 Apr 2019 20:24:00 +0900 (KST)
+Received: from epsmgms2p1new.samsung.com (unknown [182.195.42.142]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190425112400epcas1p26e7634f95a185a83c31470006d291161~Ys97JOliC0718107181epcas1p22;
+        Thu, 25 Apr 2019 11:24:00 +0000 (GMT)
+X-AuditID: b6c32a36-ce1ff7000000102e-7d-5cc198d09ab8
+Received: from epmmp2 ( [203.254.227.17]) by epsmgms2p1new.samsung.com
+        (Symantec Messaging Gateway) with SMTP id 1E.BF.03598.0D891CC5; Thu, 25 Apr
+        2019 20:24:00 +0900 (KST)
 Received: from test-PowerEdge-R720.sa.corp.samsungelectronics.net
         ([107.108.221.212]) by mmp2.samsung.com (Oracle Communications Messaging
         Server 7.0.5.31.0 64bit (built May  5 2014)) with ESMTPA id
-        <0PQI007Z2KZ7JR40@mmp2.samsung.com>; Thu, 25 Apr 2019 20:24:08 +0900 (KST)
+        <0PQI007Z2KZ7JR40@mmp2.samsung.com>; Thu, 25 Apr 2019 20:24:00 +0900 (KST)
 From:   Kanchan Joshi <joshi.k@samsung.com>
 To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
         linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
         linux-ext4@vger.kernel.org
 Cc:     prakash.v@samsung.com, anshul@samsung.com,
         Kanchan Joshi <joshi.k@samsung.com>
-Subject: [PATCH v5 7/7] fs/ext4,jbd2: add support for sending write-hint
- with journal
-Date:   Thu, 25 Apr 2019 16:50:02 +0530
-Message-id: <1556191202-3245-8-git-send-email-joshi.k@samsung.com>
+Subject: [PATCH v5 4/7] block: introduce write-hint to stream-id conversion
+Date:   Thu, 25 Apr 2019 16:49:59 +0530
+Message-id: <1556191202-3245-5-git-send-email-joshi.k@samsung.com>
 X-Mailer: git-send-email 2.7.4
 In-reply-to: <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCmue6NGQdjDP78lrX4PX0Kq8XR/2/Z
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCmru6FGQdjDL59MLP4PX0Kq8XR/2/Z
         LPbe0raYOe8Om8WevSdZLC7vmsNmMX/ZU3aLK1MWMTtweGxeUu/Rt2UVo8fnTXIBzFFcNimp
-        OZllqUX6dglcGX9ebWcrOKZQsf6ffANjt3QXIyeHhICJxM2T/9m7GLk4hAR2MEp8ubEDyvnO
-        KLGjZQsLTNXtgzvZIBIbGCWm7HvGBOFMZ5LYdfYQUIaDg01AU+LC5FKQuIjAHEaJZfumMYN0
-        MwuESKx4sooFpEZYIFyi80EpiMkioCrxcY4MSAWvgJPElm3T2CB2yUncPNcJ1skp4Czx4gfE
-        KgmBDjaJ5tenGCGKXCR6bj1mhrClJZ6t2ggVL5b4decoM1QDo8T1hplQH9hLXNzzlwniHj6J
-        jsN/2UGOkBDglehoE4Io8ZC4cPYB1F/TGCWe3dnLNIFRYgEjwypGsdSC4tz01GKjAmO94sTc
-        4tK8dL3k/NxNjOCo0nLfwbjtnM8hRgEORiUeXoXIAzFCrIllxZW5hxglOJiVRHjVTQ/GCPGm
-        JFZWpRblxxeV5qQWH2KU5mBREud9KD03WkggPbEkNTs1tSC1CCbLxMEp1cCo/DJEuX6hiEXV
-        ndBnjv+bbM8ucPaJeHBgu7DG5959fdpXzj5+2Mb85d3KFRXyP1+5GSn9uXjoxaeuWeGN7LKb
-        z3w2PN9/xFj+SF6X3ztLNdGZ78R9GFdVBBRtPmFRMG/+qexUybRYB/WWc9uOdxX779F71L/+
-        eu2HC2lGp64bCS4oCZigz22mxFKckWioxVxUnAgA9ozqpqYCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmluLIzCtJLcpLzFFi42I5/e+xoO6NGQdjDB4eEbb4PX0Kq8XR/2/Z
+        OZllqUX6dglcGa8n7GIpmKlYcfrde/YGxibpLkZODgkBE4nOh4dYuhi5OIQEdjBKXJn4Esr5
+        zijxq3suE0xVy+79bBCJDYwSX38vZwVJCAlMZ5I4dSyui5GDg01AU+LC5FKQGhGBOYwSy/ZN
+        YwapYRYIkVjxZBULiC0s4C2xec4vsDiLgKrEyZ4XbCC9vAJOEgs+CEPskpO4ea4TrIRTwFni
+        xY9nTCAzJQQ62CRer1/ADlHkIvHsWBsLSK+EgLTEpaO2EOFiiV93jjJD1TNKXG+YyQKRsJe4
+        uOcvE8Q9fBLvvvawQvTySnS0CUGUeEjsebedCeLHaYwS0961M05glFjAyLCKUSy1oDg3PbXY
+        sMBIrzgxt7g0L10vOT93EyM4qrTMdjAuOudziFGAg1GJh1ch8kCMEGtiWXFl7iFGCQ5mJRFe
+        ddODMUK8KYmVValF+fFFpTmpxYcYpTlYlMR51zs4xwgJpCeWpGanphakFsFkmTg4pRoYJYs/
+        XV3wPPi63bOZFcwnZgrMTlnqf+eej/9jmyX98jPbYlJX3H+6nOnSNYZNT3/dXy1SznjJ9NeH
+        Q4dv7md/svW6wJ5H3C6pP+c+7rnAOH8LTw9z9Y35S9jseR5aRFlKH90QvGP22/Jbakqvr235
+        J7r35+rl7zMOzll7carTmmdsJj8OrVyU/r9SiaU4I9FQi7moOBEAwGk3waYCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphluLIzCtJLcpLzFFi42I5/e+xoO6FGQdjDH7PV7X4PX0Kq8XR/2/Z
         LPbe0raYOe8Om8WevSdZLC7vmsNmMX/ZU3aLK1MWMTtweGxeUu/Rt2UVo8fnTXIBzFFcNimp
-        OZllqUX6dglcGX9ebWcrOKZQsf6ffANjt3QXIyeHhICJxO2DO9m6GLk4hATWMUo0/jnPCOHM
-        ZJK4+7SRvYuRg4NNQFPiwuRSkLiIwBxGiZ7d61lBupkFQiRmPXvMBmILC4RLNLTuBqtnEVCV
-        +DhHBiTMK+AksWXbNDaIZXISN891MoPYnALOEi9+PGMCsYWAaq5N28Q+gZFnASPDKkbJ1ILi
-        3PTcYqMCo7zUcr3ixNzi0rx0veT83E2MwKDZdlirfwfj4yXxhxgFOBiVeHgVIg/ECLEmlhVX
-        5h5ilOBgVhLhVTc9GCPEm5JYWZValB9fVJqTWnyIUZqDRUmclz//WKSQQHpiSWp2ampBahFM
-        lomDU6qBMTRO8NoijrUqC/lza/edjLOQe839pTd8FUtM4Pk3k6Uf1WuzO8t5t55hOVPzdvrq
-        3m+/lE+fL7pjrBP2yWBTXsLxW4IHjuZO9ug/MVF9w5W5jSuXnv+3sO+m/XV23Q72jKdHcl/d
-        Z/4YX/2r4LxdwNKqT+VXi95MtVB+VvXxwXVui8JdP8+/XaDEUpyRaKjFXFScCADnuS1mFgIA
-        AA==
-X-CMS-MailID: 20190425112408epcas2p2ddba9fdf175645dd2647da191eac5e1c
-CMS-TYPE: 102P
-X-CMS-RootMailID: 20190425112408epcas2p2ddba9fdf175645dd2647da191eac5e1c
+        OZllqUX6dglcGa8n7GIpmKlYcfrde/YGxibpLkZODgkBE4mW3fvZuhi5OIQE1jFKNM3dxQLh
+        zGSSePzzIVMXIwcHm4CmxIXJpSBxEYE5jBI9u9ezgnQzC4RIzHr2mA3EFhbwltg85xcziM0i
+        oCpxsucFG0gvr4CTxIIPwhDL5CRunusEK+EUcJZ48eMZE4gtBFRybdom9gmMPAsYGVYxSqYW
+        FOem5xYbFRjmpZbrFSfmFpfmpesl5+duYgSGzbbDWn07GO8viT/EKMDBqMTDeyH2QIwQa2JZ
+        cWXuIUYJDmYlEV5104MxQrwpiZVVqUX58UWlOanFhxilOViUxHlv5x2LFBJITyxJzU5NLUgt
+        gskycXBKNTBK35jqYRryorTJ/l/dC+mrZ36Z/1r234L5tnRJxmetrby97jvnGB7c9WJtVGQ2
+        x8mitqwisQNL2q+xy33qnNYkWD3fbueeaNvUprj3dZOPKW25t7Ioa8KpFw28yU2fTvx6Lv77
+        /YFZbdyaH+6V8x08tmP2JIncDQ6WzFVbvgXdeCpoZmvz4e0eJZbijERDLeai4kQA1T38wRcC
+        AAA=
+X-CMS-MailID: 20190425112400epcas1p26e7634f95a185a83c31470006d291161
+CMS-TYPE: 101P
+X-CMS-RootMailID: 20190425112400epcas1p26e7634f95a185a83c31470006d291161
 References: <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
-        <CGME20190425112408epcas2p2ddba9fdf175645dd2647da191eac5e1c@epcas2p2.samsung.com>
+        <CGME20190425112400epcas1p26e7634f95a185a83c31470006d291161@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For NAND based SSDs, mixing of data with different life-time reduces
-efficiency of internal garbage-collection. During FS operations,
-series of journal updates will follow/precede series of data/meta
-updates, causing intermixing inside SSD. By passing a write-hint with
-journal, its write can be isolated from other data/meta writes, leading
-to endurance/performance benefit on SSD.
-This patch introduces "j_writehint" member in JBD2 journal, using which
-Ext4 specifies write-hint for journal.
+This patch moves write-hint-to-stream-id conversion in block-layer.
+Earlier this was done by driver (nvme). For user write-hints, conversion
+is of the form "streamid = write-hint - 1". For kernel write-hints,
+streams are allocated in top-to-bottom fashion. This has the effect of
+mapping user-hints to lower range of stream-ids and kernel-hints to upper
+range of stream-ids.
+Conversion takes stream limit (maintained in request queue) into
+account. Write-hints beyond the exposed limit turn to 0.
+A new field 'streamid' has been added in request, while 'write-hint'
+field has been removed. For merging checks, 'bi_write_hint' (of bio) is
+used instead.
 
 Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
 ---
- fs/ext4/ext4_jbd2.h  |  1 +
- fs/ext4/super.c      |  2 ++
- fs/jbd2/commit.c     | 11 +++++++----
- fs/jbd2/journal.c    |  3 ++-
- fs/jbd2/revoke.c     |  3 ++-
- include/linux/jbd2.h |  8 ++++++++
- 6 files changed, 22 insertions(+), 6 deletions(-)
+ block/blk-core.c         | 29 ++++++++++++++++++++++++++++-
+ block/blk-merge.c        |  4 ++--
+ drivers/nvme/host/core.c |  7 ++-----
+ include/linux/blkdev.h   |  2 +-
+ 4 files changed, 33 insertions(+), 9 deletions(-)
 
-diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-index 75a5309..ade47b2 100644
---- a/fs/ext4/ext4_jbd2.h
-+++ b/fs/ext4/ext4_jbd2.h
-@@ -16,6 +16,7 @@
- #include <linux/jbd2.h>
- #include "ext4.h"
- 
-+#define EXT4_JOURNAL_WRITE_HINT (WRITE_LIFE_KERN_MIN)
- #define EXT4_JOURNAL(inode)	(EXT4_SB((inode)->i_sb)->s_journal)
- 
- /* Define the number of blocks we need to account to a transaction to
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 6ed4eb8..238c0b5 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4298,6 +4298,8 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 
- 	set_task_ioprio(sbi->s_journal->j_task, journal_ioprio);
- 
-+	sbi->s_journal->j_writehint = EXT4_JOURNAL_WRITE_HINT;
-+
- 	sbi->s_journal->j_commit_callback = ext4_journal_commit_callback;
- 
- no_journal:
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index efd0ce9..be3a0b9 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -153,10 +153,12 @@ static int journal_submit_commit_record(journal_t *journal,
- 
- 	if (journal->j_flags & JBD2_BARRIER &&
- 	    !jbd2_has_feature_async_commit(journal))
--		ret = submit_bh(REQ_OP_WRITE,
--			REQ_SYNC | REQ_PREFLUSH | REQ_FUA, bh);
-+		ret = submit_bh_write_hint(REQ_OP_WRITE,
-+			REQ_SYNC | REQ_PREFLUSH | REQ_FUA, bh,
-+			journal->j_writehint);
- 	else
--		ret = submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
-+		ret = submit_bh_write_hint(REQ_OP_WRITE, REQ_SYNC, bh,
-+			journal->j_writehint);
- 
- 	*cbh = bh;
- 	return ret;
-@@ -713,7 +715,8 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 				clear_buffer_dirty(bh);
- 				set_buffer_uptodate(bh);
- 				bh->b_end_io = journal_end_buffer_io_sync;
--				submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
-+				submit_bh_write_hint(REQ_OP_WRITE, REQ_SYNC,
-+						bh, journal->j_writehint);
- 			}
- 			cond_resched();
- 			stats.run.rs_blocks_logged += bufs;
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 382c030..6dc7c9a 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1372,7 +1372,8 @@ static int jbd2_write_superblock(journal_t *journal, int write_flags)
- 		sb->s_checksum = jbd2_superblock_csum(journal, sb);
- 	get_bh(bh);
- 	bh->b_end_io = end_buffer_write_sync;
--	ret = submit_bh(REQ_OP_WRITE, write_flags, bh);
-+	ret = submit_bh_write_hint(REQ_OP_WRITE, write_flags, bh,
-+				   journal->j_writehint);
- 	wait_on_buffer(bh);
- 	if (buffer_write_io_error(bh)) {
- 		clear_buffer_write_io_error(bh);
-diff --git a/fs/jbd2/revoke.c b/fs/jbd2/revoke.c
-index a1143e5..376b1d8 100644
---- a/fs/jbd2/revoke.c
-+++ b/fs/jbd2/revoke.c
-@@ -642,7 +642,8 @@ static void flush_descriptor(journal_t *journal,
- 	set_buffer_jwrite(descriptor);
- 	BUFFER_TRACE(descriptor, "write");
- 	set_buffer_dirty(descriptor);
--	write_dirty_buffer(descriptor, REQ_SYNC);
-+	write_dirty_buffer_with_hint(descriptor, REQ_SYNC,
-+				journal->j_writehint);
+diff --git a/block/blk-core.c b/block/blk-core.c
+index a55389b..0485c20 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -730,6 +730,33 @@ bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
+ 	return false;
  }
+ 
++enum rw_hint blk_write_hint_to_streamid(struct request *req,
++					struct bio *bio)
++{
++	enum rw_hint streamid, write_hint, nr_streams;
++	struct request_queue *q = req->q;
++
++	nr_streams = q->limits.nr_streams;
++
++	write_hint = bio->bi_write_hint;
++
++	if (!nr_streams || write_hint == WRITE_LIFE_NOT_SET ||
++	    write_hint == WRITE_LIFE_NONE)
++		streamid = 0;
++	else if (write_hint < WRITE_LIFE_KERN_MIN) { /*user-space hints*/
++		streamid = write_hint - 1;
++		if (streamid > nr_streams)
++			streamid = 0;
++	} else { /* kernel hints */
++		streamid = write_hint - WRITE_LIFE_KERN_MIN + 1;
++		if (streamid > (nr_streams - BLK_MAX_USER_HINTS))
++			streamid = 0;
++		else
++			streamid = nr_streams - streamid + 1;
++	}
++	return streamid;
++}
++
+ void blk_init_request_from_bio(struct request *req, struct bio *bio)
+ {
+ 	if (bio->bi_opf & REQ_RAHEAD)
+@@ -737,7 +764,7 @@ void blk_init_request_from_bio(struct request *req, struct bio *bio)
+ 
+ 	req->__sector = bio->bi_iter.bi_sector;
+ 	req->ioprio = bio_prio(bio);
+-	req->write_hint = bio->bi_write_hint;
++	req->streamid = blk_write_hint_to_streamid(req, bio);
+ 	blk_rq_bio_prep(req->q, req, bio);
+ }
+ EXPORT_SYMBOL_GPL(blk_init_request_from_bio);
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 1c9d4f0..1435634 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -832,7 +832,7 @@ static struct request *attempt_merge(struct request_queue *q,
+ 	 * Don't allow merge of different write hints, or for a hint with
+ 	 * non-hint IO.
+ 	 */
+-	if (req->write_hint != next->write_hint)
++	if (req->bio->bi_write_hint != next->bio->bi_write_hint)
+ 		return NULL;
+ 
+ 	if (req->ioprio != next->ioprio)
+@@ -964,7 +964,7 @@ bool blk_rq_merge_ok(struct request *rq, struct bio *bio)
+ 	 * Don't allow merge of different write hints, or for a hint with
+ 	 * non-hint IO.
+ 	 */
+-	if (rq->write_hint != bio->bi_write_hint)
++	if (rq->bio->bi_write_hint != bio->bi_write_hint)
+ 		return false;
+ 
+ 	if (rq->ioprio != bio_prio(bio))
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 2c43e12..f3000d9 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -530,12 +530,9 @@ static void nvme_assign_write_stream(struct nvme_ctrl *ctrl,
+ 				     struct request *req, u16 *control,
+ 				     u32 *dsmgmt)
+ {
+-	enum rw_hint streamid = req->write_hint;
++	enum rw_hint streamid = req->streamid;
+ 
+-	if (streamid == WRITE_LIFE_NOT_SET || streamid == WRITE_LIFE_NONE)
+-		streamid = 0;
+-	else {
+-		streamid--;
++	if (streamid != 0) {
+ 		if (WARN_ON_ONCE(streamid > ctrl->nr_streams))
+ 			return;
+ 
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 5b6cb9747..9cf8a40 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -216,7 +216,7 @@ struct request {
+ 	unsigned short nr_integrity_segments;
  #endif
  
-diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-index 0f919d5..918f21e 100644
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -1139,6 +1139,14 @@ struct journal_s
- 	 */
- 	__u32 j_csum_seed;
+-	unsigned short write_hint;
++	unsigned short streamid;
+ 	unsigned short ioprio;
  
-+	/**
-+	 * @j_writehint:
-+	 *
-+	 * write-hint for journal (set by FS).
-+	 */
-+	enum rw_hint	j_writehint;
-+
-+
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- 	/**
- 	 * @j_trans_commit_map:
+ 	unsigned int extra_len;	/* length of alignment and padding */
 -- 
 2.7.4
 
