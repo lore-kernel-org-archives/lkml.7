@@ -2,132 +2,132 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794C9C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D077C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A752067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F182067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HOQmukPk"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VVf3dTts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730558AbfDYScp (ORCPT
+        id S1730584AbfDYSdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:32:45 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42209 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbfDYSco (ORCPT
+        Thu, 25 Apr 2019 14:33:16 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:45238 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfDYSdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:32:44 -0400
-Received: by mail-ot1-f66.google.com with SMTP id f23so391089otl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:32:44 -0700 (PDT)
+        Thu, 25 Apr 2019 14:33:16 -0400
+Received: by mail-yw1-f67.google.com with SMTP id r139so245732ywe.12
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LvJO/2BdHJCODfQ2LeKMfPJDO1dVr2ZG8IxfZycQGxI=;
-        b=HOQmukPkE5rZ4+NkJz2zMeX6v/up5c1bE88TwS+7QcKcAh5xZEo2b/504uFKAoBpT4
-         wmro4N/hQCdu2TU0tiKbh83kmwLqn7Nq1b5jTPlAjAOUZneri0PP0ZrYMoYKS+KNC7y9
-         Br1+n2bpPZYelX3FOWCLX/FSOsKCBR8JflOnS8LL+HwLV2WFaHD9i0rvMF+kkal2N9BD
-         3RFiN5yQnxK+pFBKeiyfvhAZnW8NJqDvvW7e0DgC1KBxgF1HZT1TGXOx5Pl0MZWQ5yne
-         YmWkw21nM56n2sb2KSwU0pIjfd/o7926Fg6Hpj8h4dFEd+8tSa9N9gJ7775oxA0IRdSh
-         1rnQ==
+        bh=hzyf0v4+qorHObxQJIarsmYBRGRmN6zpccuNNSL44OU=;
+        b=VVf3dTtsKaAfXBPBmVkoppyV2gw2xq6TYANFWb+6Vq5JFwilh3+tFe1/CG3OPPJkP6
+         ruIfynbny0jjANfyWol12KMILx292VUx3a6BYRhTqG+Gh25Je6Zgv+QQyd7YelJCgYrM
+         892XfsDOzraUvmp/rYU4O3fkw0CMCmp8mhbuM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LvJO/2BdHJCODfQ2LeKMfPJDO1dVr2ZG8IxfZycQGxI=;
-        b=Uw6g57IwTz9W6ViBFeQYEWzwE2b+vHLF3WFy3OsiXZjU2XdgQhEwTtwtU2SkZT8VMO
-         Bl7ZhPZPkdhvc6LnDolA3eIuc2xSk1n7gDxxt4CZBQr5aQwZ8AlrHHqKB4lre2X+o0Mh
-         fAgYh4tP0sEjXPq8HynRwmViZMECoOCTCVQr/7/V8u7GBz3OM/FzNtxZVQs8kJDKsy8M
-         a1ngHTbBQ188q2mXjx851KyQ787Px+q05sVtN+PJNcv7dBB4yT6Y19DvKC3nbVHQ9eD6
-         L0gdPRlMdTiU8edtcNBzrQQbKxnj9YrCUzAEqNriRbDPQ6QkC4Bs81e25mDTZJb3DAtd
-         E/Yw==
-X-Gm-Message-State: APjAAAUsmWp6DTVxPOSwTjdLs5h5HKsOjEQyiYxXl/iq8UxbqUcrHgWR
-        hpeMHXtLO+I+4HyVKZJ+ee9oKniXAa1oHwyMyQE7ue0mUPzknw==
-X-Google-Smtp-Source: APXvYqx4PgGe2U1MhC7pPBRWgQiJibrYu1+J0E9C1Kz8Xj5sTf7PaqKrcE6RXPXAki90WNbcfORk+TJ/tzBvoht62Uo=
-X-Received: by 2002:a9d:53cc:: with SMTP id i12mr3779867oth.242.1556217163925;
- Thu, 25 Apr 2019 11:32:43 -0700 (PDT)
+        bh=hzyf0v4+qorHObxQJIarsmYBRGRmN6zpccuNNSL44OU=;
+        b=EXJk7zIYEKzBq3lpDJ430MzIY/6JIl/qsrragPxmRgwbPTbRPwAxWo1zkJ17NShxkm
+         0abeHslKRBKxA2cPi240dsbEl++6L4mEDAFT7XzG8kDgtfbxvHmhwXgbju/7/53QX1A4
+         cL+lxYTscyvHAyFbG9Dtq7IS1oTmOaqHXF+3f4mb5xf4K7XNMHDQHSOhRaaQzr28fVaJ
+         DCQh3CN0JD/nV0RVJ2udbPbJkMvuuAxxBmUBnezksdr1d7XvLT0+tGnLkgYAiP8v6sC4
+         hPOXbkOrShCkuEPe2Xud/IY1LGYhEpuu4sKnybFCGBN1ZXB3221I35SiTKcdwu7+TL+K
+         azMA==
+X-Gm-Message-State: APjAAAXe0FJchwgbYq96OJMY1wdUEWMosDfpDqyiG/y/mdlXIyrs5nHC
+        KONwdhi0w//agxn9H38D0kEU/rHzDY9NtZYT9P2p2w==
+X-Google-Smtp-Source: APXvYqxdY8Iuvb3b5qXwyXA6A4/PdGfn314MhXhx7P5obwxet5ooms4jobZ+/QDqjAwgk6U13axMvCf/rqtRzdVurtY=
+X-Received: by 2002:a81:7009:: with SMTP id l9mr32009686ywc.306.1556217195233;
+ Thu, 25 Apr 2019 11:33:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190425161416.26600-1-dima@arista.com> <20190425161416.26600-16-dima@arista.com>
-In-Reply-To: <20190425161416.26600-16-dima@arista.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 25 Apr 2019 20:32:17 +0200
-Message-ID: <CAG48ez3nT_RtaHrjpKPRZDYTyzxX49QBZXJ+u2AZmFy5Wao4wQ@mail.gmail.com>
-Subject: Re: [PATCHv3 15/27] x86/vdso: Allocate timens vdso
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        Linux API <linux-api@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+References: <20190308005735.GA4122@archlinux-ryzen> <20190320190849.GB28744@archlinux-ryzen>
+ <CAKwvOdkekJw-wLn=9K=xKE0X260MZCCRtD1r5Erp=fQTwn+p9w@mail.gmail.com>
+ <CAK8P3a2gkvkDidV6t82RYj7sydaaGkUOVvrjfuKfPtdd9vj-eg@mail.gmail.com> <20190425181411.GB4507@archlinux-i9>
+In-Reply-To: <20190425181411.GB4507@archlinux-i9>
+From:   Michael Chan <michael.chan@broadcom.com>
+Date:   Thu, 25 Apr 2019 11:33:04 -0700
+Message-ID: <CACKFLikGY0=_FBosBdp2nq8F+Upmpo-Oi8kFeMH8diBEZP_0AQ@mail.gmail.com>
+Subject: Re: -Wsometimes-uninitialized Clang warning in drivers/net/ethernet/broadcom/bnxt/bnxt.c
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Eddie Wai <eddie.wai@broadcom.com>,
+        "jeffrey.huang@broadcom.com" <huangjw@broadcom.com>,
+        "prashant.sreedharan@broadcom.com" <prashant@broadcom.com>,
+        "michael.chan@broadcom.com" <mchan@broadcom.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 6:14 PM Dmitry Safonov <dima@arista.com> wrote:
+On Thu, Apr 25, 2019 at 11:14 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> As it has been discussed on timens RFC, adding a new conditional branch
-> `if (inside_time_ns)` on VDSO for all processes is undesirable.
-> It will add a penalty for everybody as branch predictor may mispredict
-> the jump. Also there are instruction cache lines wasted on cmp/jmp.
+> Hi Arnd,
 >
-> Those effects of introducing time namespace are very much unwanted
-> having in mind how much work have been spent on micro-optimisation
-> vdso code.
->
-> The propose is to allocate a second vdso code with dynamically
-> patched out (disabled by static_branch) timens code on boot time.
->
-> Allocate another vdso and copy original code.
-[...]
-> diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-> index 80cbb2167eba..6aae9c0d400d 100644
-> --- a/arch/x86/entry/vdso/vma.c
-> +++ b/arch/x86/entry/vdso/vma.c
-[...]
->  static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
->                       struct vm_area_struct *vma, struct vm_fault *vmf)
->  {
->         const struct vdso_image *image = vma->vm_mm->context.vdso_image;
-> +       unsigned long offset = vmf->pgoff << PAGE_SHIFT;
->
->         if (!image || (vmf->pgoff << PAGE_SHIFT) >= image->size)
->                 return VM_FAULT_SIGBUS;
->
-> -       vmf->page = virt_to_page(image->text + (vmf->pgoff << PAGE_SHIFT));
-> +       if (current_timens_offsets() && image->text_timens)
+> On Fri, Mar 22, 2019 at 03:32:50PM +0100, Arnd Bergmann wrote:
+> > On Wed, Mar 20, 2019 at 9:41 PM 'Nick Desaulniers' via Clang Built
+> > Linux <clang-built-linux@googlegroups.com> wrote:
+> > >
+> > > + Broadcom folks from commit c0c050c58d84 ("bnxt_en: New Broadcom
+> > > ethernet driver.").  Looks like Michael wrote and is still maintaining
+> > > the driver.
+> > >
+> > > On Wed, Mar 20, 2019 at 12:08 PM Nathan Chancellor
+> > > <natechancellor@gmail.com> wrote:
+> > > >
+> > > > On Thu, Mar 07, 2019 at 05:57:35PM -0700, Nathan Chancellor wrote:
+> > > > > Hi all,
+> > > > >
+> > > > > We are trying to get Clang's -Wsometimes-uninitialized turned on for the
+> > > > > kernel as it can catch some bugs that GCC can't. This warning came up:
+> > > > >
+> > > > > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1612:6: warning: variable 'len' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+> > > > >         if (rxcmp1->rx_cmp_cfa_code_errors_v2 & RX_CMP_L2_ERRORS) {
+> > > > >             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1703:19: note: uninitialized use occurs here
+> > > > >         cpr->rx_bytes += len;
+> > > > >                          ^~~
+> > > > > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1612:2: note: remove the 'if' if its condition is always false
+> > > > >         if (rxcmp1->rx_cmp_cfa_code_errors_v2 & RX_CMP_L2_ERRORS) {
+> > > > >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1540:18: note: initialize the variable 'len' to silence this warning
+> > > > >         unsigned int len;
+> > > > >                         ^
+> > > > >                          = 0
+> > > > > 1 warning generated.
+> > > > >
+> > > > > It seems like the logical change to make is this; however, I am not sure
+> > > > > if this has any other unintended consequences since this is a rather
+> > > > > dense function. I would much appreciate your input, especially if there
+> > > > > is a better way to fix it.
+> > >
+> > > I agree that `goto next_rx_no_prod_no_len` appears to be most correct;
+> > > though I don't understand why this function is a mix of early return
+> > > codes, vs setting rc then updating *raw_cons.  The alternative is
+> > > probably zero initializing len, but I'm not sure whether *raw_cons
+> > > should be updated in that case or not.  Thanks for bringing this up
+> > > and the patch.  Sorry for the delay in review.  Can folks at Broadcom
+> > > please clarify?
 
-I'm pretty sure that accessing `current` in here is wrong. AFAIK this
-fault handler can be invoked on remote processes, through interfaces
-like /proc/$pid/mem and process_vm_readv(); in that case, the kernel
-should install a page based on the time namespace of the target
-process, not based on the time namespace of the caller.
+Sorry, I somehow missed this email earlier.  "goto
+next_rx_no_prod_no_len" is the most correct fix.  The "cpr->rx_bytes
++= len" logic was added about a year ago when we added the DIM
+(Dynamic Interrupt Moderation) support and we missed fixing this goto.
 
-> +               vmf->page = vmalloc_to_page(image->text_timens + offset);
-> +       else
-> +               vmf->page = virt_to_page(image->text + offset);
-> +
->         get_page(vmf->page);
->         return 0;
->  }
-[...]
+I can prepare and send the patch later today.  Thanks.
