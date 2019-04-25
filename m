@@ -2,92 +2,124 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2076DC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE729C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621E42077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379F22067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556207604;
+	bh=ho5TyauY3lJuFVAthLKFJ6Y7hIL31mARg19a8JCHiUk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=td/jJMNF/1DcvYUEX+f0lYy/uTpoxKHb2+GV/1QPKcFaRk+QExqiaPZhC1VekPzcE
+	 ooaISA/wlvodEqi5p5G6l5e6KtlXoxCoyCDbUIaeGXaMqkt9yLYS/ACCLZ8ykONl1j
+	 GzR/1LUsFLuKWE3hg0670DVCg61KGVmC6Wt5Up1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfDYPtM (ORCPT
+        id S1729163AbfDYPxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:49:12 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:42854 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726402AbfDYPtM (ORCPT
+        Thu, 25 Apr 2019 11:53:22 -0400
+Received: from casper.infradead.org ([85.118.1.10]:44084 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbfDYPxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:49:12 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x3PFmnsc002484
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Apr 2019 11:48:51 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id A496D420EEC; Thu, 25 Apr 2019 11:48:49 -0400 (EDT)
-Date:   Thu, 25 Apr 2019 11:48:49 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Pan Bian <bianpan2016@163.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: ext4: avoid drop reference to iloc.bh twice
-Message-ID: <20190425154849.GA4739@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Pan Bian <bianpan2016@163.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1555576278-3917-1-git-send-email-bianpan2016@163.com>
- <20190418123519.GJ28541@quack2.suse.cz>
+        Thu, 25 Apr 2019 11:53:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=E3NXYmNospchyn56GjhuUUM3hrUac73tHVKaHCldfOk=; b=Bonx4HPMYcr3a2nktGqFVhvpkC
+        Lm7Jv3Ti63Kv4EMBUFae5lI4ptDC5RAI5ElUhwvqH9DfP8HL3oLak9sqkNi1SrdMbInWhlezS4ZQv
+        TaB3dxTt/lLAd7hovrVYa5w4+CCJd72lsXCzDbUllvhVuoJLaU1Hl5+LKJVzv+MI7D167ykTh2GZK
+        d6OPs3hXZSnLAXf1R6CrpdOPA9x9rme1ywi76UowaMUx1f609U55StEwsjKOyqNJVxN4cMGncdYB6
+        KnVvdda0AmWSEMwWetcrVOOCMdnwjzCP88m9Y10yNoScW0lTGYk+7ZUQxJpbglecBDUogb5ukJzjR
+        1L7XLtaQ==;
+Received: from [179.95.39.209] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJggS-0007pK-Bs; Thu, 25 Apr 2019 15:53:12 +0000
+Date:   Thu, 25 Apr 2019 12:53:01 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-fsdevel@vger.kernel.org,
+        y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Sterba <dsterba@suse.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devel@driverdev.osuosl.org, qat-linux@intel.com,
+        linux-crypto@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        amd-gfx@lists.freedesktop.org, linux-input@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Sean Young <sean@mess.org>
+Subject: Re: [PATCH v3 12/26] compat_ioctl: move more drivers to
+ compat_ptr_ioctl
+Message-ID: <20190425125301.5165cf15@coco.lan>
+In-Reply-To: <20190425153534.GS2217@ZenIV.linux.org.uk>
+References: <20190416202013.4034148-1-arnd@arndb.de>
+        <20190416202701.127745-1-arnd@arndb.de>
+        <20190425122153.450fc094@coco.lan>
+        <20190425153534.GS2217@ZenIV.linux.org.uk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190418123519.GJ28541@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 02:35:19PM +0200, Jan Kara wrote:
-> On Thu 18-04-19 16:31:18, Pan Bian wrote:
-> > The reference to iloc.bh has been dropped in ext4_mark_iloc_dirty.
-> > However, the reference is dropped again if error occurs during
-> > ext4_handle_dirty_metadata, which may result in use-after-free bugs.
-> > 
-> > Fixes: fb265c9cb49e("ext4: add ext4_sb_bread() to disambiguate ENOMEM
-> > cases")
-> > 
-> > Signed-off-by: Pan Bian <bianpan2016@163.com>
+Em Thu, 25 Apr 2019 16:35:34 +0100
+Al Viro <viro@zeniv.linux.org.uk> escreveu:
+
+> On Thu, Apr 25, 2019 at 12:21:53PM -0300, Mauro Carvalho Chehab wrote:
 > 
-> Thanks for the patch! Good spotting. You can add:
+> > If I understand your patch description well, using compat_ptr_ioctl
+> > only works if the driver is not for s390, right?  
 > 
-> Reviewed-by: Jan Kara <jack@suse.cz>
+> No; s390 is where "oh, just set ->compat_ioctl same as ->unlocked_ioctl
+> and be done with that; compat_ptr() is a no-op anyway" breaks.  IOW,
+> s390 is the reason for having compat_ptr_ioctl() in the first place;
+> that thing works on all biarch architectures, as long as all stuff
+> handled by ->ioctl() takes pointer to arch-independent object as
+> argument.  IOW,
+> 	argument ignored => OK
+> 	any arithmetical type => no go, compat_ptr() would bugger it
+> 	pointer to int => OK
 
-Applied, thanks.
+That's the case for all LIRC ioctls: they all use a pointer to u32
+argument.
 
-> I'm just wondering: Ted, shouldn't we make ext4_mark_iloc_dirty() clear the
-> iloc.bh pointer on it's own? I believe this is not the first time we had a
-> bug like this and it would also catch possible use-after-free issues in
-> case someone tried to use iloc.bh after the reference has been dropped.
+> 	pointer to string => OK
+> 	pointer to u64 => OK
+> 	pointer to struct {u64 addr; char s[11];} => OK
+> 	pointer to long => needs explicit handler
+> 	pointer to struct {void *addr; char s[11];} => needs explicit handler
+> 	pointer to struct {int x; u64 y;} => needs explicit handler on amd64
+> For "just use ->unlocked_ioctl for ->ioctl" we have
+> 	argument ignored => OK
+> 	any arithmetical type => OK
+> 	any pointer => instant breakage on s390, in addtion to cases that break
+> with compat_ptr_ioctl().
 > 
-> Generally the scheme around ext4_get_inode_loc() and
-> ext4_mark_iloc_dirty() seems to be somewhat error prone. E.g. a quick audit
-> shows that there's bh leak in ext4_orphan_del() in one of the error paths.
-> I'll send patches.
+> Probably some form of that ought to go into commit message for compat_ptr_ioctl()
+> introduction...
 
-Good suggestion!
+Agreed.
 
-I agree, the interface is error-prone.  Clearing inode.bh afterwards
-makes sense.
-
-After we do this, we should also scan the call sites, since there are
-some places where we have been calling get_bh(iloc.bh) before-hand, so
-that the brelse(iloc.bh) in the cleanup path will work.  Other call
-paths add iloc.bh = NULL afterwards so that the brelse() will work
-correctly.  So we'll be able to clean up all of this afterwards.
-
-		       	     	     - Ted
+Thanks,
+Mauro
