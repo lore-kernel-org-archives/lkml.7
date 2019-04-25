@@ -2,87 +2,90 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CFAC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56EEC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B7B206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B81206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfDYKpS (ORCPT
+        id S1728973AbfDYKqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:45:18 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40762 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfDYKpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:45:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB558374;
-        Thu, 25 Apr 2019 03:45:17 -0700 (PDT)
-Received: from queper01-ThinkPad-T460s (unknown [10.37.8.81])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AB9A3F5C1;
-        Thu, 25 Apr 2019 03:45:14 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 11:45:07 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
-Subject: Re: [PATCH V3 3/3] thermal/cpu-cooling: Update thermal pressure in
- case of a maximum frequency capping
-Message-ID: <20190425104504.pbej3b74pwinx6jj@queper01-ThinkPad-T460s>
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
- <1555443521-579-4-git-send-email-thara.gopinath@linaro.org>
- <20190418094833.owlobrx6x5gclvhy@queper01-lin>
- <5CBF93F6.8000109@linaro.org>
+        Thu, 25 Apr 2019 06:46:53 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:36449 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728944AbfDYKqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 06:46:53 -0400
+Received: from [192.168.1.115] ([95.115.19.22]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mcp3E-1gkp2c3gf4-00ZzjB; Thu, 25 Apr 2019 12:46:20 +0200
+Subject: Re: [PATCH v17 1/3] proc: add /proc/<pid>/arch_status
+To:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     mingo@redhat.com, peterz@infradead.org, hpa@zytor.com,
+        ak@linux.intel.com, tim.c.chen@linux.intel.com,
+        dave.hansen@intel.com, arjan@linux.intel.com, adobriyan@gmail.com,
+        akpm@linux-foundation.org, aubrey.li@intel.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>
+References: <20190421183529.9141-1-aubrey.li@linux.intel.com>
+ <alpine.DEB.2.21.1904242310040.1762@nanos.tec.linutronix.de>
+ <da1fcb4f-e856-d31f-7c72-76c969af3935@linux.intel.com>
+ <6a9e6bd9-8e1a-9fe5-135d-c7a49697b5a4@metux.net>
+ <4456cc68-5120-e820-90ed-cb5b5dfcd760@linux.intel.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <ee1620d5-9650-5bfa-c458-fa2d051522b1@metux.net>
+Date:   Thu, 25 Apr 2019 12:46:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5CBF93F6.8000109@linaro.org>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <4456cc68-5120-e820-90ed-cb5b5dfcd760@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:ZnkALXkHHwZE1EE2jFTNP4RMHM6mt7IN4RNRxxzkIoEJQ8b01n7
+ ZlZ+Q04+zSYDioS1BzpbePww5eI0r2ltoqRByeNAFgMDWGoHIaG8ceLYGBIhnWLyZmbLfvb
+ nf7rLfpyyST+bpF+XOSLWAJwNQGCWcqO5p7+8GSkpWbvKPooTfmf5M/o9O7dkcEJFiQKeGH
+ cTdTPdjQ8jGuZFi9KI9kQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gnYz11fW57A=:yQd8eRO0sQM4pPBuihPDPl
+ UYi73k456SbyHl5c4k+eVJ0pDShAUtscC2JtxeODqa3bwBYkb2ge6IOCWFW1hdANRYiI6kQK1
+ L9vv53hy+E9RDxrkgURZEQNab9w5QWII8Qs6sObFYMUViFxIs1jcIswvuSMF1kve2qyJ+OmTF
+ TFQvoHRVodE0gY1n/kQsM3Q/yGEpoTAbcl+AlNx52w6RFFRSQiAgCPXHb1FYIV6oXhFtHX9bs
+ 13b+wsJ/4KFh7mJZpvorsaEhFfy08CnsytO6jtxD0fWzau7OC28aq8EylUvXQX1so9SRywXC9
+ +mTpxuOCVHq8ikyau0ZcTG9k5Yi3va5VMFIXLwAks6vjZwzrTSR/jtZpDcuTYSYIJabmXXKmi
+ 2cBGKF3F780UsCWIl7ok5RDn19gqXP1UXaAWRqVZrX4Sk60vpmZABsIhU57mpIAjas4SL4rF8
+ dcUoII1dmFn2aESU7rY5TDiIkz0026NTn2B757F6DK/cSzT3ROCtgKbuILJmJE1Edz8W0d6FB
+ m3fc7AbH9g9HwzNgl/cwu4wb3uaJnd/z5X/LxfZV87pZtcQtugaTjTcg87/ZZWuVZOX1nHx+l
+ jPIZDiCq+Bo32535RZ7vhyxxqx3tK2RY1IYIrnqvZhJ5PFtpk4FZ3+F7wg+eXLKKbWupsPmqQ
+ 9cbgqG2FD9LHClm0goSw3ZJp68cGEqpHk37lWKnsFyhvUb+l7foyd+WIirz7fYiPk6iZAIB08
+ Q0Ej7E6h3YC3JHwAXIe5GNEbLtXoXb1TrH0PUbV4c5PdamRb+I2DDNe2cuY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 23 Apr 2019 at 18:38:46 (-0400), Thara Gopinath wrote:
-> I think there is one major difference between user-defined frequency
-> constraints and frequency constraints due to thermal events in terms of
-> the time period the system spends in the the constraint state.
-> Typically, a user constraint lasts for seconds if not minutes and I
-> think in this case cpu_capacity_orig should reflect this constraint and
-> not cpu_capacity like this patch set.
+On 25.04.19 12:42, Li, Aubrey wrote:
+> 
+> Yep, I'll make it disabled by default and not switchable and let arch select it.
+> 
 
-That might not always be true I think. There's tons of userspace thermal
-deamons out there, and I wouldn't be suprised if they were writing into
-the cpufreq sysfs files, although I'm not sure.
+That's not quite what I've suggested. Instead:
 
-Another thing is, if you want to change the capacity_orig value, you'll
-need to rebuild the sched domains and all I believe. Otherwise there is
-a risk to 'break' the sd_asym flags. So we need to make sure we're happy
-to pay that price.
+#1: make the switch depend on the arch's that support it
+#2: still leave it selectable to the user, so somebody who doesn't need
+    it, can just disable it.
 
-> Also, in case of the user
-> constraint, there is possibly no need to accumulate and average the
-> capacity constraints and instantaneous values can be directly applied to
-> cpu_capacity_orig. On the other hand thermal pressure is more spiky and
-> sometimes in the order of ms and us requiring the accumulating and
-> averaging.
-> > 
-> > Perhaps the Intel boost stuff could be factored in there ? That is,
-> > at times when the boost freq is not reachable capacity_of() would appear
-> > smaller ... Unless this wants to be reflected instantaneously ?
-> Again, do you think intel boost is more applicable to be reflected in
-> cpu_capacity_orig and not cpu_capacity?
+(I, personally, tend to disable everything I don't need)
 
-I'm not even sure if we want to reflect it at all TBH, but I'd be
-interested to see what Intel folks think :-)
 
-Thanks,
-Quentin
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
