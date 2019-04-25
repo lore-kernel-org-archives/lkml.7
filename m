@@ -2,40 +2,109 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=MAILING_LIST_MULTI,
-	PLING_QUERY,SPF_PASS,TVD_SPACE_RATIO autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8F6C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C07FC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C45217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF601217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:55:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UdrtDXeC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbfDYLzj (ORCPT
+        id S1728416AbfDYLzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:55:39 -0400
-Received: from [111.177.175.122] ([111.177.175.122]:45330 "EHLO
-        localhost.localdomain" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727683AbfDYLzh (ORCPT
+        Thu, 25 Apr 2019 07:55:44 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:4903 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbfDYLzi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:55:37 -0400
-X-Greylist: delayed 25197 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Apr 2019 07:55:37 EDT
-Received: from localhost (localhost [IPv6:::1])
-        by localhost.localdomain (Postfix) with SMTP id 6159A115313
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 14:27:32 +0800 (CST)
-From:   linux-kernel@vger.kernel.org
-To:     linux-kernel@vger.kernel.org
-Reply-To: prodawez@armyspy.com
-Subject: Zdravstvuyte! Vas interesuyut kliyentskiye bazy dannykh?
-Message-Id: <20190422062732.6159A115313@localhost.localdomain>
-Date:   Mon, 22 Apr 2019 14:27:32 +0800 (CST)
+        Thu, 25 Apr 2019 07:55:38 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cc1a03f0000>; Thu, 25 Apr 2019 04:55:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 25 Apr 2019 04:55:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 25 Apr 2019 04:55:37 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Apr
+ 2019 11:55:34 +0000
+From:   Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 4.9 00/44] 4.9.171-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190424170839.924291114@linuxfoundation.org>
+Message-ID: <10433ff6-ee1f-e692-a324-c649450c037c@nvidia.com>
+Date:   Thu, 25 Apr 2019 12:55:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1556193343; bh=/5gB7ufBYs5TkMKd74Ag0g4YDW3YMk0qLYgdFqeOmVA=;
+        h=X-PGP-Universal:From:Subject:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=UdrtDXeC11DzbONPX2StrstKI8phUgY1DbfJnmdy3XZM52WJCUwOy36gMoAaC1DmQ
+         kquS3lVWCcQL6EhOxCvQr2W44JxejNsd3t+Ym1spG3tk7IWGQ8nOQCZrA3fF71eJtn
+         HfE4UvhPyyBaWa7A/vtbd9oE3segVROcpn7DTFd2hg4pJezxD8IRYPptMFrWmaFye/
+         z6hQmDvOkw37Sm6rFE2TCnTGCei2Ah1LZ6ZWfTw9shkkcLv71LoypW4xxlhvj8pN1M
+         uyz86Krz0PnmxTeOki3VV1uuepEJezYqoNmhR9qRqErSm+oPkDSwI3sV5UmlQxl4Sx
+         yNGDLJyi35hkQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zdravstvuyte! Vas interesuyut kliyentskiye bazy dannykh?
+
+On 24/04/2019 18:09, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.171 release.
+> There are 44 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 26 Apr 2019 05:07:31 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.171-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
 
+All tests are passing for Tegra ...
 
+Test results for stable-v4.9:
+    8 builds:	8 pass, 0 fail
+    16 boots:	16 pass, 0 fail
+    24 tests:	24 pass, 0 fail
+
+Linux version:	4.9.171-rc1-gaf81074
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
