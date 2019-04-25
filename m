@@ -2,214 +2,132 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11EAC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2EBC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A10520717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8729320717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbfDYQcQ (ORCPT
+        id S1728110AbfDYQfR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:32:16 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1035 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbfDYQcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:32:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 09:32:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
-   d="scan'208";a="164831356"
-Received: from lxy-dell.sh.intel.com ([10.239.159.145])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Apr 2019 09:32:13 -0700
-Message-ID: <6df520272ae8874fbc06d60664f17b518d9b8c5e.camel@intel.com>
-Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Like Xu <like.xu@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
-Date:   Fri, 26 Apr 2019 00:28:58 +0800
-In-Reply-To: <5203b6ee-4a14-64b7-0237-dae2a977054d@linux.intel.com>
-References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
-         <20190424143238.GB18442@linux.intel.com>
-         <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
-         <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
-         <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
-         <be509b34ba01a22845363aeb0b0f053f25c2d9c1.camel@intel.com>
-         <7568a794-2e91-c84c-5b64-d33e394f0e2b@linux.intel.com>
-         <20190425141944.GA31197@linux.intel.com>
-         <5203b6ee-4a14-64b7-0237-dae2a977054d@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Apr 2019 12:35:17 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:58206 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfDYQfR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 12:35:17 -0400
+Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 6B420CEE84;
+        Thu, 25 Apr 2019 18:43:26 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH 2/2] Bluetooth: btusb: Disable LE Advertising on system
+ suspend
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <0AA2825C-2286-4A72-AA88-5E57BC55DFE8@canonical.com>
+Date:   Thu, 25 Apr 2019 18:35:14 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <77B76631-C261-4142-AFAA-65586B5C2E56@holtmann.org>
+References: <20190422092034.21461-1-kai.heng.feng@canonical.com>
+ <20190422092034.21461-2-kai.heng.feng@canonical.com>
+ <3E3982D2-2912-4467-A8BF-C0BE53C9B82C@holtmann.org>
+ <0AA2825C-2286-4A72-AA88-5E57BC55DFE8@canonical.com>
+To:     Kai Heng Feng <kai.heng.feng@canonical.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-04-25 at 23:33 +0800, Like Xu wrote:
-> On 2019/4/25 22:19, Sean Christopherson wrote:
-> > On Thu, Apr 25, 2019 at 03:07:35PM +0800, Like Xu wrote:
-> > > On 2019/4/25 14:30, Xiaoyao Li wrote:
-> > > > > > Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes
-> > > > > > is
-> > > > > > that we cannot assmue the reserved bits 31:16 of ECX is always 0 for
-> > > > > > the
-> > > > > > future generation.
-> > 
-> > It doesn't matter if future CPUs use 31:16 for other things since this
-> > code only cares about whether or not CPUID.1F exists.  The check
-> > entry->eax >= 0x1f ensures that CPUID.1F will return zeros if the leaf
-> > does *NOT* exist, ergo the check against CPUID.1F.ECX only needs to
-> > look for a non-zero value.  CPUID.1F.ECX is the logical choice for
-> > detecting support because it is guaranteed to be non-zero if the leaf
-> > actually exists (because bits 15:8 will be non-zero).  Whether or not
-> > bits 31:16 are non-zero is irrelevant.
+Hi Kai-Heng,
+
+>>> System may freeze during suspend, and it's caused by btusb early wakeup:
+>>> 
+>>> kernel: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
+>>> kernel: dpm_run_callback(): pci_pm_suspend+0x0/0x130 returns -16
+>>> kernel: PM: Device 0000:00:14.0 failed to suspend async: error -16
+>>> kernel: PM: Some devices failed to suspend, or early wake event detected
+>>> kernel: usb usb1: usb resume
+>>> kernel: hub 1-0:1.0: hub_resume
+>>> kernel: usb usb1-port1: status 0507 change 0000
+>>> kernel: usb usb1-port6: status 0103 change 0004
+>>> kernel: usb usb1-port10: status 0107 change 0000
+>>> 
+>>> where btusb is connecte to usb1-port6.
+>>> 
+>>> The expirement shows that the early wakeup is caused by LE Advertising
+>>> packet.
+>>> 
+>>> Disabling it via event mask can prevent the issue from happening.
+>>> 
+>>> BugLink: https://bugs.launchpad.net/bugs/1823029
+>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>> ---
+>>> drivers/bluetooth/btusb.c | 12 ++++++++++++
+>>> 1 file changed, 12 insertions(+)
+>>> 
+>>> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+>>> index 10c8f9872ee5..f03fcf5687e4 100644
+>>> --- a/drivers/bluetooth/btusb.c
+>>> +++ b/drivers/bluetooth/btusb.c
+>>> @@ -490,6 +490,7 @@ struct btusb_data {
+>>> 	int (*setup_on_usb)(struct hci_dev *hdev);
+>>> 
+>>> 	int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
+>>> +	bool suspended;
+>>> };
+>>> 
+>>> static inline void btusb_free_frags(struct btusb_data *data)
+>>> @@ -3316,12 +3317,18 @@ static void btusb_disconnect(struct usb_interface *intf)
+>>> static int btusb_suspend(struct usb_interface *intf, pm_message_t message)
+>>> {
+>>> 	struct btusb_data *data = usb_get_intfdata(intf);
+>>> +	struct hci_dev *hdev = data->hdev;
+>>> 
+>>> 	BT_DBG("intf %p", intf);
+>>> 
+>>> 	if (data->suspend_count++)
+>>> 		return 0;
+>>> 
+>>> +	if (!PMSG_IS_AUTO(message)) {
+>>> +		hci_disable_le_advertising(hdev);
+>>> +		data->suspended = true;
+>>> +	}
+>>> +
+>>> 	spin_lock_irq(&data->txlock);
+>>> 	if (!(PMSG_IS_AUTO(message) && data->tx_in_flight)) {
+>>> 		set_bit(BTUSB_SUSPENDING, &data->flags);
+>>> @@ -3427,6 +3434,11 @@ static int btusb_resume(struct usb_interface *intf)
+>>> 	spin_unlock_irq(&data->txlock);
+>>> 	schedule_work(&data->work);
+>>> 
+>>> +	if (data->suspended) {
+>>> +		hci_enable_le_advertising(hdev);
+>>> +		data->suspended = false;
+>>> +	}
+>>> +
+>>> 	return 0;
+>> 
+>> this is a clear NAK. Please stop hacking things.
+>> 
+>> Lets use hci_suspend_dev and hci_resume_dev and make it actually do something to disable the events for advertising.
 > 
-> Here is a case:
+> Do you mean hci_disable_le_advertising() should be called by hci_suspend_dev(), which should be called by btusb_suspend()?
 > 
-> one future CPU may have "cpuid.0.eax > 0x1f" but not use multi-chip 
-> packaging technology thus its CPUID.1F leaf **could** not exist to 
-> expose multi-die info and it still use cpuid.0B leaf.
-> 
-> So the entry->eax >= 0x1f check is true and cpuid_ecx(0x1f) check is 
-> true as well due to default return value. (one of my machines for 
-> cpuid.1f.ecx would return 0x00000064 without cpuid.1f support).
+> I’ve tried calling hci_suspend_dev() without disabling advertising, the issue still presents.
 
-You mean entry->eax >= 0x1f, and CPUID.1F leaf doesn't exist.
-In this case, cpuid_ecx(0x1f) must be zero.
+we have to define what the behavior of hci_suspend_dev is suppose to be. In general you want to wake up from LE Advertising, but most likely only ones that are passing the whitelist. Same goes for BR/EDR and HID wakeups btw.
 
-You should the descripton of CPUID instruction in SDM. It says:
+Anyway this is the way to go since I will not allow doing any hacking from a HCI transport driver. And that is what btusb.c is. It is just a transport, it is not suppose to know anything about HCI internals unless told from the core.
 
-   If a value entered for CPUID.EAX is less than or equal to the maximum input
-   value and the leaf is not supported on that processor then 0 is returned in
-   all the registers.
+Regards
 
-I can tell you why the cpuid.1f.exc return 0x00000064 in your machines.
-That's the value of leaf 0x16, you can check the output of cpuid.0x0_eax, it
-should be 0x00000016.
-
-> When we only cares about whether or not CPUID.1F exists,
-> we may need (cpuid_ecx(0x1f) & 0x0000ff00) != 0 or just follow what host 
-> check_extended_topology_leaf() does.
-> > 
-> > > > > 
-> > > > > It's true cause the statement in public spec is not "Reserved = 0" but
-> > > > > "Bits 31 - 16: Reserved".
-> > > > > 
-> > > > > > 
-> > > > > > In my opinion, Sean's codes is OK and much simple and clear.
-> > > > > 
-> > > > > If the host cpuid.0.eax is greater than 0x1f but actually it doesn't
-> > > > > have multi-chip packaging technology and we may want to expose
-> > > > > entry->eax to some value smaller than 0x1f but greater than 0x14, much
-> > > > > effort needs to apply on Sean's code.
-> > > > > 
-> > > > > My improvement is good to overwrite cpuid.0.eax in future usage
-> > > > > from the perspective of kvm feature setting not just from value check.
-> > > > 
-> > > > Alright, there is something wrong in your code that you haven't
-> > > > realised.
-> > > > 
-> > > > When you do
-> > > > 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
-> > > > 
-> > > > it changes the entry->eax if entry->eax > 0x14. So you cannot directly
-> > > > use
-> > > > cpuid_ecx(0x1f). At least, you need to cache the value of entry->eax,
-> > > > like:
-> > > > 	
-> > > > 	u32 max_leaf = entry->eax;
-> > > > 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
-> > > > 	
-> > > > 	//...leaf between 0x14 and 0x1f
-> > > > 	
-> > > > 	if (max_leaf >= 0x1f && (cpuid_ecx(0x1f) & 0x0000ff00))
-> > > >   		entry->eax = 0x1f;
-> > > 
-> > > The cache value make no sense on this.
-> > 
-> > Xiaoyao is pointing out that by limiting entry->eax to 0x14 (or 0xd), then
-> > it can't be used to detect support for CPUID.1F since KVM will have lost
-> > the required information.
-> 
-> The point is that its existence does not really depend on cpuid.0.eax> = 
-> 0x1f. My test machine (CLX-AP, two die in one package) has cpuid.0.eax = 
-> 0x16 but does have CPUID.1F support (a bit strange on BIOS).
-
-I think it must be something wrong with your CLX-AP.
-I tested on my CLX-AP machine too, the cpuid.0x0_eax is 0x000000001f.
-
-> > 
-> > > > However, handling in increasing order in totally wrong. Since it's to
-> > > > report the
-> > > > max the leaf supported, we should handle in descending order, which is
-> > > > what Sean
-> > > > does.
-> > > 
-> > > There is no need to check "entry->eax >= 0x1f" before "setting entry->eax
-> > > =
-> > > 0x1f" if and only if cpuid_ecx(0x1f) meets requirements.
-> > 
-> > entry->eax absolutely needs to be checked, otherwise you have no idea what
-> > CPUID leaf is actually being consumed.  For example, a CPU with a maximum
-> > basic CPUID leaf of 0xB will report information that is indistinguishable
-> > from the actual CPUID.1F, i.e. KVM will incorrectly think the CPU supports
-> > CPUID.1F regardless of what heuristic is used to detect a "valid" CPUID.1F
-> > if it only looks at the result of CPUID.1F.
-> 
-> Based on what I mentioned, just reconsider this proposal:
-> 
-> case 0:
->      entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
->      if ((cpuid_ecx(0x1f) & 0x0000ff00)) != 0)
->          entry->eax = 0x1f;
-> 
-> It increases the cpuid.0.ecx value along with the minimized feature 
-> requirement in a natural and readable way. Why don't we design a little 
-> bit future ahead of time?
-
-There are two things I want to state:
-
-1. using cpuid_ecx(0x1f) to check the existence of leaf 1f is absolutely wrong.
-
-Using the return value of E{A,B,C,D}X of cpuid leaf *N* to check the existence
-of leaf *N* is totally wrong. We need first to ensure that cpuid.0_eax >= *N*,
-that's the reason why we need cpuid.0_eax.
-
-Specifically, about cpuid leaf 1f, in page 3-222 Vol.2A of latest SDM publish on
-January 2019, the description of Input EAX = 1FH is:
-
-   When CPUID executes with EAX set to 1FH, the processor returns information
-   about extended topology enumeration data. Software must detect the presence
-   of CPUID leaf 1FH by verifying (a) the highest leaf index supported by CPUID
-   is >= 1FH, and (b) CPUID.1FH:EBX[15:0] reports a non-zero value.
-
-2. Checking in descending manner is better that increasing manner.
-
-In increasing manner, we have to check from the smallest one by one, there will
-be some useless check for the smaller one. 
-   
-However, in descending manner, once it finds the supported maxmium one, there is
-no need to check the smaller leaf. 
-
-> > 
-> > > An increasing manner helps to overwrite this value on demand in a flat
-> > > code
-> > > flow (easy to understand and maintain) not an if-else_if-else flow.
-> > 
-> > Maybe in the future the code will need to be refactored as more cases are
-> > added, but for now an if-else is quite readable.  Worry about the future
-> > when it happens. :-)
-> > 
-> 
-> 
+Marcel
 
