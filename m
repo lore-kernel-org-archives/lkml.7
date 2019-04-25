@@ -2,272 +2,120 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73C1C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F64AC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC15D20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556201319;
-	bh=BRoiHrfZJQwVrBvHJdZ6WzMeL+mNQ6h9J2jqC9rvkAg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DFdfS+I9FnXuG5Uk4cpfpt9/5YqGAY1b1k7ClYCaOSF5n/mb+aRJagEPF96tx9ST2
-	 PgK0tLm+32h1jjDZnOnmduLaofcyE13rDfe9TVC9d41L/V5L0lysBwvhYyQlCry8L+
-	 oN1JwPsBipqSeNF6hryvXtaNcMtpDyxorvGGypM8=
+	by mail.kernel.org (Postfix) with ESMTP id 04F8E2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:09:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfDYOIi (ORCPT
+        id S1728222AbfDYOJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:08:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbfDYOIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:08:37 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1137F20644;
-        Thu, 25 Apr 2019 14:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556201316;
-        bh=BRoiHrfZJQwVrBvHJdZ6WzMeL+mNQ6h9J2jqC9rvkAg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ui1wS1a+UnJck+++sWj4+SZ5Vn6cvHLAKckQqvCZUsFJVP+kAFKRXUsLglmsHFYck
-         iv4eSuCRGUGsZLuZmQc55X4Ki29FmcxsaBa97gmciVwAJ3ZZi2+TtB27XLwVWWrRb4
-         MbuY9pWeOSSwXCAwXu3kphj6H/S7Gkpif3idmZHE=
-Date:   Thu, 25 Apr 2019 09:08:34 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Chocron <jonnyc@amazon.com>
-Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        linux-kernel@vger.kernel.org, vaerov@amazon.com, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org, alisaidi@amazon.com, zeev@amazon.com,
-        ronenk@amazon.com, barakw@amazon.com, talel@amazon.com,
-        hanochu@amazon.com, hhhawa@amazon.com
-Subject: Re: [PATCH v3] PCI: al: Add Amazon Annapurna Labs PCIe host
- controller driver
-Message-ID: <20190425140834.GE11428@google.com>
-References: <20190326125508.GG24180@google.com>
- <1553774276-24675-1-git-send-email-jonnyc@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553774276-24675-1-git-send-email-jonnyc@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 25 Apr 2019 10:09:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50026 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725965AbfDYOJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:09:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8F142ABCE;
+        Thu, 25 Apr 2019 14:09:00 +0000 (UTC)
+Message-ID: <1556201335.11912.6.camel@suse.com>
+Subject: Re: KASAN: use-after-free Read in dvb_usb_device_exit
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, andreyknvl@google.com,
+        syzkaller-bugs@googlegroups.com, mchehab@kernel.org,
+        corbet@lwn.net,
+        syzbot <syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Date:   Thu, 25 Apr 2019 16:08:55 +0200
+In-Reply-To: <9cfe433e-426e-19d1-9cb8-5bc2ba17145b@xs4all.nl>
+References: <000000000000789d3d058653d9bb@google.com>
+         <1555326745.13626.10.camel@suse.com>
+         <9cfe433e-426e-19d1-9cb8-5bc2ba17145b@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 01:57:56PM +0200, Jonathan Chocron wrote:
-> Add support for Amazon's Annapurna Labs PCIe driver. The HW controller
-> is based on DesignWare's IP.
+On Mi, 2019-04-24 at 16:09 +0200, Hans Verkuil wrote:
+> On 4/15/19 1:12 PM, Oliver Neukum wrote:
+> > On Fr, 2019-04-12 at 04:46 -0700, syzbot wrote:
+> > > Hello,
+> > > 
+> > > syzbot found the following crash on:
+> > > 
+> > > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> > > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1643974b200000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=26ec41e9f788b3eba396
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12f5efa7200000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1395a0f3200000
+> > > 
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
+> > > 
+> > > dvb-usb: schedule remote query interval to 150 msecs.
+> > > dw2102: su3000_power_ctrl: 0, initialized 1
+> > > dvb-usb: TeVii S421 PCI successfully initialized and connected.
+> > > usb 1-1: USB disconnect, device number 2
+> > 
+> > Hi,
+> > 
+> > proposed fix. If nobody objects, I will submit it.
+> > 
+> > 	Regards
+> > 		Oliver
+> > 
+> > From d6097d205ac61745334b79639d3b8b910ae66c71 Mon Sep 17 00:00:00 2001
+> > From: Oliver Neukum <oneukum@suse.com>
+> > Date: Mon, 15 Apr 2019 13:06:01 +0200
+> > Subject: [PATCH] dvb: usb: fix use after free in dvb_usb_device_exit
+> > 
+> > dvb_usb_device_exit() frees and uses teh device name in that order
+> > Fix by storing the name in a buffer before freeing it
+> > 
+> > Signed-off-by: Oliver Neukum <oneukum@suse.com>
+> > Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
+> > ---
+> >  drivers/media/usb/dvb-usb/dvb-usb-init.c | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+> > index 99951e02a880..2e1670cc3903 100644
+> > --- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
+> > +++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+> > @@ -288,13 +288,18 @@ void dvb_usb_device_exit(struct usb_interface *intf)
+> >  {
+> >  	struct dvb_usb_device *d = usb_get_intfdata(intf);
+> >  	const char *name = "generic DVB-USB module";
+> > +	char identifier[40];
+> >  
+> >  	usb_set_intfdata(intf, NULL);
+> >  	if (d != NULL && d->desc != NULL) {
+> >  		name = d->desc->name;
+> > +		memcpy(identifier, name, 39);
+> > +		identifier[39] = NULL;
+> >  		dvb_usb_exit(d);
 > 
-> The HW doesn't support accessing the Root Port's config space via ECAM,
-> so we obtain its base address via an AMZN0001 device.
-> 
-> Furthermore, the DesignWare PCIe controller doesn't filter out config
-> transactions sent to devices 1 and up on its bus, so they are filtered
-> by the driver.
-> 
-> All subordinate buses do support ECAM access.
-> 
-> Implementing specific PCI config access functions involves:
->  - Adding an init function to obtain the Root Port's base address from
->    an AMZN0001 device.
->  - Adding a new entry in the MCFG quirk array
-> 
-> Co-developed-by: Vladimir Aerov <vaerov@amazon.com>
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> Signed-off-by: Vladimir Aerov <vaerov@amazon.com>
-> Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
+> Why not just move this to after the info()? You'll need to repeat the
+> 'if' in that case, but that way there is no need to memcpy anything.
 
-Applied with Ben's reviewed-by and Lorenzo's ack to pci/host/al for v5.2,
-thanks!
+The info() would make the incorrect claim that something has been
+freed. It looks to me like it exists to guarantee that you know that
+nothing hung while freeing.
 
-> ---
-> 
-> --v2:
->   - Fix commit message comments (incl. using AMZN0001 instead of
->     PNP0C02)
->   - Use the usual multi-line comment style
-> 
-> --v3:
->   - Fix additional commit message comments
-> 
->  MAINTAINERS                          |  6 +++
->  drivers/acpi/pci_mcfg.c              | 12 +++++
->  drivers/pci/controller/dwc/Makefile  |  1 +
->  drivers/pci/controller/dwc/pcie-al.c | 93 ++++++++++++++++++++++++++++++++++++
->  include/linux/pci-ecam.h             |  1 +
->  5 files changed, 113 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-al.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 32d444476a90..7a17017f9f82 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11769,6 +11769,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
->  S:	Supported
->  F:	drivers/pci/controller/
->  
-> +PCIE DRIVER FOR ANNAPURNA LABS
-> +M:	Jonathan Chocron <jonnyc@amazon.com>
-> +L:	linux-pci@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/pci/controller/dwc/pcie-al.c
-> +
->  PCIE DRIVER FOR AMLOGIC MESON
->  M:	Yue Wang <yue.wang@Amlogic.com>
->  L:	linux-pci@vger.kernel.org
-> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> index a4e8432fc2fb..b42be067fb83 100644
-> --- a/drivers/acpi/pci_mcfg.c
-> +++ b/drivers/acpi/pci_mcfg.c
-> @@ -52,6 +52,18 @@ struct mcfg_fixup {
->  static struct mcfg_fixup mcfg_quirks[] = {
->  /*	{ OEM_ID, OEM_TABLE_ID, REV, SEGMENT, BUS_RANGE, ops, cfgres }, */
->  
-> +#define AL_ECAM(table_id, rev, seg, ops) \
-> +	{ "AMAZON", table_id, rev, seg, MCFG_BUS_ANY, ops }
-> +
-> +	AL_ECAM("GRAVITON", 0, 0, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 1, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 2, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 3, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 4, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 5, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 6, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 7, &al_pcie_ops),
-> +
->  #define QCOM_ECAM32(seg) \
->  	{ "QCOM  ", "QDF2432 ", 1, seg, MCFG_BUS_ANY, &pci_32b_ops }
->  
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index 7bcdcdf5024e..1ea773c0070d 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -28,5 +28,6 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  # depending on whether ACPI, the DT driver, or both are enabled.
->  
->  ifdef CONFIG_PCI
-> +obj-$(CONFIG_ARM64) += pcie-al.o
->  obj-$(CONFIG_ARM64) += pcie-hisi.o
->  endif
-> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-> new file mode 100644
-> index 000000000000..65a9776c12be
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-al.c
-> @@ -0,0 +1,93 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe host controller driver for Amazon's Annapurna Labs IP (used in chips
-> + * such as Graviton and Alpine)
-> + *
-> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> + *
-> + * Author: Jonathan Chocron <jonnyc@amazon.com>
-> + */
-> +
-> +#include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
-> +#include <linux/pci-acpi.h>
-> +#include "../../pci.h"
-> +
-> +#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
-> +
-> +struct al_pcie_acpi  {
-> +	void __iomem *dbi_base;
-> +};
-> +
-> +static void __iomem *al_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +				     int where)
-> +{
-> +	struct pci_config_window *cfg = bus->sysdata;
-> +	struct al_pcie_acpi *pcie = cfg->priv;
-> +	void __iomem *dbi_base = pcie->dbi_base;
-> +
-> +	if (bus->number == cfg->busr.start) {
-> +		/*
-> +		 * The DW PCIe core doesn't filter out transactions to other
-> +		 * devices/functions on the primary bus num, so we do this here.
-> +		 */
-> +		if (PCI_SLOT(devfn) > 0)
-> +			return NULL;
-> +		else
-> +			return dbi_base + where;
-> +	}
-> +
-> +	return pci_ecam_map_bus(bus, devfn, where);
-> +}
-> +
-> +static int al_pcie_init(struct pci_config_window *cfg)
-> +{
-> +	struct device *dev = cfg->parent;
-> +	struct acpi_device *adev = to_acpi_device(dev);
-> +	struct acpi_pci_root *root = acpi_driver_data(adev);
-> +	struct al_pcie_acpi *al_pcie;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
-> +	if (!al_pcie)
-> +		return -ENOMEM;
-> +
-> +	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-> +	ret = acpi_get_rc_resources(dev, "AMZN0001", root->segment, res);
-> +	if (ret) {
-> +		dev_err(dev, "can't get rc dbi base address for SEG %d\n",
-> +			root->segment);
-> +		return ret;
-> +	}
-> +
-> +	dev_dbg(dev, "Root port dbi res: %pR\n", res);
-> +
-> +	al_pcie->dbi_base = devm_pci_remap_cfg_resource(dev, res);
-> +	if (IS_ERR(al_pcie->dbi_base)) {
-> +		long err = PTR_ERR(al_pcie->dbi_base);
-> +
-> +		dev_err(dev, "couldn't remap dbi base %pR (err:%ld)\n",
-> +			res, err);
-> +		return err;
-> +	}
-> +
-> +	cfg->priv = al_pcie;
-> +
-> +	return 0;
-> +}
-> +
-> +struct pci_ecam_ops al_pcie_ops = {
-> +	.bus_shift    = 20,
-> +	.init         =  al_pcie_init,
-> +	.pci_ops      = {
-> +		.map_bus    = al_pcie_map_bus,
-> +		.read       = pci_generic_config_read,
-> +		.write      = pci_generic_config_write,
-> +	}
-> +};
-> +
-> +#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
-> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> index 29efa09d686b..a73164c85e78 100644
-> --- a/include/linux/pci-ecam.h
-> +++ b/include/linux/pci-ecam.h
-> @@ -56,6 +56,7 @@ void __iomem *pci_ecam_map_bus(struct pci_bus *bus, unsigned int devfn,
->  extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
->  extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
->  extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
-> +extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
->  #endif
->  
->  #ifdef CONFIG_PCI_HOST_COMMON
-> -- 
-> 1.9.1
-> 
+	Regards
+		Oliver
+
