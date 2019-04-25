@@ -2,99 +2,132 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC55C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD00C282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09ADF20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:35:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BJRtOUBD"
+	by mail.kernel.org (Postfix) with ESMTP id 0A96D20811
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfDYLf2 (ORCPT
+        id S1730955AbfDYLi1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:35:28 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35592 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730275AbfDYLf2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:35:28 -0400
-Received: by mail-lj1-f195.google.com with SMTP id z26so2161548ljj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 04:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v3TdseDHlXpvn66ru+hD44JJlRv76RtBk6sjy6NJ3BQ=;
-        b=BJRtOUBDKWNx4CAK8xmNVWevdil9EnDJk1GjWV3wqDeJt0JweUDKvbseOpVf+55Cc0
-         2KubrIKonCVyx7RcjFt/Cff9VcUV9sb1OczdjHZ6nKMItHeC/thwgWPez8hnpsa5By36
-         30Z6F9tn0U/GVaQssvHTxGrrLdQddkozAnnk+71vrsRynrJTqx7duRgyaemgVnQpf/Ts
-         iJDGaMtUPin5ppzDFn8VD3W2K1uDRqG9hkJBXuh929fx2VcYzxDSz8j1vVCNZzjATl2/
-         vFYCK1oY6Rl4PGLS2aN6IG152iqoTk3X4rVVZCQsz6SSCaZEVONW4LKJ5ilTKXqYYxdJ
-         IOhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v3TdseDHlXpvn66ru+hD44JJlRv76RtBk6sjy6NJ3BQ=;
-        b=gTMCNQ3/d70vCLrzM/4rLlbCz0FR/CHytVAy1/QTq+DUMyWfN0wN453WX+6PCHlbpb
-         IrtAUgBd18ch8fCqzZZj2XKA21ExwLYshKEpHlwvyA4D9+ZEY+RgTot6YgnpjvoOFq8B
-         64TwH8urxHZ0V+5K0iTqIkKXEk10ZhzPxxPEi+sY6rzTfT2wv0CwsdBdvSGRpzXcBZ5S
-         prYm6pasJsGtENZ8VjRQZMManyke4Kt3dBeKzYfTd4fXmjqbgNVSDCxR4TTuOI8En9j1
-         5SId+NQHTpLL1laYWqA5ElPODI7248CoxRSnR3T+PevvO4dUHcUCj8iH4Pr/Y7Cpy1wX
-         r3Vg==
-X-Gm-Message-State: APjAAAX3QBOYM4FvKTz52vzaFbHzcNtu9da2KpzPk+5IhTolGmjY2MOI
-        NbbnOLHkByphcgBCa9UTThI/zA==
-X-Google-Smtp-Source: APXvYqwzWdeRvBap2TyOdJ8PVoAHxGApUGgCXhRsFEklLZCLgC/avJc26LQ4s3sWHRtuj8TVlFO/Gg==
-X-Received: by 2002:a2e:86c5:: with SMTP id n5mr15087401ljj.184.1556192127118;
-        Thu, 25 Apr 2019 04:35:27 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-72.NA.cust.bahnhof.se. [158.174.22.72])
-        by smtp.gmail.com with ESMTPSA id w12sm909416ljj.11.2019.04.25.04.35.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Apr 2019 04:35:26 -0700 (PDT)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: pms405: increase s3 max voltage
-Date:   Thu, 25 Apr 2019 13:34:29 +0200
-Message-Id: <20190425113429.14321-1-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 25 Apr 2019 07:38:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57864 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726223AbfDYLi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 07:38:26 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4EF7B306D323;
+        Thu, 25 Apr 2019 11:38:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B6F61001E87;
+        Thu, 25 Apr 2019 11:38:24 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAG48ez23c1eiEJpBwkV183sesj6EDWoMsEh40GDXQkS1W2_nMA@mail.gmail.com>
+References: <CAG48ez23c1eiEJpBwkV183sesj6EDWoMsEh40GDXQkS1W2_nMA@mail.gmail.com> <155612240208.8564.13865046977065545591.stgit@warthog.procyon.org.uk> <155612246750.8564.9186344007442012471.stgit@warthog.procyon.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     dhowells@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>,
+        keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>, dwalsh@redhat.com,
+        vgoyal@redhat.com
+Subject: Re: [PATCH 07/11] keys: Move the user and user-session keyrings to the user_namespace
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3831.1556192301.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Thu, 25 Apr 2019 12:38:21 +0100
+Message-ID: <3832.1556192301@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 25 Apr 2019 11:38:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Increase s3 max voltage in accordance to QCS404 CPR Fusing Guide Rev 6.0
+Jann Horn <jannh@google.com> wrote:
 
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > +       struct key              *user_keyring_register;
+> 
+> Maybe a comment about locking semantics above user_keyring_register?
+> "Only written once, may be read locklessly with READ_ONCE()", or
+> something like that?
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 2c3127167e3c..6910fc663fe1 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -64,7 +64,7 @@
- 		regulator-boot-on;
- 		regulator-name = "vdd_apc";
- 		regulator-min-microvolt = <1048000>;
--		regulator-max-microvolt = <1352000>;
-+		regulator-max-microvolt = <1384000>;
- 	};
- };
- 
--- 
-2.20.1
+Ok.
 
+> > -
+> > +#define __KDEBUG
+> 
+> Was that supposed to be in here, or did you commit that accidentally?
+
+Accidental.
+
+> > -       struct key *uid_keyring, *session_keyring;
+> > +       struct key *reg_keyring = user_ns->user_keyring_register;
+> 
+> This is a lockless read of a field that may be written concurrently;
+> this should be READ_ONCE(). (Especially on alpha, I think the memory
+> ordering will actually be incorrect without READ_ONCE().)
+
+Yeah, you're right about both of these that you pointed out.  It's not needed
+when the user_ns->keyring_sem is taken for writing, however.
+
+> > +               if (!IS_ERR(reg_keyring))
+> > +                       user_ns->user_keyring_register = reg_keyring;
+> 
+> This is a write of a pointer that may be read concurrently; this
+> should be smp_store_release().
+
+Yep.
+
+> > +       else if ((user_session = get_user_session_keyring())) {
+> > +               key_ref = keyring_search_aux(make_key_ref(user_session, 1),
+> > +                                            ctx);
+> >                 if (!IS_ERR(key_ref))
+> >                         goto found;
+> 
+> I'm not sure I understand this code. In the "goto found" case, the
+> key_put() below is skipped, right? Is that intentional?
+
+Actually, the key_put() should be directly after the keyring_search_aux()
+call, before the error check.
+
+> >  error_alloc:
+> >         complete_request_key(authkey, ret);
+> > +error_us:
+> > +       key_put(user_session);
+> >         kleave(" = %d", ret);
+> >         return ret;
+> >  }
+> 
+> This looks weird. If the look_up_user_keyrings() fails, user_session
+> might still be an uninitialized pointer, right? And then the "goto
+> error_us" jumps down here and calls key_put() on that?
+
+The call to complete_request_key() should be after error_us and the key_put()
+should be before it.
+
+> > @@ -289,16 +291,19 @@ static int construct_get_dest_keyring(struct key **_dest_keyring)
+> >
+> >                         if (dest_keyring)
+> >                                 break;
+> > +                       /* Fall through */
+> >
+> >                         /* fall through */
+> >                 case KEY_REQKEY_DEFL_USER_SESSION_KEYRING:
+> 
+> Why two "fall through" comments?
+
+Someone else added one and when I rebased, I don't think I got a conflict.
+
+David
