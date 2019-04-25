@@ -2,139 +2,177 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCBAC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28E6C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C06720717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B85D20717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="W8zVsXTU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jiGIee8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387541AbfDYSOA (ORCPT
+        id S1730408AbfDYSOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:14:00 -0400
-Received: from mail-eopbgr780040.outbound.protection.outlook.com ([40.107.78.40]:65152
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728158AbfDYSN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:13:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qm+GWHw+nakUcGT7VrMhTdRt1qq6NHYKTIs5Vyv4C98=;
- b=W8zVsXTU9wOAcqrOLf6CiNIj/pOug09vt66iuBlqKsmNwwn5QsYNjx+oR8isb6SkzJD3Y+RmcZBwEtwbBk+mZxVw+jL7qS161H/Mzj3n6FK+4V3leJ5SuA2pbfWgp58IiOjB+LpJUBAxmbiRRdLsFEP8mdu1VJZ7fStsBTpUNwg=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB6312.namprd05.prod.outlook.com (20.178.51.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.10; Thu, 25 Apr 2019 18:13:40 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::e862:1b1b:7665:8094]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::e862:1b1b:7665:8094%3]) with mapi id 15.20.1835.010; Thu, 25 Apr 2019
- 18:13:40 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Andy Lutomirski <luto@kernel.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        Thu, 25 Apr 2019 14:14:19 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41934 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728158AbfDYSOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 14:14:16 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m4so701055edd.8;
+        Thu, 25 Apr 2019 11:14:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mSYDqetsZPJeQHMyd/mvWooQeI0Yrfu3YJ3J34U92a0=;
+        b=jiGIee8qd82UJQVY+TdyOK2DgYWyjkraGP0mAq6U47RUXJmEQfpHlxdQbsXtLkOeed
+         3kdDZVrDvoY1gudXBA5M3nIxqDBz+SIpYpLp97TfwvzxoWA+l4yTPaebX/bQlyvHI+o3
+         DgjOOZB96GOFMJFQHp1WLSJllwQRig3zOu1xu+RsjKJgIPRGZwyBGTzhuMyM3U+heivG
+         BKfLRZIxbVlKMHUysXSt/wY96dQzwznkel87fRRdWMiOksRQk4r/jaRyxpuD0NSKQRo/
+         PXWHl2hwddsI+5qPV8N+5/jrYlOjmofdm0q0MXb5EnPkSi+/N5mEuc+klc0ie8Pg2pfL
+         6Apg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mSYDqetsZPJeQHMyd/mvWooQeI0Yrfu3YJ3J34U92a0=;
+        b=BuWpFNkjaR2Hc3ZIbuND6zDrNVu+ZYdRN77sgZmKAcl48Sqg/OE855SsX534cI6xOc
+         CiKMOYN9GdDDESK9sRL5bX/+1fJMJVjF2gCMxMK1r4JdatJlF8YV1e1YH3i3S/hvqxXp
+         tL62MgY9byBiY/2+D+fEhhDwQqsQ37SBdmOjBTsRqyyh0zflpcoVR3+Zql9eETbYd9Df
+         Isb7vzuWS9fYloxukt+R7NDtqH9R1cqWWYJnFPYLY1tCBRjvepwEKkg7g1B7dHRUzSUy
+         bsZ4lWbSdrsNnylvU/b+D0xSp7Uf3pHYceuxeOQR0DYm7U5WIV7E/90n7QsOARW97iNk
+         GsUQ==
+X-Gm-Message-State: APjAAAVWGjIs094eWwEndQyZqSqN0/0fkci9jfcbSG4kjmmpjanW7Wb1
+        QY+2/x/rgRkIQwJgo2VeqZE=
+X-Google-Smtp-Source: APXvYqw+CDR6bs3INoBwrJOcMD6V2UgPo7smWH9y3oHd4OGkmDWAwrg5SH+TE0FrS7vXaZuNnHLA5w==
+X-Received: by 2002:a50:9161:: with SMTP id f30mr4029676eda.47.1556216053958;
+        Thu, 25 Apr 2019 11:14:13 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id d17sm6408995edp.84.2019.04.25.11.14.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Apr 2019 11:14:13 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 11:14:11 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH] x86/mm/tlb: Remove flush_tlb_info from the stack
-Thread-Topic: [PATCH] x86/mm/tlb: Remove flush_tlb_info from the stack
-Thread-Index: AQHU+aHFH4sDsaCumUS5u9AqMzrCzaZJ9iEAgAABtYCAAAeEgIADMpmA
-Date:   Thu, 25 Apr 2019 18:13:40 +0000
-Message-ID: <07CCD48D-8B81-4801-BA07-2AECED8174EF@vmware.com>
-References: <20190423065706.15430-1-namit@vmware.com>
- <CALCETrUohp2rMr9EcoAYm2M=Ktu4Bg2sPfUWMy5JqM-GXsDOBQ@mail.gmail.com>
- <44A66873-0834-4794-81A5-3B2131314AA4@vmware.com>
- <CALCETrXLjL4vMwQP1tweWvk_+dBvZFdE85ckt8TZSVw2XyW_yQ@mail.gmail.com>
-In-Reply-To: <CALCETrXLjL4vMwQP1tweWvk_+dBvZFdE85ckt8TZSVw2XyW_yQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 617c9a45-961a-4b78-e836-08d6c9a9bebe
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB6312;
-x-ms-traffictypediagnostic: BYAPR05MB6312:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BYAPR05MB6312D0D36FAAA60EA8799934D03D0@BYAPR05MB6312.namprd05.prod.outlook.com>
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(136003)(39860400002)(396003)(199004)(189003)(3846002)(6506007)(966005)(446003)(76176011)(45080400002)(8936002)(81156014)(8676002)(81166006)(68736007)(229853002)(6486002)(53546011)(26005)(102836004)(99286004)(36756003)(6436002)(5660300002)(316002)(4326008)(6116002)(14454004)(486006)(66446008)(6246003)(83716004)(66946007)(82746002)(64756008)(25786009)(66556008)(11346002)(186003)(71200400001)(305945005)(71190400001)(66476007)(76116006)(73956011)(2616005)(6512007)(93886005)(478600001)(66066001)(476003)(7736002)(33656002)(97736004)(53936002)(2906002)(6916009)(6306002)(256004)(54906003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6312;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EmS/RAcQO34LN/sSlAkyNJ8mr5TaJ5qo6MEJhxEFvPbhdBoSW0Yo44ul377VelfRnuKYS5HSp+bHcyGEKzvYSfNar+FKherVaIKAsMC4plcp2crudzwRU3wxHEw1bx2ag+wkwJkozcgz5Su45I5fMh9kPfTMcX4GS5ABCzsOiGsQkvJYomyKmdn6O0t211eFnWcDZnt/clpOKqOsAPZdOnfy2O+ESz0O1D63k/Kto+g/cTCyVrzX6fEbyC8skLMcZ42IzWBZmq5e7ZjN5G5wXaM38An5B5iRDBfU2WL+66eGMkN9xJAMioIKEXvL1U9t9IqAoE09eDQsRUkxQLHM6Tw1yVp+j8jINZUmw3JFBq9XxDhtd3lZ80sf95X2oioydH6HKOXXAm947UCesEj3/L1KE1MZYOLCJ6spmzNmQwo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EF3C1425EE7D4B4F82820D49B9084DB9@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        clang-built-linux@googlegroups.com,
+        Eddie Wai <eddie.wai@broadcom.com>, huangjw@broadcom.com,
+        prashant@broadcom.com, mchan@broadcom.com,
+        vasundhara-v.volam@broadcom.com
+Subject: Re: -Wsometimes-uninitialized Clang warning in
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c
+Message-ID: <20190425181411.GB4507@archlinux-i9>
+References: <20190308005735.GA4122@archlinux-ryzen>
+ <20190320190849.GB28744@archlinux-ryzen>
+ <CAKwvOdkekJw-wLn=9K=xKE0X260MZCCRtD1r5Erp=fQTwn+p9w@mail.gmail.com>
+ <CAK8P3a2gkvkDidV6t82RYj7sydaaGkUOVvrjfuKfPtdd9vj-eg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 617c9a45-961a-4b78-e836-08d6c9a9bebe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 18:13:40.4843
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6312
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2gkvkDidV6t82RYj7sydaaGkUOVvrjfuKfPtdd9vj-eg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBBcHIgMjMsIDIwMTksIGF0IDEwOjIzIEFNLCBBbmR5IEx1dG9taXJza2kgPGx1dG9Aa2Vy
-bmVsLm9yZz4gd3JvdGU6DQo+IA0KPiBPbiBUdWUsIEFwciAyMywgMjAxOSBhdCA5OjU2IEFNIE5h
-ZGF2IEFtaXQgPG5hbWl0QHZtd2FyZS5jb20+IHdyb3RlOg0KPj4+IE9uIEFwciAyMywgMjAxOSwg
-YXQgOTo1MCBBTSwgQW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+IHdyb3RlOg0KPj4+
-IA0KPj4+IE9uIFR1ZSwgQXByIDIzLCAyMDE5IGF0IDEyOjEyIEFNIE5hZGF2IEFtaXQgPG5hbWl0
-QHZtd2FyZS5jb20+IHdyb3RlOg0KPj4gaHR0cHM6Ly9uYW0wNC5zYWZlbGlua3MucHJvdGVjdGlv
-bi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGZ2l0Lmtlcm5lbC5vcmclMkZwdWIlMkZz
-Y20lMkZsaW51eCUyRmtlcm5lbCUyRmdpdCUyRmx1dG8lMkZsaW51eC5naXQlMkZsb2clMkYlM0Zo
-JTNEeDg2JTJGZml4ZXMmYW1wO2RhdGE9MDIlN0MwMSU3Q25hbWl0JTQwdm13YXJlLmNvbSU3Q2Iw
-YmExM2EwNTliNTRhYmNiMWMwMDhkNmM4MTA3YTU0JTdDYjM5MTM4Y2EzY2VlNGI0YWE0ZDZjZDgz
-ZDlkZDYyZjAlN0MwJTdDMCU3QzYzNjkxNjM3MDQ0MjA3MDM0OSZhbXA7c2RhdGE9NXVYWDk1Q0Ql
-MkZBSTVaU0pPTiUyQmpDQUtRODhzQXdaZ21lNkF6MFpIcEVHWm8lM0QmYW1wO3Jlc2VydmVkPTAg
-Pj4gUmVtb3ZlIGZsdXNoX3RsYl9pbmZvIHZhcmlhYmxlcyBmcm9tIHRoZSBzdGFjay4gVGhpcyBh
-bGxvd3MgdG8gYWxpZ24NCj4+Pj4gZmx1c2hfdGxiX2luZm8gdG8gY2FjaGUtbGluZSBhbmQgYXZv
-aWQgcG90ZW50aWFsbHkgdW5uZWNlc3NhcnkgY2FjaGUNCj4+Pj4gbGluZSBtb3ZlbWVudHMuIEl0
-IGFsc28gYWxsb3dzIHRvIGhhdmUgYSBmaXhlZCB2aXJ0dWFsLXRvLXBoeXNpY2FsDQo+Pj4+IHRy
-YW5zbGF0aW9uIG9mIHRoZSB2YXJpYWJsZXMsIHdoaWNoIHJlZHVjZXMgVExCIG1pc3Nlcy4NCj4+
-Pj4gDQo+Pj4+IFVzZSBwZXItQ1BVIHN0cnVjdCBmb3IgZmx1c2hfdGxiX21tX3JhbmdlKCkgYW5k
-DQo+Pj4+IGZsdXNoX3RsYl9rZXJuZWxfcmFuZ2UoKS4gQWRkIGRlYnVnIGFzc2VydGlvbnMgdG8g
-ZW5zdXJlIHRoZXJlIGFyZQ0KPj4+PiBubyBuZXN0ZWQgVExCIGZsdXNoZXMgdGhhdCBtaWdodCBv
-dmVyd3JpdGUgdGhlIHBlci1DUFUgZGF0YS4gRm9yDQo+Pj4+IGFyY2hfdGxiYmF0Y2hfZmx1c2go
-KSwgdXNlIGEgY29uc3Qgc3RydWN0Lg0KPj4+PiANCj4+Pj4gUmVzdWx0cyB3aGVuIHJ1bm5pbmcg
-YSBtaWNyb2JlbmNobWFya3MgdGhhdCBwZXJmb3JtcyAxMF42IE1BRFZfRE9OVEVFRA0KPj4+PiBv
-cGVyYXRpb25zIGFuZCB0b3VjaGluZyBhIHBhZ2UsIGluIHdoaWNoIDMgYWRkaXRpb25hbCB0aHJl
-YWRzIHJ1biBhDQo+Pj4+IGJ1c3ktd2FpdCBsb29wICg1IHJ1bnMpOg0KPj4+IA0KPj4+IENhbiB5
-b3UgYWRkIGEgbWVtc2V0KCwsLC4gMCwgc2l6ZW9mKHN0cnVjdCBmbHVzaF90bGJfaW5mbykpIGV2
-ZXJ5d2hlcmUNCj4+PiB5b3UgZ3JhYiBpdD8gIE9yLCBldmVuIGJldHRlciwgcGVyaGFwcyBkbyBz
-b21ldGhpbmcgbGlrZToNCj4+PiANCj4+PiBzdGF0aWMgaW5saW5lIHN0cnVjdCBmbHVzaF90bGJf
-aW5mbyAqZ2V0X2ZsdXNoX3RsYl9pbmZvKHZvaWQpDQo+Pj4gew0KPj4+IC8qIGNoZWNrIHJlZW50
-cmFuY3ksIG1ha2Ugc3VyZSB0aGF0IHdlIHVzZSBzbXBfcHJvY2Vzc29yX2lkKCkgb3INCj4+PiBv
-dGhlcndpc2UgYXNzZXJ0IHRoYXQgd2UncmUgYm91bmQgdG8gYSBzaW5nbGUgQ1BVLiAqLw0KPj4+
-IHN0cnVjdCBmbHVzaF90bGJfaW5mbyAqcHRyID0gdGhpc19jcHVfcHRyKC4uLik7DQo+Pj4gbWVt
-c2V0KHB0ciwgMCwgc2l6ZW9mKCpwdHIpKTsNCj4+PiByZXR1cm4gcHRyOw0KPj4+IH0NCj4+PiAN
-Cj4+PiBzdGF0aWMgaW5saW5lIHZvaWQgcHV0X2ZsdXNoX3RsYl9pbmZvKHZvaWQpDQo+Pj4gew0K
-Pj4+IC8qIGZpbmlzaCBjaGVja2luZyByZWVudHJhbmN5LiAqLw0KPj4+IH0NCj4+IA0KPj4gSeKA
-mWxsIGNoZWNrIGlmIHRoZSBjb21waWxlciBpcyBzbWFydCBlbm91Z2ggdG8gYXZvaWQgcmVkdW5k
-YW50IGFzc2lnbm1lbnRzLA0KPj4gYW5kIGlmIGl0IGlzIG5vdCwgSeKAmWxsIGp1c3QgZ2l2ZSBh
-bGwgdGhlIHN0cnVjdCBhcmd1bWVudHMgdG8NCj4+IGdldF9mbHVzaF90bGJfaW5mbygpIGluc3Rl
-YWQgb2YgbWVtc2V0KCkgaWYgeW91IGRvbuKAmXQgbWluZC4NCj4gDQo+IFNvdW5kcyBnb29kLg0K
-PiANCj4+IEkgYWxzbyB3YW50IHRvIGdpdmUgYSB0cnkgZm9yIHBhcmFsbGVsaXppbmcgdGhlIHJl
-bW90ZSBhbmQgbG9jYWwNCj4+IGludm9jYXRpb25zLCB3aGljaCByZWFsbHkgYW5ub3lzIG1lIGV2
-ZXJ5IHRpbWUgSSBsb29rIGF0IHRoZSBjb2RlLg0KPiANCj4gWWVzIHBsZWFzZSENCg0KSSBoYXZl
-IHdyaXR0ZW4gc29tZSBwYXRjaGVzIGFuZCB0aGV5IGRvIHByb3ZpZGUgYSBjb25zaWRlcmFibGUg
-cGVyZm9ybWFuY2UNCmltcHJvdmVtZW50IG9mICg+MTAlKSBmb3IgcmVtb3RlIFRMQiBmbHVzaGVz
-LiBUaGVyZSBhcmUgc3RpbGwgc29tZSBpc3N1ZXMNCnRoYXQgbmVlZCB0byBiZSByZXNvbHZlZCwg
-c3BlY2lmaWNhbGx5IGEgc21hbGwgc2xvd2Rvd24gZm9yIGxvY2FsIFRMQg0KZmx1c2hlcyAofjE1
-bnMpLg0KDQpBbnlob3csIGJhc2VkIG9uIG15IHBhc3QgZXhwZXJpZW5jZSwgSSB3aWxsIGRvIHRo
-aXMgY2hhbmdlIGluIGEgc2VwYXJhdGUNCnBhdGNoLXNldCBhZnRlciB0aGUgZmx1c2hfdGxiX2lu
-Zm8gb2ZmLXN0YWNrIHBhdGNoIG1ha2VzIGl0IHRocm91Z2guDQoNCg==
+Hi Arnd,
+
+On Fri, Mar 22, 2019 at 03:32:50PM +0100, Arnd Bergmann wrote:
+> On Wed, Mar 20, 2019 at 9:41 PM 'Nick Desaulniers' via Clang Built
+> Linux <clang-built-linux@googlegroups.com> wrote:
+> >
+> > + Broadcom folks from commit c0c050c58d84 ("bnxt_en: New Broadcom
+> > ethernet driver.").  Looks like Michael wrote and is still maintaining
+> > the driver.
+> >
+> > On Wed, Mar 20, 2019 at 12:08 PM Nathan Chancellor
+> > <natechancellor@gmail.com> wrote:
+> > >
+> > > On Thu, Mar 07, 2019 at 05:57:35PM -0700, Nathan Chancellor wrote:
+> > > > Hi all,
+> > > >
+> > > > We are trying to get Clang's -Wsometimes-uninitialized turned on for the
+> > > > kernel as it can catch some bugs that GCC can't. This warning came up:
+> > > >
+> > > > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1612:6: warning: variable 'len' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+> > > >         if (rxcmp1->rx_cmp_cfa_code_errors_v2 & RX_CMP_L2_ERRORS) {
+> > > >             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1703:19: note: uninitialized use occurs here
+> > > >         cpr->rx_bytes += len;
+> > > >                          ^~~
+> > > > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1612:2: note: remove the 'if' if its condition is always false
+> > > >         if (rxcmp1->rx_cmp_cfa_code_errors_v2 & RX_CMP_L2_ERRORS) {
+> > > >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > drivers/net/ethernet/broadcom/bnxt/bnxt.c:1540:18: note: initialize the variable 'len' to silence this warning
+> > > >         unsigned int len;
+> > > >                         ^
+> > > >                          = 0
+> > > > 1 warning generated.
+> > > >
+> > > > It seems like the logical change to make is this; however, I am not sure
+> > > > if this has any other unintended consequences since this is a rather
+> > > > dense function. I would much appreciate your input, especially if there
+> > > > is a better way to fix it.
+> >
+> > I agree that `goto next_rx_no_prod_no_len` appears to be most correct;
+> > though I don't understand why this function is a mix of early return
+> > codes, vs setting rc then updating *raw_cons.  The alternative is
+> > probably zero initializing len, but I'm not sure whether *raw_cons
+> > should be updated in that case or not.  Thanks for bringing this up
+> > and the patch.  Sorry for the delay in review.  Can folks at Broadcom
+> > please clarify?
+> 
+> I also came up with a workaround for this, but did it the other way round:
+> 
+> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> index 0bb9d7b3a2b6..48bdb87574c3 100644
+> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> @@ -1608,6 +1608,7 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct
+> bnxt_cp_ring_info *cpr,
+>         }
+>         *event |= BNXT_RX_EVENT;
+> 
+> +       len = le32_to_cpu(rxcmp->rx_cmp_len_flags_type) >> RX_CMP_LEN_SHIFT;
+>         rx_buf->data = NULL;
+>         if (rxcmp1->rx_cmp_cfa_code_errors_v2 & RX_CMP_L2_ERRORS) {
+>                 bnxt_reuse_rx_data(rxr, cons, data);
+> @@ -1618,7 +1619,6 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct
+> bnxt_cp_ring_info *cpr,
+>                 goto next_rx;
+>         }
+> 
+> -       len = le32_to_cpu(rxcmp->rx_cmp_len_flags_type) >> RX_CMP_LEN_SHIFT;
+>         dma_addr = rx_buf->mapping;
+> 
+>         if (bnxt_rx_xdp(bp, rxr, cons, data, &data_ptr, &len, event)) {
+> 
+> Presumably one of the two is correct here, but I don't know which one ;-)
+> 
+>        Arnd
+
+Did you want to submit this a formal patch? Since no one from Broadcom
+has chipped in yet, it'd probably be better to submit this for review
+and get comments that way. I cannot imagine that this is any worse than
+what is currently happening (adding uninitialized stack memory to
+rx_bytes when jumping to next_rx) and I like it better than modifying
+the goto statement.
+
+This is the only other warning I run into in arm, arm64 and x86_64
+all{yes,mod}config so I'd like to get it resolved soon so we can turn on
+this warning for the whole kernel.
+
+Cheers,
+Nathan
