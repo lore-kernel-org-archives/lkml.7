@@ -2,147 +2,83 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58A2C4321B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22748C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6946020717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556215760;
-	bh=2oKokC3pkrt1E8iupN9/b6YmSxWCfYtApWjD9u1/PBY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XVFg3bUAfx67fw0eLwk9LXi+5OZfnW2QdHan0IFaVw8S24fi/w4T5uBEWZfx/ZqH3
-	 YnWTQRdoq1m4R1hAAljfsWGR1ae2p/aIXhdj6H/WskTvkrV8b3T/n0Q7cOBpNRcfDz
-	 1hxQwT6N4q2JiLg/57eQvs0Zr8njXqUdiv2vmXz0=
+	by mail.kernel.org (Postfix) with ESMTP id 96B1220685
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:11:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="l56nmXBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387494AbfDYSJS (ORCPT
+        id S2387512AbfDYSLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:09:18 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35176 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbfDYSJR (ORCPT
+        Thu, 25 Apr 2019 14:11:21 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41454 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbfDYSLV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:09:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2oKokC3pkrt1E8iupN9/b6YmSxWCfYtApWjD9u1/PBY=; b=dSsewGvtuMhhlNA66ppDxBFwY
-        IwxcrS6w1Yr4eDYIiQkSN4UCcv98j5XCjgcJ06n5+5qyXPNHSdnNAM8va5oF/cW1zBN1oHLLU+CKf
-        lrNCY0rg2jaySC7z2jKotuTNlL5ZSQinGfYKCam13OfX6NQspDuqwl/gd3uNhUDXMwj34=;
-Received: from 94.197.120.252.threembb.co.uk ([94.197.120.252] helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hJin0-0003sZ-S0; Thu, 25 Apr 2019 18:08:32 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 9B05B441D3B; Thu, 25 Apr 2019 19:07:58 +0100 (BST)
-Date:   Thu, 25 Apr 2019 19:07:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 25/79] docs: convert docs to ReST and rename to *.rst
-Message-ID: <20190425180758.GC23183@sirena.org.uk>
-Mail-Followup-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-References: <cover.1555938375.git.mchehab+samsung@kernel.org>
- <7adf9035ae06ecc6c7e46b51cb677f0a8f61d19a.1555938376.git.mchehab+samsung@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aT9PWwzfKXlsBJM1"
-Content-Disposition: inline
-In-Reply-To: <7adf9035ae06ecc6c7e46b51cb677f0a8f61d19a.1555938376.git.mchehab+samsung@kernel.org>
-X-Cookie: But they went to MARS around 1953!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 25 Apr 2019 14:11:21 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 188so298327pfd.8
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5lGPiotqFsXnHCFPcp4p25LBjmPjAhvbjVU4U9JLqy8=;
+        b=l56nmXBzEGn1m1ng/I+i9/CB4YNSitXs36Enhz6nr5OVnUymBa/d9hvhoTQPzHSA9l
+         XehOK/PtPQ8Gwkasm5ySnOXMQmSPT0aIQahOAEtx8KBCE46M42Uvkmfc5Nsa9pQ8MkiL
+         y2Dq+rPIxm4BkyUQA+P8IC2zp+SGpEaZwK6JMdk81I55bBOnHfjVpT3beLY6LHUJgpc2
+         6elPBLWDBUvrUt7edFugW1bQbgXRfzowRCpvyuRPSrwn2qWo92eJU8UUJTKkjGgYOGKV
+         /JTvobI/pZ8VbnUcPYQHt4jVbCV0w57KEHfuVgXhG3jB8yS5ys1GH7VSOskJ3bblJ6i8
+         Strw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=5lGPiotqFsXnHCFPcp4p25LBjmPjAhvbjVU4U9JLqy8=;
+        b=tp4ZKNyDNx8tADz7+YVtVhgXDvVtzPxlxyhouEwbG6i4M/jxhR/gSm4I09T6W+6Evf
+         OxxOYPHAeLYyg24jNcQZsl1mHoIsW2z6BkvcXcMZ1oOWXbJp+b4ASr+mKXV54RTHiXUy
+         dUVHwgRpiXAyNyyOIyViRUo7xZM2YzWZM0tZrKeSfyRjzp1HfTklXgI58qD+0XEjN8Hs
+         xFodzRgyih07pl/7MbqYcH139wLxmRVSglheuKICM5CM4SexetxmcQWiFipYks0gSC29
+         +uVG/pPpNXwM5FoGI6nWFztiC1GZWMzwD9zmpprySaf9mXlOWup7IoDahuuBldnhgRoC
+         5I2g==
+X-Gm-Message-State: APjAAAUgAvSN2YPhDHt7RQXuMvkkIFRLXqWTn4cjRDcWd3BhVYNWDbaU
+        Z7yjdEqDeIb191YrZwKXHD4Gfw==
+X-Google-Smtp-Source: APXvYqyfOTs6fTSBCpgWsKOSSyK/s8tWQGXiH4g6Y4lSbp0B7Dqo90yoBnMyARIpT+YLy9Mou3ZpaA==
+X-Received: by 2002:a62:fb16:: with SMTP id x22mr2818961pfm.140.1556215880706;
+        Thu, 25 Apr 2019 11:11:20 -0700 (PDT)
+Received: from localhost ([134.134.139.92])
+        by smtp.gmail.com with ESMTPSA id e4sm8629592pfn.185.2019.04.25.11.11.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Apr 2019 11:11:19 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 11:11:19 -0700 (PDT)
+X-Google-Original-Date: Thu, 25 Apr 2019 11:11:15 PDT (-0700)
+Subject:     Re: [PATCH 3/3] riscv/signal: Fixup additional syscall restarting
+In-Reply-To: <20190410065304.GA2942@infradead.org>
+CC:     guoren@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ren_guo@c-sky.com
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Message-ID: <mhng-e56eb5bc-3336-4e0e-897f-be508b1c5f4a@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 09 Apr 2019 23:53:04 PDT (-0700), Christoph Hellwig wrote:
+> Looks good,
+>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
---aT9PWwzfKXlsBJM1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Apr 22, 2019 at 10:27:14AM -0300, Mauro Carvalho Chehab wrote:
-> Convert the PM documents to ReST, in order to allow them to
-> build with Sphinx.
-
-This is massively CCed covering a large range of subsystems and is patch
-25 of a 79 patch series so I've no context for what's going on here or
-why... =20
-
---aT9PWwzfKXlsBJM1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzB930ACgkQJNaLcl1U
-h9D9hggAgwfFCuARstTCzGVBwHcVdm64UOuT+vxyBjKpaiOugpu9eYgcEyTMTndn
-s/LwwIR6+jTD8By3kSTAXNwf45w0LPS6lFtpErJnjM5UirPgDON9007j9qhKipEN
-tJvLGym/Jsh45UdlYTK1odH7gaOZCwygFNT3x/GyB223C7QCmWBWpwEm1bcMUJ1m
-x8dEcMx7tFb4LdKprVW5kTex9KsBWG1MCnw8OCiZTmvnlXfkcvJnm4T5Rzv8ZLR1
-vpMRGaEVRnHIgfnPArpTgNa/owmkH6oB8f4A3bLpvRlqfQO3xYP0DQMKXNjyKESN
-JYPDGkiQ4n7iBx70h8+FV4GcF7mlNA==
-=a3df
------END PGP SIGNATURE-----
-
---aT9PWwzfKXlsBJM1--
+Thanks!  I've pulled just this patch into my for-next, as I'm assuming the
+c-sky patches will go in seperately.  Given that it's been on the list for a
+while I think it's a good candidate for rc7, so unless anyone says something or
+testing causes a problem I'll send it up tomorrow.
