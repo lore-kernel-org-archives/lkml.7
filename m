@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0E1C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A761BC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76572205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B793B205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ldl8eDGE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rhdWvw2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387968AbfDYTzc (ORCPT
+        id S2387953AbfDYTzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:55:32 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45826 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387681AbfDYTx0 (ORCPT
+        Thu, 25 Apr 2019 15:55:31 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46871 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387714AbfDYTx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:53:26 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e24so420154pfi.12
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:53:25 -0700 (PDT)
+        Thu, 25 Apr 2019 15:53:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n2so346731pgg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:53:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gDKvnZtlQcJ/F2zJQhfvE482g7t3vSsFp5ROjl2xttU=;
-        b=ldl8eDGERjZIk7NuTVJ9jRJEehmNTz/FLrTt7FDfDdcvu0VbNp2uZ2U/kagpl4Plr+
-         cF9vn3eNR0PTyXL+gF1gGO6IEp6LmgLx0D5TvTwTRreXzTgPWHvclElWrZ63tmKWoPVA
-         1AJ6WICl1ajyhmMGE3RsL+lCaSKUAFfuE7HLAdbKhWdoWiT7HVnE77NbQJ4rPLn8mREY
-         VHyort6GiUukCu+DRuMQwV3FqKlSwQvWGiYJDnq9ARbdik7Kdy4B3x5cdyu+sqmtelWC
-         UfqVBUPSQt/FlmemvuRCwp4UEUp+jO6sNsBiOVVCtdzEdnYYQYTWM5kCd2XnjPuw2Qhc
-         gyEQ==
+        bh=jtvY10kYu/UgXuic20owCvhI/8GuPQmjFeAnMENcPb8=;
+        b=rhdWvw2WbI8ZwsgR9Ea2apCocBC3wDQ1cVKhXdexnzeN6Z+iKrfh7LE3/j40d4eiee
+         TW+sKpplvu4XZtnIYooJkkk0Z6uQF3wB5LuIEZYY2Rbn998YaXwG1JXoNnJzMxiCRR2E
+         VCLePDQHJEPx0fUO3LRMcO5XU12svsSixgpdgi7ZDdfvtXxUaAlKACO+Lk7gh9ETeIRl
+         0vt35jTtZctGIUjr+qkzs/MGpP+8yfQyG+oT0UbtE7qZ13QHxbL07/8RrUCTLQWyifFl
+         jYsXOJul+akM6ocN3RQKS+IRspcM9G8zzuKhJhd/tg6V7pMc8Pr2d2y3t64yWKV/d2fP
+         D4WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=gDKvnZtlQcJ/F2zJQhfvE482g7t3vSsFp5ROjl2xttU=;
-        b=V27JaB69s4OdWEiyV8IZcZAK6b6l4SEjqlRvYnus/j+kj0ygBuDXylITPgW49BGF5Z
-         7GHGrLqkCKKuRX1BnpocRr1ZaGyqlPWzsb9fmwFhGHH13hw49bM/DXn11Dz7thmiLl/K
-         /QDQqnBxcDkMlfQrGvLEIgSlGpA0swxQXTyWYPQoaWlRC+E1DdigIDSj2RaiFw8cHAnc
-         cF1lEP8JzLK0d1otmZxuU9domxKAkLzmQdGKTYpciVMTlRvffbuCU2h5aeTeS4OWvtJf
-         ixeQN5n9EQka/2DyJp/JDQXcVE6PjVaMv8GtcplIrlxU6VYywUaGllFDjfl+sY31zn82
-         5/Fw==
-X-Gm-Message-State: APjAAAVyLGk3PjsZpfiiqLsV+AIqd1hIIulPwk222q1Ur0OxGvRPCSl9
-        rqk7IS4e9crefxRISftwxuMAmw==
-X-Google-Smtp-Source: APXvYqwOCW3Lo4PoYIZYaODdboVcE1gv/249sAwxQF2kSLHVTO/g2Igs4iPfaAlYRuOtiCNmo4GhHQ==
-X-Received: by 2002:a63:fb58:: with SMTP id w24mr3428924pgj.444.1556222005459;
-        Thu, 25 Apr 2019 12:53:25 -0700 (PDT)
+        bh=jtvY10kYu/UgXuic20owCvhI/8GuPQmjFeAnMENcPb8=;
+        b=oCIbwcXt3mmu7TJ8cf36AfwBJi9cSsp1xGZOooajWHGXSfbJU0oxTjDQAlAO2T5AV+
+         p9MCH9tvJ0X9MUis3lWKkIzh7h0rOMF4Dq8/gQNPFJykDrlgBUVLR2O1u0DrfiJwbMFT
+         7Wyg/X9FW+CzJ2Q5nD9itzUUZNPLCszwbwsHTQ2ROTIt92ggo2GCkEwPsTktm+eCjgEG
+         ERtiuJ5HPO2UdWmlzjspSag3U0KMHdn/sisrgmUg/fQVQQL80RHme6ePL0IVWKsnM/aA
+         hibRZV2E2xRCDDSAImMfFH8MlupiI4NKmq3Bo1Ij2x/F4Ai6GrDXrAiOQ/12a1XN6lq0
+         HI9A==
+X-Gm-Message-State: APjAAAUJNtRSRxcOvrgzoSWVFJ3inRd6evI78HafLaEEKtLXnOL5ihgw
+        Hsac01y3k5xrIMgkT2XhM7D9Sg==
+X-Google-Smtp-Source: APXvYqylCdshzKzKT0G/5wy1Kpkd0MIIfGN4mXn5+tw1dm/rhT5T+jYy0XmZzTsnZt9ghrvcHabtfQ==
+X-Received: by 2002:a63:115c:: with SMTP id 28mr39367291pgr.270.1556222007875;
+        Thu, 25 Apr 2019 12:53:27 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id t64sm47261961pfa.86.2019.04.25.12.53.24
+        by smtp.gmail.com with ESMTPSA id t64sm47261961pfa.86.2019.04.25.12.53.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 12:53:24 -0700 (PDT)
+        Thu, 25 Apr 2019 12:53:27 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/32] coresight: tpiu: Cleanup power management
-Date:   Thu, 25 Apr 2019 13:52:48 -0600
-Message-Id: <20190425195310.31562-11-mathieu.poirier@linaro.org>
+Subject: [PATCH 12/32] coresight: tmc: Cleanup power management
+Date:   Thu, 25 Apr 2019 13:52:50 -0600
+Message-Id: <20190425195310.31562-13-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190425195310.31562-1-mathieu.poirier@linaro.org>
 References: <20190425195310.31562-1-mathieu.poirier@linaro.org>
@@ -71,44 +71,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Drop the power only when we have successfully probed. Otherwise
-leave it to the amba probe to do the rest.
+Drop the power only if we were successful in probing the device.
 
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-[Removed extra newline left after original modification]
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/hwtracing/coresight/coresight-tpiu.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
-index b2f72a1fa402..93e2ef34e734 100644
---- a/drivers/hwtracing/coresight/coresight-tpiu.c
-+++ b/drivers/hwtracing/coresight/coresight-tpiu.c
-@@ -153,8 +153,6 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
- 	/* Disable tpiu to support older devices */
- 	tpiu_disable_hw(drvdata);
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+index 647b6aa93554..c6a5462ebf27 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.c
++++ b/drivers/hwtracing/coresight/coresight-tmc.c
+@@ -432,8 +432,6 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+ 		drvdata->size = readl_relaxed(drvdata->base + TMC_RSZ) * 4;
+ 	}
  
 -	pm_runtime_put(&adev->dev);
 -
- 	desc.type = CORESIGHT_DEV_TYPE_SINK;
- 	desc.subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_PORT;
- 	desc.ops = &tpiu_cs_ops;
-@@ -162,7 +160,12 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	desc.pdata = pdata;
  	desc.dev = dev;
- 	drvdata->csdev = coresight_register(&desc);
- 
--	return PTR_ERR_OR_ZERO(drvdata->csdev);
-+	if (!IS_ERR(drvdata->csdev)) {
+ 	desc.groups = coresight_tmc_groups;
+@@ -476,6 +474,8 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+ 	ret = misc_register(&drvdata->miscdev);
+ 	if (ret)
+ 		coresight_unregister(drvdata->csdev);
++	else
 +		pm_runtime_put(&adev->dev);
-+		return 0;
-+	}
-+
-+	return PTR_ERR(drvdata->csdev);
+ out:
+ 	return ret;
  }
- 
- #ifdef CONFIG_PM
 -- 
 2.17.1
 
