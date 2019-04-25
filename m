@@ -2,187 +2,238 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6237C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC90C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F995214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:14:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FbTCRrC9"
+	by mail.kernel.org (Postfix) with ESMTP id 02966214C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387587AbfDYBOe (ORCPT
+        id S2387715AbfDYBS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 21:14:34 -0400
-Received: from mail-eopbgr50055.outbound.protection.outlook.com ([40.107.5.55]:39075
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728712AbfDYBOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 21:14:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GMrGsHFSr84jVLmd4m/2/B64dNSw1UWjdhzur/Lzdgg=;
- b=FbTCRrC9gUtB8P4v5gq/b3ayg6tehB9JFaht5HuVsq0jTeZqyb9i74bI7vJA9sqFIcGZqP1nqin0MU9HNi1HcgDrx9aP+qq/NFg+iGC4Mz8oDnY09kbLEbRLwrdZr39XQ6Pz/Kzz3FafY8SmM1KsMOs5pUxpgyhUcKTnPRwCxkQ=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3788.eurprd04.prod.outlook.com (52.134.72.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.18; Thu, 25 Apr 2019 01:14:27 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.010; Thu, 25 Apr 2019
- 01:14:27 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH 2/2] watchdog: imx_sc: Add pretimeout support
-Thread-Topic: [PATCH 2/2] watchdog: imx_sc: Add pretimeout support
-Thread-Index: AQHU+wQ67HfMfWtsaUW0yczuADoMLQ==
-Date:   Thu, 25 Apr 2019 01:14:27 +0000
-Message-ID: <1556154581-31890-2-git-send-email-Anson.Huang@nxp.com>
-References: <1556154581-31890-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1556154581-31890-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0PR03CA0058.apcprd03.prod.outlook.com
- (2603:1096:203:52::22) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 84f21954-e104-42af-7ab9-08d6c91b5c79
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3788;
-x-ms-traffictypediagnostic: DB3PR0402MB3788:
-x-microsoft-antispam-prvs: <DB3PR0402MB3788BD1CEE6AF1A9BC00FF66F53D0@DB3PR0402MB3788.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(376002)(396003)(39850400004)(199004)(189003)(68736007)(36756003)(256004)(478600001)(8936002)(50226002)(76176011)(2201001)(14444005)(14454004)(97736004)(86362001)(316002)(6486002)(110136005)(66476007)(66446008)(64756008)(66556008)(73956011)(476003)(53936002)(6506007)(8676002)(2616005)(186003)(66946007)(66066001)(305945005)(446003)(11346002)(102836004)(26005)(7736002)(6116002)(486006)(25786009)(2501003)(4326008)(386003)(52116002)(99286004)(81166006)(6436002)(81156014)(6512007)(3846002)(71190400001)(5660300002)(2906002)(71200400001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3788;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6p2124/KYgVXesqg3JxYO51SMfxkMLzo65nl+90aSsTRjw+eeUUEe5W1pJdWscAUKN/ZIS+FJXfswnMEZ5NwcdzVH10D9PAdi/yu3Y4asTJMOFvmw29/olJPBeWZj4kC+0w4yLaFt9iJcCwO+ysCSSHBOuUEsoecLcxcLi8KMgrhcdTcZzqL8MRf0jVHHHu0mfU9K0QVLIy+d+1uqNcTgvampbaq7nUiP0XbPMGt76MYrsDlM/kqrIg8zj8FWZ0FKfNJMUI37wU+orHB92jQYeSAaPm0afTlr0qJwrNG7dCdM6cAJvIKIZta9O2SwCxL7xKTCHbfNUIsoy2BdvDfvN+AnVasU0WXrjAsYWoD/um5ifK/o+iKudMq5BgWBnxCjG1lZLzTSovaRvSYHbiKp+bfz8haUVRwT43Zkn5pGh0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 21:18:59 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40662 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbfDYBS7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 21:18:59 -0400
+Received: by mail-qt1-f196.google.com with SMTP id y49so3926004qta.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 18:18:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gSdbl7tiCDChVFi/egk34T6hGKLdbLIMT0F6PPP6KJk=;
+        b=LRGp8HnKuyTQ8iaGOXzJX7efeZ8PRDyPoP/+z9c8f8p16TCTghiIGWOk3J9oRloU1Z
+         yZQIleBd3TYP5m3a4q7RnR9R/g7KOx/l+xTnLzj2yJYjXIvFSybBe0bpD1O78JOIzocz
+         ewB4Bmm7mYCAbaXFF83XrrqpyPFRV13UkvS8Qpfki0cC3bNWYK8Vszx683HkTZ46lJ12
+         ZWrUYogR5x3wehY3Oq4s9C8xBPXDKO6eyaCEes8lOIdK3EzwHzdPXeoOL9VMd7hAyChw
+         iGpxWZJLxeAxCo7HaYK4IqAa3fYAhAl+50JNCTnsBGTO/guWaGEFPmDPIKRwJAgif8FZ
+         jYwA==
+X-Gm-Message-State: APjAAAX4ZniUW3g0wefui788T8FPgi+ximdMXtes5l2gsyQkXUOZ+wOo
+        Ab3H6nWVcN8Ebb2B7M7jTOCVbLqk3q4=
+X-Google-Smtp-Source: APXvYqxKlHSNlPqQN4XmzYneFKkJ/mvtPnQ1lM7Bwy+vkifcs/0Fs/s/gpyQh6mYewhWVUy9oqbl+w==
+X-Received: by 2002:aed:20c4:: with SMTP id 62mr26929160qtb.256.1556155138200;
+        Wed, 24 Apr 2019 18:18:58 -0700 (PDT)
+Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
+        by smtp.gmail.com with ESMTPSA id e6sm9930128qtr.56.2019.04.24.18.18.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 18:18:56 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 21:18:54 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Michael Roth <mdroth@linux.vnet.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>
+Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+Message-ID: <20190424210813-mutt-send-email-mst@kernel.org>
+References: <20190129134750-mutt-send-email-mst@kernel.org>
+ <877eefxvyb.fsf@morokweng.localdomain>
+ <20190204144048-mutt-send-email-mst@kernel.org>
+ <87ef71seve.fsf@morokweng.localdomain>
+ <20190320171027-mutt-send-email-mst@kernel.org>
+ <87tvfvbwpb.fsf@morokweng.localdomain>
+ <20190323165456-mutt-send-email-mst@kernel.org>
+ <87a7go71hz.fsf@morokweng.localdomain>
+ <20190419190258-mutt-send-email-mst@kernel.org>
+ <875zr228zf.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84f21954-e104-42af-7ab9-08d6c91b5c79
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 01:14:27.7712
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3788
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <875zr228zf.fsf@morokweng.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-aS5NWCBzeXN0ZW0gY29udHJvbGxlciB3YXRjaGRvZyBjYW4gc3VwcG9ydCBwcmV0aW1lb3V0IElS
-UQ0KdmlhIGdlbmVyYWwgU0NVIE1VIElSUSwgaXQgZGVwZW5kcyBvbiBJTVhfU0NVIGFuZCBkcml2
-ZXIgTVVTVA0KYmUgcHJvYmVkIGFmdGVyIFNDVSBJUEMgcmVhZHksIHRoZW4gZW5hYmxlIGNvcnJl
-c3BvbmRpbmcgU0NVDQpJUlEgZ3JvdXAgYW5kIHJlZ2lzdGVyIFNDVSBJUlEgbm90aWZpZXIsIHdo
-ZW4gd2F0Y2hkb2cgcHJldGltZW91dA0KSVJRIGZpcmVzLCBTQ1UgTVUgSVJRIHdpbGwgYmUgaGFu
-ZGxlZCBhbmQgd2F0Y2hkb2cgcHJldGltZW91dA0Kbm90aWZpZXIgd2lsbCBiZSBjYWxsZWQgdG8g
-aGFuZGxlIHRoZSBldmVudC4NCg0KU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1
-YW5nQG54cC5jb20+DQotLS0NCiBkcml2ZXJzL3dhdGNoZG9nL0tjb25maWcgICAgICB8ICAxICsN
-CiBkcml2ZXJzL3dhdGNoZG9nL2lteF9zY193ZHQuYyB8IDY1ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKy0tLS0NCiAyIGZpbGVzIGNoYW5nZWQsIDYxIGluc2VydGlvbnMo
-KyksIDUgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3dhdGNoZG9nL0tjb25m
-aWcgYi9kcml2ZXJzL3dhdGNoZG9nL0tjb25maWcNCmluZGV4IDQ0YTMxNTguLmYyYzJjMWEgMTAw
-NjQ0DQotLS0gYS9kcml2ZXJzL3dhdGNoZG9nL0tjb25maWcNCisrKyBiL2RyaXZlcnMvd2F0Y2hk
-b2cvS2NvbmZpZw0KQEAgLTY0NCw2ICs2NDQsNyBAQCBjb25maWcgSU1YMl9XRFQNCiBjb25maWcg
-SU1YX1NDX1dEVA0KIAl0cmlzdGF0ZSAiSU1YIFNDIFdhdGNoZG9nIg0KIAlkZXBlbmRzIG9uIEhB
-VkVfQVJNX1NNQ0NDDQorCWRlcGVuZHMgb24gSU1YX1NDVQ0KIAlzZWxlY3QgV0FUQ0hET0dfQ09S
-RQ0KIAloZWxwDQogCSAgVGhpcyBpcyB0aGUgZHJpdmVyIGZvciB0aGUgc3lzdGVtIGNvbnRyb2xs
-ZXIgd2F0Y2hkb2cNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3dhdGNoZG9nL2lteF9zY193ZHQuYyBi
-L2RyaXZlcnMvd2F0Y2hkb2cvaW14X3NjX3dkdC5jDQppbmRleCA0OTg0OGI2Li5mNDVlZDEwIDEw
-MDY0NA0KLS0tIGEvZHJpdmVycy93YXRjaGRvZy9pbXhfc2Nfd2R0LmMNCisrKyBiL2RyaXZlcnMv
-d2F0Y2hkb2cvaW14X3NjX3dkdC5jDQpAQCAtNCw2ICs0LDcgQEANCiAgKi8NCiANCiAjaW5jbHVk
-ZSA8bGludXgvYXJtLXNtY2NjLmg+DQorI2luY2x1ZGUgPGxpbnV4L2Zpcm13YXJlL2lteC9zY2ku
-aD4NCiAjaW5jbHVkZSA8bGludXgvaW8uaD4NCiAjaW5jbHVkZSA8bGludXgvaW5pdC5oPg0KICNp
-bmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCkBAIC0zMywxMSArMzQsMTYgQEANCiANCiAjZGVmaW5l
-IFNDX1RJTUVSX1dET0dfQUNUSU9OX1BBUlRJVElPTgkwDQogDQorI2RlZmluZSBTQ19JUlFfV0RP
-RwkJCTENCisjZGVmaW5lIFNDX0lSUV9HUk9VUF9XRE9HCQkxDQorDQogc3RhdGljIGJvb2wgbm93
-YXlvdXQgPSBXQVRDSERPR19OT1dBWU9VVDsNCiBtb2R1bGVfcGFyYW0obm93YXlvdXQsIGJvb2ws
-IDAwMDApOw0KIE1PRFVMRV9QQVJNX0RFU0Mobm93YXlvdXQsICJXYXRjaGRvZyBjYW5ub3QgYmUg
-c3RvcHBlZCBvbmNlIHN0YXJ0ZWQgKGRlZmF1bHQ9Ig0KIAkJIF9fTU9EVUxFX1NUUklORyhXQVRD
-SERPR19OT1dBWU9VVCkgIikiKTsNCiANCitzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlICppbXhfc2Nf
-d2RkOw0KKw0KIHN0YXRpYyBpbnQgaW14X3NjX3dkdF9waW5nKHN0cnVjdCB3YXRjaGRvZ19kZXZp
-Y2UgKndkb2cpDQogew0KIAlzdHJ1Y3QgYXJtX3NtY2NjX3JlcyByZXM7DQpAQCAtODUsMTIgKzkx
-LDQyIEBAIHN0YXRpYyBpbnQgaW14X3NjX3dkdF9zZXRfdGltZW91dChzdHJ1Y3Qgd2F0Y2hkb2df
-ZGV2aWNlICp3ZG9nLA0KIAlyZXR1cm4gcmVzLmEwID8gLUVBQ0NFUyA6IDA7DQogfQ0KIA0KK3N0
-YXRpYyBpbnQgaW14X3NjX3dkdF9zZXRfcHJldGltZW91dChzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNl
-ICp3ZG9nLA0KKwkJCQkgICAgIHVuc2lnbmVkIGludCBwcmV0aW1lb3V0KQ0KK3sNCisJc3RydWN0
-IGFybV9zbWNjY19yZXMgcmVzOw0KKw0KKwl3ZG9nLT5wcmV0aW1lb3V0ID0gcHJldGltZW91dDsN
-CisJYXJtX3NtY2NjX3NtYyhJTVhfU0lQX1RJTUVSLCBJTVhfU0lQX1RJTUVSX1NFVF9QUkVUSU1F
-X1dET0csDQorCQkgICAgICBwcmV0aW1lb3V0ICogMTAwMCwgMCwgMCwgMCwgMCwgMCwgJnJlcyk7
-DQorDQorCXJldHVybiByZXMuYTAgPyAtRUFDQ0VTIDogMDsNCit9DQorDQorc3RhdGljIGludCBp
-bXhfc2Nfd2R0X25vdGlmeShzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgKm5iLA0KKwkJCSAgICAgdW5z
-aWduZWQgbG9uZyBldmVudCwgdm9pZCAqZ3JvdXApDQorew0KKwkvKiBpZ25vcmUgb3RoZXIgaXJx
-cyAqLw0KKwlpZiAoIShldmVudCAmIFNDX0lSUV9XRE9HICYmDQorCQkoKih1OCAqKWdyb3VwID09
-IFNDX0lSUV9HUk9VUF9XRE9HKSkpDQorCQlyZXR1cm4gMDsNCisNCisJd2F0Y2hkb2dfbm90aWZ5
-X3ByZXRpbWVvdXQoaW14X3NjX3dkZCk7DQorDQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMg
-c3RydWN0IG5vdGlmaWVyX2Jsb2NrIGlteF9zY193ZHRfbm90aWZpZXIgPSB7DQorCS5ub3RpZmll
-cl9jYWxsID0gaW14X3NjX3dkdF9ub3RpZnksDQorfTsNCisNCiBzdGF0aWMgY29uc3Qgc3RydWN0
-IHdhdGNoZG9nX29wcyBpbXhfc2Nfd2R0X29wcyA9IHsNCiAJLm93bmVyID0gVEhJU19NT0RVTEUs
-DQogCS5zdGFydCA9IGlteF9zY193ZHRfc3RhcnQsDQogCS5zdG9wICA9IGlteF9zY193ZHRfc3Rv
-cCwNCiAJLnBpbmcgID0gaW14X3NjX3dkdF9waW5nLA0KIAkuc2V0X3RpbWVvdXQgPSBpbXhfc2Nf
-d2R0X3NldF90aW1lb3V0LA0KKwkuc2V0X3ByZXRpbWVvdXQgPSBpbXhfc2Nfd2R0X3NldF9wcmV0
-aW1lb3V0LA0KIH07DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCB3YXRjaGRvZ19pbmZvIGlteF9z
-Y193ZHRfaW5mbyA9IHsNCkBAIC0xMDIsOSArMTM4LDE1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-d2F0Y2hkb2dfaW5mbyBpbXhfc2Nfd2R0X2luZm8gPSB7DQogc3RhdGljIGludCBpbXhfc2Nfd2R0
-X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogew0KIAlzdHJ1Y3QgZGV2aWNl
-ICpkZXYgPSAmcGRldi0+ZGV2Ow0KLQlzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlICppbXhfc2Nfd2Rk
-Ow0KIAlpbnQgcmV0Ow0KIA0KKwkvKiB3YWl0IHVudGlsIGkuTVggU0NVIElQQyByZWFkeSAqLw0K
-KwlyZXQgPSBpbXhfc2N1X2lycV9ncm91cF9lbmFibGUoU0NfSVJRX0dST1VQX1dET0csDQorCQkJ
-CSAgICAgICBTQ19JUlFfV0RPRywNCisJCQkJICAgICAgIHRydWUpOw0KKwlpZiAocmV0ID09IC1F
-UFJPQkVfREVGRVIpDQorCQlyZXR1cm4gcmV0Ow0KKw0KIAlpbXhfc2Nfd2RkID0gZGV2bV9remFs
-bG9jKGRldiwgc2l6ZW9mKCppbXhfc2Nfd2RkKSwgR0ZQX0tFUk5FTCk7DQogCWlmICghaW14X3Nj
-X3dkZCkNCiAJCXJldHVybiAtRU5PTUVNOw0KQEAgLTExNyw2ICsxNTksNyBAQCBzdGF0aWMgaW50
-IGlteF9zY193ZHRfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJaW14X3Nj
-X3dkZC0+bWF4X3RpbWVvdXQgPSBNQVhfVElNRU9VVDsNCiAJaW14X3NjX3dkZC0+cGFyZW50ID0g
-ZGV2Ow0KIAlpbXhfc2Nfd2RkLT50aW1lb3V0ID0gREVGQVVMVF9USU1FT1VUOw0KKwlpbXhfc2Nf
-d2RkLT5wcmV0aW1lb3V0ID0gMDsNCiANCiAJd2F0Y2hkb2dfaW5pdF90aW1lb3V0KGlteF9zY193
-ZGQsIDAsIGRldik7DQogCXdhdGNoZG9nX3N0b3Bfb25fcmVib290KGlteF9zY193ZGQpOw0KQEAg
-LTEyOCwxMyArMTcxLDI2IEBAIHN0YXRpYyBpbnQgaW14X3NjX3dkdF9wcm9iZShzdHJ1Y3QgcGxh
-dGZvcm1fZGV2aWNlICpwZGV2KQ0KIAkJcmV0dXJuIHJldDsNCiAJfQ0KIA0KKwlyZXQgPSBpbXhf
-c2N1X2lycV9yZWdpc3Rlcl9ub3RpZmllcigmaW14X3NjX3dkdF9ub3RpZmllcik7DQorCWlmIChy
-ZXQpDQorCQlkZXZfd2FybigmcGRldi0+ZGV2LA0KKwkJCSAiRmFpbGVkIHRvIHJlZ2lzdGVyIHdh
-dGNoZG9nIGlycSBub3RpZmllclxuIik7DQorDQogCXJldHVybiAwOw0KIH0NCiANCi1zdGF0aWMg
-aW50IF9fbWF5YmVfdW51c2VkIGlteF9zY193ZHRfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYp
-DQorc3RhdGljIGludCBpbXhfc2Nfd2R0X3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
-ZGV2KQ0KIHsNCi0Jc3RydWN0IHdhdGNoZG9nX2RldmljZSAqaW14X3NjX3dkZCA9IGRldl9nZXRf
-ZHJ2ZGF0YShkZXYpOw0KKwlpbXhfc2N1X2lycV91bnJlZ2lzdGVyX25vdGlmaWVyKCZpbXhfc2Nf
-d2R0X25vdGlmaWVyKTsNCisJaW14X3NjdV9pcnFfZ3JvdXBfZW5hYmxlKFNDX0lSUV9HUk9VUF9X
-RE9HLA0KKwkJCQkgU0NfSVJRX1dET0csDQorCQkJCSBmYWxzZSk7DQogDQorCXJldHVybiAwOw0K
-K30NCisNCitzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGlteF9zY193ZHRfc3VzcGVuZChzdHJ1
-Y3QgZGV2aWNlICpkZXYpDQorew0KIAlpZiAod2F0Y2hkb2dfYWN0aXZlKGlteF9zY193ZGQpKQ0K
-IAkJaW14X3NjX3dkdF9zdG9wKGlteF9zY193ZGQpOw0KIA0KQEAgLTE0Myw4ICsxOTksNiBAQCBz
-dGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGlteF9zY193ZHRfc3VzcGVuZChzdHJ1Y3QgZGV2aWNl
-ICpkZXYpDQogDQogc3RhdGljIGludCBfX21heWJlX3VudXNlZCBpbXhfc2Nfd2R0X3Jlc3VtZShz
-dHJ1Y3QgZGV2aWNlICpkZXYpDQogew0KLQlzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlICppbXhfc2Nf
-d2RkID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQotDQogCWlmICh3YXRjaGRvZ19hY3RpdmUoaW14
-X3NjX3dkZCkpDQogCQlpbXhfc2Nfd2R0X3N0YXJ0KGlteF9zY193ZGQpOw0KIA0KQEAgLTE2Miw2
-ICsyMTYsNyBAQCBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBpbXhfc2Nfd2R0X2R0X2lkcyk7DQog
-DQogc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgaW14X3NjX3dkdF9kcml2ZXIgPSB7DQog
-CS5wcm9iZQkJPSBpbXhfc2Nfd2R0X3Byb2JlLA0KKwkucmVtb3ZlCQk9IGlteF9zY193ZHRfcmVt
-b3ZlLA0KIAkuZHJpdmVyCQk9IHsNCiAJCS5uYW1lCT0gImlteC1zYy13ZHQiLA0KIAkJLm9mX21h
-dGNoX3RhYmxlID0gaW14X3NjX3dkdF9kdF9pZHMsDQotLSANCjIuNy40DQoNCg==
+On Wed, Apr 24, 2019 at 10:01:56PM -0300, Thiago Jung Bauermann wrote:
+> 
+> Michael S. Tsirkin <mst@redhat.com> writes:
+> 
+> > On Wed, Apr 17, 2019 at 06:42:00PM -0300, Thiago Jung Bauermann wrote:
+> >>
+> >> Michael S. Tsirkin <mst@redhat.com> writes:
+> >>
+> >> > On Thu, Mar 21, 2019 at 09:05:04PM -0300, Thiago Jung Bauermann wrote:
+> >> >>
+> >> >> Michael S. Tsirkin <mst@redhat.com> writes:
+> >> >>
+> >> >> > On Wed, Mar 20, 2019 at 01:13:41PM -0300, Thiago Jung Bauermann wrote:
+> >> >> >> >From what I understand of the ACCESS_PLATFORM definition, the host will
+> >> >> >> only ever try to access memory addresses that are supplied to it by the
+> >> >> >> guest, so all of the secure guest memory that the host cares about is
+> >> >> >> accessible:
+> >> >> >>
+> >> >> >>     If this feature bit is set to 0, then the device has same access to
+> >> >> >>     memory addresses supplied to it as the driver has. In particular,
+> >> >> >>     the device will always use physical addresses matching addresses
+> >> >> >>     used by the driver (typically meaning physical addresses used by the
+> >> >> >>     CPU) and not translated further, and can access any address supplied
+> >> >> >>     to it by the driver. When clear, this overrides any
+> >> >> >>     platform-specific description of whether device access is limited or
+> >> >> >>     translated in any way, e.g. whether an IOMMU may be present.
+> >> >> >>
+> >> >> >> All of the above is true for POWER guests, whether they are secure
+> >> >> >> guests or not.
+> >> >> >>
+> >> >> >> Or are you saying that a virtio device may want to access memory
+> >> >> >> addresses that weren't supplied to it by the driver?
+> >> >> >
+> >> >> > Your logic would apply to IOMMUs as well.  For your mode, there are
+> >> >> > specific encrypted memory regions that driver has access to but device
+> >> >> > does not. that seems to violate the constraint.
+> >> >>
+> >> >> Right, if there's a pre-configured 1:1 mapping in the IOMMU such that
+> >> >> the device can ignore the IOMMU for all practical purposes I would
+> >> >> indeed say that the logic would apply to IOMMUs as well. :-)
+> >> >>
+> >> >> I guess I'm still struggling with the purpose of signalling to the
+> >> >> driver that the host may not have access to memory addresses that it
+> >> >> will never try to access.
+> >> >
+> >> > For example, one of the benefits is to signal to host that driver does
+> >> > not expect ability to access all memory. If it does, host can
+> >> > fail initialization gracefully.
+> >>
+> >> But why would the ability to access all memory be necessary or even
+> >> useful? When would the host access memory that the driver didn't tell it
+> >> to access?
+> >
+> > When I say all memory I mean even memory not allowed by the IOMMU.
+> 
+> Yes, but why? How is that memory relevant?
+
+It's relevant when driver is not trusted to only supply correct
+addresses. The feature was originally designed to support userspace
+drivers within guests.
+
+> >> >> >> >> > But the name "sev_active" makes me scared because at least AMD guys who
+> >> >> >> >> > were doing the sensible thing and setting ACCESS_PLATFORM
+> >> >> >> >>
+> >> >> >> >> My understanding is, AMD guest-platform knows in advance that their
+> >> >> >> >> guest will run in secure mode and hence sets the flag at the time of VM
+> >> >> >> >> instantiation. Unfortunately we dont have that luxury on our platforms.
+> >> >> >> >
+> >> >> >> > Well you do have that luxury. It looks like that there are existing
+> >> >> >> > guests that already acknowledge ACCESS_PLATFORM and you are not happy
+> >> >> >> > with how that path is slow. So you are trying to optimize for
+> >> >> >> > them by clearing ACCESS_PLATFORM and then you have lost ability
+> >> >> >> > to invoke DMA API.
+> >> >> >> >
+> >> >> >> > For example if there was another flag just like ACCESS_PLATFORM
+> >> >> >> > just not yet used by anyone, you would be all fine using that right?
+> >> >> >>
+> >> >> >> Yes, a new flag sounds like a great idea. What about the definition
+> >> >> >> below?
+> >> >> >>
+> >> >> >> VIRTIO_F_ACCESS_PLATFORM_NO_IOMMU This feature has the same meaning as
+> >> >> >>     VIRTIO_F_ACCESS_PLATFORM both when set and when not set, with the
+> >> >> >>     exception that the IOMMU is explicitly defined to be off or bypassed
+> >> >> >>     when accessing memory addresses supplied to the device by the
+> >> >> >>     driver. This flag should be set by the guest if offered, but to
+> >> >> >>     allow for backward-compatibility device implementations allow for it
+> >> >> >>     to be left unset by the guest. It is an error to set both this flag
+> >> >> >>     and VIRTIO_F_ACCESS_PLATFORM.
+> >> >> >
+> >> >> > It looks kind of narrow but it's an option.
+> >> >>
+> >> >> Great!
+> >> >>
+> >> >> > I wonder how we'll define what's an iommu though.
+> >> >>
+> >> >> Hm, it didn't occur to me it could be an issue. I'll try.
+> >>
+> >> I rephrased it in terms of address translation. What do you think of
+> >> this version? The flag name is slightly different too:
+> >>
+> >>
+> >> VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION This feature has the same
+> >>     meaning as VIRTIO_F_ACCESS_PLATFORM both when set and when not set,
+> >>     with the exception that address translation is guaranteed to be
+> >>     unnecessary when accessing memory addresses supplied to the device
+> >>     by the driver. Which is to say, the device will always use physical
+> >>     addresses matching addresses used by the driver (typically meaning
+> >>     physical addresses used by the CPU) and not translated further. This
+> >>     flag should be set by the guest if offered, but to allow for
+> >>     backward-compatibility device implementations allow for it to be
+> >>     left unset by the guest. It is an error to set both this flag and
+> >>     VIRTIO_F_ACCESS_PLATFORM.
+> >
+> > Thanks, I'll think about this approach. Will respond next week.
+> 
+> Thanks!
+> 
+> >> >> > Another idea is maybe something like virtio-iommu?
+> >> >>
+> >> >> You mean, have legacy guests use virtio-iommu to request an IOMMU
+> >> >> bypass? If so, it's an interesting idea for new guests but it doesn't
+> >> >> help with guests that are out today in the field, which don't have A
+> >> >> virtio-iommu driver.
+> >> >
+> >> > I presume legacy guests don't use encrypted memory so why do we
+> >> > worry about them at all?
+> >>
+> >> They don't use encrypted memory, but a host machine will run a mix of
+> >> secure and legacy guests. And since the hypervisor doesn't know whether
+> >> a guest will be secure or not at the time it is launched, legacy guests
+> >> will have to be launched with the same configuration as secure guests.
+> >
+> > OK and so I think the issue is that hosts generally fail if they set
+> > ACCESS_PLATFORM and guests do not negotiate it.
+> > So you can not just set ACCESS_PLATFORM for everyone.
+> > Is that the issue here?
+> 
+> Yes, that is one half of the issue. The other is that even if hosts
+> didn't fail, existing legacy guests wouldn't "take the initiative" of
+> not negotiating ACCESS_PLATFORM to get the improved performance. They'd
+> have to be modified to do that.
+
+So there's a non-encrypted guest, hypervisor wants to set
+ACCESS_PLATFORM to allow encrypted guests but that will slow down legacy
+guests since their vIOMMU emulation is very slow.
+
+So enabling support for encryption slows down non-encrypted guests. Not
+great but not the end of the world, considering even older guests that
+don't support ACCESS_PLATFORM are completely broken and you do not seem
+to be too worried by that.
+
+For future non-encrypted guests, bypassing the emulated IOMMU for when
+that emulated IOMMU is very slow might be solvable in some other way,
+e.g. with virtio-iommu. Which reminds me, could you look at
+virtio-iommu as a solution for some of the issues?
+Review of that patchset from that POV would be appreciated.
+
+> --
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
