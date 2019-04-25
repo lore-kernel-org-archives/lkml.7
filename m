@@ -2,173 +2,145 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44F0C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256F6C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E662A205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31739205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:55:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TPX0i/At"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jDYZJv2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387931AbfDYTzQ (ORCPT
+        id S2387945AbfDYTzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:55:16 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36715 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387747AbfDYTxb (ORCPT
+        Thu, 25 Apr 2019 15:55:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44824 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387538AbfDYTzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:53:31 -0400
-Received: by mail-pl1-f195.google.com with SMTP id ck15so318784plb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:53:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YusN59c3iVe7dOG1Akfa6gDWfbXRGUq+MaL1LI2ES48=;
-        b=TPX0i/AtQIbWmNklm28vIvGzjPNLKhyboNWsooFfdW6iiPt6HNxr4YrcfRxQ7nbLe/
-         O2UffuRzv7I+S/loo/zBlQREV+9ONd17mz9GO4g9aoJG0w/77IqD8bAvXFgQnb1r+X8J
-         p+QcGCur0l79hGH4LaAs30eMx51tUObMBuDPfB1Zn4XUOwVWIydnG0Wi/PkfHh/27B8K
-         MEzUlP2iIXZ1cy7bmTizRqA+D8s6Q6Hbyngr6J+Mc9JT0SgNrJWwKNIkE/9dxdOUkW+G
-         XBMAqCko2Df6B6tFw6/ze1+eWfCdhqWjXMFWHxVMMN3ekV7tn12wT8aqPkP45k2ga1bk
-         eEhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=YusN59c3iVe7dOG1Akfa6gDWfbXRGUq+MaL1LI2ES48=;
-        b=cX193MGkff4S6c3ilmsp8TNoBJQWlHBl/snmG+UbwEdTgBOwfjCheT3BwpFi9dyoB9
-         geBQ3ioH6dsJG0mbCL6xB4PQfMdjrskDQoeF66TTKhXdSdaQElGzr5nIA/nhUt8r7sgJ
-         mlabN2rehdTJrSDEIIhcOShUP0/X+DwPhgZJ2FwGqXEu2fSQCKo0a1iAtE+O8/E1puhO
-         YQT3jX++rQSLfkJrLz9f9GlXM53Jx/DK2Z6MlVmbh1x+ncALhhyCKn1AffGvA3qWvNlf
-         ZPNggpRTd6hdbwRAi/c70Iht34cJ2wcmD0dV25QqIPO4NlEQmG4VyKy9moEDXtNQVyGz
-         O+9Q==
-X-Gm-Message-State: APjAAAVeG07zS2sG39d6fNTRDiUBwjTpGMwnDPDz1CCJzorxvWZENex1
-        iu9BJK6Lmxv3tIWB1DgYXJMqLQ==
-X-Google-Smtp-Source: APXvYqwIvCKf+xz7WMPq3Fx1D22z3iTdvJB6dBnJ2eMEOYHDfbIH+VUqrFyZXB/60U5tHJGxuieE4Q==
-X-Received: by 2002:a17:902:7b97:: with SMTP id w23mr33285271pll.335.1556222010532;
-        Thu, 25 Apr 2019 12:53:30 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id t64sm47261961pfa.86.2019.04.25.12.53.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 12:53:29 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 14/32] coresight: etm4x: Add kernel configuration for CONTEXTID
-Date:   Thu, 25 Apr 2019 13:52:52 -0600
-Message-Id: <20190425195310.31562-15-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190425195310.31562-1-mathieu.poirier@linaro.org>
-References: <20190425195310.31562-1-mathieu.poirier@linaro.org>
+        Thu, 25 Apr 2019 15:55:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VOZ0OpoJ76M1yqdpvv8yJsTY4zgs8X+CEIvxpLsiyZw=; b=jDYZJv2MuyVq0uDtRxHjNnk8S
+        NaRI/nO6b2o8Kcb6+X+ibBTCbGIIE+WXxVtVr02NBSTJv1jQeNyRRiI3Pu8iYNtn67e6sr7n4GB7t
+        6cgcyQaGVcToDPlhVM13g3PlgO+975scbyDlFmP7GdJP7RtSogv88yVQNwAQcXa4CWS2AJxz1x9Ir
+        tVAQrFVz02VzxjlbnlH+1DUwAZoUZ5ELshIQ3aCK+gC3qOCetC+Gm2lKd5dFUeWSS0qo0juyv3F15
+        JTkNlmPZUEAjKkWShjZu1dWPNsryC0OTt7mLrtBoowNhmLik7jGGnpdbEKE6cwxbLzk4CZLNs/r2S
+        EHis7BZAA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJkSj-0003L3-5L; Thu, 25 Apr 2019 19:55:17 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9948920288CFF; Thu, 25 Apr 2019 21:55:15 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 21:55:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yuyang Du <duyuyang@gmail.com>
+Cc:     will.deacon@arm.com, mingo@kernel.org, bvanassche@acm.org,
+        ming.lei@redhat.com, frederic@kernel.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 23/28] locking/lockdep: Update irqsafe lock bitmaps
+Message-ID: <20190425195515.GX12232@hirez.programming.kicks-ass.net>
+References: <20190424101934.51535-1-duyuyang@gmail.com>
+ <20190424101934.51535-24-duyuyang@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424101934.51535-24-duyuyang@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the proper bit in the configuration register when contextID tracing
-has been requested by user space.  That way PE_CONTEXT elements are
-generated by the tracers when a process is installed on a CPU.
+On Wed, Apr 24, 2019 at 06:19:29PM +0800, Yuyang Du wrote:
+> The bitmaps keep track of which locks are irqsafe. Update the bitmaps
+> when there is new irqsafe usage and when an irqsafe lock is zapped.
+> 
+> Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+> ---
+>  kernel/locking/lockdep.c | 39 ++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 38 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 291cc9c..1b78216 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -3107,6 +3107,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
+>  	int excl_bit = exclusive_bit(new_bit);
+>  	int read = new_bit & LOCK_USAGE_READ_MASK;
+>  	int dir = new_bit & LOCK_USAGE_DIR_MASK;
+> +	struct lock_class *lock = hlock_class(this);
+>  
+>  	/*
+>  	 * mark USED_IN has to look forwards -- to ensure no dependency
+> @@ -3119,6 +3120,25 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
+>  		check_usage_backwards : check_usage_forwards;
+>  
+>  	/*
+> +	 * The bit is already marked so that we update the bitmaps
+> +	 * before validation.
+> +	 */
+> +	if (!dir) {
+> +		unsigned long *bitmaps[4] = {
+> +			lock_classes_hardirq_safe,
+> +			lock_classes_hardirq_safe_read,
+> +			lock_classes_softirq_safe,
+> +			lock_classes_softirq_safe_read
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Robert Walker <robert.walker@arm.com>
----
- drivers/hwtracing/coresight/Kconfig              | 1 +
- drivers/hwtracing/coresight/coresight-etm-perf.c | 2 ++
- drivers/hwtracing/coresight/coresight-etm4x.c    | 5 +++++
- include/linux/coresight-pmu.h                    | 2 ++
- tools/include/linux/coresight-pmu.h              | 2 ++
- 5 files changed, 12 insertions(+)
+That again should be something CPP magic using lockdep_states.h.
 
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index a40d796f0a4b..18e8d03321d6 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -75,6 +75,7 @@ config CORESIGHT_SOURCE_ETM4X
- 	bool "CoreSight Embedded Trace Macrocell 4.x driver"
- 	depends on ARM64
- 	select CORESIGHT_LINKS_AND_SINKS
-+	select PID_IN_CONTEXTIDR
- 	help
- 	  This driver provides support for the ETM4.x tracer module, tracing the
- 	  instructions that a processor is executing. This is primarily useful
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 25ae56e924bb..bbfed70b3402 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -29,6 +29,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
- 
- /* ETMv3.5/PTM's ETMCR is 'config' */
- PMU_FORMAT_ATTR(cycacc,		"config:" __stringify(ETM_OPT_CYCACC));
-+PMU_FORMAT_ATTR(contextid,	"config:" __stringify(ETM_OPT_CTXTID));
- PMU_FORMAT_ATTR(timestamp,	"config:" __stringify(ETM_OPT_TS));
- PMU_FORMAT_ATTR(retstack,	"config:" __stringify(ETM_OPT_RETSTK));
- /* Sink ID - same for all ETMs */
-@@ -36,6 +37,7 @@ PMU_FORMAT_ATTR(sinkid,		"config2:0-31");
- 
- static struct attribute *etm_config_formats_attr[] = {
- 	&format_attr_cycacc.attr,
-+	&format_attr_contextid.attr,
- 	&format_attr_timestamp.attr,
- 	&format_attr_retstack.attr,
- 	&format_attr_sinkid.attr,
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 08ce37c9475d..732ae12fca9b 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -239,6 +239,11 @@ static int etm4_parse_event_config(struct etmv4_drvdata *drvdata,
- 	if (attr->config & BIT(ETM_OPT_TS))
- 		/* bit[11], Global timestamp tracing bit */
- 		config->cfg |= BIT(11);
-+
-+	if (attr->config & BIT(ETM_OPT_CTXTID))
-+		/* bit[6], Context ID tracing bit */
-+		config->cfg |= BIT(ETM4_CFG_BIT_CTXTID);
-+
- 	/* return stack - enable if selected and supported */
- 	if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
- 		/* bit[12], Return stack enable bit */
-diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-index a1a959ba24ff..b0e35eec6499 100644
---- a/include/linux/coresight-pmu.h
-+++ b/include/linux/coresight-pmu.h
-@@ -12,11 +12,13 @@
- 
- /* ETMv3.5/PTM's ETMCR config bit */
- #define ETM_OPT_CYCACC  12
-+#define ETM_OPT_CTXTID	14
- #define ETM_OPT_TS      28
- #define ETM_OPT_RETSTK	29
- 
- /* ETMv4 CONFIGR programming bits for the ETM OPTs */
- #define ETM4_CFG_BIT_CYCACC	4
-+#define ETM4_CFG_BIT_CTXTID	6
- #define ETM4_CFG_BIT_TS		11
- #define ETM4_CFG_BIT_RETSTK	12
- 
-diff --git a/tools/include/linux/coresight-pmu.h b/tools/include/linux/coresight-pmu.h
-index a1a959ba24ff..b0e35eec6499 100644
---- a/tools/include/linux/coresight-pmu.h
-+++ b/tools/include/linux/coresight-pmu.h
-@@ -12,11 +12,13 @@
- 
- /* ETMv3.5/PTM's ETMCR config bit */
- #define ETM_OPT_CYCACC  12
-+#define ETM_OPT_CTXTID	14
- #define ETM_OPT_TS      28
- #define ETM_OPT_RETSTK	29
- 
- /* ETMv4 CONFIGR programming bits for the ETM OPTs */
- #define ETM4_CFG_BIT_CYCACC	4
-+#define ETM4_CFG_BIT_CTXTID	6
- #define ETM4_CFG_BIT_TS		11
- #define ETM4_CFG_BIT_RETSTK	12
- 
--- 
-2.17.1
+Also, that array can be static const, right? It's just an index into the
+static bitmaps.
 
+> +		};
+> +		int index = (new_bit >> 2) << 1;
+> +
+> +		if (read)
+> +		       index += 1;
+> +
+> +		__set_bit(lock - lock_classes, bitmaps[index]);
+> +	}
+> +
+> +	/*
+>  	 * Validate that this particular lock does not have conflicting
+>  	 * usage states.
+>  	 */
+> @@ -3146,7 +3166,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
+>  			return 0;
+>  	}
+>  
+> -	if (state_verbose(new_bit, hlock_class(this)))
+> +	if (state_verbose(new_bit, lock))
+>  		return 2;
+>  
+>  	return 1;
+> @@ -4650,6 +4670,22 @@ static void remove_class_from_lock_chains(struct pending_free *pf,
+>  	}
+>  }
+>  
+> +static inline void remove_irqsafe_lock_bitmap(struct lock_class *class)
+> +{
+> +#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
+> +	unsigned long usage = class->usage_mask;
+> +
+> +	if (usage & LOCKF_USED_IN_HARDIRQ)
+> +		__clear_bit(class - lock_classes, lock_classes_hardirq_safe);
+> +	if (usage & LOCKF_USED_IN_HARDIRQ_READ)
+> +		__clear_bit(class - lock_classes, lock_classes_hardirq_safe_read);
+> +	if (usage & LOCKF_USED_IN_SOFTIRQ)
+> +		__clear_bit(class - lock_classes, lock_classes_softirq_safe);
+> +	if (usage & LOCKF_USED_IN_SOFTIRQ_READ)
+> +		__clear_bit(class - lock_classes, lock_classes_softirq_safe_read);
+
+More CPP foo required here. Also, do we really need to test, we could
+just unconditionally clear the bits.
+
+> +#endif
+> +}
