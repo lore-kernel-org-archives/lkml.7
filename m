@@ -2,97 +2,112 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085C1C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D2EC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452BC2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556207619;
-	bh=QfVP/tIgKcO1dC2YfnIFEr1yLlGdnMnH+hkipPKTe6I=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=pmVCEAJFZj+sdCgDhygNOzyisCWXcXvVjGOn+6unTqPQJfc/iEzY3Wtk5Fpsx37YD
-	 9F/UETJk6TNUmT9RQ6PXyh8AXcaGg4P3HNz4/S2rk6ztmEGW11TMgufGuZ0M159LJt
-	 U7+c3jB1DnlnWSwhP+2oEJdWZknd4bz82kDav1+g=
+	by mail.kernel.org (Postfix) with ESMTP id 7ED582067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbfDYPxh (ORCPT
+        id S1729589AbfDYPzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:53:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729397AbfDYPxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:53:35 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E35522067D;
-        Thu, 25 Apr 2019 15:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556207615;
-        bh=QfVP/tIgKcO1dC2YfnIFEr1yLlGdnMnH+hkipPKTe6I=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=Zy0hFfMTDldJMGCGnNkeB5nXxkgW8Cf+0nO0fyWPT54XBX1l//se3WQvezjsDb8ge
-         FEo35dmgr9B7cbYnyUlqtDwg689t+Dq6EB0eGKqURjURaevmWMlPb4WJ+pqH4xU43N
-         PaJ31s4TBHp1o8tr0l0HPpr1HEFUnxZ6p1cdmJDE=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 25 Apr 2019 11:55:44 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43713 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbfDYPzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 11:55:43 -0400
+Received: by mail-qt1-f195.google.com with SMTP id g4so604936qtq.10;
+        Thu, 25 Apr 2019 08:55:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zkwopJCM5aWIxk1QBblXCx0FKSBr5++vETUbB1hTeEs=;
+        b=NlFeIDqca1cphh1upv/cDvlCmoF3HGt9HAeTxX4mddA/iM+S/tVwkvKF/kGj0UjUS6
+         NrEz4HIfUbW0toeWqqgP6WykwBwrZXLqbB6Gf6WXQRQex61VKLGV4z7FqIf5z6epxlDA
+         Zv6YT0xVBX4JXNVzfiLQkRVgx7ZxCgZCcx6YGw7ZiQNKvWVoE2MZjdk29nY9hWl10OxW
+         yAE81CZ2r95sOz6SCvFgjobX+lYYBFMn6RP5xtON6VBegCcJl0BWI//Epf0VQR/m3M1i
+         fO+vLQD6vYsIVNmtqkDsRUoT1LVLB77F/7RpXaY1QsscJYaj8m55g74xVtdoLQi4J+CB
+         +Qlg==
+X-Gm-Message-State: APjAAAUUJhjzP/nzNWGRi13/QF447CE8eBjeq7u2Iw7AolrPIWsq/zVY
+        yehVaa+rTyWhqJhrPiIN5UwhzSnp3AGTpY3tt3w=
+X-Google-Smtp-Source: APXvYqwupzbYTiLjLfqIarqoXDi4frJzR/cv4HqO21AQp9/xhogJt2aa2zuSHYZLMoMxRTXJvQmzyoVA0Y0H4v8cQsw=
+X-Received: by 2002:a0c:d2fa:: with SMTP id x55mr32105048qvh.161.1556207741117;
+ Thu, 25 Apr 2019 08:55:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190424071347.73xbynv5jqipqkgx@fsr-ub1664-175>
-References: <1553269010-15591-1-git-send-email-abel.vesa@nxp.com> <CAOMZO5DWpu9irOWR3rux-vV1sihfsDkTs5SJ7XXy8MgRBCd-Gw@mail.gmail.com> <155493360763.20095.6174028293897341109@swboyd.mtv.corp.google.com> <155605619927.15276.90300312265075245@swboyd.mtv.corp.google.com> <20190424071347.73xbynv5jqipqkgx@fsr-ub1664-175>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [EXT] Re: [RFC 00/19] clk: imx: Switch the imx6 and imx7 to clk_hw based API
-To:     Abel Vesa <abel.vesa@nxp.com>
-Message-ID: <155620761362.15276.4197988939287759775@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Thu, 25 Apr 2019 08:53:33 -0700
+References: <20190416202013.4034148-1-arnd@arndb.de> <20190416202701.127745-1-arnd@arndb.de>
+ <20190425122153.450fc094@coco.lan> <20190425153534.GS2217@ZenIV.linux.org.uk>
+In-Reply-To: <20190425153534.GS2217@ZenIV.linux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 25 Apr 2019 17:55:23 +0200
+Message-ID: <CAK8P3a2HmiYQJ2FV2FgLiFsD8M9UKteC9Jetx7ja06PQVZWYfA@mail.gmail.com>
+Subject: Re: [PATCH v3 12/26] compat_ioctl: move more drivers to compat_ptr_ioctl
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Sterba <dsterba@suse.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        driverdevel <devel@driverdev.osuosl.org>, qat-linux@intel.com,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-iio@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, Sean Young <sean@mess.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Abel Vesa (2019-04-24 00:13:48)
->=20
-> Can you please be more specific and point out exactly which one isn't ?
+On Thu, Apr 25, 2019 at 5:35 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Thu, Apr 25, 2019 at 12:21:53PM -0300, Mauro Carvalho Chehab wrote:
+>
+> > If I understand your patch description well, using compat_ptr_ioctl
+> > only works if the driver is not for s390, right?
+>
+> No; s390 is where "oh, just set ->compat_ioctl same as ->unlocked_ioctl
+> and be done with that; compat_ptr() is a no-op anyway" breaks.  IOW,
+> s390 is the reason for having compat_ptr_ioctl() in the first place;
+> that thing works on all biarch architectures, as long as all stuff
+> handled by ->ioctl() takes pointer to arch-independent object as
+> argument.  IOW,
+>         argument ignored => OK
+>         any arithmetical type => no go, compat_ptr() would bugger it
+>         pointer to int => OK
+>         pointer to string => OK
+>         pointer to u64 => OK
+>         pointer to struct {u64 addr; char s[11];} => OK
 
-Is this a question for me?
+To be extra pedantic, the 'struct {u64 addr; char s[11];} '
+case is also broken on x86, because sizeof (obj) is smaller
+on i386, even though the location of the members are
+the same. i.e. you can copy_from_user() this, but not
+copy_to_user(), which overwrites 4 bytes after the end of
+the 20-byte user structure.
 
->=20
-> >=20
-> > FYI, I'm dropping this from my review queue under the assumption it will
-> > be sent again. Also, it would be nice to not have the wrappers at all in
-> > the next series so that everything is clk_hw based instead of clk based.
-> > Otherwise, it looks good to me and I'd like to see this work completed.
-> > Thanks!
-> >=20
->=20
-> I'll try to resend this before the end of next week.
->=20
-> As for the wrappers, they need to stay in until the last user of the clk
-> based API is switched to clk_hw based. That means all the remaining imx
-> platforms (1 through 5, and then 8). I chosed to do the imx6 and imx7
-> first because these are easier to find. Once this is in, I'll move on
-> with the imx8 and then the imx1 through imx5 (which are harder to find
-> nowadays).
->=20
-
-Ok. I'm not thrilled to keep around legacy code because nobody is
-testing out new kernels on these devices. If we can, we should try to
-delete old drivers that don't get used anymore, but if we can't then
-we should be able to modify and compile those drivers and wait for the
-bug reports to come in if something is broken.
-
-
+       Arnd
