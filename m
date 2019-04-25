@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CAAC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859ABC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F5320651
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3ECF20651
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="YIpGwX3+"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Y9TJttj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbfDYQPI (ORCPT
+        id S1729089AbfDYQPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:15:08 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46661 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729039AbfDYQPF (ORCPT
+        Thu, 25 Apr 2019 12:15:04 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44338 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfDYQPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:15:05 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d1so349261edd.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:15:03 -0700 (PDT)
+        Thu, 25 Apr 2019 12:15:01 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i13so359705edf.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3nLLPHN9gu0//fQ6wxKokPM+FTzJFa/tfyfyjA+K6d8=;
-        b=YIpGwX3+ePv+v9jxKJpn4m/t/Qbbuwn/IgtCJdNRndYmhSs+yddBzJbsKEqWDd3eGa
-         ceU9oItuLNPWYBThPieOPmyEkSsXjBueFBBAAzNeNdEyuzTCJHcrYE+f2dRl1efbEY7E
-         pFpMnAmTCD3zjbEZzf4IImhnBplgSdtPSMQ4KhSrRsRkC6w+jzD5gHLYaT1L494cn0Jw
-         YyJL0eb1G549v6JbE3ZnvQn5Fh2r4RE9cHjriMuJ7pjSmy8zQ94g9GuRlpxz1gIkgUMH
-         U/bpZByyhQKWXq4/vPi+laxiEaMTHSKD7YRIaHB+0uN5yFkMDh6xI9ZRLzP4tI++HVOd
-         cnXA==
+        bh=KzBLwvgUEpfKbrwmx+pVv3C86NZA90pPtPPyYG4wEh4=;
+        b=Y9TJttj94t4E/zPLUzYkpCTuqLqEuYi6+Nv9lJuZXklDg2TYcx0BHk7wfCvvQvKJ6I
+         /gdkiyeCl2sCofVCp/UpMPyP99J22lgRtLntk9ZrnO2IQT1FmQ9GT90+Vo3FPA0wd5u5
+         Z6+bs651WCoeXqtYYiHsj98alAYqtVX2xUBqkFoJypPVE3dmjCuGg3K6GUcUH1yPMvGK
+         KIxPrLkOFzIJOH4isG3BsetbIyQd2jN/GMor45/HO/Jo9oxo+fW0pAudpxtsWRC4esxh
+         Rp5tOtC5rKxCqhKy9ukMqZ0xRUQpSE1QxfUGER/dyNQFM6WJWc1e8VY/iBLZo5J5fs7r
+         na+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3nLLPHN9gu0//fQ6wxKokPM+FTzJFa/tfyfyjA+K6d8=;
-        b=OXfqo9hXGGF/4LKuyZ8AcmmXTSdDVSTZ+LQNM04JSePEw1ZhqAguwm5dtxVxlSY9bE
-         T0b752sBpnfwU+1xWgMei7LtFs7SC6G9axZyc9ovDNnyanRiFAaHoAa1WpuQ8QSY0hFq
-         Q7asbyoOnADEAIv15uUpQYLjCgiZnRrx3iZkkx+jdy0NW1870OTt+0d+cVbAhemZey/1
-         HLoIpiYA4Ravv0Iozx3UDZcqGm6Gx7mzCt8kuKEEVd95wnMFiiQQXiXoVnzd3rlchR/Z
-         bT3wiF5YCD9VsXaDA+W9huNXTSAPP1ZNd9ctgZrsZyAmhQZ4bfMUeI9m4RHtSZqxGzjG
-         Ob2w==
-X-Gm-Message-State: APjAAAX04NdChHXPWM8Zj1pqTjIBxo3CncRDGt4BBA3y/oRFYsM6Rcan
-        kSBErLUJUVmG7kPv3iNBbKtpAQkRv0c=
-X-Google-Smtp-Source: APXvYqx714zYspesW+4Dt8pwndoK7TjNvJTZt71IBDKgWVkSg5OI8tHeQgmoJCaC6SjmlaEkEXjkeA==
-X-Received: by 2002:a50:ed11:: with SMTP id j17mr21383026eds.200.1556208902908;
-        Thu, 25 Apr 2019 09:15:02 -0700 (PDT)
+        bh=KzBLwvgUEpfKbrwmx+pVv3C86NZA90pPtPPyYG4wEh4=;
+        b=cxxBc3r03j3tMzTY8vRm+0wVzkfQQkvs+GuvuS6nMntXYdLFsx6ZzkR6gGRMeC3Iw4
+         WlDKv64OKgkHwh2G5tu4MNMU7hK4cEl7zoexNik29AtrICiF6tp9SBmf+RA18sh8S2ve
+         jnTu+gD3JPgeI48p/Ymvflj/BlI1BxOvIepYwCK2onQMS6vpwWQhX1JIoLR+dGIeBDER
+         thnXvJmJDvkvnkRx0mjtBWbT9fU2gBaGi3OQ4Tno0rJBEAwOq1I7IV2687Wy9012CLUt
+         FcEciwl3zX2UuIizTtXdsbbIQI218wH9dGcBwvinawGvRh+UmSZqPMOQfnP6M+04skeE
+         91eA==
+X-Gm-Message-State: APjAAAWO9xq1oyCFWjXRSEVdklXjg/VROAY5blz/q+rYXpDKhoR7NEKw
+        Kh5N/zjyBiUjV1xb5EmYBTOb8D6Z9bc=
+X-Google-Smtp-Source: APXvYqwu+lbp9f5xNYTFllUN62mYNMGq6RTzuFsIdjVpHiXgW8vkpz108yfC5OzNeN9SiJhte+RhOw==
+X-Received: by 2002:a50:ad5d:: with SMTP id z29mr2184709edc.63.1556208899807;
+        Thu, 25 Apr 2019 09:14:59 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id br19sm4147042ejb.48.2019.04.25.09.15.01
+        by smtp.gmail.com with ESMTPSA id br19sm4147042ejb.48.2019.04.25.09.14.58
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Apr 2019 09:15:02 -0700 (PDT)
+        Thu, 25 Apr 2019 09:14:59 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
@@ -75,9 +75,9 @@ Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv3 27/27] selftest/timens: Check that a right vdso is mapped after fork and exec
-Date:   Thu, 25 Apr 2019 17:14:16 +0100
-Message-Id: <20190425161416.26600-28-dima@arista.com>
+Subject: [PATCHv3 25/27] x86/vdso: Align VDSO functions by CPU L1 cache line
+Date:   Thu, 25 Apr 2019 17:14:14 +0100
+Message-Id: <20190425161416.26600-26-dima@arista.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190425161416.26600-1-dima@arista.com>
 References: <20190425161416.26600-1-dima@arista.com>
@@ -90,132 +90,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrei Vagin <avagin@gmail.com>
 
+After performance testing VDSO patches a noticeable 20% regression was
+found on gettime_perf selftest with a cold cache.
+As it turns to be, before time namespaces introduction, VDSO functions
+were quite aligned to cache lines, but adding a new code to adjust
+timens offset inside namespace created a small shift and vdso functions
+become unaligned on cache lines.
+
+Add align to vdso functions with gcc option to fix performance drop.
+
+Coping the resulting numbers from cover letter:
+
+Hot CPU cache (more gettime_perf.c cycles - the better):
+        | before     | CONFIG_TIME_NS=n | host        | inside timens
+--------|------------|------------------|-------------|-------------
+cycles  | 139887013  | 139453003        | 139899785   | 128792458
+diff (%)| 100        | 99.7             | 100         | 92
+
+Cold cache (lesser tsc per gettime_perf_cold.c cycle - the better):
+        | before     | CONFIG_TIME_NS=n | host        | inside timens
+--------|------------|------------------|-------------|-------------
+tsc     | 6748       | 6718             | 6862        | 12682
+diff (%)| 100        | 99.6             | 101.7       | 188
+
+Measured on Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+
+Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- tools/testing/selftests/timens/.gitignore |  1 +
- tools/testing/selftests/timens/Makefile   |  2 +-
- tools/testing/selftests/timens/exec.c     | 91 +++++++++++++++++++++++
- 3 files changed, 93 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/timens/exec.c
+ arch/x86/entry/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
-index 16292e4d08a5..789f21e81028 100644
---- a/tools/testing/selftests/timens/.gitignore
-+++ b/tools/testing/selftests/timens/.gitignore
-@@ -1,4 +1,5 @@
- clock_nanosleep
-+exec
- gettime_perf
- gettime_perf_cold
- procfs
-diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
-index ef65bf96b55c..9e0edf354906 100644
---- a/tools/testing/selftests/timens/Makefile
-+++ b/tools/testing/selftests/timens/Makefile
-@@ -1,4 +1,4 @@
--TEST_GEN_PROGS := timens timerfd timer clock_nanosleep procfs gettime_perf
-+TEST_GEN_PROGS := timens timerfd timer clock_nanosleep procfs gettime_perf exec
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index bc0bdbf49397..9b45aafdfcfe 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -4,6 +4,7 @@
+ #
  
- uname_M := $(shell uname -m 2>/dev/null || echo not)
- ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/i386/)
-diff --git a/tools/testing/selftests/timens/exec.c b/tools/testing/selftests/timens/exec.c
-new file mode 100644
-index 000000000000..b3a05c41e202
---- /dev/null
-+++ b/tools/testing/selftests/timens/exec.c
-@@ -0,0 +1,91 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <stdio.h>
-+#include <stdbool.h>
-+#include <sys/stat.h>
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <time.h>
-+#include <unistd.h>
-+#include <time.h>
-+#include <string.h>
-+
-+#include "log.h"
-+#include "timens.h"
-+
-+#define OFFSET (36000)
-+
-+int main(int argc, char *argv[])
-+{
-+	struct timespec now, tst;
-+	int status, i;
-+	pid_t pid;
-+
-+	if (argc > 1) {
-+		if (sscanf(argv[1], "%ld", &now.tv_sec) != 1)
-+			return pr_perror("sscanf");
-+
-+		for (i = 0; i < 2; i++) {
-+			_gettime(CLOCK_MONOTONIC, &tst, i);
-+			if (abs(tst.tv_sec - now.tv_sec) > 5)
-+				return pr_fail("%ld %ld\n", now.tv_sec, tst.tv_sec);
-+		}
-+	}
-+
-+	nscheck();
-+
-+	clock_gettime(CLOCK_MONOTONIC, &now);
-+
-+	if (unshare(CLONE_NEWTIME))
-+		return pr_perror("Can't unshare() timens");
-+
-+	if (_settime(CLOCK_MONOTONIC, OFFSET))
-+		return 1;
-+
-+	for (i = 0; i < 2; i++) {
-+		_gettime(CLOCK_MONOTONIC, &tst, i);
-+		if (abs(tst.tv_sec - now.tv_sec) > 5)
-+			return pr_fail("%ld %ld\n",
-+					now.tv_sec, tst.tv_sec);
-+	}
-+
-+	if (argc > 1)
-+		return 0;
-+
-+	pid = fork();
-+	if (pid < 0)
-+		return pr_perror("fork");
-+
-+	if (pid == 0) {
-+		char now_str[64];
-+		char *cargv[] = {"exec", now_str, NULL};
-+		char *cenv[] = {NULL};
-+
-+		/* Check that a child process is in the new timens. */
-+		for (i = 0; i < 2; i++) {
-+			_gettime(CLOCK_MONOTONIC, &tst, i);
-+			if (abs(tst.tv_sec - now.tv_sec - OFFSET) > 5)
-+				return pr_fail("%ld %ld\n",
-+						now.tv_sec + OFFSET, tst.tv_sec);
-+		}
-+
-+		/* Check that a proper vdso will be mapped after execve. */
-+		snprintf(now_str, sizeof(now_str), "%ld", now.tv_sec + OFFSET);
-+		execve("/proc/self/exe", cargv, cenv);
-+		return pr_perror("execve");
-+	}
-+
-+	if (waitpid(pid, &status, 0) != pid)
-+		return pr_perror("waitpid");
-+
-+	if (status)
-+		ksft_exit_fail();
-+
-+	ksft_test_result_pass("exec\n");
-+	ksft_exit_pass();
-+	return 0;
-+}
+ KBUILD_CFLAGS += $(DISABLE_LTO)
++KBUILD_CFLAGS += -falign-functions=$(CONFIG_X86_L1_CACHE_SHIFT)
+ KASAN_SANITIZE			:= n
+ UBSAN_SANITIZE			:= n
+ OBJECT_FILES_NON_STANDARD	:= y
 -- 
 2.21.0
 
