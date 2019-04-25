@@ -2,293 +2,349 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73041C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D81C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5DD206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9E2206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:24:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="I5V2ZQB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731512AbfDYWTF (ORCPT
+        id S1727798AbfDYWYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 18:19:05 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:33315 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726933AbfDYWTE (ORCPT
+        Thu, 25 Apr 2019 18:24:09 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35808 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfDYWYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 18:19:04 -0400
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 41CE26000A;
-        Thu, 25 Apr 2019 22:19:01 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 00:27:57 +0200
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: aardvark: Use LTSSM state to build link training
- flag
-Message-ID: <20190425222756.GR2754@voidbox.localdomain>
-References: <20190316161243.29517-1-repk@triplefau.lt>
- <20190425210439.GG11428@google.com>
+        Thu, 25 Apr 2019 18:24:09 -0400
+Received: by mail-ed1-f67.google.com with SMTP id y67so1483112ede.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 15:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zLWYfQ8wtfMkU0RYd/H+oiQ3kA9CQ8WRFYo7pkiEaUw=;
+        b=I5V2ZQB43GbAa8f1I1We+8lAS168b4VKR/Pote5rEk1yb47u732X32TlQaLmVmqLAh
+         n03qRSZJB7seuX/d7aytHMsdBVeF9qYJ4ftI+/lPKcK4hPaInfPdEFhNKI0yc0/CRr1z
+         FS8ehQJjmV48262HJjkBTLntA8z1uEroVOuJz1fxBV8Q2isdUNH+boYyI1XoyROIZNJA
+         1tIT+gm5eMJYFVS1MHWxBc8gSY1H4hOV02/96d3uoX2xBMvx7ALndw6J+nUP5SAm2Txm
+         GVGoeH2jUXUSRDGU4kzAEoXr5y/kI/ohUBR1CUKXq6pagzRJD4lJRH88vWgus3z3zzYd
+         RRRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zLWYfQ8wtfMkU0RYd/H+oiQ3kA9CQ8WRFYo7pkiEaUw=;
+        b=HIG+QHdO4EL+FruWeQ1+6r0dqSrk7U4Zmk3Qqcn9LYfZC7r+jdJ/x5uB1+0K8G81H0
+         ue+1PCQ4SrD7vMd4o5SVKIdxVhJ9pLH3ve2I518EUooMWdGWQPKPtBEO/aEzfxJTaPDI
+         9BTZ3BoISFVHIwsqEpjz02ZKgTcK8Wbs+HnK44bsiIxO4/fzblbFbzHhrYobHtZHNoag
+         iziPUUOH/zNZyeg7aZz5YMGGJeiqlD4heP6SAYBy/0iny467v2tQmuvg1xFMnPEQe29U
+         vX2rT41fVhPRWRG+4nHt611obXUjptp0OtDCKjHLBv9Fv3mrDgWDqy/N6Y81D+3xBDdg
+         aYEg==
+X-Gm-Message-State: APjAAAVm9TrtErvUlIdICyXYzzYNqhYThrSvIGChngOxYt+F3cebMwFx
+        rRa0VSVwRGO7F7S1u3dyJpyO6A==
+X-Google-Smtp-Source: APXvYqzNZyGGrXHonxloPii7SqC+nObPzlg5gChXyHG8X2Frz2ERFiexaVN5xee6eucll+c3ua62YA==
+X-Received: by 2002:a17:906:839a:: with SMTP id p26mr20119426ejx.254.1556231046208;
+        Thu, 25 Apr 2019 15:24:06 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id a14sm5216757edc.61.2019.04.25.15.24.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Apr 2019 15:24:05 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 00:24:04 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net,
+        rostedt@goodmis.org, dancol@google.com, sspatil@google.com,
+        jannh@google.com, surenb@google.com, timmurray@google.com,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        torvalds@linux-foundation.org, kernel-team@android.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jann Horn <jann@thejh.net>,
+        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, oleg@redhat.com,
+        viro@zeniv.linux.org.uk, linux-api@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] Add polling support to pidfd
+Message-ID: <20190425222359.sqhboc4x4daznr6r@brauner.io>
+References: <20190425190010.46489-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190425210439.GG11428@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190425190010.46489-1-joel@joelfernandes.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Thu, Apr 25, 2019 at 03:00:09PM -0400, Joel Fernandes (Google) wrote:
+> pidfd are file descriptors referring to a process created with the
+> CLONE_PIDFD clone(2) flag. Android low memory killer (LMK) needs pidfd
+> polling support to replace code that currently checks for existence of
+> /proc/pid for knowing that a process that is signalled to be killed has
+> died, which is both racy and slow. The pidfd poll approach is race-free,
+> and also allows the LMK to do other things (such as by polling on other
+> fds) while awaiting the process being killed to die.
 
-On Thu, Apr 25, 2019 at 04:04:39PM -0500, Bjorn Helgaas wrote:
-> Hi Remi,
-> 
-> On Sat, Mar 16, 2019 at 05:12:43PM +0100, Remi Pommarel wrote:
-> > The PCI_EXP_LNKSTA_LT flag in the emulated root device's PCI_EXP_LNKSTA
-> > config register does not reflect the actual link training state and is
-> > always cleared. The Link Training and Status State Machine (LTSSM) flag
-> > in LMI config register could be used as a link training indicator.
-> 
-> LMI?  I assume this is an Aardvark-specific register?  Maybe "Aardvark
-> LMI register", since the other things here are generic PCIe registers?
+Thanks for the patch!
 
-Yes this is an Aardvark specific register, I would have said that LMI
-stands for LTSSM management interface, but this is only guessing as I
-don't have access to a datasheet.
+Ok, let me be a little bit anal.
+Please start the commit message with what this patch does and then add
+the justification why. You just say the "pidfd-poll" approach. You can
+probably assume that CLONE_PIDFD is available for this patch. So
+something like:
 
-> Is this a hardware erratum?  I know advk does some software emulation,
-> but it looks like the Aardvark PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKSTA
-> register is awfully close to being exactly the PCIe-defined
-> PCI_EXP_LNKSTA, so the difference seems like a mistake.
+"This patch makes pidfds pollable. Specifically, it allows listeners to
+be informed when the process the pidfd referes to exits. This patch only
+introduces the ability to poll thread-group leaders since pidfds
+currently can only reference those..."
 
-Vendor says that PCI_EXP_LNKSTA_LT bit in PCI_EXP_LNKSTA is marked as
-"reserved" and is not implemented. It does look like a mistake to me.
+Then justify the use-case and then go into implementation details.
+That's usually how I would think about this:
+- Change the codebase to do X
+- Why do we need X
+- Are there any technical details worth mentioning in the commit message
+(- Are there any controversial points that people stumbled upon but that
+  have been settled sufficiently.)
 
-> 
-> > Indeed if the LTSSM is in L0 or upper state then link training has
-> > completed (see [1]).
-> > 
-> > Unfortunately because setting the PCI_EXP_LINCTL_RL flag does not
-> 
-> s/PCI_EXP_LINCTL_RL/PCI_EXP_LNKCTL_RL/
-> 
-> > instantly imply a LTSSM state change (e.g. L0s to recovery state
-> > transition takes some time), LTSSM can be in L0 but link training has
-> > not finished yet. Thus a lower L0 LTSSM state followed by a L0 or upper
-> > state sequence has to be seen to be sure that link training has been
-> > done.
-> > 
-> > Because one may not call a pcie conf register read on LNKSTA after
-> > doing a retrain link or may miss the link down state due to timing, a
-> > 20ms timeout is used. Passing this timeout link is considered retrained.
-> 
-> It sounds like reading and/or writing some registers during a retrain
-> causes some sort of EL1 error?  Is this a separate erratum?  Is there
-> a list of the registers and operations (read/write) that are affected?
-> The backtrace below suggests that it's actually a read of LNKCAP or
-> LNKCTL (not LNKSTA) that caused the error.
-
-IIUC, the backtrace below produces an EL1 error when doing a PIO
-transfer while the link is still retraining. See my comment below for
-more about that. But accessing any root complex's register seems fine.
-> 
-> It sounds like there are really two problems:
-> 
->   1) Reading PCI_EXP_LNKSTA (or the Aardvark equivalent) doesn't give
->      valid data for PCI_EXP_LNKSTA_LT.
-
-The 1) is correct.
+> pidfd are file descriptors referring to a process created with the
+> CLONE_PIDFD clone(2) flag. Android low memory killer (LMK) needs pidfd
+> polling support to replace code that currently checks for existence of
+> /proc/pid for knowing that a process that is signalled to be killed has
+> died, which is both racy and slow. The pidfd poll approach is race-free,
+> and also allows the LMK to do other things (such as by polling on other
+> fds) while awaiting the process being killed to die.
 
 > 
->   2) Sometimes config reads cause EL1 errors.
-
-Actually EL1 error happens when we try to access device's register with
-a PIO transfer, which is when we try to use the link while it is being
-retrained.
-
-IMHO, 1) and 2) are linked. ASPM core tries to use the link too early
-because it has read invalid data for PCI_EXP_LNKSTA_LT.
-
+> It prevents a situation where a PID is reused between when LMK sends a
+> kill signal and checks for existence of the PID, since the wrong PID is
+> now possibly checked for existence.
 > 
-> If that's the case and if it's possible, can you split this into a
-> patch for each issue?
+> In this patch, we follow the same existing mechanism in the kernel used
+> when the parent of the task group is to be notified (do_notify_parent).
+> This is when the tasks waiting on a poll of pidfd are also awakened.
 > 
-> > This fixes boot hang or kernel panic with the following callstack due to
-> > ASPM setup doing a link re-train and polling for PCI_EXP_LNKSTA_LT flag
-> > to be cleared before using it.
-> > 
-> > -------------------- 8< -------------------
-> > 	[    0.915389]  dump_backtrace+0x0/0x140
-> > 	[    0.915391]  show_stack+0x14/0x20
-> > 	[    0.915393]  dump_stack+0x90/0xb4
-> > 	[    0.915394]  panic+0x134/0x2c0
-> > 	[    0.915396]  nmi_panic+0x6c/0x70
-> > 	[    0.915398]  arm64_serror_panic+0x74/0x80
-> > 	[    0.915400]  is_valid_bugaddr+0x0/0x8
-> > 	[    0.915402]  el1_error+0x7c/0xe4
-> > 	[    0.915404]  advk_pcie_rd_conf+0x4c/0x250
-> > 	[    0.915406]  pci_bus_read_config_word+0x7c/0xd0
-> > 	[    0.915408]  pcie_capability_read_word+0x90/0xc8
-> > 	[    0.915410]  pcie_get_aspm_reg+0x68/0x118
-> > 	[    0.915412]  pcie_aspm_init_link_state+0x460/0xa98
+> We have decided to include the waitqueue in struct pid for the following
+> reasons:
+> 1. The wait queue has to survive for the lifetime of the poll. Including
+> it in task_struct would not be option in this case because the task can
+> be reaped and destroyed before the poll returns.
 > 
-> This backtrace doesn't make sense to me as being related to this
-> issue.  You said above that the bug was that PCI_EXP_LNKSTA_LT is not
-> updated.  But apparently even *reading* a register at the wrong time
-> causes this EL1 error.  And pcie_get_aspm_reg() doesn't even read
-> LNKSTA; it only reads LNKCAP and LNKCTL.
+> 2. By including the struct pid for the waitqueue means that during
+> de_thread(), the new thread group leader automatically gets the new
+> waitqueue/pid even though its task_struct is different.
+> 
+> Appropriate test cases are added in the second patch to provide coverage
+> of all the cases the patch is handling.
+> 
+> Andy had a similar patch [1] in the past which was a good reference
+> however this patch tries to handle different situations properly related
+> to thread group existence, and how/where it notifies. And also solves
+> other bugs (waitqueue lifetime).  Daniel had a similar patch [2]
+> recently which this patch supercedes.
+> 
+> [1] https://lore.kernel.org/patchwork/patch/345098/
+> [2] https://lore.kernel.org/lkml/20181029175322.189042-1-dancol@google.com/
+> 
+> Cc: luto@amacapital.net
+> Cc: rostedt@goodmis.org
+> Cc: dancol@google.com
+> Cc: sspatil@google.com
+> Cc: christian@brauner.io
+> Cc: jannh@google.com
+> Cc: surenb@google.com
+> Cc: timmurray@google.com
+> Cc: Jonathan Kowalski <bl0pbl33p@gmail.com>
+> Cc: torvalds@linux-foundation.org
+> Cc: kernel-team@android.com
 
-In fact here, advk_pcie_rd_conf+0x4c seems to be this line:
-	advk_writel(pcie, 0, PIO_START);
+These should all be in the form:
 
-So EL1 error seems not to happen while accessing root complex registery
-but while doing a PIO transfer using the link.
+Cc: Firstname Lastname <email@address.com>
 
-> 
-> BTW, if you're including a backtrace in a commit log, you can strip
-> out the timestamps and the "cut" lines because they don't contribute
-> information that's relevant in this context.
-> 
-> > 	[    0.915414]  pci_scan_slot+0xe8/0x100
-> > 	[    0.915416]  pci_scan_child_bus_extend+0x50/0x288
-> > 	[    0.915418]  pci_scan_bridge_extend+0x348/0x4f0
-> > 	[    0.915420]  pci_scan_child_bus_extend+0x1dc/0x288
-> > 	[    0.915423]  pci_scan_root_bus_bridge+0xc4/0xe0
-> > 	[    0.915424]  pci_host_probe+0x14/0xa8
-> > 	[    0.915426]  advk_pcie_probe+0x838/0x910
-> > 	[...]
-> > -------------------- 8< -------------------
-> > 
-> > [1] "PCI Express Base Specification", REV. 2.1
-> >     PCI Express, March 4 2009, Table 4-7
-> > 
-> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > ---
-> > Changes since v1:
-> >   - Rename retraining flag field
-> >   - Fix DEVCTL register writing
-> > ---
-> >  drivers/pci/controller/pci-aardvark.c | 33 ++++++++++++++++++++++++++-
-> >  1 file changed, 32 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index eb58dfdaba1b..47b707b5fc2c 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -180,6 +180,7 @@
-> >  #define LINK_WAIT_MAX_RETRIES		10
-> >  #define LINK_WAIT_USLEEP_MIN		90000
-> >  #define LINK_WAIT_USLEEP_MAX		100000
-> > +#define LINK_RETRAIN_DELAY_MAX		(20 * HZ / 1000) /* 20 ms */
-> >  
-> >  #define MSI_IRQ_NUM			32
-> >  
-> > @@ -199,6 +200,8 @@ struct advk_pcie {
-> >  	u16 msi_msg;
-> >  	int root_bus_nr;
-> >  	struct pci_bridge_emul bridge;
-> > +	unsigned long rl_deadline; /* Retrain link jiffies deadline */
-> > +	u8 rl_asked; /* Retraining has been asked and is in transition */
-> >  };
-> >  
-> >  static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64 reg)
-> > @@ -400,6 +403,19 @@ static int advk_pcie_wait_pio(struct advk_pcie *pcie)
-> >  	return -ETIMEDOUT;
-> >  }
-> >  
-> > +static int advk_pcie_link_retraining(struct advk_pcie *pcie)
-> > +{
-> > +	if (!advk_pcie_link_up(pcie)) {
-> > +		pcie->rl_asked = 0;
-> > +		return 1;
-> > +	}
-> > +
-> > +	if (pcie->rl_asked && time_before(jiffies, pcie->rl_deadline))
-> > +		return 1;
-> > +
-> > +	pcie->rl_asked = 0;
-> > +	return 0;
-> > +}
-> >  
-> >  static pci_bridge_emul_read_status_t
-> >  advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
-> > @@ -426,11 +442,19 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
-> >  		return PCI_BRIDGE_EMUL_HANDLED;
-> >  	}
-> >  
-> > +	case PCI_EXP_LNKCTL: {
-> 
-> Don't you mean PCI_EXP_LNKSTA here?
+There are people missing from the Cc that really should be there...
 
-No, PCI_EXP_LNKSTA and PCI_EXP_LNKCTL are consecutive 16bit registers
-but bridge emulation accesses those registers by 32bit chunk. So when
-one wants to read PCI_EXP_LNKSTA register, pci bridge reads 32bit data
-from PCI_EXP_LNKCTL and 16 bit shift the result to the right.
+Even though he usually doesn't respond that often, please Cc Al on this.
+If he responds it's usually rather important.
 
-This is why I use (PCI_EXP_LNKSTA_LT << 16) below.
+Oleg has reviewed your RFC patch quite substantially and given valuable
+feedback and has an opinion on this thing and is best acquainted with
+the exit code. So please add him to the Cc of the commit message in the
+appropriate form and also add him to the Cc of the thread.
 
-> 
-> > +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
-> > +			~(PCI_EXP_LNKSTA_LT << 16);
-> > +		if (advk_pcie_link_retraining(pcie))
-> > +			val |= (PCI_EXP_LNKSTA_LT << 16);
-> > +		*value = val;
-> > +		return PCI_BRIDGE_EMUL_HANDLED;
-> > +	}
-> > +
-> >  	case PCI_CAP_LIST_ID:
-> >  	case PCI_EXP_DEVCAP:
-> >  	case PCI_EXP_DEVCTL:
-> >  	case PCI_EXP_LNKCAP:
-> > -	case PCI_EXP_LNKCTL:
-> 
-> If you did mean PCI_EXP_LNKSTA above, I suppose you would leave
-> PCI_EXP_LNKCTL here?
-> 
-> >  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
-> >  		return PCI_BRIDGE_EMUL_HANDLED;
-> >  	default:
-> > @@ -447,8 +471,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
-> >  
-> >  	switch (reg) {
-> >  	case PCI_EXP_DEVCTL:
-> > +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> > +		break;
-> 
-> What's the purpose of this DEVCTL change?  Could it be a separate patch?
-> I can't tell that it's related to the PCI_EXP_LNKSTA_LT issue.
+Probably also want linux-api for good measure since a lot of people are
+subscribed that would care about pollable pidfds. I'd also add Kees
+since he had some interest in this work and David (Howells).
 
-In fact that is the computed diff that is a bit weird here. DEVCTL does
-not really change, the advk_writel() stays the same as it was before
-the change.
+> Co-developed-by: Daniel Colascione <dancol@google.com>
 
-I have actually just modified the PCI_EXP_LNKCTL case.
+Every CDB needs to give a SOB as well.
 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > 
-> >  	case PCI_EXP_LNKCTL:
-> >  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> > +		if (new & PCI_EXP_LNKCTL_RL) {
-> > +			pcie->rl_asked = 1;
-> > +			pcie->rl_deadline = jiffies + LINK_RETRAIN_DELAY_MAX;
-> > +		}
-> >  		break;
-> >  
-> >  	case PCI_EXP_RTCTL:
-> > -- 
-> > 2.20.1
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> ---
+> 
+> RFC -> v1:
+> * Based on CLONE_PIDFD patches: https://lwn.net/Articles/786244/
+> * Updated selftests.
+> * Renamed poll wake function to do_notify_pidfd.
+> * Removed depending on EXIT flags
+> * Removed POLLERR flag since semantics are controversial and
+>   we don't have usecases for it right now (later we can add if there's
+>   a need for it).
+> 
+>  include/linux/pid.h |  3 +++
+>  kernel/fork.c       | 33 +++++++++++++++++++++++++++++++++
+>  kernel/pid.c        |  2 ++
+>  kernel/signal.c     | 14 ++++++++++++++
+>  4 files changed, 52 insertions(+)
+> 
+> diff --git a/include/linux/pid.h b/include/linux/pid.h
+> index 3c8ef5a199ca..1484db6ca8d1 100644
+> --- a/include/linux/pid.h
+> +++ b/include/linux/pid.h
+> @@ -3,6 +3,7 @@
+>  #define _LINUX_PID_H
+>  
+>  #include <linux/rculist.h>
+> +#include <linux/wait.h>
+>  
+>  enum pid_type
+>  {
+> @@ -60,6 +61,8 @@ struct pid
+>  	unsigned int level;
+>  	/* lists of tasks that use this pid */
+>  	struct hlist_head tasks[PIDTYPE_MAX];
+> +	/* wait queue for pidfd notifications */
+> +	wait_queue_head_t wait_pidfd;
+>  	struct rcu_head rcu;
+>  	struct upid numbers[1];
+>  };
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 5525837ed80e..fb3b614f6456 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1685,8 +1685,41 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+>  }
+>  #endif
+>  
+> +static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
+> +{
+> +	struct task_struct *task;
+> +	struct pid *pid;
+> +	int poll_flags = 0;
+> +
+> +	/*
+> +	 * tasklist_lock must be held because to avoid racing with
+> +	 * changes in exit_state and wake up. Basically to avoid:
+> +	 *
+> +	 * P0: read exit_state = 0
+> +	 * P1: write exit_state = EXIT_DEAD
+> +	 * P1: Do a wake up - wq is empty, so do nothing
+> +	 * P0: Queue for polling - wait forever.
+> +	 */
+> +	read_lock(&tasklist_lock);
+> +	pid = file->private_data;
+> +	task = pid_task(pid, PIDTYPE_PID);
+> +	WARN_ON_ONCE(task && !thread_group_leader(task));
+> +
+> +	if (!task || (task->exit_state && thread_group_empty(task)))
+> +		poll_flags = POLLIN | POLLRDNORM;
+
+So we block until the thread-group is empty? Hm, the thread-group leader
+remains in zombie state until all threads are gone. Should probably just
+be a short comment somewhere that callers are only informed about a
+whole thread-group exit and not about when the thread-group leader has
+actually exited.
+
+I would like the ability to extend this interface in the future to allow
+for actually reading data from the pidfd on EPOLLIN.
+POSIX specifies that POLLIN and POLLRDNORM are set even if the
+message to be read is zero. So one cheap way of doing this would
+probably be to do a 0 read/ioctl. That wouldn't hurt your very limited
+usecase and people could test whether the read returned non-0 data and
+if so they know this interface got extended. If we never extend it here
+it won't matter.
+
+> +
+> +	if (!poll_flags)
+> +		poll_wait(file, &pid->wait_pidfd, pts);
+> +
+> +	read_unlock(&tasklist_lock);
+> +
+> +	return poll_flags;
+> +}
+
+
+> +
+> +
+>  const struct file_operations pidfd_fops = {
+>  	.release = pidfd_release,
+> +	.poll = pidfd_poll,
+>  #ifdef CONFIG_PROC_FS
+>  	.show_fdinfo = pidfd_show_fdinfo,
+>  #endif
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 20881598bdfa..5c90c239242f 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -214,6 +214,8 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+>  	for (type = 0; type < PIDTYPE_MAX; ++type)
+>  		INIT_HLIST_HEAD(&pid->tasks[type]);
+>  
+> +	init_waitqueue_head(&pid->wait_pidfd);
+> +
+>  	upid = pid->numbers + ns->level;
+>  	spin_lock_irq(&pidmap_lock);
+>  	if (!(ns->pid_allocated & PIDNS_ADDING))
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 1581140f2d99..16e7718316e5 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -1800,6 +1800,17 @@ int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
+>  	return ret;
+>  }
+>  
+> +static void do_notify_pidfd(struct task_struct *task)
+
+Maybe a short command that this helper can only be called when we know
+that task is a thread-group leader wouldn't hurt so there's no confusion
+later.
+
+> +{
+> +	struct pid *pid;
+> +
+> +	lockdep_assert_held(&tasklist_lock);
+> +
+> +	pid = get_task_pid(task, PIDTYPE_PID);
+> +	wake_up_all(&pid->wait_pidfd);
+> +	put_pid(pid);
+> +}
+> +
+>  /*
+>   * Let a parent know about the death of a child.
+>   * For a stopped/continued status change, use do_notify_parent_cldstop instead.
+> @@ -1823,6 +1834,9 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+>  	BUG_ON(!tsk->ptrace &&
+>  	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
+>  
+> +	/* Wake up all pidfd waiters */
+> +	do_notify_pidfd(tsk);
+> +
+>  	if (sig != SIGCHLD) {
+>  		/*
+>  		 * This is only possible if parent == real_parent.
+> -- 
+> 2.21.0.593.g511ec345e18-goog
