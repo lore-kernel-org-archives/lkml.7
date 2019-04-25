@@ -2,131 +2,152 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D0CC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E168C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C661216C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862CB20717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:23:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1r9GGLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbfDYVWl (ORCPT
+        id S2387977AbfDYVXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 17:22:41 -0400
-Received: from mga06.intel.com ([134.134.136.31]:4583 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727782AbfDYVWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 17:22:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 14:22:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
-   d="scan'208";a="340827658"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Apr 2019 14:22:38 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.109]) by
- ORSMSX109.amr.corp.intel.com ([169.254.11.52]) with mapi id 14.03.0415.000;
- Thu, 25 Apr 2019 14:22:37 -0700
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "peterz@infradead.org" <peterz@infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "Dock, Deneen T" <deneen.t.dock@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "kristen@linux.intel.com" <kristen@linux.intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux_dti@icloud.com" <linux_dti@icloud.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>
-Subject: Re: [PATCH v4 16/23] vmalloc: Add flag for free of special
- permsissions
-Thread-Topic: [PATCH v4 16/23] vmalloc: Add flag for free of special
- permsissions
-Thread-Index: AQHU+T1qDj30K9TIe0uwu0BdDCSPu6ZN0J6AgAAMKQA=
-Date:   Thu, 25 Apr 2019 21:22:37 +0000
-Message-ID: <c6b37ed1b616386acfab4d4a8cbe972d9346a5fe.camel@intel.com>
-References: <20190422185805.1169-1-rick.p.edgecombe@intel.com>
-         <20190422185805.1169-17-rick.p.edgecombe@intel.com>
-         <20190425203845.GA12232@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190425203845.GA12232@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.54.75.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0E199F7050ED404B9991A495937A8F97@intel.com>
-Content-Transfer-Encoding: base64
+        Thu, 25 Apr 2019 17:23:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42997 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfDYVXn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 17:23:43 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w25so539280pfi.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 14:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UKfv/+2hxNXo3G0f1rs2ctgRlkVqpH5iJye5M7jma6w=;
+        b=f1r9GGLoERmtzgX/NQ/h4vSipA8uc+NFmDN3XAryLlX9f9A3Yka0gS20g/yJ2kYpot
+         uUwVbj2+F+71B16gxNDqujSdvO0dx0mZL2k239u/Sbe3z/sMXo+zXx68WsRqdSw5TCvY
+         HFTb3y2TqXLh1ajZSSOz+1foND/Gm4nHCLFx3vyHQ9yT70nVcv9tBi6kcdUSTdi6tJVK
+         tjk0LLyLKJNydZKcGxwModVIsy2YeCbOhw/HZkDjKZqumc1e3FE/4uzz6mYc5Yjg7nQN
+         4S6rUXlY0nqXb4mFvxE3O9SAUyCbMVbUrnVB3kNs1I5GxKXK/e3Lv+qI9nAnhSWmST+G
+         1QsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UKfv/+2hxNXo3G0f1rs2ctgRlkVqpH5iJye5M7jma6w=;
+        b=nBown/pzCx4h4fzLrGl7xyVrFUeo7AMFT2D746D7i6xMc85De2zmR/qiTQgFbD67dT
+         /MIYV5QI4vZ26FuAOwftc1QqKvEWlQo7xOz7ilJ/7VY6XHE9AtAhKfUr4WI2MRpENm3t
+         erRjKyAOuQZVcUo2lEQJWln9L7OExHEit91DIuFICfU/MZogFtQE2qmY9D52jCPGB+tc
+         9T5RAVwEp0PtWj1oOJdmMJX79MbHXDvTSXN7Snir8IjdJ+7VOu4uOlH4GEIlKzzNxeSE
+         Oo7DBC6myKdmiRRZbzZ1+RhBe/vn6ZBXlYdJ9zBRE24hzoiKIb6RoQjgG4rbIIEHoI5G
+         QBYQ==
+X-Gm-Message-State: APjAAAWJ6cAZpirx2euWkKAJPMXVDqdx+D7z/FnKeUboOCW7hvam6m2W
+        5HfJBwCB6pjtpNqaOMsZ8Sc=
+X-Google-Smtp-Source: APXvYqzVie7r3lbmW+CTkPcDRJdDxl/xLvMX4jWnfOd1LFW/Je6jVNB4DJED4nWMHpacQEVmpXIweA==
+X-Received: by 2002:a63:e048:: with SMTP id n8mr39673496pgj.41.1556227422606;
+        Thu, 25 Apr 2019 14:23:42 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::3cda])
+        by smtp.gmail.com with ESMTPSA id y1sm26597209pgc.29.2019.04.25.14.23.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 14:23:41 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 14:23:40 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH] bpf: Fix preempt_enable_no_resched() abuse
+Message-ID: <20190425212338.zo3gzg4avfy6ukxf@ast-mbp.dhcp.thefacebook.com>
+References: <20190419130304.GV14281@hirez.programming.kicks-ass.net>
+ <20190419131522.GW14281@hirez.programming.kicks-ass.net>
+ <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
+ <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
+ <20190423141714.GO11158@hirez.programming.kicks-ass.net>
+ <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
+ <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
+ <20190423193435.GX4038@hirez.programming.kicks-ass.net>
+ <88ba7be0-9ec5-941e-1b3f-80fbe05fe3a0@redhat.com>
+ <20190423195559.GY4038@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423195559.GY4038@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA0LTI1IGF0IDIyOjM4ICswMjAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToN
-Cj4gT24gTW9uLCBBcHIgMjIsIDIwMTkgYXQgMTE6NTc6NThBTSAtMDcwMCwgUmljayBFZGdlY29t
-YmUgd3JvdGU6DQo+ID4gQWRkIGEgbmV3IGZsYWcgVk1fRkxVU0hfUkVTRVRfUEVSTVMsIGZvciBl
-bmFibGluZyB2ZnJlZSBvcGVyYXRpb25zIHRvDQo+ID4gaW1tZWRpYXRlbHkgY2xlYXIgZXhlY3V0
-YWJsZSBUTEIgZW50cmllcyBiZWZvcmUgZnJlZWluZyBwYWdlcywgYW5kIGhhbmRsZQ0KPiA+IHJl
-c2V0dGluZyBwZXJtaXNzaW9ucyBvbiB0aGUgZGlyZWN0bWFwLiBUaGlzIGZsYWcgaXMgdXNlZnVs
-IGZvciBhbnkga2luZA0KPiA+IG9mIG1lbW9yeSB3aXRoIGVsZXZhdGVkIHBlcm1pc3Npb25zLCBv
-ciB3aGVyZSB0aGVyZSBjYW4gYmUgcmVsYXRlZA0KPiA+IHBlcm1pc3Npb25zIGNoYW5nZXMgb24g
-dGhlIGRpcmVjdG1hcC4gVG9kYXkgdGhpcyBpcyBSTytYIGFuZCBSTyBtZW1vcnkuDQo+ID4gDQo+
-ID4gQWx0aG91Z2ggdGhpcyBlbmFibGVzIGRpcmVjdGx5IHZmcmVlaW5nIG5vbi13cml0ZWFibGUg
-bWVtb3J5IG5vdywNCj4gPiBub24td3JpdGFibGUgbWVtb3J5IGNhbm5vdCBiZSBmcmVlZCBpbiBh
-biBpbnRlcnJ1cHQgYmVjYXVzZSB0aGUgYWxsb2NhdGlvbg0KPiA+IGl0c2VsZiBpcyB1c2VkIGFz
-IGEgbm9kZSBvbiBkZWZlcnJlZCBmcmVlIGxpc3QuIFNvIHdoZW4gUk8gbWVtb3J5IG5lZWRzIHRv
-DQo+ID4gYmUgZnJlZWQgaW4gYW4gaW50ZXJydXB0IHRoZSBjb2RlIGRvaW5nIHRoZSB2ZnJlZSBu
-ZWVkcyB0byBoYXZlIGl0cyBvd24NCj4gPiB3b3JrIHF1ZXVlLCBhcyB3YXMgdGhlIGNhc2UgYmVm
-b3JlIHRoZSBkZWZlcnJlZCB2ZnJlZSBsaXN0IHdhcyBhZGRlZCB0bw0KPiA+IHZtYWxsb2MuDQo+
-ID4gDQo+ID4gRm9yIGFyY2hpdGVjdHVyZXMgd2l0aCBzZXRfZGlyZWN0X21hcF8gaW1wbGVtZW50
-YXRpb25zIHRoaXMgd2hvbGUgb3BlcmF0aW9uDQo+ID4gY2FuIGJlIGRvbmUgd2l0aCBvbmUgVExC
-IGZsdXNoIHdoZW4gY2VudHJhbGl6ZWQgbGlrZSB0aGlzLiBGb3Igb3RoZXJzIHdpdGgNCj4gPiBk
-aXJlY3RtYXAgcGVybWlzc2lvbnMsIGN1cnJlbnRseSBvbmx5IGFybTY0LCBhIGJhY2t1cCBtZXRo
-b2QgdXNpbmcNCj4gPiBzZXRfbWVtb3J5IGZ1bmN0aW9ucyBpcyB1c2VkIHRvIHJlc2V0IHRoZSBk
-aXJlY3RtYXAuIFdoZW4gYXJtNjQgYWRkcw0KPiA+IHNldF9kaXJlY3RfbWFwXyBmdW5jdGlvbnMs
-IHRoaXMgYmFja3VwIGNhbiBiZSByZW1vdmVkLg0KPiA+IA0KPiA+IFdoZW4gdGhlIFRMQiBpcyBm
-bHVzaGVkIHRvIGJvdGggcmVtb3ZlIFRMQiBlbnRyaWVzIGZvciB0aGUgdm1hbGxvYyByYW5nZQ0K
-PiA+IG1hcHBpbmcgYW5kIHRoZSBkaXJlY3QgbWFwIHBlcm1pc3Npb25zLCB0aGUgbGF6eSBwdXJn
-ZSBvcGVyYXRpb24gY291bGQgYmUNCj4gPiBkb25lIHRvIHRyeSB0byBzYXZlIGEgVExCIGZsdXNo
-IGxhdGVyLiBIb3dldmVyIHRvZGF5IHZtX3VubWFwX2FsaWFzZXMNCj4gPiBjb3VsZCBmbHVzaCBh
-IFRMQiByYW5nZSB0aGF0IGRvZXMgbm90IGluY2x1ZGUgdGhlIGRpcmVjdG1hcC4gU28gYSBoZWxw
-ZXINCj4gPiBpcyBhZGRlZCB3aXRoIGV4dHJhIHBhcmFtZXRlcnMgdGhhdCBjYW4gYWxsb3cgYm90
-aCB0aGUgdm1hbGxvYyBhZGRyZXNzIGFuZA0KPiA+IHRoZSBkaXJlY3QgbWFwcGluZyB0byBiZSBm
-bHVzaGVkIGR1cmluZyB0aGlzIG9wZXJhdGlvbi4gVGhlIGJlaGF2aW9yIG9mIHRoZQ0KPiA+IG5v
-cm1hbCB2bV91bm1hcF9hbGlhc2VzIGZ1bmN0aW9uIGlzIHVuY2hhbmdlZC4NCj4gPiArc3RhdGlj
-IGlubGluZSB2b2lkIHNldF92bV9mbHVzaF9yZXNldF9wZXJtcyh2b2lkICphZGRyKQ0KPiA+ICt7
-DQo+ID4gKwlzdHJ1Y3Qgdm1fc3RydWN0ICp2bSA9IGZpbmRfdm1fYXJlYShhZGRyKTsNCj4gPiAr
-DQo+ID4gKwlpZiAodm0pDQo+ID4gKwkJdm0tPmZsYWdzIHw9IFZNX0ZMVVNIX1JFU0VUX1BFUk1T
-Ow0KPiA+ICt9DQo+IA0KPiBTbywgcHJldmlvdXNseSBpbiB0aGUgc2VyaWVzIHdlIGFkZGVkIE5Y
-IHRvIG1vZHVsZV9hbGxvYygpIGFuZCBmaXhlZCB1cA0KPiBhbGwgdGhlIHVzYWdlIHNpdGUuIEFu
-ZCBub3cgd2UncmUgZ29pbmcgdGhyb3VnaCB0aG9zZSB2ZXJ5IHNhbWUgc2l0ZXMgdG8NCj4gYWRk
-IHNldF92bV9mbHVzaF9yZXNldF9wZXJtcygpLg0KPiANCj4gV2h5IGlzbid0IG1vZHVsZV9hbGxv
-YygpIGNhbGxpbmcgdGhlIGFib3ZlIGZ1bmN0aW9uIGFuZCBhdm9pZCBzcHJpbmtsaW5nDQo+IGl0
-IGFsbCBvdmVyIHRoZSBwbGFjZSBhZ2Fpbj8NCg0KWWVhLCB0aGF0IGNvdWxkIG1ha2UgaXQgbW9y
-ZSBhdXRvbWF0aWMsIGJ1dCB0aGVyZSBhcmUgc29tZSBhZHZhbnRhZ2VzIHRvIGhvdyBpdA0KaXMg
-Y3VycmVudGx5Lg0KDQpPbmUgaXMgdGhhdCBtb3N0IGFyY2gncyBoYXZlIHRoZWlyIG93biBtb2R1
-bGVfYWxsb2MoKSwgYW5kIHNvIGNhbGxpbmcNCnNldF92bV9mbHVzaF9yZXNldF9wZXJtcygpIGlu
-IGtlcm5lbC9tb2R1bGUuYyBjYXRjaGVzIGFsbCBhcmNoaXRlY3R1cmVzLg0KT3RoZXJ3aXNlIGl0
-IHdvdWxkIGJlIGFkZGVkIGluIGVhY2ggYXJjaCB3aGljaCB3b3VsZCBiZSBtb3JlIHNpdGVzLg0K
-DQpUaGUgb3RoZXIgcmVhc29uIGlzIHRoYXQgdGhlIGZsdXNoIGlzbid0IGFjdHVhbGx5IG5lZWRl
-ZCB1bnRpbCBhZnRlciB0aGUgbWVtb3J5DQppcyBtYWRlIGV4ZWN1dGFibGUsIHNvIHdlIGRvbid0
-IGJvdGhlciBmbHVzaGluZyBpZiB0aGUgYWxsb2NhdGlvbiBuZXZlciBnZXRzIHNldA0KZXhlY3V0
-YWJsZS4gV2hlbiB0aGF0IGhhcHBlbnMgaXMgb25seSBrbm93biBieSB0aGUgY2FsbGVycyBvZiBt
-b2R1bGVfYWxsb2MoKS4NCg0KVGhhbmtzLA0KDQpSaWNrDQo=
+On Tue, Apr 23, 2019 at 09:55:59PM +0200, Peter Zijlstra wrote:
+> On Tue, Apr 23, 2019 at 03:41:32PM -0400, Waiman Long wrote:
+> > On 4/23/19 3:34 PM, Peter Zijlstra wrote:
+> > > On Tue, Apr 23, 2019 at 03:12:16PM -0400, Waiman Long wrote:
+> 
+> > >> You are right on that. However, there is a variant called
+> > >> preempt_enable_no_resched() that doesn't have this side effect. So I am
+> > >> going to use that one instead.
+> > > Only if the very next line is schedule(). Otherwise you're very much not
+> > > going to use that function.
+> > 
+> > May I know the reason why. 
+> 
+> Because it can 'consume' a need_resched and introduces arbitrary delays
+> before the schedule() eventually happens, breaking the very notion of
+> PREEMPT=y (and the fundamentals RT relies on).
+> 
+> > I saw a number of instances of
+> > preempt_enable_no_resched() without right next a schedule().
+> 
+> Look more closely.. and let me know, if true, those are bugs that need
+> fixing.
+> 
+> Argghhh.. BPF...
+> 
+> Also, with the recent RCU rework, we can probably drop that
+> rcu_read_lock()/rcu_read_unlock() from there if we're disabling
+> preemption anyway.
+> 
+> ---
+> Subject: bpf: Fix preempt_enable_no_resched() abuse
+> 
+> Unless the very next line is schedule(), or implies it, one must not use
+> preempt_enable_no_resched(). It can cause a preemption to go missing and
+> thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
+> 
+> Cc: Roman Gushchin <guro@fb.com>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+> 
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index f02367faa58d..944ccc310201 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -510,7 +510,7 @@ int bpf_prog_array_copy(struct bpf_prog_array __rcu *old_array,
+>  		}					\
+>  _out:							\
+>  		rcu_read_unlock();			\
+> -		preempt_enable_no_resched();		\
+> +		preempt_enable();			\
+>  		_ret;					\
+
+Applied to bpf tree. Thanks!
+It should have been fixed long ago. Not sure how we kept forgetting about it.
+
