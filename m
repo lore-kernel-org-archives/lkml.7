@@ -2,110 +2,136 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D74AC282E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE0BC282E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD4B217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:56:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cjJmTnCY"
+	by mail.kernel.org (Postfix) with ESMTP id 03419217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387442AbfDYL4S (ORCPT
+        id S2387567AbfDYL4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:56:18 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8345 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbfDYL4R (ORCPT
+        Thu, 25 Apr 2019 07:56:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47302 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387500AbfDYL4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:56:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cc1a0450000>; Thu, 25 Apr 2019 04:55:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 25 Apr 2019 04:56:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 25 Apr 2019 04:56:16 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Apr
- 2019 11:56:13 +0000
-From:   Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 5.0 000/115] 5.0.10-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190424170924.797924502@linuxfoundation.org>
-Message-ID: <471444ef-bff9-146f-5261-7625e81d83d3@nvidia.com>
-Date:   Thu, 25 Apr 2019 12:56:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556193350; bh=wsR+Pdr5SZ9tmMTrdcDEDQX20ZXAzcY2pIh96H9pMYg=;
-        h=X-PGP-Universal:From:Subject:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=cjJmTnCYRpp8noO6HyoHhthfxjsxyYWbSHaru8fe3HYRooN6RhId+qYZaG445jCxE
-         T5FpX1mModIl1WcmMP0tV+vNT9+N7javCRBKSs77Xmq4I8GKoOhR8Wdg6E03NxlGBD
-         pBAUuSy3xSRRcUWbOlpizqas0h3T8LDZTVR8W1azx74P9TMDboc+iqIh9OvJHC4tup
-         6cQofh2HBhLBhQ23YrX897iLHxdTCLKALgCH8KQHzS2YsT3H1ZeAQwnOrPnmBTCWMf
-         eOIdzYWnHwyEtiBVvQyDWXY5H+abY+KAMCdV9pBdQg1C3lw8jCKG/XnvmhVSsldZt5
-         nLtohRTw335dQ==
+        Thu, 25 Apr 2019 07:56:22 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3PBntXO134725
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 07:56:21 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s3b2g430r-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 07:56:20 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 25 Apr 2019 12:56:18 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Apr 2019 12:56:03 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3PBu2w229949952
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Apr 2019 11:56:02 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7061052051;
+        Thu, 25 Apr 2019 11:56:02 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.95.60])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9D1F35204F;
+        Thu, 25 Apr 2019 11:56:01 +0000 (GMT)
+Subject: Re: [PATCH v2] KEYS: Make use of platform keyring for module
+ signature verify
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Robert Holmes <robeholmes@gmail.com>, jeyu@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        stable@vger.kernel.org
+Date:   Thu, 25 Apr 2019 07:55:50 -0400
+In-Reply-To: <1556116431-7129-1-git-send-email-robeholmes@gmail.com>
+References: <1556116431-7129-1-git-send-email-robeholmes@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042511-4275-0000-0000-0000032D92EA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042511-4276-0000-0000-0000383CDF76
+Message-Id: <1556193350.3894.92.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904250076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 24/04/2019 18:08, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.10 release.
-> There are 115 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, 2019-04-24 at 14:33 +0000, Robert Holmes wrote:
+> This patch completes commit 278311e417be ("kexec, KEYS: Make use of
+> platform keyring for signature verify") which, while adding the
+> platform keyring for bzImage verification, neglected to also add
+> this keyring for module verification.
 > 
-> Responses should be made by Fri 26 Apr 2019 05:07:37 PM UTC.
-> Anything received after that time might be too late.
+> As such, kernel modules signed with keys from the MokList variable
+> were not successfully verified.
+
+Using the platform keyring keys for verifying kernel modules was not
+neglected, but rather intentional.  This patch description should
+clearly explain the reason for needing to verify kernel module
+signatures based on the pre-boot keys.  (Hint: verifying kernel
+modules based on the pre-boot keys was previously rejected.)
+
+Mimi
+
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.10-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
+> Signed-off-by: Robert Holmes <robeholmes@gmail.com>
+> Cc: linux-integrity@vger.kernel.org
+> Cc: keyrings@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> ---
+>  kernel/module_signing.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
-> thanks,
+> diff --git a/kernel/module_signing.c b/kernel/module_signing.c
+> index 6b9a926fd86b..cf94220e9154 100644
+> --- a/kernel/module_signing.c
+> +++ b/kernel/module_signing.c
+> @@ -49,6 +49,7 @@ int mod_verify_sig(const void *mod, struct load_info *info)
+>  {
+>  	struct module_signature ms;
+>  	size_t sig_len, modlen = info->len;
+> +	int ret;
 > 
-> greg k-h
+>  	pr_devel("==>%s(,%zu)\n", __func__, modlen);
+> 
+> @@ -82,8 +83,15 @@ int mod_verify_sig(const void *mod, struct load_info *info)
+>  		return -EBADMSG;
+>  	}
+> 
+> -	return verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+> -				      VERIFY_USE_SECONDARY_KEYRING,
+> -				      VERIFYING_MODULE_SIGNATURE,
+> -				      NULL, NULL);
+> +	ret = verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+> +				     VERIFY_USE_SECONDARY_KEYRING,
+> +				     VERIFYING_MODULE_SIGNATURE,
+> +				     NULL, NULL);
+> +	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
+> +		ret = verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+> +					     VERIFY_USE_PLATFORM_KEYRING,
+> +					     VERIFYING_MODULE_SIGNATURE,
+> +					     NULL, NULL);
+> +	}
+> +	return ret;
+>  }
 
-
-All tests are passing for Tegra ...
-
-Test results for stable-v5.0:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    32 tests:	32 pass, 0 fail
-
-Linux version:	5.0.10-rc2-ge428bc9
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana, tegra210,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
