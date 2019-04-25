@@ -2,87 +2,90 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBCDC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DD3C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D832084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:09:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556212143;
-	bh=Z0DkJi0ys+baDYC3c0RlBG7F+ZKBibIbe4bsebiBhGM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DpCMchz8+igOIZD/YZRPZkDT29+7PZGnBu7wMgZ7kH9E2/Okuzo5cFYGI0Nik3q5c
-	 iQoz6wAD1a/2rta9wXb9MNoa9g4XK1/otnJwvNgLzLk7L8PcrRTWwt8kmS8ZH8iAGu
-	 PdHWU5mX8msHo7zg7BwBOPfyg8qKXUqhum3M2y+o=
+	by mail.kernel.org (Postfix) with ESMTP id A481A2084F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 17:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbfDYRJB (ORCPT
+        id S1728151AbfDYRL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 13:09:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbfDYRJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 13:09:01 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E00EA20717;
-        Thu, 25 Apr 2019 17:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556212141;
-        bh=Z0DkJi0ys+baDYC3c0RlBG7F+ZKBibIbe4bsebiBhGM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sJ9f2/J8XUY/eunrkR1awe6JJJF2toUomntN/evTZ2NVDSjBiNO6ftremhZzPF45N
-         7ock+Hdddv0KQbK3X2VF36BwaPHGUo/Bb8ijtEi4l7SpEZBXGBf8eoqpV/9aWfvnbv
-         pvBYFzh0q6hi9C2yYcsz2L6yYS+feaDuNWUO+0Lc=
-Date:   Thu, 25 Apr 2019 19:08:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.0 000/115] 5.0.10-stable review
-Message-ID: <20190425170858.GA11105@kroah.com>
-References: <20190424170924.797924502@linuxfoundation.org>
- <0f4261a5-53b0-4c10-5dbe-fbb02a4f47ad@kernel.org>
+        Thu, 25 Apr 2019 13:11:29 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:43263 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfDYRL3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 13:11:29 -0400
+Received: from oxbaltgw05.schlund.de ([172.19.246.11]) by
+ mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MD9Ox-1hSCLR1rYP-009AJI; Thu, 25 Apr 2019 19:11:12 +0200
+Date:   Thu, 25 Apr 2019 19:11:11 +0200 (CEST)
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Jeremy Linton <jeremy.linton@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     mlangsdo@redhat.com, suzuki.poulose@arm.com, marc.zyngier@arm.com,
+        catalin.marinas@arm.com, julien.thierry@arm.com,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        Andre.Przywara@arm.com, Dave.Martin@arm.com,
+        shankerd@codeaurora.org
+Message-ID: <1375455768.808427.1556212271639@email.ionos.de>
+In-Reply-To: <20190415212129.1112-10-jeremy.linton@arm.com>
+References: <20190415212129.1112-1-jeremy.linton@arm.com>
+ <20190415212129.1112-10-jeremy.linton@arm.com>
+Subject: Re: [v8 09/10] arm64: add sysfs vulnerability show for speculative
+ store bypass
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f4261a5-53b0-4c10-5dbe-fbb02a4f47ad@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Medium
+X-Mailer: Open-Xchange Mailer v7.8.4-Rev54
+X-Originating-Client: open-xchange-appsuite
+X-Provags-ID: V03:K1:EiwVhB3XXpe5Oux+q614hCOdrvLuQGrnO8GGL3/xbZcxZB66jeP
+ 2XUTmYwWTClu/ijBWkfrNG9zxOszrtmhgX6tooI+bv1jOIgOvGerroF0Nc/HUjAHBgcbY8b
+ Gs9YLOy3WfZwhjyfueGlniJIoshi/IYxp1voAnZkVGVwnuK26T7SAY6c4lJq7nNpFK3Cq9z
+ Z2s+fNc/AlZxykK+Y8DIg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1lppWUuFHUA=:PffeInm+yTx1FG9of4fjBs
+ Av09yqD3QH6snduQEbdiil+BWZuOvSzOgIArXW32O1Hh/uOgyLUFXT18vJwv9RTPkslw7MAIQ
+ x6FNU9zrq+/Lssc/+Be4nbBVq61W+mcdBWY3xkkM15/DPKEHvW9IlrXotvsccA0PcwkaGuwm9
+ l7enK/8pqG8dy+UptK5uvurJazcEWxIyhb0/rAwZK6o9bYO0vuzo9hDb+wI5boD1WHo3jOg03
+ Bo1smk0tMmXbwxjBrE4+BnpHor3rzDIWv0E7X0Y1Wjx3vqwxlgnNsiwdXkOsR9kieLNKzCplH
+ 6ktRDM3Uy9+NdeiPoyPTxDAciJn9yfO+FqirhqjNZElcNIGQ6hrnKeY0xA26Kd10HTbBBAk80
+ iLXSmdzGGJ1fGGulVgeWOGzvVuqCeiZVkouJVaQWADrSFYbCe4C+sAo7wSoXC5H3H2GfAsDqk
+ 2W3vbso7pLY2DVH52BpG7uWX0LJAbTBsZ9xq4KWbgpK9vjT/MyAM4dVlLI/sdu4BiavW9bHAb
+ dKk695/QTNV96cP1M7ZomqzNc8AnMP6YQCtRd9omUw574/c78FkdX17HceyYVSjkDJ916Fs17
+ hzc7Yt5QJOgp67nlBsNVf+7J/NsoiUMhLN37vqzoqPjsD5zLP3ozKcmKnZGshSrCeL/5oApbm
+ 5ArfqR1XsTCjZtRaIp4i3FCoZaf9NNQKPke5RUj3pkFaRfCrDcXyhPyo7X/tP5RzK1aP5WMKE
+ 0iLIZYyYtbMV1PdAPvPXCV4mIsBbUZnrNv12C103RWpeTfPMB7aV7knZEi8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 10:23:57AM -0600, shuah wrote:
-> On 4/24/19 11:08 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.0.10 release.
-> > There are 115 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri 26 Apr 2019 05:07:37 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.10-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
+
+> Jeremy Linton <jeremy.linton@arm.com> hat am 15. April 2019 um 23:21 geschrieben:
 > 
-> Compiled and booted on my test system. No dmesg regressions.
+> 
+> Return status based on ssbd_state and __ssb_safe. If the
+> mitigation is disabled, or the firmware isn't responding then
+> return the expected machine state based on a whitelist of known
+> good cores.
+> 
+> Given a heterogeneous machine, the overall machine vulnerability
+> defaults to safe but is reset to unsafe when we miss the whitelist
+> and the firmware doesn't explicitly tell us the core is safe.
+> In order to make that work we delay transitioning to vulnerable
+> until we know the firmware isn't responding to avoid a case
+> where we miss the whitelist, but the firmware goes ahead and
+> reports the core is not vulnerable. If all the cores in the
+> machine have SSBS, then __ssb_safe will remain true.
+> 
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 
-Great!  Thanks for testing all 6 of these and letting me know.
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-greg k-h
+on a Raspberry Pi 3 B
