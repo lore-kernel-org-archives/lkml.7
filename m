@@ -6,161 +6,95 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2FAC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AE9C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B71421670
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0CE2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:30:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="tT/idkXR"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PwXL66dW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfDYO3j (ORCPT
+        id S1727950AbfDYO3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:29:39 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:34283 "EHLO pegase1.c-s.fr"
+        Thu, 25 Apr 2019 10:29:37 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:64279 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfDYO3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727793AbfDYO3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Apr 2019 10:29:34 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44qfhW10Knz9v06y;
+        by localhost (Postfix) with ESMTP id 44qfhW6rfxz9v077;
         Thu, 25 Apr 2019 16:29:31 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=tT/idkXR; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=PwXL66dW; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id RtzazHEqEke0; Thu, 25 Apr 2019 16:29:31 +0200 (CEST)
+        with ESMTP id Kb3nQpI5GC-P; Thu, 25 Apr 2019 16:29:31 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44qfhV6z2Bz9v06V;
-        Thu, 25 Apr 2019 16:29:30 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44qfhW5qrGz9v06V;
+        Thu, 25 Apr 2019 16:29:31 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556202571; bh=axb7vQ4uXgNr8ZjFZU2tFNDocuemQXta/CrI1IINaKM=;
+        t=1556202571; bh=cZ1QMAayAZBOmwbyBpo0uNyvjh2VFaZERn9kUJF6Jx0=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=tT/idkXRnfouHPOpOjpEO9CjwhpOG+7OW0Qb1q82N72+3OhIwX6F0ky+3UJ1WhrYL
-         PDYL4kMR9pqW6BbkSjARuzns/36dkF3mJMpu6DKknNpVO8FauGdubMz4sy8/K2vpFM
-         b6tO/zO8WSb39FeQXtQ7yjHrcRYg/6mA2LHDrIeM=
+        b=PwXL66dWhMCczy1GkQxVKjBjNfLTknti6RCYO/dQyE/kkLSzNFBqsSsLZ4T90s+IG
+         trKhSoqCC5oQCP6vJrZp6YF822O8kFEqvOpeGM64l/OJjJX9nBPMwdRUUM7pmSt+Ch
+         peHcLYeXCdAvZ685FEJww1zn0UwPzENbmFbzLclY=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 449728B923;
-        Thu, 25 Apr 2019 16:29:32 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 48CAB8B933;
+        Thu, 25 Apr 2019 16:29:33 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id MFFSSM3TYK1V; Thu, 25 Apr 2019 16:29:32 +0200 (CEST)
+        with ESMTP id xJHvZc0Zba8A; Thu, 25 Apr 2019 16:29:33 +0200 (CEST)
 Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DAB368B932;
-        Thu, 25 Apr 2019 16:29:31 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EA6988B923;
+        Thu, 25 Apr 2019 16:29:32 +0200 (CEST)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id ACABB66276; Thu, 25 Apr 2019 14:29:31 +0000 (UTC)
-Message-Id: <cc95821273df454eb146871bf6e5eeabef7c4ac9.1556202029.git.christophe.leroy@c-s.fr>
+        id B421C66276; Thu, 25 Apr 2019 14:29:32 +0000 (UTC)
+Message-Id: <05126096391a1bfcd53c09f69a534987eec0a6a6.1556202029.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1556202028.git.christophe.leroy@c-s.fr>
 References: <cover.1556202028.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 05/11] powerpc/mm: get rid of mm_ctx_slice_mask_xxx()
+Subject: [PATCH v2 06/11] powerpc/mm: remove unnecessary #ifdef CONFIG_PPC64
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 25 Apr 2019 14:29:31 +0000 (UTC)
+Date:   Thu, 25 Apr 2019 14:29:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that slice_mask_for_size() is in mmu.h, the mm_ctx_slice_mask_xxx()
-are not needed anymore, so drop them. Note that the 8xx ones where
-not used anyway.
+For PPC32 that's a noop, gcc should be smart enough to ignore it.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/book3s/64/mmu.h     | 32 ++++------------------------
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h | 17 ---------------
- 2 files changed, 4 insertions(+), 45 deletions(-)
+ arch/powerpc/mm/slice.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/powerpc/include/asm/book3s/64/mmu.h
-index ad00355f874f..e3d7f1404e20 100644
---- a/arch/powerpc/include/asm/book3s/64/mmu.h
-+++ b/arch/powerpc/include/asm/book3s/64/mmu.h
-@@ -179,45 +179,21 @@ static inline void mm_ctx_set_slb_addr_limit(mm_context_t *ctx, unsigned long li
- 	ctx->hash_context->slb_addr_limit = limit;
- }
+diff --git a/arch/powerpc/mm/slice.c b/arch/powerpc/mm/slice.c
+index 31de91b65a64..840c4118a185 100644
+--- a/arch/powerpc/mm/slice.c
++++ b/arch/powerpc/mm/slice.c
+@@ -118,13 +118,11 @@ static int slice_high_has_vma(struct mm_struct *mm, unsigned long slice)
+ 	unsigned long start = slice << SLICE_HIGH_SHIFT;
+ 	unsigned long end = start + (1ul << SLICE_HIGH_SHIFT);
  
--#ifdef CONFIG_PPC_64K_PAGES
--static inline struct slice_mask *mm_ctx_slice_mask_64k(mm_context_t *ctx)
--{
--	return &ctx->hash_context->mask_64k;
--}
+-#ifdef CONFIG_PPC64
+ 	/* Hack, so that each addresses is controlled by exactly one
+ 	 * of the high or low area bitmaps, the first high area starts
+ 	 * at 4GB, not 0 */
+ 	if (start == 0)
+-		start = SLICE_LOW_TOP;
 -#endif
--
--static inline struct slice_mask *mm_ctx_slice_mask_4k(mm_context_t *ctx)
--{
--	return &ctx->hash_context->mask_4k;
--}
--
--#ifdef CONFIG_HUGETLB_PAGE
--static inline struct slice_mask *mm_ctx_slice_mask_16m(mm_context_t *ctx)
--{
--	return &ctx->hash_context->mask_16m;
--}
--
--static inline struct slice_mask *mm_ctx_slice_mask_16g(mm_context_t *ctx)
--{
--	return &ctx->hash_context->mask_16g;
--}
--#endif
--
- static inline struct slice_mask *slice_mask_for_size(mm_context_t *ctx, int psize)
- {
- #ifdef CONFIG_PPC_64K_PAGES
- 	if (psize == MMU_PAGE_64K)
--		return mm_ctx_slice_mask_64k(&ctx);
-+		return &ctx->hash_context->mask_64k;
- #endif
- #ifdef CONFIG_HUGETLB_PAGE
- 	if (psize == MMU_PAGE_16M)
--		return mm_ctx_slice_mask_16m(&ctx);
-+		return &ctx->hash_context->mask_16m;
- 	if (psize == MMU_PAGE_16G)
--		return mm_ctx_slice_mask_16g(&ctx);
-+		return &ctx->hash_context->mask_16g;
- #endif
- 	VM_BUG_ON(psize != MMU_PAGE_4K);
++		start = (unsigned long)SLICE_LOW_TOP;
  
--	return mm_ctx_slice_mask_4k(&ctx);
-+	return &ctx->hash_context->mask_4k;
+ 	return !slice_area_is_free(mm, start, end - start);
  }
- 
- #ifdef CONFIG_PPC_SUBPAGE_PROT
-diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-index a0f6844a1498..beded4df1f50 100644
---- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-@@ -255,23 +255,6 @@ static inline void mm_ctx_set_slb_addr_limit(mm_context_t *ctx, unsigned long li
- 	ctx->slb_addr_limit = limit;
- }
- 
--static inline struct slice_mask *mm_ctx_slice_mask_base(mm_context_t *ctx)
--{
--	return &ctx->mask_base_psize;
--}
--
--#ifdef CONFIG_HUGETLB_PAGE
--static inline struct slice_mask *mm_ctx_slice_mask_512k(mm_context_t *ctx)
--{
--	return &ctx->mask_512k;
--}
--
--static inline struct slice_mask *mm_ctx_slice_mask_8m(mm_context_t *ctx)
--{
--	return &ctx->mask_8m;
--}
--#endif
--
- static inline struct slice_mask *slice_mask_for_size(mm_context_t *ctx, int psize)
- {
- #ifdef CONFIG_HUGETLB_PAGE
 -- 
 2.13.3
 
