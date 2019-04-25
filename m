@@ -2,135 +2,109 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF8AC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EF3C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE7E214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:35:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="qQs56Uko"
+	by mail.kernel.org (Postfix) with ESMTP id 4BE32214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 01:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388075AbfDYBfT (ORCPT
+        id S2388092AbfDYBgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 21:35:19 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:40469 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387733AbfDYBfT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 21:35:19 -0400
-Received: by mail-it1-f194.google.com with SMTP id k64so9572164itb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 18:35:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3bpnT0MKJFDMp8yH3bNjp+BARmsLopErc5UrP8dj8Fk=;
-        b=qQs56Ukocl78Sf5FuGfxht/IptjPjK+pks9kLVauKAGQJud0FXwEZiSmAapugG+0uB
-         GkxbjbIuN1E+6GTaNxrMogrZL/G2BpRDkO9Z7nfp5ZCVaivUk23l7c7ZbPtQEiBJ2PZq
-         Uq+sANwEAuSRVA1kZf9HZJHifa+0udTWlR8Y8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3bpnT0MKJFDMp8yH3bNjp+BARmsLopErc5UrP8dj8Fk=;
-        b=mlt2GuI0aF3NOke+So29tmtA3k2l62KVoofkyPN79n0vwUr+NJQ8sE2xcZgCms1Pja
-         dK6W9R7tWWCZABug/gplEe/WE/nN1misQy1P6TRULRmRelxzH8DfpZFFFUyWMCeqBT5j
-         xue/S7yufvfhSXmF6uqqZZLjVNtzozYZdVEfQDuXAYeixXG3/OydENnzN9kVdNym08cB
-         b+7JUOd6War5isMgmJqFmZSyqokesLb5BzgDbkmDChIJyxpxsTOid+bzMfTTojbDDbEA
-         tX3uhC0+1YpzysG/p9biMZSQXBg/BtfOpDeIaIl7nrKOYCBfwADEYsyJe81KfWJNjJBk
-         Tuog==
-X-Gm-Message-State: APjAAAWsfWZraeVIfgIjCbrwLAJkyvXfiBXRyyOq+oWfgQSTL8NqJaph
-        sqDiTDbvfJwxIXa2TDDFkUlUn+iZ9i7ybk+5IBuK1Q==
-X-Google-Smtp-Source: APXvYqy9S367pYw9RPDTzptJgtuOYTSS/K3PA1N7EYCSEjXz8IvMuuq3AvTeUmzsptcuZsgIb7q2BKeNu4pcp96cwLI=
-X-Received: by 2002:a02:c043:: with SMTP id u3mr15408649jam.35.1556156118300;
- Wed, 24 Apr 2019 18:35:18 -0700 (PDT)
+        Wed, 24 Apr 2019 21:36:53 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:33014 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728775AbfDYBgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 21:36:52 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id AD685A898FA635AAC9C9;
+        Thu, 25 Apr 2019 09:36:49 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 25 Apr 2019 09:36:49 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 25 Apr 2019 09:36:48 +0800
+Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: relocate chksum_offset for
+ large_nat_bitmap feature
+To:     Ju Hyung Park <qkrwngud825@gmail.com>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190422093353.61014-1-yuchao0@huawei.com>
+ <20190422093353.61014-2-yuchao0@huawei.com>
+ <CAD14+f0D9CVmBZGmbMcKB7xAHvBrbGAgVxR4W8Fiu0Vo6czDYQ@mail.gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <cd4b13a5-9b59-aa53-5859-f52275b4d9d7@huawei.com>
+Date:   Thu, 25 Apr 2019 09:36:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1556055738-14838-1-git-send-email-dagmcr@gmail.com>
-In-Reply-To: <1556055738-14838-1-git-send-email-dagmcr@gmail.com>
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-Date:   Thu, 25 Apr 2019 09:35:07 +0800
-Message-ID: <CAJCx=gkykSjn7uf67s2_NqB+-FYWF_oA_PknB7LcX5QRD_mp9Q@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: temperature: maxim_thermocouple: declare missing
- of table
-To:     Daniel Gomez <dagmcr@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>, javier@dowhile0.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAD14+f0D9CVmBZGmbMcKB7xAHvBrbGAgVxR4W8Fiu0Vo6czDYQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 5:42 AM Daniel Gomez <dagmcr@gmail.com> wrote:
->
-> Add missing <of_device_id> table for SPI driver relying on SPI
-> device match since compatible is in a DT binding or in a DTS.
->
-> Before this patch:
-> modinfo drivers/iio/temperature/maxim_thermocouple.ko | grep alias
-> alias:          spi:max31855
-> alias:          spi:max6675
->
-> After this patch:
-> modinfo drivers/iio/temperature/maxim_thermocouple.ko | grep alias
-> alias:          spi:max31855
-> alias:          spi:max6675
-> alias:          of:N*T*Cmaxim,max31855C*
-> alias:          of:N*T*Cmaxim,max31855
-> alias:          of:N*T*Cmaxim,max6675C*
-> alias:          of:N*T*Cmaxim,max6675
+Hi Ju Hyung,
 
-Heh oops I missed that somehow in initial development.
+On 2019/4/24 19:43, Ju Hyung Park wrote:
+> Hi Chao,
+> 
+> On Mon, Apr 22, 2019 at 6:34 PM Chao Yu <yuchao0@huawei.com> wrote:
+>> +       if (__is_set_ckpt_flags(*cp_block, CP_LARGE_NAT_BITMAP_FLAG)) {
+>> +               if (crc_offset != CP_MIN_CHKSUM_OFFSET) {
+>> +                       f2fs_put_page(*cp_page, 1);
+>> +                       f2fs_msg(sbi->sb, KERN_WARNING,
+>> +                               "layout of large_nat_bitmap is deprecated, "
+>> +                               "run fsck to repair, chksum_offset: %zu",
+>> +                               crc_offset);
+>> +                       return -EINVAL;
+>> +               }
+>> +       }
+>> +
+> 
+> I try not to be a Grammar Nazi and a jerk on every patches, but since
+> this is a message a user would directly encounter, I'd like to see a
+> bit less ambiguous message.
 
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Please feel free to give us your opinion or suggestion. :)
 
->
-> Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-> Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-> ---
->  drivers/iio/temperature/maxim_thermocouple.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/iio/temperature/maxim_thermocouple.c b/drivers/iio/temperature/maxim_thermocouple.c
-> index c31b963..c613a64 100644
-> --- a/drivers/iio/temperature/maxim_thermocouple.c
-> +++ b/drivers/iio/temperature/maxim_thermocouple.c
-> @@ -10,6 +10,8 @@
->  #include <linux/init.h>
->  #include <linux/mutex.h>
->  #include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/spi/spi.h>
->  #include <linux/iio/iio.h>
->  #include <linux/iio/trigger.h>
-> @@ -262,9 +264,17 @@ static const struct spi_device_id maxim_thermocouple_id[] = {
->  };
->  MODULE_DEVICE_TABLE(spi, maxim_thermocouple_id);
->
-> +static const struct of_device_id maxim_thermocouple_of_match[] = {
-> +        { .compatible = "maxim,max6675" },
-> +        { .compatible = "maxim,max31855" },
-> +        { },
-> +};
-> +MODULE_DEVICE_TABLE(of, maxim_thermocouple_of_match);
-> +
->  static struct spi_driver maxim_thermocouple_driver = {
->         .driver = {
->                 .name   = MAXIM_THERMOCOUPLE_DRV_NAME,
-> +               .of_match_table = maxim_thermocouple_of_match,
->         },
->         .probe          = maxim_thermocouple_probe,
->         .remove         = maxim_thermocouple_remove,
-> --
-> 2.7.4
->
+> 
+> How about "using deprecated layout of large_nat_bitmap, please run
+> fsck v1.13.0 or higher to repair, chksum_offset: %zu"?
+> The original message seems to suggest that large_nat_bitmap is
+> deprecated outright.
+> 
+> Also, I'd like to suggest to write down an actual version of
+> f2fs-tools here as we've seen older versions of fsck doing even more
+> damage and the users might not have the latest f2fs-tools installed.
+
+Agreed, user should be told which version of fsck can repair that problem, will
+update the message in next version.
+
+> 
+> Btw, what happens if we use the latest fsck to fix the corrupted image
+> and use the older kernel to mount it?
+> Would it even mount?
+
+No, since fixed image is using a new layout, how about giving the detailed
+information about which version of kernel user should update to, once we detect
+such issue and trigger the repairing?
+
+Thanks,
+
+> 
+> Thanks.
+> .
+> 
