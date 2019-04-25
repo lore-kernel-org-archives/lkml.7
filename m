@@ -2,130 +2,113 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880AEC282E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E41C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636F120675
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C89214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ERaNGG4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfDYIzg (ORCPT
+        id S1727680AbfDYI60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 04:55:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51206 "EHLO mx1.suse.de"
+        Thu, 25 Apr 2019 04:58:26 -0400
+Received: from mail-eopbgr70053.outbound.protection.outlook.com ([40.107.7.53]:28935
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726039AbfDYIzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 04:55:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1FABDAD51;
-        Thu, 25 Apr 2019 08:55:34 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH 1/3] xen/swiotlb: fix condition for calling
- xen_destroy_contiguous_region()
-To:     Jan Beulich <JBeulich@suse.com>
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        lkml <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-References: =?UTF-8?B?PDIwMTkwNDIzMTA1NDU3LjE3NTAy77+9Me+/vWpncm9zc0BzdXNl?=
- =?UTF-8?Q?=2ecom=3e_=3c20190423105457=2e17502-2-jgross=40suse=2ecom=3e_=3c5?=
- =?UTF-8?Q?CC175950200007800228E80=40suse=2ecom=3e?=
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- mQENBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAG0H0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT6JATkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPuQENBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAGJAR8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHf4kBrQQY
- AQgAIBYhBIUSZ3Lo9gSUpdCX97DendYovxMvBQJa3fDQAhsCAIEJELDendYovxMvdiAEGRYI
- AB0WIQRTLbB6QfY48x44uB6AXGG7T9hjvgUCWt3w0AAKCRCAXGG7T9hjvk2LAP99B/9FenK/
- 1lfifxQmsoOrjbZtzCS6OKxPqOLHaY47BgEAqKKn36YAPpbk09d2GTVetoQJwiylx/Z9/mQI
- CUbQMg1pNQf9EjA1bNcMbnzJCgt0P9Q9wWCLwZa01SnQWFz8Z4HEaKldie+5bHBL5CzVBrLv
- 81tqX+/j95llpazzCXZW2sdNL3r8gXqrajSox7LR2rYDGdltAhQuISd2BHrbkQVEWD4hs7iV
- 1KQHe2uwXbKlguKPhk5ubZxqwsg/uIHw0qZDk+d0vxjTtO2JD5Jv/CeDgaBX4Emgp0NYs8IC
- UIyKXBtnzwiNv4cX9qKlz2Gyq9b+GdcLYZqMlIBjdCz0yJvgeb3WPNsCOanvbjelDhskx9gd
- 6YUUFFqgsLtrKpCNyy203a58g2WosU9k9H+LcheS37Ph2vMVTISMszW9W8gyORSgmw==
-Message-ID: <38c2907c-2749-e66c-1279-7d74bc20bc35@suse.com>
-Date:   Thu, 25 Apr 2019 10:55:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726039AbfDYI6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 04:58:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bxArzx5LapsSizRQ6GtpQd3NW5Bbr9O2nwqkeARy4Rc=;
+ b=ERaNGG4vdMbLBLH8NA0Wjob4xNlMuw/Vh+sB6tFgp3pEP+PfvNWbi1oP/Lv0f0YOp8X3hvQziO956/wEBKcrLg/sP0EVf/rkeoRr6hr6Tr4WpGWO8KQ2DfFeBftWRQFm803HgD5f2/tkcmu3k46myuECTbJHwEo0DSTLpTKoFwo=
+Received: from VI1PR04MB4800.eurprd04.prod.outlook.com (20.177.48.221) by
+ VI1PR04MB5503.eurprd04.prod.outlook.com (20.178.122.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.12; Thu, 25 Apr 2019 08:58:21 +0000
+Received: from VI1PR04MB4800.eurprd04.prod.outlook.com
+ ([fe80::9bd:1d31:d6c3:d157]) by VI1PR04MB4800.eurprd04.prod.outlook.com
+ ([fe80::9bd:1d31:d6c3:d157%6]) with mapi id 15.20.1813.017; Thu, 25 Apr 2019
+ 08:58:21 +0000
+From:   Vabhav Sharma <vabhav.sharma@nxp.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+CC:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: [PATCH v2] clk: qoriq: increase array size of cmux_to_group
+Thread-Topic: [PATCH v2] clk: qoriq: increase array size of cmux_to_group
+Thread-Index: AQHU+0UI0uc08PbIX0aEjsibKUKapA==
+Date:   Thu, 25 Apr 2019 08:58:21 +0000
+Message-ID: <1556182715-6761-1-git-send-email-vabhav.sharma@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BMXPR01CA0064.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:2c::28) To VI1PR04MB4800.eurprd04.prod.outlook.com
+ (2603:10a6:803:53::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vabhav.sharma@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.9.1
+x-originating-ip: [92.120.1.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 98a9b04b-a933-4ebc-1662-08d6c95c2ae4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5503;
+x-ms-traffictypediagnostic: VI1PR04MB5503:
+x-microsoft-antispam-prvs: <VI1PR04MB55039E7AABCAE9AA764FA4DFF33D0@VI1PR04MB5503.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0018A2705B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(136003)(366004)(189003)(199004)(102836004)(81166006)(6486002)(316002)(81156014)(6436002)(476003)(110136005)(6512007)(2616005)(2906002)(8936002)(4326008)(5660300002)(68736007)(26005)(8676002)(52116002)(6506007)(386003)(14454004)(97736004)(66946007)(66476007)(66556008)(64756008)(66446008)(73956011)(478600001)(256004)(36756003)(305945005)(186003)(2501003)(7736002)(86362001)(54906003)(99286004)(71190400001)(71200400001)(25786009)(44832011)(3846002)(6116002)(486006)(66066001)(14444005)(50226002)(53936002)(21314003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5503;H:VI1PR04MB4800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: bRWMbUiqalFo7H7fBUt8+7vutfFssLigVXdYQRRolUVcfAiNBQsrgyood/b6oTMysL/R7oJs3AmSgV52NECCssTI9upW8s9SsOhEjwRywKom59jzZIZ19/ZuU6gVV8p8jKBLry7vBsdncJLUEYy7uq8yF1h22/HRT1YO84eOzdJmOt2kNllneBP8fvjEdr3AmtcyV3dSuvc1EC+iMAQsVLFOIfqyYT3aK2kauz1MmuNGLcFVYD31X0PL1pnOJK/SuDpP9KJmQzf1A38LJr66m5LrLavjAgfLphtmTSrzJK699BPxbmdHV1agduQHd4TUzw4DREc2PJkCzq2WEHypVtfyHAdBJ1DBfsb/wWnHv9SGS+SA74/o8TF+eWJkbUypQsFRhzwHL8rCY3iuQdTXH/KWdE96Qpaz9gwhfdajfT8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98a9b04b-a933-4ebc-1662-08d6c95c2ae4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 08:58:21.6391
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5503
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/04/2019 10:53, Jan Beulich wrote:
->>>> On 23.04.19 at 12:54, <jgross@suse.com> wrote:
->> --- a/drivers/xen/swiotlb-xen.c
->> +++ b/drivers/xen/swiotlb-xen.c
->> @@ -360,8 +360,8 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
->>  	/* Convert the size to actually allocated. */
->>  	size = 1UL << (order + XEN_PAGE_SHIFT);
->>  
->> -	if (((dev_addr + size - 1 <= dma_mask)) ||
->> -	    range_straddles_page_boundary(phys, size))
->> +	if ((dev_addr + size - 1 <= dma_mask) &&
->> +	    !WARN_ON(range_straddles_page_boundary(phys, size)))
->>  		xen_destroy_contiguous_region(phys, order);
-> 
-> On the allocation side we have
-> 
-> 	if (((dev_addr + size - 1 <= dma_mask)) &&
-> 	    !range_straddles_page_boundary(phys, size))
-> 		*dma_handle = dev_addr;
-> 	else {
-> 		if (xen_create_contiguous_region(phys, order,
-> 						 fls64(dma_mask), dma_handle) != 0) {
-> 			xen_free_coherent_pages(hwdev, size, ret, (dma_addr_t)phys, attrs);
-> 			return NULL;
-> 		}
-> 	}
-> 
-> which is (as far as the function call is concerned)
-> 
-> 	if ((dev_addr + size - 1 > dma_mask) ||
-> 	    range_straddles_page_boundary(phys, size))
-> 		xen_create_contiguous_region(...);
-> 
-> So I don't think your transformation is correct. Even worse, both
-> parts of the condition in xen_swiotlb_free_coherent() act on an
-> address that is the _result_ of the prior
-> xen_create_contiguous_region(), i.e. the address should always
-> match _both_ criteria anyway. Whereas what you really want is
-> undo the xen_create_contiguous_region() only when it actually
-> was called. Otherwise you also shatter contiguous allocations
-> that were contiguous already for other reasons (perhaps just
-> luck).
-
-Yes, that is what patch 3 does.
-
-
-Juergen
-
+RnJvbTogWW9nZXNoIEdhdXIgPHlvZ2VzaG5hcmF5YW4uZ2F1ckBueHAuY29tPg0KDQpJbmNyZWFz
+ZSBzaXplIG9mIGNtdXhfdG9fZ3JvdXAgYXJyYXksIHRvIGFjY29tZGF0ZSBlbnRyeSBvZg0KLTEg
+dGVybWluYXRpb24uDQoNCkFkZGVkIC0xLCB0ZXJtaW5hdGVkLCBlbnRyeSBmb3IgNDA4MF9jbXV4
+X2dycFguDQoNClNpZ25lZC1vZmYtYnk6IFlvZ2VzaCBHYXVyIDx5b2dlc2huYXJheWFuLmdhdXJA
+bnhwLmNvbT4NClNpZ25lZC1vZmYtYnk6IFZhYmhhdiBTaGFybWEgPHZhYmhhdi5zaGFybWFAbnhw
+LmNvbT4NCkFja2VkLWJ5OiBTY290dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0Pg0KQWNrZWQtYnk6
+IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz4NCg0KQ2hhbmdlcyBmb3IgdjI6DQotIElu
+Y29ycG9yYXRlZCByZXZpZXcgY29tbWVudHMgZnJvbSBTdGVwaGVuIEJveWQNCi0gU3ViamVjdCBs
+aW5lIG1vZGlmaWVkDQotIEluZGVudGF0aW9uIHVwZGF0ZQ0KLS0tDQogZHJpdmVycy9jbGsvY2xr
+LXFvcmlxLmMgfCA0ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRl
+bGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvY2xrLXFvcmlxLmMgYi9kcml2
+ZXJzL2Nsay9jbGstcW9yaXEuYw0KaW5kZXggMTIxMmE5Yi4uM2Q1MWQ3YyAxMDA2NDQNCi0tLSBh
+L2RyaXZlcnMvY2xrL2Nsay1xb3JpcS5jDQorKysgYi9kcml2ZXJzL2Nsay9jbGstcW9yaXEuYw0K
+QEAgLTc5LDcgKzc5LDcgQEAgc3RydWN0IGNsb2NrZ2VuX2NoaXBpbmZvIHsNCiAJY29uc3Qgc3Ry
+dWN0IGNsb2NrZ2VuX211eGluZm8gKmNtdXhfZ3JvdXBzWzJdOw0KIAljb25zdCBzdHJ1Y3QgY2xv
+Y2tnZW5fbXV4aW5mbyAqaHdhY2NlbFtOVU1fSFdBQ0NFTF07DQogCXZvaWQgKCppbml0X3Blcmlw
+aCkoc3RydWN0IGNsb2NrZ2VuICpjZyk7DQotCWludCBjbXV4X3RvX2dyb3VwW05VTV9DTVVYXTsg
+LyogLTEgdGVybWluYXRlcyBpZiBmZXdlciB0aGFuIE5VTV9DTVVYICovDQorCWludCBjbXV4X3Rv
+X2dyb3VwW05VTV9DTVVYKzFdOwkvKiBhcnJheSBzaG91bGQgYmUgLTEgdGVybWluYXRlZCAqLw0K
+IAl1MzIgcGxsX21hc2s7CS8qIDEgPDwgbiBiaXQgc2V0IGlmIFBMTCBuIGlzIHZhbGlkICovDQog
+CXUzMiBmbGFnczsJLyogQ0dfeHh4ICovDQogfTsNCkBAIC02MDEsNyArNjAxLDcgQEAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBjbG9ja2dlbl9jaGlwaW5mbyBjaGlwaW5mb1tdID0gew0KIAkJCSZwNDA4
+MF9jbXV4X2dycDEsICZwNDA4MF9jbXV4X2dycDINCiAJCX0sDQogCQkuY211eF90b19ncm91cCA9
+IHsNCi0JCQkwLCAwLCAwLCAwLCAxLCAxLCAxLCAxDQorCQkJMCwgMCwgMCwgMCwgMSwgMSwgMSwg
+MSwgLTENCiAJCX0sDQogCQkucGxsX21hc2sgPSAweDFmLA0KIAl9LA0KLS0gDQoyLjcuNA0KDQo=
