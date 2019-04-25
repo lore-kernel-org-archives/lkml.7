@@ -2,200 +2,98 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC84C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBFEC4321D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A55212F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784252089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfDYNcQ (ORCPT
+        id S1727399AbfDYNZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 09:32:16 -0400
-Received: from mga07.intel.com ([134.134.136.100]:11360 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfDYNcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 09:32:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 06:32:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,393,1549958400"; 
-   d="scan'208";a="153678137"
-Received: from shbuild999.sh.intel.com ([10.239.146.112])
-  by orsmga002.jf.intel.com with ESMTP; 25 Apr 2019 06:32:13 -0700
-From:   Feng Tang <feng.tang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH v4] panic: add an option to replay all the printk message in buffer
-Date:   Thu, 25 Apr 2019 21:32:17 +0800
-Message-Id: <1556199137-14163-1-git-send-email-feng.tang@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 25 Apr 2019 09:25:36 -0400
+Received: from tartarus.angband.pl ([54.37.238.230]:36176 "EHLO
+        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfDYNZf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 09:25:35 -0400
+Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
+        (envelope-from <kilobyte@angband.pl>)
+        id 1hJeKv-00077K-W9; Thu, 25 Apr 2019 15:22:49 +0200
+Date:   Thu, 25 Apr 2019 15:22:49 +0200
+From:   Adam Borowski <kilobyte@angband.pl>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH RESEND v5 0/5] namei: vfs flags to restrict path
+ resolution
+Message-ID: <20190425132249.GA26669@angband.pl>
+References: <20190320143717.2523-1-cyphar@cyphar.com>
+ <CALCETrV-Q4qZXGeavBPQbF6-VVz7hqvjRkbhFeYmbGiQgu5Omg@mail.gmail.com>
+ <20190325130429.dbrgjxnvq3w5cpb3@yavin>
+ <CAGXu5jKPrarixQkWWXOBCu6kRRpQd0aaJsPJbvsAyh0Wvc620A@mail.gmail.com>
+ <20190424153806.64qkkmkudzodxnz2@yavin>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190424153806.64qkkmkudzodxnz2@yavin>
+X-Junkbait: aaron@angband.pl, zzyx@angband.pl
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: kilobyte@angband.pl
+X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently on panic, kernel will lower the loglevel and print out
-pending printk msg only with console_flush_on_panic().
+On Thu, Apr 25, 2019 at 01:38:06AM +1000, Aleksa Sarai wrote:
+>  * openat(2) ignores unknown flags, meaning that old kernels will ignore
+>    new programs trying to use O_THISROOT and might end up causing
+>    security issues. Yes, it'd be trivial to check whether the new O_*
+>    flags are supported at start-up, but I think a security feature
+>    shouldn't have a foot-gun associated with it. In fact, I didn't know
+>    openat(2) ignored unknown flags until I wrote this patchset -- I
+>    doubt many other userspace developers do either.
 
-Add an option for users to configure the "panic_print" to replay
-all dmesg in buffer, some of which they may have never seen due
-to the loglevel setting, which will help panic debugging .
+For this reason, I propose every new syscall that has flags to follow a
+bitmask scheme, where any flag assigned a bit in the upper half returns
+EOPNOTSUPP when called on an old kernel.  That would allow defining which
+flags can be safely ignored and which can't.
 
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Cc: Aaro Koskinen <aaro.koskinen@nokia.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@suse.de>
----
-Changelog:
+It otherwise takes major hacks to implement a fail-if-not-supported flag
+while keeping compat with old kernels.  For example, for mmap(), MAP_SHARED
+has been duplicated as MAP_SHARED_VALIDATE just to allow an unrelated flag
+(MAP_SYNC) to fail on old kernels.
 
-  v4:
-    - keep the original console_flush_on_panic() inside
-      panic(), as suggested by Petr Mladek
 
-  v3:
-    - Solve the compile issue when CONFIG_PRINTK=n, found by
-      Andrew Morton
-    - Add enum for parameter of console_flush_on_panic()
-    - move the printk replay code to console_flush_on_panic()
-
-  v2:
-    - Add a new func in printk.c dedicated for the replaying, as
-      suggested by Petr Mladek
-    - Combine the 2 patches in v1 into one suggested by both Petr
-      and Sergey
-
- Documentation/admin-guide/kernel-parameters.txt | 1 +
- arch/powerpc/kernel/traps.c                     | 2 +-
- include/linux/console.h                         | 7 ++++++-
- kernel/panic.c                                  | 6 +++++-
- kernel/printk/printk.c                          | 8 +++++++-
- 5 files changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 2b8ee90..7b15c94 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3135,6 +3135,7 @@
- 			bit 2: print timer info
- 			bit 3: print locks info if CONFIG_LOCKDEP is on
- 			bit 4: print ftrace buffer
-+			bit 5: print all printk messages in buffer
- 
- 	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
- 			on a WARN().
-diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index 1fd45a8..0fb785e 100644
---- a/arch/powerpc/kernel/traps.c
-+++ b/arch/powerpc/kernel/traps.c
-@@ -179,7 +179,7 @@ extern void panic_flush_kmsg_end(void)
- 	kmsg_dump(KMSG_DUMP_PANIC);
- 	bust_spinlocks(0);
- 	debug_locks_off();
--	console_flush_on_panic();
-+	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
- }
- 
- static unsigned long oops_begin(struct pt_regs *regs)
-diff --git a/include/linux/console.h b/include/linux/console.h
-index ec9bdb3..d09951d 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -166,6 +166,11 @@ struct console {
- extern int console_set_on_cmdline;
- extern struct console *early_console;
- 
-+enum con_flush_mode {
-+	CONSOLE_FLUSH_PENDING,
-+	CONSOLE_REPLAY_ALL,
-+};
-+
- extern int add_preferred_console(char *name, int idx, char *options);
- extern void register_console(struct console *);
- extern int unregister_console(struct console *);
-@@ -175,7 +180,7 @@ extern int console_trylock(void);
- extern void console_unlock(void);
- extern void console_conditional_schedule(void);
- extern void console_unblank(void);
--extern void console_flush_on_panic(void);
-+extern void console_flush_on_panic(enum con_flush_mode mode);
- extern struct tty_driver *console_device(int *);
- extern void console_stop(struct console *);
- extern void console_start(struct console *);
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 0ae0d73..f795feb 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -51,6 +51,7 @@ EXPORT_SYMBOL_GPL(panic_timeout);
- #define PANIC_PRINT_TIMER_INFO		0x00000004
- #define PANIC_PRINT_LOCK_INFO		0x00000008
- #define PANIC_PRINT_FTRACE_INFO		0x00000010
-+#define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
- unsigned long panic_print;
- 
- ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-@@ -134,6 +135,9 @@ EXPORT_SYMBOL(nmi_panic);
- 
- static void panic_print_sys_info(void)
- {
-+	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
-+		console_flush_on_panic(CONSOLE_REPLAY_ALL);
-+
- 	if (panic_print & PANIC_PRINT_TASK_INFO)
- 		show_state();
- 
-@@ -277,7 +281,7 @@ void panic(const char *fmt, ...)
- 	 * panic() is not being callled from OOPS.
- 	 */
- 	debug_locks_off();
--	console_flush_on_panic();
-+	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
- 
- 	panic_print_sys_info();
- 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 02ca827..54f93de 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2525,10 +2525,11 @@ void console_unblank(void)
- 
- /**
-  * console_flush_on_panic - flush console content on panic
-+ * @mode: flush all messages in buffer or just the pending ones
-  *
-  * Immediately output all pending messages no matter what.
-  */
--void console_flush_on_panic(void)
-+void console_flush_on_panic(enum con_flush_mode mode)
- {
- 	/*
- 	 * If someone else is holding the console lock, trylock will fail
-@@ -2539,6 +2540,11 @@ void console_flush_on_panic(void)
- 	 */
- 	console_trylock();
- 	console_may_schedule = 0;
-+
-+	if (mode == CONSOLE_REPLAY_ALL) {
-+		console_seq = log_first_seq;
-+		console_idx = log_first_idx;
-+	}
- 	console_unlock();
- }
- 
+Meow!
 -- 
-2.7.4
-
+⢀⣴⠾⠻⢶⣦⠀ 
+⣾⠁⢰⠒⠀⣿⡁ Imagine there are bandits in your house, your kid is bleeding out,
+⢿⡄⠘⠷⠚⠋⠀ the house is on fire, and seven giant trumpets are playing in the
+⠈⠳⣄⠀⠀⠀⠀ sky.  Your cat demands food.  The priority should be obvious...
