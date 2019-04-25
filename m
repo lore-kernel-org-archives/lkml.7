@@ -2,98 +2,82 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B683DC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71966C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E11520717
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD97620717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 18:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556218199;
-	bh=LLlnyOWEIXNVJJN+S4Oqj5dozgPtmN2SJyteU//bjcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S6BqSYtK04ACNL48CUgiYLnoI1mpe6r37ro8tfOxro1hgVdUTL7cLIjRRxGKmm79l
-	 jVZqZtGa4yIihkq/FhcXyanRY4ba8G7PRqYxTXL5B1+Nw09MgM+aoLLXcfROqSVOfD
-	 OOpLEiWPla4TrPfikrD+nRhM1p3LXyHe7uzypHtw=
+	s=default; t=1556218249;
+	bh=qxF/lXiqo6cG/57oiaUteES7Mb3jGcT9riQl/ZNu7G0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VpDdXIJA0J5gqUSs/toMgjmhfax/BjapMUlQj9dT9knieeKFp2AjQ5SDsgz03aAIX
+	 E1IUyuLbSBTt4Gw8ff6JDNGOkKYCHkmL96XxTX6bUR8qlY6xiqqgn8ME+CbcuQqHnF
+	 28A7bte5dwSZt73BW1DCN43H1nCurMXtwHyhd+yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbfDYSt5 (ORCPT
+        id S1729225AbfDYSus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 14:49:57 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46978 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfDYSt4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 14:49:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LLlnyOWEIXNVJJN+S4Oqj5dozgPtmN2SJyteU//bjcI=; b=KjcZ5CrTefgtj7tJ6icoAaOeg
-        5sdiROzkJArJzyC3/XyE6fBe/yKQ4lUCMLpy9QgaTFshInoPdhjlHGrhva/izbeco0exxSo1XtBXb
-        XWowqhsnbHjlj/NeQdtRAcyDad56n1HSalTZ8Hp1CWVPEuuZsASuJdKCwn6yXTgXX/nJM=;
-Received: from 188.29.165.56.threembb.co.uk ([188.29.165.56] helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hJjRJ-0004Mp-Ev; Thu, 25 Apr 2019 18:49:45 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 19CEE441D3B; Thu, 25 Apr 2019 19:49:41 +0100 (BST)
-Date:   Thu, 25 Apr 2019 19:49:41 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me
-Subject: Re: [PATCH 2/3] ASoC: simple-card-utils: add
- asoc_simple_card_of_parse_pin_switches()
-Message-ID: <20190425184941.GH23183@sirena.org.uk>
-References: <20190420104553.5071-1-paul@crapouillou.net>
- <20190420104553.5071-2-paul@crapouillou.net>
+        Thu, 25 Apr 2019 14:50:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbfDYSur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 14:50:47 -0400
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 553E42146E
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 18:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556218247;
+        bh=qxF/lXiqo6cG/57oiaUteES7Mb3jGcT9riQl/ZNu7G0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=B80m5djWcvM7FGaP9bH9idT/TL1WS/EHA4jDB/C7IhZYKiFdAU/tL5dCTYG4mDLCC
+         FmVlwVFYbPgQubjIzVfut7u2Nlev8TV0PaxqR/vZeywXp3Gv9GrW04uP+MKzsAO/CM
+         eDqIZ/o8Hs2Y2Q27kvf8uMZURy9vktZA7OmI+eRI=
+Received: by mail-wm1-f41.google.com with SMTP id n25so659811wmk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 11:50:46 -0700 (PDT)
+X-Gm-Message-State: APjAAAVyhnOHDAS/7+VsHLP7PahPAF3Tm3KG75SREMOfNk4Zx9HUXaBw
+        pUh4rxyv/yCrXa39J6Oh5pglb3v+k7PsHe4f6CQFdw==
+X-Google-Smtp-Source: APXvYqydoeh+i3DNI6lzmXpy6tzeBOndTDk0R2/se/sGzaRsHorj4pk/wGQxi9a/avUEXgkxmLJWcSm/uTKW/r8FzjA=
+X-Received: by 2002:a1c:eb18:: with SMTP id j24mr4882651wmh.32.1556218245380;
+ Thu, 25 Apr 2019 11:50:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uAgJxtfIS94j9H4T"
-Content-Disposition: inline
-In-Reply-To: <20190420104553.5071-2-paul@crapouillou.net>
-X-Cookie: But they went to MARS around 1953!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190425180828.24959-1-namit@vmware.com>
+In-Reply-To: <20190425180828.24959-1-namit@vmware.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 25 Apr 2019 11:50:32 -0700
+X-Gmail-Original-Message-ID: <CALCETrVmUQ2=qddwh=CHtkaZPn1JMoN9ce=Dv5rNUvFbqjHzUw@mail.gmail.com>
+Message-ID: <CALCETrVmUQ2=qddwh=CHtkaZPn1JMoN9ce=Dv5rNUvFbqjHzUw@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/mm/tlb: Remove flush_tlb_info from the stack
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 25, 2019 at 11:08 AM Nadav Amit <namit@vmware.com> wrote:
+>
+> Move flush_tlb_info variables off the stack. This allows to align
+> flush_tlb_info to cache-line and avoid potentially unnecessary cache
+> line movements. It also allows to have a fixed virtual-to-physical
+> translation of the variables, which reduces TLB misses.
+>
+> Use per-CPU struct for flush_tlb_mm_range() and
+> flush_tlb_kernel_range(). Add debug assertions to ensure there are
+> no nested TLB flushes that might overwrite the per-CPU data. For
+> arch_tlbbatch_flush() use a const struct.
+>
 
---uAgJxtfIS94j9H4T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sat, Apr 20, 2019 at 12:45:52PM +0200, Paul Cercueil wrote:
-> This function is a helper that permits to create pin switch controls for
-> a list of widgets whose names are listed in the PREFIX "pin-switches"
-> devicetree property.
-
-This doesn't apply against current code, please check and resend.
-
---uAgJxtfIS94j9H4T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzCAUQACgkQJNaLcl1U
-h9DiJgf+Lw9YawQDyW9xcOtpzvnRSd2TkTYKSlXJ08xv7bGfnLyd9G4xCALeDAfj
-C+XGV3koinjACyfqnENByqcTFj8aUtft36DW/keK6FjA4PY/cM7tts6yK16mzgO6
-Ju7uJgtu3yhaK3jzpnIaTbmKHwrnG7jd/3ZchS2aIeSITVGIs8d+Bbg2gPYdEEfR
-2OS1HzeHzCICuSPT+bSDBWGYhcLNm1TdaHuAgxO0lsLCDMnNuAL8JDc/m+fcy8V7
-j8g4Xacw6d2BFxhSh0xWzmwBI2h8yMWXtwGxoRXh5ur8bOwszbvDzM1qu34r38oa
-KoYqqvaISW0G3kNJQ8rLIAPW9MXa5Q==
-=o0p1
------END PGP SIGNATURE-----
-
---uAgJxtfIS94j9H4T--
+I like this version of the patch.
