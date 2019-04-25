@@ -2,159 +2,118 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34D5C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9530C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E922084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B2121904
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 03:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388970AbfDYD0P (ORCPT
+        id S2388979AbfDYDcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 23:26:15 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:49503 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388900AbfDYD0O (ORCPT
+        Wed, 24 Apr 2019 23:32:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50682 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388852AbfDYDcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 23:26:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=qiuxishi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TQAj6H9_1556162771;
-Received: from 10.211.55.3(mailfrom:qiuxishi@linux.alibaba.com fp:SMTPD_---0TQAj6H9_1556162771)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 25 Apr 2019 11:26:12 +0800
-Subject: Re: [RFC PATCH 5/5] mm, page_alloc: Introduce
- ZONELIST_FALLBACK_SAME_TYPE fallback list
-References: <1556155295-77723-1-git-send-email-fan.du@intel.com>
- <1556155295-77723-6-git-send-email-fan.du@intel.com>
- <a0728518-a067-4f89-a8ae-3fa279f768f2.xishi.qiuxishi@alibaba-inc.com>
-From:   Xishi Qiu <qiuxishi@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>, dave.hansen@intel.com,
-        ying.huang@intel.com, linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-To:     Fengguang Wu <fengguang.wu@intel.com>, fan.du@intel.com
-Message-ID: <2158298b-d4db-671e-6cff-395e9184ecf3@linux.alibaba.com>
-Date:   Thu, 25 Apr 2019 11:26:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 24 Apr 2019 23:32:13 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3P3SdnF050416
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 23:32:12 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s32fbdc24-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 23:32:11 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Thu, 25 Apr 2019 04:32:09 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Apr 2019 04:32:05 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3P3W4JU53018848
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Apr 2019 03:32:04 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98A3F4C046;
+        Thu, 25 Apr 2019 03:32:04 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51D524C044;
+        Thu, 25 Apr 2019 03:32:03 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.124.31.152])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 25 Apr 2019 03:32:03 +0000 (GMT)
+Date:   Thu, 25 Apr 2019 09:02:01 +0530
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] livepatch: Cleanup message handling in
+ klp_try_switch_task()
+References: <20190424085550.29612-1-pmladek@suse.com>
+ <20190424085550.29612-4-pmladek@suse.com>
+ <20190424155532.3uyxyxwm4c5dqsf5@treble>
+ <alpine.LSU.2.21.1904242045360.30239@pobox.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <a0728518-a067-4f89-a8ae-3fa279f768f2.xishi.qiuxishi@alibaba-inc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.1904242045360.30239@pobox.suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-TM-AS-GCONF: 00
+x-cbid: 19042503-0012-0000-0000-00000313EF7E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042503-0013-0000-0000-0000214C472E
+Message-Id: <20190425033201.GC24416@JAVRIS.in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=998 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904250022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fan Du,
+On Wed, Apr 24, 2019 at 08:48:58PM +0200, Miroslav Benes wrote:
+> On Wed, 24 Apr 2019, Josh Poimboeuf wrote:
+> 
+[...]
+> > >  	ret = save_stack_trace_tsk_reliable(task, &trace);
+> > > -	WARN_ON_ONCE(ret == -ENOSYS);
+> > > +	if (ret == -ENOSYS) {
+> > > +		if (!enosys_warned) {
+> > > +			printk_deferred(KERN_WARNING "%s: save_stack_trace_tsk_reliable() not supported on this architecture.\n",
+> > > +					__func__);
+> > > +			enosys_warned = 1;
+> > > +		}
+> > > +		return ret;
+> > > +	}
+> > 
+> > We already have a similar printk in patch 1, so is this warning really
+> > needed?
+> 
+> I don't think so. pr_warn() in klp_enable_patch() should be enough in my 
+> opinion.
+> 
+> However,
+> 
+> if (ret == -ENOSYS)
+> 	return ret;
+> 
+> would be justified, wouldn't it?
+> 
 
-I think we should change the print in mminit_verify_zonelist too.
+Probably an one line comment on why we return, will be helpful.
 
-This patch changes the order of ZONELIST_FALLBACK, so the default numa policy can
-alloc DRAM first, then PMEM, right?
+-- 
+Kamalesh
 
-Thanks,
-Xishi Qiu
->     On system with heterogeneous memory, reasonable fall back lists woul be:
->     a. No fall back, stick to current running node.
->     b. Fall back to other nodes of the same type or different type
->        e.g. DRAM node 0 -> DRAM node 1 -> PMEM node 2 -> PMEM node 3
->     c. Fall back to other nodes of the same type only.
->        e.g. DRAM node 0 -> DRAM node 1
-> 
->     a. is already in place, previous patch implement b. providing way to
->     satisfy memory request as best effort by default. And this patch of
->     writing build c. to fallback to the same node type when user specify
->     GFP_SAME_NODE_TYPE only.
-> 
->     Signed-off-by: Fan Du <fan.du@intel.com>
->     ---
->      include/linux/gfp.h    |  7 +++++++
->      include/linux/mmzone.h |  1 +
->      mm/page_alloc.c        | 15 +++++++++++++++
->      3 files changed, 23 insertions(+)
-> 
->     diff --git a/include/linux/gfp.h b/include/linux/gfp.h
->     index fdab7de..ca5fdfc 100644
->     --- a/include/linux/gfp.h
->     +++ b/include/linux/gfp.h
->     @@ -44,6 +44,8 @@
->      #else
->      #define ___GFP_NOLOCKDEP 0
->      #endif
->     +#define ___GFP_SAME_NODE_TYPE 0x1000000u
->     +
->      /* If the above are modified, __GFP_BITS_SHIFT may need updating */
->      
->      /*
->     @@ -215,6 +217,7 @@
->      
->      /* Disable lockdep for GFP context tracking */
->      #define __GFP_NOLOCKDEP ((__force gfp_t)___GFP_NOLOCKDEP)
->     +#define __GFP_SAME_NODE_TYPE ((__force gfp_t)___GFP_SAME_NODE_TYPE)
->      
->      /* Room for N __GFP_FOO bits */
->      #define __GFP_BITS_SHIFT (23 + IS_ENABLED(CONFIG_LOCKDEP))
->     @@ -301,6 +304,8 @@
->          __GFP_NOMEMALLOC | __GFP_NOWARN) & ~__GFP_RECLAIM)
->      #define GFP_TRANSHUGE (GFP_TRANSHUGE_LIGHT | __GFP_DIRECT_RECLAIM)
->      
->     +#define GFP_SAME_NODE_TYPE (__GFP_SAME_NODE_TYPE)
->     +
->      /* Convert GFP flags to their corresponding migrate type */
->      #define GFP_MOVABLE_MASK (__GFP_RECLAIMABLE|__GFP_MOVABLE)
->      #define GFP_MOVABLE_SHIFT 3
->     @@ -438,6 +443,8 @@ static inline int gfp_zonelist(gfp_t flags)
->      #ifdef CONFIG_NUMA
->       if (unlikely(flags & __GFP_THISNODE))
->        return ZONELIST_NOFALLBACK;
->     + if (unlikely(flags & __GFP_SAME_NODE_TYPE))
->     +  return ZONELIST_FALLBACK_SAME_TYPE;
->      #endif
->       return ZONELIST_FALLBACK;
->      }
->     diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->     index 8c37e1c..2f8603e 100644
->     --- a/include/linux/mmzone.h
->     +++ b/include/linux/mmzone.h
->     @@ -583,6 +583,7 @@ static inline bool zone_intersects(struct zone *zone,
->      
->      enum {
->       ZONELIST_FALLBACK, /* zonelist with fallback */
->     + ZONELIST_FALLBACK_SAME_TYPE, /* zonelist with fallback to the same type node */
->      #ifdef CONFIG_NUMA
->       /*
->        * The NUMA zonelists are doubled because we need zonelists that
->     diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->     index a408a91..de797921 100644
->     --- a/mm/page_alloc.c
->     +++ b/mm/page_alloc.c
->     @@ -5448,6 +5448,21 @@ static void build_zonelists_in_node_order(pg_data_t *pgdat, int *node_order,
->       }
->       zonerefs->zone = NULL;
->       zonerefs->zone_idx = 0;
->     +
->     + zonerefs = pgdat->node_zonelists[ZONELIST_FALLBACK_SAME_TYPE]._zonerefs;
->     +
->     + for (i = 0; i < nr_nodes; i++) {
->     +  int nr_zones;
->     +
->     +  pg_data_t *node = NODE_DATA(node_order[i]);
->     +
->     +  if (!is_node_same_type(node->node_id, pgdat->node_id))
->     +   continue;
->     +  nr_zones = build_zonerefs_node(node, zonerefs);
->     +  zonerefs += nr_zones;
->     + }
->     + zonerefs->zone = NULL;
->     + zonerefs->zone_idx = 0;
->      }
->      
->      /*
->     -- 
->     1.8.3.1
-> 
-> 
