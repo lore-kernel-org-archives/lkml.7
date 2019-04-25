@@ -2,409 +2,142 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADE6C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7319FC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1F62088F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9702088F
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731138AbfDYMaE (ORCPT
+        id S1731154AbfDYMaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:30:04 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:56099 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfDYMaC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:30:02 -0400
-X-Originating-IP: 90.88.147.33
-Received: from localhost.localdomain (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 1E76624001D;
-        Thu, 25 Apr 2019 12:29:55 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Eben Upton <eben@raspberrypi.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v7 4/4] drm/vc4: Allocate binner bo when starting to use the V3D
-Date:   Thu, 25 Apr 2019 14:29:17 +0200
-Message-Id: <20190425122917.26536-5-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190425122917.26536-1-paul.kocialkowski@bootlin.com>
-References: <20190425122917.26536-1-paul.kocialkowski@bootlin.com>
+        Thu, 25 Apr 2019 08:30:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60024 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726067AbfDYMaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 08:30:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 76C51AF32;
+        Thu, 25 Apr 2019 12:30:15 +0000 (UTC)
+Subject: Re: x86/paravirt: Detect over-sized patching bugs in
+ paravirt_patch_call()
+To:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+References: <20190424134115.091452807@linutronix.de>
+ <20190424134223.690835713@linutronix.de> <20190425065209.GA89582@gmail.com>
+ <alpine.DEB.2.21.1904250921010.1762@nanos.tec.linutronix.de>
+ <20190425081012.GA115378@gmail.com> <20190425091717.GA72229@gmail.com>
+ <20190425092131.GL4038@hirez.programming.kicks-ass.net>
+ <20190425095039.GC115378@gmail.com>
+ <20190425102210.GM4038@hirez.programming.kicks-ass.net>
+ <20190425105745.GA29840@gmail.com>
+ <cde4b650-7fe5-869e-9cd8-327150bd092e@suse.com>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b9f94dff-24d1-7ded-9baa-0df6ec2b6a8b@suse.com>
+Date:   Thu, 25 Apr 2019 14:30:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cde4b650-7fe5-869e-9cd8-327150bd092e@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The binner BO is not required until the V3D is in use, so avoid
-allocating it at probe and do it on the first non-dumb BO allocation.
+On 25/04/2019 13:30, Juergen Gross wrote:
+> On 25/04/2019 12:57, Ingo Molnar wrote:
+>>
+>> * Peter Zijlstra <peterz@infradead.org> wrote:
+>>
+>>> On Thu, Apr 25, 2019 at 11:50:39AM +0200, Ingo Molnar wrote:
+>>>>
+>>>> * Peter Zijlstra <peterz@infradead.org> wrote:
+>>>>
+>>>>> On Thu, Apr 25, 2019 at 11:17:17AM +0200, Ingo Molnar wrote:
+>>>>>> It basically means that we silently won't do any patching and the kernel 
+>>>>>> will crash later on in mysterious ways, because paravirt patching is 
+>>>>>> usually relied on.
+>>>>>
+>>>>> That's OK. The compiler emits an indirect CALL/JMP to the pv_ops
+>>>>> structure contents. That _should_ stay valid and function correctly at
+>>>>> all times.
+>>>>
+>>>> It might result in a correctly executing kernel in terms of code 
+>>>> generation, but it doesn't result in a viable kernel: some of the places 
+>>>> rely on the patching going through and don't know what to do when it 
+>>>> doesn't and misbehave or crash in interesting ways.
+>>>>
+>>>> Guess how I know this. ;-)
+>>>
+>>> What sites would that be? It really should work AFAIK.
+>>
+>> So for example I tried to increasing the size of one of the struct 
+>> patch_xxl members:
+>>
+>> --- a/arch/x86/kernel/paravirt_patch.c
+>> +++ b/arch/x86/kernel/paravirt_patch.c
+>> @@ -28,7 +28,7 @@ struct patch_xxl {
+>>  	const unsigned char	irq_restore_fl[2];
+>>  # ifdef CONFIG_X86_64
+>>  	const unsigned char	cpu_wbinvd[2];
+>> -	const unsigned char	cpu_usergs_sysret64[6];
+>> +	const unsigned char	cpu_usergs_sysret64[60];
+>>  	const unsigned char	cpu_swapgs[3];
+>>  	const unsigned char	mov64[3];
+>>  # else
+>>
+>> Which with the vanilla kernel crashes on boot much, much later:
+>>
+>> [    2.478026] PANIC: double fault, error_code: 0x0
+> 
+> Sure, there is no NOP padding applied. Pre-populating the area with
+> 1 byte NOPs would avoid the crash.
 
-Keep track of which clients are using the V3D and liberate the buffer
-when there is none left, using a kref. Protect the logic with a
-mutex to avoid race conditions.
+This is wrong, of course.
 
-The binner BO is created at the time of the first render ioctl and is
-destroyed when there is no client and no exec job using it left.
+But the indirect jmp is failing as struct pv_ops isn't mapped by the
+user page tables.
 
-The Out-Of-Memory (OOM) interrupt also gets some tweaking, to avoid
-enabling it before having allocated a binner bo.
 
-We also want to keep the BO alive during runtime suspend/resume to avoid
-failing to allocate it at resume. This happens when the CMA pool is
-full at that point and results in a hard crash.
-
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- drivers/gpu/drm/vc4/vc4_bo.c  | 33 +++++++++++++++++++-
- drivers/gpu/drm/vc4/vc4_drv.c |  6 ++++
- drivers/gpu/drm/vc4/vc4_drv.h | 14 +++++++++
- drivers/gpu/drm/vc4/vc4_gem.c | 13 ++++++++
- drivers/gpu/drm/vc4/vc4_irq.c | 21 +++++++++----
- drivers/gpu/drm/vc4/vc4_v3d.c | 58 +++++++++++++++++++++++++++--------
- 6 files changed, 125 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/gpu/drm/vc4/vc4_bo.c b/drivers/gpu/drm/vc4/vc4_bo.c
-index 88ebd681d7eb..2b3ec5926fe2 100644
---- a/drivers/gpu/drm/vc4/vc4_bo.c
-+++ b/drivers/gpu/drm/vc4/vc4_bo.c
-@@ -799,13 +799,38 @@ vc4_prime_import_sg_table(struct drm_device *dev,
- 	return obj;
- }
- 
-+static int vc4_grab_bin_bo(struct vc4_dev *vc4, struct vc4_file *vc4file)
-+{
-+	int ret;
-+
-+	if (!vc4->v3d)
-+		return -ENODEV;
-+
-+	if (vc4file->bin_bo_used)
-+		return 0;
-+
-+	ret = vc4_v3d_bin_bo_get(vc4);
-+	if (ret)
-+		return ret;
-+
-+	vc4file->bin_bo_used = true;
-+
-+	return 0;
-+}
-+
- int vc4_create_bo_ioctl(struct drm_device *dev, void *data,
- 			struct drm_file *file_priv)
- {
- 	struct drm_vc4_create_bo *args = data;
-+	struct vc4_file *vc4file = file_priv->driver_priv;
-+	struct vc4_dev *vc4 = to_vc4_dev(dev);
- 	struct vc4_bo *bo = NULL;
- 	int ret;
- 
-+	ret = vc4_grab_bin_bo(vc4, vc4file);
-+	if (ret)
-+		return ret;
-+
- 	/*
- 	 * We can't allocate from the BO cache, because the BOs don't
- 	 * get zeroed, and that might leak data between users.
-@@ -846,6 +871,8 @@ vc4_create_shader_bo_ioctl(struct drm_device *dev, void *data,
- 			   struct drm_file *file_priv)
- {
- 	struct drm_vc4_create_shader_bo *args = data;
-+	struct vc4_file *vc4file = file_priv->driver_priv;
-+	struct vc4_dev *vc4 = to_vc4_dev(dev);
- 	struct vc4_bo *bo = NULL;
- 	int ret;
- 
-@@ -865,6 +892,10 @@ vc4_create_shader_bo_ioctl(struct drm_device *dev, void *data,
- 		return -EINVAL;
- 	}
- 
-+	ret = vc4_grab_bin_bo(vc4, vc4file);
-+	if (ret)
-+		return ret;
-+
- 	bo = vc4_bo_create(dev, args->size, true, VC4_BO_TYPE_V3D_SHADER);
- 	if (IS_ERR(bo))
- 		return PTR_ERR(bo);
-@@ -894,7 +925,7 @@ vc4_create_shader_bo_ioctl(struct drm_device *dev, void *data,
- 	 */
- 	ret = drm_gem_handle_create(file_priv, &bo->base.base, &args->handle);
- 
-- fail:
-+fail:
- 	drm_gem_object_put_unlocked(&bo->base.base);
- 
- 	return ret;
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
-index 6d9be20a32be..0f99ad03614e 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.c
-+++ b/drivers/gpu/drm/vc4/vc4_drv.c
-@@ -128,8 +128,12 @@ static int vc4_open(struct drm_device *dev, struct drm_file *file)
- 
- static void vc4_close(struct drm_device *dev, struct drm_file *file)
- {
-+	struct vc4_dev *vc4 = to_vc4_dev(dev);
- 	struct vc4_file *vc4file = file->driver_priv;
- 
-+	if (vc4file->bin_bo_used)
-+		vc4_v3d_bin_bo_put(vc4);
-+
- 	vc4_perfmon_close_file(vc4file);
- 	kfree(vc4file);
- }
-@@ -274,6 +278,8 @@ static int vc4_drm_bind(struct device *dev)
- 	drm->dev_private = vc4;
- 	INIT_LIST_HEAD(&vc4->debugfs_list);
- 
-+	mutex_init(&vc4->bin_bo_lock);
-+
- 	ret = vc4_bo_cache_init(drm);
- 	if (ret)
- 		goto dev_put;
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 4f13f6262491..5bfca83deb8e 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -216,6 +216,11 @@ struct vc4_dev {
- 	 * the minor is available (after drm_dev_register()).
- 	 */
- 	struct list_head debugfs_list;
-+
-+	/* Mutex for binner bo allocation. */
-+	struct mutex bin_bo_lock;
-+	/* Reference count for our binner bo. */
-+	struct kref bin_bo_kref;
- };
- 
- static inline struct vc4_dev *
-@@ -584,6 +589,11 @@ struct vc4_exec_info {
- 	 * NULL otherwise.
- 	 */
- 	struct vc4_perfmon *perfmon;
-+
-+	/* Whether the exec has taken a reference to the binner BO, which should
-+	 * happen with a VC4_PACKET_TILE_BINNING_MODE_CONFIG packet.
-+	 */
-+	bool bin_bo_used;
- };
- 
- /* Per-open file private data. Any driver-specific resource that has to be
-@@ -594,6 +604,8 @@ struct vc4_file {
- 		struct idr idr;
- 		struct mutex lock;
- 	} perfmon;
-+
-+	bool bin_bo_used;
- };
- 
- static inline struct vc4_exec_info *
-@@ -833,6 +845,8 @@ void vc4_plane_async_set_fb(struct drm_plane *plane,
- extern struct platform_driver vc4_v3d_driver;
- extern const struct of_device_id vc4_v3d_dt_match[];
- int vc4_v3d_get_bin_slot(struct vc4_dev *vc4);
-+int vc4_v3d_bin_bo_get(struct vc4_dev *vc4);
-+void vc4_v3d_bin_bo_put(struct vc4_dev *vc4);
- int vc4_v3d_pm_get(struct vc4_dev *vc4);
- void vc4_v3d_pm_put(struct vc4_dev *vc4);
- 
-diff --git a/drivers/gpu/drm/vc4/vc4_gem.c b/drivers/gpu/drm/vc4/vc4_gem.c
-index d9311be32a4f..6219e9368ef2 100644
---- a/drivers/gpu/drm/vc4/vc4_gem.c
-+++ b/drivers/gpu/drm/vc4/vc4_gem.c
-@@ -820,6 +820,7 @@ static int
- vc4_get_bcl(struct drm_device *dev, struct vc4_exec_info *exec)
- {
- 	struct drm_vc4_submit_cl *args = exec->args;
-+	struct vc4_dev *vc4 = to_vc4_dev(dev);
- 	void *temp = NULL;
- 	void *bin;
- 	int ret = 0;
-@@ -918,6 +919,14 @@ vc4_get_bcl(struct drm_device *dev, struct vc4_exec_info *exec)
- 	if (ret)
- 		goto fail;
- 
-+	if (exec->found_tile_binning_mode_config_packet) {
-+		ret = vc4_v3d_bin_bo_get(vc4);
-+		if (ret)
-+			goto fail;
-+
-+		exec->bin_bo_used = true;
-+	}
-+
- 	/* Block waiting on any previous rendering into the CS's VBO,
- 	 * IB, or textures, so that pixels are actually written by the
- 	 * time we try to read them.
-@@ -966,6 +975,10 @@ vc4_complete_exec(struct drm_device *dev, struct vc4_exec_info *exec)
- 	vc4->bin_alloc_used &= ~exec->bin_slots;
- 	spin_unlock_irqrestore(&vc4->job_lock, irqflags);
- 
-+	/* Release the reference on the binner BO if needed. */
-+	if (exec->bin_bo_used)
-+		vc4_v3d_bin_bo_put(vc4);
-+
- 	/* Release the reference we had on the perf monitor. */
- 	vc4_perfmon_put(exec->perfmon);
- 
-diff --git a/drivers/gpu/drm/vc4/vc4_irq.c b/drivers/gpu/drm/vc4/vc4_irq.c
-index 723dc86b4511..e226c24e543f 100644
---- a/drivers/gpu/drm/vc4/vc4_irq.c
-+++ b/drivers/gpu/drm/vc4/vc4_irq.c
-@@ -59,18 +59,22 @@ vc4_overflow_mem_work(struct work_struct *work)
- {
- 	struct vc4_dev *vc4 =
- 		container_of(work, struct vc4_dev, overflow_mem_work);
--	struct vc4_bo *bo = vc4->bin_bo;
-+	struct vc4_bo *bo;
- 	int bin_bo_slot;
- 	struct vc4_exec_info *exec;
- 	unsigned long irqflags;
- 
--	if (!bo)
--		return;
-+	mutex_lock(&vc4->bin_bo_lock);
-+
-+	if (!vc4->bin_bo)
-+		goto complete;
-+
-+	bo = vc4->bin_bo;
- 
- 	bin_bo_slot = vc4_v3d_get_bin_slot(vc4);
- 	if (bin_bo_slot < 0) {
- 		DRM_ERROR("Couldn't allocate binner overflow mem\n");
--		return;
-+		goto complete;
- 	}
- 
- 	spin_lock_irqsave(&vc4->job_lock, irqflags);
-@@ -101,6 +105,9 @@ vc4_overflow_mem_work(struct work_struct *work)
- 	V3D_WRITE(V3D_INTCTL, V3D_INT_OUTOMEM);
- 	V3D_WRITE(V3D_INTENA, V3D_INT_OUTOMEM);
- 	spin_unlock_irqrestore(&vc4->job_lock, irqflags);
-+
-+complete:
-+	mutex_unlock(&vc4->bin_bo_lock);
- }
- 
- static void
-@@ -252,8 +259,10 @@ vc4_irq_postinstall(struct drm_device *dev)
- 	if (!vc4->v3d)
- 		return 0;
- 
--	/* Enable both the render done and out of memory interrupts. */
--	V3D_WRITE(V3D_INTENA, V3D_DRIVER_IRQS);
-+	/* Enable the render done interrupts. The out-of-memory interrupt is
-+	 * enabled as soon as we have a binner BO allocated.
-+	 */
-+	V3D_WRITE(V3D_INTENA, V3D_INT_FLDONE | V3D_INT_FRDONE);
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/vc4/vc4_v3d.c b/drivers/gpu/drm/vc4/vc4_v3d.c
-index c16db4665af6..4ede8a920aa8 100644
---- a/drivers/gpu/drm/vc4/vc4_v3d.c
-+++ b/drivers/gpu/drm/vc4/vc4_v3d.c
-@@ -294,6 +294,14 @@ static int bin_bo_alloc(struct vc4_dev *vc4)
- 			WARN_ON_ONCE(sizeof(vc4->bin_alloc_used) * 8 !=
- 				     bo->base.base.size / vc4->bin_alloc_size);
- 
-+			kref_init(&vc4->bin_bo_kref);
-+
-+			/* Enable the out-of-memory interrupt to set our
-+			 * newly-allocated binner BO, potentially from an
-+			 * already-pending-but-masked interupt.
-+			 */
-+			V3D_WRITE(V3D_INTENA, V3D_INT_OUTOMEM);
-+
- 			break;
- 		}
- 
-@@ -313,6 +321,43 @@ static int bin_bo_alloc(struct vc4_dev *vc4)
- 	return ret;
- }
- 
-+int vc4_v3d_bin_bo_get(struct vc4_dev *vc4)
-+{
-+	int ret = 0;
-+
-+	mutex_lock(&vc4->bin_bo_lock);
-+
-+	if (vc4->bin_bo) {
-+		kref_get(&vc4->bin_bo_kref);
-+		goto complete;
-+	}
-+
-+	ret = bin_bo_alloc(vc4);
-+
-+complete:
-+	mutex_unlock(&vc4->bin_bo_lock);
-+
-+	return ret;
-+}
-+
-+static void bin_bo_release(struct kref *ref)
-+{
-+	struct vc4_dev *vc4 = container_of(ref, struct vc4_dev, bin_bo_kref);
-+
-+	if (WARN_ON_ONCE(!vc4->bin_bo))
-+		return;
-+
-+	drm_gem_object_put_unlocked(&vc4->bin_bo->base.base);
-+	vc4->bin_bo = NULL;
-+}
-+
-+void vc4_v3d_bin_bo_put(struct vc4_dev *vc4)
-+{
-+	mutex_lock(&vc4->bin_bo_lock);
-+	kref_put(&vc4->bin_bo_kref, bin_bo_release);
-+	mutex_unlock(&vc4->bin_bo_lock);
-+}
-+
- #ifdef CONFIG_PM
- static int vc4_v3d_runtime_suspend(struct device *dev)
- {
-@@ -321,9 +366,6 @@ static int vc4_v3d_runtime_suspend(struct device *dev)
- 
- 	vc4_irq_uninstall(vc4->dev);
- 
--	drm_gem_object_put_unlocked(&vc4->bin_bo->base.base);
--	vc4->bin_bo = NULL;
--
- 	clk_disable_unprepare(v3d->clk);
- 
- 	return 0;
-@@ -335,10 +377,6 @@ static int vc4_v3d_runtime_resume(struct device *dev)
- 	struct vc4_dev *vc4 = v3d->vc4;
- 	int ret;
- 
--	ret = bin_bo_alloc(vc4);
--	if (ret)
--		return ret;
--
- 	ret = clk_prepare_enable(v3d->clk);
- 	if (ret != 0)
- 		return ret;
-@@ -405,12 +443,6 @@ static int vc4_v3d_bind(struct device *dev, struct device *master, void *data)
- 	if (ret != 0)
- 		return ret;
- 
--	ret = bin_bo_alloc(vc4);
--	if (ret) {
--		clk_disable_unprepare(v3d->clk);
--		return ret;
--	}
--
- 	/* Reset the binner overflow address/size at setup, to be sure
- 	 * we don't reuse an old one.
- 	 */
--- 
-2.21.0
-
+Juergen
