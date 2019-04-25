@@ -2,443 +2,90 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225C7C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC386C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8140217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1112084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387539AbfDYLRh (ORCPT
+        id S1730872AbfDYLTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:17:37 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37221 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbfDYLRh (ORCPT
+        Thu, 25 Apr 2019 07:19:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33880 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfDYLTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:17:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v13so7324213ljk.4;
-        Thu, 25 Apr 2019 04:17:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f9nv7NFkq+1Rw9FXXqVv02O1dF6boGA1zcH6Oor3v5s=;
-        b=WpjoG9MnflvRtlPnRK51RdMq6zZLSzyj2k9u5dVEv0y0UPLt31ZjfP1iVLpcKmnLd9
-         gVHn641hTr9d+hjzsUaIgQ6gBxUueZmcpx3SQrPOjl/awY/lEB62EKByfqO4xfSwZpVK
-         uhVBpbqzkf96N8ChUvI76kv4yZSEEqPqJlsuK37bvMN08OBSh8EfA1mHtwaNKrIL7/eo
-         dirJOlBKTxuYGDioWuFuJpwu3A6W3V7HXhs22UxrnVF+dbnvsHRAV42ociTYh7KZzX2j
-         jEilAMFjfORra9uwrIVueJeG8u68OjWxWzg/+/tCX9KnlA97sxbdKxZsG90LiMLvXh1a
-         4uVA==
-X-Gm-Message-State: APjAAAVzoM2XDsNmCb6zcjGDWS/qGoZv8R7OEeb0urow49tUJ/XJ5GFj
-        Gmy462a+rdQGeJ3AePfCdaw=
-X-Google-Smtp-Source: APXvYqyMDWhL2z2U+Aez9RxzDG81yfgSzbg0FhKp7kQbKY6G+1tu/t4frZQ9P6jiGgqrUaA1F9UGiw==
-X-Received: by 2002:a2e:500d:: with SMTP id e13mr20608122ljb.169.1556191052475;
-        Thu, 25 Apr 2019 04:17:32 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id n10sm5817603ljh.36.2019.04.25.04.17.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 04:17:31 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 14:17:19 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
-Subject: [PATCH RESEND v13 8/8] watchdog: bd70528: Initial support for ROHM
- BD70528 watchdog block
-Message-ID: <resend.2a84677b20adab6319736c8baa31b6241dd63a68.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover2.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 25 Apr 2019 07:19:48 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 327E82813B8
+Subject: Re: [PATCH 00/30] Update cros_ec_commands.h
+To:     Lee Jones <lee.jones@linaro.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Cc:     bleung@chromium.org, groeck@chromium.org,
+        linux-kernel@vger.kernel.org
+References: <20190424232918.243308-1-gwendal@chromium.org>
+ <20190425081232.GA14758@dell>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <aa1c0ab7-6491-69a8-936c-26460b78d6c2@collabora.com>
+Date:   Thu, 25 Apr 2019 13:19:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover2.1554371464.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190425081232.GA14758@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initial support for watchdog block included in ROHM BD70528
-power management IC.
+Hi Gwendal, Lee
 
-Configurations for low power states are still to be checked.
+On 25/4/19 10:12, Lee Jones wrote:
+> On Wed, 24 Apr 2019, Gwendal Grignou wrote:
+> 
+>> The interface between CrosEC embedded controller and the host,
+>> described by cros_ec_commands.h, as diverged from what the embedded
+>> controller really support.
+>>
+>> The source of thruth is at
+>> https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
+>>
+>> That include file is converted to remove ACPI and Embedded only code.
+>>
+>> From now on, cros_ec_commands.h will be automatically generated from
+>> the file above, do not modify directly.
+>>
+>> Fell free to squash the commits below.
+> 
+> This is going to need a bunch of Chromium reviews (and testing
+> ideally) before I can take this set.
+> 
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
----
-Changelog v13
-- Moved WDT enable/disable code from MFD to WDT as was (strongly) suggested
-  by Lee Jones
+I tested this patchset in different ways. With the full series applied I checked
+that didn't break any cros-ec driver on Kevin, Samus and Veyron devices. I also
+checked via userspace tool that I don't see any problem sending commands and
+finally I checked that applying one-by-one the patches didn't break the build on
+x86 and arm64, there is though, a problem,
 
-Changelog v12 
-- No functional changes
-- Small styling fixes
+[PATCH 24/30] mfd: cros_ec: Update I2S API
 
- drivers/watchdog/Kconfig       |  12 ++
- drivers/watchdog/Makefile      |   1 +
- drivers/watchdog/bd70528_wdt.c | 290 +++++++++++++++++++++++++++++++++
- 3 files changed, 303 insertions(+)
- create mode 100644 drivers/watchdog/bd70528_wdt.c
+introduces a build problem because removes a struct that is currently used by
+the cros_ec_codec driver. I think that at the same time we should update that
+driver with the new struct name.
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 242eea859637..a00bf649d7f0 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -90,6 +90,18 @@ config SOFT_WATCHDOG_PRETIMEOUT
- 	  watchdog. Be aware that governors might affect the watchdog because it
- 	  is purely software, e.g. the panic governor will stall it!
- 
-+config BD70528_WATCHDOG
-+	tristate "ROHM BD70528 PMIC Watchdog"
-+	depends on MFD_ROHM_BD70528
-+	select WATCHDOG_CORE
-+	help
-+	  Support for the watchdog in the ROHM BD70528 PMIC. Watchdog trigger
-+	  cause system reset.
-+
-+	  Say Y here to include support for the ROHM BD70528 watchdog.
-+	  Alternatively say M to compile the driver as a module,
-+	  which will be called bd70528_wdt.
-+
- config DA9052_WATCHDOG
- 	tristate "Dialog DA9052 Watchdog"
- 	depends on PMIC_DA9052 || COMPILE_TEST
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index ba930e464657..3985922c440a 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -205,6 +205,7 @@ obj-$(CONFIG_WATCHDOG_SUN4V)		+= sun4v_wdt.o
- obj-$(CONFIG_XEN_WDT) += xen_wdt.o
- 
- # Architecture Independent
-+obj-$(CONFIG_BD70528_WATCHDOG) += bd70528_wdt.o
- obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
- obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
- obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
-diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-new file mode 100644
-index 000000000000..b0152fef4fc7
---- /dev/null
-+++ b/drivers/watchdog/bd70528_wdt.c
-@@ -0,0 +1,290 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 ROHM Semiconductors
-+// ROHM BD70528MWV watchdog driver
-+
-+#include <linux/bcd.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/rohm-bd70528.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/watchdog.h>
-+
-+/*
-+ * Max time we can set is 1 hour, 59 minutes and 59 seconds
-+ * and Minimum time is 1 second
-+ */
-+#define WDT_MAX_MS	((2 * 60 * 60 - 1) * 1000)
-+#define WDT_MIN_MS	1000
-+#define DEFAULT_TIMEOUT	60
-+
-+#define WD_CTRL_MAGIC1 0x55
-+#define WD_CTRL_MAGIC2 0xAA
-+
-+struct wdtbd70528 {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct rohm_regmap_dev *mfd;
-+	struct watchdog_device wdt;
-+};
-+
-+/**
-+ * bd70528_wdt_set - arm or disarm watchdog timer
-+ *
-+ * @data:	device data for the PMIC instance we want to operate on
-+ * @enable:	new state of WDT. zero to disable, non zero to enable
-+ * @old_state:	previous state of WDT will be filled here
-+ *
-+ * Arm or disarm WDT on BD70528 PMIC. Expected to be called only by
-+ * BD70528 RTC and BD70528 WDT drivers. The rtc_timer_lock must be taken
-+ * by calling bd70528_wdt_lock before calling bd70528_wdt_set.
-+ */
-+int bd70528_wdt_set(struct rohm_regmap_dev *data, int enable, int *old_state)
-+{
-+	int ret, i;
-+	unsigned int tmp;
-+	struct bd70528_data *bd70528 = container_of(data, struct bd70528_data,
-+						 chip);
-+	u8 wd_ctrl_arr[3] = { WD_CTRL_MAGIC1, WD_CTRL_MAGIC2, 0 };
-+	u8 *wd_ctrl = &wd_ctrl_arr[2];
-+
-+	ret = regmap_read(bd70528->chip.regmap, BD70528_REG_WDT_CTRL, &tmp);
-+	if (ret)
-+		return ret;
-+
-+	*wd_ctrl = (u8)tmp;
-+
-+	if (old_state) {
-+		if (*wd_ctrl & BD70528_MASK_WDT_EN)
-+			*old_state |= BD70528_WDT_STATE_BIT;
-+		else
-+			*old_state &= ~BD70528_WDT_STATE_BIT;
-+		if ((!enable) == (!(*old_state & BD70528_WDT_STATE_BIT)))
-+			return 0;
-+	}
-+
-+	if (enable) {
-+		if (*wd_ctrl & BD70528_MASK_WDT_EN)
-+			return 0;
-+		*wd_ctrl |= BD70528_MASK_WDT_EN;
-+	} else {
-+		if (*wd_ctrl & BD70528_MASK_WDT_EN)
-+			*wd_ctrl &= ~BD70528_MASK_WDT_EN;
-+		else
-+			return 0;
-+	}
-+
-+	for (i = 0; i < 3; i++) {
-+		ret = regmap_write(bd70528->chip.regmap, BD70528_REG_WDT_CTRL,
-+				   wd_ctrl_arr[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = regmap_read(bd70528->chip.regmap, BD70528_REG_WDT_CTRL, &tmp);
-+	if ((tmp & BD70528_MASK_WDT_EN) != (*wd_ctrl & BD70528_MASK_WDT_EN)) {
-+		dev_err(bd70528->chip.dev,
-+			"Watchdog ctrl mismatch (hw) 0x%x (set) 0x%x\n",
-+			tmp, *wd_ctrl);
-+		ret = -EIO;
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(bd70528_wdt_set);
-+
-+/**
-+ * bd70528_wdt_lock - take WDT lock
-+ *
-+ * @bd70528:	device data for the PMIC instance we want to operate on
-+ *
-+ * Lock WDT for arming/disarming in order to avoid race condition caused
-+ * by WDT state changes initiated by WDT and RTC drivers.
-+ */
-+void bd70528_wdt_lock(struct rohm_regmap_dev *data)
-+{
-+	struct bd70528_data *bd70528 = container_of(data, struct bd70528_data,
-+						 chip);
-+
-+	mutex_lock(&bd70528->rtc_timer_lock);
-+}
-+EXPORT_SYMBOL(bd70528_wdt_lock);
-+
-+/**
-+ * bd70528_wdt_unlock - unlock WDT lock
-+ *
-+ * @bd70528:	device data for the PMIC instance we want to operate on
-+ *
-+ * Unlock WDT lock which has previously been taken by call to
-+ * bd70528_wdt_lock.
-+ */
-+void bd70528_wdt_unlock(struct rohm_regmap_dev *data)
-+{
-+	struct bd70528_data *bd70528 = container_of(data, struct bd70528_data,
-+						 chip);
-+
-+	mutex_unlock(&bd70528->rtc_timer_lock);
-+}
-+EXPORT_SYMBOL(bd70528_wdt_unlock);
-+
-+static int bd70528_wdt_set_locked(struct wdtbd70528 *w, int enable)
-+{
-+	return bd70528_wdt_set(w->mfd, enable, NULL);
-+}
-+
-+static int bd70528_wdt_change(struct wdtbd70528 *w, int enable)
-+{
-+	int ret;
-+
-+	bd70528_wdt_lock(w->mfd);
-+	ret = bd70528_wdt_set_locked(w, enable);
-+	bd70528_wdt_unlock(w->mfd);
-+
-+	return ret;
-+}
-+
-+static int bd70528_wdt_start(struct watchdog_device *wdt)
-+{
-+	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-+
-+	dev_dbg(w->dev, "WDT ping...\n");
-+	return bd70528_wdt_change(w, 1);
-+}
-+
-+static int bd70528_wdt_stop(struct watchdog_device *wdt)
-+{
-+	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-+
-+	dev_dbg(w->dev, "WDT stopping...\n");
-+	return bd70528_wdt_change(w, 0);
-+}
-+
-+static int bd70528_wdt_set_timeout(struct watchdog_device *wdt,
-+				   unsigned int timeout)
-+{
-+	unsigned int hours;
-+	unsigned int minutes;
-+	unsigned int seconds;
-+	int ret;
-+	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-+
-+	seconds = timeout;
-+	hours = timeout / (60 * 60);
-+	/* Maximum timeout is 1h 59m 59s => hours is 1 or 0 */
-+	if (hours)
-+		seconds -= (60 * 60);
-+	minutes = seconds / 60;
-+	seconds = seconds % 60;
-+
-+	bd70528_wdt_lock(w->mfd);
-+
-+	ret = bd70528_wdt_set_locked(w, 0);
-+	if (ret)
-+		goto out_unlock;
-+
-+	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_HOUR,
-+				 BD70528_MASK_WDT_HOUR, hours);
-+	if (ret) {
-+		dev_err(w->dev, "Failed to set WDT hours\n");
-+		goto out_en_unlock;
-+	}
-+	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_MINUTE,
-+				 BD70528_MASK_WDT_MINUTE, bin2bcd(minutes));
-+	if (ret) {
-+		dev_err(w->dev, "Failed to set WDT minutes\n");
-+		goto out_en_unlock;
-+	}
-+	ret = regmap_update_bits(w->regmap, BD70528_REG_WDT_SEC,
-+				 BD70528_MASK_WDT_SEC, bin2bcd(seconds));
-+	if (ret)
-+		dev_err(w->dev, "Failed to set WDT seconds\n");
-+	else
-+		dev_dbg(w->dev, "WDT tmo set to %u\n", timeout);
-+
-+out_en_unlock:
-+	ret = bd70528_wdt_set_locked(w, 1);
-+out_unlock:
-+	bd70528_wdt_unlock(w->mfd);
-+
-+	return ret;
-+}
-+
-+static const struct watchdog_info bd70528_wdt_info = {
-+	.identity = "bd70528-wdt",
-+	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+};
-+
-+static const struct watchdog_ops bd70528_wdt_ops = {
-+	.start		= bd70528_wdt_start,
-+	.stop		= bd70528_wdt_stop,
-+	.set_timeout	= bd70528_wdt_set_timeout,
-+};
-+
-+static int bd70528_wdt_probe(struct platform_device *pdev)
-+{
-+	struct rohm_regmap_dev *bd70528;
-+	struct wdtbd70528 *w;
-+	int ret;
-+	unsigned int reg;
-+
-+	bd70528 = dev_get_drvdata(pdev->dev.parent);
-+	if (!bd70528) {
-+		dev_err(&pdev->dev, "No MFD driver data\n");
-+		return -EINVAL;
-+	}
-+	w = devm_kzalloc(&pdev->dev, sizeof(*w), GFP_KERNEL);
-+	if (!w)
-+		return -ENOMEM;
-+
-+	w->regmap = bd70528->regmap;
-+	w->mfd = bd70528;
-+	w->dev = &pdev->dev;
-+
-+	w->wdt.info = &bd70528_wdt_info;
-+	w->wdt.ops =  &bd70528_wdt_ops;
-+	w->wdt.min_hw_heartbeat_ms = WDT_MIN_MS;
-+	w->wdt.max_hw_heartbeat_ms = WDT_MAX_MS;
-+	w->wdt.parent = pdev->dev.parent;
-+	w->wdt.timeout = DEFAULT_TIMEOUT;
-+	watchdog_set_drvdata(&w->wdt, w);
-+	watchdog_init_timeout(&w->wdt, 0, pdev->dev.parent);
-+
-+	ret = bd70528_wdt_set_timeout(&w->wdt, w->wdt.timeout);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to set the watchdog timeout\n");
-+		return ret;
-+	}
-+
-+	bd70528_wdt_lock(w->mfd);
-+	ret = regmap_read(w->regmap, BD70528_REG_WDT_CTRL, &reg);
-+	bd70528_wdt_unlock(w->mfd);
-+
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to get the watchdog state\n");
-+		return ret;
-+	}
-+	if (reg & BD70528_MASK_WDT_EN) {
-+		dev_dbg(&pdev->dev, "watchdog was running during probe\n");
-+		set_bit(WDOG_HW_RUNNING, &w->wdt.status);
-+	}
-+
-+	ret = devm_watchdog_register_device(&pdev->dev, &w->wdt);
-+	if (ret < 0)
-+		dev_err(&pdev->dev, "watchdog registration failed: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver bd70528_wdt = {
-+	.driver = {
-+		.name = "bd70528-wdt"
-+	},
-+	.probe = bd70528_wdt_probe,
-+};
-+
-+module_platform_driver(bd70528_wdt);
-+
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+MODULE_DESCRIPTION("BD70528 watchdog driver");
-+MODULE_LICENSE("GPL");
--- 
-2.17.2
+Once this is fixed,
 
+Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+for the full series.
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Thanks,
+ Enric
+
