@@ -2,148 +2,111 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCA1C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9DDC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D599D20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE0420811
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:30:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fBN5zXpm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfDYLat (ORCPT
+        id S1728169AbfDYLa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:30:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50208 "EHLO mx1.suse.de"
+        Thu, 25 Apr 2019 07:30:58 -0400
+Received: from mail-eopbgr80043.outbound.protection.outlook.com ([40.107.8.43]:59011
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727218AbfDYLat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:30:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 24330AFC2;
-        Thu, 25 Apr 2019 11:30:47 +0000 (UTC)
-Subject: Re: x86/paravirt: Detect over-sized patching bugs in
- paravirt_patch_call()
-To:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-References: <20190424134115.091452807@linutronix.de>
- <20190424134223.690835713@linutronix.de> <20190425065209.GA89582@gmail.com>
- <alpine.DEB.2.21.1904250921010.1762@nanos.tec.linutronix.de>
- <20190425081012.GA115378@gmail.com> <20190425091717.GA72229@gmail.com>
- <20190425092131.GL4038@hirez.programming.kicks-ass.net>
- <20190425095039.GC115378@gmail.com>
- <20190425102210.GM4038@hirez.programming.kicks-ass.net>
- <20190425105745.GA29840@gmail.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <cde4b650-7fe5-869e-9cd8-327150bd092e@suse.com>
-Date:   Thu, 25 Apr 2019 13:30:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190425105745.GA29840@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        id S1727218AbfDYLa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 07:30:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vcd3L1QPNSwk5NsNneEVBZx0mhsJQL7y0KMeVYuHDOk=;
+ b=fBN5zXpm4OIkkIPYdy5dHl+xre5tOXu0GIfOzcyHIG+UC+JSbaeV7GTn04cL71LeJiZpVy7PqrqWv9dscw/KbjA6W3/xjbES7NkH/gbj6nGASk1n9KO1t99lp9AAzAarB5VnWGrqyasCu8ZdWBAke6m+pBVQCCKGeb/T5Lr3GOk=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
+ VI1PR04MB5742.eurprd04.prod.outlook.com (20.178.127.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.13; Thu, 25 Apr 2019 11:30:54 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::81d8:f74b:f91e:f071]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::81d8:f74b:f91e:f071%6]) with mapi id 15.20.1813.017; Thu, 25 Apr 2019
+ 11:30:54 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] dma-mapping: create iommu mapping for newly allocated
+ dma coherent mem
+Thread-Topic: [RFC PATCH] dma-mapping: create iommu mapping for newly
+ allocated dma coherent mem
+Thread-Index: AQHU+SuhzP7n9rkWMk6epTxwq855uaZIeyMAgAHQb4CAAR4MgIABWJQA
+Date:   Thu, 25 Apr 2019 11:30:54 +0000
+Message-ID: <b9f2b425-dde9-f9a1-b8fa-b7710e764b16@nxp.com>
+References: <20190422165125.21704-1-laurentiu.tudor@nxp.com>
+ <20190422181100.GB32490@lst.de>
+ <VI1PR04MB513407A66107759EC0DFE175EC230@VI1PR04MB5134.eurprd04.prod.outlook.com>
+ <20190424145705.GB21480@lst.de>
+In-Reply-To: <20190424145705.GB21480@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9efaa0ed-af9c-44e0-6dc1-08d6c9717a97
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5742;
+x-ms-traffictypediagnostic: VI1PR04MB5742:
+x-microsoft-antispam-prvs: <VI1PR04MB574294BDBD6817E2786A1E96EC3D0@VI1PR04MB5742.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0018A2705B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(366004)(376002)(396003)(346002)(199004)(189003)(8936002)(478600001)(4326008)(97736004)(6246003)(66066001)(6486002)(81156014)(6436002)(81166006)(71200400001)(71190400001)(8676002)(256004)(6116002)(3846002)(229853002)(36756003)(54906003)(316002)(11346002)(476003)(2616005)(486006)(44832011)(6916009)(5660300002)(2906002)(66946007)(66446008)(64756008)(66556008)(76176011)(76116006)(7736002)(305945005)(73956011)(68736007)(26005)(6506007)(186003)(53546011)(99286004)(102836004)(446003)(66476007)(31686004)(31696002)(93886005)(53936002)(86362001)(25786009)(14454004)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5742;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3qlcUcjzUEFjHGfOOWWpa9IGk1mwUS5fLKHYrpNF7G//Owsr88hjnShhckMLU7GM+7sZCcxcR39/sLaeLl8Zi2prcvnmnmAvtgFcIBkB5AM4nUivoq/icqzTfj+pHUFUORVKhRK2erfCL3hB4E0hJmcDLfsNvGMcd+ztolPtDsOYk3BcUo3UKItSLa332LUNTfAd3XIt0yc9Zo6RFqeA8Gv0qSom2SPjy2vkysBpgrPBjoxT9HoT25k+CBSnDXANMV2YcihMmUDf8T+cJWnzlYSzsmCs5zNb3hnCvysVA+W1PNuFXsPXWMw4wfIHZiiuVaoml+7248YKnhKNbgYbLFRHPYPHLeL8OBxjOi+TWBmp7ogzgrH/z2RAylMNsLUU46QwP7KA2ntiXkqtUsgbg9+No40szz0+v0X/2wBdPbs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C3DAFF8A2E6710478B0D4E110DCF3AE3@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9efaa0ed-af9c-44e0-6dc1-08d6c9717a97
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 11:30:54.3194
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5742
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/04/2019 12:57, Ingo Molnar wrote:
-> 
-> * Peter Zijlstra <peterz@infradead.org> wrote:
-> 
->> On Thu, Apr 25, 2019 at 11:50:39AM +0200, Ingo Molnar wrote:
->>>
->>> * Peter Zijlstra <peterz@infradead.org> wrote:
->>>
->>>> On Thu, Apr 25, 2019 at 11:17:17AM +0200, Ingo Molnar wrote:
->>>>> It basically means that we silently won't do any patching and the kernel 
->>>>> will crash later on in mysterious ways, because paravirt patching is 
->>>>> usually relied on.
->>>>
->>>> That's OK. The compiler emits an indirect CALL/JMP to the pv_ops
->>>> structure contents. That _should_ stay valid and function correctly at
->>>> all times.
->>>
->>> It might result in a correctly executing kernel in terms of code 
->>> generation, but it doesn't result in a viable kernel: some of the places 
->>> rely on the patching going through and don't know what to do when it 
->>> doesn't and misbehave or crash in interesting ways.
->>>
->>> Guess how I know this. ;-)
->>
->> What sites would that be? It really should work AFAIK.
-> 
-> So for example I tried to increasing the size of one of the struct 
-> patch_xxl members:
-> 
-> --- a/arch/x86/kernel/paravirt_patch.c
-> +++ b/arch/x86/kernel/paravirt_patch.c
-> @@ -28,7 +28,7 @@ struct patch_xxl {
->  	const unsigned char	irq_restore_fl[2];
->  # ifdef CONFIG_X86_64
->  	const unsigned char	cpu_wbinvd[2];
-> -	const unsigned char	cpu_usergs_sysret64[6];
-> +	const unsigned char	cpu_usergs_sysret64[60];
->  	const unsigned char	cpu_swapgs[3];
->  	const unsigned char	mov64[3];
->  # else
-> 
-> Which with the vanilla kernel crashes on boot much, much later:
-> 
-> [    2.478026] PANIC: double fault, error_code: 0x0
-
-Sure, there is no NOP padding applied. Pre-populating the area with
-1 byte NOPs would avoid the crash.
-
-> But in any case, even if many of the others will work if the patching 
-> fails silently, is there any case where we'd treat patching failure as an 
-> acceptable case?
-> 
-> BUG_ON() in paravirt kernels is an easily debuggable condition and beats 
-> the above kinds of symptoms. But I can turn it into a WARN_ON_ONCE() if 
-> you think that's better?
-
-I'd prefer the BUG_ON(). Its not as if those conditions will occur on
-very few machines only. In case some patching isn't working we should
-catch those issues early.
-
-
-Juergen
+SGkgQ2hyaXN0b3BoLA0KDQpPbiAyNC4wNC4yMDE5IDE3OjU3LCBDaHJpc3RvcGggSGVsbHdpZyB3
+cm90ZToNCj4gSSdkIGJlIGhhcHB5IHRvIG9mZmxvYWQgYWxsIG9mIHRoZSBtZW50aW9uZWQgdGFz
+a3MgdG8geW91IGlmIHlvdQ0KPiB2b2x1bnRlZXIuDQoNCkFscmlnaHQsIEkgdGhpbmsgSSBtb3N0
+bHkgZ290IGl0IGFuZCBjYW4gc3RhcnQgd2l0aCB0aGUgdHdvIHVzYiBkcml2ZXJzIA0KeW91IG1l
+bnRpb25lZC4gSnVzdCBuZWVkIGEgZmV3IGNsYXJpZmljYXRpb25zLCBwbGVhc2Ugc2VlIGlubGlu
+ZS4NCg0KPiBJIHRoaW5rIHRoZSBmaXJzdCBzdGVwIGlzIHRvIG1vdmUgdGhlIHR3byBVU0IgY29u
+dHJvbGxlciB0aGF0IGNhbiBvbmx5DQo+IERNQSB0byB0aGVpciBvd24gQkFSIG9mZiB0aGUgZXhp
+c3RpbmcgRE1BIGNvaGVyZW50IGluZnJhc3RydWN0dXJlLiAgVGhlDQo+IGNvbnRyb2xsZXJzIGFy
+ZSBhbHJlYWR5IGlkZW50aWZpZWQgdXNpbmcgdGhlIEhDRF9MT0NBTF9NRU0gZmxhZywgc28gd2UN
+Cj4ganVzdCBuZWVkIHRvIGtleSBvZmYgdGhhdCBpbiB0aGUgaGNkX2J1ZmZlcl8qIHJvdXRpbmVz
+IGFuZCBjYWxsIGludG8gYQ0KDQpTbyBpZiBIQ0RfTE9DQUxfTUVNIGlzIHNldCBJIHNob3VsZCBj
+YWxsIGludG8gdGhlIGdlbl9wb29sIGFwaSBpbnN0ZWFkIA0Kb2YgZXhpc3RpbmcgZG1hX3thbGxv
+YyxmcmVlfV9jb2hlcmVudCgpLg0KDQo+IGdlbmFsbG9jIHRoYXQgaGFzIGJlZW4gZmVkIHVzaW5n
+IHRoZSBiYXIsIHJlcGxhY2luZyB0aGUgY3VycmVudA0KPiBkbWFfZGVjbGFyZV9jb2hlcmVudCB1
+c2FnZS4gIFRha2UgYSBsb29rIGF0IGRyaXZlcnMvcGNpL3AycGRtYS5jDQo+IGZvciBhbm90aGVy
+IGV4YW1wbGUgb2YgYWxsb2NhdGluZyBiaXRzIG9mIGEgQkFSIHVzaW5nIGdlbmFsbG9jLg0KDQpX
+aGVyZSBzaG91bGQgSSBwbGFjZSB0aGUgcmVmZXJlbmNlIHRvIHRoZSBnZW5fcG9vbD8gSG93IGRv
+ZXMgbG9jYWxfcG9vbCANCmluICdzdHJ1Y3QgaGNkX3VzYicgc291bmQ/DQoNCi0tLQ0KVGhhbmtz
+ICYgQmVzdCBSZWdhcmRzLCBMYXVyZW50aXU=
