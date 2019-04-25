@@ -2,123 +2,134 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8CCC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3001C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A799E206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:52:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dFUKT8/y"
+	by mail.kernel.org (Postfix) with ESMTP id B9B012077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387522AbfDYTwV (ORCPT
+        id S2387564AbfDYTxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:52:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56096 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfDYTwU (ORCPT
+        Thu, 25 Apr 2019 15:53:05 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:60536 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfDYTxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:52:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=f77raPNimqC2AbXVo9+y7MCgUWwUJvpmXp/DKHn5A8k=; b=dFUKT8/yu+sy/k6BIcNFuOQyk
-        X241+AVdHlQr1oL5296ANVIGjxBT5fuiprbRIR+EJYimd1UrmDtKzECRi+xHzmaGZIjXJRdrMBISo
-        DvTn2Pw26f3o8O7xEKc7KwuiFodgqXlUFNw3PwRUyn55LIKtO+aFfeJx5yxEzmVZmS31kpftJIOLU
-        ZyvrK4OUq5quVD3uft1J9D5m4hcXQUAv7YsTvfm8QWy5WjxBkbtWnkVXeKL46RMdtEh3m2l4Skgyi
-        8z2wLAkT+BKOjOln9K1266uNiRHA+vCeb15vxrve4n6QCAWQAkxCTleULJL3xIxdgYJdW7BkC+zIN
-        Nw29h1FaQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJkPl-0007vx-Rq; Thu, 25 Apr 2019 19:52:14 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 26590200D2F43; Thu, 25 Apr 2019 21:52:12 +0200 (CEST)
-Date:   Thu, 25 Apr 2019 21:52:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yuyang Du <duyuyang@gmail.com>
-Cc:     will.deacon@arm.com, mingo@kernel.org, bvanassche@acm.org,
-        ming.lei@redhat.com, frederic@kernel.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 22/28] locking/lockdep: Adjust new bit cases in mark_lock
-Message-ID: <20190425195212.GW12232@hirez.programming.kicks-ass.net>
-References: <20190424101934.51535-1-duyuyang@gmail.com>
- <20190424101934.51535-23-duyuyang@gmail.com>
+        Thu, 25 Apr 2019 15:53:05 -0400
+Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hJkQE-0001Cn-Bd; Thu, 25 Apr 2019 21:52:42 +0200
+Date:   Thu, 25 Apr 2019 21:52:41 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <dima@arista.com>
+cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv3 03/27] timens: Introduce CLOCK_MONOTONIC offsets
+In-Reply-To: <20190425161416.26600-4-dima@arista.com>
+Message-ID: <alpine.DEB.2.21.1904252118280.1768@nanos.tec.linutronix.de>
+References: <20190425161416.26600-1-dima@arista.com> <20190425161416.26600-4-dima@arista.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424101934.51535-23-duyuyang@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 06:19:28PM +0800, Yuyang Du wrote:
-> The new bit can be any possible lock usage except it is garbage, so the
-
-s/except it/except when it/ ?
-
-> cases in switch can be made simpler. Warn early on if wrong usage bit is
-> passed without taking locks. No functional change.
+On Thu, 25 Apr 2019, Dmitry Safonov wrote:
+> From: Andrei Vagin <avagin@openvz.org>
 > 
-> Signed-off-by: Yuyang Du <duyuyang@gmail.com>
-> ---
->  kernel/locking/lockdep.c | 21 +++++++--------------
->  1 file changed, 7 insertions(+), 14 deletions(-)
-> 
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index c08ec88..291cc9c 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -3476,6 +3476,11 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
->  {
->  	unsigned int new_mask = 1 << new_bit, ret = 1;
->  
-> +	if (new_bit >= LOCK_USAGE_STATES) {
-> +		WARN_ON(1);
+> Add monotonic time virtualisation for time namespace.
+> Introduce timespec for monotionic clock into timens offsets and wire
+> clock_gettime() syscall.
 
-Does that want to be DEBUG_LOCKS_WARN_ON() ?
+That's a bit meager. It should at least explain the concept how this is
+supposed to work.
+ 
+>  #define CLOCKS_MASK			(CLOCK_REALTIME | CLOCK_MONOTONIC)
+>  #define CLOCKS_MONO			CLOCK_MONOTONIC
 
-> +		return 0;
-> +	}
-> +
->  	/*
->  	 * If already set then do not dirty the cacheline,
->  	 * nor do any checks:
-> @@ -3499,25 +3504,13 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
->  		return 0;
->  
->  	switch (new_bit) {
-> -#define LOCKDEP_STATE(__STATE)			\
-> -	case LOCK_USED_IN_##__STATE:		\
-> -	case LOCK_USED_IN_##__STATE##_READ:	\
-> -	case LOCK_ENABLED_##__STATE:		\
-> -	case LOCK_ENABLED_##__STATE##_READ:
-> -#include "lockdep_states.h"
-> -#undef LOCKDEP_STATE
-> -		ret = mark_lock_irq(curr, this, new_bit);
-> -		if (!ret)
-> -			return 0;
-> -		break;
->  	case LOCK_USED:
->  		debug_atomic_dec(nr_unused_locks);
+Unrelated to this, but those two defines can go away.
+  
+> +#define CLOCK_TIMENS			1024
+
+Random number pulled out of thin air without any explanation. Aside of that
+why is this exposed to user space?
+
+> @@ -77,6 +78,7 @@ int do_clock_gettime(clockid_t which_clock, struct timespec64 *tp)
 >  		break;
->  	default:
-> -		if (!debug_locks_off_graph_unlock())
-> +		ret = mark_lock_irq(curr, this, new_bit);
-> +		if (!ret)
->  			return 0;
-> -		WARN_ON(1);
-> -		return 0;
->  	}
+>  	case CLOCK_MONOTONIC:
+>  		ktime_get_ts64(tp);
+> +		timens_add_monotonic(tp);
+>  		break;
+>  	case CLOCK_BOOTTIME:
+>  		ktime_get_boottime_ts64(tp);
+> diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+> index 29176635991f..a047d6b7c768 100644
+> --- a/kernel/time/posix-timers.c
+> +++ b/kernel/time/posix-timers.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/hashtable.h>
+>  #include <linux/compat.h>
+>  #include <linux/nospec.h>
+> +#include <linux/time_namespace.h>
 >  
->  	graph_unlock();
-> -- 
-> 1.8.3.1
-> 
+>  #include "timekeeping.h"
+>  #include "posix-timers.h"
+> @@ -190,6 +191,8 @@ static int posix_clock_realtime_adj(const clockid_t which_clock,
+>  static int posix_ktime_get_ts(clockid_t which_clock, struct timespec64 *tp)
+>  {
+>  	ktime_get_ts64(tp);
+> +	if (which_clock & CLOCK_TIMENS)
+> +		timens_add_monotonic(tp);
+
+> @@ -1039,7 +1046,7 @@ SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
+>  	if (!kc)
+>  		return -EINVAL;
+>  
+> -	error = kc->clock_get(which_clock, &kernel_tp);
+> +	error = kc->clock_get(which_clock | CLOCK_TIMENS, &kernel_tp);
+
+Bah. After some banging the head against the wall I figured out what you
+are doing here. It's because kc->clock_get() is used in common_timer_get()
+as well and there you don't want the adjustment there. Sorry, but this is
+uncomprehensible and unmaintainable and adds yet another conditional into
+the code flow.
+
+The callsite in common_timer_get() has already a comment:
+        /*
+         * The timespec64 based conversion is suboptimal, but it's not
+         * worth to implement yet another callback.
+         */
+        kc->clock_get(timr->it_clock, &ts64);
+        now = timespec64_to_ktime(ts64);
+
+So now we have a proper justification to add that extra callback:
+separation of functionality. It's trivial and not a massive code size
+overhead.
+
+Thanks,
+
+	tglx
