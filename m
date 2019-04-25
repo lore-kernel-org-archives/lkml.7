@@ -2,115 +2,109 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3559CC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E06C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6133217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F90F217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="EnKY2EUp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ieMQLJgs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfDYH66 (ORCPT
+        id S1728699AbfDYIAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:58:58 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:52302 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726380AbfDYH66 (ORCPT
+        Thu, 25 Apr 2019 04:00:24 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47978 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbfDYIAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:58:58 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3P7kUsv028244;
-        Thu, 25 Apr 2019 09:58:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
- : from : message-id : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=IvsHaaSIMlxl18/hQm1gg52lY0Z93obL0eK66HuX8Tk=;
- b=EnKY2EUp/xh/t5Xc2qWEbEfPcn6/iLL9+qjctaDNkIpmOM3CNfYL0H/44hwg6m/vT5Fe
- 6ueMtCeDGCqAtvXKt9RwW/MfuMUaYeJ+iQ3IVqCWL2+yJhftpJU1K2P0wU0fontTWoma
- 1cXmNdmKqBtb0AhVn4/nW1a9SPU7whpV34E4EGzOXFZW/KZdpWiuv6ZflUJuiJbDTcDg
- /vwG58OcL22W+B2qXLWCNeCQDIw1j9CpRC7l7223RPh41w5mPuhGb8Q32YR2HyWNUOcx
- OO2zzlKLgEK+akUgwjjw9A2Zg/e4zqX4Fm/AcJ7Js97c1b6ksJWcF+MNokMZw1wNL48H oQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ryrvxj7jp-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 25 Apr 2019 09:58:31 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CF07D31;
-        Thu, 25 Apr 2019 07:58:28 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5032114A2;
-        Thu, 25 Apr 2019 07:58:28 +0000 (GMT)
-Received: from [10.201.23.29] (10.75.127.44) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 25 Apr
- 2019 09:58:27 +0200
-Subject: Re: [PATCH] mtd: rawnand: stm32_fmc2: manage the get_irq error case
-To:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-mtd@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1556117346-5608-1-git-send-email-fabien.dessenne@st.com>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <1812f1d3-da71-4c62-d289-e08d742c2932@st.com>
-Date:   Thu, 25 Apr 2019 09:58:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 25 Apr 2019 04:00:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=psogWtI1uy8YkV5hhwCdx2cClcHcsNKnUU83+auLkOs=; b=ieMQLJgsdFGVe5GV6+tfDKAOB
+        EwvGWu8zv2FfjuMMgkHvV3SmHJ225pdG9SkG8BtiaSGJo2Fn8WJyuOmwLoNGMf7UfMBXa6eSboC0B
+        rZYqAz54XhQbUhFSrau9G1eG4owjbhgStlDzfzYUBEeuUWxtQ6iVtNDbKNVkroFP3xsxmbGgiVXTd
+        +vr+JHDPtsHj/p9oNVjVUUpbfgcYvYymEqvlzoAjeiSx9lsx85hWJwzQYSMviFZrTeAX04emStle/
+        UXAV7IOSHLcWQ6pvyS3UbzJkBPvOVmNq301OThAQqR7VtWufokdeF/xh4LJLZ8JDWBT+jSGnMhTPK
+        xImbMsO5w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJZIp-0000rL-Rl; Thu, 25 Apr 2019 08:00:20 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7BDED20D0A201; Thu, 25 Apr 2019 10:00:16 +0200 (CEST)
+Date:   Thu, 25 Apr 2019 10:00:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Xie XiuQi <xiexiuqi@huawei.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        cj.chengjian@huawei.com
+Subject: Re: [PATCH] sched: fix a potential divide error
+Message-ID: <20190425080016.GX11158@hirez.programming.kicks-ass.net>
+References: <20190420083416.170446-1-xiexiuqi@huawei.com>
+ <20190423184458.GW4038@hirez.programming.kicks-ass.net>
+ <14cdc45e-7a6f-5e1f-e877-10503180ac4e@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <1556117346-5608-1-git-send-email-fabien.dessenne@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_07:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14cdc45e-7a6f-5e1f-e877-10503180ac4e@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 25, 2019 at 11:52:28AM +0800, Xie XiuQi wrote:
+> On 2019/4/24 2:44, Peter Zijlstra wrote:
 
+> > I'll try and come up with a better Changelog tomorrow.
 
-On 4/24/19 4:49 PM, Fabien Dessenne wrote:
-> During probe, check the "get_irq" error value.
-> 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+I actually did, but forgot to send out. I have the below.
+Does that work for you?
 
-Acked-by: Christophe Kerello <christophe.kerello@st.com>
+---
+Subject: sched/numa: Fix a possible divide-by-zero
+From: Xie XiuQi <xiexiuqi@huawei.com>
+Date: Sat, 20 Apr 2019 16:34:16 +0800
 
-> ---
->   drivers/mtd/nand/raw/stm32_fmc2_nand.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> index 999ca6a..4aabea2 100644
-> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> @@ -1909,6 +1909,12 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
->   	}
->   
->   	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		if (irq != -EPROBE_DEFER)
-> +			dev_err(dev, "IRQ error missing or invalid\n");
-> +		return irq;
-> +	}
-> +
->   	ret = devm_request_irq(dev, irq, stm32_fmc2_irq, 0,
->   			       dev_name(dev), fmc2);
->   	if (ret) {
-> 
+sched_clock_cpu() may not be consistent between CPUs. If a task
+migrates to another CPU, then se.exec_start is set to that CPU's
+rq_clock_task() by update_stats_curr_start(). Specifically, the new
+value might be before the old value due to clock skew.
+
+So then if in numa_get_avg_runtime() the expression:
+
+  'now - p->last_task_numa_placement'
+
+ends up as -1, then the divider '*period + 1' in task_numa_placement()
+is 0 and things go bang. Similar to update_curr(), check if time goes
+backwards to avoid this.
+
+Cc: mingo@redhat.com
+Cc: cj.chengjian@huawei.com
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+[peterz: simplified changelog]
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190420083416.170446-1-xiexiuqi@huawei.com
+---
+ kernel/sched/fair.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2007,6 +2007,10 @@ static u64 numa_get_avg_runtime(struct t
+ 	if (p->last_task_numa_placement) {
+ 		delta = runtime - p->last_sum_exec_runtime;
+ 		*period = now - p->last_task_numa_placement;
++
++		/* Avoid backward, and prevent potential divide error */
++		if (unlikely((s64)*period < 0))
++			*period = 0;
+ 	} else {
+ 		delta = p->se.avg.load_sum;
+ 		*period = LOAD_AVG_MAX;
