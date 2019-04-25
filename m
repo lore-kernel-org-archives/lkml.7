@@ -2,151 +2,141 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D00C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00287C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206DA20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:05:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5JilGXI"
+	by mail.kernel.org (Postfix) with ESMTP id 4860C206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556219281;
+	bh=n1XacDQSZkIHcOl4KDxvF+mtyxMvHgv1v1cEjOLiHlk=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=UpyKKnQtXPKtpOGuLVp5HzfAayMy9lTe17smvGyC2tLHZd3IT6LSw01DsJGCVGYGk
+	 MmlfHSrLMn0U2sWCG7b/KVZum2vK+hcFX9sUvBXal3/wJtgR32QQtXdNJLgjXikBg8
+	 mKCZ8usHB+YJw4lm61KUfWk5LYnLqJu9S4x8AWY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbfDYTFz (ORCPT
+        id S1727913AbfDYTH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:05:55 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43547 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfDYTFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:05:54 -0400
-Received: by mail-ed1-f67.google.com with SMTP id j20so824628edq.10;
-        Thu, 25 Apr 2019 12:05:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2KuFGByIikjJ5Pwm5SY495J/mx7w1L5BjJhcfzR4AMg=;
-        b=c5JilGXIEo4zfxw+9s8fniKNCTmhDPxcqd/Alqyiv0ef/pyhPvNU622OFbxvLecXH9
-         0n8AcjuwVkxRaTSNpuvUwdcRIlZeispeFDsuc5jxnji+Qrd5W2j00nho8RJ/tnErlOM8
-         zPUZmxWozv4v2gmDX9+cGY19yTyCuS3yW3NT555+TGMAuf4TMLWLm3x1VEbVNDZb3Wfu
-         j5WgP8U7QdD35LVsCjMurJRrdb3QJGqDQHh8u+gsTtCSCREAMztHlb1VzfIs5kjR1evh
-         E7JpXYfXcOHJGcqPVle6HLEnx1PGadsSbRDtNO+PmMd1OaXMYSp+rmmYZzFPusOuMOVG
-         uX4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2KuFGByIikjJ5Pwm5SY495J/mx7w1L5BjJhcfzR4AMg=;
-        b=CF4HWE3ezPi9hRkUdnOCeYeWyEHd3szSECWW2min7lY7xTVob7qEOZLLNCHmiRdZJi
-         Z4SszAc23XkZwN9h5imDIONQvBYu8pRR2BRG9apTEfvr52yTmA2HhDwUqfvI9kuaTi17
-         3VJuktUCfuOLAZf+JO7oLE19Wwr0Sm2QY3m6njalLyX9s1AMPIBWdTtX5D49YmAelBax
-         suB++Gak2Vhx/CiDDdUa1H3rCbXSyzNtkjHZx5nTALiptnoukQLy9Ysx5if+VjEWFJMi
-         Kla3SKRM5pWy1jcJ0/9i76BqlS0oL73rDswQznF1wwU5+C6fE1HM/VA0fL5qIIvryWgI
-         zkzw==
-X-Gm-Message-State: APjAAAVnM8Qay8ayqqk7Oc6uXD9Zvq/DwaG7nNEzPYFyRxtAW3b9pgoB
-        meZloy9ltMPtvBKiJ1PkNx0=
-X-Google-Smtp-Source: APXvYqx6yeI5sgCmBZigsoUXSrchdK9oRRmBrIEe/tNVlKPICIcskpyJ/EkUt/cn/B0kburzW3JI3w==
-X-Received: by 2002:a17:906:49ca:: with SMTP id w10mr20768407ejv.252.1556219152809;
-        Thu, 25 Apr 2019 12:05:52 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id d17sm6435663edp.84.2019.04.25.12.05.51
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 12:05:52 -0700 (PDT)
-Subject: Re: [PATCHv3 15/27] x86/vdso: Allocate timens vdso
-To:     Jann Horn <jannh@google.com>, Dmitry Safonov <dima@arista.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        Linux API <linux-api@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <20190425161416.26600-1-dima@arista.com>
- <20190425161416.26600-16-dima@arista.com>
- <CAG48ez3nT_RtaHrjpKPRZDYTyzxX49QBZXJ+u2AZmFy5Wao4wQ@mail.gmail.com>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <169526ff-8331-6db6-e67a-8ffbbfa678cd@gmail.com>
-Date:   Thu, 25 Apr 2019 20:05:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 25 Apr 2019 15:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbfDYTH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 15:07:59 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A09D206A3;
+        Thu, 25 Apr 2019 19:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556219278;
+        bh=n1XacDQSZkIHcOl4KDxvF+mtyxMvHgv1v1cEjOLiHlk=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=D1+W4uaX0FJhWFWv2rfanhVDPGKf2C0GU8/Sl8TfwpNf0Ugl+nUJroarUCCLhpSFU
+         Xn58i2HZjegdu9q8j645ardBebJjLxeK7vSiHWfQIngISl614pRSmECpOJx1m1M9Za
+         bA+f2diCytBz1JXdg3unFCpmYITogw/czyi4xKfo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez3nT_RtaHrjpKPRZDYTyzxX49QBZXJ+u2AZmFy5Wao4wQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190414202009.31268-2-digetx@gmail.com>
+References: <20190414202009.31268-1-digetx@gmail.com> <20190414202009.31268-2-digetx@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 1/4] clk: tegra20/30: Add custom EMC clock implementation
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Message-ID: <155621927685.15276.16453873579880842057@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 25 Apr 2019 12:07:56 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/25/19 7:32 PM, Jann Horn wrote:
-> On Thu, Apr 25, 2019 at 6:14 PM Dmitry Safonov <dima@arista.com> wrote:
->>
->> As it has been discussed on timens RFC, adding a new conditional branch
->> `if (inside_time_ns)` on VDSO for all processes is undesirable.
->> It will add a penalty for everybody as branch predictor may mispredict
->> the jump. Also there are instruction cache lines wasted on cmp/jmp.
->>
->> Those effects of introducing time namespace are very much unwanted
->> having in mind how much work have been spent on micro-optimisation
->> vdso code.
->>
->> The propose is to allocate a second vdso code with dynamically
->> patched out (disabled by static_branch) timens code on boot time.
->>
->> Allocate another vdso and copy original code.
-> [...]
->> diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
->> index 80cbb2167eba..6aae9c0d400d 100644
->> --- a/arch/x86/entry/vdso/vma.c
->> +++ b/arch/x86/entry/vdso/vma.c
-> [...]
->>  static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
->>                       struct vm_area_struct *vma, struct vm_fault *vmf)
->>  {
->>         const struct vdso_image *image = vma->vm_mm->context.vdso_image;
->> +       unsigned long offset = vmf->pgoff << PAGE_SHIFT;
->>
->>         if (!image || (vmf->pgoff << PAGE_SHIFT) >= image->size)
->>                 return VM_FAULT_SIGBUS;
->>
->> -       vmf->page = virt_to_page(image->text + (vmf->pgoff << PAGE_SHIFT));
->> +       if (current_timens_offsets() && image->text_timens)
-> 
-> I'm pretty sure that accessing `current` in here is wrong. AFAIK this
-> fault handler can be invoked on remote processes, through interfaces
-> like /proc/$pid/mem and process_vm_readv(); in that case, the kernel
-> should install a page based on the time namespace of the target
-> process, not based on the time namespace of the caller.
+Quoting Dmitry Osipenko (2019-04-14 13:20:06)
+> diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/clk-=
+tegra20-emc.c
+> new file mode 100644
+> index 000000000000..35b67a9989c8
+> --- /dev/null
+> +++ b/drivers/clk/tegra/clk-tegra20-emc.c
+> @@ -0,0 +1,307 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/bits.h>
+> +#include <linux/clk/tegra.h>
 
-Oh yeah, I see, smells bogus.
-Will try to redesign it..
+Include clk-provider.h as this is a clk provider driver.
 
-> 
->> +               vmf->page = vmalloc_to_page(image->text_timens + offset);
->> +       else
->> +               vmf->page = virt_to_page(image->text + offset);
->> +
->>         get_page(vmf->page);
->>         return 0;
->>  }
-> [...]
-> 
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +
+> +#include "clk.h"
+> +
+> +#define CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK     GENMASK(7, 0)
+> +#define CLK_SOURCE_EMC_2X_CLK_SRC_MASK         GENMASK(31, 30)
+[...]
+> +
+> +static const struct clk_ops tegra_clk_emc_ops =3D {
+> +       .recalc_rate =3D emc_recalc_rate,
+> +       .get_parent =3D emc_get_parent,
+> +       .set_parent =3D emc_set_parent,
+> +       .set_rate =3D emc_set_rate,
+> +       .set_rate_and_parent =3D emc_set_rate_and_parent,
+> +       .determine_rate =3D emc_determine_rate,
+> +};
+> +
+> +void tegra20_clk_set_emc_round_callback(void *round_cb, void *arg_cb)
 
-Thanks,
-          Dima
+Why can't we have type safety on these function pointers?
+
+> +{
+> +       struct clk *clk =3D __clk_lookup("emc");
+> +       struct tegra_clk_emc *emc;
+> +       struct clk_hw *hw;
+> +
+> +       if (clk) {
+> +               hw =3D __clk_get_hw(clk);
+> +               emc =3D to_tegra_clk_emc(hw);
+> +
+> +               emc->round_cb =3D round_cb;
+> +               emc->arg_cb =3D arg_cb;
+> +       }
+> +}
+> +
+> +bool tegra20_clk_emc_driver_available(void)
+> +{
+> +       struct clk *clk =3D __clk_lookup("emc");
+
+Can we avoid using __clk_lookup()? Maybe by having the clk_hw pointer in
+this driver somehow?
+
+> +       struct tegra_clk_emc *emc;
+> +       struct clk_hw *hw;
+> +
+> +       if (clk) {
+> +               hw =3D __clk_get_hw(clk);
+
+This gets further to the point, we don't prefer to see drivers use
+__clk_get_hw() unless they absolutely need to. Maybe I don't understand
+the driver structure, but it seems like maybe the driver that's
+providing the callbacks could be the same driver that's registering
+these clks, and thus everything could be inside one file so that we
+don't have to pass around callbacks and clk_hw pointers? Commit text
+says "this is how it's been" but that's not a reason to keep doing it.
+
+> +               emc =3D to_tegra_clk_emc(hw);
+> +
