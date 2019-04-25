@@ -2,186 +2,272 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D52C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E73C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFB8218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556176039;
-	bh=clXOPulsGsq7yugiG2SOZwcF7tC+sDSnPz9wU3akTxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dP0NguwjkduOB7Fd40Ah/pAEOLsg+jHADTP1t6qIU94oLB6K59Y+gLjjejIlbYwQX
-	 OFiif1+aEaUir/aAvgl605Brd47HdV0In4SNECdYPgAcNnIxKN6VO98n6aruFF79qg
-	 VFRbScW4zFuYN51Vf06uUefAMIbsHgYTqdFHz338=
+	by mail.kernel.org (Postfix) with ESMTP id 89F0D218AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388943AbfDYHHS (ORCPT
+        id S2389084AbfDYHHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:07:18 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36170 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388847AbfDYHHR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:07:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b1so17379003wru.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 00:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Zlv0/XFgcNR3wgBaFoDB30QJMdFwjhVp47g/tZDSg5M=;
-        b=G3J5Y0gk5MmdRKkrmXoZK3Konx19l+YRESEhqmJXnSpz9sG2kM6PsI/WsurVsizWSF
-         7MaMj8iSl4sOmoPdwB6oNVsf2fe39y8GGH6HiWiXbuEVWg7q+eK6mchKhHfCBkdOQ94i
-         9veMNbVBXa+35MkR18nTL99QAOtEwgTmBxcJAuM/rfJ/ga0vHjwOKVc2u4f4L1E43pRc
-         ncHsSRRWmu5PWpRvF6Jz3iuqoDOLE//D/9/chFOCymCc41NEwyxNBSc4ps9o920KJeSm
-         gX4vVKO/ylY0rFYPcQS2N/i1hCVFg8KlG5R4AGFWr5Ef0PQbTPsnovAXxcZmXqKfkaqp
-         lHJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zlv0/XFgcNR3wgBaFoDB30QJMdFwjhVp47g/tZDSg5M=;
-        b=Ouy+JN+P5ck+wKp9VhFNnHXTTHK8BE6McuT2NGUpPIe2IdE9+/YQebXx3o02bNQL2W
-         PGYlZ/xgqEWTGOtfWKw8hUpS2Sj504VamYwju2DdZuwIoDgHYizPla5JjkHxspmKpWiX
-         5b7U3dUiVvfcQgxUNcdIO/IjH+1QAjLKQS9kDHUApRdxAGxaP6mCJ/Kn4MaqM28z3o/w
-         80+LN7KjRNIkEzY2z4SK/EMiqoK/KKTJxQyCkZtZMDlQjgh4YdMF5poFRref/DJr4G3D
-         M2ac3frBB96bv2ewkk7X/xRhKZKd/hi2QYk0iHHekfZQQRk4dKfEmau8/Lu2xu5Y2qzx
-         llAw==
-X-Gm-Message-State: APjAAAWcIENQmxaiOD6FgDM+DIkTtHHsGy5T5pFw429d0D5NTnDO3V63
-        wZdrey9k/ylw5yZ+tKVhInc=
-X-Google-Smtp-Source: APXvYqy6MMNwBJt3nHW4ag3in05NjOyDtBZvQHOe83q7abZZimw/DkeBlu4Ay+7zVb+KtIVMu7wWuQ==
-X-Received: by 2002:a5d:4acc:: with SMTP id y12mr3940992wrs.234.1556176035985;
-        Thu, 25 Apr 2019 00:07:15 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id c63sm4316836wma.29.2019.04.25.00.07.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 00:07:15 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 09:07:13 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Zhao Yakui <yakui.zhao@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, Jason Chen CJ <jason.cj.chen@intel.com>
-Subject: Re: [RFC PATCH v5 4/4] x86/acrn: Add hypercall for ACRN guest
-Message-ID: <20190425070712.GA57256@gmail.com>
-References: <1556067260-9128-1-git-send-email-yakui.zhao@intel.com>
- <1556067260-9128-5-git-send-email-yakui.zhao@intel.com>
+        Thu, 25 Apr 2019 03:07:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:57017 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387965AbfDYHHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 03:07:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 00:07:38 -0700
+X-IronPort-AV: E=Sophos;i="5.60,392,1549958400"; 
+   d="scan'208";a="137275377"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.239.196.186]) ([10.239.196.186])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 25 Apr 2019 00:07:36 -0700
+Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
+References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
+ <20190424143238.GB18442@linux.intel.com>
+ <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
+ <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
+ <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
+ <be509b34ba01a22845363aeb0b0f053f25c2d9c1.camel@intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <7568a794-2e91-c84c-5b64-d33e394f0e2b@linux.intel.com>
+Date:   Thu, 25 Apr 2019 15:07:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556067260-9128-5-git-send-email-yakui.zhao@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <be509b34ba01a22845363aeb0b0f053f25c2d9c1.camel@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Zhao Yakui <yakui.zhao@intel.com> wrote:
-
-> When ACRN hypervisor is detected, the hypercall is needed so that the
-> ACRN guest can query/config some settings. For example: it can be used
-> to query the resources in hypervisor and manage the CPU/memory/device/
-> interrupt for the guest operating system.
+On 2019/4/25 14:30, Xiaoyao Li wrote:
+> On Thu, 2019-04-25 at 14:02 +0800, Like Xu wrote:
+>> On 2019/4/25 12:18, Xiaoyao Li wrote:
+>>> On Thu, 2019-04-25 at 10:58 +0800, Like Xu wrote:
+>>>> On 2019/4/24 22:32, Sean Christopherson wrote:
+>>>>> Now that I understand how min() works...
+>>>>>
+>>>>> On Mon, Apr 22, 2019 at 02:40:34PM +0800, Like Xu wrote:
+>>>>>> Expose Intel V2 Extended Topology Enumeration Leaf to guest only when
+>>>>>> host system has multiple software-visible die within each package.
+>>>>>>
+>>>>>> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+>>>>>> ---
+>>>>>>     arch/x86/kvm/cpuid.c | 13 +++++++++++++
+>>>>>>     1 file changed, 13 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>>>>>> index fd39516..9fc14f2 100644
+>>>>>> --- a/arch/x86/kvm/cpuid.c
+>>>>>> +++ b/arch/x86/kvm/cpuid.c
+>>>>>> @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
+>>>>>>     	return xcr0;
+>>>>>>     }
+>>>>>>     
+>>>>>> +/* We need to check if the host cpu has multi-chip packaging
+>>>>>> technology.
+>>>>>> */
+>>>>>> +static bool kvm_supported_intel_mcp(void)
+>>>>>> +{
+>>>>>> +	u32 eax, ignored;
+>>>>>> +
+>>>>>> +	cpuid_count(0x1f, 0, &eax, &ignored, &ignored, &ignored);
+>>>>>
+>>>>> This is broken because of how CPUID works for unsupported input leafs:
+>>>>>
+>>>>>      If a value entered for CPUID.EAX is higher than the maximum input
+>>>>> value
+>>>>>      for basic or extended function for that processor then the data for
+>>>>> the
+>>>>>      highest basic information leaf is returned.
+>>>>>
+>>>>> For example, my system with a max basic leaf of 0x16 returns 0x00000e74
+>>>>> for CPUID.1F.EAX.
+>>>>
+>>>> You're right and the cpuid.1f.eax check is unreliable after I checked a
+>>>> few machines.
+>>>>
+>>>>>
+>>>>>> +
+>>>>>> +	return boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && (eax !=
+>>>>>> 0);
+>>>>>
+>>>>> Checking 'eax != 0' is broken as it will be '0' when SMT is
+>>>>> disabled.  ecx
+>>>>> is the obvious choice since bits 15:8 are guaranteed to be non-zero when
+>>>>> the leaf is valid.
+>>>>
+>>>> I agree with this and ecx[15:8] makes sense.
+>>>>
+>>>>>
+>>>>> I think we can skip the vendor check.  AFAIK, CPUID.1F isn't used by
+>>>>> AMD,
+>>>>> and since AMD and Intel try to maintain a semblance of CPUID
+>>>>> compatibility
+>>>>> it seems more likely that AMD/Hygon would implement CPUID.1F as-is
+>>>>> rather
+>>>>> than repurpose it to mean something else entirely.
+>>>>
+>>>> If it's true, let's skip the vendor check.
+>>>>
+>>>> // I have to mention that AMD already has MCP CPUs.
+>>>>
+>>>>>
+>>>>>> +}
+>>>>>> +
+>>>>>>     #define F(x) bit(X86_FEATURE_##x)
+>>>>>>     
+>>>>>>     int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>>>>>> @@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct
+>>>>>> kvm_cpuid_entry2 *entry, u32 function,
+>>>>>>     	switch (function) {
+>>>>>>     	case 0:
+>>>>>>     		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 :
+>>>>>> 0xd));
+>>>>>> +		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry-
+>>>>>>> eax;
+>>>>>
+>>>>> If we put everything together, I think the code can be reduced to:
+>>>>>
+>>>>> 		/* comment about multi-chip leaf... */
+>>>>> 		if (entry->eax >= 0x1f && cpuid_ecx(0x1f))
+>>>>> 			entry->eax = 0x1f;
+>>>>> 		else
+>>>>> 			entry->eax = min(entry->eax,
+>>>>> 					 (u32)(f_intel_pt ? 0x14 :
+>>>>> 0xd));
+>>>>
+>>>> Based on:
+>>>>
+>>>> 	ECX Bits 07 - 00: Level number. Same value in ECX input.
+>>>> 	Bits 15 - 08: Level type.
+>>>> 	Bits 31 - 16: Reserved.
+>>>>
+>>>> how about using an increasing order:
+>>>>
+>>>> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+>>>>
+>>>> 	// ... more checks when eax is between 0x14 and 0x1f if any
+>>>>
+>>>> 	/* Check if the host cpu has multi-chip packaging technology.*/
+>>>> 	if (((cpuid_ecx(0x1f) >> 8) & 0xff) != 0)
+>>>> 		entry->eax = 0x1f;
+>>>
+>>> As Sean pointed out, you cannot rely on the output of cpuid.1f to indicate
+>>> the
+>>> existence of leaf 1f. If maximum basic leaf supported is smaller than 1f,
+>>> the
+>>> data returned by cpuid_ecx(0x1f) is the actual highest basic information
+>>> leaf of
+>>> the hardware.
+>>
+>> I don't think so.
+>>
+>>> So using "entry->eax >= 0x1f" from cpuid.0H is and only is the right way to
+>>> check the existence of leaf 1f.
+>>>
+>>> We can simply use (cpuid_ecx(0x1f) & 0x0000ff00) to avoid the unnecessory
+>>> shifting operation.
+>>
+>> I borrowed this "unnecessory" shifting operation from host
+>> check_extended_topology_leaf() and we may do better on this.
+>>
+>>> Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes is that
+>>> we
+>>> cannot assmue the reserved bits 31:16 of ECX is always 0 for the future
+>>> generation.
+>>
+>> It's true cause the statement in public spec is not "Reserved = 0" but
+>> "Bits 31 - 16: Reserved".
+>>
+>>>
+>>> In my opinion, Sean's codes is OK and much simple and clear.
+>>
+>> If the host cpuid.0.eax is greater than 0x1f but actually it doesn't
+>> have multi-chip packaging technology and we may want to expose
+>> entry->eax to some value smaller than 0x1f but greater than 0x14, much
+>> effort needs to apply on Sean's code.
+>>
+>> My improvement is good to overwrite cpuid.0.eax in future usage
+>> from the perspective of kvm feature setting not just from value check.
 > 
-> So add the hypercall so that ACRN guest can communicate with the
-> low-level ACRN hypervisor. It is implemented with the VMCALL instruction.
+> Alright, there is something wrong in your code that you haven't realised.
 > 
-> Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
-> Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
-> Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
-> ---
-> V1->V2: Refine the comments for the function of acrn_hypercall0/1/2
-> v2->v3: Use the "vmcall" mnemonic to replace hard-code byte definition
-> v4->v5: Use _ASM_X86_ACRN_HYPERCALL_H instead of _ASM_X86_ACRNHYPERCALL_H to
-> align the header file of acrn_hypercall.h
->         Use the "VMCALL" mnemonic in comment/commit log.
->         Uppercase r8/rdi/rsi/rax for hypercall parameter registers in comment.
-> ---
->  arch/x86/include/asm/acrn_hypercall.h | 82 +++++++++++++++++++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 arch/x86/include/asm/acrn_hypercall.h
+> When you do
+> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
 > 
-> diff --git a/arch/x86/include/asm/acrn_hypercall.h b/arch/x86/include/asm/acrn_hypercall.h
-> new file mode 100644
-> index 0000000..3594436
-> --- /dev/null
-> +++ b/arch/x86/include/asm/acrn_hypercall.h
-> @@ -0,0 +1,82 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef _ASM_X86_ACRN_HYPERCALL_H
-> +#define _ASM_X86_ACRN_HYPERCALL_H
+> it changes the entry->eax if entry->eax > 0x14. So you cannot directly use
+> cpuid_ecx(0x1f). At least, you need to cache the value of entry->eax, like:
+> 	
+> 	u32 max_leaf = entry->eax;
+> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+> 	
+> 	//...leaf between 0x14 and 0x1f
+> 	
+> 	if (max_leaf >= 0x1f && (cpuid_ecx(0x1f) & 0x0000ff00))
+>   		entry->eax = 0x1f;
 
+The cache value make no sense on this.
 
-> +
-> +#include <linux/errno.h>
-> +
-> +#ifdef CONFIG_ACRN_GUEST
-> +
-> +/*
-> + * Hypercalls for ACRN guest
-> + *
-> + * Hypercall number is passed in R8 register.
-> + * Up to 2 arguments are passed in RDI, RSI.
-> + * Return value will be placed in RAX.
-> + */
-> +
-> +static inline long acrn_hypercall0(unsigned long hcall_id)
-> +{
-> +	register unsigned long r8 asm("r8") = hcall_id;
-> +	register long result asm("rax");
-> +
-> +	/* the hypercall is implemented with the VMCALL instruction.
-> +	 * asm indicates that inline assembler instruction is used.
-> +	 * volatile qualifier is added to avoid that it is dropped
-> +	 * because of compiler optimization.
-> +	 */
+> 
+> However, handling in increasing order in totally wrong. Since it's to report the
+> max the leaf supported, we should handle in descending order, which is what Sean
+> does.
 
-Non-standard comment style.
+There is no need to check "entry->eax >= 0x1f" before "setting 
+entry->eax = 0x1f" if and only if cpuid_ecx(0x1f) meets requirements.
 
-asm statements are volatile by default I believe.
+An increasing manner helps to overwrite this value on demand in a flat 
+code flow (easy to understand and maintain) not an if-else_if-else flow.
 
-I.e. the second and third sentences are partly obvious, superfluous and 
-bogus.
+> 
+>>> All need to do is using (cpuid_ecx(0x1f) & 0x0000ff00) to verify the leaf.1f
+>>> is
+>>> valid.
+>>>
+>>> Thanks,
+>>> -Xiaoyao
+>>>> 	// ... more checks when eax greater than 0x1f if any
+>>>>
+>>>> are we OK with it?
+>>>>
+>>>>>>     		break;
+>>>>>>     	case 1:
+>>>>>>     		entry->edx &= kvm_cpuid_1_edx_x86_features;
+>>>>>> @@ -544,6 +555,8 @@ static inline int __do_cpuid_ent(struct
+>>>>>> kvm_cpuid_entry2 *entry, u32 function,
+>>>>>>     		entry->edx = edx.full;
+>>>>>>     		break;
+>>>>>>     	}
+>>>>>> +	/* function 0x1f has additional index. */
+>>>>>> +	case 0x1f:
+>>>>>>     	/* function 0xb has additional index. */
+>>>>>>     	case 0xb: {
+>>>>>>     		int i, level_type;
+>>>>>> -- 
+>>>>>> 1.8.3.1
+>>>>>>
+>>>>
+>>>>
+>>>
+>>>
+>>
+>>
+> 
+> 
 
-> +	asm volatile("vmcall"
-> +			: "=r"(result)
-> +			: "r"(r8));
-> +
-> +	return result;
-> +}
-> +
-> +static inline long acrn_hypercall1(unsigned long hcall_id,
-> +				   unsigned long param1)
-> +{
-> +	register unsigned long r8 asm("r8") = hcall_id;
-> +	register long result asm("rax");
-> +
-> +	asm volatile("vmcall"
-> +			: "=r"(result)
-> +			: "D"(param1), "r"(r8));
-
-Why are register variables used? Doesn't GCC figure it out correctly by 
-default?
-
-> +static inline long acrn_hypercall2(unsigned long hcall_id,
-> +				   unsigned long param1,
-> +				   unsigned long param2)
-> +{
-> +	register unsigned long r8 asm("r8") = hcall_id;
-> +	register long result asm("rax");
-> +
-> +	asm volatile("vmcall"
-> +			: "=r"(result)
-> +			: "D"(param1), "S"(param2), "r"(r8));
-
-Ditto.
-
-Thanks,
-
-	Ingo
