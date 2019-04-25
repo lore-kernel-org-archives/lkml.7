@@ -4,66 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C690C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC7CC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC62206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD22206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 21:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Sb9e8e7r"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jftEa6nU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731152AbfDYVLH (ORCPT
+        id S1731127AbfDYVLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 25 Apr 2019 17:11:07 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41050 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730224AbfDYVLG (ORCPT
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46758 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387410AbfDYVLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 17:11:06 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f6so452064pgs.8
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 14:11:05 -0700 (PDT)
+        Thu, 25 Apr 2019 17:11:04 -0400
+Received: by mail-pl1-f195.google.com with SMTP id o7so386498pll.13
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 14:11:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
          :content-transfer-encoding;
-        bh=vcFlRupR2yaCqWT209z2Td6TEDAqyTpSgzmrlnK/AE4=;
-        b=Sb9e8e7rmVdqwot/Or3gZiDtV5ubYldJpsdhwvyoR4ukNJKS9Yyd7ONY6ZklWcaI3k
-         mhaEVVd/KQu9pHhJFiz+oFcMzm6KTGmTLTQeUX0w3jhAoRoJe2l0H9R3OLgfxCgmcnTE
-         +3v6B+KvZeBLdfLPsekrVjX1IigYPaRRy0WIehs+bX7A8/dVP9eehUKe//f45ye053f+
-         IKk9f+Vgu0PgL/ECcNHj8mo+Jz+vCE5koO6QAW3FYne4LrhkhOA+NSsk2CoEpwlWEgZz
-         KgmUAwrFSmn0lK91xh8MSL5fUO0s1/VkjyV1LK/6le1Jr6xK6u1yu8X3lbLQGZUJXSEv
-         WQ9g==
+        bh=roGj97wYSWSHB0+5VEsFkCFkqjjsXMUkRSvmPsovwsw=;
+        b=jftEa6nUXu1Zi+JZ9W54SQIZqATa/5C2tQK2rCmQDT2PvzbvZ8h+nYF4dkzvfJKqpv
+         NX3lAcogLz+EiFwib+PjIsld0zQVOEGU2n4eJ3la7cgw/LqMbDaJEKcNl23CF0LxykEi
+         Vay3uqG1EAGMUB72KKLk89J7U7f6rEf2ISZUeKm/Tf33JKPTK+R6oiMgxviCPeoXYd8t
+         Zkpb8ATK+6haFxbWElk6UG3yOR6H9+D2taBkPoggkMzLhqJcd/kmcqxnNKKvkerBCmH/
+         QJA2V7fHhs/SA94m7En55Fhg9LmP2oDC2nntLcO8xl9HhJJdj2Pf4Q6Lrf+6709n20It
+         eBKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
          :mime-version:content-transfer-encoding;
-        bh=vcFlRupR2yaCqWT209z2Td6TEDAqyTpSgzmrlnK/AE4=;
-        b=CQESDwT3ZXaPMJINVgy6KVx8geKGwUywQBqnubZ0DHsUu5Q0yDddl8e1l2QKYZUHVz
-         Yo2S4rugUWd0+kWXDGg03OoTdUDX9jkv0FSLIWnjmZiXW9uZXYFqmhzlZKhlmNvkas3R
-         WHhZLZb8TKOOj/LW2F1TLsdX/PfQ4TeV1NI6T5/12m0nyIxaM4pNOYHdQrewLNY5rhjG
-         Fkmy5KK2Ifk1ZJRtctTHyWV2Rmm10xWr1mZmz+sCjWtsOdxcVe398ACCXN2PGQAp+xPD
-         yUdYbehSa6YcP6SCRYqMSslMawQXglmFmF2O69aXc2+IOclqnBURMCztr9Ozr0uLq5q6
-         OlRw==
-X-Gm-Message-State: APjAAAU+oJT/ZwZPkyTLEgjSmZX5d+IK/6Gy8k/EZc6WHPUjU9ZPLKJ/
-        Cmxtn4dTD89fQIhvy/kbGM0a2an3c5g=
-X-Google-Smtp-Source: APXvYqzsP3LVx5cpVuSqOO/Et/dcgRWHvhp8u23I7bMhUIjvGQsPeJkhvHIROoNIf6oGhgGAwW75Hg==
-X-Received: by 2002:a63:6581:: with SMTP id z123mr40239396pgb.243.1556226664970;
-        Thu, 25 Apr 2019 14:11:04 -0700 (PDT)
+        bh=roGj97wYSWSHB0+5VEsFkCFkqjjsXMUkRSvmPsovwsw=;
+        b=r1L9R90iFBMQDgqHDaXdIuaD/JuEtJXI0lanywBRE0aa72M5nPLKPZwXYgwlAYZxkK
+         zay9gTLu7mSDoxb1K9z8uPC8pbX+mKbrMYNLfGVtbGVNpS9pQ4JR1mm4CjQSYGPd4uqv
+         SdyxX78Kh7ARsmzVon+eHzUuP208uVKR1ywhFhA1yLpD4j++xGrEZxYpOu/2I8Kudb8T
+         Mhb1z31WWsF9lBT/bxL3CO0FvTsrv7IdWT1sIrmfzT9yMJfFkgQZe8NksKrXz24syWxz
+         F/Q2ahWNl8Rnu2HMEpxxCfkvTNHL6G98XlgqQiUYyvbRI1vKHa3RffPMmIa964zOqqyJ
+         5GHA==
+X-Gm-Message-State: APjAAAV3EkIykLvaFxxiwoR1y8mWMCI19phB0e/xta4EaWoqCTNmKXyN
+        OdUSORgtGY+seKwH1WOTpZzzkl3BIOo=
+X-Google-Smtp-Source: APXvYqwvi5rAeBC3P9WCOL/QJp5wvQDZwxJdiloeHLUHjFEIxwAz0wbX3f6xs6+BBhyd8uOA5Cvizw==
+X-Received: by 2002:a17:902:e285:: with SMTP id cf5mr5040257plb.77.1556226663261;
+        Thu, 25 Apr 2019 14:11:03 -0700 (PDT)
 Received: from localhost ([134.134.139.92])
-        by smtp.gmail.com with ESMTPSA id a17sm40764312pfj.123.2019.04.25.14.11.03
+        by smtp.gmail.com with ESMTPSA id 8sm38199508pfs.50.2019.04.25.14.11.02
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 14:11:04 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 14:11:04 -0700 (PDT)
-X-Google-Original-Date: Thu, 25 Apr 2019 14:09:54 PDT (-0700)
-Subject:     Re: [PATCH 3/3] riscv: Add support for libdw
-In-Reply-To: <99f15d5c74727c31bf8d08b6cf948754e3e09943.1554961908.git.han_mao@c-sky.com>
+        Thu, 25 Apr 2019 14:11:02 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 14:11:02 -0700 (PDT)
+X-Google-Original-Date: Thu, 25 Apr 2019 14:08:42 PDT (-0700)
+Subject:     Re: [PATCH 2/3] riscv: Add support for perf registers sampling
+In-Reply-To: <69322515ac3fcba8af004039f44473cec5ecbdcc.1554961908.git.han_mao@c-sky.com>
 CC:     linux-kernel@vger.kernel.org, han_mao@c-sky.com
 From:   Palmer Dabbelt <palmer@sifive.com>
 To:     han_mao@c-sky.com
-Message-ID: <mhng-a74d03ae-cfb4-4e42-8950-f90816975291@palmer-si-x1e>
+Message-ID: <mhng-0787435f-0b2c-4ab4-ad73-0b68a815e613@palmer-si-x1e>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
@@ -72,41 +71,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Apr 2019 00:53:50 PDT (-0700), han_mao@c-sky.com wrote:
-> This patch add support for DWARF register mappings and libdw registers
-> initialization, which is used by perf callchain analyzing when
-> --call-graph=dwarf is given.
-
-Is there any way to make this the only backtracer?  It's the only one that's
-likely to be useful on RISC-V without recompiling everything with
--fno-omit-frame-pointer, which has a major performance hit.
-
+On Thu, 11 Apr 2019 00:53:49 PDT (-0700), han_mao@c-sky.com wrote:
+> This patch implements the perf registers sampling and validation API
+> for riscv arch. The valid registers and their register ID are defined in
+> perf_regs.h. Perf tool can backtrace in userspace with unwind library
+> and the registers/user stack dump support.
+>
 > Signed-off-by: Mao Han <han_mao@c-sky.com>
 >
 > CC: Palmer Dabbelt <palmer@sifive.com>
 > ---
->  tools/arch/riscv/include/uapi/asm/perf_regs.h | 42 ++++++++++++
->  tools/perf/Makefile.config                    |  6 +-
->  tools/perf/arch/riscv/Build                   |  1 +
->  tools/perf/arch/riscv/Makefile                |  3 +
->  tools/perf/arch/riscv/include/perf_regs.h     | 96 +++++++++++++++++++++++++++
->  tools/perf/arch/riscv/util/Build              |  2 +
->  tools/perf/arch/riscv/util/dwarf-regs.c       | 70 +++++++++++++++++++
->  tools/perf/arch/riscv/util/unwind-libdw.c     | 57 ++++++++++++++++
->  8 files changed, 276 insertions(+), 1 deletion(-)
->  create mode 100644 tools/arch/riscv/include/uapi/asm/perf_regs.h
->  create mode 100644 tools/perf/arch/riscv/Build
->  create mode 100644 tools/perf/arch/riscv/Makefile
->  create mode 100644 tools/perf/arch/riscv/include/perf_regs.h
->  create mode 100644 tools/perf/arch/riscv/util/Build
->  create mode 100644 tools/perf/arch/riscv/util/dwarf-regs.c
->  create mode 100644 tools/perf/arch/riscv/util/unwind-libdw.c
+>  arch/riscv/Kconfig                      |  2 ++
+>  arch/riscv/include/uapi/asm/perf_regs.h | 42 +++++++++++++++++++++++++++++++
+>  arch/riscv/kernel/Makefile              |  1 +
+>  arch/riscv/kernel/perf_regs.c           | 44 +++++++++++++++++++++++++++++++++
+>  4 files changed, 89 insertions(+)
+>  create mode 100644 arch/riscv/include/uapi/asm/perf_regs.h
+>  create mode 100644 arch/riscv/kernel/perf_regs.c
 >
-> diff --git a/tools/arch/riscv/include/uapi/asm/perf_regs.h b/tools/arch/riscv/include/uapi/asm/perf_regs.h
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index eb56c82..effd157 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -33,6 +33,8 @@ config RISCV
+>  	select HAVE_DMA_CONTIGUOUS
+>  	select HAVE_FUTEX_CMPXCHG if FUTEX
+>  	select HAVE_PERF_EVENTS
+> +	select HAVE_PERF_REGS
+> +	select HAVE_PERF_USER_STACK_DUMP
+>  	select HAVE_SYSCALL_TRACEPOINTS
+>  	select IRQ_DOMAIN
+>  	select RISCV_ISA_A if SMP
+> diff --git a/arch/riscv/include/uapi/asm/perf_regs.h b/arch/riscv/include/uapi/asm/perf_regs.h
 > new file mode 100644
 > index 0000000..ce48987
 > --- /dev/null
-> +++ b/tools/arch/riscv/include/uapi/asm/perf_regs.h
+> +++ b/arch/riscv/include/uapi/asm/perf_regs.h
 > @@ -0,0 +1,42 @@
 > +/* SPDX-License-Identifier: GPL-2.0 */
 > +// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
@@ -149,293 +149,69 @@ likely to be useful on RISC-V without recompiling everything with
 > +	PERF_REG_RISCV_T6,
 > +	PERF_REG_RISCV_MAX,
 > +};
+
+Is it expected this eventually supports floating-point and vector registers?
+If so, how do we make this extensible?
+
 > +#endif /* _ASM_RISCV_PERF_REGS_H */
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index fe3f97e..8f2e6d3 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -59,6 +59,10 @@ ifeq ($(SRCARCH),arm64)
->    LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
->  endif
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index dd2ba44..024badc 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -39,5 +39,6 @@ obj-$(CONFIG_DYNAMIC_FTRACE)	+= mcount-dyn.o
 >
-> +ifeq ($(SRCARCH),riscv)
-> +  NO_PERF_REGS := 0
-> +endif
-> +
->  ifeq ($(ARCH),s390)
->    NO_PERF_REGS := 0
->    NO_SYSCALL_TABLE := 0
-> @@ -77,7 +81,7 @@ endif
->  # Disable it on all other architectures in case libdw unwind
->  # support is detected in system. Add supported architectures
->  # to the check.
-> -ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390))
-> +ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390 riscv))
->    NO_LIBDW_DWARF_UNWIND := 1
->  endif
+>  obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o
+>  obj-$(CONFIG_PERF_EVENTS)	+= perf_callchain.o
+> +obj-$(CONFIG_HAVE_PERF_REGS)	+= perf_regs.o
 >
-> diff --git a/tools/perf/arch/riscv/Build b/tools/perf/arch/riscv/Build
+>  clean:
+> diff --git a/arch/riscv/kernel/perf_regs.c b/arch/riscv/kernel/perf_regs.c
 > new file mode 100644
-> index 0000000..e4e5f33
+> index 0000000..03d7ac3
 > --- /dev/null
-> +++ b/tools/perf/arch/riscv/Build
-> @@ -0,0 +1 @@
-> +perf-y += util/
-> diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
-> new file mode 100644
-> index 0000000..7fbca17
-> --- /dev/null
-> +++ b/tools/perf/arch/riscv/Makefile
-> @@ -0,0 +1,3 @@
-> +ifndef NO_DWARF
-> +PERF_HAVE_DWARF_REGS := 1
-> +endif
-> diff --git a/tools/perf/arch/riscv/include/perf_regs.h b/tools/perf/arch/riscv/include/perf_regs.h
-> new file mode 100644
-> index 0000000..6051eff
-> --- /dev/null
-> +++ b/tools/perf/arch/riscv/include/perf_regs.h
-> @@ -0,0 +1,96 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+> +++ b/arch/riscv/kernel/perf_regs.c
+> @@ -0,0 +1,44 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
 > +
-> +#ifndef ARCH_PERF_REGS_H
-> +#define ARCH_PERF_REGS_H
-> +
-> +#include <stdlib.h>
-> +#include <linux/types.h>
+> +#include <linux/errno.h>
+> +#include <linux/kernel.h>
+> +#include <linux/perf_event.h>
+> +#include <linux/bug.h>
 > +#include <asm/perf_regs.h>
+> +#include <asm/ptrace.h>
 > +
-> +#define PERF_REGS_MASK	((1ULL << PERF_REG_RISCV_MAX) - 1)
-> +#define PERF_REGS_MAX	PERF_REG_RISCV_MAX
+> +u64 perf_reg_value(struct pt_regs *regs, int idx)
+> +{
+> +	if (WARN_ON_ONCE((u32)idx >= PERF_REG_RISCV_MAX))
+> +		return 0;
+> +
+> +	return ((long *)regs)[idx];
+> +}
+> +
+> +#define REG_RESERVED (~((1ULL << PERF_REG_RISCV_MAX) - 1))
+> +
+> +int perf_reg_validate(u64 mask)
+> +{
+> +	if (!mask || mask & REG_RESERVED)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +u64 perf_reg_abi(struct task_struct *task)
+> +{
 > +#if __riscv_xlen == 64
-> +#define PERF_SAMPLE_REGS_ABI    PERF_SAMPLE_REGS_ABI_64
+> +	return PERF_SAMPLE_REGS_ABI_64;
 > +#else
-> +#define PERF_SAMPLE_REGS_ABI	PERF_SAMPLE_REGS_ABI_32
+> +	return PERF_SAMPLE_REGS_ABI_32;
 > +#endif
-> +
-> +#define PERF_REG_IP	PERF_REG_RISCV_PC
-> +#define PERF_REG_SP	PERF_REG_RISCV_SP
-> +
-> +static inline const char *perf_reg_name(int id)
-> +{
-> +	switch (id) {
-> +	case PERF_REG_RISCV_PC:
-> +		return "pc";
-> +	case PERF_REG_RISCV_RA:
-> +		return "ra";
-> +	case PERF_REG_RISCV_SP:
-> +		return "sp";
-> +	case PERF_REG_RISCV_GP:
-> +		return "gp";
-> +	case PERF_REG_RISCV_TP:
-> +		return "tp";
-> +	case PERF_REG_RISCV_T0:
-> +		return "t0";
-> +	case PERF_REG_RISCV_T1:
-> +		return "t1";
-> +	case PERF_REG_RISCV_T2:
-> +		return "t2";
-> +	case PERF_REG_RISCV_S0:
-> +		return "s0";
-> +	case PERF_REG_RISCV_S1:
-> +		return "s1";
-> +	case PERF_REG_RISCV_A0:
-> +		return "a0";
-> +	case PERF_REG_RISCV_A1:
-> +		return "a1";
-> +	case PERF_REG_RISCV_A2:
-> +		return "a2";
-> +	case PERF_REG_RISCV_A3:
-> +		return "a3";
-> +	case PERF_REG_RISCV_A4:
-> +		return "a4";
-> +	case PERF_REG_RISCV_A5:
-> +		return "a5";
-> +	case PERF_REG_RISCV_A6:
-> +		return "a6";
-> +	case PERF_REG_RISCV_A7:
-> +		return "a7";
-> +	case PERF_REG_RISCV_S2:
-> +		return "s2";
-> +	case PERF_REG_RISCV_S3:
-> +		return "s3";
-> +	case PERF_REG_RISCV_S4:
-> +		return "s4";
-> +	case PERF_REG_RISCV_S5:
-> +		return "s5";
-> +	case PERF_REG_RISCV_S6:
-> +		return "s6";
-> +	case PERF_REG_RISCV_S7:
-> +		return "s7";
-> +	case PERF_REG_RISCV_S8:
-> +		return "s8";
-> +	case PERF_REG_RISCV_S9:
-> +		return "s9";
-> +	case PERF_REG_RISCV_S10:
-> +		return "s10";
-> +	case PERF_REG_RISCV_S11:
-> +		return "s11";
-> +	case PERF_REG_RISCV_T3:
-> +		return "t3";
-> +	case PERF_REG_RISCV_T4:
-> +		return "t4";
-> +	case PERF_REG_RISCV_T5:
-> +		return "t5";
-> +	case PERF_REG_RISCV_T6:
-> +		return "t6";
-> +	default:
-> +		return NULL;
-> +	}
-> +
-> +	return NULL;
 > +}
 > +
-> +#endif /* ARCH_PERF_REGS_H */
-> diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
-> new file mode 100644
-> index 0000000..1160bb2
-> --- /dev/null
-> +++ b/tools/perf/arch/riscv/util/Build
-> @@ -0,0 +1,2 @@
-> +perf-$(CONFIG_DWARF) += dwarf-regs.o
-> +perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-> diff --git a/tools/perf/arch/riscv/util/dwarf-regs.c b/tools/perf/arch/riscv/util/dwarf-regs.c
-> new file mode 100644
-> index 0000000..a55f352
-> --- /dev/null
-> +++ b/tools/perf/arch/riscv/util/dwarf-regs.c
-> @@ -0,0 +1,70 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
-> +// Mapping of DWARF debug register numbers into register names.
-> +
-> +#include <stddef.h>
-> +#include <errno.h> /* for EINVAL */
-> +#include <string.h> /* for strcmp */
-> +#include <dwarf-regs.h>
-> +
-> +struct pt_regs_dwarfnum {
-> +	const char *name;
-> +	unsigned int dwarfnum;
-> +};
-> +
-> +#define REG_DWARFNUM_NAME(r, num) {.name = r, .dwarfnum = num}
-> +#define REG_DWARFNUM_END {.name = NULL, .dwarfnum = 0}
-> +
-> +struct pt_regs_dwarfnum riscv_dwarf_regs_table[] = {
-> +	REG_DWARFNUM_NAME("%zero", 0),
-> +	REG_DWARFNUM_NAME("%ra", 1),
-> +	REG_DWARFNUM_NAME("%sp", 2),
-> +	REG_DWARFNUM_NAME("%gp", 3),
-> +	REG_DWARFNUM_NAME("%tp", 4),
-> +	REG_DWARFNUM_NAME("%t0", 5),
-> +	REG_DWARFNUM_NAME("%t1", 6),
-> +	REG_DWARFNUM_NAME("%t2", 7),
-> +	REG_DWARFNUM_NAME("%s0", 8),
-> +	REG_DWARFNUM_NAME("%s1", 9),
-> +	REG_DWARFNUM_NAME("%a0", 10),
-> +	REG_DWARFNUM_NAME("%a1", 11),
-> +	REG_DWARFNUM_NAME("%a2", 12),
-> +	REG_DWARFNUM_NAME("%a3", 13),
-> +	REG_DWARFNUM_NAME("%a4", 14),
-> +	REG_DWARFNUM_NAME("%a5", 15),
-> +	REG_DWARFNUM_NAME("%a6", 16),
-> +	REG_DWARFNUM_NAME("%a7", 17),
-> +	REG_DWARFNUM_NAME("%s2", 18),
-> +	REG_DWARFNUM_NAME("%s3", 19),
-> +	REG_DWARFNUM_NAME("%s4", 20),
-> +	REG_DWARFNUM_NAME("%s5", 21),
-> +	REG_DWARFNUM_NAME("%s6", 22),
-> +	REG_DWARFNUM_NAME("%s7", 23),
-> +	REG_DWARFNUM_NAME("%s8", 24),
-> +	REG_DWARFNUM_NAME("%s9", 25),
-> +	REG_DWARFNUM_NAME("%s10", 26),
-> +	REG_DWARFNUM_NAME("%s11", 27),
-> +	REG_DWARFNUM_NAME("%t3", 28),
-> +	REG_DWARFNUM_NAME("%t4", 29),
-> +	REG_DWARFNUM_NAME("%t5", 30),
-> +	REG_DWARFNUM_NAME("%t6", 31),
-> +	REG_DWARFNUM_END,
-> +};
-> +
-> +#define RISCV_MAX_REGS ((sizeof(riscv_dwarf_regs_table) / \
-> +		 sizeof(riscv_dwarf_regs_table[0])) - 1)
-> +
-> +const char *get_arch_regstr(unsigned int n)
+> +void perf_get_regs_user(struct perf_regs *regs_user,
+> +			struct pt_regs *regs,
+> +			struct pt_regs *regs_user_copy)
 > +{
-> +	return (n < RISCV_MAX_REGS) ? riscv_dwarf_regs_table[n].name : NULL;
-> +}
-> +
-> +int regs_query_register_offset(const char *name)
-> +{
-> +	const struct pt_regs_dwarfnum *roff;
-> +
-> +	for (roff = riscv_dwarf_regs_table; roff->name != NULL; roff++)
-> +		if (!strcmp(roff->name, name))
-> +			return roff->dwarfnum;
-> +	return -EINVAL;
-> +}
-> diff --git a/tools/perf/arch/riscv/util/unwind-libdw.c b/tools/perf/arch/riscv/util/unwind-libdw.c
-> new file mode 100644
-> index 0000000..ed7a17b
-> --- /dev/null
-> +++ b/tools/perf/arch/riscv/util/unwind-libdw.c
-> @@ -0,0 +1,57 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
-> +
-> +#include <elfutils/libdwfl.h>
-> +#include "../../util/unwind-libdw.h"
-> +#include "../../util/perf_regs.h"
-> +#include "../../util/event.h"
-> +
-> +bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-> +{
-> +	struct unwind_info *ui = arg;
-> +	struct regs_dump *user_regs = &ui->sample->user_regs;
-> +	Dwarf_Word dwarf_regs[32];
-> +
-> +#define REG(r) ({						\
-> +	Dwarf_Word val = 0;					\
-> +	perf_reg_value(&val, user_regs, PERF_REG_RISCV_##r);	\
-> +	val;							\
-> +})
-> +
-> +	dwarf_regs[0]  = 0;
-> +	dwarf_regs[1]  = REG(RA);
-> +	dwarf_regs[2]  = REG(SP);
-> +	dwarf_regs[3]  = REG(GP);
-> +	dwarf_regs[4]  = REG(TP);
-> +	dwarf_regs[5]  = REG(T0);
-> +	dwarf_regs[6]  = REG(T1);
-> +	dwarf_regs[7]  = REG(T2);
-> +	dwarf_regs[8]  = REG(S0);
-> +	dwarf_regs[9]  = REG(S1);
-> +	dwarf_regs[10] = REG(A0);
-> +	dwarf_regs[11] = REG(A1);
-> +	dwarf_regs[12] = REG(A2);
-> +	dwarf_regs[13] = REG(A3);
-> +	dwarf_regs[14] = REG(A4);
-> +	dwarf_regs[15] = REG(A5);
-> +	dwarf_regs[16] = REG(A6);
-> +	dwarf_regs[17] = REG(A7);
-> +	dwarf_regs[18] = REG(S2);
-> +	dwarf_regs[19] = REG(S3);
-> +	dwarf_regs[20] = REG(S4);
-> +	dwarf_regs[21] = REG(S5);
-> +	dwarf_regs[22] = REG(S6);
-> +	dwarf_regs[23] = REG(S7);
-> +	dwarf_regs[24] = REG(S8);
-> +	dwarf_regs[25] = REG(S9);
-> +	dwarf_regs[26] = REG(S10);
-> +	dwarf_regs[27] = REG(S11);
-> +	dwarf_regs[28] = REG(T3);
-> +	dwarf_regs[29] = REG(T4);
-> +	dwarf_regs[30] = REG(T5);
-> +	dwarf_regs[31] = REG(T6);
-> +	dwfl_thread_state_register_pc(thread, REG(PC));
-> +
-> +	return dwfl_thread_state_registers(thread, 0, PERF_REG_RISCV_MAX,
-> +					   dwarf_regs);
+> +	regs_user->regs = task_pt_regs(current);
+> +	regs_user->abi = perf_reg_abi(current);
 > +}
