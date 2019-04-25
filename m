@@ -4,151 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE1EC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08578C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E170206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E1C206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfDYU7g (ORCPT
+        id S1728667AbfDYU7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 16:59:36 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:43485 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfDYU7f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 16:59:35 -0400
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id DF5A16000B;
-        Thu, 25 Apr 2019 20:59:31 +0000 (UTC)
-Date:   Thu, 25 Apr 2019 23:08:27 +0200
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH] pci: aardvark: Wait for endpoint to be ready before
- training link
-Message-ID: <20190425210826.GQ2754@voidbox.localdomain>
-References: <20190313213752.1246-1-repk@triplefau.lt>
- <20190423163215.GB26523@red-moon>
- <20190423222917.GN2754@voidbox.localdomain>
- <20190424165002.GA26089@e121166-lin.cambridge.arm.com>
+        Thu, 25 Apr 2019 16:59:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56478 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbfDYU7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 16:59:49 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D720631649AE
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 20:59:48 +0000 (UTC)
+Received: from x230.aquini.net (ovpn-126-47.rdu2.redhat.com [10.10.126.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D403171C5;
+        Thu, 25 Apr 2019 20:59:48 +0000 (UTC)
+Date:   Thu, 25 Apr 2019 16:59:45 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Joel Savitz <jsavitz@redhat.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/oom_killer: Add task UID to info message on an oom
+ kill
+Message-ID: <20190425205945.GA4546@x230.aquini.net>
+References: <1556130013-19021-1-git-send-email-jsavitz@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190424165002.GA26089@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1556130013-19021-1-git-send-email-jsavitz@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 25 Apr 2019 20:59:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 05:50:02PM +0100, Lorenzo Pieralisi wrote:
-> On Wed, Apr 24, 2019 at 12:29:18AM +0200, Remi Pommarel wrote:
-> > Hi,
-> > 
-> > On Tue, Apr 23, 2019 at 05:32:15PM +0100, Lorenzo Pieralisi wrote:
-> > > On Wed, Mar 13, 2019 at 10:37:52PM +0100, Remi Pommarel wrote:
-> > > > When configuring pcie reset pin from gpio (e.g. initially set by
-> > > > u-boot) to pcie function this pin goes low for a brief moment
-> > > > asserting the PERST# signal. Thus connected device enters fundamental
-> > > > reset process and link configuration can only begin after a minimal
-> > > > 100ms delay (see [1]).
-> > > > 
-> > > > This makes sure that link is configured after at least 100ms from
-> > > > beginning of probe() callback (shortly after the reset pin function
-> > > > configuration switch through pinctrl subsytem).
+On Wed, Apr 24, 2019 at 02:20:13PM -0400, Joel Savitz wrote:
+> In the event of an oom kill, useful information about the killed
+> process is printed to dmesg. Users, especially system administrators,
+> will find it useful to immediately see the UID of the process.
 > 
-> I am a bit lost, what's the connection between the probe() callback
-> and the reset pin function configuration ?
+> In the following example, abuse_the_ram is the name of a program
+> that attempts to iteratively allocate all available memory until it is
+> stopped by force.
 > 
-> Please elaborate.
+> Current message:
 > 
-
-So currently u-boot configures the reset pin as a GPIO set to high. The
-espressobin devicetree defines a default pinctrl to configure this pin
-as a PCIe reset function.
-
-As you can see in drivers/base/dd.c, driver_probe_device() calls
-really_probe() which first calls pinctrl_bind_pins() then shortly after
-drv->probe() callback. The pinctrl_bind_pins() function applies the
-default state. So here, just before drv->probe() gets called our reset
-pin goes from GPIO function to PCIe reset one making it going low for a
-short time during this transition.
-
-Because the pin goes low then gets back to high, PERST# signal is
-asserted then deasserted and device enters fundamental reset process
-just before drv->probe() is called. So in order to reduce the waiting
-time to a minimum I sample jiffies at the very beginning of the probe
-function, which is the closer spot from where PERST# is deasserted.
-
-To sum up:
-
-driver_probe_device() {
-	...
-	really_probe() {
-		...
-		pinctrl_bind_pins(); /* Here PERST# is asserted because pin configuration changes */
-		...
-		drv->probe();
-		...
-	}
-	...
-}
-
-> > > > 
-> > > > [1] "PCI Express Base Specification", REV. 2.1
-> > > >         PCI Express, March 4 2009, 6.6.1 Conventional Reset
-> > > > 
-> > > > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > > > ---
-> > > >  drivers/pci/controller/pci-aardvark.c | 17 ++++++++++++++---
-> > > >  1 file changed, 14 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > index a30ae7cf8e7e..70a1023d0ef1 100644
-> > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > @@ -177,6 +177,9 @@
-> > > >  
-> > > >  #define PIO_TIMEOUT_MS			1
-> > > >  
-> > > > +/* Endpoint can take up to 100ms to be ready after a reset */
-> > > > +#define ENDPOINT_RST_MS			100
-> > > > +
-> > > >  #define LINK_WAIT_MAX_RETRIES		10
-> > > >  #define LINK_WAIT_USLEEP_MIN		90000
-> > > >  #define LINK_WAIT_USLEEP_MAX		100000
-> > > > @@ -242,8 +245,10 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
-> > > >  	return -ETIMEDOUT;
-> > > >  }
-> > > >  
-> > > > -static void advk_pcie_setup_hw(struct advk_pcie *pcie)
-> > > > +static void
-> > > > +advk_pcie_setup_hw(struct advk_pcie *pcie, unsigned long ep_rdy_time)
-> > > 
-> > > Nit: I prefer the prototype to be in one line, I wrap it for you.
-> > > 
-> > > I am wondering why you need to pass in ep_rdy_time parameter when you
-> > > can easily compute it in the function itself.
-> > > 
-> > 
-> > The only reason for that is because the sooner I get the jiffies the
-> > lower the delay has to be. I was trying to reduce the impact of this
-> > delay to a minimum, but maybe the improvement is not worth it.
+> Out of memory: Killed process 35389 (abuse_the_ram)
+> total-vm:133718232kB, anon-rss:129624980kB, file-rss:0kB,
+> shmem-rss:0kB
 > 
-> That should just be (roughly) some microseconds unless there is
-> something I am missing. Try to measure it :)
-
-So doing that I do a msleep() of around 75-80ms instead of 100ms. So,
-yes, are 20ms enough to justify that, or should we just go with a plain
-msleep(100) to improve legibility.
-
--- 
-Remi
+> Patched message:
+> 
+> Out of memory: Killed process 2739 (abuse_the_ram), UID 0,
+> total-vm:133880028kB, anon-rss:129754836kB, file-rss:0kB,
+> shmem-rss:0kB
+> 
+> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> ---
+>  mm/oom_kill.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> index 3a2484884cfd..22972648b758 100644
+> --- a/mm/oom_kill.c
+> +++ b/mm/oom_kill.c
+> @@ -874,9 +874,9 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+>  	 */
+>  	do_send_sig_info(SIGKILL, SEND_SIG_PRIV, victim, PIDTYPE_TGID);
+>  	mark_oom_victim(victim);
+> -	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
+> +	pr_err("%s: Killed process %d (%s), UID %d, total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
+>  		message, task_pid_nr(victim), victim->comm,
+> -		K(victim->mm->total_vm),
+> +		task_uid(victim).val, K(victim->mm->total_vm),
+>  		K(get_mm_counter(victim->mm, MM_ANONPAGES)),
+>  		K(get_mm_counter(victim->mm, MM_FILEPAGES)),
+>  		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)));
+> -- 
+> 2.18.1
+> 
+Acked-by: Rafael Aquini <aquini@redhat.com>
