@@ -2,109 +2,125 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73082C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D466C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48E5C218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F93F20878
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbfDYHUk (ORCPT
+        id S2389251AbfDYHWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:20:40 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:56577 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfDYHUk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:20:40 -0400
-Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hJYgE-0006gv-EO; Thu, 25 Apr 2019 09:20:26 +0200
-Date:   Thu, 25 Apr 2019 09:20:25 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
-cc:     mingo@redhat.com, peterz@infradead.org, hpa@zytor.com,
-        ak@linux.intel.com, tim.c.chen@linux.intel.com,
-        dave.hansen@intel.com, arjan@linux.intel.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, aubrey.li@intel.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v17 1/3] proc: add /proc/<pid>/arch_status
-In-Reply-To: <da1fcb4f-e856-d31f-7c72-76c969af3935@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1904250917400.1762@nanos.tec.linutronix.de>
-References: <20190421183529.9141-1-aubrey.li@linux.intel.com> <alpine.DEB.2.21.1904242310040.1762@nanos.tec.linutronix.de> <da1fcb4f-e856-d31f-7c72-76c969af3935@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 25 Apr 2019 03:22:22 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54022 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727435AbfDYHWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 03:22:20 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 73B1DC3160BF9F590EBC;
+        Thu, 25 Apr 2019 15:22:17 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.20) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Apr 2019
+ 15:22:08 +0800
+Subject: Re: [PATCH v2] net: netfilter: Fix ipv6 rp_filter dropping vrf
+ packets by mistake
+To:     David Ahern <dsahern@gmail.com>, <pablo@netfilter.org>,
+        <kadlec@blackhole.kfki.hu>, <fw@strlen.de>, <davem@davemloft.net>,
+        <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
+        <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Mingfangsen <mingfangsen@huawei.com>
+References: <7662b7eb-89a4-adac-1e46-2c09816641f2@huawei.com>
+ <05222a41-c60b-0c05-6beb-26a143deea36@gmail.com>
+From:   linmiaohe <linmiaohe@huawei.com>
+Message-ID: <58b71ee4-c665-4cff-a9fb-5af9d402e1ea@huawei.com>
+Date:   Thu, 25 Apr 2019 15:21:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <05222a41-c60b-0c05-6beb-26a143deea36@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.20]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019, Li, Aubrey wrote:
 
-> On 2019/4/25 5:18, Thomas Gleixner wrote:
-> > On Mon, 22 Apr 2019, Aubrey Li wrote:
-> >> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> >> index 5ad92419be19..d5a9c5ddd453 100644
-> >> --- a/arch/x86/Kconfig
-> >> +++ b/arch/x86/Kconfig
-> >> @@ -208,6 +208,7 @@ config X86
-> >>  	select USER_STACKTRACE_SUPPORT
-> >>  	select VIRT_TO_BUS
-> >>  	select X86_FEATURE_NAMES		if PROC_FS
-> >> +	select PROC_PID_ARCH_STATUS		if PROC_FS
-> > 
-> > Can you please stop mixing arch and proc code? There is no point in
-> > enabling this on x86 right away.
-> > 
-> >> +
-> >> +config PROC_PID_ARCH_STATUS
-> >> +	bool "Enable /proc/<pid>/arch_status file"
-> > 
-> > Why is this switchable? x86 selects it if PROC_FS is enabled and all other
-> > architectures are absolutely not interested in this.
+
+On 2019/4/24 23:24, David Ahern wrote:
+> On 4/24/19 3:12 AM, linmiaohe wrote:
+>> From: Miaohe Lin <linmiaohe@huawei.com>
+>>
+>> When firewall is enabled with rp_filter, vrf ipv6 packets
+>> will be dropped because in device is vrf but out device
+>> is an enslaved device. So rt->rt6i_idev->dev != dev and
+>> maybe return false in func rpfilter_lookup_reverse6.
+>>
+>> Here is the out message when I ping the peer:
+>> ip vrf exec vrf1 ping 2013::2 -c 1
+>> 1 packets transmitted, 0 received, 100% packet loss, time 0ms
+>>
+>> The drop info in /var/log/message:
+>> Apr 24 14:59:45 localhost kernel: [81316.158259] rpfilter_DROP: IN=vrf1
+>> OUT= MAC=52:54:00:9e:dd:c1:52:54:00:4f:81:38:86:dd
+>> SRC=2013:0000:0000:0000:0000:0000:0000:0002
+>> DST=2013:0000:0000:0000:0000:0000:0000:0001 LEN=104 TC=0 HOPLIMIT=64
+>> FLOWLBL=1032942 PROTO=ICMPv6 TYPE=129 CODE=0 ID=14943 SEQ=1
+>>
+>> Signed-off-by: linmiaohe <linmiaohe@huawei.com>
+>> ---
+>>  net/ipv6/netfilter/ip6t_rpfilter.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
+>> index c3c6b09acdc4..cf1070ab1252 100644
+>> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
+>> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
+>> @@ -73,6 +73,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+>>  		goto out;
+>>  	}
+>>
+>> +	if (netif_is_l3_master(dev)) {
+>> +		dev = dev_get_by_index_rcu(dev_net(dev), IP6CB(skb)->iif);
+>> +		if (!dev)
+>> +			goto out;
+>> +	}
+>> +
+>>  	if (rt->rt6i_idev->dev == dev || (flags & XT_RPFILTER_LOOSE))
+>>  		ret = true;
+>>   out:
+>>
 > 
-> Above and this, I was trying to avoid an empty arch_file on other architectures.
-> In previous proposal the entry only exists on the platform with AVX512.
-
-What's the benefit of having a conditional enabled empty file for all other
-architectures? Nothing AFAICT.
- 
-> >> +/*
-> >> + * Add support for task architecture specific output in /proc/pid/arch_status.
-> >> + * task_arch_status() must be defined in asm/processor.h
-> >> + */
-> >> +#ifdef CONFIG_PROC_PID_ARCH_STATUS
-> >> +# ifndef task_arch_status
-> >> +# define task_arch_status(m, task)
-> >> +# endif
-> > 
-> > What exactly is the point of this macro mess? If an architecture selects
-> > CONFIG_PROC_PID_ARCH_STATUS then it has to provide proc_task_arch_status()
-> > and the prototype should be in include/linux/proc_fs.h.
+> What about the case where XT_RPFILTER_LOOSE is set? flowi6_oif needs to
+> be set to the dev->ifindex if dev is an l3 master.
 > 
-> I was trying to address Andy's last comments. If we have the prototype in 
-> include/linux/proc_fs.h, we'll have a weak function definition in fs/proc/array.c,
-> which bloats other architectures.
+
+Thanks, you are right. I miss the case when XT_RPFILTER_LOOSE is set. flowi6_oif
+needs to be set to the device ifindex if dev is an l3 master or l3 slave which
+looks like this in function rpfilter_lookup_reverse6:
+
+} else if ((flags & XT_RPFILTER_LOOSE) == 0) {
+	fl6.flowi6_oif = dev->ifindex;
+} else if (netif_is_l3_master(dev) || netif_is_l3_slave(dev))
+	fl6.flowi6_oif = dev->ifindex;
+
+> And looking at the IPv4 version I do not see how it could be correct
+> either. Have you tested it?
 > 
-> In that way proc_task_arch_status() should be defined in asm/processor.h,
-> but proc_task_arch_status() has four parameters, I don't want unnecessary
-> "struct pid_namespace *ns" and "struct pid *pid" leaked into arch headers,
-> so I defined task_arch_status(m, task) to avoid that.
+> .
+> 
 
-This #define mess is ugly and pointless. Let the arch select
-CONFIG_PROC_PID_ARCH_STATUS and if it selects it it has to provide the
-function. No waek function required at all.
+I thought rp_filter is ok with ipv4 version because it works in my enviroment. But
+I forgot rp_filter func in my enviroment is provided by sysctl rather than iptables
+rpfilter. So I tested again and found we need to fix ipv4 version too.
 
-Thanks,
+Thanks for your remind, I will fix all of these and send a patch v2 soon.
+Thanks.
 
-	tglx
