@@ -1,237 +1,143 @@
 Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD75C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C79DC282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8AA206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:08:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dQzP5y6p"
+	by mail.kernel.org (Postfix) with ESMTP id 10175214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556186981;
+	bh=LFYOnrzOnqHgCaRL1dV3rewYVMdVsYB0QjuTPuTNuS8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kkbbeWtY7/9bUsPvDZffzR0D3kDgeR4TzS4JHKlE3m5FT4hsowLRY1mZdS5YBUXHB
+	 Br0W1jvONAXZHnWla2NydwRO2ErPp8m0FxMLIxaVvftL7mHr8ZMlze0gBswcR0B7AC
+	 9yhO1OhWH09jBLHFBhbqisyTRE0UwOk9+l3IA4wE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfDYKIr (ORCPT
+        id S1726689AbfDYKJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:08:47 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:38705 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfDYKIq (ORCPT
+        Thu, 25 Apr 2019 06:09:40 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:39793 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfDYKJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:08:46 -0400
-Received: by mail-ua1-f68.google.com with SMTP id t15so7055321uao.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 03:08:46 -0700 (PDT)
+        Thu, 25 Apr 2019 06:09:39 -0400
+Received: by mail-wm1-f53.google.com with SMTP id n25so9694421wmk.4;
+        Thu, 25 Apr 2019 03:09:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qt2EZqs6GUrsmHrcnC0WRkeHSoOKsorPy1rRmzBng4A=;
-        b=dQzP5y6pAGFTGcOxI4KPrwjaIFnvNmUuRshJMnJlTq74vWaQVyUXWdOzBADCamoQE0
-         mO+0utj2yx3dDJKtUcd5JfnzlXgElR9Zhd3kDKW5J3LtLF2NgrmLOTjRwhE5INE7hKyI
-         VtLShVxRRpaMKgs0n4Anac8738pLhmWsy7o/biBAXRV7bZp/3SIyPVpTYvezU5xT+6S+
-         Ahg7Uuu0p+4yMAYUYr+nT3SEGD8nkKHE3bOXhAbgDAsXZXA+QU+J/bYbdLwuNau4vmGi
-         JhdeSGi9ZNquLqJ6NuDnw7885LkplCKk96DrDt7xEUvxQAvn9BRmf53b4l0WLWg/um1u
-         7zKQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qDXe8aInWx7rrUFbUzdCjPGqVvpdtP3z9EWwVfzbZc0=;
+        b=kAxXHkZYy9zXKuU1mD/GV24mrHOTRf2dSE1dytqyDTE9UDI6Qs03UeV4nB5Yquf+nl
+         1tep2U7T3Sryt2ngffH0HbGnWoldhLQYMgCmjjSkzwRogMPhe3prjnuLu6GRBIQdgUmP
+         FO9A7NNqPP+fSPIriO0PBVmQlihNr+lRUE9kN3TizxGphIMjD0dAZh3pX8+TVTBIlEGM
+         NvtAJ9V68fpOVi2Lsx5HMiib5OaOfiymoKlY6eqWti6BEHTZMF6SWGNJ9IBt5/IKPWow
+         QfTd69DVj5A06mVnuB2nERuOjY3Jq4M3TbOja1rBzuWUVL+Z+FGC8ZLEkNP4i5JfSmzV
+         aAvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qt2EZqs6GUrsmHrcnC0WRkeHSoOKsorPy1rRmzBng4A=;
-        b=fVh3KO5PcPDOjJfRypQqosEQah7oCvWCHJ4cMNWIzJ90OGXGa91E7IPLgd+4Dro0wK
-         aAZh1JHF7209vgdxNWaoJdWXQWI4v117ARBHZXcbP16jR325pTf0Qsvama6GmPIKVTaZ
-         sP7ayWrO0P6AVZ1+/9E7vnazYIR20/qca5INAJ/UtSBvynleT7EToGaA77+KnblCjBA8
-         ucjqPKcqpEnEEOJ7gydGX+uwBFY/2u98HAEVcgUB/HahWBm1AkRUBqj/7U2wO+8/zlxl
-         jkto5/8umKkmygVV4Z7YmieBR//r9bBDqE6Bt6XYQ121nGJWu+fhIHI4hgCReUYdO7Ug
-         83wQ==
-X-Gm-Message-State: APjAAAU5rHbXVeQvWy8MJvwxmFcOI9+R8cTRvJoHw1mF+FgN8QSoPrhX
-        4oM2p9QGUBhWg3t6stGA7izZN5ny+otwEgctfH/iUg==
-X-Google-Smtp-Source: APXvYqyQ/SqOfD2WvCtj1TkUSYRDCjUyhysnWR+OBjrwaIOXCQpPP4y4yGlyNw0PuyWY9uy3RIRHkMIuseQzZr6ygAM=
-X-Received: by 2002:ab0:2399:: with SMTP id b25mr19418936uan.129.1556186925462;
- Thu, 25 Apr 2019 03:08:45 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qDXe8aInWx7rrUFbUzdCjPGqVvpdtP3z9EWwVfzbZc0=;
+        b=intRd2J8Rd0dT9xsoF/UrTxTB+DwQvwijrTcwdCOnUy3+pxgVtf6u2pkngq7j/5EP1
+         VQvqpAZHXOlO8cyU6wsxniLgvqNcnIljtYreVLRMPkS9gGlAllJHMx3KDlwnIuebevbL
+         zpKbbzeMHqTJsNlhHPCl95sEUtcUA9iFODFT2S1Cdrdv9HmiEAoBlvCJZU3nazjRqcaC
+         NUwl7/I4isC3YVlPgvfdrJ1quJwiec5uqDVR6dv0sxnscolyhj4ejwwNxAg25c9as23I
+         GgObq6/XyWh6inrijEOmJc5EpgBnAMsf7pn56urzLWd3QnuZQwrRqHgGqbPHtdDhW46g
+         b8PQ==
+X-Gm-Message-State: APjAAAUcCTJpOO4mfQ+4Vu3bUXTn3OUpCZNSq9InHolFd/wnJx3IfESk
+        U0PiY3GbouFBdTxmHzoDOMY=
+X-Google-Smtp-Source: APXvYqx2GAh1uv+m48koOKK3YSqfB/7bnkVhISaxrxFGwOyRBo5NQ9XpO4CFxCAJqjHa83cweimVmQ==
+X-Received: by 2002:a1c:6c04:: with SMTP id h4mr2890302wmc.135.1556186977884;
+        Thu, 25 Apr 2019 03:09:37 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id c2sm19739225wrr.13.2019.04.25.03.09.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Apr 2019 03:09:37 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 12:09:33 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
+        David Rientjes <rientjes@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-arch@vger.kernel.org
+Subject: Re: [patch V3 00/29] stacktrace: Consolidate stack trace usage
+Message-ID: <20190425100933.GB8387@gmail.com>
+References: <20190425094453.875139013@linutronix.de>
 MIME-Version: 1.0
-References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com>
- <1551802205-32188-2-git-send-email-ludovic.Barre@st.com> <CAPDyKFoZuQ+hshZpj-qjchKf7enW4ChPd=r_QhK2xtuJcSvqxQ@mail.gmail.com>
- <fd57fd63-093e-dd23-5ca4-6bd4f99ecda9@st.com>
-In-Reply-To: <fd57fd63-093e-dd23-5ca4-6bd4f99ecda9@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 25 Apr 2019 12:08:09 +0200
-Message-ID: <CAPDyKFrmTX6w1ZgwBkEmieCQ5swUQx_O864mHofhNsz3LFC32A@mail.gmail.com>
-Subject: Re: [PATCH 1/4] mmc: mmci: avoid fake busy polling
-To:     Ludovic BARRE <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425094453.875139013@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019 at 11:22, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
-> hi Ulf
->
-> On 4/23/19 3:39 PM, Ulf Hansson wrote:
-> > On Tue, 5 Mar 2019 at 17:10, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> >>
-> >> From: Ludovic Barre <ludovic.barre@st.com>
-> >>
-> >> The busy status bit could occurred even if no busy response is
-> >> expected (example cmd11). On sdmmc variant, the busy_detect_flag
-> >> reflects inverted value of d0 state, it's sampled at the end of a
-> >> CMD response and a second time 2 clk cycles after the CMD response.
-> >> To avoid a fake busy, the busy status could be checked and polled
-> >> only if the command has RSP_BUSY flag.
-> >
-> > I would appreciate a better explanation of what this patch really changes.
-> >
-> > The above is giving some background to the behavior of sdmmc variant,
-> > but at this point that variant doesn't even have the
-> > ->variant->busy_detect flag set.
-> >
->
-> Yes, I will try to explain more and focus on common behavior.
->
-> >>
-> >> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> >> ---
-> >>   drivers/mmc/host/mmci.c | 19 +++++++++++++------
-> >>   1 file changed, 13 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> >> index 387ff14..4901b73 100644
-> >> --- a/drivers/mmc/host/mmci.c
-> >> +++ b/drivers/mmc/host/mmci.c
-> >> @@ -1220,12 +1220,13 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
-> >>               unsigned int status)
-> >>   {
-> >>          void __iomem *base = host->base;
-> >> -       bool sbc;
-> >> +       bool sbc, busy_resp;
-> >>
-> >>          if (!cmd)
-> >>                  return;
-> >>
-> >>          sbc = (cmd == host->mrq->sbc);
-> >> +       busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
-> >>
-> >>          /*
-> >>           * We need to be one of these interrupts to be considered worth
-> >> @@ -1239,8 +1240,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
-> >>          /*
-> >>           * ST Micro variant: handle busy detection.
-> >>           */
-> >> -       if (host->variant->busy_detect) {
-> >> -               bool busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
-> >> +       if (busy_resp && host->variant->busy_detect) {
-> >>
-> >>                  /* We are busy with a command, return */
-> >>                  if (host->busy_status &&
-> >> @@ -1253,7 +1253,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
-> >>                   * that the special busy status bit is still set before
-> >>                   * proceeding.
-> >>                   */
-> >> -               if (!host->busy_status && busy_resp &&
-> >> +               if (!host->busy_status &&
-> >>                      !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
-> >>                      (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
-> >
-> > All the changes above makes perfect sense to me, but looks more like a
-> > cleanup of the code, rather than actually changing the behavior.
->
-> yes, few changing (this just avoid to enter in
-> "if (host->variant->busy_detect)") at each time.
-> I could move this part in cleanup patch (before this patch)
 
-Sounds good to me!
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
->
-> >
-> >>
-> >> @@ -1508,6 +1508,7 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
-> >>   {
-> >>          struct mmci_host *host = dev_id;
-> >>          u32 status;
-> >> +       bool busy_resp;
-> >>          int ret = 0;
-> >>
-> >>          spin_lock(&host->lock);
-> >> @@ -1550,9 +1551,15 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
-> >>                  }
-> >>
-> >>                  /*
-> >> -                * Don't poll for busy completion in irq context.
-> >> +                * Don't poll for:
-> >> +                * -busy completion in irq context.
-> >> +                * -no busy response expected.
-> >>                   */
-> >> -               if (host->variant->busy_detect && host->busy_status)
-> >> +               busy_resp = host->cmd ?
-> >> +                       !!(host->cmd->flags & MMC_RSP_BUSY) : false;
-> >
-> > This doesn't make sense to me, but I may be missing something.
-> >
-> > host->busy_status is being updated by mmci_cmd_irq() and only when
-> > MMC_RSP_BUSY is set for the command in flight. In other words,
-> > checking for MMC_RSP_BUSY here as well is redundant. No?
->
-> In mmci_irq the "do while" loops until the status is totally cleared.
->
-> Today (for variant with busy_detect option), the status busy_detect_flag
-> is excluded only while busy_status period (command with MMC_RSP_BUSY and
-> while busy line is low => "busy_status=1")
->
-> On SDMMC variant I noticed that busy_detect_flag status could be enabled
-> even if the command is not MMC_RSP_BUSY, for example sdmmc variant stay
-> in loop while cmd11 voltage switch.
+> -	if (unlikely(!ret))
+> +	if (unlikely(!ret)) {
+> +		if (!trace->nr_entries) {
+> +			/*
+> +			 * If save_trace fails here, the printing might
+> +			 * trigger a WARN but because of the !nr_entries it
+> +			 * should not do bad things.
+> +			 */
+> +			save_trace(trace);
+> +		}
+>  		return print_circular_bug(&this, target_entry, next, prev);
+> +	}
+>  	else if (unlikely(ret < 0))
+>  		return print_bfs_bug(ret);
 
-Right, I see.
+Just a minor style nit: the 'else' should probably on the same line as 
+the '}' it belongs to, to make it really obvious that the 'if' has an 
+'else' branch?
 
->
-> So I wish extend host->variant->busy_detect_flag exclusion for all
-> commands which is not a MMC_RSP_BUSY. I suppose that other variants
-> could have the same behavior, and else there is no impact, normally.
+At that point the condition should probably also use balanced curly 
+braces.
 
-I am guessing this is because the variant->busy_dpsm_flag has been set
-in the datactrl register, which is needed for mmci_card_busy().
+Interdiff looks good otherwise.
 
-That said, I am kind of wondering if we ever should need repeat the
-while loop if 'status' contains the bit for
-host->variant->busy_detect_flag. I mean we have already called
-mmci_cmd_irq() to handle it.
+Thanks,
 
-So, couldn't we just always do:
-
-if (host->variant->busy_detect_flag)
-    status &= ~host->variant->busy_detect_flag;
-
-No?
-
->
-> >
-> >> +
-> >> +               if (host->variant->busy_detect &&
-> >> +                   (!busy_resp || host->busy_status))
-> >>                          status &= ~host->variant->busy_detect_flag;
-> >>
-> >>                  ret = 1;
-> >> --
-> >> 2.7.4
-> >>
-> >
-> > Kind regards
-> > Uffe
-> >
-
-Kind regards
-Uffe
+	Ingo
