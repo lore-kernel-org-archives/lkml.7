@@ -2,102 +2,101 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18962C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8257C282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E390D217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADFB218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556178524;
+	bh=+Qgon2X3Xpjxac7EpKvxR+RQaesDw4jyLzgtHPOFurk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kqQKVPt5LQwLE4BHOVIq2WwYsgh07S/vJdjfNVpvg7+daf21LN8hhJlpA6kbEfLMA
+	 G49ewclAK1IuCA/S7xD0km7KNo9r1cvCKrFlAr4EIbtorAX+2k7qul/k4wKZj0Z1cq
+	 PDWKyfJtcObz7rKrUOhfvoCzk8FrEa/xhU3vQNSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfDYHqS (ORCPT
+        id S1727897AbfDYHsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:46:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39252 "EHLO mx1.suse.de"
+        Thu, 25 Apr 2019 03:48:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39600 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726184AbfDYHqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:46:18 -0400
+        id S1726184AbfDYHsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 03:48:43 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 17295AF60;
-        Thu, 25 Apr 2019 07:46:16 +0000 (UTC)
-Subject: Re: [patch 3/3] x86/paravirt: Replace paravirt patch asm magic
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-References: <20190424134115.091452807@linutronix.de>
- <20190424134223.690835713@linutronix.de> <20190425065209.GA89582@gmail.com>
- <alpine.DEB.2.21.1904250921010.1762@nanos.tec.linutronix.de>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <6da95feb-e8ea-0c9b-d4c1-fa3556d6026a@suse.com>
-Date:   Thu, 25 Apr 2019 09:46:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mx1.suse.de (Postfix) with ESMTP id 23A2AAF60;
+        Thu, 25 Apr 2019 07:48:42 +0000 (UTC)
+Date:   Thu, 25 Apr 2019 09:48:41 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Du, Fan" <fan.du@intel.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Wu, Fengguang" <fengguang.wu@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "xishi.qiuxishi@alibaba-inc.com" <xishi.qiuxishi@alibaba-inc.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 5/5] mm, page_alloc: Introduce
+ ZONELIST_FALLBACK_SAME_TYPE fallback list
+Message-ID: <20190425074841.GN12751@dhcp22.suse.cz>
+References: <1556155295-77723-1-git-send-email-fan.du@intel.com>
+ <1556155295-77723-6-git-send-email-fan.du@intel.com>
+ <20190425063807.GK12751@dhcp22.suse.cz>
+ <5A90DA2E42F8AE43BC4A093BF067884825785F04@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1904250921010.1762@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5A90DA2E42F8AE43BC4A093BF067884825785F04@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/04/2019 09:22, Thomas Gleixner wrote:
-> On Thu, 25 Apr 2019, Ingo Molnar wrote:
->>> +# else
->>> +	.irq_restore_fl		= { 0x50, 0x9d },	// push %eax; popf
->>> +	.mmu_write_cr3		= { 0x0f, 0x22, 0xd8 },	// mov %eax, %cr3
->>> +	.cpu_iret		= { 0xcf },		// iret
->>> +# endif
->>
->> I think these open-coded hexa versions are somewhat fragile as well, how 
->> about putting these into a .S file and controlling the sections in an LTO 
->> safe manner there?
->>
->> That will also allow us to write proper asm, and global labels can be 
->> used to extract the patchlets and their length?
+On Thu 25-04-19 07:43:09, Du, Fan wrote:
 > 
-> We are not changing these any other day and I really don't see a reason to
-> have these things global just because.
+> 
+> >-----Original Message-----
+> >From: Michal Hocko [mailto:mhocko@kernel.org]
+> >Sent: Thursday, April 25, 2019 2:38 PM
+> >To: Du, Fan <fan.du@intel.com>
+> >Cc: akpm@linux-foundation.org; Wu, Fengguang <fengguang.wu@intel.com>;
+> >Williams, Dan J <dan.j.williams@intel.com>; Hansen, Dave
+> ><dave.hansen@intel.com>; xishi.qiuxishi@alibaba-inc.com; Huang, Ying
+> ><ying.huang@intel.com>; linux-mm@kvack.org; linux-kernel@vger.kernel.org
+> >Subject: Re: [RFC PATCH 5/5] mm, page_alloc: Introduce
+> >ZONELIST_FALLBACK_SAME_TYPE fallback list
+> >
+> >On Thu 25-04-19 09:21:35, Fan Du wrote:
+> >> On system with heterogeneous memory, reasonable fall back lists woul be:
+> >> a. No fall back, stick to current running node.
+> >> b. Fall back to other nodes of the same type or different type
+> >>    e.g. DRAM node 0 -> DRAM node 1 -> PMEM node 2 -> PMEM node 3
+> >> c. Fall back to other nodes of the same type only.
+> >>    e.g. DRAM node 0 -> DRAM node 1
+> >>
+> >> a. is already in place, previous patch implement b. providing way to
+> >> satisfy memory request as best effort by default. And this patch of
+> >> writing build c. to fallback to the same node type when user specify
+> >> GFP_SAME_NODE_TYPE only.
+> >
+> >So an immediate question which should be answered by this changelog. Who
+> >is going to use the new gfp flag? Why cannot all allocations without an
+> >explicit numa policy fallback to all existing nodes?
+> 
+> PMEM is good for frequently read accessed page, e.g. page cache(implicit page
+> request), or user space data base (explicit page request)
+> For now this patch create GFP_SAME_NODE_TYPE for such cases, additional
+> Implementation will be followed up.
 
-What about generating the hex values from the Makefile using a temporary
-.S file? This would make the result easy verifiable and I don't think
-setting this up is too complicated.
-
-
-Juergen
+Then simply configure that NUMA node as movable and you get these
+allocations for any movable allocation. I am not really convinced a new
+gfp flag is really justified.
+-- 
+Michal Hocko
+SUSE Labs
