@@ -2,98 +2,146 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76269C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB990C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8859A2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:46:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="RDkfmGP5";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="UoF0oNh7"
+	by mail.kernel.org (Postfix) with ESMTP id CFEDA206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556221640;
+	bh=rbgSt1Z/AZYaF31m0DDwCoq42ppzgpseqxIMx2mDntk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ba0AqctW1lvNoWzLKzDKrKErikbH/0PkMyDrnmZdIlnJgnp/jBCDgqetkMWUcuJRC
+	 /HIN8+dHzFF1VOvDIxzGDQf8Rh0lO0e+JO0RqcJjr8Kk8zHdfvDmXDn1+6gKcmehU9
+	 l5VDJV67UB1+DKTfG0NgWFIleCACvVXiJSXzqGEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbfDYTqu (ORCPT
+        id S2387574AbfDYTrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:46:50 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51342 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727517AbfDYTqt (ORCPT
+        Thu, 25 Apr 2019 15:47:19 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41659 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfDYTrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:46:49 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id F18BD8EE128;
-        Thu, 25 Apr 2019 12:46:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1556221608;
-        bh=eEZhjMHHMxvU2y+hJ2EEU/LgKWzqfVWKCNdD4gxbL5g=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=RDkfmGP5zG/H0JgXAB+X2uF+VrjXfq1ilzpng22YN2DDEJx4Wv7/YWdCTgQDPXBmf
-         OYrob/YZYgA/aLKHZP2R3AT7DK52DExdC9/M1RxOP+Daylk8CBHkhKCYbErckCXPjO
-         AcBngFmDW5V+mCpDsPaMHQDjuEQGSaNncFzF6qsQ=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 4c3LLyURmsqg; Thu, 25 Apr 2019 12:46:47 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B90DC8EE0AB;
-        Thu, 25 Apr 2019 12:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1556221607;
-        bh=eEZhjMHHMxvU2y+hJ2EEU/LgKWzqfVWKCNdD4gxbL5g=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=UoF0oNh7fo5g1m73NKF5r3a0Yx/4IVVWbxksDv7EBZ+Wh6IbiCsbfcaPSueqemeeM
-         gMTk6JEU2/bxF1rdJbwDgivzkX8CF117rb+GUTpNUupXLy6PEnzFKYPxwXEKiCx9Vx
-         YqKJLOJZc39uonrCqxq4vcI4n7f+MWfqHn/GJZXo=
-Message-ID: <1556221605.24945.3.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2] KEYS: Make use of platform keyring for module
- signature verify
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Robert Holmes <robeholmes@gmail.com>, jeyu@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        stable@vger.kernel.org
-Date:   Thu, 25 Apr 2019 12:46:45 -0700
-In-Reply-To: <1556193350.3894.92.camel@linux.ibm.com>
-References: <1556116431-7129-1-git-send-email-robeholmes@gmail.com>
-         <1556193350.3894.92.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Apr 2019 15:47:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c12so998010wrt.8;
+        Thu, 25 Apr 2019 12:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ydDrHuDhZXJBmgP1xmnm9CGqwfa2HZ/by3+G5Gc/qz8=;
+        b=FQdjsNNesEsS+R16FOsavmXeWEvpkdaR8uvYQPZhi5Fguc4QyUht7xG4qkcysn0ZTC
+         E1MYLGYj+P8Cvu5r472c5/ZuiCA0SpOSjrMwUzIsBHG3eYdLYiwhhv0eaToYzInEs7dn
+         JWPvAvLHCEaBR71XfJluuTyaBqYC60oYg+ZDILBDt2AwHQcMqPHLkgSVEk8aPEdoj+AA
+         E1UdAGKxpV+HAIePZ89lsNl85sTx6fGsSexiJ4sswSboxg9Lg8pkwuaP0B+jJa1QmwUp
+         e+s8J2wRJo4kMW79Fh2CrH9WzevN+RGZlxJl15hj1HUhnDqKA1XpyXNnLRG6ihZHWWaV
+         g+XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ydDrHuDhZXJBmgP1xmnm9CGqwfa2HZ/by3+G5Gc/qz8=;
+        b=KAtyW51e3fW2sMDnEXNkEHx4jZqINP808RAmapxvXcZANziFj2Hzs5AqYFwcQ+b3Ct
+         ts3Bm0Cf715lZmPa5hhzjsmxHrapIlW7Iooi4BcywFZm2sMnVFX9Hb4soEAxTG1dkmJ6
+         0VdBL9qdMXNWeA+AtaQwB1QWQe28OWmnoid4soPgABM8gBGCMb+Zhd+sut0VIp/+x3Up
+         6gj3HlpKAs1uol05i5pFmG0MVhN72GXFcef8AEo66k54pKYIAzuDrphKNL4NC362uKet
+         jhRVJSuyGYQGPseIprEWEGz4BdxEvyki9cpSwWDRBdGSwxQ2XqzvtCY5Ihk43BGqeZRw
+         Tgfg==
+X-Gm-Message-State: APjAAAW1vuoaCHwcfz7RsB4//ua4/y+yNjJeZCFGjgfJQOq0n4A1T03I
+        +IxD1+7z0qD9CH33GaKdz1g=
+X-Google-Smtp-Source: APXvYqwh0niotys+kP44J79XSppHEpypwWfa7yKREdp/DHiSyfVh9/akqrFbPU64RzOVHr4z7vnDfQ==
+X-Received: by 2002:adf:dc83:: with SMTP id r3mr8453910wrj.179.1556221637279;
+        Thu, 25 Apr 2019 12:47:17 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id l21sm18779718wme.4.2019.04.25.12.47.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Apr 2019 12:47:16 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 21:47:14 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v8 05/15] x86/msr-index: Define MSR_IA32_CORE_CAPABILITY
+ and split lock detection bit
+Message-ID: <20190425194714.GA58719@gmail.com>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
+ <1556134382-58814-6-git-send-email-fenghua.yu@intel.com>
+ <20190425054511.GA40105@gmail.com>
+ <20190425190148.GA64477@romley-ivt3.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425190148.GA64477@romley-ivt3.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-04-25 at 07:55 -0400, Mimi Zohar wrote:
-> On Wed, 2019-04-24 at 14:33 +0000, Robert Holmes wrote:
-> > This patch completes commit 278311e417be ("kexec, KEYS: Make use of
-> > platform keyring for signature verify") which, while adding the
-> > platform keyring for bzImage verification, neglected to also add
-> > this keyring for module verification.
+
+* Fenghua Yu <fenghua.yu@intel.com> wrote:
+
+> On Thu, Apr 25, 2019 at 07:45:11AM +0200, Ingo Molnar wrote:
 > > 
-> > As such, kernel modules signed with keys from the MokList variable
-> > were not successfully verified.
+> > * Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > 
+> > > A new MSR_IA32_CORE_CAPABILITY (0xcf) is defined. Each bit in the MSR
+> > > enumerates a model specific feature. Currently bit 5 enumerates split
+> > > lock detection. When bit 5 is 1, split lock detection is supported.
+> > > When the bit is 0, split lock detection is not supported.
+> > > 
+> > > Please check the latest Intel 64 and IA-32 Architectures Software
+> > > Developer's Manual for more detailed information on the MSR and the
+> > > split lock detection bit.
+> > > 
+> > > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > > ---
+> > >  arch/x86/include/asm/msr-index.h | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> > > index ca5bc0eacb95..f65ef6f783d2 100644
+> > > --- a/arch/x86/include/asm/msr-index.h
+> > > +++ b/arch/x86/include/asm/msr-index.h
+> > > @@ -59,6 +59,9 @@
+> > >  #define MSR_PLATFORM_INFO_CPUID_FAULT_BIT	31
+> > >  #define MSR_PLATFORM_INFO_CPUID_FAULT		BIT_ULL(MSR_PLATFORM_INFO_CPUID_FAULT_BIT)
+> > >  
+> > > +#define MSR_IA32_CORE_CAPABILITY	0x000000cf
+> > > +#define CORE_CAP_SPLIT_LOCK_DETECT	BIT(5)     /* Detect split lock */
+> > 
+> > Please don't put comments into definitions.
 > 
-> Using the platform keyring keys for verifying kernel modules was not
-> neglected, but rather intentional.  This patch description should
-> clearly explain the reason for needing to verify kernel module
-> signatures based on the pre-boot keys.  (Hint: verifying kernel
-> modules based on the pre-boot keys was previously rejected.)
+> I'll remove the comment and change definitions of the MSR and the split lock
+> detection bit as following:
+> 
+> +#define MSR_IA32_CORE_CAPABILITY                       0x000000cf
+> +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT 5
+> +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT)
+> 
+> Are these right changes?
 
-To clarify here: most Linux systems use shim/mok to pivot the root of
-trust away from the Secure Boot db variable to the new MokList/shim
-built in keys.  This makes the actual secure boot db outside the
-expected Linux Kernel trust boundary *unless* the user has taken
-ownership of the system and is actually using db for their own trusted
-keys.  This makes the policy for what pre-boot keys to trust within the
-Linux boundary very complex, which is why we default to not using the
-pre-boot keys at all.
+I suspect it could be shortened to CORE_CAP as you (partly) did it 
+originally.
 
-James
+Thanks,
 
+	Ingo
