@@ -2,105 +2,191 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB43AC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E176BC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6966F214AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:00:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="RiSE9xoG"
+	by mail.kernel.org (Postfix) with ESMTP id A8BEB217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 11:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfDYLAe (ORCPT
+        id S1730609AbfDYLCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 07:00:34 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58734 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfDYLAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 07:00:34 -0400
-Received: from zn.tnic (p200300EC2F0E430060E979F7C497EAD3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:4300:60e9:79f7:c497:ead3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 28ECE1EC0104;
-        Thu, 25 Apr 2019 13:00:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1556190032;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=h4vJV92cjPhuBbrkXWH6sxAbEZLDW9YxPad+hPvCa+o=;
-        b=RiSE9xoGBNEl7nXdHpiIa74sgTrhS8MxK1dMV6zuutHt4cl3yEo0kKv8CaNQiG7Y+8W6S9
-        Pvco5SCiWEkG2sscs+LbPezeuwyfxmtG8vMTcQCWdRktdbhmMp/Dz45S92wgAKiZ+jMCAg
-        a+RZ6xLbrKK2H7pXt/kdjIlH9Wz+8gc=
-Date:   Thu, 25 Apr 2019 13:00:25 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Zhao, Yakui" <yakui.zhao@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Chen, Jason CJ" <jason.cj.chen@intel.com>
-Subject: Re: [RFC PATCH v5 4/4] x86/acrn: Add hypercall for ACRN guest
-Message-ID: <20190425110025.GA16164@zn.tnic>
-References: <1556067260-9128-1-git-send-email-yakui.zhao@intel.com>
- <1556067260-9128-5-git-send-email-yakui.zhao@intel.com>
- <20190425070712.GA57256@gmail.com>
- <6dd021a9-e2c0-ee84-55fd-3e6dfb4bd944@intel.com>
+        Thu, 25 Apr 2019 07:02:19 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41036 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbfDYLCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 07:02:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA3E8374;
+        Thu, 25 Apr 2019 04:02:18 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11F493F5C1;
+        Thu, 25 Apr 2019 04:02:13 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 12:02:11 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
+Subject: Re: [RFC PATCH v6 22/26] x86/cet/shstk: ELF header parsing of Shadow
+ Stack
+Message-ID: <20190425110211.GZ3567@e103592.cambridge.arm.com>
+References: <20181119214809.6086-1-yu-cheng.yu@intel.com>
+ <20181119214809.6086-23-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6dd021a9-e2c0-ee84-55fd-3e6dfb4bd944@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20181119214809.6086-23-yu-cheng.yu@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 06:16:02PM +0800, Zhao, Yakui wrote:
-> The parameter register for the VMCALL is predefined in ACRN hypervisor. Now
-> the R8 is used to pass the hcall_id.
-> It seems that there is no special constraint for R8~R15.
-> So the explicit register variable is used so that the R8 can be passed.
+On Mon, Nov 19, 2018 at 01:48:05PM -0800, Yu-cheng Yu wrote:
+> Look in .note.gnu.property of an ELF file and check if Shadow Stack needs
+> to be enabled for the task.
 
-If you're going to use the constraint "D" for param1, you can just as
-well do
+What's the status of this series?  I don't see anything in linux-next
+yet.
 
-	"=a" (result)
+For describing ELF features, Arm has recently adopted
+NT_GNU_PROPERTY_TYPE_0, with properties closely modelled on
+GNU_PROPERTY_X86_FEATURE_1_AND etc. [1]
 
-everywhere since you have the letter constraint for %rax instead of
-declaring it with "register".
+So, arm64 will be need something like this patch for supporting new
+features (such as the Branch Target Identification feature of ARMv8.5-A
+[2]).
 
-Also, you can completely get rid of those "register" declarations
-and let gcc have all the freedom to pass in hcall_id and the other
-parameters:
+If this series isn't likely to merge soon, can we split this patch into
+generic and x86-specific parts and handle them separately?
 
-	unsigned long result;
+It would be good to see the generic ELF note parsing move to common
+code -- I'll take a look and comment in more detail.
 
-        asm volatile("mov %[hcall_id], %%r8\n\t"
-                     "vmcall\n\t"
-                     : "=a" (result)
-                     : [hcall_id] "g" (hcall_id)
-                     : "r8");
+[...]
 
-        return result;
+> diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+> index 69c0f892e310..557ed0ba71c7 100644
+> --- a/arch/x86/include/asm/elf.h
+> +++ b/arch/x86/include/asm/elf.h
+> @@ -381,4 +381,9 @@ struct va_alignment {
+>  
+>  extern struct va_alignment va_align;
+>  extern unsigned long align_vdso_addr(unsigned long);
+> +
+> +#ifdef CONFIG_ARCH_HAS_PROGRAM_PROPERTIES
+> +extern int arch_setup_features(void *ehdr, void *phdr, struct file *file,
+> +			       bool interp);
+> +#endif
+>  #endif /* _ASM_X86_ELF_H */
+> diff --git a/arch/x86/include/uapi/asm/elf_property.h b/arch/x86/include/uapi/asm/elf_property.h
+> new file mode 100644
+> index 000000000000..af361207718c
+> --- /dev/null
+> +++ b/arch/x86/include/uapi/asm/elf_property.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _UAPI_ASM_X86_ELF_PROPERTY_H
+> +#define _UAPI_ASM_X86_ELF_PROPERTY_H
+> +
+> +/*
+> + * pr_type
+> + */
+> +#define GNU_PROPERTY_X86_FEATURE_1_AND (0xc0000002)
+> +
+> +/*
+> + * Bits for GNU_PROPERTY_X86_FEATURE_1_AND
+> + */
+> +#define GNU_PROPERTY_X86_FEATURE_1_SHSTK	(0x00000002)
+> +
 
-and %r8 will be in the clobber list so gcc will reload it if needed.
+Generally we seem to collect all ELF definitions in <linux/uapi/elf.h>,
+including arch-specific ones.
 
-gcc turns it into
+Is a new header really needed here?
 
-0000000000001040 <main>:
-    1040:       4c 8b 05 e1 2f 00 00    mov    0x2fe1(%rip),%r8        # 4028 <hcall_id>
-    1047:       0f 01 c1                vmcall
-    104a:       c3                      retq 
-    104b:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+[...]
 
-here.
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index 54207327f98f..007ff0fbae84 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -1081,6 +1081,21 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  		goto out_free_dentry;
+>  	}
+>  
+> +#ifdef CONFIG_ARCH_HAS_PROGRAM_PROPERTIES
+> +	if (interpreter) {
+> +		retval = arch_setup_features(&loc->interp_elf_ex,
+> +					     interp_elf_phdata,
+> +					     interpreter, true);
 
--- 
-Regards/Gruss,
-    Boris.
+Can we dummy no-op functions in the common headers to avoid this
+ifdeffery?  Logically all arches will always do this step, even if it's
+a no-op today.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> +	} else {
+> +		retval = arch_setup_features(&loc->elf_ex,
+> +					     elf_phdata,
+> +					     bprm->file, false);
+> +	}
+> +
+> +	if (retval < 0)
+> +		goto out_free_dentry;
+> +#endif
+> +
+>  	if (elf_interpreter) {
+>  		unsigned long interp_map_addr = 0;
+>  
+> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+> index c5358e0ae7c5..5ef25a565e88 100644
+> --- a/include/uapi/linux/elf.h
+> +++ b/include/uapi/linux/elf.h
+> @@ -372,6 +372,7 @@ typedef struct elf64_shdr {
+>  #define NT_PRFPREG	2
+>  #define NT_PRPSINFO	3
+>  #define NT_TASKSTRUCT	4
+> +#define NT_GNU_PROPERTY_TYPE_0 5
+
+IIUC, note type codes are namespaced by the note name.  This section
+currently only seems to have codes for name == "LINUX".
+
+There are conflicts: for example NT_GNU_ABI_TAG == NT_PRSTATUS.
+
+We should probably split out the codes for name == "GNU" into a separate
+list, otherwise people are likely to get confused.
+
+As noted above, can the GNU_PRPOERTY_<arch>_* definitions just go in
+here instead of a separate header?
+
+[...]
+
+Cheers
+---Dave
+
+[1] https://developer.arm.com/docs/ihi0056/latest/elf-for-the-arm-64-bit-architecture-aarch64-abi-2019q1-documentation
+
+[2] https://community.arm.com/developer/ip-products/processors/b/processors-ip-blog/posts/arm-a-profile-architecture-2018-developments-armv85a
