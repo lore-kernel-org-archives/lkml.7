@@ -2,177 +2,210 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC1CC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057F3C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C189206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556231112;
-	bh=GACxoLulNU5OtRBVh4C6+vAfmx59bpYIT7euqG9Hw2Y=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=ZdBpYxTzTp5XuMwf4e/YqEAr/H2g0ppGKqS9U5yqr0jBP1XAR3MnnWK+3p26cVpPw
-	 uOEf2TJRkHLtBTdpSb5fMEJS+uWq0+aQ3JLznEZaWPXrL39wVYKEysdBvmf+hskscl
-	 QykQB+EF6ft5UY0E9gPsuA4NRy/oGTiJKadqJ5Hs=
+	by mail.kernel.org (Postfix) with ESMTP id 1A30F20717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 22:33:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ip5euGH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbfDYWZL (ORCPT
+        id S1727464AbfDYWdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 18:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbfDYWZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 18:25:11 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FBB8206C0;
-        Thu, 25 Apr 2019 22:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556231109;
-        bh=GACxoLulNU5OtRBVh4C6+vAfmx59bpYIT7euqG9Hw2Y=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=DMYI5upH/y40N2SBRYu4goleLc1jZrvfgr9RR8EfGg0iWKAhU2va1VsChK4Yo8PXb
-         oMCdTznx/mSN0XthQHnRgWaK5fAQf/nNxEgEEjtgTzlg39afRqqwrlbgEZ6UcNcLjE
-         7rABNeOTlgayruhzdulEHDAGjEu/Eg7HiIMHw3Do=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 25 Apr 2019 18:33:39 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44538 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfDYWdi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 18:33:38 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h18so834511lfj.11;
+        Thu, 25 Apr 2019 15:33:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pnwO3ii3JkeNPr1hcPvBi2/3rAZyjNVc0qQJMLcBg4g=;
+        b=Ip5euGH5ClT6AoUA5raCFKXkbcxLmgokJBIzGPetkjCvSyh5LUm+5Z4/znxyoCTBkB
+         pFPNA8XT+sXH8Ilsngg8XjNO5NCeCsd1aPC3SkGgf5d8utzFj3I2Y2sduj374kdyj5GK
+         gz5WaB4lK55ytGG18Dcg9olkULhHEqrrUuNtnY7vzPmNfaTD7s2YLCoJU19mxbpxh0Bg
+         Ekzx7RtMMYQJ7/1IdwaC7X+xPdAC/z7w+V1LfT/AycK+/AIksQdFmBXLVB5CvExv0vtF
+         IiQVvhd07S3UHi3wB2M5o2BUd4Yj3hiVS34IXQ9br346v8Q+LJpeMnvIpae2rL2EEOzT
+         4xCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pnwO3ii3JkeNPr1hcPvBi2/3rAZyjNVc0qQJMLcBg4g=;
+        b=ia3APpy1zO2A1hGtSF+7eChJPPUhJBY1aYWy8uanepkraUwvMTinzwvLPL8dBBjejB
+         ge/OetlIoYEZd2uVXepMhlh7eqfEFaDqopHfNaNIRruKfnW21f2591z3oODPTjcYt5Rc
+         W0Vyq5id7A1aD4l6S+WkmJPrmDIbrM+x7sQR4Ckzi2lSiZrbJZp6yO3j0PKf4Hqx7MdH
+         0xv9neowEyDLtAyMkVFJ9m07Jmx6wXOZ3uQ+xBJt6szKjHq5IACGj5HM4S1mYVpQdLEb
+         78TId9C6XtMJDaloFFRutlJeZNHLD6uqld/hw0Hn6Ke5xP7v+rECffYOmBg/ukOh3f7r
+         vo2A==
+X-Gm-Message-State: APjAAAXdE0OegSuIhsCvjMc83D4CA2mrtJbr8uzx49UBD+6hPt+xB5V2
+        hNi8aLV8UvWOmM9vZKvvEik=
+X-Google-Smtp-Source: APXvYqxXdekO9jgCOogXP8lb3phLNHUabTl1NErTJUk8047mQrXyHuF3/yms97bic05946xEgMMx8g==
+X-Received: by 2002:ac2:533c:: with SMTP id f28mr19303555lfh.73.1556231615812;
+        Thu, 25 Apr 2019 15:33:35 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id m21sm5257382lfj.47.2019.04.25.15.33.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 15:33:34 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Richard Leitner <richard.leitner@skidata.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] usb: usb251xb: Lock i2c-bus segment the hub resides
+Date:   Fri, 26 Apr 2019 01:32:56 +0300
+Message-Id: <20190425223256.20270-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: 20190424144914.10580-1-fancer.lancer@gmail.com
+References: 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <2b4f56cd-caf9-e6b5-6344-a045e08a9c91@gmail.com>
-References: <20190414202009.31268-1-digetx@gmail.com> <20190414202009.31268-2-digetx@gmail.com> <155621927685.15276.16453873579880842057@swboyd.mtv.corp.google.com> <2b4f56cd-caf9-e6b5-6344-a045e08a9c91@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 1/4] clk: tegra20/30: Add custom EMC clock implementation
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Message-ID: <155623110849.15276.13181079281286430446@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Thu, 25 Apr 2019 15:25:08 -0700
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Dmitry Osipenko (2019-04-25 14:42:19)
-> 25.04.2019 22:07, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > Quoting Dmitry Osipenko (2019-04-14 13:20:06)
-> >> diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/c=
-lk-tegra20-emc.c
-> >> new file mode 100644
-> >> index 000000000000..35b67a9989c8
-> >> --- /dev/null
-> >> +++ b/drivers/clk/tegra/clk-tegra20-emc.c
-> >> @@ -0,0 +1,307 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +
-> >> +#include <linux/bits.h>
-> >> +#include <linux/clk/tegra.h>
-> >=20
-> > Include clk-provider.h as this is a clk provider driver.
->=20
-> Okay, although clk-provider.h is also included by clk.h below.
+SMBus slave configuration is activated by CFG_SEL[1:0]=0x1 pins
+state. This is the mode the hub is supposed to be to let this driver
+work correctly. But a race condition might happen right after reset
+is cleared due to CFG_SEL[0] pin being multiplexed with SMBus SCL
+function. In case if the reset pin is handled by a i2c GPIO expander,
+which is also placed at the same i2c-bus segment as the usb251x
+SMB-interface connected to, then the hub reset clearance might
+cause the CFG_SEL[0] being latched in unpredictable state. So
+sometimes the hub configuration mode might be 0x1 (as expected),
+but sometimes being 0x0, which doesn't imply to have the hub SMBus-slave
+interface activated and consequently causes this driver failure.
 
-We prefer explicit includes instead of implicit ones. Failing to do that
-leads to changes like the one I'm making now to push out linux/io.h to
-all the users who are relying on clk-provider.h to provide it for them.
+In order to fix the problem we must make sure the GPIO-reset chip doesn't
+reside the same i2c-bus segment as the SMBus-interface of the hub. If
+it doesn't, we can safely block the segment for the time the reset is
+cleared to prevent anyone generating a traffic at the i2c-bus SCL lane
+connected to the CFG_SEL[0] pin. But if it does, nothing we can do, so
+just return an error. If we locked the i2c-bus segment and tried to
+communicate with the GPIO-expander, it would cause a deadlock. If we didn't
+lock the i2c-bus segment, it would randomly cause the CFG_SEL[0] bit flip.
 
->=20
-> >> +{
-> >> +       struct clk *clk =3D __clk_lookup("emc");
-> >> +       struct tegra_clk_emc *emc;
-> >> +       struct clk_hw *hw;
-> >> +
-> >> +       if (clk) {
-> >> +               hw =3D __clk_get_hw(clk);
-> >> +               emc =3D to_tegra_clk_emc(hw);
-> >> +
-> >> +               emc->round_cb =3D round_cb;
-> >> +               emc->arg_cb =3D arg_cb;
-> >> +       }
-> >> +}
-> >> +
-> >> +bool tegra20_clk_emc_driver_available(void)
-> >> +{
-> >> +       struct clk *clk =3D __clk_lookup("emc");
-> >=20
-> > Can we avoid using __clk_lookup()? Maybe by having the clk_hw pointer in
-> > this driver somehow?
->=20
-> tegra20_clk_emc_driver_available() is a private function of the Tegra's
-> clk-core. Please note that prototype of this function is added to the
-> local "drivers/clk/tegra/clk.h" file.
->=20
-> It is indeed possible to use clk pointer instead of __clk_lookup() and
-> I'll change that in v3 since it's causing some confusion.
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Can you use a clk_hw pointer directly? I'd like to see clk provider
-drivers only use struct clk_hw, and clk consumers only use struct clk.
+---
+Changelog v2
+- Execute the check code only if GPIOLIB is enabled (reported by
+  a build robot).
 
->=20
-> >> +       struct tegra_clk_emc *emc;
-> >> +       struct clk_hw *hw;
-> >> +
-> >> +       if (clk) {
-> >> +               hw =3D __clk_get_hw(clk);
-> >=20
-> > This gets further to the point, we don't prefer to see drivers use
-> > __clk_get_hw() unless they absolutely need to. Maybe I don't understand
-> > the driver structure, but it seems like maybe the driver that's
-> > providing the callbacks could be the same driver that's registering
-> > these clks, and thus everything could be inside one file so that we
-> > don't have to pass around callbacks and clk_hw pointers? Commit text
-> > says "this is how it's been" but that's not a reason to keep doing it.
->=20
-> Again, tegra20_clk_emc_driver_available() is for the Terga's clk-core
-> and not for the EMC (External Memory Controller) driver. This function
-> is used to determine whether EMC driver is ready to handle clock-rate
-> changes (PRE/POST rate-change notifications), clk users can't get EMC
-> clock until driver is ready (i.e. the "round" callback is registered by
-> the driver).
+---
+ drivers/usb/misc/usb251xb.c | 62 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-Who are the other users of the EMC clk? Why does the EMC driver and the
-clk driver need to be in sync in such a way that requires us to check if
-some code in the EMC driver is ready before we can hand out clks from
-this clk provider? It looks like some tight coupling between these two
-pieces of code on the clk_get() path which is setting off alarms for me.
-
->=20
-> Please see tegra20_clk_src_onecell_get() changes in this patch and
-> drivers/memory/tegra/tegra20-emc.c for clarity.
->=20
-> It is not possible to register clk from the EMC driver without having
-> some custom integration with the clk-core because CLK and EMC are
-> different hardware units and hence EMC driver doesn't have direct access
-> to the CLK registers. I think it is better to keep CLK and memory-timing
-> programming logically separated simply for consistency, although I'm
-> open to suggestions.
-
-Sorry, I'm really confused and it's probably because I'm not taking the
-time to read all the Tegra code right now. I'm trying to understand the
-overall memory controller frequency logic.
-
-I understand that there's a memory controller, and a clk controller, and
-they're different hardware blocks. Presumably the clk controller can't
-change frequencies without informing the memory controller that it's
-going to change something so the memory controller can fix timings in
-the EMC register space.
-
-Is there some other entity that's needing to be deferred while the EMC
-and clk drivers tell each other that they're probed and ready so that
-these notifiers all work? Is that entity using clks directly instead of
-going through the EMC to change frequencies? If so, why can't we funnel
-that logic through EMC which then goes to the clk driver? That way it's
-clearly "thing that changes frequency" -> EMC -> clk controller call
-chain. It might even allow us to get rid of the rate notifiers?
+diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+index 04684849d683..cdc80e8c2d8a 100644
+--- a/drivers/usb/misc/usb251xb.c
++++ b/drivers/usb/misc/usb251xb.c
+@@ -12,6 +12,7 @@
+ 
+ #include <linux/delay.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/gpio/driver.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/nls.h>
+@@ -222,11 +223,51 @@ static const struct usb251xb_data usb2517i_data = {
+ 	.product_str = "USB2517i",
+ };
+ 
++#ifdef CONFIG_GPIOLIB
++static int usb251xb_check_dev_children(struct device *dev, void *child)
++{
++	if (dev->type == &i2c_adapter_type) {
++		return device_for_each_child(dev, child,
++					     usb251xb_check_dev_children);
++	}
++
++	return (dev == child);
++}
++
++static int usb251x_check_gpio_chip(struct usb251xb *hub)
++{
++	struct gpio_chip *gc = gpiod_to_chip(hub->gpio_reset);
++	struct i2c_adapter *adap = hub->i2c->adapter;
++	int ret;
++
++	if (!hub->gpio_reset)
++		return 0;
++
++	if (!gc)
++		return -EINVAL;
++
++	ret = usb251xb_check_dev_children(&adap->dev, gc->parent);
++	if (ret) {
++		dev_err(hub->dev, "Reset GPIO chip is at the same i2c-bus\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++#else
++static int usb251x_check_gpio_chip(struct usb251xb *hub)
++{
++	return 0;
++}
++#endif
++
+ static void usb251xb_reset(struct usb251xb *hub, int state)
+ {
+ 	if (!hub->gpio_reset)
+ 		return;
+ 
++	i2c_lock_bus(hub->i2c->adapter, I2C_LOCK_SEGMENT);
++
+ 	gpiod_set_value_cansleep(hub->gpio_reset, state);
+ 
+ 	/* wait for hub recovery/stabilization */
+@@ -234,6 +275,8 @@ static void usb251xb_reset(struct usb251xb *hub, int state)
+ 		usleep_range(500, 750);	/* >=500us at power on */
+ 	else
+ 		usleep_range(1, 10);	/* >=1us at power down */
++
++	i2c_unlock_bus(hub->i2c->adapter, I2C_LOCK_SEGMENT);
+ }
+ 
+ static int usb251xb_connect(struct usb251xb *hub)
+@@ -621,6 +664,25 @@ static int usb251xb_probe(struct usb251xb *hub)
+ 		}
+ 	}
+ 
++	/*
++	 * usb251x SMBus-slave SCL lane is muxed with CFG_SEL0 pin. So if anyone
++	 * tries to work with the bus at the moment the hub reset is released,
++	 * it may cause an invalid config being latched by usb251x. Particularly
++	 * one of the config modes makes the hub loading a default registers
++	 * value without SMBus-slave interface activation. If the hub
++	 * accidentally gets this mode, this will cause the driver SMBus-
++	 * functions failure. Normally we could just lock the SMBus-segment the
++	 * hub i2c-interface resides for the device-specific reset timing. But
++	 * the GPIO controller, which is used to handle the hub reset, might be
++	 * placed at the same i2c-bus segment. In this case an error should be
++	 * returned since we can't safely use the GPIO controller to clear the
++	 * reset state (it may affect the hub configuration) and we can't lock
++	 * the i2c-bus segment (it will cause a deadlock).
++	 */
++	err = usb251x_check_gpio_chip(hub);
++	if (err)
++		return err;
++
+ 	err = usb251xb_connect(hub);
+ 	if (err) {
+ 		dev_err(dev, "Failed to connect hub (%d)\n", err);
+-- 
+2.21.0
 
