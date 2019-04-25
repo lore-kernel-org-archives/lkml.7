@@ -2,109 +2,136 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5495BC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105B8C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2345A217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0199217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:34:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="lKjyhnT3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbfDYHdt (ORCPT
+        id S1730309AbfDYHeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:33:49 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59166 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730224AbfDYHdr (ORCPT
+        Thu, 25 Apr 2019 03:34:09 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:60577 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfDYHeJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:33:47 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 7B9728058A; Thu, 25 Apr 2019 09:33:35 +0200 (CEST)
-Date:   Thu, 25 Apr 2019 09:33:43 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Pavel Machek <pavel@denx.de>, Jens Axboe <axboe@kernel.dk>,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, lduncan@suse.com,
-        hare@suse.com, mcgrof@kernel.org, jthumshirn@suse.de, hch@lst.de,
-        gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
-        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, hdegoede@redhat.com,
-        linux-ide@vger.kernel.org
-Subject: Re: regression -next -- scsi: sd: Rely on the driver core for
- asynchronous probing was Re: next-20190408..0418: Suspend/resume problems on
- Thinkpad X60
-Message-ID: <20190425073343.GA19600@amd>
-References: <20190408173928.GB13260@amd>
- <20190412102812.GA24977@amd>
- <20190423102239.GA15531@amd>
- <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
- <20190424095431.GA32457@amd>
- <20190424104850.GC32457@amd>
- <20190424202119.GA26357@amd>
- <20190424204832.GA3111@amd>
- <20190424205150.GA4582@amd>
- <1556139361.161891.140.camel@acm.org>
+        Thu, 25 Apr 2019 03:34:09 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3P7WgMC3004961
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 25 Apr 2019 00:32:42 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3P7WgMC3004961
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1556177563;
+        bh=RGcMisWW/6jsGL1BORw7d4Dh3jILUKMCU3LzbBb1qjM=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=lKjyhnT3D5THFYp2vWQyj2hO+7AXNsZMLGh4L28rBvDwD9J3l9RMjCKcj+keK0omp
+         jL5JeKBaDeNDc5UyIHOEQ/OWIWPjwIsWF/VzWwAokjgCoB5RnSTOmUS8/aCJewwJWH
+         z0DYXFHoTCQ1mJFvC/bFNiMxR0QyVPaaXPy3DTtjgOAfBKTAHbVqqeU4cESzK+P6B7
+         xHbzEFjIK+Q6xA6ndO/Q7vpqnBviCEzEIFPGXt1SnDT0yjQB1G2ysze5KdVShnuYve
+         Yezvfl/NycDybOvTx7gf4nWtmciUbSrdFNdZSmVTYf5sQ+fuvUTEZn1gfZadTsY11I
+         4xXdBosCj/nuA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3P7WfvJ3004953;
+        Thu, 25 Apr 2019 00:32:41 -0700
+Date:   Thu, 25 Apr 2019 00:32:41 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Mike Rapoport <tipbot@zytor.com>
+Message-ID: <tip-6ad57f7f2cbf65daced27f023cc99360742a24b9@git.kernel.org>
+Cc:     luto@kernel.org, hch@infradead.org, mgorman@techsingularity.net,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, bp@alien8.de,
+        peterz@infradead.org, rppt@linux.ibm.com,
+        dave.hansen@linux.intel.com, willy@infradead.org,
+        tglx@linutronix.de, riel@surriel.com,
+        torvalds@linux-foundation.org, hpa@zytor.com
+Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          riel@surriel.com, hpa@zytor.com, torvalds@linux-foundation.org,
+          mingo@kernel.org, luto@kernel.org, hch@infradead.org,
+          bp@alien8.de, peterz@infradead.org, mgorman@techsingularity.net,
+          willy@infradead.org, rppt@linux.ibm.com,
+          dave.hansen@linux.intel.com
+In-Reply-To: <1556112252-9339-2-git-send-email-rppt@linux.ibm.com>
+References: <1556112252-9339-2-git-send-email-rppt@linux.ibm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/mm] x86/Kconfig: Make SPARSEMEM default for 32-bit x86
+Git-Commit-ID: 6ad57f7f2cbf65daced27f023cc99360742a24b9
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <1556139361.161891.140.camel@acm.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  6ad57f7f2cbf65daced27f023cc99360742a24b9
+Gitweb:     https://git.kernel.org/tip/6ad57f7f2cbf65daced27f023cc99360742a24b9
+Author:     Mike Rapoport <rppt@linux.ibm.com>
+AuthorDate: Wed, 24 Apr 2019 16:24:11 +0300
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 25 Apr 2019 09:02:17 +0200
 
---k+w/mQv8wyuph6w0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+x86/Kconfig: Make SPARSEMEM default for 32-bit x86
 
-On Wed 2019-04-24 13:56:01, Bart Van Assche wrote:
-> On Wed, 2019-04-24 at 22:51 +0200, Pavel Machek wrote:
-> > Unfortunately, that one does not revert cleanly on top of -next.
->=20
-> Can you try the following:
->=20
-> git revert d16ece577bf2cee7f94bab75a0d967bcb89dd2a7 &&
->   git revert 21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3
->=20
-> I will see whether I can come up with a better way to analyze what is
-> going on. I had not expected that these patches would cause any suspend/
-> resume problems.
+Sparsemem has been a default memory model for x86-64 for over a decade,
+since:
 
-Not even d16ece reverts:
+  b263295dbffd ("x86: 64-bit, make sparsemem vmemmap the only memory model").
 
-pavel@duo:/data/l/linux-next-32$ git show  | head -3
-commit 76c938fcaa4b4a5d8f05fa907925d5043834964e
-Author: Stephen Rothwell <sfr@canb.auug.org.au>
-Date:   Tue Apr 23 20:24:59 2019 +1000
-pavel@duo:/data/l/linux-next-32$ git revert
-d16ece577bf2cee7f94bab75a0d967bcb89dd2a7
-error: could not revert d16ece5... scsi: sd: Inline sd_probe_part2()
-hint: after resolving the conflicts, mark the corrected paths
-hint: with 'git add <paths>' or 'git rm <paths>'
-hint: and commit the result with 'git commit'
+Make it the default for 32-bit NUMA systems (if there any left) as well.
 
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-mm@kvack.org
+Link: http://lkml.kernel.org/r/1556112252-9339-2-git-send-email-rppt@linux.ibm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/Kconfig | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
---k+w/mQv8wyuph6w0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzBYtcACgkQMOfwapXb+vLSPACggAjbyoCyqU8ktZSlP27yCCjh
-Y5sAnRe/NkQIgD/Wl4euXqOxeO2JdhOO
-=JJcZ
------END PGP SIGNATURE-----
-
---k+w/mQv8wyuph6w0--
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 5ad92419be19..0b91756ed980 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1609,10 +1609,6 @@ config ARCH_DISCONTIGMEM_ENABLE
+ 	def_bool y
+ 	depends on NUMA && X86_32
+ 
+-config ARCH_DISCONTIGMEM_DEFAULT
+-	def_bool y
+-	depends on NUMA && X86_32
+-
+ config ARCH_SPARSEMEM_ENABLE
+ 	def_bool y
+ 	depends on X86_64 || NUMA || X86_32 || X86_32_NON_STANDARD
+@@ -1620,8 +1616,7 @@ config ARCH_SPARSEMEM_ENABLE
+ 	select SPARSEMEM_VMEMMAP_ENABLE if X86_64
+ 
+ config ARCH_SPARSEMEM_DEFAULT
+-	def_bool y
+-	depends on X86_64
++	def_bool X86_64 || (NUMA && X86_32)
+ 
+ config ARCH_SELECT_MEMORY_MODEL
+ 	def_bool y
