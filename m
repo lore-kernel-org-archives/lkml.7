@@ -2,81 +2,106 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8945C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE58C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02CE3206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:25:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556205956;
-	bh=59I6dUdmKaNfnmPOyLiLVrGc1J4bM8FMIFPvAl3lNvc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qd9/ELNnoGDw1AD92eYe67wu8FpScyMA6nAtuhs7iDOJNCqkFE5VVxNKXNK9YeaVp
-	 N73UXhO5/dK/2TEB97SaoHbheVPx20xZOXL4Qnq8ormsQdCDnca0G2znq5L5j9oNMo
-	 Lh7TPU4JUOKgDxvWC969WdDRmuC7IlWKuDqSW97E=
+	by mail.kernel.org (Postfix) with ESMTP id A913B20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbfDYPZy (ORCPT
+        id S1728908AbfDYP0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:25:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41694 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727337AbfDYPZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:25:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6F7B5AF26;
-        Thu, 25 Apr 2019 15:25:52 +0000 (UTC)
-Date:   Thu, 25 Apr 2019 17:25:50 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        akpm@linux-foundation.org, dave.hansen@linux.intel.com,
-        dan.j.williams@intel.com, keith.busch@intel.com,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
-        thomas.lendacky@amd.com, ying.huang@intel.com,
-        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
-        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        rppt@linux.vnet.ibm.com, ard.biesheuvel@linaro.org,
-        andrew.murray@arm.com, james.morse@arm.com, marc.zyngier@arm.com,
-        sboyd@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: configurable sparsemem section size
-Message-ID: <20190425152550.GY12751@dhcp22.suse.cz>
-References: <20190423203843.2898-1-pasha.tatashin@soleen.com>
+        Thu, 25 Apr 2019 11:26:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53910 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727337AbfDYP0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 11:26:31 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A91FA307D91F;
+        Thu, 25 Apr 2019 15:26:31 +0000 (UTC)
+Received: from treble (ovpn-123-99.rdu2.redhat.com [10.10.123.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 956FF60C8E;
+        Thu, 25 Apr 2019 15:26:30 +0000 (UTC)
+Date:   Thu, 25 Apr 2019 10:26:28 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     live-patching@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Livepatch vs LTO
+Message-ID: <20190425152628.ogk4woi3omeocwly@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190423203843.2898-1-pasha.tatashin@soleen.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 25 Apr 2019 15:26:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 23-04-19 16:38:43, Pavel Tatashin wrote:
-> sparsemem section size determines the maximum size and alignment that
-> is allowed to offline/online memory block. The bigger the size the less
-> the clutter in /sys/devices/system/memory/*. On the other hand, however,
-> there is less flexability in what granules of memory can be added and
-> removed.
-> 
-> Recently, it was enabled in Linux to hotadd persistent memory that
-> can be either real NV device, or reserved from regular System RAM
-> and has identity of devdax.
-> 
-> The problem is that because ARM64's section size is 1G, and devdax must
-> have 2M label section, the first 1G is always missed when device is
-> attached, because it is not 1G aligned.
-> 
-> Allow, better flexibility by making section size configurable.
+Hi all,
 
-Is there any inherent reason (64k page size?) that enforces such a large
-memsection?
+On IRC, Peter expressed some concern about -flive-patching, specifically
+that the flag isn't compatible with LTO.
+
+The upstream kernel currently doesn't support LTO, but Android is using
+it with LLVM:
+
+  https://source.android.com/devices/tech/debug/kcfi
+
+And there seems to be progress being made in that direction for
+upstream.
+
+Live patching has at least the following issues with LTO:
+
+- For source-based patch generation (klp-convert and friends), the GCC
+  manual says that -flive-patching is incompatible with LTO.  Does
+  anybody know if that's a hard incompatibility, or can it be fixed?
+
+  Also, what about the performance implications of this flag with LTO?
+  Might they become more pronounced?
+
+  Also I wonder if -fdump-ipa-clones works with LTO?
+
+  I also wonder about the future of source-based patch generation with
+  LLVM.  Will it also have -flive-patching and -fdump-ipa-clones flags?
+
+- For binary-based patch generation (kpatch-build), we currently diff
+  objects at a per-compilation-unit level.  That would have to be
+  changed to work on vmlinux.o instead.
+
+- Objtool would also have to be changed to work on vmlinux.o.  It's
+  currently not optimized for large files, and the per-.o whitelisting
+  would need to be fixed.  And there may be other issues lurking.
+
+Also, thinking about objtool in this context has given me another idea,
+which might allow us to get rid of the use of -flive-patching and
+-fdump-ipa-clones altogether (which are both nasty and way too
+compiler-dependent):
+
+Since objtool is already reading every function in the kernel, it could
+create a checksum associated with each function, based on all the
+instructions (both within the function and any alternatives or other
+special sections it relies on).  The function checksums could be written
+to a file.
+
+Then, when a patch file is applied and the kernel rebuilt, the checksum
+files could be compared to determine exactly which functions have
+changed at a binary level.
+
+Thoughts?  Any reasons why that wouldn't work?
+
+And, if we wanted to take the idea even further, objtool could have the
+ability to write the changed functions to a new object file.  Voila, we
+now pretty much have kpatch-build :-)  (Though whether this is better
+than source-based patch generation is certainly an open question.)
+
 -- 
-Michal Hocko
-SUSE Labs
+Josh
