@@ -2,113 +2,97 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24446C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAEDC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06AF217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA75E214AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 08:17:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="OW30lv7+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbfDYIQk (ORCPT
+        id S1729206AbfDYIRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 04:16:40 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6691 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729013AbfDYIQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 04:16:40 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5F3C055965E714D60F99;
-        Thu, 25 Apr 2019 16:16:38 +0800 (CST)
-Received: from [127.0.0.1] (10.177.19.210) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Apr 2019
- 16:16:31 +0800
-Subject: Re: [PATCH] sched: fix a potential divide error
-To:     Peter Zijlstra <peterz@infradead.org>
-References: <20190420083416.170446-1-xiexiuqi@huawei.com>
- <20190423184458.GW4038@hirez.programming.kicks-ass.net>
- <14cdc45e-7a6f-5e1f-e877-10503180ac4e@huawei.com>
- <20190425080016.GX11158@hirez.programming.kicks-ass.net>
-CC:     <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <cj.chengjian@huawei.com>
-From:   Xie XiuQi <xiexiuqi@huawei.com>
-Message-ID: <da2a154a-6a97-4e87-8914-343643824b5b@huawei.com>
-Date:   Thu, 25 Apr 2019 16:16:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Thu, 25 Apr 2019 04:17:40 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34077 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbfDYIRj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 04:17:39 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c6so23311000wrm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 01:17:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U9RYUwqYs8GxnXHLt/p3Fz6x5DoO+pRsegYtnMfkhYI=;
+        b=OW30lv7+KMGA1SvNnrC1b9nUxyPmrhzCwlLdnhO49dL4Y2a3DCBE1TGq2LS2gO18ts
+         bNVhuCfsZ2dYI3OqebC2QB1SRjQyM8HndAJuRSFxsqmU2dZMcJZEI7+EKm+0iNNErUvP
+         52/iFBVr5IzSt08jveciUgxVXttQ4d+GdNmM85RPSBT+SIpqMnNYT2HJSqz0kv46BH1Y
+         c1jvlsP+FOxDQ2Eg8X2Aq4+t1Hpdi2lnJoocoAulmgT7hjtdGbSEUapFtuldk2nhAmRd
+         2MrOCtd9qhO2QzTLwNQFqCnF8Bg0YurSosNVvqYW6ASIR/06jfc0vrWzlgJmgrIEY1do
+         1vIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U9RYUwqYs8GxnXHLt/p3Fz6x5DoO+pRsegYtnMfkhYI=;
+        b=qezDImjgos91Hwiir5O3rKOY2KzKVE79tq0mxpxKPVwsWK/d/IpDBbnLbH35uijFRZ
+         WA/99qUz+bsQT3lk1VsIH+rWX3iddlyVN1+BAfV9g9ot/l4CDMDjNBeoLzpmVFaI4zCM
+         skMpCGP2nLtS7A2FdK3dusTztDbL2BVjuUD5b7KfQYmspfgegDwjV8X3WtgR4ZZoGznB
+         sYfqTVDiU0lbuc6xHyN1Y94s3NV7rrWYYC1bKa5Llc0rfza5oKq+lD8/5wJdGcUJBCID
+         PtuKYvUkqdMfEYulqvcSctryWsIasABRs1zRugHaA+bBs9OihCMBxtpjrgs0NEON166R
+         z1Og==
+X-Gm-Message-State: APjAAAX6x+1oiQLoKUb+b20dxDh6JAsB9gLwPt53PHIyr33nxhxlEAJq
+        2/+GkI2h+RMJIJ6WudWjOttjYT0Cm8JcfscxvDUD9A==
+X-Google-Smtp-Source: APXvYqz6cL1WMgmusMQg+hkMCdQCzrq7wzmGiwVnpGvldT/cM4eqPWnf8C8tW1NZQkbZOu5U4n7+NAWd4McNqKXyRO0=
+X-Received: by 2002:a5d:5346:: with SMTP id t6mr4334662wrv.59.1556180257986;
+ Thu, 25 Apr 2019 01:17:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190425080016.GX11158@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.19.210]
-X-CFilter-Loop: Reflected
+References: <20190425055015.45487-1-anup.patel@wdc.com> <20190425055015.45487-3-anup.patel@wdc.com>
+ <20190425055757.GA30545@infradead.org> <CAAhSdy36q1R8HQRG3kXDqj5JoJbO_drignvO7wCHJ3-6wkE5rw@mail.gmail.com>
+ <20190425080117.GA3575@infradead.org>
+In-Reply-To: <20190425080117.GA3575@infradead.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 25 Apr 2019 13:47:26 +0530
+Message-ID: <CAAhSdy3rEPGHkHEL9gSnEQVArFxXNNfPsbUHrQjqMf+Qbqw0zw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] RISC-V: Add interrupt related SCAUSE defines in asm/csr.h
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Thu, Apr 25, 2019 at 1:31 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Thu, Apr 25, 2019 at 12:46:52PM +0530, Anup Patel wrote:
+> > On Thu, Apr 25, 2019 at 11:28 AM Christoph Hellwig <hch@infradead.org> wrote:
+> > >
+> > > > +#ifdef CONFIG_64BIT
+> > > > +#define SCAUSE_IRQ_FLAG              _AC(0x8000000000000000, UL)
+> > > > +#else
+> > > > +#define SCAUSE_IRQ_FLAG              _AC(0x80000000, UL)
+> > > > +#endif
+> > >
+> > > Please keep the existing defintion that doesn't need an ifdef..
+> >
+> > Sure, will do.
+>
+> While we're at it: I don't think we need both INTERRUPT_CAUSE_FLAG and
+> SCAUSE_IRQ_FLAG.
 
-On 2019/4/25 16:00, Peter Zijlstra wrote:
-> On Thu, Apr 25, 2019 at 11:52:28AM +0800, Xie XiuQi wrote:
->> On 2019/4/24 2:44, Peter Zijlstra wrote:
-> 
->>> I'll try and come up with a better Changelog tomorrow.
-> 
-> I actually did, but forgot to send out. I have the below.
-> Does that work for you?
+Oops, I already send v5. Saw your comment just now.
 
-It works for me, thank you very much.
-
-> 
-> ---
-> Subject: sched/numa: Fix a possible divide-by-zero
-> From: Xie XiuQi <xiexiuqi@huawei.com>
-> Date: Sat, 20 Apr 2019 16:34:16 +0800
-> 
-> sched_clock_cpu() may not be consistent between CPUs. If a task
-> migrates to another CPU, then se.exec_start is set to that CPU's
-> rq_clock_task() by update_stats_curr_start(). Specifically, the new
-> value might be before the old value due to clock skew.
-> 
-> So then if in numa_get_avg_runtime() the expression:
-> 
->   'now - p->last_task_numa_placement'
-> 
-> ends up as -1, then the divider '*period + 1' in task_numa_placement()
-> is 0 and things go bang. Similar to update_curr(), check if time goes
-> backwards to avoid this.
-> 
-> Cc: mingo@redhat.com
-> Cc: cj.chengjian@huawei.com
-> Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-> [peterz: simplified changelog]
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lkml.kernel.org/r/20190420083416.170446-1-xiexiuqi@huawei.com
-> ---
->  kernel/sched/fair.c |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -2007,6 +2007,10 @@ static u64 numa_get_avg_runtime(struct t
->  	if (p->last_task_numa_placement) {
->  		delta = runtime - p->last_sum_exec_runtime;
->  		*period = now - p->last_task_numa_placement;
-> +
-> +		/* Avoid backward, and prevent potential divide error */
-> +		if (unlikely((s64)*period < 0))
-> +			*period = 0;
->  	} else {
->  		delta = p->se.avg.load_sum;
->  		*period = LOAD_AVG_MAX;
-> 
-> .
-> 
-
--- 
-Thanks,
-Xie XiuQi
-
+Regards,
+Anup
