@@ -2,185 +2,109 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154C8C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 02:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C2DC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 02:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBEF420652
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 02:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6114820652
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 02:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NEvUOyTA"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hYmqS3Sg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388647AbfDYCPQ (ORCPT
+        id S2388684AbfDYCPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 22:15:16 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39450 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727660AbfDYCPQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 22:15:16 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i17so10298943pfo.6;
-        Wed, 24 Apr 2019 19:15:15 -0700 (PDT)
+        Wed, 24 Apr 2019 22:15:54 -0400
+Received: from mail-eopbgr800040.outbound.protection.outlook.com ([40.107.80.40]:15714
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388648AbfDYCPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 22:15:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=upelHXPXvBnmaQF4I2XLLyJfMgebnENhE++m0KAJUwk=;
-        b=NEvUOyTAqQiq5Co0uXudut22rlMP1o1svI6X6Qzn10TVCvF5rgiMPKCeOQYVNUJpKW
-         gkInixFk44bGYAB9zA7D4zKn+SebVKOij4Pp/cxMxmscRL/juBXZoN2/QZfQ6ltXBYpN
-         NMPwxMWc1SmCQRhuM2ZarfueXGjfYNcoaepNvWicvXlaWH0XPseo7uDkr8hiHjReSJc8
-         QqDhd90bVJCDobs6HG1AiOwZpashQLwZlmzgGs0esX8WD74SBqZA+7JqUoJnzqWUbFcg
-         9HFQDI2QDGKx8nre/bEPmuHm0qVTrjbEk7nljz/AIBUbII+l8M+sxfJINeZt1Xy67NT8
-         F7Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=upelHXPXvBnmaQF4I2XLLyJfMgebnENhE++m0KAJUwk=;
-        b=Gwkq6JwJO07x8rBnSyIPJ0amNDMkxweElgsZ6soeVKDw2g2qZTySk319ygVWgY6rfL
-         4y1vtwp4ZMRkZ1eyektaFQbTNEsRTvylcCoc+d1u1Y6zR8yroSMdewI32IfCFYSkb/cD
-         ls4iED9yN1FebZhvpvMooxThWD3lqnSNlaBHEZn1MX1RbBmOdSwsVbdcpV8zFWhjuQW0
-         EsnoPj7Bci/fLNEauQMR0z9t3JEA0mnspRX+x5QwMpieRwOflXH9k+at+txBQ8WFdJif
-         5Ne5enNrZukvMN5pglWOmdKDebTzT8yd5IODPdyGbfFpU/FX8SAABp7jjOAOlOerbMyi
-         KqQg==
-X-Gm-Message-State: APjAAAUtFlTGmvKVA6pAQUgDyem7J1Y3IM3TOr/siVPzpxRD/V08OLOm
-        z55d/ViA0BRjq9+sIOV/gGw=
-X-Google-Smtp-Source: APXvYqxKGr0bTUcnykotSEx501Z9ZOL8blyv7nEKj6Xy0FtdL4dLgzomz6Z8rHRbqM6oMMoJJpYETQ==
-X-Received: by 2002:a62:ed05:: with SMTP id u5mr36357214pfh.63.1556158514707;
-        Wed, 24 Apr 2019 19:15:14 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q87sm31004530pfa.133.2019.04.24.19.15.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 19:15:13 -0700 (PDT)
-Subject: Re: [PATCH 1/2] firmware: imx: SCU irq should ONLY be enabled after
- SCU IPC is ready
-To:     Anson Huang <anson.huang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1556154581-31890-1-git-send-email-Anson.Huang@nxp.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <4a89a37c-fc7b-3248-4cc3-ae232ab310b7@roeck-us.net>
-Date:   Wed, 24 Apr 2019 19:15:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1556154581-31890-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xz02FmCrzCCRb1GiImEKt5HL8poGfyuZSGG0jb0VOwM=;
+ b=hYmqS3SgNXGKEIuPIN68hWPbzT4xrATMd0ApuawnlAGayX+zls6xhRuAsUhel3ngZuKMD47e4+CqnHBjAS7aEFekWm5ezSVsPKgb+WNNK9z0Uc26i4243EWh4RPeYkGYr6xkApoWq+WuSVjdjXozE7c6YnpQXrbO0v7731bsLN8=
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.116.31) by
+ DM6PR12MB3289.namprd12.prod.outlook.com (20.179.106.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.14; Thu, 25 Apr 2019 02:15:49 +0000
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::9183:846f:a93e:9a43]) by DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::9183:846f:a93e:9a43%5]) with mapi id 15.20.1813.017; Thu, 25 Apr 2019
+ 02:15:49 +0000
+From:   "Singh, Brijesh" <brijesh.singh@amd.com>
+To:     Steve Rutherford <srutherford@google.com>
+CC:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v1 00/10] Add AMD SEV guest live migration support
+Thread-Topic: [RFC PATCH v1 00/10] Add AMD SEV guest live migration support
+Thread-Index: AQHU+rgpwai7tJB3uUaULXjJMShjVaZLrqMAgAAmZACAAC5kAIAAIMyA
+Date:   Thu, 25 Apr 2019 02:15:49 +0000
+Message-ID: <329c5293-4b29-8392-2124-13f3093eda19@amd.com>
+References: <20190424160942.13567-1-brijesh.singh@amd.com>
+ <CABayD+eYsqT49-Smp0a9OGRt2or_L7LNKHpe-iraM62XzGq5_g@mail.gmail.com>
+ <eee5e112-89bd-331b-6875-34c0712de4cb@amd.com>
+ <CABayD+fy5+QNU8YWsVrfd6jyvPo3AWCBgR-V8iWKzZkWxQY=zA@mail.gmail.com>
+In-Reply-To: <CABayD+fy5+QNU8YWsVrfd6jyvPo3AWCBgR-V8iWKzZkWxQY=zA@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN2PR01CA0024.prod.exchangelabs.com (2603:10b6:804:2::34)
+ To DM6PR12MB2682.namprd12.prod.outlook.com (2603:10b6:5:4a::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [70.112.153.56]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9a2c6d9d-3844-47bb-d17c-08d6c923ee9d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3289;
+x-ms-traffictypediagnostic: DM6PR12MB3289:
+x-microsoft-antispam-prvs: <DM6PR12MB3289E2315EEB11F65BD8F70FE53D0@DM6PR12MB3289.namprd12.prod.outlook.com>
+x-forefront-prvs: 0018A2705B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(39860400002)(366004)(136003)(189003)(199004)(186003)(36756003)(8676002)(478600001)(102836004)(81166006)(81156014)(4326008)(14444005)(3846002)(6916009)(26005)(71190400001)(71200400001)(6116002)(256004)(31696002)(31686004)(99286004)(52116002)(76176011)(486006)(6506007)(386003)(6436002)(53546011)(68736007)(4744005)(8936002)(14454004)(97736004)(66946007)(305945005)(316002)(53936002)(6512007)(66066001)(66446008)(54906003)(6246003)(86362001)(7736002)(6486002)(66476007)(64756008)(66556008)(7416002)(2906002)(5660300002)(2616005)(93886005)(476003)(73956011)(25786009)(11346002)(446003)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3289;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: i3HOdmiKst/dRWbUfEbrx0FR7up9BAz+p8QccOuFCd06MPlTxRFH0krKCTFAzKpDZDYZF1uwFyg8bEXUA06c+y4WjgJw0/u2JllbY5v9UCfRdGGKBMSwEG+03ciYPQTcVzfRP5v8TTb4GinHwI4aQ8xKDq/8oIA79UCDqBWmZmQD5B1l1kKCUsKdlTUng63pvFyqq2tEFh+VbysNuF0iaOfOHTwCULW3qt66pZaks/hOJydmZtzQrz8hxd6qvzKq13aEPVD0F+sc9jt1WygWaWrbr8ihcv7x4yTG8bljN5l9zwEWALnntD0NqaZRAJoP6gYZ5Y3clpIcDR0UcNNT3lcIGjZTjCie2dfhRMpNdbzJSaFZZwOPiuuGHLkm5JKA3PgIeypLA6yp1rL27RmZplo4Z0wsXblG7ziu3DG9ZzU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <ED9CCEF63AB03A48A5711DE9DE877353@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a2c6d9d-3844-47bb-d17c-08d6c923ee9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 02:15:49.8802
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3289
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/19 6:14 PM, Anson Huang wrote:
-> The imx_scu_irq_group_enable() is normally called during module driver
-> probe phase to enable SCU group irq, e.g., i.MX system controller
-> watchdog driver will call it during its driver probe phase, as i.MX
-> system controller watchdog driver does NOT need SCU IPC handle for
-> operations, so it could be probed before i.MX SCU IPC is ready, and
-> below dump will show out:
-> 
-> [    0.933001] Hardware name: Freescale i.MX8QXP MEK (DT)
-> [    0.938129] pstate: 60000005 (nZCv daif -PAN -UAO)
-> [    0.942907] pc : imx_scu_call_rpc+0x114/0x158
-> [    0.947251] lr : imx_scu_irq_group_enable+0x74/0xc4
-> [    0.952113] sp : ffff00001005bae0
-> [    0.955415] x29: ffff00001005bae0 x28: ffff0000111bb0a0
-> [    0.960712] x27: ffff00001140b000 x26: ffff00001111068c
-> [    0.966011] x25: ffff0000111bb100 x24: 0000000000000000
-> [    0.971311] x23: ffff0000113d9cd8 x22: 0000000000000001
-> [    0.976610] x21: 0000000000000001 x20: ffff80083b51a410
-> [    0.981909] x19: ffff000011259000 x18: 0000000000000480
-> [    0.987209] x17: 000000000023ffb8 x16: 0000000000000010
-> [    0.992508] x15: 000000000000023f x14: ffffffffffffffff
-> [    0.997807] x13: 0000000000000018 x12: 0000000000000030
-> [    1.003107] x11: 0000000000000003 x10: 0101010101010101
-> [    1.008406] x9 : ffffffffffffffff x8 : 7f7f7f7f7f7f7f7f
-> [    1.013706] x7 : fefefeff646c606d x6 : 0000000000000000
-> [    1.019005] x5 : ffff0000112596c8 x4 : 0000000000000008
-> [    1.024304] x3 : 0000000000000003 x2 : 0000000000000001
-> [    1.029604] x1 : ffff00001005bb58 x0 : 0000000000000000
-> [    1.034905] Call trace:
-> [    1.037341]  imx_scu_call_rpc+0x114/0x158
-> [    1.041334]  imx_scu_irq_group_enable+0x74/0xc4
-> [    1.045856]  imx_sc_wdt_probe+0x24/0x150
-> [    1.049766]  platform_drv_probe+0x4c/0xb0
-> [    1.053762]  really_probe+0x1f8/0x2c8
-> [    1.057407]  driver_probe_device+0x58/0xfc
-> [    1.061490]  device_driver_attach+0x68/0x70
-> [    1.065660]  __driver_attach+0x94/0xdc
-> [    1.069397]  bus_for_each_dev+0x64/0xc0
-> [    1.073220]  driver_attach+0x20/0x28
-> [    1.076782]  bus_add_driver+0x148/0x1fc
-> [    1.080601]  driver_register+0x68/0x120
-> [    1.084424]  __platform_driver_register+0x4c/0x54
-> [    1.089120]  imx_sc_wdt_driver_init+0x18/0x20
-> [    1.093463]  do_one_initcall+0x58/0x1b8
-> [    1.097287]  kernel_init_freeable+0x1cc/0x288
-> [    1.101630]  kernel_init+0x10/0x100
-> [    1.105101]  ret_from_fork+0x10/0x18
-> [    1.108669] ---[ end trace 9e03302114457de9 ]---
-> [    1.113296] enable irq failed, group 1, mask 1, ret -22
-> 
-> To avoid such scenario, return -EPROBE_DEFER in imx_scu_irq_group_enable()
-> API if SCU IPC is NOT ready, then module driver which calls this API
-> in probe phase will defer probe after SCU IPC ready.
-> 
-Difficult to comment - I seem to have missed the patch introducing
-the call to imx_scu_irq_group_enable() from the watchdog driver, and
-I don't see it in -next either.
-
-However, as far as I can see, imx_sc_irq_ipc_handle is initialized from
-imx_scu_probe(). If the watchdog driver depends on it, it should be a
-sub-node of fsl,imx-scu, and be instantiated from the call to
-devm_of_platform_populate() in imx_scu_probe(). This should make the
-EPROBE_DEFER unnecessary.
-
-In other words, the above statement "i.MX system controller watchdog
-driver does NOT need SCU IPC handle for operations" is no longer accurate.
-If it needs the interrupt, and the interrupt needs the IPC handle, the
-watchdog driver does require the IPC handle. It would otherwise not need
-to defer its probe function until the IPC handle is available.
-
-I would like to add that it is highly unusual for a watchdog driver to depend
-on a firmware driver. However, again, that is difficult to argue since I seem
-to have missed the patch series introducing that dependency.
-
-Guenter
-
-> Fixes: 851826c7566e ("firmware: imx: enable imx scu general irq function")
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->   drivers/firmware/imx/imx-scu-irq.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/firmware/imx/imx-scu-irq.c b/drivers/firmware/imx/imx-scu-irq.c
-> index 043833a..687121f 100644
-> --- a/drivers/firmware/imx/imx-scu-irq.c
-> +++ b/drivers/firmware/imx/imx-scu-irq.c
-> @@ -100,6 +100,9 @@ int imx_scu_irq_group_enable(u8 group, u32 mask, u8 enable)
->   	struct imx_sc_rpc_msg *hdr = &msg.hdr;
->   	int ret;
->   
-> +	if (!imx_sc_irq_ipc_handle)
-> +		return -EPROBE_DEFER;
-> +
->   	hdr->ver = IMX_SC_RPC_VERSION;
->   	hdr->svc = IMX_SC_RPC_SVC_IRQ;
->   	hdr->func = IMX_SC_IRQ_FUNC_ENABLE;
-> 
-
+DQpPbiA0LzI0LzE5IDc6MTggUE0sIFN0ZXZlIFJ1dGhlcmZvcmQgd3JvdGU6DQo+IERvIHlvdSBt
+ZWFuIE1pQi9zLCBNQi9zIG9yIE1iL3M/IFNpbmNlIHlvdSBhcmUgdGFsa2luZyBhYm91dCBuZXR3
+b3JrDQo+IHNwZWVkcywgc29tZXRpbWVzIHRoZXNlIGdldCBjb25mbGF0ZWQuDQoNCkl0J3MgbWVn
+YWJpdHMvc2VjLiBUaGUgUU1QIHF1ZXJ5LW1pZ3JhdGlvbiBjb21tYW5kIHNob3dzIHRoZSB0aHJv
+dWdocHV0DQppbiBNYml0cy9zLiBJdCBpbmNsdWRlcyBQU1AgY29tbWFuZCBleGVjdXRpb24gYW5k
+IHRoZSBuZXR3b3JrIHdyaXRlLg0KTW9zdCBvZiB0aGUgdGltZSBpcyBzcGVudCBpbiBQU1AgRlcu
+IEkgaGF2ZSBub3QgcGVyZm9ybWVkIHJhdyBQU1ANCmNvbW1hbmQgYmVuY2htYXJrIHlldCBidXQg
+SSBiZWxpZXZlIFNFViBGVyAwLjE3IG1heSByZXByb2R1Y2UgdXAgdG8NCjEyTWJpdHMvcy4gSSB3
+aWxsIHVwZGF0ZSB0aHJlYWQgYWZ0ZXIgSSBmaW5pc2ggdGhlIGZ1cnRoZXIgcGVyZm9ybWFuY2UN
+CmJyZWFrZG93bi4NCg0KLUJyaWplc2gNCg0K
