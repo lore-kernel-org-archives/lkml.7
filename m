@@ -2,164 +2,414 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C73C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16934C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2A2205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E122081C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:33:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQb9AJGQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730202AbfDYPd2 (ORCPT
+        id S1730250AbfDYPda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 25 Apr 2019 11:33:30 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34814 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730180AbfDYPd2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Apr 2019 11:33:28 -0400
-Received: from mga17.intel.com ([192.55.52.151]:53982 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730136AbfDYPdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:33:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 08:33:23 -0700
-X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
-   d="scan'208";a="137410325"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.255.28.123]) ([10.255.28.123])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 25 Apr 2019 08:33:21 -0700
-Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
-References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
- <20190424143238.GB18442@linux.intel.com>
- <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
- <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
- <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
- <be509b34ba01a22845363aeb0b0f053f25c2d9c1.camel@intel.com>
- <7568a794-2e91-c84c-5b64-d33e394f0e2b@linux.intel.com>
- <20190425141944.GA31197@linux.intel.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <5203b6ee-4a14-64b7-0237-dae2a977054d@linux.intel.com>
-Date:   Thu, 25 Apr 2019 23:33:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: by mail-pf1-f193.google.com with SMTP id b3so105497pfd.1;
+        Thu, 25 Apr 2019 08:33:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5a/6MPsR4urKp6yQEMyiUcAMrF2FenVOvePurxnpdZ8=;
+        b=bQb9AJGQlPSOo3LXhEGmCcLePbpXt3ZDwN9IY0TD8i+MWU/1jfz8mKaZXqgEs8kxP3
+         TCE4C68S2MhbovfNZlQbpwJTewaK5rayecNA3fRKvT2ECRT2ITGgSaDcwsor+iBi3HUm
+         sK8hNOcFZTx57HYoHgfj97irLlieOolVxiEa7K5PhsnbADqj8AvCt3ulIdtYltd1jGA9
+         UahPsFHLftmQRA0Ii0eUyjITyj2+Ck2vdwKp3SGLfvPaRxpf1k22ZwPLaIXsOspEf25E
+         1Bz+OaX/eAEfuGfCDQEquq+vwsfCk9rPqz7yq8DGcmKOJWu3ZfA2k/yNC5Q/y7TpDyii
+         j0nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5a/6MPsR4urKp6yQEMyiUcAMrF2FenVOvePurxnpdZ8=;
+        b=GZdYlO2TsS1Ptut+P6AmZ/d1H3j4mUCrkt8pYzDE2ViLz3VuU0cxdxKGUKt/pPGc1q
+         K+RRIijfT7cRSU6e24bvXpdyqe5QjRL6Y42vjqb8glhqggGygldXuIPOhMiKKfPRc9R8
+         BUMkJQn2SO2dKuMdMTwbs7HRGGBTePazG7yLpt6cPiRcKM37TdWxSxpLnpZfWV+SE/7M
+         FPkDHdFQiDWT8FpuPu3LDUnigzKt9Br84oKAji7Tqxixtn5/TWptj8FomOLjr/ejda8S
+         TC927kaGSc+c2GuFyiXFS6VCVSlhDKI2cS1ylAZNcGmEJgAvfu4p2BUsx0wdDc+bDnNa
+         YETg==
+X-Gm-Message-State: APjAAAWS+gYpuy8VLVDv7SbdCySVcEUE+Uyf0k8ZqyWynSxGatKrGnNC
+        O5b6CmI/KbvRSp2oY45v8C2PBTnc
+X-Google-Smtp-Source: APXvYqyD82rg0mi82mhLm44kgfK1nVbiS1CcHAwNaq0u8ox19Zj+Cp7hQO6CnorxaLYLJIXtAwc90A==
+X-Received: by 2002:a63:6581:: with SMTP id z123mr38514410pgb.243.1556206406976;
+        Thu, 25 Apr 2019 08:33:26 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id c14sm2643363pgj.94.2019.04.25.08.33.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 08:33:26 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     rjw@rjwysocki.net, Jonathan Corbet <corbet@lwn.net>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v6 19/24] Documentation: ACPI: move apei/output_format.txt to firmware-guide/acpi and convert to reST
+Date:   Thu, 25 Apr 2019 23:31:12 +0800
+Message-Id: <20190425153117.16057-20-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190425153117.16057-1-changbin.du@gmail.com>
+References: <20190425153117.16057-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190425141944.GA31197@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/25 22:19, Sean Christopherson wrote:
-> On Thu, Apr 25, 2019 at 03:07:35PM +0800, Like Xu wrote:
->> On 2019/4/25 14:30, Xiaoyao Li wrote:
->>>>> Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes is
->>>>> that we cannot assmue the reserved bits 31:16 of ECX is always 0 for the
->>>>> future generation.
-> 
-> It doesn't matter if future CPUs use 31:16 for other things since this
-> code only cares about whether or not CPUID.1F exists.  The check
-> entry->eax >= 0x1f ensures that CPUID.1F will return zeros if the leaf
-> does *NOT* exist, ergo the check against CPUID.1F.ECX only needs to
-> look for a non-zero value.  CPUID.1F.ECX is the logical choice for
-> detecting support because it is guaranteed to be non-zero if the leaf
-> actually exists (because bits 15:8 will be non-zero).  Whether or not
-> bits 31:16 are non-zero is irrelevant.
+This converts the plain text documentation to reStructuredText format and
+add it to Sphinx TOC tree. No essential content change.
 
-Here is a case:
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/acpi/apei/output_format.txt     | 147 -----------------
+ .../acpi/apei/output_format.rst               | 150 ++++++++++++++++++
+ Documentation/firmware-guide/acpi/index.rst   |   1 +
+ 3 files changed, 151 insertions(+), 147 deletions(-)
+ delete mode 100644 Documentation/acpi/apei/output_format.txt
+ create mode 100644 Documentation/firmware-guide/acpi/apei/output_format.rst
 
-one future CPU may have "cpuid.0.eax > 0x1f" but not use multi-chip 
-packaging technology thus its CPUID.1F leaf **could** not exist to 
-expose multi-die info and it still use cpuid.0B leaf.
-
-So the entry->eax >= 0x1f check is true and cpuid_ecx(0x1f) check is 
-true as well due to default return value. (one of my machines for 
-cpuid.1f.ecx would return 0x00000064 without cpuid.1f support).
-
-When we only cares about whether or not CPUID.1F exists,
-we may need (cpuid_ecx(0x1f) & 0x0000ff00) != 0 or just follow what host 
-check_extended_topology_leaf() does.
-
-> 
->>>>
->>>> It's true cause the statement in public spec is not "Reserved = 0" but
->>>> "Bits 31 - 16: Reserved".
->>>>
->>>>>
->>>>> In my opinion, Sean's codes is OK and much simple and clear.
->>>>
->>>> If the host cpuid.0.eax is greater than 0x1f but actually it doesn't
->>>> have multi-chip packaging technology and we may want to expose
->>>> entry->eax to some value smaller than 0x1f but greater than 0x14, much
->>>> effort needs to apply on Sean's code.
->>>>
->>>> My improvement is good to overwrite cpuid.0.eax in future usage
->>> >from the perspective of kvm feature setting not just from value check.
->>>
->>> Alright, there is something wrong in your code that you haven't realised.
->>>
->>> When you do
->>> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
->>>
->>> it changes the entry->eax if entry->eax > 0x14. So you cannot directly use
->>> cpuid_ecx(0x1f). At least, you need to cache the value of entry->eax, like:
->>> 	
->>> 	u32 max_leaf = entry->eax;
->>> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
->>> 	
->>> 	//...leaf between 0x14 and 0x1f
->>> 	
->>> 	if (max_leaf >= 0x1f && (cpuid_ecx(0x1f) & 0x0000ff00))
->>>   		entry->eax = 0x1f;
->>
->> The cache value make no sense on this.
-> 
-> Xiaoyao is pointing out that by limiting entry->eax to 0x14 (or 0xd), then
-> it can't be used to detect support for CPUID.1F since KVM will have lost
-> the required information.
-
-The point is that its existence does not really depend on cpuid.0.eax> = 
-0x1f. My test machine (CLX-AP, two die in one package) has cpuid.0.eax = 
-0x16 but does have CPUID.1F support (a bit strange on BIOS).
-
-> 
->>> However, handling in increasing order in totally wrong. Since it's to report the
->>> max the leaf supported, we should handle in descending order, which is what Sean
->>> does.
->>
->> There is no need to check "entry->eax >= 0x1f" before "setting entry->eax =
->> 0x1f" if and only if cpuid_ecx(0x1f) meets requirements.
-> 
-> entry->eax absolutely needs to be checked, otherwise you have no idea what
-> CPUID leaf is actually being consumed.  For example, a CPU with a maximum
-> basic CPUID leaf of 0xB will report information that is indistinguishable
-> from the actual CPUID.1F, i.e. KVM will incorrectly think the CPU supports
-> CPUID.1F regardless of what heuristic is used to detect a "valid" CPUID.1F
-> if it only looks at the result of CPUID.1F.
-
-Based on what I mentioned, just reconsider this proposal:
-
-case 0:
-     entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
-     if ((cpuid_ecx(0x1f) & 0x0000ff00)) != 0)
-         entry->eax = 0x1f;
-
-It increases the cpuid.0.ecx value along with the minimized feature 
-requirement in a natural and readable way. Why don't we design a little 
-bit future ahead of time?
-
-> 
->> An increasing manner helps to overwrite this value on demand in a flat code
->> flow (easy to understand and maintain) not an if-else_if-else flow.
-> 
-> Maybe in the future the code will need to be refactored as more cases are
-> added, but for now an if-else is quite readable.  Worry about the future
-> when it happens. :-)
-> 
+diff --git a/Documentation/acpi/apei/output_format.txt b/Documentation/acpi/apei/output_format.txt
+deleted file mode 100644
+index 0c49c197c47a..000000000000
+--- a/Documentation/acpi/apei/output_format.txt
++++ /dev/null
+@@ -1,147 +0,0 @@
+-                     APEI output format
+-                     ~~~~~~~~~~~~~~~~~~
+-
+-APEI uses printk as hardware error reporting interface, the output
+-format is as follow.
+-
+-<error record> :=
+-APEI generic hardware error status
+-severity: <integer>, <severity string>
+-section: <integer>, severity: <integer>, <severity string>
+-flags: <integer>
+-<section flags strings>
+-fru_id: <uuid string>
+-fru_text: <string>
+-section_type: <section type string>
+-<section data>
+-
+-<severity string>* := recoverable | fatal | corrected | info
+-
+-<section flags strings># :=
+-[primary][, containment warning][, reset][, threshold exceeded]\
+-[, resource not accessible][, latent error]
+-
+-<section type string> := generic processor error | memory error | \
+-PCIe error | unknown, <uuid string>
+-
+-<section data> :=
+-<generic processor section data> | <memory section data> | \
+-<pcie section data> | <null>
+-
+-<generic processor section data> :=
+-[processor_type: <integer>, <proc type string>]
+-[processor_isa: <integer>, <proc isa string>]
+-[error_type: <integer>
+-<proc error type strings>]
+-[operation: <integer>, <proc operation string>]
+-[flags: <integer>
+-<proc flags strings>]
+-[level: <integer>]
+-[version_info: <integer>]
+-[processor_id: <integer>]
+-[target_address: <integer>]
+-[requestor_id: <integer>]
+-[responder_id: <integer>]
+-[IP: <integer>]
+-
+-<proc type string>* := IA32/X64 | IA64
+-
+-<proc isa string>* := IA32 | IA64 | X64
+-
+-<processor error type strings># :=
+-[cache error][, TLB error][, bus error][, micro-architectural error]
+-
+-<proc operation string>* := unknown or generic | data read | data write | \
+-instruction execution
+-
+-<proc flags strings># :=
+-[restartable][, precise IP][, overflow][, corrected]
+-
+-<memory section data> :=
+-[error_status: <integer>]
+-[physical_address: <integer>]
+-[physical_address_mask: <integer>]
+-[node: <integer>]
+-[card: <integer>]
+-[module: <integer>]
+-[bank: <integer>]
+-[device: <integer>]
+-[row: <integer>]
+-[column: <integer>]
+-[bit_position: <integer>]
+-[requestor_id: <integer>]
+-[responder_id: <integer>]
+-[target_id: <integer>]
+-[error_type: <integer>, <mem error type string>]
+-
+-<mem error type string>* :=
+-unknown | no error | single-bit ECC | multi-bit ECC | \
+-single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
+-target abort | parity error | watchdog timeout | invalid address | \
+-mirror Broken | memory sparing | scrub corrected error | \
+-scrub uncorrected error
+-
+-<pcie section data> :=
+-[port_type: <integer>, <pcie port type string>]
+-[version: <integer>.<integer>]
+-[command: <integer>, status: <integer>]
+-[device_id: <integer>:<integer>:<integer>.<integer>
+-slot: <integer>
+-secondary_bus: <integer>
+-vendor_id: <integer>, device_id: <integer>
+-class_code: <integer>]
+-[serial number: <integer>, <integer>]
+-[bridge: secondary_status: <integer>, control: <integer>]
+-[aer_status: <integer>, aer_mask: <integer>
+-<aer status string>
+-[aer_uncor_severity: <integer>]
+-aer_layer=<aer layer string>, aer_agent=<aer agent string>
+-aer_tlp_header: <integer> <integer> <integer> <integer>]
+-
+-<pcie port type string>* := PCIe end point | legacy PCI end point | \
+-unknown | unknown | root port | upstream switch port | \
+-downstream switch port | PCIe to PCI/PCI-X bridge | \
+-PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
+-root complex event collector
+-
+-if section severity is fatal or recoverable
+-<aer status string># :=
+-unknown | unknown | unknown | unknown | Data Link Protocol | \
+-unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
+-Poisoned TLP | Flow Control Protocol | Completion Timeout | \
+-Completer Abort | Unexpected Completion | Receiver Overflow | \
+-Malformed TLP | ECRC | Unsupported Request
+-else
+-<aer status string># :=
+-Receiver Error | unknown | unknown | unknown | unknown | unknown | \
+-Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
+-Replay Timer Timeout | Advisory Non-Fatal
+-fi
+-
+-<aer layer string> :=
+-Physical Layer | Data Link Layer | Transaction Layer
+-
+-<aer agent string> :=
+-Receiver ID | Requester ID | Completer ID | Transmitter ID
+-
+-Where, [] designate corresponding content is optional
+-
+-All <field string> description with * has the following format:
+-
+-field: <integer>, <field string>
+-
+-Where value of <integer> should be the position of "string" in <field
+-string> description. Otherwise, <field string> will be "unknown".
+-
+-All <field strings> description with # has the following format:
+-
+-field: <integer>
+-<field strings>
+-
+-Where each string in <fields strings> corresponding to one set bit of
+-<integer>. The bit position is the position of "string" in <field
+-strings> description.
+-
+-For more detailed explanation of every field, please refer to UEFI
+-specification version 2.3 or later, section Appendix N: Common
+-Platform Error Record.
+diff --git a/Documentation/firmware-guide/acpi/apei/output_format.rst b/Documentation/firmware-guide/acpi/apei/output_format.rst
+new file mode 100644
+index 000000000000..c2e7ebddb529
+--- /dev/null
++++ b/Documentation/firmware-guide/acpi/apei/output_format.rst
+@@ -0,0 +1,150 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==================
++APEI output format
++==================
++
++APEI uses printk as hardware error reporting interface, the output
++format is as follow::
++
++        <error record> :=
++        APEI generic hardware error status
++        severity: <integer>, <severity string>
++        section: <integer>, severity: <integer>, <severity string>
++        flags: <integer>
++        <section flags strings>
++        fru_id: <uuid string>
++        fru_text: <string>
++        section_type: <section type string>
++        <section data>
++
++        <severity string>* := recoverable | fatal | corrected | info
++
++        <section flags strings># :=
++        [primary][, containment warning][, reset][, threshold exceeded]\
++        [, resource not accessible][, latent error]
++
++        <section type string> := generic processor error | memory error | \
++        PCIe error | unknown, <uuid string>
++
++        <section data> :=
++        <generic processor section data> | <memory section data> | \
++        <pcie section data> | <null>
++
++        <generic processor section data> :=
++        [processor_type: <integer>, <proc type string>]
++        [processor_isa: <integer>, <proc isa string>]
++        [error_type: <integer>
++        <proc error type strings>]
++        [operation: <integer>, <proc operation string>]
++        [flags: <integer>
++        <proc flags strings>]
++        [level: <integer>]
++        [version_info: <integer>]
++        [processor_id: <integer>]
++        [target_address: <integer>]
++        [requestor_id: <integer>]
++        [responder_id: <integer>]
++        [IP: <integer>]
++
++        <proc type string>* := IA32/X64 | IA64
++
++        <proc isa string>* := IA32 | IA64 | X64
++
++        <processor error type strings># :=
++        [cache error][, TLB error][, bus error][, micro-architectural error]
++
++        <proc operation string>* := unknown or generic | data read | data write | \
++        instruction execution
++
++        <proc flags strings># :=
++        [restartable][, precise IP][, overflow][, corrected]
++
++        <memory section data> :=
++        [error_status: <integer>]
++        [physical_address: <integer>]
++        [physical_address_mask: <integer>]
++        [node: <integer>]
++        [card: <integer>]
++        [module: <integer>]
++        [bank: <integer>]
++        [device: <integer>]
++        [row: <integer>]
++        [column: <integer>]
++        [bit_position: <integer>]
++        [requestor_id: <integer>]
++        [responder_id: <integer>]
++        [target_id: <integer>]
++        [error_type: <integer>, <mem error type string>]
++
++        <mem error type string>* :=
++        unknown | no error | single-bit ECC | multi-bit ECC | \
++        single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
++        target abort | parity error | watchdog timeout | invalid address | \
++        mirror Broken | memory sparing | scrub corrected error | \
++        scrub uncorrected error
++
++        <pcie section data> :=
++        [port_type: <integer>, <pcie port type string>]
++        [version: <integer>.<integer>]
++        [command: <integer>, status: <integer>]
++        [device_id: <integer>:<integer>:<integer>.<integer>
++        slot: <integer>
++        secondary_bus: <integer>
++        vendor_id: <integer>, device_id: <integer>
++        class_code: <integer>]
++        [serial number: <integer>, <integer>]
++        [bridge: secondary_status: <integer>, control: <integer>]
++        [aer_status: <integer>, aer_mask: <integer>
++        <aer status string>
++        [aer_uncor_severity: <integer>]
++        aer_layer=<aer layer string>, aer_agent=<aer agent string>
++        aer_tlp_header: <integer> <integer> <integer> <integer>]
++
++        <pcie port type string>* := PCIe end point | legacy PCI end point | \
++        unknown | unknown | root port | upstream switch port | \
++        downstream switch port | PCIe to PCI/PCI-X bridge | \
++        PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
++        root complex event collector
++
++        if section severity is fatal or recoverable
++        <aer status string># :=
++        unknown | unknown | unknown | unknown | Data Link Protocol | \
++        unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
++        Poisoned TLP | Flow Control Protocol | Completion Timeout | \
++        Completer Abort | Unexpected Completion | Receiver Overflow | \
++        Malformed TLP | ECRC | Unsupported Request
++        else
++        <aer status string># :=
++        Receiver Error | unknown | unknown | unknown | unknown | unknown | \
++        Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
++        Replay Timer Timeout | Advisory Non-Fatal
++        fi
++
++        <aer layer string> :=
++        Physical Layer | Data Link Layer | Transaction Layer
++
++        <aer agent string> :=
++        Receiver ID | Requester ID | Completer ID | Transmitter ID
++
++Where, [] designate corresponding content is optional
++
++All <field string> description with * has the following format::
++
++        field: <integer>, <field string>
++
++Where value of <integer> should be the position of "string" in <field
++string> description. Otherwise, <field string> will be "unknown".
++
++All <field strings> description with # has the following format::
++
++        field: <integer>
++        <field strings>
++
++Where each string in <fields strings> corresponding to one set bit of
++<integer>. The bit position is the position of "string" in <field
++strings> description.
++
++For more detailed explanation of every field, please refer to UEFI
++specification version 2.3 or later, section Appendix N: Common
++Platform Error Record.
+diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+index e9f253d54897..869badba6d7a 100644
+--- a/Documentation/firmware-guide/acpi/index.rst
++++ b/Documentation/firmware-guide/acpi/index.rst
+@@ -17,6 +17,7 @@ ACPI Support
+    DSD-properties-rules
+    debug
+    aml-debugger
++   apei/output_format
+    gpio-properties
+    i2c-muxes
+    acpi-lid
+-- 
+2.20.1
 
