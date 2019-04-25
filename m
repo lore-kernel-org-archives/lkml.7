@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77FCC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D91C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91E02077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B1722077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556220430;
-	bh=tMaBmVNzDZzyba5Sl2Sur4VdYlkLOqjjbnxi4xJm1bI=;
+	s=default; t=1556220433;
+	bh=7rTmrTrxhop8MUj70t6sLTQCqwUpQACvHEsmSi+y6sk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=cDSC9cSUN/1I/OHWFGSrgADtANzWY9NJEs3kSi1ngNHu5nTSAvQ03mBM3+UJGgC8T
-	 qnZg54ERpc7u3m92ORKUovLnNI+RXmsF35z7wanOynX0wRML16wg3VoMK8HnChrFbN
-	 AqIL9MbFzhl+ZeQ3Cavcd6dNN5XDjVNMrHLekwqI=
+	b=SjKtAgiRMJ6w4dByV6mR09QsoubeG3z1hLjsgB88uR8SANces8N/Jk7dvj43SVUUy
+	 8bfpXgjXWnp4xtfEvJwydAIHJuykhxUc7efGn3k4TyJhKKHWIVHrqFfCzQwXnXtWgP
+	 uTWhjyJrk9Cx1r1sdqUyrtug1H2LWxpXmJK0Z+2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbfDYT0r (ORCPT
+        id S1730557AbfDYT0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:26:47 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52676 "EHLO
+        Thu, 25 Apr 2019 15:26:46 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52678 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729341AbfDYT0m (ORCPT
+        with ESMTP id S1729417AbfDYT0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:26:42 -0400
+        Thu, 25 Apr 2019 15:26:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=KZRC4KGmaEf56xBdQHGtaywKTsQXcv/ghwcGgGRnZ3M=; b=c3+pjFyqRPMy
-        HSc3IisKiB3Mx+MPqpzL8kA6BrTewbQv3yytYkXdwCxZ2KOAcuwSYO33DgL6rmuTCyi/uHIFKHoWu
-        jMIuQ1r5uKMCPN/GxQzjvCIYCZxHuKf92W6XOcMWqdz5DbEUYJp+ZpGaaW1fjlFHaFod/mt0xThOx
-        l3iEw=;
+        List-Archive; bh=VqilEpU0zcs5UID60f+ZH1pJ3ZhXj2B3wEwvevnvqGU=; b=HysAUfxATRFm
+        1BAWCJVbQlgiL+rB1RzR869KWBJunD1c9mqTEcpJ26dXd5rM0DUKKgetoVdKYVmrMwnN2aTwgJZ13
+        QbdV8UuUFFJcDmmt2JVcydWRR0NDyyNvU5dsO5hefth7WsjTk9z5GOYIgJkwjVnB1UhRnrMXzEktk
+        R185Q=;
 Received: from 188.29.164.24.threembb.co.uk ([188.29.164.24] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJk0z-0004eK-5C; Thu, 25 Apr 2019 19:26:37 +0000
+        id 1hJk0z-0004eV-JO; Thu, 25 Apr 2019 19:26:37 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 348E1441D3B; Thu, 25 Apr 2019 20:26:36 +0100 (BST)
+        id AC64A441D3D; Thu, 25 Apr 2019 20:26:36 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Chenglin Xu <chenglin.xu@mediatek.com>,
-        Chen Zhong <chen.zhong@mediatek.com>,
-        Flora Fu <flora.fu@mediatek.com>,
-        Henry Chen <henryc.chen@mediatek.com>,
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: mt63xx: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: <20190421022656.5838-1-axel.lin@ingics.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Mark Zhang <markz@nvidia.com>,
+        Venkat Reddy Talla <vreddytalla@nvidia.com>
+Subject: Applied "regulator: max77620: Fix regulator info setting for max20024" to the regulator tree
+In-Reply-To: <20190422053531.23123-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190425192636.348E1441D3B@finisterre.ee.mobilebroadband>
+Message-Id: <20190425192636.AC64A441D3D@finisterre.ee.mobilebroadband>
 Date:   Thu, 25 Apr 2019 20:26:36 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -65,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: mt63xx: Switch to SPDX identifier
+   regulator: max77620: Fix regulator info setting for max20024
 
 has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.1
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,139 +90,36 @@ to this mail.
 Thanks,
 Mark
 
-From 0e093f82754daca970df3a2614d5a2492ad3f6d9 Mon Sep 17 00:00:00 2001
+From 734008e714d8c757613c43ff57c1bf7ef1bb5b5d Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Sun, 21 Apr 2019 10:26:56 +0800
-Subject: [PATCH] regulator: mt63xx: Switch to SPDX identifier
+Date: Mon, 22 Apr 2019 13:35:31 +0800
+Subject: [PATCH] regulator: max77620: Fix regulator info setting for max20024
 
-Convert MediaTek mt63xx PMIC drivers to SPDX identifier.
+Current code always set pmic->rinfo[id] = &max77620_regs_info[id];
+It should set to either max77620_regs_info or max20024_regs_info
+depends on the chip_id.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/mt6311-regulator.c | 17 ++++-------------
- drivers/regulator/mt6311-regulator.h | 10 +---------
- drivers/regulator/mt6323-regulator.c | 12 ++++--------
- drivers/regulator/mt6380-regulator.c | 17 ++++-------------
- drivers/regulator/mt6397-regulator.c | 17 ++++-------------
- 5 files changed, 17 insertions(+), 56 deletions(-)
+ drivers/regulator/max77620-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/mt6311-regulator.c b/drivers/regulator/mt6311-regulator.c
-index 01d69f43d2b0..af95449d3590 100644
---- a/drivers/regulator/mt6311-regulator.c
-+++ b/drivers/regulator/mt6311-regulator.c
-@@ -1,16 +1,7 @@
--/*
-- * Copyright (c) 2015 MediaTek Inc.
-- * Author: Henry Chen <henryc.chen@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2015 MediaTek Inc.
-+// Author: Henry Chen <henryc.chen@mediatek.com>
+diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
+index 1607ac673e44..0ad91a7f9cb9 100644
+--- a/drivers/regulator/max77620-regulator.c
++++ b/drivers/regulator/max77620-regulator.c
+@@ -803,7 +803,7 @@ static int max77620_regulator_probe(struct platform_device *pdev)
+ 			continue;
  
- #include <linux/err.h>
- #include <linux/gpio.h>
-diff --git a/drivers/regulator/mt6311-regulator.h b/drivers/regulator/mt6311-regulator.h
-index 5218db46a798..4904d6751714 100644
---- a/drivers/regulator/mt6311-regulator.h
-+++ b/drivers/regulator/mt6311-regulator.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015 MediaTek Inc.
-  * Author: Henry Chen <henryc.chen@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #ifndef __MT6311_REGULATOR_H__
-diff --git a/drivers/regulator/mt6323-regulator.c b/drivers/regulator/mt6323-regulator.c
-index 25b002328910..893ea190788a 100644
---- a/drivers/regulator/mt6323-regulator.c
-+++ b/drivers/regulator/mt6323-regulator.c
-@@ -1,11 +1,7 @@
--/*
-- * Copyright (c) 2016 MediaTek Inc.
-- * Author: Chen Zhong <chen.zhong@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2016 MediaTek Inc.
-+// Author: Chen Zhong <chen.zhong@mediatek.com>
- 
- #include <linux/module.h>
- #include <linux/of.h>
-diff --git a/drivers/regulator/mt6380-regulator.c b/drivers/regulator/mt6380-regulator.c
-index 86bc332df3f2..b6aed090b5e0 100644
---- a/drivers/regulator/mt6380-regulator.c
-+++ b/drivers/regulator/mt6380-regulator.c
-@@ -1,16 +1,7 @@
--/*
-- * Copyright (c) 2017 MediaTek Inc.
-- * Author: Chenglin Xu <chenglin.xu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2017 MediaTek Inc.
-+// Author: Chenglin Xu <chenglin.xu@mediatek.com>
- 
- #include <linux/module.h>
- #include <linux/of.h>
-diff --git a/drivers/regulator/mt6397-regulator.c b/drivers/regulator/mt6397-regulator.c
-index 3e6c8d99ec0f..fd9ed864a0c1 100644
---- a/drivers/regulator/mt6397-regulator.c
-+++ b/drivers/regulator/mt6397-regulator.c
-@@ -1,16 +1,7 @@
--/*
-- * Copyright (c) 2014 MediaTek Inc.
-- * Author: Flora Fu <flora.fu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2014 MediaTek Inc.
-+// Author: Flora Fu <flora.fu@mediatek.com>
- 
- #include <linux/module.h>
- #include <linux/of.h>
+ 		rdesc = &rinfo[id].desc;
+-		pmic->rinfo[id] = &max77620_regs_info[id];
++		pmic->rinfo[id] = &rinfo[id];
+ 		pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
+ 		pmic->reg_pdata[id].active_fps_src = -1;
+ 		pmic->reg_pdata[id].active_fps_pd_slot = -1;
 -- 
 2.20.1
 
