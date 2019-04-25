@@ -2,313 +2,256 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6CEC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3496C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11940217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:31:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BvVcTjsg"
+	by mail.kernel.org (Postfix) with ESMTP id 87614217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 06:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbfDYGbj (ORCPT
+        id S1729666AbfDYGd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 02:31:39 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:38085 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfDYGbj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 02:31:39 -0400
-Received: by mail-ua1-f67.google.com with SMTP id t15so6890590uao.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 23:31:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DsWrY5rLCYMwsmN6y8s5YmSBG5RMEFfsiL0kEIJ+uHE=;
-        b=BvVcTjsg6aQ/vKUyZA2wIskC3DRTeRM1ROL3T+e5YqlkSPEUFT3Cvcbw5L3aUM0OCJ
-         LO/wdTyZgs7ncEAilZ+HUMMvwH6Hi+3y3Z9UBVjevkB3I3izPVtdOy+rzrp5syEf+czu
-         2vjwlYIqy5Ymmge8c2FwVFT+Ub0O5EQ9+cOW+oI4y0W7PAZb64DcWJ9COpfD2PK2D/tU
-         Wd9Gcjmgc7nml25I5E+Dya8iZO/AXUaMvwjonYk/EbiYUuN3L9e6O36KE0sKOb+owlSR
-         7TRPlC+kdaepmtWkC/Ad0GrE6a1O7ME0WOPohQFpr9rpN5aVv0qocfv4y157wTa3xHcQ
-         ZLtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DsWrY5rLCYMwsmN6y8s5YmSBG5RMEFfsiL0kEIJ+uHE=;
-        b=cBzZYpmCzlpXAlhYwTmIW8vDE+/iuG5eGsRWCeZMQpH+zt9RvoHgfNG/qJKV6y7rtO
-         Y/SrJF7+bCzFEZKKuPvfidBNxrKoGeFcaorMnEC6UZSEz/jqq89Wd0gBMnvlnP9K1MG1
-         HBX5b26N1S6HqpjHTynIiC6AHhJFu9RIMXcr7LIfSd7KLbTQJbdW0JkpUiENrpfN4tBH
-         0ihAg9wYc8G88GCNKnL6y1YBG/GZogofjS00ECkSEqlA0A9RYRfk6FQAkRRe2O2lqXQy
-         qoCMgFhFUekqypF4QAYUBCEasHx1X3d8gx9hhFM047k6+0P/oPJDhVr9bDUh8RQ6J+eU
-         dtYg==
-X-Gm-Message-State: APjAAAVG6neCZy7i40+3MBg8HHs+3rVEsb7HDAxd6O7OSQp9bQicWPIx
-        27dn0BIa/hYSemdBsTSkG7M758hMEv18vuEX4dApxg==
-X-Google-Smtp-Source: APXvYqzs79V97XmW9k+25z9oHG0lb59Wg3advClSdz/IglhclRiEXSaO+WftnNnFpHzrkdSG/C7twwjStrSXAkxdHQA=
-X-Received: by 2002:ab0:7694:: with SMTP id v20mr2008378uaq.60.1556173897438;
- Wed, 24 Apr 2019 23:31:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1553853990.git.amit.kucheria@linaro.org>
- <5583cae1-8fea-724a-24a4-59b38a205ac3@free.fr> <CAP245DUNo02QUkGDPFfzow9535GKO9x6ZusETRjEgTmnHL4D2g@mail.gmail.com>
- <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr> <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
- <903fa0a6-5c40-97b4-1c01-fd84f3e51c62@free.fr> <8e53ea22-d248-8c63-bcda-15b502eb9699@free.fr>
-In-Reply-To: <8e53ea22-d248-8c63-bcda-15b502eb9699@free.fr>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 25 Apr 2019 12:01:25 +0530
-Message-ID: <CAHLCerPj6MQ0LeqUHM_91NOW1cP0z75DD7oBnR7Q3-8rpCmnww@mail.gmail.com>
-Subject: Re: [PATCH v2 00/13] qcom: dts: thermal cleanups
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Content-Type: multipart/mixed; boundary="000000000000610ac3058754f8f5"
+        Thu, 25 Apr 2019 02:33:27 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52113 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbfDYGd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 02:33:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 23:33:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,392,1549958400"; 
+   d="scan'208";a="340598753"
+Received: from lxy-dell.sh.intel.com ([10.239.159.145])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Apr 2019 23:33:24 -0700
+Message-ID: <be509b34ba01a22845363aeb0b0f053f25c2d9c1.camel@intel.com>
+Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Like Xu <like.xu@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
+Date:   Thu, 25 Apr 2019 14:30:09 +0800
+In-Reply-To: <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
+References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
+         <20190424143238.GB18442@linux.intel.com>
+         <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
+         <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
+         <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000610ac3058754f8f5
-Content-Type: text/plain; charset="UTF-8"
+On Thu, 2019-04-25 at 14:02 +0800, Like Xu wrote:
+> On 2019/4/25 12:18, Xiaoyao Li wrote:
+> > On Thu, 2019-04-25 at 10:58 +0800, Like Xu wrote:
+> > > On 2019/4/24 22:32, Sean Christopherson wrote:
+> > > > Now that I understand how min() works...
+> > > > 
+> > > > On Mon, Apr 22, 2019 at 02:40:34PM +0800, Like Xu wrote:
+> > > > > Expose Intel V2 Extended Topology Enumeration Leaf to guest only when
+> > > > > host system has multiple software-visible die within each package.
+> > > > > 
+> > > > > Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> > > > > ---
+> > > > >    arch/x86/kvm/cpuid.c | 13 +++++++++++++
+> > > > >    1 file changed, 13 insertions(+)
+> > > > > 
+> > > > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > > > > index fd39516..9fc14f2 100644
+> > > > > --- a/arch/x86/kvm/cpuid.c
+> > > > > +++ b/arch/x86/kvm/cpuid.c
+> > > > > @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
+> > > > >    	return xcr0;
+> > > > >    }
+> > > > >    
+> > > > > +/* We need to check if the host cpu has multi-chip packaging
+> > > > > technology.
+> > > > > */
+> > > > > +static bool kvm_supported_intel_mcp(void)
+> > > > > +{
+> > > > > +	u32 eax, ignored;
+> > > > > +
+> > > > > +	cpuid_count(0x1f, 0, &eax, &ignored, &ignored, &ignored);
+> > > > 
+> > > > This is broken because of how CPUID works for unsupported input leafs:
+> > > > 
+> > > >     If a value entered for CPUID.EAX is higher than the maximum input
+> > > > value
+> > > >     for basic or extended function for that processor then the data for
+> > > > the
+> > > >     highest basic information leaf is returned.
+> > > > 
+> > > > For example, my system with a max basic leaf of 0x16 returns 0x00000e74
+> > > > for CPUID.1F.EAX.
+> > > 
+> > > You're right and the cpuid.1f.eax check is unreliable after I checked a
+> > > few machines.
+> > > 
+> > > > 
+> > > > > +
+> > > > > +	return boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && (eax !=
+> > > > > 0);
+> > > > 
+> > > > Checking 'eax != 0' is broken as it will be '0' when SMT is
+> > > > disabled.  ecx
+> > > > is the obvious choice since bits 15:8 are guaranteed to be non-zero when
+> > > > the leaf is valid.
+> > > 
+> > > I agree with this and ecx[15:8] makes sense.
+> > > 
+> > > > 
+> > > > I think we can skip the vendor check.  AFAIK, CPUID.1F isn't used by
+> > > > AMD,
+> > > > and since AMD and Intel try to maintain a semblance of CPUID
+> > > > compatibility
+> > > > it seems more likely that AMD/Hygon would implement CPUID.1F as-is
+> > > > rather
+> > > > than repurpose it to mean something else entirely.
+> > > 
+> > > If it's true, let's skip the vendor check.
+> > > 
+> > > // I have to mention that AMD already has MCP CPUs.
+> > > 
+> > > > 
+> > > > > +}
+> > > > > +
+> > > > >    #define F(x) bit(X86_FEATURE_##x)
+> > > > >    
+> > > > >    int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+> > > > > @@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct
+> > > > > kvm_cpuid_entry2 *entry, u32 function,
+> > > > >    	switch (function) {
+> > > > >    	case 0:
+> > > > >    		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 :
+> > > > > 0xd));
+> > > > > +		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry-
+> > > > > >eax;
+> > > > 
+> > > > If we put everything together, I think the code can be reduced to:
+> > > > 
+> > > > 		/* comment about multi-chip leaf... */
+> > > > 		if (entry->eax >= 0x1f && cpuid_ecx(0x1f))
+> > > > 			entry->eax = 0x1f;
+> > > > 		else
+> > > > 			entry->eax = min(entry->eax,
+> > > > 					 (u32)(f_intel_pt ? 0x14 :
+> > > > 0xd));
+> > > 
+> > > Based on:
+> > > 
+> > > 	ECX Bits 07 - 00: Level number. Same value in ECX input.
+> > > 	Bits 15 - 08: Level type.
+> > > 	Bits 31 - 16: Reserved.
+> > > 
+> > > how about using an increasing order:
+> > > 
+> > > 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+> > > 
+> > > 	// ... more checks when eax is between 0x14 and 0x1f if any
+> > > 
+> > > 	/* Check if the host cpu has multi-chip packaging technology.*/
+> > > 	if (((cpuid_ecx(0x1f) >> 8) & 0xff) != 0)
+> > > 		entry->eax = 0x1f;
+> > 
+> > As Sean pointed out, you cannot rely on the output of cpuid.1f to indicate
+> > the
+> > existence of leaf 1f. If maximum basic leaf supported is smaller than 1f,
+> > the
+> > data returned by cpuid_ecx(0x1f) is the actual highest basic information
+> > leaf of
+> > the hardware.
+> 
+> I don't think so.
+> 
+> > So using "entry->eax >= 0x1f" from cpuid.0H is and only is the right way to
+> > check the existence of leaf 1f.
+> > 
+> > We can simply use (cpuid_ecx(0x1f) & 0x0000ff00) to avoid the unnecessory
+> > shifting operation.
+> 
+> I borrowed this "unnecessory" shifting operation from host 
+> check_extended_topology_leaf() and we may do better on this.
+> 
+> > Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes is that
+> > we
+> > cannot assmue the reserved bits 31:16 of ECX is always 0 for the future
+> > generation.
+> 
+> It's true cause the statement in public spec is not "Reserved = 0" but 
+> "Bits 31 - 16: Reserved".
+> 
+> > 
+> > In my opinion, Sean's codes is OK and much simple and clear.
+> 
+> If the host cpuid.0.eax is greater than 0x1f but actually it doesn't
+> have multi-chip packaging technology and we may want to expose 
+> entry->eax to some value smaller than 0x1f but greater than 0x14, much 
+> effort needs to apply on Sean's code.
+> 
+> My improvement is good to overwrite cpuid.0.eax in future usage
+> from the perspective of kvm feature setting not just from value check.
 
-Marc, can you please test these 3 patches on top of my original series?
+Alright, there is something wrong in your code that you haven't realised. 
 
-Andy, patches 1 and 2 fix problems that already exist upstream. They
-were not introduced by my series.
-Patch 3 fixes an issue with my series where the name of the thermal
-zone was too long. You can choose to fold it into the patch titled
-"arm64: dts: msm8998: thermal: Add temperature sensors near major
-peripherals" or add it as a new patch with a Fixes tag.
+When you do 
+	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
 
-On Wed, Apr 24, 2019 at 8:00 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
->
-> On 23/04/2019 15:10, Marc Gonzalez wrote:
->
-> > Sure. I can give you a Tested-by once everything works on the MEDIABOX I have.
-> >
-> > You mention the 4 thermal_zone*/temp failures.
-> >
-> > What about the cluster0-mhm-thermal and cluster1-mhm-thermal failures?
->
-> I have synced up with today's linux-next.
+it changes the entry->eax if entry->eax > 0x14. So you cannot directly use
+cpuid_ecx(0x1f). At least, you need to cache the value of entry->eax, like:
+	
+	u32 max_leaf = entry->eax;
+	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+	
+	//...leaf between 0x14 and 0x1f
+	
+	if (max_leaf >= 0x1f && (cpuid_ecx(0x1f) & 0x0000ff00))
+ 		entry->eax = 0x1f;
 
-Thanks for the report. Can you add the attached couple of patches and retest?
+However, handling in increasing order in totally wrong. Since it's to report the
+max the leaf supported, we should handle in descending order, which is what Sean
+does.
 
-> # dmesg | grep thermal
-> Failed to build cluster0-mhm-thermal zone -22
-> Failed to build cluster1-mhm-thermal zone -22
+> > All need to do is using (cpuid_ecx(0x1f) & 0x0000ff00) to verify the leaf.1f
+> > is
+> > valid.
+> > 
+> > Thanks,
+> > -Xiaoyao
+> > > 	// ... more checks when eax greater than 0x1f if any
+> > > 
+> > > are we OK with it?
+> > > 
+> > > > >    		break;
+> > > > >    	case 1:
+> > > > >    		entry->edx &= kvm_cpuid_1_edx_x86_features;
+> > > > > @@ -544,6 +555,8 @@ static inline int __do_cpuid_ent(struct
+> > > > > kvm_cpuid_entry2 *entry, u32 function,
+> > > > >    		entry->edx = edx.full;
+> > > > >    		break;
+> > > > >    	}
+> > > > > +	/* function 0x1f has additional index. */
+> > > > > +	case 0x1f:
+> > > > >    	/* function 0xb has additional index. */
+> > > > >    	case 0xb: {
+> > > > >    		int i, level_type;
+> > > > > -- 
+> > > > > 1.8.3.1
+> > > > > 
+> > > 
+> > > 
+> > 
+> > 
+> 
+> 
 
-This one turned out to be a silly one, The name of the thermal zone is
-restricted to under 20 characters. Fixed that with patch 3.
-
-> # for F in $(find /sys/class/thermal/thermal_zone?/ /sys/class/thermal/thermal_zone??/ -type f); do echo $F; cat $F; done
-> /sys/class/thermal/thermal_zone0/uevent
-> /sys/class/thermal/thermal_zone0/trip_point_0_hyst
-> 2000
-> /sys/class/thermal/thermal_zone0/mode
-> enabled
-> /sys/class/thermal/thermal_zone0/power/runtime_active_time
-> 0
-> /sys/class/thermal/thermal_zone0/power/runtime_status
-> unsupported
-
-<snip>
-
-> /sys/class/thermal/thermal_zone8/type
-> gpu-thermal-bottom
-> /sys/class/thermal/thermal_zone8/offset
-> 0
-> /sys/class/thermal/thermal_zone8/slope
-> 1
-> /sys/class/thermal/thermal_zone8/trip_point_0_type
-> hot
-> /sys/class/thermal/thermal_zone8/k_po
-> 0
-> /sys/class/thermal/thermal_zone8/integral_cutoff
-> 0
-> /sys/class/thermal/thermal_zone8/k_i
-> 0
-> /sys/class/thermal/thermal_zone8/k_pu
-> 0
-> /sys/class/thermal/thermal_zone8/temp
-> cat: read error: Invalid argument
-
-Patch 2 should fix this and thermal_zone9 below.
-
-> /sys/class/thermal/thermal_zone8/trip_point_0_temp
-> 90000
-> /sys/class/thermal/thermal_zone9/uevent
-> /sys/class/thermal/thermal_zone9/trip_point_0_hyst
-> 2000
-> /sys/class/thermal/thermal_zone9/passive
-> 0
-> /sys/class/thermal/thermal_zone9/mode
-> disabled
-> /sys/class/thermal/thermal_zone9/power/runtime_active_time
-> 0
-> /sys/class/thermal/thermal_zone9/power/runtime_status
-> unsupported
-> /sys/class/thermal/thermal_zone9/power/autosuspend_delay_ms
-> cat: read error: Input/output error
-> /sys/class/thermal/thermal_zone9/power/runtime_suspended_time
-> 0
-> /sys/class/thermal/thermal_zone9/power/control
-> auto
-> /sys/class/thermal/thermal_zone9/available_policies
-> step_wise
-> /sys/class/thermal/thermal_zone9/policy
-> step_wise
-> /sys/class/thermal/thermal_zone9/k_d
-> 0
-> /sys/class/thermal/thermal_zone9/sustainable_power
-> 0
-> /sys/class/thermal/thermal_zone9/type
-> gpu-thermal-top
-> /sys/class/thermal/thermal_zone9/offset
-> 0
-> /sys/class/thermal/thermal_zone9/slope
-
-<snip>
-
-> /sys/class/thermal/thermal_zone18/available_policies
-> step_wise
-> /sys/class/thermal/thermal_zone18/policy
-> step_wise
-> /sys/class/thermal/thermal_zone18/k_d
-> 0
-> /sys/class/thermal/thermal_zone18/sustainable_power
-> 0
-> /sys/class/thermal/thermal_zone18/type
-> battery-thermal
-
-This look wrong. TSENS shouldn't have board-specific thermal zones.
-
-<snip>
-
-> /sys/class/thermal/thermal_zone19/k_d
-> 0
-> /sys/class/thermal/thermal_zone19/sustainable_power
-> 0
-> /sys/class/thermal/thermal_zone19/type
-> skin-thermal
-
-And this too. See patch 1 to fix this existing issue (not introduced
-by my series).
-
---000000000000610ac3058754f8f5
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-arm64-dts-msm8998-mtp-thermal-Remove-skin-and-batter.patch"
-Content-Disposition: attachment; 
-	filename="0001-arm64-dts-msm8998-mtp-thermal-Remove-skin-and-batter.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_juw7920c0>
-X-Attachment-Id: f_juw7920c0
-
-RnJvbSA5NDY5OGUxOWI2MzI5ZTk4NDA0ZmY5YjljYzBjOTBhMzA2MmZhNWU1IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpNZXNzYWdlLUlkOiA8OTQ2OThlMTliNjMyOWU5ODQwNGZmOWI5Y2MwYzkw
-YTMwNjJmYTVlNS4xNTU2MTY5NjM3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+CkZyb206
-IEFtaXQgS3VjaGVyaWEgPGFtaXQua3VjaGVyaWFAbGluYXJvLm9yZz4KRGF0ZTogVGh1LCAyNSBB
-cHIgMjAxOSAwMToyMjo1MCArMDUzMApTdWJqZWN0OiBbUEFUQ0ggMS8yXSBhcm02NDogZHRzOiBt
-c204OTk4LW10cDogdGhlcm1hbDogUmVtb3ZlIHNraW4gYW5kIGJhdHRlcnkKIHRoZXJtYWwgem9u
-ZXMKClRoZSBtc204OTk4LW10cCBkb2Vzbid0IGhhdmUgVFNFTlMtYmFzZWQgc2Vuc29ycyB3aXJl
-ZCB1cCBmb3Igc2tpbiBhbmQKYmF0dGVyeSB0aGVybWFsIHpvbmVzLiBUU0VOUyBzZW5zb3JzIHNo
-b3VsZCBiZSBjb21tb24gYWNyb3NzIGFsbCBib2FyZHMKdXNpbmcgdGhlIFNvQyBhbmQgc2hvdWxk
-bid0IGJlIGJvYXJkLXNwZWNpZmljIGFzIHRoZXNlIGVudHJpZXMuCgpUaGV5IGFsc28gc2hvdyB0
-aGUgZm9sbG93aW5nIGVycm9yIHdoZW4gdHJ5aW5nIHRvIHJlYWQgdGhlIHRlbXBlcmF0dXJlCgog
-ICBjYXQ6IHJlYWQgZXJyb3I6IEludmFsaWQgYXJndW1lbnQKClJlbW92ZSB0aGVzZSBib2FyZC1z
-cGVjaWZpYyBlcnJvbmVvdXMgdGhlcm1hbCB6b25lcy4KCkZpeGVzOiA0NDQ5YjZmMjQ4ZDkgKCJh
-cm02NDogZHRzOiBxY29tOiBtc204OTk4OiBBZGQgdHNlbnMgYW5kIHRoZXJtYWwtem9uZXMiKQpT
-aWduZWQtb2ZmLWJ5OiBBbWl0IEt1Y2hlcmlhIDxhbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+Ci0t
-LQogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL21zbTg5OTgtbXRwLmR0c2kgfCAzOCAtLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDM4IGRlbGV0aW9ucygtKQoKZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4LW10cC5kdHNpIGIvYXJjaC9h
-cm02NC9ib290L2R0cy9xY29tL21zbTg5OTgtbXRwLmR0c2kKaW5kZXggZjA5MDEwNjdiMDQzLi42
-MGJkZjc0ODVmMGUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4
-LW10cC5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4LW10cC5kdHNp
-CkBAIC0xNSw0NCArMTUsNiBAQAogCQlzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjExNTIwMG44IjsK
-IAl9OwogCi0JdGhlcm1hbC16b25lcyB7Ci0JCWJhdHRlcnktdGhlcm1hbCB7Ci0JCQlwb2xsaW5n
-LWRlbGF5LXBhc3NpdmUgPSA8MjUwPjsKLQkJCXBvbGxpbmctZGVsYXkgPSA8MTAwMD47Ci0KLQkJ
-CXRoZXJtYWwtc2Vuc29ycyA9IDwmdHNlbnMwIDA+OwotCi0JCQl0cmlwcyB7Ci0JCQkJYmF0dGVy
-eV9jcml0OiB0cmlwMCB7Ci0JCQkJCXRlbXBlcmF0dXJlID0gPDYwMDAwPjsKLQkJCQkJaHlzdGVy
-ZXNpcyA9IDwyMDAwPjsKLQkJCQkJdHlwZSA9ICJjcml0aWNhbCI7Ci0JCQkJfTsKLQkJCX07Ci0J
-CX07Ci0KLQkJc2tpbi10aGVybWFsIHsKLQkJCXBvbGxpbmctZGVsYXktcGFzc2l2ZSA9IDwyNTA+
-OwotCQkJcG9sbGluZy1kZWxheSA9IDwxMDAwPjsKLQotCQkJdGhlcm1hbC1zZW5zb3JzID0gPCZ0
-c2VuczEgNT47Ci0KLQkJCXRyaXBzIHsKLQkJCQlza2luX2FsZXJ0OiB0cmlwMCB7Ci0JCQkJCXRl
-bXBlcmF0dXJlID0gPDQ0MDAwPjsKLQkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsKLQkJCQkJdHlw
-ZSA9ICJwYXNzaXZlIjsKLQkJCQl9OwotCi0JCQkJc2tpcF9jcml0OiB0cmlwMSB7Ci0JCQkJCXRl
-bXBlcmF0dXJlID0gPDcwMDAwPjsKLQkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsKLQkJCQkJdHlw
-ZSA9ICJjcml0aWNhbCI7Ci0JCQkJfTsKLQkJCX07Ci0JCX07Ci0JfTsKLQogCXZwaF9wd3I6IHZw
-aC1wd3ItcmVndWxhdG9yIHsKIAkJY29tcGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwogCQly
-ZWd1bGF0b3ItbmFtZSA9ICJ2cGhfcHdyIjsKLS0gCjIuMTcuMQoK
---000000000000610ac3058754f8f5
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0002-arm64-dts-msm8998-thermal-Fix-number-of-supported-se.patch"
-Content-Disposition: attachment; 
-	filename="0002-arm64-dts-msm8998-thermal-Fix-number-of-supported-se.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_juw7921h1>
-X-Attachment-Id: f_juw7921h1
-
-RnJvbSBlZGE3ZGEyZDAwOThkNjYxNzY3MWU2NzY1ODIyNmUzYzVmYjA3MDQ1IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpNZXNzYWdlLUlkOiA8ZWRhN2RhMmQwMDk4ZDY2MTc2NzFlNjc2NTgyMjZl
-M2M1ZmIwNzA0NS4xNTU2MTY5NjM3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+CkluLVJl
-cGx5LVRvOiA8OTQ2OThlMTliNjMyOWU5ODQwNGZmOWI5Y2MwYzkwYTMwNjJmYTVlNS4xNTU2MTY5
-NjM3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+ClJlZmVyZW5jZXM6IDw5NDY5OGUxOWI2
-MzI5ZTk4NDA0ZmY5YjljYzBjOTBhMzA2MmZhNWU1LjE1NTYxNjk2MzcuZ2l0LmFtaXQua3VjaGVy
-aWFAbGluYXJvLm9yZz4KRnJvbTogQW1pdCBLdWNoZXJpYSA8YW1pdC5rdWNoZXJpYUBsaW5hcm8u
-b3JnPgpEYXRlOiBUaHUsIDI1IEFwciAyMDE5IDAxOjUyOjQ0ICswNTMwClN1YmplY3Q6IFtQQVRD
-SCAyLzJdIGFybTY0OiBkdHM6IG1zbTg5OTg6IHRoZXJtYWw6IEZpeCBudW1iZXIgb2Ygc3VwcG9y
-dGVkCiBzZW5zb3JzCgptc204OTk4IGhhcyAyMiBzZW5zb3JzIGNvbm5lY3RlZCBpbiB0b3RhbCwg
-MTQgb24gdGhlIDFzdCBjb250cm9sbGVyLCA4Cm9uIHRoZSAybmQgY29udHJvbGxlci4gSW5jcmVh
-c2UgdGhlIG51bWJlciB0byBhbGxvdyBzZW5zb3JzIHdpdGggSUQgMTIKYW5kIDEzIHRvIGJlIHJl
-Z2lzdGVyZWQuCgpTaWduZWQtb2ZmLWJ5OiBBbWl0IEt1Y2hlcmlhIDxhbWl0Lmt1Y2hlcmlhQGxp
-bmFyby5vcmc+Ci0tLQogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL21zbTg5OTguZHRzaSB8IDIg
-Ky0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4LmR0c2kgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL3Fjb20vbXNtODk5OC5kdHNpCmluZGV4IDk5ODAxN2Q0ZDg0Ny4uMDYyYTkzYTEy
-MTk4IDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vbXNtODk5OC5kdHNpCisr
-KyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4LmR0c2kKQEAgLTc0NSw3ICs3NDUs
-NyBAQAogCQkJcmVnID0gPDB4MTBhYjAwMCAweDEwMDA+LCAvKiBUTSAqLwogCQkJICAgICAgPDB4
-MTBhYTAwMCAweDEwMDA+OyAvKiBTUk9UICovCiAKLQkJCSNxY29tLHNlbnNvcnMgPSA8MTI+Owor
-CQkJI3Fjb20sc2Vuc29ycyA9IDwxND47CiAJCQkjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8MT47
-CiAJCX07CiAKLS0gCjIuMTcuMQoK
---000000000000610ac3058754f8f5
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0003-arm64-dts-msm8998-thermal-Restrict-thermal-zone-name.patch"
-Content-Disposition: attachment; 
-	filename="0003-arm64-dts-msm8998-thermal-Restrict-thermal-zone-name.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_juw9kjgr2>
-X-Attachment-Id: f_juw9kjgr2
-
-RnJvbSA0M2VlMDExMDA2NTYyYmFjMzA5MWZiYmU1NjNkZjg4MzQ2MGU5OGE2IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpNZXNzYWdlLUlkOiA8NDNlZTAxMTAwNjU2MmJhYzMwOTFmYmJlNTYzZGY4
-ODM0NjBlOThhNi4xNTU2MTczNTA3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+CkluLVJl
-cGx5LVRvOiA8OTQ2OThlMTliNjMyOWU5ODQwNGZmOWI5Y2MwYzkwYTMwNjJmYTVlNS4xNTU2MTcz
-NTA3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+ClJlZmVyZW5jZXM6IDw5NDY5OGUxOWI2
-MzI5ZTk4NDA0ZmY5YjljYzBjOTBhMzA2MmZhNWU1LjE1NTYxNzM1MDcuZ2l0LmFtaXQua3VjaGVy
-aWFAbGluYXJvLm9yZz4KRnJvbTogQW1pdCBLdWNoZXJpYSA8YW1pdC5rdWNoZXJpYUBsaW5hcm8u
-b3JnPgpEYXRlOiBUaHUsIDI1IEFwciAyMDE5IDExOjUzOjI3ICswNTMwClN1YmplY3Q6IFtQQVRD
-SCAzLzNdIGFybTY0OiBkdHM6IG1zbTg5OTg6IHRoZXJtYWw6IFJlc3RyaWN0IHRoZXJtYWwgem9u
-ZSBuYW1lCiBsZW5ndGggdG8gdW5kZXIgMjAKClRoZSB0aGVybWFsIGNvcmUgcmVzdHJpY3RzIG5h
-bWVzIG9mIHRoZXJtYWwgem9uZXMgdG8gdW5kZXIgMjAKY2hhcmFjdGVycy4gRml4IHRoZSBuYW1l
-cyBmb3IgYSBjb3VwbGUgb2YgbXNtODk5OCB0aGVybWFsIHpvbmVzLgoKU2lnbmVkLW9mZi1ieTog
-QW1pdCBLdWNoZXJpYSA8YW1pdC5rdWNoZXJpYUBsaW5hcm8ub3JnPgotLS0KIGFyY2gvYXJtNjQv
-Ym9vdC9kdHMvcWNvbS9tc204OTk4LmR0c2kgfCA0ICsrLS0KIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
-c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290
-L2R0cy9xY29tL21zbTg5OTguZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4
-LmR0c2kKaW5kZXggMDYyYTkzYTEyMTk4Li4wMTc1NzgyOWQ1ZjMgMTAwNjQ0Ci0tLSBhL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTk4LmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0
-cy9xY29tL21zbTg5OTguZHRzaQpAQCAtNTM2LDcgKzUzNiw3IEBACiAJCQl9OwogCQl9OwogCi0J
-CWNsdXN0ZXIwLW1obS10aGVybWFsIHsKKwkJY2x1c3QwLW1obS10aGVybWFsIHsKIAkJCXBvbGxp
-bmctZGVsYXktcGFzc2l2ZSA9IDwyNTA+OwogCQkJcG9sbGluZy1kZWxheSA9IDwxMDAwPjsKIApA
-QCAtNTUxLDcgKzU1MSw3IEBACiAJCQl9OwogCQl9OwogCi0JCWNsdXN0ZXIxLW1obS10aGVybWFs
-IHsKKwkJY2x1c3QxLW1obS10aGVybWFsIHsKIAkJCXBvbGxpbmctZGVsYXktcGFzc2l2ZSA9IDwy
-NTA+OwogCQkJcG9sbGluZy1kZWxheSA9IDwxMDAwPjsKIAotLSAKMi4xNy4xCgo=
---000000000000610ac3058754f8f5--
