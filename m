@@ -2,205 +2,155 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F3CC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8ACCC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCA3205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:56:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CPnCXH5w"
+	by mail.kernel.org (Postfix) with ESMTP id 0BBD8205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388006AbfDYT4B (ORCPT
+        id S1730597AbfDYT4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:56:01 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38454 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387648AbfDYTxU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:53:20 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 10so438549pfo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bgGGBhw0+vDHwgRg8Lg3/ie77JvSZeI8JjKHAU8cgFw=;
-        b=CPnCXH5wv5s81Bmkz/8nI8XhRVwekiRbWHgD9nnyYlY2/Jec/MMGJZzKpHhvCa00rI
-         eyW8G9UkqbFo7R81IWY66MsHBgyZRS06wgiuLqMmRpE5kKgnKbgmP5PDL2VTWwdNxjwo
-         2Q1STDGyQQAohFPmQWIC8+Q7YvgX/WGjV1NI69pMCwL5jChkrtwnDtaTpOikhBGgnOHC
-         BuVyvJ10bWA4DX3f1+pA2zySpnmjbnRDpIXqECoLBBOLLPR2lEyl9R+Bt9lKcYjTimxH
-         rfzhVbXOGMaixnTIu+caylqN183Uw9n36xNK2OlMt0psyOSe3vfLFGsLBSD6FTNtairq
-         0rhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=bgGGBhw0+vDHwgRg8Lg3/ie77JvSZeI8JjKHAU8cgFw=;
-        b=Wl/FezMeOtUk5R2+P8DFdXYeNA91nsH8mcPjkcU4qVRNdZc8EJh44EUcq5IHXLUcHo
-         mP63WugzFLMNXUDLtM0hZsochi7LPBw6WcKm7tG6orIEe613a1jLDPcGsdVTEAF7pku8
-         d6AOZq2MOQH9xoGr4dxFDhjYE8H/5dO8iDMojon02cZmTfllVlg9FdtHAIkquVvMEVIT
-         CLPREkuHo9iMVUHmDZzbElt0epOOdp3vK+F1VMVtj19yDlfXYSiEPqqMCeYCxHgJ3QD5
-         duXtUX4Rg8My21idiEGXt2ojC4m93GsctEXNLHcAy91ztq756ncOAFml+IdZevyq1ONN
-         C6Mw==
-X-Gm-Message-State: APjAAAXkZWcegiXQTyfmUbAP7BwFqUNvp1uNlViQyNnfmsw818IarNKg
-        MqRw7R2MrweHy6/MxyRVfYzbUg==
-X-Google-Smtp-Source: APXvYqwAyO7XaKwfEVuZ2QDMyExW3v/1N/bP7mphwS45UyE9QC+p5Eo50AS2lvYWjPT5TtN0v9zeKA==
-X-Received: by 2002:a63:cd50:: with SMTP id a16mr20239491pgj.394.1556221998950;
-        Thu, 25 Apr 2019 12:53:18 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id t64sm47261961pfa.86.2019.04.25.12.53.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 12:53:18 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 05/32] coresight: replicator: Prepare for merging with dynamic-replicator
-Date:   Thu, 25 Apr 2019 13:52:43 -0600
-Message-Id: <20190425195310.31562-6-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190425195310.31562-1-mathieu.poirier@linaro.org>
-References: <20190425195310.31562-1-mathieu.poirier@linaro.org>
+        Thu, 25 Apr 2019 15:56:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:4911 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729259AbfDYT4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 15:56:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 12:56:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
+   d="scan'208";a="226726529"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga001.jf.intel.com with ESMTP; 25 Apr 2019 12:56:19 -0700
+Date:   Thu, 25 Apr 2019 12:48:09 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v8 09/15] x86/split_lock: Define MSR TEST_CTL register
+Message-ID: <20190425194808.GB64477@romley-ivt3.sc.intel.com>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
+ <1556134382-58814-10-git-send-email-fenghua.yu@intel.com>
+ <20190425062126.GC40105@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425062126.GC40105@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+On Thu, Apr 25, 2019 at 08:21:26AM +0200, Ingo Molnar wrote:
+> 
+> * Fenghua Yu <fenghua.yu@intel.com> wrote:
+> 
+> > Setting bit 29 in MSR TEST_CTL (0x33) enables split lock detection and
+> > clearing the bit disables split lock detection.
+> > 
+> > Define the MSR and the bit. The definitions will be used in enabling or
+> > disabling split lock detection.
+> > 
+> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > ---
+> >  arch/x86/include/asm/msr-index.h | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> > index f65ef6f783d2..296eeb761ab6 100644
+> > --- a/arch/x86/include/asm/msr-index.h
+> > +++ b/arch/x86/include/asm/msr-index.h
+> > @@ -39,6 +39,10 @@
+> >  
+> >  /* Intel MSRs. Some also available on other CPUs */
+> >  
+> > +#define MSR_TEST_CTL				0x00000033
+> > +#define TEST_CTL_SPLIT_LOCK_DETECT_SHIFT	29
+> > +#define TEST_CTL_SPLIT_LOCK_DETECT		BIT(29)
+> 
+> Three problems:
+> 
+>  - Is MSR_TEST_CTL is not really a canonical MSR name... A quick look at 
+>    msr-index reveals the prevailing nomenclature:
+> 
+>      dagon:~/tip> git grep -h 'define MSR' arch/x86/include/asm/msr-index.h | cut -d_ -f1-2 | sort -n | uniq -c | sort -n | tail -10
+>        8 #define MSR_K8
+>        8 #define MSR_MTRRfix4K
+>       12 #define MSR_CORE
+>       13 #define MSR_IDT
+>       14 #define MSR_K7
+>       16 #define MSR_PKG
+>       19 #define MSR_F15H
+>       33 #define MSR_AMD64
+>       83 #define MSR_P4
+>      163 #define MSR_IA32
+> 
+>    I.e. this shouldn't this be something like MSR_IA32_TEST_CTL - or this 
+>    the name the Intel SDM uses? (I haven't checked.)
 
-As a preparatory step to merge the separate drivers for static and
-dynamic replicators, annotate the static replicator specific details.
-Also refactor the probe routine to make it generic in order to merge
-the drivers easily.
+TEST_CTL is the MSR's exact name shown in Table 2-14 in the latest SDM.
+https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- .../coresight/coresight-replicator.c          | 62 +++++++++++--------
- 1 file changed, 36 insertions(+), 26 deletions(-)
+So can I still use MSR_TEST_CTL here?
 
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-index feac98315471..43cbcf1e7be8 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -56,58 +56,68 @@ static const struct coresight_ops replicator_cs_ops = {
- 	.link_ops	= &replicator_link_ops,
- };
- 
--static int replicator_probe(struct platform_device *pdev)
-+static int replicator_probe(struct device *dev)
- {
--	int ret;
--	struct device *dev = &pdev->dev;
-+	int ret = 0;
- 	struct coresight_platform_data *pdata = NULL;
- 	struct replicator_drvdata *drvdata;
- 	struct coresight_desc desc = { 0 };
--	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *np = dev->of_node;
- 
- 	if (np) {
- 		pdata = of_get_coresight_platform_data(dev, np);
- 		if (IS_ERR(pdata))
- 			return PTR_ERR(pdata);
--		pdev->dev.platform_data = pdata;
-+		dev->platform_data = pdata;
- 	}
- 
- 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
- 	if (!drvdata)
- 		return -ENOMEM;
- 
--	drvdata->dev = &pdev->dev;
--	drvdata->atclk = devm_clk_get(&pdev->dev, "atclk"); /* optional */
-+	drvdata->dev = dev;
-+	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
- 	if (!IS_ERR(drvdata->atclk)) {
- 		ret = clk_prepare_enable(drvdata->atclk);
- 		if (ret)
- 			return ret;
- 	}
--	pm_runtime_get_noresume(&pdev->dev);
--	pm_runtime_set_active(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
--	platform_set_drvdata(pdev, drvdata);
-+
-+	dev_set_drvdata(dev, drvdata);
- 
- 	desc.type = CORESIGHT_DEV_TYPE_LINK;
- 	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
- 	desc.ops = &replicator_cs_ops;
--	desc.pdata = pdev->dev.platform_data;
--	desc.dev = &pdev->dev;
-+	desc.pdata = dev->platform_data;
-+	desc.dev = dev;
- 	drvdata->csdev = coresight_register(&desc);
- 	if (IS_ERR(drvdata->csdev)) {
- 		ret = PTR_ERR(drvdata->csdev);
--		goto out_disable_pm;
-+		goto out_disable_clk;
- 	}
- 
--	pm_runtime_put(&pdev->dev);
-+	pm_runtime_put(dev);
- 
--	return 0;
--
--out_disable_pm:
--	if (!IS_ERR(drvdata->atclk))
-+out_disable_clk:
-+	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
- 		clk_disable_unprepare(drvdata->atclk);
--	pm_runtime_put_noidle(&pdev->dev);
--	pm_runtime_disable(&pdev->dev);
-+	return ret;
-+}
-+
-+static int static_replicator_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	pm_runtime_get_noresume(&pdev->dev);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = replicator_probe(&pdev->dev);
-+
-+	if (ret) {
-+		pm_runtime_put_noidle(&pdev->dev);
-+		pm_runtime_disable(&pdev->dev);
-+	}
- 
- 	return ret;
- }
-@@ -139,18 +149,18 @@ static const struct dev_pm_ops replicator_dev_pm_ops = {
- 			   replicator_runtime_resume, NULL)
- };
- 
--static const struct of_device_id replicator_match[] = {
-+static const struct of_device_id static_replicator_match[] = {
- 	{.compatible = "arm,coresight-replicator"},
- 	{}
- };
- 
--static struct platform_driver replicator_driver = {
--	.probe          = replicator_probe,
-+static struct platform_driver static_replicator_driver = {
-+	.probe          = static_replicator_probe,
- 	.driver         = {
- 		.name   = "coresight-replicator",
--		.of_match_table = replicator_match,
-+		.of_match_table = static_replicator_match,
- 		.pm	= &replicator_dev_pm_ops,
- 		.suppress_bind_attrs = true,
- 	},
- };
--builtin_platform_driver(replicator_driver);
-+builtin_platform_driver(static_replicator_driver);
--- 
-2.17.1
+> 
+>  - The canonical way to define MSR capabilities is to use the MSR's name 
+>    as a prefix. I.e.:
+> 
+>         MSR_TEST_CTL
+>         MSR_TEST_CTL_SPLIT_LOCK_DETECT_BIT
+>         MSR_TEST_CTL_SPLIT_LOCK_DETECT
+>         etc.
+> 
+>    Instead of the random mixture of MSR_ prefixed and non-prefixed 
+>    MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT and 
+>    TEST_CTL_SPLIT_LOCK_DETECT names.
+> 
+>  - Finally, this is not how we define bits - the _SHIFT postfix is actively
+>    confusing as we usually denote _SHIFT values with something that is 
+>    used in a bit-shift operation, which this isn't. Instead the proper 
+>    scheme is to postfix the bit number with _BIT and the mask with _MASK, 
+>    i.e. something like:
+> 
+>      #define MSR_TEST_CTL				0x00000033
+>      #define MSR_TEST_CTL_SPLIT_LOCK_DETECT_BIT		29
+>      #define MSR_TEST_CTL_SPLIT_LOCK_DETECT		BIT(MSR_TEST_CTL_SPLIT_LOCK_DETECT_BIT)
+> 
+> Note how this cleans up actual usage:
+> 
+> +       msr_set_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
+> +       this_cpu_or(msr_test_ctl_cache, TEST_CTL_SPLIT_LOCK_DETECT);
+> 
+> -       msr_set_bit(MSR_TEST_CTL, MSR_TEST_CTL_SPLIT_LOCK_DETECT_BIT);
+> -       this_cpu_or(msr_test_ctl_cache, MSR_TEST_CTL_SPLIT_LOCK_DETECT);
+> 
+> Frankly, this kind of disorganized code in a v8 submission is *really* 
+> disappointing, it's not like it's hard to look up these patterns and 
+> practices in existing code...
 
+OK. Will change the bit and mask definitions.
+
+Thanks.
+
+-Fenghua
