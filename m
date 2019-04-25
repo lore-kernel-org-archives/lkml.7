@@ -2,63 +2,64 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B26AC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBE2C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED50020651
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032B420651
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="i3T0oYje"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="YG0oyt1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbfDYQQd (ORCPT
+        id S1729609AbfDYQQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:16:33 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42234 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbfDYQOd (ORCPT
+        Thu, 25 Apr 2019 12:16:38 -0400
+Received: from mail-ed1-f50.google.com ([209.85.208.50]:34134 "EHLO
+        mail-ed1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbfDYQO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:14:33 -0400
-Received: by mail-ed1-f67.google.com with SMTP id l25so374591eda.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:14:31 -0700 (PDT)
+        Thu, 25 Apr 2019 12:14:28 -0400
+Received: by mail-ed1-f50.google.com with SMTP id a6so426702edv.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 09:14:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZUR3j6htod8TbyFy5p0r2ITUFYxuGwpF70tHqt6V82w=;
-        b=i3T0oYjeJnwmJwEAud+bMH9716vwCpp8yZ+ieOczyz17Bpf3kpZjE8hQ3Jk3LwOrZ6
-         yDTwWietn7CikD3BXgnIZA7X/gihLQQV18odEGB2iRvOy01ekLUc2n+3Gi4/y5EMdVxt
-         WAzsL22/4FUQuIjfga7Wpd/xT3lPF8/qG2K41Bc2vLmnBDKUhPD1/Y3eNxlQvECWeRgv
-         QxbyDmGv3crngiXXHy0jQLVSKTvKNhwu9P29VugL0wuQLUZLTkomCx6RWzfUGrSIeDvk
-         LaNKiVDtdO8VjDx1ivgFdbFKJey0kLapc6MBceMvDAyHjYdkUfuBAz6eYcsZxU9yPfKz
-         jgnw==
+        bh=h9Q94xTTcevLLXvPD5iKQ146v4lVALmWfST8zwXY3LM=;
+        b=YG0oyt1PngBeS9TkHOIfUrhXiXEecTVmtTd/sfmRAC9wN0WJpD1laa2SdJydXrokN3
+         m6GGMhJDUYt0dOGs6TQzEiuuaQbDxIwowc82bSp32it2eAqXmROHgikGVh8SqZlfwuua
+         P4ZOtaG4jDs85gmnObwjAWkJva7eR9RAFCBgLfwVjbnl239t10SGbN8b+t4gZ5U7Kx1I
+         BybSf4E9ESukaJ8KT/msD2+FKBVlcGikJlPlfhNz7sRrASo6BuZ9Wot7VouNXG+Vpc2m
+         7N0hqUxPoOrbGOTmg/JtSau6Kg1HIWHhnGU///he0j+KetPb6V3W795ZN4AQRhXyNKU0
+         JcYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZUR3j6htod8TbyFy5p0r2ITUFYxuGwpF70tHqt6V82w=;
-        b=ANDs4LqhTzhQGX5tBObiFDw0ON06spnl2unXm7nLoX+Qqf/4nzrqOC8ngrjSUo//8Z
-         4JPjMU8HcXF4sTkgYBAHWRUXRGSUojC7MBYyv0h9mvFVZ1eVpB80vlUaDr36JLJWU+Zf
-         kzHq4KZpbLiXQ3C9PeViG5sjzDcFGmV0O6UBHsBuEveh/6Twz7ShuknyjjMdXbtL4zG2
-         uB5yT0FDavycOCaysIm3vN7PEm4VRj9nkqvtfOoShNuVErMCNasbmtgdN3m1ofs2Ottq
-         apjuhd5VYZoyCjGtpQ7Y7i3n6K36xn8O60at3370eVJ7wkj8E4rKBtr90yksdJd/XyJ4
-         1Ayw==
-X-Gm-Message-State: APjAAAXRvOpFyOpr6p3TF7BKB4plTV4t43zO+bJDrdVs4MoxM0Ski2xp
-        xpC63ropKOXYET6vz/cq/6faNlqQJtc=
-X-Google-Smtp-Source: APXvYqyaoanO8GKA8fKfWtEwaXr1QtRUm0dwQ0w2lGHjgjIhHUjg758nXoFyv/IB6zt0iq4ftD8c7w==
-X-Received: by 2002:a17:906:1249:: with SMTP id u9mr15669932eja.58.1556208871185;
-        Thu, 25 Apr 2019 09:14:31 -0700 (PDT)
+        bh=h9Q94xTTcevLLXvPD5iKQ146v4lVALmWfST8zwXY3LM=;
+        b=WdGe8qmNRJKvG2u2gbrzhvTq/I7LMT6jvIBCIp21YBdUSmFdO4r91aI1RqKHvgLZMo
+         9FDGqaEHqFGWsW8Da3Znlbqqe88JdcMTj6SqeMuQBHX2NYHzedOogMbuhXWplSCziKuW
+         LnCjTrbwpin16wI5L4IJG4AyrTR6F/oyN57FHOArP45JTynwBdPkmoTJCrCiBSV+U6Tw
+         aaKvDXC/PelRu3+pegx6aClMToNRBOQ/12ZLVSfzrWG6IgNGnEO0Opc/ZLx9ZNQR80++
+         ttGO8PXXWg/wuE9kBivKL7o72GG7E/SfQEI3/wCDVyvUrPtEudAEC+2t3DBUGDE9X0kF
+         RIjw==
+X-Gm-Message-State: APjAAAVLyJc5DiEt3fH8podToU9ewFx6TWu++i88yfMLt08M+n9GhzAK
+        CFYnTuiX0TK2ExIwb6CAj0u0yxWtV5w=
+X-Google-Smtp-Source: APXvYqxT8fhupq7fTmFd6IbqlAvrfcGwZL5nxLLaZozIv3j77V8ISNjpX3cl3AyPoStaVOMs+kOEBw==
+X-Received: by 2002:a50:9dc8:: with SMTP id l8mr25335851edk.180.1556208866417;
+        Thu, 25 Apr 2019 09:14:26 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id br19sm4147042ejb.48.2019.04.25.09.14.29
+        by smtp.gmail.com with ESMTPSA id br19sm4147042ejb.48.2019.04.25.09.14.24
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 25 Apr 2019 09:14:30 -0700 (PDT)
+        Thu, 25 Apr 2019 09:14:25 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <dima@arista.com>, Adrian Reber <adrian@lisas.de>,
+Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
+        Adrian Reber <adrian@lisas.de>,
         Andrei Vagin <avagin@openvz.org>,
         Andy Lutomirski <luto@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
@@ -74,9 +75,9 @@ Cc:     Dmitry Safonov <dima@arista.com>, Adrian Reber <adrian@lisas.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv3 08/27] timens: Shift /proc/uptime
-Date:   Thu, 25 Apr 2019 17:13:57 +0100
-Message-Id: <20190425161416.26600-9-dima@arista.com>
+Subject: [PATCHv3 05/27] timerfd/timens: Take into account ns clock offsets
+Date:   Thu, 25 Apr 2019 17:13:54 +0100
+Message-Id: <20190425161416.26600-6-dima@arista.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190425161416.26600-1-dima@arista.com>
 References: <20190425161416.26600-1-dima@arista.com>
@@ -87,34 +88,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Respect boottime inside time namespace for /proc/uptime
+From: Andrei Vagin <avagin@gmail.com>
 
+Make timerfd respect timens offsets.
+Provide a helper timens_ktime_to_host() that is useful to wire up
+timens to different kernel subsystems.
+
+Signed-off-by: Andrei Vagin <avagin@openvz.org>
+Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- fs/proc/uptime.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/timerfd.c                   |  8 +++++--
+ include/linux/hrtimer.h        |  1 +
+ include/linux/time_namespace.h | 40 ++++++++++++++++++++++++++++++++++
+ kernel/time/hrtimer.c          |  3 +++
+ 4 files changed, 50 insertions(+), 2 deletions(-)
 
-diff --git a/fs/proc/uptime.c b/fs/proc/uptime.c
-index a4c2791ab70b..5a1b228964fb 100644
---- a/fs/proc/uptime.c
-+++ b/fs/proc/uptime.c
-@@ -5,6 +5,7 @@
- #include <linux/sched.h>
- #include <linux/seq_file.h>
- #include <linux/time.h>
+diff --git a/fs/timerfd.c b/fs/timerfd.c
+index 6a6fc8aa1de7..a55ade09eee1 100644
+--- a/fs/timerfd.c
++++ b/fs/timerfd.c
+@@ -26,6 +26,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/compat.h>
+ #include <linux/rcupdate.h>
 +#include <linux/time_namespace.h>
- #include <linux/kernel_stat.h>
  
- static int uptime_proc_show(struct seq_file *m, void *v)
-@@ -20,6 +21,8 @@ static int uptime_proc_show(struct seq_file *m, void *v)
- 		nsec += (__force u64) kcpustat_cpu(i).cpustat[CPUTIME_IDLE];
+ struct timerfd_ctx {
+ 	union {
+@@ -179,6 +180,8 @@ static int timerfd_setup(struct timerfd_ctx *ctx, int flags,
+ 	htmode = (flags & TFD_TIMER_ABSTIME) ?
+ 		HRTIMER_MODE_ABS: HRTIMER_MODE_REL;
  
- 	ktime_get_boottime_ts64(&uptime);
-+	timens_add_boottime(&uptime);
++	htmode |= HRTIMER_MODE_NS;
 +
- 	idle.tv_sec = div_u64_rem(nsec, NSEC_PER_SEC, &rem);
- 	idle.tv_nsec = rem;
- 	seq_printf(m, "%lu.%02lu %lu.%02lu\n",
+ 	texp = timespec64_to_ktime(ktmr->it_value);
+ 	ctx->expired = 0;
+ 	ctx->ticks = 0;
+@@ -197,9 +200,10 @@ static int timerfd_setup(struct timerfd_ctx *ctx, int flags,
+ 
+ 	if (texp != 0) {
+ 		if (isalarm(ctx)) {
+-			if (flags & TFD_TIMER_ABSTIME)
++			if (flags & TFD_TIMER_ABSTIME) {
++				texp = timens_ktime_to_host(clockid, texp);
+ 				alarm_start(&ctx->t.alarm, texp);
+-			else
++			} else
+ 				alarm_start_relative(&ctx->t.alarm, texp);
+ 		} else {
+ 			hrtimer_start(&ctx->t.tmr, texp, htmode);
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 2e8957eac4d4..4b9c89c797ee 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -38,6 +38,7 @@ enum hrtimer_mode {
+ 	HRTIMER_MODE_REL	= 0x01,
+ 	HRTIMER_MODE_PINNED	= 0x02,
+ 	HRTIMER_MODE_SOFT	= 0x04,
++	HRTIMER_MODE_NS		= 0x08,
+ 
+ 	HRTIMER_MODE_ABS_PINNED = HRTIMER_MODE_ABS | HRTIMER_MODE_PINNED,
+ 	HRTIMER_MODE_REL_PINNED = HRTIMER_MODE_REL | HRTIMER_MODE_PINNED,
+diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
+index 5f0da6858b10..988414f7f791 100644
+--- a/include/linux/time_namespace.h
++++ b/include/linux/time_namespace.h
+@@ -56,6 +56,41 @@ static inline void timens_add_boottime(struct timespec64 *ts)
+                 *ts = timespec64_add(*ts, ns_offsets->monotonic_boottime_offset);
+ }
+ 
++static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
++{
++	struct timens_offsets *ns_offsets = current->nsproxy->time_ns->offsets;
++	struct timespec64 *offset;
++	ktime_t koff;
++
++	if (!ns_offsets)
++		return tim;
++
++	switch (clockid) {
++		case CLOCK_MONOTONIC:
++		case CLOCK_MONOTONIC_RAW:
++		case CLOCK_MONOTONIC_COARSE:
++			offset = &ns_offsets->monotonic_time_offset;
++			break;
++		case CLOCK_BOOTTIME:
++		case CLOCK_BOOTTIME_ALARM:
++			offset = &ns_offsets->monotonic_boottime_offset;
++			break;
++		default:
++			return tim;
++	}
++
++	koff = timespec64_to_ktime(*offset);
++	if (tim < koff)
++		tim = 0;
++	else if (KTIME_MAX - tim < -koff)
++		tim = KTIME_MAX;
++	else
++		tim = ktime_sub(tim, koff);
++
++	return tim;
++}
++
++
+ #else
+ static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
+ {
+@@ -82,6 +117,11 @@ static inline int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *ts
+ 
+ static inline void timens_add_monotonic(struct timespec64 *ts) {}
+ static inline void timens_add_boottime(struct timespec64 *ts) {}
++
++static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
++{
++	return tim;
++}
+ #endif
+ 
+ #endif /* _LINUX_TIMENS_H */
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 41dfff23c1f9..484a0efec1df 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -42,6 +42,7 @@
+ #include <linux/timer.h>
+ #include <linux/freezer.h>
+ #include <linux/compat.h>
++#include <linux/time_namespace.h>
+ 
+ #include <linux/uaccess.h>
+ 
+@@ -1069,6 +1070,8 @@ static int __hrtimer_start_range_ns(struct hrtimer *timer, ktime_t tim,
+ 
+ 	if (mode & HRTIMER_MODE_REL)
+ 		tim = ktime_add_safe(tim, base->get_time());
++	else if (mode & HRTIMER_MODE_NS)
++		tim = timens_ktime_to_host(base->clockid, tim);
+ 
+ 	tim = hrtimer_update_lowres(timer, tim, mode);
+ 
 -- 
 2.21.0
 
