@@ -2,87 +2,119 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1E5C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA4AC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10BDF2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA542084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 10:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556188357;
+	bh=ikNdpMJYg29HonRPDwbbNZqSQGpOz28XgRvY4DOUgIU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZjHsWcsoEoJy/4uBQ3wTRadsUI9Vbj5OXYZCzvlosbUH3q0ASBYtyItdAZeDUYKzf
+	 gSBd7pEi2ANr5Lqw4HJjL9lxMRtRi62ifrV+2q+pyzAKUyaYUijV0wTQrP+1/XWO0w
+	 U0UvHMIzqnbRz2b9WiViFuYP0NByu7dr8Ufomsn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbfDYKag (ORCPT
+        id S1730378AbfDYKcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 06:30:36 -0400
-Received: from tartarus.angband.pl ([54.37.238.230]:58028 "EHLO
-        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfDYKag (ORCPT
+        Thu, 25 Apr 2019 06:32:36 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40534 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfDYKcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 06:30:36 -0400
-Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1hJbeD-0005xy-UO; Thu, 25 Apr 2019 12:30:33 +0200
-Date:   Thu, 25 Apr 2019 12:30:33 +0200
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     Nico Schottelius <nico-kernel-20190425@schottelius.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: How to turn off IPv4 without disabling IPv6
-Message-ID: <20190425103033.GA20813@angband.pl>
-References: <87pnpaqvk9.fsf@line.ungleich.ch>
+        Thu, 25 Apr 2019 06:32:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id t8so18937467otp.7;
+        Thu, 25 Apr 2019 03:32:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pbTspqmMHl6lzjfEGJMBs25JPgJC8+QH26Jub2MLcuA=;
+        b=J38U4GMsj4+7ghcExtIftFztX8fa+0OXkL6+0Q7TI8qtOvBI8HXYWkaFnqrIpE0F9w
+         Y/AJaCcV3AOZdX40d6nN+WajBqum1lnbQO6AkyUu6oCo8/E9sBl4n3e5qD25qazHefiD
+         kazgdm/KwV16tm5AzemHTRqBusl/T9K/kwVZ7iV8Uqz1iTaK40t8SYp0Q/WWS84vCm1O
+         IhPlZxMOmV4JqtMw6ffvDXiWC9wZNX1nN82aaQtxeAeGhilFpX0sNZadCRuPrEQKEioj
+         bRpDO7MQyg9T4f0LBCeCkatb8PtLIHAjJ+L8KusCafxSDv5g928Kxy+wmyzytRnYg0hk
+         Fu1w==
+X-Gm-Message-State: APjAAAWq1caJIDCg7Td/HRxBb3cDI5B1eqlH0BXx73d+RztX6tT0MPBT
+        S0Un6A74bs2LD4e4997A5iXWoR8MKP92tK9dNzH7nw==
+X-Google-Smtp-Source: APXvYqz65yVA0+fR3WR/Mam5YBG86jsLjcQX7fsqonTQle8rgCvclLHD/zRTjk7zZMU3EBJiW/TQf+qsskV73yHZy+8=
+X-Received: by 2002:a9d:6e17:: with SMTP id e23mr23202213otr.65.1556188354951;
+ Thu, 25 Apr 2019 03:32:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87pnpaqvk9.fsf@line.ungleich.ch>
-X-Junkbait: aaron@angband.pl, zzyx@angband.pl
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: kilobyte@angband.pl
-X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
+References: <20190425090413.10700-1-ulf.hansson@linaro.org>
+ <CAJZ5v0jxGcFu-aqvyR4UgjRuCwB9q9fZCiXf+D3NL3TJ5OVEPA@mail.gmail.com>
+ <CAPDyKFqP+92wwscW2V3352DVS1QM=DjMZ3e0uty1eQ4=5JyHWA@mail.gmail.com>
+ <CAJZ5v0jTRF1wvcYTxfSd59ByhnzXdLL8CVg1qnUfQhAj1L1qLA@mail.gmail.com> <CAPDyKFq3QTjX5m9HoNYFTd-e-p_BXsqPH8s+P_yQ5YEJvHBoag@mail.gmail.com>
+In-Reply-To: <CAPDyKFq3QTjX5m9HoNYFTd-e-p_BXsqPH8s+P_yQ5YEJvHBoag@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 Apr 2019 12:32:24 +0200
+Message-ID: <CAJZ5v0iK03ajPVE2LdkJHKBQzeeS+dkkaYfvUuVYAcZKStU-EQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] PM / Domains: Improve support for CPUs in genpd
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 11:32:38AM +0200, Nico Schottelius wrote:
-> running some IPv6 only
-> networks. The systems in the IPv6 only networks do not need any IPv4
-> support anymore and thus for switches/routers we turned the support off.
+On Thu, Apr 25, 2019 at 12:17 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Thu, 25 Apr 2019 at 12:14, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Thu, Apr 25, 2019 at 12:11 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > >
+> > > On Thu, 25 Apr 2019 at 11:56, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > On Thu, Apr 25, 2019 at 11:04 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > > > >
+> > > > > Recently genpd was extended to cope with devices belonging to CPUs. However,
+> > > > > attaching CPU devices via genpd_dev_pm_attach_by_id|name() doesn't work,
+> > > > > because of the virtual device that genpd allocates in this path.
+> > > > >
+> > > > > In this series, this limitation is addressed, together with a few other related
+> > > > > fixes/cleanups.
+> > > > >
+> > > > > Ulf Hansson (4):
+> > > > >   PM / Domains: Use the base device for
+> > > > >     driver_deferred_probe_check_state()
+> > > > >   PM / Domains: Drop unused in-parameter to some genpd functions
+> > > > >   PM / Domains: Search for the CPU device outside the genpd lock
+> > > > >   PM / Domains: Allow to attach a CPU via
+> > > > >     genpd_dev_pm_attach_by_id|name()
+> > > > >
+> > > > >  drivers/base/power/domain.c | 73 ++++++++++++++++++-------------------
+> > > > >  include/linux/pm_domain.h   |  1 +
+> > > > >  2 files changed, 36 insertions(+), 38 deletions(-)
+> > > >
+> > > > Are there any dependencies between this and the series you've recently posted?
+> > >
+> > > Yep. I should have stated that, sorry. This should be applied on top.
+> >
+> > On top of which series?
+>
+> [PATCH 0/3] PM / Domains: Improve support for multi PM domains
+>
+> and
+>
+> [PATCH v13 0/4] PM / Domains: Support hierarchical CPU arrangement (PSCI/ARM)
 
-> Today we tried to turn off IPv4 in the Linux kernel at compile time.
-> But it seems that as soon as we turn off CONFIG_INET, CONFIG_IPV6 is
-> automatically turned off as well.
-
-Even if you don't want global nor even link-scope IPv4, way too many
-programs assume that at least 127.0.0.1 (ie, lo) is working.  They can't be
-reconfigured to use ::1 without patching and rebuilding.
-
-> Coming back to my original question: is there a way or how would we turn
-> off IPv4 support in the Linux kernel?
-
-I believe this is not worth your time for today.
-
-Just do what IPv6-haters do on stock modern distros: have no routes for the
-other IP version configured; non-buggy programs will do the right thing.
-
-This seems to work well.  Heck, I had a busy dev server with broken IPv4, I
-didn't notice that for 1.5 years until I tried to pull something directly
-from Github (which is still v4 only).
-
-You're a network admin so you know far more than me wrt anything that goes
-over the wire -- but as as a distro developer/user, I'd say there's a
-considerable cost to have every of tens of thousands programs shipped by a
-distro, and many more that are private to a company/university/etc, updated
-to autodetect how to access "localhost" on a particular box.
-
-That's an extra moving part where there was none before.  Complexity is bad.
-Having the IPv4 stack built just for the lo interface simplifies things.
-
-
-Meow!
--- 
-⢀⣴⠾⠻⢶⣦⠀
-⣾⠁⢠⠒⠀⣿⡁ Did ya know that typing "test -j8" instead of "ctest -j8"
-⢿⡄⠘⠷⠚⠋⠀ will make your testsuite pass much faster, and fix bugs?
-⠈⠳⣄⠀⠀⠀⠀
+OK, thanks!
