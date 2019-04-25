@@ -2,164 +2,191 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD83C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B111AC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4542320678
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:55:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kpt/0gZ4"
+	by mail.kernel.org (Postfix) with ESMTP id D625D20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 13:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556197288;
+	bh=Z5o13u5SEfOqQI+GfkO/KziMTykmSD5QTd6/HiylPqo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rgKGW81Wt/YB0IGZ69P30H25w9g2BzBcEyKZu/bx/sBkogp28yR9j43tate+WmXct
+	 kYgLWUuQQ+X+QhBAdxzifbnQBBgdXXQ3Kf8vVPB5AifzcPwEEaDOIUv6+vv6ZT3UqQ
+	 Krsis5FhUDAM7QbwaMQVgKTg64rRMcBzTzbpfbWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfDYMzd (ORCPT
+        id S1729081AbfDYNB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:55:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41973 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728921AbfDYMzc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:55:32 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 188so11139634pfd.8
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 05:55:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8wBY4DrJYGHWrcFUmZjiCL1GZae6MKSXg88kMv8qUJs=;
-        b=kpt/0gZ4WrV9SiGhJ7LUvRdANxf1yoZCJH59nBxbGmEN87lgZU0zmDaK0zbjhO7BLG
-         utf6gA5paYqhvOPoQZULRLLHoxbGrpcyjoo0Srwg28SpomupgdlyfEaGXKM4E4WWPzMD
-         d9vSpUAbWJzG7yM6wfKaL7fMtHgfuZMBGLtOUYvGF0YHuMDzBWmPxOPVH8Hch8x0pxU8
-         8FceKSLo+h0ie0C2V3G3NuCXwi9y66ENXD9yCaoeg07jiJWERnqUDi116toaFfMHz+a7
-         Snx7/z1M4B+tBKqT+ijdrEWcYvU7/UgzI0eA7GMb40edMPbxfit+kG2Xmf5VhDmE+TJF
-         QB1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8wBY4DrJYGHWrcFUmZjiCL1GZae6MKSXg88kMv8qUJs=;
-        b=fuIxkGjEsMEteivHCJstfNsUO6cNFoXGF6/Wmev01pW4rrGUw708YTXIsPwCrKOU9i
-         HgbAypgSj94HvQdqd0NAh+DIXAlSvO58mPXCoBTzlLIXcEdVY5G5qtqD/xjx3SmBcdG9
-         HwmzHtuzcfubRd27mNyK+cxGyh0+bjCMGJjIZ/ZgDKgHAGw3rdNvHxZQHc3hL0wd+Z9r
-         gTXoBZy1HmO6MfOu/cSrKS/OTHxxLaifl+gg4Ro7J5NiHF1Ld0ns8d3VMrcEsUJdAvHN
-         qIcxK+sYJ52v0t374m70sQA80DPkLHM9cyIchtya3zp3zsEmwlh8Wu4CPmhGvg9r1/kb
-         wHaQ==
-X-Gm-Message-State: APjAAAViDQIPEG9+4u3ha8B1WeFTTmp+hWpIhdH7lQ4UvtF/afYQfdg4
-        nX/rgUhYYr8U7MDUk+xDosy5
-X-Google-Smtp-Source: APXvYqyPIJF3zDHkGAEdm0iGkdPvkVHpZBxI2K3JRs3H0bNIISQV2X9u90OtMSmDvc6PyZrREiH43w==
-X-Received: by 2002:a65:424d:: with SMTP id d13mr37022632pgq.318.1556196931990;
-        Thu, 25 Apr 2019 05:55:31 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:81e:2691:7d48:1fca:4d86:743])
-        by smtp.gmail.com with ESMTPSA id c18sm50507983pfc.0.2019.04.25.05.55.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 05:55:31 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 3/3] reset: Add reset controller support for BM1880 SoC
-Date:   Thu, 25 Apr 2019 18:25:08 +0530
-Message-Id: <20190425125508.5965-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190425125508.5965-1-manivannan.sadhasivam@linaro.org>
-References: <20190425125508.5965-1-manivannan.sadhasivam@linaro.org>
+        Thu, 25 Apr 2019 09:01:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726571AbfDYNB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 09:01:27 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905F620678;
+        Thu, 25 Apr 2019 13:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556197285;
+        bh=Z5o13u5SEfOqQI+GfkO/KziMTykmSD5QTd6/HiylPqo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j4WQyPfQWLosEaE+QW+8v1JRCsa3nDXl4G42rs61dn+meBuulauy67PxnFVQC2FWi
+         WHScWmscUqdM3tJWue4LDA+sOociIPABQPfo3rJtyXh+cuG7KVNqsUM47du1ql0o9t
+         c5NmdmVcxkz3uj+4ujed8aex8R/FS2cHVBGNDBUU=
+Date:   Thu, 25 Apr 2019 08:01:24 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, Karol Herbst <kherbst@redhat.com>,
+        Ben Skeggs <skeggsb@gmail.com>, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pci/quirks: Add quirk to reset nvgpu at boot for the
+ Lenovo ThinkPad P50
+Message-ID: <20190425130124.GD11428@google.com>
+References: <20190212220230.1568-1-lyude@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190212220230.1568-1-lyude@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add reset controller support for Bitmain BM1880 SoC reusing the
-reset-simple driver. While we are at it, this driver has also been
-modified to make use of the SPDX license identifier.
+On Tue, Feb 12, 2019 at 05:02:30PM -0500, Lyude Paul wrote:
+> On a very specific subset of ThinkPad P50 SKUs, particularly ones that
+> come with a Quadro M1000M chip instead of the M2000M variant, the BIOS
+> seems to have a very nasty habit of not always resetting the secondary
+> Nvidia GPU between full reboots if the laptop is configured in Hybrid
+> Graphics mode. The reason for this happening is unknown, but the
+> following steps and possibly a good bit of patience will reproduce the
+> issue:
+> 
+> 1. Boot up the laptop normally in Hybrid graphics mode
+> 2. Make sure nouveau is loaded and that the GPU is awake
+> 2. Allow the nvidia GPU to runtime suspend itself after being idle
+> 3. Reboot the machine, the more sudden the better (e.g sysrq-b may help)
+> 4. If nouveau loads up properly, reboot the machine again and go back to
+> step 2 until you reproduce the issue
+> 
+> This results in some very strange behavior: the GPU will
+> quite literally be left in exactly the same state it was in when the
+> previously booted kernel started the reboot. This has all sorts of bad
+> sideaffects: for starters, this completely breaks nouveau starting with a
+> mysterious EVO channel failure that happens well before we've actually
+> used the EVO channel for anything:
+> 
+> nouveau 0000:01:00.0: disp: chid 0 mthd 0000 data 00000400 00001000
+> 00000002
+> ...
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/reset/Kconfig        |  3 ++-
- drivers/reset/Makefile       |  1 +
- drivers/reset/reset-simple.c | 16 +++++++++++-----
- 3 files changed, 14 insertions(+), 6 deletions(-)
+> So to do this, we add a new pci quirk using
+> DECLARE_PCI_FIXUP_CLASS_FINAL that will be invoked before the PCI probe
+> at boot finishes. From there, we check to make sure that this is indeed
+> the specific P50 variant of this GPU. We also make sure that the GPU PCI
+> device is advertising NoReset- in order to prevent us from trying to
+> reset the GPU when the machine is in Dedicated graphics mode (where the
+> GPU being initialized by the BIOS is normal and expected). Finally, we
+> try mapping the MMIO space for the GPU which should only work if the GPU
+> is actually active in D0 mode. We can then read the magic 0x2240c
+> register on the GPU, which will have bit 1 set if the GPU's firmware has
+> already been posted during a previous boot. Once we've confirmed all of
+> this, we reset the PCI device and re-disable it - bringing the GPU back
+> into a healthy state.
+> 
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Cc: nouveau@lists.freedesktop.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: Karol Herbst <kherbst@redhat.com>
+> Cc: Ben Skeggs <skeggsb@gmail.com>
+> Cc: stable@vger.kernel.org
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 2c8c23db92fb..b25e8d139f0d 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -117,7 +117,7 @@ config RESET_QCOM_PDC
- 
- config RESET_SIMPLE
- 	bool "Simple Reset Controller Driver" if COMPILE_TEST
--	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
-+	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARCH_BITMAIN
- 	help
- 	  This enables a simple reset controller driver for reset lines that
- 	  that can be asserted and deasserted by toggling bits in a contiguous,
-@@ -129,6 +129,7 @@ config RESET_SIMPLE
- 	   - RCC reset controller in STM32 MCUs
- 	   - Allwinner SoCs
- 	   - ZTE's zx2967 family
-+	   - Bitmain BM1880 SoC
- 
- config RESET_STM32MP157
- 	bool "STM32MP157 Reset Driver" if COMPILE_TEST
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 61456b8f659c..b87968771166 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
- obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
- obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
- obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
-+#obj-$(CONFIG_RESET_BM1880) += reset-bm1880.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index 77fbba3100c8..fd1fa4984d76 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Simple Reset Controller Driver
-  *
-@@ -8,11 +9,6 @@
-  * Copyright 2013 Maxime Ripard
-  *
-  * Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-  */
- 
- #include <linux/device.h>
-@@ -119,6 +115,14 @@ static const struct reset_simple_devdata reset_simple_active_low = {
- 	.status_active_low = true,
- };
- 
-+#define BM1880_NR_BANKS		2
-+
-+static const struct reset_simple_devdata reset_simple_bm1880 = {
-+	.nr_resets = BM1880_NR_BANKS * 32,
-+	.active_low = true,
-+	.status_active_low = true,
-+};
-+
- static const struct of_device_id reset_simple_dt_ids[] = {
- 	{ .compatible = "altr,stratix10-rst-mgr",
- 		.data = &reset_simple_socfpga },
-@@ -129,6 +133,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
- 		.data = &reset_simple_active_low },
- 	{ .compatible = "aspeed,ast2400-lpc-reset" },
- 	{ .compatible = "aspeed,ast2500-lpc-reset" },
-+	{ .compatible = "bitmain,bm1880-reset",
-+		.data = &reset_simple_bm1880 },
- 	{ /* sentinel */ },
- };
- 
--- 
-2.17.1
+Applied to pci/misc for v5.2, thanks!
 
+> ---
+>  drivers/pci/quirks.c | 65 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index b0a413f3f7ca..948492fda8bf 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5117,3 +5117,68 @@ SWITCHTEC_QUIRK(0x8573);  /* PFXI 48XG3 */
+>  SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+>  SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+>  SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+> +
+> +/*
+> + * On certain Lenovo Thinkpad P50 SKUs, specifically those with a Nvidia
+> + * Quadro M1000M, the BIOS will occasionally make the mistake of not resetting
+> + * the nvidia GPU between reboots if the system is configured to use hybrid
+> + * graphics mode. This results in the GPU being left in whatever state it was
+> + * in during the previous boot which causes spurious interrupts from the GPU,
+> + * which in turn cause us to disable the wrong IRQs and end up breaking the
+> + * touchpad. Unsurprisingly, this also completely breaks nouveau.
+> + *
+> + * Luckily, it seems a simple reset of the PCI device for the nvidia GPU
+> + * manages to bring the GPU back into a clean state and fix all of these
+> + * issues. Additionally since the GPU will report NoReset+ when the machine is
+> + * configured in Dedicated display mode, we don't need to worry about
+> + * accidentally resetting the GPU when it's supposed to already be
+> + * initialized.
+> + */
+> +static void
+> +quirk_lenovo_thinkpad_p50_nvgpu_survives_reboot(struct pci_dev *pdev)
+> +{
+> +	void __iomem *map;
+> +	int ret;
+> +
+> +	if (pdev->subsystem_vendor != PCI_VENDOR_ID_LENOVO ||
+> +	    pdev->subsystem_device != 0x222e ||
+> +	    !pdev->reset_fn)
+> +		return;
+> +
+> +	/*
+> +	 * If we can't enable the device's mmio space, it's probably not even
+> +	 * initialized. This is fine, and means we can just skip the quirk
+> +	 * entirely.
+> +	 */
+> +	if (pci_enable_device_mem(pdev)) {
+> +		pci_dbg(pdev, "Can't enable device mem, no reset needed\n");
+> +		return;
+> +	}
+> +
+> +	/* Taken from drivers/gpu/drm/nouveau/engine/device/base.c */
+> +	map = ioremap(pci_resource_start(pdev, 0), 0x102000);
+> +	if (!map) {
+> +		pci_err(pdev, "Can't map MMIO space, this is probably very bad\n");
+> +		goto out_disable;
+> +	}
+> +
+> +	/*
+> +	 * Be extra careful, and make sure that the GPU firmware is posted
+> +	 * before trying a reset
+> +	 */
+> +	if (ioread32(map + 0x2240c) & 0x2) {
+> +		pci_info(pdev,
+> +			 FW_BUG "GPU left initialized by EFI, resetting\n");
+> +		ret = pci_reset_function(pdev);
+> +		if (ret < 0)
+> +			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
+> +	}
+> +
+> +	iounmap(map);
+> +out_disable:
+> +	pci_disable_device(pdev);
+> +}
+> +
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+> +			      PCI_CLASS_DISPLAY_VGA, 8,
+> +			      quirk_lenovo_thinkpad_p50_nvgpu_survives_reboot);
+> -- 
+> 2.20.1
+> 
