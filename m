@@ -2,117 +2,115 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CE4C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC787C282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A648A20890
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9FD12081C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 12:33:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="RG6efg+w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hHDWKwAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731159AbfDYMay (ORCPT
+        id S1731175AbfDYMdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 08:30:54 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43102 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfDYMax (ORCPT
+        Thu, 25 Apr 2019 08:33:11 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:38711 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDYMdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 08:30:53 -0400
-Received: by mail-ed1-f68.google.com with SMTP id j20so18971285edq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 05:30:52 -0700 (PDT)
+        Thu, 25 Apr 2019 08:33:10 -0400
+Received: by mail-wm1-f46.google.com with SMTP id w15so3924wmc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 05:33:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=67R0k05803KguupIDta7Ra/6RBriLS9l4FIpl33TABc=;
-        b=RG6efg+wINT5PtOxJThnJ7/GhcdJnGb39Z4ZiVojLVulIllPY6WegbUX1iE+KXv7ix
-         hw7G3Q35WeIJFBq6h+DTKCSoq6Caf3U4HMLnir6Y2Fpepl+Yg62BlPdyDc+AfIeAdC6G
-         T5q6JA5VpPnsEZbc1Y3THNGipkJEYTCX5YvtGmIytNOobkbu5pJOI8FPfiRA+c2salf8
-         qIjHlzsMeZbUV6ujc/e+TQwLohjwZU6jQscEF+qeF4JPVtvV/MenGzVv1/zUdUKvFb4o
-         XQFGsXg+neKHnqNqXD/JaZm33914fdkJ2/qSt+EWsmhg8bcDYJt8SzWMQ5M1Jr4er9q8
-         DqAg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Tmlh66TVXb+pSFlqjzdKxmks/bQ0y8g4h02Q2AlwVMA=;
+        b=hHDWKwAV5nYFX6rVYSYfwUolebmMX3j62o6yjHU45+9SpEt8301nswM+kEfWQdAoLm
+         fW4mMyasKnxApgWqR7SQJ4ejX6ZFoesknAxGgmjPO5MssprQfn/9aD42VJ+ZDM+m5q8e
+         0K1A/ZdVNIvgCLFq7YFc0aWlqh3LANecYz2byijnLrEwmakPuyoBq8/GXhIB8H8EMqcv
+         dq2mvKiiNgLx4bR67kPRjhQHFxIjyDCxuPz5jO4k8/CS6aO101lrJSW10xMVjoloIHAT
+         o14WlOVR2qezBex6eRSLvfcC5RXN7WJVnN0jiHxikp4MueONLuGWNcyLAKNe1KMIfRoB
+         e5Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=67R0k05803KguupIDta7Ra/6RBriLS9l4FIpl33TABc=;
-        b=Nn54y9zeRvg7jHG7hpxTViV3Y3UMrmhxU2gW6pFuqhcw/JW2BsmEHrL+O9ehgmGq/C
-         u0KSqjxINk9bbWA2OeufDxFbhhzXFq0kdgzBDwRw0zuBGpEqWuDD9nuZq860ZBXuvZ5N
-         5zrWfpV9/AGrlGyBnCM3MMA0Imyd63aWDnvI0uebdq0230j8vpLQ2po86kFS78asnrEE
-         VxIIKON3mn6bHIGEvI9lF5HKwo4gBxRFjgOY8LSRa18zj0bVhoLn8op8jG++BPpBPo1/
-         mexTOFjEXRecpKW/o9Q6UgoC09ueGh78DXAq5JA2KOJyd6cOTsk1inUDYpKNUpiRiAmm
-         RzaQ==
-X-Gm-Message-State: APjAAAXVD+uaL11ZhUv1wmS6t4BPI54snCIlxDfxN9C9FD/nKRf1tWYg
-        edlSBPBY4MyqHVJO7zdClThVllN4yzvOk4buZhJHhA==
-X-Google-Smtp-Source: APXvYqwiC0RYDcdWaH93fKry+qe407e7uBBkYjvENxoUhOgx5lCTLYYQiqnziqtuQkVFJZxzsIpjW4zsSKchIjg+TPc=
-X-Received: by 2002:a50:b68a:: with SMTP id d10mr1779006ede.79.1556195451949;
- Thu, 25 Apr 2019 05:30:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tmlh66TVXb+pSFlqjzdKxmks/bQ0y8g4h02Q2AlwVMA=;
+        b=PCpPzHtpQZnjaNamh3xRxDnfSee3HQGNQOCpF4myIRNbD5gH+VPhxqgWnUPjDvzN2E
+         nHGTNlDgHXkezAsn8bFaJ5fA5F5zfGMNWteOJ4nEqozRoLXbAF0mUWjw2FGa7KCUZv29
+         +Xs62bA9EzVmbfp/v3qsRZMTJWjgFk07fL2geurGYz5Xi82MSSUDghJ1FVxWB04NAYWS
+         QfEtaxDP+VAM9PZDiAoTpgC5hM2g3g5hOgBgHK0ZtITOY5Ki3Ytip8Ih4OXmh15B6InO
+         Ku/8YjWNOmfZp2KWjrc9Wt2tCqy340K+VT+lSCz9XpXuHsvx6N7rQ3bLo8NQxN6dDbmi
+         DGkw==
+X-Gm-Message-State: APjAAAU/Y6CMA92oyW3wWUwRvf5ZV7eK9sH/LAHMEVyApSp0V+dC7THz
+        crWIsOsZzzp5UVaDmrFi7kK5387x5Tg=
+X-Google-Smtp-Source: APXvYqyO73VogtYJaAG2wco5dVXxq7D6ym3CqkjHRmSdg3sRZSfQ9pQAWVmnWn5TqLxqTjxNqcSEZw==
+X-Received: by 2002:a1c:730c:: with SMTP id d12mr3212612wmb.47.1556195588720;
+        Thu, 25 Apr 2019 05:33:08 -0700 (PDT)
+Received: from apalos (athedsl-4485328.home.otenet.gr. [94.71.60.216])
+        by smtp.gmail.com with ESMTPSA id t9sm26127402wra.71.2019.04.25.05.33.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 05:33:07 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 15:33:03 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Christian Neubert <christian.neubert.86@gmail.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] clk: mvebu: armada-37xx-periph: Fix initialization for
+ cpu clocks
+Message-ID: <20190425123303.GA12659@apalos>
+References: <20190313163558.6705-1-gregory.clement@bootlin.com>
+ <20190314121541.GB19385@apalos>
+ <CAC5LXJcCs4nr-qFOWzUJpUBAJ9ngG-cgeTCVCFBKFc1SPzHMuQ@mail.gmail.com>
+ <20190314134428.GA24768@apalos>
+ <874l85v8p6.fsf@FE-laptop>
+ <20190318112844.GA1708@apalos>
+ <87h8c0s955.fsf@FE-laptop>
+ <20190318122113.GA4834@apalos>
+ <20190424093015.rcr5auamfccxf6ei@vireshk-i7>
 MIME-Version: 1.0
-References: <20190421014429.31206-1-pasha.tatashin@soleen.com>
- <20190421014429.31206-3-pasha.tatashin@soleen.com> <4ad3c587-6ab8-1307-5a13-a3e73cf569a5@redhat.com>
- <CAPcyv4h3+hU=MmB=RCc5GZmjLW_ALoVg_C4Z7aw8NQ=1LzPKaw@mail.gmail.com>
- <CA+CK2bDB5o4+NMc7==_ipVAZoEo7fdrkjZ4etU0LUCqxnmN-Rg@mail.gmail.com> <180d6250-8a6a-0b5d-642a-ec6648cb45b1@redhat.com>
-In-Reply-To: <180d6250-8a6a-0b5d-642a-ec6648cb45b1@redhat.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 25 Apr 2019 08:30:40 -0400
-Message-ID: <CA+CK2bBt0vHr9D+BuvM=GmjCMESu5iBiUTdvid_TaoE6j2daQg@mail.gmail.com>
-Subject: Re: [v2 2/2] device-dax: "Hotremove" persistent memory that is used
- like normal RAM
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424093015.rcr5auamfccxf6ei@vireshk-i7>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> Yes, also I think you can let go of the device_lock in
-> check_memblocks_offline_cb, lock_device_hotplug() should take care of
-> this (see Documentation/core-api/memory-hotplug.rst - "locking internals")
->
-Hi David,
+Hi Viresh,
 
-Thank you for your comments. I went through memory-hotplug.rst, and I
-still think that device_lock() is needed here. In this particular case
-it can be replaced with something like READ_ONCE(), but for simplicity
-it is better to have device_lock()/device_unlock() as this is not a
-performance critical code.
+> > > Also, during this week-end, Christian suggested that the issue might
+> > > come from the AVS support.
+> > > 
+> > > Could you disable it and check you still have the issue?
+> > > 
+> > > For this, you just have to remove the avs node in
+> > > arch/arm64/boot/dts/marvell/armada-37xx.dtsi and rebuild the dtb.
+> > Sure. You'll have to wait for a week though. Currently on a trip. I'll run that
+> >  once i return
+> 
+> @Ilias: Can you please try this now and confirm to Gregory ?
+I am more overloaded than usual and totally forgot about this. Apologies.
+I'll try finding some time and do this.
 
-I do not see any lock ordering issues with this code, as we are
-holding lock_device_hotplug() first that prevents userland from
-adding/removing memory during this check.
-
-https://soleen.com/source/xref/linux/arch/powerpc/platforms/powernv/memtrace.c?r=98fa15f3#248
-
-Here we have a similar code:
-lock_device_hotplug();
-   online_mem_block();
-    device_online()
-     device_lock(dev);
-
-Pasha
+Thanks
+/Ilias
