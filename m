@@ -2,74 +2,325 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC38C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F465C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FCCD2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556205462;
-	bh=YkLb91M8d3SPGJOA8WtmE/vSLqnU7wIEtymcLOfLMnI=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=jQ+zUYyHal3wpcTeQIYATQVC5JXjIKUe/w3MWHn7h9jUtG7WysL5Q4WTKSNWvQ02q
-	 V1Dcr5PbhVpXmgbYb2PITlmSSukSg/T1DZf1yGSuY6/opTWl4iEpIlbD5t4kJ+5sLg
-	 37bxYK4ZceVFmFrX8RPMXt8+onjT8SWDkXEv3f5E=
+	by mail.kernel.org (Postfix) with ESMTP id 7A3DA2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfDYPRk (ORCPT
+        id S1727450AbfDYPSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbfDYPRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:17:40 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2203D2067D;
-        Thu, 25 Apr 2019 15:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556205460;
-        bh=YkLb91M8d3SPGJOA8WtmE/vSLqnU7wIEtymcLOfLMnI=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=GRLvkgyyKM1N2e+m986yhNCKZkMK90biOImKebgujCAkMVotQ/imrRMCKdZXRPUC8
-         HRLP2u1T1tj5oWzUP6beWrgBTfcYGKs3uyv7f7t/J2IZ4yZb8LLnT2+lQcZ8V3MF1L
-         CF3Pbm6NAfOpw1hNKMxyi6kM4yz5cbsWhvVeGumk=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 25 Apr 2019 11:18:08 -0400
+Received: from mail.netline.ch ([148.251.143.178]:49731 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfDYPSI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 11:18:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id CB9E72AA103;
+        Thu, 25 Apr 2019 17:18:03 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id q6nTEBXTV1DD; Thu, 25 Apr 2019 17:18:03 +0200 (CEST)
+Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id B8EC52A6042;
+        Thu, 25 Apr 2019 17:18:02 +0200 (CEST)
+Received: from [::1]
+        by thor with esmtp (Exim 4.92)
+        (envelope-from <michel@daenzer.net>)
+        id 1hJg8Q-0002t5-86; Thu, 25 Apr 2019 17:18:02 +0200
+Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     Alexandre Courbot <acourbot@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
+ <20190418081816.GO13337@phenom.ffwll.local>
+ <8265f098722d0cd5aae606d7ee6d955f168ac8f3.camel@ndufresne.ca>
+ <987372acff18f4c66191ee52fa69dc2917e4a605.camel@bootlin.com>
+ <1d6fb659-0516-41db-257b-258e6116a4f2@daenzer.net>
+ <7479b8df108c66b1711eb89efbfeb4a16480533d.camel@ndufresne.ca>
+ <8e091392-2365-6c52-1fc2-84ebdc9e83fe@daenzer.net>
+ <93c8e6834728b7e5979013df757017d309ee6a89.camel@bootlin.com>
+ <CAKMK7uFewmCuc97Qp_2zzk9YvMPmK8zE=a6XGszsLq+SLy-vJA@mail.gmail.com>
+ <9230d330e3b57af0643abc834bcf207095cc4bd7.camel@ndufresne.ca>
+ <65a37cec-5040-e2f0-5cd5-c9c3111827ad@daenzer.net>
+ <e572f31653301f0a479fe1373b3dfd5ada8e49f3.camel@ndufresne.ca>
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
+ mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
+ LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
+ 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
+ /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
+ WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
+ Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
+ V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
+ AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
+ ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
+ AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
+ jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
+ qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
+ bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
+ CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
+ GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
+ YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
+ Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
+Message-ID: <24ee7263-a868-bcfe-d4aa-0e9d8e2f6ee5@daenzer.net>
+Date:   Thu, 25 Apr 2019 17:17:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190411214835.19947-3-digetx@gmail.com>
-References: <20190411214835.19947-1-digetx@gmail.com> <20190411214835.19947-3-digetx@gmail.com>
-Cc:     linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v1 2/2] clk: tegra124: Remove lock-enable bit from PLLM
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Message-ID: <155620545907.15276.14629311287072608722@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Thu, 25 Apr 2019 08:17:39 -0700
+In-Reply-To: <e572f31653301f0a479fe1373b3dfd5ada8e49f3.camel@ndufresne.ca>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="2VcJrharQhz1ikiIY67gmutUhQ3MOiXtA"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Dmitry Osipenko (2019-04-11 14:48:35)
-> According to the Tegra124 TRM documentation, PLLM_MISC2 register doesn't
-> have the lock-enable bit as well as any other PLLM-related register. Hence
-> PLLM re-locking can't be initiated by software. The incorrect bit setting
-> should have been harmless since that bit is undefined according to TRM.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--2VcJrharQhz1ikiIY67gmutUhQ3MOiXtA
+Content-Type: multipart/mixed; boundary="XMy5e4t38JTHemRMdAyY23YSxjokCppP8";
+ protected-headers="v1"
+From: =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+To: Nicolas Dufresne <nicolas@ndufresne.ca>, Daniel Vetter <daniel@ffwll.ch>,
+ Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: Alexandre Courbot <acourbot@chromium.org>,
+ Maxime Ripard <maxime.ripard@bootlin.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel <dri-devel@lists.freedesktop.org>, Tomasz Figa
+ <tfiga@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Dave Airlie <airlied@redhat.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>,
+ "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>
+Message-ID: <24ee7263-a868-bcfe-d4aa-0e9d8e2f6ee5@daenzer.net>
+Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
+References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
+ <20190418081816.GO13337@phenom.ffwll.local>
+ <8265f098722d0cd5aae606d7ee6d955f168ac8f3.camel@ndufresne.ca>
+ <987372acff18f4c66191ee52fa69dc2917e4a605.camel@bootlin.com>
+ <1d6fb659-0516-41db-257b-258e6116a4f2@daenzer.net>
+ <7479b8df108c66b1711eb89efbfeb4a16480533d.camel@ndufresne.ca>
+ <8e091392-2365-6c52-1fc2-84ebdc9e83fe@daenzer.net>
+ <93c8e6834728b7e5979013df757017d309ee6a89.camel@bootlin.com>
+ <CAKMK7uFewmCuc97Qp_2zzk9YvMPmK8zE=a6XGszsLq+SLy-vJA@mail.gmail.com>
+ <9230d330e3b57af0643abc834bcf207095cc4bd7.camel@ndufresne.ca>
+ <65a37cec-5040-e2f0-5cd5-c9c3111827ad@daenzer.net>
+ <e572f31653301f0a479fe1373b3dfd5ada8e49f3.camel@ndufresne.ca>
+In-Reply-To: <e572f31653301f0a479fe1373b3dfd5ada8e49f3.camel@ndufresne.ca>
+
+--XMy5e4t38JTHemRMdAyY23YSxjokCppP8
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: quoted-printable
+
+On 2019-04-24 7:43 p.m., Nicolas Dufresne wrote:
+> Le mercredi 24 avril 2019 =C3=A0 18:54 +0200, Michel D=C3=A4nzer a =C3=A9=
+crit :
+>> On 2019-04-24 5:44 p.m., Nicolas Dufresne wrote:
+>>> Le mercredi 24 avril 2019 =C3=A0 17:06 +0200, Daniel Vetter a =C3=A9c=
+rit :
+>>>> On Wed, Apr 24, 2019 at 4:41 PM Paul Kocialkowski
+>>>> <paul.kocialkowski@bootlin.com> wrote:
+>>>>> On Wed, 2019-04-24 at 16:39 +0200, Michel D=C3=A4nzer wrote:
+>>>>>> On 2019-04-24 2:01 p.m., Nicolas Dufresne wrote:
+>>>>>>> Rendering a video stream is more complex then what you describe h=
+ere.
+>>>>>>> Whenever there is a unexpected delay (late delivery of a frame as=
+ an
+>>>>>>> example) you may endup in situation where one frame is ready afte=
+r the
+>>>>>>> targeted vblank. If there is another frame that targets the follo=
+wing
+>>>>>>> vblank that gets ready on-time, the previous frame should be repl=
+aced
+>>>>>>> by the most recent one.
+>>>>>>>
+>>>>>>> With fences, what happens is that even if you received the next f=
+rame
+>>>>>>> on time, naively replacing it is not possible, because we don't k=
+now
+>>>>>>> when the fence for the next frame will be signalled. If you simpl=
+y
+>>>>>>> always replace the current frame, you may endup skipping a lot mo=
+re
+>>>>>>> vblank then what you expect, and that results in jumpy playback.
+>>>>>>
+>>>>>> So you want to be able to replace a queued flip with another one t=
+hen.
+>>>>>> That doesn't necessarily require allowing more than one flip to be=
+
+>>>>>> queued ahead of time.
+>>>>>
+>>>>> There might be other ways to do it, but this one has plenty of
+>>>>> advantages.
+>>>>
+>>>> The point of kms (well one of the reasons) was to separate the
+>>>> implementation of modesetting for specific hw from policy decisions
+>>>> like which frames to drop and how to schedule them. Kernel gives
+>>>> tools, userspace implements the actual protocols.
+>>>>
+>>>> There's definitely a bit a gap around scheduling flips for a specifi=
+c
+>>>> frame or allowing to cancel/overwrite an already scheduled flip, but=
+
+>>>> no one yet has come up with a clear proposal for new uapi + example
+>>>> implementation + userspace implementation + big enough support from
+>>>> other compositors that this is what they want too.
+>>
+>> Actually, the ATOMIC_AMEND patches propose a way to replace a schedule=
+d
+>> flip?
+>>
+>>
+>>>>>> Note that this can also be done in userspace with explicit fencing=
+ (by
+>>>>>> only selecting a frame and submitting it to the kernel after all
+>>>>>> corresponding fences have signalled), at least to some degree, but=
+ the
+>>>>>> kernel should be able to do it up to a later point in time and mor=
+e
+>>>>>> reliably, with less risk of missing a flip for a frame which becom=
+es
+>>>>>> ready just in time.
+>>>>>
+>>>>> Indeed, but it would be great if we could do that with implicit fen=
+cing
+>>>>> as well.
+>>>>
+>>>> 1. extract implicit fences from dma-buf. This part is just an idea,
+>>>> but easy to implement once we have someone who actually wants this.
+>>>> All we need is a new ioctl on the dma-buf to export the fences from
+>>>> the reservation_object as a sync_file (either the exclusive or the
+>>>> shared ones, selected with a flag).
+>>>> 2. do the exact same frame scheduling as with explicit fencing
+>>>> 3. supply explicit fences in your atomic ioctl calls - these should
+>>>> overrule any implicit fences (assuming correct kernel drivers, but w=
+e
+>>>> have helpers so you can assume they all work correctly).
+>>>>
+>>>> By design this is possible, it's just that no one yet bothered enoug=
+h
+>>>> to make it happen.
+>>>> -Daniel
+>>>
+>>> I'm not sure I understand the workflow of this one. I'm all in favour=
+
+>>> leaving the hard work to userspace. Note that I have assumed explicit=
+
+>>> fences from the start, I don't think implicit fence will ever exist i=
+n
+>>> v4l2, but I might be wrong. What I understood is that there was a
+>>> previous attempt in the past but it raised more issues then it actual=
+ly
+>>> solved. So that being said, how do handle exactly the follow use case=
+s:
+>>>
+>>>  - A frame was lost by capture driver, but it was schedule as being t=
+he
+>>> next buffer to render (normally previous frame should remain).
+>>
+>> Userspace just doesn't call into the kernel to flip to the lost frame,=
+
+>> so the previous one remains.
 >=20
-> Tested-by: Steev Klimaszewski <steev@kali.org>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
+> We are stuck in a loop you a me. Considering v4l2 to drm, where fences
+> don't exist on v4l2, it makes very little sense to bring up fences if
+> we are to wait on the fence in userspace.
 
-Applied to clk-next
+It makes sense insofar as no V4L specific code would be needed to make
+sure that the contents of a buffer produced via V4L aren't consumed
+before they're ready to be.
 
+
+>>>  - The scheduled frame is late for the next vblank (didn't signal on-=
+
+>>> time), a new one may be better for the next vlbank, but we will only
+>>> know when it's fence is signaled.
+>>
+>> Userspace only selects a frame and submits it to the kernel after all
+>> its fences have signalled.
+>>
+>>> Better in this context means the the presentation time of this frame =
+is
+>>> closer to the next vblank time. Keep in mind that the idea is to
+>>> schedule the frames before they are signal, in order to make the usag=
+e
+>>> of the fence useful in lowering the latency.
+>>
+>> Fences are about signalling completion, not about low latency.
+>=20
+> It can be used to remove a roundtrip with userspace at a very time
+> sensitive moment. If you pass a dmabuf with it's unsignalled fence to a=
+
+> kernel driver, the driver can start the job on this dmabuf as soon as
+> the fence is signalled. If you always wait on a fence in userspace, you=
+
+> have to wait for the userspace process to be scheduled,
+
+I doubt this magically works without something like that (e.g. a
+workqueue, which runs in normal process context) in the kernel either. :)=
+
+
+> then userspace will setup the drm atomic request or similar action, whi=
+ch
+> may take some time and may require another process in the kernel to hav=
+e
+> to be schedule. This effectively adds some variable delay, a gap where
+> nothing is happening between two operations. This time is lost and
+> contributes to the overall operation latency.
+
+It only increases latency if it causes a flip to miss its target vblank,
+and it's not possible to know this happens at an unacceptable rate
+without trying. The prudent approach is to at least prototype a solution
+with as much complexity as possible in userspace first. If that turns
+out to perform too badly, then we can think about how to improve it by
+adding complexity in the kernel.
+
+
+> The benefit of fences we are looking for is being able to setup before
+> the fence is signalled the operations on various compatible drivers.
+> This way, on the time critical moment a driver can be feed more jobs,
+> there is no userspace rountrip involved.
+
+That is possible with other operations, just not with page flipping yet.
+
+
+--=20
+Earthling Michel D=C3=A4nzer               |              https://www.amd=
+=2Ecom
+Libre software enthusiast             |             Mesa and X developer
+
+
+--XMy5e4t38JTHemRMdAyY23YSxjokCppP8--
+
+--2VcJrharQhz1ikiIY67gmutUhQ3MOiXtA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQSwn681vpFFIZgJURRaga+OatuyAAUCXMHPpAAKCRBaga+Oatuy
+AMleAKCXj7uOVv+7unsA8XmBgHL4l+RIngCfQdfL/h1glH56Axxq+FXY52D93Cc=
+=R+QT
+-----END PGP SIGNATURE-----
+
+--2VcJrharQhz1ikiIY67gmutUhQ3MOiXtA--
