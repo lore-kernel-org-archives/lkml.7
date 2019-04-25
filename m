@@ -2,136 +2,91 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FC9C43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C0AC43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E73D8206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54EC206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556224251;
+	bh=30cPmhYk9+IDH3/xSH5F9qo31Czy69WZicE1p5RCi+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EyJg6OV1Bdb9JTElxy4c7AQ6JPdFFVfkyvk/REbNwhI7k1Jsi52lesiBmKW1Z1mTQ
+	 4eLge753XIE6gV8FdRnDCA9hXrdf3g/zgpldclNp72KqnaYHrfSFKin3YuV6X75N3r
+	 MilRyw+p3CGGlzwGrlmNikXHBlmr/oQjvkquyX0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731059AbfDYUai (ORCPT
+        id S1731076AbfDYUau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 16:30:38 -0400
-Received: from mga09.intel.com ([134.134.136.24]:12496 "EHLO mga09.intel.com"
+        Thu, 25 Apr 2019 16:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbfDYUah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 16:30:37 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 13:30:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,394,1549958400"; 
-   d="scan'208";a="165116162"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Apr 2019 13:30:35 -0700
-Date:   Thu, 25 Apr 2019 13:22:26 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v8 05/15] x86/msr-index: Define MSR_IA32_CORE_CAPABILITY
- and split lock detection bit
-Message-ID: <20190425202226.GD64477@romley-ivt3.sc.intel.com>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
- <1556134382-58814-6-git-send-email-fenghua.yu@intel.com>
- <20190425054511.GA40105@gmail.com>
- <20190425190148.GA64477@romley-ivt3.sc.intel.com>
- <20190425194714.GA58719@gmail.com>
- <20190425195154.GC64477@romley-ivt3.sc.intel.com>
- <20190425200830.GD58719@gmail.com>
+        id S1730991AbfDYUat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 16:30:49 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4438206A3;
+        Thu, 25 Apr 2019 20:30:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556224249;
+        bh=30cPmhYk9+IDH3/xSH5F9qo31Czy69WZicE1p5RCi+I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t0SSdAS4CWR+ZMG4GTP/ZMxPkJQvvIVWspLmrHd4D5v+b/dDHretkTK2CBHT7moGB
+         qCvCfuRRlXiQGhpnkOGeR5r1B4Kx+JQ2d90t6PvplvFpD9ZKuTqBkZHtThJdtcjdji
+         voZ5JB3taSj934XtmvEtQWv52nwvLNS+xsgDSXLA=
+Date:   Thu, 25 Apr 2019 22:30:46 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     richard.gong@linux.intel.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org,
+        atull@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Richard Gong <richard.gong@intel.com>
+Subject: Re: [PATCHv1 4/6] firmware: add Intel Stratix10 remote system update
+ driver
+Message-ID: <20190425203046.GE22307@kroah.com>
+References: <1554835562-25056-1-git-send-email-richard.gong@linux.intel.com>
+ <1554835562-25056-5-git-send-email-richard.gong@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425200830.GD58719@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1554835562-25056-5-git-send-email-richard.gong@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 10:08:30PM +0200, Ingo Molnar wrote:
-> 
-> * Fenghua Yu <fenghua.yu@intel.com> wrote:
-> 
-> > On Thu, Apr 25, 2019 at 09:47:14PM +0200, Ingo Molnar wrote:
-> > > 
-> > > * Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > > 
-> > > > On Thu, Apr 25, 2019 at 07:45:11AM +0200, Ingo Molnar wrote:
-> > > > > 
-> > > > > * Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > > > > 
-> > > > > > A new MSR_IA32_CORE_CAPABILITY (0xcf) is defined. Each bit in the MSR
-> > > > > > enumerates a model specific feature. Currently bit 5 enumerates split
-> > > > > > lock detection. When bit 5 is 1, split lock detection is supported.
-> > > > > > When the bit is 0, split lock detection is not supported.
-> > > > > > 
-> > > > > > Please check the latest Intel 64 and IA-32 Architectures Software
-> > > > > > Developer's Manual for more detailed information on the MSR and the
-> > > > > > split lock detection bit.
-> > > > > > 
-> > > > > > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> > > > > > ---
-> > > > > >  arch/x86/include/asm/msr-index.h | 3 +++
-> > > > > >  1 file changed, 3 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> > > > > > index ca5bc0eacb95..f65ef6f783d2 100644
-> > > > > > --- a/arch/x86/include/asm/msr-index.h
-> > > > > > +++ b/arch/x86/include/asm/msr-index.h
-> > > > > > @@ -59,6 +59,9 @@
-> > > > > >  #define MSR_PLATFORM_INFO_CPUID_FAULT_BIT	31
-> > > > > >  #define MSR_PLATFORM_INFO_CPUID_FAULT		BIT_ULL(MSR_PLATFORM_INFO_CPUID_FAULT_BIT)
-> > > > > >  
-> > > > > > +#define MSR_IA32_CORE_CAPABILITY	0x000000cf
-> > > > > > +#define CORE_CAP_SPLIT_LOCK_DETECT	BIT(5)     /* Detect split lock */
-> > > > > 
-> > > > > Please don't put comments into definitions.
-> > > > 
-> > > > I'll remove the comment and change definitions of the MSR and the split lock
-> > > > detection bit as following:
-> > > > 
-> > > > +#define MSR_IA32_CORE_CAPABILITY                       0x000000cf
-> > > > +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT 5
-> > > > +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT)
-> > > > 
-> > > > Are these right changes?
-> > > 
-> > > I suspect it could be shortened to CORE_CAP as you (partly) did it 
-> > > originally.
-> > 
-> > IA32_CORE_CAPABILITY is the MSR's exact name in the latest SDM (in Table 2-14):
-> > https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
-> > 
-> > So can I define the MSR and the bits as follows?
-> > 
-> > +#define MSR_IA32_CORE_CAP                       0x000000cf
-> > +#define MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT_BIT 5
-> > +#define MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT_BIT)
-> 
-> Yeah, I suppose that looks OK.
+On Tue, Apr 09, 2019 at 01:46:00PM -0500, richard.gong@linux.intel.com wrote:
+> +/*
+> + * This driver exposes some optional features of the Intel Stratix 10 SoC FPGA.
+> + * The SysFS interfaces exposed here are FPGA Remote System Update (RSU)
 
-Should I also change the feature definition 'X86_FEATURE_CORE_CAPABILITY' to
-'X86_FEATURE_CORE_CAP' in cpufeatures.h in patch #0006 to match the
-MSR definition here? Or should I still keep the current feature definition?
+It has never been "SysFS", it has always been "sysfs".
 
-Thanks.
+> + * related.  They allow user space software to query the configuration system
+> + * status and to request optional reboot behavior specific to Intel FPGAs.
+> + */
+> +
+> +static ssize_t current_image_show(struct device *dev,
+> +				  struct device_attribute *attr, char *buf)
+> +{
+> +	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
+> +
+> +	if (!priv)
+> +		return -ENODEV;
+> +
+> +	return scnprintf(buf, PAGE_SIZE, "%ld", priv->status.current_image);
 
--Fenghua
+While it is all nice and fine to try to be "safe" and use scnprintf() it
+turns out that if you EVER care about the size of a sysfs buffer, your
+code is doing something wrong.  This can just be a simple sprintf()
+call.
+
+Same goes for everywhere in this file.
+
+thanks,
+
+greg k-h
