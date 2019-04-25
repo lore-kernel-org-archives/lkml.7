@@ -2,96 +2,135 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F74C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA85C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA172088F
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556206921;
-	bh=D2Iuvsrp3bx79rGa/wq+w7GHIBzLICFaDzZw9rIKylI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WtOCoVE/K1o5hUS11xOBslmnRkBhrV6RgjU3c+6NBpXpktJyxB10hMo4i0m5uPhiB
-	 hWIrk3WKSVT0v0hMDyhKRNquSxNSxdGwZ0KNljWDuc2/bgu3eaiLDKmjNtQRcXDwmp
-	 +055BEYlOz7TeOqRbNoUAIeJKTXCWBUZOl1BJldE=
+	by mail.kernel.org (Postfix) with ESMTP id 52DE020679
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 15:42:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIxieLUP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbfDYPl7 (ORCPT
+        id S1728046AbfDYPmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 11:41:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45256 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726296AbfDYPl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 11:41:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C7F89AFED;
-        Thu, 25 Apr 2019 15:41:57 +0000 (UTC)
-Date:   Thu, 25 Apr 2019 17:41:56 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
-        sashal@kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        akpm@linux-foundation.org, dave.hansen@linux.intel.com,
-        dan.j.williams@intel.com, keith.busch@intel.com,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
-        thomas.lendacky@amd.com, ying.huang@intel.com,
-        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
-        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com,
-        catalin.marinas@arm.com, rppt@linux.vnet.ibm.com,
-        ard.biesheuvel@linaro.org, andrew.murray@arm.com,
-        james.morse@arm.com, marc.zyngier@arm.com, sboyd@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: configurable sparsemem section size
-Message-ID: <20190425154156.GZ12751@dhcp22.suse.cz>
-References: <20190423203843.2898-1-pasha.tatashin@soleen.com>
- <20190425152550.GY12751@dhcp22.suse.cz>
- <20190425153138.GC25193@fuggles.cambridge.arm.com>
+        Thu, 25 Apr 2019 11:42:20 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45377 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727210AbfDYPmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 11:42:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id y3so25928pgk.12;
+        Thu, 25 Apr 2019 08:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fdGRNyUQlpc4HjiFlwZawue24kiF5g7GyMltLZfo7cE=;
+        b=YIxieLUPcMA5EY/ryz/w3MSDrHtVKhB0buP5Ib9v2TtDcrgrLatRkRvmwcaFgImjog
+         rxhPiSaeNOz5dkfMh7ZHxpqoA4NqsqKw89f3Z+JMEyoau91GLZmMdnvke0dUQAZcO7J+
+         O0lfbBVh/k3/SnSW3V8u8M2e5//l8DeJXd2AKiB7uaMwWIXoQ5gOvC5If6VwBDVWffzL
+         V+flPXi9xp3Dj5DOxTJjJDjnHOChw+HGMGDQebfCEq5LNIgNeMAKxqLq+Taa/fdxXpve
+         H/LlHOz/jS+mZ1iN7+bGG1Jfb1a1EwwCRpNnJlHmjTnmhbfUozKFuMCCbJ5YXwtJ5ksW
+         0rvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fdGRNyUQlpc4HjiFlwZawue24kiF5g7GyMltLZfo7cE=;
+        b=RgEvKRCiBFptdy5dV7DSyg7CoxXJb2uM1BCtHiKW01xDLhhUJY4s4IObSGKwPOYkSi
+         S7d6A1O3Z4laHAuOJrM4XCB/3nd4ou2PxVjR0JvlWloxnSL12p5hj9XPH+sHnO2LB/P/
+         hdkeIEVYt8ZnNZ3pu2Y/Ufbs6+BJOsH5u3IWLvGdnrKAXZAfoYUprIRJOS+YTDgqOc0I
+         C2ZpHbUkqGEylQqTF1E5O7gFOQ5Gadc0OAR9bzNWsRKpYqONJrG3gwnFBSXCa+ODYftY
+         OSwPobQJIzjv7F+PQHFaZeo6WFkLl6TB2nEpjVKttEi9bXf2Sz2qsL3zWPCcuywBdebO
+         aKHg==
+X-Gm-Message-State: APjAAAXl4vWXR8WarLq9UaC5IOFcWNy1rAgZlPDeguNpn7A3lIPD8K0v
+        kV/SwSUmqpVG9Y3scGGFUys=
+X-Google-Smtp-Source: APXvYqyeeWmVX0kg2+bRmqQrJjqbejE5dDoGnKIs4kkB8kuPCsHm+s3GgBBlCTp7tZUOrfb0T+9NTg==
+X-Received: by 2002:aa7:8092:: with SMTP id v18mr40431342pff.35.1556206938879;
+        Thu, 25 Apr 2019 08:42:18 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id z22sm23504071pgv.23.2019.04.25.08.42.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Apr 2019 08:42:17 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 23:42:08 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 25/63] Documentation: add Linux PCI to Sphinx TOC tree
+Message-ID: <20190425154207.admsorr4ztmqxqv2@mail.google.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+ <20190423162932.21428-26-changbin.du@gmail.com>
+ <20190424120336.4f66cbb8@coco.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425153138.GC25193@fuggles.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190424120336.4f66cbb8@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 25-04-19 16:31:38, Will Deacon wrote:
-> On Thu, Apr 25, 2019 at 05:25:50PM +0200, Michal Hocko wrote:
-> > On Tue 23-04-19 16:38:43, Pavel Tatashin wrote:
-> > > sparsemem section size determines the maximum size and alignment that
-> > > is allowed to offline/online memory block. The bigger the size the less
-> > > the clutter in /sys/devices/system/memory/*. On the other hand, however,
-> > > there is less flexability in what granules of memory can be added and
-> > > removed.
-> > > 
-> > > Recently, it was enabled in Linux to hotadd persistent memory that
-> > > can be either real NV device, or reserved from regular System RAM
-> > > and has identity of devdax.
-> > > 
-> > > The problem is that because ARM64's section size is 1G, and devdax must
-> > > have 2M label section, the first 1G is always missed when device is
-> > > attached, because it is not 1G aligned.
-> > > 
-> > > Allow, better flexibility by making section size configurable.
-> > 
-> > Is there any inherent reason (64k page size?) that enforces such a large
-> > memsection?
+On Wed, Apr 24, 2019 at 12:03:43PM -0300, Mauro Carvalho Chehab wrote:
+> Em Wed, 24 Apr 2019 00:28:54 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
 > 
-> I gave *vague* memories of running out of bits in the page flags if we
-> changed this, but that was a while back. If that's no longer the case,
-> then I'm open to changing the value, but I really don't want to expose
-> it as a Kconfig option as proposed in this patch. People won't have a
-> clue what to set and it doesn't help at all with the single-Image effort.
+> > Add a index.rst for PCI subsystem. More docs will be added later.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  Documentation/PCI/index.rst | 9 +++++++++
+> 
+> On a past discussion at docs ML, we've agreed to use lowercase for new
+> stuff. My suggestion here would be to use lowercase for "pci".
+> 
+> Also, there's already a pci directory under driver-api, added on this
+> commit:
+> 
+> 	commit fcc78f9c22474d60c65d522e50ea07006ec1b9fc
+> 	Author: Logan Gunthorpe <logang@deltatee.com>
+> 	Date:   Thu Oct 4 15:27:39 2018 -0600
+> 
+> 	    docs-rst: Add a new directory for PCI documentation
+> 
+> I would just add a new section at Documentation/driver-api/pci/index.rst
+> with something like:
+> 
+> 	Legacy PCI documentation
+> 	========================
+> 
+> 	.. note::
+> 
+> 	   The files here were written a long time ago and need some serious
+> 	   work. Use their contents with caution.
+> 
+> 	.. toctree::
+> 	    :maxdepth: 1
+> 
+> 	    <files converted from Documentation/PCI>
+> 
+> And add those documents from Documentation/PCI into it.
+>
+Bjorn, Jonathan,
+Do you agree with this? By this all Documentation/PCI/* will be moved to
+Documentation/driver-api/pci.
 
-Ohh, I absolutely agree about the config option part JFTR. 1GB section
-loos quite excessive. I am not really sure a standard arm64 memory
-layout looks though.
+> 
+> Thanks,
+> Mauro
+
 -- 
-Michal Hocko
-SUSE Labs
+Cheers,
+Changbin Du
