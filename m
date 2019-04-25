@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8754EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DC8C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99466205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0162077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TMAP7HcQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NLl1Qh73"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbfDYTxu (ORCPT
+        id S1730849AbfDYTyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:53:50 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33525 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbfDYTxr (ORCPT
+        Thu, 25 Apr 2019 15:54:19 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38492 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730710AbfDYTxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:53:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id h5so453440pfo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:53:47 -0700 (PDT)
+        Thu, 25 Apr 2019 15:53:45 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 10so439204pfo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:53:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=beHUlTV1r7N3uXY3Nh5y6OVMIGz+2muMwcMKI5ehutQ=;
-        b=TMAP7HcQM3kb5W+gBxCS9kR+mSZpauCuGsJoRl7IcGegZXd7AnQ4n4RKfbmfvmpVvf
-         CMi3nCKPjCi50t8XHwIww/3cA9joj1fXyECB1LqnaVnzikd0Xr3vTrcfCI8IdFAww5OZ
-         SXmaeF76uT3ELakS0diC15XfhO6yozwd1rdNnhKrckZO6kpHouymel0r+a95LL3YmZdt
-         Gu6q8MM+gGveBbyqgcQPhVlN5QGo55Pj+QdcO8BLJanDj+D84NxuQz4SGkvSfDE630xb
-         9KiM0zRDoRLkufKrEDTdFlSxPAU17P/oFlxHapEiu6ol/D+7TA1tWThRRX8LD7pJ5lyt
-         IQVA==
+        bh=hCKOOh4hib7nPM65HtU8D/wwQ4e+FlOROgf2ArtIPlk=;
+        b=NLl1Qh73x0bruajqwDy06dnBABzmAWNzw/fQwjVFDhO+q7EdS71MBwjXbx0j+siM2N
+         nYF4xGB2mOWxEm3CU2B/+ruf9UJX7b4nVeFGVdNVE+4itmPOhktkdL3C/fOO9pA7TTP0
+         74WI3W5YES935RHXmLvg34016AovPe1mwqku21t/buu9pSTm2R3fBLvi06J/d4ea+0q9
+         4qFTr+hLI/NtawuF6E7Xq+Lo7d2ocdgm/GPJzHwI8+9nGuZ8eXyn7x9+nNJWep2jSuvQ
+         jY9vX8RqltoCPs5FdQQjPfyQvErA2W/StfdzAS+GeUVMwBWnJcelbqqsc8/e6s8z/t0/
+         4NEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=beHUlTV1r7N3uXY3Nh5y6OVMIGz+2muMwcMKI5ehutQ=;
-        b=H0nkJGe34QsgQULKT7+Ladh9r3YcGYyvZ2FyTQWmisx/sAYugt3PrnyVxqnSkXHwFt
-         al516PSICQ8NLtvodKImzC4czwqqlkO3Cd6Unw6XO2qLFd6xlUniPgpJhplZ/Tx5BUqL
-         HJ3X83gXAfxxo0ERiDW57vf7iLZcUCYDuYnCCY4n92irQlxm7knTLkNEAKnkrzzI2wkE
-         ENPlHPTnmgotOOZemCaff62zBGWZIPrP48Jb2D2jxAW9/SBzwSoZC1wEwGNX62WoDiVL
-         UatiPoAL5gXUfbLFhFRZR/udBjk1ECCynhnK9aoXBsJyEGVjOJL5NrZblZThlZoqdjeZ
-         anQg==
-X-Gm-Message-State: APjAAAXOZqkTaRWfF1wc5hCC8XUCm9p8Qz0pje9eViWu2/ayHgHlLT9b
-        mMaqpBmOMETONCOm6lTaBwbv8g==
-X-Google-Smtp-Source: APXvYqzOvuEJWh2JGV9dlry1yCkhitl/qheCqY7eub1Ib4Cu218oRSV63bayQp3C2g2RuPDUeG3XOg==
-X-Received: by 2002:a63:115c:: with SMTP id 28mr39368616pgr.270.1556222027096;
-        Thu, 25 Apr 2019 12:53:47 -0700 (PDT)
+        bh=hCKOOh4hib7nPM65HtU8D/wwQ4e+FlOROgf2ArtIPlk=;
+        b=JbK3b/CDFGO61mNdKXHTocI1dX1pgnxfmwp+SHLmMIpaVW2GY6fxjXMcbatjBEMYt4
+         k//dutx0KaOLzvU6R01rWuGAIU/2p0Fu+8q1hczclkzKnKAAeCJt31mBhfO7/99TvzrB
+         2XwC3QTjfUoNMF91HPwzxmV/p9nR3ffamAQftZRsLAFPaA8OZcZx+P7fGnWIhOgUpwZK
+         R5BlaotVrHvSgcKpNfP0OgaSEfV7BEB9lB2YExpQCyR9TOrvVs+B/SMPzJq8wq2Kez5f
+         LHZgGRC5p4848fHVqjXMNRYGrqsoHVeOBg7tG6zS66tb3aVh4D2v9IiPi5konYA31d6d
+         RwhA==
+X-Gm-Message-State: APjAAAUn8eRC32OlbDumjT/1l+5wtHH9Le6nO2RKvYpr93C7Co/qsQcH
+        Jj44pQkk4tqMrByX1X33ATtGig==
+X-Google-Smtp-Source: APXvYqyWBGzch/1IvPRMLBbQTeSi4b3nMzAr1C49TIBMXrDtODXyurwD78awOF/ntymlvdO/1CRjWQ==
+X-Received: by 2002:a63:cd50:: with SMTP id a16mr20241249pgj.394.1556222024673;
+        Thu, 25 Apr 2019 12:53:44 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id t64sm47261961pfa.86.2019.04.25.12.53.45
+        by smtp.gmail.com with ESMTPSA id t64sm47261961pfa.86.2019.04.25.12.53.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 12:53:46 -0700 (PDT)
+        Thu, 25 Apr 2019 12:53:44 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 27/32] coresight: tmc-etr: Introduce the notion of reference counting to ETR devices
-Date:   Thu, 25 Apr 2019 13:53:05 -0600
-Message-Id: <20190425195310.31562-28-mathieu.poirier@linaro.org>
+Subject: [PATCH 25/32] coresight: tmc-etr: Create per-thread buffer allocation function
+Date:   Thu, 25 Apr 2019 13:53:03 -0600
+Message-Id: <20190425195310.31562-26-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190425195310.31562-1-mathieu.poirier@linaro.org>
 References: <20190425195310.31562-1-mathieu.poirier@linaro.org>
@@ -69,69 +69,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds reference counting to struct etr_buf so that, in CPU-wide
-trace scenarios, shared buffers can be disposed of when no longer used.
+Buffer allocation is different when dealing with per-thread and
+CPU-wide sessions.  In preparation to support CPU-wide trace scenarios
+simplify things by keeping allocation functions for both type separate.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Tested-by: Leo Yan <leo.yan@linaro.org>
 Tested-by: Robert Walker <robert.walker@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etr.c | 5 +++++
- drivers/hwtracing/coresight/coresight-tmc.h     | 3 +++
- 2 files changed, 8 insertions(+)
+ .../hwtracing/coresight/coresight-tmc-etr.c   | 29 ++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index 1acad42184e6..de33c0391186 100644
+index e1d2128ee757..bca1b2d9ef2e 100644
 --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
 +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -8,6 +8,7 @@
- #include <linux/coresight.h>
- #include <linux/dma-mapping.h>
- #include <linux/iommu.h>
-+#include <linux/refcount.h>
- #include <linux/slab.h>
- #include <linux/types.h>
- #include <linux/vmalloc.h>
-@@ -1222,7 +1223,11 @@ get_perf_etr_buf_per_thread(struct tmc_drvdata *drvdata,
- 	 * with memory allocation.
- 	 */
- 	etr_buf = alloc_etr_buf(drvdata, event, nr_pages, pages, snapshot);
-+	if (IS_ERR(etr_buf))
-+		goto out;
- 
-+	refcount_set(&etr_buf->refcount, 1);
-+out:
+@@ -1207,6 +1207,33 @@ alloc_etr_buf(struct tmc_drvdata *drvdata, struct perf_event *event,
  	return etr_buf;
  }
  
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
-index 487c53701e9c..ee44906dffe8 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.h
-+++ b/drivers/hwtracing/coresight/coresight-tmc.h
-@@ -9,6 +9,7 @@
++static struct etr_buf *
++get_perf_etr_buf_per_thread(struct tmc_drvdata *drvdata,
++			    struct perf_event *event, int nr_pages,
++			    void **pages, bool snapshot)
++{
++	struct etr_buf *etr_buf;
++
++	/*
++	 * In per-thread mode the etr_buf isn't shared, so just go ahead
++	 * with memory allocation.
++	 */
++	etr_buf = alloc_etr_buf(drvdata, event, nr_pages, pages, snapshot);
++
++	return etr_buf;
++}
++
++static struct etr_buf *
++get_perf_etr_buf(struct tmc_drvdata *drvdata, struct perf_event *event,
++		 int nr_pages, void **pages, bool snapshot)
++{
++	if (event->cpu == -1)
++		return get_perf_etr_buf_per_thread(drvdata, event, nr_pages,
++						   pages, snapshot);
++
++	return ERR_PTR(-ENOENT);
++}
++
+ static struct etr_perf_buffer *
+ tmc_etr_setup_perf_buf(struct tmc_drvdata *drvdata, struct perf_event *event,
+ 		       int nr_pages, void **pages, bool snapshot)
+@@ -1223,7 +1250,7 @@ tmc_etr_setup_perf_buf(struct tmc_drvdata *drvdata, struct perf_event *event,
+ 	if (!etr_perf)
+ 		return ERR_PTR(-ENOMEM);
  
- #include <linux/dma-mapping.h>
- #include <linux/miscdevice.h>
-+#include <linux/refcount.h>
+-	etr_buf = alloc_etr_buf(drvdata, event, nr_pages, pages, snapshot);
++	etr_buf = get_perf_etr_buf(drvdata, event, nr_pages, pages, snapshot);
+ 	if (!IS_ERR(etr_buf))
+ 		goto done;
  
- #define TMC_RSZ			0x004
- #define TMC_STS			0x00c
-@@ -133,6 +134,7 @@ struct etr_buf_operations;
- 
- /**
-  * struct etr_buf - Details of the buffer used by ETR
-+ * refcount	; Number of sources currently using this etr_buf.
-  * @mode	: Mode of the ETR buffer, contiguous, Scatter Gather etc.
-  * @full	: Trace data overflow
-  * @size	: Size of the buffer.
-@@ -143,6 +145,7 @@ struct etr_buf_operations;
-  * @private	: Backend specific information for the buf
-  */
- struct etr_buf {
-+	refcount_t			refcount;
- 	enum etr_mode			mode;
- 	bool				full;
- 	ssize_t				size;
 -- 
 2.17.1
 
