@@ -1,87 +1,96 @@
 Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F2AC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96611C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 129BE218DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F84208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556185846;
-	bh=1IkGVSlGFDld6FbcEHIT1SiASIMoYQkeETs+lvzeViU=;
+	s=default; t=1556186115;
+	bh=0n4/b804LrRgV0IkstfXDxmzKKNR4zvoBIoq6K5si1c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zwAfF66m6m6BwQ2V+YmNh9MFSq+fQWXdfyQRiutNEBj33bYHWroRSSfW9HyvbSEDQ
-	 5gxPbdDbe9RElNHMqjtWlCu/GDvrenMQ2g7UpsInzcgnJ/bj+57HgTpI2rEdR3ac8N
-	 yvoUNRZXRhAeAj7Jd4SrgjIveGbpGtw6GFLqQMtQ=
+	b=X5IsTIalUY7AYLhEf01YJQtlibcPJf746QpdXT66OLC2XO9pZ+HUiSii+H+nbQxAY
+	 Yb4PzVAV4n1SDxnq4nCbNWeXuQ/vuHQneclY7Vm5ZJktMYPe/KeSwwpu3wftxmlAIp
+	 1+/p03QE/jNuyirsduXoezdS5zhlAC6rtKGFIQjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbfDYJuo (ORCPT
+        id S1728844AbfDYJzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 05:50:44 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51564 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728949AbfDYJuo (ORCPT
+        Thu, 25 Apr 2019 05:55:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40522 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728721AbfDYJzN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 05:50:44 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 4so8415392wmf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 02:50:42 -0700 (PDT)
+        Thu, 25 Apr 2019 05:55:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h4so29404395wre.7
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 02:55:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=QRURGkNNf2oM8zyBsCgVmv0B2tylYvvIGuKb+CaX1Yo=;
-        b=cNn8Hr/RTFc8nnA1dcl3N4dyUfXumDRAvttnl1GXNjF1B5zvh7yBHOxxFTdm+zN8Rl
-         ycPvI64sMIhgxe1zbiPgqisQTOCwUEKWx4EcMcYIolvpmvsaGcHexWA8FXNA5Jdsvly5
-         1Y0Q7MNP5OxLyLyuhEt8rhQF/6mkJ46uQY2kbMih8yHTmKBNMKS0qHoeXnLNRQkiqzir
-         z++huLATxoWgPhEtv2WAiIgftav+LCndTuZeygQNW94n5cEEDVEMjSPfADWhqOFERZv3
-         ojsO9hAu+rJYnHBlYy3A7fNpWbUzCRN3neXkyR3fDIeaIpRb9gY15zMoDcDfACFOqXyX
-         u5IQ==
+        bh=ouVX7DLtQR+TSPnOB9BUOPib5uiKvZBg++0sPW/v4gE=;
+        b=Xyvp+dfhww1WMbugWM08fm5oyJfQ+wIKPoCdMy5/ONKkXkHlNV+XZLOEPkycNdN2do
+         wyRtmYS6t3ALW+vGuhfpcfhylKnMcYe6E0xduwzdwMPka8vN5YpT8tbdDeMIz2FKamuC
+         FHet4fcB3VWAX2UW6ElDdXhh8Wh86rjliHR7rxe3T8nmBI5/kUYAKokSiAwVSC2VV68S
+         xCbdKUjHUs7yNGSmyo1MRwmduYGsY9YMwiS5t7gpziXlFBhWE37EdGi4oqoN11Ha/cyK
+         0zEQYoe3GEq/pBSf3mv/N8Mwpk4lsZttHC6QA4OVzxdaGAtoCRL4vE7/Px07Bo8BEilM
+         2RYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QRURGkNNf2oM8zyBsCgVmv0B2tylYvvIGuKb+CaX1Yo=;
-        b=gOxNrW22Q64kARmSOpxMp4JS53ZQs3xnQXidcxN0p7VA2zgYVLdWiPsYXXS+r92TF9
-         tb3iUaJnZyIZXN5TbGToqi+gKs8v6JpzpksIAZ9Fzm/SmqDV8x+WaCvGf0N9v1Nxh6ug
-         CLOvlsegHSB0RYbknV2q29dAflIJQICZZONBjCo4YGB1K+w8r2dMqUtl2hiDPEhGN2S5
-         MQ81n7hOddC1sJlmvsak/Iuu4lF0N3UYX0+4Rc1/vLD7xkFHdmqtVFIfeEnSdR383Se4
-         NzdJM1pL+Y5WEgGjbvwgL1UTbh6AiwXMok9CPGByr5eUUrubL+79cjrvAoEGFe/0CsGb
-         RU7A==
-X-Gm-Message-State: APjAAAUdUb50tMGpq3KqM2tYPdAI9RWLNGFM4Hvx8Awb+mazn2f7wWUQ
-        Xxj8Vl7izmz3mzU36tkOrpY=
-X-Google-Smtp-Source: APXvYqyl8ixo/hRmfGqlSnoCSP453r0hCb4185iNiqNIhSTNo7y0rmXJkJRhxrTRRQJn++ybDPivTQ==
-X-Received: by 2002:a7b:c14c:: with SMTP id z12mr2797644wmi.138.1556185842281;
-        Thu, 25 Apr 2019 02:50:42 -0700 (PDT)
+        bh=ouVX7DLtQR+TSPnOB9BUOPib5uiKvZBg++0sPW/v4gE=;
+        b=ldJl+QP/Vza+FEwDQ1uqp33GZSmpe/5hLsZ0+LcgNpBc6K6RlyTvZjGR+/LVTKZLxp
+         BN85goprZVzzS6ULu8MozjcrKiu9k95wqPK+LlvoM4I8btH5MYl8CJvz5B6xr4GBexrS
+         R0lKFWHypmcfXpzdt+rrXxnLug7ZjYhqoPDgiLKT0w5l85GVbvC8LolZcpSOZYh2j5sW
+         SOFj8PMmxHRsaRnax9b6IBLEtmK7jCPPag+WaJwwq+5jzJuOCgznHo+jKhwRGS2c5VTX
+         E7rumJeLwNOZOQbbTzdnPZV/cZgH8VuO9wgLGUlERHqHQrmj7X0rvaAZB9o4vM7VPrzo
+         coww==
+X-Gm-Message-State: APjAAAXDCxIFBndh7vU5FrfD2DdJZJC/wG3uCN/AXoWTk6xCF3oVmsd1
+        qHh4kSz4XfhGA/8aiQuhve0=
+X-Google-Smtp-Source: APXvYqyp1suasz+reeDqu2oVDxNMpbouFweRJdk2YT+qAB2J5V6DmzM+Dd9vTRpCuBTv6lky9b0Kgg==
+X-Received: by 2002:adf:80ec:: with SMTP id 99mr16716387wrl.55.1556186111655;
+        Thu, 25 Apr 2019 02:55:11 -0700 (PDT)
 Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id p9sm751536wma.31.2019.04.25.02.50.41
+        by smtp.gmail.com with ESMTPSA id y125sm31917125wmc.39.2019.04.25.02.55.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 02:50:41 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 11:50:39 +0200
+        Thu, 25 Apr 2019 02:55:10 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 11:55:08 +0200
 From:   Ingo Molnar <mingo@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: x86/paravirt: Detect over-sized patching bugs in
- paravirt_patch_call()
-Message-ID: <20190425095039.GC115378@gmail.com>
-References: <20190424134115.091452807@linutronix.de>
- <20190424134223.690835713@linutronix.de>
- <20190425065209.GA89582@gmail.com>
- <alpine.DEB.2.21.1904250921010.1762@nanos.tec.linutronix.de>
- <20190425081012.GA115378@gmail.com>
- <20190425091717.GA72229@gmail.com>
- <20190425092131.GL4038@hirez.programming.kicks-ass.net>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190425095508.GA8387@gmail.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+ <20190424140013.GA14594@sinkpad>
+ <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425092131.GL4038@hirez.programming.kicks-ass.net>
+In-Reply-To: <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -89,82 +98,76 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
+* Aubrey Li <aubrey.intel@gmail.com> wrote:
 
-> On Thu, Apr 25, 2019 at 11:17:17AM +0200, Ingo Molnar wrote:
-> > It basically means that we silently won't do any patching and the kernel 
-> > will crash later on in mysterious ways, because paravirt patching is 
-> > usually relied on.
+> On Wed, Apr 24, 2019 at 10:00 PM Julien Desfossez
+> <jdesfossez@digitalocean.com> wrote:
+> >
+> > On 24-Apr-2019 09:13:10 PM, Aubrey Li wrote:
+> > > On Wed, Apr 24, 2019 at 12:18 AM Vineeth Remanan Pillai
+> > > <vpillai@digitalocean.com> wrote:
+> > > >
+> > > > Second iteration of the core-scheduling feature.
+> > > >
+> > > > This version fixes apparent bugs and performance issues in v1. This
+> > > > doesn't fully address the issue of core sharing between processes
+> > > > with different tags. Core sharing still happens 1% to 5% of the time
+> > > > based on the nature of workload and timing of the runnable processes.
+> > > >
+> > > > Changes in v2
+> > > > -------------
+> > > > - rebased on mainline commit: 6d906f99817951e2257d577656899da02bb33105
+> > >
+> > > Thanks to post v2, based on this version, here is my benchmarks result.
+> > >
+> > > Environment setup
+> > > --------------------------
+> > > Skylake server, 2 numa nodes, 104 CPUs (HT on)
+> > > cgroup1 workload, sysbench (CPU intensive non AVX workload)
+> > > cgroup2 workload, gemmbench (AVX512 workload)
+> > >
+> > > Case 1: task number < CPU num
+> > > --------------------------------------------
+> > > 36 sysbench threads in cgroup1
+> > > 36 gemmbench threads in cgroup2
+> > >
+> > > core sched off:
+> > > - sysbench 95th percentile latency(ms): avg = 4.952, stddev = 0.55342
+> > > core sched on:
+> > > - sysbench 95th percentile latency(ms): avg = 3.549, stddev = 0.04449
+> > >
+> > > Due to core cookie matching, sysbench tasks won't be affect by AVX512
+> > > tasks, latency has ~28% improvement!!!
+> > >
+> > > Case 2: task number > CPU number
+> > > -------------------------------------------------
+> > > 72 sysbench threads in cgroup1
+> > > 72 gemmbench threads in cgroup2
+> > >
+> > > core sched off:
+> > > - sysbench 95th percentile latency(ms): avg = 11.914, stddev = 3.259
+> > > core sched on:
+> > > - sysbench 95th percentile latency(ms): avg = 13.289, stddev = 4.863
+> > >
+> > > So not only power, now security and performance is a pair of contradictions.
+> > > Due to core cookie not matching and forced idle introduced, latency has ~12%
+> > > regression.
+> > >
+> > > Any comments?
+> >
+> > Would it be possible to post the results with HT off as well ?
 > 
-> That's OK. The compiler emits an indirect CALL/JMP to the pv_ops
-> structure contents. That _should_ stay valid and function correctly at
-> all times.
+> What's the point here to turn HT off? The latency is sensitive to the
+> relationship
+> between the task number and CPU number. Usually less CPU number, more run
+> queue wait time, and worse result.
 
-It might result in a correctly executing kernel in terms of code 
-generation, but it doesn't result in a viable kernel: some of the places 
-rely on the patching going through and don't know what to do when it 
-doesn't and misbehave or crash in interesting ways.
+HT-off numbers are mandatory: turning HT off is by far the simplest way 
+to solve the security bugs in these CPUs.
 
-Guess how I know this. ;-)
-
-> Not patching should at the very least cause a WARN with RETPOLINE 
-> kernels though, we hard rely on the patching actually working and 
-> writing at least a direct call.
-
-We hard rely in other places too.
-
-How about just BUG_ON()-ing in paravirt_patch_call() as well? It's not 
-like these are *supposed* to fail, and if they do we want to know it, 
-even if the outcome might be more benign in some cases?
-
-I.e. how about the patch below? This not only makes it more apparent when 
-patching fails, it also makes the kernel smaller and removes an #ifdef 
-ugly.
-
-I tried it with a richly paravirt-enabled kernel and no patching bugs 
-were detected.
+Any core-scheduling solution *must* perform better than HT-off for all 
+relevant workloads, otherwise what's the point?
 
 Thanks,
 
 	Ingo
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-
----
- arch/x86/kernel/paravirt.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 7f9121f2fdac..544d386ded45 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -73,21 +73,21 @@ struct branch {
- static unsigned paravirt_patch_call(void *insnbuf, const void *target,
- 				    unsigned long addr, unsigned len)
- {
-+	const int call_len = 5;
- 	struct branch *b = insnbuf;
--	unsigned long delta = (unsigned long)target - (addr+5);
-+	unsigned long delta = (unsigned long)target - (addr+call_len);
- 
--	if (len < 5) {
--#ifdef CONFIG_RETPOLINE
--		WARN_ONCE(1, "Failing to patch indirect CALL in %ps\n", (void *)addr);
--#endif
--		return len;	/* call too long for patch site */
-+	if (len < call_len) {
-+		pr_warn("paravirt: Failed to patch indirect CALL at %ps\n", (void *)addr);
-+		/* Kernel might not be viable if patching fails, bail out: */
-+		BUG_ON(1);
- 	}
- 
- 	b->opcode = 0xe8; /* call */
- 	b->delta = delta;
--	BUILD_BUG_ON(sizeof(*b) != 5);
-+	BUILD_BUG_ON(sizeof(*b) != call_len);
- 
--	return 5;
-+	return call_len;
- }
- 
- #ifdef CONFIG_PARAVIRT_XXL
