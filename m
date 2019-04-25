@@ -2,117 +2,150 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CE9C282E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FC3C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F7F217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1CC2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 05:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SR/pJRTe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgXIAX7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfDYFTM (ORCPT
+        id S1729038AbfDYFTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 01:19:12 -0400
-Received: from mail-eopbgr30071.outbound.protection.outlook.com ([40.107.3.71]:17022
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725942AbfDYFTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 01:19:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zuxQ8ul2eKExo4ZIFTuRm555FPWrI/4prFYeRiad8pY=;
- b=SR/pJRTeSNoW5fpznV/Xk+Xw9wNkhaDKz5NgIPXZtn8wVJ2eJMXoooZq1BptnMFXrnYIU4G1tLQmVbvbrqkdpfIesLjaxYZ3nqh5vHnYbocKJv9u4GABoGuMuZOEupqq2tC9iYzRJRRkOKQU0KhYtzFNChmyF4OeozJ3iDVva4s=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3946.eurprd04.prod.outlook.com (52.134.72.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Thu, 25 Apr 2019 05:19:08 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.010; Thu, 25 Apr 2019
- 05:19:07 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH 1/2] clk: imx7ulp: update nic1_bus_clk parent info
-Thread-Topic: [PATCH 1/2] clk: imx7ulp: update nic1_bus_clk parent info
-Thread-Index: AQHU+yZo1imoxnc2yEuB0Vl7xqmoQQ==
-Date:   Thu, 25 Apr 2019 05:19:07 +0000
-Message-ID: <1556169264-31683-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0PR03CA0070.apcprd03.prod.outlook.com
- (2603:1096:203:52::34) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b9167b82-fc55-4969-64ca-08d6c93d8a76
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3946;
-x-ms-traffictypediagnostic: DB3PR0402MB3946:
-x-microsoft-antispam-prvs: <DB3PR0402MB394614909D5F9E83BCD5DF6DF53D0@DB3PR0402MB3946.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0018A2705B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(376002)(346002)(39860400002)(199004)(189003)(6506007)(26005)(2616005)(3846002)(66946007)(2906002)(64756008)(81166006)(81156014)(8936002)(476003)(6116002)(66066001)(50226002)(6486002)(8676002)(52116002)(110136005)(102836004)(73956011)(6436002)(14454004)(386003)(66476007)(15650500001)(66446008)(99286004)(66556008)(186003)(478600001)(486006)(14444005)(6512007)(4326008)(71200400001)(53936002)(86362001)(71190400001)(25786009)(256004)(2201001)(5660300002)(97736004)(36756003)(7736002)(316002)(7416002)(305945005)(2501003)(68736007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3946;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sxFFmMqNFAx5BfOqd5VgQKDcdgB0CxZ7UNCMZQEuAgfHitBOfHpRTotdo/LtPhfU6QCAZ/FWf5ocG+u0I+GKU3wwrpwHTyhm/pLudrPYVy9L8FMaUKJpPW8QJLloeE4tssQQt3sY9Ko6jIIA5OVu7gJQ/Qo6Lxzp53HcohuTrlRIDb5NERgv+ybsJN4fzfkbIiZY0xtNH4JxlbIpZ0gN4d2dE6rJmoxW+FcnP0BBXZFi/+k1pGRrFobTiQx3VcUIJypj3KSbDgRVwGB0ljD0IkvhOthUL+qWDF+xOSVdOojHipE7efz82qSnJ1Katyap0tQnLpJNCZ7j6rxAKjXUWKnoNJmxfUPyTELFS2I+vX4553NIoSqlzBsuvISTiPx1me5f2zGasmJaaTpK2zUNOduIjekKm64StnlKCMJTx2Q=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 25 Apr 2019 01:19:49 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:47079 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728849AbfDYFTt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 01:19:49 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 9so10497246pfj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 22:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qFPWnf6Le6aJkS62VqbYlAu1OT1Uv7eQ0DcMcSSP4NE=;
+        b=PgXIAX7ibmpmX3mt/TUFXAqXRLDQbPvWziPwptV/gQNISHrJQg1v+x9IduSP6nePfl
+         QxkJCsS2uvjGEoB584yddjjfGfnth22p2Wv7Dk37ZJhPu8mZYXSgleoKoFgtEL+t5CFv
+         jQN/RoDs/f0Zd0lJsC4fcG5B9HLS1cyrYST1pfX8P/SSoynuFXApr4lmByhbPt2iYgOs
+         aZNW7kk+SG+CxMdP3YLZE9JdkfFfujUDMNGWNwvbZ8vQ+aJPQ2SkjVoMt8ytqf0HdmuL
+         XSvo13HvD6HqSsBkcf5B+Di3IQ0nHsvpuYxA664KOYxgaDRierDHqRCICjkZPk2/xAZ8
+         MJAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qFPWnf6Le6aJkS62VqbYlAu1OT1Uv7eQ0DcMcSSP4NE=;
+        b=MsIpSkTyxh+gMYFOxwsLAW0xiInqqt5uyWExvYPjxM6MmeD6/OjJAp6x+QrtzlXoAm
+         Zll5SHwAQqmAR1Dwuvv+Kc9NHUBjsue4F6yzlJ19hO9g2g3LOg5JEiu+VyNKQwhnBoQJ
+         GzAOr3IlWoBL3BPP99qNDOWCLJ0/M/UgPYURkvPK/Wn2MGvcPzq2/0FydUIasCCCpnZA
+         Aa6LbNX3lQbQAcG5ONy9ueCwSPCmDnkcgotNyxnsO5QscefPolrm9PJCa0kvDfNnfywA
+         bw5PdeQ0gtaqpOTnHFMjsHQzJc2+AqxH14KGQP3/q0OhHcMFpgKBfQhsg7GUV1eqv5ip
+         1Zgg==
+X-Gm-Message-State: APjAAAXqKUfNVkMU4ORLRz25TWvcQ9MDISWHoFhMAg9ssWEZMDXAu9g7
+        UKY1jqzTjTM0EEFrnwAMwXk=
+X-Google-Smtp-Source: APXvYqyN9haRLAbX7gPY4653w6nCOcn1npbtX8dAbPhVUAwO9OPLxKUyzxKO0YrYdiMjNF3vXKYmPA==
+X-Received: by 2002:a63:f115:: with SMTP id f21mr34663194pgi.65.1556169588680;
+        Wed, 24 Apr 2019 22:19:48 -0700 (PDT)
+Received: from localhost ([175.223.37.83])
+        by smtp.gmail.com with ESMTPSA id g5sm32599436pfo.53.2019.04.24.22.19.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 22:19:47 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 14:19:44 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC][PATCH 2/2] printk: take console_sem when accessing console
+ drivers list
+Message-ID: <20190425051944.GB8532@jagdpanzerIV>
+References: <20190423062511.1118-1-sergey.senozhatsky@gmail.com>
+ <20190423062511.1118-3-sergey.senozhatsky@gmail.com>
+ <20190424151306.jcmygibltizcorgk@pathway.suse.cz>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9167b82-fc55-4969-64ca-08d6c93d8a76
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2019 05:19:07.9171
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3946
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424151306.jcmygibltizcorgk@pathway.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U2luY2UgaS5NWDdVTFAgQjAgY2hpcCwgbmljMV9idXNfY2xrJ3MgcGFyZW50IGlzIGNoYW5nZWQg
-dG8NCmZyb20gbmljMF9jbGsgZGlyZWN0bHksIHVwZGF0ZSBpdCBhY2NvcmRpbmdseS4NCg0KU2ln
-bmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQotLS0NCiBkcml2
-ZXJzL2Nsay9pbXgvY2xrLWlteDd1bHAuYyB8IDIgKy0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
-cnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9j
-bGstaW14N3VscC5jIGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMNCmluZGV4IDY2Njgy
-MTAuLjQyZTQ2NjcgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDd1bHAuYw0K
-KysrIGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMNCkBAIC0xMTUsNyArMTE1LDcgQEAg
-c3RhdGljIHZvaWQgX19pbml0IGlteDd1bHBfY2xrX3NjZzFfaW5pdChzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm5wKQ0KIA0KIAljbGtzW0lNWDdVTFBfQ0xLX05JQzBfRElWXQk9IGlteF9jbGtfaHdfZGl2
-aWRlcl9mbGFncygibmljMF9jbGsiLAkJIm5pY19zZWwiLCAgYmFzZSArIDB4NDAsIDI0LCA0LCBD
-TEtfU0VUX1JBVEVfUEFSRU5UIHwgQ0xLX0lTX0NSSVRJQ0FMKTsNCiAJY2xrc1tJTVg3VUxQX0NM
-S19OSUMxX0RJVl0JPSBpbXhfY2xrX2h3X2RpdmlkZXJfZmxhZ3MoIm5pYzFfY2xrIiwJCSJuaWMw
-X2NsayIsIGJhc2UgKyAweDQwLCAxNiwgNCwgQ0xLX1NFVF9SQVRFX1BBUkVOVCB8IENMS19JU19D
-UklUSUNBTCk7DQotCWNsa3NbSU1YN1VMUF9DTEtfTklDMV9CVVNfRElWXQk9IGlteF9jbGtfaHdf
-ZGl2aWRlcl9mbGFncygibmljMV9idXNfY2xrIiwJIm5pYzFfY2xrIiwgYmFzZSArIDB4NDAsIDQs
-ICA0LCBDTEtfU0VUX1JBVEVfUEFSRU5UIHwgQ0xLX0lTX0NSSVRJQ0FMKTsNCisJY2xrc1tJTVg3
-VUxQX0NMS19OSUMxX0JVU19ESVZdCT0gaW14X2Nsa19od19kaXZpZGVyX2ZsYWdzKCJuaWMxX2J1
-c19jbGsiLAkibmljMF9jbGsiLCBiYXNlICsgMHg0MCwgNCwgIDQsIENMS19TRVRfUkFURV9QQVJF
-TlQgfCBDTEtfSVNfQ1JJVElDQUwpOw0KIA0KIAljbGtzW0lNWDdVTFBfQ0xLX0dQVV9ESVZdCT0g
-aW14X2Nsa19od19kaXZpZGVyKCJncHVfY2xrIiwgIm5pYzBfY2xrIiwgYmFzZSArIDB4NDAsIDIw
-LCA0KTsNCiANCi0tIA0KMi43LjQNCg0K
+On (04/24/19 17:13), Petr Mladek wrote:
+> >  	/*
+> >  	 * before we register a new CON_BOOT console, make sure we don't
+> > @@ -2691,6 +2696,7 @@ void register_console(struct console *newcon)
+> >  			if (!(bcon->flags & CON_BOOT)) {
+> >  				pr_info("Too late to register bootconsole %s%d\n",
+> >  					newcon->name, newcon->index);
+> > +				console_unlock();
+> >  				return;
+> >  			}
+> >  		}
+> > @@ -2701,6 +2707,7 @@ void register_console(struct console *newcon)
+> >  
+> >  	if (!has_preferred || bcon || !console_drivers)
+> >  		has_preferred = preferred_console >= 0;
+> > +	console_unlock();
+
+Thanks for taking a look!
+
+> We should keep it until the console is added into the list. Otherwise
+> there are races with accessing the static has_preferred and
+> the global preferred_console variables.
+
+We don't modify `preferred_console' in register_console(), only
+read-access it. Write-access, at the same time, is not completely
+race free. That global `preferred_console' is modified from
+
+ add_preferred_console() -> __add_preferred_console() -> WRITE preferred_console
+ console_setup() -> __add_preferred_console() -> WRITE preferred_console
+
+So `preferred_console' is not WRITE protected by console_sem, that's
+why I didn't make sure to READ protected it in register_console().
+
+As of static `has_preferred'... I kind of couldn't figure out if
+we really need to protect it, but can do.
+
+> Also the value of bcon should stay synchronized until we decide
+> about replaying the log.
+
+Good catch. So we, basically, can do the same thing as we did to
+__unregister_console(): factor out the registration code and call
+that new __register_console() under console_lock, and do
+console_unlock()/console_lock() after we add console to the list,
+but before we unregister boot consoles.
+
+Except for one small detail:
+
+> IMHO, the only danger might be when con->match() or con->setup()
+> would want to take console_lock() as well. I checked few drivers
+> and they looked safe. But I did not check all of them.
+>
+> What do you think, please?
+
+That's a hard question. I would assume that ->match() has
+no business in console_sem; but I'm not completely sure about
+->setup().
+
+E.g. 8250 does take console_sem during port configuration:
+	config_port()
+	 serial8250_config_port()
+	  autoconfig_irq()
+	   console_lock()
+
+But it doesn't look like we hit this path from ->setup(); seems
+to be early serial setup stage.
+
+So may be we can move the whole thing under console_sem.
+
+	-ss
