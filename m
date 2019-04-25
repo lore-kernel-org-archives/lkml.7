@@ -2,196 +2,175 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8130BC43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CDAC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECF0205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:57:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mj7u0XCT"
+	by mail.kernel.org (Postfix) with ESMTP id DADFD206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 19:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556222274;
+	bh=M0klb38CAfwmfeRnmU/cPc3te8MCDlrFMp+XvcriVtI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MyWDiHwPaTHrKMOEGo0qsyB9vAhvOEFscSb4a0YQd+VvEpxAwWGoWzDs6Zc0ur5wd
+	 YsmQafYxKDhCJyXgE52dEFwk6kKy8yE8ze8DCud5WS542GtbS8dR/YHJfQ/s//4nes
+	 d2ND7PCb4c3UXg8VN/Q3ia/DZqPPhI9VgVoEJBq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbfDYT5O (ORCPT
+        id S1730794AbfDYT5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 15:57:14 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:36163 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729259AbfDYT5N (ORCPT
+        Thu, 25 Apr 2019 15:57:53 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42200 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfDYT5x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 15:57:13 -0400
-Received: by mail-it1-f195.google.com with SMTP id y10so2184639itc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 12:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=gvwc2z4S6BD6uWlEMi4IucZ2NoOc2SvZD8TjjoytUcY=;
-        b=mj7u0XCTY89HpkX0rB6pEM6G9cN6dFJV7R66tTAw7uYiAQtFjBSVi9RLv6syTFdrnY
-         YLUwYsQhOY7lyffrxcjZSQOZRcNQH09RuuG+25zPhuTKCmzkYfiC0txxsoyV/knfI8Nm
-         mKKoAJTXoikIsAV4Ei8d4YW3PHr/tPNZc2CbzRJBkILzC4/3OchxfNDU9tbm9GH4KHOK
-         RvT8z24Nha/ML2F/mkcPW1+YBgCyg3xi4q2EqEJUswisH59HQ5G6rP7/XsdBw0dYMJaX
-         pukbWyejRCZWSheiE83PzWJjqKY1+th3lCOH33QEV5y5Ad7HsEomdNC3Um7p5kIsefoH
-         Qdzg==
+        Thu, 25 Apr 2019 15:57:53 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w139so1061069oie.9;
+        Thu, 25 Apr 2019 12:57:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=gvwc2z4S6BD6uWlEMi4IucZ2NoOc2SvZD8TjjoytUcY=;
-        b=ecPXFnOc2PcRZ6hDE/8FvOjb0+hj9H39m7oG4rKEsGEflP7+l5SOH3hgHfcRtPeVo9
-         84ek1jZufm6SeK1+NoeIf+9WnpaDrEOmA9yW+sNiUmVTr0h4e7DLhFjzYW5uI4Ecu7Ni
-         G6zVle3Qa436leTGjDkvbIYOp3kc1oQj5wK48QBPaPtAkxUd/LVm3+pcu18j2mJY/1hu
-         zt8zQ5rFuNdQxaCbibvOuK/uyQQHbdgKOLLheZtLcflHvrptoJmnhy9hlQjh23qIHMs5
-         6zhG5a0UGnvGki498hqpfAdovv2OypJ0pLH3ZC5/TOjJc5BpGlZCkbZ75YivjqAm7NH0
-         l1Nw==
-X-Gm-Message-State: APjAAAVF7+O8zy2cfbaw5bzDL/Ft+Fvl+US4PTPbzwigYFeoh5ZXr8Hy
-        /Bh8XFYJQl3Wig8ILHQEVfBMLA==
-X-Google-Smtp-Source: APXvYqwZ/YflD4xyz9LUJg/gRo5Ytqr+BO/vOnfgsaQnT15Lt7D91H3JJVgMIt7YTQxhP4jEcCWaMQ==
-X-Received: by 2002:a05:660c:3c7:: with SMTP id c7mr4972199itl.2.1556222232601;
-        Thu, 25 Apr 2019 12:57:12 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id t67sm11013344ita.35.2019.04.25.12.57.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q+ZqzLPdQ6UxCMOOHKP9B7YQ4swKS1G4qWBFIt51nI0=;
+        b=RtvB3vbjrHl40Wwur/LAwQ/2nMZ0nHW0xRTRfe+X+jI9uLlvgLPRn9wadoD5sq9dK+
+         oj7qiovxQV3G6eK6cSIwqHWHSqAdyfVuubdsA0qq8vzVQ0t2tIk7TwFirScwfy+HtpAW
+         mRtHHgQljJd2YsYQqA9jCtMdEbSyPYcgm6ntlOBJMCpHnFoyh0x15qPm9kc5Pr4W2ZcC
+         uBp1Dhe+HlTNKxe8+55hlk8jDUeRVPmQWjmAAv25dD69I/PkzRjGOowXBVcQoyLJq3cX
+         p58l/HkxrazIopFNtGAt+Y8ygfmnpaj1GdWxx8uv5ioFe+7VAIj4bNvvaCCzN0Z92NDP
+         YEdw==
+X-Gm-Message-State: APjAAAUYCxSbY4tFjr4QtWMGDQEHAVJPXo8hs1IUJPy9DWorIc681L7v
+        2eGDmRNT7Z6JIQITq5xhSg==
+X-Google-Smtp-Source: APXvYqws+IT22HvmUSol1kl5L/dHeIPkCQ71NEVYtJ9VVyntv8s8Sl5K3c2g+pxIBr2jTJOGHYpESw==
+X-Received: by 2002:aca:4c47:: with SMTP id z68mr1368440oia.64.1556222272113;
+        Thu, 25 Apr 2019 12:57:52 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p14sm9141466otq.34.2019.04.25.12.57.51
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 12:57:11 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 12:57:11 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH 9/9] riscv: call pm_power_off from machine_halt /
- machine_power_off
-In-Reply-To: <20190411115623.5749-10-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1904251227220.17442@viisi.sifive.com>
-References: <20190411115623.5749-1-hch@lst.de> <20190411115623.5749-10-hch@lst.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 25 Apr 2019 12:57:51 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 14:57:50 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        cw00.choi@samsung.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
+        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
+        willy.mh.wolff.ml@gmail.com
+Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add Exynos5422
+ DMC device description
+Message-ID: <20190425195750.GA26031@bogus>
+References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
+ <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Apr 2019, Christoph Hellwig wrote:
-
-> This way any override of pm_power_off also affects the halt path and
-> we don't need additional infrastructure for it.
+On Fri, Apr 19, 2019 at 04:19:24PM +0200, Lukasz Luba wrote:
+> The patch adds description for DT binding for a new Exynos5422 Dynamic
+> Memory Controller device.
 > 
-> Also remove the pm_power_off export - at least for now we don't have
-> any modular drivers overriding it.
-
-I'd propose that we keep the pm_power_off export - both to align with 
-other architectures:
-
-$ fgrep -r pm_power_off arch/ | grep EXPORT
-arch/s390/kernel/setup.c:EXPORT_SYMBOL_GPL(pm_power_off);
-arch/m68k/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/hexagon/kernel/reset.c:EXPORT_SYMBOL(pm_power_off);
-arch/ia64/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/sparc/kernel/process_32.c:EXPORT_SYMBOL(pm_power_off);
-arch/sparc/kernel/reboot.c:EXPORT_SYMBOL(pm_power_off);
-arch/sh/kernel/reboot.c:EXPORT_SYMBOL(pm_power_off);
-arch/um/kernel/reboot.c:EXPORT_SYMBOL(pm_power_off);
-arch/openrisc/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/nios2/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/arc/kernel/reset.c:EXPORT_SYMBOL(pm_power_off);
-arch/arm/kernel/reboot.c:EXPORT_SYMBOL(pm_power_off);
-arch/nds32/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/csky/kernel/power.c:EXPORT_SYMBOL(pm_power_off);
-arch/alpha/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/arm64/kernel/process.c:EXPORT_SYMBOL_GPL(pm_power_off);
-arch/unicore32/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/c6x/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/xtensa/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/h8300/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/powerpc/kernel/setup-common.c:EXPORT_SYMBOL_GPL(pm_power_off);
-arch/mips/kernel/reset.c:EXPORT_SYMBOL(pm_power_off);
-arch/riscv/kernel/reset.c:EXPORT_SYMBOL(pm_power_off);
-arch/microblaze/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-arch/x86/kernel/reboot.c:EXPORT_SYMBOL(pm_power_off);
-arch/parisc/kernel/process.c:EXPORT_SYMBOL(pm_power_off);
-$
-
-and to make sure there's no hassle with the drivers that expect to assign 
-something to it:
-
-$ fgrep -r pm_power_off drivers/ | fgrep =  | cut -f1 -d:  | sort -u | wc -l
-39
-$
-
-For what it's worth, I agree with the implied criticism that reassigning 
-pm_power_off is not a good interface.  There is the obvious problem that 
-more than one chunk of independent code could all try to assign to 
-pm_power_off.  However, to avoid creating a RISC-V-specific mess when 
-someone uses a TI PMIC driver on a RISC-V board, or tries to use ACPI with 
-RISC-V, fixing that seems best done as a separate tree-wide series.
-
-...
-
-Replacing machine_power_off() with a call to your default_power_off() 
-looks fine to me.  However I think it makes sense to change our existing 
-machine_halt() (which was not added by your patch).  Looking at other 
-major architectures - x86, ARM64, and ARM - they don't actually try to 
-power down the system in machine_halt(), instead just entering an 
-infinite loop, WFI, or calling into firmware or a hypervisor.  I'd propose 
-that we align with that approach.
-
-
-- Paul
-
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 > ---
->  arch/riscv/kernel/reset.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
+>  .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
 > 
-> diff --git a/arch/riscv/kernel/reset.c b/arch/riscv/kernel/reset.c
-> index 2a53d26ffdd6..ed637aee514b 100644
-> --- a/arch/riscv/kernel/reset.c
-> +++ b/arch/riscv/kernel/reset.c
-> @@ -12,11 +12,15 @@
->   */
->  
->  #include <linux/reboot.h>
-> -#include <linux/export.h>
->  #include <asm/sbi.h>
->  
-> -void (*pm_power_off)(void) = machine_power_off;
-> -EXPORT_SYMBOL(pm_power_off);
-> +static void default_power_off(void)
-> +{
-> +	sbi_shutdown();
-> +	while (1);
-> +}
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> new file mode 100644
+> index 0000000..133b3cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -0,0 +1,73 @@
+> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
 > +
-> +void (*pm_power_off)(void) = default_power_off;
->  
->  void machine_restart(char *cmd)
->  {
-> @@ -26,11 +30,10 @@ void machine_restart(char *cmd)
->  
->  void machine_halt(void)
->  {
-> -	machine_power_off();
-> +	pm_power_off();
->  }
->  
->  void machine_power_off(void)
->  {
-> -	sbi_shutdown();
-> -	while (1);
-> +	pm_power_off();
->  }
+> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
+> +memory chips are connected. The driver is to monitor the controller in runtime
+> +and switch frequency and voltage. To monitor the usage of the controller in
+> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
+> +is able to measure the current load of the memory.
+> +When 'userspace' governor is used for the driver, an application is able to
+> +switch the DMC and memory frequency.
+> +
+> +Required properties for DMC device for Exynos5422:
+> +- compatible: Should be "samsung,exynos5422-bus".
+> +- clock-names : the name of clock used by the bus, "bus".
+> +- clocks : phandles for clock specified in "clock-names" property.
+> +- devfreq-events : phandles for PPMU devices connected to this DMC.
+> +- vdd-supply : phandle for voltage regulator which is connected.
+> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
+> +- operating-points-v2 : phandle for OPPs described in v2 definition.
+> +- device-handle : phandle of the connected DRAM memory device. For more
+> +	information please refer to Documentation
+
+The memory node(s) should be a child of the memory controller IMO.
+
+> +- devfreq-events : phandles of the PPMU events used by the controller.
+> +
+> +Example:
+> +
+> +	ppmu_dmc0_0: ppmu@10d00000 {
+> +		compatible = "samsung,exynos-ppmu";
+> +		reg = <0x10d00000 0x2000>;
+> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+> +		clock-names = "ppmu";
+> +		status = "okay";
+
+Don't show 'status' in examples.
+
+> +		events {
+> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
+> +				event-name = "ppmu-event3-dmc0_0";
+> +			};
+> +		};
+> +	};
+> +
+> +	dmc: memory-controller@10c20000 {
+> +		compatible = "samsung,exynos5422-dmc";
+> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
+> +			<0x10000000 0x1000>, <0x10030000 0x1000>;
+> +		clocks = 	<&clock CLK_FOUT_SPLL>,
+> +				<&clock CLK_MOUT_SCLK_SPLL>,
+> +				<&clock CLK_FF_DOUT_SPLL2>,
+> +				<&clock CLK_FOUT_BPLL>,
+> +				<&clock CLK_MOUT_BPLL>,
+> +				<&clock CLK_SCLK_BPLL>,
+> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
+> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+> +				<&clock CLK_MOUT_MCLK_CDREX>,
+> +				<&clock CLK_DOUT_CLK2X_PHY0>,
+> +				<&clock CLK_CLKM_PHY0>,
+> +				<&clock CLK_CLKM_PHY1>;
+> +		clock-names =	"fout_spll",
+> +				"mout_sclk_spll",
+> +				"ff_dout_spll2",
+> +				"fout_bpll",
+> +				"mout_bpll",
+> +				"sclk_bpll",
+> +				"mout_mx_mspll_ccore",
+> +				"mout_mx_mspll_ccore_phy",
+> +				"mout_mclk_cdrex",
+> +				"dout_clk2x_phy0",
+> +				"clkm_phy0",
+> +			        "clkm_phy1";
+> +		status = "okay";
+> +		operating-points-v2 = <&dmc_opp_table>;
+> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+> +		operating-points-v2 = <&dmc_opp_table>;
+> +		device-handle = <&samsung_K3QF2F20DB>;
+> +		vdd-supply = <&buck1_reg>;
+> +	};
 > -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 2.7.4
 > 
