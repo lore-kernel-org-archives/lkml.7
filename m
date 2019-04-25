@@ -2,105 +2,148 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE14CC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC320C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE348218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:18:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Lt3fYGgM"
+	by mail.kernel.org (Postfix) with ESMTP id B61A7218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 09:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbfDYJSA (ORCPT
+        id S1728448AbfDYJSJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 05:18:00 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23376 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726887AbfDYJR4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 05:17:56 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3P91RM6023615;
-        Thu, 25 Apr 2019 11:17:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=0/wuEmKjJOSd230MuGusU1DgsuWoQ281XaTZzSew2DI=;
- b=Lt3fYGgMEf3AZV4wmvBC7J/cXQ/kQYjVqDw2uMA8HXAY/uZiRq4ESubcSaxHabMMTqL9
- M7j6abAy7U7GvkdkAaZhDR1OWYn9b1BopV+Ac/bjVYJngo8laVU7d7UjE2wdw29Vlqfh
- HVJ7ox5Bje7wFTLdahtqRDPMJSRkeSIrrbQ5HNIe/5tO3crXQU9nX+ouoUHtWD67OnW9
- /b+tU15K9HXwfoxsae0/uryyrjgm87ukjEhAKy+EA5MfmnRWqs7ifS6uH82pGn+XnD3L
- y/YCGfM2/n06JDp/14ZUfi0KFExVuFwNTiiEe1tBQonCu5wXF4CbmSzbBx0lq6iqxMQT dw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rys6s2m2w-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 25 Apr 2019 11:17:39 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 02F443F;
-        Thu, 25 Apr 2019 09:17:36 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D8C7D1615;
-        Thu, 25 Apr 2019 09:17:35 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 25 Apr
- 2019 11:17:35 +0200
-Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 25 Apr 2019 11:17:35
- +0200
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 5/6] ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
-Date:   Thu, 25 Apr 2019 11:17:22 +0200
-Message-ID: <1556183843-28033-6-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556183843-28033-1-git-send-email-fabien.dessenne@st.com>
-References: <1556183843-28033-1-git-send-email-fabien.dessenne@st.com>
+        Thu, 25 Apr 2019 05:18:09 -0400
+Received: from mga03.intel.com ([134.134.136.65]:52354 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbfDYJSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 05:18:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 02:18:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,393,1549958400"; 
+   d="scan'208";a="167792309"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Apr 2019 02:18:06 -0700
+Received: from fmsmsx162.amr.corp.intel.com (10.18.125.71) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 25 Apr 2019 02:18:06 -0700
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ fmsmsx162.amr.corp.intel.com (10.18.125.71) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 25 Apr 2019 02:18:05 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.92]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.42]) with mapi id 14.03.0415.000;
+ Thu, 25 Apr 2019 17:18:04 +0800
+From:   "Du, Fan" <fan.du@intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Wu, Fengguang" <fengguang.wu@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "xishi.qiuxishi@alibaba-inc.com" <xishi.qiuxishi@alibaba-inc.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Du, Fan" <fan.du@intel.com>
+Subject: RE: [RFC PATCH 5/5] mm, page_alloc: Introduce
+ ZONELIST_FALLBACK_SAME_TYPE fallback list
+Thread-Topic: [RFC PATCH 5/5] mm, page_alloc: Introduce
+ ZONELIST_FALLBACK_SAME_TYPE fallback list
+Thread-Index: AQHU+wg4wWYFBheblUa8IPBSvnCJwqZL5rWAgACUV7D//39ggIAAhyuw//9+rQCAAIghcP//gTcAABHkxSA=
+Date:   Thu, 25 Apr 2019 09:18:03 +0000
+Message-ID: <5A90DA2E42F8AE43BC4A093BF067884825786020@SHSMSX104.ccr.corp.intel.com>
+References: <1556155295-77723-1-git-send-email-fan.du@intel.com>
+ <1556155295-77723-6-git-send-email-fan.du@intel.com>
+ <20190425063807.GK12751@dhcp22.suse.cz>
+ <5A90DA2E42F8AE43BC4A093BF067884825785F04@SHSMSX104.ccr.corp.intel.com>
+ <20190425074841.GN12751@dhcp22.suse.cz>
+ <5A90DA2E42F8AE43BC4A093BF067884825785F50@SHSMSX104.ccr.corp.intel.com>
+ <20190425080936.GP12751@dhcp22.suse.cz>
+ <5A90DA2E42F8AE43BC4A093BF067884825785FA5@SHSMSX104.ccr.corp.intel.com>
+ <20190425084302.GQ12751@dhcp22.suse.cz>
+In-Reply-To: <20190425084302.GQ12751@dhcp22.suse.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODQwNThjYmYtYmNiNi00Y2IxLTllY2QtZmFlNWEzYWU0OWM5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMDM5V281XC94Zm1Yc2dwc1lqZnJCTDhmckFrZFBId2Rpc0t6TTJva1hJOTJJMk9acWZNRVZ1NHBrZ2JURWJMVVMifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.25]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-25_08:,,
- signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define a hwspinlock to be used by the irq controller driver and the
-syscon driver.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 824d7e1..417bdf7 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -921,6 +921,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 			reg = <0x5000d000 0x400>;
-+			hwlocks = <&hsem 1 1>;
- 		};
- 
- 		syscfg: syscon@50020000 {
--- 
-2.7.4
+>-----Original Message-----
+>From: owner-linux-mm@kvack.org [mailto:owner-linux-mm@kvack.org] On
+>Behalf Of Michal Hocko
+>Sent: Thursday, April 25, 2019 4:43 PM
+>To: Du, Fan <fan.du@intel.com>
+>Cc: akpm@linux-foundation.org; Wu, Fengguang <fengguang.wu@intel.com>;
+>Williams, Dan J <dan.j.williams@intel.com>; Hansen, Dave
+><dave.hansen@intel.com>; xishi.qiuxishi@alibaba-inc.com; Huang, Ying
+><ying.huang@intel.com>; linux-mm@kvack.org; linux-kernel@vger.kernel.org
+>Subject: Re: [RFC PATCH 5/5] mm, page_alloc: Introduce
+>ZONELIST_FALLBACK_SAME_TYPE fallback list
+>
+>On Thu 25-04-19 08:20:28, Du, Fan wrote:
+>>
+>>
+>> >-----Original Message-----
+>> >From: owner-linux-mm@kvack.org [mailto:owner-linux-mm@kvack.org] On
+>> >Behalf Of Michal Hocko
+>> >Sent: Thursday, April 25, 2019 4:10 PM
+>> >To: Du, Fan <fan.du@intel.com>
+>> >Cc: akpm@linux-foundation.org; Wu, Fengguang
+><fengguang.wu@intel.com>;
+>> >Williams, Dan J <dan.j.williams@intel.com>; Hansen, Dave
+>> ><dave.hansen@intel.com>; xishi.qiuxishi@alibaba-inc.com; Huang, Ying
+>> ><ying.huang@intel.com>; linux-mm@kvack.org;
+>linux-kernel@vger.kernel.org
+>> >Subject: Re: [RFC PATCH 5/5] mm, page_alloc: Introduce
+>> >ZONELIST_FALLBACK_SAME_TYPE fallback list
+>> >
+>> >On Thu 25-04-19 07:55:58, Du, Fan wrote:
+>> >> >> PMEM is good for frequently read accessed page, e.g. page
+>cache(implicit
+>> >> >> page
+>> >> >> request), or user space data base (explicit page request)
+>> >> >> For now this patch create GFP_SAME_NODE_TYPE for such cases,
+>> >additional
+>> >> >> Implementation will be followed up.
+>> >> >
+>> >> >Then simply configure that NUMA node as movable and you get these
+>> >> >allocations for any movable allocation. I am not really convinced a new
+>> >> >gfp flag is really justified.
+>> >>
+>> >> Case 1: frequently write and/or read accessed page deserved to DRAM
+>> >
+>> >NUMA balancing
+>>
+>> Sorry, I mean page cache case here.
+>> Numa balancing works for pages mapped in pagetable style.
+>
+>I would still expect that a remote PMEM node access latency is
+>smaller/comparable to the real storage so a promoting part is not that
+>important for the unmapped pagecache. Maybe I am wrong here but that
+>really begs for some experiments before we start adding special casing.
+
+I understand your concern :), please refer to following summary from 3rd party.
+https://arxiv.org/pdf/1903.05714.pdf
+
+
+>--
+>Michal Hocko
+>SUSE Labs
 
