@@ -2,66 +2,110 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444F8C282E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D59CC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD10217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A3B218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 07:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556178837;
+	bh=YdMgnXYAI/yAygkfcSIMFDiK3a9yZsZGc8nAqaSDOEM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yq9oaeEiagTrm2Q0KM+AiCGG3Xb6VRmPFbW61ov8PuYaBF+TxIfDotfKY11dThz6f
+	 hnUeq3blNjQscVx1uUw5EEUDbraSRLZ63LVW5PUW5xT9ycWuMaOim66dbpv8MLFMyr
+	 eQvYgw9hVHJg3x1/23tJ7NphJWVB/y03kmgOC4mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfDYHwJ (ORCPT
+        id S1728126AbfDYHx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 03:52:09 -0400
-Received: from [5.180.42.13] ([5.180.42.13]:52402 "EHLO deadmen.hmeau.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbfDYHwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 03:52:09 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hJZAs-0002MZ-L2; Thu, 25 Apr 2019 15:52:06 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hJZAp-00027S-Ey; Thu, 25 Apr 2019 15:52:03 +0800
-Date:   Thu, 25 Apr 2019 15:52:03 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Vitaly Chikunov <vt@altlinux.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] crypto: ecrdsa - select ASN1 and OID_REGISTRY for EC-RDSA
-Message-ID: <20190425075203.a2h5w2d45i2wdxdf@gondor.apana.org.au>
-References: <20190423162954.7859-1-vt@altlinux.org>
+        Thu, 25 Apr 2019 03:53:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40422 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726533AbfDYHxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 03:53:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 66B4DAD7B;
+        Thu, 25 Apr 2019 07:53:54 +0000 (UTC)
+Date:   Thu, 25 Apr 2019 09:53:53 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Du, Fan" <fan.du@intel.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Wu, Fengguang" <fengguang.wu@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "xishi.qiuxishi@alibaba-inc.com" <xishi.qiuxishi@alibaba-inc.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/5] New fallback workflow for heterogeneous memory
+ system
+Message-ID: <20190425075353.GO12751@dhcp22.suse.cz>
+References: <1556155295-77723-1-git-send-email-fan.du@intel.com>
+ <20190425063727.GJ12751@dhcp22.suse.cz>
+ <5A90DA2E42F8AE43BC4A093BF067884825785EE8@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190423162954.7859-1-vt@altlinux.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <5A90DA2E42F8AE43BC4A093BF067884825785EE8@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 07:29:54PM +0300, Vitaly Chikunov wrote:
-> Fix undefined symbol issue in ecrdsa_generic module when ASN1
-> or OID_REGISTRY aren't enabled in the config by selecting these
-> options for CRYPTO_ECRDSA.
+On Thu 25-04-19 07:41:40, Du, Fan wrote:
 > 
-> ERROR: "asn1_ber_decoder" [crypto/ecrdsa_generic.ko] undefined!
-> ERROR: "look_up_OID" [crypto/ecrdsa_generic.ko] undefined!
 > 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-> ---
->  crypto/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
+> >-----Original Message-----
+> >From: Michal Hocko [mailto:mhocko@kernel.org]
+> >Sent: Thursday, April 25, 2019 2:37 PM
+> >To: Du, Fan <fan.du@intel.com>
+> >Cc: akpm@linux-foundation.org; Wu, Fengguang <fengguang.wu@intel.com>;
+> >Williams, Dan J <dan.j.williams@intel.com>; Hansen, Dave
+> ><dave.hansen@intel.com>; xishi.qiuxishi@alibaba-inc.com; Huang, Ying
+> ><ying.huang@intel.com>; linux-mm@kvack.org; linux-kernel@vger.kernel.org
+> >Subject: Re: [RFC PATCH 0/5] New fallback workflow for heterogeneous
+> >memory system
+> >
+> >On Thu 25-04-19 09:21:30, Fan Du wrote:
+> >[...]
+> >> However PMEM has different characteristics from DRAM,
+> >> the more reasonable or desirable fallback style would be:
+> >> DRAM node 0 -> DRAM node 1 -> PMEM node 2 -> PMEM node 3.
+> >> When DRAM is exhausted, try PMEM then.
+> >
+> >Why and who does care? NUMA is fundamentally about memory nodes with
+> >different access characteristics so why is PMEM any special?
+> 
+> Michal, thanks for your comments!
+> 
+> The "different" lies in the local or remote access, usually the underlying
+> memory is the same type, i.e. DRAM.
+> 
+> By "special", PMEM is usually in gigantic capacity than DRAM per dimm, 
+> while with different read/write access latency than DRAM.
 
-Patch applied.  Thanks.
+You are describing a NUMA in general here. Yes access to different NUMA
+nodes has a different read/write latency. But that doesn't make PMEM
+really special from a regular DRAM. There are few other people trying to
+work with PMEM as NUMA nodes and these kind of arguments are repeating
+again and again. So far I haven't really heard much beyond hand waving.
+Please go and read through those discussion so that we do not have to go
+throug the same set of arguments again.
+
+I absolutely do see and understand people want to find a way to use
+their shiny NVIDIMs but please step back and try to think in more
+general terms than PMEM is special and we have to treat it that way.
+We currently have ways to use it as DAX device and a NUMA node then
+focus on how to improve our NUMA handling so that we can get maximum out
+of the HW rather than make a PMEM NUMA node a special snow flake.
+
+Thank you.
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Michal Hocko
+SUSE Labs
