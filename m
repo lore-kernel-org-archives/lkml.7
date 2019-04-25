@@ -2,136 +2,208 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46620C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16617C43219
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF8220693
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731D1206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 16:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbfDYQjk (ORCPT
+        id S1729455AbfDYQjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 12:39:40 -0400
-Received: from foss.arm.com ([217.140.101.70]:48166 "EHLO foss.arm.com"
+        Thu, 25 Apr 2019 12:39:43 -0400
+Received: from foss.arm.com ([217.140.101.70]:48174 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbfDYQjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 12:39:39 -0400
+        id S1726380AbfDYQjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 12:39:42 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 379DE80D;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1B2F15A2;
+        Thu, 25 Apr 2019 09:39:41 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBBF53F557;
         Thu, 25 Apr 2019 09:39:39 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B2DB3F557;
-        Thu, 25 Apr 2019 09:39:38 -0700 (PDT)
-Subject: Re: [RFC PATCH] kprobes/arm64: Blacklist functions called in
- '_sdei_handler'
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1555751217-54310-1-git-send-email-wangxiongfeng2@huawei.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <d9f89a0d-bb73-7162-9fcf-2bcc2ea4bc66@arm.com>
-Date:   Thu, 25 Apr 2019 17:39:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Date:   Thu, 25 Apr 2019 17:39:37 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     julien.thierry@arm.com, marc.zyngier@arm.com,
+        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        christoffer.dall@arm.com, james.morse@arm.com,
+        suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] arm64/fpsimd: Don't disable softirq when touching
+ FPSIMD/SVE state
+Message-ID: <20190425163937.GI3567@e103592.cambridge.arm.com>
+References: <20190423135719.11306-1-julien.grall@arm.com>
+ <20190423135719.11306-4-julien.grall@arm.com>
+ <20190424131734.GT3567@e103592.cambridge.arm.com>
+ <ab9294b0-a360-df28-ca5c-ba4974f6c5a5@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1555751217-54310-1-git-send-email-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab9294b0-a360-df28-ca5c-ba4974f6c5a5@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xiongfeng Wang,
+On Thu, Apr 25, 2019 at 04:57:26PM +0100, Julien Grall wrote:
+> Hi Dave,
+> 
+> On 24/04/2019 14:17, Dave Martin wrote:
+> >On Tue, Apr 23, 2019 at 02:57:19PM +0100, Julien Grall wrote:
+> >>diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+> >>index 5313aa257be6..6168d06bbd20 100644
+> >>--- a/arch/arm64/kernel/fpsimd.c
+> >>+++ b/arch/arm64/kernel/fpsimd.c
+> >>@@ -92,7 +92,8 @@
+> >>   * To prevent this from racing with the manipulation of the task's FPSIMD state
+> >>   * from task context and thereby corrupting the state, it is necessary to
+> >>   * protect any manipulation of a task's fpsimd_state or TIF_FOREIGN_FPSTATE
+> >>- * flag with local_bh_disable() unless softirqs are already masked.
+> >>+ * flag with {, __}get_cpu_fpsimd_context(). This will still allow softirqs to
+> >>+ * run but prevent them to use FPSIMD.
+> >>   *
+> >>   * For a certain task, the sequence may look something like this:
+> >>   * - the task gets scheduled in; if both the task's fpsimd_cpu field
+> >>@@ -155,6 +156,56 @@ extern void __percpu *efi_sve_state;
+> >>  #endif /* ! CONFIG_ARM64_SVE */
+> >>+DEFINE_PER_CPU(bool, fpsimd_context_busy);
+> >>+EXPORT_PER_CPU_SYMBOL(fpsimd_context_busy);
+> >>+
+> >>+static void __get_cpu_fpsimd_context(void)
+> >>+{
+> >>+	bool busy = __this_cpu_xchg(fpsimd_context_busy, true);
+> >>+
+> >>+	WARN_ON(busy);
+> >>+}
+> >>+
+> >>+/*
+> >>+ * Claim ownership of the CPU FPSIMD context for use by the calling context.
+> >>+ *
+> >>+ * The caller may freely modify FPSIMD context until *put_cpu_fpsimd_context()
+> >>+ * is called.
+> >
+> >Nit: it may be better to say "freely manipulate the FPSIMD context
+> >metadata".
+> >
+> >get_cpu_fpsimd_context() isn't enough to allow the FPSIMD regs to be
+> >safely trashed, because they may still contain live data (or an up to
+> >date copy) for some task.
+> 
+> Good point, I will update the comment.
+> 
+> >
+> >(For that you also need fpsimd_save_and_flush_cpu_state(), or just use
+> >kernel_neon_begin() instead.)
+> >
+> >[...]
+> >
+> >>@@ -922,6 +971,8 @@ void fpsimd_thread_switch(struct task_struct *next)
+> >>  	if (!system_supports_fpsimd())
+> >>  		return;
+> >>+	__get_cpu_fpsimd_context();
+> >>+
+> >>  	/* Save unsaved fpsimd state, if any: */
+> >>  	fpsimd_save();
+> >>@@ -936,6 +987,8 @@ void fpsimd_thread_switch(struct task_struct *next)
+> >>  	update_tsk_thread_flag(next, TIF_FOREIGN_FPSTATE,
+> >>  			       wrong_task || wrong_cpu);
+> >>+
+> >>+	__put_cpu_fpsimd_context();
+> >
+> >There should be a note in the commit message explaining why these are
+> >here.
+> >
+> >Are they actually needed, other than to keep
+> >WARN_ON(have_cpu_fpsimd_context()) happy elsewhere?
+> 
+> It depends on how fpsimd_thread_switch() is called. I will answer more below.
+> 
+> >
+> >Does PREEMPT_RT allow non-threaded softirqs to execute while we're in
+> >this code?
+> 
+> This has nothing to do with PREEMPT_RT. Softirqs might be executed after
+> handling interrupt (see irq_exit()).
+> 
+> A call to preempt_disable() will not be enough to prevent softirqs, you
+> actually need to either mask interrupts or have BH disabled.
+> 
+> fpsimd_thread_switch() seems to be only called from the context switch code.
+> AFAICT, interrupt will be masked. Therefore, holding the FPSIMD CPU is not
+> necessary. However...
+> 
+> >
+> >
+> >OTOH, if the overall effect on performance remains positive, we can
+> >probably argue that these operations make the code more self-describing
+> >and help guard against mistakes during future maintanence, even if
+> >they're not strictly needed today.
+> 
+> .... I think it would help guard against mistakes. The more I haven't seen
+> any performance impact in the benchmark.
 
-On 20/04/2019 10:06, Xiongfeng Wang wrote:
-> Functions called in '_sdei_handler' are needed to be marked as
-> 'nokprobe'.
+Which generally seems a good thing.  The commit message should explain
+that these are being added for hygiene rather than necessity here,
+though.
 
-+ "Because these functions are called in NMI context and neither the arch-code's debug
-infrastructure nor kprobes core supports this."
+> [...]
+> 
+> >>-/*
+> >>- * Save the FPSIMD state to memory and invalidate cpu view.
+> >>- * This function must be called with softirqs (and preemption) disabled.
+> >>- */
+> >>+/* Save the FPSIMD state to memory and invalidate cpu view. */
+> >>  void fpsimd_save_and_flush_cpu_state(void)
+> >>  {
+> >>+	get_cpu_fpsimd_context();
+> >>  	fpsimd_save();
+> >>  	fpsimd_flush_cpu_state();
+> >>+	put_cpu_fpsimd_context();
+> >>  }
+> >
+> >Again, are these added just to keep WARN_ON()s happy?
+> 
+> !preemptible() is not sufficient to prevent softirq running. You also need
+> to have either interrupt masked or BH disabled.
 
+So, why was the code safe before this series?  (In fact, _was_ it safe?)
 
-> ---
-> When I kprobe 'sdei_smccc_smc',
+AFAICT, we have local_irq_disable() around context switch, which covers
+preempt notifiers (where kvm_arch_vcpu_put_fp() gets called) and
+fpsimd_thread_switch(): this is what prevents softirqs from firing.
 
-Heh, when debugging this I put printk()s on the other side.
+So, while it's clean to have get/put here, I still don't see why they're
+required.
 
+I think the arguments are basically similar to fpsimd_thread_switch().
+Since fpsimd_save_and_flush_cpu_state() and fpsimd_thread_switch() are
+called from similar contexts, is makes sense to keep them aligned.
 
-> the cpu hungs. I am not sure if it is
-> becase when SDEI events interrupt EL0, '__sdei_asm_entry_trampoline'
-> didn't restore vbar_el1 with kernel vectors.
+> >Now I look at the diff, I think after all that
+> >
+> >	WARN_ON(preemptible());
+> >	__get_cpu_fpsimd_context();
+> >
+> >	...
+> >
+> >	__put_cpu_fpsimd_context();
+> >
+> >is preferable.  The purpose of this function is to free up the FPSIMD
+> >regs for use by the kernel, so it makes no sense to call it with
+> >preemption enabled: the regs could spontaneously become live again due
+> >to a context switch.  So we shouldn't encourage misuse by making the
+> >function "safe" to call with preemption enabled.
+> 
+> Ok, I will switch back to the underscore version and add a WARN_ON(...).
 
-Yes, we don't expect exceptions from the NMI handler, so VBAR_EL1 is left as whatever its
-current state is. Today it could be the EL0 trampoline, the kernel vectors proper, or KVMs
-vectors. This may change in the future, all SDEI does with VBAR_EL1 is emulate the
-architecture: read it in order to fake up an interrupt on exit.
+Thanks.
 
+[...]
 
-> Or is it becasue brk
-> exception corrupt elr_el1 and trust firmware didn't preserve it for us?
-
-Yes, this too! "5.2.1.1 Client responsibilities" of [0]
-| The handler may modify the accessible System registers, but these must be restored
-| before the handler completes.
-
-We don't do this, because its extra work, and we don't ever anticipate it being necessary.
-
-
-> drivers/firmware/arm_sdei.c | 3 +++
-> 1 file changed, 3 insertions(+)
-
-Nit: Because this patch only touches this file, the subject prefix should really be
-"firmware: arm_sdei:". Running 'git log --online' over a file should give you a hint at
-what the expected style is. This lets people spot the patches they need to look at.
-
-
-
-> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-> index e6376f9..9cd70d1 100644
-> --- a/drivers/firmware/arm_sdei.c
-> +++ b/drivers/firmware/arm_sdei.c
-> @@ -165,6 +165,7 @@ static int invoke_sdei_fn(unsigned long function_id, unsigned long arg0,
->  
->  	return err;
->  }
-> +NOKPROBE_SYMBOL(invoke_sdei_fn);
-
-Ah! These are called via sdei_api_event_context(). Oops.
-
-
->  static struct sdei_event *sdei_event_find(u32 event_num)
->  {
-> @@ -879,6 +880,7 @@ static void sdei_smccc_smc(unsigned long function_id,
->  {
->  	arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4, 0, 0, res);
->  }
-> +NOKPROBE_SYMBOL(sdei_smccc_smc);
->  
->  static void sdei_smccc_hvc(unsigned long function_id,
->  			   unsigned long arg0, unsigned long arg1,
-> @@ -887,6 +889,7 @@ static void sdei_smccc_hvc(unsigned long function_id,
->  {
->  	arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4, 0, 0, res);
->  }
-> +NOKPROBE_SYMBOL(sdei_smccc_hvc);
->  
->  int sdei_register_ghes(struct ghes *ghes, sdei_event_callback *normal_cb,
->  		       sdei_event_callback *critical_cb)
-
-
-Thanks for making this more robust!
-
-Reviewed-by: James Morse <james.morse@arm.com>
-
-
-Thanks,
-
-James
-
-
-[0]
-http://infocenter.arm.com/help/topic/com.arm.doc.den0054a/ARM_DEN0054A_Software_Delegated_Exception_Interface.pdf
+Cheers
+---Dave
