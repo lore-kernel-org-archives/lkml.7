@@ -2,230 +2,118 @@ Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663BFC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D22C43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE0020878
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B508206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 20:23:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J4W5YP5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387677AbfDYUWE (ORCPT
+        id S2387705AbfDYUXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 16:22:04 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:44886 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfDYUWE (ORCPT
+        Thu, 25 Apr 2019 16:23:52 -0400
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:38147 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfDYUXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 16:22:04 -0400
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 24D2C30549E9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 13:22:02 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id m4so1088033edd.8
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 13:22:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAWh1K458c91PtBVfJaWkaP6CWdZlw0NmgqFXBTNpMkXo8GttO56
-        5UmIuZyAMAlnYZ3LO310iZbdU7aW9OUSbxmmbVtkWA==
-X-Google-Smtp-Source: APXvYqwweChsi3AqnPdDUOT5D9d5rwoZCYeMBtQXYLl4G2mrsjzWKLwvwisxAXFZFa5rLsHsYJa9ISezA51ERu+uvqM=
-X-Received: by 2002:a17:906:5586:: with SMTP id y6mr12040782ejp.48.1556223720560;
- Thu, 25 Apr 2019 13:22:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190425175440.9354-1-pasha.tatashin@soleen.com>
- <20190425175440.9354-3-pasha.tatashin@soleen.com> <77c286e3-8708-6e64-94a1-fb44b6bbff3f@intel.com>
-In-Reply-To: <77c286e3-8708-6e64-94a1-fb44b6bbff3f@intel.com>
-From:   Pavel Tatashin <patatash@linux.microsoft.com>
-Date:   Thu, 25 Apr 2019 16:21:49 -0400
-X-Gmail-Original-Message-ID: <CA+CK2bA=t2U51-Zoii1RWEDbXwvQ_ZALtJyQVZ392b8f7H+sew@mail.gmail.com>
-Message-ID: <CA+CK2bA=t2U51-Zoii1RWEDbXwvQ_ZALtJyQVZ392b8f7H+sew@mail.gmail.com>
-Subject: Re: [v3 2/2] device-dax: "Hotremove" persistent memory that is used
- like normal RAM
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        David Hildenbrand <david@redhat.com>
+        Thu, 25 Apr 2019 16:23:51 -0400
+Received: by mail-vk1-f201.google.com with SMTP id u20so501768vku.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 13:23:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=lYPpgNkuYL/UXj4RzVEQzfR0g2A/fW/hCvtNkvFYhqw=;
+        b=J4W5YP5UnwpMpQ7LVf49jdjMSKa9+TuqygYeYA8m199Sy706j9bCaFoaW6REUEL60B
+         tZuOIxsYM2/aCpfr2t5gMx7YhggQxwv2blHrirMWWiDu50yONbFztn48AtU2UODSPGVS
+         vPbjNf4bJr8Cn0z79ZRoac5OP8wZ80a6udaUKfLKCChSr3LMAPeVRle3y29B6ZXK9Gr5
+         5J55EauRa13oECD0SgvdFqtAQtGvL1eLkeFN/0QZW2eHguVFV7NWNiM1WY9n5O/8fBaR
+         D8iKa64i3vNymuRFQqGljC5MgakHoHvJJhRLo6HoNTBrT57fsT1LfiiLh44S/olVrCK8
+         /1ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=lYPpgNkuYL/UXj4RzVEQzfR0g2A/fW/hCvtNkvFYhqw=;
+        b=QFcn76BbGzAuuzVeZobMEyjc8oQwezJaBgT3C7Dz+NVHwcRuFQK1uuU0ON5QOC9OGQ
+         zO7WpOXzhfgm3M/4EW2p2RI4KOS8g4HavvDH3JQ4S2tyA5dXYOEB0UpasghqemSuQqwd
+         2rpaznNtvOplaOKcharZ1qqMECZEKlGOYp/q9O36P3nIKCemQ7IfcLuFP5DgKhKGsheO
+         iisH1S5DEaa3U4J8jkEWFZOiTGz2RXT57QAngj2NZ/+pkr7WPzaxT3YWpRo2iQ8gsxet
+         IefmeKav2Tji3Loyeq8qMjoep+9KhxX6Iw5nnBDqkqRe5Sjwrq/GedWLz6ERpMBZNAqp
+         swFw==
+X-Gm-Message-State: APjAAAVixTNnIqM5WGqINHXrTu4Px5u47l4lS49FCWSUgqnPkTFfVarT
+        /2x2/H7/AQxURCQFoEDQj1dpitv4T5Nq
+X-Google-Smtp-Source: APXvYqz43J3gj3FJFFk7eWuLDdCsAkB5ssgtC9kn39T9R/ELLx03D9K4hl9FLDXZyDblK1hN4tRBtaVQSWf0
+X-Received: by 2002:a67:f30f:: with SMTP id p15mr22276944vsf.158.1556223830537;
+ Thu, 25 Apr 2019 13:23:50 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 13:23:47 -0700
+Message-Id: <20190425202347.83880-1-venture@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+Subject: [PATCH] fixup! drivers/misc: Add Aspeed P2A control driver
+From:   Patrick Venture <venture@google.com>
+To:     venture@google.com, arnd@arndb.de, gregkh@linuxfoundation.org,
+        joel@jms.id.au, andrew@aj.id.au
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        arm@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 3:01 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> Hi Pavel,
->
-> Thanks for doing this!  I knew we'd have to get to it eventually, but
-> sounds like you needed it sooner rather than later.
+Fixup compiler warnings:
+ - 108 warning: ISO C90 forbids mixed declarations and code
+ - 264 warning: unused variable 'value'
+ - 335 warning: unused variable 'res'
 
-Hi Dave,
+Signed-off-by: Patrick Venture <venture@google.com>
+---
+ drivers/misc/aspeed-p2a-ctrl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thank you for taking time reviewing this work, my comments below:
+diff --git a/drivers/misc/aspeed-p2a-ctrl.c b/drivers/misc/aspeed-p2a-ctrl.c
+index c0521b2ffc6a..9736821972ef 100644
+--- a/drivers/misc/aspeed-p2a-ctrl.c
++++ b/drivers/misc/aspeed-p2a-ctrl.c
+@@ -99,13 +99,14 @@ static void aspeed_p2a_disable_bridge(struct aspeed_p2a_ctrl *p2a_ctrl)
+ 
+ static int aspeed_p2a_mmap(struct file *file, struct vm_area_struct *vma)
+ {
++	unsigned long vsize;
+ 	struct aspeed_p2a_user *priv = file->private_data;
+ 	struct aspeed_p2a_ctrl *ctrl = priv->parent;
+ 
+ 	if (ctrl->mem_base == 0 && ctrl->mem_size == 0)
+ 		return -EINVAL;
+ 
+-	unsigned long vsize = vma->vm_end - vma->vm_start;
++	vsize = vma->vm_end - vma->vm_start;
+ 	pgprot_t prot = vma->vm_page_prot;
+ 
+ 	if (vma->vm_pgoff + vsize > ctrl->mem_base + ctrl->mem_size)
+@@ -261,7 +262,6 @@ static int aspeed_p2a_open(struct inode *inode, struct file *file)
+ static int aspeed_p2a_release(struct inode *inode, struct file *file)
+ {
+ 	int i;
+-	u32 value;
+ 	u32 bits = 0;
+ 	bool open_regions = false;
+ 	struct aspeed_p2a_user *priv = file->private_data;
+@@ -332,7 +332,7 @@ static int aspeed_p2a_ctrl_probe(struct platform_device *pdev)
+ {
+ 	struct aspeed_p2a_ctrl *misc_ctrl;
+ 	struct device *dev;
+-	struct resource *res, resm;
++	struct resource resm;
+ 	struct device_node *node;
+ 	int rc = 0;
+ 
+-- 
+2.21.0.593.g511ec345e18-goog
 
-> >
-> > +#ifdef CONFIG_MEMORY_HOTREMOVE
->
-> Instead of this #ifdef, is there any downside to doing
->
->         if (!IS_ENABLED(CONFIG_MEMORY_HOTREMOVE)) {
->                 /*
->                  * Without hotremove, purposely leak ...
->                  */
->                 return 0;
->         }
-
-Your method relies that compiler will optimize out all the code that
-is not needed, and that dependencies such as __remove_memory() have
-empty stubs. So, I prefer that way it is currently implemented.
-
->
->
-> > +/*
-> > + * Check that device-dax's memory_blocks are offline. If a memory_block is not
-> > + * offline a warning is printed and an error is returned. dax hotremove can
-> > + * succeed only when every memory_block is offlined beforehand.
-> > + */
->
-> I'd much rather see comments inline with the code than all piled at the
-> top of a function like this.
-
-OK
-
->
-> One thing that would be helpful, though, is a reminder about needing the
-> device hotplug lock.
-
-OK
-
->
-> > +static int
-> > +check_memblock_offlined_cb(struct memory_block *mem, void *arg)
-> > +{
-> > +     struct device *mem_dev = &mem->dev;
-> > +     bool is_offline;
-> > +
-> > +     device_lock(mem_dev);
-> > +     is_offline = mem_dev->offline;
-> > +     device_unlock(mem_dev);
-> > +
-> > +     if (!is_offline) {
-> > +             struct device *dev = (struct device *)arg;
->
-> The two devices confused me for a bit here.  Seems worth a comment to
-> remind the reader what this device _is_ versus 'mem_dev'.
-
-OK
-
->
-> > +             unsigned long spfn = section_nr_to_pfn(mem->start_section_nr);
-> > +             unsigned long epfn = section_nr_to_pfn(mem->end_section_nr);
-> > +             phys_addr_t spa = spfn << PAGE_SHIFT;
-> > +             phys_addr_t epa = epfn << PAGE_SHIFT;
-> > +
-> > +             dev_warn(dev, "memory block [%pa-%pa] is not offline\n",
-> > +                      &spa, &epa);
->
-> I thought we had a magic resource printk %something.  Could we just
-> print one of the device resources here to save all the section/pfn/paddr
-> calculations?
-
-There is no resource for each memory block device, only for system
-ram. Since here we inform admin about a particular memory block that
-is not offlined, I do not see how to do it differently.
-
->
-> Also, should we consider a slightly scarier message?  This path has a
-> permanent, user-visible effect (we can never try to unbind again).
-
-hm, how about:
-dev_err(
-"DAX region %pR cannot be hotremoved until next reboot because memory
-block [%pa-%pa] is not offline"
-)
-
->
-> > +             return -EBUSY;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
->
-> Even though they're static, I'd prefer that we not create two versions
-> of check_memblock_offlined_cb() in the kernel.  Can we give this a
-> better, non-conflicting name?
-
-how about check_devdax_mem_offlined_cb ?
-
->
-> > +static int dev_dax_kmem_remove(struct device *dev)
-> > +{
-> > +     struct dev_dax *dev_dax = to_dev_dax(dev);
-> > +     struct resource *res = dev_dax->dax_kmem_res;
-> > +     resource_size_t kmem_start;
-> > +     resource_size_t kmem_size;
-> > +     unsigned long start_pfn;
-> > +     unsigned long end_pfn;
-> > +     int rc;
-> > +
-> > +     /*
-> > +      * dax kmem resource does not exist, means memory was never hotplugged.
-> > +      * So, nothing to do here.
-> > +      */
-> > +     if (!res)
-> > +             return 0;
->
-> How could that happen?  I can't think of any obvious scenarios.
-
-Yes, I do not think this is possible. I can remove this check. Just
-feels safer to have it though.
-
->
-> > +     kmem_start = res->start;
-> > +     kmem_size = resource_size(res);
-> > +     start_pfn = kmem_start >> PAGE_SHIFT;
-> > +     end_pfn = start_pfn + (kmem_size >> PAGE_SHIFT) - 1;
-> > +
-> > +     /*
-> > +      * Walk and check that every singe memory_block of dax region is
-> > +      * offline
-> > +      */
-> > +     lock_device_hotplug();
-> > +     rc = walk_memory_range(start_pfn, end_pfn, dev,
-> > +                            check_memblock_offlined_cb);
->
-> Does lock_device_hotplug() also lock memory online/offline?  Otherwise,
-> isn't this offline check racy?  If not, can you please spell that out in
-> a comment?
-
-Yes, it locks memory online/offline via sysfs: online_store(), as that
-one also takes this lock lock_device_hotplug(). If someone else wants
-to offline/online the memory they also need to take this lock.
-
->
-> Also, could you compare this a bit to the walk_memory_range() use in
-> __remove_memory()?  Why do we need two walks looking for offline blocks?
-
-It is basically doing the same thing, but I do not really see a way
-around this. Because __remove_memory() assumes that pages are
-offlined, checks, and panics if they are not. Here, we do not panic,
-but inform admin of consequences.
-
-Thank you,
-Pasha
