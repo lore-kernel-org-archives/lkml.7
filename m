@@ -6,95 +6,114 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AE9C43218
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5EEC43218
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0CE2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A94620717
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 14:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PwXL66dW"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="U8/Hg020"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbfDYO3h (ORCPT
+        id S1726049AbfDYOaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 10:29:37 -0400
+        Thu, 25 Apr 2019 10:30:05 -0400
 Received: from pegase1.c-s.fr ([93.17.236.30]:64279 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727793AbfDYO3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 10:29:34 -0400
+        id S1727913AbfDYO3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 10:29:37 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44qfhW6rfxz9v077;
-        Thu, 25 Apr 2019 16:29:31 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 44qfhZ5kgLz9v07L;
+        Thu, 25 Apr 2019 16:29:34 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=PwXL66dW; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=U8/Hg020; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Kb3nQpI5GC-P; Thu, 25 Apr 2019 16:29:31 +0200 (CEST)
+        with ESMTP id ovHELJZ2eFk3; Thu, 25 Apr 2019 16:29:34 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44qfhW5qrGz9v06V;
-        Thu, 25 Apr 2019 16:29:31 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44qfhZ4k9Nz9v06V;
+        Thu, 25 Apr 2019 16:29:34 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556202571; bh=cZ1QMAayAZBOmwbyBpo0uNyvjh2VFaZERn9kUJF6Jx0=;
+        t=1556202574; bh=TwaIS2P81oPcrASBsdsj/1AWlg/8riE96JLh5A3sUas=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=PwXL66dWhMCczy1GkQxVKjBjNfLTknti6RCYO/dQyE/kkLSzNFBqsSsLZ4T90s+IG
-         trKhSoqCC5oQCP6vJrZp6YF822O8kFEqvOpeGM64l/OJjJX9nBPMwdRUUM7pmSt+Ch
-         peHcLYeXCdAvZ685FEJww1zn0UwPzENbmFbzLclY=
+        b=U8/Hg020NC+94+eCvjW4y2f2bWclR29QvzVVZWmL1VB7vXxIInZp9JFsRBpKhp6oU
+         MtYbQs6L1dNQSjz4L76lNupPPvkUaGioufV5/BOTT4olHoe0KRgMyrSq1ItVlSFb70
+         lskvBxMb9XL05b1QAEgVOOXUz7ybMNPhcYBjQbPI=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 48CAB8B933;
-        Thu, 25 Apr 2019 16:29:33 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 33ADB8B931;
+        Thu, 25 Apr 2019 16:29:36 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xJHvZc0Zba8A; Thu, 25 Apr 2019 16:29:33 +0200 (CEST)
+        with ESMTP id VPpSKOszOp44; Thu, 25 Apr 2019 16:29:36 +0200 (CEST)
 Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EA6988B923;
-        Thu, 25 Apr 2019 16:29:32 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0C4108B923;
+        Thu, 25 Apr 2019 16:29:36 +0200 (CEST)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id B421C66276; Thu, 25 Apr 2019 14:29:32 +0000 (UTC)
-Message-Id: <05126096391a1bfcd53c09f69a534987eec0a6a6.1556202029.git.christophe.leroy@c-s.fr>
+        id C9F1866276; Thu, 25 Apr 2019 14:29:35 +0000 (UTC)
+Message-Id: <306daa20cb5b7c361b28831a190e45b16245779d.1556202029.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1556202028.git.christophe.leroy@c-s.fr>
 References: <cover.1556202028.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 06/11] powerpc/mm: remove unnecessary #ifdef CONFIG_PPC64
+Subject: [PATCH v2 09/11] powerpc/mm: define get_slice_psize() all the time
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 25 Apr 2019 14:29:32 +0000 (UTC)
+Date:   Thu, 25 Apr 2019 14:29:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For PPC32 that's a noop, gcc should be smart enough to ignore it.
+get_slice_psize() can be defined regardless of CONFIG_PPC_MM_SLICES
+to avoid ifdefs
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/mm/slice.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/powerpc/include/asm/slice.h | 5 +++++
+ arch/powerpc/mm/hugetlbpage.c    | 4 +---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/mm/slice.c b/arch/powerpc/mm/slice.c
-index 31de91b65a64..840c4118a185 100644
---- a/arch/powerpc/mm/slice.c
-+++ b/arch/powerpc/mm/slice.c
-@@ -118,13 +118,11 @@ static int slice_high_has_vma(struct mm_struct *mm, unsigned long slice)
- 	unsigned long start = slice << SLICE_HIGH_SHIFT;
- 	unsigned long end = start + (1ul << SLICE_HIGH_SHIFT);
+diff --git a/arch/powerpc/include/asm/slice.h b/arch/powerpc/include/asm/slice.h
+index be8af667098f..c6f466f4c241 100644
+--- a/arch/powerpc/include/asm/slice.h
++++ b/arch/powerpc/include/asm/slice.h
+@@ -36,6 +36,11 @@ void slice_setup_new_exec(void);
  
--#ifdef CONFIG_PPC64
- 	/* Hack, so that each addresses is controlled by exactly one
- 	 * of the high or low area bitmaps, the first high area starts
- 	 * at 4GB, not 0 */
- 	if (start == 0)
--		start = SLICE_LOW_TOP;
+ static inline void slice_init_new_context_exec(struct mm_struct *mm) {}
+ 
++static inline unsigned int get_slice_psize(struct mm_struct *mm, unsigned long addr)
++{
++	return 0;
++}
++
+ #endif /* CONFIG_PPC_MM_SLICES */
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index 9e732bb2c84a..5f67e7a4d1cc 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -578,14 +578,12 @@ unsigned long hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+ 
+ unsigned long vma_mmu_pagesize(struct vm_area_struct *vma)
+ {
+-#ifdef CONFIG_PPC_MM_SLICES
+ 	/* With radix we don't use slice, so derive it from vma*/
+-	if (!radix_enabled()) {
++	if (IS_ENABLED(CONFIG_PPC_MM_SLICES) && !radix_enabled()) {
+ 		unsigned int psize = get_slice_psize(vma->vm_mm, vma->vm_start);
+ 
+ 		return 1UL << mmu_psize_to_shift(psize);
+ 	}
 -#endif
-+		start = (unsigned long)SLICE_LOW_TOP;
- 
- 	return !slice_area_is_free(mm, start, end - start);
+ 	return vma_kernel_pagesize(vma);
  }
+ 
 -- 
 2.13.3
 
