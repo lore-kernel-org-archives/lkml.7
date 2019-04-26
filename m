@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDC7C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2F5C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B28208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B77208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271675;
-	bh=k+ZzsoIWNxad8KMGhnYqBjQqMkPM/DXJRHs7XcGalTw=;
+	s=default; t=1556271678;
+	bh=A/GtMtdQZmsSqYaFvQWbVstuKbysiglHBQlafyO0tF0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=SuhdGGXlGy2IMsYpzdLUzTcaAoohdX0miVC4oN4xiNy8lXsZ1hNY8/kGn8cY7EMvd
-	 WW4eEeEyVDjRPX0rsWMUG1C53bKyd3/O5EPsv8KCJgPn6U353LbCguZbJOX1QFok2M
-	 ho2k/2G77opxmO/1vhDV5mwlcTm5EfUvUbzg2CnQ=
+	b=U/V6fURmflMks5LjPG+d6nLq5dvksOtlD+R3ag9LfOOpsdqwuWEnw8TB6KqtCZR17
+	 DckC/UyeNsMcZoSzBTa7n2coNP4aRajxm9pzmjZeuYUiTuIHrlh0LQKu+lcfWTij2H
+	 UfrfV0SZYQHQGXIMvsWSuNwqYYOefjNrV0RJ7M7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfDZJlO (ORCPT
+        id S1726893AbfDZJlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:41:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46980 "EHLO
+        Fri, 26 Apr 2019 05:41:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47104 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfDZJlM (ORCPT
+        with ESMTP id S1726853AbfDZJlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:41:12 -0400
+        Fri, 26 Apr 2019 05:41:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=qCGmuSYmSH2D7vbtdW8oXv5UiMon8QxN9SaH2coDR5U=; b=C0LPmzMSQWh5
-        zqj9lFIdpF4id0J0iI5wQnvg1r/YCTzZP9eVs3K7TvqxZQgX31KmA84eYcnvYfsYYFObTfkn1aEwv
-        4tY18f15ymtpMKBlTPg4aZToRg5/X8JPuNFOGQGJN1lBwsBJGLMdqSyL+8RNUyxMyntI6/tcT380W
-        d23ic=;
+        List-Archive; bh=p30AVwRBOVn8CBY400HfLGHKv50QuypTByEKhNpxn/Y=; b=dv0rzVMJAhS9
+        X1GI24pGxoRbsTFH/nFKviB1AdH2kZU4u7iW0anZ4xnNY8PHlXmC8UPVKF3ffffnKXxzcNsDnEitZ
+        RiTsWI3g7ZaC+iDspL/ks4Phembv8pPTMPIADGyPyH6c4Xz2OoAr9ZSbCZabsoSYybfaPyHvIEbmS
+        Moeg4=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxLx-0003Kr-Fy; Fri, 26 Apr 2019 09:41:09 +0000
+        id 1hJxM0-0003Ks-RI; Fri, 26 Apr 2019 09:41:12 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 44091441D3B; Fri, 26 Apr 2019 10:41:03 +0100 (BST)
+        id 9D1B2441D3C; Fri, 26 Apr 2019 10:41:06 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: tps65218: Convert to use regulator_get_current_limit_regmap" to the regulator tree
+Subject: Applied "regulator: ab8500: Remove *regulator from struct ab8500_regulator_info" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094103.44091441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:41:03 +0100 (BST)
+Message-Id: <20190426094106.9D1B2441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:41:06 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps65218: Convert to use regulator_get_current_limit_regmap
+   regulator: ab8500: Remove *regulator from struct ab8500_regulator_info
 
 has been applied to the regulator tree at
 
@@ -85,151 +85,65 @@ to this mail.
 Thanks,
 Mark
 
-From 7cfcecfb82afe81fdc94ec214f2ad3d83eb2a4ba Mon Sep 17 00:00:00 2001
+From 7c6b8e3b9fe85af29b66478d585a0cffd6caa1df Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Sat, 13 Apr 2019 10:29:07 +0800
-Subject: [PATCH] regulator: tps65218: Convert to use
- regulator_get_current_limit_regmap
+Date: Fri, 12 Apr 2019 22:11:58 +0800
+Subject: [PATCH] regulator: ab8500: Remove *regulator from struct
+ ab8500_regulator_info
 
-Use regulator_get_current_limit_regmap helper to save some code.
+Current code is using devm_regulator_register() so we don't need to save
+*regulator for clean up, use a local variable instead.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps65218-regulator.c | 48 ++++++++++----------------
- 1 file changed, 19 insertions(+), 29 deletions(-)
+ drivers/regulator/ab8500.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
-index 7aed3fbffecc..b72035610013 100644
---- a/drivers/regulator/tps65218-regulator.c
-+++ b/drivers/regulator/tps65218-regulator.c
-@@ -29,7 +29,8 @@
- #include <linux/mfd/tps65218.h>
+diff --git a/drivers/regulator/ab8500.c b/drivers/regulator/ab8500.c
+index 6b9a3463f1fd..3fcb4cbaab02 100644
+--- a/drivers/regulator/ab8500.c
++++ b/drivers/regulator/ab8500.c
+@@ -44,7 +44,6 @@ struct ab8500_shared_mode {
+  * struct ab8500_regulator_info - ab8500 regulator information
+  * @dev: device pointer
+  * @desc: regulator description
+- * @regulator_dev: regulator device
+  * @shared_mode: used when mode is shared between two regulators
+  * @load_lp_uA: maximum load in idle (low power) mode
+  * @update_bank: bank to control on/off
+@@ -65,7 +64,6 @@ struct ab8500_shared_mode {
+ struct ab8500_regulator_info {
+ 	struct device		*dev;
+ 	struct regulator_desc	desc;
+-	struct regulator_dev	*regulator;
+ 	struct ab8500_shared_mode *shared_mode;
+ 	int load_lp_uA;
+ 	u8 update_bank;
+@@ -1600,6 +1598,7 @@ static int ab8500_regulator_register(struct platform_device *pdev,
+ 	struct ab8500 *ab8500 = dev_get_drvdata(pdev->dev.parent);
+ 	struct ab8500_regulator_info *info = NULL;
+ 	struct regulator_config config = { };
++	struct regulator_dev *rdev;
  
- #define TPS65218_REGULATOR(_name, _of, _id, _type, _ops, _n, _vr, _vm, _er, \
--			   _em, _cr, _cm, _lr, _nlr, _delay, _fuv, _sr, _sm) \
-+			   _em, _cr, _cm, _lr, _nlr, _delay, _fuv, _sr, _sm, \
-+			   _ct, _ncl) \
- 	{							\
- 		.name			= _name,		\
- 		.of_match		= _of,			\
-@@ -42,6 +43,8 @@
- 		.vsel_mask		= _vm,			\
- 		.csel_reg		= _cr,			\
- 		.csel_mask		= _cm,			\
-+		.curr_table		= _ct,			\
-+		.n_current_limits	= _ncl,			\
- 		.enable_reg		= _er,			\
- 		.enable_mask		= _em,			\
- 		.volt_table		= NULL,			\
-@@ -188,8 +191,7 @@ static const struct regulator_ops tps65218_ldo1_dcdc34_ops = {
- 	.set_suspend_disable	= tps65218_pmic_set_suspend_disable,
- };
+ 	/* assign per-regulator data */
+ 	info = &abx500_regulator.info[id];
+@@ -1621,12 +1620,11 @@ static int ab8500_regulator_register(struct platform_device *pdev,
+ 	}
  
--static const int ls3_currents[] = { 100000, 200000, 500000, 1000000 };
--
-+static const unsigned int ls3_currents[] = { 100000, 200000, 500000, 1000000 };
+ 	/* register regulator with framework */
+-	info->regulator = devm_regulator_register(&pdev->dev, &info->desc,
+-						&config);
+-	if (IS_ERR(info->regulator)) {
++	rdev = devm_regulator_register(&pdev->dev, &info->desc, &config);
++	if (IS_ERR(rdev)) {
+ 		dev_err(&pdev->dev, "failed to register regulator %s\n",
+ 			info->desc.name);
+-		return PTR_ERR(info->regulator);
++		return PTR_ERR(rdev);
+ 	}
  
- static int tps65218_pmic_set_input_current_lim(struct regulator_dev *dev,
- 					       int lim_uA)
-@@ -229,29 +231,13 @@ static int tps65218_pmic_set_current_limit(struct regulator_dev *dev,
- 				 TPS65218_PROTECT_L1);
- }
- 
--static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
--{
--	int retval;
--	unsigned int index;
--	struct tps65218 *tps = rdev_get_drvdata(dev);
--
--	retval = regmap_read(tps->regmap, dev->desc->csel_reg, &index);
--	if (retval < 0)
--		return retval;
--
--	index = (index & dev->desc->csel_mask) >>
--					 __builtin_ctz(dev->desc->csel_mask);
--
--	return ls3_currents[index];
--}
--
- static const struct regulator_ops tps65218_ls23_ops = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= tps65218_pmic_enable,
- 	.disable		= tps65218_pmic_disable,
- 	.set_input_current_limit = tps65218_pmic_set_input_current_lim,
- 	.set_current_limit	= tps65218_pmic_set_current_limit,
--	.get_current_limit	= tps65218_pmic_get_current_limit,
-+	.get_current_limit	= regulator_get_current_limit_regmap,
- };
- 
- /* Operations permitted on DCDC5, DCDC6 */
-@@ -270,53 +256,57 @@ static const struct regulator_desc regulators[] = {
- 			   TPS65218_CONTROL_DCDC1_MASK, TPS65218_REG_ENABLE1,
- 			   TPS65218_ENABLE1_DC1_EN, 0, 0, dcdc1_dcdc2_ranges,
- 			   2, 4000, 0, TPS65218_REG_SEQ3,
--			   TPS65218_SEQ3_DC1_SEQ_MASK),
-+			   TPS65218_SEQ3_DC1_SEQ_MASK, NULL, 0),
- 	TPS65218_REGULATOR("DCDC2", "regulator-dcdc2", TPS65218_DCDC_2,
- 			   REGULATOR_VOLTAGE, tps65218_dcdc12_ops, 64,
- 			   TPS65218_REG_CONTROL_DCDC2,
- 			   TPS65218_CONTROL_DCDC2_MASK, TPS65218_REG_ENABLE1,
- 			   TPS65218_ENABLE1_DC2_EN, 0, 0, dcdc1_dcdc2_ranges,
- 			   2, 4000, 0, TPS65218_REG_SEQ3,
--			   TPS65218_SEQ3_DC2_SEQ_MASK),
-+			   TPS65218_SEQ3_DC2_SEQ_MASK, NULL, 0),
- 	TPS65218_REGULATOR("DCDC3", "regulator-dcdc3", TPS65218_DCDC_3,
- 			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 64,
- 			   TPS65218_REG_CONTROL_DCDC3,
- 			   TPS65218_CONTROL_DCDC3_MASK, TPS65218_REG_ENABLE1,
- 			   TPS65218_ENABLE1_DC3_EN, 0, 0, ldo1_dcdc3_ranges, 2,
--			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC3_SEQ_MASK),
-+			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC3_SEQ_MASK,
-+			   NULL, 0),
- 	TPS65218_REGULATOR("DCDC4", "regulator-dcdc4", TPS65218_DCDC_4,
- 			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 53,
- 			   TPS65218_REG_CONTROL_DCDC4,
- 			   TPS65218_CONTROL_DCDC4_MASK, TPS65218_REG_ENABLE1,
- 			   TPS65218_ENABLE1_DC4_EN, 0, 0, dcdc4_ranges, 2,
--			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC4_SEQ_MASK),
-+			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC4_SEQ_MASK,
-+			   NULL, 0),
- 	TPS65218_REGULATOR("DCDC5", "regulator-dcdc5", TPS65218_DCDC_5,
- 			   REGULATOR_VOLTAGE, tps65218_dcdc56_pmic_ops, 1, -1,
- 			   -1, TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC5_EN, 0,
- 			   0, NULL, 0, 0, 1000000, TPS65218_REG_SEQ5,
--			   TPS65218_SEQ5_DC5_SEQ_MASK),
-+			   TPS65218_SEQ5_DC5_SEQ_MASK, NULL, 0),
- 	TPS65218_REGULATOR("DCDC6", "regulator-dcdc6", TPS65218_DCDC_6,
- 			   REGULATOR_VOLTAGE, tps65218_dcdc56_pmic_ops, 1, -1,
- 			   -1, TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC6_EN, 0,
- 			   0, NULL, 0, 0, 1800000, TPS65218_REG_SEQ5,
--			   TPS65218_SEQ5_DC6_SEQ_MASK),
-+			   TPS65218_SEQ5_DC6_SEQ_MASK, NULL, 0),
- 	TPS65218_REGULATOR("LDO1", "regulator-ldo1", TPS65218_LDO_1,
- 			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 64,
- 			   TPS65218_REG_CONTROL_LDO1,
- 			   TPS65218_CONTROL_LDO1_MASK, TPS65218_REG_ENABLE2,
- 			   TPS65218_ENABLE2_LDO1_EN, 0, 0, ldo1_dcdc3_ranges,
- 			   2, 0, 0, TPS65218_REG_SEQ6,
--			   TPS65218_SEQ6_LDO1_SEQ_MASK),
-+			   TPS65218_SEQ6_LDO1_SEQ_MASK, NULL, 0),
- 	TPS65218_REGULATOR("LS2", "regulator-ls2", TPS65218_LS_2,
- 			   REGULATOR_CURRENT, tps65218_ls23_ops, 0, 0, 0,
- 			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS2_EN,
- 			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS2ILIM_MASK,
--			   NULL, 0, 0, 0, 0, 0),
-+			   NULL, 0, 0, 0, 0, 0, ls3_currents,
-+			   ARRAY_SIZE(ls3_currents)),
- 	TPS65218_REGULATOR("LS3", "regulator-ls3", TPS65218_LS_3,
- 			   REGULATOR_CURRENT, tps65218_ls23_ops, 0, 0, 0,
- 			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS3_EN,
- 			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS3ILIM_MASK,
--			   NULL, 0, 0, 0, 0, 0),
-+			   NULL, 0, 0, 0, 0, 0, ls3_currents,
-+			   ARRAY_SIZE(ls3_currents)),
- };
- 
- static int tps65218_regulator_probe(struct platform_device *pdev)
+ 	return 0;
 -- 
 2.20.1
 
