@@ -2,91 +2,825 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3B6C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932C8C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5289D208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4530420679
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:52:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdiPbvPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfDZQvA (ORCPT
+        id S1726326AbfDZQwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:51:00 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39292 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfDZQu7 (ORCPT
+        Fri, 26 Apr 2019 12:52:06 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44599 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfDZQwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:50:59 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hK43r-0003ZP-QS; Fri, 26 Apr 2019 16:50:55 +0000
-Date:   Fri, 26 Apr 2019 17:50:55 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Ceph fixes for 5.1-rc7
-Message-ID: <20190426165055.GY2217@ZenIV.linux.org.uk>
-References: <20190425174739.27604-1-idryomov@gmail.com>
- <CAHk-=wgPBx9xPWY7obK60=RTnOF3Ln0j9XkhYbekML=Fi3bFXg@mail.gmail.com>
- <342ef35feb1110197108068d10e518742823a210.camel@kernel.org>
- <20190425200941.GW2217@ZenIV.linux.org.uk>
- <86674e79e9f24e81feda75bc3c0dd4215604ffa5.camel@kernel.org>
+        Fri, 26 Apr 2019 12:52:05 -0400
+Received: by mail-qk1-f195.google.com with SMTP id y5so2246300qkc.11;
+        Fri, 26 Apr 2019 09:52:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1h0/Ce66fkLi5GQzmzroX7RTOg5U7ohcuW+f60X6ilg=;
+        b=QdiPbvPU3cs5k/NYti+rYeklQWSxwkszVestFRdTEndeSGfuHh9XIyDPMWcYaIRsqH
+         nKGRYEkodkHWXiFb5AnIqtiei1KyH48zMwLDPCDW8g5frSOa/c7Jlj5yfphPkIysLx1z
+         OSA5yVmu5MIpkFVBI9ue7KNvAW2aTCbty7Z74MNP9pi73qYIKQ/HYhfHjF6IIfcY0Jhv
+         C9R2LwMQ5jzKJIJyu7NrtF2UO5nMPMd+pqeyE66pOi3OIOnEoqmwt3Xmd2GmALFenXKh
+         98Cn4OXCktza746G916B4GFNDhjkNvENIQG8i0iC/Nvi74lipTpFF7HV1Hantm2FSfrw
+         cO1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1h0/Ce66fkLi5GQzmzroX7RTOg5U7ohcuW+f60X6ilg=;
+        b=mELCnntLaFB8fciuuORrmiMR2V5SneM6Y7Wwl/TORlsYAIBJ24Fi46jw1/RaZkXaSD
+         myUDAb9e+T/W3K0oSZ5txIyqbmPqiolbcmHfwQIG38r4mPTzbW9rYCscP0Dq2vnIFtUH
+         jBT92znDlpaMMssogx5xmt7rHTWk0+9btilpu1AleiKyNee9asikuA6YAwQvzg81xLFu
+         gyDp9B457cmvz2nDPNKbSsuVMFaUpAqmLAKUfAQ37298xVhrhRtIgm8Gr/DcdGMNcWTt
+         xAbpV8GqZgob/wBphrJjjuD2DPTTQ+8oppWIj8gU+hXDmauIWQ5rM0Wvd5e8f91Zy24M
+         0Isw==
+X-Gm-Message-State: APjAAAWUMOB9igSVDdPe10y9aH420KEKbHIeGF1/FTtnx39ChgzU2+x+
+        Dn4Rqz8nXtFXtblr2fQrp6VLFYXxXcAOiUOIvQM=
+X-Google-Smtp-Source: APXvYqzu6ow9EM2IHEB7gx7JzA/t2lA3Y9x/QvVPVCnSq/1hbqSyHivbBkFrCX0Z81FeUOgZRGorDIZNyGjeTZlYvPA=
+X-Received: by 2002:a37:4c04:: with SMTP id z4mr36278633qka.312.1556297523738;
+ Fri, 26 Apr 2019 09:52:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86674e79e9f24e81feda75bc3c0dd4215604ffa5.camel@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190417084457.28747-1-andrew.smirnov@gmail.com> <20190417084457.28747-3-andrew.smirnov@gmail.com>
+In-Reply-To: <20190417084457.28747-3-andrew.smirnov@gmail.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Fri, 26 Apr 2019 18:51:51 +0200
+Message-ID: <CAFqH_53vo__70Xm5pOoLvqPG2iNN32VP5cbFCatDq=o0GLYzsA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] power: supply: Add driver for Microchip UCS1002
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        Chris Health <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 12:25:03PM -0400, Jeff Layton wrote:
+Hi Andrey,
 
-> It turns out though that using name_snapshot from ceph is a bit more
-> tricky. In some cases, we have to call ceph_mdsc_build_path to build up
-> a full path string. We can't easily populate a name_snapshot from there
-> because struct external_name is only defined in fs/dcache.c.
+Many thanks to push this upstream. Actually this the fifth version [1]
+of this patchset. I think that is interesting for the maintainers
+maintain the history and the changelog.
 
-Explain, please.  For ceph_mdsc_build_path() you don't need name
-snapshots at all and existing code is, AFAICS, just fine, except
-for pointless pr_err() there.
+[1] https://lkml.org/lkml/2016/3/14/233
 
-I _probably_ would take allocation out of the loop (e.g. make it
-__getname(), called unconditionally) and turned it into the
-d_path.c-style read_seqbegin_or_lock()/need_seqretry()/done_seqretry()
-loop, so that the first pass would go under rcu_read_lock(), while
-the second (if needed) would just hold rename_lock exclusive (without
-bumping the refcount).  But that's a matter of (theoretical) livelock
-avoidance, not the locking correctness for ->d_name accesses.
+Missatge de Andrey Smirnov <andrew.smirnov@gmail.com> del dia dc., 17
+d=E2=80=99abr. 2019 a les 10:46:
+>
+> Add driver for Microchip UCS1002 Programmable USB Port Power
+> Controller with Charger Emulation. The driver exposed a power supply
+> device to control/monitor various parameter of the device as well as a
+> regulator to allow controlling VBUS line.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Health <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> ---
+>  drivers/power/supply/Kconfig         |   9 +
+>  drivers/power/supply/Makefile        |   1 +
+>  drivers/power/supply/ucs1002_power.c | 639 +++++++++++++++++++++++++++
+>  3 files changed, 649 insertions(+)
+>  create mode 100644 drivers/power/supply/ucs1002_power.c
+>
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index e901b9879e7e..c614c8a196f3 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -660,4 +660,13 @@ config FUEL_GAUGE_SC27XX
+>          Say Y here to enable support for fuel gauge with SC27XX
+>          PMIC chips.
+>
+> +config CHARGER_UCS1002
+> +        tristate "Microchip UCS1002 USB Port Power Controller"
+> +       depends on I2C
+> +       depends on OF
+> +       select REGMAP_I2C
+> +       help
+> +         Say Y to enable support for Microchip UCS1002 Programmable
+> +         USB Port Power Controller with Charger Emulation.
+> +
+>  endif # POWER_SUPPLY
+> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefil=
+e
+> index b731c2a9b695..c56803a9e4fe 100644
+> --- a/drivers/power/supply/Makefile
+> +++ b/drivers/power/supply/Makefile
+> @@ -87,3 +87,4 @@ obj-$(CONFIG_AXP288_CHARGER)  +=3D axp288_charger.o
+>  obj-$(CONFIG_CHARGER_CROS_USBPD)       +=3D cros_usbpd-charger.o
+>  obj-$(CONFIG_CHARGER_SC2731)   +=3D sc2731_charger.o
+>  obj-$(CONFIG_FUEL_GAUGE_SC27XX)        +=3D sc27xx_fuel_gauge.o
+> +obj-$(CONFIG_CHARGER_UCS1002)  +=3D ucs1002_power.o
+> diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/supply/=
+ucs1002_power.c
+> new file mode 100644
+> index 000000000000..b0b81d62e003
+> --- /dev/null
+> +++ b/drivers/power/supply/ucs1002_power.c
+> @@ -0,0 +1,639 @@
+> +// SPDX-License-Identifier: GPL-2.0+
 
-Oh, and
-        *base = ceph_ino(d_inode(temp));
-        *plen = len;
-probably belongs in critical section - _that_ might be a correctness
-issue, since temp is not held by anything once you are out of there.
+There is a license mismatch, or this should be GPL-2.0 or
+MODULE_LICENCE should GPL.
 
-> I could add some routines to do this, but it feels a lot like I'm
-> abusing internal dcache interfaces. I'll keep thinking about it though.
-> 
-> While we're on the subject though:
-> 
-> struct external_name {
->         union {
->                 atomic_t count;
->                 struct rcu_head head;
->         } u;
->         unsigned char name[];
-> };
-> 
-> Is it really ok to union the count and rcu_head there?
-> 
-> I haven't trawled through all of the code yet, but what prevents someone
-> from trying to access the count inside an RCU critical section, after
-> call_rcu has been called on it?
+> +/*
+> + * Driver for UCS1002 Programmable USB Port Power Controller
+> + *
+> + * Copyright (C) 2019 Zodiac Inflight Innovations
+> + */
+> +#include <linux/freezer.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/kthread.h>
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/of_regulator.h>
+> +
+> +/* UCS1002 Registers */
+> +#define UCS1002_REG_CURRENT_MEASUREMENT        0x00
+> +
+> +/*
+> + * The Total Accumulated Charge registers store the total accumulated
+> + * charge delivered from the VS source to a portable device. The total
+> + * value is calculated using four registers, from 01h to 04h. The bit
+> + * weighting of the registers is given in mA/hrs.
+> + */
+> +#define UCS1002_REG_TOTAL_ACC_CHARGE   0x01
+> +
+> +/* Other Status Register */
+> +#define UCS1002_REG_OTHER_STATUS       0x0f
+> +#  define F_ADET_PIN                   BIT(4)
+> +#  define F_CHG_ACT                    BIT(3)
+> +
+> +/* Interrupt Status */
+> +#define UCS1002_REG_INTERRUPT_STATUS   0x10
+> +#  define F_DISCHARGE_ERR              BIT(6)
+> +#  define F_RESET                      BIT(5)
+> +#  define F_MIN_KEEP_OUT               BIT(4)
+> +#  define F_TSD                                BIT(3)
+> +#  define F_OVER_VOLT                  BIT(2)
+> +#  define F_BACK_VOLT                  BIT(1)
+> +#  define F_OVER_ILIM                  BIT(0)
+> +
+> +/* Pin Status Register */
+> +#define UCS1002_REG_PIN_STATUS         0x14
+> +#  define UCS1002_PWR_STATE_MASK       0x03
+> +#  define F_PWR_EN_PIN                 BIT(6)
+> +#  define F_M2_PIN                     BIT(5)
+> +#  define F_M1_PIN                     BIT(4)
+> +#  define F_EM_EN_PIN                  BIT(3)
+> +#  define F_SEL_PIN                    BIT(2)
+> +#  define F_ACTIVE_MODE_MASK           GENMASK(5, 3)
+> +#  define F_ACTIVE_MODE_PASSTHROUGH    F_M2_PIN
+> +#  define F_ACTIVE_MODE_DEDICATED      F_EM_EN_PIN
+> +#  define F_ACTIVE_MODE_BC12_DCP       (F_M2_PIN | F_EM_EN_PIN)
+> +#  define F_ACTIVE_MODE_BC12_SDP       F_M1_PIN
+> +#  define F_ACTIVE_MODE_BC12_CDP       (F_M1_PIN | F_M2_PIN | F_EM_EN_PI=
+N)
+> +
+> +/* General Configuration Register */
+> +#define UCS1002_REG_GENERAL_CFG                0x15
+> +#  define F_RATION_EN                  BIT(3)
+> +
+> +/* Emulation Configuration Register */
+> +#define UCS1002_REG_EMU_CFG            0x16
+> +
+> +/* Switch Configuration Register */
+> +#define UCS1002_REG_SWITCH_CFG         0x17
+> +#  define F_PIN_IGNORE                 BIT(7)
+> +#  define F_EM_EN_SET                  BIT(5)
+> +#  define F_M2_SET                     BIT(4)
+> +#  define F_M1_SET                     BIT(3)
+> +#  define F_S0_SET                     BIT(2)
+> +#  define F_PWR_EN_SET                 BIT(1)
+> +#  define F_LATCH_SET                  BIT(0)
+> +#  define V_SET_ACTIVE_MODE_MASK       GENMASK(5, 3)
+> +#  define V_SET_ACTIVE_MODE_PASSTHROUGH        F_M2_SET
+> +#  define V_SET_ACTIVE_MODE_DEDICATED  F_EM_EN_SET
+> +#  define V_SET_ACTIVE_MODE_BC12_DCP   (F_M2_SET | F_EM_EN_SET)
+> +#  define V_SET_ACTIVE_MODE_BC12_SDP   F_M1_SET
+> +#  define V_SET_ACTIVE_MODE_BC12_CDP   (F_M1_SET | F_M2_SET | F_EM_EN_SE=
+T)
+> +
+> +/* Current Limit Register */
+> +#define UCS1002_REG_ILIMIT             0x19
+> +#  define UCS1002_ILIM_SW_MASK         GENMASK(3, 0)
+> +
+> +/* Product ID */
+> +#define UCS1002_REG_PRODUCT_ID         0xfd
+> +#  define UCS1002_PRODUCT_ID           0x4e
+> +
+> +/* Manufacture name */
+> +#define UCS1002_MANUFACTURER           "SMSC"
+> +
+> +struct ucs1002_info {
+> +       struct power_supply *charger;
+> +       struct i2c_client *client;
+> +       struct regmap *regmap;
+> +       struct regulator_desc *regulator_descriptor;
+> +       bool present;
+> +};
+> +
+> +static enum power_supply_property ucs1002_props[] =3D {
+> +       POWER_SUPPLY_PROP_ONLINE,
+> +       POWER_SUPPLY_PROP_CHARGE_NOW,
+> +       POWER_SUPPLY_PROP_CURRENT_NOW,
+> +       POWER_SUPPLY_PROP_CURRENT_MAX,
+> +       POWER_SUPPLY_PROP_PRESENT, /* the presence of PED */
+> +       POWER_SUPPLY_PROP_MANUFACTURER,
+> +       POWER_SUPPLY_PROP_USB_TYPE,
+> +       POWER_SUPPLY_PROP_HEALTH,
+> +};
+> +
+> +static int ucs1002_get_online(struct ucs1002_info *info,
+> +                             union power_supply_propval *val)
+> +{
+> +       unsigned int reg;
+> +       int ret;
+> +
+> +       ret =3D regmap_read(info->regmap, UCS1002_REG_OTHER_STATUS, &reg)=
+;
+> +       if (ret)
+> +               return ret;
+> +
+> +       val->intval =3D !!(reg & F_CHG_ACT);
+> +
+> +       return 0;
+> +}
+> +
+> +static int ucs1002_get_charge(struct ucs1002_info *info,
+> +                             union power_supply_propval *val)
+> +{
+> +       /*
+> +        * To fit within 32 bits some values are rounded (uA/h)
+> +        *
+> +        * For Total Accumulated Charge Middle Low Byte register, addr
+> +        * 03h, byte 2
+> +        *
+> +        *   B0: 0.01084 mA/h rounded to 11 uA/h
+> +        *   B1: 0.02169 mA/h rounded to 22 uA/h
+> +        *   B2: 0.04340 mA/h rounded to 43 uA/h
+> +        *   B3: 0.08676 mA/h rounded to 87 uA/h
+> +        *   B4: 0.17350 mA/h rounded to 173 u=C3=81/h
+> +        *
+> +        * For Total Accumulated Charge Low Byte register, addr 04h,
+> +        * byte 3
+> +        *
+> +        *   B6: 0.00271 mA/h rounded to 3 uA/h
+> +        *   B7: 0.005422 mA/h rounded to 5 uA/h
+> +        */
+> +       static const int bit_weights_uAh[BITS_PER_TYPE(u32)] =3D {
+> +               0, 0, 0, 0, 0, 0, 3, 5,
+> +
 
-The fact that no lockless accesses to ->count are ever done?
+nit: I personally don't like these empty lines here.
+
+> +               11, 22, 43, 87, 173, 347, 694, 1388,
+> +
+> +               2776, 5552, 11105, 22210, 44420, 88840, 177700, 355400,
+> +
+> +               710700, 1421000, 2843000, 5685000, 11371000, 22742000,
+> +               45484000, 90968000,
+> +       };
+> +       unsigned long total_acc_charger;
+> +       unsigned int reg;
+> +       int i, ret;
+> +
+> +       ret =3D regmap_bulk_read(info->regmap, UCS1002_REG_TOTAL_ACC_CHAR=
+GE,
+> +                              &reg, sizeof(u32));
+> +       if (ret)
+> +               return ret;
+> +
+> +       total_acc_charger =3D be32_to_cpu(reg);
+> +       val->intval =3D 0;
+> +
+> +       for_each_set_bit(i, &total_acc_charger, ARRAY_SIZE(bit_weights_uA=
+h))
+> +               val->intval +=3D bit_weights_uAh[i];
+> +
+> +       return 0;
+> +}
+> +
+> +static int ucs1002_get_current(struct ucs1002_info *info,
+> +                              union power_supply_propval *val)
+> +{
+> +       /*
+> +        * The Current Measurement register stores the measured
+> +        * current value delivered to the portable device. The range
+> +        * is from 9.76 mA to 2.5 A.
+> +        */
+> +       static const int bit_weights_uA[BITS_PER_TYPE(u8)] =3D {
+> +               9760, 19500, 39000, 78100, 156200, 312300, 624600, 124930=
+0,
+> +       };
+> +       unsigned long current_measurement;
+> +       unsigned int reg;
+> +       int i, ret;
+> +
+> +       ret =3D regmap_read(info->regmap, UCS1002_REG_CURRENT_MEASUREMENT=
+, &reg);
+> +       if (ret)
+> +               return ret;
+> +
+> +       current_measurement =3D reg;
+> +       val->intval =3D 0;
+> +
+> +       for_each_set_bit(i, &current_measurement, ARRAY_SIZE(bit_weights_=
+uA))
+> +               val->intval +=3D bit_weights_uA[i];
+> +
+> +       return 0;
+> +}
+> +
+> +/*
+> + * The Current Limit register stores the maximum current used by the
+> + * port switch. The range is from 500mA to 2.5 A.
+> + */
+> +static const u32 ucs1002_current_limit_uA[] =3D {
+> +       500000, 900000, 1000000, 1200000, 1500000, 1800000, 2000000, 2500=
+000,
+> +};
+> +
+> +static int ucs1002_get_max_current(struct ucs1002_info *info,
+> +                                  union power_supply_propval *val)
+> +{
+> +       unsigned int reg;
+> +       int ret;
+> +
+> +       ret =3D regmap_read(info->regmap, UCS1002_REG_ILIMIT, &reg);
+> +       if (ret)
+> +               return ret;
+> +
+> +       val->intval =3D ucs1002_current_limit_uA[reg & UCS1002_ILIM_SW_MA=
+SK];
+> +
+> +       return 0;
+> +}
+> +
+> +static int ucs1002_set_max_current(struct ucs1002_info *info, u32 val)
+> +{
+> +       unsigned int reg;
+> +       int ret, idx;
+> +
+> +       for (idx =3D 0; idx < ARRAY_SIZE(ucs1002_current_limit_uA); idx++=
+) {
+> +               if (val =3D=3D ucs1002_current_limit_uA[idx])
+> +                       break;
+> +       }
+> +
+> +       if (idx =3D=3D ARRAY_SIZE(ucs1002_current_limit_uA)) {
+> +               dev_err(&info->client->dev,
+> +                       "%d is an invalid max current value\n", val);
+> +               return -EINVAL;
+> +       }
+> +
+> +       ret =3D regmap_write(info->regmap, UCS1002_REG_ILIMIT, idx);
+> +       if (ret)
+> +               return ret;
+> +       /*
+> +        * Any current limit setting exceeding the one set via ILIM
+> +        * pin will be rejected, so we read out freshly changed limit
+> +        * to make sure that it took effect.
+> +        */
+> +       ret =3D regmap_read(info->regmap, UCS1002_REG_ILIMIT, &reg);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (reg !=3D idx)
+> +               return -EINVAL;
+> +
+> +       return 0;
+> +}
+> +
+> +static enum power_supply_usb_type ucs1002_usb_types[] =3D {
+> +       POWER_SUPPLY_USB_TYPE_PD,
+> +       POWER_SUPPLY_USB_TYPE_SDP,
+> +       POWER_SUPPLY_USB_TYPE_DCP,
+> +       POWER_SUPPLY_USB_TYPE_CDP,
+> +       POWER_SUPPLY_USB_TYPE_UNKNOWN,
+> +};
+> +
+> +static int ucs1002_set_usb_type(struct ucs1002_info *info, int val)
+> +{
+> +       unsigned int mode;
+> +
+> +       if (val >=3D ARRAY_SIZE(ucs1002_usb_types))
+> +               return -EINVAL;
+> +
+> +       switch (ucs1002_usb_types[val]) {
+> +       case POWER_SUPPLY_USB_TYPE_PD:
+> +               mode =3D V_SET_ACTIVE_MODE_DEDICATED;
+> +               break;
+> +       case POWER_SUPPLY_USB_TYPE_SDP:
+> +               mode =3D V_SET_ACTIVE_MODE_BC12_SDP;
+> +               break;
+> +       case POWER_SUPPLY_USB_TYPE_DCP:
+> +               mode =3D V_SET_ACTIVE_MODE_BC12_DCP;
+> +               break;
+> +       case POWER_SUPPLY_USB_TYPE_CDP:
+> +               mode =3D V_SET_ACTIVE_MODE_BC12_CDP;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
+> +                                 V_SET_ACTIVE_MODE_MASK, mode);
+> +}
+> +
+> +static int ucs1002_get_usb_type(struct ucs1002_info *info,
+> +                               union power_supply_propval *val)
+> +{
+> +       enum power_supply_usb_type type;
+> +       unsigned int reg;
+> +       int ret;
+> +
+> +       ret =3D regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &reg);
+> +       if (ret)
+> +               return ret;
+> +
+> +       switch (reg & F_ACTIVE_MODE_MASK) {
+> +       default:
+> +               type =3D POWER_SUPPLY_USB_TYPE_UNKNOWN;
+> +               break;
+> +       case F_ACTIVE_MODE_DEDICATED:
+> +               type =3D POWER_SUPPLY_USB_TYPE_PD;
+> +               break;
+> +       case F_ACTIVE_MODE_BC12_SDP:
+> +               type =3D POWER_SUPPLY_USB_TYPE_SDP;
+> +               break;
+> +       case F_ACTIVE_MODE_BC12_DCP:
+> +               type =3D POWER_SUPPLY_USB_TYPE_DCP;
+> +               break;
+> +       case F_ACTIVE_MODE_BC12_CDP:
+> +               type =3D POWER_SUPPLY_USB_TYPE_CDP;
+> +               break;
+> +       };
+> +
+> +       val->intval =3D type;
+> +
+> +       return 0;
+> +}
+> +
+> +static int ucs1002_get_health(struct ucs1002_info *info,
+> +                             union power_supply_propval *val)
+> +{
+> +       unsigned int reg;
+> +       int ret, health;
+> +
+> +       ret =3D regmap_read(info->regmap, UCS1002_REG_INTERRUPT_STATUS, &=
+reg);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (reg & F_TSD)
+> +               health =3D POWER_SUPPLY_HEALTH_OVERHEAT;
+> +       else if (reg & (F_OVER_VOLT | F_BACK_VOLT))
+> +               health =3D POWER_SUPPLY_HEALTH_OVERVOLTAGE;
+> +       else if (reg & F_OVER_ILIM)
+> +               health =3D POWER_SUPPLY_HEALTH_OVERCURRENT;
+> +       else if (reg & (F_DISCHARGE_ERR | F_MIN_KEEP_OUT))
+> +               health =3D POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
+> +       else
+> +               health =3D POWER_SUPPLY_HEALTH_GOOD;
+> +
+> +       val->intval =3D health;
+> +
+> +       return 0;
+> +}
+> +
+> +static int ucs1002_get_property(struct power_supply *psy,
+> +                               enum power_supply_property psp,
+> +                               union power_supply_propval *val)
+> +{
+> +       struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
+> +
+> +       switch (psp) {
+> +       case POWER_SUPPLY_PROP_ONLINE:
+> +               return ucs1002_get_online(info, val);
+> +       case POWER_SUPPLY_PROP_CHARGE_NOW:
+> +               return ucs1002_get_charge(info, val);
+> +       case POWER_SUPPLY_PROP_CURRENT_NOW:
+> +               return ucs1002_get_current(info, val);
+> +       case POWER_SUPPLY_PROP_CURRENT_MAX:
+> +               return ucs1002_get_max_current(info, val);
+> +       case POWER_SUPPLY_PROP_USB_TYPE:
+> +               return ucs1002_get_usb_type(info, val);
+> +       case POWER_SUPPLY_PROP_HEALTH:
+> +               return ucs1002_get_health(info, val);
+> +       case POWER_SUPPLY_PROP_PRESENT:
+> +               val->intval =3D info->present;
+> +               return 0;
+> +       case POWER_SUPPLY_PROP_MANUFACTURER:
+> +               val->strval =3D UCS1002_MANUFACTURER;
+> +               return 0;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +}
+> +
+> +static int ucs1002_set_property(struct power_supply *psy,
+> +                               enum power_supply_property psp,
+> +                               const union power_supply_propval *val)
+> +{
+> +       struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
+> +
+> +       switch (psp) {
+> +       case POWER_SUPPLY_PROP_CURRENT_MAX:
+> +               return ucs1002_set_max_current(info, val->intval);
+> +       case POWER_SUPPLY_PROP_USB_TYPE:
+> +               return ucs1002_set_usb_type(info, val->intval);
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +}
+> +
+> +static int ucs1002_property_is_writeable(struct power_supply *psy,
+> +                                        enum power_supply_property psp)
+> +{
+> +       switch (psp) {
+> +       case POWER_SUPPLY_PROP_CURRENT_MAX:
+> +       case POWER_SUPPLY_PROP_USB_TYPE:
+> +               return true;
+> +       default:
+> +               return false;
+> +       }
+> +}
+> +
+> +static const struct power_supply_desc ucs1002_charger_desc =3D {
+> +       .name                   =3D "ucs1002",
+> +       .type                   =3D POWER_SUPPLY_TYPE_USB,
+> +       .usb_types              =3D ucs1002_usb_types,
+> +       .num_usb_types          =3D ARRAY_SIZE(ucs1002_usb_types),
+> +       .get_property           =3D ucs1002_get_property,
+> +       .set_property           =3D ucs1002_set_property,
+> +       .property_is_writeable  =3D ucs1002_property_is_writeable,
+> +       .properties             =3D ucs1002_props,
+> +       .num_properties         =3D ARRAY_SIZE(ucs1002_props),
+> +};
+> +
+> +static irqreturn_t ucs1002_charger_irq(int irq, void *data)
+> +{
+> +       int ret, regval;
+> +       bool present;
+> +       struct ucs1002_info *info =3D data;
+> +
+> +       present =3D info->present;
+> +
+> +       ret =3D regmap_read(info->regmap, UCS1002_REG_OTHER_STATUS, &regv=
+al);
+> +       if (ret)
+> +               return IRQ_HANDLED;
+> +
+> +       /* update attached status */
+> +       info->present =3D (regval & F_ADET_PIN) ? true : false;
+> +
+> +       /* notify the change */
+> +       if (present !=3D info->present)
+> +               power_supply_changed(info->charger);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t ucs1002_alert_irq(int irq, void *data)
+> +{
+> +       struct ucs1002_info *info =3D data;
+> +
+> +       power_supply_changed(info->charger);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static const struct regulator_ops ucs1002_regulator_ops =3D {
+> +       .is_enabled     =3D regulator_is_enabled_regmap,
+> +       .enable         =3D regulator_enable_regmap,
+> +       .disable        =3D regulator_disable_regmap,
+> +};
+> +
+> +static const struct regulator_desc ucs1002_regulator_descriptor =3D {
+> +       .name           =3D "ucs1002-vbus",
+> +       .ops            =3D &ucs1002_regulator_ops,
+> +       .type           =3D REGULATOR_VOLTAGE,
+> +       .owner          =3D THIS_MODULE,
+> +       .enable_reg     =3D UCS1002_REG_SWITCH_CFG,
+> +       .enable_mask    =3D F_PWR_EN_SET,
+> +       .enable_val     =3D F_PWR_EN_SET,
+> +       .fixed_uV       =3D 5000000,
+> +       .n_voltages     =3D 1,
+> +};
+> +
+> +static int ucs1002_probe(struct i2c_client *client,
+> +                        const struct i2c_device_id *dev_id)
+> +{
+> +       struct device *dev =3D &client->dev;
+> +       struct power_supply_config charger_config =3D {};
+> +       const struct regmap_config regmap_config =3D {
+> +               .reg_bits =3D 8,
+> +               .val_bits =3D 8,
+> +       };
+> +       struct regulator_config regulator_config =3D {};
+> +       int irq_a_det, irq_alert, ret;
+> +       struct regulator_dev *rdev;
+> +       struct ucs1002_info *info;
+> +       unsigned int regval;
+> +
+> +       info =3D devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+> +       if (!info)
+> +               return -ENOMEM;
+> +
+> +       info->regmap =3D devm_regmap_init_i2c(client, &regmap_config);
+> +       if (IS_ERR(info->regmap)) {
+> +               ret =3D PTR_ERR(info->regmap);
+> +               dev_err(dev, "regmap initialization failed: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       info->client =3D client;
+> +
+> +       irq_a_det =3D of_irq_get_byname(dev->of_node, "a_det");
+> +       irq_alert =3D of_irq_get_byname(dev->of_node, "alert");
+> +
+> +       charger_config.of_node =3D dev->of_node;
+> +       charger_config.drv_data =3D info;
+> +
+> +       ret =3D regmap_read(info->regmap, UCS1002_REG_PRODUCT_ID, &regval=
+);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (regval !=3D UCS1002_PRODUCT_ID) {
+> +               dev_err(dev,
+> +                       "Product ID does not match (0x%02x !=3D 0x%02x)\n=
+",
+> +                       regval, UCS1002_PRODUCT_ID);
+> +               return -ENODEV;
+> +       }
+> +
+> +       dev_info(dev, "registered with product id 0x%02x\n", regval);
+> +
+> +       /* Enable charge rationing by default */
+> +       ret =3D regmap_update_bits(info->regmap, UCS1002_REG_GENERAL_CFG,
+> +                                F_RATION_EN, F_RATION_EN);
+> +       if (ret)
+> +               return ret;
+> +
+> +       dev_dbg(dev, "set active mode selection through i2c\n");
+> +       /*
+> +        * Ignore the M1, M2, PWR_EN, and EM_EN pin states. Set active
+> +        * mode selection to Dedicated Charger Emulation Cycle.
+> +        *
+> +        * #M1    #M2    EM_EN
+> +        *  0      0       1   - Dedicated Charger Emulation Cycle
+> +        *
+> +        */
+> +       ret =3D regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
+> +                                F_PIN_IGNORE | F_EM_EN_SET | F_M2_SET |
+> +                                F_M1_SET, F_PIN_IGNORE | F_EM_EN_SET);
+> +       if (ret)
+> +               return ret;
+> +       /*
+> +        * Be safe and set initial current limit to 500mA
+> +        */
+> +       ret =3D ucs1002_set_max_current(info, 500000);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to read max current default\n");
+> +               return ret;
+> +       }
+> +
+> +       info->charger =3D devm_power_supply_register(dev, &ucs1002_charge=
+r_desc,
+> +                                                  &charger_config);
+> +       if (IS_ERR(info->charger)) {
+> +               dev_err(dev, "failed to register power supply\n");
+> +               return PTR_ERR(info->charger);
+> +       }
+> +
+> +       ret =3D regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval=
+);
+> +       if (ret)
+> +               return ret;
+> +
+> +       info->regulator_descriptor =3D
+> +               devm_kmemdup(dev, &ucs1002_regulator_descriptor,
+> +                            sizeof(ucs1002_regulator_descriptor),
+> +                            GFP_KERNEL);
+> +       info->regulator_descriptor->enable_is_inverted =3D !(regval & F_S=
+EL_PIN);
+> +
+> +       regulator_config.dev =3D dev;
+> +       regulator_config.of_node =3D dev->of_node;
+> +       regulator_config.regmap =3D info->regmap;
+> +
+> +       rdev =3D devm_regulator_register(dev, info->regulator_descriptor,
+> +                                      &regulator_config);
+> +       if (IS_ERR(rdev)) {
+> +               dev_err(dev, "failed to register VBUS regulator\n");
+> +               return PTR_ERR(rdev);
+> +       }
+> +
+> +       if (irq_a_det > 0) {
+> +               ret =3D devm_request_threaded_irq(dev, irq_a_det, NULL,
+> +                                               ucs1002_charger_irq,
+> +                                               IRQF_TRIGGER_FALLING |
+> +                                               IRQF_TRIGGER_RISING |
+> +                                               IRQF_ONESHOT,
+> +                                               "ucs1002-a_det", info);
+> +               if (ret) {
+> +                       dev_err(dev, "failed to request A_DET threaded ir=
+q\n");
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       if (irq_alert > 0) {
+> +               ret =3D devm_request_threaded_irq(dev, irq_alert, NULL,
+> +                                               ucs1002_alert_irq,
+> +                                               IRQF_TRIGGER_FALLING |
+> +                                               IRQF_TRIGGER_RISING |
+> +                                               IRQF_ONESHOT,
+> +                                               "ucs1002-alert", info);
+> +               if (ret) {
+> +                       dev_err(dev, "failed to request ALERT threaded ir=
+q\n");
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +#if IS_ENABLED(CONFIG_OF)
+
+This driver is DT only, this if is not needed.
+
+> +static const struct of_device_id ucs1002_of_match[] =3D {
+> +       { .compatible =3D "microchip,ucs1002", },
+> +       { /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, ucs1002_of_match);
+> +#endif
+> +
+> +static const struct i2c_device_id ucs1002_ids[] =3D {
+> +       {"ucs1002", 0},
+> +       { /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ucs1002_ids);
+> +
+> +static struct i2c_driver ucs1002_driver =3D {
+> +       .driver =3D {
+> +                  .name =3D "ucs1002",
+> +                  .of_match_table =3D of_match_ptr(ucs1002_of_match),
+
+No need to use of_match_ptr, is DT-only.
+
+> +       },
+> +       .probe =3D ucs1002_probe,
+> +};
+> +module_i2c_driver(ucs1002_driver);
+> +
+> +MODULE_DESCRIPTION("Microchip UCS1002 Programmable USB Port Power Contro=
+ller");
+> +MODULE_AUTHOR("Enric Balletbo Serra <enric.balletbo@collabora.com>");
+
+I'm not sure how much differs this patch from the one I sent 3 years
+ago ... but if i'm the author or co-author you should add the
+signed-off-by.
+
+[1] https://lkml.org/lkml/2016/3/14/233
+[2] https://www.spinics.net/lists/devicetree/msg122745.html
+
+> +MODULE_AUTHOR("Andrey Smirnov <andrew.smirnov@gmail.com>");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.20.1
+>
