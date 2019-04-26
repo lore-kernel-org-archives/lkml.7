@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E421C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD158C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9371208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1422087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTkRQ/Y6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JScJif31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfD0Gnl (ORCPT
+        id S1727003AbfD0Gnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:43:41 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39792 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfD0Gnj (ORCPT
+        Sat, 27 Apr 2019 02:43:49 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45685 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbfD0Gnh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:43:39 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e92so2571784plb.6;
-        Fri, 26 Apr 2019 23:43:38 -0700 (PDT)
+        Sat, 27 Apr 2019 02:43:37 -0400
+Received: by mail-pl1-f193.google.com with SMTP id o5so2559510pls.12;
+        Fri, 26 Apr 2019 23:43:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=TdxUBqKvjD04gvlVW2fqTrr9rgpG7ttN99ifXgy4wJ0=;
-        b=fTkRQ/Y6ekEQNK89awlPXt7h4NxMjoecNBAMoo9ta42p80ijXkGhM1UL/BQmQFyWo6
-         LJfDPrdOvXO5UvSlwALV9jzgVbZ3dPkOetjmwgngrd6Xv4mjhDuVn4pVdt7q+ACp200R
-         xHDNjHe63z2eq8GDtYLwE09uCfrsylk7ZaSgnWZyDkP/bBrVBZQ5DR2PNo0INMO0nJJB
-         A8319czkJRDzqjy/YpDHiQ5QMkoO+Q0Ds/GWZq+ooXRPBqH7Yybl6d/xzosC6sOQZDv0
-         Hev5YYonTqwLdIPLk/p3TqQ3UvgcH8BaYIQHch4ej87FxDr5lyTtZXPQ+va/opGvDk71
-         04vw==
+        bh=p6XVxxmeId6Fyrw7m3B0ifgQzW6nhwdk5H1SAhfRKS0=;
+        b=JScJif310IMh72ZohwOauSCAwdoUkuEv8bR6xdhJcKtk1RynLwO3Yk/O8uL4tZE53n
+         NrQxpNK4N1uzjciA1sdkWWtPp8ycpHXFn7qqLzJr7tYIRLsxhiosMqxmPVmHzIChx8+N
+         dySb7k6fhrhmrpcilrlJoW9blvaY3Q+PCSiONh6FBKvoxbL7qSMy7/IzPS7lXjYYk3R/
+         KYc3BtX2zUuYUpbQToVTJQ3xLcXFtZGa0gKnazTNuB9oRgES+e5Dt6lyOMWvmuEim8L6
+         0oOzDDk8SIoEGUBtvVZ7G2upgHOvvdwFGoH6Y4DMveFflSyOioLkC8F7etEF6M59+eVc
+         h1Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=TdxUBqKvjD04gvlVW2fqTrr9rgpG7ttN99ifXgy4wJ0=;
-        b=fwSLJNC2urf2zCXZTQSoC8Qnh8s30laBA5I8Gmpc2Y6UmmoU0XT2zLFi+E0Kr90X/q
-         OWATgIQ1+n41lpdipnWpOiKIL1FahETtey4rAiMfC9+ffZEc8wj7qqcPD9T0K9x6Hb2i
-         gwpRV5Xd6ftMWhHt0Hyyk5UCLOzD/2/jnNPW8t24EiyfqXt45x98eN9bmAY+1Qr5KHi+
-         lFPZ78r06ulIBM8eSrILe8SiKms6ePEQ2GA62Ryq69OuNq3POHcB5GsBU+GehfNyOR3Y
-         nMmhqxP0teevO0XDsIAGUer7BDBUUfDTQBwfhQWPACF1Gg0RtCZhBJOVZm7MwTltd34O
-         2QLQ==
-X-Gm-Message-State: APjAAAUnoJ/5NW9VE51N0M3ZPcd08vSBfp9y5MvLwVFw/VuYcK776E53
-        8u0E/ZGS1ZaWbGOT+RYmrMNUEtvIEY4Fjg==
-X-Google-Smtp-Source: APXvYqwkqefi+5wlFbKz/qeJ/65fu9i/qlczB3LZREQFaY/+lFjrw+S/8uXGcd/aBtDXpy5vBsJ5Xg==
-X-Received: by 2002:a17:902:b715:: with SMTP id d21mr50699394pls.103.1556347418251;
-        Fri, 26 Apr 2019 23:43:38 -0700 (PDT)
+        bh=p6XVxxmeId6Fyrw7m3B0ifgQzW6nhwdk5H1SAhfRKS0=;
+        b=LyWYEmbBpNVVbvN9h2qTIWyJbVDxaHuKUcymYtgVieDWwAn4sRTR8C1KMHYF75e7ZL
+         y4DA7keD9mModIuM3Bc5+r7jYMJqW5nPDmR44ReLh5QvRhCk7YNysu5AjQea8oPdRvnn
+         E7OT7KacbPAhPpz2w47+dtYZSeo95unBtLpoxVh3I3+fK2AgBItnUG+aUBDAPkX9H/N8
+         21wHuPAeYxC7lVj9CFIRRmYkfKCCr77xjMBuO3+EGZiQxzZE/VWdzmx6zLyTZoNe+piD
+         SPWRwxEn9f77YvGhzWtAH7d90pwPXGuP28jItHvDd48WqGo3SoRog5D8tkKBEgXYZuxl
+         23yQ==
+X-Gm-Message-State: APjAAAUIvQtvDYpD9Au0UShuWf5YI8brh8QNWzm9xHzyIFxlOhB96IuM
+        C8LGFYGZIdxIMi43EX75C5E=
+X-Google-Smtp-Source: APXvYqy73yIN4FITPLecL8eRrrVFTQfYnIM8wwU5XCBZXYl3CE93cW/V+JNeu8zKe2r7aDykFyaZUg==
+X-Received: by 2002:a17:902:d83:: with SMTP id 3mr52113119plv.125.1556347416975;
+        Fri, 26 Apr 2019 23:43:36 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.37
+        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 23:43:37 -0700 (PDT)
+        Fri, 26 Apr 2019 23:43:36 -0700 (PDT)
 From:   nadav.amit@gmail.com
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -71,12 +71,10 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
         will.deacon@arm.com, ard.biesheuvel@linaro.org,
         kristen@linux.intel.com, deneen.t.dock@intel.com,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH v6 24/24] bpf: Fail bpf_probe_write_user() while mm is switched
-Date:   Fri, 26 Apr 2019 16:23:03 -0700
-Message-Id: <20190426232303.28381-25-nadav.amit@gmail.com>
+        Nadav Amit <namit@vmware.com>
+Subject: [PATCH v6 23/24] mm/tlb: Provide default nmi_uaccess_okay()
+Date:   Fri, 26 Apr 2019 16:23:02 -0700
+Message-Id: <20190426232303.28381-24-nadav.amit@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426232303.28381-1-nadav.amit@gmail.com>
 References: <20190426232303.28381-1-nadav.amit@gmail.com>
@@ -87,54 +85,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nadav Amit <namit@vmware.com>
 
-When using a temporary mm, bpf_probe_write_user() should not be able to
-write to user memory, since user memory addresses may be used to map
-kernel memory.  Detect these cases and fail bpf_probe_write_user() in
-such cases.
+x86 has an nmi_uaccess_okay(), but other architectures do not.
+Arch-independent code might need to know whether access to user
+addresses is ok in an NMI context or in other code whose execution
+context is unknown.  Specifically, this function is needed for
+bpf_probe_write_user().
 
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Reported-by: Jann Horn <jannh@google.com>
-Suggested-by: Jann Horn <jannh@google.com>
+Add a default implementation of nmi_uaccess_okay() for architectures
+that do not have such a function.
+
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- kernel/trace/bpf_trace.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/include/asm/tlbflush.h | 2 ++
+ include/asm-generic/tlb.h       | 9 +++++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index d64c00afceb5..94b0e37d90ef 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -14,6 +14,8 @@
- #include <linux/syscalls.h>
- #include <linux/error-injection.h>
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index 90926e8dd1f8..dee375831962 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -274,6 +274,8 @@ static inline bool nmi_uaccess_okay(void)
+ 	return true;
+ }
  
-+#include <asm/tlb.h>
++#define nmi_uaccess_okay nmi_uaccess_okay
 +
- #include "trace_probe.h"
- #include "trace.h"
+ /* Initialize cr4 shadow for this CPU. */
+ static inline void cr4_init_shadow(void)
+ {
+diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+index b9edc7608d90..480e5b2a5748 100644
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -21,6 +21,15 @@
+ #include <asm/tlbflush.h>
+ #include <asm/cacheflush.h>
  
-@@ -163,6 +165,10 @@ BPF_CALL_3(bpf_probe_write_user, void *, unsafe_ptr, const void *, src,
- 	 * access_ok() should prevent writing to non-user memory, but in
- 	 * some situations (nommu, temporary switch, etc) access_ok() does
- 	 * not provide enough validation, hence the check on KERNEL_DS.
-+	 *
-+	 * nmi_uaccess_okay() ensures the probe is not run in an interim
-+	 * state, when the task or mm are switched. This is specifically
-+	 * required to prevent the use of temporary mm.
- 	 */
++/*
++ * Blindly accessing user memory from NMI context can be dangerous
++ * if we're in the middle of switching the current user task or switching
++ * the loaded mm.
++ */
++#ifndef nmi_uaccess_okay
++# define nmi_uaccess_okay() true
++#endif
++
+ #ifdef CONFIG_MMU
  
- 	if (unlikely(in_interrupt() ||
-@@ -170,6 +176,8 @@ BPF_CALL_3(bpf_probe_write_user, void *, unsafe_ptr, const void *, src,
- 		return -EPERM;
- 	if (unlikely(uaccess_kernel()))
- 		return -EPERM;
-+	if (unlikely(!nmi_uaccess_okay()))
-+		return -EPERM;
- 	if (!access_ok(unsafe_ptr, size))
- 		return -EPERM;
- 
+ /*
 -- 
 2.17.1
 
