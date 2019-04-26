@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC36AC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24F9C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B62C208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99BC9208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWiWMfB1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8S+0Eig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfD0GnW (ORCPT
+        id S1726553AbfD0Gn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:43:22 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44006 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfD0GnU (ORCPT
+        Sat, 27 Apr 2019 02:43:27 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39776 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfD0GnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:43:20 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e67so2741608pfe.10;
-        Fri, 26 Apr 2019 23:43:19 -0700 (PDT)
+        Sat, 27 Apr 2019 02:43:23 -0400
+Received: by mail-pl1-f194.google.com with SMTP id e92so2571590plb.6;
+        Fri, 26 Apr 2019 23:43:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CLKl6NZzJuOK2yM4IgvyVy0XzBWA5gDBiZYSHfLNQ00=;
-        b=LWiWMfB1NCPlUWHzx7KNU9QCQPe3RdgA8qCNPze1WHQjmMq2EnzDsMlPceyPd+MHEm
-         QMnqsza7hwGkI6ZFGgTOeRjeOEfXCrRJYup1t+tZNnEBvqMdc01pTHEj2bJKvz7BRo7K
-         E/q3JXY24fjwRSyZU/Tw4XNKZ1nfyh4euDeX0+jZD8/F9QgFlj4BNpu6QQplyXiEhS74
-         PVZ8Bi1kj7P4bpKFaIDD7kzaPwPpjBstpFpZumGDsgFZsa4oA3jDKygoO8TIjMEYq1h+
-         8j/kDmbTP0+sW4oBzq9jDl4H2CBcWV2hkh9XtxTKhVDjbhF8cy7tl1t7BO8Iros2slYv
-         iP/w==
+        bh=0/++kCIdz9NinK/+MFp07AkuSYwP6lr30tD8Xi+P1Ns=;
+        b=c8S+0EigCS6E8XvKa358lLe6LCVfzSFVuNJOVAHrtcVTOWv87dH8gGM88UuaQDW1Ql
+         IEkRJXiL08aosg7wFKjOifGHvdFqqFOyIVAPTy32+RTxwh4obVo1hvSc3VrfhbIWeRKu
+         ZJA1hj0UwfXTRnrJeU5WqlBmd3LvGogakdG6r5O5HCHdIZ01YxMYWq3GzL7qFIqoHj+M
+         ImxYzSZVWsC/5XsbT15MbduZoaGGNML2WLcc4snNS8OhI4V0R2fmhxvtsFVBQg8hBw68
+         V9bB/2b3yhVaonMZdGNuWp1CujPDm/DoQRIcyXEO1I8gk21/7x6PmT++18rtH9HSkyQc
+         PS4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=CLKl6NZzJuOK2yM4IgvyVy0XzBWA5gDBiZYSHfLNQ00=;
-        b=lI+mvh/uuXJUbpWZjmK7o5G+JDl5zlSN1dPZXPc5jHKYv9uqb2YZtH4g8H1lVX5zoO
-         ssDRG8enaXxGjHII4qKuJHOOLP3UBGTFruxuajjDaEzAN3SSp+PpMz4z5k7aqTEd5OYM
-         BVxqSEfyXbLj/SYbBF6EVkcivLJVMLIhjQY59QuRWi8cJ2d1QNz9njg6OJRj+Ylcm3wc
-         VjhTfsd2EuVUCvGh+/nD0AcaaAx1qOWW8Xu6foGL+EML3ud6cki3Q2fXHuFTyKoUIFfk
-         X43kVEE/s++RuR5BIB5qWzZQXZE40feSFCbavrHG2h7AaamQucZz3hHsH1k+C7BvzKPl
-         DWtA==
-X-Gm-Message-State: APjAAAWriFohq44B0F7Gk1qnO8TjjZ7N/nZcxrhgLYE8U0gWcI86Yjdp
-        giaz6Jtyjru8xoJdfCrXuwM=
-X-Google-Smtp-Source: APXvYqx8IDeCvv7F4Tl+g2zi6Qtjw6+CBIajqUbAMvc7uvXy5z6A8pYUXx0y0vJXO744BzKTEFFO2g==
-X-Received: by 2002:aa7:91d6:: with SMTP id z22mr42068121pfa.242.1556347399283;
-        Fri, 26 Apr 2019 23:43:19 -0700 (PDT)
+        bh=0/++kCIdz9NinK/+MFp07AkuSYwP6lr30tD8Xi+P1Ns=;
+        b=rge4jTvFd4i8gt7gOGK4c8WxZ9mQIZNxN7vF9b4lrI/F9BW6oKPTHZKHBhp/vZlA9r
+         1X5ToAvo58StUFUrjYaaYhi10ajx0ua2nZoyO0yx77ysw9nATgen3Ob4ti0TCLDFZ3E7
+         /JW41bPXHo4tjkN0GIg9/mCvcigOVn1HLqCBtBqzQiwUPgSflJtCrDgxkLOVqlTtwXMq
+         VOXe/1PXnMS2PSFSt9yRUkfg8wgvxi1mKCqyQstt8OWNtlSIGyTLz1n1ezdqzLf71Y9X
+         0WVNTsaKTajeYhaxI24tUSpWjKlQZ2LFVhWtQ2Sqssjx8DvDYmxRI+Bl2eXCeTMC3E5J
+         wHQA==
+X-Gm-Message-State: APjAAAVuEHWI3/x5cX53WhZCjpvt1PxWvhqXPPzj6KPJhS7srjXTWmND
+        UTmFcD22LPGV/u640mzygNA=
+X-Google-Smtp-Source: APXvYqwD3aMW9+fxSDptS7zjHtrUL6axD8ahdhvdTbAECEHQ3uOfUvnD7wIP6ssynsnm5EaQ/VhgYw==
+X-Received: by 2002:a17:902:20c6:: with SMTP id v6mr48012719plg.276.1556347402023;
+        Fri, 26 Apr 2019 23:43:22 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.16
+        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 23:43:18 -0700 (PDT)
+        Fri, 26 Apr 2019 23:43:21 -0700 (PDT)
 From:   nadav.amit@gmail.com
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -71,10 +71,14 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
         will.deacon@arm.com, ard.biesheuvel@linaro.org,
         kristen@linux.intel.com, deneen.t.dock@intel.com,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Nadav Amit <namit@vmware.com>
-Subject: [PATCH v6 10/24] x86/ftrace: Set trampoline pages as executable
-Date:   Fri, 26 Apr 2019 16:22:49 -0700
-Message-Id: <20190426232303.28381-11-nadav.amit@gmail.com>
+        Nadav Amit <namit@vmware.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: [PATCH v6 12/24] x86/module: Avoid breaking W^X while loading modules
+Date:   Fri, 26 Apr 2019 16:22:51 -0700
+Message-Id: <20190426232303.28381-13-nadav.amit@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426232303.28381-1-nadav.amit@gmail.com>
 References: <20190426232303.28381-1-nadav.amit@gmail.com>
@@ -85,52 +89,123 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nadav Amit <namit@vmware.com>
 
-Since alloc_module() will not set the pages as executable soon, set
-ftrace trampoline pages as executable after they are allocated.
+When modules and BPF filters are loaded, there is a time window in
+which some memory is both writable and executable. An attacker that has
+already found another vulnerability (e.g., a dangling pointer) might be
+able to exploit this behavior to overwrite kernel code. Prevent having
+writable executable PTEs in this stage.
 
-For the time being, do not change ftrace to use the text_poke()
-interface. As a result, ftrace still breaks W^X.
+In addition, avoiding having W+X mappings can also slightly simplify the
+patching of modules code on initialization (e.g., by alternatives and
+static-key), as would be done in the next patch. This was actually the
+main motivation for this patch.
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+To avoid having W+X mappings, set them initially as RW (NX) and after
+they are set as RO set them as X as well. Setting them as executable is
+done as a separate step to avoid one core in which the old PTE is cached
+(hence writable), and another which sees the updated PTE (executable),
+which would break the W^X protection.
+
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jessica Yu <jeyu@kernel.org>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Andy Lutomirski <luto@amacapital.net>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/kernel/ftrace.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kernel/alternative.c | 28 +++++++++++++++++++++-------
+ arch/x86/kernel/module.c      |  2 +-
+ include/linux/filter.h        |  1 +
+ kernel/module.c               |  5 +++++
+ 4 files changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index ef49517f6bb2..53ba1aa3a01f 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -730,6 +730,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	unsigned long end_offset;
- 	unsigned long op_offset;
- 	unsigned long offset;
-+	unsigned long npages;
- 	unsigned long size;
- 	unsigned long retq;
- 	unsigned long *ptr;
-@@ -762,6 +763,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 		return 0;
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 599203876c32..3d2b6b6fb20c 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -668,15 +668,29 @@ void __init alternative_instructions(void)
+  * handlers seeing an inconsistent instruction while you patch.
+  */
+ void *__init_or_module text_poke_early(void *addr, const void *opcode,
+-					      size_t len)
++				       size_t len)
+ {
+ 	unsigned long flags;
+-	local_irq_save(flags);
+-	memcpy(addr, opcode, len);
+-	local_irq_restore(flags);
+-	sync_core();
+-	/* Could also do a CLFLUSH here to speed up CPU recovery; but
+-	   that causes hangs on some VIA CPUs. */
++
++	if (boot_cpu_has(X86_FEATURE_NX) &&
++	    is_module_text_address((unsigned long)addr)) {
++		/*
++		 * Modules text is marked initially as non-executable, so the
++		 * code cannot be running and speculative code-fetches are
++		 * prevented. Just change the code.
++		 */
++		memcpy(addr, opcode, len);
++	} else {
++		local_irq_save(flags);
++		memcpy(addr, opcode, len);
++		local_irq_restore(flags);
++		sync_core();
++
++		/*
++		 * Could also do a CLFLUSH here to speed up CPU recovery; but
++		 * that causes hangs on some VIA CPUs.
++		 */
++	}
+ 	return addr;
+ }
  
- 	*tramp_size = size + RET_SIZE + sizeof(void *);
-+	npages = DIV_ROUND_UP(*tramp_size, PAGE_SIZE);
+diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
+index b052e883dd8c..cfa3106faee4 100644
+--- a/arch/x86/kernel/module.c
++++ b/arch/x86/kernel/module.c
+@@ -87,7 +87,7 @@ void *module_alloc(unsigned long size)
+ 	p = __vmalloc_node_range(size, MODULE_ALIGN,
+ 				    MODULES_VADDR + get_module_load_offset(),
+ 				    MODULES_END, GFP_KERNEL,
+-				    PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
++				    PAGE_KERNEL, 0, NUMA_NO_NODE,
+ 				    __builtin_return_address(0));
+ 	if (p && (kasan_module_alloc(p, size) < 0)) {
+ 		vfree(p);
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 6074aa064b54..14ec3bdad9a9 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -746,6 +746,7 @@ static inline void bpf_prog_unlock_ro(struct bpf_prog *fp)
+ static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+ {
+ 	set_memory_ro((unsigned long)hdr, hdr->pages);
++	set_memory_x((unsigned long)hdr, hdr->pages);
+ }
  
- 	/* Copy ftrace_caller onto the trampoline memory */
- 	ret = probe_kernel_read(trampoline, (void *)start_offset, size);
-@@ -806,6 +808,12 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	/* ALLOC_TRAMP flags lets us know we created it */
- 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
+ static inline void bpf_jit_binary_unlock_ro(struct bpf_binary_header *hdr)
+diff --git a/kernel/module.c b/kernel/module.c
+index 0b9aa8ab89f0..2b2845ae983e 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1950,8 +1950,13 @@ void module_enable_ro(const struct module *mod, bool after_init)
+ 		return;
  
-+	/*
-+	 * Module allocation needs to be completed by making the page
-+	 * executable. The page is still writable, which is a security hazard,
-+	 * but anyhow ftrace breaks W^X completely.
-+	 */
-+	set_memory_x((unsigned long)trampoline, npages);
- 	return (unsigned long)trampoline;
- fail:
- 	tramp_free(trampoline, *tramp_size);
+ 	frob_text(&mod->core_layout, set_memory_ro);
++	frob_text(&mod->core_layout, set_memory_x);
++
+ 	frob_rodata(&mod->core_layout, set_memory_ro);
++
+ 	frob_text(&mod->init_layout, set_memory_ro);
++	frob_text(&mod->init_layout, set_memory_x);
++
+ 	frob_rodata(&mod->init_layout, set_memory_ro);
+ 
+ 	if (after_init)
 -- 
 2.17.1
 
