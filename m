@@ -2,229 +2,127 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9701CC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C31C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE5D2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:07:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUjp491g"
+	by mail.kernel.org (Postfix) with ESMTP id 1B7C52077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfDZNHy (ORCPT
+        id S1726239AbfDZNIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:07:54 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35733 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfDZNHx (ORCPT
+        Fri, 26 Apr 2019 09:08:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35874 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726013AbfDZNIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:07:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y197so4361746wmd.0;
-        Fri, 26 Apr 2019 06:07:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rsrLtw4Gmr2viLgGXMzcj3XLcNbytJSIHL3NMu3D0Rw=;
-        b=bUjp491gDi63+BuCK0cKDD7V+fPodhm/rDn22t2ZUvaV+mnMzVZ/9FfhsuTKMRmnRo
-         4UPYmA2l38uP63i9OHurURplpglqhJvYE2zpgzkfNrseBmkie9GY6AK1gj13ws7uiNEh
-         K9o/9RyZL+CxU2JKdu9r9VmXoq8ac2NhA0OnUPRdIKcxnTCL69h50NGZOfv9gCsHPPxo
-         3ZWTsOJDZB8lQlS8Y1YKE/xbTz6znTRYis8YzuY3eSuQdahZ+afeFCyFWZ6thv3pByMF
-         tbg60vwdXVrvpsWa/KvTjp8u0d3T5MMvx+v690jQRxRlgF3nVpqGjHu+ZTv/eQhENZad
-         dVfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rsrLtw4Gmr2viLgGXMzcj3XLcNbytJSIHL3NMu3D0Rw=;
-        b=JBd6dsPyNn1YdVQb3QEgwOw/NU8IO442jPuMUnrAhZRUk9f4JRK2ItFVx3Lc0aYsSw
-         P/frk1BIIoFfTV+9O2wlFQ82NE4kxCYqkpbAY/qZ6lWJF1nP1z115loSHKr8CcTZ/2TX
-         Ggy/xYCpXyOCuqGZT7Lebf1CUYOZkmkluhvvm69BXD5On9octg8NWCROE4ubJqOG5lC6
-         K+oYuEwTG3tqM8dxEXAAqp6iP1113lL28Az44F0ElscFabWldiT27jeNwiGIkqPjtoLG
-         KYdlm8rbmzXRV9cQGHrP6EVShUMHAOyy33yexsufh+1wNCI0IIpkYFoZn80QSbF10JYL
-         MP8w==
-X-Gm-Message-State: APjAAAW7YZjoOrxCEzfgiJW7rhCeVbEwRA/FJYXm3c/GjlcWo9Dm92Xc
-        +bdLSTOEQT+YJo9qbPwXOlA=
-X-Google-Smtp-Source: APXvYqxtiyLS5gnAASRfRwtPjtYN/w8rWbUPH+q9XGKD/0O0hMYs62fGHG2d85oS+TunHB5aM6RDGg==
-X-Received: by 2002:a1c:7005:: with SMTP id l5mr4150032wmc.149.1556284070941;
-        Fri, 26 Apr 2019 06:07:50 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id s21sm20244314wmh.22.2019.04.26.06.07.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 06:07:50 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 15:07:48 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Cc:     linus.walleij@linaro.org, jonathanh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        pdeschrijver@nvidia.com, josephl@nvidia.com, smangipudi@nvidia.com,
-        ldewangan@nvidia.com, vidyas@nvidia.com
-Subject: Re: [PATCH 1/2] dt-binding: Tegra194 pinctrl support
-Message-ID: <20190426130748.GC16228@ulmo>
-References: <1556247378-3335-1-git-send-email-kyarlagadda@nvidia.com>
+        Fri, 26 Apr 2019 09:08:30 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QD50sD158820
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:08:29 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s410y5gpa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:08:19 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Fri, 26 Apr 2019 14:07:43 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 26 Apr 2019 14:07:39 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3QD7cmY30212172
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Apr 2019 13:07:38 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8F43442045;
+        Fri, 26 Apr 2019 13:07:38 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 465114203F;
+        Fri, 26 Apr 2019 13:07:38 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 26 Apr 2019 13:07:38 +0000 (GMT)
+Date:   Fri, 26 Apr 2019 15:07:36 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Prarit Bhargava <prarit@redhat.com>, Jessica Yu <jeyu@kernel.org>
+Cc:     linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Cathy Avery <cavery@redhat.com>
+Subject: [-next] system hangs likely due to "modules: Only return -EEXIST for
+ modules that have finished loading"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="B4IIlcmfBL/1gGOG"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556247378-3335-1-git-send-email-kyarlagadda@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19042613-0008-0000-0000-000002E0837B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042613-0009-0000-0000-0000224CE125
+Message-Id: <20190426130736.GB8646@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904260090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Prarit,
 
---B4IIlcmfBL/1gGOG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+it looks like your commit f9a75c1d717f ("modules: Only return -EEXIST
+for modules that have finished loading") _sometimes_ causes hangs on
+s390. This is unfortunately not 100% reproducible, however the
+mentioned commit seems to be the only relevant one in modules.c.
 
-On Fri, Apr 26, 2019 at 08:26:17AM +0530, Krishna Yarlagadda wrote:
-> Add new compatible string and other fields used in pinctrl
-> driver for Tegra194 in nvidia,tegra210-pinmux.txt
->=20
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
->  .../bindings/pinctrl/nvidia,tegra210-pinmux.txt    | 43 ++++++++++++++++=
-+++---
->  1 file changed, 38 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pi=
-nmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux=
-=2Etxt
-> index 85f2114..c4e802d 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt
-> @@ -1,7 +1,7 @@
-> -NVIDIA Tegra210 pinmux controller
-> +NVIDIA Tegra210/194 pinmux controller
-> =20
->  Required properties:
-> -- compatible: "nvidia,tegra210-pinmux"
-> +- compatible: "nvidia,tegra210-pinmux" or "nvidia,tegra194-pinmux"
->  - reg: Should contain a list of base address and size pairs for:
->    - first entry: The APB_MISC_GP_*_PADCTRL registers (pad control)
->    - second entry: The PINMUX_AUX_* registers (pinmux)
-> @@ -83,6 +83,10 @@ Valid values for pin and group names (nvidia,pin) are:
->      These correspond to Tegra PINMUX_AUX_* (pinmux) registers. Any prope=
-rty
->      that exists in those registers may be set for the following pin name=
-s.
-> =20
-> +  Tegra194:
-> +    pex_l5_clkreq_n_pgg0, pex_l5_rst_n_pgg1
-> +
-> +  Tegra210:
->      In Tegra210, many pins also have a dedicated APB_MISC_GP_*_PADCTRL
->      register. Where that is true, and property that exists in that regis=
-ter
->      may also be set on the following pin names.
-> @@ -127,12 +131,15 @@ Valid values for pin and group names (nvidia,pin) a=
-re:
->      registers. Note that where one of these registers controls a single =
-pin
->      for which a PINMUX_AUX_* exists, see the list above for the pin name=
- to
->      use when configuring the pinmux.
-> -
-> +  Tegra210:
->      pa6, pcc7, pe6, pe7, ph6, pk0, pk1, pk2, pk3, pk4, pk5, pk6, pk7, pl=
-0, pl1,
->      pz0, pz1, pz2, pz3, pz4, pz5, sdmmc1, sdmmc2, sdmmc3, sdmmc4
-> +  Tegra194:
-> +    pex_l5_clkreq_n_pgg0, pex_l5_rst_n_pgg1
-> =20
->  Valid values for nvidia,functions are:
-> =20
-> +  Tegra210:
->      aud, bcl, blink, ccla, cec, cldvfs, clk, core, cpu, displaya, displa=
-yb,
->      dmic1, dmic2, dmic3, dp, dtv, extperiph3, i2c1, i2c2, i2c3, i2cpmu, =
-i2cvi,
->      i2s1, i2s2, i2s3, i2s4a, i2s4b, i2s5a, i2s5b, iqc0, iqc1, jtag, pe, =
-pe0,
-> @@ -140,9 +147,12 @@ Valid values for nvidia,functions are:
->      sdmmc1, sdmmc3, shutdown, soc, sor0, sor1, spdif, spi1, spi2, spi3, =
-spi4,
->      sys, touch, uart, uarta, uartb, uartc, uartd, usb, vgp1, vgp2, vgp3,=
- vgp4,
->      vgp5, vgp6, vimclk, vimclk2
-> +  Tegra194:
-> +    pe5
-> =20
-> -Example:
-> +Examples:
-> =20
-> +  Tegra210:
->  	pinmux: pinmux@70000800 {
->  		compatible =3D "nvidia,tegra210-pinmux";
->  		reg =3D <0x0 0x700008d4 0x0 0x2a8>, /* Pad control registers */
-> @@ -163,4 +173,27 @@ Example:
->  			};
->  		};
->  	};
-> -};
-> +
-> +  Tegra194:
-> +		tegra_pinctrl: pinmux: pinmux@2430000 {
-> +			compatible =3D "nvidia,tegra194-pinmux";
-> +			reg =3D <0x2430000 0x17000
-> +			       0xc300000 0x4000>;
-> +			#gpio-range-cells =3D <2>;
+What I see is a hanging system with messages like this on the console:
 
-This doesn't appear to be documented and we don't use this on any other
-chip.
+[   65.876040] rcu: INFO: rcu_sched self-detected stall on CPU
+[   65.876049] rcu:     7-....: (5999 ticks this GP) idle=eae/1/0x4000000000000002 softirq=1181/1181 fqs=2729
+[   65.876078]  (t=6000 jiffies g=-471 q=17196)
+[   65.876084] Task dump for CPU 7:
+[   65.876088] systemd-udevd   R  running task        0   731    721 0x06000004
+[   65.876097] Call Trace:
+[   65.876113] ([<0000000000abb264>] __schedule+0x2e4/0x6e0)
+[   65.876122]  [<00000000001ee486>] finished_loading+0x4e/0xb0
+[   65.876128]  [<00000000001f1ed6>] load_module+0xcce/0x27a0
+[   65.876134]  [<00000000001f3af0>] __s390x_sys_init_module+0x148/0x178
+[   65.876142]  [<0000000000ac0766>] system_call+0x2aa/0x2c8
 
-> +			pex_rst_c5_out_state: pex_rst_c5_out {
-> +				pex_rst {
-> +					nvidia,pins =3D "pex_l5_rst_n_pgg1";
-> +					nvidia,schmitt =3D <TEGRA_PIN_DISABLE>;
-> +					nvidia,lpdr =3D <TEGRA_PIN_ENABLE>;
-> +					nvidia,enable-input =3D <TEGRA_PIN_DISABLE>;
-> +					nvidia,io-high-voltage =3D <TEGRA_PIN_ENABLE>;
-> +					nvidia,tristate =3D <TEGRA_PIN_DISABLE>;
-> +					nvidia,pull =3D <TEGRA_PIN_PULL_NONE>;
+crash's backtrace of this task looks like this:
 
-Should the above not set a nvidia,function property for the pex_rst pin?
+PID: 731    TASK: 1e79ba000         CPU: 7   COMMAND: "systemd-udevd"
+ LOWCORE INFO:
+  -psw      : 0x0704c00180000000 0x0000000000ab666a
+  -function : memcmp at ab666a
+  -prefix   : 0x7fe32000
+  -cpu timer: 0x7fffff5784d0f048
+  -clock cmp: 0xd60757081cd70d00
+  -general registers:
+     0x0000000000000009 0x0000000000000009
+     0x000003ff80347321 000000000000000000
+     0x000003ff8034f321 000000000000000000
+     0x000000000000001e 0x000003ff8c592708
+     0x000003e0047da900 0x000003ff8034f318
+     0x0000000000000001 0x0000000000000009
+     0x000003ff80347300 0x0000000000ad81b8
+     0x00000000001ee062 0x000003e004357cb0
+[...]
+ #0 [3e004357cf0] load_module at 1f1eb0
+ #1 [3e004357dd0] __se_sys_init_module at 1f3af0
+ #2 [3e004357ea8] system_call at ac0766
+ PSW:  0705000180000000 000003ff8c27ad3e (user space)
+ GPRS: 000002aa280d2fb0 000003ff8c27ad3c 0000000000000080 00000000000035fd
+       000003ff8c592708 000002aa280c8770 0000000000000000 000002aa280d7130
+       0000000000020000 000002aa28915760 000003ff8c592708 000002aa280c00b0
+       000003ff8c8fff80 000002aa280c00b0 000003ff8c58a456 000003ffe9cfde90
 
-Thierry
+I did not look any further into the dump, however since the commit
+touches exactly the code path which seems to be looping... ;)
 
-> +				};
-> +			};
-> +		};
-> +		pinmuxtest@0 {
-> +			compatible =3D "nvidia,tegra194-pinmux-test";
-> +			pinctrl-names =3D "pex_rst";
-> +			pinctrl-0 =3D <&pex_rst_c5_out_state>;
-> +		};
-> --=20
-> 2.7.4
->=20
-
---B4IIlcmfBL/1gGOG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzDAqQACgkQ3SOs138+
-s6H1qg//RWcDJBPuUXv7TZF/CL+BdbTsUBWjBbYxyO2uIWwCpgOB6IPSIbWWHP+D
-TMux4TUd0Jdra2AuWfOPQSJXhHlGxSSQWPyPvCX5ZMuMAb0khraFsCcmjcQzEtgi
-aUDm3kupODoKbuwV7bwJuuRjhlINM3o7ItB/Z3QQ6kelY8SCMqlkY2yAU2YXZi9Q
-t1wFSyP0SkovHHYkz1SMsqejraX91i6VT+3MN4sCrztSquD6QeLWZNfNfLET0Y6G
-zTin1D1JHpVaFPOn4WoNDTZUGFgSe6VzZePAuO22yj9uaFZo6bm1q5UJRPk+YWM0
-CgsfibQoGLhRxQJhZIREXisQDwJkcuM5Q//PkZlA7OFd3+0gqnzGvHZ4wGnUlcAS
-kAlL951+YrRkyhVyalm2X9q7zZ5Az+PdT5OcYQx6fDquk9kHCCYOZbyghU2U7EL6
-Fr+Y2wk1praI7Xu29JhHbS4/i5t15MlNeZ2b2csqtG+5Z0QOfRWjOswqnfqNVgqG
-yM5ZBsrQk+43rWwXmgiDv89HHn9QXi4lyJF1cbbLToqLlt0FXR4MYGMwGycw0F5z
-3d4/0aVXAtn5wsqWIanSmtqyGncRz5bKkx0EeYHLTHEIlY38+LdXWVqgXjAUNiGn
-EDrLWVWJn/eG0ITIw9aO3Cm6CquLxktdwV/4mTIHYkCc+kunUcE=
-=ibra
------END PGP SIGNATURE-----
-
---B4IIlcmfBL/1gGOG--
