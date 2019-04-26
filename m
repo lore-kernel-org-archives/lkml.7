@@ -2,180 +2,133 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40929C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1299EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09ABB206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556258419;
-	bh=XwVkAeBflMUjAt+dKBxND8OqrDbucl9vUib9UY4pjac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AG2J22HCQnU2ZM61aQDNtda33hXY/Px4cN7pIxuWAz08QrpFLPLqUX77Rv2jclen4
-	 OBYnuhUn8+uclUVp+OBIK5ljh8hSXpkqb4Xmia5y1oFj+kErjBq6aPRFdX4OPulNyN
-	 dCcC7Ngg5ftoozNMX2ynPDeTMQhRvRKyotqOmNZw=
+	by mail.kernel.org (Postfix) with ESMTP id D2D49206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="DVuXMago"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfDZGAR (ORCPT
+        id S1727317AbfDZGAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 02:00:17 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55630 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727346AbfDZGAQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 02:00:16 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o25so2198744wmf.5;
-        Thu, 25 Apr 2019 23:00:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xG06JOJH6aQLNft6haZRC3MGK6N0PVzv1voVXNfMTvc=;
-        b=Yd63ou6cXbKRz4amh22WBpCSJKQZlACjg2tXHXVW7Y40Q3JFCDVY8bkHcnN8rnr4a/
-         M+fBXQSFZaHYLVkaxQ39g29lPtIlMMTMg5LDsMmU+T2QUbmxg+L5NTA3kapjEesPcbjG
-         4g2jY24bMC+w6997jcB7xlZVp5s4hlHVJ1aFXn3vCJyHDXkHWYpRp2xXamtch6S0MAmA
-         w/EusqN05FTRCG/S5wUDFUPdZBIjsD4yXdv4j8opiKUIzFZ1bILfEskAOkyMTRuxjfTy
-         d8x4vBOPlYf9XLmQcHYLs1HBZoemTu+eM/EES3Pn0dFVBXQa5JJu1h6oGvOoWkrt/WGr
-         8oyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xG06JOJH6aQLNft6haZRC3MGK6N0PVzv1voVXNfMTvc=;
-        b=m6wT2tN/22JazqLccqlGzB2+v3xnUC4O0WNBfbK4I4P4GYSMXSm2EG7GKqsBdQ5Py3
-         K4AoHYtvX4SGM7+CUgvk04Ia7JAS8w1vDXJtEpygAXchJ92kjZNzUOlMBT+3eoJmTsRf
-         C32yhy2iA8E76i06yz0ag2VWBQLwEwjWP/ppTe5FFspASUWl/DLM/juUsI5zXT262Vhq
-         TxXkHJ7bb61FB6XfH87hAz6+r6g7mwbQkeU2QPxdB1W9fTvLMN7gA0XflXjOf4sUS/aQ
-         HbRwHFUUHrAUS8b8ylntVowFcm/bfAW2cbXuwcUe9+aJGXfYed/O3//9FK+jBmhT74Y2
-         rMcw==
-X-Gm-Message-State: APjAAAU9Ox39+LD7UfR7hwj1j1OJPhvZmLzrjJg4UZJ+f6M7B+tx8iH9
-        yHaNJzPo0D95ESnva2pc/JU=
-X-Google-Smtp-Source: APXvYqx1h0fGs/p5JDZCopdJAAThg0TMzLOzvf7ttpgeeXPyWG6k4MPouwa1UX3571OZfTdqtBokUg==
-X-Received: by 2002:a7b:c115:: with SMTP id w21mr6174946wmi.55.1556258413393;
-        Thu, 25 Apr 2019 23:00:13 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id n1sm17595815wmc.19.2019.04.25.23.00.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 23:00:12 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 08:00:10 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v8 05/15] x86/msr-index: Define MSR_IA32_CORE_CAPABILITY
- and split lock detection bit
-Message-ID: <20190426060010.GB122831@gmail.com>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
- <1556134382-58814-6-git-send-email-fenghua.yu@intel.com>
- <20190425054511.GA40105@gmail.com>
- <20190425190148.GA64477@romley-ivt3.sc.intel.com>
- <20190425194714.GA58719@gmail.com>
- <20190425195154.GC64477@romley-ivt3.sc.intel.com>
- <20190425200830.GD58719@gmail.com>
- <20190425202226.GD64477@romley-ivt3.sc.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190425202226.GD64477@romley-ivt3.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 26 Apr 2019 02:00:12 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:60344 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727020AbfDZF7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 01:59:51 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44r3Kv2Tq7z9v1vP;
+        Fri, 26 Apr 2019 07:59:47 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=DVuXMago; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 3dBihyuc_5WN; Fri, 26 Apr 2019 07:59:47 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44r3Kv1TYdz9v1tj;
+        Fri, 26 Apr 2019 07:59:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1556258387; bh=4kEDLZNkBNAYCQ5OcoGO2PuBDx1/QI5nsGEmUjCJNzw=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=DVuXMagoAbuIWEZZwTVKXG0tADE8VQ6UXfN3DKe7buTgDOsVa/1q/pFswEdag6l50
+         8iW1iTmS5hlqHdjdbcu4CjwKQCZRKos6LJ1I6JlZ6TCI+OueKSyCmY44BmqIEqps76
+         jOXZWwWupVwRDaoeMRz/j7chAgrU1fSHth4Jmeuk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1962C8B807;
+        Fri, 26 Apr 2019 07:59:48 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id AQkN-zkAJyC0; Fri, 26 Apr 2019 07:59:48 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.6])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 01C618B74C;
+        Fri, 26 Apr 2019 07:59:48 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id D962166276; Fri, 26 Apr 2019 05:59:47 +0000 (UTC)
+Message-Id: <abacb62daee8e70f14ce3899a255f756c6b20583.1556258135.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1556258134.git.christophe.leroy@c-s.fr>
+References: <cover.1556258134.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 12/17] powerpc/mm: move hugetlb_disabled into asm/hugetlb.h
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        aneesh.kumar@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 26 Apr 2019 05:59:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+No need to have this in asm/page.h, move it into asm/hugetlb.h
 
-* Fenghua Yu <fenghua.yu@intel.com> wrote:
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/hugetlb.h | 2 ++
+ arch/powerpc/include/asm/page.h    | 1 -
+ arch/powerpc/kernel/fadump.c       | 1 +
+ arch/powerpc/mm/hash_utils_64.c    | 1 +
+ 4 files changed, 4 insertions(+), 1 deletion(-)
 
-> On Thu, Apr 25, 2019 at 10:08:30PM +0200, Ingo Molnar wrote:
-> > 
-> > * Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > 
-> > > On Thu, Apr 25, 2019 at 09:47:14PM +0200, Ingo Molnar wrote:
-> > > > 
-> > > > * Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > > > 
-> > > > > On Thu, Apr 25, 2019 at 07:45:11AM +0200, Ingo Molnar wrote:
-> > > > > > 
-> > > > > > * Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > > > > > 
-> > > > > > > A new MSR_IA32_CORE_CAPABILITY (0xcf) is defined. Each bit in the MSR
-> > > > > > > enumerates a model specific feature. Currently bit 5 enumerates split
-> > > > > > > lock detection. When bit 5 is 1, split lock detection is supported.
-> > > > > > > When the bit is 0, split lock detection is not supported.
-> > > > > > > 
-> > > > > > > Please check the latest Intel 64 and IA-32 Architectures Software
-> > > > > > > Developer's Manual for more detailed information on the MSR and the
-> > > > > > > split lock detection bit.
-> > > > > > > 
-> > > > > > > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> > > > > > > ---
-> > > > > > >  arch/x86/include/asm/msr-index.h | 3 +++
-> > > > > > >  1 file changed, 3 insertions(+)
-> > > > > > > 
-> > > > > > > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> > > > > > > index ca5bc0eacb95..f65ef6f783d2 100644
-> > > > > > > --- a/arch/x86/include/asm/msr-index.h
-> > > > > > > +++ b/arch/x86/include/asm/msr-index.h
-> > > > > > > @@ -59,6 +59,9 @@
-> > > > > > >  #define MSR_PLATFORM_INFO_CPUID_FAULT_BIT	31
-> > > > > > >  #define MSR_PLATFORM_INFO_CPUID_FAULT		BIT_ULL(MSR_PLATFORM_INFO_CPUID_FAULT_BIT)
-> > > > > > >  
-> > > > > > > +#define MSR_IA32_CORE_CAPABILITY	0x000000cf
-> > > > > > > +#define CORE_CAP_SPLIT_LOCK_DETECT	BIT(5)     /* Detect split lock */
-> > > > > > 
-> > > > > > Please don't put comments into definitions.
-> > > > > 
-> > > > > I'll remove the comment and change definitions of the MSR and the split lock
-> > > > > detection bit as following:
-> > > > > 
-> > > > > +#define MSR_IA32_CORE_CAPABILITY                       0x000000cf
-> > > > > +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT 5
-> > > > > +#define MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAPABILITY_SPLIT_LOCK_DETECT_BIT)
-> > > > > 
-> > > > > Are these right changes?
-> > > > 
-> > > > I suspect it could be shortened to CORE_CAP as you (partly) did it 
-> > > > originally.
-> > > 
-> > > IA32_CORE_CAPABILITY is the MSR's exact name in the latest SDM (in Table 2-14):
-> > > https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
-> > > 
-> > > So can I define the MSR and the bits as follows?
-> > > 
-> > > +#define MSR_IA32_CORE_CAP                       0x000000cf
-> > > +#define MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT_BIT 5
-> > > +#define MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT     BIT(MSR_IA32_CORE_CAP_SPLIT_LOCK_DETECT_BIT)
-> > 
-> > Yeah, I suppose that looks OK.
-> 
-> Should I also change the feature definition 'X86_FEATURE_CORE_CAPABILITY' to
-> 'X86_FEATURE_CORE_CAP' in cpufeatures.h in patch #0006 to match the
-> MSR definition here? Or should I still keep the current feature definition?
-> 
-> Thanks.
+diff --git a/arch/powerpc/include/asm/hugetlb.h b/arch/powerpc/include/asm/hugetlb.h
+index fd5c0873a57d..84598c6b0959 100644
+--- a/arch/powerpc/include/asm/hugetlb.h
++++ b/arch/powerpc/include/asm/hugetlb.h
+@@ -13,6 +13,8 @@
+ #include <asm/nohash/32/hugetlb-8xx.h>
+ #endif /* CONFIG_PPC_BOOK3S_64 */
+ 
++extern bool hugetlb_disabled;
++
+ void flush_dcache_icache_hugepage(struct page *page);
+ 
+ int slice_is_hugepage_only_range(struct mm_struct *mm, unsigned long addr,
+diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+index 748f5db2e2b7..6b508420d92b 100644
+--- a/arch/powerpc/include/asm/page.h
++++ b/arch/powerpc/include/asm/page.h
+@@ -29,7 +29,6 @@
+ 
+ #ifndef __ASSEMBLY__
+ #ifdef CONFIG_HUGETLB_PAGE
+-extern bool hugetlb_disabled;
+ extern unsigned int HPAGE_SHIFT;
+ #else
+ #define HPAGE_SHIFT PAGE_SHIFT
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index 45a8d0be1c96..25f063f56ec5 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -36,6 +36,7 @@
+ #include <linux/sysfs.h>
+ #include <linux/slab.h>
+ #include <linux/cma.h>
++#include <linux/hugetlb.h>
+ 
+ #include <asm/debugfs.h>
+ #include <asm/page.h>
+diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+index f727197de713..db1aef2adc88 100644
+--- a/arch/powerpc/mm/hash_utils_64.c
++++ b/arch/powerpc/mm/hash_utils_64.c
+@@ -37,6 +37,7 @@
+ #include <linux/context_tracking.h>
+ #include <linux/libfdt.h>
+ #include <linux/pkeys.h>
++#include <linux/hugetlb.h>
+ 
+ #include <asm/debugfs.h>
+ #include <asm/processor.h>
+-- 
+2.13.3
 
-Hm, no, for CPU features it's good to follow the vendor convention.
-
-So I guess the long-form CPU_CAPABILITY for all of these is the best 
-after all.
-
-Thanks,
-
-	Ingo
