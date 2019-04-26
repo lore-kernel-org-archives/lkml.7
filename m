@@ -2,140 +2,128 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84CDC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A438EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1F2208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:11:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556295062;
-	bh=AdIVBpnWD4EKRko4Qg1W+qoIdwT0atGxH5KyjTAjmLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S4MExiyYAdlwym/BRp71vGKwW90o8fgs+GFYoWb//7Nq6QvT77TMlz0eZx9n6xazW
-	 kc8U+az9HW0UGJQvXbfZLwLPDBBwDSMA9VG4why2VoTQu3AGdwB/H48lUozA/DW/Mf
-	 glTWRUgSft1ex7QXi1+xFHjeI5fWKMpJbpf6y8c0=
+	by mail.kernel.org (Postfix) with ESMTP id 7039720651
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:12:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byeOH0yW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfDZQKx (ORCPT
+        id S1726518AbfDZQMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbfDZQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:10:52 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE1C820B7C;
-        Fri, 26 Apr 2019 16:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556295051;
-        bh=AdIVBpnWD4EKRko4Qg1W+qoIdwT0atGxH5KyjTAjmLY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NblDReoEcEdKXjkOnUMB3hntAPt6i8qWP0cbksb59jsvVofe8n26ccSx++CJcH6TA
-         gstldZ+aLEByveeMspV33ZGgll/aZW2RM5X9urMuzgIrxt/C0KcVbXD+8WzHBRVoYy
-         13E4n0CdIIy/WTkpKR23mrMPc4kCTiNIQLPHSsiw=
-Date:   Fri, 26 Apr 2019 11:10:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH] pci: aardvark: Wait for endpoint to be ready before
- training link
-Message-ID: <20190426161050.GA189964@google.com>
-References: <20190313213752.1246-1-repk@triplefau.lt>
- <20190423163215.GB26523@red-moon>
- <20190423222917.GN2754@voidbox.localdomain>
- <20190424165002.GA26089@e121166-lin.cambridge.arm.com>
- <20190425210826.GQ2754@voidbox.localdomain>
+        Fri, 26 Apr 2019 12:12:41 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45334 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfDZQMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:12:41 -0400
+Received: by mail-pl1-f195.google.com with SMTP id o5so1785386pls.12;
+        Fri, 26 Apr 2019 09:12:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+bbsuKoR24YMuDr33VKXl7Q82tkl1CzMT//eb9+9c84=;
+        b=byeOH0yWYnFhUFa3PDaM4zPwagrPHA4B9aTN2i8AfkXKGtsWkP4vVLk5f9QmcMkOnR
+         lbdbKAgipyqOSYtbCSDvEpdFbDVytkJvjBMGgkVQbQgWnIm+uj/yNz8W1uEcDVi+D7UU
+         wYxLEy6/dalZnYRDC+vTmSswhZI8T+9Mtcg9g9wZFW0rC+1mPat5lWB4v0WZlj0xVMQS
+         v9A12KP1KHwy1Qp1VkK7FSn+WKg5Dpu5TPXsJ5TaoQ72dRFe0vopyPusjaexa+GXVfui
+         NA6PmlAbaHBMrCja6BJTh5RQwQavXuU38TxNwG8cC21fB56tsQC/hXFtlMqVZ85GWL8A
+         cOjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+bbsuKoR24YMuDr33VKXl7Q82tkl1CzMT//eb9+9c84=;
+        b=MG6QdNs1VsWtXKp4ohQviVxQmJahsP1zYGV+hQUDzzklmPgwxCQaWCx1PIzEL9czLe
+         0JRXqVzxUJ72LZAPOwU6hih2D2Ic6+TTX97q48+zUNEtVF/P95jl7lF2LDAXkopvDSGk
+         V8URKrhLOzJZ08SK31Uh7ljKi9zBKkXfEOz7G91CJ1vYSDlEx+pH4DbQ/KuKdUzKsxmk
+         P7r4P5/SvwC/iiRg2kFY3bdESo7omUZ4jR+VBM3sG3xM/b+L8cURdA+S1qGieVO5S60P
+         q68AvvkYE3VHlHUcXgRdmSSisbtoGCYcnagC04VXp3IPlSuBDvcJBG/x3jOo8SqhdF7H
+         tX2g==
+X-Gm-Message-State: APjAAAWrS1Wk82D6o7q0MMvhj1COmH23MID2ypPXj47oU51G2rYmGtbq
+        VlBw0BJ+RgGyByXU+FZlU1g=
+X-Google-Smtp-Source: APXvYqyRlOkdUezbiG6JC9t9RbxBOlSK9+zh6qqP6l26TaJFo2GNCtKfK1mv0h99q79Yq4Ze3Lx5Yw==
+X-Received: by 2002:a17:902:a503:: with SMTP id s3mr42597997plq.16.1556295160638;
+        Fri, 26 Apr 2019 09:12:40 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s19sm32646630pfe.74.2019.04.26.09.12.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 09:12:40 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 09:12:39 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-pm@vger.kernel.org, Chris Health <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] power: supply: core: Add
+ POWER_SUPPLY_HEALTH_OVERCURRENT constant
+Message-ID: <20190426161239.GA7128@roeck-us.net>
+References: <20190417084457.28747-1-andrew.smirnov@gmail.com>
+ <20190417084457.28747-2-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425210826.GQ2754@voidbox.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190417084457.28747-2-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 11:08:27PM +0200, Remi Pommarel wrote:
-> On Wed, Apr 24, 2019 at 05:50:02PM +0100, Lorenzo Pieralisi wrote:
-> > On Wed, Apr 24, 2019 at 12:29:18AM +0200, Remi Pommarel wrote:
-> > > On Tue, Apr 23, 2019 at 05:32:15PM +0100, Lorenzo Pieralisi wrote:
-> > > > On Wed, Mar 13, 2019 at 10:37:52PM +0100, Remi Pommarel wrote:
-> > > > > When configuring pcie reset pin from gpio (e.g. initially set by
-> > > > > u-boot) to pcie function this pin goes low for a brief moment
-> > > > > asserting the PERST# signal. Thus connected device enters fundamental
-> > > > > reset process and link configuration can only begin after a minimal
-> > > > > 100ms delay (see [1]).
-> > > > > 
-> > > > > This makes sure that link is configured after at least 100ms from
-> > > > > beginning of probe() callback (shortly after the reset pin function
-> > > > > configuration switch through pinctrl subsytem).
-> > 
-> > I am a bit lost, what's the connection between the probe() callback
-> > and the reset pin function configuration ?
+On Wed, Apr 17, 2019 at 01:44:55AM -0700, Andrey Smirnov wrote:
+> Add POWER_SUPPLY_HEALTH_OVERCURRENT constant in order to allow
+> singalling overcurrent condition via power supply health information.
 > 
-> So currently u-boot configures the reset pin as a GPIO set to high. The
-> espressobin devicetree defines a default pinctrl to configure this pin
-> as a PCIe reset function.
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Health <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/power/supply/power_supply_sysfs.c | 2 +-
+>  include/linux/power_supply.h              | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 > 
-> As you can see in drivers/base/dd.c, driver_probe_device() calls
-> really_probe() which first calls pinctrl_bind_pins() then shortly after
-> drv->probe() callback. The pinctrl_bind_pins() function applies the
-> default state. So here, just before drv->probe() gets called our reset
-> pin goes from GPIO function to PCIe reset one making it going low for a
-> short time during this transition.
+> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+> index 5e91946731fd..464f4e837601 100644
+> --- a/drivers/power/supply/power_supply_sysfs.c
+> +++ b/drivers/power/supply/power_supply_sysfs.c
+> @@ -62,7 +62,7 @@ static const char * const power_supply_charge_type_text[] = {
+>  static const char * const power_supply_health_text[] = {
+>  	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
+>  	"Unspecified failure", "Cold", "Watchdog timer expire",
+> -	"Safety timer expire"
+> +	"Safety timer expire", "Over current"
+>  };
+>  
+>  static const char * const power_supply_technology_text[] = {
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 2f9c201a54d1..bdab14c7ca4d 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -57,6 +57,7 @@ enum {
+>  	POWER_SUPPLY_HEALTH_COLD,
+>  	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
+>  	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
+> +	POWER_SUPPLY_HEALTH_OVERCURRENT,
+>  };
+>  
+>  enum {
+> -- 
+> 2.20.1
 > 
-> Because the pin goes low then gets back to high, PERST# signal is
-> asserted then deasserted and device enters fundamental reset process
-> just before drv->probe() is called. So in order to reduce the waiting
-> time to a minimum I sample jiffies at the very beginning of the probe
-> function, which is the closer spot from where PERST# is deasserted.
-> 
-> To sum up:
-> 
-> driver_probe_device() {
-> 	...
-> 	really_probe() {
-> 		...
-> 		pinctrl_bind_pins(); /* Here PERST# is asserted because pin configuration changes */
-> 		...
-> 		drv->probe();
-
-Ah, I see.  Hmmm.  This definitely warrants a comment in
-advk_pcie_probe() about the connection.
-
-I appreciate that ab78029ecc34 ("drivers/pinctrl: grab default handles
-from device core") saves some boilerplate from drivers, but ... at the
-same time, it makes for some non-obvious implicit connections like
-this.  I'm not sure whether having the boilerplate or the comment is
-worse.  But I'm pretty sure the "no boilerplate, no comment" option is
-the worst of the three :)
-
-> > > > > [1] "PCI Express Base Specification", REV. 2.1
-> > > > >         PCI Express, March 4 2009, 6.6.1 Conventional Reset
-
-> > > > > +/* Endpoint can take up to 100ms to be ready after a reset */
-> > > > > +#define ENDPOINT_RST_MS			100
-
-> So doing that I do a msleep() of around 75-80ms instead of 100ms. So,
-> yes, are 20ms enough to justify that, or should we just go with a plain
-> msleep(100) to improve legibility.
-
-I vote for 100ms so it's easily tied to the spec.  We *should* have a
-PCI core #define for that to make it even easier.
-
-PCI_PM_D3COLD_WAIT might be close, but we might need some cleanup in
-this area.  There are a whole bunch of "msleep(100)" calls in
-drivers/pci that probably should use the same #define.  Somebody
-should look through pci_af_flr(), pcie_flr(), pci_pm_reset(),
-pcie_wait_for_link(), to see if we can use a common constant.
-
-Bjorn
