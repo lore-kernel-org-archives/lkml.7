@@ -2,170 +2,117 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFA5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50579C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7036206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2190B206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:06:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uy1VTQH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfDZPGG (ORCPT
+        id S1726495AbfDZPGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:06:06 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43860 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbfDZPGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:06:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F74980D;
-        Fri, 26 Apr 2019 08:06:05 -0700 (PDT)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD28C3F5C1;
-        Fri, 26 Apr 2019 08:06:03 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ard.biesheuvel@linaro.org, julien.thierry@arm.com,
-        marc.zyngier@arm.com, catalin.marinas@arm.com,
-        suzuki.poulose@arm.com, will.deacon@arm.com,
-        christoffer.dall@arm.com, james.morse@arm.com
-References: <20190426143740.31973-1-julien.grall@arm.com>
- <20190426143740.31973-4-julien.grall@arm.com>
- <20190426145232.GK3567@e103592.cambridge.arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <322340c7-0c97-76f8-8ab8-875040b4459c@arm.com>
-Date:   Fri, 26 Apr 2019 16:06:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 26 Apr 2019 11:06:51 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35789 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbfDZPGv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:06:51 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j20so2764477lfh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 08:06:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uK1bPzXfoKqtAuaxFD9Fq0QPMIelpERA39QXbQVkvIg=;
+        b=Uy1VTQH1+NF1sh+lwHjoPc4Ep9K2d8TefI4IG/PIxokwnNKQ/L2A14hJhvPbRVcoFy
+         RpTUAzE5j3sywdjGfCe/nBkE57lXS2tSBxovsAjCbB9pekvm0J4z7f1HjeCE+noUOOh5
+         qeFybjLsuVap6L6JCZzbG3xEqymrOvMgtK7sP005PaD/WsrJeKfCB0p3rKfZ5hIc8pYC
+         Nr9yeZu9lkGw6P7k+dOMPz79Hykzc3pNiMDkHQDNXA+KrpuCBRPa7gDmFt+ItDECJdsy
+         MbtL5Ia6hPxfIxt034pQLeVWG6ykR46S1dp3FMPIWLco1jih118lgV6HbtO5jElM9HjF
+         yqJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uK1bPzXfoKqtAuaxFD9Fq0QPMIelpERA39QXbQVkvIg=;
+        b=GGEEAP9XnrhTc6oc2Dx0QXK+uhkoaTHyuZH7DxrVOpgA22pIGHr4AUsn6id3qFV5Fb
+         jNMni7DU1fM27qhRNptXHlGYoUsS9ew3LEgph5gGewmBTqTID51r76Llg0KdrxNLMcbe
+         c/9IdEpIytPk0lm3uy8eh5QH9sPgc5xWyHVOiGe2e2cuMmDaLg5BdaiUmcNAiPXfXWFx
+         D3/fd8pbBOmuIutqod8cPUxlfGRrcdzh8A0Mavr62RGc7vHIj10v/FghjB/P+xeCSLqo
+         R9kntlcW2hjEIyn6FQ3flCWXO8LEM8KAzAt2N3AZ9z2+qPsIjG1Gp6hkHKj0nBxuHkp/
+         gXqA==
+X-Gm-Message-State: APjAAAUUjCV+PNO4DHeoYj2vEtwh2FawjDbimQlgwGVN906VlqZJSDHS
+        T987VrLuR6OQazwz+76wy3s=
+X-Google-Smtp-Source: APXvYqzBuRAqCPFkR5+/YMDV+V9w4WpXskZfYfptKWo+v6n34mGJw53MRtyvwLFksaSbZdZwCmtfmA==
+X-Received: by 2002:a19:48c9:: with SMTP id v192mr24276282lfa.136.1556291208973;
+        Fri, 26 Apr 2019 08:06:48 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:a315:5445:5300:2492:ad61:69f1:23cc])
+        by smtp.googlemail.com with ESMTPSA id o3sm5636622lfn.41.2019.04.26.08.06.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 08:06:48 -0700 (PDT)
+From:   =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+To:     kyungmin.park@samsung.com
+Cc:     bbrezillon@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH] mtd: onenand: Add support for 8Gb datasize onenand
+Date:   Fri, 26 Apr 2019 17:06:34 +0200
+Message-Id: <20190426150634.5643-1-pawel.mikolaj.chmiel@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190426145232.GK3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-On 26/04/2019 15:52, Dave Martin wrote:
-> On Fri, Apr 26, 2019 at 03:37:40PM +0100, Julien Grall wrote:
->> When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
->> the kernel may be able to use FPSIMD/SVE. This is for instance the case
->> for crypto code.
->>
->> Any use of FPSIMD/SVE in the kernel are clearly marked by using the
->> function kernel_neon_{begin, end}. Furthermore, this can only be used
->> when may_use_simd() returns true.
->>
->> The current implementation of may_use_simd() allows softirq to use
->> FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
->> When in use, softirqs usually fall back to a software method.
->>
->> At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
->> when touching the FPSIMD/SVE context. This has the drawback to disable
->> all softirqs even if they are not using FPSIMD/SVE.
->>
->> Since a softirq is supposed to check may_use_simd() anyway before
->> attempting to use FPSIMD/SVE, there is limited reason to keep softirq
->> disabled when touching the FPSIMD/SVE context. Instead, we can simply
->> disable preemption and mark the FPSIMD/SVE context as in use by setting
->> CPU's kernel_neon_busy flag.
-> 
-> fpsimd_context_busy?
+Used in several S5PV210-based Galaxy S devices, among them SGH-T959V,
+SGH-T959P, SGH-T839, and SPH-D700.
 
-Yes.
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+---
+ drivers/mtd/nand/onenand/onenand_base.c | 2 ++
+ include/linux/mtd/onenand_regs.h        | 1 +
+ 2 files changed, 3 insertions(+)
 
-> 
->> Two new helpers {get, put}_cpu_fpsimd_context is introduced to mark the
->> area using FPSIMD/SVE context and uses them in replacement of
-> 
-> Paragraph mangled during edit?
-
-Possibly, I will update it.
-
-> 
-> -> "are introduced ... and they are used to replace ..."
-> 
->> local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
->> also re-implemented to use the new helpers.
->>
->> Additionally, double-underscored versions of the helpers are provided to
->> be used in function called with interrupt masked. They are used for
->> sanity and also help to mark place where the FPSIMD context can be
->> manipulate freely.
-> 
-> For the benefit of other readers, this should be more explicit.  Also,
-> the distinction between the normal and __ helpers is that the latter
-> can be caller with preemption disabled.
-> 
-> To clarify the impact, we can say something like
-> 
-> "These are only relevant on paths where irqs are disabled anyway, so
-> they are not needed for correctness in the current code. Let's use them
-> anyway though: this marks the critical sections clearly and will help
-> to avoid mistakes during future maintenance."
-
-How about the following commit message?
-
-     arm64/fpsimd: Don't disable softirq when touching FPSIMD/SVE state
-
-     When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
-     the kernel may be able to use FPSIMD/SVE. This is for instance the case
-     for crypto code.
-
-     Any use of FPSIMD/SVE in the kernel are clearly marked by using the
-     function kernel_neon_{begin, end}. Furthermore, this can only be used
-     when may_use_simd() returns true.
-
-     The current implementation of may_use_simd() allows softirq to use
-     FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
-     When in use, softirqs usually fall back to a software method.
-
-     At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
-     when touching the FPSIMD/SVE context. This has the drawback to disable
-     all softirqs even if they are not using FPSIMD/SVE.
-
-     Since a softirq is supposed to check may_use_simd() anyway before
-     attempting to use FPSIMD/SVE, there is limited reason to keep softirq
-     disabled when touching the FPSIMD/SVE context. Instead, we can simply
-     disable preemption and mark the FPSIMD/SVE context as in use by setting
-     CPU's fpsimd_context_busy flag.
-
-     Two new helpers {get, put}_cpu_fpsimd_context are introduced to mark
-     the area using FPSIMD/SVE context and they are used to replace
-     local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
-     also re-implemented to use the new helpers.
-
-     Additionally, double-underscored versions of the helpers are provided to
-     called when preemption is already disabled. These are only relevant on
-     paths where irqs are disabled anyway, so they are not needed for
-     correctness in the current code. Let's use them anyway though: this
-     marks critical sections clearly and will help to avoid mistakes during
-     future maintenance.
-
-     The change has been benchmarked on Linux 5.1-rc4 with defconfig.
-
-     On Juno2:
-         * hackbench 100 process 1000 (10 times)
-         * .7% quicker
-
-     On ThunderX 2:
-         * hackbench 1000 process 1000 (20 times)
-         * 3.4% quicker
-
-> 
-> [...]
-> 
-> (Sorry to nitpick)
-
-That's fine, I should have be more careful when rework the commit message.
-
-Cheers,
-
+diff --git a/drivers/mtd/nand/onenand/onenand_base.c b/drivers/mtd/nand/onenand/onenand_base.c
+index 4ca4b194e7d7..abdef0bd1367 100644
+--- a/drivers/mtd/nand/onenand/onenand_base.c
++++ b/drivers/mtd/nand/onenand/onenand_base.c
+@@ -3260,6 +3260,8 @@ static void onenand_check_features(struct mtd_info *mtd)
+ 
+ 	/* Lock scheme */
+ 	switch (density) {
++	case ONENAND_DEVICE_DENSITY_8Gb:
++		this->options |= ONENAND_HAS_NOP_1;
+ 	case ONENAND_DEVICE_DENSITY_4Gb:
+ 		if (ONENAND_IS_DDP(this))
+ 			this->options |= ONENAND_HAS_2PLANE;
+diff --git a/include/linux/mtd/onenand_regs.h b/include/linux/mtd/onenand_regs.h
+index d60130f88eed..9640d707cbf8 100644
+--- a/include/linux/mtd/onenand_regs.h
++++ b/include/linux/mtd/onenand_regs.h
+@@ -80,6 +80,7 @@
+ #define ONENAND_DEVICE_DENSITY_1Gb	(0x003)
+ #define ONENAND_DEVICE_DENSITY_2Gb	(0x004)
+ #define ONENAND_DEVICE_DENSITY_4Gb	(0x005)
++#define ONENAND_DEVICE_DENSITY_8Gb	(0x006)
+ 
+ /*
+  * Version ID Register F002h (R)
 -- 
-Julien Grall
+2.20.1
+
