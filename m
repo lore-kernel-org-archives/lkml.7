@@ -2,110 +2,178 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F0DC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6BFC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3721206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556288800;
-	bh=txJvu4RSNbNVSpcFzceE5UFZAad15JQXsWN4351Gezk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ks41f4+yhJ+jf/X1tPyiQITL+uXqZGR2dtxcH8p5lVQi8fvFye2kU+00EZ+waiFHS
-	 d+kmZKOo/O+4oHQ8YDFja2Qq+HYLrWv03bmb8wUPcZ3im6JjWcA/uGoyMKtntkR/Pz
-	 pSz7duHklVYJSjtjcUAvxsn42FO2OdUW57aCVW7c=
+	by mail.kernel.org (Postfix) with ESMTP id ABFC5206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfDZO0j (ORCPT
+        id S1726521AbfDZO0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:26:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37163 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbfDZO0j (ORCPT
+        Fri, 26 Apr 2019 10:26:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:47817 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbfDZO0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:26:39 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r20so1659656otg.4;
-        Fri, 26 Apr 2019 07:26:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TPXAxARqPqZgBSIBW7sK/th4srY55i8I5lUn6zENakM=;
-        b=k4Z/Ss6LgMRf2s7yd02Kvmsvs0f2FrYV4betigeeyVwj501CnsWXSJALFcCezC4BcE
-         Rh134C6QQNmqp5Fo76uqvUlgV3R38LAE4wlOt822f29t1A/9Fhwt6kTMO0UeXQdiVBIS
-         xdvNBZAaHPFHjXysYTGOGK7rPj7apvGGFmKQ1pl1LfQAM5wa5FhmbR1J5EBHJRNEGZgN
-         3nRWh2xMg0ZYV/jh8dlFixm07FFescKDKMj78YGWKuutig8ernSl+bj34J15aVFEu9tQ
-         /JdbWjOaw8Ku2gcuMM4fkoqraGJAel5CT/RTzdfwJoiqfGIY7cJ3U1oVteHwzLLw/qJN
-         CNUg==
-X-Gm-Message-State: APjAAAWPxh/gpQyRDohmfpEHtfru/Jb/AK54wiDtbTA2xXFoeuC2kJzC
-        Zxoeua2o+kP9wmahiXcieA==
-X-Google-Smtp-Source: APXvYqz8zLff/W51ZBzi7tWn5RzlqOqZHog1GZVSP7IM8hVFLyusEdq9tXk5WAI7WNDvqRoVbcGEyA==
-X-Received: by 2002:a05:6830:1107:: with SMTP id w7mr28189486otq.14.1556288798499;
-        Fri, 26 Apr 2019 07:26:38 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c131sm3913824oif.33.2019.04.26.07.26.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 07:26:37 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 09:26:37 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Wanglai Shi <shiwanglai@hisilicon.com>
-Subject: Re: [PATCH v5 3/4] dt-bindings: arm: coresight: Unify funnel DT
- binding
-Message-ID: <20190426142637.GA17613@bogus>
-References: <20190412102738.12679-1-leo.yan@linaro.org>
- <20190412102738.12679-4-leo.yan@linaro.org>
+        Fri, 26 Apr 2019 10:26:53 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N79Ey-1gjxWY3Vdc-017SDB; Fri, 26 Apr 2019 16:26:34 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Joseph Myers <joseph@codesourcery.com>, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin LaHaise <bcrl@kvack.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, linux-aio@kvack.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH 2/2] y2038: remove CONFIG_64BIT_TIME
+Date:   Fri, 26 Apr 2019 16:25:05 +0200
+Message-Id: <20190426142531.1378357-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190426142531.1378357-1-arnd@arndb.de>
+References: <20190426142531.1378357-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412102738.12679-4-leo.yan@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:pjXQoUiFLLd5AZcOYPHe+Yv87CKp/2bRQj9L5IdyHlllyX1swCL
+ KEyyDzWxeJiMQRVJsbN2SdOj5GNMkFRP1EzypybxgMWZYRBEcmxrsC5fhm7kLR3cXHSyMml
+ 0Zq6ILdbJwDaJjWBMe3gwQCsrLodILgzEXOq/R1R+xRcm4sLgIwSn1sLj3LdbNamNQ+rKcg
+ /AbDTdDj4qW6VgsaKoU5Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Lx8cwdssJtM=:0FMNwAN48UJP6infa2tHYg
+ xeU1qF8k2SuQQeUzOfx8Zfjvd9uiI+7nFUzWKKqIHDyqoXrmDGNItowIUHeXKYgGnRCLFiOb1
+ 7zYzQjUah3mvWDbRsc+2fr/Xp/QfWg11TcmMh2PnDO8DJImUjVFn9dMcnsx/cqaY2fiLcpANU
+ I3BMH4tkccVNcfiHFtQ4dxOLhKafB9FH1YYYql8emThRzQIjJ3F6XpJa59By7mZ8s+D1J5lrq
+ vHZ/rKFjX3rzt10ShdL6NGUnhh1+juoEW0pRn6YJBijRdov33dnTmBekJDdXuvmhQ8BQ13qX4
+ nWMkoO60FniI31YwLHoXqObXXtP1zm+Xv7iAzry7he7zrHCl2fhaXbOHJXj4nYzET0YpNBn1V
+ opY/Sk+NtJkRRMmZ/m3mGLHh7wfm+Xg4auPR6Sk83idWKaRG50VhBwukf/JIN4D4ntFXgsDoM
+ sk2CxskqMbDvaw8kMGoqhseKRo54Uz155WKMuEW38XeMJTfrhHXFGSEJ7MRWdv7/MtF7gM+ZR
+ MFU7qB68cY9lqaz5LHbc1S7Q/3rLVP4vtrN+aFYBz+13mcLp+RA40ZaRiwSrU2OMUupPuN/D7
+ PywueB00J+binMgD6w/JI/lecVBJeIrNDSZvrcBeshDtfZF8c5uAvVfW7oEIx+rnKa5uOCXkv
+ iyWH5pYE0Zpm9+XdgjYaRPaP1SmACz+ENHdBLMUnkNAbysyCQKfiNSu+zegW26YOw5dTddzWy
+ XVoIsvxQxnDABSGYEm0UfX99muH1w3jYf+ygEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019 18:27:37 +0800, Leo Yan wrote:
-> Following the same fashion with replicator DT binding, this patch is to
-> unify the DT binding for funnel to support static and dynamic modes;
-> finally we get the funnel DT binding as below:
-> 
-> Before patch:
-> 
->   Static funnel, aka. non-configurable funnel:
->     Not supported;
-> 
->   Dynamic funnel, aka. configurable funnel:
->     "arm,coresight-funnel", "arm,primecell";
-> 
-> After patch:
-> 
->   Static funnel:
->     "arm,coresight-static-funnel";
-> 
->   Dynamic funnel:
->     "arm,coresight-dynamic-funnel", "arm,primecell";
->     "arm,coresight-funnel", "arm,primecell"; (obsolete)
-> 
-> At the end of this patch, it gives an example for static funnel DT
-> binding, and updates the dynamic funnel example.
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Wanglai Shi <shiwanglai@hisilicon.com>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  .../devicetree/bindings/arm/coresight.txt     | 53 +++++++++++++++++--
->  1 file changed, 48 insertions(+), 5 deletions(-)
-> 
+The CONFIG_64BIT_TIME option is defined on all architectures, and can
+be removed for simplicity now.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+This would make sense for 5.2, or could be part of a later
+cleanup series when I have more patches for the remaining
+y2038 bits
+---
+ arch/Kconfig          | 8 --------
+ fs/aio.c              | 2 +-
+ ipc/syscall.c         | 2 +-
+ kernel/time/hrtimer.c | 2 +-
+ kernel/time/time.c    | 4 ++--
+ net/socket.c          | 2 +-
+ 6 files changed, 6 insertions(+), 14 deletions(-)
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 9092e0ffe4d3..23ee740182aa 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -763,14 +763,6 @@ config OLD_SIGACTION
+ config COMPAT_OLD_SIGACTION
+ 	bool
+ 
+-config 64BIT_TIME
+-	def_bool y
+-	help
+-	  This should be selected by all architectures that need to support
+-	  new system calls with a 64-bit time_t. This is relevant on all 32-bit
+-	  architectures, and 64-bit architectures as part of compat syscall
+-	  handling.
+-
+ config COMPAT_32BIT_TIME
+ 	def_bool !64BIT || COMPAT
+ 	help
+diff --git a/fs/aio.c b/fs/aio.c
+index 3490d1fa0e16..b1b949ae1a93 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -2057,7 +2057,7 @@ static long do_io_getevents(aio_context_t ctx_id,
+  *	specifies an infinite timeout. Note that the timeout pointed to by
+  *	timeout is relative.  Will fail with -ENOSYS if not implemented.
+  */
+-#if !defined(CONFIG_64BIT_TIME) || defined(CONFIG_64BIT)
++#ifdef CONFIG_64BIT
+ 
+ SYSCALL_DEFINE5(io_getevents, aio_context_t, ctx_id,
+ 		long, min_nr,
+diff --git a/ipc/syscall.c b/ipc/syscall.c
+index 581bdff4e7c5..dfb0e988d542 100644
+--- a/ipc/syscall.c
++++ b/ipc/syscall.c
+@@ -30,7 +30,7 @@ int ksys_ipc(unsigned int call, int first, unsigned long second,
+ 		return ksys_semtimedop(first, (struct sembuf __user *)ptr,
+ 				       second, NULL);
+ 	case SEMTIMEDOP:
+-		if (IS_ENABLED(CONFIG_64BIT) || !IS_ENABLED(CONFIG_64BIT_TIME))
++		if (IS_ENABLED(CONFIG_64BIT))
+ 			return ksys_semtimedop(first, ptr, second,
+ 			        (const struct __kernel_timespec __user *)fifth);
+ 		else if (IS_ENABLED(CONFIG_COMPAT_32BIT_TIME))
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 41dfff23c1f9..61f03faf783a 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1749,7 +1749,7 @@ long hrtimer_nanosleep(const struct timespec64 *rqtp,
+ 	return ret;
+ }
+ 
+-#if !defined(CONFIG_64BIT_TIME) || defined(CONFIG_64BIT)
++#ifdef CONFIG_64BIT
+ 
+ SYSCALL_DEFINE2(nanosleep, struct __kernel_timespec __user *, rqtp,
+ 		struct __kernel_timespec __user *, rmtp)
+diff --git a/kernel/time/time.c b/kernel/time/time.c
+index 74105fa3ce80..a4c72577aa92 100644
+--- a/kernel/time/time.c
++++ b/kernel/time/time.c
+@@ -264,7 +264,7 @@ COMPAT_SYSCALL_DEFINE2(settimeofday, struct old_timeval32 __user *, tv,
+ }
+ #endif
+ 
+-#if !defined(CONFIG_64BIT_TIME) || defined(CONFIG_64BIT)
++#ifdef CONFIG_64BIT
+ SYSCALL_DEFINE1(adjtimex, struct __kernel_timex __user *, txc_p)
+ {
+ 	struct __kernel_timex txc;		/* Local copy of parameter */
+@@ -871,7 +871,7 @@ int get_timespec64(struct timespec64 *ts,
+ 	ts->tv_sec = kts.tv_sec;
+ 
+ 	/* Zero out the padding for 32 bit systems or in compat mode */
+-	if (IS_ENABLED(CONFIG_64BIT_TIME) && in_compat_syscall())
++	if (in_compat_syscall())
+ 		kts.tv_nsec &= 0xFFFFFFFFUL;
+ 
+ 	ts->tv_nsec = kts.tv_nsec;
+diff --git a/net/socket.c b/net/socket.c
+index a180e1a9ff23..2ff80e03d97b 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2787,7 +2787,7 @@ SYSCALL_DEFINE2(socketcall, int, call, unsigned long __user *, args)
+ 				    a[2], true);
+ 		break;
+ 	case SYS_RECVMMSG:
+-		if (IS_ENABLED(CONFIG_64BIT) || !IS_ENABLED(CONFIG_64BIT_TIME))
++		if (IS_ENABLED(CONFIG_64BIT))
+ 			err = __sys_recvmmsg(a0, (struct mmsghdr __user *)a1,
+ 					     a[2], a[3],
+ 					     (struct __kernel_timespec __user *)a[4],
+-- 
+2.20.0
+
