@@ -6,117 +6,74 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D133BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AF6C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5EE52086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D8E206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfDZVrg (ORCPT
+        id S1727279AbfDZVsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 17:47:36 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:57119 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbfDZVrd (ORCPT
+        Fri, 26 Apr 2019 17:48:17 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54027 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727248AbfDZVsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 17:47:33 -0400
-X-Originating-IP: 90.66.53.80
-Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id AE2E54000C;
-        Fri, 26 Apr 2019 21:47:30 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexander Dahl <ada@thorsis.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Romain Izard <romain.izard.pro@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 3/9] clocksource/drivers/tcb_clksrc: Use tcb as sched_clock
-Date:   Fri, 26 Apr 2019 23:47:12 +0200
-Message-Id: <20190426214718.13470-4-alexandre.belloni@bootlin.com>
+        Fri, 26 Apr 2019 17:48:16 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hK8hX-00005a-Kl; Fri, 26 Apr 2019 21:48:11 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amd/display: fix incorrect null check on pointer
+Date:   Fri, 26 Apr 2019 22:48:11 +0100
+Message-Id: <20190426214811.12310-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190426214718.13470-1-alexandre.belloni@bootlin.com>
-References: <20190426214718.13470-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the driver is registered early enough, use the TCB as the
-sched_clock which is much more accurate than the jiffies implementation.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Currently an allocation is being made but the allocation failure
+check is being performed on another pointer. Fix this by checking
+the correct pointer. Also use the normal kernel idiom for null
+pointer checks.
+
+Addresses-Coverity: ("Resource leak")
+Fixes: 43e3ac8389ef ("drm/amd/display: Add function to copy DC streams")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/clocksource/tcb_clksrc.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/gpu/drm/amd/display/dc/core/dc_stream.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/tcb_clksrc.c b/drivers/clocksource/tcb_clksrc.c
-index bf68504da94a..9de8c10ab546 100644
---- a/drivers/clocksource/tcb_clksrc.c
-+++ b/drivers/clocksource/tcb_clksrc.c
-@@ -11,6 +11,7 @@
- #include <linux/io.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
-+#include <linux/sched_clock.h>
- #include <linux/syscore_ops.h>
- #include <soc/at91/atmel_tcb.h>
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+index 6200df3edcd0..96e97d25d639 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+@@ -168,7 +168,7 @@ struct dc_stream_state *dc_copy_stream(const struct dc_stream_state *stream)
+ 	struct dc_stream_state *new_stream;
  
-@@ -114,6 +115,16 @@ static struct clocksource clksrc = {
- 	.resume		= tc_clksrc_resume,
- };
+ 	new_stream = kzalloc(sizeof(struct dc_stream_state), GFP_KERNEL);
+-	if (stream == NULL)
++	if (!new_stream)
+ 		return NULL;
  
-+static u64 notrace tc_sched_clock_read(void)
-+{
-+	return tc_get_cycles(&clksrc);
-+}
-+
-+static u64 notrace tc_sched_clock_read32(void)
-+{
-+	return tc_get_cycles32(&clksrc);
-+}
-+
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
- 
- struct tc_clkevt_device {
-@@ -335,6 +346,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 	struct atmel_tc tc;
- 	struct clk *t0_clk;
- 	const struct of_device_id *match;
-+	u64 (*tc_sched_clock)(void);
- 	u32 rate, divided_rate = 0;
- 	int best_divisor_idx = -1;
- 	int clk32k_divisor_idx = -1;
-@@ -419,6 +431,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 		clksrc.read = tc_get_cycles32;
- 		/* setup ony channel 0 */
- 		tcb_setup_single_chan(&tc, best_divisor_idx);
-+		tc_sched_clock = tc_sched_clock_read32;
- 	} else {
- 		/* we have three clocks no matter what the
- 		 * underlying platform supports.
-@@ -430,6 +443,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 		}
- 		/* setup both channel 0 & 1 */
- 		tcb_setup_dual_chan(&tc, best_divisor_idx);
-+		tc_sched_clock = tc_sched_clock_read;
- 	}
- 
- 	/* and away we go! */
-@@ -442,6 +456,8 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 	if (ret)
- 		goto err_unregister_clksrc;
- 
-+	sched_clock_register(tc_sched_clock, 32, divided_rate);
-+
- 	return 0;
- 
- err_unregister_clksrc:
+ 	memcpy(new_stream, stream, sizeof(struct dc_stream_state));
 -- 
 2.20.1
 
