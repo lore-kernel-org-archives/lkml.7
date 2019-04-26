@@ -5,141 +5,144 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD5AC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CB8C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6C02086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826882077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfDZThW (ORCPT
+        id S1726683AbfDZTp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 15:37:22 -0400
-Received: from ms.lwn.net ([45.79.88.28]:50814 "EHLO ms.lwn.net"
+        Fri, 26 Apr 2019 15:45:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58694 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbfDZThV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 15:37:21 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726310AbfDZTp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 15:45:58 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 839AD77D;
-        Fri, 26 Apr 2019 19:37:20 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 13:37:19 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH 1/2] Docs: An initial automarkup extension for sphinx
-Message-ID: <20190426133719.5d30d4a4@lwn.net>
-In-Reply-To: <20190426153255.7e424a45@coco.lan>
-References: <20190425200125.12302-1-corbet@lwn.net>
-        <20190425200125.12302-2-corbet@lwn.net>
-        <20190426153255.7e424a45@coco.lan>
-Organization: LWN.net
+        by mx1.redhat.com (Postfix) with ESMTPS id F1D80772CC;
+        Fri, 26 Apr 2019 19:45:56 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A0AF60FD9;
+        Fri, 26 Apr 2019 19:45:56 +0000 (UTC)
+Subject: Re: [-next] system hangs likely due to "modules: Only return -EEXIST
+ for modules that have finished loading"
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     Jessica Yu <jeyu@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Cathy Avery <cavery@redhat.com>
+References: <20190426130736.GB8646@osiris>
+ <d4d75ad1-e193-c230-1edc-a93db2b068d7@redhat.com>
+ <20190426150741.GD8646@osiris> <20190426160956.GA3827@linux-8ccs>
+ <2e047a7e-bf08-be8c-bdd0-429464fa133d@redhat.com>
+Message-ID: <52c293e9-ddfa-426a-a8f1-2106e250e78d@redhat.com>
+Date:   Fri, 26 Apr 2019 15:45:55 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <2e047a7e-bf08-be8c-bdd0-429464fa133d@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 26 Apr 2019 19:45:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019 15:32:55 -0300
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 
-> > +# Try to identify "function()" that's not already marked up some
-> > +# other way.  Sphinx doesn't like a lot of stuff right after a
-> > +# :c:func: block (i.e. ":c:func:`mmap()`s" flakes out), so the last
-> > +# bit tries to restrict matches to things that won't create trouble.
-> > +#
-> > +RE_function = re.compile(r'(^|\s+)([\w\d_]+\(\))([.,/\s]|$)')  
+
+On 4/26/19 2:10 PM, Prarit Bhargava wrote:
 > 
-> IMHO, this looks good enough to avoid trouble, maybe except if one
-> wants to write a document explaining this functionality at the
-> doc-guide/kernel-doc.rst.
-
-Adding something to the docs is definitely on my list.
-
-> Anyway, the way it is written, we could still explain it by adding
-> a "\ " after the func, e. g.:
 > 
-> 	When you write a function like: func()\ , the automarkup
-> 	extension will automatically convert it into:
-> 	``:c:func:`func()```.
+> On 4/26/19 12:09 PM, Jessica Yu wrote:
+>> +++ Heiko Carstens [26/04/19 17:07 +0200]:
+>>> On Fri, Apr 26, 2019 at 09:22:34AM -0400, Prarit Bhargava wrote:
+>>>> On 4/26/19 9:07 AM, Heiko Carstens wrote:
+>>>>> Hello Prarit,
+>>>>>
+>>>>> it looks like your commit f9a75c1d717f ("modules: Only return -EEXIST
+>>>>> for modules that have finished loading") _sometimes_ causes hangs on
+>>>>> s390. This is unfortunately not 100% reproducible, however the
+>>>>> mentioned commit seems to be the only relevant one in modules.c.
+>>>>>
+>>>>> What I see is a hanging system with messages like this on the console:
+>>>>>
+>>>>> [   65.876040] rcu: INFO: rcu_sched self-detected stall on CPU
+>>>>> [   65.876049] rcu:     7-....: (5999 ticks this GP)
+>>>> idle=eae/1/0x4000000000000002 softirq=1181/1181 fqs=2729
+>>>>> [   65.876078]  (t=6000 jiffies g=-471 q=17196)
+>>>>> [   65.876084] Task dump for CPU 7:
+>>>>> [   65.876088] systemd-udevd   R  running task        0   731    721
+>>>> 0x06000004
+>>>>> [   65.876097] Call Trace:
+>>>>> [   65.876113] ([<0000000000abb264>] __schedule+0x2e4/0x6e0)
+>>>>> [   65.876122]  [<00000000001ee486>] finished_loading+0x4e/0xb0
+>>>>> [   65.876128]  [<00000000001f1ed6>] load_module+0xcce/0x27a0
+>>>>> [   65.876134]  [<00000000001f3af0>] __s390x_sys_init_module+0x148/0x178
+>>>>> [   65.876142]  [<0000000000ac0766>] system_call+0x2aa/0x2c8
+>>>>> I did not look any further into the dump, however since the commit
+>>>>> touches exactly the code path which seems to be looping... ;)
+>>>>>
+>>>>
+>>>> Ouch :(  I wonder if I exposed a further race or another bug.  Heiko, can you
+>>>> determine which module is stuck?  Warning: I have not compiled this code.
+>>>
+>>> Here we go:
+>>>
+>>> [   11.716866] PRARIT: waiting for module s390_trng to load.
+>>> [   11.716867] PRARIT: waiting for module s390_trng to load.
+>>> [   11.716868] PRARIT: waiting for module s390_trng to load.
+>>> [   11.716870] PRARIT: waiting for module s390_trng to load.
+>>> [   11.716871] PRARIT: waiting for module s390_trng to load.
+>>> [   11.716872] PRARIT: waiting for module s390_trng to load.
+>>> [   11.716874] PRARIT: waiting for module s390_trng to load.
+>>> [   11.716875] PRARIT: waiting for module s390_trng to load.
+>>> [   11.716876] PRARIT: waiting for module s390_trng to load.
+>>> [   16.726850] add_unformed_module: 31403529 callbacks suppressed
+>>> [   16.726853] PRARIT: waiting for module s390_trng to load.
+>>> [   16.726862] PRARIT: waiting for module s390_trng to load.
+>>> [   16.726865] PRARIT: waiting for module s390_trng to load.
+>>> [   16.726867] PRARIT: waiting for module s390_trng to load.
+>>> [   16.726869] PRARIT: waiting for module s390_trng to load.
+>>>
+>>> If I'm not mistaken then there was _no_ corresponding message on the
+>>> console stating that the module already exists.
 > 
-> So, this looks OK on my eyes.
-
-Not sure I like that; the whole point is to avoid extra markup here.  Plus
-I like that it catches all function references whether the author thought
-to mark them or not.
-
-> > +#
-> > +# Lines consisting of a single underline character.
-> > +#
-> > +RE_underline = re.compile(r'^([-=~])\1+$')  
+> Heiko,
 > 
-> Hmm... why are you calling this "underline"? Sounds a bad name to me,
-> as it took me a while to understand what you meant.
-
-Seemed OK to me, but I can change it :)
-
-> From the code I'm inferring that this is meant to track 3 of the
-> possible symbols used as a (sub).*title markup. On several places 
-> we use other symbols:'^', '~', '.', '*' (and others) as sub-sub(sub..)
-> title markups.
-
-I picked the ones that were suggested in our docs; it was enough to catch
-all of the problems in the current kernel docs.
-
-Anyway, The real documentation gives the actual set, so I'll maybe make it:
-
-	=-'`":~^_*+#<>
-
-I'd prefer that to something more wildcardish.
-
-> You should probably need another regex for the title itself:
+> Where is the s390_trng module?  I can't seem to find it in the tree.
 > 
-> 	RE_possible_title = re.compile(r'^(\S.*\S)\s*$')
+> [02:06 PM root@ibm-z-108 linux-next]# find ./ -name *s390_trng*
+> [02:06 PM root@ibm-z-108 linux-next]# git grep s390_trng
+> [02:07 PM root@ibm-z-108 linux-next]#
 > 
-> in order to get the size of the matched line. Doing a doing len(previous)
-> will get you false positives.
 
-This I don't quite get.  It's easy enough to trim off the spaces with
-strip() if that turns out to be a problem (which it hasn't so far).  I can
-add that.
+Never mind, I found it: s390-trng.c
 
-> on a separate matter (but related to automarkup matter - and to what
-> I would name underline), as a future feature, perhaps we could also add
-> a parser for:
+P.
+
+> P.
 > 
-> 	_something that requires underlines_
-> 
-> Underlined text is probably the only feature that we use on several docs
-> with Sphinx doesn't support (there are some extensions for that - I guess,
-> but it sounds simple enough to have a parser here).
-> 
-> This can be tricky to get it right, as just underlines_ is a
-> cross reference markup - so, I would only add this after we improve the
-> script to come after Sphinx own markup processing.
-
-That does indeed sound tricky.  It would also probably have to come
-*before* Sphinx does its thing or it's unlikely to survive.
-
-> > +        #
-> > +        # Is this an underline line?  If so, and it is the same length
-> > +        # as the previous line, we may have mangled a heading line in
-> > +        # error, so undo it.
-> > +        #
-> > +        elif RE_underline.match(line):
-> > +            if len(line) == len(previous):  
-> 
-> No, that doesn't seem enough. I would, instead, use the regex I
-> proposed before, in order to check if the previous line starts with
-> a non-space, and getting the length only up to the last non-space
-> (yeah, unfortunately, we have some text files that have extra blank
-> spaces at line's tail).
-
-So I'll make it "if len(line) == len(previous.strip())
-
-Thanks,
-
-jon
+>>
+>> Hm, my current theory is that we have a module whose exit() function
+>> is taking a while to run to completion. While it is doing so, the
+>> module's state is already set to MODULE_STATE_GOING.
+>>
+>> With Prarit's patch, since this module is probably still in GOING,
+>> add_unformed_module() will wait until the module is finally gone. If
+>> this takes too long, we will keep trying to add ourselves to the
+>> module list and hence stay in the loop in add_unformed_module().
+>> According to Documentation/RCU/stallwarn.txt, this looping in the
+>> kernel may trigger an rcu stall warning (see bullet point stating "a
+>> CPU looping anywhere in the kernel without invoking schedule()".
+>>
+>> Heiko, could you modify the patch to print the module's state to
+>> confirm?
+>>
+>> Thanks,
+>>
+>> Jessica
