@@ -2,197 +2,183 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8960CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C1FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A9A2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BF12077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CC9Q03V6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NzhXVdzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbfDZJ3Z (ORCPT
+        id S1726058AbfDZJbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:29:25 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34943 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfDZJ3Z (ORCPT
+        Fri, 26 Apr 2019 05:31:48 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46877 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfDZJbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:29:25 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w197so2427884oia.2;
-        Fri, 26 Apr 2019 02:29:24 -0700 (PDT)
+        Fri, 26 Apr 2019 05:31:47 -0400
+Received: by mail-lf1-f68.google.com with SMTP id k18so1823220lfj.13;
+        Fri, 26 Apr 2019 02:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NsY5EmHdlAn0ywW1Ux75nexz4+HNB70NwRqQrN4RVkc=;
-        b=CC9Q03V659ZKJXXkQNMFm8zddbExPDGz8vaOVoLs52urDHhOeJABtt8xExwMRIrYwd
-         stf9ptfAa0GnFBPI7kC0vU9iOSI/GNzBg9shgp6i+w0rIBQjBglXlK2V0zzJuHpJHhv3
-         f/sFH4obG+SHjEaaDUu1OiOChjxZWGa3TLFMfbogQB1CEJA5S17+HJWU8MhETVg2KgTK
-         +kXyaH0OKxHOKZkfFTvekn7OFeU1cUuYFG/2dWrT92F7KlUWjh4v/d7XvW5343qNyabq
-         cZKotQ1lOHpcYC1EBHGHl1bBxBCvh2580axwfAYK0pd4YiPjRwXaCpHH/VIqaNM3B8nN
-         R/Dg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8XngklsEx7FjQ3aFz/vWthXQwMXtqDaLXO4qZKwIGnM=;
+        b=NzhXVdzVLOPW7juNy1wbBPURSp9M0sO5UrNBIZrd8orzYK2rsGL9q2dXf/4Se7chTR
+         pOKf8/nwPG6n/Vwc6FhQuSEHAALlprNN2MWJBkNWnSQVLKRj89C8Fa/UaWfchFwHGhrB
+         4ECh8+GBJoiikigtIUfsZDAz23VNv/ol6Q2QYowALlAgp9ke4bLRmvPyvzbaRzRxoIkS
+         oJlz8aIt8pkV+kWsAIiF+d5Z/ZmnXbb0V45CqayFxDJrFyw6CrvmhD7C4mYLqCVSRXPQ
+         UJoh7QrzWzirtHQ6PIJoJ8Ih2BfWzm5B6xl4hduXLSBi72UFStrtgmdAyasnBIBnOK5R
+         Dftg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NsY5EmHdlAn0ywW1Ux75nexz4+HNB70NwRqQrN4RVkc=;
-        b=EfUXXY9q2jQP+HRNB5QOu27yRp+6Sbt+4AOjMMohh+k06khA5WpvhTER40GFWhADBU
-         wbc0fAqvQQSRzcd0cUcHnkX84U8yUW7MF2AxnUao/DBFgXP3d43QLTfV/Cz6WIUiugM7
-         a2HfYfV+dbRoUYnR5APtGtRmXXQJOqRctLf2xm/GwTkys02mofpR0xcEJ899a7p4VnmQ
-         cFj5Op6GQPizsUVo7ggPNwZ93k1A1ebQ4/oHwX1Uep1eVLrjxYEzLfDVlqW4R7ImIrcJ
-         GAV7/lCAW60ZtWqcUNNbuLWoDcbaXTdVAjxIBLq3ReXap55KXkFPn8UrUR/BfMCU4kqv
-         /KfQ==
-X-Gm-Message-State: APjAAAVuwnJKcKnaWCC0uVCCLyar94XLQDjLAosEyXKJMB/rmvNwpmt6
-        3J/cvE5g45xQckfaMsc9BbNLyEGdD1FAn8hbs5A=
-X-Google-Smtp-Source: APXvYqyQlyzvwqQN5JndAC+hYrtPWX4/7rbPQJud7RXC05dGSFjLiKCT+Pd/wlHZxI7Q+wAW9mKwHUT8YTlUMbkQ9Bg=
-X-Received: by 2002:aca:5bd7:: with SMTP id p206mr6372016oib.128.1556270963864;
- Fri, 26 Apr 2019 02:29:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8XngklsEx7FjQ3aFz/vWthXQwMXtqDaLXO4qZKwIGnM=;
+        b=B7EQbUMButnlJwwjjicNe/ndYCfr7qH43Kx2uzLsDuFmz58FVGHU5rzlFwA84R6gAz
+         Vr+qzpxgJSW5/QOUBegk8hFTbYEY8GgncOL0HPp0OIh2PrX8lP7k+y354zPu+spZ9mX8
+         otjSRajk/WXCeWPER8k8FC7bTVy2BO4k2VdGcoib27CFTyzF8BSauCM6tdioM3PyNLQs
+         w4k23calpSiYEOVU1fTfTodyiuFB1Qe78h03qQ+wy1xbw1JLirtySfWMlaxHa9pK1WgU
+         2jNSQZubhfmNSslrYk52sk3TW1tI2sq5UUTRu2oHg2M/+pxNyyg+9j5YwEym0zpVoKRz
+         viJg==
+X-Gm-Message-State: APjAAAVcQcJChc80IF2oLybG2SBQBgouDEYHq2TuE4TBoPyHYlETQTB5
+        GYDBFkuMVOIgur5rHp/cW9jXZZDJOGY=
+X-Google-Smtp-Source: APXvYqx3VglXoX4j1jUiw/1sM/w/boItLHSKInk0NTWrB4+05ESU/3qu7Wno/iuBRl5wuUrYBLkqzQ==
+X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr10688538lfn.10.1556271105187;
+        Fri, 26 Apr 2019 02:31:45 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id a1sm1418767lfc.17.2019.04.26.02.31.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 02:31:44 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: realtek: Add rtl8211e rx/tx delays config
+Date:   Fri, 26 Apr 2019 12:30:10 +0300
+Message-Id: <20190426093010.9609-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190422083257.21805-1-alexandru.ardelean@analog.com>
- <20190422210606.GA8805@kroah.com> <86ea407aaa891e50a3bdaf2c3653636a365076ee.camel@analog.com>
- <20190424133455.00002909@huawei.com> <20190425193736.GA11458@kroah.com>
-In-Reply-To: <20190425193736.GA11458@kroah.com>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Fri, 26 Apr 2019 12:29:11 +0300
-Message-ID: <CA+U=DsoyPQyNDX6CDx=xE73H9A=66BGKhTseEvZcZZPnpPAfQw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] lib: add __sysfs_match_string_with_gaps() helper
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 10:38 PM gregkh@linuxfoundation.org
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Apr 24, 2019 at 01:34:55PM +0100, Jonathan Cameron wrote:
-> > On Tue, 23 Apr 2019 06:38:44 +0000
-> > "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-> >
-> > > On Mon, 2019-04-22 at 23:06 +0200, Greg KH wrote:
-> > > >
-> > > >
-> > > > On Mon, Apr 22, 2019 at 11:32:56AM +0300, Alexandru Ardelean wrote:
-> > > > > This helper is similar to __sysfs_match_string() with the exception
-> > > > > that it
-> > > > > ignores NULL elements within the array.
-> > > >
-> > > > sysfs is "one value per file", why are you trying to write multiple
-> > > > things on a single line to a single sysfs file?
-> > > >
-> > > > Is IIO really that messy?  :)
-> > > >
-> > >
-> > > Hmm, I don't think I understood the comment/question, or maybe I did not
-> > > formulate the comment properly.
-> > >
-> > > Maybe Jonathan can pitch-in here if I'm saying something wrong.
-> > >
-> > > So, in IIO there is `struct iio_enum` which is essentially a sysfs wrapper
-> > > for exposing an "enum" type to userspace via sysfs (which takes only one
-> > > value). This iio_enum type is basically a string-to-int mapping.
-> >
-> > >
-> > > Some example in C:
-> > >
-> > > enum {
-> > >     ENUM0,
-> > >     ENUM1,
-> > >     ENUM5 = 5,
-> > >     ENUM6,
-> > >     ENUM7
-> > > };
-> > >
-> > >
-> > > /* Notice the gaps in the elements */
-> > > static const char * const item_strings[] = {
-> > >         [ENUM0] = "mode0",
-> > >         [ENUM1] = "mode1",
-> > >         [ENUM5] = "mode5",
-> > >         [ENUM6] = "mode6",
-> > >         [ENUM7] = "mode7",
-> > > };
-> > >
-> > > static const struct iio_enum iio_enum1 = {
-> > >         .items = item_strings,
-> > >         .num_items = ARRAY_SIZE(item_strings),
-> > >         .set = iio_enum1_set,
-> > >         .get = iio_enum1_get,
-> > > };
-> > >
-> > >
-> > > The signature of the iio_enum1_set / iio_enum1_get is below:
-> > >
-> > > static int iio_enum1_set(struct iio_dev *indio_dev,
-> > >         const struct iio_chan_spec *chan, unsigned int val);
-> > >
-> > > static int iio_enum1_get(struct iio_dev *indio_dev,
-> > >         const struct iio_chan_spec *chan)
-> > >
-> > >
-> > > IIO core resolves the string-to-int mapping.
-> > > It uses __sysfs_match_string() to do that, but it requires that the list of
-> > > strings (and C enums) be contiguous.
-> > > This change [and V2 of this patch] introduces a
-> > > __sysfs_match_string_with_gaps() helper that ignores gaps (represented as
-> > > NULLs).
-> > >
-> > > For reference, __sysfs_match_string() returns -EINVAL on the first NULL in
-> > > the array of strings (regardless of the given array size).
-> > >
-> > > __sysfs_match_string_with_gaps() is typically helpful when C enums refer to
-> > > bitfields, or have some equivalence in HW.
-> > >
-> >
-> > You have described it well.
-> > Perhaps the issue is in the naming? Or more description is needed for the original
-> > patch.
-> >
-> > It's worth highlighting that the current help text for
-> > __sysfs_match_string has a description that says:
-> >
-> > /**
-> >  * __sysfs_match_string - matches given string in an array
-> >  * @array: array of strings
-> >  * @n: number of strings in the array or -1 for NULL terminated arrays
-> >  * @str: string to match with
-> >  *
-> >  * Returns index of @str in the @array or -EINVAL, just like match_string().
-> >  * Uses sysfs_streq instead of strcmp for matching.
-> >  */
-> >
-> > so one could argue that if you pass a value of n which is not -1 the function
-> > should not assume that any NULL terminates the array...
-> >
-> > So basically this new function is implementing what I would have assumed
-> > __sysfs_match_string would do, but doesn't.
->
-> Ok, yeah, I'm confused, I also thought this is what the original
-> function did.
->
-> Nevermind, no objection from me on this:
->
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+There are two chip pins named TXDLY and RXDLY which actually addes
+the 2ns delays to TXC and RXC for TXD/RXD latching. Alas it is only
+documented info regarding the RGMII timing control configurations
+the PHY provides. It turnes out the same settings can be setup
+via MDIO registers hidden in the extension pages layout.
+Particularly the extension page 0xa4 provides a register 0x1c,
+which bits 1 and 2 control the described delays. They are used
+to implemet the "rgmii-{id,rxid,txid}" phy-mode.
 
-Hmm, I actually did not give much thought to that -1.
-I'll check into this and see about a V3.
-It may make more sense to just fix the original
-`__sysfs_match_string()`, but I'll need to go through the users of
-this function and see.
+The hidden RGMII configs register utilization was found in the
+rtl8211e U-boot driver:
+https://elixir.bootlin.com/u-boot/v2019.01/source/drivers/net/phy/realtek.c#L99
 
-Thanks
-Alex
+There is also a freebsd discussion regarding this register:
+https://reviews.freebsd.org/D13591
+
+It confirms that the register bits field must control the so called
+configuration pins described in the table 12-13 of the official PHY
+datasheet:
+8:6 = PHY Address
+5:4 = Auto-Negotiation
+3 = Interface Mode Select
+2 = RX Delay
+1 = TX Delay
+0 = SELRGV
+
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+---
+ drivers/net/phy/realtek.c | 44 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index 10df52ccddfe..8776b94d91ed 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -23,11 +23,14 @@
+ 
+ #define RTL821x_INSR				0x13
+ 
++#define RTL821x_EXT_PAGE_SELECT			0x1e
+ #define RTL821x_PAGE_SELECT			0x1f
+ 
+ #define RTL8211F_INSR				0x1d
+ 
+ #define RTL8211F_TX_DELAY			BIT(8)
++#define RTL8211E_TX_DELAY			BIT(1)
++#define RTL8211E_RX_DELAY			BIT(2)
+ 
+ #define RTL8201F_ISR				0x1e
+ #define RTL8201F_IER				0x13
+@@ -174,6 +177,46 @@ static int rtl8211f_config_init(struct phy_device *phydev)
+ 	return phy_modify_paged(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY, val);
+ }
+ 
++static int rtl8211e_config_init(struct phy_device *phydev)
++{
++	int ret, oldpage;
++	u16 val = 0;
++
++	ret = genphy_config_init(phydev);
++	if (ret < 0)
++		return ret;
++
++	/* enable TX/RX delay for rgmii-* modes, otherwise disable it */
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
++		val = RTL8211E_TX_DELAY | RTL8211E_RX_DELAY;
++	else if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
++		val = RTL8211E_TX_DELAY;
++	else if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
++		val = RTL8211E_RX_DELAY;
++
++	/* According to a sample driver there is a 0x1c config register on
++	 * a 0xa4 extension page (0x7) layout. It can be used to disable/enable
++	 * the RX/TX delays otherwise controlled by hardware strobes. It can
++	 * also be used to customize the whole configuration register:
++	 * 8:6 = PHY Address, 5:4 = Auto-Negotiation, 3 = Interface Mode Select,
++	 * 2 = RX Delay, 1 = TX Delay, 0 = SELRGV (see original PHY datasheet
++	 * for details).
++	 */
++	oldpage = phy_select_page(phydev, 0x7);
++	if (oldpage < 0)
++		goto err_restore_page;
++
++	ret = phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
++	if (!ret)
++		goto err_restore_page;
++
++	ret = phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
++			 val);
++
++err_restore_page:
++	return phy_restore_page(phydev, oldpage, ret);
++}
++
+ static int rtl8211b_suspend(struct phy_device *phydev)
+ {
+ 	phy_write(phydev, MII_MMD_DATA, BIT(9));
+@@ -257,6 +300,7 @@ static struct phy_driver realtek_drvs[] = {
+ 		PHY_ID_MATCH_EXACT(0x001cc915),
+ 		.name		= "RTL8211E Gigabit Ethernet",
+ 		.features	= PHY_GBIT_FEATURES,
++		.config_init	= &rtl8211e_config_init,
+ 		.ack_interrupt	= &rtl821x_ack_interrupt,
+ 		.config_intr	= &rtl8211e_config_intr,
+ 		.suspend	= genphy_suspend,
+-- 
+2.21.0
+
