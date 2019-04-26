@@ -2,102 +2,81 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50409C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF4BC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D212084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09AC62077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:05:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iz/OMkWy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfDZOEo (ORCPT
+        id S1726414AbfDZOFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:04:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51138 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726124AbfDZOEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:04:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 37162AF3A;
-        Fri, 26 Apr 2019 14:04:42 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 16:04:39 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 07/12] mm: Kill is_dev_zone() helper
-Message-ID: <20190426140439.GC30513@linux>
-References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155552637207.2015392.16917498971420465931.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Fri, 26 Apr 2019 10:05:21 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45500 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbfDZOFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 10:05:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=YavYTdrjkXZ54CR41r8kSNgF2FRkNecJrp5TEOnh8ak=; b=iz/OMkWyN6Th+XyfJamukW6oip
+        IcshYemnTF9QsFMbDQ3WMvaDfW/miqn3pE4+Tx8jSUGuO52a7kwBKP3/ba2///LP2I/9Ajc8Pv1fW
+        G32+PP+Ipn8q82J6NiOELyEi9zbAJ4cTJvLkpphE23d+UCUmYlnWLs1Xgw5kNt/Ippmk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hK1TX-00014z-JV; Fri, 26 Apr 2019 16:05:15 +0200
+Date:   Fri, 26 Apr 2019 16:05:15 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Esben Haabendal <esben@geanix.com>
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/12] net: ll_temac: Allow use on x86 platforms
+Message-ID: <20190426140515.GG14432@lunn.ch>
+References: <20190426073231.4008-1-esben@geanix.com>
+ <20190426073231.4008-7-esben@geanix.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155552637207.2015392.16917498971420465931.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190426073231.4008-7-esben@geanix.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 11:39:32AM -0700, Dan Williams wrote:
-> Given there are no more usages of is_dev_zone() outside of 'ifdef
-> CONFIG_ZONE_DEVICE' protection, kill off the compilation helper.
+On Fri, Apr 26, 2019 at 09:32:25AM +0200, Esben Haabendal wrote:
+> With little-endian and 64-bit support in place, the ll_temac driver can
+> now be used on x86 and x86_64 platforms.
 > 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-
+> Signed-off-by: Esben Haabendal <esben@geanix.com>
 > ---
->  include/linux/mmzone.h |   12 ------------
->  mm/page_alloc.c        |    2 +-
->  2 files changed, 1 insertion(+), 13 deletions(-)
+>  drivers/net/ethernet/xilinx/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index b13f0cddf75e..3237c5e456df 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -855,18 +855,6 @@ static inline int local_memory_node(int node_id) { return node_id; };
->   */
->  #define zone_idx(zone)		((zone) - (zone)->zone_pgdat->node_zones)
->  
-> -#ifdef CONFIG_ZONE_DEVICE
-> -static inline bool is_dev_zone(const struct zone *zone)
-> -{
-> -	return zone_idx(zone) == ZONE_DEVICE;
-> -}
-> -#else
-> -static inline bool is_dev_zone(const struct zone *zone)
-> -{
-> -	return false;
-> -}
-> -#endif
-> -
->  /*
->   * Returns true if a zone has pages managed by the buddy allocator.
->   * All the reclaim decisions have to use this function rather than
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index c9ad28a78018..fd455bd742d5 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5844,7 +5844,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
->  	unsigned long start = jiffies;
->  	int nid = pgdat->node_id;
->  
-> -	if (WARN_ON_ONCE(!pgmap || !is_dev_zone(zone)))
-> +	if (WARN_ON_ONCE(!pgmap || zone_idx(zone) != ZONE_DEVICE))
->  		return;
->  
->  	/*
-> 
+> diff --git a/drivers/net/ethernet/xilinx/Kconfig b/drivers/net/ethernet/xilinx/Kconfig
+> index 6d68c8a..6f858f6 100644
+> --- a/drivers/net/ethernet/xilinx/Kconfig
+> +++ b/drivers/net/ethernet/xilinx/Kconfig
+> @@ -5,7 +5,7 @@
+>  config NET_VENDOR_XILINX
+>  	bool "Xilinx devices"
+>  	default y
+> -	depends on PPC || PPC32 || MICROBLAZE || ARCH_ZYNQ || MIPS
+> +	depends on PPC || PPC32 || MICROBLAZE || ARCH_ZYNQ || MIPS || X86
 
--- 
-Oscar Salvador
-SUSE L3
+Hi Esben
+
+While you are here, maybe also add COMPILE_TEST here and to
+XILINX_LL_TEMAC?
+
+	Andrew
