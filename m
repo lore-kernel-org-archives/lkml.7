@@ -2,122 +2,167 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD46C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73A1C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564A12077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7F92077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YouWOTTg"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="LO2yBP/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfDZSBB (ORCPT
+        id S1726253AbfDZSC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 14:01:01 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44172 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfDZSBB (ORCPT
+        Fri, 26 Apr 2019 14:02:56 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39525 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfDZSCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 14:01:01 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y12so1908439plk.11
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 11:01:01 -0700 (PDT)
+        Fri, 26 Apr 2019 14:02:55 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i17so2091012pfo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 11:02:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QgpcjtM8GqhirZUjj4Yi3UaRcRfryKCQ0fsKcAS6iq4=;
-        b=YouWOTTgmZcMgpt7BsgUdB1ht6uEf5kKEHHMVB5iGaAehC7W/GOidF6vCoZBSGn538
-         UHsRrlZEJi8PNRrUi5n1IZArH/kSJjT+MUGdkOAshPUl08i5emUO6Fa7luH8a3b4aBBO
-         MyrWYebW5hlKUwPgobG/hv+gGYU4UEuQ8jianmZP7n7TjrYeGq6dkHvo/iw5HAOAjQdC
-         2zBMmlV8i0Smep96ysjgn9560upTf1fG7a3C+6vUt/U5xp0+ZMDf9v6gopbdsyM+wycl
-         3sxkhfZo0ugHJT8wYWGZ9oBjk1w2RCb4aPWw89FcdTUU4/+taYyx/8qysXxBYwAQTUoF
-         sSBQ==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:date:message-id:subject
+         :references:in-reply-to:to:cc;
+        bh=uf9+Gc4IGjm5bXfQmbt+aGr/dzzLVRS2xZVZ9HE9m58=;
+        b=LO2yBP/43Gaxq2G427F4quiP0FFiCIk+EbiXVQe5DTb0hxctE2AttHWb6tWuexLs3L
+         ZkgG1bwlvK7lyTAodQcHTtnOIHnbCFp9kz0q5A0+btCGRUTPSe0ZDv/yUcUGoaI4Rnlk
+         POZD7BlXQwFPt1fFpDSqeXtHETEWLhggiXmUS7fRcPEHbEKMnALPeB2xOwiFoJBB6XqV
+         doRFYnnnMI40ZmQb8mE1Lgw+qjcbkk2g59wZvyeOR7s+5xpjLqhxr0BhfZT+vtLzmeT2
+         pNJbsy6DDny9FxIJnnFyBwYu1AkprSd5oSgpU/8x9kx6LPOL9cmTqq+QBhTSJsDQVwa+
+         NiJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QgpcjtM8GqhirZUjj4Yi3UaRcRfryKCQ0fsKcAS6iq4=;
-        b=ZCOH7OgrTW2mLI6RvLAnUQN3xxP6uNY70vZxJYxCTh6mq2wvtZoPmT5s46gNbFW9AE
-         778D+O6X/SBkiC1LUQZXbKGFjsEOMQdv0zbxTTUcByVXkhL0GLciNVktXuIQZ3eNJHE2
-         8bOKMEOViuimcXD0k02FqzxseG4RJFHVt0smWP8gNyqbphJKngNWgt7X65T6mUsMG4Z8
-         bofr7GrI0ZOWE92MdXiTB/o265aW/IJ3jLvL1Ol9Y7Yf/I2fSIwZLR8awBeAUrQ/TOTw
-         L30XSis5eHQptp4BX1t4XkhC8tUipekofCLpYoTrxc/txtv6gr2T69bBsz0aAtKxff4X
-         /h+g==
-X-Gm-Message-State: APjAAAWUoDgdqb7Lrb0Z0nYcVcxrlAW2hBFDrN9NZbZUKSBQeGYxSzE3
-        4Oy414JPHpEgCcH10EMZXmbbO2D7r4WQo+4oHJIB0w==
-X-Google-Smtp-Source: APXvYqxlXWG7kfLW5uVwj0WUNXrrhVqZet8RCYND3XClYyu35n3cM60w5mnM6qy38ezgLNIvxM7VbodLmOGh/5yBthw=
-X-Received: by 2002:a17:902:7d8f:: with SMTP id a15mr46673534plm.3.1556301660487;
- Fri, 26 Apr 2019 11:01:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190426155653.2cdebc5d@canb.auug.org.au> <20190426062548.GB5920@kroah.com>
- <CAO=notwQFWRVDtoH+NGWpm647pJHVFvVoPm3EKdKmdrRUmDZqw@mail.gmail.com>
-In-Reply-To: <CAO=notwQFWRVDtoH+NGWpm647pJHVFvVoPm3EKdKmdrRUmDZqw@mail.gmail.com>
-From:   Patrick Venture <venture@google.com>
-Date:   Fri, 26 Apr 2019 11:00:49 -0700
-Message-ID: <CAO=notxMAQinwQrrbGwYAUD3JGq8zo42U314Km_QKQrnrkRoQA@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the char-misc tree
-To:     Greg KH <greg@kroah.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version:date
+         :message-id:subject:references:in-reply-to:to:cc;
+        bh=uf9+Gc4IGjm5bXfQmbt+aGr/dzzLVRS2xZVZ9HE9m58=;
+        b=CElRMXMZxYE0a9X6cK3f0i1iUAOcNoVH7phrrNZ1SUbkLiML6fmkfp8vJcbOfDp91O
+         PWl8ypj1P6N+xcteOGIZDcS3VR2jEdfwmvk0iR8Ba3FnWzxH0/Ej5IO7DySfn1KJmMCl
+         q4N0n4p+yCLLNTXJBQlVFJu8JwQWs+LQOykScxqNM9QezxOuACNTJo2qpzws4M3N2nAn
+         PyNT0JtvhCFA7ePVLGuGGoewiuz+iV2xKqFIZotkRoS1I4BQ74w4PeYVKmD5kw/dx/bl
+         mQPGJLfvNrMI8nhzSvBCiYWNjXb3sH5bdjVbZQwQ+TONITVZWG/pc3Nq5bmuhvm8kE5k
+         njcQ==
+X-Gm-Message-State: APjAAAUTryxBY997erNbfL824+McOB+KSv6lMtiwBcrCwQe/901HQwYi
+        mJW7ETeT6V4XIZUm9zdMdhKUVA==
+X-Google-Smtp-Source: APXvYqzBEXuTEM05o6uGn8vlD4CMCKRLEInJ6zCYpq9KPk9r3ASAk9h3Sp5XQ3azdexwEX66AO8sKw==
+X-Received: by 2002:a62:e213:: with SMTP id a19mr46999249pfi.85.1556301774455;
+        Fri, 26 Apr 2019 11:02:54 -0700 (PDT)
+Received: from ?IPv6:2601:647:5803:15b9:2926:d41b:33e7:d8df? ([2601:647:5803:15b9:2926:d41b:33e7:d8df])
+        by smtp.gmail.com with ESMTPSA id f8sm8533429pfk.88.2019.04.26.11.02.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 11:02:53 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Date:   Fri, 26 Apr 2019 10:40:18 -0700
+Message-Id: <8E695557-1CD2-431A-99CC-49A4E8247BAE@amacapital.net>
+Subject: Re: [RFC PATCH 2/7] x86/sci: add core implementation for system call isolation
+References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com> <1556228754-12996-3-git-send-email-rppt@linux.ibm.com> <627d9321-466f-c4ed-c658-6b8567648dc6@intel.com> <1556290658.2833.28.camel@HansenPartnership.com> <54090243-E4C7-4C66-8025-AFE0DF5DF337@amacapital.net> <1556291961.2833.42.camel@HansenPartnership.com>
+In-Reply-To: <1556291961.2833.42.camel@HansenPartnership.com>
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+X-Mailer: iPhone Mail (16E227)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 7:30 AM Patrick Venture <venture@google.com> wrote:
->
-> On Thu, Apr 25, 2019 at 11:25 PM Greg KH <greg@kroah.com> wrote:
-> >
-> > On Fri, Apr 26, 2019 at 03:56:53PM +1000, Stephen Rothwell wrote:
-> > > Hi all,
-> > >
-> > > After merging the char-misc tree, today's linux-next build (x86_64
-> > > allmodconfig) produced this warning:
-> > >
-> > > drivers/misc/aspeed-p2a-ctrl.c: In function 'aspeed_p2a_mmap':
-> > > drivers/misc/aspeed-p2a-ctrl.c:110:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-> > >   pgprot_t prot = vma->vm_page_prot;
-> > >   ^~~~~~~~
-> > >
-> > > Introduced by commit
-> > >
-> > >   01c60dcea9f7 ("drivers/misc: Add Aspeed P2A control driver")
-> >
-> > Patrick, I thought you fixed all of these already?  Can you send a patch
-> > again?
->
-> I fixed the ones caught by the robot.  I'll have to switch up my build
-> environment a bit to fault on warnings for the kernel, not sure why it
-> isn't --
 
-Verified the warnings being ignored isn't a local configuration issue,
-but the way OpenBMC is configured.  Verified the warning via normal
-kernel compilation and fixed the issue.  Reran and found no other
-issues for that drivers.  Submitted patch for review.
 
->
-> >
-> > Can you also make the driver so it can build with CONFIG_COMPILE_TEST
-> > enabled so that others can find your problems earlier in the review
-> > process?
+> On Apr 26, 2019, at 8:19 AM, James Bottomley <James.Bottomley@hansenpartne=
+rship.com> wrote:
+>=20
+> On Fri, 2019-04-26 at 08:07 -0700, Andy Lutomirski wrote:
+>>> On Apr 26, 2019, at 7:57 AM, James Bottomley <James.Bottomley@hanse
+>>> npartnership.com> wrote:
+>>>=20
+>>>>> On Fri, 2019-04-26 at 07:46 -0700, Dave Hansen wrote:
+>>>>> On 4/25/19 2:45 PM, Mike Rapoport wrote:
+>>>>> After the isolated system call finishes, the mappings created
+>>>>> during its execution are cleared.
+>>>>=20
+>>>> Yikes.  I guess that stops someone from calling write() a bunch
+>>>> of times on every filesystem using every block device driver and
+>>>> all the DM code to get a lot of code/data faulted in.  But, it
+>>>> also means not even long-running processes will ever have a
+>>>> chance of behaving anything close to normally.
+>>>>=20
+>>>> Is this something you think can be rectified or is there
+>>>> something fundamental that would keep SCI page tables from being
+>>>> cached across different invocations of the same syscall?
+>>>=20
+>>> There is some work being done to look at pre-populating the
+>>> isolated address space with the expected execution footprint of the
+>>> system call, yes.  It lessens the ROP gadget protection slightly
+>>> because you might find a gadget in the pre-populated code, but it
+>>> solves a lot of the overhead problem.
+>>=20
+>> I=E2=80=99m not even remotely a ROP expert, but: what stops a ROP payload=
 
-Verified the driver builds and produces no warnings.
+>> from using all the =E2=80=9Cfault-in=E2=80=9D gadgets that exist =E2=80=94=
+ any function that
+>> can return on an error without doing to much will fault in the whole
+>> page containing the function.
+>=20
+> The address space pre-population is still per syscall, so you don't get
+> access to the code footprint of a different syscall.  So the isolated
+> address space is created anew for every system call, it's just pre-
+> populated with that system call's expected footprint.
 
-Thanks,
-Patrick
+That=E2=80=99s not what I mean. Suppose I want to use a ROP gadget in vmallo=
+c(), but vmalloc isn=E2=80=99t in the page tables. Then first push vmalloc i=
+tself into the stack. As long as RDI contains a sufficiently ridiculous valu=
+e, it should just return without doing anything. And it can return right bac=
+k into the ROP gadget, which is now available.
 
->
-> Roger that.
->
-> >
-> > thanks,
-> >
-> > greg k-h
+>=20
+>> To improve this, we would want some thing that would try to check
+>> whether the caller is actually supposed to call the callee, which is
+>> more or less the hard part of CFI.  So can=E2=80=99t we just do CFI and c=
+all
+>> it a day?
+>=20
+> By CFI you mean control flow integrity?  In theory I believe so, yes,
+> but in practice doesn't it require a lot of semantic object information
+> which is easy to get from higher level languages like java but a bit
+> more difficult for plain C.
+
+Yes. As I understand it, grsecurity instruments gcc to create some kind of h=
+ash of all function signatures. Then any indirect call can effectively verif=
+y that it=E2=80=99s calling a function of the right type. And every return v=
+erified a cookie.
+
+On CET CPUs, RET gets checked directly, and I don=E2=80=99t see the benefit o=
+f SCI.
+
+>=20
+>> On top of that, a robust, maintainable implementation of this thing
+>> seems very complicated =E2=80=94 for example, what happens if vfree() get=
+s
+>> called?
+>=20
+> Address space Local vs global object tracking is another thing on our
+> list.  What we'd probably do is verify the global object was allowed to
+> be freed and then hand it off safely to the main kernel address space.
+>=20
+>=20
+
+This seems exceedingly complicated.=
