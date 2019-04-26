@@ -2,128 +2,162 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9421CC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA23C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6501A2067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:03:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556273011;
-	bh=E2G87EJLgM2gxx/orZotpt65Cr0Ljf0nDOCLKbWpHaU=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ktybwPADD5WW1oUN2WSLKRa/f6nnmMx0+b3foP1R+R1vh7i6p7XSASZ1br0CBMUm4
-	 T4t7QPXN1lgFE6BvWzBSjnYSlU9gM7SsRSDG/3tvW6Yb/9ri9GmC+/J80GR4RN/yR1
-	 iuJyNlkRwLXINk1dyTB3v7wIvaoVxuF8SF4vHFS8=
+	by mail.kernel.org (Postfix) with ESMTP id A48C82084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:04:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="P3twHYzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfDZKDa (ORCPT
+        id S1726598AbfDZKEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:03:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56670 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfDZKD3 (ORCPT
+        Fri, 26 Apr 2019 06:04:25 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34466 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfDZKEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:03:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=D1CkM3YHEnUB2EMTId45/y5anrnTf+wW5OWbCq4uHs4=; b=LL/aGA19sryg
-        4cflUSf9PAuJgTwBSyTFb5DBsoZf2z0pqZbwyBXJrRavz7UW2wULMwZT5JTyOhvo7rAg95kHvOEwT
-        aMhNQfw0+pqb4ldwuYHH6EflTkrqcPhVWJrgkrl3VYq70f7GgEkgQV7NsECLyWjDUe1hECB0fiWeC
-        tm5ck=;
-Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxhJ-0003km-5o; Fri, 26 Apr 2019 10:03:13 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 7D977441D3B; Fri, 26 Apr 2019 11:03:09 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        daniel.baluta@nxp.com, festevam@gmail.com, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mark Brown <broonie@kernel.org>, perex@perex.cz,
-        sfr@canb.auug.org.au, Stephen Rothwell <sfr@canb.auug.org.au>,
-        timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
-Subject: Applied "ASoC: fsl_sai: Add missing return 0 in remove()" to the asoc tree
-In-Reply-To: <1556248850-3748-1-git-send-email-nicoleotsuka@gmail.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190426100311.7D977441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 11:03:08 +0100 (BST)
+        Fri, 26 Apr 2019 06:04:24 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a6so2699958edv.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 03:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=Uhnd+ZTyHqzarEfmPfq7PYfZRuzWwiqjQwSXkDCy4pE=;
+        b=P3twHYzVOMkoVN49T4LZraJ+/RZHUFkdxtSWal6fYhFBa5bj50eJU/JLmZO6YUvITg
+         AUVPKFvLWiosviB4z0Zj9YSpKYRq0PEq+uMaUWCXg833oBUiVSLEXqW0i03vaBRoMk/J
+         GOlJKnrsuXXSulan2ml5qT98SKzg10lJJ7bwzoQMSY00JiEzeGtfWAyqbSLmnpE98M/Z
+         ladJ4Sh+/bKC6w8y+JyIvhYT8o1GLkNrFmSN/fF84MK8GdgDV7yd87cOhWnnNHwpw7rF
+         y2S1jTnmBs8dCDu/vWFu1fhU0Sa3qqNRdak717uUA1ImGK28iw8B9xrDnKm9MMpBVw7T
+         9wQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=Uhnd+ZTyHqzarEfmPfq7PYfZRuzWwiqjQwSXkDCy4pE=;
+        b=oSeyul+jFPpyADRPwTGenf8U3S4+eRhw1SkK9u0TK7amR2Wew14fZe0X95i42MBrs2
+         ejRyC/Jqn18krKnzOw2KQfUKdYxbxYf8tsHSV+7rw/3i5ib3u7MVn3gpwn1fg/q5OfPm
+         CksVpwYe3SFL2ibRwLVVNVDYuvRQdKnQj6hKWhz8GjZwg969Xgv4qZHlNqA+s4dYFggj
+         D3FTJ+evm61rharmLgUUJOaiqkE7g4PR3T1rihLCPsGhj/je1GNNb6VZAfI1mOGu8uew
+         VfaYqKveuDrqklrf0jsgkWr0KoXaFjiLexq/QiLaWMnjN2WHzvYqyMSe1i1m+rEUskBU
+         XLUA==
+X-Gm-Message-State: APjAAAXgrbByoYksh1J8ub6XRgiNyXEYqQhm5Qd/BEfuX7gXUjdTHl7z
+        PD2FbQAqYZepotjQEYzajGrnDw==
+X-Google-Smtp-Source: APXvYqwxVe2Brd3cEcDyMGvyGObIu494Zy2LCquIvfAA44lSCeAgXV/X0KOZ5VZcRcnmODt0JqkGHw==
+X-Received: by 2002:a50:adf8:: with SMTP id b53mr27121578edd.194.1556273063083;
+        Fri, 26 Apr 2019 03:04:23 -0700 (PDT)
+Received: from [192.168.1.119] (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
+        by smtp.gmail.com with ESMTPSA id l46sm7058645edb.24.2019.04.26.03.04.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 03:04:21 -0700 (PDT)
+From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
+Message-Id: <F305CAB7-F566-40D7-BC91-E88DE821520B@javigon.com>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_D0EF968A-4724-4E5B-BE8B-7FBB785420C2";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] lightnvm: pblk: Introduce hot-cold data separation
+Date:   Fri, 26 Apr 2019 12:04:19 +0200
+In-Reply-To: <66434cc7-2bac-dd10-6edc-4560e6a0f89f@intel.com>
+Cc:     Heiner Litz <hlitz@ucsc.edu>,
+        =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Hans Holmberg <hans.holmberg@cnexlabs.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     "Konopko, Igor J" <igor.j.konopko@intel.com>
+References: <20190425052152.6571-1-hlitz@ucsc.edu>
+ <66434cc7-2bac-dd10-6edc-4560e6a0f89f@intel.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   ASoC: fsl_sai: Add missing return 0 in remove()
+--Apple-Mail=_D0EF968A-4724-4E5B-BE8B-7FBB785420C2
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+> On 26 Apr 2019, at 11.11, Igor Konopko <igor.j.konopko@intel.com> =
+wrote:
+>=20
+> On 25.04.2019 07:21, Heiner Litz wrote:
+>> Introduce the capability to manage multiple open lines. Maintain one =
+line
+>> for user writes (hot) and a second line for gc writes (cold). As user =
+and
+>> gc writes still utilize a shared ring buffer, in rare cases a =
+multi-sector
+>> write will contain both gc and user data. This is acceptable, as on a
+>> tested SSD with minimum write size of 64KB, less than 1% of all =
+writes
+>> contain both hot and cold sectors.
+>=20
+> Hi Heiner
+>=20
+> Generally I really like this changes, I was thinking about sth similar =
+since a while, so it is very good to see that patch.
+>=20
+> I have a one question related to this patch, since it is not very =
+clear for me - how you ensure the data integrity in following scenarios:
+> -we have open line X for user data and line Y for GC
+> -GC writes LBA=3DN to line Y
+> -user writes LBA=3DN to line X
+> -we have power failure when both line X and Y were not written =
+completely
+> -during pblk creation we are executing OOB metadata recovery
+> And here is the question, how we distinguish whether LBA=3DN from line =
+Y or LBA=3DN from line X is the valid one?
+> Line X and Y might have seq_id either descending or ascending - this =
+would create two possible scenarios too.
+>=20
+> Thanks
+> Igor
+>=20
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+You are right, I think this is possible in the current implementation.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+We need an extra constrain so that we only GC lines above the GC line
+ID. This way, when we order lines on recovery, we can guarantee
+consistency. This means potentially that we would need several open
+lines for GC to avoid padding in case this constrain forces to choose a
+line with an ID higher than the GC line ID.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+What do you think?
 
 Thanks,
-Mark
+Javier
 
-From b46ea8f4d23807e41be86bf214618e4fd4682b9b Mon Sep 17 00:00:00 2001
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Date: Thu, 25 Apr 2019 20:20:50 -0700
-Subject: [PATCH] ASoC: fsl_sai: Add missing return 0 in remove()
+--Apple-Mail=_D0EF968A-4724-4E5B-BE8B-7FBB785420C2
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
 
-Build warning being reported:
-    sound/soc/fsl/fsl_sai.c: In function 'fsl_sai_remove':
-    sound/soc/fsl/fsl_sai.c:921:1: warning: no return statement in
-    function returning non-void [-Wreturn-type]
+-----BEGIN PGP SIGNATURE-----
 
-So this patch just adds a "return 0" to fix it.
+iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAlzC16MACgkQPEYBfS0l
+eODiWA/+NnPGXwCNAiRIGflg6iOCkHbPmUN+s9PhmEz1JYn0aPWhDz4lCRPEd+fX
+JGFcg6CI/YpHE2Vm6YxpvqbzUgHe3LkJt3wPAEakLVHRRzbymtoU0f0sPnNibnJK
+VcA227UPRzz7wHb8eZBG+ChzEA1EUgL+4/eUcRlzhNG4Ofog6uchZl36Y8R/wrqT
+djuZq0ziFvI/y60gTgYP5KkKqS/mlMZw2OXYYfEJHCYEwMJ43lXfWHH7HeX7PYt9
+lE2K4sIP9Q13N4l1XbqTctLv1ykaFdp73Mj3dwgz9wSbo5/rnYuoOY+B0igF39Y7
+pqZA3akAjzGenKHjN7ufe0/+Dxx8pcKewfj4vH2RJ6rjs8Xb5hkNCpRzls8ZFmN9
+QEHfxCwtZjt2/Zdey6cgVtkrBeaOXiSMqnuynGbFOLw/9zqAkzmzSP+rXLISqf6b
+xKxxXjIWFUe5gAmEpVv92ejq1VGTooT8WXYyL+HsDnXMovsGZrgO8kPyyTNioHxP
+vSyZ6Nvn2TyoWlaH6iILmJcLsm4pYpdr6ZeF3GbNH3I5DOfpHXjM4wbeH3+xAano
+865HG0uySxZHIGf3OOuXXjsRemJPA1FN6MdyZ3eLwMFmM/CYBOBy2fqB7GhCM9KA
+8eeOdP26FJdMb7cP42lYS1r8bkrYvP6pXBW3JH7YIUlMTwJx3Dc=
+=1OCh
+-----END PGP SIGNATURE-----
 
-Fixes: 812ad463e089 ("ASoC: fsl_sai: Add support for runtime pm")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/fsl/fsl_sai.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 26c27dc0781f..8593269156bd 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -918,6 +918,8 @@ static int fsl_sai_probe(struct platform_device *pdev)
- static int fsl_sai_remove(struct platform_device *pdev)
- {
- 	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
- }
- 
- static const struct of_device_id fsl_sai_ids[] = {
--- 
-2.20.1
-
+--Apple-Mail=_D0EF968A-4724-4E5B-BE8B-7FBB785420C2--
