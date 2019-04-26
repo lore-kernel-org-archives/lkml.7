@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697BCC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CC8C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3119B206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDFD206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="BIR86u2B"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="iCQ1ZqtD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfDZHkX (ORCPT
+        id S1726481AbfDZHk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:40:23 -0400
-Received: from first.geanix.com ([116.203.34.67]:59670 "EHLO first.geanix.com"
+        Fri, 26 Apr 2019 03:40:27 -0400
+Received: from first.geanix.com ([116.203.34.67]:59676 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbfDZHkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726271AbfDZHkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Apr 2019 03:40:11 -0400
 Received: from localhost (unknown [193.163.1.7])
-        by first.geanix.com (Postfix) with ESMTPSA id EB974308E66;
-        Fri, 26 Apr 2019 07:31:56 +0000 (UTC)
+        by first.geanix.com (Postfix) with ESMTPSA id 634DD308E63;
+        Fri, 26 Apr 2019 07:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1556263917; bh=m+kQKDRjAhZWzmFTYr3O9yWFFE7SWz5kcgwexJZSafA=;
+        t=1556263908; bh=LPDZt0Vc7Hk/lfTv8Vlw+SKbCgvnoHJMcUX3q5mdP8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=BIR86u2Bhen0TQ19S7lRJ9t76tAJEyzRZmuzSs12lvkhtAAMfz4GgFekcMV2wVZOM
-         1EPixbyPl/3G7/QAWj0hDJZ2p89/48DBJYr24DW5dZ613v6OIDAe/MlcJogYTIK0t1
-         kvbPvGFuc+R+ckbenLfe+efqwniLb7zIqtsf1KvUh8WbW5/yqGeyvg4eGcsHnAwI5l
-         ogbttdoK9qXpmw5GzG6+AJhH6+f1CSBsCCnLWCgqWKbzxpo0QowoWGHpcc3+KBtk8i
-         ZAN/pn/3B0wGGBAD5/wsg3fbmHxfrEfoEgZKRv/XAv4pI0S6C5ISu79ezpMsBmtU8x
-         7cgF6ZGzHdsEQ==
+        b=iCQ1ZqtDCyaw/viuk4DdDVJdXx5PpvtRHhTdNC0KBVce4RPb4nzROhjvxPhUWKnsw
+         NBlVEeWb6GJ3oqrKQhpSvHfoY76RRUzP21sfHYxpiOUKH7XLG7NclWzMgCpMjtRVCo
+         JGgpTMgz5QYimlYtL3H8z7E4lYNVIPZPCO9KweKvshNepKeKZW2y0B9sgt96v5Jg2D
+         mBIiL77i+B9KaZA4uRIs9z5WtA+AhhMkNeKcOiKe1LgZf/K22I8iUS+scMj+PuQLlB
+         m9DfHrvzzN655almJwlYeVMn/OLvbAOGWUW7y1BI1ULT5dpnJSSuhLsTzs7wNd1dA6
+         2938UH0olVM+A==
 From:   Esben Haabendal <esben@geanix.com>
 To:     netdev@vger.kernel.org
 Cc:     "David S. Miller" <davem@davemloft.net>,
         Michal Simek <michal.simek@xilinx.com>,
-        YueHaibing <yuehaibing@huawei.com>,
         Yang Wei <yang.wei9@zte.com.cn>,
         Luis Chamberlain <mcgrof@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/12] net: ll_temac: Support indirect_mutex share within TEMAC IP
-Date:   Fri, 26 Apr 2019 09:32:26 +0200
-Message-Id: <20190426073231.4008-8-esben@geanix.com>
+Subject: [PATCH 05/12] net: ll_temac: Fix support for little-endian platforms
+Date:   Fri, 26 Apr 2019 09:32:24 +0200
+Message-Id: <20190426073231.4008-6-esben@geanix.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190426073231.4008-1-esben@geanix.com>
 References: <20190426073231.4008-1-esben@geanix.com>
@@ -55,234 +55,226 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indirect register access goes through a DCR bus bridge, which
-allows only one outstanding transaction.  And to make matters
-worse, each TEMAC IP block contains two Ethernet interfaces, and
-although they seem to have separate registers for indirect access,
-they actually share the registers.  Or to be more specific, MSW, LSW
-and CTL registers are physically shared between Ethernet interfaces
-in same TEMAC IP, with RDY register being (almost) specificic to
-the Ethernet interface.  The 0x10000 bit in RDY reflects combined
-bus ready state though.
+Both TEMAC and SDMA is big-endian, so make sure that all values in SDMA
+buffer descriptors (cmdac_bd) are handled as big-endian, independent of the
+host endianness. With all currently supported platforms being big-endian,
+this change does not make a change for any of them.
 
-So we need to take care to synchronize not only within a single
-device, but also between devices in same TEMAC IP.
-
-This commit allows to do that with legacy platform devices.
-
-For OF devices, the xlnx,compound parent of the temac node should be
-used to find siblings, and setup a shared indirect_mutex between them.
-I will leave this work to somebody else, as I don't have hardware to
-test that.  No regression is introduced by that, as before this commit
-using two Ethernet interfaces in same TEMAC block is simply broken.
+Note, when using app3 and app4 for piggybacking skb pointers there is no
+need to care about endianness, as neither TEMAC nor SDMA access app3 and
+app4 in TX buffer descriptors.
 
 Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
- drivers/net/ethernet/xilinx/ll_temac.h      |  5 ++++-
- drivers/net/ethernet/xilinx/ll_temac_main.c | 30 ++++++++++++++++++-----------
- drivers/net/ethernet/xilinx/ll_temac_mdio.c | 16 +++++++--------
- include/linux/xilinx_ll_temac.h             |  6 ++++++
- 4 files changed, 37 insertions(+), 20 deletions(-)
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 90 ++++++++++++++++-------------
+ 1 file changed, 51 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac.h b/drivers/net/ethernet/xilinx/ll_temac.h
-index 23d8dd5..990f9ed 100644
---- a/drivers/net/ethernet/xilinx/ll_temac.h
-+++ b/drivers/net/ethernet/xilinx/ll_temac.h
-@@ -358,7 +358,10 @@ struct temac_local {
- 
- 	struct sk_buff **rx_skb;
- 	spinlock_t rx_lock;
--	struct mutex indirect_mutex;
-+	/* For synchronization of indirect register access.  Must be
-+	 * shared mutex between interfaces in same TEMAC block.
-+	 */
-+	struct mutex *indirect_mutex;
- 	u32 options;			/* Current options word */
- 	int last_link;
- 	unsigned int temac_features;
 diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 817bc57..309f149 100644
+index 9c1fb9b..817bc57 100644
 --- a/drivers/net/ethernet/xilinx/ll_temac_main.c
 +++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -346,7 +346,7 @@ static void temac_do_set_mac_address(struct net_device *ndev)
+@@ -258,6 +258,7 @@ static int temac_dma_bd_init(struct net_device *ndev)
+ {
  	struct temac_local *lp = netdev_priv(ndev);
- 
- 	/* set up unicast MAC address filter set its mac address */
--	mutex_lock(&lp->indirect_mutex);
-+	mutex_lock(lp->indirect_mutex);
- 	temac_indirect_out32(lp, XTE_UAW0_OFFSET,
- 			     (ndev->dev_addr[0]) |
- 			     (ndev->dev_addr[1] << 8) |
-@@ -357,7 +357,7 @@ static void temac_do_set_mac_address(struct net_device *ndev)
- 	temac_indirect_out32(lp, XTE_UAW1_OFFSET,
- 			     (ndev->dev_addr[4] & 0x000000ff) |
- 			     (ndev->dev_addr[5] << 8));
--	mutex_unlock(&lp->indirect_mutex);
-+	mutex_unlock(lp->indirect_mutex);
- }
- 
- static int temac_init_mac_address(struct net_device *ndev, const void *address)
-@@ -386,7 +386,7 @@ static void temac_set_multicast_list(struct net_device *ndev)
- 	u32 multi_addr_msw, multi_addr_lsw, val;
+ 	struct sk_buff *skb;
++	dma_addr_t skb_dma_addr;
  	int i;
  
--	mutex_lock(&lp->indirect_mutex);
-+	mutex_lock(lp->indirect_mutex);
- 	if (ndev->flags & (IFF_ALLMULTI | IFF_PROMISC) ||
- 	    netdev_mc_count(ndev) > MULTICAST_CAM_TABLE_NUM) {
- 		/*
-@@ -425,7 +425,7 @@ static void temac_set_multicast_list(struct net_device *ndev)
- 		temac_indirect_out32(lp, XTE_MAW1_OFFSET, 0);
- 		dev_info(&ndev->dev, "Promiscuous mode disabled.\n");
+ 	lp->rx_skb = devm_kcalloc(&ndev->dev, RX_BD_NUM, sizeof(*lp->rx_skb),
+@@ -280,13 +281,15 @@ static int temac_dma_bd_init(struct net_device *ndev)
+ 		goto out;
+ 
+ 	for (i = 0; i < TX_BD_NUM; i++) {
+-		lp->tx_bd_v[i].next = lp->tx_bd_p +
+-				sizeof(*lp->tx_bd_v) * ((i + 1) % TX_BD_NUM);
++		lp->tx_bd_v[i].next = cpu_to_be32(
++			lp->tx_bd_p
++			+ sizeof(*lp->tx_bd_v) * ((i + 1) % TX_BD_NUM));
  	}
--	mutex_unlock(&lp->indirect_mutex);
-+	mutex_unlock(lp->indirect_mutex);
- }
  
- static struct temac_option {
-@@ -517,7 +517,7 @@ static u32 temac_setoptions(struct net_device *ndev, u32 options)
- 	struct temac_option *tp = &temac_options[0];
- 	int reg;
+ 	for (i = 0; i < RX_BD_NUM; i++) {
+-		lp->rx_bd_v[i].next = lp->rx_bd_p +
+-				sizeof(*lp->rx_bd_v) * ((i + 1) % RX_BD_NUM);
++		lp->rx_bd_v[i].next = cpu_to_be32(
++			lp->rx_bd_p
++			+ sizeof(*lp->rx_bd_v) * ((i + 1) % RX_BD_NUM));
  
--	mutex_lock(&lp->indirect_mutex);
-+	mutex_lock(lp->indirect_mutex);
- 	while (tp->opt) {
- 		reg = temac_indirect_in32(lp, tp->reg) & ~tp->m_or;
- 		if (options & tp->opt)
-@@ -526,7 +526,7 @@ static u32 temac_setoptions(struct net_device *ndev, u32 options)
- 		tp++;
+ 		skb = netdev_alloc_skb_ip_align(ndev,
+ 						XTE_MAX_JUMBO_FRAME_SIZE);
+@@ -295,12 +298,12 @@ static int temac_dma_bd_init(struct net_device *ndev)
+ 
+ 		lp->rx_skb[i] = skb;
+ 		/* returns physical address of skb->data */
+-		lp->rx_bd_v[i].phys = dma_map_single(ndev->dev.parent,
+-						     skb->data,
+-						     XTE_MAX_JUMBO_FRAME_SIZE,
+-						     DMA_FROM_DEVICE);
+-		lp->rx_bd_v[i].len = XTE_MAX_JUMBO_FRAME_SIZE;
+-		lp->rx_bd_v[i].app0 = STS_CTRL_APP0_IRQONEND;
++		skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
++					      XTE_MAX_JUMBO_FRAME_SIZE,
++					      DMA_FROM_DEVICE);
++		lp->rx_bd_v[i].phys = cpu_to_be32(skb_dma_addr);
++		lp->rx_bd_v[i].len = cpu_to_be32(XTE_MAX_JUMBO_FRAME_SIZE);
++		lp->rx_bd_v[i].app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
  	}
- 	lp->options |= options;
--	mutex_unlock(&lp->indirect_mutex);
-+	mutex_unlock(lp->indirect_mutex);
  
- 	return 0;
- }
-@@ -545,7 +545,7 @@ static void temac_device_reset(struct net_device *ndev)
+ 	lp->dma_out(lp, TX_CHNL_CTRL, 0x10220400 |
+@@ -676,11 +679,11 @@ static void temac_start_xmit_done(struct net_device *ndev)
+ 	struct sk_buff *skb;
  
- 	dev_dbg(&ndev->dev, "%s()\n", __func__);
+ 	cur_p = &lp->tx_bd_v[lp->tx_bd_ci];
+-	stat = cur_p->app0;
++	stat = be32_to_cpu(cur_p->app0);
  
--	mutex_lock(&lp->indirect_mutex);
-+	mutex_lock(lp->indirect_mutex);
- 	/* Reset the receiver and wait for it to finish reset */
- 	temac_indirect_out32(lp, XTE_RXC1_OFFSET, XTE_RXC1_RXRST_MASK);
- 	timeout = 1000;
-@@ -597,7 +597,7 @@ static void temac_device_reset(struct net_device *ndev)
- 	temac_indirect_out32(lp, XTE_TXC_OFFSET, 0);
- 	temac_indirect_out32(lp, XTE_FCC_OFFSET, XTE_FCC_RXFLO_MASK);
+ 	while (stat & STS_CTRL_APP0_CMPLT) {
+-		dma_unmap_single(ndev->dev.parent, cur_p->phys, cur_p->len,
+-				 DMA_TO_DEVICE);
++		dma_unmap_single(ndev->dev.parent, be32_to_cpu(cur_p->phys),
++				 be32_to_cpu(cur_p->len), DMA_TO_DEVICE);
+ 		skb = (struct sk_buff *)ptr_from_txbd(cur_p);
+ 		if (skb)
+ 			dev_consume_skb_irq(skb);
+@@ -691,14 +694,14 @@ static void temac_start_xmit_done(struct net_device *ndev)
+ 		cur_p->app4 = 0;
  
--	mutex_unlock(&lp->indirect_mutex);
-+	mutex_unlock(lp->indirect_mutex);
+ 		ndev->stats.tx_packets++;
+-		ndev->stats.tx_bytes += cur_p->len;
++		ndev->stats.tx_bytes += be32_to_cpu(cur_p->len);
  
- 	/* Sync default options with HW
- 	 * but leave receiver and transmitter disabled.  */
-@@ -625,7 +625,7 @@ static void temac_adjust_link(struct net_device *ndev)
- 	/* hash together the state values to decide if something has changed */
- 	link_state = phy->speed | (phy->duplex << 1) | phy->link;
+ 		lp->tx_bd_ci++;
+ 		if (lp->tx_bd_ci >= TX_BD_NUM)
+ 			lp->tx_bd_ci = 0;
  
--	mutex_lock(&lp->indirect_mutex);
-+	mutex_lock(lp->indirect_mutex);
- 	if (lp->last_link != link_state) {
- 		mii_speed = temac_indirect_in32(lp, XTE_EMCFG_OFFSET);
- 		mii_speed &= ~XTE_EMCFG_LINKSPD_MASK;
-@@ -641,7 +641,7 @@ static void temac_adjust_link(struct net_device *ndev)
- 		lp->last_link = link_state;
- 		phy_print_status(phy);
+ 		cur_p = &lp->tx_bd_v[lp->tx_bd_ci];
+-		stat = cur_p->app0;
++		stat = be32_to_cpu(cur_p->app0);
  	}
--	mutex_unlock(&lp->indirect_mutex);
-+	mutex_unlock(lp->indirect_mutex);
- }
  
- #ifdef CONFIG_64BIT
-@@ -1092,7 +1092,15 @@ static int temac_probe(struct platform_device *pdev)
- 	lp->dev = &pdev->dev;
- 	lp->options = XTE_OPTION_DEFAULTS;
- 	spin_lock_init(&lp->rx_lock);
--	mutex_init(&lp->indirect_mutex);
-+
-+	/* Setup mutex for synchronization of indirect register access */
-+	if (pdata && pdata->indirect_mutex) {
-+		lp->indirect_mutex = pdata->indirect_mutex;
-+	} else {
-+		lp->indirect_mutex = devm_kmalloc(
-+			&pdev->dev, sizeof(*lp->indirect_mutex), GFP_KERNEL);
-+		mutex_init(lp->indirect_mutex);
-+	}
+ 	netif_wake_queue(ndev);
+@@ -732,7 +735,7 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	struct temac_local *lp = netdev_priv(ndev);
+ 	struct cdmac_bd *cur_p;
+-	dma_addr_t start_p, tail_p;
++	dma_addr_t start_p, tail_p, skb_dma_addr;
+ 	int ii;
+ 	unsigned long num_frag;
+ 	skb_frag_t *frag;
+@@ -753,15 +756,17 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 		unsigned int csum_start_off = skb_checksum_start_offset(skb);
+ 		unsigned int csum_index_off = csum_start_off + skb->csum_offset;
  
- 	/* map device registers */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_mdio.c b/drivers/net/ethernet/xilinx/ll_temac_mdio.c
-index 61b832f..c8707f1 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_mdio.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_mdio.c
-@@ -29,10 +29,10 @@ static int temac_mdio_read(struct mii_bus *bus, int phy_id, int reg)
- 	/* Write the PHY address to the MIIM Access Initiator register.
- 	 * When the transfer completes, the PHY register value will appear
- 	 * in the LSW0 register */
--	mutex_lock(&lp->indirect_mutex);
-+	mutex_lock(lp->indirect_mutex);
- 	temac_iow(lp, XTE_LSW0_OFFSET, (phy_id << 5) | reg);
- 	rc = temac_indirect_in32(lp, XTE_MIIMAI_OFFSET);
--	mutex_unlock(&lp->indirect_mutex);
-+	mutex_unlock(lp->indirect_mutex);
+-		cur_p->app0 |= 1; /* TX Checksum Enabled */
+-		cur_p->app1 = (csum_start_off << 16) | csum_index_off;
++		cur_p->app0 |= cpu_to_be32(0x000001); /* TX Checksum Enabled */
++		cur_p->app1 = cpu_to_be32((csum_start_off << 16)
++					  | csum_index_off);
+ 		cur_p->app2 = 0;  /* initial checksum seed */
+ 	}
  
- 	dev_dbg(lp->dev, "temac_mdio_read(phy_id=%i, reg=%x) == %x\n",
- 		phy_id, reg, rc);
-@@ -50,10 +50,10 @@ static int temac_mdio_write(struct mii_bus *bus, int phy_id, int reg, u16 val)
- 	/* First write the desired value into the write data register
- 	 * and then write the address into the access initiator register
- 	 */
--	mutex_lock(&lp->indirect_mutex);
-+	mutex_lock(lp->indirect_mutex);
- 	temac_indirect_out32(lp, XTE_MGTDR_OFFSET, val);
- 	temac_indirect_out32(lp, XTE_MIIMAI_OFFSET, (phy_id << 5) | reg);
--	mutex_unlock(&lp->indirect_mutex);
-+	mutex_unlock(lp->indirect_mutex);
+-	cur_p->app0 |= STS_CTRL_APP0_SOP;
+-	cur_p->len = skb_headlen(skb);
+-	cur_p->phys = dma_map_single(ndev->dev.parent, skb->data,
+-				     skb_headlen(skb), DMA_TO_DEVICE);
++	cur_p->app0 |= cpu_to_be32(STS_CTRL_APP0_SOP);
++	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
++				      skb_headlen(skb), DMA_TO_DEVICE);
++	cur_p->len = cpu_to_be32(skb_headlen(skb));
++	cur_p->phys = cpu_to_be32(skb_dma_addr);
+ 	ptr_to_txbd((void *)skb, cur_p);
  
- 	return 0;
- }
-@@ -87,9 +87,9 @@ int temac_mdio_setup(struct temac_local *lp, struct platform_device *pdev)
+ 	for (ii = 0; ii < num_frag; ii++) {
+@@ -770,14 +775,15 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 			lp->tx_bd_tail = 0;
  
- 	/* Enable the MDIO bus by asserting the enable bit and writing
- 	 * in the clock config */
--	mutex_lock(&lp->indirect_mutex);
-+	mutex_lock(lp->indirect_mutex);
- 	temac_indirect_out32(lp, XTE_MC_OFFSET, 1 << 6 | clk_div);
--	mutex_unlock(&lp->indirect_mutex);
-+	mutex_unlock(lp->indirect_mutex);
+ 		cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+-		cur_p->phys = dma_map_single(ndev->dev.parent,
+-					     skb_frag_address(frag),
+-					     skb_frag_size(frag), DMA_TO_DEVICE);
+-		cur_p->len = skb_frag_size(frag);
++		skb_dma_addr = dma_map_single(
++			ndev->dev.parent, skb_frag_address(frag),
++			skb_frag_size(frag), DMA_TO_DEVICE);
++		cur_p->phys = cpu_to_be32(skb_dma_addr);
++		cur_p->len = cpu_to_be32(skb_frag_size(frag));
+ 		cur_p->app0 = 0;
+ 		frag++;
+ 	}
+-	cur_p->app0 |= STS_CTRL_APP0_EOP;
++	cur_p->app0 |= cpu_to_be32(STS_CTRL_APP0_EOP);
  
- 	bus = devm_mdiobus_alloc(&pdev->dev);
- 	if (!bus)
-@@ -116,10 +116,10 @@ int temac_mdio_setup(struct temac_local *lp, struct platform_device *pdev)
- 	if (rc)
- 		return rc;
+ 	tail_p = lp->tx_bd_p + sizeof(*lp->tx_bd_v) * lp->tx_bd_tail;
+ 	lp->tx_bd_tail++;
+@@ -799,7 +805,7 @@ static void ll_temac_recv(struct net_device *ndev)
+ 	struct sk_buff *skb, *new_skb;
+ 	unsigned int bdstat;
+ 	struct cdmac_bd *cur_p;
+-	dma_addr_t tail_p;
++	dma_addr_t tail_p, skb_dma_addr;
+ 	int length;
+ 	unsigned long flags;
  
--	mutex_lock(&lp->indirect_mutex);
-+	mutex_lock(lp->indirect_mutex);
- 	dev_dbg(lp->dev, "MDIO bus registered;  MC:%x\n",
- 		temac_indirect_in32(lp, XTE_MC_OFFSET));
--	mutex_unlock(&lp->indirect_mutex);
-+	mutex_unlock(lp->indirect_mutex);
- 	return 0;
- }
+@@ -808,14 +814,14 @@ static void ll_temac_recv(struct net_device *ndev)
+ 	tail_p = lp->rx_bd_p + sizeof(*lp->rx_bd_v) * lp->rx_bd_ci;
+ 	cur_p = &lp->rx_bd_v[lp->rx_bd_ci];
  
-diff --git a/include/linux/xilinx_ll_temac.h b/include/linux/xilinx_ll_temac.h
-index 53f9203..c4c66be 100644
---- a/include/linux/xilinx_ll_temac.h
-+++ b/include/linux/xilinx_ll_temac.h
-@@ -15,6 +15,12 @@ struct ll_temac_platform_data {
- 	phy_interface_t phy_interface; /* PHY interface mode */
- 	bool reg_little_endian;	/* Little endian TEMAC register access  */
- 	bool dma_little_endian;	/* Little endian DMA register access  */
-+	/* Pre-initialized mutex to use for synchronizing indirect
-+	 * register access.  When using both interfaces of a single
-+	 * TEMAC IP block, the same mutex should be passed here, as
-+	 * they share the same DCR bus bridge.
-+	 */
-+	struct mutex *indirect_mutex;
- };
+-	bdstat = cur_p->app0;
++	bdstat = be32_to_cpu(cur_p->app0);
+ 	while ((bdstat & STS_CTRL_APP0_CMPLT)) {
  
- #endif /* __LINUX_XILINX_LL_TEMAC_H */
+ 		skb = lp->rx_skb[lp->rx_bd_ci];
+-		length = cur_p->app4 & 0x3FFF;
++		length = be32_to_cpu(cur_p->app4) & 0x3FFF;
+ 
+-		dma_unmap_single(ndev->dev.parent, cur_p->phys, length,
+-				 DMA_FROM_DEVICE);
++		dma_unmap_single(ndev->dev.parent, be32_to_cpu(cur_p->phys),
++				 length, DMA_FROM_DEVICE);
+ 
+ 		skb_put(skb, length);
+ 		skb->protocol = eth_type_trans(skb, ndev);
+@@ -826,7 +832,12 @@ static void ll_temac_recv(struct net_device *ndev)
+ 		    (skb->protocol == htons(ETH_P_IP)) &&
+ 		    (skb->len > 64)) {
+ 
+-			skb->csum = cur_p->app3 & 0xFFFF;
++			/* Convert from device endianness (be32) to cpu
++			 * endiannes, and if necessary swap the bytes
++			 * (back) for proper IP checksum byte order
++			 * (be16).
++			 */
++			skb->csum = htons(be32_to_cpu(cur_p->app3) & 0xFFFF);
+ 			skb->ip_summed = CHECKSUM_COMPLETE;
+ 		}
+ 
+@@ -843,11 +854,12 @@ static void ll_temac_recv(struct net_device *ndev)
+ 			return;
+ 		}
+ 
+-		cur_p->app0 = STS_CTRL_APP0_IRQONEND;
+-		cur_p->phys = dma_map_single(ndev->dev.parent, new_skb->data,
+-					     XTE_MAX_JUMBO_FRAME_SIZE,
+-					     DMA_FROM_DEVICE);
+-		cur_p->len = XTE_MAX_JUMBO_FRAME_SIZE;
++		cur_p->app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
++		skb_dma_addr = dma_map_single(ndev->dev.parent, new_skb->data,
++					      XTE_MAX_JUMBO_FRAME_SIZE,
++					      DMA_FROM_DEVICE);
++		cur_p->phys = cpu_to_be32(skb_dma_addr);
++		cur_p->len = cpu_to_be32(XTE_MAX_JUMBO_FRAME_SIZE);
+ 		lp->rx_skb[lp->rx_bd_ci] = new_skb;
+ 
+ 		lp->rx_bd_ci++;
+@@ -855,7 +867,7 @@ static void ll_temac_recv(struct net_device *ndev)
+ 			lp->rx_bd_ci = 0;
+ 
+ 		cur_p = &lp->rx_bd_v[lp->rx_bd_ci];
+-		bdstat = cur_p->app0;
++		bdstat = be32_to_cpu(cur_p->app0);
+ 	}
+ 	lp->dma_out(lp, RX_TAILDESC_PTR, tail_p);
+ 
 -- 
 2.4.11
 
