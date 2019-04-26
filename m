@@ -2,90 +2,127 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4766EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429EEC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1643A206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B84C206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbfDZJhf (ORCPT
+        id S1726190AbfDZJh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:37:35 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55123 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfDZJhf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:37:35 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hJxIK-0004Mr-LY; Fri, 26 Apr 2019 11:37:24 +0200
-Message-ID: <1556271442.2584.29.camel@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH v2 06/15] spi: imx: fix ERR009165
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 26 Apr 2019 11:37:22 +0200
-In-Reply-To: <1556270196.9298.16.camel@nxp.com>
-References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
-         <1556265512-9130-7-git-send-email-yibin.gong@nxp.com>
-         <1556269635.2584.23.camel@pengutronix.de>
-         <1556270196.9298.16.camel@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 26 Apr 2019 05:37:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56166 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725935AbfDZJhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 05:37:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9A703AF95;
+        Fri, 26 Apr 2019 09:37:53 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 11:37:51 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Pu Wen <puwen@hygon.cn>
+Cc:     <bp@alien8.de>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [RFC PATCH RESEND] i2c-piix4: Add Hygon Dhyana SMBus support
+Message-ID: <20190426113751.77befab1@endymion>
+In-Reply-To: <1555938607-2865-1-git-send-email-puwen@hygon.cn>
+References: <1555938607-2865-1-git-send-email-puwen@hygon.cn>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, den 26.04.2019, 09:22 +0000 schrieb Robin Gong:
-> On 2019-04-26 at 11:07 +0200, Lucas Stach wrote:
-> > 
-> > Am Freitag, den 26.04.2019, 08:05 +0000 schrieb Robin Gong:
-> > >  static void mx51_setup_wml(struct spi_imx_data *spi_imx)
-> > >  {
-> > > +     u32 tx_wml = 0;
-> > > +
-> > 
-> > With a wml of 0 you might set the maxburst of the TX dma channel to
-> > fifosize to minimize the performance impact of this workaround.
-> > 
-> > Regards,
-> > Lucas
+Hi Pu,
+
+On Mon, 22 Apr 2019 21:10:07 +0800, Pu Wen wrote:
+> The Hygon Dhyana CPU has the SMBus device with PCI device ID 0x790b,
+> which is the same as AMD CZ SMBus device. So add Hygon Dhyana support
+> to the i2c-piix4 driver by using the code path of AMD.
+
+Sorry for the late answer.
+
+> Cc: <stable@vger.kernel.org> # v5.0+
+
+I object to adding this to stable. It's not fixing any bug, and it's
+far from being a one-liner. I'd rather let distributions backport it as
+they see fit.
+
+> Signed-off-by: Pu Wen <puwen@hygon.cn>
+> ---
+>  drivers/i2c/busses/i2c-piix4.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
 > 
-> Unfortunately, this is a MUST part of errata which cause performance
-> drop.
+> diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+> index 90946a8..9db9d9d 100644
+> --- a/drivers/i2c/busses/i2c-piix4.c
+> +++ b/drivers/i2c/busses/i2c-piix4.c
+> @@ -289,6 +289,9 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
+>  	     PIIX4_dev->revision >= 0x41) ||
+>  	    (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD &&
+>  	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS &&
+> +	     PIIX4_dev->revision >= 0x49) ||
+> +	    (PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON &&
+> +	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS &&
+>  	     PIIX4_dev->revision >= 0x49))
+>  		smb_en = 0x00;
 
-I'm not talking about changing the WML, but when the WML must be 0 you
-can safely increase the DMA burst size without overflowing the FIFO,
-which might recover some of of the performance loss.
+Does the compatibility with the original AMD chipset include the
+revision number?
 
-Regards,
-Lucas
+>  	else
+> @@ -361,7 +364,8 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
+>  		 piix4_smba, i2ccfg >> 4);
+>  
+>  	/* Find which register is used for port selection */
+> -	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD) {
+> +	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD ||
+> +	    PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON) {
+>  		switch (PIIX4_dev->device) {
+>  		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
+>  			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
+> @@ -794,6 +798,7 @@ static const struct pci_device_id piix4_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_SBX00_SMBUS) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_HYGON, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
+>  		     PCI_DEVICE_ID_SERVERWORKS_OSB4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
+> @@ -904,11 +909,13 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	if ((dev->vendor == PCI_VENDOR_ID_ATI &&
+>  	     dev->device == PCI_DEVICE_ID_ATI_SBX00_SMBUS &&
+>  	     dev->revision >= 0x40) ||
+> -	    dev->vendor == PCI_VENDOR_ID_AMD) {
+> +	    dev->vendor == PCI_VENDOR_ID_AMD ||
+> +	    dev->vendor == PCI_VENDOR_ID_HYGON) {
+>  		bool notify_imc = false;
+>  		is_sb800 = true;
+>  
+> -		if (dev->vendor == PCI_VENDOR_ID_AMD &&
+> +		if ((dev->vendor == PCI_VENDOR_ID_AMD ||
+> +		     dev->vendor == PCI_VENDOR_ID_HYGON) &&
+>  		    dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) {
+>  			u8 imc;
+>  
+
+Patch looks good. I assume you have tested it on real hardware?
+
+I would like you to also document the new supported chipset in
+drivers/i2c/busses/Kconfig and Documentation/i2c/busses/i2c-piix4 as
+well as in the header comment of i2c-piix4.c itself. I know it seems
+redundant but it helps the user know which driver they need.
+
+Thanks,
+-- 
+Jean Delvare
+SUSE L3 Support
