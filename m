@@ -2,68 +2,69 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E7CC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FD4C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0CE2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F6A2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1U7nwzD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrBdGumP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfDZPdA (ORCPT
+        id S1726884AbfDZPdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:33:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43476 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbfDZPc4 (ORCPT
+        Fri, 26 Apr 2019 11:33:05 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39104 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfDZPdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:32:56 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z9so1788571pgu.10;
-        Fri, 26 Apr 2019 08:32:56 -0700 (PDT)
+        Fri, 26 Apr 2019 11:33:02 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i17so1905312pfo.6;
+        Fri, 26 Apr 2019 08:33:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Y1AKVJFPbq277WK1HjlwVckr54jHOYhvpvnDgPVgIWM=;
-        b=c1U7nwzD5wlXgA3iq0hX82QlEKYEgy/2OEMalYqOj7Jc1xxHy/Q4JSe5bypvRSCCwm
-         TSKA6/cdDSMCjR8fTZKFCycxw/aajEGEaqasSp+bGTgm7bz+N/JzIK1GlEW6kCXHBKsx
-         xpiPVutbM4pRoISbQZcHIzemmz5750lmcKwF8VVgMZgVvXA8s1c8Zby5tr1O90v5PEAC
-         /ZoHkpN3+vvnXDrNEMI+k7qgiscg+faNW7VLJT/q28+pWvzTbfVS+JSt8FhxcgkHkyqo
-         yGAhi/qdnTgw8ymgXLWyIkWstAYo+Y2M+JANm8G/CXpCtZYjAd3Awjkmv2T1NJhShQ6f
-         UTDg==
+        bh=G+5WsbuuHSwf0oNxPHkpZsl8HtDzIrn5jcvXnz9HzZI=;
+        b=HrBdGumPDRRmjDk3Jm3Nh0HA9cb+1O9+msLfCbRcMhUdmqXwSCFaRC0JvTXur91qQz
+         dZpXDHoVR6blJldO2R7vCpWRbHxcURkhDkJbbnCDg8Gms+HMAtbUXIMEJetgDsM8Bl6t
+         Ig/RAsnl3m0zkZeX+u13Uk0sPbIP9QmKLo7wTZ0GZ+bzbtOyLsdwB0u/ULFt9+iMUwu7
+         9VD9I/tfGPWeBOrdyIRRU7cZO0XqzbLAJXdda0b+z5+6/D2JSqdN5lb15di4ziKesITt
+         exy4teIInzhpulOVBSCio2BS8bOkN4ZxqT6EYc2gjVUGIyCPKpS/A1ivCALh66x+tobu
+         XYzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Y1AKVJFPbq277WK1HjlwVckr54jHOYhvpvnDgPVgIWM=;
-        b=EV7KBXQcnQh/igzTTKGr930wFV0RHDzemhKdwahh2s/cLF+zOcd4sBut8jWePKyOIz
-         qvH/w4Of6xk/nTUDhpDCdaZF2lNihoZZhH6qHZ7nNjxu4i/a8w9lN3NBFBXmQAhQ+s1Y
-         wXdYYk7uk+DhrmmUXh5PJYQ9y6CyT75C25BM/t2WlP73rOyTPaGBnrn1Lc2cYrbLs5To
-         3siVC9MDGBky+6qgqahqppwH33Ml6IduESlZ+zeMAwj08ciG3rX7Rr66bzdjTAJYG9mx
-         Ic1xMIH5OY9QUoWiLe580Gp3Y/vGNCFUcgxNF9V2LAGJNDsKqckkr2nifLzwhkSn4TGd
-         b5MA==
-X-Gm-Message-State: APjAAAWpWYPq4VKADVA45K1WKLWT/TrvFjc6HXbrtq7jsK+lVw/z620H
-        iQQKaQV8jJNwmN+Nroz8ws4=
-X-Google-Smtp-Source: APXvYqzCrFcRT1qs6weFxVuAJGhohCk1cqDi13cf1E2RJ9oKc+Gfw7wzKeJ5XdKB7+/TzO0bpBBzcw==
-X-Received: by 2002:aa7:8455:: with SMTP id r21mr15411036pfn.253.1556292776149;
-        Fri, 26 Apr 2019 08:32:56 -0700 (PDT)
+        bh=G+5WsbuuHSwf0oNxPHkpZsl8HtDzIrn5jcvXnz9HzZI=;
+        b=X90PEdk0KE0E8tLmtR3nWP9R+izA3+XViNI1Gay6ol1mt0iqUnT/MNa1Ifyh3Wb/iA
+         vn6czIYv8gRZZ211OQTTQQEGis6GkUZMuhPvHSeTjihRBGQKwKO/6K9g4njLECoSQaes
+         UiaAvxoPeARDj3FFeAg2Bd6CIdPGyWc9ZoM617hwRoeE4KrvUZTq0lFteSPQ4eqyHJrK
+         zjzHyQO03vswQmUx09rNfD4rAYHb0OYpjsq2EuX5pANNcKmOyYx30Uipr4ECtAXVfuLl
+         zrBK0sd0BOHBN8fB7T+ir0WaTcOEZhsYd7MRdrUbedi366oIDoRgaOYoiVX4++s0+cBy
+         d0QQ==
+X-Gm-Message-State: APjAAAW0yrupT3RpLr4gOI0YLtXaWcawTbjBwfWFcsnei1CEbmSgTny4
+        cJXyk2G2kcixJZxlugPnn1E=
+X-Google-Smtp-Source: APXvYqzH7Ss0w3Ms1flq0Rj9ZVszksBPGYqCB9mMHHkXgF9uvwPUCqfVqxzCvvQXOVeYJQMlXKjH1w==
+X-Received: by 2002:a63:5466:: with SMTP id e38mr44958494pgm.340.1556292781358;
+        Fri, 26 Apr 2019 08:33:01 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.32.51
+        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.32.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 08:32:55 -0700 (PDT)
+        Fri, 26 Apr 2019 08:33:00 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         mchehab+samsung@kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 08/27] Documentation: x86: convert zero-page.txt to reST
-Date:   Fri, 26 Apr 2019 23:31:31 +0800
-Message-Id: <20190426153150.21228-9-changbin.du@gmail.com>
+Subject: [PATCH 09/27] Documentation: x86: convert tlb.txt to reST
+Date:   Fri, 26 Apr 2019 23:31:32 +0800
+Message-Id: <20190426153150.21228-10-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190426153150.21228-1-changbin.du@gmail.com>
 References: <20190426153150.21228-1-changbin.du@gmail.com>
@@ -79,119 +80,98 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- Documentation/x86/index.rst     |  1 +
- Documentation/x86/zero-page.rst | 45 +++++++++++++++++++++++++++++++++
- Documentation/x86/zero-page.txt | 40 -----------------------------
- 3 files changed, 46 insertions(+), 40 deletions(-)
- create mode 100644 Documentation/x86/zero-page.rst
- delete mode 100644 Documentation/x86/zero-page.txt
+ Documentation/x86/index.rst            |  1 +
+ Documentation/x86/{tlb.txt => tlb.rst} | 30 ++++++++++++++++----------
+ 2 files changed, 20 insertions(+), 11 deletions(-)
+ rename Documentation/x86/{tlb.txt => tlb.rst} (81%)
 
 diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index 7b8388ebd43d..9a0b5f38ef6b 100644
+index 9a0b5f38ef6b..fd54b859db9b 100644
 --- a/Documentation/x86/index.rst
 +++ b/Documentation/x86/index.rst
-@@ -14,3 +14,4 @@ Linux x86 Support
-    kernel-stacks
+@@ -15,3 +15,4 @@ Linux x86 Support
     entry_64
     earlyprintk
-+   zero-page
-diff --git a/Documentation/x86/zero-page.rst b/Documentation/x86/zero-page.rst
-new file mode 100644
-index 000000000000..70f10eabca86
---- /dev/null
-+++ b/Documentation/x86/zero-page.rst
-@@ -0,0 +1,45 @@
+    zero-page
++   tlb
+diff --git a/Documentation/x86/tlb.txt b/Documentation/x86/tlb.rst
+similarity index 81%
+rename from Documentation/x86/tlb.txt
+rename to Documentation/x86/tlb.rst
+index 6a0607b99ed8..82ec58ae63a8 100644
+--- a/Documentation/x86/tlb.txt
++++ b/Documentation/x86/tlb.rst
+@@ -1,5 +1,12 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=========
-+Zero Page
-+=========
-+The additional fields in struct boot_params as a part of 32-bit boot
-+protocol of kernel. These should be filled by bootloader or 16-bit
-+real-mode setup code of the kernel. References/settings to it mainly
-+are in::
++=======
++The TLB
++=======
 +
-+  arch/x86/include/uapi/asm/bootparam.h
+ When the kernel unmaps or modified the attributes of a range of
+ memory, it has two choices:
 +
-+===========	=====	=======================	================================
-+Offset/Size	Proto	Name			Meaning
+  1. Flush the entire TLB with a two-instruction sequence.  This is
+     a quick operation, but it causes collateral damage: TLB entries
+     from areas other than the one we are trying to flush will be
+@@ -10,6 +17,7 @@ memory, it has two choices:
+     damage to other TLB entries.
+ 
+ Which method to do depends on a few things:
 +
-+000/040		ALL	screen_info		Text mode or frame buffer information
-+						(struct screen_info)
-+040/014		ALL	apm_bios_info		APM BIOS information (struct apm_bios_info)
-+058/008		ALL	tboot_addr      	Physical address of tboot shared page
-+060/010		ALL	ist_info		Intel SpeedStep (IST) BIOS support information
-+						(struct ist_info)
-+080/010		ALL	hd0_info		hd0 disk parameter, OBSOLETE!!
-+090/010		ALL	hd1_info		hd1 disk parameter, OBSOLETE!!
-+0A0/010		ALL	sys_desc_table		System description table (struct sys_desc_table),
-+						OBSOLETE!!
-+0B0/010		ALL	olpc_ofw_header		OLPC's OpenFirmware CIF and friends
-+0C0/004		ALL	ext_ramdisk_image	ramdisk_image high 32bits
-+0C4/004		ALL	ext_ramdisk_size	ramdisk_size high 32bits
-+0C8/004		ALL	ext_cmd_line_ptr	cmd_line_ptr high 32bits
-+140/080		ALL	edid_info		Video mode setup (struct edid_info)
-+1C0/020		ALL	efi_info		EFI 32 information (struct efi_info)
-+1E0/004		ALL	alt_mem_k		Alternative mem check, in KB
-+1E4/004		ALL	scratch			Scratch field for the kernel setup code
-+1E8/001		ALL	e820_entries		Number of entries in e820_table (below)
-+1E9/001		ALL	eddbuf_entries		Number of entries in eddbuf (below)
-+1EA/001		ALL	edd_mbr_sig_buf_entries	Number of entries in edd_mbr_sig_buffer
-+						(below)
-+1EB/001		ALL     kbd_status      	Numlock is enabled
-+1EC/001		ALL     secure_boot		Secure boot is enabled in the firmware
-+1EF/001		ALL	sentinel		Used to detect broken bootloaders
-+290/040		ALL	edd_mbr_sig_buffer	EDD MBR signatures
-+2D0/A00		ALL	e820_table		E820 memory map table
-+						(array of struct e820_entry)
-+D00/1EC		ALL	eddbuf			EDD data (array of struct edd_info)
-+===========	=====	=======================	================================
-diff --git a/Documentation/x86/zero-page.txt b/Documentation/x86/zero-page.txt
-deleted file mode 100644
-index 68aed077f7b6..000000000000
---- a/Documentation/x86/zero-page.txt
-+++ /dev/null
-@@ -1,40 +0,0 @@
--The additional fields in struct boot_params as a part of 32-bit boot
--protocol of kernel. These should be filled by bootloader or 16-bit
--real-mode setup code of the kernel. References/settings to it mainly
--are in:
--
--  arch/x86/include/uapi/asm/bootparam.h
--
--
--Offset	Proto	Name		Meaning
--/Size
--
--000/040	ALL	screen_info	Text mode or frame buffer information
--				(struct screen_info)
--040/014	ALL	apm_bios_info	APM BIOS information (struct apm_bios_info)
--058/008	ALL	tboot_addr      Physical address of tboot shared page
--060/010	ALL	ist_info	Intel SpeedStep (IST) BIOS support information
--				(struct ist_info)
--080/010	ALL	hd0_info	hd0 disk parameter, OBSOLETE!!
--090/010	ALL	hd1_info	hd1 disk parameter, OBSOLETE!!
--0A0/010	ALL	sys_desc_table	System description table (struct sys_desc_table),
--				OBSOLETE!!
--0B0/010	ALL	olpc_ofw_header	OLPC's OpenFirmware CIF and friends
--0C0/004	ALL	ext_ramdisk_image ramdisk_image high 32bits
--0C4/004	ALL	ext_ramdisk_size  ramdisk_size high 32bits
--0C8/004	ALL	ext_cmd_line_ptr  cmd_line_ptr high 32bits
--140/080	ALL	edid_info	Video mode setup (struct edid_info)
--1C0/020	ALL	efi_info	EFI 32 information (struct efi_info)
--1E0/004	ALL	alt_mem_k	Alternative mem check, in KB
--1E4/004	ALL	scratch		Scratch field for the kernel setup code
--1E8/001	ALL	e820_entries	Number of entries in e820_table (below)
--1E9/001	ALL	eddbuf_entries	Number of entries in eddbuf (below)
--1EA/001	ALL	edd_mbr_sig_buf_entries	Number of entries in edd_mbr_sig_buffer
--				(below)
--1EB/001	ALL     kbd_status      Numlock is enabled
--1EC/001	ALL     secure_boot	Secure boot is enabled in the firmware
--1EF/001	ALL	sentinel	Used to detect broken bootloaders
--290/040	ALL	edd_mbr_sig_buffer EDD MBR signatures
--2D0/A00	ALL	e820_table	E820 memory map table
--				(array of struct e820_entry)
--D00/1EC	ALL	eddbuf		EDD data (array of struct edd_info)
+  1. The size of the flush being performed.  A flush of the entire
+     address space is obviously better performed by flushing the
+     entire TLB than doing 2^48/PAGE_SIZE individual flushes.
+@@ -33,7 +41,7 @@ well.  There is essentially no "right" point to choose.
+ You may be doing too many individual invalidations if you see the
+ invlpg instruction (or instructions _near_ it) show up high in
+ profiles.  If you believe that individual invalidations being
+-called too often, you can lower the tunable:
++called too often, you can lower the tunable::
+ 
+ 	/sys/kernel/debug/x86/tlb_single_page_flush_ceiling
+ 
+@@ -43,7 +51,7 @@ Setting it to 1 is a very conservative setting and it should
+ never need to be 0 under normal circumstances.
+ 
+ Despite the fact that a single individual flush on x86 is
+-guaranteed to flush a full 2MB [1], hugetlbfs always uses the full
++guaranteed to flush a full 2MB [1]_, hugetlbfs always uses the full
+ flushes.  THP is treated exactly the same as normal memory.
+ 
+ You might see invlpg inside of flush_tlb_mm_range() show up in
+@@ -54,15 +62,15 @@ Essentially, you are balancing the cycles you spend doing invlpg
+ with the cycles that you spend refilling the TLB later.
+ 
+ You can measure how expensive TLB refills are by using
+-performance counters and 'perf stat', like this:
++performance counters and 'perf stat', like this::
+ 
+-perf stat -e
+-	cpu/event=0x8,umask=0x84,name=dtlb_load_misses_walk_duration/,
+-	cpu/event=0x8,umask=0x82,name=dtlb_load_misses_walk_completed/,
+-	cpu/event=0x49,umask=0x4,name=dtlb_store_misses_walk_duration/,
+-	cpu/event=0x49,umask=0x2,name=dtlb_store_misses_walk_completed/,
+-	cpu/event=0x85,umask=0x4,name=itlb_misses_walk_duration/,
+-	cpu/event=0x85,umask=0x2,name=itlb_misses_walk_completed/
++  perf stat -e
++    cpu/event=0x8,umask=0x84,name=dtlb_load_misses_walk_duration/,
++    cpu/event=0x8,umask=0x82,name=dtlb_load_misses_walk_completed/,
++    cpu/event=0x49,umask=0x4,name=dtlb_store_misses_walk_duration/,
++    cpu/event=0x49,umask=0x2,name=dtlb_store_misses_walk_completed/,
++    cpu/event=0x85,umask=0x4,name=itlb_misses_walk_duration/,
++    cpu/event=0x85,umask=0x2,name=itlb_misses_walk_completed/
+ 
+ That works on an IvyBridge-era CPU (i5-3320M).  Different CPUs
+ may have differently-named counters, but they should at least
+@@ -70,6 +78,6 @@ be there in some form.  You can use pmu-tools 'ocperf list'
+ (https://github.com/andikleen/pmu-tools) to find the right
+ counters for a given CPU.
+ 
+-1. A footnote in Intel's SDM "4.10.4.2 Recommended Invalidation"
++.. [1] A footnote in Intel's SDM "4.10.4.2 Recommended Invalidation"
+    says: "One execution of INVLPG is sufficient even for a page
+    with size greater than 4 KBytes."
 -- 
 2.20.1
 
