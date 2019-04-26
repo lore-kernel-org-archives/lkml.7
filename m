@@ -2,60 +2,60 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CEFC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 05:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593CFC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 05:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6670206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 05:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B23E21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 05:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDwi/tZq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u66RsWG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfDZFdL (ORCPT
+        id S1726255AbfDZFdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 01:33:11 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44547 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfDZFdL (ORCPT
+        Fri, 26 Apr 2019 01:33:16 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45418 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfDZFdP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 01:33:11 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z16so1017072pgv.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 22:33:11 -0700 (PDT)
+        Fri, 26 Apr 2019 01:33:15 -0400
+Received: by mail-pg1-f196.google.com with SMTP id y27so302905pgl.12
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 22:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0BlWP+G5OWGW9mpUi7okyYbJLLGMBmtOivNIy7fAx4I=;
-        b=DDwi/tZqqfSFaSVDCjsFOX8uVprJkxHGNToSWybSY/ZirrohPGXxFQ5l+krGNxrYtN
-         3S/ba+c0ZsscEq5/9N2W5wn/5fbLpvakGAdbFPUH7Iwo2927nEnbGS0vScZZidwiBMZR
-         fZxhi9yUSkyG7Qe4WcqOqnuG6sO4w7gudmcrcWebNBRdtBjl4BZlcMYasV4/pf+cLsQq
-         mo481jhPhxFNyexl5/seYbWVmYIfune7gWbvYLJO+ORqwTiOQQTojAoGsLfmUymrvmQ4
-         xO2BdDnS4qejGzXfo+192vSI8A97LysV3Xt1KimejkTp046F+KpEsmjf0F/TRB7b792z
-         upXw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=B3a4/fKTHTXdtHCuFcpfY4dukjeDm34PKGaxXB15JjI=;
+        b=u66RsWG0SJXgerjqCUxP/SlDZMpQWKbdkwH2vJ0VajMN512FbIXnnFnY+AvHlr/46l
+         XvvgUQw/kEO1oZ6soeGAebaVIwwxDXL/Yd+BJ5IiTdKtemcfcX8tiI3gB6JPnL0H3P2+
+         z5SLC42Srwb8VcnAPYEgFO0t8lI1vOr8ktd5Ib3B3mPGgdL8V4Xo5rG5ufh7KG7iD5/c
+         jHO2qrIylCD2r8uxYB8MYBKgMmXfVXK+tH33RKkMjpXvqpWwmI1a2k+UddGSfQ5k4QcN
+         cmWsH+39iE0W8ckrYvxC1uE4WjeohGIU1YEKddNmBJikZXKYFYMNN0vz82mn83uoAufn
+         E1Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0BlWP+G5OWGW9mpUi7okyYbJLLGMBmtOivNIy7fAx4I=;
-        b=U8j3fojCRj8qWVTSFmSoXWj1t/4/1n00rMi7y5vyhvvpo79ezRh6vS3O/TkvhSZhmc
-         FduMTZDvbEhWn7E9YzXvufTed4arX6ds+xwu7s2EAx+985sYLw9ixVXfXJFCMrbYa1Xr
-         g+gtUj0ym20HyMaKCPJJpMaprHxswe2aZay5n0XwUA/M1BVP/WZyDwTTu+aECGHyEUtL
-         JGOgSAzxb1ft22gWmLLezkjJnK5ptg2whZZAbBvI83OSa2GQN1PLoB2w20+Njw12z4tO
-         mxm0floRK1JZRBD5Ss7Q9VfFKcyZ7tS3YKDTqp2A+lsR8q9G/BU/UOGLuq4wumT5cjyQ
-         ZDeA==
-X-Gm-Message-State: APjAAAUpvaxcovXFZycJs266spFwSfQ1YsXN+IIur1+fiXmj3bMSADw4
-        2U0GVknnpiYHF42ITKLgjYg=
-X-Google-Smtp-Source: APXvYqzUyO1/qtvvUmS8tJE3ItFawslD6xkZGJKA5zyltJL0Mgnesyhhlb8pLaqQTWWOLWD9mE97XQ==
-X-Received: by 2002:a63:4a5f:: with SMTP id j31mr38851660pgl.369.1556256790373;
-        Thu, 25 Apr 2019 22:33:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=B3a4/fKTHTXdtHCuFcpfY4dukjeDm34PKGaxXB15JjI=;
+        b=og7fMwBxMA+1pSJv5ECr0rqs9Vhfc/t9Rj0sOzr3mAJl8zdsi2444cbhvGuOm8udsO
+         Mi9LrxV8WkL4rB3QRP7D5+DveE8NFsQbh+eotYIVA03YIBbEeF3+nTt/VfzjdNpKQwaw
+         XqF1j9CjCEov5MjeJAYrjwmEhD4Eq1QpU173bbRUvmp8jppYFPSqDvFyTWbyas7kzK6/
+         UesXZPIivWaFqZ/bKl59uq8oce2f37/vQrZYVQ3PZS/DDCljGZwlEDGfWaeMws47SClr
+         AdfT+FYxoUopcYewFCS7H7ml5adB1iKFheUeGC6gpBRbEb5ssHRcWwSmXMxn4oyzOQoq
+         j9Zw==
+X-Gm-Message-State: APjAAAWBrkIDRYC3+HS+0rX/ZKG/h38ICzVVICq+kMyK1f6f7QZH3SFt
+        OEtfIF4ZleoWrbN9fCJ+b20=
+X-Google-Smtp-Source: APXvYqxfgH4rGzl2v/wo4+6r6/qlvjLX9KJ/O5y85O0HQ15kQ7Ll0kFgwwPXnUezIhv0k/X2pu1jFA==
+X-Received: by 2002:a63:2943:: with SMTP id p64mr38892102pgp.151.1556256794752;
+        Thu, 25 Apr 2019 22:33:14 -0700 (PDT)
 Received: from localhost.localdomain ([110.70.55.171])
-        by smtp.gmail.com with ESMTPSA id j5sm5256532pfg.186.2019.04.25.22.33.06
+        by smtp.gmail.com with ESMTPSA id j5sm5256532pfg.186.2019.04.25.22.33.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 22:33:09 -0700 (PDT)
+        Thu, 25 Apr 2019 22:33:13 -0700 (PDT)
 From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
 X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 To:     Petr Mladek <pmladek@suse.com>,
@@ -64,10 +64,12 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Subject: [PATCHv2 0/4] Access console drivers list under console_sem
-Date:   Fri, 26 Apr 2019 14:32:58 +0900
-Message-Id: <20190426053302.4332-1-sergey.senozhatsky@gmail.com>
+Subject: [PATCHv2 1/4] printk: factor out __unregister_console() code
+Date:   Fri, 26 Apr 2019 14:32:59 +0900
+Message-Id: <20190426053302.4332-2-sergey.senozhatsky@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190426053302.4332-1-sergey.senozhatsky@gmail.com>
+References: <20190426053302.4332-1-sergey.senozhatsky@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,46 +77,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The following pattern in register_console() is not completely safe:
 
-        Normally, we grab console_sem lock before we iterate consoles
-list, which is necessary if we want to be race free. The only exception
-to this rule is console_flush_on_panic(). However, it seems that we are
-not fully race free - register_console() iterates console drivers list
-in unsafe manner in several places. E.g. the following scenarion:
+     for_each_console(bcon)
+         if (bcon->flags & CON_BOOT)
+             unregister_console(bcon);
 
-        CPU0                                    CPU1
-        register_console()                      unregister_console()
-                                                 console_lock()
-          for_each_console()                      // modify console_drivers
-            con->foo                                kfree(con)
+Because, in theory, console drivers list and console drivers
+can be modified concurrently from another CPU. We need to grab
+console_sem lock, which protects console drivers list and console
+drivers, before we start iterating console drivers list.
 
-I factored out register_console() and unregister_console() and now
-the bulk of the work is done under console_sem. Both in register
-and unregister paths we now have that oddly looking thing
+Factor out __unregister_console(), which will be called from
+unregister_console() and register_console(), in both cases
+under console_sem lock.
 
-	pr_info("console enabled/disabled");
-	console_unlock();
-	console_lock();
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+---
+ kernel/printk/printk.c | 98 ++++++++++++++++++++++++------------------
+ 1 file changed, 56 insertions(+), 42 deletions(-)
 
-Which is not really odd, in fact. This is to make sure that we always
-print messages on all the consoles.
-
-v2:
-- removed outdated comment (Petr)
-- factor out register_console() and always run it under console_sem (Petr)
-- added a patch which enusures that we always print "console disabled'
-  on every console, before we unregister one of them
-
-Sergey Senozhatsky (4):
-  printk: factor out __unregister_console() code
-  printk: remove invalid register_console() comment
-  printk: factor out register_console() code
-  printk: make sure we always print console disabled message
-
- kernel/printk/printk.c | 125 +++++++++++++++++++++++++----------------
- 1 file changed, 76 insertions(+), 49 deletions(-)
-
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 17102fd4c136..b0e361ca1bea 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2605,6 +2605,48 @@ static int __init keep_bootcon_setup(char *str)
+ 
+ early_param("keep_bootcon", keep_bootcon_setup);
+ 
++static int __unregister_console(struct console *console)
++{
++	struct console *a, *b;
++	int res;
++
++	pr_info("%sconsole [%s%d] disabled\n",
++		(console->flags & CON_BOOT) ? "boot" : "",
++		console->name, console->index);
++
++	res = _braille_unregister_console(console);
++	if (res)
++		return res;
++
++	res = 1;
++	if (console_drivers == console) {
++		console_drivers = console->next;
++		res = 0;
++	} else if (console_drivers) {
++		for (a = console_drivers->next, b = console_drivers;
++		     a; b = a, a = b->next) {
++			if (a == console) {
++				b->next = a->next;
++				res = 0;
++				break;
++			}
++		}
++	}
++
++	if (!res && (console->flags & CON_EXTENDED))
++		nr_ext_console_drivers--;
++
++	/*
++	 * If this isn't the last console and it has CON_CONSDEV set, we
++	 * need to set it on the next preferred console.
++	 */
++	if (console_drivers != NULL && console->flags & CON_CONSDEV)
++		console_drivers->flags |= CON_CONSDEV;
++
++	console->flags &= ~CON_ENABLED;
++	return res;
++}
++
+ /*
+  * The console driver calls this routine during kernel initialization
+  * to register the console printing procedure with printk() and to
+@@ -2777,62 +2819,34 @@ void register_console(struct console *newcon)
+ 	pr_info("%sconsole [%s%d] enabled\n",
+ 		(newcon->flags & CON_BOOT) ? "boot" : "" ,
+ 		newcon->name, newcon->index);
+-	if (bcon &&
+-	    ((newcon->flags & (CON_CONSDEV | CON_BOOT)) == CON_CONSDEV) &&
+-	    !keep_bootcon) {
+-		/* We need to iterate through all boot consoles, to make
++
++	if (keep_bootcon)
++		return;
++
++	if (bcon && (newcon->flags & (CON_CONSDEV|CON_BOOT)) == CON_CONSDEV) {
++		console_lock();
++		/*
++		 * We need to iterate through all boot consoles, to make
+ 		 * sure we print everything out, before we unregister them.
+ 		 */
+ 		for_each_console(bcon)
+ 			if (bcon->flags & CON_BOOT)
+-				unregister_console(bcon);
++				__unregister_console(bcon);
++		console_unlock();
++		console_sysfs_notify();
+ 	}
+ }
+ EXPORT_SYMBOL(register_console);
+ 
+ int unregister_console(struct console *console)
+ {
+-        struct console *a, *b;
+-	int res;
+-
+-	pr_info("%sconsole [%s%d] disabled\n",
+-		(console->flags & CON_BOOT) ? "boot" : "" ,
+-		console->name, console->index);
+-
+-	res = _braille_unregister_console(console);
+-	if (res)
+-		return res;
++	int ret;
+ 
+-	res = 1;
+ 	console_lock();
+-	if (console_drivers == console) {
+-		console_drivers=console->next;
+-		res = 0;
+-	} else if (console_drivers) {
+-		for (a=console_drivers->next, b=console_drivers ;
+-		     a; b=a, a=b->next) {
+-			if (a == console) {
+-				b->next = a->next;
+-				res = 0;
+-				break;
+-			}
+-		}
+-	}
+-
+-	if (!res && (console->flags & CON_EXTENDED))
+-		nr_ext_console_drivers--;
+-
+-	/*
+-	 * If this isn't the last console and it has CON_CONSDEV set, we
+-	 * need to set it on the next preferred console.
+-	 */
+-	if (console_drivers != NULL && console->flags & CON_CONSDEV)
+-		console_drivers->flags |= CON_CONSDEV;
+-
+-	console->flags &= ~CON_ENABLED;
++	ret = __unregister_console(console);
+ 	console_unlock();
+ 	console_sysfs_notify();
+-	return res;
++	return ret;
+ }
+ EXPORT_SYMBOL(unregister_console);
+ 
 -- 
 2.21.0
 
