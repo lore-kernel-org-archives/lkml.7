@@ -4,29 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B8EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C021DC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC2832084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B1442084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbfDZHcW (ORCPT
+        id S1726681AbfDZHcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:32:22 -0400
+        Fri, 26 Apr 2019 03:32:51 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29121 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726336AbfDZHcB (ORCPT
+        by vger.kernel.org with ESMTP id S1726436AbfDZHcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:32:01 -0400
+        Fri, 26 Apr 2019 03:32:22 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
  15.0.1156.6; Fri, 26 Apr 2019 00:31:44 -0700
 Received: from sc2-haas01-esx0118.eng.vmware.com (sc2-haas01-esx0118.eng.vmware.com [10.172.44.118])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id C60F7412A6;
-        Fri, 26 Apr 2019 00:31:45 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 0758741298;
+        Fri, 26 Apr 2019 00:31:46 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -43,13 +42,11 @@ CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <hpa@zytor.com>,
         <ard.biesheuvel@linaro.org>, <kristen@linux.intel.com>,
         <deneen.t.dock@intel.com>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v5 12/23] x86/jump-label: Remove support for custom poker
-Date:   Thu, 25 Apr 2019 17:11:32 -0700
-Message-ID: <20190426001143.4983-13-namit@vmware.com>
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH v5 18/23] bpf: Use vmalloc special flag
+Date:   Thu, 25 Apr 2019 17:11:38 -0700
+Message-ID: <20190426001143.4983-19-namit@vmware.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426001143.4983-1-namit@vmware.com>
 References: <20190426001143.4983-1-namit@vmware.com>
@@ -62,89 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are only two types of poking: early and breakpoint based. The use
-of a function pointer to perform poking complicates the code and is
-probably inefficient due to the use of indirect branches.
+From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Nadav Amit <namit@vmware.com>
+Use new flag VM_FLUSH_RESET_PERMS for handling freeing of special
+permissioned memory in vmalloc and remove places where memory was set RW
+before freeing which is no longer needed. Don't track if the memory is RO
+anymore because it is now tracked in vmalloc.
+
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/kernel/jump_label.c | 26 ++++++++++----------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
+ include/linux/filter.h | 17 +++--------------
+ kernel/bpf/core.c      |  1 -
+ 2 files changed, 3 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
-index e7d8c636b228..e631c358f7f4 100644
---- a/arch/x86/kernel/jump_label.c
-+++ b/arch/x86/kernel/jump_label.c
-@@ -37,7 +37,6 @@ static void bug_at(unsigned char *ip, int line)
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 14ec3bdad9a9..7d3abde3f183 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -20,6 +20,7 @@
+ #include <linux/set_memory.h>
+ #include <linux/kallsyms.h>
+ #include <linux/if_vlan.h>
++#include <linux/vmalloc.h>
  
- static void __ref __jump_label_transform(struct jump_entry *entry,
- 					 enum jump_label_type type,
--					 void *(*poker)(void *, const void *, size_t),
- 					 int init)
+ #include <net/sch_generic.h>
+ 
+@@ -503,7 +504,6 @@ struct bpf_prog {
+ 	u16			pages;		/* Number of allocated pages */
+ 	u16			jited:1,	/* Is our filter JIT'ed? */
+ 				jit_requested:1,/* archs need to JIT the prog */
+-				undo_set_mem:1,	/* Passed set_memory_ro() checkpoint */
+ 				gpl_compatible:1, /* Is filter GPL compatible? */
+ 				cb_access:1,	/* Is control block accessed? */
+ 				dst_needed:1,	/* Do we need dst entry? */
+@@ -733,27 +733,17 @@ bpf_ctx_narrow_access_ok(u32 off, u32 size, u32 size_default)
+ 
+ static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
  {
- 	union jump_code_union jmp;
-@@ -50,14 +49,6 @@ static void __ref __jump_label_transform(struct jump_entry *entry,
- 	jmp.offset = jump_entry_target(entry) -
- 		     (jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
+-	fp->undo_set_mem = 1;
++	set_vm_flush_reset_perms(fp);
+ 	set_memory_ro((unsigned long)fp, fp->pages);
+ }
  
--	/*
--	 * As long as only a single processor is running and the code is still
--	 * not marked as RO, text_poke_early() can be used; Checking that
--	 * system_state is SYSTEM_BOOTING guarantees it.
--	 */
--	if (system_state == SYSTEM_BOOTING)
--		poker = text_poke_early;
+-static inline void bpf_prog_unlock_ro(struct bpf_prog *fp)
+-{
+-	if (fp->undo_set_mem)
+-		set_memory_rw((unsigned long)fp, fp->pages);
+-}
 -
- 	if (type == JUMP_LABEL_JMP) {
- 		if (init) {
- 			expect = default_nop; line = __LINE__;
-@@ -80,16 +71,19 @@ static void __ref __jump_label_transform(struct jump_entry *entry,
- 		bug_at((void *)jump_entry_code(entry), line);
- 
- 	/*
--	 * Make text_poke_bp() a default fallback poker.
-+	 * As long as only a single processor is running and the code is still
-+	 * not marked as RO, text_poke_early() can be used; Checking that
-+	 * system_state is SYSTEM_BOOTING guarantees it. It will be set to
-+	 * SYSTEM_SCHEDULING before other cores are awaken and before the
-+	 * code is write-protected.
- 	 *
- 	 * At the time the change is being done, just ignore whether we
- 	 * are doing nop -> jump or jump -> nop transition, and assume
- 	 * always nop being the 'currently valid' instruction
--	 *
- 	 */
--	if (poker) {
--		(*poker)((void *)jump_entry_code(entry), code,
--			 JUMP_LABEL_NOP_SIZE);
-+	if (init || system_state == SYSTEM_BOOTING) {
-+		text_poke_early((void *)jump_entry_code(entry), code,
-+				JUMP_LABEL_NOP_SIZE);
- 		return;
- 	}
- 
-@@ -101,7 +95,7 @@ void arch_jump_label_transform(struct jump_entry *entry,
- 			       enum jump_label_type type)
+ static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
  {
- 	mutex_lock(&text_mutex);
--	__jump_label_transform(entry, type, NULL, 0);
-+	__jump_label_transform(entry, type, 0);
- 	mutex_unlock(&text_mutex);
++	set_vm_flush_reset_perms(hdr);
+ 	set_memory_ro((unsigned long)hdr, hdr->pages);
+ 	set_memory_x((unsigned long)hdr, hdr->pages);
  }
  
-@@ -131,5 +125,5 @@ __init_or_module void arch_jump_label_transform_static(struct jump_entry *entry,
- 			jlstate = JL_STATE_NO_UPDATE;
- 	}
- 	if (jlstate == JL_STATE_UPDATE)
--		__jump_label_transform(entry, type, text_poke_early, 1);
-+		__jump_label_transform(entry, type, 1);
+-static inline void bpf_jit_binary_unlock_ro(struct bpf_binary_header *hdr)
+-{
+-	set_memory_rw((unsigned long)hdr, hdr->pages);
+-}
+-
+ static inline struct bpf_binary_header *
+ bpf_jit_binary_hdr(const struct bpf_prog *fp)
+ {
+@@ -789,7 +779,6 @@ void __bpf_prog_free(struct bpf_prog *fp);
+ 
+ static inline void bpf_prog_unlock_free(struct bpf_prog *fp)
+ {
+-	bpf_prog_unlock_ro(fp);
+ 	__bpf_prog_free(fp);
  }
+ 
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index ff09d32a8a1b..c605397c79f0 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -848,7 +848,6 @@ void __weak bpf_jit_free(struct bpf_prog *fp)
+ 	if (fp->jited) {
+ 		struct bpf_binary_header *hdr = bpf_jit_binary_hdr(fp);
+ 
+-		bpf_jit_binary_unlock_ro(hdr);
+ 		bpf_jit_binary_free(hdr);
+ 
+ 		WARN_ON_ONCE(!bpf_prog_kallsyms_verify_off(fp));
 -- 
 2.17.1
 
