@@ -2,74 +2,199 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.9 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572D5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8904C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F35A206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE7E206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbfDZH1P (ORCPT
+        id S1726083AbfDZHbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:27:15 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:33501 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfDZH1O (ORCPT
+        Fri, 26 Apr 2019 03:31:47 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:2747 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725899AbfDZHbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:27:14 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hJvG8-0003l0-3a; Fri, 26 Apr 2019 09:27:00 +0200
-Date:   Fri, 26 Apr 2019 09:26:59 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, jannh@google.com,
-        riel@surriel.com, mingo@redhat.com, bp@suse.de, Jason@zx2c4.com,
-        luto@kernel.org, tglx@linutronix.de, rkrcmar@redhat.com,
-        mingo@kernel.org, hpa@zytor.com, kvm@vger.kernel.org,
-        pbonzini@redhat.com, kurt.kanzenbach@linutronix.de
-Subject: Re: [RFC PATCH] x86/fpu: Don't unconditionally add
- XFEATURE_MASK_FPSSE on sigentry
-Message-ID: <20190426072659.swew4mvfz7dfjyqq@linutronix.de>
-References: <20190425173545.sogxyptbaqvoofm6@linutronix.de>
- <cbb4c3de-1e12-c325-fa7f-40bc63c495e7@intel.com>
+        Fri, 26 Apr 2019 03:31:47 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Fri, 26 Apr 2019 00:31:40 -0700
+Received: from sc2-haas01-esx0118.eng.vmware.com (sc2-haas01-esx0118.eng.vmware.com [10.172.44.118])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 593CC41298;
+        Fri, 26 Apr 2019 00:31:45 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        <linux_dti@icloud.com>, <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <akpm@linux-foundation.org>, <kernel-hardening@lists.openwall.com>,
+        <linux-mm@kvack.org>, <will.deacon@arm.com>,
+        <ard.biesheuvel@linaro.org>, <kristen@linux.intel.com>,
+        <deneen.t.dock@intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Nadav Amit <namit@vmware.com>
+Subject: [PATCH v5 00/23] x86: text_poke() fixes and executable lockdowns
+Date:   Thu, 25 Apr 2019 17:11:20 -0700
+Message-ID: <20190426001143.4983-1-namit@vmware.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cbb4c3de-1e12-c325-fa7f-40bc63c495e7@intel.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: namit@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-25 14:13:05 [-0700], Dave Hansen wrote:
-> On 4/25/19 10:35 AM, Sebastian Andrzej Siewior wrote:
-> > This commit reverts commit 04944b793e18e ("x86: xsave: set FP, SSE bits
-> > in the xsave header in the user sigcontext"). The commit claims that it
-> > is required for legacy applications but fails to explain why this is
-> > needed and it is not obvious to me why the application would require the
-> > FP/SSE state in the signal handler.
-> 
-> Any software that understands XSAVE is OK.  I think the legacy software
-> would be that which groks 'fxregs_state, and FXSAVE/FXRSTOR but does not
-> comprehend XSAVE/XRSTOR.  *That* software might change fxregs_state in
-> the signal frame, but the lack of XFEATURE_MASK_FPSSE in xfeatures would
-> prevent XRSTOR from restoring it.
+Yet another version, per PeterZ request, addressing the latest feedback.
 
-but it would edit its FP state before it has been used.
+This patchset improves several overlapping issues around stale TLB
+entries and W^X violations. It is combined from "x86/alternative:
+text_poke() enhancements v7" [1] and "Don't leave executable TLB entries
+to freed pages v2" [2] patchsets that were conflicting.
 
-> That's just a guess, though.
-> 
-> If we care, I think we should just use XSAVE instead of XSAVEOPT and
-> trying to reconstruct the init state in software.
+The related issues that this fixes:
+1. Fixmap PTEs that are used for patching are available for access from
+  other cores and might be exploited. They are not even flushed from
+  the TLB in remote cores, so the risk is even higher. Address this
+  issue by introducing a temporary mm that is only used during
+  patching. Unfortunately, due to init ordering, fixmap is still used
+  during boot-time patching. Future patches can eliminate the need for
+  it.
+2. Missing lockdep assertion to ensure text_mutex is taken. It is
+  actually not always taken, so fix the instances that were found not
+  to take the lock (although they should be safe even without taking
+  the lock).
+3. Module_alloc returning memory that is RWX until a module is finished
+  loading.
+4. Sometimes when memory is freed via the module subsystem, an
+  executable permissioned TLB entry can remain to a freed page. If the
+  page is re-used to back an address that will receive data from
+  userspace, it can result in user data being mapped as executable in
+  the kernel. The root of this behavior is vfree lazily flushing the
+  TLB, but not lazily freeing the underlying pages.
 
-We can't use XSAVE directly in the slowpath. We need to reconstruct the
-init state. We have the mxcsr quirk. We would need just to extend it and
-set the FP area to init state if the FP state is missing like we do in
-fpstate_sanitize_xstate().
 
-Sebastian
+Changes v4 to v5:
+- Change temporary state variable name [Borislav]
+- Commit log and comment fixes [Borislav]
+
+Changes v3 to v4:
+- Remove the size parameter from tramp_free() [Steven]
+- Remove caching of hw_breakpoint_active() [Sean]
+- Prevent the use of bpf_probe_write_user() while using temporary mm [Jann]
+- Fix build issues on other archs
+
+Changes v2 to v3:
+- Fix commit messages and comments [Boris]
+- Rename VM_HAS_SPECIAL_PERMS [Boris]
+- Remove unnecessary local variables [Boris]
+- Rename set_alias_*() functions [Boris, Andy]
+- Save/restore DR registers when using temporary mm
+- Move line deletion from patch 10 to patch 17
+
+Changes v1 to v2:
+- Adding "Reviewed-by tag" [Masami]
+- Comment instead of code to warn against module removal while
+  patching [Masami]
+- Avoiding open-coded TLB flush [Andy]
+- Remove "This patch" [Borislav Petkov]
+- Not set global bit during text poking [Andy, hpa]
+- Add Ack from [Pavel Machek]
+- Split patch 16 "Plug in new special vfree flag" into 4 patches (16-19)
+  to make it easier to review. There were no code changes.
+
+The changes from "Don't leave executable TLB entries to freed pages
+v2" to v1:
+- Add support for case of hibernate trying to save an unmapped page
+  on the directmap. (Ard Biesheuvel)
+- No week arch breakout for vfree-ing special memory (Andy Lutomirski)
+- Avoid changing deferred free code by moving modules init free to work
+  queue (Andy Lutomirski)
+- Plug in new flag for kprobes and ftrace
+- More arch generic names for set_pages functions (Ard Biesheuvel)
+- Fix for TLB not always flushing the directmap (Nadav Amit)
+
+Changes from "x86/alternative: text_poke() enhancements v7" to v1
+- Fix build failure on CONFIG_RANDOMIZE_BASE=n (Rick)
+- Remove text_poke usage from ftrace (Nadav)
+
+[1] https://lkml.org/lkml/2018/12/5/200
+[2] https://lkml.org/lkml/2018/12/11/1571
+
+
+Andy Lutomirski (1):
+  x86/mm: Introduce temporary mm structs
+
+Nadav Amit (15):
+  Fix "x86/alternatives: Lockdep-enforce text_mutex in text_poke*()"
+  x86/jump_label: Use text_poke_early() during early init
+  x86/mm: Save debug registers when loading a temporary mm
+  fork: Provide a function for copying init_mm
+  x86/alternative: Initialize temporary mm for patching
+  x86/alternative: Use temporary mm for text poking
+  x86/kgdb: Avoid redundant comparison of patched code
+  x86/ftrace: Set trampoline pages as executable
+  x86/kprobes: Set instruction page as executable
+  x86/module: Avoid breaking W^X while loading modules
+  x86/jump-label: Remove support for custom poker
+  x86/alternative: Remove the return value of text_poke_*()
+  x86/alternative: Comment about module removal races
+  mm/tlb: Provide default nmi_uaccess_okay()
+  bpf: Fail bpf_probe_write_user() while mm is switched
+
+Rick Edgecombe (7):
+  x86/mm/cpa: Add set_direct_map_ functions
+  mm: Make hibernate handle unmapped pages
+  vmalloc: Add flag for free of special permsissions
+  modules: Use vmalloc special flag
+  bpf: Use vmalloc special flag
+  x86/ftrace: Use vmalloc special flag
+  x86/kprobes: Use vmalloc special flag
+
+ arch/Kconfig                         |   4 +
+ arch/x86/Kconfig                     |   1 +
+ arch/x86/include/asm/fixmap.h        |   2 -
+ arch/x86/include/asm/mmu_context.h   |  56 ++++++++
+ arch/x86/include/asm/pgtable.h       |   3 +
+ arch/x86/include/asm/set_memory.h    |   3 +
+ arch/x86/include/asm/text-patching.h |   7 +-
+ arch/x86/include/asm/tlbflush.h      |   2 +
+ arch/x86/kernel/alternative.c        | 201 ++++++++++++++++++++-------
+ arch/x86/kernel/ftrace.c             |  22 +--
+ arch/x86/kernel/jump_label.c         |  21 ++-
+ arch/x86/kernel/kgdb.c               |  25 +---
+ arch/x86/kernel/kprobes/core.c       |  19 ++-
+ arch/x86/kernel/module.c             |   2 +-
+ arch/x86/mm/init_64.c                |  36 +++++
+ arch/x86/mm/pageattr.c               |  16 ++-
+ arch/x86/xen/mmu_pv.c                |   2 -
+ include/asm-generic/tlb.h            |   9 ++
+ include/linux/filter.h               |  18 +--
+ include/linux/mm.h                   |  18 +--
+ include/linux/sched/task.h           |   1 +
+ include/linux/set_memory.h           |  11 ++
+ include/linux/vmalloc.h              |  15 ++
+ init/main.c                          |   3 +
+ kernel/bpf/core.c                    |   1 -
+ kernel/fork.c                        |  24 +++-
+ kernel/module.c                      |  82 ++++++-----
+ kernel/power/snapshot.c              |   5 +-
+ kernel/trace/bpf_trace.c             |   8 ++
+ mm/page_alloc.c                      |   7 +-
+ mm/vmalloc.c                         | 113 ++++++++++++---
+ 31 files changed, 542 insertions(+), 195 deletions(-)
+
+-- 
+2.17.1
+
