@@ -2,260 +2,141 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272CAC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2937AC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E228A2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEDAB208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271992;
-	bh=Duq5rY5zdK2IbC+D/olVWFtIaLEOopUUk9GZlavj/co=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=2FS8w7mgr8YGpD9QUtl3vBt7dtZ62qIqsv0pp9s59EsPS83DXaAeK5gwyQJ/Uh0V4
-	 JAdL6d/JzjNI8PPBRNZbKaqu3ZBxWCTSCrSWyf/IIRQnW7wEtELxoYqOT8C8RZPnbj
-	 e5/6uHBesmRKgQhzhF7OI5dEFuJUqlnlGNZiIVdM=
+	s=default; t=1556271997;
+	bh=9RT8xA5jMBv6EzT8N9JRPoEns1coQhC9bYDVc6PmTws=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YBlWE7tQaUFbAnxxQT2MnPoUPzp40cBVlbxLke39tB5C7B8gUmeOa95Ag/w/UFnBU
+	 57q9qf2zlQRb5GBeOfMYFFtgyiUGv13l8AmlKnBbNEgWP67otPV/pJeUa0v/a/jNi7
+	 SOdhsjAWZA4ibX+gqiwLyixTDV4v90CNk20XPrc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfDZJp5 (ORCPT
+        id S1726780AbfDZJqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:45:57 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55272 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfDZJpy (ORCPT
+        Fri, 26 Apr 2019 05:46:36 -0400
+Received: from casper.infradead.org ([85.118.1.10]:52042 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfDZJqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:45:54 -0400
+        Fri, 26 Apr 2019 05:46:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=bCO3F4jGoWbbF2kzN76H5v5L+ImBbS6Epz66gQMEttY=; b=xeZAsm9aO0EB
-        o6nBKA/29o/Iv5Q+s8v7ZBP6sVA469eImA34kruBV9lx1926TC9PoSwdyiaj0o+mRzdnEV0BfIvWm
-        p8MT3EbrXo5OaisZYsqBz9ZVpv5y/r5LJD850GT4Zd1T4bByITbOnYZvzSLm5wAshjVhGXLeBHmBw
-        REWgk=;
-Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxQV-0003SM-Kx; Fri, 26 Apr 2019 09:45:51 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 97F4F441D3B; Fri, 26 Apr 2019 10:45:50 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: mcp16502: Remove unneeded fields from struct mcp16502" to the regulator tree
-In-Reply-To: 
-X-Patchwork-Hint: ignore
-Message-Id: <20190426094550.97F4F441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:45:50 +0100 (BST)
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gTBjYHF7PdfcMS747oVD2PM5dGAfiuGzrLBbmiynnAI=; b=ThiRHSVnK8igKQlUt70ItUpgfn
+        ahvUpV2Rj5VYX6v2qdgqkJ5YDlrjlEHjCiqciVId/LoW/vvbKtqqhjBZvImCJFrk4tTc96+SgQTMt
+        3OwLruS8ajlGs/wQ20K30ls643aeeOVpb/B7MjXylL0emp1dw6nykZEPhyzyfDfgrbPNaH7y3BxV8
+        0/Pf9E/MtLsN+dZ02jvg38Neh4bT8CtGsUuBDGhhjAjqMii4uRKfUZed6iZ/INQKwoT8UUu5T/2j8
+        o0WOHq5yMZ0fJgkLpfKIpMcsztztvKqpYFW56Aq/Y4OzodfEabMJl4Dq9mXtvOf21R/5AYdWX7Hzf
+        niiIxfrA==;
+Received: from [179.95.39.209] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJxQz-000573-Hl; Fri, 26 Apr 2019 09:46:22 +0000
+Date:   Fri, 26 Apr 2019 06:46:09 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 25/79] docs: convert docs to ReST and rename to *.rst
+Message-ID: <20190426064609.7f00e013@coco.lan>
+In-Reply-To: <20190425180758.GC23183@sirena.org.uk>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+        <7adf9035ae06ecc6c7e46b51cb677f0a8f61d19a.1555938376.git.mchehab+samsung@kernel.org>
+        <20190425180758.GC23183@sirena.org.uk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Mark,
 
-   regulator: mcp16502: Remove unneeded fields from struct mcp16502
+Em Thu, 25 Apr 2019 19:07:58 +0100
+Mark Brown <broonie@kernel.org> escreveu:
 
-has been applied to the regulator tree at
+> On Mon, Apr 22, 2019 at 10:27:14AM -0300, Mauro Carvalho Chehab wrote:
+> > Convert the PM documents to ReST, in order to allow them to
+> > build with Sphinx.  
+> 
+> This is massively CCed covering a large range of subsystems and is patch
+> 25 of a 79 patch series so I've no context for what's going on here or
+> why...  
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+There are two goals of this series:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+1) to prepare for placing the new *.rst files under Documentation/ into an
+   index file, being part of one of the books. Most of the stuff covered
+   on this series either fit at the system admin guide or at the
+   Kernel API documentation book;
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+2) to ensure that, if some edition on a file would cause warnings at
+   Sphinx build, someone will notice and submit a followup patch.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+You can see more details at patch 00/79:
+	https://lore.kernel.org/lkml/20190422115110.26443b44@coco.lan/
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+In order to do that, this series has one patch per Documentation/*
+sub-directory. This specific one is for the documents under
+Documentation/power/ [1].
+
+[1] btw, the title of this specific patch should be, instead:
+	docs: power: convert docs to ReST and rename to *.rst
+
+The series is long because I'm trying to cover a significant part
+of the documentation files. In any case, except if an eventual
+conflict might rise on some file, this patch is independent from
+all other files, and should be safe to apply directly via the
+subsystem git tree.
+
+I'm working on a follow-up patch series that should be adding the
+power/index.rst file into another index file - probably at
+Documentation/index.rst[1]. As such patch will be adding a lot of other
+index files, the best would be to merge it via the docs tree, in
+order to avoid conflicts.
+
+
+[1] such patch will be removing the ":orphan:" meta-tag from it
+(that basically tells the build system to not produce warnings if
+the file is not directly or indirectly referenced by the main
+index file).
 
 Thanks,
-Mark
-
-From 4cf469539b635d2588df4f48bf721890f5f2ade5 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Thu, 11 Apr 2019 09:59:22 +0800
-Subject: [PATCH] regulator: mcp16502: Remove unneeded fields from struct
- mcp16502
-
-At the context with rdev, we can use rdev->regmap instead of mcp->rmap.
-The *rdev[NUM_REGULATORS] is not required because current code uses
-devm_regulator_register() so we don't need to store *rdev for clean up
-paths.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/mcp16502.c | 40 +++++++++++++++---------------------
- 1 file changed, 16 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/regulator/mcp16502.c b/drivers/regulator/mcp16502.c
-index 3a8004abe044..9292ab8736c7 100644
---- a/drivers/regulator/mcp16502.c
-+++ b/drivers/regulator/mcp16502.c
-@@ -119,8 +119,6 @@ enum {
-  * @lpm: LPM GPIO descriptor
-  */
- struct mcp16502 {
--	struct regulator_dev *rdev[NUM_REGULATORS];
--	struct regmap *rmap;
- 	struct gpio_desc *lpm;
- };
- 
-@@ -179,13 +177,12 @@ static unsigned int mcp16502_get_mode(struct regulator_dev *rdev)
- {
- 	unsigned int val;
- 	int ret, reg;
--	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
- 
- 	reg = mcp16502_get_reg(rdev, MCP16502_OPMODE_ACTIVE);
- 	if (reg < 0)
- 		return reg;
- 
--	ret = regmap_read(mcp->rmap, reg, &val);
-+	ret = regmap_read(rdev->regmap, reg, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -211,7 +208,6 @@ static int _mcp16502_set_mode(struct regulator_dev *rdev, unsigned int mode,
- {
- 	int val;
- 	int reg;
--	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
- 
- 	reg = mcp16502_get_reg(rdev, op_mode);
- 	if (reg < 0)
-@@ -228,7 +224,7 @@ static int _mcp16502_set_mode(struct regulator_dev *rdev, unsigned int mode,
- 		return -EINVAL;
- 	}
- 
--	reg = regmap_update_bits(mcp->rmap, reg, MCP16502_MODE, val);
-+	reg = regmap_update_bits(rdev->regmap, reg, MCP16502_MODE, val);
- 	return reg;
- }
- 
-@@ -247,9 +243,8 @@ static int mcp16502_get_status(struct regulator_dev *rdev)
- {
- 	int ret;
- 	unsigned int val;
--	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
- 
--	ret = regmap_read(mcp->rmap, MCP16502_STAT_BASE(rdev_get_id(rdev)),
-+	ret = regmap_read(rdev->regmap, MCP16502_STAT_BASE(rdev_get_id(rdev)),
- 			  &val);
- 	if (ret)
- 		return ret;
-@@ -290,7 +285,6 @@ static int mcp16502_suspend_get_target_reg(struct regulator_dev *rdev)
-  */
- static int mcp16502_set_suspend_voltage(struct regulator_dev *rdev, int uV)
- {
--	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
- 	int sel = regulator_map_voltage_linear_range(rdev, uV, uV);
- 	int reg = mcp16502_suspend_get_target_reg(rdev);
- 
-@@ -300,7 +294,7 @@ static int mcp16502_set_suspend_voltage(struct regulator_dev *rdev, int uV)
- 	if (reg < 0)
- 		return reg;
- 
--	return regmap_update_bits(mcp->rmap, reg, MCP16502_VSEL, sel);
-+	return regmap_update_bits(rdev->regmap, reg, MCP16502_VSEL, sel);
- }
- 
- /*
-@@ -328,13 +322,12 @@ static int mcp16502_set_suspend_mode(struct regulator_dev *rdev,
-  */
- static int mcp16502_set_suspend_enable(struct regulator_dev *rdev)
- {
--	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
- 	int reg = mcp16502_suspend_get_target_reg(rdev);
- 
- 	if (reg < 0)
- 		return reg;
- 
--	return regmap_update_bits(mcp->rmap, reg, MCP16502_EN, MCP16502_EN);
-+	return regmap_update_bits(rdev->regmap, reg, MCP16502_EN, MCP16502_EN);
- }
- 
- /*
-@@ -342,13 +335,12 @@ static int mcp16502_set_suspend_enable(struct regulator_dev *rdev)
-  */
- static int mcp16502_set_suspend_disable(struct regulator_dev *rdev)
- {
--	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
- 	int reg = mcp16502_suspend_get_target_reg(rdev);
- 
- 	if (reg < 0)
- 		return reg;
- 
--	return regmap_update_bits(mcp->rmap, reg, MCP16502_EN, 0);
-+	return regmap_update_bits(rdev->regmap, reg, MCP16502_EN, 0);
- }
- #endif /* CONFIG_SUSPEND */
- 
-@@ -441,17 +433,16 @@ static const struct regmap_config mcp16502_regmap_config = {
- static int setup_regulators(struct mcp16502 *mcp, struct device *dev,
- 			    struct regulator_config config)
- {
-+	struct regulator_dev *rdev;
- 	int i;
- 
- 	for (i = 0; i < NUM_REGULATORS; i++) {
--		mcp->rdev[i] = devm_regulator_register(dev,
--						       &mcp16502_desc[i],
--						       &config);
--		if (IS_ERR(mcp->rdev[i])) {
-+		rdev = devm_regulator_register(dev, &mcp16502_desc[i], &config);
-+		if (IS_ERR(rdev)) {
- 			dev_err(dev,
- 				"failed to register %s regulator %ld\n",
--				mcp16502_desc[i].name, PTR_ERR(mcp->rdev[i]));
--			return PTR_ERR(mcp->rdev[i]);
-+				mcp16502_desc[i].name, PTR_ERR(rdev));
-+			return PTR_ERR(rdev);
- 		}
- 	}
- 
-@@ -464,6 +455,7 @@ static int mcp16502_probe(struct i2c_client *client,
- 	struct regulator_config config = { };
- 	struct device *dev;
- 	struct mcp16502 *mcp;
-+	struct regmap *rmap;
- 	int ret = 0;
- 
- 	dev = &client->dev;
-@@ -473,15 +465,15 @@ static int mcp16502_probe(struct i2c_client *client,
- 	if (!mcp)
- 		return -ENOMEM;
- 
--	mcp->rmap = devm_regmap_init_i2c(client, &mcp16502_regmap_config);
--	if (IS_ERR(mcp->rmap)) {
--		ret = PTR_ERR(mcp->rmap);
-+	rmap = devm_regmap_init_i2c(client, &mcp16502_regmap_config);
-+	if (IS_ERR(rmap)) {
-+		ret = PTR_ERR(rmap);
- 		dev_err(dev, "regmap init failed: %d\n", ret);
- 		return ret;
- 	}
- 
- 	i2c_set_clientdata(client, mcp);
--	config.regmap = mcp->rmap;
-+	config.regmap = rmap;
- 	config.driver_data = mcp;
- 
- 	mcp->lpm = devm_gpiod_get(dev, "lpm", GPIOD_OUT_LOW);
--- 
-2.20.1
-
+Mauro
