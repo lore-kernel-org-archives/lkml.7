@@ -6,28 +6,30 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03F7C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73786C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7630206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FA7206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfDZRhz (ORCPT
+        id S1726255AbfDZRkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 13:37:55 -0400
-Received: from thoth.sbs.de ([192.35.17.2]:45300 "EHLO thoth.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfDZRhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 13:37:55 -0400
+        Fri, 26 Apr 2019 13:40:17 -0400
+Received: from goliath.siemens.de ([192.35.17.28]:52927 "EHLO
+        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfDZRkQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 13:40:16 -0400
 Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id x3QHbcF1004753
+        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id x3QHdxXO016348
         (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Apr 2019 19:37:38 +0200
+        Fri, 26 Apr 2019 19:39:59 +0200
 Received: from [167.87.22.130] ([167.87.22.130])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x3QHbZup026019;
-        Fri, 26 Apr 2019 19:37:36 +0200
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x3QHdvop028638;
+        Fri, 26 Apr 2019 19:39:57 +0200
 Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -37,12 +39,7 @@ Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-References: <20190424081802.GV2654@lahna.fi.intel.com>
- <5a28f22c-22f7-760a-d076-68ff19800d44@siemens.com>
- <20190424084259.GW2654@lahna.fi.intel.com>
- <7e328b7e-f4f0-851a-4152-a9ffd058201c@siemens.com>
- <20190424094506.GA2654@lahna.fi.intel.com>
- <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
+References: <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
  <20190424100130.GB2654@lahna.fi.intel.com>
  <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
  <20190424103306.GC2654@lahna.fi.intel.com>
@@ -52,13 +49,14 @@ References: <20190424081802.GV2654@lahna.fi.intel.com>
  <bc856e19-470d-7655-5680-a031831ab513@metux.net>
  <2f3da791-4a10-c2c4-dc5a-22ad16ed7be6@siemens.com>
  <CAHp75VfonL_f1GjRFFhp59R8U+bGzT9pcC7p8XDJ32-_cxT29g@mail.gmail.com>
+ <20190426173329.GA31161@Mani-XPS-13-9360>
 From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <bbc81e4d-7a3c-ef1e-e89b-739bc262f6db@siemens.com>
-Date:   Fri, 26 Apr 2019 19:37:35 +0200
+Message-ID: <534a4812-e6d3-9b16-5142-ab214da3d661@siemens.com>
+Date:   Fri, 26 Apr 2019 19:39:56 +0200
 User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
  Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfonL_f1GjRFFhp59R8U+bGzT9pcC7p8XDJ32-_cxT29g@mail.gmail.com>
+In-Reply-To: <20190426173329.GA31161@Mani-XPS-13-9360>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -67,46 +65,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.19 19:20, Andy Shevchenko wrote:
-> On Fri, Apr 26, 2019 at 7:05 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
->>
->> On 26.04.19 16:42, Enrico Weigelt, metux IT consult wrote:
->>> On 26.04.19 15:36, Jan Kiszka wrote:
+On 26.04.19 19:33, Manivannan Sadhasivam wrote:
+> On Fri, Apr 26, 2019 at 08:20:19PM +0300, Andy Shevchenko wrote:
+>> On Fri, Apr 26, 2019 at 7:05 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
 >>>
->>>> At the same time, there are no real alternatives - to my> knowledge - for the value it brings (various bindings) to simply
->>> switch> the engine.
->>> Which value exactly does that collection of crude wrappers and broken
->>> attempts to buypass the kernel (driving gpios via /dev/mem *facepalm*)
->>> provide ?
+>>> On 26.04.19 16:42, Enrico Weigelt, metux IT consult wrote:
+>>>> On 26.04.19 15:36, Jan Kiszka wrote:
+>>>>
+>>>>> At the same time, there are no real alternatives - to my> knowledge - for the value it brings (various bindings) to simply
+>>>> switch> the engine.
+>>>> Which value exactly does that collection of crude wrappers and broken
+>>>> attempts to buypass the kernel (driving gpios via /dev/mem *facepalm*)
+>>>> provide ?
+>>>
+>>> Leaving that blunt hack aside:
+>>>
+>>> import mraa
+>>>
+>>> pin = mraa.Gpio(13)
+>>> pin.dir(mraa.DIR_OUT)
+>>> pin.write(1)
+>>>
+>>> And the same goes for nodejs, java and c++.
+>>>
+>>> Moreover, this allows you to abstract away where "Pin 13" actually came from on
+>>> that board if the kernel changes (BSP -> upstream...) or the extension board or
+>>> ...
 >>
->> Leaving that blunt hack aside:
+>> The problem here is opaque number. This has to be chip + *relative* pin number/
+>> See this:
+>> https://stackoverflow.com/questions/55532410/how-do-linux-gpio-numbers-get-their-values/55579640#55579640
 >>
->> import mraa
->>
->> pin = mraa.Gpio(13)
->> pin.dir(mraa.DIR_OUT)
->> pin.write(1)
->>
->> And the same goes for nodejs, java and c++.
->>
->> Moreover, this allows you to abstract away where "Pin 13" actually came from on
->> that board if the kernel changes (BSP -> upstream...) or the extension board or
->> ...
 > 
-> The problem here is opaque number. This has to be chip + *relative* pin number/
-> See this:
-> https://stackoverflow.com/questions/55532410/how-do-linux-gpio-numbers-get-their-values/55579640#55579640
-> 
+> But for platform like 96Boards we don't need controller specific lookup, these
+> are all handled by the platform code [1] so that the users can use the standard
+> pinout number to access GPIOs. For instance, pin 23 on the Low Speed expansion
+> header is the GPIO for all 96Boards platform, so the user can access that pin
+> using 23 itself in the application and it will run across all supported
+> 96Boards.
 
-...and device path based discovery of the base:
-
-https://github.com/siemens/mraa/commits/jan/queue
-
-And I think that makes good use cases for application-level abstractions like in 
-mraa. You don't want all user having to learn those nasty details, for 
-devicetree, ACPI, and even worse stuff.
+Can you ensure stable numbering when probing order changes, e.g. due to adding 
+an extension board?
 
 Jan
+
+> 
+> That's one of the reason why we prefer MRAA.
+> 
+> Thanks,
+> Mani
+> 
+> [1] https://github.com/intel-iot-devkit/mraa/blob/master/src/arm/96boards.c#L75
+> 
+>> -- 
+>> With Best Regards,
+>> Andy Shevchenko
 
 -- 
 Siemens AG, Corporate Technology, CT RDA IOT SES-DE
