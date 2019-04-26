@@ -2,183 +2,242 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE4AC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3CBC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CDC2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7F3214AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:31:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="nB+PjGkc"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="bYRJhUhB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfDZUbS (ORCPT
+        id S1726754AbfDZUbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 16:31:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43754 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfDZUbS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 16:31:18 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z9so2119751pgu.10
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 13:31:17 -0700 (PDT)
+        Fri, 26 Apr 2019 16:31:46 -0400
+Received: from mail-eopbgr690081.outbound.protection.outlook.com ([40.107.69.81]:30790
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726378AbfDZUbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 16:31:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NRhCrgdcVtWSzkm+pdTS9sMArbFGolgpvwXOxwSyggQ=;
-        b=nB+PjGkczsije8B8z+PDeI9W+4LEbce9e8Ktw9RPJx6QlQnXgZNKNdCKnWfM9DMk3m
-         E1pA9YyO6kCQskSJNpGC3FBzccvhaYYzoyaUvO3uyAbu/miryUuxnj4OrZeYxXF3NIlP
-         ffFU4pOj4trayV/gF0F/7yqY/xaDmLZGgogpk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NRhCrgdcVtWSzkm+pdTS9sMArbFGolgpvwXOxwSyggQ=;
-        b=ChzpVRY1ZP5n4tceypJSI8SaOAgzTHwFKt0mo2Q9elAaRuuQVZQqvyT+KUe8qpSRBr
-         aGgoC/ZZ4eRanDz60ABcsTQMTWmtQjz3Np1mZL99O54KucI/KeEykzbM3P20vh74/K4Y
-         iytMVJMhH73LuyMvqBs9pqkM0QbtzFir+HCCS8hhZ4ZHqe65sRc6LwWiFXodtRXtBLyF
-         TPcEuk/zcnKYRzW8v62Okig0ADMtb32KEFZjU2HTZ9LixcxXIDHnDYpdwz2AZuU9LclF
-         Ppfphbx4ZmFinOkSFLSXAlugNgLK0xQeBysO0oyAEyJXyrolQ/0mB0D01l07p1/MKMhf
-         EUpg==
-X-Gm-Message-State: APjAAAXTnqg2/OW/71lAUwJJEIE+zGHDk1i75Hc8BCJ32ToS/iumlPzC
-        uttrPkLc8pckRK1/WTLXqIfQHg==
-X-Google-Smtp-Source: APXvYqx7JKRqVJbHdVSOARDb9TZX4H+2KvxT6GNyldalr3zRo6Yhd5tScsXzT46pEn7Da5c6mYKQqw==
-X-Received: by 2002:a63:6e01:: with SMTP id j1mr45913798pgc.442.1556310676949;
-        Fri, 26 Apr 2019 13:31:16 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id u17sm35108711pfn.19.2019.04.26.13.31.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 13:31:15 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 16:31:14 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
-        Jann Horn <jann@thejh.net>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Michal Hocko <mhocko@suse.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Sandeep Patil <sspatil@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Suren Baghdasaryan <surenb@google.com>,
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1AlyYZmvBYI7NHR8wuYWjdUyI0f6e1UpU6J7jGNHW4I=;
+ b=bYRJhUhBUfllq2EArIqQq9JbKubHKIppNxZER5P0kCSZce39U7NKLEEctdHJTgDErdVhejlwwl0k3ePtwwWBrOIqh2JwZiXEpRHCh3upJq48Y9IUlrl/6iKyKoiz2M5AvPQedyrMDJNQvquc1OgN44f4ONvv8kg8q8C1+R0mLao=
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
+ DM6PR12MB3388.namprd12.prod.outlook.com (20.178.198.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.13; Fri, 26 Apr 2019 20:31:41 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::c96d:c1dd:fd7a:ffd6]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::c96d:c1dd:fd7a:ffd6%4]) with mapi id 15.20.1835.010; Fri, 26 Apr 2019
+ 20:31:41 +0000
+From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tim Murray <timmurray@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [PATCH v1 2/2] Add selftests for pidfd polling
-Message-ID: <20190426203114.GA185553@google.com>
-References: <20190425190010.46489-1-joel@joelfernandes.org>
- <20190425190010.46489-2-joel@joelfernandes.org>
- <20190425212917.yotnir4uqgpnh764@brauner.io>
- <CAKOZueuPeqnWVCv8NnQNyStWBQLybkr2qqtfQ0MjzsfSQDymzg@mail.gmail.com>
- <20190426172602.GD261279@google.com>
- <CAKOZuetFw9MnZCrXbcFTCFD9Jq8bZwzdcEi_OYHMMv2R_sgNNA@mail.gmail.com>
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v1 02/10] KVM: SVM: Add KVM_SEND_UPDATE_DATA command
+Thread-Topic: [RFC PATCH v1 02/10] KVM: SVM: Add KVM_SEND_UPDATE_DATA command
+Thread-Index: AQHU+rgvkOdJQA6hTESs9qid2il0iKZO6KeA
+Date:   Fri, 26 Apr 2019 20:31:41 +0000
+Message-ID: <c0cf8d9b-4b47-f578-bc51-29739a3c2f8d@amd.com>
+References: <20190424160942.13567-1-brijesh.singh@amd.com>
+ <20190424160942.13567-3-brijesh.singh@amd.com>
+In-Reply-To: <20190424160942.13567-3-brijesh.singh@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0201CA0067.namprd02.prod.outlook.com
+ (2603:10b6:803:20::29) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:182::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.78.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 562f23ae-a4bf-4b9d-8d11-08d6ca8630dc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3388;
+x-ms-traffictypediagnostic: DM6PR12MB3388:
+x-microsoft-antispam-prvs: <DM6PR12MB33880C71109A902D97E444C6EC3E0@DM6PR12MB3388.namprd12.prod.outlook.com>
+x-forefront-prvs: 001968DD50
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(346002)(366004)(376002)(189003)(199004)(186003)(14454004)(8936002)(52116002)(446003)(31696002)(110136005)(72206003)(81156014)(8676002)(81166006)(486006)(476003)(478600001)(54906003)(2616005)(71190400001)(99286004)(71200400001)(31686004)(73956011)(316002)(66066001)(6512007)(66476007)(66556008)(64756008)(66946007)(4326008)(53936002)(86362001)(66574012)(6246003)(66446008)(11346002)(6506007)(386003)(97736004)(25786009)(76176011)(7416002)(36756003)(53546011)(14444005)(102836004)(68736007)(256004)(305945005)(7736002)(5660300002)(26005)(229853002)(2906002)(2501003)(6436002)(6486002)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3388;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nsKcs/rNEyo8R4twCAUzE4LgwjvbZteGI8apSNfimHDI/0j5f4IezN00lQHJwpErTXBm9o9TcuxTiRDju43gw2riuZfSaaNU2ZsVOio6esProI39ApYUNDlWARkfbNRJxCiHluKCejypLTmo8WgwCmJjQ/13kH57DWDJ4B+7ZXcaki47QhUAD5J+2/0Dlntgrpy+Anh0A6xmMWv3Exuv2TRqKs31eKsaDethyIhos0M+qh5CjrzbY+DTnWqPygmOOpjUzg1mGtdyV3ROD0a8yiEbfo5AqnmeFqscZxyoGgEsg3nljPLvVKvdQfqFDgaLG3khgEPD6huP/EW6AjcFZ1Pq5e0oIM1siWtHoMZQbfAHlkXuwI2oZydu8lCslWi/KoOqu0KIpnZwHcbaIN6opbhaECRqLhP0iNPfi+SNl08=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7983347A5E797A48AC78F233FCDD4471@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKOZuetFw9MnZCrXbcFTCFD9Jq8bZwzdcEi_OYHMMv2R_sgNNA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 562f23ae-a4bf-4b9d-8d11-08d6ca8630dc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2019 20:31:41.7065
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3388
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 12:35:40PM -0700, Daniel Colascione wrote:
-> On Fri, Apr 26, 2019 at 10:26 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > On Thu, Apr 25, 2019 at 03:07:48PM -0700, Daniel Colascione wrote:
-> > > On Thu, Apr 25, 2019 at 2:29 PM Christian Brauner <christian@brauner.io> wrote:
-> > > > This timing-based testing seems kinda odd to be honest. Can't we do
-> > > > something better than this?
-> > >
-> > > Agreed. Timing-based tests have a substantial risk of becoming flaky.
-> > > We ought to be able to make these tests fully deterministic and not
-> > > subject to breakage from odd scheduling outcomes. We don't have
-> > > sleepable events for everything, granted, but sleep-waiting on a
-> > > condition with exponential backoff is fine in test code. In general,
-> > > if you start with a robust test, you can insert a sleep(100) anywhere
-> > > and not break the logic. Violating this rule always causes pain sooner
-> > > or later.
-> >
-> > I prefer if you can be more specific about how to redesign the test. Please
-> > go through the code and make suggestions there. The tests have not been flaky
-> > in my experience.
-> 
-> You've been running them in an ideal environment.
-
-One would hope for a reliable test environment.
-
-> > In this case, we want to make sure that the poll unblocks at the right "time"
-> > that is when the non-leader thread exits, and not when the leader thread
-> > exits (test 1), or when the non-leader thread exits and not when the same
-> > non-leader previous did an execve (test 2).
-> 
-> Instead of sleeping, you want to wait for some condition. Right now,
-> in a bunch of places, the test does something like this:
-> 
-> do_something()
-> sleep(SOME_TIMEOUT)
-> check(some_condition())
-
-No. I don't have anything like "some_condition()". My some_condition() is
-just the difference in time.
-
-> 
-> You can replace each of these clauses with something like this:
-> 
-> do_something()
-> start_time = now()
-> while(!some_condition() && now() - start_time < LONG_TIMEOUT)
->   sleep(SHORT_DELAY)
-> check(some_condition())
-> 
-> This way, you're insensitive to timing, up to LONG_TIMEOUT (which can
-> be something like a minute). Yes, you can always write
-> sleep(LARGE_TIMEOUT) instead, but a good, robust value of LONG_TIMEOUT
-> (which should be tens of seconds) would make the test take far too
-> long to run in the happy case.
-
-Yes, but try implementing some_condition()  :-). It is easy to talk in the
-abstract, I think it would be more productive if you can come up with an
-implementation/patchh of the test itself and send a patch for that. I know
-you wrote some pseudocode below, but it is a complex reimplementation that I
-don't think will make the test more robust. I mean reading /proc/pid stat?
-yuck :) You are welcome to send a patch though if you have a better
-implementation.
-
-> Note that this code is fine:
-> 
-> check(!some_condition())
-> sleep(SOME_REASONABLE_TIMEOUT)
-> check(!some_condition())
-> 
-> It's okay to sleep for a little while and check that something did
-> *not* happen, but it's not okay for the test to *fail* due to
-> scheduling delays. The difference is that
-
-As I said, multi-second scheduling delay are really unacceptable anyway. I
-bet many kselftest may fail on a "bad" system like that way, that does not
-mean the test is flaky. If there are any reports in the future that the test
-fails or is flaky, I am happy to address them at that time. The tests work
-and catch bugs reliably as I have seen. We could also make the test task as
-RT if scheduling class is a concern.
-
-I don't think its worth bikeshedding about hypothetical issues.
-
-thanks,
-
- - Joel
-
+T24gNC8yNC8xOSAxMToxMCBBTSwgU2luZ2gsIEJyaWplc2ggd3JvdGU6DQo+IFRoZSBjb21tYW5k
+IGlzIHVzZWQgZm9yIGVuY3J5cHRpbmcgdGhlIGd1ZXN0IG1lbW9yeSByZWdpb24gdXNpbmcgdGhl
+IGVuY3J5cHRpb24NCj4gY29udGV4dCBjcmVhdGVkIHdpdGggS1ZNX1NFVl9TRU5EX1NUQVJULg0K
+PiANCj4gQ2M6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPg0KPiBDYzogSW5n
+byBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+DQo+IENjOiAiSC4gUGV0ZXIgQW52aW4iIDxocGFA
+enl0b3IuY29tPg0KPiBDYzogUGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4NCj4g
+Q2M6ICJSYWRpbSBLcsSNbcOhxZkiIDxya3JjbWFyQHJlZGhhdC5jb20+DQo+IENjOiBKb2VyZyBS
+b2VkZWwgPGpvcm9AOGJ5dGVzLm9yZz4NCj4gQ2M6IEJvcmlzbGF2IFBldGtvdiA8YnBAc3VzZS5k
+ZT4NCj4gQ2M6IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5QGFtZC5jb20+DQo+IENjOiB4
+ODZAa2VybmVsLm9yZw0KPiBDYzoga3ZtQHZnZXIua2VybmVsLm9yZw0KPiBDYzogbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZw0KPiBTaWduZWQtb2ZmLWJ5OiBCcmlqZXNoIFNpbmdoIDxicmlq
+ZXNoLnNpbmdoQGFtZC5jb20+DQo+IC0tLQ0KPiAgLi4uL3ZpcnR1YWwva3ZtL2FtZC1tZW1vcnkt
+ZW5jcnlwdGlvbi5yc3QgICAgIHwgIDIzICsrKysNCj4gIGFyY2gveDg2L2t2bS9zdm0uYyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8IDEyOCArKysrKysrKysrKysrKysrKy0NCj4gIGluY2x1
+ZGUvdWFwaS9saW51eC9rdm0uaCAgICAgICAgICAgICAgICAgICAgICB8ICAgOSArKw0KPiAgMyBm
+aWxlcyBjaGFuZ2VkLCAxNTcgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2FtZC1tZW1vcnktZW5jcnlwdGlv
+bi5yc3QgYi9Eb2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2FtZC1tZW1vcnktZW5jcnlwdGlvbi5y
+c3QNCj4gaW5kZXggMzQwYWM0Zjg3MzIxLi5hMDIwOGUxNzE0ODkgMTAwNjQ0DQo+IC0tLSBhL0Rv
+Y3VtZW50YXRpb24vdmlydHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdA0KPiArKysg
+Yi9Eb2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2FtZC1tZW1vcnktZW5jcnlwdGlvbi5yc3QNCj4g
+QEAgLTI2Miw2ICsyNjIsMjkgQEAgUmV0dXJuczogMCBvbiBzdWNjZXNzLCAtbmVnYXRpdmUgb24g
+ZXJyb3INCj4gICAgICAgICAgICAgICAgICBfX3UzMiBhbWRfY2VydF9sZW47DQo+ICAgICAgICAg
+IH07DQo+ICANCj4gKzExLiBLVk1fU0VWX1NFTkRfVVBEQVRFX0RBVEENCj4gKy0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0NCj4gKw0KPiArVGhlIEtWTV9TRVZfU0VORF9VUERBVEVfREFUQSBj
+b21tYW5kIGNhbiBiZSB1c2VkIGJ5IHRoZSBoeXBlcnZpc29yIHRvIGVuY3J5cHQgdGhlDQo+ICtv
+dXRnb2luZyBndWVzdCBtZW1vcnkgcmVnaW9uIHdpdGggZW5jcnlwdGlvbiBjb250ZXh0IGNyZWF0
+aW5nIHVzaW5nIEtWTV9TRVZfU0VORF9TVEFSVC4NCg0Kd2l0aCB0aGUgZW5jcnlwdGlvbiBjb250
+ZXh0IGNyZWF0ZWQgdXNpbmcuLi4NCg0KPiArDQo+ICtQYXJhbWV0ZXJzIChpbik6IHN0cnVjdCBr
+dm1fc2V2X3NlbmRfdXBkYXRlX2RhdGENCj4gKw0KPiArUmV0dXJuczogMCBvbiBzdWNjZXNzLCAt
+bmVnYXRpdmUgb24gZXJyb3INCj4gKw0KPiArOjoNCj4gKw0KPiArICAgICAgICBzdHJ1Y3Qga3Zt
+X3Nldl9sYXVuY2hfc2VuZF91cGRhdGVfZGF0YSB7DQo+ICsgICAgICAgICAgICAgICAgX191NjQg
+aGRyX3VhZGRyOyAgICAgICAgLyogdXNlcnNwYWNlIGFkZHJlc3MgY29udGFpbmluZyB0aGUgcGFj
+a2V0IGhlYWRlciAqLw0KPiArICAgICAgICAgICAgICAgIF9fdTMyIGhkcl9sZW47DQo+ICsNCj4g
+KyAgICAgICAgICAgICAgICBfX3U2NCBndWVzdF91YWRkcjsgICAgICAvKiB0aGUgc291cmNlIG1l
+bW9yeSByZWdpb24gdG8gYmUgZW5jcnlwdGVkICovDQo+ICsgICAgICAgICAgICAgICAgX191MzIg
+Z3Vlc3RfbGVuOw0KPiArDQo+ICsgICAgICAgICAgICAgICAgX191NjQgdHJhbnNfdWFkZHI7ICAg
+ICAgLyogdGhlIGRlc3RpdGlvbiBtZW1vcnkgcmVnaW9uICAqLw0KPiArICAgICAgICAgICAgICAg
+IF9fdTMyIHRyYW5zX2xlbjsNCj4gKyAgICAgICAgfTsNCj4gKw0KPiAgUmVmZXJlbmNlcw0KPiAg
+PT09PT09PT09PQ0KPiAgDQo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vc3ZtLmMgYi9hcmNo
+L3g4Ni9rdm0vc3ZtLmMNCj4gaW5kZXggNGMyYTIyNWJhNTQ2Li5hMWNmZDM2ZDYxOTUgMTAwNjQ0
+DQo+IC0tLSBhL2FyY2gveDg2L2t2bS9zdm0uYw0KPiArKysgYi9hcmNoL3g4Ni9rdm0vc3ZtLmMN
+Cj4gQEAgLTQxOCw2ICs0MTgsNyBAQCBlbnVtIHsNCj4gIA0KPiAgc3RhdGljIHVuc2lnbmVkIGlu
+dCBtYXhfc2V2X2FzaWQ7DQo+ICBzdGF0aWMgdW5zaWduZWQgaW50IG1pbl9zZXZfYXNpZDsNCj4g
+K3N0YXRpYyB1bnNpZ25lZCBsb25nIG1lX21hc2s7DQoNCnNldl9tZV9tYXNrID8NCg0KPiAgc3Rh
+dGljIHVuc2lnbmVkIGxvbmcgKnNldl9hc2lkX2JpdG1hcDsNCj4gICNkZWZpbmUgX19zbWVfcGFn
+ZV9wYSh4KSBfX3NtZV9zZXQocGFnZV90b19wZm4oeCkgPDwgUEFHRV9TSElGVCkNCj4gIA0KPiBA
+QCAtMTIxNiwxNSArMTIxNywyMSBAQCBzdGF0aWMgaW50IGF2aWNfZ2FfbG9nX25vdGlmaWVyKHUz
+MiBnYV90YWcpDQo+ICBzdGF0aWMgX19pbml0IGludCBzZXZfaGFyZHdhcmVfc2V0dXAodm9pZCkN
+Cj4gIHsNCj4gIAlzdHJ1Y3Qgc2V2X3VzZXJfZGF0YV9zdGF0dXMgKnN0YXR1czsNCj4gKwlpbnQg
+ZWF4LCBlYng7DQo+ICAJaW50IHJjOw0KPiAgDQo+IC0JLyogTWF4aW11bSBudW1iZXIgb2YgZW5j
+cnlwdGVkIGd1ZXN0cyBzdXBwb3J0ZWQgc2ltdWx0YW5lb3VzbHkgKi8NCj4gLQltYXhfc2V2X2Fz
+aWQgPSBjcHVpZF9lY3goMHg4MDAwMDAxRik7DQo+ICsJLyoNCj4gKwkgKiBRdWVyeSB0aGUgbWVt
+b3J5IGVuY3J5cHRpb24gaW5mb3JtYXRpb24uDQo+ICsJICogIEVCWDogIEJpdCAwOjUgUGFnZXRh
+YmxlIGJpdCBwb3NpdGlvbiB1c2VkIHRvIGluZGljYXRlIGVuY3J5cHRpb24gKGFrYSBDYml0KS4N
+Cj4gKwkgKiAgRUNYOiAgTWF4aW11bSBudW1iZXIgb2YgZW5jcnlwdGVkIGd1ZXN0cyBzdXBwb3J0
+ZWQgc2ltdWx0YW5lb3VzbHkuDQo+ICsJICogIEVEWDogIE1pbmltdW0gQVNJRCB2YWx1ZSB0aGF0
+IHNob3VsZCBiZSB1c2VkIGZvciBTRVYgZ3Vlc3QuDQo+ICsJICovDQo+ICsJY3B1aWQoMHg4MDAw
+MDAxZiwgJmVheCwgJmVieCwgJm1heF9zZXZfYXNpZCwgJm1pbl9zZXZfYXNpZCk7DQo+ICANCj4g
+IAlpZiAoIW1heF9zZXZfYXNpZCkNCj4gIAkJcmV0dXJuIDE7DQo+ICANCj4gLQkvKiBNaW5pbXVt
+IEFTSUQgdmFsdWUgdGhhdCBzaG91bGQgYmUgdXNlZCBmb3IgU0VWIGd1ZXN0ICovDQo+ICsJbWVf
+bWFzayA9IDFVTCA8PCAoZWJ4ICYgMHgzZik7DQo+ICAJbWluX3Nldl9hc2lkID0gY3B1aWRfZWR4
+KDB4ODAwMDAwMUYpOw0KDQpZb3UgY2FuIHJlbW92ZSB0aGlzIHNpbmNlIHlvdSBvYnRhaW5lZCBp
+dCB3aXRoIHRoZSBjcHVpZCgpIGNhbGwgYWJvdmUuDQoNCj4gIA0KPiAgCS8qIEluaXRpYWxpemUg
+U0VWIEFTSUQgYml0bWFwICovDQo+IEBAIC03MDUzLDYgKzcwNjAsMTE4IEBAIHN0YXRpYyBpbnQg
+c2V2X3NlbmRfc3RhcnQoc3RydWN0IGt2bSAqa3ZtLCBzdHJ1Y3Qga3ZtX3Nldl9jbWQgKmFyZ3Ap
+DQo+ICAJcmV0dXJuIHJldDsNCj4gIH0NCj4gIA0KPiArc3RhdGljIGludCBzZXZfc2VuZF91cGRh
+dGVfZGF0YShzdHJ1Y3Qga3ZtICprdm0sIHN0cnVjdCBrdm1fc2V2X2NtZCAqYXJncCkNCj4gK3sN
+Cj4gKwlzdHJ1Y3Qga3ZtX3Nldl9pbmZvICpzZXYgPSAmdG9fa3ZtX3N2bShrdm0pLT5zZXZfaW5m
+bzsNCj4gKwlzdHJ1Y3Qgc2V2X2RhdGFfc2VuZF91cGRhdGVfZGF0YSAqZGF0YTsNCj4gKwlzdHJ1
+Y3Qga3ZtX3Nldl9zZW5kX3VwZGF0ZV9kYXRhIHBhcmFtczsNCj4gKwl2b2lkICpoZHIgPSBOVUxM
+LCAqdHJhbnNfZGF0YSA9IE5VTEw7DQo+ICsJc3RydWN0IHBhZ2UgKipndWVzdF9wYWdlID0gTlVM
+TDsNCj4gKwl1bnNpZ25lZCBsb25nIG47DQo+ICsJaW50IHJldCwgb2Zmc2V0Ow0KPiArDQo+ICsJ
+aWYgKCFzZXZfZ3Vlc3Qoa3ZtKSkNCj4gKwkJcmV0dXJuIC1FTk9UVFk7DQo+ICsNCj4gKwlpZiAo
+Y29weV9mcm9tX3VzZXIoJnBhcmFtcywgKHZvaWQgX191c2VyICopKHVpbnRwdHJfdClhcmdwLT5k
+YXRhLA0KPiArCQkJc2l6ZW9mKHN0cnVjdCBrdm1fc2V2X3NlbmRfdXBkYXRlX2RhdGEpKSkNCj4g
+KwkJcmV0dXJuIC1FRkFVTFQ7DQo+ICsNCj4gKwlkYXRhID0ga3phbGxvYyhzaXplb2YoKmRhdGEp
+LCBHRlBfS0VSTkVMKTsNCj4gKwlpZiAoIWRhdGEpDQo+ICsJCXJldHVybiAtRU5PTUVNOw0KPiAr
+DQo+ICsJLyogdXNlcnNwYWNlIHdhbnRzIHRvIHF1ZXJ5IGVpdGhlciBoZWFkZXIgb3IgdHJhbnMg
+bGVuZ3RoICovDQo+ICsJaWYgKCFwYXJhbXMudHJhbnNfbGVuIHx8ICFwYXJhbXMuaGRyX2xlbikN
+Cj4gKwkJZ290byBjbWQ7DQo+ICsNCj4gKwlyZXQgPSAtRUlOVkFMOw0KPiArCWlmICghcGFyYW1z
+LnRyYW5zX3VhZGRyIHx8ICFwYXJhbXMuZ3Vlc3RfdWFkZHIgfHwNCj4gKwkgICAgIXBhcmFtcy5n
+dWVzdF9sZW4gfHwgIXBhcmFtcy5oZHJfdWFkZHIpDQo+ICsJCWdvdG8gZV9mcmVlOw0KPiArDQo+
+ICsJLyogQ2hlY2sgaWYgd2UgYXJlIGNyb3NzaW5nIHRoZSBwYWdlIGJvdW5kcnkgKi8NCj4gKwly
+ZXQgPSAtRUlOVkFMOw0KPiArCW9mZnNldCA9IHBhcmFtcy5ndWVzdF91YWRkciAmIChQQUdFX1NJ
+WkUgLSAxKTsNCj4gKwlpZiAoKHBhcmFtcy5ndWVzdF9sZW4gKyBvZmZzZXQgPiBQQUdFX1NJWkUp
+KQ0KPiArCQlnb3RvIGVfZnJlZTsNCj4gKw0KPiArCXJldCA9IC1FTk9NRU07DQo+ICsJaGRyID0g
+a21hbGxvYyhwYXJhbXMuaGRyX2xlbiwgR0ZQX0tFUk5FTCk7DQo+ICsJaWYgKCFoZHIpDQo+ICsJ
+CWdvdG8gZV9mcmVlOw0KPiArDQo+ICsJZGF0YS0+aGRyX2FkZHJlc3MgPSBfX3BzcF9wYShoZHIp
+Ow0KPiArCWRhdGEtPmhkcl9sZW4gPSBwYXJhbXMuaGRyX2xlbjsNCj4gKw0KPiArCXJldCA9IC1F
+Tk9NRU07DQo+ICsJdHJhbnNfZGF0YSA9IGttYWxsb2MocGFyYW1zLnRyYW5zX2xlbiwgR0ZQX0tF
+Uk5FTCk7DQo+ICsJaWYgKCF0cmFuc19kYXRhKQ0KPiArCQlnb3RvIGVfZnJlZTsNCj4gKw0KPiAr
+CWRhdGEtPnRyYW5zX2FkZHJlc3MgPSBfX3BzcF9wYSh0cmFuc19kYXRhKTsNCj4gKwlkYXRhLT50
+cmFuc19sZW4gPSBwYXJhbXMudHJhbnNfbGVuOw0KPiArDQo+ICsJLyogUGluIGd1ZXN0IG1lbW9y
+eSAqLw0KPiArCXJldCA9IC1FRkFVTFQ7DQo+ICsJZ3Vlc3RfcGFnZSA9IHNldl9waW5fbWVtb3J5
+KGt2bSwgcGFyYW1zLmd1ZXN0X3VhZGRyICYgUEFHRV9NQVNLLA0KPiArCQkJCSAgICBQQUdFX1NJ
+WkUsICZuLCAwKTsNCj4gKwlpZiAoIWd1ZXN0X3BhZ2UpDQo+ICsJCWdvdG8gZV9mcmVlOw0KPiAr
+DQo+ICsJZGF0YS0+Z3Vlc3RfYWRkcmVzcyA9IF9fc21lX3BhZ2VfcGEoZ3Vlc3RfcGFnZVswXSkg
+KyBvZmZzZXQ7DQoNCklmIHRoZSBDLWJpdCBuZWVkcyB0byBiZSBzZXQgcmVnYXJkbGVzcyBiZWxv
+dywgdGhlbiB5b3UgZG9uJ3QgbmVlZCB0aGUNCl9fc21lIHZlcnNpb24gb2YgdGhpcy4NCg0KPiAr
+CWRhdGEtPmd1ZXN0X2xlbiA9IHBhcmFtcy5ndWVzdF9sZW47DQo+ICsNCj4gKwkvKg0KPiArCSAq
+IFRoZSBTRU5EX1VQREFURV9EQVRBIGNvbW1hbmQgcmVxdWlyZXMgQy1iaXQgdG8gYmUgYWx3YXlz
+IHNldC4NCj4gKwkgKiBUaGUgX19zbWVfcGFnZV9wYSgpIHRha2VzIGNhcmUgb2Ygc2V0dGluZyB0
+aGUgQy1iaXQgb25seSB3aGVuIFNNRQ0KPiArCSAqIGlzIGVuYWJsZWQgb24gdGhlIGhvc3QuIEJ1
+dCB3ZSBuZWVkIHRvIHNldCB0aGUgQy1iaXQgcmVnYXJsZXNzIG9mDQoNCnJlZ2FyZGxlc3MNCg0K
+VGhhbmtzLA0KVG9tDQoNCj4gKwkgKiB0aGUgU01FIHN0YXRlLg0KPiArCSAqLw0KPiArCWRhdGEt
+Pmd1ZXN0X2FkZHJlc3MgfD0gbWVfbWFzazsNCj4gKw0KPiArCS8qIGZsdXNoIHRoZSBjYWNoZXMg
+dG8gZW5zdXJlIHRoYXQgRFJBTSBoYXMgcmVjZW50IGNvbnRlbnRzICovDQo+ICsJc2V2X2NsZmx1
+c2hfcGFnZXMoZ3Vlc3RfcGFnZSwgMSk7DQo+ICsNCj4gK2NtZDoNCj4gKwlkYXRhLT5oYW5kbGUg
+PSBzZXYtPmhhbmRsZTsNCj4gKwlyZXQgPSBzZXZfaXNzdWVfY21kKGt2bSwgU0VWX0NNRF9TRU5E
+X1VQREFURV9EQVRBLCBkYXRhLCAmYXJncC0+ZXJyb3IpOw0KPiArDQo+ICsJLyogdXNlcnNwYWNl
+IGFza2VkIGZvciBoZWFkZXIgb3IgdHJhbnMgbGVuZ3RoIGFuZCBGVyByZXNwb25kZWQgd2l0aCBk
+YXRhICovDQo+ICsJaWYgKCFwYXJhbXMudHJhbnNfbGVuIHx8ICFwYXJhbXMuaGRyX2xlbikgew0K
+PiArCQlwYXJhbXMuaGRyX2xlbiA9IGRhdGEtPmhkcl9sZW47DQo+ICsJCXBhcmFtcy50cmFuc19s
+ZW4gPSBkYXRhLT50cmFuc19sZW47DQo+ICsJCWdvdG8gZG9uZTsNCj4gKwl9DQo+ICsNCj4gKwlp
+ZiAocmV0KQ0KPiArCQlnb3RvIGVfdW5waW47DQo+ICsNCj4gKwkvKiBjb3B5IHRyYW5zcG9ydCBi
+dWZmZXIgdG8gdXNlciBzcGFjZSAqLw0KPiArCWlmIChjb3B5X3RvX3VzZXIoKHZvaWQgX191c2Vy
+ICopKHVpbnRwdHJfdClwYXJhbXMudHJhbnNfdWFkZHIsDQo+ICsJCQkgdHJhbnNfZGF0YSwgcGFy
+YW1zLnRyYW5zX2xlbikpIHsNCj4gKwkJcmV0ID0gLUVGQVVMVDsNCj4gKwkJZ290byBlX3VucGlu
+Ow0KPiArCX0NCj4gKw0KPiArCS8qIGNvcHkgcGFja2V0IGhlYWRlciB0byB1c2Vyc3BhY2UgKi8N
+Cj4gKwlpZiAoY29weV90b191c2VyKCh2b2lkIF9fdXNlciAqKSh1aW50cHRyX3QpcGFyYW1zLmhk
+cl91YWRkciwgaGRyLCBwYXJhbXMuaGRyX2xlbikpDQo+ICsJCXJldCA9IC1FRkFVTFQ7DQo+ICsN
+Cj4gK2VfdW5waW46DQo+ICsJc2V2X3VucGluX21lbW9yeShrdm0sIGd1ZXN0X3BhZ2UsIG4pOw0K
+PiArZG9uZToNCj4gKwlpZiAoY29weV90b191c2VyKCh2b2lkIF9fdXNlciAqKSh1aW50cHRyX3Qp
+YXJncC0+ZGF0YSwgJnBhcmFtcywNCj4gKwkJCXNpemVvZihzdHJ1Y3Qga3ZtX3Nldl9zZW5kX3Vw
+ZGF0ZV9kYXRhKSkpDQo+ICsJCXJldCA9IC1FRkFVTFQ7DQo+ICtlX2ZyZWU6DQo+ICsJa2ZyZWUo
+ZGF0YSk7DQo+ICsJa2ZyZWUodHJhbnNfZGF0YSk7DQo+ICsJa2ZyZWUoaGRyKTsNCj4gKw0KPiAr
+CXJldHVybiByZXQ7DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBpbnQgc3ZtX21lbV9lbmNfb3Aoc3Ry
+dWN0IGt2bSAqa3ZtLCB2b2lkIF9fdXNlciAqYXJncCkNCj4gIHsNCj4gIAlzdHJ1Y3Qga3ZtX3Nl
+dl9jbWQgc2V2X2NtZDsNCj4gQEAgLTcwOTcsNiArNzIxNiw5IEBAIHN0YXRpYyBpbnQgc3ZtX21l
+bV9lbmNfb3Aoc3RydWN0IGt2bSAqa3ZtLCB2b2lkIF9fdXNlciAqYXJncCkNCj4gIAljYXNlIEtW
+TV9TRVZfU0VORF9TVEFSVDoNCj4gIAkJciA9IHNldl9zZW5kX3N0YXJ0KGt2bSwgJnNldl9jbWQp
+Ow0KPiAgCQlicmVhazsNCj4gKwljYXNlIEtWTV9TRVZfU0VORF9VUERBVEVfREFUQToNCj4gKwkJ
+ciA9IHNldl9zZW5kX3VwZGF0ZV9kYXRhKGt2bSwgJnNldl9jbWQpOw0KPiArCQlicmVhazsNCj4g
+IAlkZWZhdWx0Og0KPiAgCQlyID0gLUVJTlZBTDsNCj4gIAkJZ290byBvdXQ7DQo+IGRpZmYgLS1n
+aXQgYS9pbmNsdWRlL3VhcGkvbGludXgva3ZtLmggYi9pbmNsdWRlL3VhcGkvbGludXgva3ZtLmgN
+Cj4gaW5kZXggZjQyNTQxOGJlYzEzLi4wYmVlOTFiYmEzMjkgMTAwNjQ0DQo+IC0tLSBhL2luY2x1
+ZGUvdWFwaS9saW51eC9rdm0uaA0KPiArKysgYi9pbmNsdWRlL3VhcGkvbGludXgva3ZtLmgNCj4g
+QEAgLTE1MzIsNiArMTUzMiwxNSBAQCBzdHJ1Y3Qga3ZtX3Nldl9zZW5kX3N0YXJ0IHsNCj4gIAlf
+X3UzMiBzZXNzaW9uX2xlbjsNCj4gIH07DQo+ICANCj4gK3N0cnVjdCBrdm1fc2V2X3NlbmRfdXBk
+YXRlX2RhdGEgew0KPiArCV9fdTY0IGhkcl91YWRkcjsNCj4gKwlfX3UzMiBoZHJfbGVuOw0KPiAr
+CV9fdTY0IGd1ZXN0X3VhZGRyOw0KPiArCV9fdTMyIGd1ZXN0X2xlbjsNCj4gKwlfX3U2NCB0cmFu
+c191YWRkcjsNCj4gKwlfX3UzMiB0cmFuc19sZW47DQo+ICt9Ow0KPiArDQo+ICAjZGVmaW5lIEtW
+TV9ERVZfQVNTSUdOX0VOQUJMRV9JT01NVQkoMSA8PCAwKQ0KPiAgI2RlZmluZSBLVk1fREVWX0FT
+U0lHTl9QQ0lfMl8zCQkoMSA8PCAxKQ0KPiAgI2RlZmluZSBLVk1fREVWX0FTU0lHTl9NQVNLX0lO
+VFgJKDEgPDwgMikNCj4gDQo=
