@@ -2,104 +2,156 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17096C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4959AC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5086206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D31D206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfDZO43 (ORCPT
+        id S1726442AbfDZO5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:56:29 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:53081 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfDZO43 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:56:29 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MiMIY-1gpuFN2ziA-00fWM8; Fri, 26 Apr 2019 16:56:23 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Russell King <linux@armlinux.org.uk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-tegra@vger.kernel.org,
+        Fri, 26 Apr 2019 10:57:36 -0400
+Received: from mga02.intel.com ([134.134.136.20]:29172 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbfDZO5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 10:57:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 07:57:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,397,1549958400"; 
+   d="scan'208";a="341076653"
+Received: from lxy-dell.sh.intel.com ([10.239.159.145])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Apr 2019 07:57:33 -0700
+Message-ID: <d5e3fea7e1bb58ae24ba92056ff61ada52c28b65.camel@linux.intel.com>
+Subject: Re: [PATCH v2] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Like Xu <like.xu@linux.intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] amba: tegra-ahb: mark PM functions as __maybe_unused
-Date:   Fri, 26 Apr 2019 16:56:03 +0200
-Message-Id: <20190426145617.2342824-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:sOT3r6fkwRywuIzcyDd5YHhYsKXG8TCD1p+LxyP5gEak1TT7Ua4
- 28esKCt19z9DcJNB8IwAZJBnmgdQTuaj2KbfxqExadgrpi+NQKv5Bc8DCc5QlxEzy2y4TVQ
- iLT4kitQLxSAV2QIbwH3TxzxHAmlt3/+XjrwYD1YJ1+bITyFvVMlOyeSPAEvKcItrPMC4+n
- HEzOqlyLHeRyPa5zrG1AQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yjC718efDKQ=:2BlhEIXX9lB49C0yktOLhd
- CaK7PnyEdKOtSA4EpiLHcQglg9Eim5sHI6u6Zm3mZyu72S18EnbCDCXj9TJ8PoYTJWG2yQUQ+
- 2IKLjgcmYDJRNi3Ye3J2OPPqlyNomLa/HJ3GbJJpvbF/fZdFq+fw5eJRmLdv1cJEhqI2+/oxR
- 5TMfzRiIv7XKkAJMQX4ZGEiSCpHaucTONqGi1KfwKZPiSqr4uko3sPhLmZnTuOWqDxyoTPkb2
- 8AHqelY1PEjhgmMT3l+aCXMRpAnX31U6TTIa7ZwP+m5QN9Vrz6OW4x+nxZgYrnWW/j0YHNtRn
- oLrgcUlyIGqpAjmgi23yZwPlMXFKS8iYyL1Pl4iU34U+gfCuv3ds5TtgxkpWa1ZV6htKrEjbg
- BbwDnc05n3YiWiH8q6nXuPEUQDq+DYJLbE7sPvR6TxIT3S3fTdnnwyPiahIj5J5LvHfBmUu3W
- yTMXURDLV+FYy/2HPckyzn+gNdNazxt8SQV2ZQHSVebYexmNJ2d7TfsDFyO69EkR+z/6aw/1o
- 9cgbF4ImsnoKgtjsx/IVOTG/ULxx8/BHiiTpOje8r+mt42a/Teown/xF7zZi3EoHA4OrgSyNB
- 2A6V5eVRIO8axEaMxPo7w2VHcE92i1f2L2io0NLcq3i/Q+rF0/RLlZQBGAB6K6WI59RSVQadJ
- g+zGoNwCAImzRgASsxmImFTOfXrt3AuheNTu9qBsfnj+hSbI7RaegM0y7mBpDzGbVWmRdOJ2K
- sq85zbsY+gV5Vv7PDijtyicmlDyTSBFsBKcxqw==
+Date:   Fri, 26 Apr 2019 22:54:19 +0800
+In-Reply-To: <20190426141346.GA4140@linux.intel.com>
+References: <1556248672-6469-1-git-send-email-like.xu@linux.intel.com>
+         <20190426141346.GA4140@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns about an unused variable when CONFIG_PM is disabled,
-since it is only referenced from an #ifdef:
+On Fri, 2019-04-26 at 07:13 -0700, Sean Christopherson wrote:
+> On Fri, Apr 26, 2019 at 11:17:52AM +0800, Like Xu wrote:
+> > Some new systems have multiple software-visible die within each package.
+> > Add support to expose Intel V2 Extended Topology Enumeration Leaf CPUID.1F.
+> > 
+> > Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> > Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> > Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> > ---
+> > 
+> > ==changelog==
+> > v2:
+> > - Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
+> > - Add comment to handle 0x1f anf 0xb in common code
+> > - Reduce check time in a descending-break style
+> > 
+> > v1: https://lkml.org/lkml/2019/4/22/28
+> > 
+> >  arch/x86/kvm/cpuid.c | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index fd39516..f9b529e 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -425,6 +425,11 @@ static inline int __do_cpuid_ent(struct
+> > kvm_cpuid_entry2 *entry, u32 function,
+> >  
+> >  	switch (function) {
+> >  	case 0:
+> > +		/* Check if the cpuid leaf 0x1f is actually implemented */
+> > +		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
+> 
+> Restricting the check to bits 15:0 is unnecessary, the SDM explicitly
+> states that EBX will be zero for invalid sub-leaves:
+> 
+>   For sub-leaves that return an invalid level-type of 0 in ECX[15:8];
+>   EAX and EBX will return 0.
+> 
+> This code is merely checking for the existence of CPUID.1F, nothing will
+> break if future CPUs provide additional information, i.e. checking for a
+> valid sub-leaf is sufficient.
+> 
+> That being said, if you insist on restricting the check to non-reserved
+> bits then I think the earlier suggestion of "cpuid_ecx(0x1f) & 0x0000ff00"
+> makes more sense since the SDM clearly intends ECX to be used to detect
+> valid vs. invalid levels.
 
-drivers/amba/tegra-ahb.c:97:18: error: variable 'tegra_ahb_gizmo' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+Here we use CPUID.1F_0:EBX[15:0] to check the existence, not the output of
+ECX[15:8], which is following the Intel SDM.
 
-Rather than trying to get the #ifdef right, remove it and
-use __maybe_unused here, which is less error prone.
+Specifically, in page 3-222 Vol.2A of latest SDM publish on January 2019, there
+is such description of Input EAX = 1FH:
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/amba/tegra-ahb.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+   When CPUID executes with EAX set to 1FH, the processor returns information
+   about extended topology enumeration data. Software must detect the presence
+   of CPUID leaf 1FH by verifying (a) the highest leaf index supported by CPUID
+   is >= 1FH, and (b) CPUID.1FH:EBX[15:0] reports a non-zero value.
 
-diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
-index b0b688c481e8..3751d811be39 100644
---- a/drivers/amba/tegra-ahb.c
-+++ b/drivers/amba/tegra-ahb.c
-@@ -170,8 +170,7 @@ int tegra_ahb_enable_smmu(struct device_node *dn)
- EXPORT_SYMBOL(tegra_ahb_enable_smmu);
- #endif
- 
--#ifdef CONFIG_PM
--static int tegra_ahb_suspend(struct device *dev)
-+static int __maybe_unused tegra_ahb_suspend(struct device *dev)
- {
- 	int i;
- 	struct tegra_ahb *ahb = dev_get_drvdata(dev);
-@@ -181,7 +180,7 @@ static int tegra_ahb_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int tegra_ahb_resume(struct device *dev)
-+static int __maybe_unused tegra_ahb_resume(struct device *dev)
- {
- 	int i;
- 	struct tegra_ahb *ahb = dev_get_drvdata(dev);
-@@ -190,7 +189,6 @@ static int tegra_ahb_resume(struct device *dev)
- 		gizmo_writel(ahb, ahb->ctx[i], tegra_ahb_gizmo[i]);
- 	return 0;
- }
--#endif
- 
- static UNIVERSAL_DEV_PM_OPS(tegra_ahb_pm,
- 			    tegra_ahb_suspend,
--- 
-2.20.0
+And also, I look up the existing codes about initialising topology using leaf
+0xb in kernel. In function detect_extended_topology_early(), it use following
+
+   if (ebx == 0 || (LEAFB_SUBTYPE(ecx) != SMT_TYPE))
+
+to verify whether leaf 0xb is invalid. I think any of them is strong enough to
+verify the leaf 0xb is invalid, so I don't know why it uses both of them.
+
+> > +			entry->eax = 0x1f;
+> > +			break;
+> 
+> I find if/else easier to follow than the separate break, but either option
+> works for me.
+> 		
+> > +		}
+> >  		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+> >  		break;
+> >  	case 1:
+> > @@ -544,7 +549,12 @@ static inline int __do_cpuid_ent(struct
+> > kvm_cpuid_entry2 *entry, u32 function,
+> >  		entry->edx = edx.full;
+> >  		break;
+> >  	}
+> > -	/* function 0xb has additional index. */
+> > +	/*
+> > +	 * Intel documentation states that 0x1f and 0xb have
+> > +	 * identical formats and thus can be handled by common code.
+> > +	 * (Intel SDM Vol. 2A - Instruction Set Reference - CPUID)
+> > +	 */
+> 
+> It's probably safe to assume anyone reading reading this code is already
+> all too aware of Intel's propensity for dumping CPUID enumeration into the
+> CPUID entry in the ISR.  Maybe shorten this to something like:
+> 
+> 	/*
+> 	 * Per Intel's SDM, 0x1f is a superset of 0xb, thus they can be handled
+> 	 * by common code.
+> 	 */
+> 
+> > +	case 0x1f:
+> >  	case 0xb: {
+> >  		int i, level_type;
+> >  
+> > -- 
+> > 1.8.3.1
+> > 
 
