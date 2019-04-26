@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF52C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F082C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2E9206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D81206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271903;
-	bh=HwmCpbZ+UmNqFC7OrmrNL0W5b1KrkSJNxy1iF3mWvqk=;
+	s=default; t=1556271908;
+	bh=hn73MQcyD3HwgSRtAW0hkIZpbsO2IPc2BPNyqQMhdBE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=hBtio7C1piT9YitSjYBchNYdNeYUEMV4cf954rDGeCnHyyDGEo4vD7A74WMwc/x8B
-	 BGilGeZUSZVhJN2xwCGbBvtEX4slc2rGXTRPysy3QdqtZbZY51HCFCQPRX+bRgVmXa
-	 jnmqhOn8qI4QaWXIesluLHA+0i/QP0lZ5X+8ENl8=
+	b=0V26xrgXi6nTqPr5pZjvddUlYupoNngfgil57Hhyq7sJAPTDEKu59UVgsFJ13iqTi
+	 6zvuYH2tq7AJvE8C/tWZAfCxmqeT8dv/vtzhVoNYbiplb9V0Zptq76Kyi45nS3gJYB
+	 4cG74dxCZm27k23XuH0BSYRhNZVHV96RQ+n4P7u0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfDZJpC (ORCPT
+        id S1727373AbfDZJpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:45:02 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53642 "EHLO
+        Fri, 26 Apr 2019 05:45:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53788 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbfDZJpA (ORCPT
+        with ESMTP id S1726324AbfDZJpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:45:00 -0400
+        Fri, 26 Apr 2019 05:45:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=RSjnE2qLZo7Q1TAMcgIM3WoPBmF5lDdPJvqF61tp1BY=; b=D8pnYajQfwLr
-        +62j6guMVus0Cow/JPa31kTVV1+ZaB4NF+33F9ef9W8TPpcHbULIga3sL/hpI59iNiYJwvNCyMpg2
-        XObIKgo5MlVjAGlZK9XbVfWf0xktFOV7zun6tbqvrKuboHgSwwjsIrUhMMX4ja2C44B1p05bTEms5
-        fNrak=;
+        List-Archive; bh=6VYLqXUBVRFyKDbu77wjUX5pAGqZzD8tzYGJB7Olpdg=; b=fxcFAaH7lUZR
+        gtLHjqzlrONj9otE2KjADM4jw5+p8kbVam4pdFF/rxzSSD5XtPW5QAFcWHlb2N8oTehCBSoCXPw5q
+        sI9JGjAvBRYv9ycIm0Pb8pc4NUtELqA/31O7d48mha3FYv8qj8L6j5eTjM56KHLML29bnoDlNfw83
+        0iHD8=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxPb-0003QE-Ff; Fri, 26 Apr 2019 09:44:55 +0000
+        id 1hJxPi-0003QW-2y; Fri, 26 Apr 2019 09:45:02 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 8F714441D3B; Fri, 26 Apr 2019 10:44:54 +0100 (BST)
+        id 1D3A5441D3C; Fri, 26 Apr 2019 10:45:01 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Pascal PAILLET-LME <p.paillet@st.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Pascal Paillet <p.paillet@st.com>
-Subject: Applied "dt-bindings: regulator: Add stm32mp1 pwr regulators" to the regulator tree
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: max8998: Constify regulator_ops" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094454.8F714441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:44:54 +0100 (BST)
+Message-Id: <20190426094501.1D3A5441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:45:01 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt-bindings: regulator: Add stm32mp1 pwr regulators
+   regulator: max8998: Constify regulator_ops
 
 has been applied to the regulator tree at
 
@@ -86,69 +85,51 @@ to this mail.
 Thanks,
 Mark
 
-From c29687c354c58cd56fb2529fb89266c280206cf9 Mon Sep 17 00:00:00 2001
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Date: Mon, 15 Apr 2019 09:17:37 +0000
-Subject: [PATCH] dt-bindings: regulator: Add stm32mp1 pwr regulators
+From 7d695f20c27f33173f2149d4d1c6e994e5c0b08e Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Sun, 14 Apr 2019 20:48:17 +0800
+Subject: [PATCH] regulator: max8998: Constify regulator_ops
 
-Document devicetree bindings for stm32mp1 pwr regulators.
+These regulator_ops variables never need to be modified, make them const so
+compiler can put them to .rodata.
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../regulator/st,stm32mp1-pwr-reg.txt         | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+ drivers/regulator/max8998.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-new file mode 100644
-index 000000000000..e372dd3f0c8a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-@@ -0,0 +1,43 @@
-+STM32MP1 PWR Regulators
-+-----------------------
-+
-+Available Regulators in STM32MP1 PWR block are:
-+  - reg11 for regulator 1V1
-+  - reg18 for regulator 1V8
-+  - usb33 for the swtich USB3V3
-+
-+Required properties:
-+- compatible: Must be "st,stm32mp1,pwr-reg"
-+- list of child nodes that specify the regulator reg11, reg18 or usb33
-+  initialization data for defined regulators. The definition for each of
-+  these nodes is defined using the standard binding for regulators found at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+- vdd-supply: phandle to the parent supply/regulator node for vdd input
-+- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for usb33
-+
-+Example:
-+
-+pwr_regulators: pwr@50001000 {
-+	compatible = "st,stm32mp1,pwr-reg";
-+	reg = <0x50001000 0x10>;
-+	vdd-supply = <&vdd>;
-+	vdd_3v3_usbfs-supply = <&vdd_usb>;
-+
-+	reg11: reg11 {
-+		regulator-name = "reg11";
-+		regulator-min-microvolt = <1100000>;
-+		regulator-max-microvolt = <1100000>;
-+	};
-+
-+	reg18: reg18 {
-+		regulator-name = "reg18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	usb33: usb33 {
-+		regulator-name = "usb33";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
+diff --git a/drivers/regulator/max8998.c b/drivers/regulator/max8998.c
+index 271bb736f3f5..43b69ebd086b 100644
+--- a/drivers/regulator/max8998.c
++++ b/drivers/regulator/max8998.c
+@@ -427,7 +427,7 @@ static int max8998_set_voltage_buck_time_sel(struct regulator_dev *rdev,
+ 	return 0;
+ }
+ 
+-static struct regulator_ops max8998_ldo_ops = {
++static const struct regulator_ops max8998_ldo_ops = {
+ 	.list_voltage		= regulator_list_voltage_linear,
+ 	.map_voltage		= regulator_map_voltage_linear,
+ 	.is_enabled		= max8998_ldo_is_enabled,
+@@ -437,7 +437,7 @@ static struct regulator_ops max8998_ldo_ops = {
+ 	.set_voltage_sel	= max8998_set_voltage_ldo_sel,
+ };
+ 
+-static struct regulator_ops max8998_buck_ops = {
++static const struct regulator_ops max8998_buck_ops = {
+ 	.list_voltage		= regulator_list_voltage_linear,
+ 	.map_voltage		= regulator_map_voltage_linear,
+ 	.is_enabled		= max8998_ldo_is_enabled,
+@@ -448,7 +448,7 @@ static struct regulator_ops max8998_buck_ops = {
+ 	.set_voltage_time_sel	= max8998_set_voltage_buck_time_sel,
+ };
+ 
+-static struct regulator_ops max8998_others_ops = {
++static const struct regulator_ops max8998_others_ops = {
+ 	.is_enabled		= max8998_ldo_is_enabled,
+ 	.enable			= max8998_ldo_enable,
+ 	.disable		= max8998_ldo_disable,
 -- 
 2.20.1
 
