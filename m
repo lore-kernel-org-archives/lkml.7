@@ -4,28 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C021DC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA6BC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1442084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCB92084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfDZHcv (ORCPT
+        id S1726715AbfDZHdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:32:51 -0400
+        Fri, 26 Apr 2019 03:33:00 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29121 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726436AbfDZHcW (ORCPT
+        by vger.kernel.org with ESMTP id S1726316AbfDZHb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:32:22 -0400
+        Fri, 26 Apr 2019 03:31:59 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
  15.0.1156.6; Fri, 26 Apr 2019 00:31:44 -0700
 Received: from sc2-haas01-esx0118.eng.vmware.com (sc2-haas01-esx0118.eng.vmware.com [10.172.44.118])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 0758741298;
-        Fri, 26 Apr 2019 00:31:46 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id AA61841299;
+        Fri, 26 Apr 2019 00:31:45 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -42,11 +43,10 @@ CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <hpa@zytor.com>,
         <ard.biesheuvel@linaro.org>, <kristen@linux.intel.com>,
         <deneen.t.dock@intel.com>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH v5 18/23] bpf: Use vmalloc special flag
-Date:   Thu, 25 Apr 2019 17:11:38 -0700
-Message-ID: <20190426001143.4983-19-namit@vmware.com>
+        Nadav Amit <namit@vmware.com>
+Subject: [PATCH v5 09/23] x86/ftrace: Set trampoline pages as executable
+Date:   Thu, 25 Apr 2019 17:11:29 -0700
+Message-ID: <20190426001143.4983-10-namit@vmware.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426001143.4983-1-namit@vmware.com>
 References: <20190426001143.4983-1-namit@vmware.com>
@@ -59,91 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Since alloc_module() will not set the pages as executable soon, set
+ftrace trampoline pages as executable after they are allocated.
 
-Use new flag VM_FLUSH_RESET_PERMS for handling freeing of special
-permissioned memory in vmalloc and remove places where memory was set RW
-before freeing which is no longer needed. Don't track if the memory is RO
-anymore because it is now tracked in vmalloc.
+For the time being, do not change ftrace to use the text_poke()
+interface. As a result, ftrace still breaks W^X.
 
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- include/linux/filter.h | 17 +++--------------
- kernel/bpf/core.c      |  1 -
- 2 files changed, 3 insertions(+), 15 deletions(-)
+ arch/x86/kernel/ftrace.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 14ec3bdad9a9..7d3abde3f183 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -20,6 +20,7 @@
- #include <linux/set_memory.h>
- #include <linux/kallsyms.h>
- #include <linux/if_vlan.h>
-+#include <linux/vmalloc.h>
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index ef49517f6bb2..53ba1aa3a01f 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -730,6 +730,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	unsigned long end_offset;
+ 	unsigned long op_offset;
+ 	unsigned long offset;
++	unsigned long npages;
+ 	unsigned long size;
+ 	unsigned long retq;
+ 	unsigned long *ptr;
+@@ -762,6 +763,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 		return 0;
  
- #include <net/sch_generic.h>
+ 	*tramp_size = size + RET_SIZE + sizeof(void *);
++	npages = DIV_ROUND_UP(*tramp_size, PAGE_SIZE);
  
-@@ -503,7 +504,6 @@ struct bpf_prog {
- 	u16			pages;		/* Number of allocated pages */
- 	u16			jited:1,	/* Is our filter JIT'ed? */
- 				jit_requested:1,/* archs need to JIT the prog */
--				undo_set_mem:1,	/* Passed set_memory_ro() checkpoint */
- 				gpl_compatible:1, /* Is filter GPL compatible? */
- 				cb_access:1,	/* Is control block accessed? */
- 				dst_needed:1,	/* Do we need dst entry? */
-@@ -733,27 +733,17 @@ bpf_ctx_narrow_access_ok(u32 off, u32 size, u32 size_default)
+ 	/* Copy ftrace_caller onto the trampoline memory */
+ 	ret = probe_kernel_read(trampoline, (void *)start_offset, size);
+@@ -806,6 +808,12 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	/* ALLOC_TRAMP flags lets us know we created it */
+ 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
  
- static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
- {
--	fp->undo_set_mem = 1;
-+	set_vm_flush_reset_perms(fp);
- 	set_memory_ro((unsigned long)fp, fp->pages);
- }
- 
--static inline void bpf_prog_unlock_ro(struct bpf_prog *fp)
--{
--	if (fp->undo_set_mem)
--		set_memory_rw((unsigned long)fp, fp->pages);
--}
--
- static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
- {
-+	set_vm_flush_reset_perms(hdr);
- 	set_memory_ro((unsigned long)hdr, hdr->pages);
- 	set_memory_x((unsigned long)hdr, hdr->pages);
- }
- 
--static inline void bpf_jit_binary_unlock_ro(struct bpf_binary_header *hdr)
--{
--	set_memory_rw((unsigned long)hdr, hdr->pages);
--}
--
- static inline struct bpf_binary_header *
- bpf_jit_binary_hdr(const struct bpf_prog *fp)
- {
-@@ -789,7 +779,6 @@ void __bpf_prog_free(struct bpf_prog *fp);
- 
- static inline void bpf_prog_unlock_free(struct bpf_prog *fp)
- {
--	bpf_prog_unlock_ro(fp);
- 	__bpf_prog_free(fp);
- }
- 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index ff09d32a8a1b..c605397c79f0 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -848,7 +848,6 @@ void __weak bpf_jit_free(struct bpf_prog *fp)
- 	if (fp->jited) {
- 		struct bpf_binary_header *hdr = bpf_jit_binary_hdr(fp);
- 
--		bpf_jit_binary_unlock_ro(hdr);
- 		bpf_jit_binary_free(hdr);
- 
- 		WARN_ON_ONCE(!bpf_prog_kallsyms_verify_off(fp));
++	/*
++	 * Module allocation needs to be completed by making the page
++	 * executable. The page is still writable, which is a security hazard,
++	 * but anyhow ftrace breaks W^X completely.
++	 */
++	set_memory_x((unsigned long)trampoline, npages);
+ 	return (unsigned long)trampoline;
+ fail:
+ 	tramp_free(trampoline, *tramp_size);
 -- 
 2.17.1
 
