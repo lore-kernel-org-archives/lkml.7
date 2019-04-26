@@ -2,168 +2,135 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CFDC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12508C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E838D2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E374B208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfDZNWN (ORCPT
+        id S1726349AbfDZNWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:22:13 -0400
-Received: from 8bytes.org ([81.169.241.247]:37600 "EHLO theia.8bytes.org"
+        Fri, 26 Apr 2019 09:22:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46140 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbfDZNWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:22:13 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 8710C447; Fri, 26 Apr 2019 15:22:11 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Joerg Roedel <jroedel@suse.de>, Tom Murphy <tmurphy@arista.com>
-Subject: [PATCH] iommu/amd: Remove amd_iommu_pd_list
-Date:   Fri, 26 Apr 2019 15:22:02 +0200
-Message-Id: <20190426132202.11096-1-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
+        id S1726065AbfDZNWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 09:22:35 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4710064368;
+        Fri, 26 Apr 2019 13:22:35 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A69F560FCD;
+        Fri, 26 Apr 2019 13:22:34 +0000 (UTC)
+Subject: Re: [-next] system hangs likely due to "modules: Only return -EEXIST
+ for modules that have finished loading"
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jessica Yu <jeyu@kernel.org>
+Cc:     linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Cathy Avery <cavery@redhat.com>
+References: <20190426130736.GB8646@osiris>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <d4d75ad1-e193-c230-1edc-a93db2b068d7@redhat.com>
+Date:   Fri, 26 Apr 2019 09:22:34 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190426130736.GB8646@osiris>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 26 Apr 2019 13:22:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
 
-This variable hold a global list of allocated protection
-domains in the AMD IOMMU driver. By now this list is never
-traversed anymore, so the list and the lock protecting it
-can be removed.
 
-Cc: Tom Murphy <tmurphy@arista.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/amd_iommu.c       | 33 ---------------------------------
- drivers/iommu/amd_iommu_init.c  |  8 --------
- drivers/iommu/amd_iommu_types.h |  6 ------
- 3 files changed, 47 deletions(-)
+On 4/26/19 9:07 AM, Heiko Carstens wrote:
+> Hello Prarit,
+> 
+> it looks like your commit f9a75c1d717f ("modules: Only return -EEXIST
+> for modules that have finished loading") _sometimes_ causes hangs on
+> s390. This is unfortunately not 100% reproducible, however the
+> mentioned commit seems to be the only relevant one in modules.c.
+> 
+> What I see is a hanging system with messages like this on the console:
+> 
+> [   65.876040] rcu: INFO: rcu_sched self-detected stall on CPU
+> [   65.876049] rcu:     7-....: (5999 ticks this GP) idle=eae/1/0x4000000000000002 softirq=1181/1181 fqs=2729
+> [   65.876078]  (t=6000 jiffies g=-471 q=17196)
+> [   65.876084] Task dump for CPU 7:
+> [   65.876088] systemd-udevd   R  running task        0   731    721 0x06000004
+> [   65.876097] Call Trace:
+> [   65.876113] ([<0000000000abb264>] __schedule+0x2e4/0x6e0)
+> [   65.876122]  [<00000000001ee486>] finished_loading+0x4e/0xb0
+> [   65.876128]  [<00000000001f1ed6>] load_module+0xcce/0x27a0
+> [   65.876134]  [<00000000001f3af0>] __s390x_sys_init_module+0x148/0x178
+> [   65.876142]  [<0000000000ac0766>] system_call+0x2aa/0x2c8
+> 
+> crash's backtrace of this task looks like this:
+> 
+> PID: 731    TASK: 1e79ba000         CPU: 7   COMMAND: "systemd-udevd"
+>  LOWCORE INFO:
+>   -psw      : 0x0704c00180000000 0x0000000000ab666a
+>   -function : memcmp at ab666a
+>   -prefix   : 0x7fe32000
+>   -cpu timer: 0x7fffff5784d0f048
+>   -clock cmp: 0xd60757081cd70d00
+>   -general registers:
+>      0x0000000000000009 0x0000000000000009
+>      0x000003ff80347321 000000000000000000
+>      0x000003ff8034f321 000000000000000000
+>      0x000000000000001e 0x000003ff8c592708
+>      0x000003e0047da900 0x000003ff8034f318
+>      0x0000000000000001 0x0000000000000009
+>      0x000003ff80347300 0x0000000000ad81b8
+>      0x00000000001ee062 0x000003e004357cb0
+> [...]
+>  #0 [3e004357cf0] load_module at 1f1eb0
+>  #1 [3e004357dd0] __se_sys_init_module at 1f3af0
+>  #2 [3e004357ea8] system_call at ac0766
+>  PSW:  0705000180000000 000003ff8c27ad3e (user space)
+>  GPRS: 000002aa280d2fb0 000003ff8c27ad3c 0000000000000080 00000000000035fd
+>        000003ff8c592708 000002aa280c8770 0000000000000000 000002aa280d7130
+>        0000000000020000 000002aa28915760 000003ff8c592708 000002aa280c00b0
+>        000003ff8c8fff80 000002aa280c00b0 000003ff8c58a456 000003ffe9cfde90
+> 
+> I did not look any further into the dump, however since the commit
+> touches exactly the code path which seems to be looping... ;)
+> 
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index f467cc4b498e..3e0696cf965c 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1723,31 +1723,6 @@ static void dma_ops_free_iova(struct dma_ops_domain *dma_dom,
-  *
-  ****************************************************************************/
- 
--/*
-- * This function adds a protection domain to the global protection domain list
-- */
--static void add_domain_to_list(struct protection_domain *domain)
--{
--	unsigned long flags;
--
--	spin_lock_irqsave(&amd_iommu_pd_lock, flags);
--	list_add(&domain->list, &amd_iommu_pd_list);
--	spin_unlock_irqrestore(&amd_iommu_pd_lock, flags);
--}
--
--/*
-- * This function removes a protection domain to the global
-- * protection domain list
-- */
--static void del_domain_from_list(struct protection_domain *domain)
--{
--	unsigned long flags;
--
--	spin_lock_irqsave(&amd_iommu_pd_lock, flags);
--	list_del(&domain->list);
--	spin_unlock_irqrestore(&amd_iommu_pd_lock, flags);
--}
--
- static u16 domain_id_alloc(void)
- {
- 	int id;
-@@ -1838,8 +1813,6 @@ static void dma_ops_domain_free(struct dma_ops_domain *dom)
- 	if (!dom)
- 		return;
- 
--	del_domain_from_list(&dom->domain);
--
- 	put_iova_domain(&dom->iovad);
- 
- 	free_pagetable(&dom->domain);
-@@ -1880,8 +1853,6 @@ static struct dma_ops_domain *dma_ops_domain_alloc(void)
- 	/* Initialize reserved ranges */
- 	copy_reserved_iova(&reserved_iova_ranges, &dma_dom->iovad);
- 
--	add_domain_to_list(&dma_dom->domain);
--
- 	return dma_dom;
- 
- free_dma_dom:
-@@ -2834,8 +2805,6 @@ static void protection_domain_free(struct protection_domain *domain)
- 	if (!domain)
- 		return;
- 
--	del_domain_from_list(domain);
--
- 	if (domain->id)
- 		domain_id_free(domain->id);
- 
-@@ -2865,8 +2834,6 @@ static struct protection_domain *protection_domain_alloc(void)
- 	if (protection_domain_init(domain))
- 		goto out_err;
- 
--	add_domain_to_list(domain);
--
- 	return domain;
- 
- out_err:
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 1b1378619fc9..4497c6bb9e70 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -188,12 +188,6 @@ static bool amd_iommu_pc_present __read_mostly;
- 
- bool amd_iommu_force_isolation __read_mostly;
- 
--/*
-- * List of protection domains - used during resume
-- */
--LIST_HEAD(amd_iommu_pd_list);
--spinlock_t amd_iommu_pd_lock;
--
- /*
-  * Pointer to the device table which is shared by all AMD IOMMUs
-  * it is indexed by the PCI device id or the HT unit id and contains
-@@ -2526,8 +2520,6 @@ static int __init early_amd_iommu_init(void)
- 	 */
- 	__set_bit(0, amd_iommu_pd_alloc_bitmap);
- 
--	spin_lock_init(&amd_iommu_pd_lock);
--
- 	/*
- 	 * now the data structures are allocated and basically initialized
- 	 * start the real acpi table scan
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index 87965e4d9647..85c488b8daea 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -674,12 +674,6 @@ extern struct list_head amd_iommu_list;
-  */
- extern struct amd_iommu *amd_iommus[MAX_IOMMUS];
- 
--/*
-- * Declarations for the global list of all protection domains
-- */
--extern spinlock_t amd_iommu_pd_lock;
--extern struct list_head amd_iommu_pd_list;
--
- /*
-  * Structure defining one entry in the device table
-  */
--- 
-2.16.4
+Ouch :(  I wonder if I exposed a further race or another bug.  Heiko, can you
+determine which module is stuck?  Warning: I have not compiled this code.
 
+diff --git a/kernel/module.c b/kernel/module.c
+index e8c1de2ab4e1..bd5eebc95049 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3567,6 +3567,8 @@ static int add_unformed_module(struct module *mod)
+ 	old = find_module_all(mod->name, strlen(mod->name), true);
+ 	if (old != NULL) {
+ 		if (old->state != MODULE_STATE_LIVE) {
++			printk_ratelimited("PRARIT: waiting for module %s to load.\n",
++					   mod->name);
+ 			/* Wait in case it fails to load. */
+ 			mutex_unlock(&module_mutex);
+ 			err = wait_event_interruptible(module_wq,
+@@ -3575,6 +3577,8 @@ static int add_unformed_module(struct module *mod)
+ 				goto out_unlocked;
+ 			goto again;
+ 		}
++		printk("PRARIT: module %s already exists.\n",
++		       mod->name);
+ 		err = -EEXIST;
+ 		goto out;
+ 	}
+
+P.
