@@ -2,73 +2,86 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999E2C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96940C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65D28208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556279562;
-	bh=nwQMSKMNPZP3gD5kTTc7TwCsM2mY9q1ZGGkm86V2sCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CuXEN2U/rnTM9RrRRMiLt2XJRv/KnsLDg6wjlAZVPHCIRtvn35lgupufNwoJRzQoV
-	 PI+wjPNxwPV/DYxOma8mtjG+Psa9y0SjP7e3QcqM4/tCIdxQbQhGpcCt3gwsuDvsdW
-	 cGRgr60r4RQ3srBWSKa7H9t0QNSad8IIoqQtuu20=
+	by mail.kernel.org (Postfix) with ESMTP id 6AC09208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfDZLwl (ORCPT
+        id S1726123AbfDZL4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 07:52:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbfDZLwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 07:52:41 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E162520656;
-        Fri, 26 Apr 2019 11:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556279560;
-        bh=nwQMSKMNPZP3gD5kTTc7TwCsM2mY9q1ZGGkm86V2sCg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q358pT/w5MkAVnDrTX3wssHnK7mFsPMLvvh+u2/nourawWmZYf35YYqe/M8wRTU6t
-         ksPbpRjQh7lytaWDbFGbhfZ3KTirXsmABsdZhSOsvlHJfX8g1+6JL5/Mw9+1rr4qO7
-         CHRcsuN5iOPMskMeuGPGmbphHQY21NfStZ/4W1CA=
-Date:   Fri, 26 Apr 2019 17:22:35 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH next 03/25] dmaengine: Use dev_get_drvdata()
-Message-ID: <20190426115235.GX28103@vkoul-mobl>
-References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
- <20190423075020.173734-4-wangkefeng.wang@huawei.com>
+        Fri, 26 Apr 2019 07:56:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56314 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725877AbfDZL4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 07:56:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 511C2AD21;
+        Fri, 26 Apr 2019 11:56:30 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id B46D1E0143; Fri, 26 Apr 2019 13:56:29 +0200 (CEST)
+Date:   Fri, 26 Apr 2019 13:56:29 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Ahern <dsahern@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 0/3] make nla_nest_start() add NLA_F_NESTED flag
+Message-ID: <20190426115629.GH26549@unicorn.suse.cz>
+References: <cover.1556269635.git.mkubecek@suse.cz>
+ <1dcb87486a96785e3b9e6f337392aa904d977a0d.camel@sipsolutions.net>
+ <20190426111954.GG26549@unicorn.suse.cz>
+ <a3626aeca20280e8253b575fe72309b2009474a8.camel@sipsolutions.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190423075020.173734-4-wangkefeng.wang@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <a3626aeca20280e8253b575fe72309b2009474a8.camel@sipsolutions.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-04-19, 15:49, Kefeng Wang wrote:
-> Using dev_get_drvdata directly.
+On Fri, Apr 26, 2019 at 01:23:46PM +0200, Johannes Berg wrote:
+> On Fri, 2019-04-26 at 13:19 +0200, Michal Kubecek wrote:
+> > On Fri, Apr 26, 2019 at 11:24:15AM +0200, Johannes Berg wrote:
+> > > On Fri, 2019-04-26 at 09:13 +0000, Michal Kubecek wrote:
+> > > 
+> > > > Another observation was that even if NLA_F_NESTED flag was introduced in
+> > > > 2007, only few netlink based interfaces set it in kernel generated messages
+> > > > and even many recently added APIs omit it. That is unfortunate as without
+> > > > the flag, message parsers not familiar with attribute semantics cannot
+> > > > recognize nested attributes and do not see message structure; this affects
+> > > > e.g. wireshark dissector or mnl_nlmsg_fprintf() from libmnl.
+> > > 
+> > > Indeed.
+> > > 
+> > > I wonder if we should also (start) enforcing that the userspace sender
+> > > side sets this, if the policy is strict?
+> > 
+> > I suppose we should, at least the part that attribute with NLA_NESTED
+> > policy has NLA_F_NESTED flag. I'm not so sure about the opposite (i.e.
+> > that attributes with other policies do not have the flag) as when I was
+> > checking where kernel accesses nlattr::nla_type directly rather than
+> > with nla_type(), I stumbled upon an attribute NL80211_ATTR_VENDOR_DATA
+> > which has policy NLA_BINARY but is sometimes a nest, AFAICS.
 > 
-> Cc: Vinod Koul <vinod.koul@intel.com>
-> Cc: dmaengine@vger.kernel.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  drivers/dma/bcm-sba-raid.c | 3 +--
->  drivers/dma/nbpfaxi.c      | 4 ++--
+> I guess anyway we can only do it for *new* things, not really for all
+> existing attributes.
 
-I would prefer these to be two patches, one for each driver
+Right... but what I wanted to say is that if there is already (at least)
+one attribute which may or may not be a nest, depending on a context, we
+should expect there may be also new attributes like that in the future.
 
--- 
-~Vinod
+Michal
