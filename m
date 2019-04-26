@@ -2,82 +2,100 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BF9C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278E0C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D94C2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05D5206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:28:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="f7Do0bd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfDZN1P (ORCPT
+        id S1726271AbfDZN21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:27:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56148 "EHLO mx1.redhat.com"
+        Fri, 26 Apr 2019 09:28:27 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45449 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbfDZN1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:27:15 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1069F308FE9A;
-        Fri, 26 Apr 2019 13:27:15 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DFB5117F3F;
-        Fri, 26 Apr 2019 13:27:13 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH] KVM: selftests: make hyperv_cpuid test pass on AMD
-Date:   Fri, 26 Apr 2019 15:27:11 +0200
-Message-Id: <20190426132711.26710-1-vkuznets@redhat.com>
+        id S1726039AbfDZN20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 09:28:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=YymALKcNe5RWstAgOCkQ3CUtTqwEQ22gorsemwCLaKc=; b=f7Do0bd8Oh1aJCUUxqBCJeaDV7
+        5cRHz5xrJO053kX1HsS2rfgmBWOO0p9BI59cd8yvm8Mtd/I1o5E1a69KqSmcCh60YWv4Z4fy6f5mz
+        kT7fDMCWEw9glk+Kyp1x3NFytU71JbTmcpzsBvR3QrfYjPzDkoiDKcWpvffn9aQN037s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hK0tp-0000ax-B4; Fri, 26 Apr 2019 15:28:21 +0200
+Date:   Fri, 26 Apr 2019 15:28:21 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: realtek: Add rtl8211e rx/tx delays config
+Message-ID: <20190426132821.GB14432@lunn.ch>
+References: <20190426093010.9609-1-fancer.lancer@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 26 Apr 2019 13:27:15 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426093010.9609-1-fancer.lancer@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enlightened VMCS is only supported on Intel CPUs but the test shouldn't
-fail completely.
+On Fri, Apr 26, 2019 at 12:30:10PM +0300, Serge Semin wrote:
+> The hidden RGMII configs register utilization was found in the
+> rtl8211e U-boot driver:
+> https://elixir.bootlin.com/u-boot/v2019.01/source/drivers/net/phy/realtek.c#L99
+> 
+> It confirms that the register bits field must control the so called
+> configuration pins described in the table 12-13 of the official PHY
+> datasheet:
+> 8:6 = PHY Address
+> 5:4 = Auto-Negotiation
+> 3 = Interface Mode Select
+> 2 = RX Delay
+> 1 = TX Delay
+> 0 = SELRGV
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+> +static int rtl8211e_config_init(struct phy_device *phydev)
+> +{
+> +	int ret, oldpage;
+> +	u16 val = 0;
+> +
+> +	ret = genphy_config_init(phydev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* enable TX/RX delay for rgmii-* modes, otherwise disable it */
+> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
+> +		val = RTL8211E_TX_DELAY | RTL8211E_RX_DELAY;
+> +	else if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
+> +		val = RTL8211E_TX_DELAY;
+> +	else if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
+> +		val = RTL8211E_RX_DELAY;
 
-diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
-index 264425f75806..9a21e912097c 100644
---- a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
-+++ b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
-@@ -141,7 +141,13 @@ int main(int argc, char *argv[])
- 
- 	free(hv_cpuid_entries);
- 
--	vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
-+	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
-+
-+	if (rv) {
-+		fprintf(stderr,
-+			"Enlightened VMCS is unsupported, skip related test\n");
-+		goto vm_free;
-+	}
- 
- 	hv_cpuid_entries = kvm_get_supported_hv_cpuid(vm);
- 	if (!hv_cpuid_entries)
-@@ -151,6 +157,7 @@ int main(int argc, char *argv[])
- 
- 	free(hv_cpuid_entries);
- 
-+vm_free:
- 	kvm_vm_free(vm);
- 
- 	return 0;
--- 
-2.20.1
+Hi Serge
 
+You need to look for PHY_INTERFACE_MODE_RGMII and disable the bits.
+For any other value, and in particular PHY_INTERFACE_MODE_NA, you
+should leave the bits alone.
+
+As you found out, u-boot knows how to program these bits. There are
+probably boards out there which rely on u-boot doing this, and the PHY
+driver then not messing with the bits. The way to indicate it should
+not mess with the bits is to not have a phy-mode property in DT, which
+results in PHY_INTERFACE_MODE_NA.
+
+	Andrew
