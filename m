@@ -2,76 +2,69 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E12EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E3BC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073DB20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A4620679
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:47:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="J+npx8nP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfDZQqp (ORCPT
+        id S1726368AbfDZQra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:46:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41010 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726005AbfDZQqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:46:44 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4814E7A4F517A71618B6;
-        Sat, 27 Apr 2019 00:46:41 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Apr 2019
- 00:46:34 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <pmladek@suse.com>, <sergey.senozhatsky@gmail.com>,
-        <andriy.shevchenko@linux.intel.com>, <geert+renesas@glider.be>,
-        <rostedt@goodmis.org>, <me@tobin.cc>
-CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] lib/vsprintf: Make function pointer_string static
-Date:   Sat, 27 Apr 2019 00:46:30 +0800
-Message-ID: <20190426164630.22104-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 26 Apr 2019 12:47:30 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45741 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726005AbfDZQr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:47:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Pj5gLcBhVx6ymmBio8GihlvNeueKhA2BDc8aVSO7lOw=; b=J+npx8nPAq3lVdTpJkV6/q7a/W
+        DtDlLDx3D1wG+wYj8vX9q52G3Xhvw/LjK5THD6DfyQbe4iU+REytkv8u9w3CIQnmfBoyPXmyRmQnj
+        VKT3jl8UhiR8TmdIWQysq5VQIBeEH0jFTZRMZ8o+d/tb5//su3JCFPkfx9vS8hNLPtcI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hK40T-0002dq-VB; Fri, 26 Apr 2019 18:47:25 +0200
+Date:   Fri, 26 Apr 2019 18:47:25 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, nicolas.ferre@microchip.com,
+        ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com
+Subject: Re: [PATCH net-next] net: phy: micrel: make sure the factory test
+ bit is cleared
+Message-ID: <20190426164725.GG4041@lunn.ch>
+References: <20190426164123.26735-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426164123.26735-1-antoine.tenart@bootlin.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On Fri, Apr 26, 2019 at 06:41:23PM +0200, Antoine Tenart wrote:
+> The KSZ8081 PHY has a factory test mode which is set at the de-assertion
+> of the reset line based on the RXER (KSZ8081RNA/RND) or TXC
+> (KSZ8081MNX/RNB) pin. If a pull-down is missing, or if the pin has a
+> pull-up, the factory test mode should be cleared by manually writing a 0
+> (according to the datasheet). This patch makes sure this factory test
+> bit is cleared in config_init().
+> 
+> Tested-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 
-Fix sparse warning:
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-lib/vsprintf.c:673:6: warning:
- symbol 'pointer_string' was not declared. Should it be static?
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- lib/vsprintf.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 1f367f3..7b0a614 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -670,8 +670,9 @@ char *string(char *buf, char *end, const char *s,
- 	return string_nocheck(buf, end, s, spec);
- }
- 
--char *pointer_string(char *buf, char *end, const void *ptr,
--		     struct printf_spec spec)
-+static char *pointer_string(char *buf, char *end,
-+			    const void *ptr,
-+			    struct printf_spec spec)
- {
- 	spec.base = 16;
- 	spec.flags |= SMALL;
--- 
-2.7.4
-
-
+    Andrew
