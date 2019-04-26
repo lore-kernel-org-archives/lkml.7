@@ -2,107 +2,100 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54EAC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93E6C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D92206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556288725;
-	bh=YE6ZfedV+L+2pU9dksxtof2mqv8Wf7Zbsdk+yICJ+rA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yb7F8zVPxOgQ05fg1RxKmkF0P+dyiRG6WQFGVUYbDwBTxyyGMb1rhRkgD6Bb14gkH
-	 sT9HT+fSdtgGRThAuNUbGNtH5tdI5l0X5qIrjjcr3VW6WSjHM1j7IgTo9cexzT3xZm
-	 ulhyN/ULUcetCWDJhK+Hiw0sVVnGb20MR4SncPcQ=
+	by mail.kernel.org (Postfix) with ESMTP id A607C206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfDZOZY (ORCPT
+        id S1726475AbfDZOZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:25:24 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33579 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfDZOZY (ORCPT
+        Fri, 26 Apr 2019 10:25:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:34199 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfDZOZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:25:24 -0400
-Received: by mail-oi1-f194.google.com with SMTP id l1so1222693oib.0;
-        Fri, 26 Apr 2019 07:25:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z627A3GoZAzp1oHZpj7hwaczcn72BCTYdxYyBr+/I48=;
-        b=WYC/IwToycQc7byvjoMOIbZ61eZqO2r63YzUrScLxD3noQc5zed4XttPFxfKiXLH89
-         byPC+8JedbnLgwb+Y5R8gH3HycShiyTFfafrK0osUGPwaSlqSVYBpfgnKK7MIyAA19Y5
-         V6rtbV3wFWDrTOE0c8GzwuMceuosrj2rghS4NLyXFHW6sOIOop091bpmWjowvXro/WF3
-         7HFQ9sYTCTG7O8TmVWmzaKToi+v/uw7bVWBLmU1Wrex2s9lJX+uYPY+395nadLXBJupw
-         5g3oFfe6oVXKexxLsOB+XmntpiuUdLRUzOxjORRR1gp1sH14FojWUPFZ8H1NIQpWSrPj
-         oSRw==
-X-Gm-Message-State: APjAAAU14LahhQgyvrurtn1G1QJNPxU3FcawST1Riu9E1L4xbfsOdlGy
-        D26u2QKFV9QKsWW7i6kP5w==
-X-Google-Smtp-Source: APXvYqwEC14nIM4gk3GviAy/GGbNfg8j7afpa2OZjbUtE0Iez2j6+vyLl46N9dZiVTMQaqsFhuBOqw==
-X-Received: by 2002:aca:d8d5:: with SMTP id p204mr7513903oig.26.1556288723224;
-        Fri, 26 Apr 2019 07:25:23 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p205sm10228480oia.49.2019.04.26.07.25.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 07:25:22 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 09:25:22 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: arm: coresight: Add new compatible
- for static replicator
-Message-ID: <20190426142522.GA15387@bogus>
-References: <20190412102738.12679-1-leo.yan@linaro.org>
- <20190412102738.12679-2-leo.yan@linaro.org>
+        Fri, 26 Apr 2019 10:25:47 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MbTCr-1gmtxm3d05-00buge; Fri, 26 Apr 2019 16:25:35 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Joseph Myers <joseph@codesourcery.com>, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Lukasz Majewski <lukma@denx.de>,
+        Stepan Golosunov <stepan@golosunov.pp.ru>
+Subject: [PATCH 1/2] y2038: make CONFIG_64BIT_TIME unconditional
+Date:   Fri, 26 Apr 2019 16:25:04 +0200
+Message-Id: <20190426142531.1378357-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412102738.12679-2-leo.yan@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:fIJzz9wj+ao9HQhnAv2jIWZsWFqfvgw+Oy7O3nycVovvV0MS3Nl
+ obIIVIsSedgGiymLYKpYSUVpHoc0Xcjsn53G1AvEPhlQsm2EHLdpnRl0pg0Dxmn/zokJKiI
+ +AeQdQ0tz7vq+N4Kmh27Ieor82N4OMHIeaKqP6oD8uhU93QAXEACHahCYcwkCVoYvqSYm7O
+ uwPHbqqhCC3dpx1MNU4yw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:C4fKpd5A+4U=:odrg9PhoL/1HJOZeNkOhyH
+ O5M1WrSt4d+MH2c9+JEu1wd/Z5pn2eEOsryNN3uybDS9OxybN0RXnwcaigQuLyec8Gus1fvhP
+ MYdgH0vV2ziysm8z86qu/QN4EjMrnxFJZ5FtfFyQ3HRuNESSvCJb0UbM/0geqZNXChsafkWTn
+ KGvj8uMgqByj4Ws6TqLgtYtYy1CLa7MngzGPozURxTXR+Cxw1KPrCFV5vuqDfSErTb4Ewp9WC
+ Dmlb2n7zt7hYgMg8a90UZKnTD7+Wzek90pVVLE0UXYluR/kbDPk0aXHR/0pEj6tnUX/r/R5MN
+ H2CLQ/ZNtptifaq36R3fN28U8uXYlbG34Y/cM0ssKRIIILtL2JxRTwzq6uDtKowKdEB9LHVnb
+ 7/UvSI4/R92K9gSW6NXyRkONVFS+5ZQJNuzVb6wphWoD3xkF6/g/2+jxcrJmjob8Ncqicowv9
+ iVeMXCMjRiIOsC2ILZJcGFocNyBWSLO+rTO8Ec+I/yBOzvivNPOqu3jRMuMW6k4LLDIEtBfn5
+ aTRqVND8JstKCpCGAXv5//LrHHW3kUSatMukMmGHTe2GJDDJ/QflFs704ninGzLLNZfhDcLFq
+ GN5FxvBhne8zC0kkcwzB5NxItoWuGTyt4SZHulZOh30vBrv9K+vDdRhRoSeB3A7jhNNd4UJTQ
+ O9GjSTI4dvgRtgr73d/g+LmVdnDWkZ4juE2zwDlztY1qCe5bwJv0t7JV2VL/yiPCv3xFw8EGy
+ 6EOZryWlAU7I+t20v7gKmC/tDbQuXPGr3cMYrw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019 18:27:35 +0800, Leo Yan wrote:
-> CoreSight uses below bindings for replicator:
-> 
->   Dynamic replicator, aka. configurable replicator:
->     "arm,coresight-dynamic-replicator", "arm,primecell";
-> 
->   Static replicator, aka. non-configurable replicator:
->     "arm,coresight-replicator";
-> 
-> The compatible string "arm,coresight-replicator" is not an explicit
-> naming to express the replicator is 'static'.  To unify the naming
-> convention, this patch introduces a new compatible string
-> "arm,coresight-static-replicator" for the static replicator; the
-> compatible string "arm,coresight-replicator" is kept for backward
-> compatibility, but tag it as obsolete and suggest to use the new
-> compatible string.
-> 
-> As result CoreSight replicator have below bindings:
-> 
->   Dynamic replicator:
->     "arm,coresight-dynamic-replicator", "arm,primecell";
-> 
->   Static replicator:
->     "arm,coresight-static-replicator";
->     "arm,coresight-replicator"; (obsolete)
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
+As Stepan Golosunov points out, we made a small mistake in the
+get_timespec64() function in the kernel. It was originally added under
+the assumption that CONFIG_64BIT_TIME would get enabled on all 32-bit
+and 64-bit architectures, but when I did the conversion, I only turned
+it on for 32-bit ones.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The effect is that the get_timespec64() function never clears the upper
+half of the tv_nsec field for 32-bit tasks in compat mode. Clearing this
+is required for POSIX compliant behavior of functions that pass a
+'timespec' structure with a 64-bit tv_sec and a 32-bit tv_nsec, plus
+uninitialized padding.
+
+The easiest fix for linux-5.1 is to just make the Kconfig symbol
+unconditional, as it was originally intended. As a follow-up,
+we should remove any #ifdef CONFIG_64BIT_TIME completely.
+
+Link: https://lore.kernel.org/lkml/20190422090710.bmxdhhankurhafxq@sghpc.golosunov.pp.ru/
+Cc: Lukasz Majewski <lukma@denx.de>
+Cc: Stepan Golosunov <stepan@golosunov.pp.ru>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+Please apply this one as a bugfix for 5.1
+---
+ arch/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 33687dddd86a..9092e0ffe4d3 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -764,7 +764,7 @@ config COMPAT_OLD_SIGACTION
+ 	bool
+ 
+ config 64BIT_TIME
+-	def_bool ARCH_HAS_64BIT_TIME
++	def_bool y
+ 	help
+ 	  This should be selected by all architectures that need to support
+ 	  new system calls with a 64-bit time_t. This is relevant on all 32-bit
+-- 
+2.20.0
+
