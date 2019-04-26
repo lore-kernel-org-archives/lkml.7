@@ -2,94 +2,73 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEF3C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9A8C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8032084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:19:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FX6xwaUq"
+	by mail.kernel.org (Postfix) with ESMTP id 370AE2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556281220;
+	bh=mI9NdfFsgl0gKR9CQdoIUjjAQi/KrcMbW3F4PVK9fZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rj3+ZTrjqg54hGxKDUqkjcUjM8z8EosLkV35Vlk1CnoPeQqK2K7MM0bPHW6AXykul
+	 MFDj7VzuUxogsvCH7WB/UQNC7P9kgBZD4K/zwaiuxHaTu/P3HFesq+/uKSOOvsghjL
+	 htYE5tYbZAjfMl41sJ0CTCn8QZzWjzUiMK8A8F60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfDZMT0 (ORCPT
+        id S1726363AbfDZMUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 08:19:26 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37056 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfDZMT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 08:19:26 -0400
-Received: by mail-lj1-f193.google.com with SMTP id b12so1547133lji.4;
-        Fri, 26 Apr 2019 05:19:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U2REKTi6C3eFRunSRzv9E2Ku6HTVGxYiFcw2xLuOXgk=;
-        b=FX6xwaUqdAyJyNvnaKGcnSZ7a+Flr4E7jrJm9u54makAUZh+d697Ve9xtkV38PqmfS
-         +DlFHnykLQC5CEpj4YyGHb+16cMqDlVRCsD05Yu4pc1aP2ppzD2LZe/+oIXoQFMX/g5c
-         YPL+Zknbz9lUT7PbIMIabesPKqa61BvTowFrY5390PVRo2LrKsJv71A5uWf3F8AdcKlN
-         UNwCcW1BV3UPKyZYFKRDbNJVjiODw7qnXM1LAQT+kFWLNL99G3sbX5WIzASDVx3Ms/7R
-         LFdhIElfgRrH7+xh/tCVMR6JmZd6paBf+H3byMOJcqyKYcfQJ3CSLlbzCps+Q6NVHcKD
-         d7BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U2REKTi6C3eFRunSRzv9E2Ku6HTVGxYiFcw2xLuOXgk=;
-        b=GfkYUOXh3cPCIXo33OTpRldekpJmokRJTKRrGhsjyH7JiIo8hXpLP/3agfp/md/YLF
-         ygETtpTRDtg0tKgKbzRrTpZNJFbHPuQqZ7uzlH+iYrI0UJyW03CWXSxwu/9+cqgEj9Bx
-         T6XMQI3yOND591LPFLcOUD43uyb1RdwQx+lNITqItXjJxnHxfPi64x415xFvco96LyIt
-         tSeBkL9cYJ2PMAI1nOboNjSOcyFFcJoWlK2IvQABPgPzpTAPo1x/SoyUA+yvpzxCxaKB
-         iD9e1XhzrFxcrwDNAFqRC2KRx0PCtkzmHEwGhoMCSvHb2qafxZ0OiS5Kw+y2BzXuiowK
-         fIKw==
-X-Gm-Message-State: APjAAAXaAdaTqrGLGObwiGseEAJ0rheEL5l6V14XcXE9789KDxTlVUOJ
-        NwstlIG58UnbxZoUwySH+yHyOU8d
-X-Google-Smtp-Source: APXvYqzTIkTf5UTKPkWcchPwfve69cGcl2qRumVuuWVqoLVe/+rbpps2hNK2yoqEwZ1yWLcQwxg7Kw==
-X-Received: by 2002:a2e:7503:: with SMTP id q3mr23925061ljc.190.1556281163716;
-        Fri, 26 Apr 2019 05:19:23 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id a1sm1496192lfc.17.2019.04.26.05.19.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 05:19:23 -0700 (PDT)
-Subject: Re: [PATCH v1] dmaengine: tegra: Use relaxed versions of readl/writel
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190424231708.21219-1-digetx@gmail.com>
- <20190426120148.GB28103@vkoul-mobl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <68c342e2-5662-5632-82aa-659da0381f54@gmail.com>
-Date:   Fri, 26 Apr 2019 15:19:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 26 Apr 2019 08:20:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbfDZMUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 08:20:18 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F2B5206BF;
+        Fri, 26 Apr 2019 12:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556281218;
+        bh=mI9NdfFsgl0gKR9CQdoIUjjAQi/KrcMbW3F4PVK9fZk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TUkY5KhGq4oZKd17Ar7Kzry44pZYTuvk3BKjOrF8xD8IAQYdr5ClR3U3BJRDFPI0i
+         724LqqlAPc0pPHETH2v3If5sJeebKVwi3jzciK2UMwaV+X/V8UdrvEc5/hrZMmo6ZN
+         jh1PwEYsvJhaoMseP1xw/lzVTZ6POA75A5auBAXA=
+Date:   Fri, 26 Apr 2019 17:50:12 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: stm32-dma: dmaengine: stm32-dma: use
+ platform_get_irq()
+Message-ID: <20190426122012.GD28103@vkoul-mobl>
+References: <1556097685-7236-1-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20190426120148.GB28103@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556097685-7236-1-git-send-email-fabien.dessenne@st.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.04.2019 15:01, Vinod Koul пишет:
-> On 25-04-19, 02:17, Dmitry Osipenko wrote:
->> The readl/writel functions are inserting memory barrier in order to
->> ensure that memory stores are completed. On Tegra20 and Tegra30 this
->> results in L2 cache syncing which isn't a cheapest operation. The
->> tegra20-apb-dma driver doesn't need to synchronize generic memory
->> accesses, hence use the relaxed versions of the functions.
-> 
-> Subsystem name is **dmaengine** not dma! Please fix that
-> 
+On 24-04-19, 11:21, Fabien Dessenne wrote:
+> platform_get_resource(pdev, IORESOURCE_IRQ) is not recommended for
+> requesting IRQ's resources, as they can be not ready yet. Using
+> platform_get_irq() instead is preferred for getting IRQ even if it was
+> not retrieved earlier.
 
-Looks like you answered to a wrong email.
+Applied, thanks
+
+-- 
+~Vinod
