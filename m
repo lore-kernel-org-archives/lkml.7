@@ -6,61 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6C2C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C900C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57489206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F395F212F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556304007;
-	bh=YqS/TftSlFL9lVhVTHSdP22PlkXMhQ/xEjYhSSyRZCs=;
+	s=default; t=1556304015;
+	bh=/dT0KatIm2qeu9TL3/hi4F/YkNdgRSu028ugvnbXL5Q=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=beDvhiqTkFO3A52vfiOCezjiMo+l4Bd68RRnStLjKGpizo/uVwRv6rTKFLlPxVySK
-	 VGWvpgAAUs4I+OuycExIhhU8O/Ki2bYbi4AkR8p39qqDpGUB3YS2DgRAM3+7Ve/n0j
-	 tZzgf3SpcO+i79qAyYE44EdRClD6HOd1e8fZ2aE8=
+	b=B/4XCefJOFngryet2EySQ5+67Gw1D6HBBzOt+VgYDh8fibdjEuLa2DjFtJW8IvNWd
+	 S2+rLzoB1DdgvuW0OLsnL22VGndMy3O3woPhdaJae6urNvv8R4lRC/f7G97kgeTv9w
+	 7yItELTZ5knem1R6WeoGGzLN8Uezm/VSpVLsfPS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfDZSkF (ORCPT
+        id S1726218AbfDZSkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 14:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50614 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 14:40:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbfDZSkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 14:40:04 -0400
-Subject: Re: [GIT PULL] arm64 fixes for 5.1-rc7
+        id S1726167AbfDZSkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 14:40:03 -0400
+Subject: Re: [GIT PULL] tracing: Minor fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1556304003;
-        bh=YqS/TftSlFL9lVhVTHSdP22PlkXMhQ/xEjYhSSyRZCs=;
+        bh=/dT0KatIm2qeu9TL3/hi4F/YkNdgRSu028ugvnbXL5Q=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=I14NP+Z1isGjp84dRPWd1eQJU5lQkCWI9Ud4fm8D8PEO6S9hdEKSxzg6cvPeFENvJ
-         Dh5EhuprB1sGqwmlZQ3NTQjv2XKOvwNcdPwzIRp5zR7gMKzELMRB+su5PpvaAuauS4
-         awHqdHo89y57I6JzW76GqTw9m7ezsunh+dPnwlOU=
+        b=gs5k8eN1bVxt1FmotWf9XPP1Y4gTxxOhut/TcElDTLNnyh8TCX9Fjk5VV8hAo5ktf
+         TWKHlJXfq/c4izmgmBDBgs5RW2qc18Uu//9tSBWpc2ajvcSon5fEqhQxfcPH+Lg2kU
+         eo2zI8InhdwMLpJY9IDiRxYbj1n+jMSOHAWRQgxg=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190426171251.GA24143@arrakis.emea.arm.com>
-References: <20190426171251.GA24143@arrakis.emea.arm.com>
+In-Reply-To: <20190426115357.3ef86b4a@gandalf.local.home>
+References: <20190426115357.3ef86b4a@gandalf.local.home>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190426171251.GA24143@arrakis.emea.arm.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-X-PR-Tracked-Commit-Id: 4e69ecf4da1ee0b2ac735e1f1bb13935acd5a38d
+X-PR-Tracked-Message-Id: <20190426115357.3ef86b4a@gandalf.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+ trace-v5.1-rc6
+X-PR-Tracked-Commit-Id: d6097c9e4454adf1f8f2c9547c2fa6060d55d952
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 857e17c2ee7c426c1f8998ccd48e2d5a7542148d
-Message-Id: <155630400349.7251.7298031269500401150.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: e9e1a2e7b486e3940badb6d743c8841ed94517b6
+Message-Id: <155630400327.7251.13635658683745564163.pr-tracker-bot@kernel.org>
 Date:   Fri, 26 Apr 2019 18:40:03 +0000
-To:     Catalin Marinas <catalin.marinas@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 26 Apr 2019 18:12:53 +0100:
+The pull request you sent on Fri, 26 Apr 2019 11:53:57 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git trace-v5.1-rc6
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/857e17c2ee7c426c1f8998ccd48e2d5a7542148d
+https://git.kernel.org/torvalds/c/e9e1a2e7b486e3940badb6d743c8841ed94517b6
 
 Thank you!
 
