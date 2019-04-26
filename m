@@ -2,133 +2,145 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F75CC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA020C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683C6206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5481206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfDZONt (ORCPT
+        id S1726428AbfDZOOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:13:49 -0400
-Received: from mga04.intel.com ([192.55.52.120]:27440 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfDZONr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:13:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 07:13:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,397,1549958400"; 
-   d="scan'208";a="341067444"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Apr 2019 07:13:46 -0700
-Date:   Fri, 26 Apr 2019 07:13:46 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     kvm@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-Message-ID: <20190426141346.GA4140@linux.intel.com>
-References: <1556248672-6469-1-git-send-email-like.xu@linux.intel.com>
+        Fri, 26 Apr 2019 10:14:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53650 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726155AbfDZOOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 10:14:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3C218AC9A;
+        Fri, 26 Apr 2019 14:14:28 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 16:14:26 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH v4] panic: add an option to replay all the printk message
+ in buffer
+Message-ID: <20190426141426.h7hpvhr3rqp7umbk@pathway.suse.cz>
+References: <1556199137-14163-1-git-send-email-feng.tang@intel.com>
+ <20190426074934.seje2tn5p6fsuwaq@pathway.suse.cz>
+ <20190426135316.GA505@tigerII.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556248672-6469-1-git-send-email-like.xu@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190426135316.GA505@tigerII.localdomain>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 11:17:52AM +0800, Like Xu wrote:
-> Some new systems have multiple software-visible die within each package.
-> Add support to expose Intel V2 Extended Topology Enumeration Leaf CPUID.1F.
+On Fri 2019-04-26 22:53:16, Sergey Senozhatsky wrote:
+> On (04/26/19 09:49), Petr Mladek wrote:
+> > On Thu 2019-04-25 21:32:17, Feng Tang wrote:
+> > > Currently on panic, kernel will lower the loglevel and print out
+> > > pending printk msg only with console_flush_on_panic().
+> > > 
+> > > Add an option for users to configure the "panic_print" to replay
+> > > all dmesg in buffer, some of which they may have never seen due
+> > > to the loglevel setting, which will help panic debugging .
+> > > 
+> > > @@ -2539,6 +2540,11 @@ void console_flush_on_panic(void)
+> > >  	 */
+> > >  	console_trylock();
+> > >  	console_may_schedule = 0;
+> > > +
+> > > +	if (mode == CONSOLE_REPLAY_ALL) {
+> > > +		console_seq = log_first_seq;
+> > > +		console_idx = log_first_idx;
+> > 
+> > Ah, log_first_seq and log_first_idx are synchronized by
+> > logbuf_log.
+> > 
+> > console_flush_on_panic(CONSOLE_REPLAY_ALL) is called
+> > when only one CPU is running but it is not guaranteed.
+> > 
+> > Therefore we should use:
+> > 
+> > 	if (mode == CONSOLE_REPLAY_ALL) {
+> > 		unsigned long flags;
+> > 
+> > 		logbuf_lock_irqsave(flags);
+> > 		console_seq = log_first_seq;
+> > 		console_idx = log_first_idx;
+> > 		logbuf_unlock_irqrestore(flags);
+> > 	}
 > 
-> Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> Signed-off-by: Like Xu <like.xu@linux.intel.com>
-> ---
+> I thought about it, and I don't think I see how we can race with
+> anything here.
 > 
-> ==changelog==
-> v2:
-> - Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
-> - Add comment to handle 0x1f anf 0xb in common code
-> - Reduce check time in a descending-break style
+> Suppose we have panic on CPUA and cactive CPUB in console_unlock():
 > 
-> v1: https://lkml.org/lkml/2019/4/22/28
+> - if it's not in atomic context, then the moment it does
 > 
->  arch/x86/kvm/cpuid.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+> 	call_console_drivers();
+> 	printk_safe_exit_irqrestore(flags);  << IPI
 > 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index fd39516..f9b529e 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -425,6 +425,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
->  
->  	switch (function) {
->  	case 0:
-> +		/* Check if the cpuid leaf 0x1f is actually implemented */
-> +		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
-
-Restricting the check to bits 15:0 is unnecessary, the SDM explicitly
-states that EBX will be zero for invalid sub-leaves:
-
-  For sub-leaves that return an invalid level-type of 0 in ECX[15:8];
-  EAX and EBX will return 0.
-
-This code is merely checking for the existence of CPUID.1F, nothing will
-break if future CPUs provide additional information, i.e. checking for a
-valid sub-leaf is sufficient.
-
-That being said, if you insist on restricting the check to non-reserved
-bits then I think the earlier suggestion of "cpuid_ecx(0x1f) & 0x0000ff00"
-makes more sense since the SDM clearly intends ECX to be used to detect
-valid vs. invalid levels.
-
-> +			entry->eax = 0x1f;
-> +			break;
-
-I find if/else easier to follow than the separate break, but either option
-works for me.
-		
-> +		}
->  		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
->  		break;
->  	case 1:
-> @@ -544,7 +549,12 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
->  		entry->edx = edx.full;
->  		break;
->  	}
-> -	/* function 0xb has additional index. */
-> +	/*
-> +	 * Intel documentation states that 0x1f and 0xb have
-> +	 * identical formats and thus can be handled by common code.
-> +	 * (Intel SDM Vol. 2A - Instruction Set Reference - CPUID)
-> +	 */
-
-It's probably safe to assume anyone reading reading this code is already
-all too aware of Intel's propensity for dumping CPUID enumeration into the
-CPUID entry in the ISR.  Maybe shorten this to something like:
-
-	/*
-	 * Per Intel's SDM, 0x1f is a superset of 0xb, thus they can be handled
-	 * by common code.
-	 */
-
-> +	case 0x1f:
->  	case 0xb: {
->  		int i, level_type;
->  
-> -- 
-> 1.8.3.1
+>   IPI will take it down.
 > 
+> - If IPI doesn't take it down, then NMI will.
+
+Then I wonder why, for example, native_stop_other_cpus() waits
+10ms at maximum after sending the NMIs. What is the state
+of the CPUs that miss this deadline?
+
+
+> - But, more importantly, if that CPUB is in atomic context, then panic
+>   CPUA will spin, waiting for that CPUB to handoff printing, before
+>   panic CPU will even try to stop all CPUs.
+> 
+> 	pr_emerg("Kernel panic - not syncing: %s\n", buf)
+> 
+>   is the point of 'synchronization' - panic CPU will wait for
+>   current console owner.
+
+"Synchronization point" is too strong formulation.
+The console waiter logic is effective but it does not always
+work. The current console owner must be calling the console
+drivers.
+
+
+>   Hmm, we might have a bit of a problem here, maybe.
+
+Hmm, the printk() might wait forever when NMI stopped
+the current console owner in the console driver code
+or with the logbuf_lock taken.
+
+The console waiter logic might get solved by clearing
+the console_owner in console_flush_on_panic(). It can't
+be much worse, we already ignore console_lock() there, ...
+
+The best solution for the logbuf_lock scenario would be
+the lock less log buffer.
+
+
+Anyway, do we really need to have length discussion about
+whether the locks are needed? They will not break anything.
+And we could ignore one scenario in case of problems.
+Also we will not need to think about it when the
+call is moved anywhere else.
+
+Finally, I could imagine that people would want to replay
+the log also from other locations when debugging nasty bugs.
+
+Best Regards,
+Petr
