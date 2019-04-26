@@ -2,97 +2,68 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39B9C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 03:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2D8C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 03:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970BF206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 03:05:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CPPOeOCj"
+	by mail.kernel.org (Postfix) with ESMTP id AA1DA2063F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 03:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfDZDFy (ORCPT
+        id S1727662AbfDZDHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 23:05:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:55511 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbfDZDFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 23:05:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44qzTB4RCfz9s3Z;
-        Fri, 26 Apr 2019 13:05:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556247951;
-        bh=SyU+6zUJv5EY80y4dJsRkozaWkjrBOBiJUmWFnmDkFc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CPPOeOCjKE7CTsW56DOWYQFAQ1vC4/FyA07v2Sitlbqd7WZoT0+LZhrPy/YKlijmD
-         0wKUVDPVdU3DLTBxjXZTZTTazbDQxzPpi1UywNppRgtJTp64bnT25XubporDMIJQwM
-         5YqU/c0tsdJiC04YChaPhE0jzVNmj4DGMUf1s66czGycmetETy4Csgp5laO8yKpeMm
-         itvVKOXMsq1RghpCEjgBbhCjFSYoQKnqX02C9XcyfqV5pPardyDFDCRTY2DovmHtz2
-         FjlsT764WuUNIspwYyoBG/RY1/LWC3m9Zxc0keqPolSaqkFFlogHysQn2p5iaE8Gds
-         rTkz6EqKXAEXw==
-Date:   Fri, 26 Apr 2019 13:05:49 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: linux-next: build warning after merge of the sound-asoc tree
-Message-ID: <20190426130549.59f7e604@canb.auug.org.au>
+        Thu, 25 Apr 2019 23:07:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7691 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726315AbfDZDHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 23:07:20 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 54C66792D86FAE738FF5;
+        Fri, 26 Apr 2019 11:07:18 +0800 (CST)
+Received: from [127.0.0.1] (10.67.78.74) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Apr 2019
+ 11:07:10 +0800
+To:     <mathias.nyman@intel.com>, <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <tangnianyao@huawei.com>
+From:   "Tangnianyao (ICT)" <tangnianyao@huawei.com>
+Subject: [RFC] Question about reset order for xhci controller and pci
+Message-ID: <4ae9963b-cfc1-7667-6082-a979725af0eb@huawei.com>
+Date:   Fri, 26 Apr 2019 11:07:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/k0dArgqWDEr04j791JcWNGf"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.78.74]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/k0dArgqWDEr04j791JcWNGf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,all
 
-Hi all,
+I've meet a problem about reset xhci and it may be caused by the
+reset order of pci and xhci.
+Using xhci-pci, when users send reset command in os(centos or red-hat os),
+it would first reset PCI device by pci_reset_function. During this
+process, it would disable BME(Bus Master Enable) and set BME=0, and
+then enable it and set BME=1.
+And then it comes to xhci reset process. First, it would send an
+endpoint stop command in xhci_urb_dequeue. However, this stop ep command
+fails to finish. The reason is that BME is set to 0 in former process and
+xhci RUN/STOP changes to 0, and when BME is set to 1 again, RUN/STOP doesn't
+recover to 1.
+I've checked BME behavior in xhci spec, it shows that "If the BME bit is set to 0
+when xHC is running, the xHC may treat this as a Host Controller Error, asserting
+HCE(1) and immediately halt(R/S=0 and HCH=1). Recovery from this state will
+require an HCRST." It seems that the stop ep command failure is reasonable.
+Maybe I've missed something and please let me know.
 
-After merging the sound-asoc tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+linux version:5.0.0-rc3
 
-sound/soc/fsl/fsl_sai.c: In function 'fsl_sai_remove':
-sound/soc/fsl/fsl_sai.c:921:1: warning: no return statement in function ret=
-urning non-void [-Wreturn-type]
- }
- ^
+Thanks,
+Nianyao Tang
 
-Introduced by commit
-
-  812ad463e089 ("ASoC: fsl_sai: Add support for runtime pm")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/k0dArgqWDEr04j791JcWNGf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzCdY0ACgkQAVBC80lX
-0Gy3hggAgta9W7V7Cb/iiPd73oUf4R+aUUAS4zRRgVmLIzmcoiVfZKfrlzyozGrb
-XIKoTUzuqbNwQcyh35wVjT91/ZGsXufrno6CatyOySBv+5d3UnByxXo3M4wKh/lX
-uwvuDRh5rzRtkwUwSsfm7zZqWgSO+HchLkFmQwAaHO6eN2oWySzLE20r+YaihBmj
-+shkUE8gURA1M+X+Cvhy2H5scEak89Ac5U+0ZsY0s8BKuPZMzqB2rfn5ymis+8GK
-Z6HNTEX1GV7hApAEe9gLyw+SXUwh6gLhsq9vHqcGGAx69vHc5G3o8GHA2u9njV7f
-jojp7RHGsjFFulfrnRF8kEBUIRO7wQ==
-=DZES
------END PGP SIGNATURE-----
-
---Sig_/k0dArgqWDEr04j791JcWNGf--
