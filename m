@@ -7,57 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5A3C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F14C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 824F3208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D6E206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556272146;
-	bh=Rcr/mti6j2+dzBuDJFX0rRYjawcVNYS+r3jVhp0r+4Q=;
+	s=default; t=1556272155;
+	bh=lkO6Rz2DiapVeRSd0t08iMd6FYynDAws5LZk6Y39F5M=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=rERTg977SuG8zjL4EYXHjTzmxKNlXS79QPlE390Rmfb4pFDpJBfQLszjIesIb1Dg8
-	 GIenRMmEDnzDRXQmfNIgjAA0ovHqmbF2fDI9BtoEWLs2lW8mt8szuKcGAAc8WDqtpJ
-	 R+zClAULnYB/k5+Nj+GFycbZt8RUT9kqpfhZwlrI=
+	b=xwOCvIHOnhtaQQpGxLNNrv4Pm90X9ZvI9pHYKTyPAUHKCeE4ZmiQWPnE/5VuIe4hk
+	 MSyD+xrErrwlppuFuYMplBK57JgpkIiTtcbjBkmUC+cUuQ3aKrXggasfhuemOpMhCA
+	 0l/eNoT2C6xrtcqRCEkzQ2P4aBvitIOgW73JjaZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfDZJtF (ORCPT
+        id S1727231AbfDZJoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:49:05 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52618 "EHLO
+        Fri, 26 Apr 2019 05:44:25 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52496 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727227AbfDZJo1 (ORCPT
+        with ESMTP id S1726820AbfDZJoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:44:27 -0400
+        Fri, 26 Apr 2019 05:44:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=RcNJRTHqTTG/1gDWVFtW8IGjBT/xF2F5B2RbB2kx9Jg=; b=hAbxK0JWjqmw
-        2zKOmiHTD/deXUIwzMvmwzfNJ+N33Xrx3qyEb0RPBQkqKv/c6K1owI1T+DUriFAHO21M3JsIw7Fvy
-        uH6EWbrkUdxOWbQvbEwVIUfi8NiOG2UwYJPdcia+M7nj3QOwX3wE/DSuesLMtab2Ub+9d6F0iqA6X
-        hoc+c=;
+        List-Archive; bh=RSLf2VHcn1xnUInCdFeL3Ts/cHHcDwd9UlEvJRmoBa0=; b=PR/6s+TyeHlZ
+        usPwWGlIQL9XP7LkI8MVMBRD0XNJfDqirh+WtLAHF7tNK44+wkVj6aFZZHGzoBRR8a+jhcNvlYR+7
+        Aw9y5Gt/dHbdO5D4bJHVwSUoFTGBib9xdp8SUK+8IgjpWJwFmFbJpyGS3ERSsuQnDp+24LfgVIOTn
+        j7FOc=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxP3-0003O0-S5; Fri, 26 Apr 2019 09:44:21 +0000
+        id 1hJxP1-0003Na-QW; Fri, 26 Apr 2019 09:44:19 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id D15B2441D3B; Fri, 26 Apr 2019 10:44:20 +0100 (BST)
+        id BC48B441D3B; Fri, 26 Apr 2019 10:44:18 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
+Cc:     Icenowy Zheng <icenowy@aosc.io>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Wadim Egorov <w.egorov@phytec.de>,
-        Yunfan Zhang <yfzhang@marvell.com>
-Subject: Applied "regulator: fan53555: Clean up unneeded fields from struct fan53555_device_info" to the regulator tree
-In-Reply-To: <20190419005824.21533-1-axel.lin@ingics.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: sy8106a: Get rid of struct sy8106a" to the regulator tree
+In-Reply-To: <20190420030125.6661-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094420.D15B2441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:44:20 +0100 (BST)
+Message-Id: <20190426094418.BC48B441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:44:18 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: fan53555: Clean up unneeded fields from struct fan53555_device_info
+   regulator: sy8106a: Get rid of struct sy8106a
 
 has been applied to the regulator tree at
 
@@ -90,168 +87,113 @@ to this mail.
 Thanks,
 Mark
 
-From a69929c7aa7006990975e0c5f8de16a6215265ec Mon Sep 17 00:00:00 2001
+From 5d7ebba38bafa8f6eba2540e8a36233ea6d6d0dc Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 19 Apr 2019 08:58:23 +0800
-Subject: [PATCH] regulator: fan53555: Clean up unneeded fields from struct
- fan53555_device_info
+Date: Sat, 20 Apr 2019 11:01:25 +0800
+Subject: [PATCH] regulator: sy8106a: Get rid of struct sy8106a
 
-The *regmap and *rdev can be replaced by local variables.
-The slew_rate is no longer used since commit dd7e71fbeefe
-("regulator: fan53555: use set_ramp_delay to set the ramp up slew rate").
+All the fields in struct sy8106a are only used in sy8106a_i2c_probe(), so
+use local variables instead.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/fan53555.c | 36 +++++++++++++++++-------------------
- 1 file changed, 17 insertions(+), 19 deletions(-)
+ drivers/regulator/sy8106a-regulator.c | 40 +++++++++------------------
+ 1 file changed, 13 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/regulator/fan53555.c b/drivers/regulator/fan53555.c
-index 771a06d1900d..e2caf4173ab5 100644
---- a/drivers/regulator/fan53555.c
-+++ b/drivers/regulator/fan53555.c
-@@ -91,10 +91,8 @@ enum {
+diff --git a/drivers/regulator/sy8106a-regulator.c b/drivers/regulator/sy8106a-regulator.c
+index 65fbd1f0b612..42e03b2c10a0 100644
+--- a/drivers/regulator/sy8106a-regulator.c
++++ b/drivers/regulator/sy8106a-regulator.c
+@@ -22,12 +22,6 @@
+  */
+ #define SY8106A_GO_BIT			BIT(7)
  
- struct fan53555_device_info {
- 	enum fan53555_vendor vendor;
--	struct regmap *regmap;
- 	struct device *dev;
- 	struct regulator_desc desc;
+-struct sy8106a {
 -	struct regulator_dev *rdev;
- 	struct regulator_init_data *regulator;
- 	/* IC Type and Rev */
- 	int chip_id;
-@@ -106,8 +104,6 @@ struct fan53555_device_info {
- 	unsigned int vsel_min;
- 	unsigned int vsel_step;
- 	unsigned int vsel_count;
--	/* Voltage slew rate limiting */
--	unsigned int slew_rate;
- 	/* Mode */
- 	unsigned int mode_reg;
- 	unsigned int mode_mask;
-@@ -125,7 +121,7 @@ static int fan53555_set_suspend_voltage(struct regulator_dev *rdev, int uV)
- 	ret = regulator_map_voltage_linear(rdev, uV, uV);
- 	if (ret < 0)
- 		return ret;
--	ret = regmap_update_bits(di->regmap, di->sleep_reg,
-+	ret = regmap_update_bits(rdev->regmap, di->sleep_reg,
- 				 di->desc.vsel_mask, ret);
- 	if (ret < 0)
- 		return ret;
-@@ -140,7 +136,7 @@ static int fan53555_set_suspend_enable(struct regulator_dev *rdev)
+-	struct regmap *regmap;
+-	u32 fixed_voltage;
+-};
+-
+ static const struct regmap_config sy8106a_regmap_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 8,
+@@ -70,36 +64,32 @@ static const struct regulator_desc sy8106a_reg = {
+ static int sy8106a_i2c_probe(struct i2c_client *i2c,
+ 			    const struct i2c_device_id *id)
  {
- 	struct fan53555_device_info *di = rdev_get_drvdata(rdev);
- 
--	return regmap_update_bits(di->regmap, di->sleep_reg,
-+	return regmap_update_bits(rdev->regmap, di->sleep_reg,
- 				  VSEL_BUCK_EN, VSEL_BUCK_EN);
- }
- 
-@@ -148,7 +144,7 @@ static int fan53555_set_suspend_disable(struct regulator_dev *rdev)
- {
- 	struct fan53555_device_info *di = rdev_get_drvdata(rdev);
- 
--	return regmap_update_bits(di->regmap, di->sleep_reg,
-+	return regmap_update_bits(rdev->regmap, di->sleep_reg,
- 				  VSEL_BUCK_EN, 0);
- }
- 
-@@ -158,11 +154,11 @@ static int fan53555_set_mode(struct regulator_dev *rdev, unsigned int mode)
- 
- 	switch (mode) {
- 	case REGULATOR_MODE_FAST:
--		regmap_update_bits(di->regmap, di->mode_reg,
-+		regmap_update_bits(rdev->regmap, di->mode_reg,
- 				   di->mode_mask, di->mode_mask);
- 		break;
- 	case REGULATOR_MODE_NORMAL:
--		regmap_update_bits(di->regmap, di->vol_reg, di->mode_mask, 0);
-+		regmap_update_bits(rdev->regmap, di->vol_reg, di->mode_mask, 0);
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -176,7 +172,7 @@ static unsigned int fan53555_get_mode(struct regulator_dev *rdev)
- 	unsigned int val;
- 	int ret = 0;
- 
--	ret = regmap_read(di->regmap, di->mode_reg, &val);
-+	ret = regmap_read(rdev->regmap, di->mode_reg, &val);
- 	if (ret < 0)
- 		return ret;
- 	if (val & di->mode_mask)
-@@ -213,7 +209,7 @@ static int fan53555_set_ramp(struct regulator_dev *rdev, int ramp)
- 		return -EINVAL;
- 	}
- 
--	return regmap_update_bits(di->regmap, FAN53555_CONTROL,
-+	return regmap_update_bits(rdev->regmap, FAN53555_CONTROL,
- 				  CTL_SLEW_MASK, regval << CTL_SLEW_SHIFT);
- }
- 
-@@ -396,6 +392,7 @@ static int fan53555_regulator_register(struct fan53555_device_info *di,
- 			struct regulator_config *config)
- {
- 	struct regulator_desc *rdesc = &di->desc;
+-	struct sy8106a *chip;
+ 	struct device *dev = &i2c->dev;
+-	struct regulator_dev *rdev = NULL;
 +	struct regulator_dev *rdev;
- 
- 	rdesc->name = "fan53555-reg";
- 	rdesc->supply_name = "vin";
-@@ -410,8 +407,8 @@ static int fan53555_regulator_register(struct fan53555_device_info *di,
- 	rdesc->vsel_mask = di->vsel_count - 1;
- 	rdesc->owner = THIS_MODULE;
- 
--	di->rdev = devm_regulator_register(di->dev, &di->desc, config);
--	return PTR_ERR_OR_ZERO(di->rdev);
-+	rdev = devm_regulator_register(di->dev, &di->desc, config);
-+	return PTR_ERR_OR_ZERO(rdev);
- }
- 
- static const struct regmap_config fan53555_regmap_config = {
-@@ -466,6 +463,7 @@ static int fan53555_regulator_probe(struct i2c_client *client,
- 	struct fan53555_device_info *di;
- 	struct fan53555_platform_data *pdata;
  	struct regulator_config config = { };
 +	struct regmap *regmap;
- 	unsigned int val;
- 	int ret;
+ 	unsigned int reg, vsel;
++	u32 fixed_voltage;
+ 	int error;
  
-@@ -502,22 +500,22 @@ static int fan53555_regulator_probe(struct i2c_client *client,
- 		di->vendor = id->driver_data;
- 	}
+-	chip = devm_kzalloc(&i2c->dev, sizeof(struct sy8106a), GFP_KERNEL);
+-	if (!chip)
+-		return -ENOMEM;
+-
+ 	error = of_property_read_u32(dev->of_node, "silergy,fixed-microvolt",
+-				     &chip->fixed_voltage);
++				     &fixed_voltage);
+ 	if (error)
+ 		return error;
  
--	di->regmap = devm_regmap_init_i2c(client, &fan53555_regmap_config);
--	if (IS_ERR(di->regmap)) {
-+	regmap = devm_regmap_init_i2c(client, &fan53555_regmap_config);
+-	if (chip->fixed_voltage < SY8106A_MIN_MV * 1000 ||
+-	    chip->fixed_voltage > SY8106A_MAX_MV * 1000)
++	if (fixed_voltage < SY8106A_MIN_MV * 1000 ||
++	    fixed_voltage > SY8106A_MAX_MV * 1000)
+ 		return -EINVAL;
+ 
+-	chip->regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
+-	if (IS_ERR(chip->regmap)) {
+-		error = PTR_ERR(chip->regmap);
++	regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
 +	if (IS_ERR(regmap)) {
- 		dev_err(&client->dev, "Failed to allocate regmap!\n");
--		return PTR_ERR(di->regmap);
-+		return PTR_ERR(regmap);
++		error = PTR_ERR(regmap);
+ 		dev_err(dev, "Failed to allocate register map: %d\n", error);
+ 		return error;
  	}
- 	di->dev = &client->dev;
- 	i2c_set_clientdata(client, di);
- 	/* Get chip ID */
--	ret = regmap_read(di->regmap, FAN53555_ID1, &val);
-+	ret = regmap_read(regmap, FAN53555_ID1, &val);
- 	if (ret < 0) {
- 		dev_err(&client->dev, "Failed to get chip ID!\n");
- 		return ret;
- 	}
- 	di->chip_id = val & DIE_ID;
- 	/* Get chip revision */
--	ret = regmap_read(di->regmap, FAN53555_ID2, &val);
-+	ret = regmap_read(regmap, FAN53555_ID2, &val);
- 	if (ret < 0) {
- 		dev_err(&client->dev, "Failed to get chip Rev!\n");
- 		return ret;
-@@ -534,7 +532,7 @@ static int fan53555_regulator_probe(struct i2c_client *client,
- 	/* Register regulator */
- 	config.dev = di->dev;
- 	config.init_data = di->regulator;
--	config.regmap = di->regmap;
+ 
+ 	config.dev = &i2c->dev;
+-	config.regmap = chip->regmap;
+-	config.driver_data = chip;
 +	config.regmap = regmap;
- 	config.driver_data = di;
- 	config.of_node = np;
+ 
+ 	config.of_node = dev->of_node;
+ 	config.init_data = of_get_regulator_init_data(dev, dev->of_node,
+@@ -109,15 +99,15 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c,
+ 		return -ENOMEM;
+ 
+ 	/* Ensure GO_BIT is enabled when probing */
+-	error = regmap_read(chip->regmap, SY8106A_REG_VOUT1_SEL, &reg);
++	error = regmap_read(regmap, SY8106A_REG_VOUT1_SEL, &reg);
+ 	if (error)
+ 		return error;
+ 
+ 	if (!(reg & SY8106A_GO_BIT)) {
+-		vsel = (chip->fixed_voltage / 1000 - SY8106A_MIN_MV) /
++		vsel = (fixed_voltage / 1000 - SY8106A_MIN_MV) /
+ 		       SY8106A_STEP_MV;
+ 
+-		error = regmap_write(chip->regmap, SY8106A_REG_VOUT1_SEL,
++		error = regmap_write(regmap, SY8106A_REG_VOUT1_SEL,
+ 				     vsel | SY8106A_GO_BIT);
+ 		if (error)
+ 			return error;
+@@ -131,10 +121,6 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c,
+ 		return error;
+ 	}
+ 
+-	chip->rdev = rdev;
+-
+-	i2c_set_clientdata(i2c, chip);
+-
+ 	return 0;
+ }
  
 -- 
 2.20.1
