@@ -3,105 +3,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C7FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5D7C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4BB206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE7B206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="swQlCevC"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LLcbJytR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbfDZCho (ORCPT
+        id S1729400AbfDZCkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 22:37:44 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42819 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727591AbfDZChn (ORCPT
+        Thu, 25 Apr 2019 22:40:01 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44024 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728517AbfDZCj7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 22:37:43 -0400
-Received: by mail-qt1-f196.google.com with SMTP id p20so2501378qtc.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 19:37:43 -0700 (PDT)
+        Thu, 25 Apr 2019 22:39:59 -0400
+Received: by mail-pl1-f195.google.com with SMTP id n8so757276plp.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 19:39:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=Dmt86cvAtAKBxNH5qe3yzo7tNTPBM5j4xs//7OU8lNU=;
-        b=swQlCevC/BDwMOtwX1AFdQBwadRT2sG2XrgFaTVYn9D6dWzId9g/6Fcj7xIkx4x4j0
-         +vB8SGlksa8DtMmKhE+xOJPt5jC6L+UxNIKnw7LyuFLEMDRBAUh6JHQ9N13EkiGEYLmq
-         5Kga85CShqXbIGV+YkqHDbd/fM2aNXCutXPaGI1nCX3YKzDvu7EJlPC6c63/mmXCd13q
-         LlhPc4DhtoMgcQM2cJH8kGViTKa5UkGqXeTe3U7Qv6cW/5In2G+QP2dZVp7zLWUT5dA4
-         HQ/vsbhrPFJuTTOWEjQQPPP6bSW4246cGD9riC+pMr/572dMEUsIX0F0t1iIwVnJkvc7
-         va9w==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=VO3iBFMkWhmrJrV24wpgxspECFNCTyofN0BzMsoUTLQ=;
+        b=LLcbJytR27KzYvODS/mG8EoR/6HefQiMUIVwP3LP27thQ7cSxfvw637TF9QubMQB/G
+         gNdKVY9Ohe6zolUH3G9KKkoCqddapgRAYzQUQma9W4SKsZi6dpC0/E3DugJW7YIrJrNL
+         Ipb855ozjGSuuY96EsxTDP98p+pkiXoj+DaB8lS0+TBjKGeG5bLN5is9tbQ8LY4nLh2p
+         11gTllvu4bVXmrltM7J0yT1NTMDxSwEhmU9g+l40ydLVx6RxbsS4HQtIdN7Cm8JKglRk
+         iY1CbEgf0AUKw9F1v2LnFXdRFt0s+azuUJp9e1CffftnwJ/ypp16Na/T4pkjBN4y1ly7
+         Arfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=Dmt86cvAtAKBxNH5qe3yzo7tNTPBM5j4xs//7OU8lNU=;
-        b=GVIIU4gV8Z+CJVFDVTYrINsGFcV+J4+BiypdYfT1uItnFHcqiLbnbVnc8Wl7410LO7
-         R5/QVL94Rn8/ezYM0avnQrVsoDMiZeLbTVj2WJ4J+e+G98gEv8Au7AjUOrbRQFCYW5yZ
-         C4tbeOngLSUSudDJf+Pp77U/ZBInqww0EtASnd7JCvtVg0/mF3eSzD4vHesBFPtBuqAV
-         3i8Bh0xLCuO8Y338/61rlPZffcah4JfQUyurmJWzvXe0BjbffQRlE1fjXKDYA+nLAJgi
-         i3iN3dN9ahgez0t7CCwzJN46i7bU1ISSNJFGotWzcddEMC2SdH8e2jMpobZJxCG0N6zH
-         m4Ug==
-X-Gm-Message-State: APjAAAXQBxppy0Zu9/8uavgIQL9dWlMAXkNDjgC+M5NRRelyZVLEZtme
-        1Eznxr0pnmnFMR3Zk8xoSw/KJdC03aY=
-X-Google-Smtp-Source: APXvYqwbeQZy+YtvbvBua5Qp4ztaknJZbk889BorpNYMjQDiRvIks2hVU1yV7v9t/3PjugTYcyU6Lg==
-X-Received: by 2002:ac8:2234:: with SMTP id o49mr2911305qto.104.1556246262764;
-        Thu, 25 Apr 2019 19:37:42 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id g17sm192646qki.61.2019.04.25.19.37.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 19:37:42 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 19:37:37 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Saeed Mahameed <saeedm@mellanox.com>
-Cc:     Moshe Shemesh <moshe@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] devlink: Execute devlink health recover as a
- work
-Message-ID: <20190425193737.131be39f@cakuba.netronome.com>
-In-Reply-To: <e540b1c192632dfcf4c0367be133c9ca51f33b43.camel@mellanox.com>
-References: <1556189823-5368-1-git-send-email-moshe@mellanox.com>
-        <20190425143847.417033ab@cakuba.netronome.com>
-        <e540b1c192632dfcf4c0367be133c9ca51f33b43.camel@mellanox.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VO3iBFMkWhmrJrV24wpgxspECFNCTyofN0BzMsoUTLQ=;
+        b=rmAuY+JIFWjpMSkbgGyYETJIjdBnXwkMvmJnXRPTY3yIwBLCY7TdrCJQFOtD5fMl7s
+         cmI5rm8MwATVHShXbPdcf3bDfevTRJ+cT77eW7O/LqdMPWtiLmtLrtl7WLqXURZGMVS7
+         GSAhysNXr45tb00I2WGg8WBSm5pkpxmr6PRDZi6VN8BmJKDhKXi9X6KFxeikW0QUud28
+         o/Ke9hvZjosOpgVhVoPadmhNGQ0AEfXleabh79efodus3Dbr2KVpbVar8H5MN4bHcMOW
+         yq/1fHp//ICfkVfuMwB1rzepqPBWnBVRLOuO1YATHGndQYPoKt71Qeh5PXa633hrsl0R
+         Sn6A==
+X-Gm-Message-State: APjAAAVDLKzVoTGXa8xhlEHg884iqgeUabukXJOEC+YEBlzpEIF9he9j
+        RYMf5/Tdwi7qh4eNWvaMsWNHBrhck+4bMg==
+X-Google-Smtp-Source: APXvYqwVFhKqwvVZkXVmb6SFTLR1hz5lT4AQByaHEtQDU6UXaJfhlw3/073UFDsW8JGZTPHaB0iK3w==
+X-Received: by 2002:a17:902:bb90:: with SMTP id m16mr5819205pls.340.1556246398081;
+        Thu, 25 Apr 2019 19:39:58 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id b19sm30534749pgb.51.2019.04.25.19.39.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 19:39:57 -0700 (PDT)
+Subject: Re: [LSF/MM TOPIC] Lightning round?
+To:     Theodore Ts'o <tytso@mit.edu>, lsf-pc@lists.linux-foundation.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190425200012.GA6391@redhat.com>
+ <83fda245-849a-70cc-dde0-5c451938ee97@kernel.dk>
+ <20190425211906.GH4739@mit.edu>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <cf2c4c2b-678a-bda9-bcee-7dd28894e53d@kernel.dk>
+Date:   Thu, 25 Apr 2019 20:39:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190425211906.GH4739@mit.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019 01:42:34 +0000, Saeed Mahameed wrote:
-> > > @@ -4813,7 +4831,11 @@ static int
-> > > devlink_nl_cmd_health_reporter_recover_doit(struct sk_buff *skb,
-> > >  	if (!reporter)
-> > >  		return -EINVAL;
-> > >  
-> > > -	return devlink_health_reporter_recover(reporter, NULL);
-> > > +	if (!reporter->ops->recover)
-> > > +		return -EOPNOTSUPP;
-> > > +
-> > > +	queue_work(devlink->reporters_wq, &reporter->recover_work);
-> > > +	return 0;
-> > >  }  
-> > 
-> > So the recover user space request will no longer return the status,
-> > and
-> > it will not actually wait for the recover to happen.  Leaving user
-> > pondering - did the recover run and fail, or did it nor get run
-> > yet...
-> >   
+On 4/25/19 3:19 PM, Theodore Ts'o wrote:
+> On Thu, Apr 25, 2019 at 02:03:34PM -0600, Jens Axboe wrote:
+>>
+>> which also includes a link to the schedule. Here it is:
+>>
+>> https://docs.google.com/spreadsheets/d/1Z1pDL-XeUT1ZwMWrBL8T8q3vtSqZpLPgF3Bzu_jejfk
 > 
-> wait_for_completion_interruptible_timeout is missing from the design ?
+> It looks like there are still quite a few open slots on Thursday?
+> Could we perhaps schedule a session for lightning talks?
 
-Perhaps, but I think its better to avoid the async execution of 
-the recover all together.  Perhaps its better to refcount the 
-reporters on the call to recover_doit?  Or some such.. :)
+Yes good idea, I've added it. Like previous years, I imagine the
+schedule will remain fluid, both as we go into the conference, but also
+during. So we can always add and/or move things around.
+
+> I've got at least one thing that I'm hoping to be able to plug as a
+> lightning round topic.  Folks may remember that a year or two ago I
+> had given an LSF/MM talk about changes to the block layer to support
+> inline encryption engines[1] (where the data gets encrypted/decrypted
+> between the DMA engine and the storage device, typically EMCC/UFS
+> flash).
+> 
+> [1]  https://marc.info/?l=linux-fsdevel&m=148190956210784&w=2
+> 
+> Between the Android team really trying to get aligned with upstream,
+> and multiple SOC vendors interested in providing inline encryption
+> support in hardware, we (finally) have a few engineers who have been
+> on implementing this design for the past few months.  If all goes
+> well, hopefully RFC patches will be published on linux-block,
+> linux-fsdevel, and linux-fscrypto by early next week.  Assuming this
+> happens on schedule, it would be perfect for a lightning talk, with
+> the goal of commending this patch series for feedback.
+
+Agree
+
+-- 
+Jens Axboe
+
