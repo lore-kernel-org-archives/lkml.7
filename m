@@ -2,112 +2,102 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8519FC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED2CC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F30206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3B9206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:57:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g388yM8V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tzWzi45G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbfDZGz6 (ORCPT
+        id S1726011AbfDZG5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 02:55:58 -0400
-Received: from mail-eopbgr40069.outbound.protection.outlook.com ([40.107.4.69]:49537
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725893AbfDZGz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 02:55:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oitB9cAJAe6yp15cJyFTAfn4cB+2hG/zWuzePDEmJkA=;
- b=g388yM8VgYq6jXo9xseOk1hVV19nTa9xVHiwuELVUVQqomdf73TgXb2RaCXHHzBRJjkyt6nPSmrAZr27CJpdnW4OwC48AIcBS9JJnyPyokwjsxhzit/MZ7d44y02VCjsaNrc1H5QJ5cpS1+jK9OjfaKNWvmgQ/FjUQ2NiEgcOhc=
-Received: from AM6PR04MB4789.eurprd04.prod.outlook.com (20.177.32.218) by
- AM6PR04MB6294.eurprd04.prod.outlook.com (20.179.7.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Fri, 26 Apr 2019 06:55:55 +0000
-Received: from AM6PR04MB4789.eurprd04.prod.outlook.com
- ([fe80::2c:6837:2927:a618]) by AM6PR04MB4789.eurprd04.prod.outlook.com
- ([fe80::2c:6837:2927:a618%3]) with mapi id 15.20.1813.017; Fri, 26 Apr 2019
- 06:55:55 +0000
-From:   Vabhav Sharma <vabhav.sharma@nxp.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-CC:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Andy Tang <andy.tang@nxp.com>,
-        Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: [PATCH v4] cpufreq: qoriq: add support for lx2160a
-Thread-Topic: [PATCH v4] cpufreq: qoriq: add support for lx2160a
-Thread-Index: AQHU+/0YoMkczGxbgEqQ3+d1tNVJlw==
-Date:   Fri, 26 Apr 2019 06:55:55 +0000
-Message-ID: <1556261743-20584-1-git-send-email-vabhav.sharma@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BMXPR01CA0078.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:54::18) To AM6PR04MB4789.eurprd04.prod.outlook.com
- (2603:10a6:20b:3::26)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vabhav.sharma@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.9.1
-x-originating-ip: [92.120.1.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 91c228b4-15a6-485e-19fa-08d6ca143a75
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB6294;
-x-ms-traffictypediagnostic: AM6PR04MB6294:
-x-microsoft-antispam-prvs: <AM6PR04MB6294EE645F880F3734ADC25CF33E0@AM6PR04MB6294.eurprd04.prod.outlook.com>
-x-forefront-prvs: 001968DD50
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(39860400002)(346002)(366004)(136003)(199004)(189003)(68736007)(2501003)(81156014)(86362001)(2616005)(256004)(26005)(4326008)(486006)(316002)(44832011)(186003)(8676002)(476003)(66066001)(6506007)(386003)(6486002)(36756003)(2906002)(6436002)(6116002)(3846002)(478600001)(66476007)(102836004)(54906003)(99286004)(25786009)(73956011)(66946007)(5660300002)(66556008)(64756008)(66446008)(110136005)(7736002)(8936002)(6512007)(52116002)(305945005)(81166006)(71200400001)(50226002)(14454004)(53936002)(97736004)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6294;H:AM6PR04MB4789.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rWIBHd9b6ScRWOe9V1d2v3wCzngifYAGqvDidyr53huponzFDJuqLEBLIVC/MWmhFfs8NEnSW6FVf7ozEONHDr2X0TQNQrd4q6jG92DIp/yqldh5vugW+h8Vfn98VY7eHI6/QYkKRwOdwJE+AtMZqR0jTnU8UO0OD+YHVVIFWJ6GGi4ksvlfe+OEo8D5pJUn3qO+CasnCV8xgoE2UlvK4OhNgl9CRnEmEdlmekGin+k+cdvGHDfkNFpH+pdld5bL0tNyFmDQugn/GJ/Nwi0q6+dN2Trfd57FBShsSeasbg6Yx6WfDHYts04RUiDXcorEkL6l7+gnZf2a8ZaqnKKhazYZTjRjcYfQwjPTX1IK9mWjOhJodUPnnquroIVCxu2lKex+xKgISf8c5t0qoJxg9wt6fLr++F700rTBlCxkCZc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 26 Apr 2019 02:57:50 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39800 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfDZG5t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 02:57:49 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h16so2987261qtk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 23:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QyqYEKvDUNhL9MMnFlKvINv444Yhz0Ms3qn2L+mBiN8=;
+        b=tzWzi45G75cdiVNcT0Ii0HjMC5NjBKU6lUEQDSJSU8qs3hvbWcyNkHa12/PmMFWtm6
+         BN+Gg0JTbAnWQkJDOfjhD/q9XP16jYv0VVE5UsJ+en6PkichE83m+PmwK0KQAEXdzuUV
+         pC/sxdb7Rsgm5EYEV18PUtaes3BnOZHhBiF/wz/Ky9Z3wvPYhDGUslP7x+soFceVwtDm
+         VZkCWVd7p4mIXxx1eAGEEw6Ji6mQsWXYw4wYSRjD5nasO9Md1USXQLjyrNpbK//FxYjp
+         Ms6zZ93q2QWoWqJe5O5gCXna11+tHrD9daGsWAPeLlIVM4NhWueva7Q3ZO9iE0R/dXNY
+         JR9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QyqYEKvDUNhL9MMnFlKvINv444Yhz0Ms3qn2L+mBiN8=;
+        b=i5DicNnmLedHqpuRAwzQRWmyxkS754vbrkUCW1MCNiDAuGwCFFXA5uQI1xyu2AIwKu
+         pmAaS5ava5/+Dugvoz27mSrJMG9fhg0GjTHlgM4sqv+1r7Bc3jfr4hh6E9MKs45zIuwD
+         xIwYJwAyUmX4qtkm9AwN7teUg6js0xeYKP82+V4mZX7021w8b7lJiW8iOqr2KC9ahJNu
+         2NU2optpxD9CueAqD+ugpZ398GiQcNdPl+eJ3h9y3qqsAbGeNZ4C5IIz29BEqkDEls1E
+         czMo13Qsq4RIVKLL9Q+wnWxe8LseEaQZGbSUM0x9U3VGpVBzHADVH+Y1qk8IBRwgnXoQ
+         J7Qw==
+X-Gm-Message-State: APjAAAXX8e2w6jJjmRnJRh09oULnVZSpIIsAEsSbOvyWL3BcDwaLwiR/
+        RFbtMtGHvXj2Yyr9mvRuQ2R0PywdJLwlBDqTev0=
+X-Google-Smtp-Source: APXvYqz2fQ9zN9crfykgYDKQMqDjvyyTPJo4H+c+EAzQTRlNt0cjB6LjyirY6+9jcjDLSADK9Ul8stvy4XB3uHL4rms=
+X-Received: by 2002:ac8:27a6:: with SMTP id w35mr35010736qtw.157.1556261868816;
+ Thu, 25 Apr 2019 23:57:48 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91c228b4-15a6-485e-19fa-08d6ca143a75
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2019 06:55:55.1795
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6294
+References: <20190424101934.51535-1-duyuyang@gmail.com> <20190424101934.51535-20-duyuyang@gmail.com>
+ <20190425193247.GU12232@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190425193247.GU12232@hirez.programming.kicks-ass.net>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Fri, 26 Apr 2019 14:57:37 +0800
+Message-ID: <CAHttsrY4jK2cayBE8zNCSJKDAkzLiBb40GVfQHpJi2YK1nEZaQ@mail.gmail.com>
+Subject: Re: [PATCH 19/28] locking/lockdep: Optimize irq usage check when
+ marking lock usage bit
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     will.deacon@arm.com, Ingo Molnar <mingo@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
+        Frederic Weisbecker <frederic@kernel.org>, tglx@linutronix.de,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RW5hYmxlIHN1cHBvcnQgb2YgTlhQIFNvQyBseDIxNjBhIHRvIGhhbmRsZSB0aGUNCmx4MjE2MGEg
-U29DLg0KDQpTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1YW50aWFuIDxhbmR5LnRhbmdAbnhwLmNvbT4N
-ClNpZ25lZC1vZmYtYnk6IFlvZ2VzaCBHYXVyIDx5b2dlc2huYXJheWFuLmdhdXJAbnhwLmNvbT4N
-ClNpZ25lZC1vZmYtYnk6IFZhYmhhdiBTaGFybWEgPHZhYmhhdi5zaGFybWFAbnhwLmNvbT4NCkFj
-a2VkLWJ5OiBTY290dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0Pg0KQWNrZWQtYnk6IFN0ZXBoZW4g
-Qm95ZCA8c2JveWRAa2VybmVsLm9yZz4NCkFja2VkLWJ5OiBWaXJlc2ggS3VtYXIgPHZpcmVzaC5r
-dW1hckBsaW5hcm8ub3JnPg0KLS0tDQpDaGFuZ2VzIGZvciB2NDoNCi0gSW5jb3Jwb3JhdGVkIHJl
-dmlldyBjb21tZW50cyBmcm9tIFN0ZXBoZW4gQm95ZA0KDQpDaGFuZ2VzIGZvciB2MzoNCi0gSW5j
-b3Jwb3JhdGVkIHJldmlldyBjb21tZW50cyBvZiBSYWZhZWwgSi4gV3lzb2NraQ0KLSBVcGRhdGVk
-IGNvbW1pdCBtZXNzYWdlDQoNCkNoYW5nZXMgZm9yIHYyOg0KLSBTdWJqZWN0IGxpbmUgdXBkYXRl
-ZA0KDQogZHJpdmVycy9jcHVmcmVxL3FvcmlxLWNwdWZyZXEuYyB8IDEgKw0KIDEgZmlsZSBjaGFu
-Z2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jcHVmcmVxL3Fvcmlx
-LWNwdWZyZXEuYyBiL2RyaXZlcnMvY3B1ZnJlcS9xb3JpcS1jcHVmcmVxLmMNCmluZGV4IDQyOTVl
-NTQuLjgxZjAyODggMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2NwdWZyZXEvcW9yaXEtY3B1ZnJlcS5j
-DQorKysgYi9kcml2ZXJzL2NwdWZyZXEvcW9yaXEtY3B1ZnJlcS5jDQpAQCAtMjg0LDYgKzI4NCw3
-IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG5vZGVfbWF0Y2hlc1tdIF9faW5p
-dGNvbnN0ID0gew0KIAl7IC5jb21wYXRpYmxlID0gImZzbCxsczEwNDZhLWNsb2NrZ2VuIiwgfSwN
-CiAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1jbG9ja2dlbiIsIH0sDQogCXsgLmNvbXBh
-dGlibGUgPSAiZnNsLGxzMjA4MGEtY2xvY2tnZW4iLCB9LA0KKwl7IC5jb21wYXRpYmxlID0gImZz
-bCxseDIxNjBhLWNsb2NrZ2VuIiwgfSwNCiAJeyAuY29tcGF0aWJsZSA9ICJmc2wscDQwODAtY2xv
-Y2tnZW4iLCB9LA0KIAl7IC5jb21wYXRpYmxlID0gImZzbCxxb3JpcS1jbG9ja2dlbi0xLjAiLCB9
-LA0KIAl7IC5jb21wYXRpYmxlID0gImZzbCxxb3JpcS1jbG9ja2dlbi0yLjAiLCB9LA0KLS0gDQoy
-LjcuNA0KDQo=
+Thanks for review.
+
+On Fri, 26 Apr 2019 at 03:32, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Apr 24, 2019 at 06:19:25PM +0800, Yuyang Du wrote:
+>
+> After only a quick read of these next patches; this is the one that
+> worries me most.
+>
+> You did mention Frederic's patches, but I'm not entirely sure you're
+> aware why he's doing them. He's preparing to split the softirq state
+> into one state per softirq vector.
+>
+> See here:
+>
+>   https://lkml.kernel.org/r/20190228171242.32144-14-frederic@kernel.org
+>   https://lkml.kernel.org/r/20190228171242.32144-15-frederic@kernel.org
+>
+> IOW he's going to massively explode this storage.
+
+If I understand correctly, he is not going to.
+
+First of all, we can divide the whole usage thing into tracking and checking.
+
+Frederic's fine-grained soft vector state is applied to usage
+tracking, i.e., which specific vectors a lock is used or enabled.
+
+But for usage checking, which vectors are does not really matter. So,
+the current size of the arrays and bitmaps are good enough. Right?
