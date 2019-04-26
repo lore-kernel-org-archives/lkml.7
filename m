@@ -2,150 +2,118 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE8FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2379C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120432084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4308206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p+k3zXC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfDZO75 (ORCPT
+        id S1726553AbfDZPAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:59:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35537 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfDZO75 (ORCPT
+        Fri, 26 Apr 2019 11:00:18 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45722 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfDZPAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:59:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y197so4862531wmd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 07:59:56 -0700 (PDT)
+        Fri, 26 Apr 2019 11:00:18 -0400
+Received: by mail-pf1-f193.google.com with SMTP id e24so1847673pfi.12;
+        Fri, 26 Apr 2019 08:00:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A5Y+MEfrLrdu8cFgwukPbLeOMa8h8CDG6LEpPB89rIc=;
+        b=p+k3zXC+msVwPDiTh8ZFLz2dOtBlIVpVmkiMWJMLrbujSRqsiO1qH5CsQ6Fqj8uvWv
+         8saQw+waVQ242238j8bPgCHXA0ohHari7ghEBVdMaeNGGzNJAVMeESC96whtfP0Tmw/C
+         qFQn1p8G4XKbzOVOfYJMGf3DcA63NGtu1arxjhgFZNfWxfhcHj4ErdBBngFmUdiKmEAk
+         hU+CZFZROyJ8WVKIHalTVXwPT15QHT7im47RDFoot+Hxu9NNotgMMu1ZSbn2q8dgf/oP
+         T92/isg/gsPnkOSc1dJb3AIf+vNgvXrNFYmNV1fa6E0h0xygfCj+PBTiMLC35uJSEW5D
+         0UNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=0F1ut/UAEkuWPG6wyrTkb2MOpdQOgWB7mvJpKTT59BU=;
-        b=cbZF2mealvJmkaoI/VLTVN/tRLIg6rBlqW1aF2UT96drS7lZo/sO4Hhj3Xrnj2+6pf
-         B33nQjyZhp7EJ3j34ucYdz4JOk1bm1HerEQzZ2beceuXVdHz5RKemEV0WZlxqtcujptk
-         MqyIbGYVvBFt/nfgqPReroeMxKsCdpSsJYf+Yr/iqh2zM2LMCNgZeE2WLGUJRKE/IUqL
-         pLDf/NN9m6I0m3hxW0VxU7eZlzqbdBBfS3O6kTtl1E7BaTrF1+MrH2uTtAZoqRNMjH7I
-         WJMz4buupEVtDKcpQQfW75Y533L7yIs8D+wIBcOGnCFF3C0uD9IwYYrNUFdhq4pKfsXo
-         hZ7Q==
-X-Gm-Message-State: APjAAAWMnY5mET839r3yVuzRanAFKXIWm3fXu3hSYuIv48U8GSbw39dc
-        ac++5T8QxoPUMashssKnYUioMrlEly9zCQ==
-X-Google-Smtp-Source: APXvYqxEDHX3RX1VU3ahGAdeJZGdA9q1eCc3kzTBPkzej1x+UXiJVhjEQMMD3k/lpzctoYR3HN2EUg==
-X-Received: by 2002:a7b:c053:: with SMTP id u19mr7711277wmc.63.1556290795318;
-        Fri, 26 Apr 2019 07:59:55 -0700 (PDT)
-Received: from dhcp129-106.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.googlemail.com with ESMTPSA id h123sm6572282wme.6.2019.04.26.07.59.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 07:59:54 -0700 (PDT)
-From:   Grzegorz Halat <ghalat@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-fbdev@vger.kernel.org,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Grzegorz Halat <ghalat@redhat.com>
-Subject: [PATCH] vt/fbcon: deinitialize resources in visual_init() after failed memory allocation
-Date:   Fri, 26 Apr 2019 16:59:46 +0200
-Message-Id: <20190426145946.26537-1-ghalat@redhat.com>
-X-Mailer: git-send-email 2.20.1
+        bh=A5Y+MEfrLrdu8cFgwukPbLeOMa8h8CDG6LEpPB89rIc=;
+        b=WYfqAkLK7RPjl1rYZnArEKP38bPdT1au55bRg5B7LWuFsbiLDUVYfo+GruSAcXr72e
+         pA4c/GqFf92sqhi5/L0hLavs/ohN7iWYCotQ9B4Wp1jPaY1nKWg3Lro/AFNdXoQBAUMN
+         oBf59F7GFlm9I2L0B9i+JNyDf2E4CemeRhx0Wp6uYRgvBIvV7pcTBBMFEXxRceIS++tn
+         d+aNssAFkMARLLsVAoKlGrp9FwGJQhtLbc12F8Lwqbb+oRXK/3jET407fSUpozTuXQil
+         aymrMgFHp7QHwQokGT109xXJ22pz5/FDVedP2it18je887HDumQmfMPlF3asMsChw8P3
+         c3hw==
+X-Gm-Message-State: APjAAAUHIpXsR6kUzHVofTJ03OSsqDtcSgVpAIj6oY2nb7QSnyyvfLr1
+        xTvlIW2aCTgBg0Wu3ETch2AU1owL
+X-Google-Smtp-Source: APXvYqxiR+Id+MWGuZ3Ujb9i4Tjd0ZnOAs81XzNPPfdZRya+E5UuH83bo9s6s/kqzm4/Ap7196sYCg==
+X-Received: by 2002:a63:b53:: with SMTP id a19mr861877pgl.216.1556290816618;
+        Fri, 26 Apr 2019 08:00:16 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:c824:60cf:2bea:8fbc? ([2601:282:800:fd80:c824:60cf:2bea:8fbc])
+        by smtp.googlemail.com with ESMTPSA id 4sm284982pfi.94.2019.04.26.08.00.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 08:00:15 -0700 (PDT)
+Subject: Re: [PATCH net-next 0/3] make nla_nest_start() add NLA_F_NESTED flag
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1556269635.git.mkubecek@suse.cz>
+ <1dcb87486a96785e3b9e6f337392aa904d977a0d.camel@sipsolutions.net>
+ <20190426111954.GG26549@unicorn.suse.cz>
+ <a3626aeca20280e8253b575fe72309b2009474a8.camel@sipsolutions.net>
+ <20190426115629.GH26549@unicorn.suse.cz>
+ <18db9ac8b398b215e3523dd5b79c7f86e21864ce.camel@sipsolutions.net>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <47f6daf9-2d14-1566-8ed1-fb5d4dd57bf8@gmail.com>
+Date:   Fri, 26 Apr 2019 09:00:14 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <18db9ac8b398b215e3523dd5b79c7f86e21864ce.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After memory allocation failure vc_allocate() doesn't clean up data
-which has been initialized in visual_init(). In case of fbcon this
-leads to divide-by-0 in fbcon_init() on next open of the same tty.
+On 4/26/19 6:17 AM, Johannes Berg wrote:
+> On Fri, 2019-04-26 at 13:56 +0200, Michal Kubecek wrote:
+> 
+>>>> I suppose we should, at least the part that attribute with NLA_NESTED
+>>>> policy has NLA_F_NESTED flag. I'm not so sure about the opposite (i.e.
+>>>> that attributes with other policies do not have the flag) as when I was
+>>>> checking where kernel accesses nlattr::nla_type directly rather than
+>>>> with nla_type(), I stumbled upon an attribute NL80211_ATTR_VENDOR_DATA
+>>>> which has policy NLA_BINARY but is sometimes a nest, AFAICS.
+>>>
+>>> I guess anyway we can only do it for *new* things, not really for all
+>>> existing attributes.
+>>
+>> Right... but what I wanted to say is that if there is already (at least)
+>> one attribute which may or may not be a nest, depending on a context, we
+>> should expect there may be also new attributes like that in the future.
+> 
+> Yeah, but we can handle that as we see it?
+> 
+> I just reposted my strict validation series - maybe we can right now, as
+> it's not released yet, quickly add an NL_VALIDATED_NESTED_FLAG or so to
+> it?
+> 
+> Do you want to take a stab at that? I have to go now, but I could check
+> in the next few days.
 
-memory allocation in vc_allocate() may fail here:
-1097:     vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
-
-on next open() fbcon_init() skips vc_font.data initialization:
-1088:     if (!p->fontdata) {
-
-division by zero in fbcon_init() happens here:
-1149:     new_cols /= vc->vc_font.width;
-
-Additional check is needed in fbcon_deinit() to prevent
-usage of uninitialized vc_screenbuf:
-
-1251:        if (vc->vc_hi_font_mask && vc->vc_screenbuf)
-1252:                set_vc_hi_font(vc, false);
-
-Crash:
-
- #6 [ffffc90001eafa60] divide_error at ffffffff81a00be4
-    [exception RIP: fbcon_init+463]
-    RIP: ffffffff814b860f  RSP: ffffc90001eafb18  RFLAGS: 00010246
-...
- #7 [ffffc90001eafb60] visual_init at ffffffff8154c36e
- #8 [ffffc90001eafb80] vc_allocate at ffffffff8154f53c
- #9 [ffffc90001eafbc8] con_install at ffffffff8154f624
-...
-
-Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
----
- drivers/tty/vt/vt.c              | 11 +++++++++--
- drivers/video/fbdev/core/fbcon.c |  2 +-
- 2 files changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 650c66886c80..ec85d195678f 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1056,6 +1056,13 @@ static void visual_init(struct vc_data *vc, int num, int init)
- 	vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
- }
- 
-+
-+static void visual_deinit(struct vc_data *vc)
-+{
-+	vc->vc_sw->con_deinit(vc);
-+	module_put(vc->vc_sw->owner);
-+}
-+
- int vc_allocate(unsigned int currcons)	/* return 0 on success */
- {
- 	struct vt_notifier_param param;
-@@ -1103,6 +1110,7 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
- 
- 	return 0;
- err_free:
-+	visual_deinit(vc);
- 	kfree(vc);
- 	vc_cons[currcons].d = NULL;
- 	return -ENOMEM;
-@@ -1331,9 +1339,8 @@ struct vc_data *vc_deallocate(unsigned int currcons)
- 		param.vc = vc = vc_cons[currcons].d;
- 		atomic_notifier_call_chain(&vt_notifier_list, VT_DEALLOCATE, &param);
- 		vcs_remove_sysfs(currcons);
--		vc->vc_sw->con_deinit(vc);
-+		visual_deinit(vc);
- 		put_pid(vc->vt_pid);
--		module_put(vc->vc_sw->owner);
- 		vc_uniscr_set(vc, NULL);
- 		kfree(vc->vc_screenbuf);
- 		vc_cons[currcons].d = NULL;
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index cd059a801662..c59b23f6e9ba 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -1248,7 +1248,7 @@ static void fbcon_deinit(struct vc_data *vc)
- 	if (free_font)
- 		vc->vc_font.data = NULL;
- 
--	if (vc->vc_hi_font_mask)
-+	if (vc->vc_hi_font_mask && vc->vc_screenbuf)
- 		set_vc_hi_font(vc, false);
- 
- 	if (!con_is_bound(&fb_con))
--- 
-2.20.1
-
+What is a valid use case for an attribute sometimes being a nest and
+sometimes not? That seems really weird to me (ie., wrong). They should
+be 2 separate attributes even if the backend processing is the same.
