@@ -2,208 +2,170 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F85C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFA5C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA281206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:05:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gZcolju3"
+	by mail.kernel.org (Postfix) with ESMTP id B7036206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfDZPF3 (ORCPT
+        id S1726455AbfDZPGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:05:29 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45827 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfDZPF2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:05:28 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k92so949605edc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 08:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=1BKKOVXP9tjmQBqg/He9D4Zx+2GSJwf5kk/dHfK6jhI=;
-        b=gZcolju3VVCUHpIEB5MH4GR9Wgq+tQBiLWDuvs16ypijweiIrEOK49Ai+TueUv7nNV
-         PuCWZ3KNQ5SrL6s7eJUaHeuB9iBjiFVhgOl4xVyx7inocfOuB10i5KszohGbIZQW6m8H
-         HH7Byhgvf8ei8ozCrbn7nLsF1qkuazo02V2Gc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=1BKKOVXP9tjmQBqg/He9D4Zx+2GSJwf5kk/dHfK6jhI=;
-        b=YteMgIig3fdIBfROG2tesgoLpnIGLeVtWCAaCQQfVGTQujEMVMwEYBjI7kYjiNf9M6
-         cVLmM/nOiuhJMhaBn2w+6U7sd89/pdDjr21+Rn0AElkC3NaKCTPJ9Ddq+4GLBOTMdsPP
-         JtARsz23pAKeLU8injeOQNqAKUWJCEq3VMyxl9MRnLJNZDBC/q6AvbCxiQth97Un0XCI
-         YdzstKxwCutk637l/ca6c2Z2QwpIQfGBwt2Dc1D6bdRUmuoEADNqC7p8SJObeSxibbfI
-         CJ9TQ0K5iWTL9G5IeMGkT86bNjJOIprBgVyUiQCRFZKe8TMK499fdT2rGTO5RHOqHD/b
-         7zyQ==
-X-Gm-Message-State: APjAAAVANM27LFWDL8QHUgmALveavpP+B8LUQ4Yy4LHt3087biw1Ml4i
-        l+bZjB8k/nTXMKmyxXKNdDHWXA==
-X-Google-Smtp-Source: APXvYqyvR7zzkh2I5zrhWDxcnNrcnhDdNQmAkszIdocSgWAYTRgqYX6KtYL30hrVTFNMIR6aOCdC8g==
-X-Received: by 2002:a17:906:11d2:: with SMTP id o18mr22559901eja.123.1556291126445;
-        Fri, 26 Apr 2019 08:05:26 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id j55sm7238122ede.73.2019.04.26.08.05.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 08:05:25 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 17:05:05 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>, zhoucm1 <David1.Zhou@amd.com>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        "James (Qian) Wang" <james.qian.wang@arm.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        intel-gvt-dev@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Koenig, Christian" <christian.koenig@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        freedreno@lists.freedesktop.org
-Subject: Re: [Intel-gfx] [PATCH v2] drm: prefix header search paths with
- $(srctree)/
-Message-ID: <20190426150505.GA3271@phenom.ffwll.local>
-Mail-Followup-To: Dave Airlie <airlied@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Dave Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>, zhoucm1 <David1.Zhou@amd.com>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        "James (Qian) Wang" <james.qian.wang@arm.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        intel-gvt-dev@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Koenig, Christian" <christian.koenig@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        freedreno@lists.freedesktop.org
-References: <1553859161-2628-1-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNAR6bT93kmyPCzJg2ZFvk239nz0nyVX5z23G+8Y0Wiba1Q@mail.gmail.com>
- <CAPM=9txpmjQqh0eLA1sMjcDatQG83vk=juLehiUDi=sBO+c9Tg@mail.gmail.com>
- <8d04d30e86a54b3e9b27b30ac0ab3822@SOC-EX01V.e01.socionext.com>
- <CAPM=9tyRHNp2R_No_0Gx0N59XR2RvD4=1G2GWgLLDxmKNk6JVg@mail.gmail.com>
+        Fri, 26 Apr 2019 11:06:06 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43860 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbfDZPGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:06:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F74980D;
+        Fri, 26 Apr 2019 08:06:05 -0700 (PDT)
+Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD28C3F5C1;
+        Fri, 26 Apr 2019 08:06:03 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] arm64/fpsimd: Don't disable softirq when touching
+ FPSIMD/SVE state
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ard.biesheuvel@linaro.org, julien.thierry@arm.com,
+        marc.zyngier@arm.com, catalin.marinas@arm.com,
+        suzuki.poulose@arm.com, will.deacon@arm.com,
+        christoffer.dall@arm.com, james.morse@arm.com
+References: <20190426143740.31973-1-julien.grall@arm.com>
+ <20190426143740.31973-4-julien.grall@arm.com>
+ <20190426145232.GK3567@e103592.cambridge.arm.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <322340c7-0c97-76f8-8ab8-875040b4459c@arm.com>
+Date:   Fri, 26 Apr 2019 16:06:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPM=9tyRHNp2R_No_0Gx0N59XR2RvD4=1G2GWgLLDxmKNk6JVg@mail.gmail.com>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190426145232.GK3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 12:56:48PM +1000, Dave Airlie wrote:
-> Daniel, drm-misc-next-fixes?
+Hi,
 
-Makes sense. Pushed.
+On 26/04/2019 15:52, Dave Martin wrote:
+> On Fri, Apr 26, 2019 at 03:37:40PM +0100, Julien Grall wrote:
+>> When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
+>> the kernel may be able to use FPSIMD/SVE. This is for instance the case
+>> for crypto code.
+>>
+>> Any use of FPSIMD/SVE in the kernel are clearly marked by using the
+>> function kernel_neon_{begin, end}. Furthermore, this can only be used
+>> when may_use_simd() returns true.
+>>
+>> The current implementation of may_use_simd() allows softirq to use
+>> FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
+>> When in use, softirqs usually fall back to a software method.
+>>
+>> At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
+>> when touching the FPSIMD/SVE context. This has the drawback to disable
+>> all softirqs even if they are not using FPSIMD/SVE.
+>>
+>> Since a softirq is supposed to check may_use_simd() anyway before
+>> attempting to use FPSIMD/SVE, there is limited reason to keep softirq
+>> disabled when touching the FPSIMD/SVE context. Instead, we can simply
+>> disable preemption and mark the FPSIMD/SVE context as in use by setting
+>> CPU's kernel_neon_busy flag.
+> 
+> fpsimd_context_busy?
 
-Cheers, Daniel
+Yes.
 
 > 
-> Dave.
+>> Two new helpers {get, put}_cpu_fpsimd_context is introduced to mark the
+>> area using FPSIMD/SVE context and uses them in replacement of
 > 
-> On Fri, 26 Apr 2019 at 12:25, <yamada.masahiro@socionext.com> wrote:
-> >
-> > Hi Dave,
-> >
-> > > -----Original Message-----
-> > > From: Dave Airlie [mailto:airlied@gmail.com]
-> > > Sent: Friday, April 26, 2019 11:19 AM
-> > > To: Yamada, Masahiro/山田 真弘 <yamada.masahiro@socionext.com>
-> > > Cc: David Airlie <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>;
-> > > dri-devel <dri-devel@lists.freedesktop.org>; nouveau
-> > > <nouveau@lists.freedesktop.org>; Sam Ravnborg <sam@ravnborg.org>; David
-> > > (ChunMing) Zhou <David1.Zhou@amd.com>; amd-gfx mailing list
-> > > <amd-gfx@lists.freedesktop.org>; James (Qian) Wang
-> > > <james.qian.wang@arm.com>; Ben Skeggs <bskeggs@redhat.com>;
-> > > linux-arm-msm <linux-arm-msm@vger.kernel.org>; Intel Graphics
-> > > Development <intel-gfx@lists.freedesktop.org>;
-> > > intel-gvt-dev@lists.freedesktop.org; Linux Kernel Mailing List
-> > > <linux-kernel@vger.kernel.org>; Christian König
-> > > <christian.koenig@amd.com>; Alex Deucher <alexander.deucher@amd.com>;
-> > > freedreno@lists.freedesktop.org
-> > > Subject: Re: [Intel-gfx] [PATCH v2] drm: prefix header search paths with
-> > > $(srctree)/
-> > >
-> > > On Fri, 26 Apr 2019 at 11:46, Masahiro Yamada
-> > > <yamada.masahiro@socionext.com> wrote:
-> > > >
-> > > > Hi.
-> > > >
-> > > >
-> > > > On Fri, Mar 29, 2019 at 8:37 PM Masahiro Yamada
-> > > > <yamada.masahiro@socionext.com> wrote:
-> > > > >
-> > > > > Currently, the Kbuild core manipulates header search paths in a crazy
-> > > > > way [1].
-> > > > >
-> > > > > To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
-> > > > > the search paths in the srctree. Some Makefiles are already written
-> > > in
-> > > > > that way, but not all. The goal of this work is to make the notation
-> > > > > consistent, and finally get rid of the gross hacks.
-> > > > >
-> > > > > Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
-> > > > > ("kbuild: do not drop -I without parameter").
-> > > > >
-> > > > > [1]: https://patchwork.kernel.org/patch/9632347/
-> > > > >
-> > > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > > > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> > > > > ---
-> > > > >
-> > > > > I put all gpu/drm changes into a single patch because
-> > > > > they are trivial conversion.
-> > > > >
-> > > > > If you are interested in the big picture of this work,
-> > > > > the full patch set is available at the following URL.
-> > > > >
-> > > > >
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.g
-> > > it build-test
-> > > >
-> > > >
-> > > > Is somebody taking care of this?
-> > > >
-> > >
-> > > Are you expecting this to be merged in the drm tree? if so please
-> > > indicate that when posting.
-> >
-> >
-> > Sorry for unclearness.
-> >
-> > Could you apply this to your drm tree?
-> >
-> > Thanks.
-> >
-> >
-> >
-> >
-> > > I'd assumed this would go via kbuild tree.
-> > >
-> > > If the later,
-> > > Acked-by: Dave Airlie <airlied@redhat.com>
-> > > Dave.
+> Paragraph mangled during edit?
+
+Possibly, I will update it.
+
+> 
+> -> "are introduced ... and they are used to replace ..."
+> 
+>> local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
+>> also re-implemented to use the new helpers.
+>>
+>> Additionally, double-underscored versions of the helpers are provided to
+>> be used in function called with interrupt masked. They are used for
+>> sanity and also help to mark place where the FPSIMD context can be
+>> manipulate freely.
+> 
+> For the benefit of other readers, this should be more explicit.  Also,
+> the distinction between the normal and __ helpers is that the latter
+> can be caller with preemption disabled.
+> 
+> To clarify the impact, we can say something like
+> 
+> "These are only relevant on paths where irqs are disabled anyway, so
+> they are not needed for correctness in the current code. Let's use them
+> anyway though: this marks the critical sections clearly and will help
+> to avoid mistakes during future maintenance."
+
+How about the following commit message?
+
+     arm64/fpsimd: Don't disable softirq when touching FPSIMD/SVE state
+
+     When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
+     the kernel may be able to use FPSIMD/SVE. This is for instance the case
+     for crypto code.
+
+     Any use of FPSIMD/SVE in the kernel are clearly marked by using the
+     function kernel_neon_{begin, end}. Furthermore, this can only be used
+     when may_use_simd() returns true.
+
+     The current implementation of may_use_simd() allows softirq to use
+     FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
+     When in use, softirqs usually fall back to a software method.
+
+     At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
+     when touching the FPSIMD/SVE context. This has the drawback to disable
+     all softirqs even if they are not using FPSIMD/SVE.
+
+     Since a softirq is supposed to check may_use_simd() anyway before
+     attempting to use FPSIMD/SVE, there is limited reason to keep softirq
+     disabled when touching the FPSIMD/SVE context. Instead, we can simply
+     disable preemption and mark the FPSIMD/SVE context as in use by setting
+     CPU's fpsimd_context_busy flag.
+
+     Two new helpers {get, put}_cpu_fpsimd_context are introduced to mark
+     the area using FPSIMD/SVE context and they are used to replace
+     local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
+     also re-implemented to use the new helpers.
+
+     Additionally, double-underscored versions of the helpers are provided to
+     called when preemption is already disabled. These are only relevant on
+     paths where irqs are disabled anyway, so they are not needed for
+     correctness in the current code. Let's use them anyway though: this
+     marks critical sections clearly and will help to avoid mistakes during
+     future maintenance.
+
+     The change has been benchmarked on Linux 5.1-rc4 with defconfig.
+
+     On Juno2:
+         * hackbench 100 process 1000 (10 times)
+         * .7% quicker
+
+     On ThunderX 2:
+         * hackbench 1000 process 1000 (20 times)
+         * 3.4% quicker
+
+> 
+> [...]
+> 
+> (Sorry to nitpick)
+
+That's fine, I should have be more careful when rework the commit message.
+
+Cheers,
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Julien Grall
