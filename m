@@ -2,111 +2,84 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392DAC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157F4C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097952084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DKfH3dt6"
+	by mail.kernel.org (Postfix) with ESMTP id DD99D2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfDZJW6 (ORCPT
+        id S1726239AbfDZJXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:22:58 -0400
-Received: from mail-eopbgr30050.outbound.protection.outlook.com ([40.107.3.50]:2428
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725800AbfDZJW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:22:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wosop9x7jdko7Nj7Ym8CzXYQTWX3mLF2psofi+kn098=;
- b=DKfH3dt69JNimngpqvyLZAGsZcN266mNG7MFIPBgK0kiNTBVigWExG4cK1heUbQL8Ciwfj+KkPAcj0rPB6f6SguiTUCutQvw+4Xc+DWTHXd+3xzKa2Med8QnFowm6skF0xIbQ9pCBekBzDgl51Q2wETGUla6rw9plvyOewVYjSE=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB4382.eurprd04.prod.outlook.com (20.177.55.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Fri, 26 Apr 2019 09:22:52 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1835.010; Fri, 26 Apr 2019
- 09:22:52 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [PATCH v2 06/15] spi: imx: fix ERR009165
-Thread-Topic: [EXT] Re: [PATCH v2 06/15] spi: imx: fix ERR009165
-Thread-Index: AQHU/AbWhmFw/8q/U0K0862nrKFDRaZOJtSAgAACnAA=
-Date:   Fri, 26 Apr 2019 09:22:52 +0000
-Message-ID: <1556270196.9298.16.camel@nxp.com>
-References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
-         <1556265512-9130-7-git-send-email-yibin.gong@nxp.com>
-         <1556269635.2584.23.camel@pengutronix.de>
-In-Reply-To: <1556269635.2584.23.camel@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ed310d5-5c24-4c08-f16b-08d6ca28c271
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4382;
-x-ms-traffictypediagnostic: VI1PR04MB4382:
-x-microsoft-antispam-prvs: <VI1PR04MB438293F0BF0D3D85BD40DE99893E0@VI1PR04MB4382.eurprd04.prod.outlook.com>
-x-forefront-prvs: 001968DD50
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(136003)(366004)(39860400002)(189003)(199004)(99286004)(6246003)(76116006)(14454004)(103116003)(7736002)(76176011)(478600001)(97736004)(305945005)(53936002)(6512007)(91956017)(229853002)(68736007)(66556008)(66446008)(66476007)(64756008)(73956011)(66946007)(54906003)(81156014)(66066001)(8936002)(25786009)(8676002)(7416002)(110136005)(316002)(6436002)(3846002)(6116002)(50226002)(5660300002)(186003)(486006)(476003)(446003)(2616005)(11346002)(6506007)(256004)(71200400001)(53546011)(4744005)(2201001)(71190400001)(2501003)(102836004)(86362001)(36756003)(26005)(81166006)(4326008)(6486002)(2906002)(99106002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4382;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KjUsXsuONhYH6/4vhS87NYAhb2lV/YHuQlYC2tItfpine6qMFRuCorEQDF38+FItCRj+NdHcp0efSXx01fsbqsJUz+mf4+gJJPb6aRtGmN1Lqw2q88Xn0zi3JX9Izzt6SjCjWkKfcIxYARynymOOmVhUYwynAkfjyoAMP9a+MO4945AClvfrHEZ+stTFVf/mbwLaegayR54smaGzpYd/sOUY476U+1kKzsEMKuSt+wD+xxC+OWpizBW/3vYkJHkEWSITUhjJp8Ppt0iN+odj5NnMFCFN5FSdHjHS8m1VgNUP2W/IN1U+5NW0wi+7H+Q0MY0pYIthRbc9flJcxtQVwWTDD7hBBzlyumTRoV4FQV7coh3irgLWIC9QhuZXzymIfFUC8nvFI3ugfw6iEjYW+CfaOsT/+c/ul9qtefMNgs8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A1CDFF5781E36B4989E32D766AA48CC6@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 26 Apr 2019 05:23:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37922 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbfDZJXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 05:23:54 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BA81829150;
+        Fri, 26 Apr 2019 09:23:53 +0000 (UTC)
+Received: from localhost (ovpn-12-17.pek2.redhat.com [10.72.12.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C75E366070;
+        Fri, 26 Apr 2019 09:23:52 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 17:23:48 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>, keescook@chromium.org
+Cc:     kirill@shutemov.name, linux-kernel@vger.kernel.org, x86@kernel.org,
+        tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com,
+        keescook@chromium.org, peterz@infradead.org, thgarnie@google.com,
+        herbert@gondor.apana.org.au, mike.travis@hpe.com,
+        frank.ramsay@hpe.com, yamada.masahiro@socionext.com
+Subject: Re: [PATCH v2 RESEND 2/2] x86/mm/KASLR: Fix the size of vmemmap
+ section
+Message-ID: <20190426092348.GO3584@localhost.localdomain>
+References: <20190414072804.12560-1-bhe@redhat.com>
+ <20190414072804.12560-3-bhe@redhat.com>
+ <20190415194755.GJ29317@zn.tnic>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ed310d5-5c24-4c08-f16b-08d6ca28c271
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2019 09:22:52.7992
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4382
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415194755.GJ29317@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 26 Apr 2019 09:23:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNC0yNiBhdCAxMTowNyArMDIwMCwgTHVjYXMgU3RhY2ggd3JvdGU6DQo+IA0KPiBB
-bSBGcmVpdGFnLCBkZW4gMjYuMDQuMjAxOSwgMDg6MDUgKzAwMDAgc2NocmllYiBSb2JpbiBHb25n
-Og0KPiA+IMKgc3RhdGljIHZvaWQgbXg1MV9zZXR1cF93bWwoc3RydWN0IHNwaV9pbXhfZGF0YSAq
-c3BpX2lteCkNCj4gPiDCoHsNCj4gPiArwqDCoMKgwqDCoHUzMiB0eF93bWwgPSAwOw0KPiA+ICsN
-Cj4gV2l0aCBhIHdtbCBvZiAwIHlvdSBtaWdodCBzZXQgdGhlIG1heGJ1cnN0IG9mIHRoZSBUWCBk
-bWEgY2hhbm5lbCB0bw0KPiBmaWZvc2l6ZSB0byBtaW5pbWl6ZSB0aGUgcGVyZm9ybWFuY2UgaW1w
-YWN0IG9mIHRoaXMgd29ya2Fyb3VuZC4NCj4gDQo+IFJlZ2FyZHMsDQo+IEx1Y2FzDQpVbmZvcnR1
-bmF0ZWx5LCB0aGlzIGlzIGEgTVVTVCBwYXJ0IG9mIGVycmF0YSB3aGljaCBjYXVzZSBwZXJmb3Jt
-YW5jZQ0KZHJvcC4=
+Hi Boris,
+
+On 04/15/19 at 09:47pm, Borislav Petkov wrote:
+> On Sun, Apr 14, 2019 at 03:28:04PM +0800, Baoquan He wrote:
+> > kernel_randomize_memory() hardcodes the size of vmemmap section as 1 TB,
+> > to support the maximum amount of system RAM in 4-level paging mode, 64 TB.
+> > 
+> > However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
+> > the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
+> > 64 TB of vmemmap area is needed. The wrong hardcoding may cause vmemmap
+> > stamping into the following cpu_entry_area section, if KASLR puts vmemmap
+> > very close to cpu_entry_area, and the actual area of vmemmap is much bigger
+> > than 1 TB.
+ 
+> 
+> Kirill, ack?
+
+I sent private mail to Kirill and Kees. Kirill haven't replied yet, he
+could be busy with something else as he doesn't show up recently on
+lkml.
+
+Kees kindly replied, and said he couldn't find this mail thread. He told
+I can add his Reviewed-by, as he has acked this patchset in v2
+thread. I just updated later to tune log and correct typos.
+http://lkml.kernel.org/r/CAGXu5j+o4aSx9mMDJqTMOp-VrvWes-2YEwR1f29z8dm0rUfzGQ@mail.gmail.com
+
+Can this be picked into tip with Kees' ack?
+
+Thanks
+Baoquan
