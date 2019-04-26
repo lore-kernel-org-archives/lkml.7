@@ -2,81 +2,66 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE6EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A70C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6A2206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D995D206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:25:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556277950;
+	bh=FM/dpq7eHpddjL+UU71FES9tcXis3DA5rNdzoDEgfC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YFhBj9Sr5PEqw90dFoaXmioDsIYEm+ybW5WF1qLyZXnErDicQIHucIJcctnp2Vd+t
+	 Zpzuvny6CyiQnoYMFcGbj+mxM2PUs+8sJgwIos/nxelIywn9ic0es1rEfsej4ldreW
+	 ABwIe3cTeiJkcUmn+9ldlYOpbXME8JkUrdPsEbYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbfDZLX4 (ORCPT
+        id S1726077AbfDZLZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 07:23:56 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:56896 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfDZLXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 07:23:55 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1hJyxH-0002uu-8G; Fri, 26 Apr 2019 13:23:47 +0200
-Message-ID: <a3626aeca20280e8253b575fe72309b2009474a8.camel@sipsolutions.net>
-Subject: Re: [PATCH net-next 0/3] make nla_nest_start() add NLA_F_NESTED flag
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        David Ahern <dsahern@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Fri, 26 Apr 2019 13:23:46 +0200
-In-Reply-To: <20190426111954.GG26549@unicorn.suse.cz>
-References: <cover.1556269635.git.mkubecek@suse.cz>
-         <1dcb87486a96785e3b9e6f337392aa904d977a0d.camel@sipsolutions.net>
-         <20190426111954.GG26549@unicorn.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 26 Apr 2019 07:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbfDZLZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 07:25:49 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11316206A3;
+        Fri, 26 Apr 2019 11:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556277948;
+        bh=FM/dpq7eHpddjL+UU71FES9tcXis3DA5rNdzoDEgfC8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FA96xBN+K45tSdbEbual83mrFxpIpj6AY+ZIHBmYOV0F+1P1bdkYSMeJScbuiCyn1
+         bjgwadamlZdaek0ezRplmF3iNcNBBEBIVVwCRWICel54ZpusZtIaQKzIEcpAzePKxZ
+         YBuYYxTcHt+bYTVx07Gir5DPw3hlaWOdYUmY7aZI=
+Date:   Fri, 26 Apr 2019 16:55:43 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] dmaengine: idma64: Move driver name to the header
+Message-ID: <20190426112543.GS28103@vkoul-mobl>
+References: <20190409150219.15094-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409150219.15094-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-04-26 at 13:19 +0200, Michal Kubecek wrote:
-> On Fri, Apr 26, 2019 at 11:24:15AM +0200, Johannes Berg wrote:
-> > On Fri, 2019-04-26 at 09:13 +0000, Michal Kubecek wrote:
-> > 
-> > > Another observation was that even if NLA_F_NESTED flag was introduced in
-> > > 2007, only few netlink based interfaces set it in kernel generated messages
-> > > and even many recently added APIs omit it. That is unfortunate as without
-> > > the flag, message parsers not familiar with attribute semantics cannot
-> > > recognize nested attributes and do not see message structure; this affects
-> > > e.g. wireshark dissector or mnl_nlmsg_fprintf() from libmnl.
-> > 
-> > Indeed.
-> > 
-> > I wonder if we should also (start) enforcing that the userspace sender
-> > side sets this, if the policy is strict?
-> 
-> I suppose we should, at least the part that attribute with NLA_NESTED
-> policy has NLA_F_NESTED flag. I'm not so sure about the opposite (i.e.
-> that attributes with other policies do not have the flag) as when I was
-> checking where kernel accesses nlattr::nla_type directly rather than
-> with nla_type(), I stumbled upon an attribute NL80211_ATTR_VENDOR_DATA
-> which has policy NLA_BINARY but is sometimes a nest, AFAICS.
+On 09-04-19, 18:02, Andy Shevchenko wrote:
+> There are two drivers that are relying on the iDMA 64-bit driver name
+> to match. Instead of duplicating string in both of them, dedicate
+> a header file and share it between users.
 
-I guess anyway we can only do it for *new* things, not really for all
-existing attributes.
+Applied, thanks
 
-Regarding that attribute - I guess we'd have to come up with a policy
-flag saying "may or may not be nested" (if it was a new one) or so?
-
-johannes
-
+-- 
+~Vinod
