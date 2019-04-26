@@ -2,146 +2,153 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FF8C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D559EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16575206BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:26:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WuQV9dkG"
+	by mail.kernel.org (Postfix) with ESMTP id B8F6F2088F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbfDZC0C (ORCPT
+        id S1728546AbfDZC0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 25 Apr 2019 22:26:03 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2942 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728271AbfDZC0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Apr 2019 22:26:02 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:39252 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728269AbfDZC0C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 22:26:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1556245560; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=XpPFglC39Lepd2C8rXS0wGjtZOwr35DRBGQT+aRjR8o=;
-        b=WuQV9dkGg1BIOQqYR3H699slUZkovPSu8EtmvmKnRlS2lIPsBC3EM2y/jUzF+zKpaNleaj
-        v3N2iDTun0r4+TaH3rUKgfMWZircsJ9n2CYZGsubp8vUIGQauuB/OBJV9Qqv+VDjxWgkbK
-        FF383Q4Mhnu1o6BYAfOwN9Y+lyweYpM=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, od@zcrc.me,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 1/2] ASoC: simple-card-utils: add asoc_simple_parse_pin_switches()
-Date:   Fri, 26 Apr 2019 04:25:49 +0200
-Message-Id: <20190426022550.31359-1-paul@crapouillou.net>
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id BBF69B7BD93831104C50;
+        Fri, 26 Apr 2019 10:26:00 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 26 Apr 2019 10:26:00 +0800
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 26 Apr 2019 10:25:59 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v2 2/2] f2fs: relocate chksum_offset for large_nat_bitmap feature
+Date:   Fri, 26 Apr 2019 10:25:54 +0800
+Message-ID: <20190426022554.56393-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function is a helper that permits to create pin switch controls for
-a list of widgets whose names are listed in the PREFIX "pin-switches"
-devicetree property.
+For large_nat_bitmap feature, there is a design flaw:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Previous:
+
+struct f2fs_checkpoint layout:
++--------------------------+  0x0000
+| checkpoint_ver           |
+| ......                   |
+| checksum_offset          |------+
+| ......                   |      |
+| sit_nat_version_bitmap[] |<-----|-------+
+| ......                   |      |       |
+| checksum_value           |<-----+       |
++--------------------------+  0x1000      |
+|                          |      nat_bitmap + sit_bitmap
+| payload blocks           |              |
+|                          |              |
++--------------------------|<-------------+
+
+Obviously, if nat_bitmap size + sit_bitmap size is larger than
+MAX_BITMAP_SIZE_IN_CKPT, nat_bitmap or sit_bitmap may overlap
+checkpoint checksum's position, once checkpoint() is triggered
+from kernel, nat or sit bitmap will be damaged by checksum field.
+
+In order to fix this, let's relocate checksum_value's position
+to the head of sit_nat_version_bitmap as below, then nat/sit
+bitmap and chksum value update will become safe.
+
+After:
+
+struct f2fs_checkpoint layout:
++--------------------------+  0x0000
+| checkpoint_ver           |
+| ......                   |
+| checksum_offset          |------+
+| ......                   |      |
+| sit_nat_version_bitmap[] |<-----+
+| ......                   |<-------------+
+|                          |              |
++--------------------------+  0x1000      |
+|                          |      nat_bitmap + sit_bitmap
+| payload blocks           |              |
+|                          |              |
++--------------------------|<-------------+
+
+Related report and discussion:
+
+https://sourceforge.net/p/linux-f2fs/mailman/message/36642346/
+
+Reported-by: Park Ju Hyung <qkrwngud825@gmail.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
+v2:
+- improve hint message suggested by Ju Hyung.
+- move verification to f2fs_sanity_check_ckpt().
+ fs/f2fs/f2fs.h  |  4 +++-
+ fs/f2fs/super.c | 13 +++++++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-Notes:
-    v2: - Rebase on top of for-next
-        - Rename to asoc_simple_parse_pin_switches()
-
- include/sound/simple_card_utils.h     |  2 +
- sound/soc/generic/simple-card-utils.c | 57 +++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+)
-
-diff --git a/include/sound/simple_card_utils.h b/include/sound/simple_card_utils.h
-index 67dc3ee6ed01..3429888347e7 100644
---- a/include/sound/simple_card_utils.h
-+++ b/include/sound/simple_card_utils.h
-@@ -133,6 +133,8 @@ int asoc_simple_parse_routing(struct snd_soc_card *card,
- 				      char *prefix);
- int asoc_simple_parse_widgets(struct snd_soc_card *card,
- 				      char *prefix);
-+int asoc_simple_parse_pin_switches(struct snd_soc_card *card,
-+				   char *prefix);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 119bc5a9783e..aa71c1aa9eaa 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1909,9 +1909,11 @@ static inline void *__bitmap_ptr(struct f2fs_sb_info *sbi, int flag)
+ 	int offset;
  
- int asoc_simple_init_jack(struct snd_soc_card *card,
- 			       struct asoc_simple_jack *sjack,
-diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-index db1458a19985..f4c6375d11c7 100644
---- a/sound/soc/generic/simple-card-utils.c
-+++ b/sound/soc/generic/simple-card-utils.c
-@@ -430,6 +430,63 @@ int asoc_simple_parse_widgets(struct snd_soc_card *card,
- }
- EXPORT_SYMBOL_GPL(asoc_simple_parse_widgets);
+ 	if (is_set_ckpt_flags(sbi, CP_LARGE_NAT_BITMAP_FLAG)) {
++		unsigned int chksum_size = sizeof(__le32);
++
+ 		offset = (flag == SIT_BITMAP) ?
+ 			le32_to_cpu(ckpt->nat_ver_bitmap_bytesize) : 0;
+-		return &ckpt->sit_nat_version_bitmap + offset;
++		return &ckpt->sit_nat_version_bitmap + offset + chksum_size;
+ 	}
  
-+int asoc_simple_parse_pin_switches(struct snd_soc_card *card,
-+				   char *prefix)
-+{
-+	const unsigned int nb_controls_max = 16;
-+	const char **strings, *control_name;
-+	struct snd_kcontrol_new *controls;
-+	struct device *dev = card->dev;
-+	unsigned int i, nb_controls;
-+	char prop[128];
-+	int ret;
+ 	if (__cp_payload(sbi) > 0) {
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index fefc8cc6e756..22241bb866df 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2714,6 +2714,19 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 		return 1;
+ 	}
+ 
++	if (__is_set_ckpt_flags(ckpt, CP_LARGE_NAT_BITMAP_FLAG)) {
++		unsigned int chksum_offset;
 +
-+	if (!prefix)
-+		prefix = "";
-+
-+	snprintf(prop, sizeof(prop), "%s%s", prefix, "pin-switches");
-+
-+	if (!of_property_read_bool(dev->of_node, prop))
-+		return 0;
-+
-+	strings = devm_kcalloc(dev, nb_controls_max,
-+			       sizeof(*strings), GFP_KERNEL);
-+	if (!strings)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_string_array(dev->of_node, prop,
-+					    strings, nb_controls_max);
-+	if (ret < 0)
-+		return ret;
-+
-+	nb_controls = (unsigned int)ret;
-+
-+	controls = devm_kcalloc(dev, nb_controls,
-+				sizeof(*controls), GFP_KERNEL);
-+	if (!controls)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < nb_controls; i++) {
-+		control_name = devm_kasprintf(dev, GFP_KERNEL,
-+					      "%s Switch", strings[i]);
-+		if (!control_name)
-+			return -ENOMEM;
-+
-+		controls[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
-+		controls[i].name = control_name;
-+		controls[i].info = snd_soc_dapm_info_pin_switch;
-+		controls[i].get = snd_soc_dapm_get_pin_switch;
-+		controls[i].put = snd_soc_dapm_put_pin_switch;
-+		controls[i].private_value = (unsigned long)strings[i];
++		chksum_offset = le32_to_cpu(ckpt->checksum_offset);
++		if (chksum_offset != CP_MIN_CHKSUM_OFFSET) {
++			f2fs_msg(sbi->sb, KERN_WARNING,
++				"using deprecated layout of large_nat_bitmap, "
++				"please run fsck v1.13.0 or higher to repair, "
++				"chksum_offset: %u", chksum_offset);
++			return 1;
++		}
 +	}
 +
-+	card->controls = controls;
-+	card->num_controls = nb_controls;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(asoc_simple_parse_pin_switches);
-+
- int asoc_simple_init_jack(struct snd_soc_card *card,
- 			  struct asoc_simple_jack *sjack,
- 			  int is_hp, char *prefix)
+ 	if (unlikely(f2fs_cp_error(sbi))) {
+ 		f2fs_msg(sbi->sb, KERN_ERR, "A bug case: need to run fsck");
+ 		return 1;
 -- 
-2.21.0.593.g511ec345e18
+2.18.0.rc1
 
