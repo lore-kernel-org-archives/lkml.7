@@ -2,133 +2,77 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00695C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D012C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF089206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1904208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:45:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AZhuFqvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfDZMpS (ORCPT
+        id S1726239AbfDZMp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 08:45:18 -0400
-Received: from mga11.intel.com ([192.55.52.93]:27479 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbfDZMpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 08:45:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 05:45:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,397,1549958400"; 
-   d="scan'208";a="137680155"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.156])
-  by orsmga008.jf.intel.com with ESMTP; 26 Apr 2019 05:45:17 -0700
-From:   kan.liang@linux.intel.com
-To:     acme@redhat.com, mingo@redhat.com, linux-kernel@vger.kernel.org
-Cc:     jolsa@redhat.com, namhyung@gmail.com, lgoncalv@redhat.com,
-        ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2] perf stat: Add hint for SMI cost measurement
-Date:   Fri, 26 Apr 2019 05:45:03 -0700
-Message-Id: <1556282703-120695-1-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 26 Apr 2019 08:45:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38110 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfDZMp4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 08:45:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=akHd8JqiMAzxrz2WCE0z9Z8wSwIAjNmdXhzSk4evgGw=; b=AZhuFqvb56ZemhjhPqPx8RzlB
+        DHLTZNxiXAREhfS6hcQN84QTKvH+1PpWmT3ZWfsXF+elp2AQmuYMqGB2t3FEbi0ghPRncdVSagaUg
+        smuSONJ+ayLRN+gwNnSaVtu/M7pIk1lzVenHes52Rp0bV1GYl1e5fx3YIjo4uYepzFcszxh3NyQuI
+        6BJ994ZTbSsB/zVBP8yoQ04uSFpxPPUImZBAYzRQMwjI3NfjMEhuXJrp1MHliAIYRWty+euxnpKua
+        qZKTJVagxc4Kmqtc601X8scFFP7/0W6OCj1Src9tP32GYwPDBknVCaZ7Va2LSJJEgOXC8jpQR+kyy
+        s6+S28swg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hK0Ej-0007PV-L6; Fri, 26 Apr 2019 12:45:53 +0000
+Date:   Fri, 26 Apr 2019 05:45:53 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [LSF/MM TOPIC] Direct block mapping through fs for device
+Message-ID: <20190426124553.GB12339@infradead.org>
+References: <20190426013814.GB3350@redhat.com>
+ <20190426062816.GG1454@dread.disaster.area>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426062816.GG1454@dread.disaster.area>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Fri, Apr 26, 2019 at 04:28:16PM +1000, Dave Chinner wrote:
+> i.e. go look at how xfs_pnfs.c works to hand out block mappings to
+> remote pNFS clients so they can directly access the underlying
+> storage. Basically, anyone wanting to map blocks needs a file layout
+> lease and then to manage the filesystem state over that range via
+> these methods in the struct export_operations:
+> 
+>         int (*get_uuid)(struct super_block *sb, u8 *buf, u32 *len, u64 *offset);
+>         int (*map_blocks)(struct inode *inode, loff_t offset,
+>                           u64 len, struct iomap *iomap,
+>                           bool write, u32 *device_generation);
+>         int (*commit_blocks)(struct inode *inode, struct iomap *iomaps,
+>                              int nr_iomaps, struct iattr *iattr);
 
-Entering/exiting a C-state deeper than C0 may cause slight difference in
-counts between aperf and unhalted core cycles, which may impact the SMI
-cost.
-
-Add smi_env_check() to check if C-state is completely disabled during
-the measurement. If not, give a hint to user.
-
-Update the document as well.
-
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-Changes since V1:
-- Update changelog, document, and user-visible message
-
- tools/perf/Documentation/perf-stat.txt |  5 +++++
- tools/perf/builtin-stat.c              | 25 +++++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 39c05f8..19b7267 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -309,6 +309,11 @@ The output is SMI cycles%, equals to (aperf - unhalted core cycles) / aperf
- 
- Users who wants to get the actual value can apply --no-metric-only.
- 
-+Entering/exiting a C-state deeper than C0 may cause slight difference in counts
-+between aperf and unhalted core cycles, which may impact the SMI cost.
-+Please completely disable C-state during the measurement,
-+e.g. set idle=poll in grub.
-+
- EXAMPLES
- --------
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index c3625ec..e437788 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -87,6 +87,7 @@
- 
- #define DEFAULT_SEPARATOR	" "
- #define FREEZE_ON_SMI_PATH	"devices/cpu/freeze_on_smi"
-+#define CPUIDLE_CUR_DRV		"devices/system/cpu/cpuidle/current_driver"
- 
- static void print_counters(struct timespec *ts, int argc, const char **argv);
- 
-@@ -1024,6 +1025,27 @@ __weak void arch_topdown_group_warn(void)
- {
- }
- 
-+static void smi_env_check(void)
-+{
-+	char *name;
-+	size_t len;
-+	int err;
-+
-+	err = sysfs__read_str(CPUIDLE_CUR_DRV, &name, &len);
-+	if (err) {
-+		pr_warning("Failed to read %s, err %d. Ignoring C-state status check.\n",
-+			   CPUIDLE_CUR_DRV, err);
-+		return;
-+	}
-+
-+	if (strncmp(name, "none", 4)) {
-+		pr_warning("Entering/exiting a C-state deeper than C0 may result inaccurate SMI cost.\n"
-+			   "Please completely disable C-state, e.g. set idle=poll in grub.\n");
-+	}
-+
-+	free(name);
-+}
-+
- /*
-  * Add default attributes, if there were no attributes specified or
-  * if -d/--detailed, -d -d or -d -d -d is used:
-@@ -1196,6 +1218,9 @@ static int add_default_attributes(void)
- 
- 		if (pmu_have_event("msr", "aperf") &&
- 		    pmu_have_event("msr", "smi")) {
-+
-+			smi_env_check();
-+
- 			if (!force_metric_only)
- 				stat_config.metric_only = true;
- 			err = parse_events(evsel_list, smi_cost_attrs, &errinfo);
--- 
-2.7.4
-
+Nipick:  get_uuid isn't needed for the least itself, it just works
+around the fact that the original pNFS/block protocol is braindead.
+The pNFS/SCSI prototocol already switches to a device UUID, and other
+users that work locally shouldn't need it either.
