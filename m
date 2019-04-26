@@ -2,106 +2,98 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B21C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F41C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2401206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0899206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfDZNql (ORCPT
+        id S1726322AbfDZNrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:46:41 -0400
-Received: from mga03.intel.com ([134.134.136.65]:38269 "EHLO mga03.intel.com"
+        Fri, 26 Apr 2019 09:47:14 -0400
+Received: from 8bytes.org ([81.169.241.247]:37632 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbfDZNql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:46:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 06:46:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,397,1549958400"; 
-   d="scan'208";a="153986651"
-Received: from ikonopko-mobl.ger.corp.intel.com (HELO [10.237.142.109]) ([10.237.142.109])
-  by orsmga002.jf.intel.com with ESMTP; 26 Apr 2019 06:46:39 -0700
-Subject: Re: [PATCH] lightnvm: pblk: Introduce hot-cold data separation
-To:     =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier@javigon.com>
-Cc:     Heiner Litz <hlitz@ucsc.edu>,
-        =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190425052152.6571-1-hlitz@ucsc.edu>
- <66434cc7-2bac-dd10-6edc-4560e6a0f89f@intel.com>
- <F305CAB7-F566-40D7-BC91-E88DE821520B@javigon.com>
-From:   Igor Konopko <igor.j.konopko@intel.com>
-Message-ID: <a1df8967-2169-1c43-c55a-e2144fa53b9a@intel.com>
-Date:   Fri, 26 Apr 2019 15:46:38 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726039AbfDZNrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 09:47:13 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 11282447; Fri, 26 Apr 2019 15:47:11 +0200 (CEST)
+Date:   Fri, 26 Apr 2019 15:47:10 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Paul Mackerras <paulus@samba.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:AMD KFD" <dri-devel@lists.freedesktop.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        "open list:8169 10/100/1000 GIGABIT ETHERNET DRIVER" 
+        <netdev@vger.kernel.org>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 6/9] iommu/amd: use helper pci_dev_id
+Message-ID: <20190426134710.GD24576@8bytes.org>
+References: <2e1f9a57-6d08-d017-24da-3e6b97fa2449@gmail.com>
+ <f673e8ac-cc9a-75a6-09b8-35b94bfc868b@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <F305CAB7-F566-40D7-BC91-E88DE821520B@javigon.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f673e8ac-cc9a-75a6-09b8-35b94bfc868b@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 26.04.2019 12:04, Javier González wrote:
+On Wed, Apr 24, 2019 at 09:15:25PM +0200, Heiner Kallweit wrote:
+> Use new helper pci_dev_id() to simplify the code.
 > 
->> On 26 Apr 2019, at 11.11, Igor Konopko <igor.j.konopko@intel.com> wrote:
->>
->> On 25.04.2019 07:21, Heiner Litz wrote:
->>> Introduce the capability to manage multiple open lines. Maintain one line
->>> for user writes (hot) and a second line for gc writes (cold). As user and
->>> gc writes still utilize a shared ring buffer, in rare cases a multi-sector
->>> write will contain both gc and user data. This is acceptable, as on a
->>> tested SSD with minimum write size of 64KB, less than 1% of all writes
->>> contain both hot and cold sectors.
->>
->> Hi Heiner
->>
->> Generally I really like this changes, I was thinking about sth similar since a while, so it is very good to see that patch.
->>
->> I have a one question related to this patch, since it is not very clear for me - how you ensure the data integrity in following scenarios:
->> -we have open line X for user data and line Y for GC
->> -GC writes LBA=N to line Y
->> -user writes LBA=N to line X
->> -we have power failure when both line X and Y were not written completely
->> -during pblk creation we are executing OOB metadata recovery
->> And here is the question, how we distinguish whether LBA=N from line Y or LBA=N from line X is the valid one?
->> Line X and Y might have seq_id either descending or ascending - this would create two possible scenarios too.
->>
->> Thanks
->> Igor
->>
-> 
-> You are right, I think this is possible in the current implementation.
-> 
-> We need an extra constrain so that we only GC lines above the GC line
-> ID. This way, when we order lines on recovery, we can guarantee
-> consistency. This means potentially that we would need several open
-> lines for GC to avoid padding in case this constrain forces to choose a
-> line with an ID higher than the GC line ID.
-> 
-> What do you think?
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 
-I'm not sure yet about your approach, I need to think and analyze this a 
-little more.
+Reviewed-by: Joerg Roedel <jroedel@suse.de>
 
-I also believe that probably we need to ensure that current user data 
-line seq_id is always above the current GC line seq_id or sth like that. 
-We cannot also then GC any data from the lines which are still open, but 
-I believe that this is a case even right now.
-
+> ---
+>  drivers/iommu/amd_iommu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Thanks,
-> Javier
+> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+> index f467cc4b4..5cb201422 100644
+> --- a/drivers/iommu/amd_iommu.c
+> +++ b/drivers/iommu/amd_iommu.c
+> @@ -165,7 +165,7 @@ static inline u16 get_pci_device_id(struct device *dev)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+>  
+> -	return PCI_DEVID(pdev->bus->number, pdev->devfn);
+> +	return pci_dev_id(pdev);
+>  }
+>  
+>  static inline int get_acpihid_device_id(struct device *dev,
+> -- 
+> 2.21.0
 > 
