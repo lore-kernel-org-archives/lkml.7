@@ -2,100 +2,82 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9765BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BC8C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69A7F20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClRdcSpu"
+	by mail.kernel.org (Postfix) with ESMTP id AEFBA2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556306571;
+	bh=nlD1D4QGFj+6jowGj4uSL+44D+55t6PWw4urvseygko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xByonDMzlJPDTw54uB+8nmqxLMXlqhyg3ibVhCUOnwGsU8SYz6ZiCo2Mm75DYdS7v
+	 eC/0HynZQjiVcpcw5W5bkAOUeiEJvHQN5AQK19NY723BWTg8dvzNa58ADqQlBarm/P
+	 RCAQibH0lznR4P9Z7KrHhtdpfYMCOI0Hp6P9qF5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfDZTWj (ORCPT
+        id S1726901AbfDZTWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 15:22:39 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:37272 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfDZTWi (ORCPT
+        Fri, 26 Apr 2019 15:22:50 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46304 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfDZTWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 15:22:38 -0400
-Received: by mail-vs1-f67.google.com with SMTP id w13so2585629vsc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 12:22:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b7ipGmZUWCvILHKl1N8W9pjQhoVgXJtkFwGPFamiRLY=;
-        b=ClRdcSpuBDw2LXj56vYDefYJm65krG3lgo5PTlHF86S9ePKoStQtVJNG41mwFBzKmP
-         S0oP0mKCNhBHfeM70vJLT7NL8+oWXMGTGHGVqhhkAELxcZ8Uv6CS3cN6+vavQWTfBnfT
-         ghG7L4u/KTDzL63MK3dtev/3hqW3ce8fU8ci8TaLmLrRwSUysrdKzwErHvQzpemSt/ek
-         e53tg/0RHfqy4y6vizRv2xJoeWcw522f/SdHQTH8njUbAWkpvQGdYF/F9OlqaM555+kA
-         bdEESX6evOeocLYV0Tf4whn5CCZc2sItQ7ymEbH0Ku45yNc6n/ZMh3BqaFXxizlHNTUU
-         ShFg==
+        Fri, 26 Apr 2019 15:22:49 -0400
+Received: by mail-ot1-f68.google.com with SMTP id s24so3555710otk.13;
+        Fri, 26 Apr 2019 12:22:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b7ipGmZUWCvILHKl1N8W9pjQhoVgXJtkFwGPFamiRLY=;
-        b=PNw3gTkPRUfUvKrLYJ9s4jHY3Vwqqn4BnyaQBqZBzVu7L4KvrkTKxKSDYznJrZx2SY
-         NwTx/PH2WFDVlJlE0ljPoYA2qp85L6JqXURVYNPKMkK/BoenBlM8LA1wqKYKjrqoqqli
-         ZEnrrRS8bd0KT/n6HCfiI1a8EuVi62/xuXTO5Qi+ueyUFtcTtGdZhuTSEvXNSDzvJlP8
-         0bsGrsHoMt5GcQKkMyiJ5MoeoAsCX2CA3H7z9liEuD5KPv3x9X47IFX/0Ji8x5UOund8
-         +xP2XNNbgZ3SbGu0ibYvN/U7NXQBFjtKxKxjlY4aSzzjlj96SPXfgJs1AgtpGAko1/1C
-         E++g==
-X-Gm-Message-State: APjAAAWs+z9Dhb/O5npQUUasNjwVMgC5v7fpZvmintPsOvdpbvZvtdeL
-        hguazu5Xs5XhbGD8/h/2andg6ZBudC74tsrweNI=
-X-Google-Smtp-Source: APXvYqyltNB45bfeDzKFfH/8A/H/kEQ70l6fjW+p5Cv46vv7LVcurN+GkJgRincJ8p9Gu26Fk1MuQFPV0S9BPdVcdrs=
-X-Received: by 2002:a67:f6c8:: with SMTP id v8mr14308952vso.73.1556306557529;
- Fri, 26 Apr 2019 12:22:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eObGxICpfVAjnrd7zCyTsZFj9+mp6QpitFjn2X8Bu8Q=;
+        b=WN5mYysAXBX7UWhDdCXlu6C/qS0xPv9WSkGltQmw1YT0sIYiCkVdr1rxvibu5/syzO
+         No9YifvldSipYg7Znk9KGgzRPbNFoJck8X3eYWH8pLErWXYTR2dWtUMArY8MqkW3goU0
+         v3eJYrF3DTfQZoQuXmCKhx7PwuIJtgj8cMkWrW77BkbIyxVjPpxmLDmgs578YBUaZ50G
+         IvZemCe/jFVUYlftp/ITb3+Y5/pEqc0Qvp8F2YJTckUlUI87/CCIwuThiwJQnJQ2+FKR
+         u+Bay3XENqquS6UfNKMXYrP4Vdnr4NCNLfgd5/bSSRjBvnMON47CvJVNdAfwdakd6cNk
+         yFZQ==
+X-Gm-Message-State: APjAAAX+6ZDLBilT6wnj37ZVJ4zciRygZrNXmCufAqprtcVEbjxlfS3A
+        qOy1NIxZw4pSA4tWWMIzPQ==
+X-Google-Smtp-Source: APXvYqxlNTL6NcIK5OZJGItgau2FbRT2fkebxBE1FIDD45QgqzSorOz9vh5a4zxjm+aBaBSzbEgSlw==
+X-Received: by 2002:a05:6830:9a:: with SMTP id a26mr3676802oto.317.1556306568973;
+        Fri, 26 Apr 2019 12:22:48 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f5sm1173434otp.16.2019.04.26.12.22.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 12:22:48 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 14:22:47 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org,
+        dtor@google.com, linux@roeck-us.net, jacek.anaszewski@gmail.com
+Subject: Re: [PATCH v4 19/26] dt-bindings: aat1290: Add function and color
+ properties
+Message-ID: <20190426192247.GA6807@bogus>
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+ <20190417205439.17685-20-jacek.anaszewski@gmail.com>
 MIME-Version: 1.0
-References: <20190426182948.GA10020@bharath12345-Inspiron-5559>
-In-Reply-To: <20190426182948.GA10020@bharath12345-Inspiron-5559>
-From:   Bharath Veda <linux.bhar@gmail.com>
-Date:   Sat, 27 Apr 2019 00:52:25 +0530
-Message-ID: <CAMwgTV7k=32sSFYp38Ft8M-oXhcEqcOByO=fpUBMeS1_XvzN1g@mail.gmail.com>
-Subject: Re: [PATCH] drivers/char/random.c: Make add_hwgenerator_randomness static
-To:     tytso@mit.edu, arnd@arndb.de, Greg KH <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417205439.17685-20-jacek.anaszewski@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Please ignore this patch. It breaks the build.
-
-Thank you
-
-On Fri, Apr 26, 2019 at 11:59 PM Bharath Vedartham <linux.bhar@gmail.com> wrote:
->
-> Make add_hwgenerator_randomness static as it is only declared on
-> drivers/char/random.c
->
-> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+On Wed, 17 Apr 2019 22:54:32 +0200, Jacek Anaszewski wrote:
+> Refer to new "function" and "color" properties and mark "label"
+> as deprecated.
+> 
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 > ---
->  drivers/char/random.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/char/random.c b/drivers/char/random.c
-> index 38c6d1a..08fd00a 100644
-> --- a/drivers/char/random.c
-> +++ b/drivers/char/random.c
-> @@ -2342,7 +2342,7 @@ randomize_page(unsigned long start, unsigned long range)
->   * Those devices may produce endless random bits and will be throttled
->   * when our pool is full.
->   */
-> -void add_hwgenerator_randomness(const char *buffer, size_t count,
-> +static void add_hwgenerator_randomness(const char *buffer, size_t count,
->                                 size_t entropy)
->  {
->         struct entropy_store *poolp = &input_pool;
-> --
-> 2.7.4
->
+>  Documentation/devicetree/bindings/leds/leds-aat1290.txt | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
