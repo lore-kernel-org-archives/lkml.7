@@ -2,150 +2,116 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C58EC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB69C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE92214C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556300666;
-	bh=f/og59YkYC9ApZwrq1CuOoaeZXfjmj4D8LdPICM0l0g=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=LtFP4NV2YDojt/klxuRK4qPh+uzs4t5M2WZmdAFAOiOEGYG7DUocZpPJrIhCmj0WW
-	 fAaTAPxotoSd8hkmuBM5kNzzMsLJs+RM3mUIpA1ZruOOG9O/xIFlMzDuJsYsM2x6Ap
-	 CU1stNg2W9WdU/xwnjVT/1aiYrqfBUYjYd0ngWdY=
+	by mail.kernel.org (Postfix) with ESMTP id 9EE1721537
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:44:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dIYNzCRy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfDZRoY (ORCPT
+        id S1726349AbfDZRos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 13:44:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfDZRoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 13:44:24 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F9582077B;
-        Fri, 26 Apr 2019 17:44:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556300662;
-        bh=f/og59YkYC9ApZwrq1CuOoaeZXfjmj4D8LdPICM0l0g=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=f00dlNCwhDELLIrmHlCPV6JItu/FK9OR9/Y22oUmiiACSEVaZTUbn38SMhl3QuhJf
-         Q/Yfa/o+PSBq60FcuzQ4SXgZxTbMVkrKaR+bbfAVb92cbH083Va/f4QNy3Qe62fCsS
-         4MSHxFGWkxbP2RNoulgHwd8ogVIDf12LbmXkGI5A=
-Date:   Fri, 26 Apr 2019 10:44:20 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        David Laight <David.Laight@aculab.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Message-ID: <20190426174419.GB691@sol.localdomain>
-References: <20190416120822.GV11158@hirez.programming.kicks-ass.net>
- <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
- <20190416154348.GB3004@mit.edu>
- <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com>
- <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com>
- <20190417151555.GG4686@mit.edu>
- <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
- <20190426140102.GA4922@mit.edu>
+        Fri, 26 Apr 2019 13:44:48 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35909 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfDZRos (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 13:44:48 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w20so1286656plq.3;
+        Fri, 26 Apr 2019 10:44:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q+wz9yZx1wmA45aHBRwLyUV3wvKIM+8HiQVPMF85bPk=;
+        b=dIYNzCRyyhHPrQ8H3Y5kRm4rDmU0W57ABKzAjjhkKAJDaMzixFzrU0AbBCrYEBrD1j
+         IOYW+sXwFNryVTzuBHJ0LB6zY/tEuyWqq+e6uWSWFdhPFk6wshqGoATEOu+aUT4WItTr
+         IUO/nE87fAS0PKrJZm+O5F+dk/gqxpqmZrxaiN+c2ZjoeH4jCkVmPTEc7yn4bT3tXzMe
+         dnsolcrFeXZFnbxuY7EZeMYJ1Fcg4Ru1DaOqJfPtWoC88TYtQW/t9299QGl0fFMWKuoV
+         TMOlUp/ZXhGqwT2MOctWqh7wV4E0Gwr4Rrdbj7M8AY/j1IdH6pChlr7qwm7uNJu15lyG
+         1+jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q+wz9yZx1wmA45aHBRwLyUV3wvKIM+8HiQVPMF85bPk=;
+        b=ac4H9T6BFDnLiBlyoPIQCdTxBDu5w/nNRWLRoex098Jg7fGJy700l/B41+YJw1nPz1
+         9hHOmbnjBK4Pt6ZJ56GqTjDF9WXl3LpZlsZQzAQNRqftYyksr+aVhF5/ruWFUOjxM2BB
+         bHzRHRg+8HucumtjEg/tZlT01tCIMEya8iHzsmGUR1mhJEtG+OlGQpRPE57OF8ctz/KO
+         a2ppjTz2NBIhX9UTo3ht4pXnlotFoWsykocAmnrW9q/K/X/7wU4K3XfQOGfWy2Z9tObY
+         AVuWeyFlJYm+oEsw3hd1YaeePf1SOo4bz5FDqCgYkPVzICJVH4S83/d3fvOuoS2Sw5r/
+         TG9A==
+X-Gm-Message-State: APjAAAX6jkrp2H2SRgpaU2A6E0H5ZYI59pQiKuvSA6TVWJKRqYvu7rzw
+        XwI3xe0j0dZfXCOEYWVVfPbBmxDIMMg9EZT+u6GSmGZmcTk=
+X-Google-Smtp-Source: APXvYqy5F7P/HIH5GG6ubF+EEpkTWCk5Kut5C9lU/7u4EIARhhMAow1YZLV2r3r1oyTnt/veElK4KEnPvlw1RZEeyow=
+X-Received: by 2002:a17:902:758b:: with SMTP id j11mr10110791pll.87.1556300687807;
+ Fri, 26 Apr 2019 10:44:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426140102.GA4922@mit.edu>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
+ <20190424100130.GB2654@lahna.fi.intel.com> <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
+ <20190424103306.GC2654@lahna.fi.intel.com> <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
+ <20190426130615.GT9224@smile.fi.intel.com> <bd5453e1-0279-02ab-3304-edc6ebf509dc@siemens.com>
+ <bc856e19-470d-7655-5680-a031831ab513@metux.net> <2f3da791-4a10-c2c4-dc5a-22ad16ed7be6@siemens.com>
+ <CAHp75VfonL_f1GjRFFhp59R8U+bGzT9pcC7p8XDJ32-_cxT29g@mail.gmail.com> <20190426173329.GA31161@Mani-XPS-13-9360>
+In-Reply-To: <20190426173329.GA31161@Mani-XPS-13-9360>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 26 Apr 2019 20:44:36 +0300
+Message-ID: <CAHp75VdcS_LaKNhaKsFaWa9ReQw4KRDRpc-81kv0Hb9wbZFCTg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 10:01:02AM -0400, Theodore Ts'o wrote:
-> On Fri, Apr 26, 2019 at 11:33:09AM +0000, Reshetova, Elena wrote:
-> > Adding Eric and Herbert to continue discussion for the chacha part. 
-> > So, as a short summary I am trying to find out a fast (fast enough to be used per syscall
-> > invocation) source of random bits with good enough security properties. 
-> > I started to look into chacha kernel implementation and while it seems that it is designed to 
-> > work with any number of rounds, it does not expose less than 12 rounds primitive. 
-> > I guess this is done for security sake, since 12 is probably the lowest bound we want people
-> > to use for the purpose of encryption/decryption, but if we are to build an efficient RNG,
-> > chacha8 probably is a good tradeoff between security and speed. 
-> > 
-> > What are people's opinions/perceptions on this? Has it been considered before to create a
-> > kernel RNG based on chacha?
-> 
-> Well, sure.  The get_random_bytes() kernel interface and the
-> getrandom(2) system call uses a CRNG based on chacha20.  See
-> extract_crng() and crng_reseed() in drivers/char/random.c.
-> 
-> It *is* possible to use an arbitrary number of rounds if you use the
-> low level interface exposed as chacha_block(), which is an
-> EXPORT_SYMBOL interface so even modules can use it.  "Does not expose
-> less than 12 rounds" applies only if you are using the high-level
-> crypto interface.
+On Fri, Apr 26, 2019 at 8:33 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> On Fri, Apr 26, 2019 at 08:20:19PM +0300, Andy Shevchenko wrote:
+> > On Fri, Apr 26, 2019 at 7:05 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
+> > > On 26.04.19 16:42, Enrico Weigelt, metux IT consult wrote:
+> > > > On 26.04.19 15:36, Jan Kiszka wrote:
 
-chacha_block() actually WARNs if the round count isn't 12 or 20, because I
-didn't want people to sneak in uses of other variants without discussion :-)
+> > The problem here is opaque number. This has to be chip + *relative* pin number/
+> > See this:
+> > https://stackoverflow.com/questions/55532410/how-do-linux-gpio-numbers-get-their-values/55579640#55579640
+> >
+>
+> But for platform like 96Boards we don't need controller specific lookup, these
+> are all handled by the platform code [1] so that the users can use the standard
+> pinout number to access GPIOs.
 
-(Possibly I should have made chacha_block() 'static' and only exported
-chacha12_block() and chacha20_block().  But the 'nrounds' parameter is
-convenient for crypto/chacha_generic.c.)
+This is a complete mistake.
 
-> 
-> We have used cut down crypto algorithms for performance critical
-> applications before; at one point, we were using a cut down MD4(!) for
-> initial TCP sequence number generation.  But that was getting rekeyed
-> every five minutes, and the goal was to make it just hard enough that
-> there were other easier ways of DOS attacking a server.
-> 
-> I'm not a cryptographer, so I'd really us to hear from multiple
-> experts about the security level of, say, ChaCha8 so we understand
-> exactly kind of security we'd offering.  And I'd want that interface
-> to be named so that it's clear it's only intended for a very specific
-> use case, since it will be tempting for other kernel developers to use
-> it in other contexts, with undue consideration.
-> 
->       	    	      	   	 - Ted
+There is *no* global GPIO numbers anymore in Linux. (I don't count
+very old legacy platforms)
+Read above, it applies to DT or whatever resource provider.
 
-The best attack on ChaCha is against 7 rounds and has time complexity 2^235.  So
-while there's no publicly known attack on ChaCha8, its security margin is too
-small for it to be recommended for typical cryptographic use.  I wouldn't be
-suprised to see an attack published on ChaCha8 in the not-too-distant future.
-(*Probably* not a practical one, but the crypto will be technically "broken"
-regardless.)
+> For instance, pin 23 on the Low Speed expansion
+> header is the GPIO for all 96Boards platform, so the user can access that pin
+> using 23 itself in the application and it will run across all supported
+> 96Boards.
+>
+> That's one of the reason why we prefer MRAA.
 
-I don't think it's completely out of the question for this specific use case,
-since apparently you only need random numbers that are used temporarily for
-runtime memory layout.  Thus the algorithm can be upgraded at any time without
-spending decades deprecating it from network protocols and on-disk formats.
+> [1] https://github.com/intel-iot-devkit/mraa/blob/master/src/arm/96boards.c#L75
 
-But if you actually need cryptographically secure random numbers, it would be
-much better to start with something with a higher security margin like ChaCha20,
-optimizing it, and only going lower if you actually need to.
-
-Would it be possibly to call ChaCha20 through the actual crypto API so that SIMD
-instructions (e.g. AVX-2) could be used?  That would make it *much* faster.
-Also consider AES-CTR with AES-NI instructions.
-
-- Eric
+-- 
+With Best Regards,
+Andy Shevchenko
