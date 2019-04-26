@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8C9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF225C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7712089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5F4206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271682;
-	bh=jdVv7uMKkzlK/fD2HC+XxfruvPNPEXqmdW/a2rhirAk=;
+	s=default; t=1556271690;
+	bh=5BGtr5FSnPaVIOUH+lM4TF35mFWmjxLjTOf5qbg3Uhc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=JFFuPw/vfwBh2DaBJOkG2slJn9sAVNhBUBRF8YeHT3f9XuLBc1k0b6l/FNjs33wm4
-	 euaGcxY5KyVIXda0/bnlhvNSVzOM3RtcrCFIqGJEP6DE1YJA9IMOrPp1NFBaqKntu6
-	 qExGQbsFfxaih73T/K9krVRn9sxwUvrTgK0mWFD8=
+	b=harKLBzk4DtQMa6vnsbgrgNmZMAkPXqwfetCo1JO2quyPfo/lFFXrHKGxs0Ap1M0o
+	 8po8lO7c/kUYSYEX0M+Qyn15Orq0J5cITy8PEywGcawLT4xiNwKzipwKaMllS94Hd0
+	 ZFuvXrpBQrAnLdoC7RLRVF4n4XTKA1Bo9vM9w73s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfDZJlU (ORCPT
+        id S1726990AbfDZJl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:41:20 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47042 "EHLO
+        Fri, 26 Apr 2019 05:41:29 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47408 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbfDZJlO (ORCPT
+        with ESMTP id S1726930AbfDZJlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:41:14 -0400
+        Fri, 26 Apr 2019 05:41:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=3ZezLZJ+xVOAnD6C7TehXJb6gep3ZNmZ+t6tn5EJ1VM=; b=vM3iQCqSXbOb
-        FrT2UP2/vmxSaraIUDhO6Wpwks7n7vxqhue00les2Wiq4bMZjRPgVqrlzRlorXr953IC9MEW3pSIm
-        1/95mOjO+OYHE+wOioHUbMI6TAjChrcf7SdfzZImojqZCE40bm/WsctMPmAzpVRpyutYAZx/BFZhm
-        APduM=;
+        List-Archive; bh=kJJ7X8ioZshO8HTrSNLCYRNrSMdqb6MfwaMtIScxi7M=; b=gFc5Y+kIEByZ
+        +8U2ZKk37uxqlFKUipRWM4M1CMYakHJc0G0kIX4BXRWs3m1iFb2OZlbar3GVM/rGSiZ2R7/ZPrPPA
+        Unh5Mom4CA9fHrnhxmzPAtMj+dWoywbycrmBmtU3L6xDFxsnND3LhazuyCRPjAq+txj9ZqAIP/Yrl
+        +25D4=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxLz-0003Ky-AS; Fri, 26 Apr 2019 09:41:11 +0000
+        id 1hJxMA-0003LF-OB; Fri, 26 Apr 2019 09:41:22 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 53400441D3B; Fri, 26 Apr 2019 10:41:10 +0100 (BST)
+        id BF7E3441D3B; Fri, 26 Apr 2019 10:41:16 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: ab8500: Constify regulator_ops" to the regulator tree
+Subject: Applied "regulator: ab8500-ext: Convert to use simplified DT parsing" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094110.53400441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:41:10 +0100 (BST)
+Message-Id: <20190426094116.BF7E3441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:41:16 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: ab8500: Constify regulator_ops
+   regulator: ab8500-ext: Convert to use simplified DT parsing
 
 has been applied to the regulator tree at
 
@@ -85,68 +85,93 @@ to this mail.
 Thanks,
 Mark
 
-From 6d66d9952ec06f12197174018be76538150aea05 Mon Sep 17 00:00:00 2001
+From 48cb9737edff831a6cd96bad7e9f9f612a7f3a9e Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 12 Apr 2019 22:11:57 +0800
-Subject: [PATCH] regulator: ab8500: Constify regulator_ops
+Date: Fri, 12 Apr 2019 22:06:58 +0800
+Subject: [PATCH] regulator: ab8500-ext: Convert to use simplified DT parsing
 
-These regulator_ops variables never need to be modified, make them const so
-compiler can put them to .rodata.
+Use regulator core's simplified DT parsing code to simplify the driver
+implementation.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/ab8500.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/regulator/ab8500-ext.c | 28 +++++-----------------------
+ 1 file changed, 5 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/regulator/ab8500.c b/drivers/regulator/ab8500.c
-index 83dba3fbfe0c..6b9a3463f1fd 100644
---- a/drivers/regulator/ab8500.c
-+++ b/drivers/regulator/ab8500.c
-@@ -510,7 +510,7 @@ static int ab8500_regulator_set_voltage_sel(struct regulator_dev *rdev,
- 	return ret;
- }
- 
--static struct regulator_ops ab8500_regulator_volt_mode_ops = {
-+static const struct regulator_ops ab8500_regulator_volt_mode_ops = {
- 	.enable			= ab8500_regulator_enable,
- 	.disable		= ab8500_regulator_disable,
- 	.is_enabled		= ab8500_regulator_is_enabled,
-@@ -522,7 +522,7 @@ static struct regulator_ops ab8500_regulator_volt_mode_ops = {
- 	.list_voltage		= regulator_list_voltage_table,
+diff --git a/drivers/regulator/ab8500-ext.c b/drivers/regulator/ab8500-ext.c
+index 89ddbabca2af..f232a7a90fd5 100644
+--- a/drivers/regulator/ab8500-ext.c
++++ b/drivers/regulator/ab8500-ext.c
+@@ -733,6 +733,7 @@ static struct ab8500_ext_regulator_info
+ 	[AB8500_EXT_SUPPLY1] = {
+ 		.desc = {
+ 			.name		= "VEXTSUPPLY1",
++			.of_match	= of_match_ptr("ab8500_ext1"),
+ 			.ops		= &ab8500_ext_regulator_ops,
+ 			.type		= REGULATOR_VOLTAGE,
+ 			.id		= AB8500_EXT_SUPPLY1,
+@@ -750,6 +751,7 @@ static struct ab8500_ext_regulator_info
+ 	[AB8500_EXT_SUPPLY2] = {
+ 		.desc = {
+ 			.name		= "VEXTSUPPLY2",
++			.of_match	= of_match_ptr("ab8500_ext2"),
+ 			.ops		= &ab8500_ext_regulator_ops,
+ 			.type		= REGULATOR_VOLTAGE,
+ 			.id		= AB8500_EXT_SUPPLY2,
+@@ -767,6 +769,7 @@ static struct ab8500_ext_regulator_info
+ 	[AB8500_EXT_SUPPLY3] = {
+ 		.desc = {
+ 			.name		= "VEXTSUPPLY3",
++			.of_match	= of_match_ptr("ab8500_ext3"),
+ 			.ops		= &ab8500_ext_regulator_ops,
+ 			.type		= REGULATOR_VOLTAGE,
+ 			.id		= AB8500_EXT_SUPPLY3,
+@@ -783,31 +786,13 @@ static struct ab8500_ext_regulator_info
+ 	},
  };
  
--static struct regulator_ops ab8500_regulator_volt_ops = {
-+static const struct regulator_ops ab8500_regulator_volt_ops = {
- 	.enable		= ab8500_regulator_enable,
- 	.disable	= ab8500_regulator_disable,
- 	.is_enabled	= ab8500_regulator_is_enabled,
-@@ -531,7 +531,7 @@ static struct regulator_ops ab8500_regulator_volt_ops = {
- 	.list_voltage	= regulator_list_voltage_table,
- };
+-static struct of_regulator_match ab8500_ext_regulator_match[] = {
+-	{ .name = "ab8500_ext1", .driver_data = (void *) AB8500_EXT_SUPPLY1, },
+-	{ .name = "ab8500_ext2", .driver_data = (void *) AB8500_EXT_SUPPLY2, },
+-	{ .name = "ab8500_ext3", .driver_data = (void *) AB8500_EXT_SUPPLY3, },
+-};
+-
+ static int ab8500_ext_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct ab8500 *ab8500 = dev_get_drvdata(pdev->dev.parent);
+ 	struct ab8500_regulator_platform_data *pdata = &ab8500_regulator_plat_data;
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct regulator_config config = { };
+ 	struct regulator_dev *rdev;
+-	int i, err;
+-
+-	if (np) {
+-		err = of_regulator_match(&pdev->dev, np,
+-					 ab8500_ext_regulator_match,
+-					 ARRAY_SIZE(ab8500_ext_regulator_match));
+-		if (err < 0) {
+-			dev_err(&pdev->dev,
+-				"Error parsing regulator init data: %d\n", err);
+-			return err;
+-		}
+-	}
++	int i;
  
--static struct regulator_ops ab8500_regulator_mode_ops = {
-+static const struct regulator_ops ab8500_regulator_mode_ops = {
- 	.enable			= ab8500_regulator_enable,
- 	.disable		= ab8500_regulator_disable,
- 	.is_enabled		= ab8500_regulator_is_enabled,
-@@ -541,14 +541,14 @@ static struct regulator_ops ab8500_regulator_mode_ops = {
- 	.list_voltage		= regulator_list_voltage_table,
- };
+ 	if (!ab8500) {
+ 		dev_err(&pdev->dev, "null mfd parent\n");
+@@ -843,10 +828,7 @@ static int ab8500_ext_regulator_probe(struct platform_device *pdev)
  
--static struct regulator_ops ab8500_regulator_ops = {
-+static const struct regulator_ops ab8500_regulator_ops = {
- 	.enable			= ab8500_regulator_enable,
- 	.disable		= ab8500_regulator_disable,
- 	.is_enabled		= ab8500_regulator_is_enabled,
- 	.list_voltage		= regulator_list_voltage_table,
- };
+ 		config.dev = &pdev->dev;
+ 		config.driver_data = info;
+-		config.of_node = ab8500_ext_regulator_match[i].of_node;
+-		config.init_data = (np) ?
+-			ab8500_ext_regulator_match[i].init_data :
+-			&pdata->ext_regulator[i];
++		config.init_data = &pdata->ext_regulator[i];
  
--static struct regulator_ops ab8500_regulator_anamic_mode_ops = {
-+static const struct regulator_ops ab8500_regulator_anamic_mode_ops = {
- 	.enable		= ab8500_regulator_enable,
- 	.disable	= ab8500_regulator_disable,
- 	.is_enabled	= ab8500_regulator_is_enabled,
+ 		/* register regulator with framework */
+ 		rdev = devm_regulator_register(&pdev->dev, &info->desc,
 -- 
 2.20.1
 
