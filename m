@@ -2,134 +2,90 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59496C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC26C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C269206BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFB7206BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556242722;
+	bh=d7Ir08bBi4TxEsMumxprS2fXxUkfiMgE/kM9QWPr980=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=yuiTNlAqKhmiVE8ZkURFK/s7K74GcaNn/xdX7+eR5XwHipwGGgLNl40LfOPihOf+U
+	 21BHaWvqNFLOFzeeRlq+4LWQII7tHG6+25INsuib1LdV31yZtaQ+r5LdltA/IuMQqm
+	 Al0RhbMRwljyc3ZdXt14lVgek5IbbfGnqby8bXoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbfDZBiS (ORCPT
+        id S1727668AbfDZBil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 21:38:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38646 "EHLO mx1.redhat.com"
+        Thu, 25 Apr 2019 21:38:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbfDZBiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 21:38:17 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726026AbfDZBik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 21:38:40 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 447E63005FE7;
-        Fri, 26 Apr 2019 01:38:17 +0000 (UTC)
-Received: from redhat.com (ovpn-120-47.rdu2.redhat.com [10.10.120.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5865F1820F;
-        Fri, 26 Apr 2019 01:38:16 +0000 (UTC)
-Date:   Thu, 25 Apr 2019 21:38:14 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     lsf-pc@lists.linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [LSF/MM TOPIC] Direct block mapping through fs for device
-Message-ID: <20190426013814.GB3350@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9950B206BF;
+        Fri, 26 Apr 2019 01:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556242719;
+        bh=d7Ir08bBi4TxEsMumxprS2fXxUkfiMgE/kM9QWPr980=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=sj5suOkRDhCCYxAvrgjb1iZT5s/Wanay10AblXBH01zNZ29HZEPhYQGo6JfxbVdJV
+         s4tkKeb4pV7vS+80pITct4vvjYvKfcB785xQnG7eAN8Yk8s616nKvMCNyHAIB9sSVA
+         V2353gHuQqL6RSilh3guUfmi8uMSOeN+DxkBlt94=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 26 Apr 2019 01:38:17 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190411082618.3502-1-paul.walmsley@sifive.com>
+References: <20190411082618.3502-1-paul.walmsley@sifive.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 0/3] clk: add driver for the SiFive FU540 PRCI and PLLs it controls
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        mturquette@baylibre.com
+Message-ID: <155624271876.15276.8637203698438742304@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 25 Apr 2019 18:38:38 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I see that they are still empty spot in LSF/MM schedule so i would like to
-have a discussion on allowing direct block mapping of file for devices (nic,
-gpu, fpga, ...). This is mm, fs and block discussion, thought the mm side
-is pretty light ie only adding 2 callback to vm_operations_struct:
+Quoting Paul Walmsley (2019-04-11 01:26:16)
+> clk: add driver for the SiFive FU540 PRCI and PLLs it controls
+>=20
+> Add a driver for the SiFive FU540 PRCI IP block, which handles clock and
+> some device reset control for the SiFive FU540 chip.  Also add a driver-
+> independent library for the Analog Bits Wide-Range PLL (WRPLL), used by
+> the PRCI driver to monitor and control the WRPLL instances on the FU540
+> chip.
+>=20
+> Boot-tested on a SiFive HiFive Unleashed board, using BBL and the
+> open-source FSBL with a mainline-focused DTB.
+>=20
+> This third version incorporates changes requested by Stephen Boyd
+> <sboyd@kernel.org> and Rob Herring <robh@kernel.org>.
+>=20
+> This patch series is also available, along with the DT macro prerequisite
+> patch, at:
 
-    int (*device_map)(struct vm_area_struct *vma,
-                      struct device *importer,
-                      struct dma_buf **bufp,
-                      unsigned long start,
-                      unsigned long end,
-                      unsigned flags,
-                      dma_addr_t *pa);
+Can you please send the dt macro patch along with the rest of the
+patches? I can't apply these patches and build them without it.
+Typically the macro patch is part of the binding patch and Rob
+acks/reviews it as one change. Then I pick that up and the clk driver
+parts and they get pulled into whatever SoC tree is using the bindings
+header with and those defines get merged up through some other path..
 
-    // Some flags i can think of:
-    DEVICE_MAP_FLAG_PIN // ie return a dma_buf object
-    DEVICE_MAP_FLAG_WRITE // importer want to be able to write
-    DEVICE_MAP_FLAG_SUPPORT_ATOMIC_OP // importer want to do atomic operation
-                                      // on the mapping
+>=20
+> https://github.com/sifive/riscv-linux/tree/dev/paulw/prci-v5.1-rc4
+>=20
 
-    void (*device_unmap)(struct vm_area_struct *vma,
-                         struct device *importer,
-                         unsigned long start,
-                         unsigned long end,
-                         dma_addr_t *pa);
+I suppose I'll go and fetch it from here manually.
 
-Each filesystem could add this callback and decide wether or not to allow
-the importer to directly map block. Filesystem can use what ever logic they
-want to make that decision. For instance if they are page in the page cache
-for the range then it can say no and the device would fallback to main
-memory. Filesystem can also update its internal data structure to keep
-track of direct block mapping.
-
-If filesystem decide to allow the direct block mapping then it forward the
-request to the block device which itself can decide to forbid the direct
-mapping again for any reasons. For instance running out of BAR space or
-peer to peer between block device and importer device is not supported or
-block device does not want to allow writeable peer mapping ...
-
-
-So event flow is:
-    1  program mmap a file (end never intend to access it with CPU)
-    2  program try to access the mmap from a device A
-    3  device A driver see device_map callback on the vma and call it
-    4a on success device A driver program the device to mapped dma address
-    4b on failure device A driver fallback to faulting so that it can use
-       page from page cache
-
-This API assume that the importer does support mmu notifier and thus that
-the fs can invalidate device mapping at _any_ time by sending mmu notifier
-to all mapping of the file (for a given range in the file or for the whole
-file). Obviously you want to minimize disruption and thus only invalidate
-when necessary.
-
-The dma_buf parameter can be use to add pinning support for filesystem who
-wish to support that case too. Here the mapping lifetime get disconnected
-from the vma and is transfer to the dma_buf allocated by filesystem. Again
-filesystem can decide to say no as pinning blocks has drastic consequence
-for filesystem and block device.
-
-
-This has some similarities to the hmmap and caching topic (which is mapping
-block directly to CPU AFAIU) but device mapping can cut some corner for
-instance some device can forgo atomic operation on such mapping and thus
-can work over PCIE while CPU can not do atomic to PCIE BAR.
-
-Also this API here can be use to allow peer to peer access between devices
-when the vma is a mmap of a device file and thus vm_operations_struct come
-from some exporter device driver. So same 2 vm_operations_struct call back
-can be use in more cases than what i just described here.
-
-
-So i would like to gather people feedback on general approach and few things
-like:
-    - Do block device need to be able to invalidate such mapping too ?
-
-      It is easy for fs the to invalidate as it can walk file mappings
-      but block device do not know about file.
-
-    - Do we want to provide some generic implementation to share accross
-      fs ?
-
-    - Maybe some share helpers for block devices that could track file
-      corresponding to peer mapping ?
-
-
-Cheers,
-Jérôme
