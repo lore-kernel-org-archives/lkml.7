@@ -2,144 +2,104 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFE4C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF17C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6F2208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556293523;
-	bh=/WIF5ZsOAHRvnXvFaRIh8SPxwDKNHT15GaB4L4qzTMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TtQx3n7FUhJ9OrxCNZD3UkE/b4WXm+MWLVg50slYlDfnVPvouUAcEC8AXK5zm/RuM
-	 LQloTIfND7eH7h88cT+5oilPbMH9bUWpYyyqKeRMglHkV7+oPlnk7t7qGIJmuO1jbx
-	 lhJaAFwJhWd4JHfd8igR1e+3q7xyLqHFhDngnFR4=
+	by mail.kernel.org (Postfix) with ESMTP id 66D83208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfDZPpV (ORCPT
+        id S1726610AbfDZPqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:45:21 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37684 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfDZPpV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:45:21 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r20so1894933otg.4;
-        Fri, 26 Apr 2019 08:45:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tNTtEvqJlRv85tDYzGzLiqv1W7Qq1L++Q9HTzcYFWas=;
-        b=YFIGJMegua31zthlWraeSdaBdZaN/02jIq/mQ4ikamPjFC51ade/csm61Yfo9ort7W
-         Y79v9IGjgfEQiJeBuI650Pp6JuNszSOictQJcJwAhnn49k/PfM3SWgIq1C0TGCONSQh/
-         hwAYpz7l5oJO3VJEMpKbn9pa1TdBcZBECiKaYJ59mgDw/q69LoWnxm3uGEE5ANHwyrLn
-         oJ0HkSM9unT0pv0xkDBGZgmtm+IbzjwMeGTtyzUJo7AafQxFFSOPFMg6gI/JsrSCG7Kr
-         Nj4KIt9H/NKMZbJrkXquM+Vpu+NT8LOSAEpob2pAT8J7OZXTBZCUW1bTvN8EYzDr/PBt
-         1XOQ==
-X-Gm-Message-State: APjAAAWZ1NPaqytmrDPvhm1aT/To/D6Wguofz2V14qQZqlHUwOZd7nNP
-        tHlZgMhNFg6wr3nZ2z9NIQ==
-X-Google-Smtp-Source: APXvYqyCQ+DYlEX56dmy2H5QMZOm1oDfwASMFMM2tkO7QWRhHh28uNpJzEJ8wq9qkHjZomKtAnI9SQ==
-X-Received: by 2002:a9d:7ad9:: with SMTP id m25mr28870711otn.75.1556293520461;
-        Fri, 26 Apr 2019 08:45:20 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a34sm11760507otc.46.2019.04.26.08.45.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 08:45:19 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 10:45:19 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 11/16] dt-bindings: PHY: P2U: Add Tegra 194 P2U block
-Message-ID: <20190426154519.GA19329@bogus>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-12-vidyas@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424052004.6270-12-vidyas@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 26 Apr 2019 11:46:07 -0400
+Received: from mga05.intel.com ([192.55.52.43]:60041 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726228AbfDZPqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:46:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 08:46:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,398,1549958400"; 
+   d="scan'208";a="341089197"
+Received: from xulike-server.sh.intel.com ([10.239.48.134])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Apr 2019 08:46:05 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+Date:   Fri, 26 Apr 2019 23:44:46 +0800
+Message-Id: <1556293486-8888-1-git-send-email-like.xu@linux.intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:49:59AM +0530, Vidya Sagar wrote:
-> Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
-> module instantiated one for each PCIe lane between Synopsys Designware core
-> based PCIe IP and Universal PHY block.
+Add support to expose Intel V2 Extended Topology Enumeration Leaf for
+some new systems with multiple software-visible die within each package.
 
-Missing Sob.
+When CPUID executes with EAX set to 1FH, the processor returns information
+about extended topology enumeration data. Software must detect the presence
+of CPUID leaf 1FH by verifying (a) the highest leaf index supported by
+CPUID is >= 1FH, and (b) CPUID.1FH:EBX[15:0] reports a non-zero value.
 
-> ---
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Changed node label to reflect new format that includes either 'hsio' or
->   'nvhs' in its name to reflect which UPHY brick they belong to
-> 
-> Changes since [v1]:
-> * This is a new patch in v2 series
-> 
->  .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-> new file mode 100644
-> index 000000000000..8b543cba483b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-> @@ -0,0 +1,28 @@
-> +NVIDIA Tegra194 P2U binding
-> +
-> +Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
-> +Speed) each interfacing with 12 and 8 P2U instances respectively.
-> +A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
-> +interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
-> +lane.
-> +
-> +Required properties:
-> +- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
-> +- reg: Should be the physical address space and length of respective each P2U
-> +       instance.
-> +- reg-names: Must include the entry "ctl".
+Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+---
 
--names is pointless when there is only 1.
+==changelog==
+v3:
+- Redefine commit message and comment
 
-> +
-> +Required properties for PHY port node:
-> +- #phy-cells: Defined by generic PHY bindings.  Must be 0.
-> +
-> +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
-> +
-> +Example:
-> +
-> +p2u_hsio_0: p2u@3e10000 {
+v2:
+- Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
+- Add comment to handle 0x1f anf 0xb in common code
+- Reduce check time in a descending-break style
 
-phy@...
+v1: https://lkml.org/lkml/2019/4/22/28
 
-> +	compatible = "nvidia,tegra194-p2u";
-> +	reg = <0x03e10000 0x10000>;
-> +	reg-names = "ctl";
-> +
-> +	#phy-cells = <0>;
-> +};
-> -- 
-> 2.17.1
-> 
+ arch/x86/kvm/cpuid.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index fd39516..176a67a 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -425,6 +425,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 
+ 	switch (function) {
+ 	case 0:
++		/* Check if the cpuid leaf 0x1f is actually implemented */
++		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
++			entry->eax = 0x1f;
++			break;
++		}
+ 		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+ 		break;
+ 	case 1:
+@@ -544,7 +549,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		entry->edx = edx.full;
+ 		break;
+ 	}
+-	/* function 0xb has additional index. */
++	/*
++	 * Per Intel's SDM, 0x1f is a superset of 0xb, thus they can be handled
++	 * by common code.
++	 */
++	case 0x1f:
+ 	case 0xb: {
+ 		int i, level_type;
+ 
+-- 
+1.8.3.1
+
