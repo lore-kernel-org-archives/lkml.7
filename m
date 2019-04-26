@@ -2,510 +2,93 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70334C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302C1C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CB82146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55BC212F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vxmG6KgE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n21DKcpU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfDZRNw (ORCPT
+        id S1727179AbfDZRN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 13:13:52 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47816 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfDZRN0 (ORCPT
+        Fri, 26 Apr 2019 13:13:59 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40396 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfDZRN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 13:13:26 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3QHDLGb072677;
-        Fri, 26 Apr 2019 12:13:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556298801;
-        bh=5fuWK5yOCjQYR1wiTSqe51QNCjTTD6mF5/7ZApXHxs4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vxmG6KgEB3zTlrm2nDnrCW9qff1Ep0KAA1LxOMk7FedCbkevzNVGlnwERZQCiR5FI
-         WZRd5TZ/Gh5vjojo+B9tfOzHyfNVSTXKK1lOoXCIxJcy3AkPr4YjYMA7TIFspfZoHp
-         qduz11Y8Z6HSoGRIig8QhPDLKcZ8mWcMidYYFmyw=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3QHDLpA123711
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Apr 2019 12:13:21 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 26
- Apr 2019 12:13:21 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 26 Apr 2019 12:13:21 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3QHDKGZ119390;
-        Fri, 26 Apr 2019 12:13:20 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-CC:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v2 18/20] net: ethernet: ti: cpsw: introduce mac sl module api
-Date:   Fri, 26 Apr 2019 20:12:40 +0300
-Message-ID: <1556298762-8632-19-git-send-email-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556298762-8632-1-git-send-email-grygorii.strashko@ti.com>
-References: <1556298762-8632-1-git-send-email-grygorii.strashko@ti.com>
+        Fri, 26 Apr 2019 13:13:57 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b3so1869774plr.7;
+        Fri, 26 Apr 2019 10:13:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gc17CQ6FTRdjQ5C0cWLlqtto/MiFjSm/smNNQ0GtJCU=;
+        b=n21DKcpU6bFtGAUzoinuLCUWHsPYNNJNaveZg7gNFYziDQuDkNunvmhaM+9K3Xb334
+         9+yGck9m+MqFZVRNH7mQGtsTjP2L3BS2t8SEZq4jM6nuj2G0LgLPCcn5Q06/Yhk6pIVi
+         4Q/sWL/QyfSH2I/Sw9MB/YhrJ9Mdru7BGZb3srakXX6aoBwxZZADXxj+buVsQ3GXiDWk
+         jQ9VB/aqiR1X+dX0vlrdMfKi6rMYtyrl0sR/pkkhFIRydGlJQ7mgiJucfep4FD10y16N
+         angAgKaDnl/ZIA48UxhXbcPRZWK1e73irHNDXzbCUZGZfeU0vHb7fqhymKmRmTyjL6WX
+         nxoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gc17CQ6FTRdjQ5C0cWLlqtto/MiFjSm/smNNQ0GtJCU=;
+        b=R+3a15Y0bmo6z6Ou/BbM0TlTTy0WRJAPFOLC0ibW9Vcx35tvdMy/RJhqRgrYRODqtu
+         /Gv619yRhGLkJBHNUraqomkkprSJUrkuPvZ61Vo7VFVxuiq0t1hZ+70/btf7jy5znQCB
+         TWEMdL6RXJBsvGu1kU7G4oX/i51iu23anbkRyaQz/iIEcEiefn5GDQKoC+ma/CfRlAFZ
+         eWMhnK47r1NzcN3c0LvksVtwg6nP3dWtAsHG71wEyqFpQpUhqqJyBJXvRaBlXygLkRqr
+         AczbooqGzeCyuyoAF2kBpjNujG792m0i21/WMEv9pVchdnuMrTblEVVWsr3mnr/b/7e0
+         weNA==
+X-Gm-Message-State: APjAAAW4mdbOdDyQFkRm8+spwFIKxXVhoYU0Wdh+Le3vmAhpytTaYASW
+        Fc2c07iTpUuUNhxd7S9Polstlf7lnBokwSxqbVo=
+X-Google-Smtp-Source: APXvYqzs8eRuWVjCICHfUCdgGYcsiDeLtuSZ2M2WiSTDeifRfIPCeZN1uJ5nagft3rrORQ+VniMi5NXW+9KU0mNeolo=
+X-Received: by 2002:a17:902:758b:: with SMTP id j11mr9947362pll.87.1556298836280;
+ Fri, 26 Apr 2019 10:13:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <5a547510-2605-bae5-bd58-ab4aff28840d@siemens.com>
+ <CAHp75VddTO890=DMa8pQANBGMMaDtCGgVb_cxCHc_Y1hxNTHwg@mail.gmail.com> <28d2856b-7fe5-1b42-e1bc-1c3601265dd2@siemens.com>
+In-Reply-To: <28d2856b-7fe5-1b42-e1bc-1c3601265dd2@siemens.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 26 Apr 2019 20:13:44 +0300
+Message-ID: <CAHp75VcENChz5BvZn9YdT3-rBZq4U9dkF-OtVm2rYprvpqXG6A@mail.gmail.com>
+Subject: Re: [PATCH] stmmac: pci: Adjust IOT2000 matching
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Su Bao Cheng <baocheng.su@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MAC SL submodule has a lot of common functions between many of TI SoCs
-AM335x/AM437x/DRA7(AM57xx), Keystone 2 66AK2HK/E/L/G and K3 AM654, but
-there are also differences especially in registers offsets and sets of
-supported functions.
+On Fri, Apr 26, 2019 at 6:36 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
+> On 26.04.19 16:34, Andy Shevchenko wrote:
+> > On Thu, Apr 18, 2019 at 12:15 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
 
-This patch introduces the MAC SL submodule API which is intended to provide
-a common way to access the MAC SL submodule and hide HW integrations
-details.
+> >> +       /*
+> >
+> >> +        * There are 2 types of SIMATIC IOT2000: IOT20202 and IOT2040.
+> >
+> > 20202 ?
+>
+> 2020...
+>
+> I can send a fix-up or v2, whatever is preferred.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
-changes in v2:
-- use usleep_range() instead of cpu_relax()
+My understanding that if Dave applied, you need to send a fixup.
 
- drivers/net/ethernet/ti/cpsw_sl.c | 328 ++++++++++++++++++++++++++++++
- drivers/net/ethernet/ti/cpsw_sl.h |  73 +++++++
- 2 files changed, 401 insertions(+)
- create mode 100644 drivers/net/ethernet/ti/cpsw_sl.c
- create mode 100644 drivers/net/ethernet/ti/cpsw_sl.h
-
-diff --git a/drivers/net/ethernet/ti/cpsw_sl.c b/drivers/net/ethernet/ti/cpsw_sl.c
-new file mode 100644
-index 000000000000..0c7531cb0f39
---- /dev/null
-+++ b/drivers/net/ethernet/ti/cpsw_sl.c
-@@ -0,0 +1,328 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Texas Instruments Ethernet Switch media-access-controller (MAC) submodule/
-+ * Ethernet MAC Sliver (CPGMAC_SL)
-+ *
-+ * Copyright (C) 2019 Texas Instruments
-+ *
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+
-+#include "cpsw_sl.h"
-+
-+#define CPSW_SL_REG_NOTUSED U16_MAX
-+
-+static const u16 cpsw_sl_reg_map_cpsw[] = {
-+	[CPSW_SL_IDVER] = 0x00,
-+	[CPSW_SL_MACCONTROL] = 0x04,
-+	[CPSW_SL_MACSTATUS] = 0x08,
-+	[CPSW_SL_SOFT_RESET] = 0x0c,
-+	[CPSW_SL_RX_MAXLEN] = 0x10,
-+	[CPSW_SL_BOFFTEST] = 0x14,
-+	[CPSW_SL_RX_PAUSE] = 0x18,
-+	[CPSW_SL_TX_PAUSE] = 0x1c,
-+	[CPSW_SL_EMCONTROL] = 0x20,
-+	[CPSW_SL_RX_PRI_MAP] = 0x24,
-+	[CPSW_SL_TX_GAP] = 0x28,
-+};
-+
-+static const u16 cpsw_sl_reg_map_66ak2hk[] = {
-+	[CPSW_SL_IDVER] = 0x00,
-+	[CPSW_SL_MACCONTROL] = 0x04,
-+	[CPSW_SL_MACSTATUS] = 0x08,
-+	[CPSW_SL_SOFT_RESET] = 0x0c,
-+	[CPSW_SL_RX_MAXLEN] = 0x10,
-+	[CPSW_SL_BOFFTEST] = CPSW_SL_REG_NOTUSED,
-+	[CPSW_SL_RX_PAUSE] = 0x18,
-+	[CPSW_SL_TX_PAUSE] = 0x1c,
-+	[CPSW_SL_EMCONTROL] = 0x20,
-+	[CPSW_SL_RX_PRI_MAP] = 0x24,
-+	[CPSW_SL_TX_GAP] = CPSW_SL_REG_NOTUSED,
-+};
-+
-+static const u16 cpsw_sl_reg_map_66ak2x_xgbe[] = {
-+	[CPSW_SL_IDVER] = 0x00,
-+	[CPSW_SL_MACCONTROL] = 0x04,
-+	[CPSW_SL_MACSTATUS] = 0x08,
-+	[CPSW_SL_SOFT_RESET] = 0x0c,
-+	[CPSW_SL_RX_MAXLEN] = 0x10,
-+	[CPSW_SL_BOFFTEST] = CPSW_SL_REG_NOTUSED,
-+	[CPSW_SL_RX_PAUSE] = 0x18,
-+	[CPSW_SL_TX_PAUSE] = 0x1c,
-+	[CPSW_SL_EMCONTROL] = 0x20,
-+	[CPSW_SL_RX_PRI_MAP] = CPSW_SL_REG_NOTUSED,
-+	[CPSW_SL_TX_GAP] = 0x28,
-+};
-+
-+static const u16 cpsw_sl_reg_map_66ak2elg_am65[] = {
-+	[CPSW_SL_IDVER] = CPSW_SL_REG_NOTUSED,
-+	[CPSW_SL_MACCONTROL] = 0x00,
-+	[CPSW_SL_MACSTATUS] = 0x04,
-+	[CPSW_SL_SOFT_RESET] = 0x08,
-+	[CPSW_SL_RX_MAXLEN] = CPSW_SL_REG_NOTUSED,
-+	[CPSW_SL_BOFFTEST] = 0x0c,
-+	[CPSW_SL_RX_PAUSE] = 0x10,
-+	[CPSW_SL_TX_PAUSE] = 0x40,
-+	[CPSW_SL_EMCONTROL] = 0x70,
-+	[CPSW_SL_RX_PRI_MAP] = CPSW_SL_REG_NOTUSED,
-+	[CPSW_SL_TX_GAP] = 0x74,
-+};
-+
-+#define CPSW_SL_SOFT_RESET_BIT		BIT(0)
-+
-+#define CPSW_SL_STATUS_PN_IDLE		BIT(31)
-+#define CPSW_SL_AM65_STATUS_PN_E_IDLE	BIT(30)
-+#define CPSW_SL_AM65_STATUS_PN_P_IDLE	BIT(29)
-+#define CPSW_SL_AM65_STATUS_PN_TX_IDLE	BIT(28)
-+
-+#define CPSW_SL_STATUS_IDLE_MASK_BASE (CPSW_SL_STATUS_PN_IDLE)
-+
-+#define CPSW_SL_STATUS_IDLE_MASK_K3 \
-+	(CPSW_SL_STATUS_IDLE_MASK_BASE | CPSW_SL_AM65_STATUS_PN_E_IDLE | \
-+	 CPSW_SL_AM65_STATUS_PN_P_IDLE | CPSW_SL_AM65_STATUS_PN_TX_IDLE)
-+
-+#define CPSW_SL_CTL_FUNC_BASE \
-+	(CPSW_SL_CTL_FULLDUPLEX |\
-+	CPSW_SL_CTL_LOOPBACK |\
-+	CPSW_SL_CTL_RX_FLOW_EN |\
-+	CPSW_SL_CTL_TX_FLOW_EN |\
-+	CPSW_SL_CTL_GMII_EN |\
-+	CPSW_SL_CTL_TX_PACE |\
-+	CPSW_SL_CTL_GIG |\
-+	CPSW_SL_CTL_CMD_IDLE |\
-+	CPSW_SL_CTL_IFCTL_A |\
-+	CPSW_SL_CTL_IFCTL_B |\
-+	CPSW_SL_CTL_GIG_FORCE |\
-+	CPSW_SL_CTL_EXT_EN |\
-+	CPSW_SL_CTL_RX_CEF_EN |\
-+	CPSW_SL_CTL_RX_CSF_EN |\
-+	CPSW_SL_CTL_RX_CMF_EN)
-+
-+struct cpsw_sl {
-+	struct device *dev;
-+	void __iomem *sl_base;
-+	const u16 *regs;
-+	u32 control_features;
-+	u32 idle_mask;
-+};
-+
-+struct cpsw_sl_dev_id {
-+	const char *device_id;
-+	const u16 *regs;
-+	const u32 control_features;
-+	const u32 regs_offset;
-+	const u32 idle_mask;
-+};
-+
-+static const struct cpsw_sl_dev_id cpsw_sl_id_match[] = {
-+	{
-+		.device_id = "cpsw",
-+		.regs = cpsw_sl_reg_map_cpsw,
-+		.control_features = CPSW_SL_CTL_FUNC_BASE |
-+				    CPSW_SL_CTL_MTEST |
-+				    CPSW_SL_CTL_TX_SHORT_GAP_EN |
-+				    CPSW_SL_CTL_TX_SG_LIM_EN,
-+		.idle_mask = CPSW_SL_STATUS_IDLE_MASK_BASE,
-+	},
-+	{
-+		.device_id = "66ak2hk",
-+		.regs = cpsw_sl_reg_map_66ak2hk,
-+		.control_features = CPSW_SL_CTL_FUNC_BASE |
-+				    CPSW_SL_CTL_TX_SHORT_GAP_EN,
-+		.idle_mask = CPSW_SL_STATUS_IDLE_MASK_BASE,
-+	},
-+	{
-+		.device_id = "66ak2x_xgbe",
-+		.regs = cpsw_sl_reg_map_66ak2x_xgbe,
-+		.control_features = CPSW_SL_CTL_FUNC_BASE |
-+				    CPSW_SL_CTL_XGIG |
-+				    CPSW_SL_CTL_TX_SHORT_GAP_EN |
-+				    CPSW_SL_CTL_CRC_TYPE |
-+				    CPSW_SL_CTL_XGMII_EN,
-+		.idle_mask = CPSW_SL_STATUS_IDLE_MASK_BASE,
-+	},
-+	{
-+		.device_id = "66ak2el",
-+		.regs = cpsw_sl_reg_map_66ak2elg_am65,
-+		.regs_offset = 0x330,
-+		.control_features = CPSW_SL_CTL_FUNC_BASE |
-+				    CPSW_SL_CTL_MTEST |
-+				    CPSW_SL_CTL_TX_SHORT_GAP_EN |
-+				    CPSW_SL_CTL_CRC_TYPE |
-+				    CPSW_SL_CTL_EXT_EN_RX_FLO |
-+				    CPSW_SL_CTL_EXT_EN_TX_FLO |
-+				    CPSW_SL_CTL_TX_SG_LIM_EN,
-+		.idle_mask = CPSW_SL_STATUS_IDLE_MASK_BASE,
-+	},
-+	{
-+		.device_id = "66ak2g",
-+		.regs = cpsw_sl_reg_map_66ak2elg_am65,
-+		.regs_offset = 0x330,
-+		.control_features = CPSW_SL_CTL_FUNC_BASE |
-+				    CPSW_SL_CTL_MTEST |
-+				    CPSW_SL_CTL_CRC_TYPE |
-+				    CPSW_SL_CTL_EXT_EN_RX_FLO |
-+				    CPSW_SL_CTL_EXT_EN_TX_FLO,
-+	},
-+	{
-+		.device_id = "am65",
-+		.regs = cpsw_sl_reg_map_66ak2elg_am65,
-+		.regs_offset = 0x330,
-+		.control_features = CPSW_SL_CTL_FUNC_BASE |
-+				    CPSW_SL_CTL_MTEST |
-+				    CPSW_SL_CTL_XGIG |
-+				    CPSW_SL_CTL_TX_SHORT_GAP_EN |
-+				    CPSW_SL_CTL_CRC_TYPE |
-+				    CPSW_SL_CTL_XGMII_EN |
-+				    CPSW_SL_CTL_EXT_EN_RX_FLO |
-+				    CPSW_SL_CTL_EXT_EN_TX_FLO |
-+				    CPSW_SL_CTL_TX_SG_LIM_EN |
-+				    CPSW_SL_CTL_EXT_EN_XGIG,
-+		.idle_mask = CPSW_SL_STATUS_IDLE_MASK_K3,
-+	},
-+	{ },
-+};
-+
-+u32 cpsw_sl_reg_read(struct cpsw_sl *sl, enum cpsw_sl_regs reg)
-+{
-+	int val;
-+
-+	if (sl->regs[reg] == CPSW_SL_REG_NOTUSED) {
-+		dev_err(sl->dev, "cpsw_sl: not sup r reg: %04X\n",
-+			sl->regs[reg]);
-+		return 0;
-+	}
-+
-+	val = readl(sl->sl_base + sl->regs[reg]);
-+	dev_dbg(sl->dev, "cpsw_sl: reg: %04X r 0x%08X\n", sl->regs[reg], val);
-+	return val;
-+}
-+
-+void cpsw_sl_reg_write(struct cpsw_sl *sl, enum cpsw_sl_regs reg, u32 val)
-+{
-+	if (sl->regs[reg] == CPSW_SL_REG_NOTUSED) {
-+		dev_err(sl->dev, "cpsw_sl: not sup w reg: %04X\n",
-+			sl->regs[reg]);
-+		return;
-+	}
-+
-+	dev_dbg(sl->dev, "cpsw_sl: reg: %04X w 0x%08X\n", sl->regs[reg], val);
-+	writel(val, sl->sl_base + sl->regs[reg]);
-+}
-+
-+static const struct cpsw_sl_dev_id *cpsw_sl_match_id(
-+		const struct cpsw_sl_dev_id *id,
-+		const char *device_id)
-+{
-+	if (!id || !device_id)
-+		return NULL;
-+
-+	while (id->device_id) {
-+		if (strcmp(device_id, id->device_id) == 0)
-+			return id;
-+		id++;
-+	}
-+	return NULL;
-+}
-+
-+struct cpsw_sl *cpsw_sl_get(const char *device_id, struct device *dev,
-+			    void __iomem *sl_base)
-+{
-+	const struct cpsw_sl_dev_id *sl_dev_id;
-+	struct cpsw_sl *sl;
-+
-+	sl = devm_kzalloc(dev, sizeof(struct cpsw_sl), GFP_KERNEL);
-+	if (!sl)
-+		return ERR_PTR(-ENOMEM);
-+	sl->dev = dev;
-+	sl->sl_base = sl_base;
-+
-+	sl_dev_id = cpsw_sl_match_id(cpsw_sl_id_match, device_id);
-+	if (!sl_dev_id) {
-+		dev_err(sl->dev, "cpsw_sl: dev_id %s not found.\n", device_id);
-+		return ERR_PTR(-EINVAL);
-+	}
-+	sl->regs = sl_dev_id->regs;
-+	sl->control_features = sl_dev_id->control_features;
-+	sl->idle_mask = sl_dev_id->idle_mask;
-+	sl->sl_base += sl_dev_id->regs_offset;
-+
-+	return sl;
-+}
-+
-+void cpsw_sl_reset(struct cpsw_sl *sl, unsigned long tmo)
-+{
-+	unsigned long timeout = jiffies + msecs_to_jiffies(tmo);
-+
-+	/* Set the soft reset bit */
-+	cpsw_sl_reg_write(sl, CPSW_SL_SOFT_RESET, CPSW_SL_SOFT_RESET_BIT);
-+
-+	/* Wait for the bit to clear */
-+	do {
-+		usleep_range(100, 200);
-+	} while ((cpsw_sl_reg_read(sl, CPSW_SL_SOFT_RESET) &
-+		  CPSW_SL_SOFT_RESET_BIT) &&
-+		  time_after(timeout, jiffies));
-+
-+	if (cpsw_sl_reg_read(sl, CPSW_SL_SOFT_RESET) & CPSW_SL_SOFT_RESET_BIT)
-+		dev_err(sl->dev, "cpsw_sl failed to soft-reset.\n");
-+}
-+
-+u32 cpsw_sl_ctl_set(struct cpsw_sl *sl, u32 ctl_funcs)
-+{
-+	u32 val;
-+
-+	if (ctl_funcs & ~sl->control_features) {
-+		dev_err(sl->dev, "cpsw_sl: unsupported func 0x%08X\n",
-+			ctl_funcs & (~sl->control_features));
-+		return -EINVAL;
-+	}
-+
-+	val = cpsw_sl_reg_read(sl, CPSW_SL_MACCONTROL);
-+	val |= ctl_funcs;
-+	cpsw_sl_reg_write(sl, CPSW_SL_MACCONTROL, val);
-+
-+	return 0;
-+}
-+
-+u32 cpsw_sl_ctl_clr(struct cpsw_sl *sl, u32 ctl_funcs)
-+{
-+	u32 val;
-+
-+	if (ctl_funcs & ~sl->control_features) {
-+		dev_err(sl->dev, "cpsw_sl: unsupported func 0x%08X\n",
-+			ctl_funcs & (~sl->control_features));
-+		return -EINVAL;
-+	}
-+
-+	val = cpsw_sl_reg_read(sl, CPSW_SL_MACCONTROL);
-+	val &= ~ctl_funcs;
-+	cpsw_sl_reg_write(sl, CPSW_SL_MACCONTROL, val);
-+
-+	return 0;
-+}
-+
-+void cpsw_sl_ctl_reset(struct cpsw_sl *sl)
-+{
-+	cpsw_sl_reg_write(sl, CPSW_SL_MACCONTROL, 0);
-+}
-+
-+int cpsw_sl_wait_for_idle(struct cpsw_sl *sl, unsigned long tmo)
-+{
-+	unsigned long timeout = jiffies + msecs_to_jiffies(tmo);
-+
-+	do {
-+		usleep_range(100, 200);
-+	} while (!(cpsw_sl_reg_read(sl, CPSW_SL_MACSTATUS) &
-+		  sl->idle_mask) && time_after(timeout, jiffies));
-+
-+	if (!(cpsw_sl_reg_read(sl, CPSW_SL_MACSTATUS) & sl->idle_mask)) {
-+		dev_err(sl->dev, "cpsw_sl failed to soft-reset.\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-diff --git a/drivers/net/ethernet/ti/cpsw_sl.h b/drivers/net/ethernet/ti/cpsw_sl.h
-new file mode 100644
-index 000000000000..a6d06a5a420f
---- /dev/null
-+++ b/drivers/net/ethernet/ti/cpsw_sl.h
-@@ -0,0 +1,73 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Texas Instruments Ethernet Switch media-access-controller (MAC) submodule/
-+ * Ethernet MAC Sliver (CPGMAC_SL) APIs
-+ *
-+ * Copyright (C) 2019 Texas Instruments
-+ *
-+ */
-+
-+#ifndef __TI_CPSW_SL_H__
-+#define __TI_CPSW_SL_H__
-+
-+#include <linux/device.h>
-+
-+enum cpsw_sl_regs {
-+	CPSW_SL_IDVER,
-+	CPSW_SL_MACCONTROL,
-+	CPSW_SL_MACSTATUS,
-+	CPSW_SL_SOFT_RESET,
-+	CPSW_SL_RX_MAXLEN,
-+	CPSW_SL_BOFFTEST,
-+	CPSW_SL_RX_PAUSE,
-+	CPSW_SL_TX_PAUSE,
-+	CPSW_SL_EMCONTROL,
-+	CPSW_SL_RX_PRI_MAP,
-+	CPSW_SL_TX_GAP,
-+};
-+
-+enum {
-+	CPSW_SL_CTL_FULLDUPLEX = BIT(0), /* Full Duplex mode */
-+	CPSW_SL_CTL_LOOPBACK = BIT(1), /* Loop Back Mode */
-+	CPSW_SL_CTL_MTEST = BIT(2), /* Manufacturing Test mode */
-+	CPSW_SL_CTL_RX_FLOW_EN = BIT(3), /* Receive Flow Control Enable */
-+	CPSW_SL_CTL_TX_FLOW_EN = BIT(4), /* Transmit Flow Control Enable */
-+	CPSW_SL_CTL_GMII_EN = BIT(5), /* GMII Enable */
-+	CPSW_SL_CTL_TX_PACE = BIT(6), /* Transmit Pacing Enable */
-+	CPSW_SL_CTL_GIG = BIT(7), /* Gigabit Mode */
-+	CPSW_SL_CTL_XGIG = BIT(8), /* 10 Gigabit Mode */
-+	CPSW_SL_CTL_TX_SHORT_GAP_EN = BIT(10), /* Transmit Short Gap Enable */
-+	CPSW_SL_CTL_CMD_IDLE = BIT(11), /* Command Idle */
-+	CPSW_SL_CTL_CRC_TYPE = BIT(12), /* Port CRC Type */
-+	CPSW_SL_CTL_XGMII_EN = BIT(13), /* XGMII Enable */
-+	CPSW_SL_CTL_IFCTL_A = BIT(15), /* Interface Control A */
-+	CPSW_SL_CTL_IFCTL_B = BIT(16), /* Interface Control B */
-+	CPSW_SL_CTL_GIG_FORCE = BIT(17), /* Gigabit Mode Force */
-+	CPSW_SL_CTL_EXT_EN = BIT(18), /* External Control Enable */
-+	CPSW_SL_CTL_EXT_EN_RX_FLO = BIT(19), /* Ext RX Flow Control Enable */
-+	CPSW_SL_CTL_EXT_EN_TX_FLO = BIT(20), /* Ext TX Flow Control Enable */
-+	CPSW_SL_CTL_TX_SG_LIM_EN = BIT(21), /* TXt Short Gap Limit Enable */
-+	CPSW_SL_CTL_RX_CEF_EN = BIT(22), /* RX Copy Error Frames Enable */
-+	CPSW_SL_CTL_RX_CSF_EN = BIT(23), /* RX Copy Short Frames Enable */
-+	CPSW_SL_CTL_RX_CMF_EN = BIT(24), /* RX Copy MAC Control Frames Enable */
-+	CPSW_SL_CTL_EXT_EN_XGIG = BIT(25),  /* Ext XGIG Control En, k3 only */
-+
-+	CPSW_SL_CTL_FUNCS_COUNT
-+};
-+
-+struct cpsw_sl;
-+
-+struct cpsw_sl *cpsw_sl_get(const char *device_id, struct device *dev,
-+			    void __iomem *sl_base);
-+
-+void cpsw_sl_reset(struct cpsw_sl *sl, unsigned long tmo);
-+
-+u32 cpsw_sl_ctl_set(struct cpsw_sl *sl, u32 ctl_funcs);
-+u32 cpsw_sl_ctl_clr(struct cpsw_sl *sl, u32 ctl_funcs);
-+void cpsw_sl_ctl_reset(struct cpsw_sl *sl);
-+int cpsw_sl_wait_for_idle(struct cpsw_sl *sl, unsigned long tmo);
-+
-+u32 cpsw_sl_reg_read(struct cpsw_sl *sl, enum cpsw_sl_regs reg);
-+void cpsw_sl_reg_write(struct cpsw_sl *sl, enum cpsw_sl_regs reg, u32 val);
-+
-+#endif /* __TI_CPSW_SL_H__ */
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
