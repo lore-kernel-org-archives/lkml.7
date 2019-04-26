@@ -2,129 +2,109 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1872C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C768EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8780206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9060E206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:02:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yJNjghie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfDZV6v (ORCPT
+        id S1727083AbfDZWCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 17:58:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48934 "EHLO mx1.redhat.com"
+        Fri, 26 Apr 2019 18:02:51 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46217 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbfDZV6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 17:58:50 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DB70814405D;
-        Fri, 26 Apr 2019 21:58:49 +0000 (UTC)
-Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 68F5F5D71C;
-        Fri, 26 Apr 2019 21:58:49 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 15:58:48 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: Re: [PATCHv1 7/7] vfio/mdev: Fix race conditions with mdev device
- life cycle APIs
-Message-ID: <20190426155848.5173e896@x1.home>
-In-Reply-To: <AM4PR0501MB22602E3F3480FAC5DC297D4DD13E0@AM4PR0501MB2260.eurprd05.prod.outlook.com>
-References: <1553658345-43995-1-git-send-email-parav@mellanox.com>
-        <1553658345-43995-8-git-send-email-parav@mellanox.com>
-        <20190403152722.24efc561@x1.home>
-        <VI1PR0501MB22714BE24CEA00E14A811918D1500@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-        <20190404144428.1fa6afb2@x1.home>
-        <VI1PR0501MB2271E8894B77BA8F316B6148D1500@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-        <20190423132140.18b0d892@x1.home>
-        <AM4PR0501MB2260154A21D3E471A838CF5CD13D0@AM4PR0501MB2260.eurprd05.prod.outlook.com>
-        <20190426093350.47619260@x1.home>
-        <AM4PR0501MB22608CA6D17273F0E2B4A96ED13E0@AM4PR0501MB2260.eurprd05.prod.outlook.com>
-        <20190426100924.4bf48708@x1.home>
-        <AM4PR0501MB22602E3F3480FAC5DC297D4DD13E0@AM4PR0501MB2260.eurprd05.prod.outlook.com>
-Organization: Red Hat
+        id S1726632AbfDZWCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 18:02:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=BS5MJiT5HrdcX3ERI95iiVbRC6UTS1Yq0TpvT2OvyNg=; b=yJNjghie4ikHXySQNMVKjndVHE
+        rv1NmCt7iT45nhais9PC7Tz8u7Jvg4rS1TgRVnl6qwd6KRVys40o1P9kB1Ha8txSUrgBeTGoXKF9S
+        BE3k8Gkw8gcQVHz2BRVNKlnIVvIY1xCVIjuizm4LJirqC0Rhl2Rjy33JYKzI7CejzILg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hK8vK-0005ys-RR; Sat, 27 Apr 2019 00:02:26 +0200
+Date:   Sat, 27 Apr 2019 00:02:26 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Esben Haabendal <esben@geanix.com>, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Yang Wei <yang.wei9@zte.com.cn>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/12] net: ll_temac: Fix support for 64-bit platforms
+Message-ID: <20190426220226.GW4041@lunn.ch>
+References: <20190426073231.4008-1-esben@geanix.com>
+ <20190426073231.4008-4-esben@geanix.com>
+ <20190426114013.333e62c8@cakuba.netronome.com>
+ <20190426205912.GI4041@lunn.ch>
+ <20190426140856.78b786ee@cakuba.netronome.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 26 Apr 2019 21:58:49 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426140856.78b786ee@cakuba.netronome.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019 19:02:40 +0000
-Parav Pandit <parav@mellanox.com> wrote:
+On Fri, Apr 26, 2019 at 02:08:56PM -0700, Jakub Kicinski wrote:
+> On Fri, 26 Apr 2019 22:59:12 +0200, Andrew Lunn wrote:
+> > On Fri, Apr 26, 2019 at 11:40:13AM -0700, Jakub Kicinski wrote:
+> > > On Fri, 26 Apr 2019 09:32:22 +0200, Esben Haabendal wrote:  
+> > > > The use of buffer descriptor APP4 field (32-bit) for storing skb pointer
+> > > > obviously does not work on 64-bit platforms.
+> > > > As APP3 is also unused, we can use that to store the other half of 64-bit
+> > > > pointer values.
+> > > > 
+> > > > Contrary to what is hinted at in commit message of commit 15bfe05c8d63
+> > > > ("net: ethernet: xilinx: Mark XILINX_LL_TEMAC broken on 64-bit")
+> > > > there are no other pointers stored in cdmac_bd.
+> > > > 
+> > > > Signed-off-by: Esben Haabendal <esben@geanix.com>  
+> > > 
+> > > This is a bit strange, the driver stores the host's virtual address into
+> > > the HW descriptor?  
 
-> Hi Alex,
-> 
-> 
-> > -----Original Message-----
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Friday, April 26, 2019 11:09 AM
-> > To: Parav Pandit <parav@mellanox.com>
-> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > kwankhede@nvidia.com; cjia@nvidia.com
-> > Subject: Re: [PATCHv1 7/7] vfio/mdev: Fix race conditions with mdev device
-> > life cycle APIs  
-> 
-> [..]
-> 
-> > > > >  
-> > > > > > Patch 6 looks ok, except I'd rather see the sanitizing loop stay
-> > > > > > until we can otherwise fix the race above.  
-> > > > > I can put back the sanitizing look, once it looks valid. Will wait
-> > > > > for your response.  
-> > > >
-> > > > Yep, I think patch 6 is good w/o the removal of the sanitizing loop.
-> > > > Will you repost it?
-> > > >  
-> > > Just the patch-6 or 1 to 6?  
-> > 
-> > Your choice, please roll in reviews/acks if you repost the rest.
-> >   
-> > > > > > Patch 7 needed more work, iirc.  Thanks,  
-> > > > > For a moment if we assume sanitizing loop exists, than patch-7
-> > > > > looks good?  
-> > > >
-> > > > Patch 7 is a bit less trivial, so I think as we're close to the
-> > > > merge window for v5.2, I'd rather push it out to be included with
-> > > > the later re-works.  Thanks,
-> > > >  
-> > > I agree it little less trivial, I tried to place as much comment as possible,  
-> > but it is an important fix.  
-> > > Let me repost 6-7 and decide if it can be included or not?  
-> > 
-> > Sounds good.  Thanks,
-> >   
-> I am dropping patch-7 for today and reworking the patch-6 for now.
-> 
-> Even after keeping that that crazy loop, I am easily able to create this below [1] call trace on adding file when mdev_remove() fails with the thread sequence we discussed above.
-> 
-> I think this is high time, we fix the sequence to match the linux bus sequence.
-> I have some cycles this week.
-> Post these 6 patches,
-> I like to get total 3 patches done.
-> 1. fix the bus sequence
-> 2. race with parent device removal
-> 3. do not try to add sysfs file on remove() failure
-> 
-> Is there any possibility above 3 patches can make to 5.2, given that merge window closes in June?
-> If yes, I will get them in 2-3 days. I will test with sample drivers and mlx5 driver.
-> Can we get some tests also done from Kirti also done on their hw?
+Lets try that again
 
-It depends how soon they stabilize and how invasive they are.  These
-are bug fixes, so we can consider them for after the merge window
-(which will close before the end of May), but the longer they take to
-stabilize and the more significant the change, the more likely I'd be
-to wait for 5.3.  Thanks,
+Hi Jakub
 
-Alex
+> > Hi Jukub
+> 
+> I need to start keeping track of all the ways my name gets spelled :)
+> I find it entertaining :)
+
+Sorry. 
+
+And i prefer entertaining over offended :-)
+
+> > This is reasonably common. You need some sort of cookie which links
+> > the hardware descriptor to the skbuf it points to. The hardware makes
+> > no use of it, it is just a cookie.
+> 
+> Right, but accesses to HW descriptor memory ring are significantly 
+> more expensive, especially on platforms which are not coherent with 
+> DMA operations (everything but x86?)
+>
+> A preferable design is to have two descriptor rings - one for HW
+> descriptors and one for software context, no?
+
+Modern drivers do that. But this driver seems to be quite old.  And if
+you look at what it is used on, PPC & MICROBLAZE, they are old
+architectures, i don't think hardware access are that as expensive as
+for modern architectures.
+
+	  Andrew
