@@ -2,181 +2,154 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2B8C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E607AC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276D3208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:50:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e6aAA1lG"
+	by mail.kernel.org (Postfix) with ESMTP id B511F208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556279456;
+	bh=Lwhq3yGTLwZBXZG7d5cZPZUNHsm6dVmKEROQ8WGGliM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nXdE9eD/CaiAbAl8LWmjhcThAF6E2K1s/TRrmcv3fx7ywwYnXpOXfz83euPx0ozW2
+	 QaiQIDWZ3Q4cNW+6jOp0XwknpvdUQKZeXx+gMBB59L+fCCOX1gqZixgDM/mZRrcErY
+	 nEqPtz1UWgBRMLLH8hMNaJOkv9zkdqq8G9b72/98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbfDZLuZ (ORCPT
+        id S1726279AbfDZLu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 07:50:25 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45178 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfDZLuZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 07:50:25 -0400
-Received: by mail-qt1-f195.google.com with SMTP id b3so3637095qtc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 04:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=OECKUnsN+FqcH1qRH152YaHz7XnfVWlzSXg8RoYceaM=;
-        b=e6aAA1lGMAA1b1MDUX3AZLbYlvuAd6Sm3u0WMutGvkoQkn2M4fD7MCyhGjo3LFiQsf
-         SbtOh6DGlQGtbKpWP4E0QCg07CBxFic28ZHhk1Lw/h7gL2IXiTNdfz/4E5Vl4VH/hUCX
-         jGpyj70QMMlCYjioQkwYdGwRKIesxu8rK3L4Ef/eGbmz8Sm6LeBrW/CHTyX2oIPtI0wu
-         726qJulRc8BVpVW4ceGaZ+LdL6Ig23K2j4NVmEW22p/a+m4Gv9JoJK2ewDN4QPb6vdu7
-         BgcIRG3uwb1O+U9b+hGmCys7teAUVym1HtMLeg3GOB3GD1ksEtRnaPpysVpAfZrRVnDX
-         oxvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=OECKUnsN+FqcH1qRH152YaHz7XnfVWlzSXg8RoYceaM=;
-        b=jRCE4n7Bu/ST4kGMUZrE4My8f3s20LP3sGR3vUJP5M9uYsdSUryJq+XJrQ2dMGoouw
-         gcNF0EyjNSfAvPjzj4H6cfvN8c1cP72dAKZMv5P0B4Pi5cdMfqB7exe0LFxLR0Zndd0e
-         oJFxkv4GtSevuLoYp199FodJy0RobUtD+5HOSTJsX3Q7+8SZIfHvqotCXud66iS0BcQ4
-         z7ocAVD1NXIeHfK97APr+f6GlLTxFht9kXhv1ukYVIPXUqM/I84kDkyHppoYmJb2Sikd
-         j6ikc5YwwQSdbZurIp4syKzsw5VWcjvgYtVkn9Dz/a+6vGa141RtG4WLCAYaNPzfGrj+
-         O8fw==
-X-Gm-Message-State: APjAAAWrdpAPKTdRFsqMKPwI6hBUmjxhsHt2xaKn8TpJBa2Mpp/H5TYh
-        jp2V1loLmQLc1dC18foa/uNbmw==
-X-Google-Smtp-Source: APXvYqxk0oUTt9x5YxE/ilK1Ma5rhlf58J6rbM8if7Vx1xf7iO5xI7eUFOVEJK1lTS8xxIQUtU0jPQ==
-X-Received: by 2002:a0c:9d02:: with SMTP id m2mr26350975qvf.32.1556279423586;
-        Fri, 26 Apr 2019 04:50:23 -0700 (PDT)
-Received: from [192.168.1.169] (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
-        by smtp.gmail.com with ESMTPSA id j25sm15380902qtc.24.2019.04.26.04.50.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 04:50:22 -0700 (PDT)
-Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
-To:     Ionela Voinescu <ionela.voinescu@arm.com>, mingo@redhat.com,
-        peterz@infradead.org, rui.zhang@intel.com
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
- <b777c6da-0fe2-96d2-240d-96b065a3f18d@arm.com>
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5CC2F07D.1080603@linaro.org>
-Date:   Fri, 26 Apr 2019 07:50:21 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Fri, 26 Apr 2019 07:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbfDZLuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 07:50:55 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F40FA2084F;
+        Fri, 26 Apr 2019 11:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556279454;
+        bh=Lwhq3yGTLwZBXZG7d5cZPZUNHsm6dVmKEROQ8WGGliM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OE7X96wLJ7r/44OQU/ONgLqbtBQX7QoV3QL1ig4fkpoXr7iI9ywW2ec1D04l93k/o
+         qEsS92zXBO446tnIdei/yZe7BrE6iVH4dpvvqCqm9Owdwl+33QHhP+Hj059DB0P8U1
+         TRQHEwHFiJULFK9HMQ55/A1W3iZRkSIxmrbBO9Ks=
+Date:   Fri, 26 Apr 2019 17:20:47 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: fsl-qdma: fixed the source/destination
+ descriptior format
+Message-ID: <20190426115047.GW28103@vkoul-mobl>
+References: <20190419084629.41742-1-peng.ma@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <b777c6da-0fe2-96d2-240d-96b065a3f18d@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190419084629.41742-1-peng.ma@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/24/2019 11:57 AM, Ionela Voinescu wrote:
-> Hi Thara,
-> 
-> The idea and the results look promising. I'm trying to understand better
-> the cause of the improvements so I've added below some questions that
-> would help me out with this.
+On 19-04-19, 08:46, Peng Ma wrote:
+> CMD of Source/Destination descriptior format should be lower of
 
-Hi Ionela,
+s/descriptior/descriptor
 
-Thanks for the review.
+> struct fsl_qdma_engine number data address.
+> 
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> ---
+>  drivers/dma/fsl-qdma.c |   29 ++++++++++++++++++-----------
+>  1 files changed, 18 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+> index aa1d0ae..542765a 100644
+> --- a/drivers/dma/fsl-qdma.c
+> +++ b/drivers/dma/fsl-qdma.c
+> @@ -113,6 +113,7 @@
+>  /* Field definition for Descriptor offset */
+>  #define QDMA_CCDF_STATUS		20
+>  #define QDMA_CCDF_OFFSET		20
+> +#define QDMA_SDDF_CMD(x)		(((u64)(x)) << 32)
+>  
+>  /* Field definition for safe loop count*/
+>  #define FSL_QDMA_HALT_COUNT		1500
+> @@ -214,6 +215,12 @@ struct fsl_qdma_engine {
+>  
+>  };
+>  
+> +static inline void
+> +qdma_sddf_set_cmd(struct fsl_qdma_format *sddf, u32 val)
+> +{
+> +	sddf->data = QDMA_SDDF_CMD(val);
+> +}
+> +
+>  static inline u64
+>  qdma_ccdf_addr_get64(const struct fsl_qdma_format *ccdf)
+>  {
+> @@ -341,6 +348,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
+>  static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  				      dma_addr_t dst, dma_addr_t src, u32 len)
+>  {
+> +	u32 cmd;
+>  	struct fsl_qdma_format *sdf, *ddf;
+>  	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
+>  
+> @@ -353,6 +361,7 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  
+>  	memset(fsl_comp->virt_addr, 0, FSL_QDMA_COMMAND_BUFFER_SIZE);
+>  	memset(fsl_comp->desc_virt_addr, 0, FSL_QDMA_DESCRIPTOR_BUFFER_SIZE);
+> +
+>  	/* Head Command Descriptor(Frame Descriptor) */
+>  	qdma_desc_addr_set64(ccdf, fsl_comp->bus_addr + 16);
+>  	qdma_ccdf_set_format(ccdf, qdma_ccdf_get_offset(ccdf));
+> @@ -369,14 +378,14 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  	/* This entry is the last entry. */
+>  	qdma_csgf_set_f(csgf_dest, len);
+>  	/* Descriptor Buffer */
+> -	sdf->data =
+> -		cpu_to_le64(FSL_QDMA_CMD_RWTTYPE <<
+> -			    FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> -	ddf->data =
+> -		cpu_to_le64(FSL_QDMA_CMD_RWTTYPE <<
+> -			    FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> -	ddf->data |=
+> -		cpu_to_le64(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
+> +	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
+> +			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> +	qdma_sddf_set_cmd(sdf, cmd);
+> +
+> +	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
+> +			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> +	cmd |= cpu_to_le32(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
+> +	qdma_sddf_set_cmd(ddf, cmd);
+>  }
+>  
+>  /*
+> @@ -701,10 +710,8 @@ static irqreturn_t fsl_qdma_error_handler(int irq, void *dev_id)
+>  
+>  	intr = qdma_readl(fsl_qdma, status + FSL_QDMA_DEDR);
+>  
+> -	if (intr) {
+> +	if (intr)
+>  		dev_err(fsl_qdma->dma_dev.dev, "DMA transaction error!\n");
+> -		return IRQ_NONE;
+> -	}
 
-> 
-> 
->> Regarding testing, basic build, boot and sanity testing have been
->> performed on hikey960 mainline kernel with debian file system.
->> Further, aobench (An occlusion renderer for benchmarking realworld
->> floating point performance), dhrystone and hackbench test have been
->> run with the thermal pressure algorithm. During testing, due to
->> constraints of step wise governor in dealing with big little systems,
->> cpu cooling was disabled on little core, the idea being that
->> big core will heat up and cpu cooling device will throttle the
->> frequency of the big cores there by limiting the maximum available
->> capacity and the scheduler will spread out tasks to little cores as well.
->> Finally, this patch series has been boot tested on db410C running v5.1-rc4
->> kernel.
->>
-> 
-> Did you try using IPA as well? It is better equipped to deal with
-> big-LITTLE systems and it's more probable IPA will be used for these
-> systems, where your solution will have the biggest impact as well.
-> The difference will be that you'll have both the big cluster and the
-> LITTLE cluster capped in different proportions depending on their
-> utilization and their efficiency.
+this seems unrelated can you explain?
 
-No. I did not use IPA simply because it was not enabled in mainline. I
-agree it is better equipped  to deal with big-little systems. The idea
-to remove cpu cooling on little cluster was to in some (not the
-cleanest) manner to mimic this. But I agree that IPA testing is possibly
-the next step.Any help in this regard is appreciated.
-
-> 
->> During the course of development various methods of capturing
->> and reflecting thermal pressure were implemented.
->>
->> The first method to be evaluated was to convert the
->> capped max frequency into capacity and have the scheduler use the
->> instantaneous value when updating cpu_capacity.
->> This method is referenced as "Instantaneous Thermal Pressure" in the
->> test results below. 
->>
->> The next two methods employs different methods of averaging the
->> thermal pressure before applying it when updating cpu_capacity.
->> The first of these methods re-used the PELT algorithm already present
->> in the kernel that does the averaging of rt and dl load and utilization.
->> This method is referenced as "Thermal Pressure Averaging using PELT fmwk"
->> in the test results below.
->>
->> The final method employs an averaging algorithm that collects and
->> decays thermal pressure based on the decay period. In this method,
->> the decay period is configurable. This method is referenced as
->> "Thermal Pressure Averaging non-PELT Algo. Decay : XXX ms" in the
->> test results below.
->>
->> The test results below shows 3-5% improvement in performance when
->> using the third solution compared to the default system today where
->> scheduler is unware of cpu capacity limitations due to thermal events.
->>
-> 
-> Did you happen to record the amount of capping imposed on the big cores
-> when these results were obtained? Did you find scenarios where the
-> capacity of the bigs resulted in being lower than the capacity of the
-> LITTLEs (capacity inversion)?
-> This is one case where we'll see a big impact in considering thermal
-> pressure.
-
-I think I saw capacity inversion in some scenarios. I did not
-particularly capture them.
-
-> 
-> Also, given that these are more or less sustained workloads, I'm
-> wondering if there is any effect on workloads running on an uncapped
-> system following capping. I would image such a test being composed of a
-> single threaded period (no capping) followed by a multi-threaded period
-> (with capping), continued in a loop. It might be interesting to have
-> something like this as well, as part of your test coverage
-
-I do not understand this. There is either capping for a workload or no
-capping. There is no sysctl entry to turn on or off capping.
-
-Regards
-Thara
-> 
-> 
-> Thanks,
-> Ionela.
-> 
-
+>  
+>  	qdma_writel(fsl_qdma, FSL_QDMA_DEDR_CLEAR, status + FSL_QDMA_DEDR);
+>  	return IRQ_HANDLED;
+> -- 
+> 1.7.1
 
 -- 
-Regards
-Thara
+~Vinod
