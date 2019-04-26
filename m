@@ -2,52 +2,49 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FE5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B31C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE4F120684
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE0E20684
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="c0UgjJLQ"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="APcgq1l3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfDZHlN (ORCPT
+        id S1726191AbfDZHkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:41:13 -0400
-Received: from first.geanix.com ([116.203.34.67]:59666 "EHLO first.geanix.com"
+        Fri, 26 Apr 2019 03:40:07 -0400
+Received: from first.geanix.com ([116.203.34.67]:59636 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfDZHkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:40:09 -0400
+        id S1725942AbfDZHkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 03:40:07 -0400
 Received: from localhost (unknown [193.163.1.7])
-        by first.geanix.com (Postfix) with ESMTPSA id 71E0C308E68;
-        Fri, 26 Apr 2019 07:31:59 +0000 (UTC)
+        by first.geanix.com (Postfix) with ESMTPSA id 05B54308E4B;
+        Fri, 26 Apr 2019 07:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1556263919; bh=+lrDbuO8ARbZogAI4/reIhkg2z59QWgVZlRkANDwfwU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=c0UgjJLQVpQq2rMqWDrgoopvKPkZJ9WGeb9ZvC+cU8mYVRdYZhEkYZSn3V1HHKFq+
-         ROVxEJuFLSdfQLmYkXWc5TcaUkkodPUGPizhr8H+S1Is1MYGCIabSmeFeTdX1dCqYb
-         sv90pRAwwgJDMgQPFf1I1Hb3mrmLM40gNhYSmQGA1Yp3cuiWmGsO6n3RjbO+FbUN+n
-         v/37uf79NwWtCNwndmqIWAyO3LM5nRdYb0Tgd3RdMOVOBr6bizSIbQTKSHAd4ZaUgI
-         oBNoyb94RQ56C2Vna28g2AJg1zvV4qb0spuVkQCyB5U0B2Oal98fYLvfuNcO/42W7t
-         /hcJAgIZyALpQ==
+        t=1556263885; bh=5aSzjjeeGg3gvnZzM0uMyBR5Gv5/enegwSPWZOS50xg=;
+        h=From:To:Cc:Subject:Date;
+        b=APcgq1l3vbqb+KATFpR51Ygd9HXtUOjlqbXgxC/zeRQBZQdYvwwgisIUZOYOfY16T
+         ZH0ypW6bS12XgV0yOJQIvXiMN2Qt3/UPDMIEcUh2DQfEk+nK7KIyshv1PRalAIvDyG
+         HnHdisdX7s7RSDeBbxmZlalDTzt3f6PhZI4yfxtWKnDsK5Owaw/RgW7bb407B7xLYf
+         +hXYrXSY6PUpNw4cdwRG5lw8f5ZI6gzub74G9fumggL69OhpBQckhKfIUDQqGhBkT7
+         v+2FeNGxMTmiESeNeCroQWrmrSo4La7LO9DFHbntscEYFBMIoaCMX71OV0TEmQt3xE
+         OOo28ZwnjUI7w==
 From:   Esben Haabendal <esben@geanix.com>
 To:     netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Luis Chamberlain <mcgrof@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
         Yang Wei <yang.wei9@zte.com.cn>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/12] net: ll_temac: Fix iommu/swiotlb leak
-Date:   Fri, 26 Apr 2019 09:32:27 +0200
-Message-Id: <20190426073231.4008-9-esben@geanix.com>
+        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 00/12] net: ll_temac: x86_64 support
+Date:   Fri, 26 Apr 2019 09:32:19 +0200
+Message-Id: <20190426073231.4008-1-esben@geanix.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190426073231.4008-1-esben@geanix.com>
-References: <20190426073231.4008-1-esben@geanix.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,26 +52,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unmap the actual buffer length, not the amount of data received.
+This patch series adds support for use of ll_temac driver with
+platform_data configuration and fixes endianess and 64-bit problems so
+that it can be used on x86_64 platform.
 
-Signed-off-by: Esben Haabendal <esben@geanix.com>
----
- drivers/net/ethernet/xilinx/ll_temac_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+A few bugfixes are also included.
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 309f149..56d8077 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -821,7 +821,7 @@ static void ll_temac_recv(struct net_device *ndev)
- 		length = be32_to_cpu(cur_p->app4) & 0x3FFF;
- 
- 		dma_unmap_single(ndev->dev.parent, be32_to_cpu(cur_p->phys),
--				 length, DMA_FROM_DEVICE);
-+				 XTE_MAX_JUMBO_FRAME_SIZE, DMA_FROM_DEVICE);
- 
- 		skb_put(skb, length);
- 		skb->protocol = eth_type_trans(skb, ndev);
+Esben Haabendal (12):
+  net: ll_temac: Fix and simplify error handling by using devres
+    functions
+  net: ll_temac: Extend support to non-device-tree platforms
+  net: ll_temac: Fix support for 64-bit platforms
+  net: ll_temac: Add support for non-native register endianness
+  net: ll_temac: Fix support for little-endian platforms
+  net: ll_temac: Allow use on x86 platforms
+  net: ll_temac: Support indirect_mutex share within TEMAC IP
+  net: ll_temac: Fix iommu/swiotlb leak
+  net: ll_temac: Fix bug causing buffer descriptor overrun
+  net: ll_temac: Replace bad usage of msleep() with usleep_range()
+  net: ll_temac: Allow configuration of IRQ coalescing
+  net: ll_temac: Enable DMA when ready, not before
+
+ drivers/net/ethernet/xilinx/Kconfig         |   5 +-
+ drivers/net/ethernet/xilinx/ll_temac.h      |  26 +-
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 514 ++++++++++++++++++----------
+ drivers/net/ethernet/xilinx/ll_temac_mdio.c |  53 +--
+ include/linux/xilinx_ll_temac.h             |  31 ++
+ 5 files changed, 426 insertions(+), 203 deletions(-)
+ create mode 100644 include/linux/xilinx_ll_temac.h
+
 -- 
 2.4.11
 
