@@ -2,95 +2,108 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3995C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACDEC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89DEC2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E4D2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbfDZOmw (ORCPT
+        id S1726483AbfDZOnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:42:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:52549 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfDZOmv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:42:51 -0400
-Received: from [192.168.1.110] ([95.117.100.117]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MNKyQ-1h8WmN0YJu-00Oq1v; Fri, 26 Apr 2019 16:42:37 +0200
-Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-References: <20190424081802.GV2654@lahna.fi.intel.com>
- <5a28f22c-22f7-760a-d076-68ff19800d44@siemens.com>
- <20190424084259.GW2654@lahna.fi.intel.com>
- <7e328b7e-f4f0-851a-4152-a9ffd058201c@siemens.com>
- <20190424094506.GA2654@lahna.fi.intel.com>
- <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
- <20190424100130.GB2654@lahna.fi.intel.com>
- <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
- <20190424103306.GC2654@lahna.fi.intel.com>
- <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
- <20190426130615.GT9224@smile.fi.intel.com>
- <bd5453e1-0279-02ab-3304-edc6ebf509dc@siemens.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <bc856e19-470d-7655-5680-a031831ab513@metux.net>
-Date:   Fri, 26 Apr 2019 16:42:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 26 Apr 2019 10:43:25 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43280 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbfDZOnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 10:43:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 297FB80D;
+        Fri, 26 Apr 2019 07:43:24 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 672C73F5C1;
+        Fri, 26 Apr 2019 07:43:22 -0700 (PDT)
+Subject: Re: [PATCH 08/12] net: ll_temac: Fix iommu/swiotlb leak
+To:     Andrew Lunn <andrew@lunn.ch>, Esben Haabendal <esben@geanix.com>
+Cc:     netdev@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, Yang Wei <yang.wei9@zte.com.cn>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190426073231.4008-1-esben@geanix.com>
+ <20190426073231.4008-9-esben@geanix.com> <20190426142103.GI14432@lunn.ch>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <0aab6152-82c6-b53f-6b9b-0905995de43a@arm.com>
+Date:   Fri, 26 Apr 2019 15:43:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <bd5453e1-0279-02ab-3304-edc6ebf509dc@siemens.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190426142103.GI14432@lunn.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:57+Vsu3hqF1daSzg7tv9cHLoXy142HWEVeGZ8xaPZEQto4waTOy
- 2acyQzFzj3fmavYNlH4dqZqy3CETqZ5B//xzKnuZ+SuKHt0lEHiXgdV13gZ23LD47wd5f7g
- AmUXJFdy+RCm/iqu6er+i+Gz8rc6zZdbXMProKFPsT2hifXbC+77GLnXHwBe8+g33riznih
- 3q1FUbX9tS0KRaLll5NKA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yBN7E88+4OM=:htSEGp+ToArwoxikrXnyBC
- 7pnnFR6MvNepibdBA00sI6cgO/nth4lJpWktM+kbqWrfsDF46C9YZOIF036TXKzG3ZqirVSq/
- tkclYmkZZBr2P7rhrEFDuzAe3Sq/u0Qy1wbPt+zkjxxXmh2LXmqWu46tbV7MdUD0wDCGxTtv4
- 7VdYny7mLS2UFIJikMtLyf/4Kzy3peMFpMAc50Z3BOtJH+6Au1SI6xt5mBBqKR7eHrkQlfGUD
- r88ZsuPMeCpcC8kKFvgh2wwp6z2KQNL1rPFJVGQieNocfW1FZUpaTJP96duiop8Tnzaish8Ax
- YwygFeDvLMfDpsfCMACu3NJq92JTFue6e1o5CZL9VT5YwmimP5BqpAkyPN7cSOJALblhw7zqO
- BZtqhNqxI1vJkNtTSueta8+t1xgK55OJnYNdCoIQETetnp8GbYBnll1ydGPkgX97Rxf/iui7J
- XlN7uEBDGN49EeGloy89xh5fyvzEe6tTocAijgZUfjATp1bCl3bWObT98HOnpuScOC6ZJCiXS
- PjSe2nGmfM8eEW57jBf4gqXkE/Y3+nQidl5x0o5KRovqFsoxfORZZtv3KzZTRAFz3oEUuCHlQ
- euEokx4mZ32Jg59idGpIEUy+9MiAqWdnzGAmLW3SQTrnTkPZSzXqjZcDD8sh4pilvnz9Uo+WH
- WC9D4fVjX4s51wWG/XM2ZRIE8I4uTdnSmEiDGAThndpoUN40oWV9hAReLrSVGyNu+ZNiLWgKQ
- yUTbKYc/6R/RkjPwL95eh+lH+GsRLP63Nk2XkFbh/q+mAmB/XZ4n5hpVorg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.19 15:36, Jan Kiszka wrote:
+On 26/04/2019 15:21, Andrew Lunn wrote:
+> On Fri, Apr 26, 2019 at 09:32:27AM +0200, Esben Haabendal wrote:
+>> Unmap the actual buffer length, not the amount of data received.
+> 
+> Hi Esben
+> 
+> The patch Subject does not seem to match the content?
+> 
+> Also, there can be performance advantages of just unmapping the
+> received length. The unmap operation does a cache invalidate, which
+> can be expensive. Consider the effort of unmapping a 64 byte ACK vs 9K
+> jumbo frame?
 
-> At the same time, there are no real alternatives - to my> knowledge - for the value it brings (various bindings) to simply
-switch> the engine.
-Which value exactly does that collection of crude wrappers and broken
-attempts to buypass the kernel (driving gpios via /dev/mem *facepalm*)
-provide ?
+If the size passed to dma_unmap_*() is not the same as was passed to the 
+corresponding dma_map_*(), that is fundamentally incorrect use of the 
+API and may lead to warnings, resource exhaustion, or possibly even 
+corruption and crashes for some DMA API implementations.
 
-mraa belongs to the category of software, I would never put onto any
-production system. (yes, I already had a client who asked me to repair
-his mraa-based software. finally, I've replaced mraa w/ a few LoC ...)
+If there's a case where you just need to look at a small part of the 
+buffer right now, but can unmap the whole thing properly later. then 
+dma_sync_single_*() does allow operating on partial buffers. Even 
+better, if you're able to recycle buffers in your Rx pool you could 
+potentially replace the unmap/map dance altogether with some careful use 
+of sync_single.
 
+Robin.
 
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> 
+>        Andrew
+>   
+>> Signed-off-by: Esben Haabendal <esben@geanix.com>
+>> ---
+>>   drivers/net/ethernet/xilinx/ll_temac_main.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+>> index 309f149..56d8077 100644
+>> --- a/drivers/net/ethernet/xilinx/ll_temac_main.c
+>> +++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+>> @@ -821,7 +821,7 @@ static void ll_temac_recv(struct net_device *ndev)
+>>   		length = be32_to_cpu(cur_p->app4) & 0x3FFF;
+>>   
+>>   		dma_unmap_single(ndev->dev.parent, be32_to_cpu(cur_p->phys),
+>> -				 length, DMA_FROM_DEVICE);
+>> +				 XTE_MAX_JUMBO_FRAME_SIZE, DMA_FROM_DEVICE);
+>>   
+>>   		skb_put(skb, length);
+>>   		skb->protocol = eth_type_trans(skb, ndev);
+>> -- 
+>> 2.4.11
+>>
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
