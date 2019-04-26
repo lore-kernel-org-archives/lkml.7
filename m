@@ -2,200 +2,154 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29EDC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCF5C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8561206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:24:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GuQ0J8wK"
+	by mail.kernel.org (Postfix) with ESMTP id 009BE206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbfDZKYW (ORCPT
+        id S1726243AbfDZK0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:24:22 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45213 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfDZKYV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:24:21 -0400
-Received: by mail-qt1-f194.google.com with SMTP id b3so3407799qtc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 03:24:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=fbB5VwXRbKN5aHn+nrmOUtiXQH3CVjSw+YoopfaaQoQ=;
-        b=GuQ0J8wKmcJNJdK+UA+Mc8PosdUdbWpGHD+xuDWr6pvRATLyx9LJSW/rEEtkkrpBjF
-         tW+JbWWnE5V+oYLCyS4KQkAl9UJUzJkJsiJ6oyDTL5pmFhBckkdcIO7/XvrZZJDVS2x8
-         Mc51kuyqIijKAq4cGyKfrCO6bpbxviQ2Gzk49OryaVf2++N+Yvqarc0XAMq7NYVRLEgf
-         WQgC7tiXzFxb7ncuYiIy8L9kOfZ0qU5Q8uzPzF4CkX2KTnfuLlmCrc4xOk0DoPU2IAGe
-         /h8GSrycPNK280wb6cbFAwsoXHd1IM5Q06YKI5ANroUqxqsLcDcfx6yCIus2BguEkZ/D
-         QwCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=fbB5VwXRbKN5aHn+nrmOUtiXQH3CVjSw+YoopfaaQoQ=;
-        b=hRvoVi3ncDQIXmPCvgpQQ5be3zJWltlwRgZLkOBlYsqdUtZpCcrxB9XCVu9dhZJqeo
-         BipHlcDpZex8+Eeghoxdjtg+l5XmX+7wNw1fiz5A+HQ26enMfpiibXCFRXw2f9YTXSGz
-         9x9wYYT2bvvA/zB97R3xhkzfgpBnU4zb/PoUxFoZ9Clxm8PCLKZnwppK7xCF1BuHChKx
-         oYSVh6dVodQhI0lixmSuskUdXAS8w3plDI7CvmkM5qTHJ2NMYbJSJL2m2XCvVLh1D4Gx
-         BfkzuZbgGlt6vxZPdNYHhnETd/FCTyUaPrD7AEAkzENXGCPkwrHediQGnVvJf33u749D
-         kVQg==
-X-Gm-Message-State: APjAAAVKITt6MuAr232HYYnU7EzEUamZ/nwZ05icnFK7eWuEVsjPgTml
-        20j6og1xvH/SJRquvbMI9bxGzw==
-X-Google-Smtp-Source: APXvYqwM3vqC7kdD6Ma/eA9Tl4SxLqdJHsWastrRmTA1eUji7vjm2AMIleQiLr6sa3lmfXvipFt6GA==
-X-Received: by 2002:a0c:d78c:: with SMTP id z12mr26368485qvi.55.1556274260517;
-        Fri, 26 Apr 2019 03:24:20 -0700 (PDT)
-Received: from [192.168.1.169] (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
-        by smtp.gmail.com with ESMTPSA id h10sm988768qkk.69.2019.04.26.03.24.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 03:24:19 -0700 (PDT)
-Subject: Re: [PATCH V3 3/3] thermal/cpu-cooling: Update thermal pressure in
- case of a maximum frequency capping
-To:     Ionela Voinescu <ionela.voinescu@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
- <1555443521-579-4-git-send-email-thara.gopinath@linaro.org>
- <20190418094833.owlobrx6x5gclvhy@queper01-lin> <5CBF93F6.8000109@linaro.org>
- <84e64cb1-db2d-6519-e0c4-97779079d96d@arm.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5CC2DC51.9030908@linaro.org>
-Date:   Fri, 26 Apr 2019 06:24:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Fri, 26 Apr 2019 06:26:45 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38180 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbfDZK0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 06:26:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C44FA78;
+        Fri, 26 Apr 2019 03:26:44 -0700 (PDT)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E57F93F7BD;
+        Fri, 26 Apr 2019 03:26:42 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 11:26:38 +0100
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     rostedt@goodmis.org, peterz@infradead.org,
+        dietmar.eggemann@arm.com, bristot@redhat.com,
+        juri.lelli@redhat.com, williams@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: Tracehooks in scheduler
+Message-ID: <20190426102635.almrj7bbjqlbt77n@queper01-lin>
+References: <20190407175235.5c2livciovwgq7mm@e107158-lin.cambridge.arm.com>
+ <20190409082450.mkcobfbmohhxqk6k@e107158-lin.cambridge.arm.com>
+ <20190415144945.tumeop4djyj45v6k@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <84e64cb1-db2d-6519-e0c4-97779079d96d@arm.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415144945.tumeop4djyj45v6k@e107158-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/24/2019 11:56 AM, Ionela Voinescu wrote:
-> Hi guys,
-> 
-> On 23/04/2019 23:38, Thara Gopinath wrote:
->> On 04/18/2019 05:48 AM, Quentin Perret wrote:
->>> On Tuesday 16 Apr 2019 at 15:38:41 (-0400), Thara Gopinath wrote:
->>>> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
->>>> @@ -177,6 +178,9 @@ static int cpufreq_thermal_notifier(struct notifier_block *nb,
->>>>  
->>>>  		if (policy->max > clipped_freq)
->>>>  			cpufreq_verify_within_limits(policy, 0, clipped_freq);
->>>> +
->>>> +		sched_update_thermal_pressure(policy->cpus,
->>>> +				policy->max, policy->cpuinfo.max_freq);
->>>
->>> Is this something we could do this CPUFreq ? Directly in
->>> cpufreq_verify_within_limits() perhaps ?
->>>
->>> That would re-define the 'thermal pressure' framework in a more abstract
->>> way and make the scheduler look at 'frequency capping' events,
->>> regardless of the reason for capping.
->>>
->>> That would reflect user-defined frequency constraint into cpu_capacity,
->>> in addition to the thermal stuff. I'm not sure if there is another use
->>> case for frequency capping ?
->> Hi Quentin,
->> Thanks for the review. Sorry for the delay in response as I was on
->> vacation for the past few days.
->> I think there is one major difference between user-defined frequency
->> constraints and frequency constraints due to thermal events in terms of
->> the time period the system spends in the the constraint state.
->> Typically, a user constraint lasts for seconds if not minutes and I
->> think in this case cpu_capacity_orig should reflect this constraint and
->> not cpu_capacity like this patch set. Also, in case of the user
->> constraint, there is possibly no need to accumulate and average the
->> capacity constraints and instantaneous values can be directly applied to
->> cpu_capacity_orig. On the other hand thermal pressure is more spiky and
->> sometimes in the order of ms and us requiring the accumulating and
->> averaging.
-> 
-> I think we can't make any assumptions in regards to the intentions of
-> the user when restricting the OPP range though the cpufreq interface,
-> but it would still be nice to do something and reflecting it as thermal
-> pressure would be a good start. It might not be due to thermal, but it
-> is a capacity restriction that would have the same result. Also, if the
-> user has the ability to tune the decay period he has the control over
-> the behavior of the signal. Given that currently there isn't a smarter
-> mechanism (modifying capacity orig, re-normalising the capacity range)
-> for long-term capping, even treating it as short-term capping is a good
-> start. But this is a bigger exercise and it needs thorough
-> consideration, so it could be skipped, in my opinion, for now.. 
-> 
-> Also, if we want to stick with the "definition", userspace would still
-> be able to reflect thermal pressure though the thermal limits interface
-> by setting the cooling device state, which will be reflected in this
-> update as well. So userspace would have a mechanism to reflect thermal
-> pressure.
+Hi Qais,
 
-Yes, target_state under cooling devices can be set and this will reflect
-as thermal pressure.
+On Monday 15 Apr 2019 at 15:49:45 (+0100), Qais Yousef wrote:
+> Hi Steve, Peter
+> 
+> > On 04/07/19 18:52, Qais Yousef wrote:
+> > > Hi Steve, Peter
+> > > 
+> > > I know the topic has sprung up in the past but I couldn't find anything that
+> > > points into any conclusion.
+> > > 
+> > > As far as I understand new TRACE_EVENTS() in the scheduler (and probably other
+> > > subsystems) isn't desirable as it intorduces a sort of ABI that can be painful
+> > > to maintain.
+> > > 
+> > > But for us to be able to test various aspect of EAS, we rely on some events
+> > > that track load_avg, util_avg and some other metrics in the scheduler.
+> > > Example of such patches that are in android and we maintain out of tree can be
+> > > found here:
+> > > 
+> > > https://android.googlesource.com/kernel/common/+/42903694913697da88a4ac627a92bbfdf44f0a2e
+> > > https://android.googlesource.com/kernel/common/+/6dfaed989ea4ca223f0913dfc11cdafd9664fc1c
+> > > 
+> > > Dietmar and Quentin pointed me to a discussion you guys had with Daniel Bristot
+> > > in the last LPC when he had a similar need. So it is something that could
+> > > benefit other users as well.
+> > > 
+> > > What is the best way forward to be able to add tracehooks into the scheduler
+> > > and any other subsystem for that matters?
+> > > 
+> > > We tried using DECLARE_TRACE() to create a tracepoint which doesn't export
+> > > anything in /sys/kernel/debug/tracing/events and hoped that we can use eBPF or
+> > > a kernel module to attach to this tracepoint and access the args to inject our
+> > > own trace_printks() but this didn't work. The glue logic necessary to attach
+> > > to this tracepoint in a similar manner to how RAW_TRACEPOINT() in eBPF works
+> > > isn't there AFAICT.
+> > > 
+> > > I can post the full example if the above doesn't make sense. I am still
+> > > familiarizing myself with the different aspects of this code as well. There
+> > > might be support for what we want but I failed to figure out the magic
+> > > combination to get it to work.
+> > > 
+> > > If I got this glue logic done, would this be an acceptable solution? If not, do
+> > > you have any suggestions on how to progress?
+> 
+> I have written some patches in hope it'll clarify further what we are trying to
+> achieve here and what would be the best possible approach about it.
+> 
+> I have taken two approaches to solve the problem.
+> 
+> 
+> 1.
+> 
+> 	https://github.com/qais-yousef/linux/commit/e7d0aa7ff1328195f314b0730c4cc744dec4261e
+> 
+> 	In this approach everything we need is already available and we just
+> 	need to create new tracepoints as described in
+> 	Documentation/trace/tracepoints.rst and export it with
+> 	EXPORT_TRACEPOINT_SYMBOL_GPL().
+> 
+> 	A user then can have an out of tree module to probe this tp and
+> 	manipulate it as they like.
+> 
+> 	Example of such a module is here, the pelt_se tp is to demo the
+> 	approach:
+> 
+> 	https://github.com/qais-yousef/tracepoints-helpers/blob/master/module-pelt-se/probe_tp_pelt_se.c
+> 
+> 	Googling around I can see that the use of
+> 	EXPORT_TRACEPOINT_SYMBOL_GPL() is not desired unless the module is
+> 	in-tree which I doubt will be the case here.
+> 
+> 	https://lore.kernel.org/lkml/20150422130052.4996e231@gandalf.local.home/
+> 
+> 2.
+> 	https://github.com/qais-yousef/linux/commit/fb9fea29edb8af327e6b2bf3bc41469a8e66df8b
+> 	https://github.com/qais-yousef/linux/commit/edd2498c5bbfca1a26acd151a4e3323e511f3455
+> 
+> 	In this approach I try to allow attaching to a TP using eBPF. Sadly the
+> 	current infrastructure is lacking so I hacked the above up to create a
+> 	new DECLARE_TRACE_HOOK() macro which will allow using eBPF but without
+> 	exporting anything in debugfs that can constitute an ABI.
+> 
+> 	The following eBPF program can be used then to attach and access some
+> 	info at the TP:
+> 
+> 	https://github.com/qais-yousef/tracepoints-helpers/blob/master/bpf/tp_trace_printk_pelt_se
+> 
+> 
+> Does any of the above approaches make sense?
 
-> 
-> One addition.. I like that the thermal pressure framework is not tied to
-> cpufreq. There are firmware solutions that do not bother informing
-> cpufreq of limits being changed, and therefore all of this could be
-> skipped. But any firmware driver could call sched_update_thermal_pressure
-> on notifications for limits changing from firmware, which is an
-> important feature.
+For the EAS-testing use-case you mentioned earlier, it's really for
+debugging so we don't actually need the eBPF safety. None of this is
+supposed to run in production I would say. So I tend to prefer option 1
+if that works for everybody interested in this thing.
 
-For me, I am open to discussion on the best place to call
-sched_update_thermal_pressure from. Seeing the discussion and different
-opinions, I am wondering should there be a SoC or platform specific hook
-provided for better abstraction.
+And then what would be the story ? We would carry a module out-of-tree
+in our test suite to extract scheduler data and then post-process it in
+userspace or something ? Since that would be an out-of-tree module,
+upstream doesn't commit to anything to userspace, so perhaps that could
+work.
 
-Regards
-Thara
+Another thing, should these sched tracepoints be guarded by sched_debug ?
 
-> 
->>>
->>> Perhaps the Intel boost stuff could be factored in there ? That is,
->>> at times when the boost freq is not reachable capacity_of() would appear
->>> smaller ... Unless this wants to be reflected instantaneously ?
->> Again, do you think intel boost is more applicable to be reflected in
->> cpu_capacity_orig and not cpu_capacity?
->>>
->>> Thoughts ?
->>> Quentin
->>>
->>
-> 
-> The changes here would happen even faster than thermal capping, same as
-> other restrictions imposed by firmware, so it would not seem right to me
-> to reflect it in capacity_orig. Reflecting it as thermal pressure is
-> another matter, which I'd say it should be up to the client. The big
-> disadvantage I'd see for this is coping with decisions made while being
-> capped, when you're not capped any longer, and the other way around. I
-> believe these changes would happen too often and they will not happen in
-> a ramp-up/ramp-down behavior that we expect from thermal mitigation.
-> That's why I believe averaging/regulation of the signal works well in
-> this case, and it might not for power related fast restrictions.
-> 
-> But given these three cases above, it might be that the ideal solution
-> is for this framework to be made more generic and for each client to be
-> able to obtain and configure a pressure signal to be reflected
-> separately in the capacity of each CPU.
-> 
-> My two pennies' worth,
-> Ionela.
-> 
-> 
-> 
-
-
--- 
-Regards
-Thara
+Thanks,
+Quentin
