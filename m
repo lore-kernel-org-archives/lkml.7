@@ -2,112 +2,114 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25B5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49163C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C45C2067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:06:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="J1u2eDCG"
+	by mail.kernel.org (Postfix) with ESMTP id 192872077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfDZKGC (ORCPT
+        id S1726324AbfDZKKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:06:02 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37307 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfDZKGB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:06:01 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h126so2053160lfh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 03:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V6YfoSDGzpRc5jf/Ret2tebWXfDQiQOnbiio0o2ZU6E=;
-        b=J1u2eDCGJ2gEioZTB921qsXqhJT6wj/kGUqepebtFVKjTSdJggMoCosui9RSYJo6Jy
-         VzsD/zhtV+95zn57iya3oiKD0AoMsu7h6C9mh8KhSttxweUag0JmZFPXmZJna/iouiiu
-         lNBqkaCqEeQPxhrZDX/w1tWKj3vBVlQVMS5IM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V6YfoSDGzpRc5jf/Ret2tebWXfDQiQOnbiio0o2ZU6E=;
-        b=Z43ByYlPb6DCErI6qee9s9spfSmUsI/rYlM6bYHoBCo20HHcUAbFyw7Lec8rkkkC2t
-         U+s6mlc5TF4PvWgkVUvwPl/Sa2J2Lqu7W6Xa6Oy/4w/wwICZc4qq6Rcx1lJT+T9SMxNl
-         Iajpqg0efl4lAeQOQXQvLpJeTGbq/uMmu9zhLCNrhnugmhBbjlYknGHG09nofbsaQa2/
-         pT26+B5+jTiChJzyp91xn7UmHb9CeONrKXryq/lFn+wgD7moZ9bj16kbLeyKQHyApmQc
-         1kN+vAnlQbJAGgyNb4HnW5P4qUg8Lc6mZsb9s50Tx1KD0nvnmVvKm+/yQV+wWakipVMV
-         m98g==
-X-Gm-Message-State: APjAAAVlRfoaGCj4BAACLY8nSoQPCx4VdmJ0mzcq4OCheU8IpN4N9Eq/
-        50UrniluP+WQk9lzZE3iiC+mZg==
-X-Google-Smtp-Source: APXvYqyQ/3Ze+NoK18P3XhfyG2CTLYM7V7o3VpK8T6b+OrXiZ7EaMMNLhQA69cVTra4J966OKvyOOw==
-X-Received: by 2002:ac2:482e:: with SMTP id 14mr21642162lft.1.1556273159457;
-        Fri, 26 Apr 2019 03:05:59 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id y19sm5484183lfb.24.2019.04.26.03.05.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 03:05:58 -0700 (PDT)
-Subject: Re: [PATCH 09/10] arm64: select DYNAMIC_DEBUG_RELATIVE_POINTERS
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-References: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
- <20190409212517.7321-10-linux@rasmusvillemoes.dk>
- <CAK8P3a1by1-ZF2NoTdGbxv+AJu92d3Sp5L08BhLCA+0PNS8s2Q@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <94b816aa-ad36-75e6-8782-d141dec2e803@rasmusvillemoes.dk>
-Date:   Fri, 26 Apr 2019 12:05:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 26 Apr 2019 06:10:04 -0400
+Received: from foss.arm.com ([217.140.101.70]:37878 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbfDZKKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 06:10:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E1CCA78;
+        Fri, 26 Apr 2019 03:10:03 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BFF03F5AF;
+        Fri, 26 Apr 2019 03:10:03 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 9FE37682411; Fri, 26 Apr 2019 11:10:01 +0100 (BST)
+Date:   Fri, 26 Apr 2019 11:10:01 +0100
+From:   Liviu Dudau <liviu.dudau@arm.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     "James (Qian) Wang" <james.qian.wang@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>, malidp@foss.arm.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] drm/komeda: Use memset to initialize config_id
+Message-ID: <20190426101001.GK15144@e110455-lin.cambridge.arm.com>
+References: <20190425062720.26695-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1by1-ZF2NoTdGbxv+AJu92d3Sp5L08BhLCA+0PNS8s2Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190425062720.26695-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/04/2019 11.39, Arnd Bergmann wrote:
-> On Tue, Apr 9, 2019 at 11:26 PM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
->>
->> Similar to GENERIC_BUG_RELATIVE_POINTERS, one can now relativize the
->> four const char* members of struct _ddebug, thus saving 16 bytes per
->> instance (one for each pr_debug(), dev_debug() etc. in a
->> CONFIG_DYNAMIC_DEBUG kernel). The asm-generic implementation seems to
->> work out-of-the-box, though this is only compile-tested.
->>
->> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+On Wed, Apr 24, 2019 at 11:27:20PM -0700, Nathan Chancellor wrote:
+> Clang warns:
 > 
-> This causes a build regression when compiling with clang,
-> see http://staging-storage.kernelci.org/next-clang/master/next-20190424/arm64/allmodconfig/clang-8/build.log
+> drivers/gpu/drm/arm/display/komeda/komeda_dev.c:76:38: warning: suggest
+> braces around initialization of subobject [-Wmissing-braces]
+>         union komeda_config_id config_id = {0,};
+>                                             ^
+>                                             {}
+> 1 warning generated.
+> 
+> One way to fix these warnings is to add additional braces like Clang
+> suggests; however, there has been a bit of push back from some
+> maintainers, who just prefer memset as it is unambiguous, doesn't
+> depend on a particular compiler version, and properly initializes all
+> subobjects [1][2]. Do that here so there are no more warnings.
+> 
+> [1]: https://lore.kernel.org/lkml/022e41c0-8465-dc7a-a45c-64187ecd9684@amd.com/
+> [2]: https://lore.kernel.org/lkml/20181128.215241.702406654469517539.davem@davemloft.net/
+> 
+> Fixes: 4cc734cb79a8 ("drm/komeda: Add sysfs attribute: core_id and config_id")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/457
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Yes, see also https://github.com/ClangBuiltLinux/linux/issues/456 .
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
 
-The quickest short-term fix is to append "if CC_IS_GCC" to the select
-statements. Then when a fix lands in clang one can change that to "if
-CC_IS_GCC || CLANG_VERSION >= something". It's probably best if we fix
--next builds ASAP instead of waiting for knowing the proper value of
-"something". Nathan, Nick, WDYT?
+I'll pull the patch into my tree today.
 
-I had 0day verify my patches before sending them out officially, and
-thought it also did clang builds. But apparently not, or not with enough
-arch/.config combinations?
+Best regards,
+Liviu
 
-Rasmus
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_dev.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> index 9d6c31cca875..e605a518f59a 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> @@ -73,9 +73,10 @@ config_id_show(struct device *dev, struct device_attribute *attr, char *buf)
+>  {
+>  	struct komeda_dev *mdev = dev_to_mdev(dev);
+>  	struct komeda_pipeline *pipe = mdev->pipelines[0];
+> -	union komeda_config_id config_id = {0,};
+> +	union komeda_config_id config_id;
+>  	int i;
+>  
+> +	memset(&config_id, 0, sizeof(config_id));
+>  	config_id.max_line_sz = pipe->layers[0]->hsize_in.end;
+>  	config_id.n_pipelines = mdev->n_pipelines;
+>  	config_id.n_scalers = pipe->n_scalers;
+> -- 
+> 2.21.0
+> 
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
