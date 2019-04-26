@@ -2,93 +2,110 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138C2C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6F9C4321B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C081D20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BED0B20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556296842;
+	bh=aYGrbI1SERNmOyxhJ75tfrfLL0vn3KNBa/t1RILo5+8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sNZ4B7YAWy+Vf3g1DQeCnmLrDYe57yq+Ahjj3ATVyBTi6oDsBRLJkCn+LA9SwNbBC
+	 yBUDvrmdDts+jA7k9C5q27OD+oRpWYDTLKLI7lpqk1hscq4Bs1NcRmJEN6ap9BBm00
+	 rHcEC3tSKC/tgVtWYNiDBh4ChMCSSzE5IaA+2rWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfDZQkb (ORCPT
+        id S1726373AbfDZQkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:40:31 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7696 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726184AbfDZQkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:40:31 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EE351BFE4C79D3028E09;
-        Sat, 27 Apr 2019 00:40:27 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Apr 2019
- 00:40:17 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <stefan.popa@analog.com>, <lars@metafoo.de>,
-        <Michael.Hennerich@analog.com>, <jic23@kernel.org>,
-        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>
-CC:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] iio: dac: ad5758: remove set but not used variable 'dc_dc_mode'
-Date:   Sat, 27 Apr 2019 00:40:06 +0800
-Message-ID: <20190426164006.26928-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 26 Apr 2019 12:40:42 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:55596 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfDZQkl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:40:41 -0400
+Received: by mail-it1-f193.google.com with SMTP id y134so6848376itc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MpfVP/lrM2Q2wBohc8zzCs4q+zAicjTmbOR9EpWu+KM=;
+        b=YzBchEnw3mtY1YHu5sF33oylYVI3nOfEG4y0HZgQaJs3IGiOAGg2uLSxEMl9Byl9yI
+         c0nS4Koilqx/n6yAiEj7u/DZRZpuFI+SF8Q3SwqUJe2sMDyec493TAbUU9pgD0X3cwNm
+         0hERY2zqnEvAI+fi+jcfSLT6mHrs2vVPV5/AY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MpfVP/lrM2Q2wBohc8zzCs4q+zAicjTmbOR9EpWu+KM=;
+        b=Y6ZZ0UoqYmdDKZlNJS907uIl4eZUICGq4zDiy0o47lf+onhyS4DD3SaaA9jRTGHCLW
+         Ji4FUkOvxuDBHopdBtNDXUhOpEerqRqcL1Dz9C/VwFwJzz95BaT+aYMbTrxN47f8hyuc
+         7iaVjdsMZm3vRg2asihVQhGrpqGZXEPb0ddBn9A3POJR3IvFkDAkVstrG/KOXx4Xf5ff
+         p+IveZdgvtpXREMxorGA1vyAZscyhdegSyl2UykuAy8zPAAEuCaJo8QgN+wfaFy1YKDz
+         PcyUShY2EDi9/H9Vl+oX43cORmQ1kKPV/pcFIr2g476GdHRXYLp8Fz333hrpYgQSHBSW
+         NyTw==
+X-Gm-Message-State: APjAAAVgXfsRTPqsD/HsySkbJ9O9JE6Zi7OHPLY7nMmqZfjOslxOyQJJ
+        3ea6DOmzV2DKQHHhItIUH7eIG4lxButwtTZjFuSzdA==
+X-Google-Smtp-Source: APXvYqwW9kSQ5c/BDQ9RuOU9AZc1pvkLKD+0Bxd2Hwf1ST13QGVew2CuHRgH9D9F36FW8jZnvHzXcwE8P2b2WkseHhg=
+X-Received: by 2002:a24:198f:: with SMTP id b137mr8812183itb.105.1556296840738;
+ Fri, 26 Apr 2019 09:40:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+References: <20190426001143.4983-1-namit@vmware.com> <20190426001143.4983-15-namit@vmware.com>
+In-Reply-To: <20190426001143.4983-15-namit@vmware.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 26 Apr 2019 09:40:29 -0700
+Message-ID: <CAADWXX8yZJ9Z4yfqG9wQcb2r+0O7VCk2uQLcOU1=-BOnYhjnow@mail.gmail.com>
+Subject: Re: [PATCH v5 14/23] x86/mm/cpa: Add set_direct_map_ functions
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux_dti@icloud.com, linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel-hardening@lists.openwall.com, Linux-MM <linux-mm@kvack.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kristen@linux.intel.com, deneen.t.dock@intel.com,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Nadav,
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+I get
 
-drivers/iio/dac/ad5758.c: In function ad5758_write_powerdown:
-drivers/iio/dac/ad5758.c:585:15: warning: variable dc_dc_mode set but not used [-Wunused-but-set-variable]
+       dmarc=fail (p=QUARANTINE sp=NONE dis=QUARANTINE) header.from=vmware.com
 
-It is not used any more since
-commit edde945257e2 ("iio: dac: ad5758: Modifications for new revision")
+for these emails, because they lack the vmware DKIM signature.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/iio/dac/ad5758.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+It clearly did go through some vmware mail servers, but apparently not
+the *right* external vmware SMTP gateway.
 
-diff --git a/drivers/iio/dac/ad5758.c b/drivers/iio/dac/ad5758.c
-index a513c70..570f69e 100644
---- a/drivers/iio/dac/ad5758.c
-+++ b/drivers/iio/dac/ad5758.c
-@@ -582,7 +582,7 @@ static ssize_t ad5758_write_powerdown(struct iio_dev *indio_dev,
- {
- 	struct ad5758_state *st = iio_priv(indio_dev);
- 	bool pwr_down;
--	unsigned int dc_dc_mode, dac_config_mode, val;
-+	unsigned int dac_config_mode, val;
- 	unsigned long int dac_config_msk;
- 	int ret;
- 
-@@ -591,13 +591,10 @@ static ssize_t ad5758_write_powerdown(struct iio_dev *indio_dev,
- 		return ret;
- 
- 	mutex_lock(&st->lock);
--	if (pwr_down) {
--		dc_dc_mode = AD5758_DCDC_MODE_POWER_OFF;
-+	if (pwr_down)
- 		val = 0;
--	} else {
--		dc_dc_mode = st->dc_dc_mode;
-+	else
- 		val = 1;
--	}
- 
- 	dac_config_mode = AD5758_DAC_CONFIG_OUT_EN_MODE(val) |
- 			  AD5758_DAC_CONFIG_INT_EN_MODE(val);
--- 
-2.7.4
+Please check with vmware MIS what the right SMTP setup for git-send-email is.
 
+                 Linus
 
+On Fri, Apr 26, 2019 at 12:32 AM Nadav Amit <namit@vmware.com> wrote:
+>
+> From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+>
+> Add two new functions set_direct_map_default_noflush() and
+> set_direct_map_invalid_noflush() for setting the direct map alias for the
+> page to its default valid permissions and to an invalid state that cannot
+> be cached in a TLB, respectively. These functions do not flush the TLB.
+...
