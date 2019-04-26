@@ -2,95 +2,94 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20E0C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3548DC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAAA12077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47CD206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:52:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Xs33s452"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfDZOvS (ORCPT
+        id S1726429AbfDZOwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:51:18 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:34357 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfDZOvS (ORCPT
+        Fri, 26 Apr 2019 10:52:31 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]:34647 "EHLO
+        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfDZOwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:51:18 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MQuLB-1h7AGc0llv-00NwDM; Fri, 26 Apr 2019 16:50:57 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: use timespec64 in relatime_need_update
-Date:   Fri, 26 Apr 2019 16:50:41 +0200
-Message-Id: <20190426145053.2137025-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
+        Fri, 26 Apr 2019 10:52:31 -0400
+Received: by mail-qt1-f182.google.com with SMTP id j6so4424699qtq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 07:52:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:mime-version
+         :content-transfer-encoding;
+        bh=48zgZZm9rHvCEp1pEqUhC0U3faF4KPhZf7qiHf9zYg0=;
+        b=Xs33s452X6QtzPCMCAtjr0M4pj8fZRIA6lwgvpWwu/cIIYP/lUyae2OIpm6XQLNdKy
+         AWQNsXk+6JWuzUrg6GKOlETU9g2B2AU1vA9bKtiXGdfReOwebMl/ppTKXW2J8Y0dZfke
+         eXBK663QRdQNjUz8h+GoZlZb4zEddEdwng4Y8hUmXSOolJ+rYVzC/OUPSxbF7azdFHa2
+         jR8sYQsEZbSj2OPxHczSLv61il9kWCTO6EAk8jXPZSFIpt8wchRUjbcNC9jGaPa+dPmX
+         v0FQsMmlG4Ik/Tdpqotn/UGz+LGzLLbCmARjsbXN2GOBlVoLTRsehiLvaHRSNtZ+t8XP
+         qa1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
+         :content-transfer-encoding;
+        bh=48zgZZm9rHvCEp1pEqUhC0U3faF4KPhZf7qiHf9zYg0=;
+        b=dUPVTH7QL/kgUh7lE2eJMSZzOsGRMyGsAp8g/29kGyuaJALmLMZrCw+jdIHSn/hJpJ
+         vne7PGt+ueXOjEHOC9wy6dD9Erz/895Ok32c0A0SOQBLs3F1RbqN4Dcb6tr3vlqXPCAS
+         cj4yNlWa52YSeq738FohJ9lEjg9yGACDinVMfyHYCyvkawNV8bhH4QIrbcAD8ImgMe1P
+         p5jmqp+Q6nlMN9VoRe7dRY3AafpBwQQbmhEJFnpN5rx4U4sk7+DfEtHdfehnv03UpJL3
+         scBvJm56OAcHHUP8GNKLk7Z+i8cDNWN4JOoPciHx9awEurLr5QRVB6JRBcTU9bXUtZOm
+         kTew==
+X-Gm-Message-State: APjAAAUOhO9tVjH/Ncr/zIK2/zxR9eCDoVRR7GREhmN1YNDklR4ZykUp
+        LeIn5XGmv8UGkPNZpinDDcghZg==
+X-Google-Smtp-Source: APXvYqwAVI9GU8elWrhSomD5TS/PfqIKCx0Zk29tTGQeDfrgZtmKz7RRurmUfZ4VHuVfmHrwY153mw==
+X-Received: by 2002:ac8:379c:: with SMTP id d28mr24803403qtc.91.1556290350226;
+        Fri, 26 Apr 2019 07:52:30 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id g24sm3642158qkm.25.2019.04.26.07.52.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 07:52:29 -0700 (PDT)
+Message-ID: <1556290348.6132.6.camel@lca.pw>
+Subject: "iommu/amd: Set exclusion range correctly" causes smartpqi offline
+From:   Qian Cai <cai@lca.pw>
+To:     jroedel@suse.de
+Cc:     iommu@lists.linux-foundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Fri, 26 Apr 2019 10:52:28 -0400
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:BYwtyRMkhv4BHg1Gq/fMGIxHNJxM8u+QBDyasj/vmibcWLuSwHu
- z2PDg1wDzFCNIaNtJgio0WUyFp/+gCZw+MjfbhYU9bh4CCg+smlLJi/uQO5td0C2iSpg96B
- 36RJw6FXfXNyS9HW2vyOkrjKVwB+JIdvUoaYlZxzJmV0Y63H3DXopAPXj3VpUz/UAtlfEgM
- zMacE5pAPYkUAdSXbEoSA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QPV3OSjYilI=:+qx6OOT+P/6aZTfFVzS3Dc
- 0vH2iFip67TzzYZ5g5gywaKoENKtUvAX01QgBcNlTnWN/csl0QWdHbBn27GyLFTFtke4rT8n8
- ZZmBS8KjTffi7NciH2KQTQg5iQdIY8X0oLi/W+mH5WUm8xSDo3LYMCd3ryAmtRoswlmfXYJfJ
- CPXJmisom/DC7Yx3DSNGNyxj4HkSIz4K5UWOP3okzfCmglw2L4fJp9M4qyYQ2cmhYqjN2ZHlZ
- IK1RLQhGJ5DrutjVYP6S2FePuh8PMAyIADUT5EjNucF0T8puWjhDiuNnboHJumNpaEg22q03e
- clkDjliPj1L/mfY+ss9jH0YZdpl43Tv3AmK9x8qkklOw8ji08GvrS3iQXW5trkQ3yYER/kXC2
- HL0GBPVtZX7BJHJmFM7tc+YItv1mU3pV2NgsvS3O/WEv999cgrocSCbH46oU2qqPwHvikjuak
- gwofHANIRwoY8uf4NI2YH5aNu//gxMKcnwCoOmR2zLD8LQLiwiblsFE55YgduFeJsEKNMKdm8
- Ix7t+zkSlxjAe6mf3r91u0nN7PJl5vREt86w8N0XODk8djrcN7Ju8/Vjryq8tw9zmGhUN3uRR
- 1nviya1VtaMTw9NH8qeMX6TVSU8bEddTNYDE0u0AnFHdBahLhwlX47Kdi/0fghwo++yvRxhcL
- 6pjW1hiJpwQDyLf931TiuWlmlmlvARQ3gRIIij1SBtrhnT9Pj1wmePqy26qQFUj7t6Akl4bKY
- kaNPdPLv9IO38ewtKTraCRnba4l2vp4/zINYHg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For some reason, the conversion of the VFS code away from 'struct timespec'
-left one function behind that still uses it, for absolutely no reason.
+Applying some memory pressure would causes smartpqi offline even in today's
+linux-next. This can always be reproduced by a LTP test cases [1] or sometimes
+just compiling kernels.
 
-Using timespec64 will make the atime update logic work correctly past
-y2038.
+Reverting the commit "iommu/amd: Set exclusion range correctly" fixed the issue.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/inode.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+[  213.437112] smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT
+domain=0x0000 address=0x1000 flags=0x0000]
+[  213.447659] smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT
+domain=0x0000 address=0x1800 flags=0x0000]
+[  233.362013] smartpqi 0000:23:00.0: controller is offline: status code 0x14803
+[  233.369359] smartpqi 0000:23:00.0: controller offline
+[  233.388915] print_req_error: I/O error, dev sdb, sector 3317352 flags 2000001
+[  233.388921] sd 0:0:0:0: [sdb] tag#95 UNKNOWN(0x2003) Result: hostbyte=0x01
+driverbyte=0x00
+[  233.388931] sd 0:0:0:0: [sdb] tag#95 CDB: opcode=0x2a 2a 00 00 55 89 00 00 01
+08 00
+[  233.389003] Write-error on swap-device (254:1:4474640)
+[  233.389015] Write-error on swap-device (254:1:2190776)
+[  233.389023] Write-error on swap-device (254:1:8351936)
 
-diff --git a/fs/inode.c b/fs/inode.c
-index e9d97add2b36..f8ed7144c3dd 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1601,7 +1601,7 @@ EXPORT_SYMBOL(bmap);
-  * passed since the last atime update.
-  */
- static int relatime_need_update(struct vfsmount *mnt, struct inode *inode,
--			     struct timespec now)
-+			     struct timespec64 now)
- {
- 
- 	if (!(mnt->mnt_flags & MNT_RELATIME))
-@@ -1702,7 +1702,7 @@ bool atime_needs_update(const struct path *path, struct inode *inode)
- 
- 	now = current_time(inode);
- 
--	if (!relatime_need_update(mnt, inode, timespec64_to_timespec(now)))
-+	if (!relatime_need_update(mnt, inode, now))
- 		return false;
- 
- 	if (timespec64_equal(&inode->i_atime, &now))
--- 
-2.20.0
-
+[1] /opt/ltp/testcases/bin/mtest01 -p80 -w
