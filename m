@@ -2,295 +2,296 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E88C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D008C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69387206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06999206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mF+AxVL6"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ON5xaAw/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbfDZNkn (ORCPT
+        id S1726299AbfDZNlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:40:43 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43321 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfDZNkm (ORCPT
+        Fri, 26 Apr 2019 09:41:24 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49882 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726120AbfDZNlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:40:42 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3QDeKWU3665482
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 26 Apr 2019 06:40:20 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3QDeKWU3665482
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556286021;
-        bh=opfYyLN8dW79qmza6NpCVIp6iAclrMYhjIC0pnMTWXM=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=mF+AxVL60fYvTFP3FhCZ8aRd6H0oE4TjRq4MqNi50RFkQIIncgtKzqNVYGdyyiI5p
-         VdNRRY3W3lnlSC9+iicTlx3LbxH+psvD+XE5hFNpZnaX1CDwrGFzTIC3n9xLT8R4zW
-         HfNvZjj1RpORk4bidaOkfu9MnKyRGRpgW4qkN5Re1EnngzDFxUY0oMd4uu2GMDfiEM
-         5chLzaU9+chjEuw3hAMANG14aOwsTGFa/i9XrezvSM5ZTVTRMMbXYRHs+ffFcdpezN
-         mZ36ZxjysehGBP5CV8sTfOxxx3muWkhlJv6Bl+L+LXqKclrZOY0BuT2j0tFWtbYceH
-         mKxGzHwyoVdcg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3QDeJ5E3665477;
-        Fri, 26 Apr 2019 06:40:19 -0700
-Date:   Fri, 26 Apr 2019 06:40:19 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nadav Amit <tipbot@zytor.com>
-Message-ID: <tip-3db6d5a5ecaf0a778d721ccf9809248350d4bfaf@git.kernel.org>
-Cc:     luto@kernel.org, bp@alien8.de, namit@vmware.com,
-        tglx@linutronix.de, dave.hansen@intel.com, riel@surriel.com,
-        mingo@kernel.org, brgerst@gmail.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, a.p.zijlstra@chello.nl, hpa@zytor.com
-Reply-To: dave.hansen@intel.com, riel@surriel.com, tglx@linutronix.de,
-          mingo@kernel.org, luto@kernel.org, namit@vmware.com,
-          bp@alien8.de, a.p.zijlstra@chello.nl,
-          linux-kernel@vger.kernel.org, hpa@zytor.com,
-          torvalds@linux-foundation.org, brgerst@gmail.com
-In-Reply-To: <20190425230143.7008-1-namit@vmware.com>
-References: <20190425230143.7008-1-namit@vmware.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] x86/mm/tlb: Remove 'struct flush_tlb_info' from the
- stack
-Git-Commit-ID: 3db6d5a5ecaf0a778d721ccf9809248350d4bfaf
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 26 Apr 2019 09:41:23 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QDWBEP017163;
+        Fri, 26 Apr 2019 15:41:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=ykuZA6DtzWG+MyyQPuNhTSp+xxbJHKfVbR5sDbF/lDk=;
+ b=ON5xaAw/hw/j6/88plqbTWYuSDppPRq/mFgS/iNqiSkwC8JN3COfTHGkdVMKkuHqdQWA
+ 0CpT44udCpDWXNxj1fG4iaehdn/Ro/mjzfsVX+t3LnuU1CJ7gLKJMA53G+ice1TJMHl7
+ Aq6HxAkV+yyw/9yHn/8oK3cF03m1BrBlg9+HfoAmz90sTT03TsIzeRCgEVVgvhwgZEhO
+ dvSTpsLkuxDiRc3+A6BtvUoB5lLNTP4CU9X6i597w4UneGRuEhPJUOKY94gKWx3AmWec
+ Urih1obylI5b6qw7jjOIc0Hp1+bkIuFjyYcQLq+xSEcf4LxZ9ApH+wVmAk23YxDkfCDw Ag== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rytadmsm3-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 26 Apr 2019 15:41:14 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EB3FB38;
+        Fri, 26 Apr 2019 13:41:09 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C33BA2645;
+        Fri, 26 Apr 2019 13:41:09 +0000 (GMT)
+Received: from [10.48.0.131] (10.75.127.47) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 26 Apr
+ 2019 15:41:09 +0200
+Subject: Re: [PATCH] dmaengine: stm32-dma: fix residue calculation in
+ stm32-dma
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
+References: <1553689316-6231-1-git-send-email-arnaud.pouliquen@st.com>
+ <20190426121751.GC28103@vkoul-mobl>
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=arnaud.pouliquen@st.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8mOik8I/F6EW8XyQAA2P
+Message-ID: <6894b54e-651f-1caf-d363-79d1ef0eee14@st.com>
+Date:   Fri, 26 Apr 2019 15:41:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190426121751.GC28103@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3db6d5a5ecaf0a778d721ccf9809248350d4bfaf
-Gitweb:     https://git.kernel.org/tip/3db6d5a5ecaf0a778d721ccf9809248350d4bfaf
-Author:     Nadav Amit <namit@vmware.com>
-AuthorDate: Thu, 25 Apr 2019 16:01:43 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 26 Apr 2019 12:01:45 +0200
+Hi Vinod
 
-x86/mm/tlb: Remove 'struct flush_tlb_info' from the stack
+On 4/26/19 2:17 PM, Vinod Koul wrote:
+> Hi Arnaud,
+> 
+> Sorry for delay in review, the conference travel/vacation plan delayed
+> this.
+no problem, just a rememder to be sure that you not missed it in the
+patch stream.
 
-Move flush_tlb_info variables off the stack. This allows to align
-flush_tlb_info to cache-line and avoid potentially unnecessary cache
-line movements. It also allows to have a fixed virtual-to-physical
-translation of the variables, which reduces TLB misses.
+> 
+> On 27-03-19, 13:21, Arnaud Pouliquen wrote:
+>> During residue calculation. the DMA can switch to the next sg. When
+>> this race condition occurs, the residue returned value is not valid.
+>> Indeed the position in the sg returned by the hardware is the position
+>> of the next sg, not the current sg.
+>> Solution is to check the sg after the calculation to verify it.
+>> If a transition is detected we consider that the DMA has switched to
+>> the beginning of next sg.
+> 
+> Now, that sounds like duct tape. Why should we bother doing that.
+> 
+> Also looking back at the stm32_dma_desc_residue() and calls to it from
+> stm32_dma_tx_status() am not sure we are doing the right thing
+Please, could you explain what you have in mind here?
 
-Use per-CPU struct for flush_tlb_mm_range() and
-flush_tlb_kernel_range(). Add debug assertions to ensure there are
-no nested TLB flushes that might overwrite the per-CPU data. For
-arch_tlbbatch_flush() use a const struct.
+> 
+> why are we looking at next_sg here, can you explain me that please
 
-Results when running a microbenchmarks that performs 10^6 MADV_DONTEED
-operations and touching a page, in which 3 additional threads run a
-busy-wait loop (5 runs, PTI and retpolines are turned off):
+This solution is similar to one implemented in the at_hdmac.c driver
+(atc_get_bytes_left function).
 
-			base		off-stack
-			----		---------
-  avg (usec/op)		1.629		1.570	(-3%)
-  stddev		0.014		0.009
+Yes could be consider as a workaround for a hardware issue...
 
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190425230143.7008-1-namit@vmware.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/mm/tlb.c | 116 ++++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 82 insertions(+), 34 deletions(-)
+In stm32 DMA Peripheral, we can register up to 2 sg descriptors (sg1 &
+sg2)in DMA registers, and use it in a cyclic mode (auto reload). This
+mode is mainly use for audio transfer initiated by an ALSA driver.
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 487b8474c01c..7f61431c75fb 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -634,7 +634,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
- 	this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
- }
- 
--static void flush_tlb_func_local(void *info, enum tlb_flush_reason reason)
-+static void flush_tlb_func_local(const void *info, enum tlb_flush_reason reason)
- {
- 	const struct flush_tlb_info *f = info;
- 
-@@ -722,43 +722,81 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
-  */
- unsigned long tlb_single_page_flush_ceiling __read_mostly = 33;
- 
-+static DEFINE_PER_CPU_SHARED_ALIGNED(struct flush_tlb_info, flush_tlb_info);
-+
-+#ifdef CONFIG_DEBUG_VM
-+static DEFINE_PER_CPU(unsigned int, flush_tlb_info_idx);
-+#endif
-+
-+static inline struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
-+			unsigned long start, unsigned long end,
-+			unsigned int stride_shift, bool freed_tables,
-+			u64 new_tlb_gen)
-+{
-+	struct flush_tlb_info *info = this_cpu_ptr(&flush_tlb_info);
-+
-+#ifdef CONFIG_DEBUG_VM
-+	/*
-+	 * Ensure that the following code is non-reentrant and flush_tlb_info
-+	 * is not overwritten. This means no TLB flushing is initiated by
-+	 * interrupt handlers and machine-check exception handlers.
-+	 */
-+	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
-+#endif
-+
-+	info->start		= start;
-+	info->end		= end;
-+	info->mm		= mm;
-+	info->stride_shift	= stride_shift;
-+	info->freed_tables	= freed_tables;
-+	info->new_tlb_gen	= new_tlb_gen;
-+
-+	return info;
-+}
-+
-+static inline void put_flush_tlb_info(void)
-+{
-+#ifdef CONFIG_DEBUG_VM
-+	/* Complete reentrency prevention checks */
-+	barrier();
-+	this_cpu_dec(flush_tlb_info_idx);
-+#endif
-+}
-+
- void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 				unsigned long end, unsigned int stride_shift,
- 				bool freed_tables)
- {
-+	struct flush_tlb_info *info;
-+	u64 new_tlb_gen;
- 	int cpu;
- 
--	struct flush_tlb_info info = {
--		.mm = mm,
--		.stride_shift = stride_shift,
--		.freed_tables = freed_tables,
--	};
--
- 	cpu = get_cpu();
- 
--	/* This is also a barrier that synchronizes with switch_mm(). */
--	info.new_tlb_gen = inc_mm_tlb_gen(mm);
--
- 	/* Should we flush just the requested range? */
--	if ((end != TLB_FLUSH_ALL) &&
--	    ((end - start) >> stride_shift) <= tlb_single_page_flush_ceiling) {
--		info.start = start;
--		info.end = end;
--	} else {
--		info.start = 0UL;
--		info.end = TLB_FLUSH_ALL;
-+	if ((end == TLB_FLUSH_ALL) ||
-+	    ((end - start) >> stride_shift) > tlb_single_page_flush_ceiling) {
-+		start = 0;
-+		end = TLB_FLUSH_ALL;
- 	}
- 
-+	/* This is also a barrier that synchronizes with switch_mm(). */
-+	new_tlb_gen = inc_mm_tlb_gen(mm);
-+
-+	info = get_flush_tlb_info(mm, start, end, stride_shift, freed_tables,
-+				  new_tlb_gen);
-+
- 	if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
--		VM_WARN_ON(irqs_disabled());
-+		lockdep_assert_irqs_enabled();
- 		local_irq_disable();
--		flush_tlb_func_local(&info, TLB_LOCAL_MM_SHOOTDOWN);
-+		flush_tlb_func_local(info, TLB_LOCAL_MM_SHOOTDOWN);
- 		local_irq_enable();
- 	}
- 
- 	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids)
--		flush_tlb_others(mm_cpumask(mm), &info);
-+		flush_tlb_others(mm_cpumask(mm), info);
- 
-+	put_flush_tlb_info();
- 	put_cpu();
- }
- 
-@@ -787,38 +825,48 @@ static void do_kernel_range_flush(void *info)
- 
- void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- {
--
- 	/* Balance as user space task's flush, a bit conservative */
- 	if (end == TLB_FLUSH_ALL ||
- 	    (end - start) > tlb_single_page_flush_ceiling << PAGE_SHIFT) {
- 		on_each_cpu(do_flush_tlb_all, NULL, 1);
- 	} else {
--		struct flush_tlb_info info;
--		info.start = start;
--		info.end = end;
--		on_each_cpu(do_kernel_range_flush, &info, 1);
-+		struct flush_tlb_info *info;
-+
-+		preempt_disable();
-+		info = get_flush_tlb_info(NULL, start, end, 0, false, 0);
-+
-+		on_each_cpu(do_kernel_range_flush, info, 1);
-+
-+		put_flush_tlb_info();
-+		preempt_enable();
- 	}
- }
- 
-+/*
-+ * arch_tlbbatch_flush() performs a full TLB flush regardless of the active mm.
-+ * This means that the 'struct flush_tlb_info' that describes which mappings to
-+ * flush is actually fixed. We therefore set a single fixed struct and use it in
-+ * arch_tlbbatch_flush().
-+ */
-+static const struct flush_tlb_info full_flush_tlb_info = {
-+	.mm = NULL,
-+	.start = 0,
-+	.end = TLB_FLUSH_ALL,
-+};
-+
- void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- {
--	struct flush_tlb_info info = {
--		.mm = NULL,
--		.start = 0UL,
--		.end = TLB_FLUSH_ALL,
--	};
--
- 	int cpu = get_cpu();
- 
- 	if (cpumask_test_cpu(cpu, &batch->cpumask)) {
--		VM_WARN_ON(irqs_disabled());
-+		lockdep_assert_irqs_enabled();
- 		local_irq_disable();
--		flush_tlb_func_local(&info, TLB_LOCAL_SHOOTDOWN);
-+		flush_tlb_func_local(&full_flush_tlb_info, TLB_LOCAL_SHOOTDOWN);
- 		local_irq_enable();
- 	}
- 
- 	if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids)
--		flush_tlb_others(&batch->cpumask, &info);
-+		flush_tlb_others(&batch->cpumask, &full_flush_tlb_info);
- 
- 	cpumask_clear(&batch->cpumask);
- 
+From hardware point of view the DMA transfers first block based on sg1,
+then it updates registers to prepare sg2 transfer, and then generates an
+IRQ to inform that it issues the next transfer (sg2).
+
+Then driver can update sg1 to prepare the third transfer...
+
+In parallel the client driver can requests status to get the residue to
+update internal pointer.
+The issue is in the race condition between the call of the
+device_tx_status ops and the update of the DMA register on sg switch.
+
+During a short time the hardware updated the registers containing the
+sg ID but not the transfer counter(SxNDTR). In this case there is a
+mismatch between the Sg ID and the associated transfer counter.
+So residue calculation is wrong.
+Idea of this patch is to perform the calculation and then to crosscheck
+that the hardware has not switched to the next sg during the
+calculation. The way to crosscheck is to compare the the sg ID before
+and after the calculation.
+
+I tested the solution to force a new recalculation but no real solution
+to trust the registers during this phase. In this case an approximation
+is to consider that the DMA is transferring the first bytes of the next sg.
+So we return the residue corresponding to the beginning of the next buffer.
+
+Don't hesitate if it is still not clear
+
+Thanks
+Arnaud
+
+> 
+>>
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+>> ---
+>>  drivers/dma/stm32-dma.c | 70 ++++++++++++++++++++++++++++++++++++++++---------
+>>  1 file changed, 57 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+>> index 4903a40..30309d2 100644
+>> --- a/drivers/dma/stm32-dma.c
+>> +++ b/drivers/dma/stm32-dma.c
+>> @@ -1038,33 +1038,77 @@ static u32 stm32_dma_get_remaining_bytes(struct stm32_dma_chan *chan)
+>>  	return ndtr << width;
+>>  }
+>>  
+>> +static bool stm32_dma_is_current_sg(struct stm32_dma_chan *chan)
+>> +{
+>> +	struct stm32_dma_device *dmadev = stm32_dma_get_dev(chan);
+>> +	struct stm32_dma_sg_req *sg_req;
+>> +	u32 dma_scr, dma_smar, id;
+>> +
+>> +	id = chan->id;
+>> +	dma_scr = stm32_dma_read(dmadev, STM32_DMA_SCR(id));
+>> +
+>> +	if (!(dma_scr & STM32_DMA_SCR_DBM))
+>> +		return true;
+>> +
+>> +	sg_req = &chan->desc->sg_req[chan->next_sg];
+>> +
+>> +	if (dma_scr & STM32_DMA_SCR_CT) {
+>> +		dma_smar = stm32_dma_read(dmadev, STM32_DMA_SM0AR(id));
+>> +		return (dma_smar == sg_req->chan_reg.dma_sm0ar);
+>> +	}
+>> +
+>> +	dma_smar = stm32_dma_read(dmadev, STM32_DMA_SM1AR(id));
+>> +
+>> +	return (dma_smar == sg_req->chan_reg.dma_sm1ar);
+>> +}
+>> +
+>>  static size_t stm32_dma_desc_residue(struct stm32_dma_chan *chan,
+>>  				     struct stm32_dma_desc *desc,
+>>  				     u32 next_sg)
+>>  {
+>>  	u32 modulo, burst_size;
+>> -	u32 residue = 0;
+>> +	u32 residue;
+>> +	u32 n_sg = next_sg;
+>> +	struct stm32_dma_sg_req *sg_req = &chan->desc->sg_req[chan->next_sg];
+>>  	int i;
+>>  
+>> +	residue = stm32_dma_get_remaining_bytes(chan);
+>> +
+>>  	/*
+>> -	 * In cyclic mode, for the last period, residue = remaining bytes from
+>> -	 * NDTR
+>> +	 * Calculate the residue means compute the descriptors
+>> +	 * information:
+>> +	 * - the sg currently transferred
+>> +	 * - the remaining position in this sg (NDTR).
+>> +	 *
+>> +	 * The issue is that a race condition can occur if DMA is
+>> +	 * running. DMA can have started to transfer the next sg before
+>> +	 * the position in sg is read. In this case the remaing position
+>> +	 * can correspond to the new sg position.
+>> +	 * The strategy implemented in the stm32 driver is to check the
+>> +	 * sg transition. If detected we can not trust the SxNDTR register
+>> +	 * value, this register can not be up to date during the transition.
+>> +	 * In this case we can assume that the dma is at the beginning of next
+>> +	 * sg so we calculate the residue in consequence.
+>>  	 */
+>> -	if (chan->desc->cyclic && next_sg == 0) {
+>> -		residue = stm32_dma_get_remaining_bytes(chan);
+>> -		goto end;
+>> +
+>> +	if (!stm32_dma_is_current_sg(chan)) {
+>> +		n_sg++;
+>> +		if (n_sg == chan->desc->num_sgs)
+>> +			n_sg = 0;
+>> +		residue = sg_req->len;
+>>  	}
+>>  
+>>  	/*
+>> -	 * For all other periods in cyclic mode, and in sg mode,
+>> -	 * residue = remaining bytes from NDTR + remaining periods/sg to be
+>> -	 * transferred
+>> +	 * In cyclic mode, for the last period, residue = remaining bytes
+>> +	 * from NDTR,
+>> +	 * else for all other periods in cyclic mode, and in sg mode,
+>> +	 * residue = remaining bytes from NDTR + remaining
+>> +	 * periods/sg to be transferred
+>>  	 */
+>> -	for (i = next_sg; i < desc->num_sgs; i++)
+>> -		residue += desc->sg_req[i].len;
+>> -	residue += stm32_dma_get_remaining_bytes(chan);
+>> +	if (!chan->desc->cyclic || n_sg != 0)
+>> +		for (i = n_sg; i < desc->num_sgs; i++)
+>> +			residue += desc->sg_req[i].len;
+>>  
+>> -end:
+>>  	if (!chan->mem_burst)
+>>  		return residue;
+>>  
+>> -- 
+>> 2.7.4
+> 
