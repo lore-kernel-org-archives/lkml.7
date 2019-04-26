@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D19C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECCEC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94368208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B9A208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271705;
-	bh=3GroomHUx5fWuhqJzHQkhpQjm03ivv5CeF+GDnai3mo=;
+	s=default; t=1556271707;
+	bh=Duq5rY5zdK2IbC+D/olVWFtIaLEOopUUk9GZlavj/co=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=F8qzqDItzoNUsqyqyI9w2Mowtfq3eb4KLUHRyokqVVL6Iji4nJf3QaVBR5Qb96ZxZ
-	 lqgu3YCCqcd5VWWAIwTcRt9dPgvmIexX8EIUaUtq/bx4C/0tTma2xvWQifzq3AbPZs
-	 MK55VnRnzEarNI5K5ZoOxiISmgaUrr/jiT/trRXE=
+	b=dCfPEm6l2VB/GqNMsWHGA+RHGkEkLESNC5cCDaxuq2DAlbYjEYq4JerI4v344lPfO
+	 NPSM9T5lqNP6i2QrfoG95pVpISHeWCQCs65hu/UJ4t8pVaj0AF+eo8mJd7/S1j0GPv
+	 WOaZAYPR8/V7xIM95B+DGopuJwk0gUhuAeTNZ0iA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfDZJle (ORCPT
+        id S1727083AbfDZJlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:41:34 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47622 "EHLO
+        Fri, 26 Apr 2019 05:41:47 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47684 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbfDZJlc (ORCPT
+        with ESMTP id S1726928AbfDZJle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:41:32 -0400
+        Fri, 26 Apr 2019 05:41:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=wVJ90d8QrBrlpK1ud0JzgUVGzVI/Rrfuz/Fm2nlLYvA=; b=dRu9ltAlVdUr
-        lJMuHPU3DDYxwK48oj/99+bnd5KTG5JgQjRACbpAu/1VFLrdxKTmP9udW9PdoNh7u0jwMckSliCxZ
-        Pu4Akk/921fkHPCVDp1LLUHTs0CqndWp/iv8GPmBCNkXQvDpis76F/tSBsq9GtFvv+RlQos0TyNRY
-        0H8Ow=;
+        List-Archive; bh=bCO3F4jGoWbbF2kzN76H5v5L+ImBbS6Epz66gQMEttY=; b=pfuy8K3F/oCk
+        6ckpWY+naVFW0e8ELk6Ydn3+VSDJ9QrH4Tsnkz6kepmOaZcvR2FKPD6fvqW2CFW14lv/6IMrZABfg
+        9Ubz0tRyjg+++XpqFaCoUD3JFQ2PiEQsVoW/WPDN15Ovlr/FdXi7Fv2MxAxQiGSBhzwEcgbTK6NJt
+        1WPbQ=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxMI-0003Lj-AO; Fri, 26 Apr 2019 09:41:30 +0000
+        id 1hJxMK-0003Lp-BM; Fri, 26 Apr 2019 09:41:32 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id CC760441D3B; Fri, 26 Apr 2019 10:41:28 +0100 (BST)
+        id C4627441D3B; Fri, 26 Apr 2019 10:41:30 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: mcp16502: Remove setup_regulators function" to the regulator tree
+Subject: Applied "regulator: mcp16502: Remove unneeded fields from struct mcp16502" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094128.CC760441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:41:28 +0100 (BST)
+Message-Id: <20190426094130.C4627441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:41:30 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: mcp16502: Remove setup_regulators function
+   regulator: mcp16502: Remove unneeded fields from struct mcp16502
 
 has been applied to the regulator tree at
 
@@ -85,83 +85,177 @@ to this mail.
 Thanks,
 Mark
 
-From 784c24c3e45cc665226e8529d79f319af7cfd09c Mon Sep 17 00:00:00 2001
+From 4cf469539b635d2588df4f48bf721890f5f2ade5 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Thu, 11 Apr 2019 09:59:23 +0800
-Subject: [PATCH] regulator: mcp16502: Remove setup_regulators function
+Date: Thu, 11 Apr 2019 09:59:22 +0800
+Subject: [PATCH] regulator: mcp16502: Remove unneeded fields from struct
+ mcp16502
 
-It seems a little bit odd current code pass struct regulator_config rather
-than a pointer to setup_regulators. The setup_regulators is so simple and
-only has one caller, so remove it.
+At the context with rdev, we can use rdev->regmap instead of mcp->rmap.
+The *rdev[NUM_REGULATORS] is not required because current code uses
+devm_regulator_register() so we don't need to store *rdev for clean up
+paths.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/mcp16502.c | 37 +++++++++++-------------------------
- 1 file changed, 11 insertions(+), 26 deletions(-)
+ drivers/regulator/mcp16502.c | 40 +++++++++++++++---------------------
+ 1 file changed, 16 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/regulator/mcp16502.c b/drivers/regulator/mcp16502.c
-index 9292ab8736c7..e5a02711cb46 100644
+index 3a8004abe044..9292ab8736c7 100644
 --- a/drivers/regulator/mcp16502.c
 +++ b/drivers/regulator/mcp16502.c
-@@ -427,36 +427,15 @@ static const struct regmap_config mcp16502_regmap_config = {
- 	.wr_table	= &mcp16502_yes_reg_table,
+@@ -119,8 +119,6 @@ enum {
+  * @lpm: LPM GPIO descriptor
+  */
+ struct mcp16502 {
+-	struct regulator_dev *rdev[NUM_REGULATORS];
+-	struct regmap *rmap;
+ 	struct gpio_desc *lpm;
  };
  
--/*
-- * set_up_regulators() - initialize all regulators
-- */
--static int setup_regulators(struct mcp16502 *mcp, struct device *dev,
--			    struct regulator_config config)
--{
--	struct regulator_dev *rdev;
--	int i;
--
--	for (i = 0; i < NUM_REGULATORS; i++) {
--		rdev = devm_regulator_register(dev, &mcp16502_desc[i], &config);
--		if (IS_ERR(rdev)) {
--			dev_err(dev,
--				"failed to register %s regulator %ld\n",
--				mcp16502_desc[i].name, PTR_ERR(rdev));
--			return PTR_ERR(rdev);
--		}
--	}
--
--	return 0;
--}
--
- static int mcp16502_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
+@@ -179,13 +177,12 @@ static unsigned int mcp16502_get_mode(struct regulator_dev *rdev)
  {
- 	struct regulator_config config = { };
-+	struct regulator_dev *rdev;
- 	struct device *dev;
- 	struct mcp16502 *mcp;
- 	struct regmap *rmap;
--	int ret = 0;
-+	int i, ret;
+ 	unsigned int val;
+ 	int ret, reg;
+-	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
  
- 	dev = &client->dev;
- 	config.dev = dev;
-@@ -482,9 +461,15 @@ static int mcp16502_probe(struct i2c_client *client,
- 		return PTR_ERR(mcp->lpm);
+ 	reg = mcp16502_get_reg(rdev, MCP16502_OPMODE_ACTIVE);
+ 	if (reg < 0)
+ 		return reg;
+ 
+-	ret = regmap_read(mcp->rmap, reg, &val);
++	ret = regmap_read(rdev->regmap, reg, &val);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -211,7 +208,6 @@ static int _mcp16502_set_mode(struct regulator_dev *rdev, unsigned int mode,
+ {
+ 	int val;
+ 	int reg;
+-	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
+ 
+ 	reg = mcp16502_get_reg(rdev, op_mode);
+ 	if (reg < 0)
+@@ -228,7 +224,7 @@ static int _mcp16502_set_mode(struct regulator_dev *rdev, unsigned int mode,
+ 		return -EINVAL;
  	}
  
--	ret = setup_regulators(mcp, dev, config);
--	if (ret != 0)
--		return ret;
-+	for (i = 0; i < NUM_REGULATORS; i++) {
+-	reg = regmap_update_bits(mcp->rmap, reg, MCP16502_MODE, val);
++	reg = regmap_update_bits(rdev->regmap, reg, MCP16502_MODE, val);
+ 	return reg;
+ }
+ 
+@@ -247,9 +243,8 @@ static int mcp16502_get_status(struct regulator_dev *rdev)
+ {
+ 	int ret;
+ 	unsigned int val;
+-	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
+ 
+-	ret = regmap_read(mcp->rmap, MCP16502_STAT_BASE(rdev_get_id(rdev)),
++	ret = regmap_read(rdev->regmap, MCP16502_STAT_BASE(rdev_get_id(rdev)),
+ 			  &val);
+ 	if (ret)
+ 		return ret;
+@@ -290,7 +285,6 @@ static int mcp16502_suspend_get_target_reg(struct regulator_dev *rdev)
+  */
+ static int mcp16502_set_suspend_voltage(struct regulator_dev *rdev, int uV)
+ {
+-	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
+ 	int sel = regulator_map_voltage_linear_range(rdev, uV, uV);
+ 	int reg = mcp16502_suspend_get_target_reg(rdev);
+ 
+@@ -300,7 +294,7 @@ static int mcp16502_set_suspend_voltage(struct regulator_dev *rdev, int uV)
+ 	if (reg < 0)
+ 		return reg;
+ 
+-	return regmap_update_bits(mcp->rmap, reg, MCP16502_VSEL, sel);
++	return regmap_update_bits(rdev->regmap, reg, MCP16502_VSEL, sel);
+ }
+ 
+ /*
+@@ -328,13 +322,12 @@ static int mcp16502_set_suspend_mode(struct regulator_dev *rdev,
+  */
+ static int mcp16502_set_suspend_enable(struct regulator_dev *rdev)
+ {
+-	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
+ 	int reg = mcp16502_suspend_get_target_reg(rdev);
+ 
+ 	if (reg < 0)
+ 		return reg;
+ 
+-	return regmap_update_bits(mcp->rmap, reg, MCP16502_EN, MCP16502_EN);
++	return regmap_update_bits(rdev->regmap, reg, MCP16502_EN, MCP16502_EN);
+ }
+ 
+ /*
+@@ -342,13 +335,12 @@ static int mcp16502_set_suspend_enable(struct regulator_dev *rdev)
+  */
+ static int mcp16502_set_suspend_disable(struct regulator_dev *rdev)
+ {
+-	struct mcp16502 *mcp = rdev_get_drvdata(rdev);
+ 	int reg = mcp16502_suspend_get_target_reg(rdev);
+ 
+ 	if (reg < 0)
+ 		return reg;
+ 
+-	return regmap_update_bits(mcp->rmap, reg, MCP16502_EN, 0);
++	return regmap_update_bits(rdev->regmap, reg, MCP16502_EN, 0);
+ }
+ #endif /* CONFIG_SUSPEND */
+ 
+@@ -441,17 +433,16 @@ static const struct regmap_config mcp16502_regmap_config = {
+ static int setup_regulators(struct mcp16502 *mcp, struct device *dev,
+ 			    struct regulator_config config)
+ {
++	struct regulator_dev *rdev;
+ 	int i;
+ 
+ 	for (i = 0; i < NUM_REGULATORS; i++) {
+-		mcp->rdev[i] = devm_regulator_register(dev,
+-						       &mcp16502_desc[i],
+-						       &config);
+-		if (IS_ERR(mcp->rdev[i])) {
 +		rdev = devm_regulator_register(dev, &mcp16502_desc[i], &config);
 +		if (IS_ERR(rdev)) {
-+			dev_err(dev,
-+				"failed to register %s regulator %ld\n",
+ 			dev_err(dev,
+ 				"failed to register %s regulator %ld\n",
+-				mcp16502_desc[i].name, PTR_ERR(mcp->rdev[i]));
+-			return PTR_ERR(mcp->rdev[i]);
 +				mcp16502_desc[i].name, PTR_ERR(rdev));
 +			return PTR_ERR(rdev);
-+		}
-+	}
+ 		}
+ 	}
  
- 	mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_ACTIVE);
+@@ -464,6 +455,7 @@ static int mcp16502_probe(struct i2c_client *client,
+ 	struct regulator_config config = { };
+ 	struct device *dev;
+ 	struct mcp16502 *mcp;
++	struct regmap *rmap;
+ 	int ret = 0;
  
+ 	dev = &client->dev;
+@@ -473,15 +465,15 @@ static int mcp16502_probe(struct i2c_client *client,
+ 	if (!mcp)
+ 		return -ENOMEM;
+ 
+-	mcp->rmap = devm_regmap_init_i2c(client, &mcp16502_regmap_config);
+-	if (IS_ERR(mcp->rmap)) {
+-		ret = PTR_ERR(mcp->rmap);
++	rmap = devm_regmap_init_i2c(client, &mcp16502_regmap_config);
++	if (IS_ERR(rmap)) {
++		ret = PTR_ERR(rmap);
+ 		dev_err(dev, "regmap init failed: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+ 	i2c_set_clientdata(client, mcp);
+-	config.regmap = mcp->rmap;
++	config.regmap = rmap;
+ 	config.driver_data = mcp;
+ 
+ 	mcp->lpm = devm_gpiod_get(dev, "lpm", GPIOD_OUT_LOW);
 -- 
 2.20.1
 
