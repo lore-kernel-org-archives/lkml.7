@@ -2,128 +2,84 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C45CC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACFEC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC281206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B599206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:15:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Fx5NJNjg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfDZOPJ (ORCPT
+        id S1726455AbfDZOPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:15:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36228 "EHLO mx1.redhat.com"
+        Fri, 26 Apr 2019 10:15:16 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45522 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfDZOPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:15:09 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 41F0E30842A0;
-        Fri, 26 Apr 2019 14:15:08 +0000 (UTC)
-Received: from lorien.usersys.redhat.com (ovpn-116-103.phx2.redhat.com [10.3.116.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F08C4277D6;
-        Fri, 26 Apr 2019 14:15:05 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 10:15:04 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Fr?d?ric Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-Message-ID: <20190426141503.GB16477@lorien.usersys.redhat.com>
-References: <cover.1556025155.git.vpillai@digitalocean.com>
- <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
- <20190424140013.GA14594@sinkpad>
- <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
- <20190425095508.GA8387@gmail.com>
- <20190425144619.GX18914@techsingularity.net>
- <20190425185343.GA122353@gmail.com>
+        id S1726152AbfDZOPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 10:15:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=yW5kv3I/idzumD0kD5brzMhB82n0REr+cs1o/i56S3M=; b=Fx5NJNjgKn5RAaQIvKMBSvlHlY
+        FmxKMBq5k76zpXXlIJMsJUKAWDxSFGcFVZRIJYkL0aEeY7LEe5oxIhxe6DqFZ5nozTJXRXYeafnZV
+        eiAY9TOXXOA7jev/MMeXzzsloeiJm19Zn9q9VKOC4RBAUdP+1lRwixCLlJCHNERbsWaU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hK1cx-0001CF-0p; Fri, 26 Apr 2019 16:14:59 +0200
+Date:   Fri, 26 Apr 2019 16:14:58 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Esben Haabendal <esben@geanix.com>
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Yang Wei <yang.wei9@zte.com.cn>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/12] net: ll_temac: Support indirect_mutex share within
+ TEMAC IP
+Message-ID: <20190426141458.GH14432@lunn.ch>
+References: <20190426073231.4008-1-esben@geanix.com>
+ <20190426073231.4008-8-esben@geanix.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425185343.GA122353@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 26 Apr 2019 14:15:08 +0000 (UTC)
+In-Reply-To: <20190426073231.4008-8-esben@geanix.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 08:53:43PM +0200 Ingo Molnar wrote:
-> Interesting. This strongly suggests sub-optimal SMT-scheduling in the 
-> non-saturated HT case, i.e. a scheduler balancing bug.
-> 
-> As long as loads are clearly below the physical cores count (which they 
-> are in the early phases of your table) the scheduler should spread tasks 
-> without overlapping two tasks on the same core.
-> 
-> Clearly it doesn't.
-> 
+On Fri, Apr 26, 2019 at 09:32:26AM +0200, Esben Haabendal wrote:
+> @@ -1092,7 +1092,15 @@ static int temac_probe(struct platform_device *pdev)
+>  	lp->dev = &pdev->dev;
+>  	lp->options = XTE_OPTION_DEFAULTS;
+>  	spin_lock_init(&lp->rx_lock);
+> -	mutex_init(&lp->indirect_mutex);
+> +
+> +	/* Setup mutex for synchronization of indirect register access */
+> +	if (pdata && pdata->indirect_mutex) {
+> +		lp->indirect_mutex = pdata->indirect_mutex;
+> +	} else {
+> +		lp->indirect_mutex = devm_kmalloc(
+> +			&pdev->dev, sizeof(*lp->indirect_mutex), GFP_KERNEL);
+> +		mutex_init(lp->indirect_mutex);
+> +	}
 
-That's especially true if there are cgroups with different numbers of
-tasks in them involved. 
+Hi Esben
 
-Here's an example showing the average number of tasks on each of the 4 numa
-nodes during a test run. 20 cpus per node. There are 78 threads total, 76
-for lu and 2 stress cpu hogs. So fewer than the 80 CPUs on the box. The GROUP
-test has the two stresses and lu in distinct cgroups. The NORMAL test has them
-all in one. This is from 5.0-rc3+, but the version doesn't matter. It's
-reproducible on any kernel. SMT is on, but that also doesn't matter here.
+I would make the mutex mandatory, not optional. I think there will be
+less hard to debug errors that way. You want the developer to actually
+think about this mutex, should it be shared, or individual. Forcing
+them to provide it means they are more likely to read the
+documentation, and more likely to over share it than under share
+it. That is maybe not so good for performance, but safer.
 
-The first two lines show where the stress jobs ran and the second show where
-the 76 threads of lu ran.
-
-GROUP_1.stress.ps.numa.hist      Average    1.00   1.00
-NORMAL_1.stress.ps.numa.hist     Average    0.00   1.10   0.90
-
-lu.C.x_76_GROUP_1.ps.numa.hist   Average    10.97  11.78  26.28  26.97
-lu.C.x_76_NORMAL_1.ps.numa.hist  Average    19.70  18.70  17.80  19.80
-
-The NORMAL test is evenly balanced across the 20 cpus per numa node.  There
-is between a 4x and 10x performance hit to the lu benchmark between group
-and normal in any of these test runs. In this particular case it was 10x:
-
-============76_GROUP========Mop/s===================================
-min     q1      median  q3      max
-3776.51 3776.51 3776.51 3776.51 3776.51
-============76_GROUP========time====================================
-min     q1      median  q3      max
-539.92  539.92  539.92  539.92  539.92
-============76_NORMAL========Mop/s===================================
-min     q1      median  q3      max
-39386   39386   39386   39386   39386
-============76_NORMAL========time====================================
-min     q1      median  q3      max
-51.77   51.77   51.77   51.77   51.77
-
-
-This a bit off topic, but since balancing bugs was mentioned and I've been
-trying to track this down for a while (and learning the scheduler code in
-the process) I figured I'd just throw it out there :)
-
-
-Cheers,
-Phil
-
--- 
+    Andrew
