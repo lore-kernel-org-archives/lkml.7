@@ -2,240 +2,454 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C6DC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DC2C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C742084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7798C206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:42:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="LzYR2O6M"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="gesVRAz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfDZNl5 (ORCPT
+        id S1726334AbfDZNmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:41:57 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:60941 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726120AbfDZNl4 (ORCPT
+        Fri, 26 Apr 2019 09:42:53 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37773 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfDZNmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:41:56 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QDf0Oh001515;
-        Fri, 26 Apr 2019 15:41:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=LNbbAj2wRrQ7/8bo8RFV9A/U3Iz4kTcJqarCD3VIoEw=;
- b=LzYR2O6MF3dYAhqy0r9yRURhzgMEjJbtqPiHX9IGoLRDmco+bRlfxgDxrBJ9Kh+25/AZ
- N2LclwcnABoV5wdOdFUy7FUT7JzGLq9xbpsaCLtpjAVTW81IDPyMPj5HFptNUY4QtOtf
- KcdjzKzwoGhq7ASJCXhFfEK+T0sZB1pIwTe46X1rw6x57Vu4j5oOjz5tLngtrpDfhdzx
- puD33X7vhs9ps+3m5bXP4Sxu5hIHrMbJvvXPCjUhE/19IZsfCR5DXtTRAiUHWRQJK9rJ
- P1F2S0O3GsTh5q/M6s1Fs30WzyM/eUAXMSDSy/5rwdiMBOvKqAo00gE9VGuPcs19gw2S fA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2s3bbvfyqt-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 26 Apr 2019 15:41:23 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F0D2F3D;
-        Fri, 26 Apr 2019 13:41:22 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C43942642;
-        Fri, 26 Apr 2019 13:41:22 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 26 Apr
- 2019 15:41:22 +0200
-Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
- (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 26 Apr
- 2019 15:41:22 +0200
-From:   Ludovic Barre <ludovic.Barre@st.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH] watchdog: stm32: add dynamic prescaler support
-Date:   Fri, 26 Apr 2019 15:41:15 +0200
-Message-ID: <1556286075-29496-1-git-send-email-ludovic.Barre@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 26 Apr 2019 09:42:52 -0400
+Received: by mail-pl1-f193.google.com with SMTP id z8so1612705pln.4
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 06:42:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NFiuNtb+eYjAPsdLWXFASZSCNzUFWk6KGtB5sdLvtrY=;
+        b=gesVRAz6Iv9z5F4fbNPYoEpAjIsbToLMxgHuitbSeNvCWo8spP6TaUiDdvoF2zcLzz
+         LddZM1f3oKoN4hBndt2Cl7GBsYLfsIOgr1aMDqHZ3J016K0UvIK8MTyBl7rikdIFPNxZ
+         ExteKSpRXNltMfRM3093Wc84ZqG3XoUBOb00U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NFiuNtb+eYjAPsdLWXFASZSCNzUFWk6KGtB5sdLvtrY=;
+        b=YfSdPtzrL5dco35G44IucyzNhACfu9yms5SdsZz04539o5D0yE8DaEgwMQLaDi3rMz
+         AFk77z+7f0qwVC1yRcubvLzI3daJsnMS0gT5fr5uSHJrL8jSux0qPFGMKDVUZa0NG1EP
+         fRzb9/2YN6S1ifnEKOrOknJSsmF3v98SPO6HoSOahnS9oJLryTHOZhLfkf5pR4+2biXH
+         pl7zj3LWtd1EGueOWFuX+TryXTeI4lYjRr//YGwha/Q4oEVxarlwbNYbWJkbuTdchCft
+         dq+eA8eCd8u4citI6agiDGJqbuXPeWZ0FZKDkQjmSCRT2CqKu+XeAO/0NiZ6uQ0N/NXu
+         t1Xw==
+X-Gm-Message-State: APjAAAUwPjACgdOdXL1cItu6tGi8uxFZGMmCqHtOIur92aN9vjpCt7TE
+        SKcZJwGL9xPPhjwilLeo+CECgw==
+X-Google-Smtp-Source: APXvYqwA2eL2vKQCbOn2Edztz/sFsX/WX3U+pdqwSkzpaIYH48plcHkt0oHI8sWKZgd0QWKfCAUQdg==
+X-Received: by 2002:a17:902:2b81:: with SMTP id l1mr45396632plb.289.1556286171665;
+        Fri, 26 Apr 2019 06:42:51 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 4sm7443353pfj.45.2019.04.26.06.42.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 06:42:50 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 09:42:48 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, dancol@google.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, jannh@google.com,
+        Jann Horn <jann@thejh.net>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        kernel-team@android.com, linux-kselftest@vger.kernel.org,
+        luto@amacapital.net, Michal Hocko <mhocko@suse.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        rostedt@goodmis.org, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>, sspatil@google.com,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, timmurray@google.com,
+        torvalds@linux-foundation.org, Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH v1 2/2] Add selftests for pidfd polling
+Message-ID: <20190426134248.GA261279@google.com>
+References: <20190425190010.46489-1-joel@joelfernandes.org>
+ <20190425190010.46489-2-joel@joelfernandes.org>
+ <20190425212917.yotnir4uqgpnh764@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.237]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_08:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425212917.yotnir4uqgpnh764@brauner.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+On Thu, Apr 25, 2019 at 11:29:18PM +0200, Christian Brauner wrote:
+> On Thu, Apr 25, 2019 at 03:00:10PM -0400, Joel Fernandes (Google) wrote:
+> > Other than verifying pidfd based polling, the tests make sure that
+> > wait semantics are preserved with the pidfd poll. Notably the 2 cases:
+> > 1. If a thread group leader exits while threads still there, then no
+> >    pidfd poll notifcation should happen.
+> > 2. If a non-thread group leader does an execve, then the thread group
+> >    leader is signaled to exit and is replaced with the execing thread
+> >    as the new leader, however the parent is not notified in this case.
+> > 
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> >  tools/testing/selftests/pidfd/Makefile     |   2 +-
+> >  tools/testing/selftests/pidfd/pidfd_test.c | 198 +++++++++++++++++++++
+> >  2 files changed, 199 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
+> > index deaf8073bc06..4b31c14f273c 100644
+> > --- a/tools/testing/selftests/pidfd/Makefile
+> > +++ b/tools/testing/selftests/pidfd/Makefile
+> > @@ -1,4 +1,4 @@
+> > -CFLAGS += -g -I../../../../usr/include/
+> > +CFLAGS += -g -I../../../../usr/include/ -lpthread
+> >  
+> >  TEST_GEN_PROGS := pidfd_test
+> >  
+> > diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
+> > index d59378a93782..e887f807645e 100644
+> > --- a/tools/testing/selftests/pidfd/pidfd_test.c
+> > +++ b/tools/testing/selftests/pidfd/pidfd_test.c
+> > @@ -4,18 +4,42 @@
+> >  #include <errno.h>
+> >  #include <fcntl.h>
+> >  #include <linux/types.h>
+> > +#include <pthread.h>
+> >  #include <sched.h>
+> >  #include <signal.h>
+> >  #include <stdio.h>
+> >  #include <stdlib.h>
+> >  #include <string.h>
+> >  #include <syscall.h>
+> > +#include <sys/epoll.h>
+> > +#include <sys/mman.h>
+> >  #include <sys/mount.h>
+> >  #include <sys/wait.h>
+> > +#include <time.h>
+> >  #include <unistd.h>
+> >  
+> >  #include "../kselftest.h"
+> >  
+> > +#define CHILD_THREAD_MIN_WAIT 3 /* seconds */
+> > +#define MAX_EVENTS 5
+> > +#define __NR_pidfd_send_signal 424
+> 
+> Should probably be ifndefed as well.
 
-This patch allows to define the max prescaler by compatible.
-To set a large range of timeout, the prescaler should be set
-dynamically (from the timeout request) to improve the resolution
-in order to have a timeout close to the expected value.
+done
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/watchdog/stm32_iwdg.c | 70 +++++++++++++++++++++++++------------------
- 1 file changed, 41 insertions(+), 29 deletions(-)
+> > +#ifndef CLONE_PIDFD
+> > +#define CLONE_PIDFD 0x00001000
+> > +#endif
+> > +
+> > +static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
+> > +{
+> > +	size_t stack_size = 1024;
+> > +	char *stack[1024] = { 0 };
+> > +
+> > +#ifdef __ia64__
+> > +	return __clone2(fn, stack, stack_size, flags | SIGCHLD, NULL, pidfd);
+> > +#else
+> > +	return clone(fn, stack + stack_size, flags | SIGCHLD, NULL, pidfd);
+> > +#endif
+> > +}
+> > +
+> >  static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
+> >  					unsigned int flags)
+> >  {
+> > @@ -368,10 +392,184 @@ static int test_pidfd_send_signal_syscall_support(void)
+> >  	return 0;
+> >  }
+> >  
+> > +void *test_pidfd_poll_exec_thread(void *priv)
+> > +{
+> > +	char waittime[256];
+> > +
+> > +	ksft_print_msg("Child Thread: starting. pid %d tid %d ; and sleeping\n",
+> > +			getpid(), syscall(SYS_gettid));
+> > +	ksft_print_msg("Child Thread: doing exec of sleep\n");
+> > +
+> > +	sprintf(waittime, "%d", CHILD_THREAD_MIN_WAIT);
+> 
+> > +#define CHILD_THREAD_MIN_SLEEP "3" /* seconds */
+> 
+> Could also be
+> 
+> #define str(s) _str(s)
+> #define _str(s) #s
+> #define CHILD_THREAD_MIN_SLEEP 3
+> 
+> execl("/bin/sleep", "sleep", str(CHILD_THREAD_MIN_SLEEP), (char *)NULL);
+> 
+> getting rid of waittime, and snprintf().
 
-diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-index e00e3b3..91d0a89 100644
---- a/drivers/watchdog/stm32_iwdg.c
-+++ b/drivers/watchdog/stm32_iwdg.c
-@@ -34,18 +34,10 @@
- #define KR_KEY_EWA	0x5555 /* write access enable */
- #define KR_KEY_DWA	0x0000 /* write access disable */
- 
--/* IWDG_PR register bit values */
--#define PR_4		0x00 /* prescaler set to 4 */
--#define PR_8		0x01 /* prescaler set to 8 */
--#define PR_16		0x02 /* prescaler set to 16 */
--#define PR_32		0x03 /* prescaler set to 32 */
--#define PR_64		0x04 /* prescaler set to 64 */
--#define PR_128		0x05 /* prescaler set to 128 */
--#define PR_256		0x06 /* prescaler set to 256 */
-+#define PR_SHIFT	2
- 
- /* IWDG_RLR register values */
--#define RLR_MIN		0x07C /* min value supported by reload register */
--#define RLR_MAX		0xFFF /* max value supported by reload register */
-+#define RLR_MAX		GENMASK(11, 0) /* max value of reload register */
- 
- /* IWDG_SR register bit mask */
- #define FLAG_PVU	BIT(0) /* Watchdog prescaler value update */
-@@ -55,15 +47,28 @@
- #define TIMEOUT_US	100000
- #define SLEEP_US	1000
- 
--#define HAS_PCLK	true
-+struct stm32_iwdg_data {
-+	bool has_pclk;
-+	u32 max_prescaler;
-+};
-+
-+static const struct stm32_iwdg_data stm32_iwdg_data = {
-+	.has_pclk = false,
-+	.max_prescaler = 256,
-+};
-+
-+static const struct stm32_iwdg_data stm32mp1_iwdg_data = {
-+	.has_pclk = true,
-+	.max_prescaler = 1024,
-+};
- 
- struct stm32_iwdg {
- 	struct watchdog_device	wdd;
-+	const struct stm32_iwdg_data *data;
- 	void __iomem		*regs;
- 	struct clk		*clk_lsi;
- 	struct clk		*clk_pclk;
- 	unsigned int		rate;
--	bool			has_pclk;
- };
- 
- static inline u32 reg_read(void __iomem *base, u32 reg)
-@@ -80,21 +85,30 @@ static int stm32_iwdg_start(struct watchdog_device *wdd)
- {
- 	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
- 	u32 val = FLAG_PVU | FLAG_RVU;
--	u32 reload;
-+	u32 timeout, presc, iwdg_rlr, iwdg_pr;
- 	int ret;
- 
- 	dev_dbg(wdd->parent, "%s\n", __func__);
- 
--	/* prescaler fixed to 256 */
--	reload = clamp_t(unsigned int, ((wdd->timeout * wdt->rate) / 256) - 1,
--			 RLR_MIN, RLR_MAX);
-+	timeout = clamp_t(unsigned int, wdd->timeout,
-+			  wdd->min_timeout, wdd->max_hw_heartbeat_ms / 1000);
-+
-+	if (timeout != wdd->timeout)
-+		dev_warn(wdd->parent, "timeout skrinked to %d\n", timeout);
-+
-+	presc = DIV_ROUND_UP(timeout * wdt->rate, RLR_MAX + 1);
-+
-+	/* The prescaler is align on power of 2 and start at 2 ^ PR_SHIFT. */
-+	presc = roundup_pow_of_two(presc);
-+	iwdg_pr = presc <= 1 << PR_SHIFT ? 0 : ilog2(presc) - PR_SHIFT;
-+	iwdg_rlr = ((timeout * wdt->rate) / presc) - 1;
- 
- 	/* enable write access */
- 	reg_write(wdt->regs, IWDG_KR, KR_KEY_EWA);
- 
- 	/* set prescaler & reload registers */
--	reg_write(wdt->regs, IWDG_PR, PR_256); /* prescaler fix to 256 */
--	reg_write(wdt->regs, IWDG_RLR, reload);
-+	reg_write(wdt->regs, IWDG_PR, iwdg_pr);
-+	reg_write(wdt->regs, IWDG_RLR, iwdg_rlr);
- 	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
- 
- 	/* wait for the registers to be updated (max 100ms) */
-@@ -150,7 +164,7 @@ static int stm32_iwdg_clk_init(struct platform_device *pdev,
- 	}
- 
- 	/* optional peripheral clock */
--	if (wdt->has_pclk) {
-+	if (wdt->data->has_pclk) {
- 		wdt->clk_pclk = devm_clk_get(&pdev->dev, "pclk");
- 		if (IS_ERR(wdt->clk_pclk)) {
- 			dev_err(&pdev->dev, "Unable to get pclk clock\n");
-@@ -191,8 +205,8 @@ static const struct watchdog_ops stm32_iwdg_ops = {
- };
- 
- static const struct of_device_id stm32_iwdg_of_match[] = {
--	{ .compatible = "st,stm32-iwdg", .data = (void *)!HAS_PCLK },
--	{ .compatible = "st,stm32mp1-iwdg", .data = (void *)HAS_PCLK },
-+	{ .compatible = "st,stm32-iwdg", .data = &stm32_iwdg_data },
-+	{ .compatible = "st,stm32mp1-iwdg", .data = &stm32mp1_iwdg_data },
- 	{ /* end node */ }
- };
- MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
-@@ -200,20 +214,17 @@ MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
- static int stm32_iwdg_probe(struct platform_device *pdev)
- {
- 	struct watchdog_device *wdd;
--	const struct of_device_id *match;
- 	struct stm32_iwdg *wdt;
- 	struct resource *res;
- 	int ret;
- 
--	match = of_match_device(stm32_iwdg_of_match, &pdev->dev);
--	if (!match)
--		return -ENODEV;
--
- 	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
- 	if (!wdt)
- 		return -ENOMEM;
- 
--	wdt->has_pclk = match->data;
-+	wdt->data = of_device_get_match_data(&pdev->dev);
-+	if (!wdt->data)
-+		return -ENODEV;
- 
- 	/* This is the timer base. */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -231,8 +242,9 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
- 	wdd = &wdt->wdd;
- 	wdd->info = &stm32_iwdg_info;
- 	wdd->ops = &stm32_iwdg_ops;
--	wdd->min_timeout = ((RLR_MIN + 1) * 256) / wdt->rate;
--	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * 256 * 1000) / wdt->rate;
-+	wdd->min_timeout = 1;
-+	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * wdt->data->max_prescaler *
-+				    1000) / wdt->rate;
- 	wdd->parent = &pdev->dev;
- 
- 	watchdog_set_drvdata(wdd, wdt);
--- 
-2.7.4
+yep, much better, thanks.
+
+> > +	execl("/bin/sleep", "sleep", waittime, (char *)NULL);
+> > +
+> > +	ksft_print_msg("Child Thread: DONE. pid %d tid %d\n",
+> > +			getpid(), syscall(SYS_gettid));
+> > +	return NULL;
+> > +}
+> > +
+> > +static int poll_pidfd(const char *test_name, int pidfd)
+> > +{
+> > +	int c;
+> > +	int epoll_fd = epoll_create1(0);
+> 
+> You probably don't need the epoll_fd after an exec, so:
+> int epoll_fd = epoll_create1(EPOLL_CLOEXEC);
+
+done
+
+> > +	struct epoll_event event, events[MAX_EVENTS];
+> > +
+> > +	if (epoll_fd == -1)
+> > +		ksft_exit_fail_msg("%s test: Failed to create epoll file descriptor\n",
+> > +				   test_name);
+> 
+> I think logging the errno is helpful here. 
+> 
+> > +
+> > +	event.events = EPOLLIN;
+> > +	event.data.fd = pidfd;
+> > +
+> > +	if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, pidfd, &event)) {
+> > +		ksft_print_msg("%s test: Failed to add epoll file descriptor: Skipping\n",
+> > +			       test_name);
+> 
+> I think logging the errno is helpful here. 
+
+no where else in other tests are we logging this. I don't have a preference.
+Should ksft_exit_fail_msg() do this automatically? Although it could be
+logging a stale errno if it did.  Anyway I added logging of errno here, as
+you suggest.
+
+> > +		_exit(PIDFD_SKIP);
+> 
+> Why do you skip when you can't add the pidfd to the epoll loop? Why
+> shouldn't this be a test failure?
+
+The original approach was to do this for proc pidfd, which means older
+kernels could get a pidfd but couldn't do poll, in this case I wanted the
+test to be skipped. Since we are now basing this on CLONE_PIDFD, there is
+less of a reason for that. So I will just do ksft_exit_fail_msg() here.
+
+> > +	}
+> > +
+> > +	c = epoll_wait(epoll_fd, events, MAX_EVENTS, 5000);
+> 
+> Uhm 5000 timeout? Either do a -1 or something that is noticeably
+> shorter, please. :)
+
+I want a timeout for the case where epoll_wait blocks indefinitely, in which
+case it should be a test failure.
+
+> > +	if (c != 1 || !(events[0].events & EPOLLIN))
+> > +		ksft_exit_fail_msg("%s test: Unexpected epoll_wait result (c=%d, events=%x)\n",
+> > +				   test_name, c, events[0].events);
+> 
+> I think logging the errno is helpful here. 
+
+Ok, done.
+
+> > +
+> > +	close(epoll_fd);
+> > +	return events[0].events;
+> > +
+> > +}
+> > +
+> > +static int child_poll_exec_test(void *args)
+> > +{
+> > +	pthread_t t1;
+> > +
+> > +	ksft_print_msg("Child (pidfd): starting. pid %d tid %d\n", getpid(),
+> > +			syscall(SYS_gettid));
+> > +	pthread_create(&t1, NULL, test_pidfd_poll_exec_thread, NULL);
+> > +	/*
+> > +	 * Exec in the non-leader thread will destroy the leader immediately.
+> > +	 * If the wait in the parent returns too soon, the test fails.
+> > +	 */
+> > +	while (1)
+> > +		;
+> 
+> Wouldn't sleep(<some-value>) be better here or at least a:
+> 
+> while (true)
+>         sleep(<some-sensible-value);
+> 
+> instead of a busy loop?
+
+Good catch, I will do sleep(1);
+
+> > +}
+> > +
+> > +int test_pidfd_poll_exec(int use_waitpid)
+> > +{
+> > +	int pid, pidfd = 0;
+> > +	int status, ret;
+> > +	pthread_t t1;
+> > +	time_t prog_start = time(NULL);
+> > +	const char *test_name = "pidfd_poll check for premature notification on child thread exec";
+> > +
+> > +	ksft_print_msg("Parent: pid: %d\n", getpid());
+> > +	pid = pidfd_clone(CLONE_PIDFD, &pidfd, child_poll_exec_test);
+> 
+> That needs to check for error aka
+> if (pid < 0)
+> I think Tycho mentioned this already.
+
+fixed, thanks to Tycho as well!
+
+> > +
+> > +	ksft_print_msg("Parent: Waiting for Child (%d) to complete.\n", pid);
+> > +
+> > +	if (use_waitpid) {
+> > +		ret = waitpid(pid, &status, 0);
+> > +		if (ret == -1)
+> > +			ksft_print_msg("Parent: error\n");
+> > +
+> > +		if (ret == pid)
+> > +			ksft_print_msg("Parent: Child process waited for.\n");
+> > +	} else {
+> > +		poll_pidfd(test_name, pidfd);
+> 
+> Either make poll_pidfd() void or check the error value. One of the two.
+
+done
+
+> > +	}
+> > +
+> > +	time_t prog_time = time(NULL) - prog_start;
+> > +
+> > +	ksft_print_msg("Time waited for child: %lu\n", prog_time);
+> > +
+> > +	close(pidfd);
+> > +
+> > +	if (prog_time < CHILD_THREAD_MIN_WAIT || prog_time > CHILD_THREAD_MIN_WAIT + 2)
+> 
+> This timing-based testing seems kinda odd to be honest. Can't we do
+> something better than this?
+
+will try..
+
+> > +		ksft_exit_fail_msg("%s test: Failed\n", test_name);
+> > +	else
+> > +		ksft_test_result_pass("%s test: Passed\n", test_name);
+> > +}
+> > +
+> > +void *test_pidfd_poll_leader_exit_thread(void *priv)
+> > +{
+> > +	char waittime[256];
+> 
+> Unused variable
+
+ouch, fixed
+
+> > +
+> > +	ksft_print_msg("Child Thread: starting. pid %d tid %d ; and sleeping\n",
+> > +			getpid(), syscall(SYS_gettid));
+> > +	sleep(CHILD_THREAD_MIN_WAIT);
+> > +	ksft_print_msg("Child Thread: DONE. pid %d tid %d\n", getpid(), syscall(SYS_gettid));
+> > +	return NULL;
+> > +}
+> > +
+> > +static time_t *child_exit_secs;
+> > +static int child_poll_leader_exit_test(void *args)
+> > +{
+> > +	pthread_t t1, t2;
+> > +
+> > +	ksft_print_msg("Child: starting. pid %d tid %d\n", getpid(), syscall(SYS_gettid));
+> > +	pthread_create(&t1, NULL, test_pidfd_poll_leader_exit_thread, NULL);
+> > +	pthread_create(&t2, NULL, test_pidfd_poll_leader_exit_thread, NULL);
+> > +
+> > +	/*
+> > +	 * glibc exit calls exit_group syscall, so explicity call exit only
+> > +	 * so that only the group leader exits, leaving the threads alone.
+> > +	 */
+> > +	*child_exit_secs = time(NULL);
+> > +	syscall(SYS_exit, 0);
+> > +}
+> > +
+> > +int test_pidfd_poll_leader_exit(int use_waitpid)
+> 
+> static
+
+fixed
+
+> > +{
+> > +	int pid, pidfd = 0;
+> > +	int status, ret;
+> > +	time_t prog_start = time(NULL);
+> > +	const char *test_name = "pidfd_poll check for premature notification on non-empty"
+> > +				"group leader exit";
+> > +
+> > +	child_exit_secs = mmap(NULL, sizeof *child_exit_secs, PROT_READ | PROT_WRITE,
+> > +			MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+> 
+> Error checking, please:
+> 
+> if (child_exit_secs == MAP_FAILED)
+
+done
+
+> > +
+> > +	ksft_print_msg("Parent: pid: %d\n", getpid());
+> > +	pid = pidfd_clone(CLONE_PIDFD, &pidfd, child_poll_leader_exit_test);
+> 
+> Error checking, please:
+> 
+> if (pid < 0)
+
+done
+
+> > +
+> > +	ksft_print_msg("Parent: Waiting for Child (%d) to complete.\n", pid);
+> > +
+> > +	if (use_waitpid) {
+> > +		ret = waitpid(pid, &status, 0);
+> > +		if (ret == -1)
+> > +			ksft_print_msg("Parent: error\n");
+> > +	} else {
+> > +		/*
+> > +		 * This sleep tests for the case where if the child exits, and is in
+> > +		 * EXIT_ZOMBIE, but the thread group leader is non-empty, then the poll
+> > +		 * doesn't prematurely return even though there are active threads
+> > +		 */
+> > +		sleep(1);
+> > +		poll_pidfd(test_name, pidfd);
+> 
+> Make poll_pidfd() void or check error, please.
+
+done, made void
+
+> > +	}
+> > +
+> > +	if (ret == pid)
+> > +		ksft_print_msg("Parent: Child process waited for.\n");
+> > +
+> > +	time_t since_child_exit = time(NULL) - *child_exit_secs;
+> > +
+> > +	ksft_print_msg("Time since child exit: %lu\n", since_child_exit);
+> > +
+> > +	close(pidfd);
+> > +
+> > +	if (since_child_exit < CHILD_THREAD_MIN_WAIT ||
+> > +			since_child_exit > CHILD_THREAD_MIN_WAIT + 2)
+> 
+> This looks very magical. Especially without a comment. Now you add
+> random +2. Please comment it or better, come up with a non-timing
+> based test.
+
+Will try a non-timing test, need to plan it out. Other comments are addressed
+and will post again soon, thanks!
+
+ - Joel
 
