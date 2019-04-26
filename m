@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB4FC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3B2C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C71206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CD72089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271737;
-	bh=Akd9XLlO/3SbTlSw3Nknepz3l6TV5SDk2DVA5XUMGLo=;
+	s=default; t=1556271745;
+	bh=K2ySgkkJ/vVyb5H6n7ZlgvywQ0H1fvKofiIswVl6OwA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=iUk2JGm2RIiKNY2Kxv67b33AagghH1e4wJsCS9NHPISov9XKaDadXH6ys5/o7KNe4
-	 0Npt7+3kXFX7mh95pt6Wj9V68xcvtUsIi6o5v5w9nbG9357ZVNfu3u08/+BlYTlCOe
-	 ga6bHMjSc1iPN3tRnTckgqOB920RT8cYFOHi2Lu0=
+	b=aIJ9OpWJnDWqYXbeYhnZgDEpY5Hpqo7o+D/ijwFgHlG+w+q82hkrOCO3trSd4DxnI
+	 aY2CYoTCRYgerL16Ak39BpxeuQLjziMetEsOap1G+UfXCy7pUXNVG3FhwUriO2+sO8
+	 YuduRpyEPuqD4aDjcEPhF+FXVnx7ZGN+UgCE8OWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfDZJmQ (ORCPT
+        id S1727168AbfDZJmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:42:16 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48208 "EHLO
+        Fri, 26 Apr 2019 05:42:24 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47442 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfDZJlv (ORCPT
+        with ESMTP id S1726934AbfDZJl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:41:51 -0400
+        Fri, 26 Apr 2019 05:41:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=KPAj3K1tqt50q6KsRsCBTP5KhLUZeD3NBXz1MU3TLYU=; b=cD6IjRWwSxdi
-        nY3FKM6guPUWhlpt8ULwqp+2XzRt94qyWSOaznY486bRPrWJFmyT0tGLVp6/PsJ04i6Irw4C4UCNC
-        AQ53MOPI+ZW+DtLRL62gvKPFQYwjLTHd8H2J1owWd+UR077wGqmi0t/AV3bo7XR7rynVebQXFRYoV
-        089Yc=;
+        List-Archive; bh=3ohanWmhL3ADLMG2WPamJnmRoopc2IqEaIFGICbebAA=; b=F65+DhzwGQVh
+        CENgZRuKphVpQt6ofbbFhrLcb2NNuGalvY4Cpx9v2cJEv/nVvndW6jgx27wgXuE8+UO2HewsRtKxr
+        SKSCHmpJFhXY2mDaSydG9ox5GxT3zJ0jJZz172+76/D9GsOkUmnv+S7igKivPine65pli0kjtbGY0
+        Q6vek=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxMb-0003MA-F9; Fri, 26 Apr 2019 09:41:49 +0000
+        id 1hJxMC-0003LX-6p; Fri, 26 Apr 2019 09:41:24 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id EBAEA441D3B; Fri, 26 Apr 2019 10:41:47 +0100 (BST)
+        id DBA0B441D3B; Fri, 26 Apr 2019 10:41:22 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: anatop: Remove unneeded fields from struct anatop_regulator" to the regulator tree
+Subject: Applied "regulator: db8500-prcmu: Convert to use simplified DT parsing" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094147.EBAEA441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:41:47 +0100 (BST)
+Message-Id: <20190426094122.DBA0B441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:41:22 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: anatop: Remove unneeded fields from struct anatop_regulator
+   regulator: db8500-prcmu: Convert to use simplified DT parsing
 
 has been applied to the regulator tree at
 
@@ -85,179 +85,320 @@ to this mail.
 Thanks,
 Mark
 
-From f34a269229ec0d51f84f557238d1e4dcda8464d2 Mon Sep 17 00:00:00 2001
+From 92722a8fac5349fa2f249dcb366c6083d193922f Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Wed, 10 Apr 2019 00:10:39 +0800
-Subject: [PATCH] regulator: anatop: Remove unneeded fields from struct
- anatop_regulator
+Date: Fri, 12 Apr 2019 09:54:20 +0800
+Subject: [PATCH] regulator: db8500-prcmu: Convert to use simplified DT parsing
 
-These fields are only used in anatop_regulator_probe() so use local
-variables instead. The *initdata is not used so can be removed.
-The *anatop is renamed to *regmap for better readability.
-Use u32 instead of int for the variables used as third argument of
-of_property_read_u32().
+Use regulator core's simplified DT parsing code to simplify the driver
+implementation.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/anatop-regulator.c | 63 ++++++++++++----------------
- 1 file changed, 27 insertions(+), 36 deletions(-)
+ drivers/regulator/db8500-prcmu.c | 139 ++++++++++---------------------
+ 1 file changed, 42 insertions(+), 97 deletions(-)
 
-diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
-index d9d8155ed8cb..754739d004e5 100644
---- a/drivers/regulator/anatop-regulator.c
-+++ b/drivers/regulator/anatop-regulator.c
-@@ -23,18 +23,10 @@
- #define LDO_FET_FULL_ON			0x1f
- 
- struct anatop_regulator {
--	u32 control_reg;
--	struct regmap *anatop;
--	int vol_bit_shift;
--	int vol_bit_width;
- 	u32 delay_reg;
- 	int delay_bit_shift;
- 	int delay_bit_width;
--	int min_bit_val;
--	int min_voltage;
--	int max_voltage;
- 	struct regulator_desc rdesc;
--	struct regulator_init_data *initdata;
- 	bool bypass;
- 	int sel;
+diff --git a/drivers/regulator/db8500-prcmu.c b/drivers/regulator/db8500-prcmu.c
+index 863bd3de42a7..c2a3ccfc510e 100644
+--- a/drivers/regulator/db8500-prcmu.c
++++ b/drivers/regulator/db8500-prcmu.c
+@@ -214,6 +214,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_VAPE] = {
+ 		.desc = {
+ 			.name	= "db8500-vape",
++			.of_match = of_match_ptr("db8500_vape"),
+ 			.id	= DB8500_REGULATOR_VAPE,
+ 			.ops	= &db8500_regulator_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -223,6 +224,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_VARM] = {
+ 		.desc = {
+ 			.name	= "db8500-varm",
++			.of_match = of_match_ptr("db8500_varm"),
+ 			.id	= DB8500_REGULATOR_VARM,
+ 			.ops	= &db8500_regulator_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -232,6 +234,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_VMODEM] = {
+ 		.desc = {
+ 			.name	= "db8500-vmodem",
++			.of_match = of_match_ptr("db8500_vmodem"),
+ 			.id	= DB8500_REGULATOR_VMODEM,
+ 			.ops	= &db8500_regulator_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -241,6 +244,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_VPLL] = {
+ 		.desc = {
+ 			.name	= "db8500-vpll",
++			.of_match = of_match_ptr("db8500_vpll"),
+ 			.id	= DB8500_REGULATOR_VPLL,
+ 			.ops	= &db8500_regulator_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -250,6 +254,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_VSMPS1] = {
+ 		.desc = {
+ 			.name	= "db8500-vsmps1",
++			.of_match = of_match_ptr("db8500_vsmps1"),
+ 			.id	= DB8500_REGULATOR_VSMPS1,
+ 			.ops	= &db8500_regulator_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -259,6 +264,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_VSMPS2] = {
+ 		.desc = {
+ 			.name	= "db8500-vsmps2",
++			.of_match = of_match_ptr("db8500_vsmps2"),
+ 			.id	= DB8500_REGULATOR_VSMPS2,
+ 			.ops	= &db8500_regulator_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -271,6 +277,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_VSMPS3] = {
+ 		.desc = {
+ 			.name	= "db8500-vsmps3",
++			.of_match = of_match_ptr("db8500_vsmps3"),
+ 			.id	= DB8500_REGULATOR_VSMPS3,
+ 			.ops	= &db8500_regulator_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -280,6 +287,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_VRF1] = {
+ 		.desc = {
+ 			.name	= "db8500-vrf1",
++			.of_match = of_match_ptr("db8500_vrf1"),
+ 			.id	= DB8500_REGULATOR_VRF1,
+ 			.ops	= &db8500_regulator_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -289,6 +297,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_SVAMMDSP] = {
+ 		.desc = {
+ 			.name	= "db8500-sva-mmdsp",
++			.of_match = of_match_ptr("db8500_sva_mmdsp"),
+ 			.id	= DB8500_REGULATOR_SWITCH_SVAMMDSP,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -299,6 +308,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_SVAMMDSPRET] = {
+ 		.desc = {
+ 			.name	= "db8500-sva-mmdsp-ret",
++			.of_match = of_match_ptr("db8500_sva_mmdsp_ret"),
+ 			.id	= DB8500_REGULATOR_SWITCH_SVAMMDSPRET,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -310,6 +320,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_SVAPIPE] = {
+ 		.desc = {
+ 			.name	= "db8500-sva-pipe",
++			.of_match = of_match_ptr("db8500_sva_pipe"),
+ 			.id	= DB8500_REGULATOR_SWITCH_SVAPIPE,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -320,6 +331,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_SIAMMDSP] = {
+ 		.desc = {
+ 			.name	= "db8500-sia-mmdsp",
++			.of_match = of_match_ptr("db8500_sia_mmdsp"),
+ 			.id	= DB8500_REGULATOR_SWITCH_SIAMMDSP,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -330,6 +342,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_SIAMMDSPRET] = {
+ 		.desc = {
+ 			.name	= "db8500-sia-mmdsp-ret",
++			.of_match = of_match_ptr("db8500_sia_mmdsp_ret"),
+ 			.id	= DB8500_REGULATOR_SWITCH_SIAMMDSPRET,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -341,6 +354,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_SIAPIPE] = {
+ 		.desc = {
+ 			.name	= "db8500-sia-pipe",
++			.of_match = of_match_ptr("db8500_sia_pipe"),
+ 			.id	= DB8500_REGULATOR_SWITCH_SIAPIPE,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -351,6 +365,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_SGA] = {
+ 		.desc = {
+ 			.name	= "db8500-sga",
++			.of_match = of_match_ptr("db8500_sga"),
+ 			.id	= DB8500_REGULATOR_SWITCH_SGA,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -361,6 +376,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_B2R2_MCDE] = {
+ 		.desc = {
+ 			.name	= "db8500-b2r2-mcde",
++			.of_match = of_match_ptr("db8500_b2r2_mcde"),
+ 			.id	= DB8500_REGULATOR_SWITCH_B2R2_MCDE,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -371,6 +387,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_ESRAM12] = {
+ 		.desc = {
+ 			.name	= "db8500-esram12",
++			.of_match = of_match_ptr("db8500_esram12"),
+ 			.id	= DB8500_REGULATOR_SWITCH_ESRAM12,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -382,6 +399,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_ESRAM12RET] = {
+ 		.desc = {
+ 			.name	= "db8500-esram12-ret",
++			.of_match = of_match_ptr("db8500_esram12_ret"),
+ 			.id	= DB8500_REGULATOR_SWITCH_ESRAM12RET,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -393,6 +411,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_ESRAM34] = {
+ 		.desc = {
+ 			.name	= "db8500-esram34",
++			.of_match = of_match_ptr("db8500_esram34"),
+ 			.id	= DB8500_REGULATOR_SWITCH_ESRAM34,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -404,6 +423,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	[DB8500_REGULATOR_SWITCH_ESRAM34RET] = {
+ 		.desc = {
+ 			.name	= "db8500-esram34-ret",
++			.of_match = of_match_ptr("db8500_esram34_ret"),
+ 			.id	= DB8500_REGULATOR_SWITCH_ESRAM34RET,
+ 			.ops	= &db8500_regulator_switch_ops,
+ 			.type	= REGULATOR_VOLTAGE,
+@@ -414,113 +434,38 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
+ 	},
  };
-@@ -55,7 +47,7 @@ static int anatop_regmap_set_voltage_time_sel(struct regulator_dev *reg,
- 		 * to calculate how many steps LDO need to
- 		 * ramp up, and how much delay needed. (us)
- 		 */
--		regmap_read(anatop_reg->anatop, anatop_reg->delay_reg, &val);
-+		regmap_read(reg->regmap, anatop_reg->delay_reg, &val);
- 		val = (val >> anatop_reg->delay_bit_shift) &
- 			((1 << anatop_reg->delay_bit_width) - 1);
- 		ret = (new_sel - old_sel) * (LDO_RAMP_UP_UNIT_IN_CYCLES <<
-@@ -170,6 +162,13 @@ static int anatop_regulator_probe(struct platform_device *pdev)
- 	struct anatop_regulator *sreg;
- 	struct regulator_init_data *initdata;
+ 
+-static int db8500_regulator_register(struct platform_device *pdev,
+-					struct regulator_init_data *init_data,
+-					int id,
+-					struct device_node *np)
++static int db8500_regulator_probe(struct platform_device *pdev)
+ {
++	struct regulator_init_data *db8500_init_data;
+ 	struct dbx500_regulator_info *info;
  	struct regulator_config config = { };
-+	struct regmap *regmap;
-+	u32 control_reg;
-+	u32 vol_bit_shift;
-+	u32 vol_bit_width;
-+	u32 min_bit_val;
-+	u32 min_voltage;
-+	u32 max_voltage;
- 	int ret = 0;
- 	u32 val;
+-	int err;
+-
+-	/* assign per-regulator data */
+-	info = &dbx500_regulator_info[id];
+-	info->dev = &pdev->dev;
+-
+-	config.dev = &pdev->dev;
+-	config.init_data = init_data;
+-	config.driver_data = info;
+-	config.of_node = np;
+-
+-	/* register with the regulator framework */
+-	info->rdev = devm_regulator_register(&pdev->dev, &info->desc, &config);
+-	if (IS_ERR(info->rdev)) {
+-		err = PTR_ERR(info->rdev);
+-		dev_err(&pdev->dev, "failed to register %s: err %i\n",
+-			info->desc.name, err);
+-		return err;
+-	}
+-
+-	dev_dbg(rdev_get_dev(info->rdev),
+-		"regulator-%s-probed\n", info->desc.name);
++	int err, i;
  
-@@ -192,48 +191,41 @@ static int anatop_regulator_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+-	return 0;
+-}
+-
+-static struct of_regulator_match db8500_regulator_matches[] = {
+-	{ .name	= "db8500_vape",          .driver_data = (void *) DB8500_REGULATOR_VAPE, },
+-	{ .name	= "db8500_varm",          .driver_data = (void *) DB8500_REGULATOR_VARM, },
+-	{ .name	= "db8500_vmodem",        .driver_data = (void *) DB8500_REGULATOR_VMODEM, },
+-	{ .name	= "db8500_vpll",          .driver_data = (void *) DB8500_REGULATOR_VPLL, },
+-	{ .name	= "db8500_vsmps1",        .driver_data = (void *) DB8500_REGULATOR_VSMPS1, },
+-	{ .name	= "db8500_vsmps2",        .driver_data = (void *) DB8500_REGULATOR_VSMPS2, },
+-	{ .name	= "db8500_vsmps3",        .driver_data = (void *) DB8500_REGULATOR_VSMPS3, },
+-	{ .name	= "db8500_vrf1",          .driver_data = (void *) DB8500_REGULATOR_VRF1, },
+-	{ .name	= "db8500_sva_mmdsp",     .driver_data = (void *) DB8500_REGULATOR_SWITCH_SVAMMDSP, },
+-	{ .name	= "db8500_sva_mmdsp_ret", .driver_data = (void *) DB8500_REGULATOR_SWITCH_SVAMMDSPRET, },
+-	{ .name	= "db8500_sva_pipe",      .driver_data = (void *) DB8500_REGULATOR_SWITCH_SVAPIPE, },
+-	{ .name	= "db8500_sia_mmdsp",     .driver_data = (void *) DB8500_REGULATOR_SWITCH_SIAMMDSP, },
+-	{ .name	= "db8500_sia_mmdsp_ret", .driver_data = (void *) DB8500_REGULATOR_SWITCH_SIAMMDSPRET, },
+-	{ .name	= "db8500_sia_pipe",      .driver_data = (void *) DB8500_REGULATOR_SWITCH_SIAPIPE, },
+-	{ .name	= "db8500_sga",           .driver_data = (void *) DB8500_REGULATOR_SWITCH_SGA, },
+-	{ .name	= "db8500_b2r2_mcde",     .driver_data = (void *) DB8500_REGULATOR_SWITCH_B2R2_MCDE, },
+-	{ .name	= "db8500_esram12",       .driver_data = (void *) DB8500_REGULATOR_SWITCH_ESRAM12, },
+-	{ .name	= "db8500_esram12_ret",   .driver_data = (void *) DB8500_REGULATOR_SWITCH_ESRAM12RET, },
+-	{ .name	= "db8500_esram34",       .driver_data = (void *) DB8500_REGULATOR_SWITCH_ESRAM34, },
+-	{ .name	= "db8500_esram34_ret",   .driver_data = (void *) DB8500_REGULATOR_SWITCH_ESRAM34RET, },
+-};
+-
+-static int
+-db8500_regulator_of_probe(struct platform_device *pdev,
+-			struct device_node *np)
+-{
+-	int i, err;
++	db8500_init_data = dev_get_platdata(&pdev->dev);
  
- 	initdata->supply_regulator = "vin";
--	sreg->initdata = initdata;
- 
- 	anatop_np = of_get_parent(np);
- 	if (!anatop_np)
- 		return -ENODEV;
--	sreg->anatop = syscon_node_to_regmap(anatop_np);
-+	regmap = syscon_node_to_regmap(anatop_np);
- 	of_node_put(anatop_np);
--	if (IS_ERR(sreg->anatop))
--		return PTR_ERR(sreg->anatop);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
- 
--	ret = of_property_read_u32(np, "anatop-reg-offset",
--				   &sreg->control_reg);
-+	ret = of_property_read_u32(np, "anatop-reg-offset", &control_reg);
- 	if (ret) {
- 		dev_err(dev, "no anatop-reg-offset property set\n");
- 		return ret;
- 	}
--	ret = of_property_read_u32(np, "anatop-vol-bit-width",
--				   &sreg->vol_bit_width);
-+	ret = of_property_read_u32(np, "anatop-vol-bit-width", &vol_bit_width);
- 	if (ret) {
- 		dev_err(dev, "no anatop-vol-bit-width property set\n");
- 		return ret;
- 	}
--	ret = of_property_read_u32(np, "anatop-vol-bit-shift",
--				   &sreg->vol_bit_shift);
-+	ret = of_property_read_u32(np, "anatop-vol-bit-shift", &vol_bit_shift);
- 	if (ret) {
- 		dev_err(dev, "no anatop-vol-bit-shift property set\n");
- 		return ret;
- 	}
--	ret = of_property_read_u32(np, "anatop-min-bit-val",
--				   &sreg->min_bit_val);
-+	ret = of_property_read_u32(np, "anatop-min-bit-val", &min_bit_val);
- 	if (ret) {
- 		dev_err(dev, "no anatop-min-bit-val property set\n");
- 		return ret;
- 	}
--	ret = of_property_read_u32(np, "anatop-min-voltage",
--				   &sreg->min_voltage);
-+	ret = of_property_read_u32(np, "anatop-min-voltage", &min_voltage);
- 	if (ret) {
- 		dev_err(dev, "no anatop-min-voltage property set\n");
- 		return ret;
- 	}
--	ret = of_property_read_u32(np, "anatop-max-voltage",
--				   &sreg->max_voltage);
-+	ret = of_property_read_u32(np, "anatop-max-voltage", &max_voltage);
- 	if (ret) {
- 		dev_err(dev, "no anatop-max-voltage property set\n");
- 		return ret;
-@@ -247,24 +239,23 @@ static int anatop_regulator_probe(struct platform_device *pdev)
- 	of_property_read_u32(np, "anatop-delay-bit-shift",
- 			     &sreg->delay_bit_shift);
- 
--	rdesc->n_voltages = (sreg->max_voltage - sreg->min_voltage) / 25000 + 1
--			    + sreg->min_bit_val;
--	rdesc->min_uV = sreg->min_voltage;
-+	rdesc->n_voltages = (max_voltage - min_voltage) / 25000 + 1
-+			    + min_bit_val;
-+	rdesc->min_uV = min_voltage;
- 	rdesc->uV_step = 25000;
--	rdesc->linear_min_sel = sreg->min_bit_val;
--	rdesc->vsel_reg = sreg->control_reg;
--	rdesc->vsel_mask = ((1 << sreg->vol_bit_width) - 1) <<
--			   sreg->vol_bit_shift;
-+	rdesc->linear_min_sel = min_bit_val;
-+	rdesc->vsel_reg = control_reg;
-+	rdesc->vsel_mask = ((1 << vol_bit_width) - 1) << vol_bit_shift;
- 	rdesc->min_dropout_uV = 125000;
- 
- 	config.dev = &pdev->dev;
- 	config.init_data = initdata;
- 	config.driver_data = sreg;
- 	config.of_node = pdev->dev.of_node;
--	config.regmap = sreg->anatop;
-+	config.regmap = regmap;
- 
- 	/* Only core regulators have the ramp up delay configuration. */
--	if (sreg->control_reg && sreg->delay_bit_width) {
-+	if (control_reg && sreg->delay_bit_width) {
- 		rdesc->ops = &anatop_core_rops;
- 
- 		ret = regmap_read(config.regmap, rdesc->vsel_reg, &val);
-@@ -273,7 +264,7 @@ static int anatop_regulator_probe(struct platform_device *pdev)
- 			return ret;
+ 	for (i = 0; i < ARRAY_SIZE(dbx500_regulator_info); i++) {
+-		err = db8500_regulator_register(
+-			pdev, db8500_regulator_matches[i].init_data,
+-			i, db8500_regulator_matches[i].of_node);
+-		if (err)
++		/* assign per-regulator data */
++		info = &dbx500_regulator_info[i];
++		info->dev = &pdev->dev;
++
++		config.driver_data = info;
++		config.dev = &pdev->dev;
++		if (db8500_init_data)
++			config.init_data = &db8500_init_data[i];
++
++		info->rdev = devm_regulator_register(&pdev->dev, &info->desc,
++						     &config);
++		if (IS_ERR(info->rdev)) {
++			err = PTR_ERR(info->rdev);
++			dev_err(&pdev->dev, "failed to register %s: err %i\n",
++				info->desc.name, err);
+ 			return err;
+-	}
+-
+-	return 0;
+-}
+-
+-static int db8500_regulator_probe(struct platform_device *pdev)
+-{
+-	struct regulator_init_data *db8500_init_data =
+-					dev_get_platdata(&pdev->dev);
+-	struct device_node *np = pdev->dev.of_node;
+-	int i, err;
+-
+-	/* register all regulators */
+-	if (np) {
+-		err = of_regulator_match(&pdev->dev, np,
+-					db8500_regulator_matches,
+-					ARRAY_SIZE(db8500_regulator_matches));
+-		if (err < 0) {
+-			dev_err(&pdev->dev,
+-				"Error parsing regulator init data: %d\n", err);
+-			return err;
+-		}
+-
+-		err = db8500_regulator_of_probe(pdev, np);
+-		if (err)
+-			return err;
+-	} else {
+-		for (i = 0; i < ARRAY_SIZE(dbx500_regulator_info); i++) {
+-			err = db8500_regulator_register(pdev,
+-							&db8500_init_data[i],
+-							i, NULL);
+-			if (err)
+-				return err;
  		}
- 
--		sreg->sel = (val & rdesc->vsel_mask) >> sreg->vol_bit_shift;
-+		sreg->sel = (val & rdesc->vsel_mask) >> vol_bit_shift;
- 		if (sreg->sel == LDO_FET_FULL_ON) {
- 			sreg->sel = 0;
- 			sreg->bypass = true;
-@@ -306,7 +297,7 @@ static int anatop_regulator_probe(struct platform_device *pdev)
- 			anatop_rops.disable = regulator_disable_regmap;
- 			anatop_rops.is_enabled = regulator_is_enabled_regmap;
- 
--			rdesc->enable_reg = sreg->control_reg;
-+			rdesc->enable_reg = control_reg;
- 			rdesc->enable_mask = BIT(enable_bit);
- 		}
++		dev_dbg(&pdev->dev, "regulator-%s-probed\n", info->desc.name);
  	}
+ 
+-	err = ux500_regulator_debug_init(pdev,
+-					 dbx500_regulator_info,
+-					 ARRAY_SIZE(dbx500_regulator_info));
++	ux500_regulator_debug_init(pdev, dbx500_regulator_info,
++				   ARRAY_SIZE(dbx500_regulator_info));
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
