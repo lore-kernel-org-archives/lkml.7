@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F45C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6969C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6924E2087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7642920B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlRIHgbr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfcv0jVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfD0Gok (ORCPT
+        id S1727261AbfD0Goj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:44:40 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43190 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfD0GnR (ORCPT
+        Sat, 27 Apr 2019 02:44:39 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42640 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfD0GnV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:43:17 -0400
-Received: by mail-pl1-f196.google.com with SMTP id n8so2559750plp.10;
-        Fri, 26 Apr 2019 23:43:17 -0700 (PDT)
+        Sat, 27 Apr 2019 02:43:21 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w25so2743878pfi.9;
+        Fri, 26 Apr 2019 23:43:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3mFI7V2IpbwOhuCcp+g9CO2dE2meFXsvyyAeb18NWyo=;
-        b=JlRIHgbr6HB0GM/dfrBCsDnNLxTkOKzTB7qYCbAx4tDSjiPWdWErWZcgNMKz3646h4
-         C8cKj9bZkmi6cPWikKj5uJAC7SrSg/qfrmI03cXhBRcOJHEMan3BYUSQ1ScXOsNa4u3Z
-         IDQ4DfzWzmEsKN3rKTGM5uTvN695pUVNWWV4a8LMMvLzAhr7fWiHf2k7ZmkakgE11lMg
-         wbrOSfmIb0CTjB/azGiS0/j+OjbriGytqXhtU6Bd27x2yAPLaWXYIt792EgmySvUAGOQ
-         9VF/satnq8MCbRYyAQp+FRH27QsFCLaAp8PdnQobxJM8asT3n363jT4JX9FD5F/9ebkE
-         0Uqg==
+        bh=yNv4uuWY37+QDIo+8eJ5Cs1RQKFygWuhu/mUpTFc+50=;
+        b=qfcv0jVylRwgUSdFp0yVo6y3SoCAOjol9XbR7W5+lwraaEg2QoXyt+VrAjGp9wzdAn
+         BOm9G9cC4mrsWbrKkWfeWua0CLcUhNFX2UYmr160CAGJNRPhpKunjycWCJnpjaUptQXK
+         FymoezD52jYoCa9vw1d8DrTtNcDpUD3gesH2ZoYEwsgq0bZE6tTukM9zPOscjJPRRiHd
+         0d0EQKT1ASnMLtYxkgiq4MVCWAUZf/kjKC/u6ibFbPlbEhDhs/jBfSTvPAadE2T4MBPs
+         yoHMRLVUDfJJ0O31Q2uS3OPiszz2lAVHUHfzcDpTk8KxpsBn4aqr0vTCALbdk7a/EPYd
+         2uWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=3mFI7V2IpbwOhuCcp+g9CO2dE2meFXsvyyAeb18NWyo=;
-        b=Fb2V3scDSuIaD9RsJA5v4YGq3jzdnjbX11GqbT381MORxzQExTxtzQQd+InbiJk2I5
-         8nwCHLZlabvHLnuUb1X7q1n6G6Lq/gBi1Od9CKc2nioFZsnYX1ZjNYuWLsdw+0Tjn4TH
-         f7Wd0KCiZMqONkUfm7GJk0eQ7meuGsgqiOqs3QLnC8wND/R5ciH+kz4mRZ18UKMYah/V
-         uA5dSN2TFrtqLR48WmHiiqqzX2wyjKBrryKLjtqVXEgmq29oyr7m6Vhbfhs2YTdquxdN
-         RMKcwGZXCEmv1EHCyrC1ziVZ2SO2JHe/N7aE0M+yEtb4SqCs3alrnj/ITGLuuLSXP9z+
-         kSsw==
-X-Gm-Message-State: APjAAAUZpDRKLHtbae36L/n0J+5S0Y0DAH76955DFPID1Gs16v7mNlo9
-        dBSgrrl4k4tf2pSTUcT6yI8=
-X-Google-Smtp-Source: APXvYqx2WhBZnJIn8mqH1b7ixt4GF/6k4yp110M4lMdf7eXq6Mz7eqmVNfTsfdPSyk5JMfubTGyIEQ==
-X-Received: by 2002:a17:902:2927:: with SMTP id g36mr48053244plb.6.1556347396829;
-        Fri, 26 Apr 2019 23:43:16 -0700 (PDT)
+        bh=yNv4uuWY37+QDIo+8eJ5Cs1RQKFygWuhu/mUpTFc+50=;
+        b=e36XDmzl6UQXWwFVnf1Aho7OYa6xYxx/ohzJMVW9lHybNH2PZQdH8bKlDrUn2puVx/
+         HrODl7AvP0qb/38oQYRDHwjENuuFmbysNLhayn7KAjkWNwmzWxpb2p9wZZ80Kko0zlOh
+         m33D5qlUf4EpEoI6Yo/raL9lm9KANbzYTczEf8jqvJCW+uQV8cj1zbkIOY30ayPWO6t7
+         KMTkHoRxr5yKENMHV86B6bkDzj3rbmHTunDaJ+nLe5iwQLo8qNxwxouY/901FCPIJnuE
+         bdsvfOwbpKfu85tnX6J13UwqPSchNti/M6I4yUwYo9OUmbOun9hVf8MKHSlrGLRSum/Y
+         xuWQ==
+X-Gm-Message-State: APjAAAVic7Kmx599MCiIJZgM1lzjuP0Vyvi5p/aQtl7ZrzCe/B2QJNIR
+        z05MD8SrRAYoLHRVtfO0bxk=
+X-Google-Smtp-Source: APXvYqxCgMCnuubydaHXfJIDthz2u46RkKoNrhpM9xg9spe5Zm1Eq7YBRg8tloTlDMLwvkBDrQMPvQ==
+X-Received: by 2002:a63:7f0b:: with SMTP id a11mr44847434pgd.234.1556347400564;
+        Fri, 26 Apr 2019 23:43:20 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.15
+        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 23:43:16 -0700 (PDT)
+        Fri, 26 Apr 2019 23:43:20 -0700 (PDT)
 From:   nadav.amit@gmail.com
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -72,9 +72,9 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
         kristen@linux.intel.com, deneen.t.dock@intel.com,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
         Nadav Amit <namit@vmware.com>
-Subject: [PATCH v6 09/24] x86/kgdb: Avoid redundant comparison of patched code
-Date:   Fri, 26 Apr 2019 16:22:48 -0700
-Message-Id: <20190426232303.28381-10-nadav.amit@gmail.com>
+Subject: [PATCH v6 11/24] x86/kprobes: Set instruction page as executable
+Date:   Fri, 26 Apr 2019 16:22:50 -0700
+Message-Id: <20190426232303.28381-12-nadav.amit@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426232303.28381-1-nadav.amit@gmail.com>
 References: <20190426232303.28381-1-nadav.amit@gmail.com>
@@ -85,63 +85,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nadav Amit <namit@vmware.com>
 
-text_poke() already ensures that the written value is the correct one
-and fails if that is not the case. There is no need for an additional
-comparison. Remove it.
+Set the page as executable after allocation.  This patch is a
+preparatory patch for a following patch that makes module allocated
+pages non-executable.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+While at it, do some small cleanup of what appears to be unnecessary
+masking.
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/kernel/kgdb.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+ arch/x86/kernel/kprobes/core.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
-index 2b203ee5b879..13b13311b792 100644
---- a/arch/x86/kernel/kgdb.c
-+++ b/arch/x86/kernel/kgdb.c
-@@ -747,7 +747,6 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long ip)
- int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index a034cb808e7e..1591852d3ac4 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -431,8 +431,20 @@ void *alloc_insn_page(void)
+ 	void *page;
+ 
+ 	page = module_alloc(PAGE_SIZE);
+-	if (page)
+-		set_memory_ro((unsigned long)page & PAGE_MASK, 1);
++	if (!page)
++		return NULL;
++
++	/*
++	 * First make the page read-only, and only then make it executable to
++	 * prevent it from being W+X in between.
++	 */
++	set_memory_ro((unsigned long)page, 1);
++
++	/*
++	 * TODO: Once additional kernel code protection mechanisms are set, ensure
++	 * that the page was not maliciously altered and it is still zeroed.
++	 */
++	set_memory_x((unsigned long)page, 1);
+ 
+ 	return page;
+ }
+@@ -440,8 +452,12 @@ void *alloc_insn_page(void)
+ /* Recover page to RW mode before releasing it */
+ void free_insn_page(void *page)
  {
- 	int err;
--	char opc[BREAK_INSTR_SIZE];
+-	set_memory_nx((unsigned long)page & PAGE_MASK, 1);
+-	set_memory_rw((unsigned long)page & PAGE_MASK, 1);
++	/*
++	 * First make the page non-executable, and only then make it writable to
++	 * prevent it from being W+X in between.
++	 */
++	set_memory_nx((unsigned long)page, 1);
++	set_memory_rw((unsigned long)page, 1);
+ 	module_memfree(page);
+ }
  
- 	bpt->type = BP_BREAKPOINT;
- 	err = probe_kernel_read(bpt->saved_instr, (char *)bpt->bpt_addr,
-@@ -766,11 +765,6 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- 		return -EBUSY;
- 	text_poke_kgdb((void *)bpt->bpt_addr, arch_kgdb_ops.gdb_bpt_instr,
- 		       BREAK_INSTR_SIZE);
--	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
--	if (err)
--		return err;
--	if (memcmp(opc, arch_kgdb_ops.gdb_bpt_instr, BREAK_INSTR_SIZE))
--		return -EINVAL;
- 	bpt->type = BP_POKE_BREAKPOINT;
- 
- 	return err;
-@@ -778,9 +772,6 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- 
- int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
- {
--	int err;
--	char opc[BREAK_INSTR_SIZE];
--
- 	if (bpt->type != BP_POKE_BREAKPOINT)
- 		goto knl_write;
- 	/*
-@@ -791,10 +782,7 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
- 		goto knl_write;
- 	text_poke_kgdb((void *)bpt->bpt_addr, bpt->saved_instr,
- 		       BREAK_INSTR_SIZE);
--	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
--	if (err || memcmp(opc, bpt->saved_instr, BREAK_INSTR_SIZE))
--		goto knl_write;
--	return err;
-+	return 0;
- 
- knl_write:
- 	return probe_kernel_write((char *)bpt->bpt_addr,
 -- 
 2.17.1
 
