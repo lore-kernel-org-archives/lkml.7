@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3230EC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EA7C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052902084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2862084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfDZHdj (ORCPT
+        id S1726795AbfDZHdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:33:39 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:2747 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725899AbfDZHbs (ORCPT
+        Fri, 26 Apr 2019 03:33:41 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29121 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726088AbfDZHbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Apr 2019 03:31:48 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 26 Apr 2019 00:31:40 -0700
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Fri, 26 Apr 2019 00:31:44 -0700
 Received: from sc2-haas01-esx0118.eng.vmware.com (sc2-haas01-esx0118.eng.vmware.com [10.172.44.118])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 9879D412A1;
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 8042F412A4;
         Fri, 26 Apr 2019 00:31:45 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
@@ -33,7 +33,7 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Andy Lutomirski <luto@kernel.org>,
         Ingo Molnar <mingo@redhat.com>
 CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <hpa@zytor.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Nadav Amit <nadav.amit@gmail.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         <linux_dti@icloud.com>, <linux-integrity@vger.kernel.org>,
@@ -43,218 +43,83 @@ CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <hpa@zytor.com>,
         <ard.biesheuvel@linaro.org>, <kristen@linux.intel.com>,
         <deneen.t.dock@intel.com>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>
-Subject: [PATCH v5 07/23] x86/alternative: Use temporary mm for text poking
-Date:   Thu, 25 Apr 2019 17:11:27 -0700
-Message-ID: <20190426001143.4983-8-namit@vmware.com>
+        Nadav Amit <namit@vmware.com>
+Subject: [PATCH v5 04/23] x86/mm: Save debug registers when loading a temporary mm
+Date:   Thu, 25 Apr 2019 17:11:24 -0700
+Message-ID: <20190426001143.4983-5-namit@vmware.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426001143.4983-1-namit@vmware.com>
 References: <20190426001143.4983-1-namit@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: namit@vmware.com does not
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: namit@vmware.com does not
  designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-text_poke() can potentially compromise security as it sets temporary
-PTEs in the fixmap. These PTEs might be used to rewrite the kernel code
-from other cores accidentally or maliciously, if an attacker gains the
-ability to write onto kernel memory.
-
-Moreover, since remote TLBs are not flushed after the temporary PTEs are
-removed, the time-window in which the code is writable is not limited if
-the fixmap PTEs - maliciously or accidentally - are cached in the TLB.
-To address these potential security hazards, use a temporary mm for
-patching the code.
-
-Finally, text_poke() is also not conservative enough when mapping pages,
-as it always tries to map 2 pages, even when a single one is sufficient.
-So try to be more conservative, and do not map more than needed.
+Prevent user watchpoints from mistakenly firing while the temporary mm
+is being used. As the addresses of the temporary mm might overlap those
+of the user-process, this is necessary to prevent wrong signals or worse
+things from happening.
 
 Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/include/asm/fixmap.h |   2 -
- arch/x86/kernel/alternative.c | 108 +++++++++++++++++++++++++++-------
- arch/x86/xen/mmu_pv.c         |   2 -
- 3 files changed, 86 insertions(+), 26 deletions(-)
+ arch/x86/include/asm/mmu_context.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
-index 50ba74a34a37..9da8cccdf3fb 100644
---- a/arch/x86/include/asm/fixmap.h
-+++ b/arch/x86/include/asm/fixmap.h
-@@ -103,8 +103,6 @@ enum fixed_addresses {
- #ifdef CONFIG_PARAVIRT
- 	FIX_PARAVIRT_BOOTMAP,
- #endif
--	FIX_TEXT_POKE1,	/* reserve 2 pages for text_poke() */
--	FIX_TEXT_POKE0, /* first page is last, because allocation is backward */
- #ifdef	CONFIG_X86_INTEL_MID
- 	FIX_LNW_VRTC,
- #endif
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 11d5c710a94f..599203876c32 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -12,6 +12,7 @@
- #include <linux/slab.h>
- #include <linux/kdebug.h>
- #include <linux/kprobes.h>
-+#include <linux/mmu_context.h>
- #include <asm/text-patching.h>
- #include <asm/alternative.h>
- #include <asm/sections.h>
-@@ -684,41 +685,104 @@ __ro_after_init unsigned long poking_addr;
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index 24dc3b810970..93dff1963337 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -13,6 +13,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/paravirt.h>
+ #include <asm/mpx.h>
++#include <asm/debugreg.h>
  
- static void *__text_poke(void *addr, const void *opcode, size_t len)
- {
-+	bool cross_page_boundary = offset_in_page(addr) + len > PAGE_SIZE;
-+	struct page *pages[2] = {NULL};
-+	temp_mm_state_t prev;
- 	unsigned long flags;
--	char *vaddr;
--	struct page *pages[2];
--	int i;
-+	pte_t pte, *ptep;
-+	spinlock_t *ptl;
-+	pgprot_t pgprot;
+ extern atomic64_t last_mm_ctx_id;
  
- 	/*
--	 * While boot memory allocator is runnig we cannot use struct
--	 * pages as they are not yet initialized.
-+	 * While boot memory allocator is running we cannot use struct pages as
-+	 * they are not yet initialized. There is no way to recover.
- 	 */
- 	BUG_ON(!after_bootmem);
- 
- 	if (!core_kernel_text((unsigned long)addr)) {
- 		pages[0] = vmalloc_to_page(addr);
--		pages[1] = vmalloc_to_page(addr + PAGE_SIZE);
-+		if (cross_page_boundary)
-+			pages[1] = vmalloc_to_page(addr + PAGE_SIZE);
- 	} else {
- 		pages[0] = virt_to_page(addr);
- 		WARN_ON(!PageReserved(pages[0]));
--		pages[1] = virt_to_page(addr + PAGE_SIZE);
-+		if (cross_page_boundary)
-+			pages[1] = virt_to_page(addr + PAGE_SIZE);
- 	}
--	BUG_ON(!pages[0]);
-+	/*
-+	 * If something went wrong, crash and burn since recovery paths are not
-+	 * implemented.
-+	 */
-+	BUG_ON(!pages[0] || (cross_page_boundary && !pages[1]));
-+
- 	local_irq_save(flags);
--	set_fixmap(FIX_TEXT_POKE0, page_to_phys(pages[0]));
--	if (pages[1])
--		set_fixmap(FIX_TEXT_POKE1, page_to_phys(pages[1]));
--	vaddr = (char *)fix_to_virt(FIX_TEXT_POKE0);
--	memcpy(&vaddr[(unsigned long)addr & ~PAGE_MASK], opcode, len);
--	clear_fixmap(FIX_TEXT_POKE0);
--	if (pages[1])
--		clear_fixmap(FIX_TEXT_POKE1);
--	local_flush_tlb();
--	sync_core();
--	/* Could also do a CLFLUSH here to speed up CPU recovery; but
--	   that causes hangs on some VIA CPUs. */
--	for (i = 0; i < len; i++)
--		BUG_ON(((char *)addr)[i] != ((char *)opcode)[i]);
+@@ -380,6 +381,21 @@ static inline temp_mm_state_t use_temporary_mm(struct mm_struct *mm)
+ 	lockdep_assert_irqs_disabled();
+ 	temp_state.mm = this_cpu_read(cpu_tlbstate.loaded_mm);
+ 	switch_mm_irqs_off(NULL, mm, current);
 +
 +	/*
-+	 * Map the page without the global bit, as TLB flushing is done with
-+	 * flush_tlb_mm_range(), which is intended for non-global PTEs.
++	 * If breakpoints are enabled, disable them while the temporary mm is
++	 * used. Userspace might set up watchpoints on addresses that are used
++	 * in the temporary mm, which would lead to wrong signals being sent or
++	 * crashes.
++	 *
++	 * Note that breakpoints are not disabled selectively, which also causes
++	 * kernel breakpoints (e.g., perf's) to be disabled. This might be
++	 * undesirable, but still seems reasonable as the code that runs in the
++	 * temporary mm should be short.
 +	 */
-+	pgprot = __pgprot(pgprot_val(PAGE_KERNEL) & ~_PAGE_GLOBAL);
++	if (hw_breakpoint_active())
++		hw_breakpoint_disable();
 +
-+	/*
-+	 * The lock is not really needed, but this allows to avoid open-coding.
-+	 */
-+	ptep = get_locked_pte(poking_mm, poking_addr, &ptl);
-+
-+	/*
-+	 * This must not fail; preallocated in poking_init().
-+	 */
-+	VM_BUG_ON(!ptep);
-+
-+	pte = mk_pte(pages[0], pgprot);
-+	set_pte_at(poking_mm, poking_addr, ptep, pte);
-+
-+	if (cross_page_boundary) {
-+		pte = mk_pte(pages[1], pgprot);
-+		set_pte_at(poking_mm, poking_addr + PAGE_SIZE, ptep + 1, pte);
-+	}
-+
-+	/*
-+	 * Loading the temporary mm behaves as a compiler barrier, which
-+	 * guarantees that the PTE will be set at the time memcpy() is done.
-+	 */
-+	prev = use_temporary_mm(poking_mm);
-+
-+	kasan_disable_current();
-+	memcpy((u8 *)poking_addr + offset_in_page(addr), opcode, len);
-+	kasan_enable_current();
-+
-+	/*
-+	 * Ensure that the PTE is only cleared after the instructions of memcpy
-+	 * were issued by using a compiler barrier.
-+	 */
-+	barrier();
-+
-+	pte_clear(poking_mm, poking_addr, ptep);
-+	if (cross_page_boundary)
-+		pte_clear(poking_mm, poking_addr + PAGE_SIZE, ptep + 1);
-+
-+	/*
-+	 * Loading the previous page-table hierarchy requires a serializing
-+	 * instruction that already allows the core to see the updated version.
-+	 * Xen-PV is assumed to serialize execution in a similar manner.
-+	 */
-+	unuse_temporary_mm(prev);
-+
-+	/*
-+	 * Flushing the TLB might involve IPIs, which would require enabled
-+	 * IRQs, but not if the mm is not used, as it is in this point.
-+	 */
-+	flush_tlb_mm_range(poking_mm, poking_addr, poking_addr +
-+			   (cross_page_boundary ? 2 : 1) * PAGE_SIZE,
-+			   PAGE_SHIFT, false);
-+
-+	/*
-+	 * If the text does not match what we just wrote then something is
-+	 * fundamentally screwy; there's nothing we can really do about that.
-+	 */
-+	BUG_ON(memcmp(addr, opcode, len));
-+
-+	pte_unmap_unlock(ptep, ptl);
- 	local_irq_restore(flags);
- 	return addr;
+ 	return temp_state;
  }
-diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-index a21e1734fc1f..beb44e22afdf 100644
---- a/arch/x86/xen/mmu_pv.c
-+++ b/arch/x86/xen/mmu_pv.c
-@@ -2318,8 +2318,6 @@ static void xen_set_fixmap(unsigned idx, phys_addr_t phys, pgprot_t prot)
- #elif defined(CONFIG_X86_VSYSCALL_EMULATION)
- 	case VSYSCALL_PAGE:
- #endif
--	case FIX_TEXT_POKE0:
--	case FIX_TEXT_POKE1:
- 		/* All local page mappings */
- 		pte = pfn_pte(phys, prot);
- 		break;
+ 
+@@ -387,6 +403,13 @@ static inline void unuse_temporary_mm(temp_mm_state_t prev_state)
+ {
+ 	lockdep_assert_irqs_disabled();
+ 	switch_mm_irqs_off(NULL, prev_state.mm, current);
++
++	/*
++	 * Restore the breakpoints if they were disabled before the temporary mm
++	 * was loaded.
++	 */
++	if (hw_breakpoint_active())
++		hw_breakpoint_restore();
+ }
+ 
+ #endif /* _ASM_X86_MMU_CONTEXT_H */
 -- 
 2.17.1
 
