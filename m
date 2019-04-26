@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4456C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2981C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A552166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54A82084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271943;
-	bh=YSKy0BmgHyMLcnSBcqJ0V0onsha4Nq9C7l/vn3c3PKQ=;
+	s=default; t=1556271945;
+	bh=xFhJfDdcJlZGGMzFBxksjnFMGv79B2XfRAnx8xcmctA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=jefE5PUpYbEKDql+zpsoynvfGy+SmQ4IHHbTC7lOai2PJE7MQLrJouA63pkGYcJR4
-	 /J7y5GI2NnX1tjANx7T5ikxgywwHTp6lXU7IjbkSsS7GvbSoC+egXAAq5H5vqsRx7Y
-	 5WZG0M4RPxyq0tLXZsDWgw7r3yL88nj6/AF8VhPU=
+	b=x+O4eIUZdOyGcA+xHiDB7Ktxf7R+JzEDlqW8OzUF2D96o7QkOE42+ApWrLkWCmts+
+	 tdVKEuQXeHkmqzzaxSImY2+Bgco6xV3qFRID6Hph/c0N6ZjtYkHrwG2kOnIXzjqmuL
+	 rM8cXDZCHu1SyCa92e6lmg/lNDs3k7hC9dkrzNp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfDZJpm (ORCPT
+        id S1727435AbfDZJpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:45:42 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54822 "EHLO
+        Fri, 26 Apr 2019 05:45:44 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54912 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727203AbfDZJpk (ORCPT
+        with ESMTP id S1727411AbfDZJpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:45:40 -0400
+        Fri, 26 Apr 2019 05:45:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=VC95ZC4Yoz+U5KHgen2VRGk23+cMznfgDGGwJBiIDZA=; b=jvMWkHDsoTzl
-        boZdQ9xPK6elfZfwqSW8mgtZOW+L9uhRo698n9b3cPZ9ZaKba0lKoWq68k2y0I+L0fzikjLh2223o
-        5TeuiuDsYjeP3FDMd5mByP35CP4TXXq4PbH++etjR/D8/2up0orIEM8YNVdPauZvsbDues4guHCIu
-        lWYIk=;
+        List-Archive; bh=VTyfCiBjZ2Db0s7USZXQvlfsNKnjJB/KjOf0pwHH8tI=; b=xfHsUCQgEomz
+        zHDj/PBJjKOTsbqxBlqHFy0j9sMY5psCTBGWkTwUkfLNWAKlmqZaDBOHfjLTeUrBpkmMaDA9MHLfT
+        7wALxgINMu3KkPllfeaw8HvR2jl6gUG3Jmh6TyS2sROrPfQgYKnISrC3jNDnx51v81B05RYR7IMzk
+        yfKvw=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxQI-0003Rm-0H; Fri, 26 Apr 2019 09:45:38 +0000
+        id 1hJxQK-0003Rt-Dz; Fri, 26 Apr 2019 09:45:40 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 19A07441D3B; Fri, 26 Apr 2019 10:45:37 +0100 (BST)
+        id 2A32B441D3B; Fri, 26 Apr 2019 10:45:39 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: ab8500-ext: Remove *rdev from struct ab8500_ext_regulator_info" to the regulator tree
+Subject: Applied "regulator: dbx500-prcmu: Remove unused fields from struct dbx500_regulator_info" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094537.19A07441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:45:37 +0100 (BST)
+Message-Id: <20190426094539.2A32B441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:45:39 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: ab8500-ext: Remove *rdev from struct ab8500_ext_regulator_info
+   regulator: dbx500-prcmu: Remove unused fields from struct dbx500_regulator_info
 
 has been applied to the regulator tree at
 
@@ -85,71 +85,46 @@ to this mail.
 Thanks,
 Mark
 
-From 80a9c22a9da953146eacb5b8eb2b16691d4d9925 Mon Sep 17 00:00:00 2001
+From 2564002abcde7e655bd0bab7f5f3a592ca586e58 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 12 Apr 2019 22:06:57 +0800
-Subject: [PATCH] regulator: ab8500-ext: Remove *rdev from struct
- ab8500_ext_regulator_info
+Date: Fri, 12 Apr 2019 09:54:21 +0800
+Subject: [PATCH] regulator: dbx500-prcmu: Remove unused fields from struct
+ dbx500_regulator_info
 
-Current code is using devm_regulator_register() so we don't need to save
-*rdev for clean up, use a local variable instead.
+The *dev is assigned but not used, remove it.
+Current driver is using devm_regulator_register(), so no neeed to save
+*rdev for clean up. Use a local variable instead.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/ab8500-ext.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/regulator/db8500-prcmu.c | 10 +++++-----
+ drivers/regulator/dbx500-prcmu.h |  4 ----
+ 2 files changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/regulator/ab8500-ext.c b/drivers/regulator/ab8500-ext.c
-index 2ca00045eb99..89ddbabca2af 100644
---- a/drivers/regulator/ab8500-ext.c
-+++ b/drivers/regulator/ab8500-ext.c
-@@ -479,7 +479,6 @@ static struct ab8500_regulator_platform_data ab8500_regulator_plat_data = {
-  * struct ab8500_ext_regulator_info - ab8500 regulator information
-  * @dev: device pointer
-  * @desc: regulator description
-- * @rdev: regulator device
-  * @cfg: regulator configuration (extension of regulator FW configuration)
-  * @update_bank: bank to control on/off
-  * @update_reg: register to control on/off
-@@ -495,7 +494,6 @@ static struct ab8500_regulator_platform_data ab8500_regulator_plat_data = {
- struct ab8500_ext_regulator_info {
- 	struct device *dev;
- 	struct regulator_desc desc;
--	struct regulator_dev *rdev;
- 	struct ab8500_ext_regulator_cfg *cfg;
- 	u8 update_bank;
- 	u8 update_reg;
-@@ -530,7 +528,7 @@ static int ab8500_ext_regulator_enable(struct regulator_dev *rdev)
- 		info->update_bank, info->update_reg,
- 		info->update_mask, regval);
- 	if (ret < 0) {
--		dev_err(rdev_get_dev(info->rdev),
-+		dev_err(rdev_get_dev(rdev),
- 			"couldn't set enable bits for regulator\n");
- 		return ret;
- 	}
-@@ -566,7 +564,7 @@ static int ab8500_ext_regulator_disable(struct regulator_dev *rdev)
- 		info->update_bank, info->update_reg,
- 		info->update_mask, regval);
- 	if (ret < 0) {
--		dev_err(rdev_get_dev(info->rdev),
-+		dev_err(rdev_get_dev(rdev),
- 			"couldn't set disable bits for regulator\n");
- 		return ret;
- 	}
-@@ -797,6 +795,7 @@ static int ab8500_ext_regulator_probe(struct platform_device *pdev)
- 	struct ab8500_regulator_platform_data *pdata = &ab8500_regulator_plat_data;
- 	struct device_node *np = pdev->dev.of_node;
+diff --git a/drivers/regulator/db8500-prcmu.c b/drivers/regulator/db8500-prcmu.c
+index c2a3ccfc510e..eb317663f875 100644
+--- a/drivers/regulator/db8500-prcmu.c
++++ b/drivers/regulator/db8500-prcmu.c
+@@ -439,6 +439,7 @@ static int db8500_regulator_probe(struct platform_device *pdev)
+ 	struct regulator_init_data *db8500_init_data;
+ 	struct dbx500_regulator_info *info;
  	struct regulator_config config = { };
 +	struct regulator_dev *rdev;
- 	int i, err;
+ 	int err, i;
  
- 	if (np) {
-@@ -850,17 +849,15 @@ static int ab8500_ext_regulator_probe(struct platform_device *pdev)
- 			&pdata->ext_regulator[i];
+ 	db8500_init_data = dev_get_platdata(&pdev->dev);
+@@ -446,17 +447,16 @@ static int db8500_regulator_probe(struct platform_device *pdev)
+ 	for (i = 0; i < ARRAY_SIZE(dbx500_regulator_info); i++) {
+ 		/* assign per-regulator data */
+ 		info = &dbx500_regulator_info[i];
+-		info->dev = &pdev->dev;
  
- 		/* register regulator with framework */
+ 		config.driver_data = info;
+ 		config.dev = &pdev->dev;
+ 		if (db8500_init_data)
+ 			config.init_data = &db8500_init_data[i];
+ 
 -		info->rdev = devm_regulator_register(&pdev->dev, &info->desc,
 -						     &config);
 -		if (IS_ERR(info->rdev)) {
@@ -157,18 +132,33 @@ index 2ca00045eb99..89ddbabca2af 100644
 +		rdev = devm_regulator_register(&pdev->dev, &info->desc,
 +					       &config);
 +		if (IS_ERR(rdev)) {
- 			dev_err(&pdev->dev, "failed to register regulator %s\n",
- 					info->desc.name);
--			return err;
-+			return PTR_ERR(rdev);
- 		}
++			err = PTR_ERR(rdev);
+ 			dev_err(&pdev->dev, "failed to register %s: err %i\n",
+ 				info->desc.name, err);
+ 			return err;
+diff --git a/drivers/regulator/dbx500-prcmu.h b/drivers/regulator/dbx500-prcmu.h
+index c8e51ace9f06..6e20dab611ac 100644
+--- a/drivers/regulator/dbx500-prcmu.h
++++ b/drivers/regulator/dbx500-prcmu.h
+@@ -15,18 +15,14 @@
  
--		dev_dbg(rdev_get_dev(info->rdev),
--			"%s-probed\n", info->desc.name);
-+		dev_dbg(&pdev->dev, "%s-probed\n", info->desc.name);
- 	}
- 
- 	return 0;
+ /**
+  * struct dbx500_regulator_info - dbx500 regulator information
+- * @dev: device pointer
+  * @desc: regulator description
+- * @rdev: regulator device pointer
+  * @is_enabled: status of the regulator
+  * @epod_id: id for EPOD (power domain)
+  * @is_ramret: RAM retention switch for EPOD (power domain)
+  *
+  */
+ struct dbx500_regulator_info {
+-	struct device *dev;
+ 	struct regulator_desc desc;
+-	struct regulator_dev *rdev;
+ 	bool is_enabled;
+ 	u16 epod_id;
+ 	bool is_ramret;
 -- 
 2.20.1
 
