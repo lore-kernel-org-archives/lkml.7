@@ -1,162 +1,140 @@
 Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E05CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4551FC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A8C206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15866206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556272290;
+	bh=oHb6MF8lC+JY413MjCf3LDQb7TZIAPF1qTlZ2YvlOBQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QO/yRf3h3sKBgSM6WfWO4KKDbetwwWRWE1LcSdVe/RNqTgy5i3h4ko79Q7Xkx1sYa
+	 qq/j4/Kx2sLrIT5iITHVCSm26Yh0W8bJTyztwaHxwj+70nwj6T3Ob/ED13EPVxeXLY
+	 KgzKDj/TzQxEEHAZ3QDz2oNjawaKoShFiPCOmYOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfDZJuT (ORCPT
+        id S1726360AbfDZJv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:50:19 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:45652 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfDZJuS (ORCPT
+        Fri, 26 Apr 2019 05:51:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52442 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfDZJv2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:50:18 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 0012425AEA8;
-        Fri, 26 Apr 2019 19:50:14 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 57ED29403ED; Fri, 26 Apr 2019 11:50:12 +0200 (CEST)
-Date:   Fri, 26 Apr 2019 11:50:12 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tfranzen@de.adit-jv.com,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
-Message-ID: <20190426095012.xzyzevvmom4fzdcd@verge.net.au>
-References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
- <20190425111245.GA7258@vmlxhi-102.adit-jv.com>
+        Fri, 26 Apr 2019 05:51:28 -0400
+Received: by mail-wm1-f68.google.com with SMTP id j13so3057871wmh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 02:51:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eIBUFNukdDQCSXCFAOGIysYD96g9fxkE9hYS/NQtUbQ=;
+        b=Mub1JIm+6yGSpxTJNCw09BR55aYZEz/mdljtny3p9Kl3Sxic8HLWMO8ek+qIG8eEza
+         cCcSmCIqV4QKy0e5G6qtI6GW6KrHIpJ050qDWAkSYgtRF1QAMMQpKbgTW+wvN4E1PoDh
+         04NnQ+9XpWxen2MAs1BV8gdi1E9vsBWgYnEjTVWp7uz263b9V98prHsR+LqmLzU1fKh5
+         JSXTkEuYSEK6Agao9yYdik0e2P8jXpLWHDEy15jyP+xI54NZj2p7fmc6a+rB8ja+idAM
+         VC3sXXxkkLHGNr0biiAuL0/EFYtp6WLLCe63YIHIzIpi5gp8OPyR94PeIuvMoMcuMCS3
+         dn8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eIBUFNukdDQCSXCFAOGIysYD96g9fxkE9hYS/NQtUbQ=;
+        b=nGzUVoBRI5yX+jcg8DFtA7Www6Iwy1Wcbjr4ex1AwfryahRcc+DombbPsrJ4KlBzEI
+         /5EoZ962hwCi+G59KLag5kq91qMa2GjHSR1mbGiOfx04a6Yohc5q1/R8IdxDCvdQLVg/
+         +Esa+kGNpXEK8IbHXeDWqX6Z2owEE4wem+XMmF9WfRcQtH0Usz4l6Dxt5rv05gHgNNcF
+         gbyxnmJO+YkY1/tfEcQP6QIIQ0nwU6+cwVJpsrd0cgABVkDv9ma7/O03XRZtq7ro4hIV
+         35bgTpiVbeF7HYaq+3vgvzb0rXujKADWf8AE/ztllF89ez32h/yTLCiRQYKUfe3xjV4S
+         3OYQ==
+X-Gm-Message-State: APjAAAWD28UJzTQFU3ZFpseafmixXJLsthJKsMUdqMNSpc7oeUt8fm+6
+        EmZBCfuvo8rxqEO27mi8GY4=
+X-Google-Smtp-Source: APXvYqxPsta3t3N5z6tP32HWxCwj88fuhqWnRzW4fIyVk/IzfbALojztbWz7GohMblYv84WJwtnntA==
+X-Received: by 2002:a1c:6342:: with SMTP id x63mr7149854wmb.58.1556272286920;
+        Fri, 26 Apr 2019 02:51:26 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id y125sm36631305wmc.39.2019.04.26.02.51.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 02:51:26 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 11:51:23 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Fr?d?ric Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190426095123.GE126896@gmail.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+ <20190424140013.GA14594@sinkpad>
+ <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
+ <20190425095508.GA8387@gmail.com>
+ <20190425144619.GX18914@techsingularity.net>
+ <20190425185343.GA122353@gmail.com>
+ <20190425213145.GY18914@techsingularity.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425111245.GA7258@vmlxhi-102.adit-jv.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190425213145.GY18914@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-from my point of view what is required is a review.
-I will try to find someone to do so.
-I apologise for not doing so earlier.
+* Mel Gorman <mgorman@techsingularity.net> wrote:
 
-On Thu, Apr 25, 2019 at 01:12:45PM +0200, Eugeniu Rosca wrote:
-> Hi Simon,
-> 
-> Do we have any chance getting this upstream? If so, would you kindly
-> list the acceptance criteria we have to conform to?
-> 
-> Many thanks.
-> 
-> On Thu, Apr 11, 2019 at 02:41:03PM +0200, Spyridon Papageorgiou wrote:
-> > This patch adds description of TI WL1837 and links interfaces
-> > to communicate with the IC, namely the SDIO interface to WLAN.
+> > Interesting.
 > > 
-> > Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
-> > ---
-> >  arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 49 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-> > index 7a09576..27851a7 100644
-> > --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-> > @@ -38,6 +38,18 @@
-> >  		regulator-min-microvolt = <5000000>;
-> >  		regulator-max-microvolt = <5000000>;
-> >  	};
-> > +
-> > +	wlan_en: regulator-wlan_en {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "wlan-en-regulator";
-> > +
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +
-> > +		gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
-> > +		startup-delay-us = <70000>;
-> > +		enable-active-high;
-> > +	};
-> >  };
-> >  
-> >  &can0 {
-> > @@ -88,6 +100,13 @@
-> >  			line-name = "Audio_Out_OFF";
-> >  		};
-> >  
-> > +		sd-wifi-mux {
-> > +			gpio-hog;
-> > +			gpios = <5 GPIO_ACTIVE_HIGH>;
-> > +			output-low;	/* Connect WL1837 */
-> > +			line-name = "SD WiFi mux";
-> > +		};
-> > +
-> >  		hub_pwen {
-> >  			gpio-hog;
-> >  			gpios = <6 GPIO_ACTIVE_HIGH>;
-> > @@ -254,6 +273,12 @@
-> >  		function = "scif1";
-> >  	};
-> >  
-> > +	sdhi3_pins: sdhi3 {
-> > +		groups = "sdhi3_data4", "sdhi3_ctrl";
-> > +		function = "sdhi3";
-> > +		power-source = <3300>;
-> > +	};
-> > +
-> >  	usb0_pins: usb0 {
-> >  		groups = "usb0";
-> >  		function = "usb0";
-> > @@ -273,6 +298,30 @@
-> >  	status = "okay";
-> >  };
-> >  
-> > +&sdhi3 {
-> > +	pinctrl-0 = <&sdhi3_pins>;
-> > +	pinctrl-names = "default";
-> > +
-> > +	vmmc-supply = <&wlan_en>;
-> > +	vqmmc-supply = <&wlan_en>;
-> > +	bus-width = <4>;
-> > +	no-1-8-v;
-> > +	non-removable;
-> > +	cap-power-off-card;
-> > +	keep-power-in-suspend;
-> > +	max-frequency = <26000000>;
-> > +	status = "okay";
-> > +
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +	wlcore: wlcore@2 {
-> > +		compatible = "ti,wl1837";
-> > +		reg = <2>;
-> > +		interrupt-parent = <&gpio1>;
-> > +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> > +	};
-> > +};
-> > +
-> >  &usb2_phy0 {
-> >  	pinctrl-0 = <&usb0_pins>;
-> >  	pinctrl-names = "default";
-> > -- 
-> > 2.7.4
+> > Here too I'm wondering whether the scheduler could do something to 
+> > improve the saturated case: which *is* an important workload, as kernel 
+> > hackers tend to over-load their systems a bit when building kernel, to 
+> > make sure the system is at least 100% utilized. ;-)
 > > 
 > 
-> -- 
-> Best regards,
-> Eugeniu.
-> 
+> Every so often I try but I never managed to settle on a heuristic that 
+> helped this case without breaking others. The biggest hurdle is that 
+> typically things are better if migrations are low but it's hard to do 
+> that in a way that does not also stack tasks on the same CPUs 
+> prematurely.
+
+So instead of using a heuristic (which are fragile and most of them are 
+also annoyingly non-deterministic and increase overall noise and make 
+measurements harder) I'd suggest using SCHED_BATCH just as a hardcore 
+toggle to maximize for CPU-bound throughput.
+
+It's not used very much, but the kernel build could use it by default 
+(i.e. we could use a "chrt -b" call within the main Makefile), so it 
+would be the perfect guinea pig and wouldn't affect anything else.
+
+I.e. we could use SCHED_BATCH to maximize kernel build speed, with no no 
+regard to latency (within SCHED_BATCH workloads). I suspect this will 
+also maximize bandwidth of a lot of other real-world, highly parallel but 
+interacting processing workloads.
+
+[ I'd even be willing to rename it to SCHED_KBUILD, internally. ;-) ]
+
+Thanks,
+
+	Ingo
