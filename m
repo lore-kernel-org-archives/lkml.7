@@ -2,126 +2,153 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0FFC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B374C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95500206BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213462077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfDZLgW (ORCPT
+        id S1726222AbfDZLhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 07:36:22 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:51828 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725881AbfDZLgW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 07:36:22 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hJz9J-0006Cs-9i; Fri, 26 Apr 2019 12:36:13 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hJz9I-00031x-R3; Fri, 26 Apr 2019 12:36:12 +0100
-Message-ID: <0c6ecfca6329f0d11c6962ec5875314414813ac6.camel@decadent.org.uk>
-Subject: Re: BUG: unable to handle page fault for address = ADDR
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Netdev <netdev@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        peter@hurleysoftware.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        vegard.nossum@gmail.com
-Date:   Fri, 26 Apr 2019 12:36:07 +0100
-In-Reply-To: <CAHk-=wjp-R083To=AVbovNJWrskNfYN8rqz=nZZTPRihCohE4g@mail.gmail.com>
-References: <0000000000000101b30587622a69@google.com>
-         <CAHk-=wjp-R083To=AVbovNJWrskNfYN8rqz=nZZTPRihCohE4g@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-daXTa50vFJ89HdnXzyFp"
-User-Agent: Evolution 3.30.5-1 
+        Fri, 26 Apr 2019 07:37:33 -0400
+Received: from mga07.intel.com ([134.134.136.100]:14970 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbfDZLhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 07:37:32 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 04:37:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,397,1549958400"; 
+   d="scan'208";a="168164722"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 26 Apr 2019 04:37:28 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 26 Apr 2019 14:37:27 +0300
+Date:   Fri, 26 Apr 2019 14:37:27 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Thunderbolt changes for v5.2
+Message-ID: <20190426113727.GQ2583@lahna.fi.intel.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
 
---=-daXTa50vFJ89HdnXzyFp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
-On Thu, 2019-04-25 at 16:13 -0700, Linus Torvalds wrote:
-[...]
-> so we do "slhc_free()" on an error pointer, which results in
->=20
->     BUG: unable to handle page fault for address =3D fffffffffffffff4
->=20
-> and the fix might be something like the appended whitespace-damaged
-> trivial one-liner: just make slhc_free() silently ignore an error
-> pointer, to match the slhc_init() return behavior.
->=20
-> Ben? David?
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
 
-This looks sensible to me.
+are available in the Git repository at:
 
-Ben.
+  git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git tags/thunderbolt-for-v5.2
 
->                        Linus
->=20
-> diff --git a/drivers/net/slip/slhc.c b/drivers/net/slip/slhc.c
-> index f4e93f5fc204..ea90db3c7705 100644
-> --- a/drivers/net/slip/slhc.c
-> +++ b/drivers/net/slip/slhc.c
-> @@ -153,7 +153,7 @@ slhc_init(int rslots, int tslots)
->  void
->  slhc_free(struct slcompress *comp)
->  {
-> -       if ( comp =3D=3D NULLSLCOMPR )
-> +       if ( IS_ERR_OR_NULL(comp) )
->                 return;
->=20
->         if ( comp->tstate !=3D NULLSLSTATE )
---=20
-Ben Hutchings
-It is impossible to make anything foolproof
-because fools are so ingenious.
+for you to fetch changes up to 37209783c73a47692dbf1e6b2dba0d07f6ce24b3:
 
+  thunderbolt: Make priority unsigned in struct tb_path (2019-04-25 12:18:27 +0300)
 
---=-daXTa50vFJ89HdnXzyFp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+----------------------------------------------------------------
+thunderbolt: Changes for v5.2 merge window
 
------BEGIN PGP SIGNATURE-----
+This improves software connection manager on older Apple systems with
+Thunderbolt 1 and 2 controller to support full PCIe daisy chains,
+Display Port tunneling and P2P networking. There are also fixes for
+potential NULL pointer dereferences at various places in the driver.
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAlzC7ScACgkQ57/I7JWG
-EQk2yBAAvmqpyQJnSkFayIHpelfD1ed0i3WvJSIY2n9Z3cDCsKYj28+Qi5rnMVlD
-JST69B4oh0Jbcx8JK1hZtYON0X7GfZ2JkxUgtNiD9U5qL54uph4ds4BOJRg1EWh1
-p6LIYEt3OfvxGasF0KQzwa7+7XupK5cXORv/sg8J4AUtamKx278Jdg5lOFOCOXEU
-InEzNEZicz6MNQdUevf0GLq9llgavMxcI58Pk0VmnaEN3JcJ4AoHRv8muPjSl3kh
-rrG2gtUK3fq0Q4AgQvc1om4fXgEhTEMqATVeLwtKs75ZYZew3x3EhsGd0YYbnol8
-upDkJKUdZzyL4QE1ZiZsjRsEWDi/11Ucg5fU0TMpaiDoz9fIscN6SHAexBNf4XsI
-uW9A9R/pDu9fUsWfcNsh7gYPwPcBzhRgJsqypNZimQ8fqxGog1yeRSQKJLXQdUoB
-SynBByMsMUyi0HPHwTsIeqghyxjK1SfS/ERwXVHOhY6M2u2QU8cwH8/2HWMzrMkv
-C92F12IgNGB4kEkrJHy65NBQdIyevrpBQ6mm4jNrpjOQuVpqw7CaedebEMdbIMbj
-A2mNbWrkDFVceErZheFxnv+JqUOuoqrInol/err3n69Xc+lLE8+0F69+pOYEwLMw
-Jqdqdjkf6ti89hjzYldwYDEQevXNygugzOUmGNWv5TfyDSfZNNA=
-=aQUL
------END PGP SIGNATURE-----
+----------------------------------------------------------------
 
---=-daXTa50vFJ89HdnXzyFp--
+Aditya Pakki (4):
+      thunderbolt: Fix to check for kmemdup failure
+      thunderbolt: Fix to check return value of ida_simple_get
+      thunderbolt: xdomain: Fix to check return value of kmemdup
+      thunderbolt: Fix to check the return value of kmemdup
+
+Kangjie Lu (3):
+      thunderbolt: property: Fix a NULL pointer dereference
+      thunderbolt: Fix a missing check of kmemdup
+      thunderbolt: property: Fix a missing check of kzalloc
+
+Mika Westerberg (36):
+      net: thunderbolt: Unregister ThunderboltIP protocol handler when suspending
+      thunderbolt: Remove unused work field in struct tb_switch
+      thunderbolt: Drop duplicated get_switch_at_route()
+      thunderbolt: Block reads and writes if switch is unplugged
+      thunderbolt: Take domain lock in switch sysfs attribute callbacks
+      thunderbolt: Do not allocate switch if depth is greater than 6
+      thunderbolt: Enable TMU access when accessing port space on legacy devices
+      thunderbolt: Add dummy read after port capability list walk on Light Ridge
+      thunderbolt: Move LC specific functionality into a separate file
+      thunderbolt: Configure lanes when switch is initialized
+      thunderbolt: Set sleep bit when suspending switch
+      thunderbolt: Properly disable path
+      thunderbolt: Cache adapter specific capability offset into struct port
+      thunderbolt: Rename tunnel_pci to tunnel
+      thunderbolt: Generalize tunnel creation functionality
+      thunderbolt: Add functions for allocating and releasing HopIDs
+      thunderbolt: Assign remote for both ports in case of dual link
+      thunderbolt: Add helper function to iterate from one port to another
+      thunderbolt: Extend tunnel creation to more than 2 adjacent switches
+      thunderbolt: Deactivate all paths before restarting them
+      thunderbolt: Discover preboot PCIe paths the boot firmware established
+      thunderbolt: Add support for full PCIe daisy chains
+      thunderbolt: Scan only valid NULL adapter ports in hotplug
+      thunderbolt: Generalize port finding routines to support all port types
+      thunderbolt: Rework NFC credits handling
+      thunderbolt: Add support for Display Port tunnels
+      thunderbolt: Do not tear down tunnels when driver is unloaded
+      thunderbolt: Run tb_xdp_handle_request() in system workqueue
+      thunderbolt: Add XDomain UUID exchange support
+      thunderbolt: Add support for DMA tunnels
+      thunderbolt: Make tb_switch_alloc() return ERR_PTR()
+      thunderbolt: Add support for XDomain connections
+      thunderbolt: Make __TB_[SW|PORT]_PRINT take const parameters
+      thunderbolt: Make rest of the logging to happen at debug level
+      thunderbolt: Reword output of tb_dump_hop()
+      thunderbolt: Start firmware on Titan Ridge Apple systems
+
+Nathan Chancellor (1):
+      thunderbolt: Make priority unsigned in struct tb_path
+
+ drivers/net/thunderbolt.c        |   3 +
+ drivers/thunderbolt/Makefile     |   4 +-
+ drivers/thunderbolt/cap.c        |  85 ++++-
+ drivers/thunderbolt/ctl.c        |   2 +-
+ drivers/thunderbolt/icm.c        |  65 ++--
+ drivers/thunderbolt/lc.c         | 179 ++++++++++
+ drivers/thunderbolt/nhi.c        |   3 +-
+ drivers/thunderbolt/path.c       | 420 ++++++++++++++++++++----
+ drivers/thunderbolt/property.c   |  16 +-
+ drivers/thunderbolt/switch.c     | 557 +++++++++++++++++++++++++------
+ drivers/thunderbolt/tb.c         | 608 ++++++++++++++++++++++++++--------
+ drivers/thunderbolt/tb.h         | 227 +++++++++++--
+ drivers/thunderbolt/tb_msgs.h    |  11 +
+ drivers/thunderbolt/tb_regs.h    |  50 ++-
+ drivers/thunderbolt/tunnel.c     | 691 +++++++++++++++++++++++++++++++++++++++
+ drivers/thunderbolt/tunnel.h     |  78 +++++
+ drivers/thunderbolt/tunnel_pci.c | 226 -------------
+ drivers/thunderbolt/tunnel_pci.h |  31 --
+ drivers/thunderbolt/xdomain.c    | 170 ++++++++--
+ include/linux/thunderbolt.h      |   8 +
+ 20 files changed, 2765 insertions(+), 669 deletions(-)
+ create mode 100644 drivers/thunderbolt/lc.c
+ create mode 100644 drivers/thunderbolt/tunnel.c
+ create mode 100644 drivers/thunderbolt/tunnel.h
+ delete mode 100644 drivers/thunderbolt/tunnel_pci.c
+ delete mode 100644 drivers/thunderbolt/tunnel_pci.h
