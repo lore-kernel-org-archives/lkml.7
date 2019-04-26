@@ -2,125 +2,129 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15E2C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05C9C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B180020675
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:07:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="lL2n9vt8"
+	by mail.kernel.org (Postfix) with ESMTP id C308120675
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfDZPHa (ORCPT
+        id S1726715AbfDZPHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:07:30 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45300 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfDZPHa (ORCPT
+        Fri, 26 Apr 2019 11:07:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50044 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726218AbfDZPHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:07:30 -0400
-Received: by mail-pl1-f193.google.com with SMTP id o5so1704576pls.12
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 08:07:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=IiTlllJV7T8Ybav7NUjeUyZVUhhnS7kZRU1PPhbGkJM=;
-        b=lL2n9vt8GnIPUDFoTEJvf33Y5pQF3uo+rWu5qEgbH4HLxkSLx9jcc9TgyzRHksCYAj
-         fmqBt8KcPRhmOtkK37ubeAfoG6y85dhMIr00G8/l5QKNCrHl+uAHYqZa3tqrKJGN/hNF
-         zMa3B964tLPhi0oSvuAu+2gT3es4gkyza8ZHVSBXBM3/lziiDPPsEq1fEoXGTlrl9ymn
-         HW+jVq0eHkWEj5PWkmH+nzUBebi0aQ1DIrGkI35HSVEbH8s6MoxMjQlUwrNbge+pBTwd
-         EISfz9afMMiyAm8SlpyJVhLYaLgXSI/p17RwVC/21KPAGuwHhTZG4PtV9zb52apojoWM
-         ss8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=IiTlllJV7T8Ybav7NUjeUyZVUhhnS7kZRU1PPhbGkJM=;
-        b=pqcKM8Yn3zavK6AARlSaFuz1eY9lfgWAtLAIDWaLzkXm4gzEmaVS2ay/YsD7b4cKlT
-         tt9jnM+M6eb2vCRnVi8VMrhZUyTA2KnCZD6bZ+bw3cdmE7O9Ew+Iwae988+Xy+a/ZfB8
-         dDrk/zFJLlfRUuPh4YpMghG6rdU8z/duEicB8B5BskkrmF54pz5YM9XHFynZrPc+sJCl
-         gwt3rn2vkk9o1mh0VMU4MIZ2EI8Qn1LHCy5upFZNdJW7HySZ7DEK3jMKGFhsMetNf4K0
-         EcnTJn2wj1BzBqbfPO6uklT4pV0AEiuflfH4LedS+/HUAu06LONpIg/a57zliCMhNIHd
-         TPbA==
-X-Gm-Message-State: APjAAAUz69q9Qb8XJhXqjBzoHDqPy8PerjF0GoylFiJRinEhYbXjBIWP
-        U0w4vJnl+Oh0CDkQfYkj+IcmXQ==
-X-Google-Smtp-Source: APXvYqxw6s47f9ZtAEqXzz4CE/DWzlsYAbZ43O38HXxSazAc+xuzWMJmNzZfd0ZmQluLX4nGUmluqQ==
-X-Received: by 2002:a17:902:7b8e:: with SMTP id w14mr28880635pll.202.1556291249630;
-        Fri, 26 Apr 2019 08:07:29 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:dd4b:950:9d5a:d566? ([2601:646:c200:1ef2:dd4b:950:9d5a:d566])
-        by smtp.gmail.com with ESMTPSA id l15sm11072795pgb.71.2019.04.26.08.07.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 08:07:28 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH 2/7] x86/sci: add core implementation for system call isolation
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <1556290658.2833.28.camel@HansenPartnership.com>
-Date:   Fri, 26 Apr 2019 08:07:27 -0700
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org, x86@kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <54090243-E4C7-4C66-8025-AFE0DF5DF337@amacapital.net>
-References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com> <1556228754-12996-3-git-send-email-rppt@linux.ibm.com> <627d9321-466f-c4ed-c658-6b8567648dc6@intel.com> <1556290658.2833.28.camel@HansenPartnership.com>
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+        Fri, 26 Apr 2019 11:07:50 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QExrS2107054
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 11:07:49 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s41yrgxr0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 11:07:48 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Fri, 26 Apr 2019 16:07:46 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 26 Apr 2019 16:07:43 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3QF7gkU37355540
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Apr 2019 15:07:42 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C656C11C058;
+        Fri, 26 Apr 2019 15:07:42 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87C3E11C04C;
+        Fri, 26 Apr 2019 15:07:42 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 26 Apr 2019 15:07:42 +0000 (GMT)
+Date:   Fri, 26 Apr 2019 17:07:41 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     Jessica Yu <jeyu@kernel.org>, linux-next@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Cathy Avery <cavery@redhat.com>
+Subject: Re: [-next] system hangs likely due to "modules: Only return -EEXIST
+ for modules that have finished loading"
+References: <20190426130736.GB8646@osiris>
+ <d4d75ad1-e193-c230-1edc-a93db2b068d7@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4d75ad1-e193-c230-1edc-a93db2b068d7@redhat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19042615-0020-0000-0000-000003368E10
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042615-0021-0000-0000-00002188FFEB
+Message-Id: <20190426150741.GD8646@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904260103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 26, 2019 at 09:22:34AM -0400, Prarit Bhargava wrote:
+> On 4/26/19 9:07 AM, Heiko Carstens wrote:
+> > Hello Prarit,
+> > 
+> > it looks like your commit f9a75c1d717f ("modules: Only return -EEXIST
+> > for modules that have finished loading") _sometimes_ causes hangs on
+> > s390. This is unfortunately not 100% reproducible, however the
+> > mentioned commit seems to be the only relevant one in modules.c.
+> > 
+> > What I see is a hanging system with messages like this on the console:
+> > 
+> > [   65.876040] rcu: INFO: rcu_sched self-detected stall on CPU
+> > [   65.876049] rcu:     7-....: (5999 ticks this GP) idle=eae/1/0x4000000000000002 softirq=1181/1181 fqs=2729
+> > [   65.876078]  (t=6000 jiffies g=-471 q=17196)
+> > [   65.876084] Task dump for CPU 7:
+> > [   65.876088] systemd-udevd   R  running task        0   731    721 0x06000004
+> > [   65.876097] Call Trace:
+> > [   65.876113] ([<0000000000abb264>] __schedule+0x2e4/0x6e0)
+> > [   65.876122]  [<00000000001ee486>] finished_loading+0x4e/0xb0
+> > [   65.876128]  [<00000000001f1ed6>] load_module+0xcce/0x27a0
+> > [   65.876134]  [<00000000001f3af0>] __s390x_sys_init_module+0x148/0x178
+> > [   65.876142]  [<0000000000ac0766>] system_call+0x2aa/0x2c8
+> > I did not look any further into the dump, however since the commit
+> > touches exactly the code path which seems to be looping... ;)
+> > 
+> 
+> Ouch :(  I wonder if I exposed a further race or another bug.  Heiko, can you
+> determine which module is stuck?  Warning: I have not compiled this code.
 
+Here we go:
 
-> On Apr 26, 2019, at 7:57 AM, James Bottomley <James.Bottomley@hansenpartne=
-rship.com> wrote:
->=20
->> On Fri, 2019-04-26 at 07:46 -0700, Dave Hansen wrote:
->>> On 4/25/19 2:45 PM, Mike Rapoport wrote:
->>> After the isolated system call finishes, the mappings created
->>> during its execution are cleared.
->>=20
->> Yikes.  I guess that stops someone from calling write() a bunch of
->> times on every filesystem using every block device driver and all the
->> DM code to get a lot of code/data faulted in.  But, it also means not
->> even long-running processes will ever have a chance of behaving
->> anything close to normally.
->>=20
->> Is this something you think can be rectified or is there something
->> fundamental that would keep SCI page tables from being cached across
->> different invocations of the same syscall?
->=20
-> There is some work being done to look at pre-populating the isolated
-> address space with the expected execution footprint of the system call,
-> yes.  It lessens the ROP gadget protection slightly because you might
-> find a gadget in the pre-populated code, but it solves a lot of the
-> overhead problem.
->=20
+[   11.716866] PRARIT: waiting for module s390_trng to load.
+[   11.716867] PRARIT: waiting for module s390_trng to load.
+[   11.716868] PRARIT: waiting for module s390_trng to load.
+[   11.716870] PRARIT: waiting for module s390_trng to load.
+[   11.716871] PRARIT: waiting for module s390_trng to load.
+[   11.716872] PRARIT: waiting for module s390_trng to load.
+[   11.716874] PRARIT: waiting for module s390_trng to load.
+[   11.716875] PRARIT: waiting for module s390_trng to load.
+[   11.716876] PRARIT: waiting for module s390_trng to load.
+[   16.726850] add_unformed_module: 31403529 callbacks suppressed
+[   16.726853] PRARIT: waiting for module s390_trng to load.
+[   16.726862] PRARIT: waiting for module s390_trng to load.
+[   16.726865] PRARIT: waiting for module s390_trng to load.
+[   16.726867] PRARIT: waiting for module s390_trng to load.
+[   16.726869] PRARIT: waiting for module s390_trng to load.
 
-I=E2=80=99m not even remotely a ROP expert, but: what stops a ROP payload fr=
-om using all the =E2=80=9Cfault-in=E2=80=9D gadgets that exist =E2=80=94 any=
- function that can return on an error without doing to much will fault in th=
-e whole page containing the function.
+If I'm not mistaken then there was _no_ corresponding message on the
+console stating that the module already exists.
 
-To improve this, we would want some thing that would try to check whether th=
-e caller is actually supposed to call the callee, which is more or less the h=
-ard part of CFI.  So can=E2=80=99t we just do CFI and call it a day?
-
-On top of that, a robust, maintainable implementation of this thing seems ve=
-ry complicated =E2=80=94 for example, what happens if vfree() gets called?
