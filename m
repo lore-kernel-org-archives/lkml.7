@@ -2,122 +2,66 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462DFC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2A6C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1764A206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271786;
-	bh=sK85wNMU/96XkfkAJK+U9WxIqwpDV/OKo2rr3tEfq5k=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=G9r62iMF8Zr5ryIcxvuMkVrmq/kOMzUaUb1ELFd/RQY4n3nll/WRcMa+spstAlrWp
-	 4WgPURdlnk6ly16z1aBh6V7AoUzXlz6KRSCQF6DFTZWYZG5M8j4P5fFbsP8JKg4sLA
-	 tPk0FjvsLdHeZ9JFG9WZpBWesWM6tRNgnGcjCzu0=
+	by mail.kernel.org (Postfix) with ESMTP id 461552084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfDZJkp (ORCPT
+        id S1726315AbfDZJnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:40:45 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46102 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfDZJkm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:40:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=BVjhokI7gu+paERydgpKZEsS8C/K0/37ZUVB7oGK16Q=; b=Kn3xkEMmLy5x
-        3bykD6bFV8yoiphwDHajNa6taKRgq0b4bFjQ1kZx3sboKxnMyN/EwOHXznIC46YYUlRhDebn91ix+
-        TadsCwzUytcHzrATyas4pRQdLHl1czytzxOlnCVW/geTZNI+WpyMxBU4C6NFabhAwI+hBtxEcj3ek
-        03aeI=;
-Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxLR-0003Jl-Dw; Fri, 26 Apr 2019 09:40:37 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 51DD7441D3B; Fri, 26 Apr 2019 10:40:36 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: stm32-pwr: Fix return value check in stm32_pwr_regulator_probe()" to the regulator tree
-In-Reply-To: 
-X-Patchwork-Hint: ignore
-Message-Id: <20190426094036.51DD7441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:40:36 +0100 (BST)
+        Fri, 26 Apr 2019 05:43:09 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7136 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726173AbfDZJnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 05:43:08 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9CF1AC8CBCC1518CBFA7;
+        Fri, 26 Apr 2019 17:43:05 +0800 (CST)
+Received: from linux-ioko.site (10.71.200.31) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 26 Apr 2019 17:42:58 +0800
+From:   Jian Shen <shenjian15@huawei.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>
+Subject: [PATCH topic-hns-5.1 0/3] {topost} net: hns3: add support for mac autoneg and FEC enconding control
+Date:   Fri, 26 Apr 2019 17:42:40 +0800
+Message-ID: <1556271763-24142-1-git-send-email-shenjian15@huawei.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.71.200.31]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+This patchset introduce multiple media type, autoneg, FEC encoding control
+for fibre port.
 
-   regulator: stm32-pwr: Fix return value check in stm32_pwr_regulator_probe()
+Jian Shen (3):
+  {topost} net: hns3: add support for multiple media type
+  {topost} net: hns3: add autoneg and change speed support for fibre
+    port
+  {topost} net: hns3: add support for FEC encoding control
 
-has been applied to the regulator tree at
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  37 +++-
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 101 ++++++++-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  30 ++-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 233 +++++++++++++++++----
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  11 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |   7 +-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  14 +-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   1 +
+ 8 files changed, 364 insertions(+), 70 deletions(-)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From dc62f951a6a8490bcccc7b6de36cd85bd57be740 Mon Sep 17 00:00:00 2001
-From: Wei Yongjun <weiyongjun1@huawei.com>
-Date: Wed, 17 Apr 2019 02:30:59 +0000
-Subject: [PATCH] regulator: stm32-pwr: Fix return value check in
- stm32_pwr_regulator_probe()
-
-In case of error, the function of_iomap() returns NULL pointer not
-ERR_PTR(). The IS_ERR() test in the return value check should be
-replaced with NULL test.
-
-Fixes: 6cdae8173f67 ("regulator: Add support for stm32 power regulators")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/stm32-pwr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
-index 222d593d76a2..7b39a41530d4 100644
---- a/drivers/regulator/stm32-pwr.c
-+++ b/drivers/regulator/stm32-pwr.c
-@@ -140,9 +140,9 @@ static int stm32_pwr_regulator_probe(struct platform_device *pdev)
- 	int i, ret = 0;
- 
- 	base = of_iomap(np, 0);
--	if (IS_ERR(base)) {
-+	if (!base) {
- 		dev_err(&pdev->dev, "Unable to map IO memory\n");
--		return PTR_ERR(base);
-+		return -ENOMEM;
- 	}
- 
- 	config.dev = &pdev->dev;
 -- 
-2.20.1
+1.9.1
 
