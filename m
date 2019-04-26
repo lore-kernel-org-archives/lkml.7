@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86230C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF587C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 578CD206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CD6215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556272057;
-	bh=DdBSdm5TL3z05CQUTqpvTxj9GXse+B1DOXyKtHgnfnE=;
+	s=default; t=1556272059;
+	bh=pOa87PBCiYnHj7dTLvic5bMv6YY22wY8K1gMNVh3wOI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ZHMHrxKE8yY51qOuHgG4BDvcr9BPoEBwOgZAke1o9DHZYh2BtIYYAzRBnzp7B2OaE
-	 9fqfBCph5Ze4INHmSkVeXgg1nipEyg9wux8UaAWqKEphhzUgPkuIncuFhXv/dEqqdk
-	 XUDrSMcYmo0yaiR5S1Op7qQA94vBSZ+ZGe8KPQd8=
+	b=2K3+KDX46nUNypLFQbgY9Ax0edWkfHsKr26JQmvafjzw2Ty2Njrf4boFU3QX8Me5+
+	 SYeUsj0nncOuWWf9fxOzhRrtfORJAc0jmuCQ8VzcqH68clk0JP139CcQ7/YuWAixAO
+	 btfG5LlijaVYervZehJ4DYjgcGad+6tDzIh9+Y1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfDZJox (ORCPT
+        id S1727093AbfDZJri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:44:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53304 "EHLO
+        Fri, 26 Apr 2019 05:47:38 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53462 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbfDZJot (ORCPT
+        with ESMTP id S1727315AbfDZJoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:44:49 -0400
+        Fri, 26 Apr 2019 05:44:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=jtTH0TpgOBBUDtpKKnyrbTESZBwmjBlYdKBRoCyTaqs=; b=nrNftXcmqmih
-        EiTQipIlUXf+XmhR+yk9m1Qo+OWxnZbzHzQo2UpSm+xsBiT79DzDGTtiLtikFvNChHtovatziZKea
-        h7L9M7nLEHhm9fT2lNqz5e7WYF8+1YtfKJxp/S2WOgxnsSzm5IqwVeiuuSLpDi9dHgEVCt2UWwFnk
-        I8ohc=;
+        List-Archive; bh=fBZkPOekWpp//nTjusBuvLT1xpm6CydQjrsv6wGTMR0=; b=atbY1T29wqpN
+        bu1MsarOiW3vpNw1vTeJItUFFVM9QF387isJljHqoqwBZpqU1KXKxy5bXsa/t0hT/1O2a7gfAnHKc
+        kkMBokoPbSlvxVhai5vrHkJ5Ek4EXbWk3mTEh61JulYcvnD64enitQEwOkiGMz2Vm2fubK5DH4PjM
+        dhg1w=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxPT-0003Pk-F0; Fri, 26 Apr 2019 09:44:47 +0000
+        id 1hJxPX-0003Q2-HJ; Fri, 26 Apr 2019 09:44:51 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 5E716441D3B; Fri, 26 Apr 2019 10:44:46 +0100 (BST)
+        id 930C8441D3B; Fri, 26 Apr 2019 10:44:50 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: tps80031: Switch to SPDX identifier" to the regulator tree
+Subject: Applied "regulator: tps80031: Remove unused *rdev from struct tps80031_regulator" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094446.5E716441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:44:46 +0100 (BST)
+Message-Id: <20190426094450.930C8441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:44:50 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps80031: Switch to SPDX identifier
+   regulator: tps80031: Remove unused *rdev from struct tps80031_regulator
 
 has been applied to the regulator tree at
 
@@ -85,59 +85,40 @@ to this mail.
 Thanks,
 Mark
 
-From fd1a4da3bfd77d3fe15165948b948ead2b522c1c Mon Sep 17 00:00:00 2001
+From de110f387371337cf90f40055cf1ebdf01b6f427 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 16 Apr 2019 18:17:29 +0800
-Subject: [PATCH] regulator: tps80031: Switch to SPDX identifier
+Date: Tue, 16 Apr 2019 18:17:27 +0800
+Subject: [PATCH] regulator: tps80031: Remove unused *rdev from struct
+ tps80031_regulator
+
+The ri-rdev is assigend but not used, so remove it.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps80031-regulator.c | 34 ++++++++------------------
- 1 file changed, 10 insertions(+), 24 deletions(-)
+ drivers/regulator/tps80031-regulator.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/regulator/tps80031-regulator.c b/drivers/regulator/tps80031-regulator.c
-index 8e65a13e2ef5..85a6a8ca8c1b 100644
+index 1001147404c3..d97cd55b6850 100644
 --- a/drivers/regulator/tps80031-regulator.c
 +++ b/drivers/regulator/tps80031-regulator.c
-@@ -1,27 +1,13 @@
--/*
-- * tps80031-regulator.c -- TI TPS80031 regulator driver.
-- *
-- * Regulator driver for TI TPS80031/TPS80032 Fully Integrated Power
-- * Management with Power Path and Battery Charger.
-- *
-- * Copyright (c) 2012, NVIDIA Corporation.
-- *
-- * Author: Laxman Dewangan <ldewangan@nvidia.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any kind,
-- * whether express or implied; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-- * 02111-1307, USA
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// tps80031-regulator.c -- TI TPS80031 regulator driver.
-+//
-+// Regulator driver for TI TPS80031/TPS80032 Fully Integrated Power
-+// Management with Power Path and Battery Charger.
-+//
-+// Copyright (c) 2012, NVIDIA Corporation.
-+//
-+// Author: Laxman Dewangan <ldewangan@nvidia.com>
+@@ -85,7 +85,6 @@ struct tps80031_regulator_info {
  
- #include <linux/delay.h>
- #include <linux/err.h>
+ struct tps80031_regulator {
+ 	struct device			*dev;
+-	struct regulator_dev		*rdev;
+ 	struct tps80031_regulator_info	*rinfo;
+ 
+ 	u8				device_flags;
+@@ -736,7 +735,6 @@ static int tps80031_regulator_probe(struct platform_device *pdev)
+ 					ri->rinfo->desc.name);
+ 			return PTR_ERR(rdev);
+ 		}
+-		ri->rdev = rdev;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, pmic);
 -- 
 2.20.1
 
