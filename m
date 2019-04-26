@@ -5,89 +5,83 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30131C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451AFC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DE320679
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10DD4206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfDZQwN (ORCPT
+        id S1726299AbfDZQ4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:52:13 -0400
-Received: from ms.lwn.net ([45.79.88.28]:50112 "EHLO ms.lwn.net"
+        Fri, 26 Apr 2019 12:56:04 -0400
+Received: from mga05.intel.com ([192.55.52.43]:64090 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfDZQwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:52:11 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 50E6D7DF;
-        Fri, 26 Apr 2019 16:52:10 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 10:52:09 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH 1/2] Docs: An initial automarkup extension for sphinx
-Message-ID: <20190426105209.1e414eae@lwn.net>
-In-Reply-To: <87tvelrv8d.fsf@intel.com>
-References: <20190425200125.12302-1-corbet@lwn.net>
-        <20190425200125.12302-2-corbet@lwn.net>
-        <87tvelrv8d.fsf@intel.com>
-Organization: LWN.net
+        id S1726154AbfDZQ4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:56:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 09:56:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,398,1549958400"; 
+   d="scan'208";a="134668457"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga007.jf.intel.com with ESMTP; 26 Apr 2019 09:56:03 -0700
+Date:   Fri, 26 Apr 2019 09:58:46 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 06/19] drivers core: Add I/O ASID allocator
+Message-ID: <20190426095846.76a68f1f@jacob-builder>
+In-Reply-To: <20190426122115.GA29449@infradead.org>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1556062279-64135-7-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20190424061903.GB30717@infradead.org>
+        <20190425111912.0e15eb7d@jacob-builder>
+        <856b0457-bd2f-c2af-fdeb-45fe0bd3136b@arm.com>
+        <20190426122115.GA29449@infradead.org>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019 12:06:42 +0300
-Jani Nikula <jani.nikula@linux.intel.com> wrote:
+On Fri, 26 Apr 2019 05:21:15 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
-> It's more involved, but I think the better place to do this (as well as
-> the kernel-doc transformations) would be in the doctree-read event,
-> after the rst parsing is done. You can traverse the doctree and find the
-> places which weren't special for Sphinx, and replace the plain text
-> nodes in-place. I've toyed with this in the past, but alas I didn't have
-> (and still don't) have the time to finish the job.
+> On Fri, Apr 26, 2019 at 12:47:43PM +0100, Jean-Philippe Brucker wrote:
+> > >> On Tue, Apr 23, 2019 at 04:31:06PM -0700, Jacob Pan wrote:  
+> > >>> The allocator doesn't really belong in drivers/iommu because
+> > >>> some drivers would like to allocate PASIDs for devices that
+> > >>> aren't managed by an IOMMU, using the same ID space as IOMMU.
+> > >>> It doesn't really belong in drivers/pci either since platform
+> > >>> device also support PASID. Add the allocator in
+> > >>> drivers/base.    
+> > >>
+> > >> I'd still add it to drivers/iommu, just selectable separately
+> > >> from the core iommu code..  
+> > > Perhaps I misunderstood. If a driver wants to use IOASIDs w/o
+> > > iommu subsystem even turned on, how could selecting from the core
+> > > iommu code help? Could you elaborate on "selectable"?  
+> > 
+> > How about doing the same as CONFIG_IOMMU_IOVA? The code is in
+> > drivers/iommu but can be selected by non-IOMMU_API users,
+> > independently of CONFIG_IOMMU_SUPPORT. It's true that this
+> > allocator will mostly be used by IOMMU drivers.  
+> 
+> That is exactly what I meant!
 
-I had thought about this; indeed, there's a comment in the posted patch to
-that effect.  The tradeoff comes down to this, I think:
-
- - The fragility and inelegance of embedding a bit of redundant RST
-   parsing into this extension v. that of adding a late parsing stage as a
-   transform, trying to enumerate every node type that you might want to
-   change, and digging into the C domain code to emulate its reference
-   generation.
-
- - The time required to implement a solution; I'm having a bit of a hard
-   time keeping up with docs at the moment as it is.
-
- - Regexes.  This solution has more of them, but we're not going to get
-   away from them regardless.
-
-I am not at all opposed to a more proper solution that might, in the
-long term, produce more deterministic results.  I can even try to work in
-that direction.  But this is something that can be done now that, IMO,
-doesn't in any way close off a better implementation in the future.  If we
-agree that we should automatically generate references for occurrences of
-"function()", we can change how that is actually done later.
-
-I'll look into this further, but my inclination is to go forward with what
-I have now.  It's simple and easy to understand, and doesn't seem to screw
-up anywhere in the current body of kernel docs as far as I can tell.
-
-> If you decide to go with regex anyway, I'd at least consider pulling the
-> transformations/highlights from kernel-doc the script to the Sphinx
-> extension, and use the exact same transformations for stuff in source
-> code comments and rst files.
-
-Pulling all RST manipulation out of kerneldoc has a great deal of appeal;
-assuming this goes forward that should indeed be high on the todo list.
-
-Thanks,
-
-jon
+Make sense, will do that in the next round. Thanks!
