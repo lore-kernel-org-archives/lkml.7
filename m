@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F14C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD4AC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D6E206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA33206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556272155;
-	bh=lkO6Rz2DiapVeRSd0t08iMd6FYynDAws5LZk6Y39F5M=;
+	s=default; t=1556272159;
+	bh=v2ARod7HjKep7IitZ+YopVdamp1JPG6yFnkBdKSIkZA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=xwOCvIHOnhtaQQpGxLNNrv4Pm90X9ZvI9pHYKTyPAUHKCeE4ZmiQWPnE/5VuIe4hk
-	 MSyD+xrErrwlppuFuYMplBK57JgpkIiTtcbjBkmUC+cUuQ3aKrXggasfhuemOpMhCA
-	 0l/eNoT2C6xrtcqRCEkzQ2P4aBvitIOgW73JjaZM=
+	b=rB3Lum/aHbtSk9oCVYwGL9BTRzBX4quNzpbimW/lNl/JFd2hcm0+9qfQEwTDPXPZa
+	 ckFcycC9VcfjD/Oii9fLuyLSPROW04VryJQjZftA+LqDgVd5O36A6uxjl5HUI4LXe9
+	 D/S5erHNqy8LLCErjX8ATNniNSo2AOynk6fBcBQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfDZJoZ (ORCPT
+        id S1726807AbfDZJtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:44:25 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52496 "EHLO
+        Fri, 26 Apr 2019 05:49:18 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52582 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbfDZJoX (ORCPT
+        with ESMTP id S1727161AbfDZJoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:44:23 -0400
+        Fri, 26 Apr 2019 05:44:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=RSLf2VHcn1xnUInCdFeL3Ts/cHHcDwd9UlEvJRmoBa0=; b=PR/6s+TyeHlZ
-        usPwWGlIQL9XP7LkI8MVMBRD0XNJfDqirh+WtLAHF7tNK44+wkVj6aFZZHGzoBRR8a+jhcNvlYR+7
-        Aw9y5Gt/dHbdO5D4bJHVwSUoFTGBib9xdp8SUK+8IgjpWJwFmFbJpyGS3ERSsuQnDp+24LfgVIOTn
-        j7FOc=;
+        List-Archive; bh=d7fwDPCLOnIsD8KW6qDPNj2rt1PnG3weU5JoQ4wyNxs=; b=C4vDOtLBwvFG
+        3GcroHVTTu1YBxbULsUVXAgtwm797iGABZhy3hvMtm87mGJcWkdR5ovU8WF1Y2lDEpb9nDJ3dmalv
+        dRBCkSf/bHx2NZ7pMjDa1WmxbVnO814E6nEWwI5SvuROED3ZuNivo9ZcJ4kraDts7liQdW9AMv6rs
+        AJan8=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxP1-0003Na-QW; Fri, 26 Apr 2019 09:44:19 +0000
+        id 1hJxP4-0003O5-Bw; Fri, 26 Apr 2019 09:44:22 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id BC48B441D3B; Fri, 26 Apr 2019 10:44:18 +0100 (BST)
+        id 517F3441D3C; Fri, 26 Apr 2019 10:44:21 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: sy8106a: Get rid of struct sy8106a" to the regulator tree
-In-Reply-To: <20190420030125.6661-1-axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Applied "regulator: ltc3589: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190418114500.1098-3-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094418.BC48B441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:44:18 +0100 (BST)
+Message-Id: <20190426094421.517F3441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:44:21 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: sy8106a: Get rid of struct sy8106a
+   regulator: ltc3589: Switch to SPDX identifier
 
 has been applied to the regulator tree at
 
@@ -87,114 +87,49 @@ to this mail.
 Thanks,
 Mark
 
-From 5d7ebba38bafa8f6eba2540e8a36233ea6d6d0dc Mon Sep 17 00:00:00 2001
+From b2745697bfe46ce04af5493f194c6073e683b0f1 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Sat, 20 Apr 2019 11:01:25 +0800
-Subject: [PATCH] regulator: sy8106a: Get rid of struct sy8106a
-
-All the fields in struct sy8106a are only used in sy8106a_i2c_probe(), so
-use local variables instead.
+Date: Thu, 18 Apr 2019 19:45:00 +0800
+Subject: [PATCH] regulator: ltc3589: Switch to SPDX identifier
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/sy8106a-regulator.c | 40 +++++++++------------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
+ drivers/regulator/ltc3589.c | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/regulator/sy8106a-regulator.c b/drivers/regulator/sy8106a-regulator.c
-index 65fbd1f0b612..42e03b2c10a0 100644
---- a/drivers/regulator/sy8106a-regulator.c
-+++ b/drivers/regulator/sy8106a-regulator.c
-@@ -22,12 +22,6 @@
-  */
- #define SY8106A_GO_BIT			BIT(7)
- 
--struct sy8106a {
--	struct regulator_dev *rdev;
--	struct regmap *regmap;
--	u32 fixed_voltage;
--};
--
- static const struct regmap_config sy8106a_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
-@@ -70,36 +64,32 @@ static const struct regulator_desc sy8106a_reg = {
- static int sy8106a_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
- {
--	struct sy8106a *chip;
- 	struct device *dev = &i2c->dev;
--	struct regulator_dev *rdev = NULL;
-+	struct regulator_dev *rdev;
- 	struct regulator_config config = { };
-+	struct regmap *regmap;
- 	unsigned int reg, vsel;
-+	u32 fixed_voltage;
- 	int error;
- 
--	chip = devm_kzalloc(&i2c->dev, sizeof(struct sy8106a), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
--
- 	error = of_property_read_u32(dev->of_node, "silergy,fixed-microvolt",
--				     &chip->fixed_voltage);
-+				     &fixed_voltage);
- 	if (error)
- 		return error;
- 
--	if (chip->fixed_voltage < SY8106A_MIN_MV * 1000 ||
--	    chip->fixed_voltage > SY8106A_MAX_MV * 1000)
-+	if (fixed_voltage < SY8106A_MIN_MV * 1000 ||
-+	    fixed_voltage > SY8106A_MAX_MV * 1000)
- 		return -EINVAL;
- 
--	chip->regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
--	if (IS_ERR(chip->regmap)) {
--		error = PTR_ERR(chip->regmap);
-+	regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		error = PTR_ERR(regmap);
- 		dev_err(dev, "Failed to allocate register map: %d\n", error);
- 		return error;
- 	}
- 
- 	config.dev = &i2c->dev;
--	config.regmap = chip->regmap;
--	config.driver_data = chip;
-+	config.regmap = regmap;
- 
- 	config.of_node = dev->of_node;
- 	config.init_data = of_get_regulator_init_data(dev, dev->of_node,
-@@ -109,15 +99,15 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c,
- 		return -ENOMEM;
- 
- 	/* Ensure GO_BIT is enabled when probing */
--	error = regmap_read(chip->regmap, SY8106A_REG_VOUT1_SEL, &reg);
-+	error = regmap_read(regmap, SY8106A_REG_VOUT1_SEL, &reg);
- 	if (error)
- 		return error;
- 
- 	if (!(reg & SY8106A_GO_BIT)) {
--		vsel = (chip->fixed_voltage / 1000 - SY8106A_MIN_MV) /
-+		vsel = (fixed_voltage / 1000 - SY8106A_MIN_MV) /
- 		       SY8106A_STEP_MV;
- 
--		error = regmap_write(chip->regmap, SY8106A_REG_VOUT1_SEL,
-+		error = regmap_write(regmap, SY8106A_REG_VOUT1_SEL,
- 				     vsel | SY8106A_GO_BIT);
- 		if (error)
- 			return error;
-@@ -131,10 +121,6 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c,
- 		return error;
- 	}
- 
--	chip->rdev = rdev;
--
--	i2c_set_clientdata(i2c, chip);
--
- 	return 0;
- }
- 
+diff --git a/drivers/regulator/ltc3589.c b/drivers/regulator/ltc3589.c
+index 077e73715514..9a037fdc5fc5 100644
+--- a/drivers/regulator/ltc3589.c
++++ b/drivers/regulator/ltc3589.c
+@@ -1,21 +1,9 @@
+-/*
+- * Linear Technology LTC3589,LTC3589-1 regulator support
+- *
+- * Copyright (c) 2014 Philipp Zabel <p.zabel@pengutronix.de>, Pengutronix
+- *
+- * See file CREDITS for list of people who contributed to this
+- * project.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2
+- * as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// Linear Technology LTC3589,LTC3589-1 regulator support
++//
++// Copyright (c) 2014 Philipp Zabel <p.zabel@pengutronix.de>, Pengutronix
++
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
 -- 
 2.20.1
 
