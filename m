@@ -4,111 +4,161 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F118BC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A89C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A452084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C7621479
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfDZOiZ (ORCPT
+        id S1726404AbfDZOjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:38:25 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:40617 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbfDZOiZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:38:25 -0400
-X-Originating-IP: 109.213.12.238
-Received: from localhost (alyon-652-1-29-238.w109-213.abo.wanadoo.fr [109.213.12.238])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id F134740008;
-        Fri, 26 Apr 2019 14:38:22 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 16:38:22 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Mathieu Malaterre <malat@debian.org>
-Cc:     linux-rtc@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/7] rtc: jz4740: switch to
- rtc_time64_to_tm/rtc_tm_to_time64
-Message-ID: <20190426143822.GS14604@piout.net>
-References: <20190418100045.29288-1-alexandre.belloni@bootlin.com>
- <20190418100045.29288-2-alexandre.belloni@bootlin.com>
- <CA+7wUswt4mEyrrVugOMgjC=jTnQwf1cTeVwd9BtZtApjmo8gGQ@mail.gmail.com>
+        Fri, 26 Apr 2019 10:39:52 -0400
+Received: from mga14.intel.com ([192.55.52.115]:36425 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbfDZOjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 10:39:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP; 26 Apr 2019 07:39:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,397,1549958400"; 
+   d="scan'208";a="165158929"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Apr 2019 07:39:47 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hK20w-0005Qc-3i; Fri, 26 Apr 2019 17:39:46 +0300
+Date:   Fri, 26 Apr 2019 17:39:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Esben Haabendal <esben@geanix.com>
+Cc:     linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        He Zhe <zhe.he@windriver.com>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] serial: 8250: Allow port registration without
+ UPF_BOOT_AUTOCONF
+Message-ID: <20190426143946.GX9224@smile.fi.intel.com>
+References: <20190426084038.6377-1-esben@geanix.com>
+ <20190426084038.6377-2-esben@geanix.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+7wUswt4mEyrrVugOMgjC=jTnQwf1cTeVwd9BtZtApjmo8gGQ@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190426084038.6377-2-esben@geanix.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/04/2019 16:29:36+0200, Mathieu Malaterre wrote:
-> On Thu, Apr 18, 2019 at 12:00 PM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> >
-> > Call the 64bit versions of rtc_tm time conversion now that the range is
-> > enforced by the core.
-> >
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > ---
-> >  drivers/rtc/rtc-jz4740.c | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-> > index 079469627bd7..15b6832f3931 100644
-> > --- a/drivers/rtc/rtc-jz4740.c
-> > +++ b/drivers/rtc/rtc-jz4740.c
-> > @@ -171,7 +171,7 @@ static int jz4740_rtc_read_time(struct device *dev, struct rtc_time *time)
-> >         if (timeout == 0)
-> >                 return -EIO;
-> >
-> > -       rtc_time_to_tm(secs, time);
-> > +       rtc_time64_to_tm(secs, time);
-> >
-> >         return 0;
-> >  }
-> > @@ -196,7 +196,7 @@ static int jz4740_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> >         alrm->enabled = !!(ctrl & JZ_RTC_CTRL_AE);
-> >         alrm->pending = !!(ctrl & JZ_RTC_CTRL_AF);
-> >
-> > -       rtc_time_to_tm(secs, &alrm->time);
-> > +       rtc_time64_to_tm(secs, &alrm->time);
-> >
-> >         return rtc_valid_tm(&alrm->time);
-> >  }
-> > @@ -205,9 +205,7 @@ static int jz4740_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> >  {
-> >         int ret;
-> >         struct jz4740_rtc *rtc = dev_get_drvdata(dev);
-> > -       unsigned long secs;
-> > -
-> > -       rtc_tm_to_time(&alrm->time, &secs);
-> > +       unsigned long secs = rtc_tm_to_time64(&alrm->time);
+On Fri, Apr 26, 2019 at 10:40:37AM +0200, Esben Haabendal wrote:
+> With serial8250_register_8250_port() forcing UPF_BOOT_AUTOCONF bit on, it
+> is not possible to register a port without having
+> serial8250_request_std_resource() called.
 > 
-> nitpick: all other declarations are done with uint32_t, so to make it
-> clear (maybe) with something like:
+> For adding a 8250 port to an MFD device, this is problematic, as the
+> request_mem_region() call will fail, as the MFD device (and rightly  so)
+> has requested the region.  For this case, the 8250 port should accept
+> having passed mapbase and membase, and just use that.
+
+You need to simple set port type and use UPF_FIXED_TYPE.
+No need for this patch.
+
 > 
-> uint32_t secs = lower_32_bits(rtc_tm_to_time64(&alrm->time));
+> Signed-off-by: Esben Haabendal <esben@geanix.com>
+> ---
+>  drivers/tty/serial/8250/8250_core.c | 36 +++++++++++++++++++++---------------
+>  include/linux/serial_8250.h         |  2 ++
+>  2 files changed, 23 insertions(+), 15 deletions(-)
 > 
-
-Ok, I'll change that.
-
-> Technically I would have stored the full time64_t here and put a
-> WARN_ON(secs > U32_MAX) but I am not sure what other driver are
-> supposed to do in this case.
+> diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+> index e441221..ddbb0a0 100644
+> --- a/drivers/tty/serial/8250/8250_core.c
+> +++ b/drivers/tty/serial/8250/8250_core.c
+> @@ -957,20 +957,8 @@ static void serial_8250_overrun_backoff_work(struct work_struct *work)
+>  	spin_unlock_irqrestore(&port->lock, flags);
+>  }
+>  
+> -/**
+> - *	serial8250_register_8250_port - register a serial port
+> - *	@up: serial port template
+> - *
+> - *	Configure the serial port specified by the request. If the
+> - *	port exists and is in use, it is hung up and unregistered
+> - *	first.
+> - *
+> - *	The port is then probed and if necessary the IRQ is autodetected
+> - *	If this fails an error is returned.
+> - *
+> - *	On success the port is ready to use and the line number is returned.
+> - */
+> -int serial8250_register_8250_port(struct uart_8250_port *up)
+> +int __serial8250_register_8250_port(struct uart_8250_port *up,
+> +				    unsigned int extra_flags)
+>  {
+>  	struct uart_8250_port *uart;
+>  	int ret = -ENOSPC;
+> @@ -993,7 +981,7 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+>  		uart->port.fifosize     = up->port.fifosize;
+>  		uart->port.regshift     = up->port.regshift;
+>  		uart->port.iotype       = up->port.iotype;
+> -		uart->port.flags        = up->port.flags | UPF_BOOT_AUTOCONF;
+> +		uart->port.flags        = up->port.flags | extra_flags;
+>  		uart->bugs		= up->bugs;
+>  		uart->port.mapbase      = up->port.mapbase;
+>  		uart->port.mapsize      = up->port.mapsize;
+> @@ -1086,6 +1074,24 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+>  
+>  	return ret;
+>  }
+> +
+> +/**
+> + *	serial8250_register_8250_port - register a serial port
+> + *	@up: serial port template
+> + *
+> + *	Configure the serial port specified by the request. If the
+> + *	port exists and is in use, it is hung up and unregistered
+> + *	first.
+> + *
+> + *	The port is then probed and if necessary the IRQ is autodetected
+> + *	If this fails an error is returned.
+> + *
+> + *	On success the port is ready to use and the line number is returned.
+> + */
+> +int serial8250_register_8250_port(struct uart_8250_port *up)
+> +{
+> +	return __serial8250_register_8250_port(up, UPF_BOOT_AUTOCONF);
+> +}
+>  EXPORT_SYMBOL(serial8250_register_8250_port);
+>  
+>  /**
+> diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
+> index 5a655ba..9d1fe2e 100644
+> --- a/include/linux/serial_8250.h
+> +++ b/include/linux/serial_8250.h
+> @@ -145,6 +145,8 @@ static inline struct uart_8250_port *up_to_u8250p(struct uart_port *up)
+>  	return container_of(up, struct uart_8250_port, port);
+>  }
+>  
+> +extern int __serial8250_register_8250_port(struct uart_8250_port *,
+> +					   unsigned int);
+>  int serial8250_register_8250_port(struct uart_8250_port *);
+>  void serial8250_unregister_port(int line);
+>  void serial8250_suspend_port(int line);
+> -- 
+> 2.4.11
 > 
-
-Because range_max is set properly, the core will ensure that all the
-times passed to the driver fit within the range.
-
-Thanks for the review!
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
+
+
