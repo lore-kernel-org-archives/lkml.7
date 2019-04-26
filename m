@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8E0C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6BAC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4561E214C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3330B2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uo1MV7oT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="p9C2EtlN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfDZRNT (ORCPT
+        id S1727075AbfDZRN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 13:13:19 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36800 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfDZRNP (ORCPT
+        Fri, 26 Apr 2019 13:13:27 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36554 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbfDZRNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 13:13:15 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3QHDA3E079313;
-        Fri, 26 Apr 2019 12:13:10 -0500
+        Fri, 26 Apr 2019 13:13:24 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3QHDJVE108021;
+        Fri, 26 Apr 2019 12:13:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556298790;
-        bh=XhNtV44sYHgWIKEbTrlTAP9ushUPRnntmrv/oD3Vi78=;
+        s=ti-com-17Q1; t=1556298799;
+        bh=Fu9od95x/e8tiwiSgH5mijj87j21QfJc9Hr5BF8a8oQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uo1MV7oT7qAgf2GbQESB7+VJLppALAiJdr92O6yh4KR5l/laq6JRjazWg3vIOyHpL
-         GdhhoOuS5pXa0YcSD39+F2zJHDIjx36Uu2hWfEdH/27gE7BCwm4TJa+MnchrZ6TKXR
-         VcJIQBumEoOFyZHbJZOFwyruj2xz1b7YSk9ahWr4=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3QHDA9w030460
+        b=p9C2EtlNG5kzYUkjVQMMiXTm6PCEQXjZBs+/mzmNAOe5V0shrUBLBzJP2ifrJGttZ
+         iW67S6t52G1GHWTLpZFBtSz8g7HsuTh8c+ejWis7kbYyp+zVtHoTs5gRhEajhEOtDz
+         082eVYbDLjgN4rxrVC0wntPnx129H0ic7UPLhpIo=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3QHDJFd021592
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Apr 2019 12:13:10 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 26 Apr 2019 12:13:19 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 26
- Apr 2019 12:13:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 12:13:19 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 26 Apr 2019 12:13:10 -0500
+ Frontend Transport; Fri, 26 Apr 2019 12:13:19 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3QHD9rp114406;
-        Fri, 26 Apr 2019 12:13:09 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3QHDIl5092828;
+        Fri, 26 Apr 2019 12:13:18 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     <netdev@vger.kernel.org>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
@@ -58,9 +58,9 @@ CC:     Florian Fainelli <f.fainelli@gmail.com>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         Murali Karicheri <m-karicheri2@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v2 13/20] net: ethernet: ti: davinci_mdio: use devm_ioremap()
-Date:   Fri, 26 Apr 2019 20:12:35 +0300
-Message-ID: <1556298762-8632-14-git-send-email-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 17/20] net: ethernet: ti: cpsw: move common hw init code in separate func
+Date:   Fri, 26 Apr 2019 20:12:39 +0300
+Message-ID: <1556298762-8632-18-git-send-email-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556298762-8632-1-git-send-email-grygorii.strashko@ti.com>
 References: <1556298762-8632-1-git-send-email-grygorii.strashko@ti.com>
@@ -72,37 +72,320 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Davinci MDIO in most of the case implemented as module inside of TI
-CPSW subsystem and fully depends on CPSW to be enabled, but historically
-it's implemented as separate Platform device/driver and defined in DT files
-in two ways:
-- as standalone node
-- as child node of CPSW subsystem.
-
-In later case it's required to split CPSW subsystem "reg" property to
-exclude MDIO I/O range which is not useful.
-
-Hence, replace devm_ioremap_resource() with devm_ioremap() to allow define
-full I/O range in parent CPSW subsystem without spliting.
+move common hw init code in separate function as preparation for adding new
+switchdev driver.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/net/ethernet/ti/davinci_mdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+changes in v2:
+ - dropped force type conversion for desc_mem_phys parameter
 
-diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
-index edb46fcdaddc..11642721c123 100644
---- a/drivers/net/ethernet/ti/davinci_mdio.c
-+++ b/drivers/net/ethernet/ti/davinci_mdio.c
-@@ -397,7 +397,7 @@ static int davinci_mdio_probe(struct platform_device *pdev)
- 	data->dev = dev;
+ drivers/net/ethernet/ti/Makefile    |   2 +-
+ drivers/net/ethernet/ti/cpsw.c      | 106 ++---------------------
+ drivers/net/ethernet/ti/cpsw_priv.c | 129 ++++++++++++++++++++++++++++
+ drivers/net/ethernet/ti/cpsw_priv.h |   4 +
+ 4 files changed, 139 insertions(+), 102 deletions(-)
+ create mode 100644 drivers/net/ethernet/ti/cpsw_priv.c
+
+diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+index 2f159a71f88e..de1561596646 100644
+--- a/drivers/net/ethernet/ti/Makefile
++++ b/drivers/net/ethernet/ti/Makefile
+@@ -14,7 +14,7 @@ obj-$(CONFIG_TI_DAVINCI_MDIO) += davinci_mdio.o
+ obj-$(CONFIG_TI_CPSW_PHY_SEL) += cpsw-phy-sel.o
+ obj-$(CONFIG_TI_CPTS_MOD) += cpts.o
+ obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
+-ti_cpsw-y := cpsw.o davinci_cpdma.o cpsw_ale.o
++ti_cpsw-y := cpsw.o davinci_cpdma.o cpsw_ale.o cpsw_priv.o
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	data->regs = devm_ioremap_resource(dev, res);
-+	data->regs = devm_ioremap(dev, res->start, resource_size(res));
- 	if (IS_ERR(data->regs))
- 		return PTR_ERR(data->regs);
+ obj-$(CONFIG_TI_KEYSTONE_NETCP) += keystone_netcp.o
+ keystone_netcp-y := netcp_core.o cpsw_ale.o
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 982077066064..4219b13e6a8e 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -3020,16 +3020,12 @@ static int cpsw_probe(struct platform_device *pdev)
+ 	struct cpsw_platform_data	*data;
+ 	struct net_device		*ndev;
+ 	struct cpsw_priv		*priv;
+-	struct cpdma_params		dma_params;
+-	struct cpsw_ale_params		ale_params;
+ 	void __iomem			*ss_regs;
+-	void __iomem			*cpts_regs;
+ 	struct resource			*res, *ss_res;
+ 	struct gpio_descs		*mode;
+-	u32 slave_offset, sliver_offset, slave_size;
+ 	const struct soc_device_attribute *soc;
+ 	struct cpsw_common		*cpsw;
+-	int ret = 0, i, ch;
++	int ret = 0, ch;
+ 	int irq;
  
+ 	cpsw = devm_kzalloc(dev, sizeof(struct cpsw_common), GFP_KERNEL);
+@@ -3109,103 +3105,12 @@ static int cpsw_probe(struct platform_device *pdev)
+ 
+ 	cpsw->rx_packet_max = max(rx_packet_max, CPSW_MAX_PACKET_SIZE);
+ 
+-	cpsw->rx_ch_num = 1;
+-	cpsw->tx_ch_num = 1;
+ 
+-	cpsw->version = readl(&cpsw->regs->id_ver);
+-
+-	memset(&dma_params, 0, sizeof(dma_params));
+-	memset(&ale_params, 0, sizeof(ale_params));
+-
+-	switch (cpsw->version) {
+-	case CPSW_VERSION_1:
+-		cpsw->host_port_regs = ss_regs + CPSW1_HOST_PORT_OFFSET;
+-		cpts_regs		= ss_regs + CPSW1_CPTS_OFFSET;
+-		cpsw->hw_stats	     = ss_regs + CPSW1_HW_STATS;
+-		dma_params.dmaregs   = ss_regs + CPSW1_CPDMA_OFFSET;
+-		dma_params.txhdp     = ss_regs + CPSW1_STATERAM_OFFSET;
+-		ale_params.ale_regs  = ss_regs + CPSW1_ALE_OFFSET;
+-		slave_offset         = CPSW1_SLAVE_OFFSET;
+-		slave_size           = CPSW1_SLAVE_SIZE;
+-		sliver_offset        = CPSW1_SLIVER_OFFSET;
+-		dma_params.desc_mem_phys = 0;
+-		break;
+-	case CPSW_VERSION_2:
+-	case CPSW_VERSION_3:
+-	case CPSW_VERSION_4:
+-		cpsw->host_port_regs = ss_regs + CPSW2_HOST_PORT_OFFSET;
+-		cpts_regs		= ss_regs + CPSW2_CPTS_OFFSET;
+-		cpsw->hw_stats	     = ss_regs + CPSW2_HW_STATS;
+-		dma_params.dmaregs   = ss_regs + CPSW2_CPDMA_OFFSET;
+-		dma_params.txhdp     = ss_regs + CPSW2_STATERAM_OFFSET;
+-		ale_params.ale_regs  = ss_regs + CPSW2_ALE_OFFSET;
+-		slave_offset         = CPSW2_SLAVE_OFFSET;
+-		slave_size           = CPSW2_SLAVE_SIZE;
+-		sliver_offset        = CPSW2_SLIVER_OFFSET;
+-		dma_params.desc_mem_phys =
+-			(u32 __force) ss_res->start + CPSW2_BD_OFFSET;
+-		break;
+-	default:
+-		dev_err(dev, "unknown version 0x%08x\n", cpsw->version);
+-		ret = -ENODEV;
+-		goto clean_dt_ret;
+-	}
+-
+-	for (i = 0; i < cpsw->data.slaves; i++) {
+-		struct cpsw_slave *slave = &cpsw->slaves[i];
+-		void __iomem		*regs = cpsw->regs;
+-
+-		slave->slave_num = i;
+-		slave->data	= &cpsw->data.slave_data[i];
+-		slave->regs	= regs + slave_offset;
+-		slave->sliver	= regs + sliver_offset;
+-		slave->port_vlan = slave->data->dual_emac_res_vlan;
+-
+-		slave_offset  += slave_size;
+-		sliver_offset += SLIVER_SIZE;
+-	}
+-
+-	ale_params.dev			= dev;
+-	ale_params.ale_ageout		= ale_ageout;
+-	ale_params.ale_entries		= data->ale_entries;
+-	ale_params.ale_ports		= CPSW_ALE_PORTS_NUM;
+-
+-	cpsw->ale = cpsw_ale_create(&ale_params);
+-	if (!cpsw->ale) {
+-		dev_err(dev, "error initializing ale engine\n");
+-		ret = -ENODEV;
+-		goto clean_dt_ret;
+-	}
+-
+-	dma_params.dev		= dev;
+-	dma_params.rxthresh	= dma_params.dmaregs + CPDMA_RXTHRESH;
+-	dma_params.rxfree	= dma_params.dmaregs + CPDMA_RXFREE;
+-	dma_params.rxhdp	= dma_params.txhdp + CPDMA_RXHDP;
+-	dma_params.txcp		= dma_params.txhdp + CPDMA_TXCP;
+-	dma_params.rxcp		= dma_params.txhdp + CPDMA_RXCP;
+-
+-	dma_params.num_chan		= data->channels;
+-	dma_params.has_soft_reset	= true;
+-	dma_params.min_packet_size	= CPSW_MIN_PACKET_SIZE;
+-	dma_params.desc_mem_size	= data->bd_ram_size;
+-	dma_params.desc_align		= 16;
+-	dma_params.has_ext_regs		= true;
+-	dma_params.desc_hw_addr         = dma_params.desc_mem_phys;
+-	dma_params.bus_freq_mhz		= cpsw->bus_freq_mhz;
+-	dma_params.descs_pool_size	= descs_pool_size;
+-
+-	cpsw->dma = cpdma_ctlr_create(&dma_params);
+-	if (!cpsw->dma) {
+-		dev_err(dev, "error initializing dma\n");
+-		ret = -ENOMEM;
++	ret = cpsw_init_common(cpsw, ss_regs, ale_ageout,
++			       ss_res->start + CPSW2_BD_OFFSET,
++			       descs_pool_size);
++	if (ret)
+ 		goto clean_dt_ret;
+-	}
+-
+-	cpsw->cpts = cpts_create(cpsw->dev, cpts_regs, cpsw->dev->of_node);
+-	if (IS_ERR(cpsw->cpts)) {
+-		ret = PTR_ERR(cpsw->cpts);
+-		goto clean_dma_ret;
+-	}
+ 
+ 	ch = cpsw->quirk_irq ? 0 : 7;
+ 	cpsw->txv[0].ch = cpdma_chan_create(cpsw->dma, ch, cpsw_tx_handler, 0);
+@@ -3313,7 +3218,6 @@ static int cpsw_probe(struct platform_device *pdev)
+ 	unregister_netdev(ndev);
+ clean_cpts:
+ 	cpts_release(cpsw->cpts);
+-clean_dma_ret:
+ 	cpdma_ctlr_destroy(cpsw->dma);
+ clean_dt_ret:
+ 	cpsw_remove_dt(pdev);
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
+new file mode 100644
+index 000000000000..d4d1e0b397bc
+--- /dev/null
++++ b/drivers/net/ethernet/ti/cpsw_priv.c
+@@ -0,0 +1,129 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Texas Instruments Ethernet Switch Driver
++ *
++ * Copyright (C) 2019 Texas Instruments
++ */
++
++#include <linux/if_ether.h>
++#include <linux/if_vlan.h>
++#include <linux/module.h>
++#include <linux/netdevice.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++#include <linux/skbuff.h>
++
++#include "cpts.h"
++#include "cpsw_ale.h"
++#include "cpsw_priv.h"
++#include "davinci_cpdma.h"
++
++int cpsw_init_common(struct cpsw_common *cpsw, void __iomem *ss_regs,
++		     int ale_ageout, phys_addr_t desc_mem_phys,
++		     int descs_pool_size)
++{
++	u32 slave_offset, sliver_offset, slave_size;
++	struct cpsw_ale_params ale_params;
++	struct cpsw_platform_data *data;
++	struct cpdma_params dma_params;
++	struct device *dev = cpsw->dev;
++	void __iomem *cpts_regs;
++	int ret = 0, i;
++
++	data = &cpsw->data;
++	cpsw->rx_ch_num = 1;
++	cpsw->tx_ch_num = 1;
++
++	cpsw->version = readl(&cpsw->regs->id_ver);
++
++	memset(&dma_params, 0, sizeof(dma_params));
++	memset(&ale_params, 0, sizeof(ale_params));
++
++	switch (cpsw->version) {
++	case CPSW_VERSION_1:
++		cpsw->host_port_regs = ss_regs + CPSW1_HOST_PORT_OFFSET;
++		cpts_regs	     = ss_regs + CPSW1_CPTS_OFFSET;
++		cpsw->hw_stats	     = ss_regs + CPSW1_HW_STATS;
++		dma_params.dmaregs   = ss_regs + CPSW1_CPDMA_OFFSET;
++		dma_params.txhdp     = ss_regs + CPSW1_STATERAM_OFFSET;
++		ale_params.ale_regs  = ss_regs + CPSW1_ALE_OFFSET;
++		slave_offset         = CPSW1_SLAVE_OFFSET;
++		slave_size           = CPSW1_SLAVE_SIZE;
++		sliver_offset        = CPSW1_SLIVER_OFFSET;
++		dma_params.desc_mem_phys = 0;
++		break;
++	case CPSW_VERSION_2:
++	case CPSW_VERSION_3:
++	case CPSW_VERSION_4:
++		cpsw->host_port_regs = ss_regs + CPSW2_HOST_PORT_OFFSET;
++		cpts_regs	     = ss_regs + CPSW2_CPTS_OFFSET;
++		cpsw->hw_stats	     = ss_regs + CPSW2_HW_STATS;
++		dma_params.dmaregs   = ss_regs + CPSW2_CPDMA_OFFSET;
++		dma_params.txhdp     = ss_regs + CPSW2_STATERAM_OFFSET;
++		ale_params.ale_regs  = ss_regs + CPSW2_ALE_OFFSET;
++		slave_offset         = CPSW2_SLAVE_OFFSET;
++		slave_size           = CPSW2_SLAVE_SIZE;
++		sliver_offset        = CPSW2_SLIVER_OFFSET;
++		dma_params.desc_mem_phys = desc_mem_phys;
++		break;
++	default:
++		dev_err(dev, "unknown version 0x%08x\n", cpsw->version);
++		return -ENODEV;
++	}
++
++	for (i = 0; i < cpsw->data.slaves; i++) {
++		struct cpsw_slave *slave = &cpsw->slaves[i];
++		void __iomem		*regs = cpsw->regs;
++
++		slave->slave_num = i;
++		slave->data	= &cpsw->data.slave_data[i];
++		slave->regs	= regs + slave_offset;
++		slave->sliver	= regs + sliver_offset;
++		slave->port_vlan = slave->data->dual_emac_res_vlan;
++
++		slave_offset  += slave_size;
++		sliver_offset += SLIVER_SIZE;
++	}
++
++	ale_params.dev			= dev;
++	ale_params.ale_ageout		= ale_ageout;
++	ale_params.ale_entries		= data->ale_entries;
++	ale_params.ale_ports		= CPSW_ALE_PORTS_NUM;
++
++	cpsw->ale = cpsw_ale_create(&ale_params);
++	if (!cpsw->ale) {
++		dev_err(dev, "error initializing ale engine\n");
++		return -ENODEV;
++	}
++
++	dma_params.dev		= dev;
++	dma_params.rxthresh	= dma_params.dmaregs + CPDMA_RXTHRESH;
++	dma_params.rxfree	= dma_params.dmaregs + CPDMA_RXFREE;
++	dma_params.rxhdp	= dma_params.txhdp + CPDMA_RXHDP;
++	dma_params.txcp		= dma_params.txhdp + CPDMA_TXCP;
++	dma_params.rxcp		= dma_params.txhdp + CPDMA_RXCP;
++
++	dma_params.num_chan		= data->channels;
++	dma_params.has_soft_reset	= true;
++	dma_params.min_packet_size	= CPSW_MIN_PACKET_SIZE;
++	dma_params.desc_mem_size	= data->bd_ram_size;
++	dma_params.desc_align		= 16;
++	dma_params.has_ext_regs		= true;
++	dma_params.desc_hw_addr         = dma_params.desc_mem_phys;
++	dma_params.bus_freq_mhz		= cpsw->bus_freq_mhz;
++	dma_params.descs_pool_size	= descs_pool_size;
++
++	cpsw->dma = cpdma_ctlr_create(&dma_params);
++	if (!cpsw->dma) {
++		dev_err(dev, "error initializing dma\n");
++		return -ENOMEM;
++	}
++
++	cpsw->cpts = cpts_create(cpsw->dev, cpts_regs, cpsw->dev->of_node);
++	if (IS_ERR(cpsw->cpts)) {
++		ret = PTR_ERR(cpsw->cpts);
++		cpdma_ctlr_destroy(cpsw->dma);
++	}
++
++	return ret;
++}
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
+index 6a01beef4d22..53bd6e020f94 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.h
++++ b/drivers/net/ethernet/ti/cpsw_priv.h
+@@ -434,4 +434,8 @@ struct addr_sync_ctx {
+ 	int flush;		/* flush flag */
+ };
+ 
++int cpsw_init_common(struct cpsw_common *cpsw, void __iomem *ss_regs,
++		     int ale_ageout, phys_addr_t desc_mem_phys,
++		     int descs_pool_size);
++
+ #endif /* DRIVERS_NET_ETHERNET_TI_CPSW_PRIV_H_ */
 -- 
 2.17.1
 
