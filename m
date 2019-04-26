@@ -2,116 +2,139 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DDAC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7752DC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3C1206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:47:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0nJ6y2K"
+	by mail.kernel.org (Postfix) with ESMTP id 4B2DB206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:48:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfDZKrY (ORCPT
+        id S1726404AbfDZKs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:47:24 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35192 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfDZKrW (ORCPT
+        Fri, 26 Apr 2019 06:48:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34480 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725877AbfDZKsZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:47:22 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f7so3824849wrs.2;
-        Fri, 26 Apr 2019 03:47:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=/pbcIW7QnJiZfFklPKadIDJKCNmi1ZkDCWDwjtzVuRY=;
-        b=B0nJ6y2KjS3Fuw0MyXQaG++majxQlDmyF0DQhrfqFLzf4LF4Ff54hy3NS36ZxTtLrn
-         I7CeCvUixCdzsBMJNCGitQoCu7hlUeLKw3y/Kb3qUs80P7iCG081FwomO2Pt9oPwzx4s
-         Ep1sh5ZrfvW/p8R3NxcUh2oHCSHJC+kx7BBBoPx9p89P6AhZBpSCnxcHEDJn+0PWJmUR
-         MaA8x0GjTI3GFd9IvOUqMXFgiAteWLystHBquqOjzwuUJEVeWxoas+nguRk2Wc3P5TD8
-         JrcPAwiDY1pig6HXx42RDV2hcUb+oTTtqGTxtECwlCUJX4I+ymRpofLxXutyzHKwzTeC
-         /1SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=/pbcIW7QnJiZfFklPKadIDJKCNmi1ZkDCWDwjtzVuRY=;
-        b=IpiBD7mqoL/ecd6/qyamzogD7DLuDD8jrS2K1y8VxFI7vsYIQdkxbpL/6rBrvoaQF1
-         yv3F+Yf9Dw1jOh6GCFEgG9kWC/Z19MpgtiEWpAw+k7T6Ai10PsXy/nPdv2V3TayGBSli
-         UL24o9yomILDct+khFlKfPBQjlq+ab23AdkNGtoMcd5N9l20A+KkYcpCqAF/HAEL6Ul0
-         BVBgXuG+UiAysA/5Uy2AiY/TPuCPEFt84qZjuZFKw9KrQPPZlWSG/OYcSgRrc52h9Xv7
-         O1XRS0zGjHFO7Qlhb6bEK7faCwhAldswa3bNtk6Qt+F1usE8AA3lASL8Pq7gIcaS+/bp
-         geyg==
-X-Gm-Message-State: APjAAAWieheoIGngs4tD6So2sq1mxxplXig77HJNnLEkCL8zt0OQDQuc
-        Oyr56R1/VU60zojUtovxi5s=
-X-Google-Smtp-Source: APXvYqxotNEsnRMvpEYOH/0Wt4MH2xIiejxZicij7LanI1Bewg9lnlkNLI5LGhddZWkvPGVpb0196w==
-X-Received: by 2002:a5d:4111:: with SMTP id l17mr9818769wrp.242.1556275641060;
-        Fri, 26 Apr 2019 03:47:21 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id 10sm23085339wmd.23.2019.04.26.03.47.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 03:47:20 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 12:47:19 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "Andrew F. Davis" <afd@ti.com>, Sebastian Reichel <sre@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] power: supply: bq27xxx_battery: Notify also about
- status changes
-Message-ID: <20190426104719.t6gyo3no7l4wjesz@pali>
-References: <1556272742-17232-1-git-send-email-krzk@kernel.org>
+        Fri, 26 Apr 2019 06:48:25 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QAdfOK012259
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 06:48:24 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s40259n0c-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 06:48:23 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Fri, 26 Apr 2019 11:48:22 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 26 Apr 2019 11:48:20 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3QAmI6d38797540
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Apr 2019 10:48:18 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD2EEA4055;
+        Fri, 26 Apr 2019 10:48:18 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3944EA404D;
+        Fri, 26 Apr 2019 10:48:18 +0000 (GMT)
+Received: from [9.145.15.72] (unknown [9.145.15.72])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 26 Apr 2019 10:48:18 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH] KVM: s390: vsie: Return correct values for Invalid CRYCB
+ format
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+References: <1556269201-22918-1-git-send-email-pmorel@linux.ibm.com>
+ <3b17dd58-77d9-65c1-335b-17ecba902f9f@redhat.com>
+ <38c40ea1-9a7f-d720-a994-74c5bcee8e22@de.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Fri, 26 Apr 2019 12:48:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <38c40ea1-9a7f-d720-a994-74c5bcee8e22@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556272742-17232-1-git-send-email-krzk@kernel.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-TM-AS-GCONF: 00
+x-cbid: 19042610-0020-0000-0000-000003367236
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042610-0021-0000-0000-00002188E2CF
+Message-Id: <d4cefe3e-1b53-82e0-10ef-326ac78f8fc8@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904260075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 26 April 2019 11:59:02 Krzysztof Kozlowski wrote:
-> User-space might be interested in receiving uevents when the charging
-> starts/stops or if conditions of battery changes (e.g.
-> over-temperature).  Notify about changes in battery also when the flags
-> change, not only SoC.
+On 26/04/2019 11:03, Christian Borntraeger wrote:
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> On 26.04.19 11:01, David Hildenbrand wrote:
+>> On 26.04.19 11:00, Pierre Morel wrote:
+>>> Let's use the correct validity number.
+>>>
+>>> Fixes: 55ded154b43 "KVM: s390: vsie: Allow CRYCB FORMAT-2"
+>>
+>>   LANG=c git show 55ded154b43
+>> fatal: ambiguous argument '55ded154b43': unknown revision or path not in
+>> the working tree.
+>> Use '--' to separate paths from revisions, like this:
+>>
+> 
+> I think this should be
+> 56019f9aca2266edc7f304d91e4e772023b7aa14
 
-Ok, you can add my
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Yes it is, sorry, forgot to adjust the hash
 
-> ---
 > 
-> Changes since v1:
-> 1. Remove unneeded backslash (pointed by Pali).
-> ---
->  drivers/power/supply/bq27xxx_battery.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>>>
+>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>>> ---
+>>>   arch/s390/kvm/vsie.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
+>>> index ac411e9..076090f 100644
+>>> --- a/arch/s390/kvm/vsie.c
+>>> +++ b/arch/s390/kvm/vsie.c
+>>> @@ -344,7 +344,7 @@ static int shadow_crycb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
+>>>   end:
+>>>   	switch (ret) {
+>>>   	case -EINVAL:
+>>> -		return set_validity_icpt(scb_s, 0x0020U);
+>>> +		return set_validity_icpt(scb_s, 0x0022U);
+>>>   	case -EFAULT:
+>>>   		return set_validity_icpt(scb_s, 0x0035U);
+>>>   	case -EACCES:
+>>>
+>>
+>>
 > 
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-> index 29b3a4056865..195c18c2f426 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -1612,7 +1612,8 @@ void bq27xxx_battery_update(struct bq27xxx_device_info *di)
->  			di->charge_design_full = bq27xxx_battery_read_dcap(di);
->  	}
->  
-> -	if (di->cache.capacity != cache.capacity)
-> +	if ((di->cache.capacity != cache.capacity) ||
-> +	    (di->cache.flags != cache.flags))
->  		power_supply_changed(di->bat);
->  
->  	if (memcmp(&di->cache, &cache, sizeof(cache)) != 0)
+
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
