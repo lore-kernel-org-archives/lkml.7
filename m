@@ -2,80 +2,81 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB80C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229C1C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144C0206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:05:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hyyYKEUT"
+	by mail.kernel.org (Postfix) with ESMTP id E904B206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfDZUFa (ORCPT
+        id S1726930AbfDZUG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 16:05:30 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45964 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726824AbfDZUF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 16:05:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=n8D5SWOR0NCEwB3Adrs41RtWTB1GNLwZRWOWg86mWCk=; b=hyyYKEUT2N21ugLhrRHS/XPqai
-        1OjHyql+xtk32rdHnoFvE/SaZmFSgJv9UvFBQsAJXKX95W97YJOc617btXjJonX9WXj2vBNp4Sh3i
-        Ba9Y/YqcewBJkaSC6vsi64nXRAqjUzD5IUHcp9WJDLMMhkzUfx/D/6mZOu0i02FX/a+I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hK761-0004PU-WB; Fri, 26 Apr 2019 22:05:22 +0200
-Date:   Fri, 26 Apr 2019 22:05:21 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: phy: realtek: Add rtl8211e rx/tx delays config
-Message-ID: <20190426200521.GH4041@lunn.ch>
-References: <20190426093010.9609-1-fancer.lancer@gmail.com>
- <20190426132821.GB14432@lunn.ch>
- <20190426191935.ihppqlmtpemzp3kr@mobilestation>
+        Fri, 26 Apr 2019 16:06:26 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:38813 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726377AbfDZUGZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 16:06:25 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x3QK6Hwl021783
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Apr 2019 16:06:19 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 3A361420003; Fri, 26 Apr 2019 16:06:17 -0400 (EDT)
+Date:   Fri, 26 Apr 2019 16:06:17 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Bharath Veda <linux.bhar@gmail.com>
+Cc:     arnd@arndb.de, Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drivers/char/random.c: Make add_hwgenerator_randomness
+ static
+Message-ID: <20190426200617.GF9835@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Bharath Veda <linux.bhar@gmail.com>, arnd@arndb.de,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190426182948.GA10020@bharath12345-Inspiron-5559>
+ <CAMwgTV7k=32sSFYp38Ft8M-oXhcEqcOByO=fpUBMeS1_XvzN1g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190426191935.ihppqlmtpemzp3kr@mobilestation>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAMwgTV7k=32sSFYp38Ft8M-oXhcEqcOByO=fpUBMeS1_XvzN1g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hello Andrew
+On Sat, Apr 27, 2019 at 12:52:25AM +0530, Bharath Veda wrote:
+> Hi,
 > 
-> Thanks for the comment. I'll alter the code the way you said. The mode will
-> be changed by the config_init-function only if the interface is selected to be
-> rgmii-like (rgmii, rgmii-id, rgmii-txid and rgmii-rxid), otherwise it will
-> be left as is.
+> Please ignore this patch. It breaks the build.
 > 
-> But I've got a question regarding this then. What about for instance rtl8211f
-> phy config_init-method? It setups the delay config in any case, no matter
-> whether interface is configured to be of rgmii or another mode. Is it correct
-> to configure rtl8211e and rtl8211f differently? Especially seeing the U-boot
-> driver also perform the rtl8211f phy configuration.
+> On Fri, Apr 26, 2019 at 11:59 PM Bharath Vedartham <linux.bhar@gmail.com> wrote:
+> >
+> > Make add_hwgenerator_randomness static as it is only declared on
+> > drivers/char/random.c
 
-Hi Sergey
+If one were to run the handy-dandy command "git grep
+add_hwgenerator_randomness", one would find:
 
-It is not correct and rtl8211f should be changed. Please add a second
-patch for that.
+drivers/char/hw_random/core.c:          add_hwgenerator_randomness((void *)rng_fillbuf, rc,
+drivers/char/random.c:void add_hwgenerator_randomness(const char *buffer, size_t count,
+drivers/char/random.c:EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
+drivers/net/wireless/ath/ath9k/rng.c:           add_hwgenerator_randomness((void *)rng_buf, bytes_read,
+include/linux/hw_random.h:extern void add_hwgenerator_randomness(const char *buffer, size_t count, size_t entropy);
 
-We got burnt recently with PHY drivers doing the wrong thing with
-respect to RGMII delays. We have learnt from that experience, but
-there is code in the kernel which still does things wrong.
+So the claim that it is only declared in drivers/char/random.c is not
+true.
 
-      Andrew
+And of course, build-testing patches before sending them out for
+review is a really good idea.
+
+Cheers,
+
+    	 	      	  	 	     	- Ted
