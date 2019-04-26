@@ -2,94 +2,122 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C60AC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD46C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5F720656
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564A12077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DXYVVDna"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YouWOTTg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfDZSAC (ORCPT
+        id S1726362AbfDZSBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 14:00:02 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:44834 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726315AbfDZR7y (ORCPT
+        Fri, 26 Apr 2019 14:01:01 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44172 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfDZSBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 13:59:54 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QHjkQ3007872
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 10:59:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=I69yex02ZDfSNGZEwjXGsGyUJRCnW8gVyFqR8Q8tfUU=;
- b=DXYVVDnaj6nQj536siLMon43I6/AKsE16SGOuP0BGyR65THbS6q1r7k5p0U6a8URfBu5
- jNCoslGyZxHWSUbNZFc0bLRuZhzSm8XZQi8uvNRVa6ES4baplpiDiXn5tEeUyUOo575e
- nWhFCU+UHBJwg/C7okCo3HGcJzJBvvuMHTo= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2s3uwmj13b-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 10:59:53 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 26 Apr 2019 10:59:50 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 5E497115F37BC; Fri, 26 Apr 2019 10:59:48 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Tejun Heo <tj@kernel.org>
-CC:     Oleg Nesterov <oleg@redhat.com>, <kernel-team@fb.com>,
-        <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH 0/2] cgroup v2 freezer follow-up patches
-Date:   Fri, 26 Apr 2019 10:59:43 -0700
-Message-ID: <20190426175945.2559865-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Fri, 26 Apr 2019 14:01:01 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y12so1908439plk.11
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 11:01:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QgpcjtM8GqhirZUjj4Yi3UaRcRfryKCQ0fsKcAS6iq4=;
+        b=YouWOTTgmZcMgpt7BsgUdB1ht6uEf5kKEHHMVB5iGaAehC7W/GOidF6vCoZBSGn538
+         UHsRrlZEJi8PNRrUi5n1IZArH/kSJjT+MUGdkOAshPUl08i5emUO6Fa7luH8a3b4aBBO
+         MyrWYebW5hlKUwPgobG/hv+gGYU4UEuQ8jianmZP7n7TjrYeGq6dkHvo/iw5HAOAjQdC
+         2zBMmlV8i0Smep96ysjgn9560upTf1fG7a3C+6vUt/U5xp0+ZMDf9v6gopbdsyM+wycl
+         3sxkhfZo0ugHJT8wYWGZ9oBjk1w2RCb4aPWw89FcdTUU4/+taYyx/8qysXxBYwAQTUoF
+         sSBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QgpcjtM8GqhirZUjj4Yi3UaRcRfryKCQ0fsKcAS6iq4=;
+        b=ZCOH7OgrTW2mLI6RvLAnUQN3xxP6uNY70vZxJYxCTh6mq2wvtZoPmT5s46gNbFW9AE
+         778D+O6X/SBkiC1LUQZXbKGFjsEOMQdv0zbxTTUcByVXkhL0GLciNVktXuIQZ3eNJHE2
+         8bOKMEOViuimcXD0k02FqzxseG4RJFHVt0smWP8gNyqbphJKngNWgt7X65T6mUsMG4Z8
+         bofr7GrI0ZOWE92MdXiTB/o265aW/IJ3jLvL1Ol9Y7Yf/I2fSIwZLR8awBeAUrQ/TOTw
+         L30XSis5eHQptp4BX1t4XkhC8tUipekofCLpYoTrxc/txtv6gr2T69bBsz0aAtKxff4X
+         /h+g==
+X-Gm-Message-State: APjAAAWUoDgdqb7Lrb0Z0nYcVcxrlAW2hBFDrN9NZbZUKSBQeGYxSzE3
+        4Oy414JPHpEgCcH10EMZXmbbO2D7r4WQo+4oHJIB0w==
+X-Google-Smtp-Source: APXvYqxlXWG7kfLW5uVwj0WUNXrrhVqZet8RCYND3XClYyu35n3cM60w5mnM6qy38ezgLNIvxM7VbodLmOGh/5yBthw=
+X-Received: by 2002:a17:902:7d8f:: with SMTP id a15mr46673534plm.3.1556301660487;
+ Fri, 26 Apr 2019 11:01:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=687 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904260122
-X-FB-Internal: deliver
+References: <20190426155653.2cdebc5d@canb.auug.org.au> <20190426062548.GB5920@kroah.com>
+ <CAO=notwQFWRVDtoH+NGWpm647pJHVFvVoPm3EKdKmdrRUmDZqw@mail.gmail.com>
+In-Reply-To: <CAO=notwQFWRVDtoH+NGWpm647pJHVFvVoPm3EKdKmdrRUmDZqw@mail.gmail.com>
+From:   Patrick Venture <venture@google.com>
+Date:   Fri, 26 Apr 2019 11:00:49 -0700
+Message-ID: <CAO=notxMAQinwQrrbGwYAUD3JGq8zo42U314Km_QKQrnrkRoQA@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the char-misc tree
+To:     Greg KH <greg@kroah.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Tejun!
+On Fri, Apr 26, 2019 at 7:30 AM Patrick Venture <venture@google.com> wrote:
+>
+> On Thu, Apr 25, 2019 at 11:25 PM Greg KH <greg@kroah.com> wrote:
+> >
+> > On Fri, Apr 26, 2019 at 03:56:53PM +1000, Stephen Rothwell wrote:
+> > > Hi all,
+> > >
+> > > After merging the char-misc tree, today's linux-next build (x86_64
+> > > allmodconfig) produced this warning:
+> > >
+> > > drivers/misc/aspeed-p2a-ctrl.c: In function 'aspeed_p2a_mmap':
+> > > drivers/misc/aspeed-p2a-ctrl.c:110:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+> > >   pgprot_t prot = vma->vm_page_prot;
+> > >   ^~~~~~~~
+> > >
+> > > Introduced by commit
+> > >
+> > >   01c60dcea9f7 ("drivers/misc: Add Aspeed P2A control driver")
+> >
+> > Patrick, I thought you fixed all of these already?  Can you send a patch
+> > again?
+>
+> I fixed the ones caught by the robot.  I'll have to switch up my build
+> environment a bit to fault on warnings for the kernel, not sure why it
+> isn't --
 
-Please, pull these two follow-up patches for the cgroup v2 freezer.
+Verified the warnings being ignored isn't a local configuration issue,
+but the way OpenBMC is configured.  Verified the warning via normal
+kernel compilation and fixed the issue.  Reran and found no other
+issues for that drivers.  Submitted patch for review.
 
-These are a fix for a spurious state transition, which could happen
-due to a race condition, and a cleanup of some dead code. Both patches
-were suggested by Oleg Nesterov.
+>
+> >
+> > Can you also make the driver so it can build with CONFIG_COMPILE_TEST
+> > enabled so that others can find your problems earlier in the review
+> > process?
 
-Thank you!
+Verified the driver builds and produces no warnings.
 
+Thanks,
+Patrick
 
-Roman Gushchin (2):
-  cgroup: prevent spurious transition into non-frozen state
-  cgroup: get rid of cgroup_freezer_frozen_exit()
-
- include/linux/cgroup.h  |  2 +-
- kernel/cgroup/cgroup.c  |  5 ++---
- kernel/cgroup/freezer.c | 26 +++++---------------------
- kernel/signal.c         |  2 +-
- 4 files changed, 9 insertions(+), 26 deletions(-)
-
--- 
-2.20.1
-
+>
+> Roger that.
+>
+> >
+> > thanks,
+> >
+> > greg k-h
