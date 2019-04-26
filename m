@@ -2,175 +2,114 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883D8C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060BBC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D9B2053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFCF2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:19:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="bW0/FZAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfDZQTa (ORCPT
+        id S1726415AbfDZQTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:19:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33354 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbfDZQTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:19:30 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 32B6CC058CC0;
-        Fri, 26 Apr 2019 16:19:29 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E77AE2E02C;
-        Fri, 26 Apr 2019 16:19:21 +0000 (UTC)
-Subject: Re: [PATCH v2 16/19] iommu/vtd: Clean up for SVM device list
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556062279-64135-17-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <d7db0f68-3b56-7fac-e290-8c57ad9dcb2c@redhat.com>
-Date:   Fri, 26 Apr 2019 18:19:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 26 Apr 2019 12:19:52 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:38366 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfDZQTw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:19:52 -0400
+Received: by mail-vs1-f68.google.com with SMTP id s2so2260025vsi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:19:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ieCTVXJiyhcOi2/nx53QZYmt0TZMysNwpvj8N+mOnRQ=;
+        b=bW0/FZAtgKs+lLeBUBHHdamPAsF5q9m+uVynVFmBl0kvNbv9EX27+Lw3s0b+fIHf3c
+         XwL2tu9/p7Hre+5NXU7YPckqVEgqJNsF9lRwe1TnSJBiHhwBe+cRDBt5NYaWrPhNx+48
+         BaODMulleGow3zOlDv20XT8KSWVMg4+QLAgKdHGKkXRAXuMiwNId49TK2GVJPE5A8DEr
+         KN4Lyiup+KLXiCzsS/MD7MWLoIcZxRfgArGQ1Q/U4dn+AWkqvn/1+G7TIttkSl291ohQ
+         l9qxdeDDiOjvHOXw9OJWtPNnMhNCBXsJ1yXyiK/K28FiYpbCxqfBcfhIA3UDbTRK4Iuk
+         rqZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ieCTVXJiyhcOi2/nx53QZYmt0TZMysNwpvj8N+mOnRQ=;
+        b=QSzQF1Agov9j14/oU07AiueEcvZwHysAf7dCIiBvhnBDWXEpyCXPA7yCMHwcFgPnOX
+         3PcceYsGZnkCjjtLl46bROrMA0FRTPcpupzA8mUJ7qjsz83V+2GVI2mOzqJIpYwydbfA
+         B2kuwVyZW7gxX4PBQGil3yxkbwBOd4zOR6IckKvDd7m9eDiJFyD5e+3BhDJu4BVMffAS
+         s/DIeRvWj1oFke5hf7NE+A75hVpFEdga0nNMaGpGX2XQJBofc1/th5daru6W1H5xUDY/
+         jKDMIhRnvRrUBi6VDVqr84luIPGjeZOTjaHsEZwWgLAhhdADtVtQOBxwZEBjjTozPb6R
+         ez1w==
+X-Gm-Message-State: APjAAAUhfiYch9mNrlOBSWP+B1egEUBvbIXHVAmsv0Xka9CQY+7d4sZi
+        AZRa8q67yUxWwsxEiG4ASIAbdR1oUywMx1HBlswVmw==
+X-Google-Smtp-Source: APXvYqwhh1h9syYELJye7Sn4ywz7DMnDEmcbNl+CgjWYaTiFdGczmCIz9QjLEM1Y4oeTfjiBHungy6G+H8P4in3bw8c=
+X-Received: by 2002:a67:f256:: with SMTP id y22mr24121680vsm.19.1556295591010;
+ Fri, 26 Apr 2019 09:19:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1556062279-64135-17-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 26 Apr 2019 16:19:29 +0000 (UTC)
+References: <1556189823-5368-1-git-send-email-moshe@mellanox.com>
+ <20190425143847.417033ab@cakuba.netronome.com> <e540b1c192632dfcf4c0367be133c9ca51f33b43.camel@mellanox.com>
+ <20190425193737.131be39f@cakuba.netronome.com> <8bb8a789-c189-df07-5d90-fd8f2fa172ca@mellanox.com>
+In-Reply-To: <8bb8a789-c189-df07-5d90-fd8f2fa172ca@mellanox.com>
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+Date:   Fri, 26 Apr 2019 09:19:39 -0700
+Message-ID: <CAJpBn1wN67rTM2Gn-nsh0hTjq6OM2m6DS+BGU-HhSQ5ehn95Cw@mail.gmail.com>
+Subject: Re: [PATCH net-next] devlink: Execute devlink health recover as a work
+To:     Moshe Shemesh <moshe@mellanox.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Fri, Apr 26, 2019 at 6:04 AM Moshe Shemesh <moshe@mellanox.com> wrote:
+> On 4/26/2019 5:37 AM, Jakub Kicinski wrote:
+> > On Fri, 26 Apr 2019 01:42:34 +0000, Saeed Mahameed wrote:
+> >>>> @@ -4813,7 +4831,11 @@ static int
+> >>>> devlink_nl_cmd_health_reporter_recover_doit(struct sk_buff *skb,
+> >>>>    if (!reporter)
+> >>>>            return -EINVAL;
+> >>>>
+> >>>> -  return devlink_health_reporter_recover(reporter, NULL);
+> >>>> +  if (!reporter->ops->recover)
+> >>>> +          return -EOPNOTSUPP;
+> >>>> +
+> >>>> +  queue_work(devlink->reporters_wq, &reporter->recover_work);
+> >>>> +  return 0;
+> >>>>   }
+> >>>
+> >>> So the recover user space request will no longer return the status,
+> >>> and
+> >>> it will not actually wait for the recover to happen.  Leaving user
+> >>> pondering - did the recover run and fail, or did it nor get run
+> >>> yet...
+> >>>
+> >>
+> >> wait_for_completion_interruptible_timeout is missing from the design ?
+> >
+> > Perhaps, but I think its better to avoid the async execution of
+> > the recover all together.  Perhaps its better to refcount the
+> > reporters on the call to recover_doit?  Or some such.. :)
+> >
+>
+> I tried using refcount instead of devlink lock here. But once I get to
+> reporter destroy I wait for the refcount and not sure if I should
+> release the reporter after some timeout or have endless wait for
+> refcount. Both options seem not good.
 
-On 4/24/19 1:31 AM, Jacob Pan wrote:
-> Use combined macro for_each_svm_dev() to simplify SVM device iteration.
-> 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-Thanks
-
-Eric
-
-> ---
->  drivers/iommu/intel-svm.c | 76 ++++++++++++++++++++++-------------------------
->  1 file changed, 36 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index 0a973c2..39dfb2e 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -447,15 +447,13 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->  				goto out;
->  			}
->  
-> -			list_for_each_entry(sdev, &svm->devs, list) {
-> -				if (dev == sdev->dev) {
-> -					if (sdev->ops != ops) {
-> -						ret = -EBUSY;
-> -						goto out;
-> -					}
-> -					sdev->users++;
-> -					goto success;
-> +			for_each_svm_dev() {
-> +				if (sdev->ops != ops) {
-> +					ret = -EBUSY;
-> +					goto out;
->  				}
-> +				sdev->users++;
-> +				goto success;
->  			}
->  
->  			break;
-> @@ -585,40 +583,38 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
->  	if (!svm)
->  		goto out;
->  
-> -	list_for_each_entry(sdev, &svm->devs, list) {
-> -		if (dev == sdev->dev) {
-> -			ret = 0;
-> -			sdev->users--;
-> -			if (!sdev->users) {
-> -				list_del_rcu(&sdev->list);
-> -				/* Flush the PASID cache and IOTLB for this device.
-> -				 * Note that we do depend on the hardware *not* using
-> -				 * the PASID any more. Just as we depend on other
-> -				 * devices never using PASIDs that they have no right
-> -				 * to use. We have a *shared* PASID table, because it's
-> -				 * large and has to be physically contiguous. So it's
-> -				 * hard to be as defensive as we might like. */
-> -				intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
-> -				intel_flush_svm_range_dev(svm, sdev, 0, -1, 0, !svm->mm);
-> -				kfree_rcu(sdev, rcu);
-> -
-> -				if (list_empty(&svm->devs)) {
-> -					ioasid_free(svm->pasid);
-> -					if (svm->mm)
-> -						mmu_notifier_unregister(&svm->notifier, svm->mm);
-> -
-> -					list_del(&svm->list);
-> -
-> -					/* We mandate that no page faults may be outstanding
-> -					 * for the PASID when intel_svm_unbind_mm() is called.
-> -					 * If that is not obeyed, subtle errors will happen.
-> -					 * Let's make them less subtle... */
-> -					memset(svm, 0x6b, sizeof(*svm));
-> -					kfree(svm);
-> -				}
-> +	for_each_svm_dev() {
-> +		ret = 0;
-> +		sdev->users--;
-> +		if (!sdev->users) {
-> +			list_del_rcu(&sdev->list);
-> +			/* Flush the PASID cache and IOTLB for this device.
-> +			 * Note that we do depend on the hardware *not* using
-> +			 * the PASID any more. Just as we depend on other
-> +			 * devices never using PASIDs that they have no right
-> +			 * to use. We have a *shared* PASID table, because it's
-> +			 * large and has to be physically contiguous. So it's
-> +			 * hard to be as defensive as we might like. */
-> +			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
-> +			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0, !svm->mm);
-> +			kfree_rcu(sdev, rcu);
-> +
-> +			if (list_empty(&svm->devs)) {
-> +				ioasid_free(svm->pasid);
-> +				if (svm->mm)
-> +					mmu_notifier_unregister(&svm->notifier, svm->mm);
-> +
-> +				list_del(&svm->list);
-> +
-> +				/* We mandate that no page faults may be outstanding
-> +				 * for the PASID when intel_svm_unbind_mm() is called.
-> +				 * If that is not obeyed, subtle errors will happen.
-> +				 * Let's make them less subtle... */
-> +				memset(svm, 0x6b, sizeof(*svm));
-> +				kfree(svm);
->  			}
-> -			break;
->  		}
-> +		break;
->  	}
->   out:
->  	mutex_unlock(&pasid_mutex);
-> 
+Well you should "endlessly" wait.  Why would the refcount not drop,
+you have to remove it from the list first, so no new operations can
+start, right?
+In principle there is no difference between waiting for refcount to
+drop, flushing the work, or waiting for the devlink lock if reporter
+holds it?
