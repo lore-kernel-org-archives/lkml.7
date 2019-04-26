@@ -2,108 +2,149 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2BCC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A71CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38FEE2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556292153;
-	bh=obSQtL5XUn3iIY38QXNX7w3QDC/W+DfXQc5CZITuuNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yxEyfYpvUO7BDFok0WzZh99qc66cXErBU5YSl+GvYqpfoMEQ8wQyDQx3/wvsLX/Ab
-	 N0apgCCnbR+pbqH8NJbmX74RTVvGPZdiEdunkdmNPidvcnTrEsBwCPaXOLpNrdt2Ch
-	 o1ich7AAlaKp1xtAe9QdHRWBaGlbKiipN9e2+b9o=
+	by mail.kernel.org (Postfix) with ESMTP id 616042084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:25:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="he5FOjor"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfDZPWc (ORCPT
+        id S1726303AbfDZPZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:22:32 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34039 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726172AbfDZPWb (ORCPT
+        Fri, 26 Apr 2019 11:25:03 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44199 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfDZPZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:22:31 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v10so3253656oib.1;
-        Fri, 26 Apr 2019 08:22:31 -0700 (PDT)
+        Fri, 26 Apr 2019 11:25:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c5so4941273wrs.11;
+        Fri, 26 Apr 2019 08:25:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LHk6Q7YVWro0HUIwZ6DubgfOSDCLAqHqjxmCbViazvQ=;
+        b=he5FOjorgS1idJxlhNzp+WG+1REcrUiXaSQ9CeLaTJ3wlwoxpVMxuMgeL3T1FP2gr7
+         9zXZ7/0IQPgw0lhZ4nGPoE/thVE/yKQOEu+peeYWmSARgLPkXXSjE5ijcAKwf92i+7mq
+         XGllPVkC7xru/Vrdxa/PAJkPeQ2fyVjI7+TcFikCFhuBdJKwl7xw8eTd2k/5E+F8IQGw
+         E4bNcOH5zm25WHOP6uSPcbVgn/EIiK/8An0CjXPXPUmTxcmb5OhtxgRoxyfxalAdP3pv
+         pm7CWsZrRM2sAqhCkH71YiTA719qLDHCGC/XD4PHuvRkEALV54CdhyA5vk2EwRLp2vSN
+         zoQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gEQjs4gWYKzTcFdcNFpMqTicLOuyHmzyiI0OMOLN0zs=;
-        b=Hq//Rx65lJ64lJ+WOs1QFlZIWdTx6gcV4+2e0VJ4YFP3Aeib/qybarC5uVyShSHxT5
-         uL1HqZpplD/2zW9NxvT/Mi94tiQP7ejsd/edhLPc9Dnyy3onX42DmZvGTJiRfINIAGfJ
-         fzazujMcDreFPVnpw/5rlnMwbIHAPXnr3Js3InW+cPOh+tHdyUt1P1e/aixrRtoRxwTX
-         STH0MDGL0/krI8D/DJgx+YDEQ5JKN7MVobcWvd4KbNzkvYtLbr1+EiS8DC23hs9Veszh
-         iHp/uw9FnLgu5tHJnjxLfkTvS0r5RhpG+RQOAWcYInzEQA4TwW23eqD1ziQx/agweYG0
-         lPwQ==
-X-Gm-Message-State: APjAAAW9mkyd05788I/AnB9mIJpDRjb7hsOWI0xhEwD502UDFlm4wvFx
-        6ZsvCTiIDP/igXY/usLZaw==
-X-Google-Smtp-Source: APXvYqxkgLUDPnqbHG2EUDQuzVMmPUf88BqDsEOx9VRUyXCu0x0uO2/3+QX8Of539cQc6sH5NfTzug==
-X-Received: by 2002:aca:1204:: with SMTP id 4mr7377775ois.29.1556292150528;
-        Fri, 26 Apr 2019 08:22:30 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i11sm10150564otl.27.2019.04.26.08.22.29
+        bh=LHk6Q7YVWro0HUIwZ6DubgfOSDCLAqHqjxmCbViazvQ=;
+        b=dpKiOLYWxsGWWo9d5CF8kcsQdhqOhFb2arXMMxED2xQxS/6lldbdvTD0xv6IwgHJrg
+         rCVVyYqf8x65MlulOJc6PC87mIZ6yCXDf/G/AvMgXzJzA3ImNGR/jO58Ptu4hm3djQh0
+         NP2/LymPJMV0fxtD3yaoFavTy9CH03ObhwNNahRWlJO00kxbnlJ32jpK23CQc4qPxgLB
+         ClrNSUR6z517QNlq6d0ZaO4RJsm7KaHfHrEpfcnPQVmGYX2lI9/bLYhYKLBL16J3pljL
+         NYY54GRDBq2XAt0EO9+9/rr0ZDmBzch0fBjDuMvKJ3gU37fOrLOFIio74G8OlJ0RHLIg
+         4hiQ==
+X-Gm-Message-State: APjAAAWkFt0QupHZHUVTe+1eBdIEDFsTOwycCsoqXkHAzwO9U0qdOWuZ
+        h5m+7UNk35uJ07/cCvu7FzA=
+X-Google-Smtp-Source: APXvYqyp1DKWPlVfJP5wbH9fMkpIdFUeSNKQnoZvKHNQauSTPUCke5IKj6zopVxQPeAgg8DknDRFrA==
+X-Received: by 2002:adf:e711:: with SMTP id c17mr15670199wrm.57.1556292300623;
+        Fri, 26 Apr 2019 08:25:00 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id h9sm18683735wmb.5.2019.04.26.08.24.59
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 08:22:29 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 10:22:29 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 09/16] Documentation/devicetree: Add PCIe
- supports-clkreq property
-Message-ID: <20190426152229.GA8492@bogus>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-10-vidyas@nvidia.com>
+        Fri, 26 Apr 2019 08:24:59 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 17:24:58 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Tero Kristo <t-kristo@ti.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>, linux-pwm@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH] clk: Remove CLK_IS_BASIC clk flag
+Message-ID: <20190426152458.GC19559@ulmo>
+References: <20190425181447.60726-1-sboyd@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
 Content-Disposition: inline
-In-Reply-To: <20190424052004.6270-10-vidyas@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190425181447.60726-1-sboyd@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:49:57AM +0530, Vidya Sagar wrote:
-> Some host controllers need to know the existence of clkreq signal routing to
-> downstream devices to be able to advertise low power features like ASPM L1
-> substates. Without clkreq signal routing being present, enabling ASPM L1 sub
-> states might lead to downstream devices falling off the bus. Hence a new device
-> tree property 'supports-clkreq' is added to make such host controllers
-> aware of clkreq signal routing to downstream devices.
 
-Please be consistent with subjects (Use 'dt-bindings: ...')
+--XMCwj5IQnwKtuyBG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-With that change,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+On Thu, Apr 25, 2019 at 11:14:47AM -0700, Stephen Boyd wrote:
+> This flag was historically used to indicate that a clk is a "basic" type
+> of clk like a mux, divider, gate, etc. This never turned out to be very
+> useful though because it was hard to cleanly split "basic" clks from
+> other clks in a system. This one flag was a way for type introspection
+> and it just didn't scale. If anything, it was used by the TI clk driver
+> to indicate that a clk_hw wasn't contained in the SoC specific clk
+> structure. We can get rid of this define now that TI is finding those
+> clks a different way.
+>=20
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: <linux-mips@vger.kernel.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: <linux-pwm@vger.kernel.org>
+> Cc: <linux-amlogic@lists.infradead.org>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 > ---
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * Rebased on top of linux-next top of the tree
-> 
-> Changes since [v2]:
-> * None
-> 
-> Changes since [v1]:
-> * This is a new patch in v2 series
-> 
->  Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+>  arch/mips/alchemy/common/clock.c     | 2 +-
+>  drivers/clk/clk-composite.c          | 2 +-
+>  drivers/clk/clk-divider.c            | 2 +-
+>  drivers/clk/clk-fixed-factor.c       | 2 +-
+>  drivers/clk/clk-fixed-rate.c         | 2 +-
+>  drivers/clk/clk-fractional-divider.c | 2 +-
+>  drivers/clk/clk-gate.c               | 2 +-
+>  drivers/clk/clk-gpio.c               | 2 +-
+>  drivers/clk/clk-mux.c                | 2 +-
+>  drivers/clk/clk-pwm.c                | 2 +-
+>  drivers/clk/clk.c                    | 1 -
+>  drivers/clk/mmp/clk-gate.c           | 2 +-
+>  drivers/pwm/pwm-meson.c              | 2 +-
+>  include/linux/clk-provider.h         | 2 +-
+>  14 files changed, 13 insertions(+), 14 deletions(-)
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--XMCwj5IQnwKtuyBG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzDIsoACgkQ3SOs138+
+s6EeYw/+ODtlfFBeX5N8+RMkQjbVCHXWEOdXzaRchdA6FG2OsXcE4sKemUaRndwq
+39u//Gfd7+FzbRx1KozJynxMh4X4SZgkz8amg9E5KBMjxviapvni7zPs0iM4DCxU
+QaD9lX+z7SHTjAmGO2Uc9WwOzGn7hKiawSaaWt3feFeycPQ19yz/oK9OT/gMtVh9
+23fYY03Ct7m9jp7q9xfM6/03IO6QzA3ygvStbpHw06rQWVVO94z4RCziJKXEqwRE
+zgqW+2tRCeBH6lx2wi6PHbPYpVvKCV/tGMFwjhDcfKgkWaCq/A3iGyJprnALkJV9
+alCoVZ9RaxddQaxGo+nYI7Tf65j+jKsEZNDFO/rLL7uAsojJdI5SntyKJjZNJU/P
+oELMbraTQV/YJD+CfuzDzCnX+hQ6HxD49TcP2G3hPPYFwfJPNXjTMxztThFghdcU
+zUxEewHp36MCmxrCbB62AlySj013FdvXQPRWsbCK8WoPdAlS9RrDc7Fkq4rIcKvq
+7qAdfSYKyRQDAAp62gjDQJLkGlolGAKGR6vxJTcm7PaH7hfSY87rQLTxbqaZvB4/
+Be/PnMpG+OvwbGpMX6syEMcHVRoJwbJ3YP97GlPfFyQe8lj8gOumdN072Pe1LjsM
+7wC7CgOqybPOzXwmDIXOTQkoVhJAYuxdmfxK3u31WbVhbQKBX34=
+=IL2D
+-----END PGP SIGNATURE-----
+
+--XMCwj5IQnwKtuyBG--
