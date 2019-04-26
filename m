@@ -1,269 +1,156 @@
 Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3366C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E910C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D68206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:31:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="rQu/87Pb"
+	by mail.kernel.org (Postfix) with ESMTP id 22309206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556267514;
+	bh=SHcKjo86YRaBtbcui6ZNjTGtHieGQh8h35OGLG1KJxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ca8aVVg9hZh2Yon2xFkW6vv9ZOsB2cqEu2IXXst1SkNpieU5bQWeSswbDsUDiDlNy
+	 W44JPbtXffKFNaeZEpZli6YrcAKsEpT/AeLzHAeom8O+cC+MbSMfWkKSvgvw2huVKf
+	 3Hib506/yniFECXsqtU+MD9aSVFS2FCL7bsLEkCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfDZIbn (ORCPT
+        id S1726300AbfDZIbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 04:31:43 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:56119 "EHLO uho.ysoft.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfDZIbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 04:31:42 -0400
-Received: from iota-build.ysoft.local (unknown [10.1.5.151])
-        by uho.ysoft.cz (Postfix) with ESMTP id D8F16A6C6B;
-        Fri, 26 Apr 2019 10:31:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1556267500;
-        bh=Hb5jFQIPCxZTBWzwQ8QSsG9NLvE8GRE3e3X2L85MB0U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQu/87PbQUcu33MZXWOKX5Zd3JsDjWa2s86gI1ETggef7uz8I2RkfDFN9vs1/3zFq
-         waSI2imqGsahDLVG9LoFHrz7UwicJsjEP7fK7w6HLA+RNqrWRYgqHERTC0Hif/JCJz
-         cCgovvW7hsR7KVBrMH2NbO5arLaS+nTheBJTIm6E=
-From:   =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [RFC PATCH 3/4] Input: mpr121-polled: Add write-through cache to detect corrupted registers
-Date:   Fri, 26 Apr 2019 10:30:19 +0200
-Message-Id: <1556267420-93219-4-git-send-email-michal.vokac@ysoft.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1556267420-93219-1-git-send-email-michal.vokac@ysoft.com>
-References: <1556267420-93219-1-git-send-email-michal.vokac@ysoft.com>
+        Fri, 26 Apr 2019 04:31:53 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38420 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbfDZIbt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 04:31:49 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k16so3253306wrn.5;
+        Fri, 26 Apr 2019 01:31:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/8yEHGmmpSB8zJvfnDs0qm8YJnL5/w4ezpyP4pzX7OU=;
+        b=VkXjRe45hyNXVj6ZfWoXHr6MTHjtWL9wxGXVZSzLMcje4P0FbuT/Q7Jd+vA1p9zEB/
+         8RqkOkiJthWGtNBekTaSFZY4oXZh1GyFrxsJ68xk0BZzJnK06NtdNo3O+axMJWfCl1qE
+         GyHF+8T/9FBm0+DjXetmbgG3M0v8zroVHiOtLPRpaT6MrSmy9XOu160qeULDV180k0xa
+         kY+zWM78luJUpw4oMLsj3nAbD5QeSMjPf76uIIhHD82smYQ4sa2Gw/bOFqlaYzMnrmOq
+         /DJvD0YVbwD+SffY8PXAy25ufW7lJrslVydjKCvITbMXQredlQKDjMDmHDbLgT49Ymtn
+         CxwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/8yEHGmmpSB8zJvfnDs0qm8YJnL5/w4ezpyP4pzX7OU=;
+        b=jM7zytu7j/90bBqtngv2yQGzbvslQWvn1ANQhMtl4oUnPe1+cLiNzrbg35oG+YT1Nw
+         /ueimIvaeDaCzk9HdAQaxshUy+rClzoPv7S50SpQ/PfulLYYeGX5QuIgdHMa6qIBTcKx
+         7FH3oHng+/bNaXYKGCq9hqouQm2KBQlCSym5dd+cuey5sa87gcF+2L3FWQoo9u2jGrUx
+         iqTSZFOWaGRe3QkkGRVhMUBT1s4IpLu0oxqcQ8i1oVSc5bUENE9X7KaMA4fKcmqJkQKJ
+         HHsEXl3uNHKvvQkQvoMR1RvmP/2//N2+ZrDX1qVJSWDHMkbSSVThyNz0Vady3UhTRi73
+         huNg==
+X-Gm-Message-State: APjAAAX3QdY2Lv9SXr2O4FQwhzd6+iyWrpaPZFlHwyS8ORN6tqwPwtlL
+        qsdbd6xwRdX+0XGIjaVEWfE=
+X-Google-Smtp-Source: APXvYqz7R4wqcBRnF5mLwlUAgAYn64tt07z4jLjy3OlElfpQAtlWfTSEl2f9ae5ADnCd69ZUlZdi4A==
+X-Received: by 2002:a5d:654a:: with SMTP id z10mr3402530wrv.153.1556267507780;
+        Fri, 26 Apr 2019 01:31:47 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id v16sm20304256wru.76.2019.04.26.01.31.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 01:31:46 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 10:31:44 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC PATCH 2/7] x86/sci: add core implementation for system call
+ isolation
+Message-ID: <20190426083144.GA126896@gmail.com>
+References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com>
+ <1556228754-12996-3-git-send-email-rppt@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556228754-12996-3-git-send-email-rppt@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MPR121 chip (and I2C bus in general) is quite sensitive to ESD.
-An electrostatic discharge can easily cause a reset of the MPR121 chip.
-Even though the chip then recovers and respond to read/write commands,
-it is not properly initialized.
 
-This state can be detected using a write-through cache of the internal
-registers. Each time a register is written to, its value is stored in
-the cache and marked as valid. Once per MPR121_REG_CACHE_CHECK_LIMIT
-polls one valid cache value is compared with its corresponding register
-value. In case of difference an error counter is increased. If the error
-counter limit is exceeded, the chip is re-initialized.
+* Mike Rapoport <rppt@linux.ibm.com> wrote:
 
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
- drivers/input/keyboard/mpr121_touchkey_polled.c | 100 +++++++++++++++++++++---
- 1 file changed, 88 insertions(+), 12 deletions(-)
+> When enabled, the system call isolation (SCI) would allow execution of 
+> the system calls with reduced page tables. These page tables are almost 
+> identical to the user page tables in PTI. The only addition is the code 
+> page containing system call entry function that will continue 
+> exectution after the context switch.
+> 
+> Unlike PTI page tables, there is no sharing at higher levels and all 
+> the hierarchy for SCI page tables is cloned.
+> 
+> The SCI page tables are created when a system call that requires 
+> isolation is executed for the first time.
+> 
+> Whenever a system call should be executed in the isolated environment, 
+> the context is switched to the SCI page tables. Any further access to 
+> the kernel memory will generate a page fault. The page fault handler 
+> can verify that the access is safe and grant it or kill the task 
+> otherwise.
+> 
+> The initial SCI implementation allows access to any kernel data, but it
+> limits access to the code in the following way:
+> * calls and jumps to known code symbols without offset are allowed
+> * calls and jumps into a known symbol with offset are allowed only if that
+> symbol was already accessed and the offset is in the next page
+> * all other code access are blocked
+> 
+> After the isolated system call finishes, the mappings created during its
+> execution are cleared.
+> 
+> The entire SCI page table is lazily freed at task exit() time.
 
-diff --git a/drivers/input/keyboard/mpr121_touchkey_polled.c b/drivers/input/keyboard/mpr121_touchkey_polled.c
-index e5e80530c9d8..6536d9b2eeb8 100644
---- a/drivers/input/keyboard/mpr121_touchkey_polled.c
-+++ b/drivers/input/keyboard/mpr121_touchkey_polled.c
-@@ -67,6 +67,19 @@
- #define MPR121_POLL_INTERVAL_REINIT	500
- #define MPR121_POLL_RETRY_MAX		4
- 
-+#define MPR121_REG_CACHE_MIN_ADDR	0x2b
-+#define MPR121_REG_CACHE_MAX_ADDR	0x7f
-+#define MPR121_REG_CACHE_SIZE		\
-+		(MPR121_REG_CACHE_MAX_ADDR - MPR121_REG_CACHE_MIN_ADDR + 1)
-+#define MPR121_REG_CACHE_CHECK_LIMIT	8
-+#define mpr121_addr_to_cache_idx(addr)	(addr - MPR121_REG_CACHE_MIN_ADDR)
-+#define mpr121_cache_idx_to_addr(idx)	(idx + MPR121_REG_CACHE_MIN_ADDR)
-+
-+struct mpr121_polled_reg_cache {
-+	bool valid;
-+	u8 value;
-+};
-+
- struct mpr121_polled {
- 	struct i2c_client *client;
- 	struct input_dev *input_dev;
-@@ -76,6 +89,9 @@ struct mpr121_polled {
- 	u32 keycodes[MPR121_MAX_KEY_COUNT];
- 	u8 read_errors;
- 	int vdd_uv;
-+	struct mpr121_polled_reg_cache reg_cache[MPR121_REG_CACHE_SIZE];
-+	u8 reg_cache_check_count;
-+	u8 reg_cache_next_check_item;
- };
- 
- struct mpr121_polled_init_register {
-@@ -95,6 +111,29 @@ static const struct mpr121_polled_init_register init_reg_table[] = {
- 	{ AUTO_CONFIG_CTRL_ADDR, 0x0b },
- };
- 
-+static int mpr121_polled_write_reg(struct mpr121_polled *mpr121, u8 addr,
-+				   u8 value)
-+{
-+	struct i2c_client *client = mpr121->client;
-+	int ret;
-+
-+	ret = i2c_smbus_write_byte_data(client, addr, value);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "i2c write error: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (addr >= MPR121_REG_CACHE_MIN_ADDR &&
-+	    addr <= MPR121_REG_CACHE_MAX_ADDR) {
-+		u8 i = mpr121_addr_to_cache_idx(addr);
-+
-+		mpr121->reg_cache[i].valid = 1;
-+		mpr121->reg_cache[i].value = value;
-+	}
-+
-+	return 0;
-+}
-+
- static void mpr121_polled_vdd_supply_disable(void *data)
- {
- 	struct regulator *vdd_supply = data;
-@@ -140,18 +179,18 @@ static int mpr121_polled_phys_init(struct mpr121_polled *mpr121,
- 	int i, t, vdd, ret;
- 
- 	/* Set stop mode prior to writing any register */
--	ret = i2c_smbus_write_byte_data(client, ELECTRODE_CONF_ADDR, 0x00);
-+	ret = mpr121_polled_write_reg(mpr121, ELECTRODE_CONF_ADDR, 0x00);
- 	if (ret < 0)
- 		goto err_i2c_write;
- 
- 	/* Set up touch/release threshold for ele0-ele11 */
- 	for (i = 0; i <= MPR121_MAX_KEY_COUNT; i++) {
- 		t = ELE0_TOUCH_THRESHOLD_ADDR + (i * 2);
--		ret = i2c_smbus_write_byte_data(client, t, TOUCH_THRESHOLD);
-+		ret = mpr121_polled_write_reg(mpr121, t, TOUCH_THRESHOLD);
- 		if (ret < 0)
- 			goto err_i2c_write;
--		ret = i2c_smbus_write_byte_data(client, t + 1,
--						RELEASE_THRESHOLD);
-+		ret = mpr121_polled_write_reg(mpr121, t + 1,
-+					      RELEASE_THRESHOLD);
- 		if (ret < 0)
- 			goto err_i2c_write;
- 	}
-@@ -159,7 +198,7 @@ static int mpr121_polled_phys_init(struct mpr121_polled *mpr121,
- 	/* Set up init register */
- 	for (i = 0; i < ARRAY_SIZE(init_reg_table); i++) {
- 		reg = &init_reg_table[i];
--		ret = i2c_smbus_write_byte_data(client, reg->addr, reg->val);
-+		ret = mpr121_polled_write_reg(mpr121, reg->addr, reg->val);
- 		if (ret < 0)
- 			goto err_i2c_write;
- 	}
-@@ -173,9 +212,9 @@ static int mpr121_polled_phys_init(struct mpr121_polled *mpr121,
- 	usl = ((vdd - 700) * 256) / vdd;
- 	lsl = (usl * 65) / 100;
- 	tl = (usl * 90) / 100;
--	ret = i2c_smbus_write_byte_data(client, AUTO_CONFIG_USL_ADDR, usl);
--	ret |= i2c_smbus_write_byte_data(client, AUTO_CONFIG_LSL_ADDR, lsl);
--	ret |= i2c_smbus_write_byte_data(client, AUTO_CONFIG_TL_ADDR, tl);
-+	ret = mpr121_polled_write_reg(mpr121, AUTO_CONFIG_USL_ADDR, usl);
-+	ret |= mpr121_polled_write_reg(mpr121, AUTO_CONFIG_LSL_ADDR, lsl);
-+	ret |= mpr121_polled_write_reg(mpr121, AUTO_CONFIG_TL_ADDR, tl);
- 
- 	/*
- 	 * Quick charge bit will let the capacitive charge to ready
-@@ -183,7 +222,7 @@ static int mpr121_polled_phys_init(struct mpr121_polled *mpr121,
- 	 * boot.
- 	 */
- 	eleconf = mpr121->keycount | ELECTRODE_CONF_QUICK_CHARGE;
--	ret |= i2c_smbus_write_byte_data(client, ELECTRODE_CONF_ADDR,
-+	ret |= mpr121_polled_write_reg(mpr121, ELECTRODE_CONF_ADDR,
- 					 eleconf);
- 	if (ret != 0)
- 		goto err_i2c_write;
-@@ -256,6 +295,36 @@ static int mpr121_polled_process_keys(struct mpr121_polled *mpr121)
- 
- 	return 0;
- }
-+
-+static int mpr121_polled_check_regs(struct mpr121_polled *mpr121)
-+{
-+	struct i2c_client *client = mpr121->client;
-+	int i, reg;
-+
-+	/* Skip registers that were never written to (have invalid cache) */
-+	i = mpr121->reg_cache_next_check_item;
-+	for (; i < MPR121_REG_CACHE_SIZE; i++)
-+		if (mpr121->reg_cache[i].valid)
-+			break;
-+
-+	if (i == MPR121_REG_CACHE_SIZE) {
-+		mpr121->reg_cache_next_check_item = 0;
-+		return 0;
-+	}
-+
-+	reg = i2c_smbus_read_byte_data(client, mpr121_cache_idx_to_addr(i));
-+	if (reg < 0) {
-+		dev_err(&client->dev, "i2c read error: %d\n", reg);
-+		return -1;
-+	}
-+
-+	if (reg != mpr121->reg_cache[i].value)
-+		return -1;
-+
-+	mpr121->reg_cache_next_check_item = i + 1;
-+	return 0;
-+}
-+
- static void mpr121_poll(struct input_polled_dev *dev)
- {
- 	struct mpr121_polled *mpr121 = dev->private;
-@@ -282,6 +351,13 @@ static void mpr121_poll(struct input_polled_dev *dev)
- 	}
- 
- 	mpr121->read_errors = 0;
-+	mpr121->reg_cache_check_count++;
-+	if (mpr121->reg_cache_check_count > MPR121_REG_CACHE_CHECK_LIMIT) {
-+		mpr121->reg_cache_check_count = 0;
-+		ret = mpr121_polled_check_regs(mpr121);
-+		if (ret < 0)
-+			mpr121->read_errors++;
-+	}
- }
- 
- static int mpr121_polled_probe(struct i2c_client *client,
-@@ -366,8 +442,9 @@ static int mpr121_polled_probe(struct i2c_client *client,
- static int __maybe_unused mpr121_polled_suspend(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
-+	struct mpr121_polled *mpr121 = i2c_get_clientdata(client);
- 
--	i2c_smbus_write_byte_data(client, ELECTRODE_CONF_ADDR, 0x00);
-+	mpr121_polled_write_reg(mpr121, ELECTRODE_CONF_ADDR, 0x00);
- 
- 	return 0;
- }
-@@ -377,8 +454,7 @@ static int __maybe_unused mpr121_polled_resume(struct device *dev)
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct mpr121_polled *mpr121 = i2c_get_clientdata(client);
- 
--	i2c_smbus_write_byte_data(client, ELECTRODE_CONF_ADDR,
--				  mpr121->keycount);
-+	mpr121_polled_write_reg(mpr121, ELECTRODE_CONF_ADDR, mpr121->keycount);
- 
- 	return 0;
- }
--- 
-2.1.4
+So this basically uses a similar mechanism to the horrendous PTI CR3 
+switching overhead whenever a syscall seeks "protection", which overhead 
+is only somewhat mitigated by PCID.
 
+This might work on PTI-encumbered CPUs.
+
+While AMD CPUs don't need PTI, nor do they have PCID.
+
+So this feature is hurting the CPU maker who didn't mess up, and is 
+hurting future CPUs that don't need PTI ..
+
+I really don't like it where this is going. In a couple of years I really 
+want to be able to think of PTI as a bad dream that is mostly over 
+fortunately.
+
+I have the feeling that compiler level protection that avoids corrupting 
+the stack in the first place is going to be lower overhead, and would 
+work in a much broader range of environments. Do we have analysis of what 
+the compiler would have to do to prevent most ROP attacks, and what the 
+runtime cost of that is?
+
+I mean, C# and Java programs aren't able to corrupt the stack as long as 
+the language runtime is corect. Has to be possible, right?
+
+Thanks,
+
+	Ingo
