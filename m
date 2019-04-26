@@ -2,235 +2,104 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3020EC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0F0C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB2B0206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BE6206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:57:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="ZX166Pzv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tstw7iZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfDZQ4H (ORCPT
+        id S1726404AbfDZQ5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:56:07 -0400
-Received: from first.geanix.com ([116.203.34.67]:51464 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfDZQ4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:56:04 -0400
-Received: from localhost (87-49-45-205-mobile.dk.customer.tdc.net [87.49.45.205])
-        by first.geanix.com (Postfix) with ESMTPSA id 21F15308E6D;
-        Fri, 26 Apr 2019 16:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1556297691; bh=KApsgCwz8eGTOt/9YVGyS9qiTnm/rlcgthIl/A16h4g=;
-        h=From:To:Cc:Subject:Date;
-        b=ZX166PzvsbAYE7LQFvzn3IfI7kAf5bgtxydBGT6eavjvTJxTDc/Hok3UHmlhtFFcs
-         Kj1ycFAgCMKcqt1m42tSiaSJhRGdZQ3kzkyEH8RUSiJCBkW8+pjvqA21Z+fzNE/oMa
-         9fey6alyhVCAMfpyDVP8xeUgzPAUljsVZTA5CJuuLibuAUB7sVycN+J2tA9ghfEBin
-         x5aAUIbRoGdDv6QZc7fHUXjlDpEecPTOKf6rkmoeN/NIRJlomGOIGnpiT+iiEjVG0D
-         dulO/GaUSteeH0jS0X090p3dJwIKaZgNyoHhZKFU3YlHm/O11kOYL9g+TJ9s9ksGDN
-         g5dPS/+4GG2CA==
-From:   Esben Haabendal <esben@geanix.com>
-To:     linux-serial@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh R <vigneshr@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD function
-Date:   Fri, 26 Apr 2019 18:55:54 +0200
-Message-Id: <20190426165559.2656-1-esben@geanix.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 26 Apr 2019 12:57:01 -0400
+Received: from mail-oi1-f201.google.com ([209.85.167.201]:56632 "EHLO
+        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbfDZQ5A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:57:00 -0400
+Received: by mail-oi1-f201.google.com with SMTP id j202so1705526oih.23
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:57:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=LdtpNCBMXVEYh5+9sDcKIELQmRtwCEZfEh/KIYFOBOU=;
+        b=tstw7iZxA9nBCcJm42TviKa3bi3ItAr7vfTnG5YC9Kqym6BPPvFKMw4mIP/esb1Yre
+         /CMlYKOQJbOgKiCHWaeSZ1w+/XYFN9f4aLobh+zg4n7IbmnPQc0jkvCsUIRTDwa43Zwb
+         84S7GwrJ2F6mS7l2MkMjUuUxw+3zWXnLRozAko6nXAOUz0MgIg+mnXnwHXPSwr2ULpB6
+         83/g53qmLpOfbAncr55eDmfW0C+yLh0R8/TRQOJT9CC8Or6uneQm0hbGPU/omorcfvGZ
+         HcW6GH6eQ3lBvlPYvVs2YVDA2D6CmSxTljsmMGFbTMU1Rm17Z9MsIRgy1L4Xx4k1uz4D
+         yXPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=LdtpNCBMXVEYh5+9sDcKIELQmRtwCEZfEh/KIYFOBOU=;
+        b=UVIBwr79z9/rx3HW5mjjkbJcIt9Ssh3Alw38HTfjS85ZB8/2PBNWJep1OU/zc/tqW6
+         YavzKjKrbXVBp3a3DpLwMBargToxf5tdc1mTeUztwD73E3mVKK3sTpPxdRdF9CKKp/IR
+         D5gY/aeoUoDI173mjONfFwpQpV6r1kNoWUzbK7cNmXShE03h4OhKZbHY2P2U1ZGEY6lv
+         CMFXFL+UMlQtzUKA8FTb1fPRMgbD+bqYA3rK1igj5QAi+6l21Xv2nTEeU9aQp5ftwfza
+         IU6ychRxZQiRESy98N8m2RpkQPnXRE/bYagkANd7glV6NGx90FBY5AtxCLZ6ZOVrLUXr
+         kxLQ==
+X-Gm-Message-State: APjAAAUgiQzb0CLd8sQm3qrxnD/UZhhK/VG+g5KOTfFGKAdfQJNHZj9y
+        xZEUHzhkkZa4Z0zloCMgFyzaPdP2Tyl7
+X-Google-Smtp-Source: APXvYqxENZKm3ZkZkcsCV1tk0VR2N3BgC4a0+IxpAnry9JlIqN/BVvLewUEqBomJYIiy3BCfhYSlTLwujoih
+X-Received: by 2002:aca:5d57:: with SMTP id r84mr7966908oib.143.1556297820067;
+ Fri, 26 Apr 2019 09:57:00 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 09:56:55 -0700
+Message-Id: <20190426165655.218228-1-venture@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+Subject: [PATCH] misc: aspeed-p2a-ctrl: fix mixed declarations
+From:   Patrick Venture <venture@google.com>
+To:     venture@google.com, arnd@arndb.de, gregkh@linuxfoundation.org,
+        joel@jms.id.au, andrew@aj.id.au
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        arm@kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The serial8250-mfd driver is for adding 8250/16550 UART ports as functions
-to an MFD driver.
+Fix up mixed declarations and code in aspeed_p2a_mmap.
 
-When calling mfd_add_device(), platform_data should be a pointer to a
-struct plat_serial8250_port, with proper settings like .flags, .type,
-.iotype, .regshift and .uartclk.  Memory (or ioport) and IRQ should be
-passed as cell resources.
+Tested: Verified the build had the error and that this patch resolved it
+and there were no other warnings or build errors associated with
+compilation of this driver.
 
-Do not include UPF_BOOT_AUTOCONF in platform_data.flags.
-
-Signed-off-by: Esben Haabendal <esben@geanix.com>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Patrick Venture <venture@google.com>
 ---
- drivers/tty/serial/8250/8250_mfd.c | 119 +++++++++++++++++++++++++++++++++++++
- drivers/tty/serial/8250/Kconfig    |  12 ++++
- drivers/tty/serial/8250/Makefile   |   1 +
- 3 files changed, 132 insertions(+)
- create mode 100644 drivers/tty/serial/8250/8250_mfd.c
+ drivers/misc/aspeed-p2a-ctrl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/8250/8250_mfd.c b/drivers/tty/serial/8250/8250_mfd.c
-new file mode 100644
-index 0000000..eae1566
---- /dev/null
-+++ b/drivers/tty/serial/8250/8250_mfd.c
-@@ -0,0 +1,119 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ *  Serial Port driver for 8250/16550-type MFD sub devices
-+ *
-+ *  This mimics the serial8250_probe of 8250_core.c, while allowing
-+ *  use without UPF_BOOT_AUTOCONF, which is problematic for MFD, as
-+ *  the request_mem_region() will typically fail as the region is
-+ *  already requested by the MFD device.
-+ *
-+ *  Memory and irq are passed as platform resources, which allows easy
-+ *  use together with (devm_)mfd_add_devices().
-+ *
-+ *  Other parameters are passed as struct plat_serial8250_port in
-+ *  device platform_data.
-+ */
-+
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/serial_8250.h>
-+
-+struct serial8250_mfd_data {
-+	int			line;
-+};
-+
-+static int serial8250_mfd_probe(struct platform_device *pdev)
-+{
-+	struct plat_serial8250_port *pdata = dev_get_platdata(&pdev->dev);
-+	struct serial8250_mfd_data *data;
-+	struct uart_8250_port up;
-+	struct resource *r;
-+	void __iomem *membase;
-+
-+	if (!pdata)
-+		return -ENODEV;
-+
-+	memset(&up, 0, sizeof(up));
-+
-+	switch (pdata->iotype) {
-+	case UPIO_AU:
-+	case UPIO_TSI:
-+	case UPIO_MEM32:
-+	case UPIO_MEM32BE:
-+	case UPIO_MEM16:
-+	case UPIO_MEM:
-+		r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		if (!r)
-+			return -ENODEV;
-+		membase = devm_ioremap_nocache(&pdev->dev,
-+					       r->start, resource_size(r));
-+		if (!membase)
-+			return -ENOMEM;
-+		up.port.mapbase = r->start;
-+		up.port.membase = membase;
-+		break;
-+	case UPIO_HUB6:
-+	case UPIO_PORT:
-+		r = platform_get_resource(pdev, IORESOURCE_IO, 0);
-+		if (!r)
-+			return -ENODEV;
-+		up.port.iobase = r->start;
-+		break;
-+	}
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	up.port.irq = platform_get_irq(pdev, 0);
-+	if (up.port.irq < 0)
-+		up.port.irq = 0; /* no interrupt -> use polling */
-+
-+	/* Register with 8250_core.c */
-+	up.port.irqflags = pdata->irqflags;
-+	up.port.uartclk = pdata->uartclk;
-+	up.port.regshift = pdata->regshift;
-+	up.port.iotype = pdata->iotype;
-+	up.port.flags = pdata->flags;
-+	up.port.hub6 = pdata->hub6;
-+	up.port.private_data = pdata->private_data;
-+	up.port.type = pdata->type;
-+	up.port.serial_in = pdata->serial_in;
-+	up.port.serial_out = pdata->serial_out;
-+	up.port.handle_irq = pdata->handle_irq;
-+	up.port.handle_break = pdata->handle_break;
-+	up.port.set_termios = pdata->set_termios;
-+	up.port.set_ldisc = pdata->set_ldisc;
-+	up.port.get_mctrl = pdata->get_mctrl;
-+	up.port.pm = pdata->pm;
-+	up.port.dev = &pdev->dev;
-+	data->line = __serial8250_register_8250_port(&up, 0);
-+	if (data->line < 0)
-+		return data->line;
-+
-+	platform_set_drvdata(pdev, data);
-+	return 0;
-+}
-+
-+static int serial8250_mfd_remove(struct platform_device *pdev)
-+{
-+	struct serial8250_mfd_data *data = platform_get_drvdata(pdev);
-+
-+	serial8250_unregister_port(data->line);
-+	return 0;
-+}
-+
-+static struct platform_driver serial8250_mfd_driver = {
-+	.probe = serial8250_mfd_probe,
-+	.remove = serial8250_mfd_remove,
-+	.driver = {
-+		.name = "serial8250-mfd",
-+	},
-+};
-+
-+module_platform_driver(serial8250_mfd_driver);
-+
-+MODULE_AUTHOR("Esben Haabendal <esben@geanix.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Driver for 8250/16550-type MFD sub devices");
-diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-index 15c2c54..ef1572b 100644
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -58,6 +58,18 @@ config SERIAL_8250_PNP
- 	  This builds standard PNP serial support. You may be able to
- 	  disable this feature if you only need legacy serial support.
+diff --git a/drivers/misc/aspeed-p2a-ctrl.c b/drivers/misc/aspeed-p2a-ctrl.c
+index 9736821972ef..b60fbeaffcbd 100644
+--- a/drivers/misc/aspeed-p2a-ctrl.c
++++ b/drivers/misc/aspeed-p2a-ctrl.c
+@@ -100,6 +100,7 @@ static void aspeed_p2a_disable_bridge(struct aspeed_p2a_ctrl *p2a_ctrl)
+ static int aspeed_p2a_mmap(struct file *file, struct vm_area_struct *vma)
+ {
+ 	unsigned long vsize;
++	pgprot_t prot;
+ 	struct aspeed_p2a_user *priv = file->private_data;
+ 	struct aspeed_p2a_ctrl *ctrl = priv->parent;
  
-+config SERIAL_8250_MFD
-+	bool "8250/16550 MFD function support"
-+	depends on SERIAL_8250 && MFD_CORE
-+	default n
-+	help
-+	  This builds support for using 8250/16550-type UARTs as MFD
-+	  functions.
-+
-+	  MFD drivers needing this should select it automatically.
-+
-+	  If unsure, say N.
-+
- config SERIAL_8250_FINTEK
- 	bool "Support for Fintek F81216A LPC to 4 UART RS485 API"
- 	depends on SERIAL_8250
-diff --git a/drivers/tty/serial/8250/Makefile b/drivers/tty/serial/8250/Makefile
-index 18751bc..da8e139 100644
---- a/drivers/tty/serial/8250/Makefile
-+++ b/drivers/tty/serial/8250/Makefile
-@@ -6,6 +6,7 @@
- obj-$(CONFIG_SERIAL_8250)		+= 8250.o 8250_base.o
- 8250-y					:= 8250_core.o
- 8250-$(CONFIG_SERIAL_8250_PNP)		+= 8250_pnp.o
-+8250-$(CONFIG_SERIAL_8250_MFD)		+= 8250_mfd.o
- 8250_base-y				:= 8250_port.o
- 8250_base-$(CONFIG_SERIAL_8250_DMA)	+= 8250_dma.o
- 8250_base-$(CONFIG_SERIAL_8250_FINTEK)	+= 8250_fintek.o
+@@ -107,7 +108,7 @@ static int aspeed_p2a_mmap(struct file *file, struct vm_area_struct *vma)
+ 		return -EINVAL;
+ 
+ 	vsize = vma->vm_end - vma->vm_start;
+-	pgprot_t prot = vma->vm_page_prot;
++	prot = vma->vm_page_prot;
+ 
+ 	if (vma->vm_pgoff + vsize > ctrl->mem_base + ctrl->mem_size)
+ 		return -EINVAL;
 -- 
-2.4.11
+2.21.0.593.g511ec345e18-goog
 
