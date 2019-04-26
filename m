@@ -2,197 +2,124 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3128C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876A5C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E455212F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC6B212F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pObUwen/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgPi2ed0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfDZRR6 (ORCPT
+        id S1726308AbfDZRT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 13:17:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36787 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfDZRR5 (ORCPT
+        Fri, 26 Apr 2019 13:19:57 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37257 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfDZRT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 13:17:57 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b1so5464085wru.3;
-        Fri, 26 Apr 2019 10:17:55 -0700 (PDT)
+        Fri, 26 Apr 2019 13:19:56 -0400
+Received: by mail-io1-f68.google.com with SMTP id a23so3576171iot.4;
+        Fri, 26 Apr 2019 10:19:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uRlmqbsy9AlHWA5lA20w40XlV/SVimhS1euM8k4c3rE=;
-        b=pObUwen/SMTK7HuAHFFy7NlIqyubfqjmF7nhGn/yx77MzInfFgmEE3i1MpjxCHUd/N
-         lkvZ1Fn3xR4NjSlFnDEMmnOFgT3Synos0KCzHcTbeJ5QNGzYh5sIxqPdJIR4O/5gy2KW
-         whQLqlYJNp0J4dovqLCpbbEzGbBSUjrsxp2nSJCtFe16YC5rfX8XSvXyTUYx9ga76Ciz
-         WAuTuXvc1p9CxpW9fexs7wmQhmX641h1X7d6VRd6xAUMWL4mKcb/M79r/BTexcN0r9At
-         RdZhAZqpTpB0G9KIsleUdndk5CazfwniQ3gYTZyi9RcEL2wNQvn/GYN4s55yIX4YMlMG
-         BwjA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6RhyZrNZwjSd8duPbbJh0QjUHOd9upb57vvukrqOPyw=;
+        b=fgPi2ed0hON7GBQV9AXLvlIFngg+XmXBq5b54A/oTf3p9/O+fGDFcRiIZtjJIPsXN8
+         9G2zRTere33aqyxdkSi4i3fuO9+zMtf2ASdQIDSfg05AHI+dApk+iR7iX0cSEXnjsV5r
+         j/c818mFiBf4yQmBkd183XXFqq5EmfZ45YnnCIizDE43bb6fzY7Cf4Qa8Da4N2M59rsT
+         sIb3zDKp0xHlFVfV4UZS85L0bVQeIEhsHrq0rLa1Ek8DpHmrn6085RsjwFsUFhXtao2O
+         661Le3VdgjI8eis30aBygQiRFe9UiuHzOul3iWyd//WKTn2sOryT++suBD0ujM/I7moR
+         ZVSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uRlmqbsy9AlHWA5lA20w40XlV/SVimhS1euM8k4c3rE=;
-        b=ralaSlt7qR1xGcIgFX+3B/oS8j31hDNXZ79kfjlZx8S1KZY9moycwTgN+J13QeEoL6
-         4q1ecmwYfPRRakKW5dyf595MFSXTOKuZJdPlYEukbqIv8ODHi3i2R7aS7fd78NISJDrq
-         X43jli0sLvqYlFrL15jhndPU+Eh5/1IUo50mP+QQE7gZwsmatIBg2X3HLCNy0z9TLhIt
-         bycBcDKqS0y83fPFVkHoKW+I2mIFm5/o4M70x82gy1LSuvxRw0Pev3yLgyFC69luAERl
-         WQuqFXEVSKiv9nlew2tkUDp+q1vx+ydWUf8CldKnx3hjIFLNjp0p1LbBIi6IWN4NY2Dh
-         kz+g==
-X-Gm-Message-State: APjAAAUyd1pM1n8Y5ZCOajcl0ddrNe38z521vrMIOdNBQBPvFuOnv9Cc
-        t7VpdTnKvEVYwWagLDzUEzPGrRi3qTo=
-X-Google-Smtp-Source: APXvYqyEAHz76k41ihnaLDUY029P22Z3NcyifHQ60YXeuFIi/FAmN39siZS2bfDofp+ALPGNJ4aNQw==
-X-Received: by 2002:adf:e288:: with SMTP id v8mr29608681wri.7.1556299074570;
-        Fri, 26 Apr 2019 10:17:54 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd4:5700:49f9:abd6:1a89:5e12? (p200300EA8BD4570049F9ABD61A895E12.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:49f9:abd6:1a89:5e12])
-        by smtp.googlemail.com with ESMTPSA id s2sm21549403wmc.7.2019.04.26.10.17.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 10:17:53 -0700 (PDT)
-Subject: Re: [PATCH] net: phy: realtek: Add rtl8211e rx/tx delays config
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190426093010.9609-1-fancer.lancer@gmail.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <1393dc97-4211-bc9e-7284-5121c237e96b@gmail.com>
-Date:   Fri, 26 Apr 2019 19:17:44 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6RhyZrNZwjSd8duPbbJh0QjUHOd9upb57vvukrqOPyw=;
+        b=bWDR0Z01gc1jvKOyLxShdpJBUxEKJT54k8pXgnkmFpTGfy9ENI3W3Z6wMyxDY1bKxl
+         ZJ2iXvVXc8Q+RuN9I15TtVFx6ymZBuXaem/dfyvjUdDaNqWBBOtO/BYx0lv6nEuEhvy8
+         ESvds9EX6I3fYXx9TQ11Bk/D4wrAfEXp6DBinjMZLY1N+6bCgfNf45TTulGT0jASBchZ
+         fxmDMGqjEmkwWCutFcdkuqFoeY0n++0zECa16N+2fD350ObRWZIqIRNdQonZGL0oE9sQ
+         9xUR6zGr7n5dRVb99xUpK3nLqNBMMZ/ISaPGVwIRWsrHzueA56fa1J6986Ht/94OJbV5
+         1gIQ==
+X-Gm-Message-State: APjAAAUiXonLQpWlfEmFvU3k7pkcB5BSBapmE7U3DDUKwGkOqh3/Qwd9
+        WxamY7lLZy4tm/JobhE/l4GhFsVR4AucshpGC68=
+X-Google-Smtp-Source: APXvYqwDgeTyqhbmOujKb58870SOkNxEzB9N9uTsw4Hwr8qXR5eGBV+EZVd/MbHb6BN3Dbybe9RW5XTBNH3/8DM0hrk=
+X-Received: by 2002:a6b:7417:: with SMTP id s23mr1315489iog.2.1556299195506;
+ Fri, 26 Apr 2019 10:19:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190426093010.9609-1-fancer.lancer@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190410221237.160856-1-dianders@chromium.org>
+ <CANBLGcwmNowj9GSmE3bbo1t1o6EF8q-RiJftfdOQnJB9_8aSKg@mail.gmail.com> <CAD=FV=UW6d2QHzxx-Vtr+WwC1dkpUfCjxCLnfaP5S2UQxRh1oQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=UW6d2QHzxx-Vtr+WwC1dkpUfCjxCLnfaP5S2UQxRh1oQ@mail.gmail.com>
+From:   Emil Renner Berthing <emil.renner.berthing@gmail.com>
+Date:   Fri, 26 Apr 2019 19:19:42 +0200
+Message-ID: <CANBLGcxpjDFKNdT7uk8uCS=C8Gjxc9wVqDs_ZGHqRpLFVsJxxQ@mail.gmail.com>
+Subject: Re: [PATCH] mmc: dw_mmc: Disable SDIO interrupts while suspended to
+ fix suspend/resume
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        stable@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.2019 11:30, Serge Semin wrote:
-> There are two chip pins named TXDLY and RXDLY which actually addes
-> the 2ns delays to TXC and RXC for TXD/RXD latching. Alas it is only
-> documented info regarding the RGMII timing control configurations
-> the PHY provides. It turnes out the same settings can be setup
-> via MDIO registers hidden in the extension pages layout.
-> Particularly the extension page 0xa4 provides a register 0x1c,
-> which bits 1 and 2 control the described delays. They are used
-> to implemet the "rgmii-{id,rxid,txid}" phy-mode.
-> 
-There are few typos in the commit message.
+Hi Doug,
 
-> The hidden RGMII configs register utilization was found in the
-> rtl8211e U-boot driver:
-> https://elixir.bootlin.com/u-boot/v2019.01/source/drivers/net/phy/realtek.c#L99
-> 
-> There is also a freebsd discussion regarding this register:
-> https://reviews.freebsd.org/D13591
-> 
-> It confirms that the register bits field must control the so called
-> configuration pins described in the table 12-13 of the official PHY
-> datasheet:
-> 8:6 = PHY Address
-> 5:4 = Auto-Negotiation
-> 3 = Interface Mode Select
-> 2 = RX Delay
-> 1 = TX Delay
-> 0 = SELRGV
-> 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-> ---
->  drivers/net/phy/realtek.c | 44 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> index 10df52ccddfe..8776b94d91ed 100644
-> --- a/drivers/net/phy/realtek.c
-> +++ b/drivers/net/phy/realtek.c
-> @@ -23,11 +23,14 @@
->  
->  #define RTL821x_INSR				0x13
->  
-> +#define RTL821x_EXT_PAGE_SELECT			0x1e
->  #define RTL821x_PAGE_SELECT			0x1f
->  
->  #define RTL8211F_INSR				0x1d
->  
->  #define RTL8211F_TX_DELAY			BIT(8)
-> +#define RTL8211E_TX_DELAY			BIT(1)
-> +#define RTL8211E_RX_DELAY			BIT(2)
->  
->  #define RTL8201F_ISR				0x1e
->  #define RTL8201F_IER				0x13
-> @@ -174,6 +177,46 @@ static int rtl8211f_config_init(struct phy_device *phydev)
->  	return phy_modify_paged(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY, val);
->  }
->  
-> +static int rtl8211e_config_init(struct phy_device *phydev)
-> +{
-> +	int ret, oldpage;
-> +	u16 val = 0;
-> +
-> +	ret = genphy_config_init(phydev);
+TLDR: I'm no longer convinced this patch breaks suspend/resume more
+than it already is. Sorry about the noise.
 
-There's no need to call genphy_config_init().
+On Thu, 25 Apr 2019 at 23:25, Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Wed, Apr 24, 2019 at 1:19 AM Emil Renner Berthing
+> <emil.renner.berthing@gmail.com> wrote:
+> >
+> > Hi Douglas,
+> >
+> > Unfortunately this seems to beak resume on my rk3399-gru-kevin. I have
+> > a semi-complicated setup with my rootfs as a btrfs on dmcrypt on
+> > mmcblk0 which is the dw_mmc, so I'm guessing something goes wrong when
+> > waking up the dm_mmc which probably wasn't suspended before this
+> > patch. It's not 100% consistent though. Sometimes I see it resume the
+> > first time I try suspending, but then 2nd time I suspend it won't come
+> > back.
+>
+> Thanks for testing!
 
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* enable TX/RX delay for rgmii-* modes, otherwise disable it */
-> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
-> +		val = RTL8211E_TX_DELAY | RTL8211E_RX_DELAY;
-> +	else if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-> +		val = RTL8211E_TX_DELAY;
-> +	else if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-> +		val = RTL8211E_RX_DELAY;
-> +
-> +	/* According to a sample driver there is a 0x1c config register on
-> +	 * a 0xa4 extension page (0x7) layout. It can be used to disable/enable
-> +	 * the RX/TX delays otherwise controlled by hardware strobes. It can
-> +	 * also be used to customize the whole configuration register:
-> +	 * 8:6 = PHY Address, 5:4 = Auto-Negotiation, 3 = Interface Mode Select,
-> +	 * 2 = RX Delay, 1 = TX Delay, 0 = SELRGV (see original PHY datasheet
-> +	 * for details).
-> +	 */
-> +	oldpage = phy_select_page(phydev, 0x7);
-> +	if (oldpage < 0)
-> +		goto err_restore_page;
-> +
-> +	ret = phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
-> +	if (!ret)
+Thanks for your detailed response. It made me want to make absolutely
+sure that this patch is the culprit.
+As a baseline I booted a vanilla 5.0.9 and suspend/resumed it about a
+dusin times without any errors.
+So I applied this patch and immediately it crashed on suspend, but in
+a way that I could still see the kernel log,
+and it was the mwifiex driver that crashed. I rebooted and tried
+supend/resume again and
+this time it seemed like it was the dwc3 or usb3-phy that crashed.
+I still have the kernel log if anyone is interested.
+However 3rd time booting 5.0.9 with this patch suspend/resume just works.
+At least the 2 dusin times I tried before giving up on making it crash.
+I went back to vanilla 5.0.9 and after a few tries I managed to make
+that one crash too.
+I guess that means this patch is off the hook. I'm sorry about the
+false report :/
 
-I think this should be: if (ret)
-
-> +		goto err_restore_page;
-> +
-> +	ret = phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
-> +			 val);
-> +
-> +err_restore_page:
-> +	return phy_restore_page(phydev, oldpage, ret);
-> +}
-> +
->  static int rtl8211b_suspend(struct phy_device *phydev)
->  {
->  	phy_write(phydev, MII_MMD_DATA, BIT(9));
-> @@ -257,6 +300,7 @@ static struct phy_driver realtek_drvs[] = {
->  		PHY_ID_MATCH_EXACT(0x001cc915),
->  		.name		= "RTL8211E Gigabit Ethernet",
->  		.features	= PHY_GBIT_FEATURES,
-> +		.config_init	= &rtl8211e_config_init,
->  		.ack_interrupt	= &rtl821x_ack_interrupt,
->  		.config_intr	= &rtl8211e_config_intr,
->  		.suspend	= genphy_suspend,
-> 
-
+/Emil
