@@ -2,125 +2,93 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73786C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FE2C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FA7206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A42B206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfDZRkR (ORCPT
+        id S1726400AbfDZRkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 13:40:17 -0400
-Received: from goliath.siemens.de ([192.35.17.28]:52927 "EHLO
-        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfDZRkQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 13:40:16 -0400
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id x3QHdxXO016348
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Apr 2019 19:39:59 +0200
-Received: from [167.87.22.130] ([167.87.22.130])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x3QHdvop028638;
-        Fri, 26 Apr 2019 19:39:57 +0200
-Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-References: <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
- <20190424100130.GB2654@lahna.fi.intel.com>
- <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
- <20190424103306.GC2654@lahna.fi.intel.com>
- <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
- <20190426130615.GT9224@smile.fi.intel.com>
- <bd5453e1-0279-02ab-3304-edc6ebf509dc@siemens.com>
- <bc856e19-470d-7655-5680-a031831ab513@metux.net>
- <2f3da791-4a10-c2c4-dc5a-22ad16ed7be6@siemens.com>
- <CAHp75VfonL_f1GjRFFhp59R8U+bGzT9pcC7p8XDJ32-_cxT29g@mail.gmail.com>
- <20190426173329.GA31161@Mani-XPS-13-9360>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <534a4812-e6d3-9b16-5142-ab214da3d661@siemens.com>
-Date:   Fri, 26 Apr 2019 19:39:56 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        Fri, 26 Apr 2019 13:40:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47990 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfDZRkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 13:40:22 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 41B59CA1F5;
+        Fri, 26 Apr 2019 17:40:22 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id EB69B60BF3;
+        Fri, 26 Apr 2019 17:40:20 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 26 Apr 2019 19:40:21 +0200 (CEST)
+Date:   Fri, 26 Apr 2019 19:40:19 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Roman Gushchin <guroan@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 4/9] cgroup: cgroup v2 freezer
+Message-ID: <20190426174019.GB24755@redhat.com>
+References: <20190405174708.1010-1-guro@fb.com>
+ <20190405174708.1010-5-guro@fb.com>
+ <20190419151912.GA12152@redhat.com>
+ <20190419161118.GA23357@tower.DHCP.thefacebook.com>
+ <20190419162600.GC12228@redhat.com>
+ <20190419165600.GC23357@tower.DHCP.thefacebook.com>
+ <20190420105838.GA17468@redhat.com>
+ <20190422221116.GA10341@tower.DHCP.thefacebook.com>
+ <20190424154619.GG16167@redhat.com>
+ <20190424220634.GA22896@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190426173329.GA31161@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424220634.GA22896@tower.DHCP.thefacebook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 26 Apr 2019 17:40:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.19 19:33, Manivannan Sadhasivam wrote:
-> On Fri, Apr 26, 2019 at 08:20:19PM +0300, Andy Shevchenko wrote:
->> On Fri, Apr 26, 2019 at 7:05 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
->>>
->>> On 26.04.19 16:42, Enrico Weigelt, metux IT consult wrote:
->>>> On 26.04.19 15:36, Jan Kiszka wrote:
->>>>
->>>>> At the same time, there are no real alternatives - to my> knowledge - for the value it brings (various bindings) to simply
->>>> switch> the engine.
->>>> Which value exactly does that collection of crude wrappers and broken
->>>> attempts to buypass the kernel (driving gpios via /dev/mem *facepalm*)
->>>> provide ?
->>>
->>> Leaving that blunt hack aside:
->>>
->>> import mraa
->>>
->>> pin = mraa.Gpio(13)
->>> pin.dir(mraa.DIR_OUT)
->>> pin.write(1)
->>>
->>> And the same goes for nodejs, java and c++.
->>>
->>> Moreover, this allows you to abstract away where "Pin 13" actually came from on
->>> that board if the kernel changes (BSP -> upstream...) or the extension board or
->>> ...
->>
->> The problem here is opaque number. This has to be chip + *relative* pin number/
->> See this:
->> https://stackoverflow.com/questions/55532410/how-do-linux-gpio-numbers-get-their-values/55579640#55579640
->>
-> 
-> But for platform like 96Boards we don't need controller specific lookup, these
-> are all handled by the platform code [1] so that the users can use the standard
-> pinout number to access GPIOs. For instance, pin 23 on the Low Speed expansion
-> header is the GPIO for all 96Boards platform, so the user can access that pin
-> using 23 itself in the application and it will run across all supported
-> 96Boards.
+On 04/24, Roman Gushchin wrote:
+>
+> On Wed, Apr 24, 2019 at 05:46:19PM +0200, Oleg Nesterov wrote:
+> >
+> > OK, how about the ABSOLUTELY UNTESTED patch below? For the start.
+>
+> It looks good to me (and all freezer selftests pass).
+>
+> Just to be sure, is it a solution to avoid the busy loop in the signal handling
+> loop, right?
 
-Can you ensure stable numbering when probing order changes, e.g. due to adding 
-an extension board?
+Yes,
 
-Jan
+> Because it doesn't allow to drop the ->frozen check from recalc().
 
-> 
-> That's one of the reason why we prefer MRAA.
-> 
-> Thanks,
-> Mani
-> 
-> [1] https://github.com/intel-iot-devkit/mraa/blob/master/src/arm/96boards.c#L75
-> 
->> -- 
->> With Best Regards,
->> Andy Shevchenko
+Yes. Because we can race with unfreeze after leave_frozen().
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+> The JOBCTL_TRAP_FREEZE check without siglock initially looked dangerous to me,
+> but after some thoughts I didn't find any case when it's wrong.
+
+I think this is fine... Yes, JOBCTL_TRAP_FREEZE can be already set when we take
+siglock, but I don't think we need to recheck this flag.
+
+The only important thing (afaics) is that CGRP_FREEZE is stable under css_set_lock,
+so we can't wrongly set TRAP_FREEZE.
+
+> Do you prefer me to master a patch
+
+Yes please ;)
+
+Oleg.
+
