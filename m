@@ -2,86 +2,125 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB2EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C2CC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D852084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:43:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UhdPGQOL"
+	by mail.kernel.org (Postfix) with ESMTP id 719372084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfDZUna (ORCPT
+        id S1726847AbfDZUoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 16:43:30 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:39724 "EHLO mail.skyhub.de"
+        Fri, 26 Apr 2019 16:44:15 -0400
+Received: from mga02.intel.com ([134.134.136.20]:57379 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbfDZUn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 16:43:29 -0400
-Received: from zn.tnic (p200300EC2F0E4E00943B2A4E3B498EBE.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:4e00:943b:2a4e:3b49:8ebe])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E91221EC0380;
-        Fri, 26 Apr 2019 22:43:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1556311408;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=U/CTz5SAE+pabViqpyUk1tFxQ7Z2FiMtt9crX5ZBuxU=;
-        b=UhdPGQOLrAf8IGQf0LFY/S4cUffWG3c4g9ftiz6gJMEqqlTKDul2WnVMT5615oZgOgXDnJ
-        ++VBWOsicl1sJqsDfbbe8zvCah3EZWOKI05JbmK2U00zXthBByudvMSRKV7SFtwhqV+Miv
-        zO7NC654c1E1HbrUsIITY8nVh74sj4g=
-Date:   Fri, 26 Apr 2019 22:43:27 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Singh, Brijesh" <brijesh.singh@amd.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v1 01/10] KVM: SVM: Add KVM_SEV SEND_START command
-Message-ID: <20190426204327.GM4608@zn.tnic>
-References: <20190424160942.13567-1-brijesh.singh@amd.com>
- <20190424160942.13567-2-brijesh.singh@amd.com>
- <20190426141042.GF4608@zn.tnic>
- <e6f8da38-b8dd-a9c5-a358-5f33b6ea7b37@amd.com>
+        id S1725966AbfDZUoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 16:44:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 13:44:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,398,1549958400"; 
+   d="scan'208";a="227061256"
+Received: from ray.jf.intel.com (HELO [10.7.201.133]) ([10.7.201.133])
+  by orsmga001.jf.intel.com with ESMTP; 26 Apr 2019 13:44:14 -0700
+Subject: Re: [RFC PATCH] x86/fpu: Don't unconditionally add
+ XFEATURE_MASK_FPSSE on sigentry
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, jannh@google.com,
+        riel@surriel.com, mingo@redhat.com, bp@suse.de, Jason@zx2c4.com,
+        luto@kernel.org, tglx@linutronix.de, rkrcmar@redhat.com,
+        mingo@kernel.org, hpa@zytor.com, kvm@vger.kernel.org,
+        pbonzini@redhat.com, kurt.kanzenbach@linutronix.de
+References: <20190425173545.sogxyptbaqvoofm6@linutronix.de>
+ <cbb4c3de-1e12-c325-fa7f-40bc63c495e7@intel.com>
+ <20190426072659.swew4mvfz7dfjyqq@linutronix.de>
+ <89ed2d26-a73c-99ad-76d8-e4b46755c783@intel.com>
+ <20190426165013.mdgd2ocmdgkhja7n@linutronix.de>
+ <76afd2e7-40fb-15a4-d183-22e4b50de43d@intel.com>
+ <20190426200509.3q5ngl44o64q2lg2@linutronix.de>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <87871e60-4e64-2355-11b4-6201cab8bf75@intel.com>
+Date:   Fri, 26 Apr 2019 13:44:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190426200509.3q5ngl44o64q2lg2@linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e6f8da38-b8dd-a9c5-a358-5f33b6ea7b37@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 02:29:31PM +0000, Singh, Brijesh wrote:
-> Yes that's doable but I am afraid that caching the value may lead us to
-> wrong path and also divergence from the SEV API spec. The spec says the
-> returned length is a minimum length but its possible that caller can
-> give a bigger buffer and FW will still work with it.
+On 4/26/19 1:05 PM, Sebastian Andrzej Siewior wrote:
+> 
+> copy_fpstate_to_sigframe()
+>  |
+>  copy_fpregs_to_sigframe() fails.
+>  |
+>  using_compacted_format()
 
-Does the caller even have a valid reason to give a bigger buffer len?
+Aw, crud.  I was looking at Linus's tree.  Sorry about that.  In Linus's
+tree, if copy_fpregs_to_sigframe() fails, we just return from
+copy_fpstate_to_sigframe() immediately.  In other words, either XSAVE
+works, and we don't have this issue, or XSAVE fails and we don't do the
+fixup code in question.
 
-I mean I'm still thinking defensively here but maybe the only thing that
-would happen here with a bigger buffer is if the kmalloc() would fail,
-leading to eventual failure of the migration.
+I'll say it again, though: I think we should be using the XSAVE
+instruction to save this state.  If we need to map some pages in order
+to make XSAVE work, then I think we should bring some pages in and we
+can do *that* in the slow path.  We can even do that without taking page
+faults by just calling get_user_pages() for instance.
 
-If the code limits the allocation to some sane max length, the migration
-won't fail even if userspace gives it too big values...
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Or, the slow path could be to fpregs_unlock(), zero the user area
+(taking and handling page faults), then fpregs_lock() and retry the
+copy_fpregs_to_sigframe().
