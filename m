@@ -2,83 +2,188 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79248C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A75C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA7E2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:14:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VnzWlp6+"
+	by mail.kernel.org (Postfix) with ESMTP id 893EC206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:16:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbfDZHOs (ORCPT
+        id S1726013AbfDZHQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:14:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40504 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfDZHOr (ORCPT
+        Fri, 26 Apr 2019 03:16:46 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:5904 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725893AbfDZHQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:14:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VuY7zu1pTotUfMqAj4cNucA6VxR717avWOjXloOTPUE=; b=VnzWlp6+IsolVsQB95l8xyKvC
-        9oCIEXjmI09FNmMEK0o2shAwX3cR24v1HQi352VI6cdeRh5rFZsxwWtQx7+iHkKc+Z2Kl/rdSolkI
-        xlnY+RHBzaLAgNJnZRXX1fzr320lZlQED3mtXGXzZU/RBBdPGG5cpu8OG3ot/qQsR075nNjwbiMG8
-        3dSbLG6RcGKdIVrCdkmK1afDCaIvBmxnyHFVRz2Bz71y1cQx9Jy3GCkznPMm/DfsGhIFUDDOwc4Oi
-        Nj+le3L+RL/SJqtdm1tLtJIg+YnLBfpuunFK/7cF742hGgPTLbrkF8KOTxE+uqmvjkQiah9B9Yu5Q
-        fcX3Qn40Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJv47-0004cq-Ga; Fri, 26 Apr 2019 07:14:35 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6942429C45529; Fri, 26 Apr 2019 09:14:33 +0200 (CEST)
-Date:   Fri, 26 Apr 2019 09:14:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH] bpf: Fix preempt_enable_no_resched() abuse
-Message-ID: <20190426071433.GX4038@hirez.programming.kicks-ass.net>
-References: <20190419131522.GW14281@hirez.programming.kicks-ass.net>
- <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
- <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
- <20190423141714.GO11158@hirez.programming.kicks-ass.net>
- <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
- <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
- <20190423193435.GX4038@hirez.programming.kicks-ass.net>
- <88ba7be0-9ec5-941e-1b3f-80fbe05fe3a0@redhat.com>
- <20190423195559.GY4038@hirez.programming.kicks-ass.net>
- <20190425212338.zo3gzg4avfy6ukxf@ast-mbp.dhcp.thefacebook.com>
+        Fri, 26 Apr 2019 03:16:46 -0400
+X-UUID: e68ea29a041c48dba8209f091923ef2b-20190426
+X-UUID: e68ea29a041c48dba8209f091923ef2b-20190426
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 635092751; Fri, 26 Apr 2019 15:16:38 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 26 Apr
+ 2019 15:16:36 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 26 Apr 2019 15:16:35 +0800
+Message-ID: <1556262995.10179.209.camel@mhfsdcap03>
+Subject: RE: [PATCH v4 4/6] usb: roles: add API to get usb_role_switch by
+ node
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Biju Das <biju.das@bp.renesas.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        "Badhri Jagan Sridharan" <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 26 Apr 2019 15:16:35 +0800
+In-Reply-To: <OSBPR01MB210350ED8C36423BBF4A8FDFB83E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1556261237-13823-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1556261237-13823-5-git-send-email-chunfeng.yun@mediatek.com>
+         <OSBPR01MB210350ED8C36423BBF4A8FDFB83E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190425212338.zo3gzg4avfy6ukxf@ast-mbp.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 02:23:40PM -0700, Alexei Starovoitov wrote:
-> Applied to bpf tree. Thanks!
-> It should have been fixed long ago. Not sure how we kept forgetting about it.
+Hi Biju,
+On Fri, 2019-04-26 at 07:02 +0000, Biju Das wrote:
+> Hi Chunfeng Yun,
+> 
+> Thanks for the patch.
+> 
+> > Subject: [PATCH v4 4/6] usb: roles: add API to get usb_role_switch by node
+> > 
+> > Add fwnode_usb_role_switch_get() to make easier to get usb_role_switch
+> > by fwnode which register it.
+> > It's useful when there is not device_connection registered between two
+> > drivers and only knows the fwnode which register usb_role_switch.
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Tested-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> > v4 changes:
+> >   1. use switch_fwnode_match() to find fwnode suggested by Heikki
+> >   2. this patch now depends on [1]
+> > 
+> >  [1] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+> >     https://patchwork.kernel.org/patch/10909971/
+> > 
+> > v3 changes:
+> >   1. use fwnodes instead of node suggested by Andy
+> >   2. rebuild the API suggested by Heikki
+> > 
+> > v2 no changes
+> > ---
+> >  drivers/usb/roles/class.c | 25 +++++++++++++++++++++++++
+> > include/linux/usb/role.h  |  8 ++++++++
+> >  2 files changed, 33 insertions(+)
+> > 
+> > diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c index
+> > f45d8df5cfb8..994fcb979795 100644
+> > --- a/drivers/usb/roles/class.c
+> > +++ b/drivers/usb/roles/class.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/device.h>
+> >  #include <linux/module.h>
+> >  #include <linux/mutex.h>
+> > +#include <linux/of.h>
+> 
+> Is it required?
+Forgot to remove it after using fwnode instead of node, will remove it
+in next version
 
-Thanks!
+Thanks a lot
+
+> 
+> >  #include <linux/slab.h>
+> > 
+> >  static struct class *role_class;
+> > @@ -135,6 +136,30 @@ struct usb_role_switch *usb_role_switch_get(struct
+> > device *dev)  }  EXPORT_SYMBOL_GPL(usb_role_switch_get);
+> > 
+> > +/**
+> > + * fwnode_usb_role_switch_get - Find USB role switch by it's parent
+> > +fwnode
+> > + * @fwnode: The fwnode that register USB role switch
+> > + *
+> > + * Finds and returns role switch registered by @fwnode. The reference
+> > +count
+> > + * for the found switch is incremented.
+> > + */
+> > +struct usb_role_switch *
+> > +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode) {
+> > +	struct usb_role_switch *sw;
+> > +	struct device *dev;
+> > +
+> > +	dev = class_find_device(role_class, NULL, fwnode,
+> > switch_fwnode_match);
+> > +	if (!dev)
+> > +		return ERR_PTR(-EPROBE_DEFER);
+> > +
+> > +	sw = to_role_switch(dev);
+> > +	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+> > +
+> > +	return sw;
+> > +}
+> > +EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
+> > +
+> >  /**
+> >   * usb_role_switch_put - Release handle to a switch
+> >   * @sw: USB Role Switch
+> > diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h index
+> > da2b9641b877..35d460f9ec40 100644
+> > --- a/include/linux/usb/role.h
+> > +++ b/include/linux/usb/role.h
+> > @@ -48,6 +48,8 @@ int usb_role_switch_set_role(struct usb_role_switch
+> > *sw, enum usb_role role);  enum usb_role usb_role_switch_get_role(struct
+> > usb_role_switch *sw);  struct usb_role_switch *c(struct
+> > device *dev);  void usb_role_switch_put(struct usb_role_switch *sw);
+> > +struct usb_role_switch *
+> > +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
+> 
+> >  struct usb_role_switch *
+> >  usb_role_switch_register(struct device *parent, @@ -72,6 +74,12 @@ static
+> > inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
+> > 
+> >  static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
+> > 
+> > +static inline struct usb_role_switch *
+> > +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode) {
+> > +	return ERR_PTR(-ENODEV);
+> > +}
+> > +
+> 
+> >  static inline struct usb_role_switch *
+> >  usb_role_switch_register(struct device *parent,
+> >  			 const struct usb_role_switch_desc *desc)
+> > --
+> > 2.21.0
+> 
+
+
