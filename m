@@ -2,70 +2,75 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B62C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B96C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7A02084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A9320878
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556237014;
+	bh=RPO1uIC2IWh3mWyjsnKtUI+ErqImL3HOmmQm9sNEC94=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=rNG52IecjIkGzFgTVik4NoPeoc9ccZt+ZASbSaYdAtsnBR/kHG+f4+9iki46Jyubo
+	 Giak9YQpVau3KmoNWwoOOgYYOrJ1j1wT8J9WXDLnFu5ih4qV3c2LL9BvoBkeBRdJNp
+	 G2uBSMb09cNJsCyS+zIYyXHLS8mfl5nwBHoyPeW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfDZAD0 (ORCPT
+        id S1729436AbfDZADd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 20:03:26 -0400
-Received: from namei.org ([65.99.196.166]:35900 "EHLO namei.org"
+        Thu, 25 Apr 2019 20:03:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbfDZAD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 20:03:26 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x3Q03BnM013918;
-        Fri, 26 Apr 2019 00:03:11 GMT
-Date:   Fri, 26 Apr 2019 10:03:11 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        prsriva <prsriva@linux.microsoft.com>,
-        Nayna <nayna@linux.vnet.ibm.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        inux-security-module@vger.kernel.org, zohar@linux.ibm.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com,
-        Prakhar Srivastava <prsriva@microsoft.com>
-Subject: Re: [PATCH v2 2/5 RFC] use event name instead of enum to make the
- call generic
-In-Reply-To: <1556234338.2788.1.camel@HansenPartnership.com>
-Message-ID: <alpine.LRH.2.21.1904261002480.13876@namei.org>
-References: <20190424001544.7188-1-prsriva02@gmail.com>         <20190424001544.7188-2-prsriva02@gmail.com>         <d38f32f8-7078-f205-ba11-9c4266ee40e8@linux.vnet.ibm.com>         <4c313367-22dc-9532-54b5-cd3a79deb625@linux.microsoft.com>        
- <CAADWXX8NC-PFJmuvQbNXn49CYjvyn-e0rtH_EoUfCvuJHTwHAQ@mail.gmail.com>         <alpine.LRH.2.21.1904260833140.7315@namei.org> <1556234338.2788.1.camel@HansenPartnership.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1728999AbfDZADc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 20:03:32 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB93F2084F;
+        Fri, 26 Apr 2019 00:03:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556237012;
+        bh=RPO1uIC2IWh3mWyjsnKtUI+ErqImL3HOmmQm9sNEC94=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=maZCC/ZZs2YcapksAW4v1joBDZ0LoDPpscVt1eERQsq2Boju1+Ut7f5EtHQm0T+LK
+         IpSeoTpx7FIbBL/S/aXlKhn095TZzNHouKTjrhIue7bOtSdFzHTr0cB0vGQQpqGCIQ
+         7oVoWnaVeZpSwi1ZzwvMAlhkjcKRpXRaZ3NVSsoo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1556169264-31683-1-git-send-email-Anson.Huang@nxp.com>
+References: <1556169264-31683-1-git-send-email-Anson.Huang@nxp.com>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/2] clk: imx7ulp: update nic1_bus_clk parent info
+To:     "festevam@gmail.com" <festevam@gmail.com>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>
+Message-ID: <155623701103.15276.18082131746292726812@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 25 Apr 2019 17:03:31 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019, James Bottomley wrote:
+Quoting Anson Huang (2019-04-24 22:19:07)
+> Since i.MX7ULP B0 chip, nic1_bus_clk's parent is changed to
+> from nic0_clk directly, update it accordingly.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-> That's not the correct location: DMARC records should be at the _dmarc.
-> subdomain.  without this you'll inherit the dmarc policy of
-> _dmarc.microsoft.com
-> 
-
-Thanks.
-
-> > We don't have DKIM set up yet.
-> 
-> If you advertise DMARC, you're expected to have DKIM working for spam
-> purposes.  On the other hand, if you don't advertise DMARC, google will
-> probably still bin all your email as spam.
-
-Working on it.
-
--- 
-James Morris
-<jmorris@namei.org>
+Looks ok. Shawn, will you pick it up?
 
