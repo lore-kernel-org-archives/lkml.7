@@ -2,73 +2,68 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A49C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD089C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D59D2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA7AA2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:09:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zZLBwR+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfDZWJL (ORCPT
+        id S1727187AbfDZWJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 18:09:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54331 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfDZWJL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 18:09:11 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hK91o-0001bm-Km; Fri, 26 Apr 2019 22:09:08 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] ext4: fix two cases where a u32 is being checked for a less than zero error return
-Date:   Fri, 26 Apr 2019 23:09:08 +0100
-Message-Id: <20190426220908.12790-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 26 Apr 2019 18:09:50 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46267 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726696AbfDZWJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 18:09:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=0SnBoo25eK6dq94ky98ELcbAWime5vIOO6l9XPnadQQ=; b=zZLBwR+V3TTM3G7615U3yjrK30
+        YO7J5ulIMf2E5x7kENgf9mwDHdl4kgdVjODeRZVFFwF7OJPL6VncJPERIqTdNslpMVoxp0UEYTINn
+        B4uJknOQPJzAopRz+zb/PF//tgaNDCfmTpu8K1cdzQjrsX2IMWEbxsZAtqETZ193L3Iw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hK92Q-0006D9-7h; Sat, 27 Apr 2019 00:09:46 +0200
+Date:   Sat, 27 Apr 2019 00:09:46 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH net-next v2 04/20] net: ethernet: ti: cpsw: update
+ cpsw_split_res() to accept cpsw_common
+Message-ID: <20190426220946.GD23059@lunn.ch>
+References: <1556298762-8632-1-git-send-email-grygorii.strashko@ti.com>
+ <1556298762-8632-5-git-send-email-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556298762-8632-5-git-send-email-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, Apr 26, 2019 at 08:12:26PM +0300, Grygorii Strashko wrote:
+> Update cpsw_split_res() to accept struct cpsw_common instead of
+> struct net_device to simplify code.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-There are two cases where u32 variables n and err are being checked
-for less than zero error values, the checks is always false because
-the variables are not signed. Fix this by making the variables ints.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/ext4/block_validity.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index 968f163b5feb..8d03550aaae3 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -142,7 +142,8 @@ static int ext4_protect_reserved_inode(struct super_block *sb, u32 ino)
- 	struct inode *inode;
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_map_blocks map;
--	u32 i = 0, err = 0, num, n;
-+	u32 i = 0, num;
-+	int err = 0, n;
- 
- 	if ((ino < EXT4_ROOT_INO) ||
- 	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
--- 
-2.20.1
-
+    Andrew
