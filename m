@@ -2,147 +2,97 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CB8C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A74C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 826882077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D412077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfDZTp6 (ORCPT
+        id S1726831AbfDZTt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 15:45:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58694 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbfDZTp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 15:45:58 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F1D80772CC;
-        Fri, 26 Apr 2019 19:45:56 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A0AF60FD9;
-        Fri, 26 Apr 2019 19:45:56 +0000 (UTC)
-Subject: Re: [-next] system hangs likely due to "modules: Only return -EEXIST
- for modules that have finished loading"
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     Jessica Yu <jeyu@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Cathy Avery <cavery@redhat.com>
-References: <20190426130736.GB8646@osiris>
- <d4d75ad1-e193-c230-1edc-a93db2b068d7@redhat.com>
- <20190426150741.GD8646@osiris> <20190426160956.GA3827@linux-8ccs>
- <2e047a7e-bf08-be8c-bdd0-429464fa133d@redhat.com>
-Message-ID: <52c293e9-ddfa-426a-a8f1-2106e250e78d@redhat.com>
-Date:   Fri, 26 Apr 2019 15:45:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 26 Apr 2019 15:49:27 -0400
+Received: from outbound-smtp02.blacknight.com ([81.17.249.8]:34307 "EHLO
+        outbound-smtp02.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726458AbfDZTt0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 15:49:26 -0400
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp02.blacknight.com (Postfix) with ESMTPS id C008E98B05
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 19:49:23 +0000 (UTC)
+Received: (qmail 13679 invoked from network); 26 Apr 2019 19:49:23 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 26 Apr 2019 19:49:23 -0000
+Date:   Fri, 26 Apr 2019 20:49:22 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Aubrey Li <aubrey.intel@gmail.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Fr?d?ric Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190426194921.GB18914@techsingularity.net>
+References: <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+ <20190424140013.GA14594@sinkpad>
+ <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
+ <20190425095508.GA8387@gmail.com>
+ <20190425144619.GX18914@techsingularity.net>
+ <20190425185343.GA122353@gmail.com>
+ <20190425213145.GY18914@techsingularity.net>
+ <20190426084222.GC126896@gmail.com>
+ <20190426104328.GA18914@techsingularity.net>
+ <fbed0636-8e1f-ff3c-ef45-079497c844bb@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <2e047a7e-bf08-be8c-bdd0-429464fa133d@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 26 Apr 2019 19:45:57 +0000 (UTC)
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <fbed0636-8e1f-ff3c-ef45-079497c844bb@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/26/19 2:10 PM, Prarit Bhargava wrote:
-> 
-> 
-> On 4/26/19 12:09 PM, Jessica Yu wrote:
->> +++ Heiko Carstens [26/04/19 17:07 +0200]:
->>> On Fri, Apr 26, 2019 at 09:22:34AM -0400, Prarit Bhargava wrote:
->>>> On 4/26/19 9:07 AM, Heiko Carstens wrote:
->>>>> Hello Prarit,
->>>>>
->>>>> it looks like your commit f9a75c1d717f ("modules: Only return -EEXIST
->>>>> for modules that have finished loading") _sometimes_ causes hangs on
->>>>> s390. This is unfortunately not 100% reproducible, however the
->>>>> mentioned commit seems to be the only relevant one in modules.c.
->>>>>
->>>>> What I see is a hanging system with messages like this on the console:
->>>>>
->>>>> [   65.876040] rcu: INFO: rcu_sched self-detected stall on CPU
->>>>> [   65.876049] rcu:     7-....: (5999 ticks this GP)
->>>> idle=eae/1/0x4000000000000002 softirq=1181/1181 fqs=2729
->>>>> [   65.876078]  (t=6000 jiffies g=-471 q=17196)
->>>>> [   65.876084] Task dump for CPU 7:
->>>>> [   65.876088] systemd-udevd   R  running task        0   731    721
->>>> 0x06000004
->>>>> [   65.876097] Call Trace:
->>>>> [   65.876113] ([<0000000000abb264>] __schedule+0x2e4/0x6e0)
->>>>> [   65.876122]  [<00000000001ee486>] finished_loading+0x4e/0xb0
->>>>> [   65.876128]  [<00000000001f1ed6>] load_module+0xcce/0x27a0
->>>>> [   65.876134]  [<00000000001f3af0>] __s390x_sys_init_module+0x148/0x178
->>>>> [   65.876142]  [<0000000000ac0766>] system_call+0x2aa/0x2c8
->>>>> I did not look any further into the dump, however since the commit
->>>>> touches exactly the code path which seems to be looping... ;)
->>>>>
->>>>
->>>> Ouch :(  I wonder if I exposed a further race or another bug.  Heiko, can you
->>>> determine which module is stuck?  Warning: I have not compiled this code.
->>>
->>> Here we go:
->>>
->>> [   11.716866] PRARIT: waiting for module s390_trng to load.
->>> [   11.716867] PRARIT: waiting for module s390_trng to load.
->>> [   11.716868] PRARIT: waiting for module s390_trng to load.
->>> [   11.716870] PRARIT: waiting for module s390_trng to load.
->>> [   11.716871] PRARIT: waiting for module s390_trng to load.
->>> [   11.716872] PRARIT: waiting for module s390_trng to load.
->>> [   11.716874] PRARIT: waiting for module s390_trng to load.
->>> [   11.716875] PRARIT: waiting for module s390_trng to load.
->>> [   11.716876] PRARIT: waiting for module s390_trng to load.
->>> [   16.726850] add_unformed_module: 31403529 callbacks suppressed
->>> [   16.726853] PRARIT: waiting for module s390_trng to load.
->>> [   16.726862] PRARIT: waiting for module s390_trng to load.
->>> [   16.726865] PRARIT: waiting for module s390_trng to load.
->>> [   16.726867] PRARIT: waiting for module s390_trng to load.
->>> [   16.726869] PRARIT: waiting for module s390_trng to load.
->>>
->>> If I'm not mistaken then there was _no_ corresponding message on the
->>> console stating that the module already exists.
-> 
-> Heiko,
-> 
-> Where is the s390_trng module?  I can't seem to find it in the tree.
-> 
-> [02:06 PM root@ibm-z-108 linux-next]# find ./ -name *s390_trng*
-> [02:06 PM root@ibm-z-108 linux-next]# git grep s390_trng
-> [02:07 PM root@ibm-z-108 linux-next]#
+On Fri, Apr 26, 2019 at 11:37:11AM -0700, Subhra Mazumdar wrote:
+> > > So we avoid a maybe 0.1% scheduler placement overhead but inflict 5-10%
+> > > harm on the workload, and also blow up stddev by randomly co-scheduling
+> > > two tasks on the same physical core? Not a good trade-off.
+> > > 
+> > > I really think we should implement a relatively strict physical core
+> > > placement policy in the under-utilized case, and resist any attempts to
+> > > weaken this for special workloads that ping-pong quickly and benefit from
+> > > sharing the same physical core.
+> > > 
+> > It's worth a shot at least. Changes should mostly be in the wake_affine
+> > path for most loads of interest.
+>
+> Doesn't select_idle_sibling already try to do that by calling
+> select_idle_core? For our OLTP workload we infact found the cost of
+> select_idle_core was actually hurting more than it helped to find a fully
+> idle core, so a net negative.
 > 
 
-Never mind, I found it: s390-trng.c
+select_idle_sibling is not guarnateed to call select_idle_core or avoid
+selecting HT sibling whose other sibling is !idle but yes, in that path,
+the search cost is a general concern which is why any change there is
+tricky at best.
 
-P.
-
-> P.
-> 
->>
->> Hm, my current theory is that we have a module whose exit() function
->> is taking a while to run to completion. While it is doing so, the
->> module's state is already set to MODULE_STATE_GOING.
->>
->> With Prarit's patch, since this module is probably still in GOING,
->> add_unformed_module() will wait until the module is finally gone. If
->> this takes too long, we will keep trying to add ourselves to the
->> module list and hence stay in the loop in add_unformed_module().
->> According to Documentation/RCU/stallwarn.txt, this looping in the
->> kernel may trigger an rcu stall warning (see bullet point stating "a
->> CPU looping anywhere in the kernel without invoking schedule()".
->>
->> Heiko, could you modify the patch to print the module's state to
->> confirm?
->>
->> Thanks,
->>
->> Jessica
+-- 
+Mel Gorman
+SUSE Labs
