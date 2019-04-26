@@ -2,145 +2,128 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA020C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C45CC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5481206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC281206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfDZOOa (ORCPT
+        id S1726409AbfDZOPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:14:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53650 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726155AbfDZOOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:14:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3C218AC9A;
-        Fri, 26 Apr 2019 14:14:28 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 16:14:26 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v4] panic: add an option to replay all the printk message
- in buffer
-Message-ID: <20190426141426.h7hpvhr3rqp7umbk@pathway.suse.cz>
-References: <1556199137-14163-1-git-send-email-feng.tang@intel.com>
- <20190426074934.seje2tn5p6fsuwaq@pathway.suse.cz>
- <20190426135316.GA505@tigerII.localdomain>
+        Fri, 26 Apr 2019 10:15:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36228 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbfDZOPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 10:15:09 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 41F0E30842A0;
+        Fri, 26 Apr 2019 14:15:08 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-116-103.phx2.redhat.com [10.3.116.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F08C4277D6;
+        Fri, 26 Apr 2019 14:15:05 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 10:15:04 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Fr?d?ric Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190426141503.GB16477@lorien.usersys.redhat.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+ <20190424140013.GA14594@sinkpad>
+ <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
+ <20190425095508.GA8387@gmail.com>
+ <20190425144619.GX18914@techsingularity.net>
+ <20190425185343.GA122353@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190426135316.GA505@tigerII.localdomain>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190425185343.GA122353@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 26 Apr 2019 14:15:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-04-26 22:53:16, Sergey Senozhatsky wrote:
-> On (04/26/19 09:49), Petr Mladek wrote:
-> > On Thu 2019-04-25 21:32:17, Feng Tang wrote:
-> > > Currently on panic, kernel will lower the loglevel and print out
-> > > pending printk msg only with console_flush_on_panic().
-> > > 
-> > > Add an option for users to configure the "panic_print" to replay
-> > > all dmesg in buffer, some of which they may have never seen due
-> > > to the loglevel setting, which will help panic debugging .
-> > > 
-> > > @@ -2539,6 +2540,11 @@ void console_flush_on_panic(void)
-> > >  	 */
-> > >  	console_trylock();
-> > >  	console_may_schedule = 0;
-> > > +
-> > > +	if (mode == CONSOLE_REPLAY_ALL) {
-> > > +		console_seq = log_first_seq;
-> > > +		console_idx = log_first_idx;
-> > 
-> > Ah, log_first_seq and log_first_idx are synchronized by
-> > logbuf_log.
-> > 
-> > console_flush_on_panic(CONSOLE_REPLAY_ALL) is called
-> > when only one CPU is running but it is not guaranteed.
-> > 
-> > Therefore we should use:
-> > 
-> > 	if (mode == CONSOLE_REPLAY_ALL) {
-> > 		unsigned long flags;
-> > 
-> > 		logbuf_lock_irqsave(flags);
-> > 		console_seq = log_first_seq;
-> > 		console_idx = log_first_idx;
-> > 		logbuf_unlock_irqrestore(flags);
-> > 	}
+On Thu, Apr 25, 2019 at 08:53:43PM +0200 Ingo Molnar wrote:
+> Interesting. This strongly suggests sub-optimal SMT-scheduling in the 
+> non-saturated HT case, i.e. a scheduler balancing bug.
 > 
-> I thought about it, and I don't think I see how we can race with
-> anything here.
+> As long as loads are clearly below the physical cores count (which they 
+> are in the early phases of your table) the scheduler should spread tasks 
+> without overlapping two tasks on the same core.
 > 
-> Suppose we have panic on CPUA and cactive CPUB in console_unlock():
+> Clearly it doesn't.
 > 
-> - if it's not in atomic context, then the moment it does
-> 
-> 	call_console_drivers();
-> 	printk_safe_exit_irqrestore(flags);  << IPI
-> 
->   IPI will take it down.
-> 
-> - If IPI doesn't take it down, then NMI will.
 
-Then I wonder why, for example, native_stop_other_cpus() waits
-10ms at maximum after sending the NMIs. What is the state
-of the CPUs that miss this deadline?
+That's especially true if there are cgroups with different numbers of
+tasks in them involved. 
 
+Here's an example showing the average number of tasks on each of the 4 numa
+nodes during a test run. 20 cpus per node. There are 78 threads total, 76
+for lu and 2 stress cpu hogs. So fewer than the 80 CPUs on the box. The GROUP
+test has the two stresses and lu in distinct cgroups. The NORMAL test has them
+all in one. This is from 5.0-rc3+, but the version doesn't matter. It's
+reproducible on any kernel. SMT is on, but that also doesn't matter here.
 
-> - But, more importantly, if that CPUB is in atomic context, then panic
->   CPUA will spin, waiting for that CPUB to handoff printing, before
->   panic CPU will even try to stop all CPUs.
-> 
-> 	pr_emerg("Kernel panic - not syncing: %s\n", buf)
-> 
->   is the point of 'synchronization' - panic CPU will wait for
->   current console owner.
+The first two lines show where the stress jobs ran and the second show where
+the 76 threads of lu ran.
 
-"Synchronization point" is too strong formulation.
-The console waiter logic is effective but it does not always
-work. The current console owner must be calling the console
-drivers.
+GROUP_1.stress.ps.numa.hist      Average    1.00   1.00
+NORMAL_1.stress.ps.numa.hist     Average    0.00   1.10   0.90
 
+lu.C.x_76_GROUP_1.ps.numa.hist   Average    10.97  11.78  26.28  26.97
+lu.C.x_76_NORMAL_1.ps.numa.hist  Average    19.70  18.70  17.80  19.80
 
->   Hmm, we might have a bit of a problem here, maybe.
+The NORMAL test is evenly balanced across the 20 cpus per numa node.  There
+is between a 4x and 10x performance hit to the lu benchmark between group
+and normal in any of these test runs. In this particular case it was 10x:
 
-Hmm, the printk() might wait forever when NMI stopped
-the current console owner in the console driver code
-or with the logbuf_lock taken.
-
-The console waiter logic might get solved by clearing
-the console_owner in console_flush_on_panic(). It can't
-be much worse, we already ignore console_lock() there, ...
-
-The best solution for the logbuf_lock scenario would be
-the lock less log buffer.
+============76_GROUP========Mop/s===================================
+min     q1      median  q3      max
+3776.51 3776.51 3776.51 3776.51 3776.51
+============76_GROUP========time====================================
+min     q1      median  q3      max
+539.92  539.92  539.92  539.92  539.92
+============76_NORMAL========Mop/s===================================
+min     q1      median  q3      max
+39386   39386   39386   39386   39386
+============76_NORMAL========time====================================
+min     q1      median  q3      max
+51.77   51.77   51.77   51.77   51.77
 
 
-Anyway, do we really need to have length discussion about
-whether the locks are needed? They will not break anything.
-And we could ignore one scenario in case of problems.
-Also we will not need to think about it when the
-call is moved anywhere else.
+This a bit off topic, but since balancing bugs was mentioned and I've been
+trying to track this down for a while (and learning the scheduler code in
+the process) I figured I'd just throw it out there :)
 
-Finally, I could imagine that people would want to replay
-the log also from other locations when debugging nasty bugs.
 
-Best Regards,
-Petr
+Cheers,
+Phil
+
+-- 
