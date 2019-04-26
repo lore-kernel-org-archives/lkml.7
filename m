@@ -2,141 +2,171 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD659C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D035C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3FC2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbhJcu1f"
+	by mail.kernel.org (Postfix) with ESMTP id DC8182084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfDZPcs (ORCPT
+        id S1726820AbfDZPcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:32:48 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41059 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfDZPcq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:32:46 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d9so1745054pls.8;
-        Fri, 26 Apr 2019 08:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Qw8iXfD3ItYngoQYik6Jp498D9sHvHA3oeNnrYYHbk4=;
-        b=fbhJcu1fG3OoONfHlhroaCt4w35XyEL5Fz9jSI8bcoiIQbYGvjbKPMT5TH71zVzc4q
-         KQEXfRHIRCKPAcivQQaVVHkQwemG9xmcbm3WkoY4XN+0K6TiguCQjgA4ilc3q4CX8OIR
-         P7Q/AeMwLfwn+WNZ/63FLraCp+PeX7GMlelcq5wsm3u3unOUwRnAMZbB8UiPX6ZhZlEm
-         cT/c+4d6KFyOS2zoW1NbPLWvjYmEijdTD/8vIdDBqGEDvJR1E3rXDtGyxDjeyR5puORt
-         RjG9Mqqkulne++QEBLZ6iv4NGScYU871KdY317nchCLPZ8ocCRV2CIKH02Ua9o6s57Qc
-         D6Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Qw8iXfD3ItYngoQYik6Jp498D9sHvHA3oeNnrYYHbk4=;
-        b=i8I2/uPRBkjffgBkh/WTywVWW7x+Z/uv+whgIPqGMJVfOk9aaRyD4pPKjyVTItuCqF
-         ted5z3bWIDO2rTnGrnMso930bCZELEWPp7ZxbN7x4XcYq4NO39ZIGVI5+jQ/p0m8Wbvt
-         H52z4KgZCbbdBlsdJtpElCQIS5RZiz9TFkXaJ5JxPynmLFGmiQ8FnROAC6wI+S1Jdoxy
-         vs1rYYP6sDG9R3eAGTJXOa8bzI18UTowlxYlXz0OG+QhavsecQr6CIkDPHYAfuutCDBe
-         pEM8umnapCMONq8lUts1o/J/KLyvxQ0w9uHm63rd3dBeTQBTcAiIQU+2PoHuXIA9Rtix
-         55Mg==
-X-Gm-Message-State: APjAAAXuCNLfFWc3R98+bLZVcRInLgIArgDY9KZBRFkWtxTzdf7cZM0V
-        08wCdwxF+ng/BcbM+s2FT34=
-X-Google-Smtp-Source: APXvYqxXWUREqCKF57ycqs65HZcNJIa6R+UZEfCR7D4k2cNb+Ngkz+g1LaaDcgv3y/uJWz0rz74hzQ==
-X-Received: by 2002:a17:902:29e9:: with SMTP id h96mr27823553plb.258.1556292765921;
-        Fri, 26 Apr 2019 08:32:45 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.32.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 08:32:45 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mchehab+samsung@kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 06/27] Documentation: x86: convert entry_64.txt to reST
-Date:   Fri, 26 Apr 2019 23:31:29 +0800
-Message-Id: <20190426153150.21228-7-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190426153150.21228-1-changbin.du@gmail.com>
-References: <20190426153150.21228-1-changbin.du@gmail.com>
+        Fri, 26 Apr 2019 11:32:53 -0400
+Received: from mga04.intel.com ([192.55.52.120]:31663 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbfDZPct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:32:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 08:32:49 -0700
+X-IronPort-AV: E=Sophos;i="5.60,398,1549958400"; 
+   d="scan'208";a="137718346"
+Received: from dahanhan-mobl.ccr.corp.intel.com (HELO [10.255.30.119]) ([10.255.30.119])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 26 Apr 2019 08:32:47 -0700
+Subject: Re: [PATCH v2] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        linux-kernel@vger.kernel.org
+References: <1556248672-6469-1-git-send-email-like.xu@linux.intel.com>
+ <20190426141346.GA4140@linux.intel.com>
+ <d5e3fea7e1bb58ae24ba92056ff61ada52c28b65.camel@linux.intel.com>
+ <20190426150436.GD4140@linux.intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <9c374edc-0002-de46-60f0-5f36b26c898c@linux.intel.com>
+Date:   Fri, 26 Apr 2019 23:32:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190426150436.GD4140@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation to reStructuredText format and
-add it to Sphinx TOC tree. No essential content change.
+On 2019/4/26 23:04, Sean Christopherson wrote:
+> On Fri, Apr 26, 2019 at 10:54:19PM +0800, Xiaoyao Li wrote:
+>> On Fri, 2019-04-26 at 07:13 -0700, Sean Christopherson wrote:
+>>> On Fri, Apr 26, 2019 at 11:17:52AM +0800, Like Xu wrote:
+>>>> Some new systems have multiple software-visible die within each package.
+>>>> Add support to expose Intel V2 Extended Topology Enumeration Leaf CPUID.1F.
+>>>>
+>>>> Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+>>>> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+>>>> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+>>>> ---
+>>>>
+>>>> ==changelog==
+>>>> v2:
+>>>> - Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
+>>>> - Add comment to handle 0x1f anf 0xb in common code
+>>>> - Reduce check time in a descending-break style
+>>>>
+>>>> v1: https://lkml.org/lkml/2019/4/22/28
+>>>>
+>>>>   arch/x86/kvm/cpuid.c | 12 +++++++++++-
+>>>>   1 file changed, 11 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>>>> index fd39516..f9b529e 100644
+>>>> --- a/arch/x86/kvm/cpuid.c
+>>>> +++ b/arch/x86/kvm/cpuid.c
+>>>> @@ -425,6 +425,11 @@ static inline int __do_cpuid_ent(struct
+>>>> kvm_cpuid_entry2 *entry, u32 function,
+>>>>   
+>>>>   	switch (function) {
+>>>>   	case 0:
+>>>> +		/* Check if the cpuid leaf 0x1f is actually implemented */
+>>>> +		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
+>>>
+>>> Restricting the check to bits 15:0 is unnecessary, the SDM explicitly
+>>> states that EBX will be zero for invalid sub-leaves:
+>>>
+>>>    For sub-leaves that return an invalid level-type of 0 in ECX[15:8];
+>>>    EAX and EBX will return 0.
+>>>
+>>> This code is merely checking for the existence of CPUID.1F, nothing will
+>>> break if future CPUs provide additional information, i.e. checking for a
+>>> valid sub-leaf is sufficient.
+>>>
+>>> That being said, if you insist on restricting the check to non-reserved
+>>> bits then I think the earlier suggestion of "cpuid_ecx(0x1f) & 0x0000ff00"
+>>> makes more sense since the SDM clearly intends ECX to be used to detect
+>>> valid vs. invalid levels.
+>>
+>> Here we use CPUID.1F_0:EBX[15:0] to check the existence, not the output of
+>> ECX[15:8], which is following the Intel SDM.
+>>
+>> Specifically, in page 3-222 Vol.2A of latest SDM publish on January 2019, there
+>> is such description of Input EAX = 1FH:
+>>
+>>     When CPUID executes with EAX set to 1FH, the processor returns information
+>>     about extended topology enumeration data. Software must detect the presence
+>>     of CPUID leaf 1FH by verifying (a) the highest leaf index supported by CPUID
+>>     is >= 1FH, and (b) CPUID.1FH:EBX[15:0] reports a non-zero value.
+> 
+> Ah, perfect.  Please put exactly that in the changelog.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- Documentation/x86/{entry_64.txt => entry_64.rst} | 12 +++++++++---
- Documentation/x86/index.rst                      |  1 +
- 2 files changed, 10 insertions(+), 3 deletions(-)
- rename Documentation/x86/{entry_64.txt => entry_64.rst} (95%)
+Thanks Sean and xiaoyao.
+Both of you inspired me a lot and a v3 patch would be released.
 
-diff --git a/Documentation/x86/entry_64.txt b/Documentation/x86/entry_64.rst
-similarity index 95%
-rename from Documentation/x86/entry_64.txt
-rename to Documentation/x86/entry_64.rst
-index c1df8eba9dfd..a48b3f6ebbe8 100644
---- a/Documentation/x86/entry_64.txt
-+++ b/Documentation/x86/entry_64.rst
-@@ -1,3 +1,9 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============
-+Kernel Entries
-+==============
-+
- This file documents some of the kernel entries in
- arch/x86/entry/entry_64.S.  A lot of this explanation is adapted from
- an email from Ingo Molnar:
-@@ -59,7 +65,7 @@ Now, there's a secondary complication: there's a cheap way to test
- which mode the CPU is in and an expensive way.
- 
- The cheap way is to pick this info off the entry frame on the kernel
--stack, from the CS of the ptregs area of the kernel stack:
-+stack, from the CS of the ptregs area of the kernel stack::
- 
- 	xorl %ebx,%ebx
- 	testl $3,CS+8(%rsp)
-@@ -67,7 +73,7 @@ stack, from the CS of the ptregs area of the kernel stack:
- 	SWAPGS
- 
- The expensive (paranoid) way is to read back the MSR_GS_BASE value
--(which is what SWAPGS modifies):
-+(which is what SWAPGS modifies)::
- 
- 	movl $1,%ebx
- 	movl $MSR_GS_BASE,%ecx
-@@ -76,7 +82,7 @@ The expensive (paranoid) way is to read back the MSR_GS_BASE value
- 	js 1f   /* negative -> in kernel */
- 	SWAPGS
- 	xorl %ebx,%ebx
--1:	ret
-+  1:	ret
- 
- If we are at an interrupt or user-trap/gate-alike boundary then we can
- use the faster check: the stack will be a reliable indicator of
-diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index 489f4f4179c4..8a666c5abc85 100644
---- a/Documentation/x86/index.rst
-+++ b/Documentation/x86/index.rst
-@@ -12,3 +12,4 @@ Linux x86 Support
-    topology
-    exception-tables
-    kernel-stacks
-+   entry_64
--- 
-2.20.1
+> 
+>>
+>> And also, I look up the existing codes about initialising topology using leaf
+>> 0xb in kernel. In function detect_extended_topology_early(), it use following
+>>
+>>     if (ebx == 0 || (LEAFB_SUBTYPE(ecx) != SMT_TYPE))
+>>
+>> to verify whether leaf 0xb is invalid. I think any of them is strong enough to
+>> verify the leaf 0xb is invalid, so I don't know why it uses both of them.
+>>
+>>>> +			entry->eax = 0x1f;
+>>>> +			break;
+>>>
+>>> I find if/else easier to follow than the separate break, but either option
+>>> works for me.
+>>> 		
+>>>> +		}
+>>>>   		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+>>>>   		break;
+>>>>   	case 1:
+>>>> @@ -544,7 +549,12 @@ static inline int __do_cpuid_ent(struct
+>>>> kvm_cpuid_entry2 *entry, u32 function,
+>>>>   		entry->edx = edx.full;
+>>>>   		break;
+>>>>   	}
+>>>> -	/* function 0xb has additional index. */
+>>>> +	/*
+>>>> +	 * Intel documentation states that 0x1f and 0xb have
+>>>> +	 * identical formats and thus can be handled by common code.
+>>>> +	 * (Intel SDM Vol. 2A - Instruction Set Reference - CPUID)
+>>>> +	 */
+>>>
+>>> It's probably safe to assume anyone reading reading this code is already
+>>> all too aware of Intel's propensity for dumping CPUID enumeration into the
+>>> CPUID entry in the ISR.  Maybe shorten this to something like:
+>>>
+>>> 	/*
+>>> 	 * Per Intel's SDM, 0x1f is a superset of 0xb, thus they can be handled
+>>> 	 * by common code.
+>>> 	 */
+>>>
+>>>> +	case 0x1f:
+>>>>   	case 0xb: {
+>>>>   		int i, level_type;
+>>>>   
+>>>> -- 
+>>>> 1.8.3.1
+>>>>
+>>
+> 
 
