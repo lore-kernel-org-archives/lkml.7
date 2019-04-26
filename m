@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFF3C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837ACC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B4B2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E4C206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271820;
-	bh=DdBSdm5TL3z05CQUTqpvTxj9GXse+B1DOXyKtHgnfnE=;
+	s=default; t=1556271825;
+	bh=/vuUdDVm34fRwmovIYnuSmNH8xuKnAlMcXp9rwknnz4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=DVC9SvoI6qVFd7piSPN0dF4HxcT2AxZ6fW9PWTjVNbtu0Ku8lLJJGejQv0kNxYqF4
-	 fa5aMmAOlFMjoFzhBvU44mTuTmOblaSfTj4p9SQIR3FOR62pilIXupmWADCzMzct86
-	 F6c6fpLU/aELaG0ajWZ/0efbb50v2Zgl4yDLugWU=
+	b=R+zPnlDEuY6ItlGfkXpFAM358j140CL2TXiBHQYEbnQz6Pot+OgwX2Ogn6gcPMOR5
+	 iwHsP174J04XSyMlogAOeTVOI6do3FHQdK0+0zZuf4XGMNYZvWmpOmU1pd+VDuAJMb
+	 8zTCnewxEGxkMTmYBCWDv517Czx2KQiTEvKz1g2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfDZJni (ORCPT
+        id S1726522AbfDZJkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:43:38 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46164 "EHLO
+        Fri, 26 Apr 2019 05:40:36 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45796 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfDZJko (ORCPT
+        with ESMTP id S1726470AbfDZJkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:40:44 -0400
+        Fri, 26 Apr 2019 05:40:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=jtTH0TpgOBBUDtpKKnyrbTESZBwmjBlYdKBRoCyTaqs=; b=v1zzMBFxgmRw
-        HiIeEDdhtGFhoDDhgiI0tMMVb61SY+CEEEMFWuZygB7kv1oybuClMgWdJ6rXViFIUMxVKYu532yAq
-        /WDc+yCMzGaRFpWQWvtfx/vftAj14IMLvt/xi+PJmWqDeXB6A5xaPx4W3/Xv2V14FWux1uXblcbq1
-        5SgYE=;
+        List-Archive; bh=+jNPf8v0/6A8D2tJ8E+qjySuFvexSs904+oZO0E29lw=; b=WIwQqGBQTTnB
+        y6wrYfZm+rKTPVt9cKd2Wel89u0t4dn3zkNqjLcL9Xbk2rX9/LJfUYMRV/JuQYIQsI61wzxDO59l/
+        dT1lAe99cNCg1ulOtadrPuxb/3rAFch0fLntka3YvW5j8fpZC+8IXTXTsgQMu69GW4btq7kDM1yDL
+        GNrHQ=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxLV-0003Jw-G0; Fri, 26 Apr 2019 09:40:41 +0000
+        id 1hJxLJ-0003JF-Vt; Fri, 26 Apr 2019 09:40:30 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 3865E441D3B; Fri, 26 Apr 2019 10:40:40 +0100 (BST)
+        id 42B51441D3B; Fri, 26 Apr 2019 10:40:24 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: tps80031: Switch to SPDX identifier" to the regulator tree
+Subject: Applied "regulator: wm8350: Switch to SPDX identifier" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094040.3865E441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:40:40 +0100 (BST)
+Message-Id: <20190426094024.42B51441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:40:24 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps80031: Switch to SPDX identifier
+   regulator: wm8350: Switch to SPDX identifier
 
 has been applied to the regulator tree at
 
@@ -85,59 +85,46 @@ to this mail.
 Thanks,
 Mark
 
-From fd1a4da3bfd77d3fe15165948b948ead2b522c1c Mon Sep 17 00:00:00 2001
+From 87dbc5eb3cff166f8107f5be6a53db858211f23e Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 16 Apr 2019 18:17:29 +0800
-Subject: [PATCH] regulator: tps80031: Switch to SPDX identifier
+Date: Wed, 17 Apr 2019 22:16:31 +0800
+Subject: [PATCH] regulator: wm8350: Switch to SPDX identifier
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps80031-regulator.c | 34 ++++++++------------------
- 1 file changed, 10 insertions(+), 24 deletions(-)
+ drivers/regulator/wm8350-regulator.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/regulator/tps80031-regulator.c b/drivers/regulator/tps80031-regulator.c
-index 8e65a13e2ef5..85a6a8ca8c1b 100644
---- a/drivers/regulator/tps80031-regulator.c
-+++ b/drivers/regulator/tps80031-regulator.c
-@@ -1,27 +1,13 @@
+diff --git a/drivers/regulator/wm8350-regulator.c b/drivers/regulator/wm8350-regulator.c
+index 0eb3f3a33caa..56d6168a888d 100644
+--- a/drivers/regulator/wm8350-regulator.c
++++ b/drivers/regulator/wm8350-regulator.c
+@@ -1,16 +1,11 @@
 -/*
-- * tps80031-regulator.c -- TI TPS80031 regulator driver.
+- * wm8350.c  --  Voltage and current regulation for the Wolfson WM8350 PMIC
 - *
-- * Regulator driver for TI TPS80031/TPS80032 Fully Integrated Power
-- * Management with Power Path and Battery Charger.
+- * Copyright 2007, 2008 Wolfson Microelectronics PLC.
 - *
-- * Copyright (c) 2012, NVIDIA Corporation.
+- * Author: Liam Girdwood
+- *         linux@wolfsonmicro.com
 - *
-- * Author: Laxman Dewangan <ldewangan@nvidia.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any kind,
-- * whether express or implied; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-- * 02111-1307, USA
+- *  This program is free software; you can redistribute  it and/or modify it
+- *  under  the terms of  the GNU General  Public License as published by the
+- *  Free Software Foundation;  either version 2 of the  License, or (at your
+- *  option) any later version.
 - */
-+// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0+
 +//
-+// tps80031-regulator.c -- TI TPS80031 regulator driver.
++// wm8350.c  --  Voltage and current regulation for the Wolfson WM8350 PMIC
 +//
-+// Regulator driver for TI TPS80031/TPS80032 Fully Integrated Power
-+// Management with Power Path and Battery Charger.
++// Copyright 2007, 2008 Wolfson Microelectronics PLC.
 +//
-+// Copyright (c) 2012, NVIDIA Corporation.
-+//
-+// Author: Laxman Dewangan <ldewangan@nvidia.com>
++// Author: Liam Girdwood
++//         linux@wolfsonmicro.com
  
- #include <linux/delay.h>
- #include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
 -- 
 2.20.1
 
