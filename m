@@ -4,111 +4,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664F4C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C37C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 371162077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B202077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="cr78idcg"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mEyb21lX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfDZP6H (ORCPT
+        id S1726614AbfDZP6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:58:07 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:23117 "EHLO pegase1.c-s.fr"
+        Fri, 26 Apr 2019 11:58:08 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:14230 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbfDZP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726462AbfDZP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Apr 2019 11:58:05 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44rJcC21WGz9v0yW;
-        Fri, 26 Apr 2019 17:58:03 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 44rJcB29ynz9v0yV;
+        Fri, 26 Apr 2019 17:58:02 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=cr78idcg; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=mEyb21lX; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Izi6oO4AWIMK; Fri, 26 Apr 2019 17:58:03 +0200 (CEST)
+        with ESMTP id byMrXevU5eM9; Fri, 26 Apr 2019 17:58:02 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44rJcC0w2Yz9v0yT;
-        Fri, 26 Apr 2019 17:58:03 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44rJcB12LFz9v0yT;
+        Fri, 26 Apr 2019 17:58:02 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556294283; bh=PjybnOJ/4Yt9557gkQFo/aTN2gME770May9tUSmbWHc=;
+        t=1556294282; bh=2R6JBZSMWuXKlmIqHwURs8rqGPIdbTZlXIFflcVs62M=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=cr78idcgVMlEEUGBSf9Ces8d5XyQ2x2wZbp9O/P+n34Y/LAiNtVPIkICJq2rUwbz/
-         JOkJp/MI2jH1O+uUBMc5vEqjUJ5XqOIe27Bp+vLEsqSWTzEOcB6HCKpWxOfHDM4DwB
-         ljWZ0uYlLPOFIv/UEQMVuDw+97nRvv/fmEcGCjEw=
+        b=mEyb21lXQRATT20VbwMTmQVSCFGCvbrhBBKs+ib+kJBKThVrWtgw/PNBPcbQ/u+TU
+         wL9qtYIp1kHIJeM6Y4gKmfaVFGDIC6dfVv1IxIVMFnCpSKGsrRvVdKsD18iBPtmWXU
+         LNYN6h2H+hsP1C2q0G2P8ttohl9Z98LFBoWImpVY=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BD4888B94A;
-        Fri, 26 Apr 2019 17:58:04 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BF4E38B94A;
+        Fri, 26 Apr 2019 17:58:03 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id GL9FF36tFyhw; Fri, 26 Apr 2019 17:58:04 +0200 (CEST)
+        with ESMTP id 4noG9NxAZVoJ; Fri, 26 Apr 2019 17:58:03 +0200 (CEST)
 Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A55468B82F;
-        Fri, 26 Apr 2019 17:58:04 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9CC048B82F;
+        Fri, 26 Apr 2019 17:58:03 +0200 (CEST)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 92A46666FE; Fri, 26 Apr 2019 15:58:04 +0000 (UTC)
-Message-Id: <1356c8fa170e8d7e264168611aeb0049a59afead.1556293738.git.christophe.leroy@c-s.fr>
+        id 8B7C1666FE; Fri, 26 Apr 2019 15:58:03 +0000 (UTC)
+Message-Id: <371bbb2a4c61907b12d025b9beac4576ec7c9c44.1556293738.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1556293738.git.christophe.leroy@c-s.fr>
 References: <cover.1556293738.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 06/15] powerpc/Kconfig: select PPC_MM_SLICES from subarch
- type
+Subject: [PATCH v2 05/15] powerpc/mm: get rid of nohash/32/mmu.h and
+ nohash/64/mmu.h
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 26 Apr 2019 15:58:04 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 15:58:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lets select PPC_MM_SLICES from the subarch config item instead of
-doing it via defaults declaration in the PPC_MM_SLICES item itself.
+Those files have no real added values, especially the 64 bit
+which only includes the common book3e mmu.h which is also
+included from 32 bits side.
+
+So lets do the final inclusion directly from nohash/mmu.h
 
 Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/platforms/Kconfig.cputype | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/nohash/32/mmu.h     | 19 -------------------
+ arch/powerpc/include/asm/nohash/64/mmu.h     | 10 ----------
+ arch/powerpc/include/asm/nohash/mmu-book3e.h |  2 ++
+ arch/powerpc/include/asm/nohash/mmu.h        | 16 ++++++++++++----
+ 4 files changed, 14 insertions(+), 33 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/nohash/32/mmu.h
+ delete mode 100644 arch/powerpc/include/asm/nohash/64/mmu.h
 
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 00b2bb536c74..043c0909c857 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -38,6 +38,7 @@ config PPC_8xx
- 	select SYS_SUPPORTS_HUGETLBFS
- 	select PPC_HAVE_KUEP
- 	select PPC_HAVE_KUAP
-+	select PPC_MM_SLICES if HUGETLB_PAGE
+diff --git a/arch/powerpc/include/asm/nohash/32/mmu.h b/arch/powerpc/include/asm/nohash/32/mmu.h
+deleted file mode 100644
+index af0e8b54876a..000000000000
+--- a/arch/powerpc/include/asm/nohash/32/mmu.h
++++ /dev/null
+@@ -1,19 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _ASM_POWERPC_NOHASH_32_MMU_H_
+-#define _ASM_POWERPC_NOHASH_32_MMU_H_
+-
+-#if defined(CONFIG_40x)
+-/* 40x-style software loaded TLB */
+-#include <asm/nohash/32/mmu-40x.h>
+-#elif defined(CONFIG_44x)
+-/* 44x-style software loaded TLB */
+-#include <asm/nohash/32/mmu-44x.h>
+-#elif defined(CONFIG_PPC_BOOK3E_MMU)
+-/* Freescale Book-E software loaded TLB or Book-3e (ISA 2.06+) MMU */
+-#include <asm/nohash/mmu-book3e.h>
+-#elif defined (CONFIG_PPC_8xx)
+-/* Motorola/Freescale 8xx software loaded TLB */
+-#include <asm/nohash/32/mmu-8xx.h>
+-#endif
+-
+-#endif /* _ASM_POWERPC_NOHASH_32_MMU_H_ */
+diff --git a/arch/powerpc/include/asm/nohash/64/mmu.h b/arch/powerpc/include/asm/nohash/64/mmu.h
+deleted file mode 100644
+index e490ecdac012..000000000000
+--- a/arch/powerpc/include/asm/nohash/64/mmu.h
++++ /dev/null
+@@ -1,10 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _ASM_POWERPC_NOHASH_64_MMU_H_
+-#define _ASM_POWERPC_NOHASH_64_MMU_H_
+-
+-#define MAX_PHYSMEM_BITS        44
+-
+-/* Freescale Book-E software loaded TLB or Book-3e (ISA 2.06+) MMU */
+-#include <asm/nohash/mmu-book3e.h>
+-
+-#endif /* _ASM_POWERPC_NOHASH_64_MMU_H_ */
+diff --git a/arch/powerpc/include/asm/nohash/mmu-book3e.h b/arch/powerpc/include/asm/nohash/mmu-book3e.h
+index e20072972e35..4c9777d256fb 100644
+--- a/arch/powerpc/include/asm/nohash/mmu-book3e.h
++++ b/arch/powerpc/include/asm/nohash/mmu-book3e.h
+@@ -306,6 +306,8 @@ extern int book3e_htw_mode;
  
- config 40x
- 	bool "AMCC 40x"
-@@ -79,6 +80,7 @@ config PPC_BOOK3S_64
- 	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
- 	select ARCH_SUPPORTS_NUMA_BALANCING
- 	select IRQ_WORK
-+	select PPC_MM_SLICES
+ #define mmu_cleanup_all NULL
  
- config PPC_BOOK3E_64
- 	bool "Embedded processors"
-@@ -397,8 +399,6 @@ config PPC_BOOK3E_MMU
++#define MAX_PHYSMEM_BITS        44
++
+ #endif
  
- config PPC_MM_SLICES
- 	bool
--	default y if PPC_BOOK3S_64
--	default y if PPC_8xx && HUGETLB_PAGE
+ #endif /* !__ASSEMBLY__ */
+diff --git a/arch/powerpc/include/asm/nohash/mmu.h b/arch/powerpc/include/asm/nohash/mmu.h
+index a037cb1efb57..edc793e5f08f 100644
+--- a/arch/powerpc/include/asm/nohash/mmu.h
++++ b/arch/powerpc/include/asm/nohash/mmu.h
+@@ -2,10 +2,18 @@
+ #ifndef _ASM_POWERPC_NOHASH_MMU_H_
+ #define _ASM_POWERPC_NOHASH_MMU_H_
  
- config PPC_HAVE_PMU_SUPPORT
-        bool
+-#ifdef CONFIG_PPC64
+-#include <asm/nohash/64/mmu.h>
+-#else
+-#include <asm/nohash/32/mmu.h>
++#if defined(CONFIG_40x)
++/* 40x-style software loaded TLB */
++#include <asm/nohash/32/mmu-40x.h>
++#elif defined(CONFIG_44x)
++/* 44x-style software loaded TLB */
++#include <asm/nohash/32/mmu-44x.h>
++#elif defined(CONFIG_PPC_BOOK3E_MMU)
++/* Freescale Book-E software loaded TLB or Book-3e (ISA 2.06+) MMU */
++#include <asm/nohash/mmu-book3e.h>
++#elif defined (CONFIG_PPC_8xx)
++/* Motorola/Freescale 8xx software loaded TLB */
++#include <asm/nohash/32/mmu-8xx.h>
+ #endif
+ 
+ #endif /* _ASM_POWERPC_NOHASH_MMU_H_ */
 -- 
 2.13.3
 
