@@ -2,117 +2,175 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5919DC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883D8C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 244E52084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:18:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLMWO8Q0"
+	by mail.kernel.org (Postfix) with ESMTP id 60D9B2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbfDZQSv (ORCPT
+        id S1726376AbfDZQTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:18:51 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41822 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfDZQSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:18:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 188so1957584pfd.8
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=de4bNe6ru3D+sukfth4RLcI7Zhp1IspHKcI6VPzFIT0=;
-        b=DLMWO8Q00VLneKlpiu6QGqSzIXoFQXOSrbGxnAP2X7EVfPq91WjP7D7CfqmbeU8gm7
-         6iM4WIdBgyw/SiCdQDL/tifZ1jCvGkIZwHAzWYuX4JV46OVQ8plIPPB3qJB5lkwP7uVL
-         R4qAex8maEqzJEohumuEfuWnkrOTP+gqW/BRoK4B2sAg+K9u/DT6+100coIsJGFe6aK3
-         ZrsrNzuu15FJY4yorZ43fHbvxn4eSvnaNjE0Gx0vq5IcvY9Lhx8kQBM0zjq9mwwwlISw
-         PdAWSgiC/8Vb9G8ydR66VnE2w1TTP0Ojtz05faNhZw5YdnxUwLHwX/FdCdbqE29cYJ9w
-         4JGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=de4bNe6ru3D+sukfth4RLcI7Zhp1IspHKcI6VPzFIT0=;
-        b=ULAQ2aQkWitERpsUMu5P4cxJTzp2mD/r7e+RKesAQYU0R2dSQ3aQq0QahOzdf0Wll3
-         qKYrrZ2Q6+3FIMLU4etnKYWVsrcKpF+8RFl/Ex/ppehpJq2rAH2aQtZkfvCCPJXbq16s
-         5tlTNV0CYbcoGhN3+bRdiQizcncY9LDYq10FzSnYJJyRvaJ4t79tancCl7J8cS5BTsYX
-         y6QMuy39vdp2Vfa81ea+kZJH4E6v0+2pjLLxz/dOB8aJKzbBrYqFREhrk82Thuu0ijZO
-         3HkaKM1SBKq28LZYwbjODWvwk5dCkjEZGxg8B0hnEwWKZeCb3iEg1RXbpVs1ofiYBfDO
-         BiDQ==
-X-Gm-Message-State: APjAAAUbN+CePRZV7PLGRKk6qowX9vQgLJ+72vDtcEm5PAIKDKVFPNBU
-        SPodE+ZmscmwxgxgPtb4wPlcM9Pr
-X-Google-Smtp-Source: APXvYqx15GFlsFQGXDfEwBwENj7CEB0nt9L7aalCE9ijLJoaPHbYdwI2tQgT0tOiubwaG8OX+l07LQ==
-X-Received: by 2002:a62:ee0a:: with SMTP id e10mr47038892pfi.6.1556295530046;
-        Fri, 26 Apr 2019 09:18:50 -0700 (PDT)
-Received: from localhost ([121.137.63.184])
-        by smtp.gmail.com with ESMTPSA id l4sm35149983pgh.17.2019.04.26.09.18.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 09:18:49 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Sat, 27 Apr 2019 02:16:40 +0900
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH v4] panic: add an option to replay all the printk message
- in buffer
-Message-ID: <20190426171640.GA7413@tigerII.localdomain>
-References: <1556199137-14163-1-git-send-email-feng.tang@intel.com>
- <20190426074934.seje2tn5p6fsuwaq@pathway.suse.cz>
- <20190426135316.GA505@tigerII.localdomain>
- <20190426141426.h7hpvhr3rqp7umbk@pathway.suse.cz>
- <20190426164302.GA26127@tigerII.localdomain>
+        Fri, 26 Apr 2019 12:19:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33354 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbfDZQTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:19:30 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 32B6CC058CC0;
+        Fri, 26 Apr 2019 16:19:29 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E77AE2E02C;
+        Fri, 26 Apr 2019 16:19:21 +0000 (UTC)
+Subject: Re: [PATCH v2 16/19] iommu/vtd: Clean up for SVM device list
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556062279-64135-17-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <d7db0f68-3b56-7fac-e290-8c57ad9dcb2c@redhat.com>
+Date:   Fri, 26 Apr 2019 18:19:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426164302.GA26127@tigerII.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1556062279-64135-17-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 26 Apr 2019 16:19:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (04/27/19 01:43), Sergey Senozhatsky wrote:
-[..]
-> > The console waiter logic is effective but it does not always
-> > work. The current console owner must be calling the console
-> > drivers.
-> >
-> > >   Hmm, we might have a bit of a problem here, maybe.
-> >
-> > Hmm, the printk() might wait forever when NMI stopped
-> > the current console owner in the console driver code
-> > or with the logbuf_lock taken.
+Hi
+
+On 4/24/19 1:31 AM, Jacob Pan wrote:
+> Use combined macro for_each_svm_dev() to simplify SVM device iteration.
 > 
-> I guess this is why we re-init logbuf lock from panic,
-> however, we don't do anything with the console_owner.
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+
+Thanks
+
+Eric
+
+> ---
+>  drivers/iommu/intel-svm.c | 76 ++++++++++++++++++++++-------------------------
+>  1 file changed, 36 insertions(+), 40 deletions(-)
 > 
-> > The console waiter logic might get solved by clearing
-> > the console_owner in console_flush_on_panic(). It can't
-> > be much worse, we already ignore console_lock() there, ...
-
-Hmm, or maybe we are fine... console_waiter logic should work
-before we send out stop IPI/NMI from panic CPU. When we call
-flush_on_panic() console_unlock() clears console_owner, so
-panic_print_sys_info() should not deadlock on console_owner.
-
-It's probably only problematic if we kill a console_owner
-CPU and then try to printk() (from smp_send_stop()) before
-we do flush_on_panic()->console_unlock().
-
-	-ss
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index 0a973c2..39dfb2e 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -447,15 +447,13 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
+>  				goto out;
+>  			}
+>  
+> -			list_for_each_entry(sdev, &svm->devs, list) {
+> -				if (dev == sdev->dev) {
+> -					if (sdev->ops != ops) {
+> -						ret = -EBUSY;
+> -						goto out;
+> -					}
+> -					sdev->users++;
+> -					goto success;
+> +			for_each_svm_dev() {
+> +				if (sdev->ops != ops) {
+> +					ret = -EBUSY;
+> +					goto out;
+>  				}
+> +				sdev->users++;
+> +				goto success;
+>  			}
+>  
+>  			break;
+> @@ -585,40 +583,38 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
+>  	if (!svm)
+>  		goto out;
+>  
+> -	list_for_each_entry(sdev, &svm->devs, list) {
+> -		if (dev == sdev->dev) {
+> -			ret = 0;
+> -			sdev->users--;
+> -			if (!sdev->users) {
+> -				list_del_rcu(&sdev->list);
+> -				/* Flush the PASID cache and IOTLB for this device.
+> -				 * Note that we do depend on the hardware *not* using
+> -				 * the PASID any more. Just as we depend on other
+> -				 * devices never using PASIDs that they have no right
+> -				 * to use. We have a *shared* PASID table, because it's
+> -				 * large and has to be physically contiguous. So it's
+> -				 * hard to be as defensive as we might like. */
+> -				intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
+> -				intel_flush_svm_range_dev(svm, sdev, 0, -1, 0, !svm->mm);
+> -				kfree_rcu(sdev, rcu);
+> -
+> -				if (list_empty(&svm->devs)) {
+> -					ioasid_free(svm->pasid);
+> -					if (svm->mm)
+> -						mmu_notifier_unregister(&svm->notifier, svm->mm);
+> -
+> -					list_del(&svm->list);
+> -
+> -					/* We mandate that no page faults may be outstanding
+> -					 * for the PASID when intel_svm_unbind_mm() is called.
+> -					 * If that is not obeyed, subtle errors will happen.
+> -					 * Let's make them less subtle... */
+> -					memset(svm, 0x6b, sizeof(*svm));
+> -					kfree(svm);
+> -				}
+> +	for_each_svm_dev() {
+> +		ret = 0;
+> +		sdev->users--;
+> +		if (!sdev->users) {
+> +			list_del_rcu(&sdev->list);
+> +			/* Flush the PASID cache and IOTLB for this device.
+> +			 * Note that we do depend on the hardware *not* using
+> +			 * the PASID any more. Just as we depend on other
+> +			 * devices never using PASIDs that they have no right
+> +			 * to use. We have a *shared* PASID table, because it's
+> +			 * large and has to be physically contiguous. So it's
+> +			 * hard to be as defensive as we might like. */
+> +			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
+> +			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0, !svm->mm);
+> +			kfree_rcu(sdev, rcu);
+> +
+> +			if (list_empty(&svm->devs)) {
+> +				ioasid_free(svm->pasid);
+> +				if (svm->mm)
+> +					mmu_notifier_unregister(&svm->notifier, svm->mm);
+> +
+> +				list_del(&svm->list);
+> +
+> +				/* We mandate that no page faults may be outstanding
+> +				 * for the PASID when intel_svm_unbind_mm() is called.
+> +				 * If that is not obeyed, subtle errors will happen.
+> +				 * Let's make them less subtle... */
+> +				memset(svm, 0x6b, sizeof(*svm));
+> +				kfree(svm);
+>  			}
+> -			break;
+>  		}
+> +		break;
+>  	}
+>   out:
+>  	mutex_unlock(&pasid_mutex);
+> 
