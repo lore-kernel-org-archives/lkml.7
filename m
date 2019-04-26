@@ -2,127 +2,193 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607F7C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A978CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC6420878
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:34:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="p6PEVUGg"
+	by mail.kernel.org (Postfix) with ESMTP id 781C02084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:41:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556239279;
+	bh=GsFK9qZuv0FlaRjuXOccExgA31ahiLh6qHJ2B8nDco4=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=GaQU6tNfQLVdPwa9qtbZ29/ys874ajtAm6fNJi05ItWhqON15xXGEoDsZI7VdZ01n
+	 ZClKrNUOYqMzuPWNQz5Oq9hmVIGVjkDLCakl8yZiam5Xf0vVejXWAcKZa2GGNfb+BL
+	 zIAHRZ2zY2zyv0oCVLNJ5V7cgdCvjSiPYK7Q56ZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbfDZAeC (ORCPT
+        id S1727478AbfDZAlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 20:34:02 -0400
-Received: from mail-eopbgr00075.outbound.protection.outlook.com ([40.107.0.75]:29443
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729434AbfDZAeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 20:34:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tLVSnkfV7Lr3Ed2Zc8oueHPg/om0OZZz9Hfa//63np8=;
- b=p6PEVUGgmmf9+CICW63livICB+bd0ghNnXv1wDUNAN7zUtMvKtfTT30oBfYEFoqPrbEIUBKevqoJ3spYMTdwAYnqXYMVPaRUxZ8OJDcCO3iA9Ps+bSL6+5O17XlRLnvbecC7H6KfcdMnRS8KBWx5hbUbujE2Vhv4gPq8mSpB1KQ=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3723.eurprd04.prod.outlook.com (52.134.72.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Fri, 26 Apr 2019 00:33:55 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.010; Fri, 26 Apr 2019
- 00:33:55 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "rui.silva@linaro.org" <rui.silva@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] clk: imx: correct i.MX7D AV PLL num/denom offset
-Thread-Topic: [PATCH] clk: imx: correct i.MX7D AV PLL num/denom offset
-Thread-Index: AQHU+OX1DkBqqv6CPk2NXEG9vnlY3qZNc5QAgAApkAA=
-Date:   Fri, 26 Apr 2019 00:33:55 +0000
-Message-ID: <DB3PR0402MB3916C8BA5E721BEE7522D43AF53E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1555921647-21931-1-git-send-email-Anson.Huang@nxp.com>
- <155622979855.15276.5762308594961916461@swboyd.mtv.corp.google.com>
-In-Reply-To: <155622979855.15276.5762308594961916461@swboyd.mtv.corp.google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6a7c3a9f-6f3f-4ca9-1df8-08d6c9dedd49
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3723;
-x-ms-traffictypediagnostic: DB3PR0402MB3723:
-x-microsoft-antispam-prvs: <DB3PR0402MB3723DBA4F2ABCBE3A2427D53F53E0@DB3PR0402MB3723.eurprd04.prod.outlook.com>
-x-forefront-prvs: 001968DD50
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(366004)(136003)(39860400002)(199004)(189003)(13464003)(52314003)(6636002)(6436002)(2906002)(26005)(229853002)(66946007)(102836004)(3846002)(6116002)(4326008)(256004)(14444005)(86362001)(53936002)(66066001)(66446008)(6246003)(97736004)(66556008)(64756008)(66476007)(73956011)(81166006)(8676002)(81156014)(7736002)(305945005)(74316002)(8936002)(55016002)(52536014)(76116006)(9686003)(476003)(99286004)(486006)(25786009)(316002)(68736007)(7696005)(110136005)(446003)(186003)(33656002)(478600001)(11346002)(14454004)(2201001)(44832011)(6506007)(5660300002)(53546011)(71200400001)(45080400002)(2501003)(7416002)(71190400001)(76176011)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3723;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: HfAxaWf69iNXH8MSeP1zK7eXttlOT1l8QoeR9/8sV5Cvy+mE0c8Bz8AV+zodcc0lVStfdUHki6BeGvsyiO8V0sJ+OK6plF2png/yuE0TZLjJDfbghPmK1hRI5ehy09EetQqTQLKKqijJlD4pIyYeoUAvQWWjWP5O6cS641dORh1nYzuWJxlCrfxW9PXCDZ/ufuqPb1qgcvEsqxx3tPeezU/vJLcLJwJWsmmyf0gz7ofz5x1G2HuKQ4kxOkLRDB6vnXoTdqtHqG1ft6ujfUGVtE6ST0JCeTYF5UOCzqmlt472msw4qXyGjW94VmcE5TcLEYghLexNG60nW6KHnrzfx/2wWnbw3OU2JVdwScl+4gi2BM1VsC+9SBj3LrKUervp8EC43ZIIVIxXzG0Ut7PM7dW/0KQqIkeYPIvXPuj6g64=
+        Thu, 25 Apr 2019 20:41:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43836 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726557AbfDZAlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 20:41:17 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3FDB20878;
+        Fri, 26 Apr 2019 00:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556239276;
+        bh=GsFK9qZuv0FlaRjuXOccExgA31ahiLh6qHJ2B8nDco4=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=urKxPTmZAR1A/OIF3g68Ro0USKe2/uDQLMKmXtMjcS6VcB5uuoep9gCluxsh3kdEY
+         C++nqqMbV5wFNxXzrxFgOiLPorDOLK4rkTtI5RMiYnBvC/0h8kVZh97Up7MgrmZUsa
+         Iru7MEnnO8Cj8A4/xZQd9/Y79hujrU1RA6JDSboE=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a7c3a9f-6f3f-4ca9-1df8-08d6c9dedd49
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2019 00:33:55.0892
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3723
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1497cbbe-9748-87f1-2edc-daa54dbf6360@gmail.com>
+References: <20190414202009.31268-1-digetx@gmail.com> <20190414202009.31268-2-digetx@gmail.com> <155621927685.15276.16453873579880842057@swboyd.mtv.corp.google.com> <2b4f56cd-caf9-e6b5-6344-a045e08a9c91@gmail.com> <155623110849.15276.13181079281286430446@swboyd.mtv.corp.google.com> <1497cbbe-9748-87f1-2edc-daa54dbf6360@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 1/4] clk: tegra20/30: Add custom EMC clock implementation
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Message-ID: <155623927513.15276.3011897763001027401@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 25 Apr 2019 17:41:15 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFN0ZXBoZW4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGVw
-aGVuIEJveWQgW21haWx0bzpzYm95ZEBrZXJuZWwub3JnXQ0KPiBTZW50OiBGcmlkYXksIEFwcmls
-IDI2LCAyMDE5IDY6MDMgQU0NCj4gVG86IGZlc3RldmFtQGdtYWlsLmNvbTsga2VybmVsQHBlbmd1
-dHJvbml4LmRlOyBsLnN0YWNoQHBlbmd1dHJvbml4LmRlOw0KPiBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBr
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eEByZW1wZWwtcHJpdmF0LmRlOyBtdHVycXVldHRl
-QGJheWxpYnJlLmNvbTsNCj4gcnVpLnNpbHZhQGxpbmFyby5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9u
-aXguZGU7IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHN0ZWZhbkBhZ25lci5jaDsgdGlueS53aW5k
-enpAZ21haWwuY29tOyBBYmVsIFZlc2EgPGFiZWwudmVzYUBueHAuY29tPjsNCj4gQWlzaGVuZyBE
-b25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IEFuc29uIEh1YW5nDQo+IDxhbnNvbi5odWFuZ0Bu
-eHAuY29tPjsgSmFja3kgQmFpIDxwaW5nLmJhaUBueHAuY29tPg0KPiBDYzogZGwtbGludXgtaW14
-IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gY2xrOiBpbXg6IGNv
-cnJlY3QgaS5NWDdEIEFWIFBMTCBudW0vZGVub20gb2Zmc2V0DQo+IA0KPiBRdW90aW5nIEFuc29u
-IEh1YW5nICgyMDE5LTA0LTIyIDAxOjMyOjQ1KQ0KPiA+IEFjY29yZGluZyByZWZlcmVuY2UgbWFu
-dWFsLCBpLk1YN0QncyBhdWRpby92aWRlbyBQTEwncyBudW0vZGVub20NCj4gPiByZWdpc3RlciBv
-ZmZzZXQgYXJlIDB4MjAvMHgzMCwgdGhleSBhcmUgZGlmZmVyZW50IGZyb20gaS5NWDYncw0KPiA+
-IGF1ZGlvL3ZpZGVvIFBMTCwgY29ycmVjdCBpdCBieSBpbnRyb2R1Y2luZyBuZXcgb2Zmc2V0IHZh
-cmlhYmxlcyBmb3INCj4gPiBhdWRpby92aWRlbyBQTEwgYW5kIHVzaW5nIHJ1bnRpbWUgYXNzaWdu
-bWVudCBiYXNlZCBvbiBQTEwgdHlwZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1
-YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiANCj4gSXMgdGhlcmUgYW55IHdh
-eSB5b3UgY2FuIHNlbmQgcGxhaW4tdGV4dCBlbWFpbHMgaW5zdGVhZCBvZiBiYXNlNjQgZW5jb2Rl
-ZA0KPiBlbWFpbHM/IEkgaGFkIHRvIGdldCB0aGlzIGVtYWlsIHByb3Blcmx5IGRlY29kZWQgaW4g
-cGxhaW4gdGV4dCBzbyB0aGF0IGl0IHdvdWxkDQo+IGFwcGx5IGNvcnJlY3RseS4gSSB0aGluayBp
-dCdzIGFuIE91dGxvb2sgcHJvYmxlbS4NCg0KWWVzLCBpdCBzaG91bGQgYmUgZGVmYXVsdCBPdXRs
-b29rIHNldHRpbmcgcHJvYmxlbSwgbm93IEkgY2hhbmdlIHRoZSBwcmVmZXJyZWQgZW5jb2RpbmcN
-CmFzIFVuaWNvZGUgKFVURi04KSBmb3Igb3V0LWdvaW5nIG1lc3NhZ2UsIGl0IHdhcyBHQjIzMTIg
-YmVmb3JlLCBob3BlIGl0IGNhbiBmaXggdGhpcyBpc3N1ZS4NClRoYW5rcyBmb3IgcmVtaW5kZXIg
-YW5kIHNvcnJ5IGZvciB0aGUgaW5jb252ZW5pZW5jZS4NCg0KQW5zb24uDQoNCj4gDQo+IEFueXdh
-eSwgYXBwbGllZCB0byBjbGstbmV4dA0KDQo=
+Quoting Dmitry Osipenko (2019-04-25 17:03:11)
+> 26.04.2019 1:25, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > Quoting Dmitry Osipenko (2019-04-25 14:42:19)
+> >> 25.04.2019 22:07, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>> Quoting Dmitry Osipenko (2019-04-14 13:20:06)
+> >>>> +{
+> >>>> +       struct clk *clk =3D __clk_lookup("emc");
+> >>>> +       struct tegra_clk_emc *emc;
+> >>>> +       struct clk_hw *hw;
+> >>>> +
+> >>>> +       if (clk) {
+> >>>> +               hw =3D __clk_get_hw(clk);
+> >>>> +               emc =3D to_tegra_clk_emc(hw);
+> >>>> +
+> >>>> +               emc->round_cb =3D round_cb;
+> >>>> +               emc->arg_cb =3D arg_cb;
+> >>>> +       }
+> >>>> +}
+> >>>> +
+> >>>> +bool tegra20_clk_emc_driver_available(void)
+> >>>> +{
+> >>>> +       struct clk *clk =3D __clk_lookup("emc");
+> >>>
+> >>> Can we avoid using __clk_lookup()? Maybe by having the clk_hw pointer=
+ in
+> >>> this driver somehow?
+> >>
+> >> tegra20_clk_emc_driver_available() is a private function of the Tegra's
+> >> clk-core. Please note that prototype of this function is added to the
+> >> local "drivers/clk/tegra/clk.h" file.
+> >>
+> >> It is indeed possible to use clk pointer instead of __clk_lookup() and
+> >> I'll change that in v3 since it's causing some confusion.
+> >=20
+> > Can you use a clk_hw pointer directly? I'd like to see clk provider
+> > drivers only use struct clk_hw, and clk consumers only use struct clk.
+>=20
+> The clk_hw pointers are not stored directly anywhere in the Tegra's
+> clk-driver, it will be a quite massive change to make the clk driver's
+> code to use clk_hw pointers instead of struct clk.
+
+Well they must be stored in the clk driver somewhere because that's how
+the whole clk framework works.
+
+>=20
+> I can add a global variable for the tegra_clk_emc pointer, but it is
+> not really necessary since there is __clk_get_hw.
+>=20
+> Could you please explain what's the problem with __clk_get_hw?
+
+If it's a large invasive change then no worries. The thin that's wrong
+with __clk_get_hw() is that it's using a struct clk, meaing that most
+likely this is a clk consumer driver doing something weird.
+
+>=20
+> >>
+> >>>> +       struct tegra_clk_emc *emc; +       struct clk_hw *hw; + +
+> >>>> if (clk) { +               hw =3D __clk_get_hw(clk);
+> >>>
+> >>> This gets further to the point, we don't prefer to see drivers use
+> >>> __clk_get_hw() unless they absolutely need to. Maybe I don't
+> >>> understand the driver structure, but it seems like maybe the
+> >>> driver that's providing the callbacks could be the same driver
+> >>> that's registering these clks, and thus everything could be inside
+> >>> one file so that we don't have to pass around callbacks and clk_hw
+> >>> pointers? Commit text says "this is how it's been" but that's not
+> >>> a reason to keep doing it.
+> >>
+> >> Again, tegra20_clk_emc_driver_available() is for the Terga's
+> >> clk-core and not for the EMC (External Memory Controller) driver.
+> >> This function is used to determine whether EMC driver is ready to
+> >> handle clock-rate changes (PRE/POST rate-change notifications), clk
+> >> users can't get EMC clock until driver is ready (i.e. the "round"
+> >> callback is registered by the driver).
+> >=20
+> > Who are the other users of the EMC clk? Why does the EMC driver and
+> > the clk driver need to be in sync in such a way that requires us to
+> > check if some code in the EMC driver is ready before we can hand out
+> > clks from this clk provider? It looks like some tight coupling
+> > between these two pieces of code on the clk_get() path which is
+> > setting off alarms for me.
+>=20
+> The other EMC clk user is the devfreq driver. We don't want the
+> devfreq driver to get and use the EMC clock if memory timing can't be
+> programmed.
+
+Alright, got it!
+
+> That is correct.
+>=20
+> > Is there some other entity that's needing to be deferred while the
+> > EMC and clk drivers tell each other that they're probed and ready so
+> > that these notifiers all work? Is that entity using clks directly
+> > instead of going through the EMC to change frequencies? If so, why
+> > can't we funnel that logic through EMC which then goes to the clk
+> > driver? That way it's clearly "thing that changes frequency" -> EMC
+> > -> clk controller call chain. It might even allow us to get rid of
+> > the rate notifiers?
+> >=20
+>=20
+> That entity is the devfreq driver which uses EMC clk directly right
+> now.
+>=20
+>         https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
+it/tree/drivers/devfreq/tegra-devfreq.c#n484
+>=20
+> I think we can funnel all the rate-changing logic through the EMC
+> drivers using the PM memory bandwidth QoS API, which is currently
+> unsupported by the drivers. And then indeed the rate notifiers won't
+> be needed.
+
+Why does PM QoS matter here? I'm mostly asking for the chain to be
+stacked and the devfreq driver to be the same as the EMC driver and then
+have the EMC/devfreq combo driver use clk APIs to set rates and do
+things before and after.
+
+>=20
+>         https://github.com/grate-driver/linux/commit/2aa2390dd0cb8bca98e4=
+cea6a29d7bda64a51bb3
+>=20
+> Actually it will be the next step to wire up the PM QoS support to all
+> relevant drivers that I'm going to implement after the current
+> CLK/EMC/DEVFREQ patch sets will land, it's just not realistic to do
+> everything in a single hop.
+
+Ok. It doesn't make me feel great but I suppose if you don't disappear
+after this code is merged things will work out in the end.
+
