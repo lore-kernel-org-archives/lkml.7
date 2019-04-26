@@ -2,84 +2,98 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370CDC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807EDC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31CD2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556306632;
-	bh=bCIxqL50mcSBSF0qrnm97UOSZpgV+ojUaMs9HKE7F00=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U7bMd5TM4/tSpdb+AEtr8s1zvmXHyDVIFisVLkZok6+qxNjDyhNqFQQr21gVXuoyM
-	 iYYn4NwxKsIQxB98FT5d7PXGRTgFU18EZ79BYwQ/fP7b3Dy7wv53DLa73md/HEetk1
-	 cSkZZSzNkMBmhtiOLDIRD0dGHVq8foEOJChI7SbY=
+	by mail.kernel.org (Postfix) with ESMTP id 51D1B20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:25:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ig45WgKK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfDZTXv (ORCPT
+        id S1726543AbfDZTZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 15:23:51 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36161 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfDZTXu (ORCPT
+        Fri, 26 Apr 2019 15:25:14 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42291 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfDZTZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 15:23:50 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l203so3843143oia.3;
-        Fri, 26 Apr 2019 12:23:50 -0700 (PDT)
+        Fri, 26 Apr 2019 15:25:13 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w25so2172889pfi.9
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 12:25:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=an5rEpkFGQ3NHmznnBNRuXXxR3Z5SHbs8DWRZW5+fO8=;
+        b=ig45WgKKQqZebDRRWwG1Lj4m5QQ9D9aAPNnhnX1eTLJiAqznX3JOJ2g5ahFB5uVQY5
+         oyIERfk0X612tHthQqJypWNwnj9TehLdg1ikZ3jVD5cD+1COpgGuKm1HH6/7u5AGWf4M
+         rX2BEXJnxNnSXjvlZ1XIUlHWb6nLcOIzj+qG8Mh9UmsxqIZspbBW7m4l6c7vcwJlZ5yL
+         Bp98T7qET+H0q5pFEbVkUTJTxDBvu5e6CWEt5B1dmEwWQELjrLyZlwtsINfBnKF/hDZP
+         nMJ7mYiVS1SKi5+SpVOfqLBaU6jo3WpxLSZGl0ZN5PNYGJ478PSfvCsjuYyGSSN2nT9m
+         e6Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4aIwxpR0+71nFfLUyGRgXjEyjm6+FGgNL7eNRgevc6I=;
-        b=J2qGGpK3rgRYsFX4SYrYqazFWgKualAGZuqUlNVWk5dxNxlJCjs4VmAev9zqzTjcZm
-         Wyeqx80RyvGzcUhVgRH0rzJrNejruTzEcwnV8Di0Aonnu/BcY1FlXOcswv8O+WNxfjVQ
-         80XadUubhDj/3NP9CmspH/ozdX0EOwXBmIYWS06VspBo7jeV+0ExYf5r7I7WEICYs1II
-         N+7HEZ9w3fKPfFS1BIM+7h8AMd9xcFmgHwZMFAam1HbtIZg4ZeILEENuW5TurJQQr2pD
-         QxoxVIFhxRzRRano35FgLDCQENVkTkm06gcgdT8YTxfXzWVEhtwxSsHlaQ3SuBDOFBp+
-         HrGA==
-X-Gm-Message-State: APjAAAUBtpgK59VMrbR/oBXfgCGlwgM+CCj7HpwtXkHkUeh8KNBKviMx
-        1+O+ZPLP9nwFFJKNR+uvhg==
-X-Google-Smtp-Source: APXvYqx8EsSvl/BMA5aEmefVlVdKYFEN+5OTIuZXtoG3pCpH3UDtP2qQwLG/IBzIfuwckcyaiumNwg==
-X-Received: by 2002:a54:4f18:: with SMTP id e24mr7771930oiy.87.1556306629577;
-        Fri, 26 Apr 2019 12:23:49 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k14sm2794427otl.72.2019.04.26.12.23.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 12:23:48 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 14:23:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pavel@ucw.cz, robh@kernel.org,
-        dtor@google.com, linux@roeck-us.net, jacek.anaszewski@gmail.com,
-        Simon Shields <simon@lineageos.org>
-Subject: Re: [PATCH v4 25/26] dt-bindings: an30259a: Add function and color
- properties
-Message-ID: <20190426192348.GA8913@bogus>
-References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
- <20190417205439.17685-26-jacek.anaszewski@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417205439.17685-26-jacek.anaszewski@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=an5rEpkFGQ3NHmznnBNRuXXxR3Z5SHbs8DWRZW5+fO8=;
+        b=q/c4Z0PlPMxkbagNynx7eQqM3C8V4RizUOK8Co1mI+0064sKEc7Stcs0v/xSLyM2Wr
+         vNEzYyDZuMrixUyKKZAlJMvurSe0eYV6JmeS+sWpK6EQkTPZx3MVUXlN5pBiUjuxRU6N
+         emaJ1bs+bg/7siPstpdFGphca7uqhyeh3+37PNUo5TKGGcey0pHBTrNu/OYMMJcWhuW3
+         Nhpb5iyWULn4zHt7AQZ6FcNy3iyvQo56VMVmu+Sy2wgbLe2rWNqrKrlKZ5eTm3Lh/RNR
+         Nsevu6QO9dQMBgp0DSw9UD/zVj/U21QVKk+IaM8lHfZFwlUIbLGMkXriWchFbN7F8/r8
+         CCwA==
+X-Gm-Message-State: APjAAAULZn9yTNUd9CZBjLRxgMwmy/f1lENKPc70arHdTZUwHKvcp8Mt
+        MVa5C7aCk8eo/UObVqS3gJo=
+X-Google-Smtp-Source: APXvYqzLiLvTpQeqBlBn2EZNk7kx1q3pLixQSE9zvkCA8sZ0NktBztwkexSNcxu8fIPn9TCgWhTcIA==
+X-Received: by 2002:a63:1852:: with SMTP id 18mr9164960pgy.283.1556306713105;
+        Fri, 26 Apr 2019 12:25:13 -0700 (PDT)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id w38sm1129639pgk.90.2019.04.26.12.25.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 12:25:12 -0700 (PDT)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>
+Subject: [PATCH] mtd: rawnand: brcmnand: fix bch ecc layout for large page nand
+Date:   Fri, 26 Apr 2019 15:22:26 -0400
+Message-Id: <1556306615-37990-1-git-send-email-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 1.9.0.138.g2de3478
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019 22:54:38 +0200, Jacek Anaszewski wrote:
-> Refer to new "function" and "color" properties and mark "label"
-> as deprecated.
-> 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Simon Shields <simon@lineageos.org>
-> ---
->  .../devicetree/bindings/leds/leds-an30259a.txt     | 22 +++++++++++++++++-----
->  1 file changed, 17 insertions(+), 5 deletions(-)
-> 
+The oobregion->offset for large page nand parts was wrong, change
+fixes this error in calculation.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index 482c6f0..3eefea7 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -939,7 +939,7 @@ static int brcmnand_bch_ooblayout_ecc(struct mtd_info *mtd, int section,
+ 	if (section >= sectors)
+ 		return -ERANGE;
+ 
+-	oobregion->offset = (section * (sas + 1)) - chip->ecc.bytes;
++	oobregion->offset = ((section + 1) * sas) - chip->ecc.bytes;
+ 	oobregion->length = chip->ecc.bytes;
+ 
+ 	return 0;
+-- 
+1.9.0.138.g2de3478
+
