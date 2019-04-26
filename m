@@ -2,165 +2,73 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9BDC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A49C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5589C2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:08:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H+uaSFEH"
+	by mail.kernel.org (Postfix) with ESMTP id 9D59D2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfDZWI5 (ORCPT
+        id S1727212AbfDZWJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 18:08:57 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:37639 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbfDZWI4 (ORCPT
+        Fri, 26 Apr 2019 18:09:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54331 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfDZWJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 18:08:56 -0400
-Received: by mail-ua1-f67.google.com with SMTP id l17so1713100uar.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 15:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GieBCUtlVhWnwVg6ldcc309iSPs6ZMuQyRIOEMRGO10=;
-        b=H+uaSFEHe4LRsSOYpZo/5LQgBlLfDu5tdW/8Kg6h2tBCW3VKfBLB+uUVjh4j5SJf76
-         fwur2wzuNO8o1l7FUcOO0L6Tu3WbFJ6eZYdrmQGCuFIz0X6mUn0w5vJ6djySHbp8be/0
-         0FOz1LLV1he7mDMIz1pvJO95opBALai1ZtH/M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GieBCUtlVhWnwVg6ldcc309iSPs6ZMuQyRIOEMRGO10=;
-        b=jYrV8yB5RV+FSAMYB3JsvBIERKwvycsHYKO88W5ObC35u3C5qkAeCjaPEYbIwtepUQ
-         sn3o99yjtY6jbHeOsO/bgee82aK2f4BUYNfFhx2bOWM8YrNvIKUiefFbFJhfMsYbyG4H
-         EPyIe8i/aQZoq7HmewPgQZr0ozr2HIA8fQzS02RtoQaXqMdz0i5BoWXGlAcf+LasZ/sF
-         lz7zHo5woDqUAIs8eyCKI/6TkpqGQMNsFBs/KUv/EzjdNlcy6Ubu7pWO7QqoGxpxi0Ap
-         jw2Ti+tUCVux0JlA8ED2DcTLVZcE3Ew/Ml1M2iXE4a8VZevk9IWSUyxKLZe7VmN6Kiyi
-         2I1Q==
-X-Gm-Message-State: APjAAAWo5tRM712P5pbeq5A2wCvcNumlNtxcTVZYOlVhinqyQxSwO8rw
-        Msk7+PbD9VvTVG0qmh0c03qJjknllKA=
-X-Google-Smtp-Source: APXvYqwI39oEWtBycIQXwQ9cc82o1lHHNURUqI8EwPUKxvWTPgDado5NtYAlfvnxm+Z++qxvYZRSwg==
-X-Received: by 2002:ab0:6258:: with SMTP id p24mr24922187uao.27.1556316534918;
-        Fri, 26 Apr 2019 15:08:54 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id r70sm2239611vke.36.2019.04.26.15.08.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 15:08:53 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id w20so2802093vso.9
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 15:08:53 -0700 (PDT)
-X-Received: by 2002:a67:7b53:: with SMTP id w80mr26588048vsc.144.1556316532790;
- Fri, 26 Apr 2019 15:08:52 -0700 (PDT)
+        Fri, 26 Apr 2019 18:09:11 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hK91o-0001bm-Km; Fri, 26 Apr 2019 22:09:08 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] ext4: fix two cases where a u32 is being checked for a less than zero error return
+Date:   Fri, 26 Apr 2019 23:09:08 +0100
+Message-Id: <20190426220908.12790-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190410221237.160856-1-dianders@chromium.org>
- <CANBLGcwmNowj9GSmE3bbo1t1o6EF8q-RiJftfdOQnJB9_8aSKg@mail.gmail.com>
- <CAD=FV=UW6d2QHzxx-Vtr+WwC1dkpUfCjxCLnfaP5S2UQxRh1oQ@mail.gmail.com> <CANBLGcxpjDFKNdT7uk8uCS=C8Gjxc9wVqDs_ZGHqRpLFVsJxxQ@mail.gmail.com>
-In-Reply-To: <CANBLGcxpjDFKNdT7uk8uCS=C8Gjxc9wVqDs_ZGHqRpLFVsJxxQ@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 26 Apr 2019 15:08:41 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UzRbp0w_cN07kQ9dH1B3+v7fmA4_t46kP3cy1k_hn9Ug@mail.gmail.com>
-Message-ID: <CAD=FV=UzRbp0w_cN07kQ9dH1B3+v7fmA4_t46kP3cy1k_hn9Ug@mail.gmail.com>
-Subject: Re: [PATCH] mmc: dw_mmc: Disable SDIO interrupts while suspended to
- fix suspend/resume
-To:     Emil Renner Berthing <emil.renner.berthing@gmail.com>
-Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        stable@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Colin Ian King <colin.king@canonical.com>
 
-On Fri, Apr 26, 2019 at 10:19 AM Emil Renner Berthing
-<emil.renner.berthing@gmail.com> wrote:
->
-> Hi Doug,
->
-> TLDR: I'm no longer convinced this patch breaks suspend/resume more
-> than it already is. Sorry about the noise.
->
-> On Thu, 25 Apr 2019 at 23:25, Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Apr 24, 2019 at 1:19 AM Emil Renner Berthing
-> > <emil.renner.berthing@gmail.com> wrote:
-> > >
-> > > Hi Douglas,
-> > >
-> > > Unfortunately this seems to beak resume on my rk3399-gru-kevin. I have
-> > > a semi-complicated setup with my rootfs as a btrfs on dmcrypt on
-> > > mmcblk0 which is the dw_mmc, so I'm guessing something goes wrong when
-> > > waking up the dm_mmc which probably wasn't suspended before this
-> > > patch. It's not 100% consistent though. Sometimes I see it resume the
-> > > first time I try suspending, but then 2nd time I suspend it won't come
-> > > back.
-> >
-> > Thanks for testing!
->
-> Thanks for your detailed response. It made me want to make absolutely
-> sure that this patch is the culprit.
-> As a baseline I booted a vanilla 5.0.9 and suspend/resumed it about a
-> dusin times without any errors.
-> So I applied this patch and immediately it crashed on suspend, but in
-> a way that I could still see the kernel log,
-> and it was the mwifiex driver that crashed. I rebooted and tried
-> supend/resume again and
-> this time it seemed like it was the dwc3 or usb3-phy that crashed.
-> I still have the kernel log if anyone is interested.
-> However 3rd time booting 5.0.9 with this patch suspend/resume just works.
-> At least the 2 dusin times I tried before giving up on making it crash.
-> I went back to vanilla 5.0.9 and after a few tries I managed to make
-> that one crash too.
-> I guess that means this patch is off the hook. I'm sorry about the
-> false report :/
+There are two cases where u32 variables n and err are being checked
+for less than zero error values, the checks is always false because
+the variables are not signed. Fix this by making the variables ints.
 
-No worries, I've certainly been there and I'm super happy to have
-people testing patches.  :-)
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ fs/ext4/block_validity.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Odd that you're having suspend/resume patches.  My first guess for
-super randomness would be WiFi.  The PCIe bus on rk3399 causes the
-most impossible to debug problems if you try to access it at the wrong
-time.  If you disable WiFi do all your problems go away?  I tried
-putting v5.0.9 on the kevin sitting on my desk and it seems to
-suspend/resume OK (25 cycles), but:
+diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+index 968f163b5feb..8d03550aaae3 100644
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -142,7 +142,8 @@ static int ext4_protect_reserved_inode(struct super_block *sb, u32 ino)
+ 	struct inode *inode;
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_map_blocks map;
+-	u32 i = 0, err = 0, num, n;
++	u32 i = 0, num;
++	int err = 0, n;
+ 
+ 	if ((ino < EXT4_ROOT_INO) ||
+ 	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
+-- 
+2.20.1
 
-* I just jammed it straight onto a normal Chrome OS root filesystem.
-Since that filesystem expects the GPU to be there, I'm just booting to
-a serial prompt and the screen just displays the boot splash.
-
-* I didn't try to configure WiFi or anything.
-
-* I'm using the Chrome OS "fallback config" for the kernel (the config
-our build system picks if building an upstream kernel without the
-normal split config).  AKA:
-<https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/refs/heads/master/eclass/cros-kernel/rockchip64_defconfig>.
-I'm not 100% sure everything is enabled there...
-
-* I'm booting w/ serial console enabled and doing my testing with "no
-console suspend" which can certainly affect suspend/resume timing.
-
-
-Best of luck tracking your problems down!  I suppose if things used to
-work maybe a bisect would be possible?
-
--Doug
