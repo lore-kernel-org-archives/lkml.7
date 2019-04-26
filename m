@@ -2,171 +2,276 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D035C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF0FC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8182084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A998208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n5VYlOR5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfDZPcx (ORCPT
+        id S1726839AbfDZPc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:32:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:31663 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbfDZPct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:32:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 08:32:49 -0700
-X-IronPort-AV: E=Sophos;i="5.60,398,1549958400"; 
-   d="scan'208";a="137718346"
-Received: from dahanhan-mobl.ccr.corp.intel.com (HELO [10.255.30.119]) ([10.255.30.119])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 26 Apr 2019 08:32:47 -0700
-Subject: Re: [PATCH v2] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org
-References: <1556248672-6469-1-git-send-email-like.xu@linux.intel.com>
- <20190426141346.GA4140@linux.intel.com>
- <d5e3fea7e1bb58ae24ba92056ff61ada52c28b65.camel@linux.intel.com>
- <20190426150436.GD4140@linux.intel.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <9c374edc-0002-de46-60f0-5f36b26c898c@linux.intel.com>
-Date:   Fri, 26 Apr 2019 23:32:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 26 Apr 2019 11:32:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33724 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbfDZPcw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:32:52 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k19so1816091pgh.0;
+        Fri, 26 Apr 2019 08:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YQZo9l6ViyTZNmh9VAv63MarTgsVGWDeuZ7svah48L4=;
+        b=n5VYlOR5fU0DPFR7WDX3Wi4KexjXrRHjTDJxU6y5gVQhSLKogNwvUqlm8QxVfKDlCS
+         GfCOQouXa3HsmHfTJCigXn7gy+td24iAYLqMHpNsVzY3ShJ5DnGfrq7RpRijGjZUNMot
+         tYD0Is8sLWKK/NASdBp83Dj9AzH/8J7RxVpGoUsP6v25HleLHDcU/q1gESejrbo+JXUL
+         L2g7cRKJBvoq/pAbBUcG3dYQnmRDuUfVAMCsmW4RoTwyEB4TRxIP9mL3gDu1jLrmJbqB
+         v5Xv/o14WYiwAy/rVrk98zZeAtZjVA6zprU8zUv3NNe7oJW93IdyCDDlc0vNMhUpVM9h
+         H1Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YQZo9l6ViyTZNmh9VAv63MarTgsVGWDeuZ7svah48L4=;
+        b=UlFGvlf21HZp/tsTwTpuqlPTiFcMjiO1CPEDrQZ4PbRuEqZjDX7e4mrpGlTPu8R4Te
+         sHvYachcoBIlblacYcq9kDbWpsxk1IdajSyc8Zjf4/cV9h/nIOERQbji0t3/GZ40Spst
+         PIBZxPMjOn4XasaPQqn/5wVEscEfFjqVpGGDWZa/VnvZRscLsDKKESeuzgB7PcBdCRL7
+         /Nt2rp3SirFBSKxBkT+WM3rIVHVsqs44ikivPX0tGwQf95L9rB7zHD7TB+lZPsLz714D
+         nwTufv+0MM3+8PGmg3gkGDbf+C1VXDa2ytzu8pEeZPLKRD6QMQGXNuEUa+eaVYTyq1CN
+         2WMQ==
+X-Gm-Message-State: APjAAAWivaHRT0OKJyRsxg8lKq2mN1g44R04tNOo8+rkfCXYER9WPGE3
+        rxjC2eh2bzU5z/XcBu8/GkD0QBLR
+X-Google-Smtp-Source: APXvYqwOnTDcHbiRNjFRmBAsiS3wGO1QE1qm9ZNqCEycXMX788gu7aYpMuIUg2wlpC9f5V3MyEXvyQ==
+X-Received: by 2002:aa7:8252:: with SMTP id e18mr3041092pfn.105.1556292771113;
+        Fri, 26 Apr 2019 08:32:51 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.32.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 08:32:50 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mchehab+samsung@kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH 07/27] Documentation: x86: convert earlyprintk.txt to reST
+Date:   Fri, 26 Apr 2019 23:31:30 +0800
+Message-Id: <20190426153150.21228-8-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190426153150.21228-1-changbin.du@gmail.com>
+References: <20190426153150.21228-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190426150436.GD4140@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/26 23:04, Sean Christopherson wrote:
-> On Fri, Apr 26, 2019 at 10:54:19PM +0800, Xiaoyao Li wrote:
->> On Fri, 2019-04-26 at 07:13 -0700, Sean Christopherson wrote:
->>> On Fri, Apr 26, 2019 at 11:17:52AM +0800, Like Xu wrote:
->>>> Some new systems have multiple software-visible die within each package.
->>>> Add support to expose Intel V2 Extended Topology Enumeration Leaf CPUID.1F.
->>>>
->>>> Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
->>>> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
->>>> Signed-off-by: Like Xu <like.xu@linux.intel.com>
->>>> ---
->>>>
->>>> ==changelog==
->>>> v2:
->>>> - Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
->>>> - Add comment to handle 0x1f anf 0xb in common code
->>>> - Reduce check time in a descending-break style
->>>>
->>>> v1: https://lkml.org/lkml/2019/4/22/28
->>>>
->>>>   arch/x86/kvm/cpuid.c | 12 +++++++++++-
->>>>   1 file changed, 11 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->>>> index fd39516..f9b529e 100644
->>>> --- a/arch/x86/kvm/cpuid.c
->>>> +++ b/arch/x86/kvm/cpuid.c
->>>> @@ -425,6 +425,11 @@ static inline int __do_cpuid_ent(struct
->>>> kvm_cpuid_entry2 *entry, u32 function,
->>>>   
->>>>   	switch (function) {
->>>>   	case 0:
->>>> +		/* Check if the cpuid leaf 0x1f is actually implemented */
->>>> +		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
->>>
->>> Restricting the check to bits 15:0 is unnecessary, the SDM explicitly
->>> states that EBX will be zero for invalid sub-leaves:
->>>
->>>    For sub-leaves that return an invalid level-type of 0 in ECX[15:8];
->>>    EAX and EBX will return 0.
->>>
->>> This code is merely checking for the existence of CPUID.1F, nothing will
->>> break if future CPUs provide additional information, i.e. checking for a
->>> valid sub-leaf is sufficient.
->>>
->>> That being said, if you insist on restricting the check to non-reserved
->>> bits then I think the earlier suggestion of "cpuid_ecx(0x1f) & 0x0000ff00"
->>> makes more sense since the SDM clearly intends ECX to be used to detect
->>> valid vs. invalid levels.
->>
->> Here we use CPUID.1F_0:EBX[15:0] to check the existence, not the output of
->> ECX[15:8], which is following the Intel SDM.
->>
->> Specifically, in page 3-222 Vol.2A of latest SDM publish on January 2019, there
->> is such description of Input EAX = 1FH:
->>
->>     When CPUID executes with EAX set to 1FH, the processor returns information
->>     about extended topology enumeration data. Software must detect the presence
->>     of CPUID leaf 1FH by verifying (a) the highest leaf index supported by CPUID
->>     is >= 1FH, and (b) CPUID.1FH:EBX[15:0] reports a non-zero value.
-> 
-> Ah, perfect.  Please put exactly that in the changelog.
+This converts the plain text documentation to reStructuredText format and
+add it to Sphinx TOC tree. No essential content change.
 
-Thanks Sean and xiaoyao.
-Both of you inspired me a lot and a v3 patch would be released.
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+---
+ .../x86/{earlyprintk.txt => earlyprintk.rst}  | 103 ++++++++++--------
+ Documentation/x86/index.rst                   |   1 +
+ 2 files changed, 57 insertions(+), 47 deletions(-)
+ rename Documentation/x86/{earlyprintk.txt => earlyprintk.rst} (59%)
 
-> 
->>
->> And also, I look up the existing codes about initialising topology using leaf
->> 0xb in kernel. In function detect_extended_topology_early(), it use following
->>
->>     if (ebx == 0 || (LEAFB_SUBTYPE(ecx) != SMT_TYPE))
->>
->> to verify whether leaf 0xb is invalid. I think any of them is strong enough to
->> verify the leaf 0xb is invalid, so I don't know why it uses both of them.
->>
->>>> +			entry->eax = 0x1f;
->>>> +			break;
->>>
->>> I find if/else easier to follow than the separate break, but either option
->>> works for me.
->>> 		
->>>> +		}
->>>>   		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
->>>>   		break;
->>>>   	case 1:
->>>> @@ -544,7 +549,12 @@ static inline int __do_cpuid_ent(struct
->>>> kvm_cpuid_entry2 *entry, u32 function,
->>>>   		entry->edx = edx.full;
->>>>   		break;
->>>>   	}
->>>> -	/* function 0xb has additional index. */
->>>> +	/*
->>>> +	 * Intel documentation states that 0x1f and 0xb have
->>>> +	 * identical formats and thus can be handled by common code.
->>>> +	 * (Intel SDM Vol. 2A - Instruction Set Reference - CPUID)
->>>> +	 */
->>>
->>> It's probably safe to assume anyone reading reading this code is already
->>> all too aware of Intel's propensity for dumping CPUID enumeration into the
->>> CPUID entry in the ISR.  Maybe shorten this to something like:
->>>
->>> 	/*
->>> 	 * Per Intel's SDM, 0x1f is a superset of 0xb, thus they can be handled
->>> 	 * by common code.
->>> 	 */
->>>
->>>> +	case 0x1f:
->>>>   	case 0xb: {
->>>>   		int i, level_type;
->>>>   
->>>> -- 
->>>> 1.8.3.1
->>>>
->>
-> 
+diff --git a/Documentation/x86/earlyprintk.txt b/Documentation/x86/earlyprintk.rst
+similarity index 59%
+rename from Documentation/x86/earlyprintk.txt
+rename to Documentation/x86/earlyprintk.rst
+index 46933e06c972..7714e32501ec 100644
+--- a/Documentation/x86/earlyprintk.txt
++++ b/Documentation/x86/earlyprintk.rst
+@@ -1,52 +1,58 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++============
++Early Printk
++============
+ 
+ Mini-HOWTO for using the earlyprintk=dbgp boot option with a
+ USB2 Debug port key and a debug cable, on x86 systems.
+ 
+ You need two computers, the 'USB debug key' special gadget and
+-and two USB cables, connected like this:
++and two USB cables, connected like this::
+ 
+   [host/target] <-------> [USB debug key] <-------> [client/console]
+ 
+-1. There are a number of specific hardware requirements:
+-
+- a.) Host/target system needs to have USB debug port capability.
+-
+- You can check this capability by looking at a 'Debug port' bit in
+- the lspci -vvv output:
+-
+- # lspci -vvv
+- ...
+- 00:1d.7 USB Controller: Intel Corporation 82801H (ICH8 Family) USB2 EHCI Controller #1 (rev 03) (prog-if 20 [EHCI])
+-         Subsystem: Lenovo ThinkPad T61
+-         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+-         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+-         Latency: 0
+-         Interrupt: pin D routed to IRQ 19
+-         Region 0: Memory at fe227000 (32-bit, non-prefetchable) [size=1K]
+-         Capabilities: [50] Power Management version 2
+-                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+-                 Status: D0 PME-Enable- DSel=0 DScale=0 PME+
+-         Capabilities: [58] Debug port: BAR=1 offset=00a0
++Hardware requirements
++=====================
++
++  a) Host/target system needs to have USB debug port capability.
++
++     You can check this capability by looking at a 'Debug port' bit in
++     the lspci -vvv output::
++
++       # lspci -vvv
++       ...
++       00:1d.7 USB Controller: Intel Corporation 82801H (ICH8 Family) USB2 EHCI Controller #1 (rev 03) (prog-if 20 [EHCI])
++               Subsystem: Lenovo ThinkPad T61
++               Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
++               Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
++               Latency: 0
++               Interrupt: pin D routed to IRQ 19
++               Region 0: Memory at fe227000 (32-bit, non-prefetchable) [size=1K]
++               Capabilities: [50] Power Management version 2
++                       Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
++                       Status: D0 PME-Enable- DSel=0 DScale=0 PME+
++               Capabilities: [58] Debug port: BAR=1 offset=00a0
+                             ^^^^^^^^^^^ <==================== [ HERE ]
+-	 Kernel driver in use: ehci_hcd
+-         Kernel modules: ehci-hcd
+- ...
++               Kernel driver in use: ehci_hcd
++               Kernel modules: ehci-hcd
++       ...
+ 
+-( If your system does not list a debug port capability then you probably
+-  won't be able to use the USB debug key. )
++     .. note::
++       If your system does not list a debug port capability then you probably
++       won't be able to use the USB debug key. )
+ 
+- b.) You also need a NetChip USB debug cable/key:
++  b) You also need a NetChip USB debug cable/key:
+ 
+         http://www.plxtech.com/products/NET2000/NET20DC/default.asp
+ 
+      This is a small blue plastic connector with two USB connections;
+      it draws power from its USB connections.
+ 
+- c.) You need a second client/console system with a high speed USB 2.0
+-     port.
++  c) You need a second client/console system with a high speed USB 2.0 port.
+ 
+- d.) The NetChip device must be plugged directly into the physical
+-     debug port on the "host/target" system.  You cannot use a USB hub in
++  d) The NetChip device must be plugged directly into the physical
++     debug port on the "host/target" system. You cannot use a USB hub in
+      between the physical debug port and the "host/target" system.
+ 
+      The EHCI debug controller is bound to a specific physical USB
+@@ -65,24 +71,26 @@ and two USB cables, connected like this:
+      to the hardware vendor, because there is no reason not to wire
+      this port into one of the physically accessible ports.
+ 
+- e.) It is also important to note, that many versions of the NetChip
++  e) It is also important to note, that many versions of the NetChip
+      device require the "client/console" system to be plugged into the
+      right hand side of the device (with the product logo facing up and
+      readable left to right).  The reason being is that the 5 volt
+      power supply is taken from only one side of the device and it
+      must be the side that does not get rebooted.
+ 
+-2. Software requirements:
++Software requirements
++=====================
+ 
+- a.) On the host/target system:
++  a) On the host/target system:
+ 
+-    You need to enable the following kernel config option:
++    You need to enable the following kernel config option::
+ 
+       CONFIG_EARLY_PRINTK_DBGP=y
+ 
+     And you need to add the boot command line: "earlyprintk=dbgp".
+ 
+-    (If you are using Grub, append it to the 'kernel' line in
++    .. note::
++     If you are using Grub, append it to the 'kernel' line in
+      /etc/grub.conf.  If you are using Grub2 on a BIOS firmware system,
+      append it to the 'linux' line in /boot/grub2/grub.cfg. If you are
+      using Grub2 on an EFI firmware system, append it to the 'linux'
+@@ -101,9 +109,9 @@ and two USB cables, connected like this:
+     this channel open beyond early bootup. This can be useful for
+     debugging crashes under Xorg, etc.
+ 
+- b.) On the client/console system:
++  b) On the client/console system:
+ 
+-    You should enable the following kernel config option:
++    You should enable the following kernel config option::
+ 
+       CONFIG_USB_SERIAL_DEBUG=y
+ 
+@@ -115,27 +123,28 @@ and two USB cables, connected like this:
+     it up to use /dev/ttyUSB0 - or use a raw 'cat /dev/ttyUSBx' to
+     see the raw output.
+ 
+- c.) On Nvidia Southbridge based systems: the kernel will try to probe
++  c) On Nvidia Southbridge based systems: the kernel will try to probe
+      and find out which port has a debug device connected.
+ 
+-3. Testing that it works fine:
++Testing
++=======
+ 
+-   You can test the output by using earlyprintk=dbgp,keep and provoking
+-   kernel messages on the host/target system. You can provoke a harmless
+-   kernel message by for example doing:
++You can test the output by using earlyprintk=dbgp,keep and provoking
++kernel messages on the host/target system. You can provoke a harmless
++kernel message by for example doing::
+ 
+      echo h > /proc/sysrq-trigger
+ 
+-   On the host/target system you should see this help line in "dmesg" output:
++On the host/target system you should see this help line in "dmesg" output::
+ 
+      SysRq : HELP : loglevel(0-9) reBoot Crashdump terminate-all-tasks(E) memory-full-oom-kill(F) kill-all-tasks(I) saK show-backtrace-all-active-cpus(L) show-memory-usage(M) nice-all-RT-tasks(N) powerOff show-registers(P) show-all-timers(Q) unRaw Sync show-task-states(T) Unmount show-blocked-tasks(W) dump-ftrace-buffer(Z)
+ 
+-   On the client/console system do:
++On the client/console system do::
+ 
+        cat /dev/ttyUSB0
+ 
+-   And you should see the help line above displayed shortly after you've
+-   provoked it on the host system.
++And you should see the help line above displayed shortly after you've
++provoked it on the host system.
+ 
+ If it does not work then please ask about it on the linux-kernel@vger.kernel.org
+ mailing list or contact the x86 maintainers.
+diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+index 8a666c5abc85..7b8388ebd43d 100644
+--- a/Documentation/x86/index.rst
++++ b/Documentation/x86/index.rst
+@@ -13,3 +13,4 @@ Linux x86 Support
+    exception-tables
+    kernel-stacks
+    entry_64
++   earlyprintk
+-- 
+2.20.1
 
