@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2215EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB97C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25792084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3CD208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271953;
-	bh=cW0lDA5r5Uv9I57kipYaKSgJd6VwnuNQkbrIKhpZ644=;
+	s=default; t=1556271955;
+	bh=3GroomHUx5fWuhqJzHQkhpQjm03ivv5CeF+GDnai3mo=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=kw69/FaLmTZA/2XzycL7RWn08qZt1gTteq7ghhQP4UGJ0cifwBYxPpVwAtPup/Npz
-	 FAgY41BpWfOdwdMcAyDqU6sXIN3k92yGRegHeRwXnXCgd/B4l/dm0ZfaS1gVAa9yVx
-	 bbfp0xeHfuyQoeExbTyz3MSLcKrBcqSuvMm5J0nA=
+	b=vmRebWeQzDsNAj7P88ivcrl1pdEnyZLJnPV4k6wvDGFrZcbEK3Y9ioSp77Tvrjp6X
+	 9G/Xns0OlNQnHZRvK8h1zr/84z0gdIKH2g6GejpjReW74iqatwWBiO1aCUkkyli3wg
+	 IirFUQJ6nWt+zRBWuo0wgBxE94L6Na3tD8/ZsQkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfDZJpv (ORCPT
+        id S1726449AbfDZJpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:45:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55036 "EHLO
+        Fri, 26 Apr 2019 05:45:54 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55210 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbfDZJpr (ORCPT
+        with ESMTP id S1727446AbfDZJpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:45:47 -0400
+        Fri, 26 Apr 2019 05:45:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=P1HzsiY8ltLKoCOmq+ypzycKoDnu9antRqrjPOiJdGw=; b=cAiNwR+Zbkgj
-        sK4JQdzkI7IyfVZmE0IYptjT4BXauyPvw6RzOepDByBnUYbb6J1kq7Eo/Nvtg9aiUL+EVycKE7LRc
-        9hs4MGCMoxOepJYVUpgFkE1qNOtENinEYCIcImi5OVSIZjLuqr5ITaH7Im/73LdyLjgka16KphxT4
-        enPXk=;
+        List-Archive; bh=wVJ90d8QrBrlpK1ud0JzgUVGzVI/Rrfuz/Fm2nlLYvA=; b=fMIvleHN5U+S
+        nj3EIm+Z31nZIeRf1A26CSnS1OlktfDm8JnwJmSDHQCBjH7hDaZVMlHXX2qooPUsQMGDVAmn5JDew
+        5XlwCOYKoreLZowA1t7VEnfV+RRBepugXKJpMXsmR6sLqgr2UtvTkmwkY29WCmOU4VF3OCHR3Vyww
+        pbmbc=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxQO-0003S7-Uf; Fri, 26 Apr 2019 09:45:44 +0000
+        id 1hJxQT-0003SF-Ln; Fri, 26 Apr 2019 09:45:49 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id B8679441D3B; Fri, 26 Apr 2019 10:45:43 +0100 (BST)
+        id B1AF0441D3B; Fri, 26 Apr 2019 10:45:48 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: db8500-prcmu: Constify regulator_ops" to the regulator tree
+Subject: Applied "regulator: mcp16502: Remove setup_regulators function" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094543.B8679441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:45:43 +0100 (BST)
+Message-Id: <20190426094548.B1AF0441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:45:48 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: db8500-prcmu: Constify regulator_ops
+   regulator: mcp16502: Remove setup_regulators function
 
 has been applied to the regulator tree at
 
@@ -85,42 +85,83 @@ to this mail.
 Thanks,
 Mark
 
-From 1a18195a2c4e3da5e082ee297b176a71abb9161a Mon Sep 17 00:00:00 2001
+From 784c24c3e45cc665226e8529d79f319af7cfd09c Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 12 Apr 2019 09:54:19 +0800
-Subject: [PATCH] regulator: db8500-prcmu: Constify regulator_ops
+Date: Thu, 11 Apr 2019 09:59:23 +0800
+Subject: [PATCH] regulator: mcp16502: Remove setup_regulators function
 
-These regulator_ops variables never need to be modified, make them const so
-compiler can put them to .rodata.
+It seems a little bit odd current code pass struct regulator_config rather
+than a pointer to setup_regulators. The setup_regulators is so simple and
+only has one caller, so remove it.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/db8500-prcmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/mcp16502.c | 37 +++++++++++-------------------------
+ 1 file changed, 11 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/regulator/db8500-prcmu.c b/drivers/regulator/db8500-prcmu.c
-index 7cec535cf0bc..863bd3de42a7 100644
---- a/drivers/regulator/db8500-prcmu.c
-+++ b/drivers/regulator/db8500-prcmu.c
-@@ -75,7 +75,7 @@ static int db8500_regulator_is_enabled(struct regulator_dev *rdev)
- }
+diff --git a/drivers/regulator/mcp16502.c b/drivers/regulator/mcp16502.c
+index 9292ab8736c7..e5a02711cb46 100644
+--- a/drivers/regulator/mcp16502.c
++++ b/drivers/regulator/mcp16502.c
+@@ -427,36 +427,15 @@ static const struct regmap_config mcp16502_regmap_config = {
+ 	.wr_table	= &mcp16502_yes_reg_table,
+ };
  
- /* db8500 regulator operations */
--static struct regulator_ops db8500_regulator_ops = {
-+static const struct regulator_ops db8500_regulator_ops = {
- 	.enable			= db8500_regulator_enable,
- 	.disable		= db8500_regulator_disable,
- 	.is_enabled		= db8500_regulator_is_enabled,
-@@ -200,7 +200,7 @@ static int db8500_regulator_switch_is_enabled(struct regulator_dev *rdev)
- 	return info->is_enabled;
- }
+-/*
+- * set_up_regulators() - initialize all regulators
+- */
+-static int setup_regulators(struct mcp16502 *mcp, struct device *dev,
+-			    struct regulator_config config)
+-{
+-	struct regulator_dev *rdev;
+-	int i;
+-
+-	for (i = 0; i < NUM_REGULATORS; i++) {
+-		rdev = devm_regulator_register(dev, &mcp16502_desc[i], &config);
+-		if (IS_ERR(rdev)) {
+-			dev_err(dev,
+-				"failed to register %s regulator %ld\n",
+-				mcp16502_desc[i].name, PTR_ERR(rdev));
+-			return PTR_ERR(rdev);
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+ static int mcp16502_probe(struct i2c_client *client,
+ 			  const struct i2c_device_id *id)
+ {
+ 	struct regulator_config config = { };
++	struct regulator_dev *rdev;
+ 	struct device *dev;
+ 	struct mcp16502 *mcp;
+ 	struct regmap *rmap;
+-	int ret = 0;
++	int i, ret;
  
--static struct regulator_ops db8500_regulator_switch_ops = {
-+static const struct regulator_ops db8500_regulator_switch_ops = {
- 	.enable			= db8500_regulator_switch_enable,
- 	.disable		= db8500_regulator_switch_disable,
- 	.is_enabled		= db8500_regulator_switch_is_enabled,
+ 	dev = &client->dev;
+ 	config.dev = dev;
+@@ -482,9 +461,15 @@ static int mcp16502_probe(struct i2c_client *client,
+ 		return PTR_ERR(mcp->lpm);
+ 	}
+ 
+-	ret = setup_regulators(mcp, dev, config);
+-	if (ret != 0)
+-		return ret;
++	for (i = 0; i < NUM_REGULATORS; i++) {
++		rdev = devm_regulator_register(dev, &mcp16502_desc[i], &config);
++		if (IS_ERR(rdev)) {
++			dev_err(dev,
++				"failed to register %s regulator %ld\n",
++				mcp16502_desc[i].name, PTR_ERR(rdev));
++			return PTR_ERR(rdev);
++		}
++	}
+ 
+ 	mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_ACTIVE);
+ 
 -- 
 2.20.1
 
