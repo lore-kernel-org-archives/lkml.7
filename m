@@ -2,114 +2,191 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982B0C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DD3C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB9820878
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556245669;
-	bh=jdnPgtVs1C7Z0docuk2r1gPzE9n6mSF71oX0ndFdESU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ukop1QUPwShbozwM1RkLhnGNbXL/Ic5MorhQ59mc/rbmSQ3xGRmjLislPGLZEbmBB
-	 xqKx8j9UC/PN8DjgQPZOlgqn/SCpEbEH7evmlO07piHfVnRbxF1zlXxkx7D8jEqIuN
-	 SKFyttv1fubCYsZ5FZQUBFI6hZuRIPXzGiUmeYSk=
+	by mail.kernel.org (Postfix) with ESMTP id 3F94720685
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbfDZC1s (ORCPT
+        id S1727411AbfDZCfs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 22:27:48 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:34151 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726893AbfDZC1r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 22:27:47 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 4704A1117A;
-        Thu, 25 Apr 2019 22:27:46 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 25 Apr 2019 22:27:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=QQkx/gI38BRanILmeGSHvkh1ypHOhw/OGbmPVvX1nTs=; b=qXdtKMep
-        7JDjQV5xD/FEs7OSSrFz1KGr5mwvWUhM3f/Cxf7Ky9JhusqXXfdim9UkH3SQ9HqC
-        kxlvNUvKjNyi+TNmoY8Yc9bkosj91gHOsHBNPlJY3zuRlodq+5y4ioLMiGtNBIIS
-        4cNadJCqn3IsZrqN1R8ssXsMHkHyRQp3pcpUSvSVDRxbkkX+dLFN9KqGFhJ4yPQi
-        iWYK5Bid1+T10xKSE+56r6ieyGlPjSJfE3EfYHop169CUyfS44r79XHi2O1vRfLQ
-        bM37OjrmD8Iqa8wg7XgHy5q6fB/6DXbejbk7fByMyWorBviIFlrzmqgxOKgL42Uo
-        eeI8GS6eTZpviA==
-X-ME-Sender: <xms:omzCXHmol7zeCWJCB-AsvpeLSVcndbRrCKxJyLuQOIfyRdCEeXzPzA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrheehgdehlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvgedrudeiledrudehledrvddutdenucfrrghrrghmpehmrghilhhfrhhomhepthho
-    sghinheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgepfe
-X-ME-Proxy: <xmx:omzCXOpFMBNDQ_xdNyKdWBg1yL_-yINraJ_bz9NtsDB_CzbKy5jspg>
-    <xmx:omzCXGtgYzzyFg0PwBNVPwYexP2_L2ZuDxvAp09cC-024vmiIRchtQ>
-    <xmx:omzCXDGLbh8TRAYvcgwl1xkYwejd5c9zPCZeI2BSa99HDTbwuHID6w>
-    <xmx:omzCXBrmZLT5pe-fbeJGMsKBIE2LmwfhOdM_kq0cKN_dBhyXOlodLA>
-Received: from eros.localdomain (124-169-159-210.dyn.iinet.net.au [124.169.159.210])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B7D3C103D5;
-        Thu, 25 Apr 2019 22:27:40 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Pekka Enberg <penberg@iki.fi>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Tejun Heo <tj@kernel.org>, Qian Cai <cai@lca.pw>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, linux-mm@kvack.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] tools/vm/slabinfo: Add sorting info to help menu
-Date:   Fri, 26 Apr 2019 12:26:22 +1000
-Message-Id: <20190426022622.4089-5-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190426022622.4089-1-tobin@kernel.org>
-References: <20190426022622.4089-1-tobin@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 25 Apr 2019 22:35:48 -0400
+Received: from prv1-mh.provo.novell.com ([137.65.248.33]:48894 "EHLO
+        prv1-mh.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfDZCfr (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:6:1>);
+        Thu, 25 Apr 2019 22:35:47 -0400
+Received: from INET-PRV1-MTA by prv1-mh.provo.novell.com
+        with Novell_GroupWise; Thu, 25 Apr 2019 20:35:46 -0600
+Message-Id: <5CC26E7D020000F9000625E6@prv1-mh.provo.novell.com>
+X-Mailer: Novell GroupWise Internet Agent 18.1.0 
+Date:   Thu, 25 Apr 2019 20:35:41 -0600
+From:   "Gang He" <ghe@suse.com>
+To:     <jlbec@evilplan.org>, <mark@fasheh.com>, <jiangqi903@gmail.com>
+Cc:     <akpm@linux-foundation.org>, <ocfs2-devel@oss.oracle.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ocfs2: add last unlock times in locking_state
+References: <20190425091250.3625-1-ghe@suse.com>
+ <c855abce-d62c-5fe0-3b31-c252077b4530@gmail.com>
+In-Reply-To: <c855abce-d62c-5fe0-3b31-c252077b4530@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Passing more than one sorting option has undefined behaviour.
+Hello Joseph,
 
-Add an explicit statement as such to the help menu, this also has the
-advantage of highlighting all the sorting options.
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
- tools/vm/slabinfo.c | 2 ++
- 1 file changed, 2 insertions(+)
+>>> On 4/26/2019 at  9:21 am, in message
+<c855abce-d62c-5fe0-3b31-c252077b4530@gmail.com>, Joseph Qi
+<jiangqi903@gmail.com> wrote:
+> Hi Gang,
+> 
+> On 19/4/25 17:12, Gang He wrote:
+>> ocfs2 file system uses locking_state file under debugfs to dump
+>> each ocfs2 file system's dlm lock resources, but the dlm lock
+>> resources in memory are becoming more and more after the files
+>> were touched by the user. it will become a bit difficult to analyze
+>> these dlm lock resource records in locking_state file by the upper
+>> scripts, though some files are not active for now, which were
+>> accessed long time ago.
+>> Then, I'd like to add last pr/ex unlock times in locking_state file
+>> for each dlm lock resource record, the the upper scripts can use
+>> last unlock time to filter inactive dlm lock resource record.
+>> 
+>> Signed-off-by: Gang He <ghe@suse.com>
+>> ---
+>>  fs/ocfs2/dlmglue.c | 21 +++++++++++++++++----
+>>  fs/ocfs2/ocfs2.h   |  1 +
+>>  2 files changed, 18 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+>> index af405586c5b1..dccf4136f8c1 100644
+>> --- a/fs/ocfs2/dlmglue.c
+>> +++ b/fs/ocfs2/dlmglue.c
+>> @@ -448,7 +448,7 @@ static void ocfs2_update_lock_stats(struct 
+> ocfs2_lock_res *res, int level,
+>>  				    struct ocfs2_mask_waiter *mw, int ret)
+>>  {
+>>  	u32 usec;
+>> -	ktime_t kt;
+>> +	ktime_t last, kt;
+>>  	struct ocfs2_lock_stats *stats;
+>>  
+>>  	if (level == LKM_PRMODE)
+>> @@ -458,7 +458,8 @@ static void ocfs2_update_lock_stats(struct 
+> ocfs2_lock_res *res, int level,
+>>  	else
+>>  		return;
+>>  
+>> -	kt = ktime_sub(ktime_get(), mw->mw_lock_start);
+>> +	last = ktime_get();
+>> +	kt = ktime_sub(last, mw->mw_lock_start);
+>>  	usec = ktime_to_us(kt);
+>>  
+>>  	stats->ls_gets++;
+>> @@ -474,6 +475,8 @@ static void ocfs2_update_lock_stats(struct 
+> ocfs2_lock_res *res, int level,
+>>  
+>>  	if (ret)
+>>  		stats->ls_fail++;
+>> +
+>> +	stats->ls_last = ktime_to_timespec(last).tv_sec;
+>>  }
+>>  
+>>  static inline void ocfs2_track_lock_refresh(struct ocfs2_lock_res *lockres)
+>> @@ -3093,8 +3096,10 @@ static void *ocfs2_dlm_seq_next(struct seq_file *m, 
+> void *v, loff_t *pos)
+>>   *	- Lock stats printed
+>>   * New in version 3
+>>   *	- Max time in lock stats is in usecs (instead of nsecs)
+>> + * New in version 4
+>> + *	- Add last pr/ex unlock times in secs
+> 
+> Why not usecs?
+The time is the seconds from the system boot, just like uptime command.
+I feel the user do not care more accurate time, secondly, the u32 type can keep more long time until it overflows.  
 
-diff --git a/tools/vm/slabinfo.c b/tools/vm/slabinfo.c
-index 469ff6157986..68092d15e12b 100644
---- a/tools/vm/slabinfo.c
-+++ b/tools/vm/slabinfo.c
-@@ -148,6 +148,8 @@ static void usage(void)
- 		"    p | P              Poisoning\n"
- 		"    u | U              Tracking\n"
- 		"    t | T              Tracing\n"
-+
-+		"\nSorting options (--Loss, --Size, --Partial) are mutually exclusive\n"
- 	);
- }
- 
--- 
-2.21.0
+> BTW, should we change tools side like debugfs as well?
+Theoretically, the format will affect the upper debugfs.ocfs2 tool, 
+but, I quickly look at this part code of debugfs.ocfs2, this part code looks has been dead.
+Anyway, I will look at this part carefully, if it still works, I will do the corresponding change.
 
+
+Thanks
+Gang 
+
+
+> 
+> Thanks,
+> Joseph
+> 
+>>   */
+>> -#define OCFS2_DLM_DEBUG_STR_VERSION 3
+>> +#define OCFS2_DLM_DEBUG_STR_VERSION 4
+>>  static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+>>  {
+>>  	int i;
+>> @@ -3145,6 +3150,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
+> *v)
+>>  # define lock_max_prmode(_l)		((_l)->l_lock_prmode.ls_max)
+>>  # define lock_max_exmode(_l)		((_l)->l_lock_exmode.ls_max)
+>>  # define lock_refresh(_l)		((_l)->l_lock_refresh)
+>> +# define lock_last_prmode(_l)		((_l)->l_lock_prmode.ls_last)
+>> +# define lock_last_exmode(_l)		((_l)->l_lock_exmode.ls_last)
+>>  #else
+>>  # define lock_num_prmode(_l)		(0)
+>>  # define lock_num_exmode(_l)		(0)
+>> @@ -3155,6 +3162,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
+> *v)
+>>  # define lock_max_prmode(_l)		(0)
+>>  # define lock_max_exmode(_l)		(0)
+>>  # define lock_refresh(_l)		(0)
+>> +# define lock_last_prmode(_l)		(0)
+>> +# define lock_last_exmode(_l)		(0)
+>>  #endif
+>>  	/* The following seq_print was added in version 2 of this output */
+>>  	seq_printf(m, "%u\t"
+>> @@ -3165,6 +3174,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
+> *v)
+>>  		   "%llu\t"
+>>  		   "%u\t"
+>>  		   "%u\t"
+>> +		   "%u\t"
+>> +		   "%u\t"
+>>  		   "%u\t",
+>>  		   lock_num_prmode(lockres),
+>>  		   lock_num_exmode(lockres),
+>> @@ -3174,7 +3185,9 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
+> *v)
+>>  		   lock_total_exmode(lockres),
+>>  		   lock_max_prmode(lockres),
+>>  		   lock_max_exmode(lockres),
+>> -		   lock_refresh(lockres));
+>> +		   lock_refresh(lockres),
+>> +		   lock_last_prmode(lockres),
+>> +		   lock_last_exmode(lockres));
+>>  
+>>  	/* End the line */
+>>  	seq_printf(m, "\n");
+>> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+>> index 1f029fbe8b8d..8efa022684f4 100644
+>> --- a/fs/ocfs2/ocfs2.h
+>> +++ b/fs/ocfs2/ocfs2.h
+>> @@ -164,6 +164,7 @@ struct ocfs2_lock_stats {
+>>  
+>>  	/* Storing max wait in usecs saves 24 bytes per inode */
+>>  	u32		ls_max;		/* Max wait in USEC */
+>> +	u32		ls_last;	/* Last unlock time in SEC */
+>>  };
+>>  #endif
+>>  
+>> 
