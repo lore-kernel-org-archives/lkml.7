@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E96EC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23CAC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51C6208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93409208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271652;
-	bh=pOa87PBCiYnHj7dTLvic5bMv6YY22wY8K1gMNVh3wOI=;
+	s=default; t=1556271656;
+	bh=HwmCpbZ+UmNqFC7OrmrNL0W5b1KrkSJNxy1iF3mWvqk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=PYxjrbl2HW9iCb+DSDXQEw4BEtoUsbYbiTZzavRzFzhNenFKwDpc2Xc57PNXdzgkR
-	 ck3pCcSK2qJTjIyizui13adgOGV344x5MfK7EE4Xx+QJg6efzNv32OL65qMcEQrEoD
-	 P9WgIo77Tr6r2fzCn0cySkpZ6c+4U8ercPHNLet0=
+	b=RqmyNqlIKPtKks5DQmFac3Ah56OEI31ZJEJOxjCHgDuYtb0cxbeWV5zDM2RRfK8Dy
+	 sNycfDZZyRhmfX4f9M0gHCpQHtVa0Vj83ld3HV8OiaJm8QyRzFN8o0S4ajFbwCQCG1
+	 lxnmYFl+PjzBVobYjTtZr/KDkvVHp4cfziZrdBWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfDZJku (ORCPT
+        id S1726729AbfDZJkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:40:50 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46292 "EHLO
+        Fri, 26 Apr 2019 05:40:55 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46418 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbfDZJkr (ORCPT
+        with ESMTP id S1726308AbfDZJkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:40:47 -0400
+        Fri, 26 Apr 2019 05:40:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=fBZkPOekWpp//nTjusBuvLT1xpm6CydQjrsv6wGTMR0=; b=TYJWa2mWYKGg
-        PDJ1VxZQkwiLiioeSg/2pJuNhQE+GRlYmMl5bLmtpnj+V/xbY+SiIkH+Crj7r0xjH1kwYgtwAyEza
-        /mBWtNFvq3hq4ETOCQ0v+PO15pnunQr6c5KlP2WNfEwfWBCbvBu32VYSKaxZEFdf/f4gZaUFKXIgE
-        4E+cg=;
+        List-Archive; bh=RSjnE2qLZo7Q1TAMcgIM3WoPBmF5lDdPJvqF61tp1BY=; b=ZgAarCnIh66Y
+        rPvluNSgmPXJzhDEanKJyXhqrjXfX8RgNLpnkzNMtGL5CYm+3tFF/zdLeFUOhcjNoN/3hfti+JW70
+        dTa0G49/OKlLVB8KVrv4/VNpvybWo3NuDSKQEEvYA/pYrtOIzj2MovIl06k2o9BknA6jRvDlLepwP
+        UaCxM=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxLZ-0003K8-2k; Fri, 26 Apr 2019 09:40:45 +0000
+        id 1hJxLd-0003KK-Dh; Fri, 26 Apr 2019 09:40:49 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 1F017441D3B; Fri, 26 Apr 2019 10:40:44 +0100 (BST)
+        id 043B7441D3B; Fri, 26 Apr 2019 10:40:47 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: tps80031: Remove unused *rdev from struct tps80031_regulator" to the regulator tree
+To:     Pascal PAILLET-LME <p.paillet@st.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pascal Paillet <p.paillet@st.com>
+Subject: Applied "dt-bindings: regulator: Add stm32mp1 pwr regulators" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094044.1F017441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:40:44 +0100 (BST)
+Message-Id: <20190426094048.043B7441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:40:47 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps80031: Remove unused *rdev from struct tps80031_regulator
+   dt-bindings: regulator: Add stm32mp1 pwr regulators
 
 has been applied to the regulator tree at
 
@@ -85,40 +86,69 @@ to this mail.
 Thanks,
 Mark
 
-From de110f387371337cf90f40055cf1ebdf01b6f427 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 16 Apr 2019 18:17:27 +0800
-Subject: [PATCH] regulator: tps80031: Remove unused *rdev from struct
- tps80031_regulator
+From c29687c354c58cd56fb2529fb89266c280206cf9 Mon Sep 17 00:00:00 2001
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Date: Mon, 15 Apr 2019 09:17:37 +0000
+Subject: [PATCH] dt-bindings: regulator: Add stm32mp1 pwr regulators
 
-The ri-rdev is assigend but not used, so remove it.
+Document devicetree bindings for stm32mp1 pwr regulators.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Pascal Paillet <p.paillet@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps80031-regulator.c | 2 --
- 1 file changed, 2 deletions(-)
+ .../regulator/st,stm32mp1-pwr-reg.txt         | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
 
-diff --git a/drivers/regulator/tps80031-regulator.c b/drivers/regulator/tps80031-regulator.c
-index 1001147404c3..d97cd55b6850 100644
---- a/drivers/regulator/tps80031-regulator.c
-+++ b/drivers/regulator/tps80031-regulator.c
-@@ -85,7 +85,6 @@ struct tps80031_regulator_info {
- 
- struct tps80031_regulator {
- 	struct device			*dev;
--	struct regulator_dev		*rdev;
- 	struct tps80031_regulator_info	*rinfo;
- 
- 	u8				device_flags;
-@@ -736,7 +735,6 @@ static int tps80031_regulator_probe(struct platform_device *pdev)
- 					ri->rinfo->desc.name);
- 			return PTR_ERR(rdev);
- 		}
--		ri->rdev = rdev;
- 	}
- 
- 	platform_set_drvdata(pdev, pmic);
+diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+new file mode 100644
+index 000000000000..e372dd3f0c8a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+@@ -0,0 +1,43 @@
++STM32MP1 PWR Regulators
++-----------------------
++
++Available Regulators in STM32MP1 PWR block are:
++  - reg11 for regulator 1V1
++  - reg18 for regulator 1V8
++  - usb33 for the swtich USB3V3
++
++Required properties:
++- compatible: Must be "st,stm32mp1,pwr-reg"
++- list of child nodes that specify the regulator reg11, reg18 or usb33
++  initialization data for defined regulators. The definition for each of
++  these nodes is defined using the standard binding for regulators found at
++  Documentation/devicetree/bindings/regulator/regulator.txt.
++- vdd-supply: phandle to the parent supply/regulator node for vdd input
++- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for usb33
++
++Example:
++
++pwr_regulators: pwr@50001000 {
++	compatible = "st,stm32mp1,pwr-reg";
++	reg = <0x50001000 0x10>;
++	vdd-supply = <&vdd>;
++	vdd_3v3_usbfs-supply = <&vdd_usb>;
++
++	reg11: reg11 {
++		regulator-name = "reg11";
++		regulator-min-microvolt = <1100000>;
++		regulator-max-microvolt = <1100000>;
++	};
++
++	reg18: reg18 {
++		regulator-name = "reg18";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	usb33: usb33 {
++		regulator-name = "usb33";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++};
 -- 
 2.20.1
 
