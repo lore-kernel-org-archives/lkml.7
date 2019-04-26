@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75999C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B66C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 455A32084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A0652084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:34:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AXGmROK5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rNzKym1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfDZPem (ORCPT
+        id S1727203AbfDZPes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:34:42 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41215 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfDZPek (ORCPT
+        Fri, 26 Apr 2019 11:34:48 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37323 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfDZPeq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:34:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d9so1747507pls.8;
-        Fri, 26 Apr 2019 08:34:39 -0700 (PDT)
+        Fri, 26 Apr 2019 11:34:46 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e6so1807998pgc.4;
+        Fri, 26 Apr 2019 08:34:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lKxrWq0DPWG2/ldiM614YNjWwPB+5TI6uHMpmONkiyA=;
-        b=AXGmROK5mng0JPjiQim8086JiOsc6T3YZ2R2vowg2KygiAieSQeBRzTyJkCP/+tZzP
-         svPSPJGD+818NQqG4Hbpc0C7VqXIXNuGEVUzdH3KDvKMGCOoIWG81MboHCJDVpnM2TYB
-         5BVuVxDRa1OT80eMgessNEDeDeJM0Gi1RIwxC8uODAb5l7Qyf/PYP6bkYo4ThH71vXDV
-         aLXI5QaQvW8tpitc6nmsDrfRGOJQTZ5p6/HizziUPwb5xDFQzTl5XCo8AphKO8pFBUv9
-         0juZUpewcg3eyJTcQS+sS4DXBOI8T8bupHPzWzWQJ617WaDKNtz2F32hqLGWuhwMmEHO
-         gZ2A==
+        bh=Kf9ixwlamGCo6rqFj9rx+UIAO8SMHMWm68PEXOw5I1k=;
+        b=rNzKym1lZ66ZW5lsGjGf/GohzG4Pkhhf9rdqdvuI/gtmLqKS67O28dKvYWK1zltHuf
+         sLIWswFK6a6WoUBrLE4XSvMMkIK35Jrqlz+pjaEXOqdv0IAgLTrQSwuZa0uFXzOjec+K
+         IrSdPAdZIwMEV37zfJfT+ITqAZOS/slTnzL6wmBLlZfsQ4w/TA1otmYyZ2Qn0Qk9ho9B
+         tEMQ+bmkj1/FeMbPWJqmMIOhmMtmnPiGJmPqk0nB3z/vbIhDiFVmkqJL9nwIZSOe3+2T
+         8BVPcP/9quCa5NRtC80DEP2HQnu6UpK5B2/0xYsTkPKcYaGqlmLJZ97KzFj0sBm+gFcI
+         HjaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lKxrWq0DPWG2/ldiM614YNjWwPB+5TI6uHMpmONkiyA=;
-        b=VJjvs3znmSOdJsSUIjiCaaflu+d9u5VvboyFnhcCjqZuoSsaV+y8mEoXKsSvzDQ337
-         reNwdxoTL8X3DpGWj+kWJ3i4Yvigzwgu/f2zHOtBMPdkZF67bb5IeAnVL8JOy5hY8Ugm
-         3vU225XQ4WXT9XQESAss9iBb7zfNZz8mKiiAUxxAwzgLUwTe6Pt42b/w+STxbh26Infs
-         Nxqzop5S11133o+GhBW7tRknxHUE0FA+wcfR9FxxjHy5RVVP1vy8yPo/uYMojvGPaZiK
-         0jIDIJBDYQl91uTdZHCWZ8f5YuqkAw3gu3cHAWBqa89QO4WTpWuX4jWfTzzkc/3KkRs3
-         JpyQ==
-X-Gm-Message-State: APjAAAWXuk9qf8T5hRE5MQS7sI20yseKhwSs2Z4v0/Rod4vuZeRi/H34
-        XD5QmeD1eHCAg+WqFTOxhvI=
-X-Google-Smtp-Source: APXvYqzMVILCBiku92Sahm8j5XKvPT9pQa1hs8oiSt9Muzy/viGwnLlpQIi189pLyx3naOwp0XPsHg==
-X-Received: by 2002:a17:902:6b47:: with SMTP id g7mr515276plt.227.1556292879614;
-        Fri, 26 Apr 2019 08:34:39 -0700 (PDT)
+        bh=Kf9ixwlamGCo6rqFj9rx+UIAO8SMHMWm68PEXOw5I1k=;
+        b=OPyxkY/tSU5EQrtlfjmD4b92ZfpybraexY3YzUiBSFXVpXGd13xfz3mYeucz7RsWfZ
+         5klm3JqpUV+c/5g2mhjf7tGLzmHwQDRhT889XuXpOZ0DuCYcLyCuRjUGl9JLz/HATwhB
+         3rjsJ96KWYT7Ir/V5bOWH19zohVGBUSEIb5hHpPpDG3SQ4x1JhAV0IJm/r2qtdPANC0c
+         Mwf3HhqIeN5zhUAS1/S4CTT9D7iFXl+/CY9aexpWfdFa+fo544jNtIoU4igqo3lSXwL7
+         ugk0CmJ3sAwALryZbJ18pEHNNSk38RYkZiLQ4gg7q1hbFZjQPUnknx/OI5espYkKNwdU
+         L1Kw==
+X-Gm-Message-State: APjAAAVudU2QHaAdH08N+vu6alNcTgzx8t/fv+MDXw+QYGadFOwqsbxK
+        CbHVlFlXhKHgT9Pql2cKlzY=
+X-Google-Smtp-Source: APXvYqwTaO6hHImULiIhZjWVhrcewz2xP2sImhSoBL6dDXz66l5qbd+j3HpTIZNFN1BNRZRHxnUZew==
+X-Received: by 2002:a63:fb4d:: with SMTP id w13mr44735497pgj.397.1556292885921;
+        Fri, 26 Apr 2019 08:34:45 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.34.33
+        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.34.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 08:34:38 -0700 (PDT)
+        Fri, 26 Apr 2019 08:34:44 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         mchehab+samsung@kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 24/27] Documentation: x86: convert x86_64/5level-paging.txt to reST
-Date:   Fri, 26 Apr 2019 23:31:47 +0800
-Message-Id: <20190426153150.21228-25-changbin.du@gmail.com>
+Subject: [PATCH 25/27] Documentation: x86: convert x86_64/fake-numa-for-cpusets to reST
+Date:   Fri, 26 Apr 2019 23:31:48 +0800
+Message-Id: <20190426153150.21228-26-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190426153150.21228-1-changbin.du@gmail.com>
 References: <20190426153150.21228-1-changbin.du@gmail.com>
@@ -79,66 +79,85 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- .../{5level-paging.txt => 5level-paging.rst}     | 16 +++++++++++-----
- Documentation/x86/x86_64/index.rst               |  1 +
- 2 files changed, 12 insertions(+), 5 deletions(-)
- rename Documentation/x86/x86_64/{5level-paging.txt => 5level-paging.rst} (91%)
+ ...-for-cpusets => fake-numa-for-cpusets.rst} | 25 +++++++++++++------
+ Documentation/x86/x86_64/index.rst            |  1 +
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+ rename Documentation/x86/x86_64/{fake-numa-for-cpusets => fake-numa-for-cpusets.rst} (85%)
 
-diff --git a/Documentation/x86/x86_64/5level-paging.txt b/Documentation/x86/x86_64/5level-paging.rst
-similarity index 91%
-rename from Documentation/x86/x86_64/5level-paging.txt
-rename to Documentation/x86/x86_64/5level-paging.rst
-index 2432a5ef86d9..ab88a4514163 100644
---- a/Documentation/x86/x86_64/5level-paging.txt
-+++ b/Documentation/x86/x86_64/5level-paging.rst
-@@ -1,5 +1,11 @@
--== Overview ==
+diff --git a/Documentation/x86/x86_64/fake-numa-for-cpusets b/Documentation/x86/x86_64/fake-numa-for-cpusets.rst
+similarity index 85%
+rename from Documentation/x86/x86_64/fake-numa-for-cpusets
+rename to Documentation/x86/x86_64/fake-numa-for-cpusets.rst
+index 4b09f18831f8..74fbb78b3c67 100644
+--- a/Documentation/x86/x86_64/fake-numa-for-cpusets
++++ b/Documentation/x86/x86_64/fake-numa-for-cpusets.rst
+@@ -1,5 +1,12 @@
 +.. SPDX-License-Identifier: GPL-2.0
- 
-+==============
-+5-level paging
-+==============
 +
-+Overview
-+========
- Original x86-64 was limited by 4-level paing to 256 TiB of virtual address
- space and 64 TiB of physical address space. We are already bumping into
- this limit: some vendors offers servers with 64 TiB of memory today.
-@@ -16,16 +22,17 @@ QEMU 2.9 and later support 5-level paging.
- Virtual memory layout for 5-level paging is described in
- Documentation/x86/x86_64/mm.txt
++=====================
++Fake NUMA For CPUSets
++=====================
++
++:Author: David Rientjes <rientjes@cs.washington.edu>
++
+ Using numa=fake and CPUSets for Resource Management
+-Written by David Rientjes <rientjes@cs.washington.edu>
  
--== Enabling 5-level paging ==
+ This document describes how the numa=fake x86_64 command-line option can be used
+ in conjunction with cpusets for coarse memory management.  Using this feature,
+@@ -20,7 +27,7 @@ you become more familiar with using this combination for resource control,
+ you'll determine a better setup to minimize the number of nodes you have to deal
+ with.
  
-+Enabling 5-level paging
-+=======================
- CONFIG_X86_5LEVEL=y enables the feature.
+-A machine may be split as follows with "numa=fake=4*512," as reported by dmesg:
++A machine may be split as follows with "numa=fake=4*512," as reported by dmesg::
  
- Kernel with CONFIG_X86_5LEVEL=y still able to boot on 4-level hardware.
- In this case additional page table level -- p4d -- will be folded at
- runtime.
+ 	Faking node 0 at 0000000000000000-0000000020000000 (512MB)
+ 	Faking node 1 at 0000000020000000-0000000040000000 (512MB)
+@@ -34,7 +41,7 @@ A machine may be split as follows with "numa=fake=4*512," as reported by dmesg:
  
--== User-space and large virtual address space ==
--
-+User-space and large virtual address space
-+==========================================
- On x86, 5-level paging enables 56-bit userspace virtual address space.
- Not all user space is ready to handle wide addresses. It's known that
- at least some JIT compilers use higher bits in pointers to encode their
-@@ -58,4 +65,3 @@ One important case we need to handle here is interaction with MPX.
- MPX (without MAWA extension) cannot handle addresses above 47-bit, so we
- need to make sure that MPX cannot be enabled we already have VMA above
- the boundary and forbid creating such VMAs once MPX is enabled.
--
+ Now following the instructions for mounting the cpusets filesystem from
+ Documentation/cgroup-v1/cpusets.txt, you can assign fake nodes (i.e. contiguous memory
+-address spaces) to individual cpusets:
++address spaces) to individual cpusets::
+ 
+ 	[root@xroads /]# mkdir exampleset
+ 	[root@xroads /]# mount -t cpuset none exampleset
+@@ -47,7 +54,7 @@ Now this cpuset, 'ddset', will only allowed access to fake nodes 0 and 1 for
+ memory allocations (1G).
+ 
+ You can now assign tasks to these cpusets to limit the memory resources
+-available to them according to the fake nodes assigned as mems:
++available to them according to the fake nodes assigned as mems::
+ 
+ 	[root@xroads /exampleset/ddset]# echo $$ > tasks
+ 	[root@xroads /exampleset/ddset]# dd if=/dev/zero of=tmp bs=1024 count=1G
+@@ -57,9 +64,13 @@ Notice the difference between the system memory usage as reported by
+ /proc/meminfo between the restricted cpuset case above and the unrestricted
+ case (i.e. running the same 'dd' command without assigning it to a fake NUMA
+ cpuset):
+-				Unrestricted	Restricted
+-	MemTotal:		3091900 kB	3091900 kB
+-	MemFree:		  42113 kB	1513236 kB
++
++	========	============	==========
++	Name		Unrestricted	Restricted
++	========	============	==========
++	MemTotal	3091900 kB	3091900 kB
++	MemFree		42113 kB	1513236 kB
++	========	============	==========
+ 
+ This allows for coarse memory management for the tasks you assign to particular
+ cpusets.  Since cpusets can form a hierarchy, you can create some pretty
 diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
-index 4b65d29ef459..7b8c82151358 100644
+index 7b8c82151358..e2a324cde671 100644
 --- a/Documentation/x86/x86_64/index.rst
 +++ b/Documentation/x86/x86_64/index.rst
-@@ -10,3 +10,4 @@ x86_64 Support
-    boot-options
+@@ -11,3 +11,4 @@ x86_64 Support
     uefi
     mm
-+   5level-paging
+    5level-paging
++   fake-numa-for-cpusets
 -- 
 2.20.1
 
