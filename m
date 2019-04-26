@@ -2,70 +2,84 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2D1C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB9FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09909206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556280116;
-	bh=Vowjtrv0OJqv16TygegnL2eNyyqR0noN1UiGX25yQ5M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ktY+FkUh5/2MtIN8KHFcEt880IVARHZLlMe4Kbtfj8QzUOXmyBEmTySoWL8D/glK9
-	 PYj+GdLlNaSaXG8v+OvI6+TV87OsI0jScEF1FtqL2vhdNVwBNGbv/nS8DPsDPXgJ05
-	 M71wAdBSOys1UOTT9EyJbDN5Q0wcNZuzPzDmuFjw=
+	by mail.kernel.org (Postfix) with ESMTP id 8E46B2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfDZMBz (ORCPT
+        id S1726353AbfDZMIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 08:01:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfDZMBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 08:01:54 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 469ED206C1;
-        Fri, 26 Apr 2019 12:01:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556280114;
-        bh=Vowjtrv0OJqv16TygegnL2eNyyqR0noN1UiGX25yQ5M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1FJxFm9yyGkW7/V4pU3/CJBWNf1kfnlus8LFDwz7yzcUTAO0hM6LSqYL4QLkYNkhb
-         /uVaRnSnzFrdalkqxNTV2rBeUpKeeC1Y/tjEgt+3Py+viXjnqub3wkGFgrKSWkFJaL
-         Gr/tGF2AVfx21Bal8t39J8Xe16y8NzM4cWsS76L0=
-Date:   Fri, 26 Apr 2019 17:31:48 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Fri, 26 Apr 2019 08:08:37 -0400
+Received: from www62.your-server.de ([213.133.104.62]:40134 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfDZMIg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 08:08:36 -0400
+Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hJzeN-00059X-Ex; Fri, 26 Apr 2019 14:08:20 +0200
+Received: from [178.199.41.31] (helo=linux.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hJzeN-0002hV-8j; Fri, 26 Apr 2019 14:08:19 +0200
+Subject: Re: [PATCH] bpf, x32: Fix bug for BPF_JMP | {BPF_JSGT, BPF_JSLE,
+ BPF_JSLT, BPF_JSGE}
+To:     Wang YanQing <udknight@gmail.com>, ast@kernel.org,
+        davem@davemloft.net, kuznet@ms2.inr.ac.ru, tglx@linutronix.de,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] dmaengine: tegra: Use relaxed versions of readl/writel
-Message-ID: <20190426120148.GB28103@vkoul-mobl>
-References: <20190424231708.21219-1-digetx@gmail.com>
+References: <20190426105609.GA19147@udknight>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <6735a15f-57af-2d09-016e-d81b1877eca6@iogearbox.net>
+Date:   Fri, 26 Apr 2019 14:08:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424231708.21219-1-digetx@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190426105609.GA19147@udknight>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25431/Fri Apr 26 09:57:33 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-04-19, 02:17, Dmitry Osipenko wrote:
-> The readl/writel functions are inserting memory barrier in order to
-> ensure that memory stores are completed. On Tegra20 and Tegra30 this
-> results in L2 cache syncing which isn't a cheapest operation. The
-> tegra20-apb-dma driver doesn't need to synchronize generic memory
-> accesses, hence use the relaxed versions of the functions.
+Hi Wang,
 
-Subsystem name is **dmaengine** not dma! Please fix that
--- 
-~Vinod
+On 04/26/2019 12:56 PM, Wang YanQing wrote:
+> The current method to compare 64-bit numbers for conditional jump is:
+> 
+> 1) Compare the high 32-bit first.
+> 
+> 2) If the high 32-bit isn't the same, then goto step 4.
+> 
+> 3) Compare the low 32-bit.
+> 
+> 4) Check the desired condition.
+> 
+> This method is right for unsigned comparison, but it is buggy for signed
+> comparison, because it does signed comparison for low 32-bit too.
+> 
+> There is only one sign bit in 64-bit number, that is the MSB in the 64-bit
+> number, it is wrong to treat low 32-bit as signed number and do the signed
+> comparison for it.
+> 
+> This patch fixes the bug.
+> 
+> Signed-off-by: Wang YanQing <udknight@gmail.com>
+
+I presume this issue has coverage in our BPF kselftest suite, right? (If
+not, please also add a test into the test_verifier tool.)
+
+Thanks,
+Daniel
