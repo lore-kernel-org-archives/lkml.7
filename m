@@ -2,80 +2,69 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFB8C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 05:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E35C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 05:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113EF2089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 05:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3973E206BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 05:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556256324;
+	bh=h61k5wbWpjNpjdsHA3O4SHcLHPqyl+O9C21Y+jEaKe4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RQATR4BKGExwCwWkd4GwVMmwyvL2xjxfMFTN6qZLGriut5r3+b3jgtJFJqN9kvqih
+	 N3YyMoeDFPGgh3l3grUwHi6cllRiXVWxqlXijXt6i26icUi4LhJAs+IqG2e7RcftZm
+	 CRlXoIzqkcJN7kf5C+lv4GLa5zSDGWluJKg3pLac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfDZFXZ (ORCPT
+        id S1729411AbfDZFZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 01:23:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:49249 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728573AbfDZFXY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 01:23:24 -0400
-X-UUID: 5741141729ae41f9811c49cb33865009-20190426
-X-UUID: 5741141729ae41f9811c49cb33865009-20190426
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1912994456; Fri, 26 Apr 2019 13:23:16 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 26 Apr 2019 13:23:15 +0800
-Received: from mtkslt306.mediatek.inc (10.21.14.136) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 26 Apr 2019 13:23:15 +0800
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Felix Fietkau <nbd@nbd.name>
-CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v2] mt76: mt7615: add TX/RX antenna pattern capabilities
-Date:   Fri, 26 Apr 2019 13:23:08 +0800
-Message-ID: <4f7160cb9f52335ce15fccac087fec25e7650884.1556255852.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 26 Apr 2019 01:25:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42092 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725881AbfDZFZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 01:25:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DC3ACAD2B;
+        Fri, 26 Apr 2019 05:25:21 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 07:25:20 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     linux-mm@kvack.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH V2] mm: Allow userland to request that the kernel clear
+ memory on release
+Message-ID: <20190426052520.GB12337@dhcp22.suse.cz>
+References: <CACdnJuup-y1xAO93wr+nr6ARacxJ9YXgaceQK9TLktE7shab1w@mail.gmail.com>
+ <20190424211038.204001-1-matthewgarrett@google.com>
+ <20190425121410.GC1144@dhcp22.suse.cz>
+ <20190425123755.GX12751@dhcp22.suse.cz>
+ <CACdnJuutwmBn_ASY1N1+ZK8g4MbpjTnUYbarR+CPhC5BAy0oZA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACdnJuutwmBn_ASY1N1+ZK8g4MbpjTnUYbarR+CPhC5BAy0oZA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Announce antenna pattern cap to adapt PHY and baseband settings.
+On Thu 25-04-19 13:39:01, Matthew Garrett wrote:
+> On Thu, Apr 25, 2019 at 5:37 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > Besides that you inherently assume that the user would do mlock because
+> > you do not try to wipe the swap content. Is this intentional?
+> 
+> Yes, given MADV_DONTDUMP doesn't imply mlock I thought it'd be more
+> consistent to keep those independent.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
-Changes since v2:
-- Add a prefix mt76 in the title.
----
- drivers/net/wireless/mediatek/mt76/mt7615/init.c | 2 ++
- 1 file changed, 2 insertions(+)
+Do we want to fail madvise call on VMAs that are not mlocked then? What
+if the munlock happens later after the madvise is called?
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
-index 3ab3ff553ef2..122f7a565540 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
-@@ -190,6 +190,8 @@ int mt7615_register_device(struct mt7615_dev *dev)
- 			IEEE80211_VHT_CAP_SHORT_GI_160 |
- 			IEEE80211_VHT_CAP_MAX_MPDU_LENGTH_11454 |
- 			IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MASK |
-+			IEEE80211_VHT_CAP_RX_ANTENNA_PATTERN |
-+			IEEE80211_VHT_CAP_TX_ANTENNA_PATTERN |
- 			IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ;
- 	dev->mt76.chainmask = 0x404;
- 	dev->mt76.antenna_mask = 0xf;
 -- 
-2.18.0
-
+Michal Hocko
+SUSE Labs
