@@ -2,88 +2,100 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B483C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F69C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047A820675
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB8620679
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:20:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Hur+nkXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfDZJNT (ORCPT
+        id S1726036AbfDZJU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:13:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51654 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbfDZJNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:13:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6D737AE28;
-        Fri, 26 Apr 2019 09:13:12 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 1E251E0143; Fri, 26 Apr 2019 11:13:12 +0200 (CEST)
-Message-Id: <f4932253ccd555c79c8fdc3df79bce779b9a8260.1556269635.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1556269635.git.mkubecek@suse.cz>
-References: <cover.1556269635.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next 3/3] net: fix two coding style issues
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 26 Apr 2019 11:13:12 +0200 (CEST)
+        Fri, 26 Apr 2019 05:20:26 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42933 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfDZJUZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 05:20:25 -0400
+Received: by mail-ed1-f65.google.com with SMTP id l25so2544279eda.9
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 02:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=iOChsIoVZwQ6wbP1aoL1H3vmoIYH+SqIfEtaHUVB5Zs=;
+        b=Hur+nkXIiAnfpFrFXwZJjM+pTeGDpKeorzUOu1Jsd7GTcRfPpBNCI0YZMecTSj/62N
+         UB1pE8i3IalTUWPIbXwTeP/BgEp02Buw+HCEX1kRkSnpZgUW4OgPpFuBLcDoFt7/Vhvm
+         RMJXFOPJMvpKLfFTSdYUkktvY2Se8CKpDUffw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iOChsIoVZwQ6wbP1aoL1H3vmoIYH+SqIfEtaHUVB5Zs=;
+        b=kLujFRKqGMw28W8SfM8J7n+hZxSfmlY2qbDUv0NCbUhk2puCuq+RdVwzKNas62JgCu
+         cuJbJAp9ULjVCDgerMgwTwfHbdp6TASeD9WExnmKcKQD2GAECQTlZIU1hGiT4dmX9Vxh
+         l1enBSyeZ4yBpmIYSWIS+4lDkzVXeXcbcZyM/6sGDYUhoxw+8XX+WoRqJ8u2XEHq8vXS
+         jZu/78+bY6S7yY45iBEeRCqX0P4vp8T2tk8xOcjSkT7AVVv4YXhjRNz/BjNsdzsrrEwK
+         GpGIE0sQapuGdN38pkjSOj8jHfAUQ2pokqsHMcd3pTtc8rqG51BIH6QFKTY2Qkixgwau
+         59EQ==
+X-Gm-Message-State: APjAAAVc8FL0zu228J0g3tp/iODxIvAtW5D8mhdz0l6tfo34h/3GH4mj
+        IbSpYTOVIXAMEhSi3PVrDXq0Lw==
+X-Google-Smtp-Source: APXvYqxOH6WsYMbGtuBl3y4UHtVCwaBTSvgCoREz7K0RmoRnvC83oOHpmYaCpuqrDlbQ90Llu6PMqA==
+X-Received: by 2002:a17:906:515a:: with SMTP id s26mr3270533ejl.34.1556270424179;
+        Fri, 26 Apr 2019 02:20:24 -0700 (PDT)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id d59sm2403694edc.34.2019.04.26.02.20.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 26 Apr 2019 02:20:23 -0700 (PDT)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH] PCI: iproc: Enable iProc config read for PAXBv2
+Date:   Fri, 26 Apr 2019 14:50:04 +0530
+Message-Id: <1556270404-27058-1-git-send-email-srinath.mannam@broadcom.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a simple cleanup addressing two coding style issues found by
-checkpatch.pl in an earlier patch. It's submitted as a separate patch to
-keep the original patch as it was generated by spatch.
+iProc config read flag has to enable for PAXBv2 instead of PAXB.
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+Fixes: f78e60a29d4ff ("PCI: iproc: Reject unconfigured physical functions from PAXC")
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 ---
- net/bridge/br_netlink.c | 4 ++--
- net/decnet/dn_table.c   | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-iproc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
-index 0914477c4719..348ddb6d09bb 100644
---- a/net/bridge/br_netlink.c
-+++ b/net/bridge/br_netlink.c
-@@ -413,9 +413,9 @@ static int br_fill_ifinfo(struct sk_buff *skb,
- 		goto nla_put_failure;
- 
- 	if (event == RTM_NEWLINK && port) {
--		struct nlattr *nest
--			= nla_nest_start(skb, IFLA_PROTINFO);
-+		struct nlattr *nest;
- 
-+		nest = nla_nest_start(skb, IFLA_PROTINFO);
- 		if (nest == NULL || br_port_fill_attrs(skb, port) < 0)
- 			goto nla_put_failure;
- 		nla_nest_end(skb, nest);
-diff --git a/net/decnet/dn_table.c b/net/decnet/dn_table.c
-index 2fb764321b97..33fefb0aebca 100644
---- a/net/decnet/dn_table.c
-+++ b/net/decnet/dn_table.c
-@@ -348,7 +348,8 @@ static int dn_fib_dump_info(struct sk_buff *skb, u32 portid, u32 seq, int event,
- 		struct rtnexthop *nhp;
- 		struct nlattr *mp_head;
- 
--		if (!(mp_head = nla_nest_start_noflag(skb, RTA_MULTIPATH)))
-+		mp_head = nla_nest_start_noflag(skb, RTA_MULTIPATH);
-+		if (!mp_head)
- 			goto errout;
- 
- 		for_nexthops(fi) {
+diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+index c20fd6b..9d5cbc7 100644
+--- a/drivers/pci/controller/pcie-iproc.c
++++ b/drivers/pci/controller/pcie-iproc.c
+@@ -1347,7 +1347,6 @@ static int iproc_pcie_rev_init(struct iproc_pcie *pcie)
+ 		break;
+ 	case IPROC_PCIE_PAXB:
+ 		regs = iproc_pcie_reg_paxb;
+-		pcie->iproc_cfg_read = true;
+ 		pcie->has_apb_err_disable = true;
+ 		if (pcie->need_ob_cfg) {
+ 			pcie->ob_map = paxb_ob_map;
+@@ -1356,6 +1355,7 @@ static int iproc_pcie_rev_init(struct iproc_pcie *pcie)
+ 		break;
+ 	case IPROC_PCIE_PAXB_V2:
+ 		regs = iproc_pcie_reg_paxb_v2;
++		pcie->iproc_cfg_read = true;
+ 		pcie->has_apb_err_disable = true;
+ 		if (pcie->need_ob_cfg) {
+ 			pcie->ob_map = paxb_v2_ob_map;
 -- 
-2.21.0
+2.7.4
 
