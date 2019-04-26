@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23CAC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88CFC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93409208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3302084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271656;
-	bh=HwmCpbZ+UmNqFC7OrmrNL0W5b1KrkSJNxy1iF3mWvqk=;
+	s=default; t=1556271659;
+	bh=8VuQpOA4jISLuYFOK4XE94BQW08uJOWkMHofL24Q9kg=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=RqmyNqlIKPtKks5DQmFac3Ah56OEI31ZJEJOxjCHgDuYtb0cxbeWV5zDM2RRfK8Dy
-	 sNycfDZZyRhmfX4f9M0gHCpQHtVa0Vj83ld3HV8OiaJm8QyRzFN8o0S4ajFbwCQCG1
-	 lxnmYFl+PjzBVobYjTtZr/KDkvVHp4cfziZrdBWM=
+	b=gc62y791n0XQAhc4LrmoTyrQapzCLs7kx4o4Ud8XF0Bx6xX7xqbthu+dYVnIppIJl
+	 Uti182Z3w2xCr2BjmbxTl4ZqjfIGgG62Wt37kbquOOaoeIJtejEw4BRBjMVnHTpeat
+	 goCKErzLpt0jtTs7VlVYV1/VXTSvBmZvzIYx4SJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfDZJkz (ORCPT
+        id S1726785AbfDZJk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:40:55 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46418 "EHLO
+        Fri, 26 Apr 2019 05:40:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46294 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfDZJkw (ORCPT
+        with ESMTP id S1726681AbfDZJks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:40:52 -0400
+        Fri, 26 Apr 2019 05:40:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=RSjnE2qLZo7Q1TAMcgIM3WoPBmF5lDdPJvqF61tp1BY=; b=ZgAarCnIh66Y
-        rPvluNSgmPXJzhDEanKJyXhqrjXfX8RgNLpnkzNMtGL5CYm+3tFF/zdLeFUOhcjNoN/3hfti+JW70
-        dTa0G49/OKlLVB8KVrv4/VNpvybWo3NuDSKQEEvYA/pYrtOIzj2MovIl06k2o9BknA6jRvDlLepwP
-        UaCxM=;
+        List-Archive; bh=axDDG7PwE6M2jCoK5T7mMY0IW7GHNhqDrSLPGCwYrMQ=; b=L/Q33884yb0W
+        RhA23ee16Y+A9m//VqDmjanS2bxIn+ZYJ8amMW96qmQ6B+hQaQmMUq3bfOss7mEjymts58mTFjxab
+        GMYRtriooGRRIfyux/Jpb4xpEUUg0xaotDrpD/OLgNfQ+ADGaD7p00HIqbXSXVC9NXJpeBetm/vGa
+        3QDwA=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxLd-0003KK-Dh; Fri, 26 Apr 2019 09:40:49 +0000
+        id 1hJxLT-0003Jq-LM; Fri, 26 Apr 2019 09:40:39 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 043B7441D3B; Fri, 26 Apr 2019 10:40:47 +0100 (BST)
+        id 4A560441D3B; Fri, 26 Apr 2019 10:40:38 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Pascal PAILLET-LME <p.paillet@st.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Pascal Paillet <p.paillet@st.com>
-Subject: Applied "dt-bindings: regulator: Add stm32mp1 pwr regulators" to the regulator tree
+To:     kbuild test robot <lkp@intel.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: ready_mask_table[] can be static" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094048.043B7441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:40:47 +0100 (BST)
+Message-Id: <20190426094038.4A560441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:40:38 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt-bindings: regulator: Add stm32mp1 pwr regulators
+   regulator: ready_mask_table[] can be static
 
 has been applied to the regulator tree at
 
@@ -86,69 +85,49 @@ to this mail.
 Thanks,
 Mark
 
-From c29687c354c58cd56fb2529fb89266c280206cf9 Mon Sep 17 00:00:00 2001
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Date: Mon, 15 Apr 2019 09:17:37 +0000
-Subject: [PATCH] dt-bindings: regulator: Add stm32mp1 pwr regulators
+From 82f26185a91298a21aa33a985893dd5f8ed4c75a Mon Sep 17 00:00:00 2001
+From: kbuild test robot <lkp@intel.com>
+Date: Tue, 16 Apr 2019 00:52:38 +0800
+Subject: [PATCH] regulator: ready_mask_table[] can be static
 
-Document devicetree bindings for stm32mp1 pwr regulators.
-
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
+Fixes: 6cdae8173f67 ("regulator: Add support for stm32 power regulators")
+Signed-off-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../regulator/st,stm32mp1-pwr-reg.txt         | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+ drivers/regulator/stm32-pwr.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-new file mode 100644
-index 000000000000..e372dd3f0c8a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-@@ -0,0 +1,43 @@
-+STM32MP1 PWR Regulators
-+-----------------------
-+
-+Available Regulators in STM32MP1 PWR block are:
-+  - reg11 for regulator 1V1
-+  - reg18 for regulator 1V8
-+  - usb33 for the swtich USB3V3
-+
-+Required properties:
-+- compatible: Must be "st,stm32mp1,pwr-reg"
-+- list of child nodes that specify the regulator reg11, reg18 or usb33
-+  initialization data for defined regulators. The definition for each of
-+  these nodes is defined using the standard binding for regulators found at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+- vdd-supply: phandle to the parent supply/regulator node for vdd input
-+- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for usb33
-+
-+Example:
-+
-+pwr_regulators: pwr@50001000 {
-+	compatible = "st,stm32mp1,pwr-reg";
-+	reg = <0x50001000 0x10>;
-+	vdd-supply = <&vdd>;
-+	vdd_3v3_usbfs-supply = <&vdd_usb>;
-+
-+	reg11: reg11 {
-+		regulator-name = "reg11";
-+		regulator-min-microvolt = <1100000>;
-+		regulator-max-microvolt = <1100000>;
-+	};
-+
-+	reg18: reg18 {
-+		regulator-name = "reg18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	usb33: usb33 {
-+		regulator-name = "usb33";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
+diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+index e434b26d4c8b..222d593d76a2 100644
+--- a/drivers/regulator/stm32-pwr.c
++++ b/drivers/regulator/stm32-pwr.c
+@@ -32,7 +32,7 @@ enum {
+ 	STM32PWR_REG_NUM_REGS
+ };
+ 
+-u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
++static u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
+ 	[PWR_REG11] = REG_1_1_RDY,
+ 	[PWR_REG18] = REG_1_8_RDY,
+ 	[PWR_USB33] = USB_3_3_RDY,
+@@ -44,7 +44,7 @@ struct stm32_pwr_reg {
+ 	u32 ready_mask;
+ };
+ 
+-int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
++static int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
+ {
+ 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
+ 	u32 val;
+@@ -54,7 +54,7 @@ int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
+ 	return (val & priv->ready_mask);
+ }
+ 
+-int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
++static int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
+ {
+ 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
+ 	u32 val;
 -- 
 2.20.1
 
