@@ -2,147 +2,124 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994ADC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E021EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 660BF206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:53:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FztyFW/z"
+	by mail.kernel.org (Postfix) with ESMTP id B94CE2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfDZKxr (ORCPT
+        id S1726423AbfDZKyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:53:47 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33589 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfDZKxq (ORCPT
+        Fri, 26 Apr 2019 06:54:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47838 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725971AbfDZKyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:53:46 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s18so3886639wrp.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 03:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zTcRffH+OP25VLBj/71rHSWXaB0aejUmWK4Jls7WRp0=;
-        b=FztyFW/zQzlWc6KBY/Mj3dm4YzjbHfyb+uAd06e03Rw8HcBc6Z40Q4FZd70arwvLyS
-         D2e/92UQkPqhR3Rvex6w0MdmfzWhvXyFDeWbLILBTDmy7PHL+qBmf4ohMeOhwjMIqEfX
-         3CZG3nO9kjZJFcY5lIqvDPAdsNBdCHhbNVnYXq+PUojlOrIXd9NiuZrUpdU7NR7xBG5K
-         +LMDCa2960xeGhmFWqamvioHJWiumXrMwyg9yM5I0xzBoIGoAaMtvjVOsfVqJwnj4Mrf
-         LJsnrHbihD9XzY5LANzkAKg/HyV3k5LQcCpOkGRf/2eRFEviXs6C95994Kk7EVlycs7/
-         qBkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zTcRffH+OP25VLBj/71rHSWXaB0aejUmWK4Jls7WRp0=;
-        b=JJlsxjyjJyBx094g+qG8nB/zEd4o4iLotCQavzARMNzu7TWTG1hcQ9csl3hBi+PpFi
-         Rnesy87c/Uo9WMqc0ohjw5leVn5pOInFa3OSeR48ye6IHFXVUCRVNYSon8TOtPqyGf6v
-         zQPyGZlDX6cQBiOz4bnjrhhx51BlI/i5p2smnot+l9afwTLaVKWSP7/1lJVeaFhH0ZIq
-         aP9vpTYVrSB8rDCDRnAZ5vGA2MGMaiXcKo4pKgp0PwXFI862UQchwH58YV3hLr4U4a0q
-         QrHZ3q/G5hI4jxi35XQ1CCDSzGMTGhkKsNPkrmhQrUVgohU7XzEkwuXnkW4A32caRQln
-         VTHw==
-X-Gm-Message-State: APjAAAXvW1DGZlQcAldYU0CX51g8oHk0qbnlPVGQlTn8m7RlWTt3K56Z
-        sZ3V6YPYhSoRwfiDRjr87ipSKw==
-X-Google-Smtp-Source: APXvYqxElEL8y25CqmBsoORNTlRTBgdCUoXSFlCRqcjK82BkRlsKqvPa9diiWN541VJLtR6RyBC3tw==
-X-Received: by 2002:a5d:484d:: with SMTP id n13mr6979159wrs.219.1556276024829;
-        Fri, 26 Apr 2019 03:53:44 -0700 (PDT)
-Received: from apalos (ppp-94-66-229-5.home.otenet.gr. [94.66.229.5])
-        by smtp.gmail.com with ESMTPSA id 17sm22661117wrk.91.2019.04.26.03.53.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 03:53:44 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 13:53:41 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>
-Subject: Re: [RFC PATCH v3 net-next 03/11] net: ethernet: ti: cpsw: ale: add
- functions to modify VLANs/MDBs
-Message-ID: <20190426105341.GA22373@apalos>
-References: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
- <1556144667-27997-4-git-send-email-grygorii.strashko@ti.com>
- <20190426104156.GA2796@khorivan>
+        Fri, 26 Apr 2019 06:54:14 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QAnK3C063637
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 06:54:13 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s3y20mqk7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 06:54:13 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Fri, 26 Apr 2019 11:54:11 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 26 Apr 2019 11:54:08 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3QAs7Bd62259300
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Apr 2019 10:54:07 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4344DA4055;
+        Fri, 26 Apr 2019 10:54:07 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF611A404D;
+        Fri, 26 Apr 2019 10:54:06 +0000 (GMT)
+Received: from [9.145.15.72] (unknown [9.145.15.72])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 26 Apr 2019 10:54:06 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH] KVM: s390: vsie: Return correct values for Invalid CRYCB
+ format
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        borntraeger@de.ibm.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com
+References: <1556269201-22918-1-git-send-email-pmorel@linux.ibm.com>
+ <0fa39d6a-f74e-e0b7-ded9-948d1576a2b9@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Fri, 26 Apr 2019 12:54:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426104156.GA2796@khorivan>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <0fa39d6a-f74e-e0b7-ded9-948d1576a2b9@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042610-0008-0000-0000-000002E07270
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042610-0009-0000-0000-0000224CCF9C
+Message-Id: <024bb479-a731-5372-2832-108e0670950d@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904260076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ivan,
+On 26/04/2019 11:07, David Hildenbrand wrote:
+> On 26.04.19 11:00, Pierre Morel wrote:
+>> Let's use the correct validity number.
+>>
+>> Fixes: 55ded154b43 "KVM: s390: vsie: Allow CRYCB FORMAT-2"
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>> ---
+>>   arch/s390/kvm/vsie.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
+>> index ac411e9..076090f 100644
+>> --- a/arch/s390/kvm/vsie.c
+>> +++ b/arch/s390/kvm/vsie.c
+>> @@ -344,7 +344,7 @@ static int shadow_crycb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
+>>   end:
+>>   	switch (ret) {
+>>   	case -EINVAL:
+>> -		return set_validity_icpt(scb_s, 0x0020U);
+>> +		return set_validity_icpt(scb_s, 0x0022U);
+>>   	case -EFAULT:
+>>   		return set_validity_icpt(scb_s, 0x0035U);
+>>   	case -EACCES:
+>>
+> 
+> Can't verify
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+> 
 
-> >}
-> >
-> >+static int cpsw_ale_read_mc(struct cpsw_ale *ale, u8 *addr, int flags, u16 vid)
-> See below.
-> 
-Yes
-> >+{
-> >+	u32 ale_entry[ALE_ENTRY_WORDS] = {0, 0, 0};
-> >+	int idx;
-> >+
-> >+	idx = cpsw_ale_match_addr(ale, addr, (flags & ALE_VLAN) ? vid : 0);
-> >+	if (idx >= 0)
-> >+		cpsw_ale_read(ale, idx, ale_entry);
-> >+
-> >+	return cpsw_ale_get_port_mask(ale_entry, ale->port_mask_bits);
-> >+}
-> >+
-> >+int cpsw_ale_mcast_add_modify(struct cpsw_ale *ale, u8 *addr, int port_mask,
-> >+			      int flags, u16 vid, int mcast_state)
-> >+{
-> >+	int mcast_members, ret;
-> >+
-> >+	mcast_members = cpsw_ale_read_mc(ale, addr, flags, vid) | port_mask;
-> >+	ret = cpsw_ale_add_mcast(ale, addr, mcast_members, flags, vid,
-> >+				 mcast_state);
-> By fact, cpsw_ale_add_mcast() is doing modify itself already, just name is
-> different.
-> 
-> These 3 func duplicate the existent functionality as result code is done twice.
-> Better remove/combine them and rename existent ones, like:
-> cpsw_ale_add_mcast() -> cpsw_ale_add_mcast_modify()
-> cpsw_ale_del_mcast() -> cpsw_ale_del_mcast_modify()
-> 
-Yes this is correct. The reason the duplication exists is that this was
-originally coded on top of the current cpsw code. So i didn't want to change any
-part of the working driver. 
-Since we are re-working a bunch of stuff now this makes sense
+Thanks.
 
-> >+
-> >+	return ret;
-> >+}
-> >+
-> >+int cpsw_ale_mcast_del_modify(struct cpsw_ale *ale, u8 *addr, int port_mask,
-> >+			      int flags, u16 vid)
-> See above.
-and yes :)
-> 
-> >+{
-> >+	int mcast_members, ret;
-> >+	int idx;
-> >+
-> >+	mcast_members = cpsw_ale_read_mc(ale, addr, flags, vid) & ~port_mask;
-> >+	idx = cpsw_ale_match_addr(ale, addr, (flags & ALE_VLAN) ? vid : 0);
-> >+	if (idx < 0)
-> >+		return 0;
-> >+	ret = cpsw_ale_del_mcast(ale, addr, mcast_members, flags, vid);
-> >+
-> >+	return ret;
-> >+}
-> >+
- 
-Regards,
-/Ilias
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
