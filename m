@@ -1,506 +1,168 @@
-Return-Path: <SRS0=Q+aa=S3=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F8AC43219
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 23:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A30EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3170F206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Apr 2019 23:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4112084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="W+HVh7RP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="POxsyX3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfDYXpI (ORCPT
+        id S1728125AbfDZAAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 19:45:08 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44896 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbfDYXpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 19:45:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=+epMkkTIdBesI+xKCz7WPR5F1WpbDFFTioyHX0i/CWA=; b=W+HVh7RPmlgWKoHYjEonKCcSgu
-        UdPoQv6cUrWYtWHRZ/2sZMvgOvzp3VCugkLmWK6Y+tcLsblShlKyFRoWDyuwmOSQGtxw/1VHI42NL
-        Ur88XGqs8X51disuKY95bfzIbQYp80uNm/COe6Q3ksE64uwWXJQeoBV2EWgyqo08fP8E=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hJo31-0002Yc-Q1; Fri, 26 Apr 2019 01:44:59 +0200
-Date:   Fri, 26 Apr 2019 01:44:59 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>
-Subject: Re: [RFC PATCH v3 net-next 07/11] net: ethernet: ti: cpsw: introduce
- cpsw switch driver based on switchdev
-Message-ID: <20190425234459.GB4041@lunn.ch>
-References: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
- <1556144667-27997-8-git-send-email-grygorii.strashko@ti.com>
+        Thu, 25 Apr 2019 20:00:42 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39857 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfDZAAm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 20:00:42 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q10so1223280ljc.6;
+        Thu, 25 Apr 2019 17:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Xopw6scoY8m69fGtQCLNxKBU4lVmXTJmtD/S5txEm8w=;
+        b=POxsyX3lPLAOzigv0zF0gMxbogHXm6apiwkxGZpgZegq1cdTZknM8TsxshClJM64o4
+         V/BGr57OiHHV3jOFVkfS/af4V+uGWrlabZsrKY7TDW1UKZzsjNHT1wQCHhteMwuiVCT3
+         pykmf38z56NYDPpR4D7M9dZaL0XEO/sLzWhwlhrFvTJMwKv71DYXMb9oNwSReWpenTlI
+         dxsIJicarRltZ80m/SrdWywXB6Nu0vxu3Q8A4T28/qE4WJNpMHnWi0WaKfKyBqEZ4h+x
+         ex0cNJp+CqfSDs3QcO4eYuJqaMgprjsE4Wz/jjwEw+7Lzns9KPPVq9RXM9ssXqlE+FAh
+         chvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xopw6scoY8m69fGtQCLNxKBU4lVmXTJmtD/S5txEm8w=;
+        b=YRxBuDyLl/hDcf+op/e6JDTAhevJbzlVDXzqC/pRFFk37nxnSUYxWwDLAMdKBiUGbU
+         P1YPiXK+8NLrWqUu8TjPt4hJqwlQKQGc/OJUQ/fESIuXP38rk/bSO3JE2XpV7c/Kpc08
+         Djh7H1SF6UTYN2RNIAfs2OFt6bL7Yf9WC3XxPjco4KGwamT8v2nXPXxwzPpPoTKnEe73
+         gzL19qqLrkIYNNg/ftJkU5xzrYiLNvcxutLp5hNCftfRAbW8yTFuXTdqVUEj8e7oO20C
+         ZPvbvYoyzJ0Zpr+DgxGipiQxW5w9SPRGde+3/8HtaYMnwRFjeLAEBjvT7cMXMXA1HR/Y
+         /Igg==
+X-Gm-Message-State: APjAAAVHIBLzv7hUW2nwahlbgEyGuKmtF49iCPp/+2HwuFZ/CQNQa5Of
+        rs461TH64jd1uq6eHhiqzyQ=
+X-Google-Smtp-Source: APXvYqzlZFunU266yZ4pdZvz52IUxSs+hesamVoPNnAMxJhgsO23ZBhTFgWZyowIGHidvZoPhr6UrA==
+X-Received: by 2002:a2e:9941:: with SMTP id r1mr7162693ljj.168.1556236839893;
+        Thu, 25 Apr 2019 17:00:39 -0700 (PDT)
+Received: from mobilestation ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id m23sm4893350ljh.93.2019.04.25.17.00.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 25 Apr 2019 17:00:38 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 03:00:36 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
+Message-ID: <20190426000035.yfonfvrapmm4j3fg@mobilestation>
+References: <20190423224748.3765-1-fancer.lancer@gmail.com>
+ <20190423224748.3765-5-fancer.lancer@gmail.com>
+ <20190424224343.4skr727fszycwksq@pburton-laptop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556144667-27997-8-git-send-email-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190424224343.4skr727fszycwksq@pburton-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +#include <linux/of_net.h>
-> +#include <linux/of_device.h>
-> +#include <linux/if_vlan.h>
-> +#include <linux/kmemleak.h>
+On Wed, Apr 24, 2019 at 10:43:48PM +0000, Paul Burton wrote:
+> Hi Serge,
+> 
+> On Wed, Apr 24, 2019 at 01:47:40AM +0300, Serge Semin wrote:
+> > The reserved_end variable had been used by the bootmem_init() code
+> > to find a lowest limit of memory available for memmap blob. The original
+> > code just tried to find a free memory space higher than kernel was placed.
+> > This limitation seems justified for the memmap ragion search process, but
+> > I can't see any obvious reason to reserve the unused space below kernel
+> > seeing some platforms place it much higher than standard 1MB.
+> 
+> There are 2 reasons I'm aware of:
+> 
+>  1) Older systems generally had something like an ISA bus which used
+>     addresses below the kernel, and bootloaders like YAMON left behind
+>     functions that could be called right at the start of RAM. This sort
+>     of thing should be accounted for by /memreserve/ in DT or similar
+>     platform-specific reservations though rather than generically, and
+>     at least Malta & SEAD-3 DTs already have /memreserve/ entries for
+>     it. So this part I think is OK. Some other older platforms might
+>     need updating, but that's fine.
+> 
 
-Interesting
+Regarding ISA. As far as I remember devices on that bus can DMA only to the
+lowest 16MB. So in case if kernel is too big or placed pretty much high,
+they may be left even without reachable memory at all in current
+implementation.
 
-> +
-> +static int debug_level;
-> +module_param(debug_level, int, 0);
-> +MODULE_PARM_DESC(debug_level, "cpsw debug level (NETIF_MSG bits)");
+>  2) trap_init() only allocates memory for the exception vector if using
+>     a vectored interrupt mode. In other cases it just uses CAC_BASE
+>     which currently gets reserved as part of this region between
+>     PHYS_OFFSET & _text.
+> 
+>     I think this behavior is bogus, and we should instead:
+> 
+>     - Allocate the exception vector memory using memblock_alloc() for
+>       CPUs implementing MIPSr2 or higher (ie. CPUs with a programmable
+>       EBase register). If we're not using vectored interrupts then
+>       allocating one page will do, and we already have the size
+>       calculation for if we are.
+> 
+>     - Otherwise use CAC_BASE but call memblock_reserve() on the first
+>       page.
+> 
+>     I think we should make that change before this one goes in. I can
+>     try to get to it tomorrow, but feel free to beat me to it.
+> 
 
-One of my usual moans. Module parameters are bad. You have
-.set_msglevel and .get_msglevel so you can probably remove this.
+As far as I understood you and the code this should be enough to fix
+the problem:
+diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
+index 98ca55d62201..f680253e2617 100644
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -2326,6 +2326,8 @@ void __init trap_init(void)
+ 				ebase += (read_c0_ebase() & 0x3ffff000);
+ 			}
+ 		}
++
++		memblock_reserve(ebase, PAGE_SIZE);
+ 	}
+ 
+ 	if (cpu_has_mmips) {
+---
 
-> +static int ale_ageout = CPSW_ALE_AGEOUT_DEFAULT;
-> +static int rx_packet_max = CPSW_MAX_PACKET_SIZE;
-> +static int descs_pool_size = CPSW_CPDMA_DESCS_POOL_SIZE_DEFAULT;
-> +
-> +struct cpsw_switchdev_event_work {
-> +	struct work_struct work;
-> +	struct switchdev_notifier_fdb_info fdb_info;
-> +	struct cpsw_priv *priv;
-> +	unsigned long event;
-> +};
-> +
-> +static void cpsw_set_promiscious(struct net_device *ndev, bool enable)
-> +{
-> +	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
-> +	bool enable_uni = false;
-> +	int i;
-> +
-> +	if (cpsw->br_members)
-> +		return;
-> +
-> +	/* Enabling promiscuous mode for one interface will be
-> +	 * common for both the interface as the interface shares
-> +	 * the same hardware resource.
-> +	 */
-> +	for (i = 0; i < cpsw->data.slaves; i++)
-> +		if (cpsw->slaves[i].ndev &&
-> +		    (cpsw->slaves[i].ndev->flags & IFF_PROMISC))
-> +			enable_uni = true;
-> +
-> +	if (!enable && enable_uni) {
-> +		enable = enable_uni;
-> +		dev_err(cpsw->dev, "promiscuity not disabled as the other interface is still in promiscuity mode\n");
+Allocation has already been implemented in the if-branch under the
+(cpu_has_veic || cpu_has_vint) condition. So we don't need to change
+there anything.
+In case if vectored interrupts aren't supported the else-clause is
+taken and we need to reserve whatever is set in the exception base
+address variable.
 
-dev_err seems a bit heavy for this. I don't think a warning is needed
-at all. Yes, you receiver more traffic than you would expect, but
-linux should just throw it away and there should not be a problem.
+I'll add this patch between 3d and 4th ones if you are ok with it.
 
-> +	}
-> +
-> +	if (enable) {
-> +		/* Enable unknown unicast, reg/unreg mcast */
-> +		cpsw_ale_control_set(cpsw->ale, HOST_PORT_NUM,
-> +				     ALE_P0_UNI_FLOOD, 1);
-> +
-> +		dev_dbg(cpsw->dev, "promiscuity enabled\n");
-> +	} else {
-> +		/* Disable unknown unicast */
-> +		cpsw_ale_control_set(cpsw->ale, HOST_PORT_NUM,
-> +				     ALE_P0_UNI_FLOOD, 0);
-> +		dev_dbg(cpsw->dev, "promiscuity disabled\n");
-> +	}
-> +}
-> +
+-Sergey
 
-> +static void cpsw_rx_handler(void *token, int len, int status)
-> +{
-> +	struct sk_buff *skb = token;
-> +	struct cpsw_common *cpsw;
-> +	struct net_device *ndev;
-> +	struct sk_buff *new_skb;
-> +	struct cpsw_priv *priv;
-> +	struct cpdma_chan *ch;
-> +	int ret = 0, port;
-> +
-> +	ndev = skb->dev;
-> +	cpsw = ndev_to_cpsw(ndev);
-> +
-> +	port = CPDMA_RX_SOURCE_PORT(status);
-> +	if (port) {
-> +		ndev = cpsw->slaves[--port].ndev;
-> +		skb->dev = ndev;
-> +	}
-> +
-> +	if (unlikely(status < 0) || unlikely(!netif_running(ndev))) {
-> +		/* In dual emac mode check for all interfaces */
-> +		if (cpsw->usage_count && status >= 0) {
-> +			/* The packet received is for the interface which
-> +			 * is already down and the other interface is up
-> +			 * and running, instead of freeing which results
-> +			 * in reducing of the number of rx descriptor in
-> +			 * DMA engine, requeue skb back to cpdma.
-> +			 */
-> +			new_skb = skb;
-> +			goto requeue;
-> +		}
-> +
-> +		/* the interface is going down, skbs are purged */
-> +		dev_kfree_skb_any(skb);
-> +		return;
-> +	}
-> +
-> +	priv = netdev_priv(ndev);
-> +	if (cpsw->br_members)
-> +		skb->offload_fwd_mark = 1;
-> +
-> +	new_skb = netdev_alloc_skb_ip_align(ndev, cpsw->rx_packet_max);
-> +	if (new_skb) {
-> +		skb_copy_queue_mapping(new_skb, skb);
-> +		skb_put(skb, len);
-> +		if (status & CPDMA_RX_VLAN_ENCAP)
-> +			cpsw_rx_vlan_encap(skb);
-> +		if (priv->rx_ts_enabled)
-> +			cpts_rx_timestamp(cpsw->cpts, skb);
-> +		skb->protocol = eth_type_trans(skb, ndev);
-> +		netif_receive_skb(skb);
-> +		ndev->stats.rx_bytes += len;
-> +		ndev->stats.rx_packets++;
-> +		kmemleak_not_leak(new_skb);
-
-It would be good to add some comments here. Maybe new_skb is not the
-best of names? If i understand correctly, it is a buffer that will
-refill the slot in the DMA channel made by the packet just received?
-But this code looks complicated because you are maxing refill with
-received packet processing. It might be more readable if you could
-separate these two out.
-
-And cpsw is the only network driver which uses
-kmemleak_not_leak(new_skb). Since it is unique, it would be good to
-comment why it is needed.
-
-> +	} else {
-> +		ndev->stats.rx_dropped++;
-> +		new_skb = skb;
-> +	}
-> +
-> +requeue:
-> +	if (netif_dormant(ndev)) {
-> +		dev_kfree_skb_any(new_skb);
-> +		return;
-> +	}
-> +
-> +	ch = cpsw->rxv[skb_get_queue_mapping(new_skb)].ch;
-> +	ret = cpdma_chan_submit(ch, new_skb, new_skb->data,
-> +				skb_tailroom(new_skb), 0);
-> +	if (WARN_ON(ret < 0))
-> +		dev_kfree_skb_any(new_skb);
-> +}
-> +
-
-> +static int cpsw_ndo_vlan_rx_add_vid(struct net_device *ndev,
-> +				    __be16 proto, u16 vid)
-> +{
-> +	struct cpsw_priv *priv = netdev_priv(ndev);
-> +	struct cpsw_common *cpsw = priv->cpsw;
-> +	int ret, i;
-> +
-> +	if (cpsw->bridge_mask)
-> +		dev_warn(cpsw->dev, ".ndo_vlan_rx_add_vid called in switch mode\n");
-> +
-> +	if (vid == cpsw->data.default_vlan)
-> +		return 0;
-> +
-> +	ret = pm_runtime_get_sync(cpsw->dev);
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(cpsw->dev);
-> +		return ret;
-> +	}
-> +
-> +	/* In dual EMAC, reserved VLAN id should not be used for
-> +	 * creating VLAN interfaces as this can break the dual
-> +	 * EMAC port separation
-> +	 */
-> +	if (!cpsw->br_members)
-> +		for (i = 0; i < cpsw->data.slaves; i++) {
-> +			if (cpsw->slaves[i].ndev &&
-> +			    vid == cpsw->slaves[i].port_vlan) {
-> +				ret = -EINVAL;
-> +				goto err;
-> +			}
-> +		}
-> +
-> +	dev_info(priv->dev, "Adding vlanid %d to vlan filter\n", vid);
-
-dev_dbg?
-
-> +	ret = cpsw_add_vlan_ale_entry(priv, vid);
-> +err:
-> +	pm_runtime_put(cpsw->dev);
-> +	return ret;
-> +}
-> +
-> +static void cpsw_init_stp_ale_entry(struct cpsw_common *cpsw)
-> +{
-> +	char stpa[] = {0x01, 0x80, 0xc2, 0x0, 0x0, 0x0};
-
-It seems like there should be a global for this. How are BDPU built?
-
-> +
-> +	cpsw_ale_add_mcast(cpsw->ale, stpa,
-> +			   ALE_PORT_HOST, ALE_SUPER, 0,
-> +			   ALE_MCAST_BLOCK_LEARN_FWD);
-> +}
-> +
-> +static void cpsw_adjust_link(struct net_device *ndev)
-> +{
-> +	struct cpsw_priv *priv = netdev_priv(ndev);
-> +	struct cpsw_common *cpsw = priv->cpsw;
-> +	struct cpsw_slave *slave;
-> +	struct phy_device *phy;
-> +	bool link = false;
-> +	u32 mac_control = 0;
-> +
-> +	slave = &cpsw->slaves[priv->emac_port - 1];
-> +	phy = slave->phy;
-
-Hurray, a phydev per port, not the odd things the old driver does :-)
-
-
-> +
-> +	if (!phy)
-> +		return;
-> +
-> +	if (phy->link) {
-> +		mac_control = CPSW_SL_CTL_GMII_EN;
-> +
-> +		if (phy->speed == 1000)
-> +			mac_control |= CPSW_SL_CTL_GIG;
-> +		if (phy->duplex)
-> +			mac_control |= CPSW_SL_CTL_FULLDUPLEX;
-> +
-> +		/* set speed_in input in case RMII mode is used in 100Mbps */
-> +		if (phy->speed == 100)
-> +			mac_control |= CPSW_SL_CTL_IFCTL_A;
-> +		/* in band mode only works in 10Mbps RGMII mode */
-> +		else if ((phy->speed == 10) && phy_interface_is_rgmii(phy))
-> +			mac_control |= CPSW_SL_CTL_EXT_EN; /* In Band mode */
-> +
-> +		if (priv->rx_pause)
-> +			mac_control |= CPSW_SL_CTL_RX_FLOW_EN;
-> +
-> +		if (priv->tx_pause)
-> +			mac_control |= CPSW_SL_CTL_TX_FLOW_EN;
-> +
-> +		if (mac_control != slave->mac_control)
-> +			cpsw_sl_ctl_set(slave->mac_sl, mac_control);
-> +
-> +		/* enable forwarding */
-> +		cpsw_ale_control_set(cpsw->ale, priv->emac_port,
-> +				     ALE_PORT_STATE, ALE_PORT_STATE_FORWARD);
-> +
-> +		link = true;
-> +
-> +		/* TODO:
-> +		 * if (priv->shp_cfg_speed &&
-> +		 *   priv->shp_cfg_speed != slave->phy->speed &&
-> +		 *   !cpsw_shp_is_off(priv))
-> +		 *	dev_warn(priv->dev,
-> +		 *	 "Speed was changed, CBS shaper speeds are changed!");
-> +		 */
-> +	} else {
-> +		mac_control = 0;
-> +		/* disable forwarding */
-> +		cpsw_ale_control_set(cpsw->ale, priv->emac_port,
-> +				     ALE_PORT_STATE, ALE_PORT_STATE_DISABLE);
-> +
-> +		cpsw_sl_wait_for_idle(slave->mac_sl, 100);
-> +
-> +		cpsw_sl_ctl_reset(slave->mac_sl);
-> +	}
-> +
-> +	if (mac_control != slave->mac_control)
-> +		phy_print_status(phy);
-> +
-> +	slave->mac_control = mac_control;
-> +
-> +	if (link) {
-
-Why not phy->link?
-
-> +		if (cpsw_need_resplit(cpsw))
-> +			cpsw_split_res(cpsw);
-> +
-> +		if (netif_running(ndev))
-> +			netif_tx_wake_all_queues(ndev);
-> +	} else {
-> +		netif_tx_stop_all_queues(ndev);
-> +	}
-
-netif_tx_stop_all_queues() and netif_tx_wake_all_queues() are pretty
-unusual in adjust_link(). In fact, i don't remember seeing them used
-here. It would be good to comment why they are needed.
-
-> +}
-> +
-> +static int cpsw_set_pauseparam(struct net_device *ndev,
-> +			       struct ethtool_pauseparam *pause)
-> +{
-> +	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
-> +	struct cpsw_priv *priv = netdev_priv(ndev);
-> +
-> +	priv->rx_pause = pause->rx_pause ? true : false;
-> +	priv->tx_pause = pause->tx_pause ? true : false;
-> +
-> +	return phy_restart_aneg(cpsw->slaves[priv->emac_port - 1].phy);
-
-This looks wrong. You need to tell the PHY about the new pause
-settings before restarting.
-
-> +}
-> +
-> +static int cpsw_probe_dt(struct cpsw_common *cpsw)
-> +{
-> +	struct device_node *node = cpsw->dev->of_node, *tmp_node, *port_np;
-> +	struct cpsw_platform_data *data = &cpsw->data;
-> +	struct device *dev = cpsw->dev;
-> +	int ret;
-> +	u32 prop;
-> +
-> +	if (!node)
-> +		return -EINVAL;
-> +
-> +	tmp_node = of_get_child_by_name(node, "ports");
-> +	if (!tmp_node)
-> +		return -ENOENT;
-> +	data->slaves = of_get_child_count(tmp_node);
-> +	if (data->slaves < CPSW_SLAVE_PORTS_NUM)
-> +		return -ENOENT;
-
-So it is O.K. to have more than CPSW_SLAVE_PORTS_NUM slaves?
-
-> +	of_node_put(tmp_node);
-> +
-> +	data->active_slave = 0;
-> +	data->channels = CPSW_MAX_QUEUES;
-> +	data->ale_entries = CPSW_ALE_NUM_ENTRIES;
-> +	data->dual_emac = 1;
-> +	data->bd_ram_size = CPSW_BD_RAM_SIZE;
-> +	data->mac_control = 0;
-> +
-> +	data->slave_data = devm_kcalloc(dev, CPSW_SLAVE_PORTS_NUM,
-> +					sizeof(struct cpsw_slave_data),
-> +					GFP_KERNEL);
-> +	if (!data->slave_data)
-> +		return -ENOMEM;
-> +
-> +	/* Populate all the child nodes here...
-> +	 */
-> +	ret = devm_of_platform_populate(dev);
-> +	/* We do not want to force this, as in some cases may not have child */
-> +	if (ret)
-> +		dev_warn(dev, "Doesn't have any child node\n");
-> +
-> +	tmp_node = of_get_child_by_name(node, "ports");
-
-You have done this once before? Why do it again?
-
-> +	if (!tmp_node)
-> +		return -ENOENT;
-> +
-
-> +static int cpsw_create_ports(struct cpsw_common *cpsw)
-> +{
-> +	struct cpsw_platform_data *data = &cpsw->data;
-> +	struct device *dev = cpsw->dev;
-> +	struct net_device *ndev, *napi_ndev = NULL;
-> +	struct cpsw_priv *priv;
-> +	int ret = 0, i = 0;
-> +
-> +	for (i = 0; i < cpsw->data.slaves; i++) {
-> +		struct cpsw_slave_data *slave_data = &data->slave_data[i];
-> +
-> +		if (slave_data->disabled)
-> +			continue;
-> +
-> +		ndev = devm_alloc_etherdev_mqs(dev, sizeof(struct cpsw_priv),
-> +					       CPSW_MAX_QUEUES,
-> +					       CPSW_MAX_QUEUES);
-> +		if (!ndev) {
-> +			dev_err(dev, "error allocating net_device\n");
-> +			return -ENOMEM;
-> +		}
-> +
-> +		priv = netdev_priv(ndev);
-> +		priv->cpsw = cpsw;
-> +		priv->ndev = ndev;
-> +		priv->dev  = dev;
-> +		priv->msg_enable = netif_msg_init(debug_level, CPSW_DEBUG);
-> +		priv->emac_port = i + 1;
-> +
-> +		if (is_valid_ether_addr(slave_data->mac_addr)) {
-> +			ether_addr_copy(priv->mac_addr, slave_data->mac_addr);
-> +			dev_info(cpsw->dev, "cpsw: Detected MACID = %pM\n",
-> +				 priv->mac_addr);
-> +		} else {
-> +			eth_random_addr(slave_data->mac_addr);
-> +			dev_info(cpsw->dev, "cpsw: Random MACID = %pM\n",
-> +				 priv->mac_addr);
-> +		}
-> +		ether_addr_copy(ndev->dev_addr, slave_data->mac_addr);
-> +		ether_addr_copy(priv->mac_addr, slave_data->mac_addr);
-> +
-> +		cpsw->slaves[i].ndev = ndev;
-> +
-> +		ndev->features |= NETIF_F_HW_VLAN_CTAG_FILTER |
-> +				  NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_NETNS_LOCAL;
-> +
-> +		ndev->netdev_ops = &cpsw_netdev_ops;
-> +		ndev->ethtool_ops = &cpsw_ethtool_ops;
-> +		SET_NETDEV_DEV(ndev, dev);
-> +
-> +		if (!napi_ndev) {
-> +			netif_napi_add(ndev, &cpsw->napi_rx,
-> +				       cpsw->quirk_irq ?
-> +				       cpsw_rx_poll : cpsw_rx_mq_poll,
-> +				       CPSW_POLL_WEIGHT);
-> +			netif_tx_napi_add(ndev, &cpsw->napi_tx,
-> +					  cpsw->quirk_irq ?
-> +					  cpsw_tx_poll : cpsw_tx_mq_poll,
-> +					  CPSW_POLL_WEIGHT);
-> +		}
-
-I don't know much about NAPI. Does this mean the two slaves are
-sharing one NAPI instance?
-
-> +
-> +		/* register the network device */
-> +		ret = register_netdev(ndev);
-> +		if (ret) {
-> +			dev_err(dev, "cpsw: err registering net device%d\n", i);
-> +			cpsw->slaves[i].ndev = NULL;
-> +			return ret;
-> +		}
-> +		napi_ndev = ndev;
-> +	}
-> +
-> +	return ret;
-> +}
-
-  Andrew
+> Thanks,
+>     Paul
