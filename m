@@ -2,51 +2,52 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDC5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5194FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95E3212F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0D421479
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:13:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VaMMF9tj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PwGzKxwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbfDZRMv (ORCPT
+        id S1726544AbfDZRNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 13:12:51 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37382 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfDZRMv (ORCPT
+        Fri, 26 Apr 2019 13:13:00 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47730 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfDZRM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 13:12:51 -0400
+        Fri, 26 Apr 2019 13:12:57 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3QHCjR6105144;
-        Fri, 26 Apr 2019 12:12:45 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3QHCrlW072438;
+        Fri, 26 Apr 2019 12:12:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556298765;
-        bh=Bz4Ll7VXb7oya22ulDFsqlTo5sCT9i/aXgS9BcVlP0Q=;
-        h=From:To:CC:Subject:Date;
-        b=VaMMF9tjBdC5TZp5kcv53+GMs3IL9pKxWx6ICJcuwWNpSwQlIrOx/yWGGB9c5S4JU
-         2AW8KmO/1doSO+rXfCw6jBsco8eBPH0+vSGD6HBZs/xLX4K1Y5p33IOosquTTf4isZ
-         xfxJLsw0LzxITndf+yEzOHZbUdalddTAtLwq/xEY=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3QHCjJe029555
+        s=ti-com-17Q1; t=1556298773;
+        bh=hCuf3Uiz/AsLm5/G1pS3m+C5sg9iKfKUfjlQJUQubwI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=PwGzKxwVYOSpqW+HaM8ypeGIRpvwvtLfo9q2IX7i5IMGXmcE+CjSc7MMHoL9z/a3D
+         IH9xq+g4bkRXKiNWohwLLLKDrAJNxd/6G1GUX5G3mJo8DfVwds16kybpEDZxBQAE8q
+         6ycjwkb+qDXSueeXb/3nqIjsjbF5ouObkreTY7sg=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3QHCri5029611
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Apr 2019 12:12:45 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 26 Apr 2019 12:12:53 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 26
- Apr 2019 12:12:45 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 12:12:53 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 26 Apr 2019 12:12:45 -0500
+ Frontend Transport; Fri, 26 Apr 2019 12:12:53 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3QHCilT090997;
-        Fri, 26 Apr 2019 12:12:44 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3QHCpZh117788;
+        Fri, 26 Apr 2019 12:12:52 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     <netdev@vger.kernel.org>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
@@ -57,10 +58,12 @@ CC:     Florian Fainelli <f.fainelli@gmail.com>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         Murali Karicheri <m-karicheri2@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v2 00/20] net: ethernet: ti: clean up and optimizations
-Date:   Fri, 26 Apr 2019 20:12:22 +0300
-Message-ID: <1556298762-8632-1-git-send-email-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 04/20] net: ethernet: ti: cpsw: update cpsw_split_res() to accept cpsw_common
+Date:   Fri, 26 Apr 2019 20:12:26 +0300
+Message-ID: <1556298762-8632-5-git-send-email-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556298762-8632-1-git-send-email-grygorii.strashko@ti.com>
+References: <1556298762-8632-1-git-send-email-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -69,92 +72,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Update cpsw_split_res() to accept struct cpsw_common instead of
+struct net_device to simplify code.
 
-This is a preparation series for introducing new switchbase TI CPSW driver which
-was originally introduced [1][2] by Ilias Apalodimas <ilias.apalodimas@linaro.org> 
-and also discussed in private mails and at Netdev x13 confernce.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/cpsw.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-Following discussions and suggestions (mostly by Andrew and Ivan) we going
-to introduce the new driver which is operating in dual-emac mode
-by default, thus working as 2 individual network interfaces.
-When both interfaces joined the bridge - CPSW driver will enter a switch
-mode and discard dual_mac configuration. The CPSW will be switched back
-to dual_mac mode if any port leaves the bridge. All configuration is going to be
-implemented via switchdev API.
-
-Hence overall change is already very big I'm sending prerequisite patches which
-are mostly minor fixes/clean ups and code refactoring to separate common parts
-to be reused by both drivers.
-Probably the most serious change from functional point of view is Patch 11.
-
-These patches were NFS boot tetested on TI AM335x/AM437x/AM5xx boards.
-
-These patches can be found at:
- git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
- branch: lkml-5.1-cpsw-clean-up-v2
-
-changes in v2:
-- added new patch 16 to get rid of force type conversation
-- other chages metioned in patches
-
-Grygorii Strashko (20):
-  net: ethernet: ti: convert to SPDX license identifiers
-  net: ethernet: ti: cpsw: drop TI_DAVINCI_CPDMA config option
-  net: ethernet: ti: cpsw: drop CONFIG_TI_CPSW_ALE config option
-  net: ethernet: ti: cpsw: update cpsw_split_res() to accept cpsw_common
-  net: ethernet: ti: cpsw: use local var dev in probe
-  net: ethernet: ti: cpsw: drop pinctrl_pm_select_default_state call
-  net: ethernet: ti: cpsw: use devm_alloc_etherdev_mqs()
-  net: ethernet: ti: cpsw: drop cpsw_tx_packet_submit()
-  net: ethernet: ti: ale: fix mcast super setting
-  net: ethernet: ti: ale: use define for host port in
-    cpsw_ale_set_allmulti()
-  net: ethernet: ti: cpsw: fix allmulti cfg in dual_mac mode
-  net: ethernet: ti: ale: do not auto delete mcast super entries
-  net: ethernet: ti: davinci_mdio: use devm_ioremap()
-  net: ethernet: ti: cpsw: refactor probe to group common hw
-    initialization
-  net: ethernet: ti: cpsw: move cpsw definitions in priv header
-  net: ethernet: ti: davinci_cpdma: use dma_addr_t for desc_mem_phys and
-    desc_hw_addr
-  net: ethernet: ti: cpsw: move common hw init code in separate func
-  net: ethernet: ti: cpsw: introduce mac sl module api
-  net: ethernet: ti: cpsw: switch to use mac sl api
-  net: ethernet: ti: cpsw: move ethtool func in separate file
-
- drivers/net/ethernet/ti/Kconfig          |   19 -
- drivers/net/ethernet/ti/Makefile         |    9 +-
- drivers/net/ethernet/ti/cpmac.c          |   14 +-
- drivers/net/ethernet/ti/cpsw-common.c    |   12 +-
- drivers/net/ethernet/ti/cpsw-phy-sel.c   |    9 +-
- drivers/net/ethernet/ti/cpsw.c           | 1530 +++-------------------
- drivers/net/ethernet/ti/cpsw.h           |    9 +-
- drivers/net/ethernet/ti/cpsw_ale.c       |   55 +-
- drivers/net/ethernet/ti/cpsw_ale.h       |   12 +-
- drivers/net/ethernet/ti/cpsw_ethtool.c   |  719 ++++++++++
- drivers/net/ethernet/ti/cpsw_priv.c      |  132 ++
- drivers/net/ethernet/ti/cpsw_priv.h      |  429 ++++++
- drivers/net/ethernet/ti/cpsw_sl.c        |  328 +++++
- drivers/net/ethernet/ti/cpsw_sl.h        |   73 ++
- drivers/net/ethernet/ti/cpts.c           |   14 +-
- drivers/net/ethernet/ti/cpts.h           |   14 +-
- drivers/net/ethernet/ti/davinci_cpdma.c  |   37 +-
- drivers/net/ethernet/ti/davinci_cpdma.h  |   13 +-
- drivers/net/ethernet/ti/davinci_emac.c   |   16 +-
- drivers/net/ethernet/ti/davinci_mdio.c   |   19 +-
- drivers/net/ethernet/ti/netcp.h          |   10 +-
- drivers/net/ethernet/ti/netcp_core.c     |   10 +-
- drivers/net/ethernet/ti/netcp_ethss.c    |   10 +-
- drivers/net/ethernet/ti/netcp_sgmii.c    |    9 +-
- drivers/net/ethernet/ti/netcp_xgbepcsr.c |    9 +-
- 25 files changed, 1870 insertions(+), 1641 deletions(-)
- create mode 100644 drivers/net/ethernet/ti/cpsw_ethtool.c
- create mode 100644 drivers/net/ethernet/ti/cpsw_priv.c
- create mode 100644 drivers/net/ethernet/ti/cpsw_priv.h
- create mode 100644 drivers/net/ethernet/ti/cpsw_sl.c
- create mode 100644 drivers/net/ethernet/ti/cpsw_sl.h
-
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 1c04c16e279b..13a339c64892 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -963,11 +963,9 @@ static void cpsw_rx_handler(void *token, int len, int status)
+ 		dev_kfree_skb_any(new_skb);
+ }
+ 
+-static void cpsw_split_res(struct net_device *ndev)
++static void cpsw_split_res(struct cpsw_common *cpsw)
+ {
+-	struct cpsw_priv *priv = netdev_priv(ndev);
+ 	u32 consumed_rate = 0, bigest_rate = 0;
+-	struct cpsw_common *cpsw = priv->cpsw;
+ 	struct cpsw_vector *txv = cpsw->txv;
+ 	int i, ch_weight, rlim_ch_num = 0;
+ 	int budget, bigest_rate_ch = 0;
+@@ -1341,7 +1339,7 @@ static void cpsw_adjust_link(struct net_device *ndev)
+ 
+ 	if (link) {
+ 		if (cpsw_need_resplit(cpsw))
+-			cpsw_split_res(ndev);
++			cpsw_split_res(cpsw);
+ 
+ 		netif_carrier_on(ndev);
+ 		if (netif_running(ndev))
+@@ -2107,7 +2105,7 @@ static int cpsw_ndo_stop(struct net_device *ndev)
+ 	for_each_slave(priv, cpsw_slave_stop, cpsw);
+ 
+ 	if (cpsw_need_resplit(cpsw))
+-		cpsw_split_res(ndev);
++		cpsw_split_res(cpsw);
+ 
+ 	cpsw->usage_count--;
+ 	pm_runtime_put_sync(cpsw->dev);
+@@ -2594,7 +2592,7 @@ static int cpsw_ndo_set_tx_maxrate(struct net_device *ndev, int queue, u32 rate)
+ 		netdev_get_tx_queue(slave->ndev, queue)->tx_maxrate = rate;
+ 	}
+ 
+-	cpsw_split_res(ndev);
++	cpsw_split_res(cpsw);
+ 	return ret;
+ }
+ 
+@@ -3063,7 +3061,7 @@ static int cpsw_set_channels(struct net_device *ndev,
+ 	}
+ 
+ 	if (cpsw->usage_count)
+-		cpsw_split_res(ndev);
++		cpsw_split_res(cpsw);
+ 
+ 	ret = cpsw_resume_data_pass(ndev);
+ 	if (!ret)
+@@ -3698,7 +3696,7 @@ static int cpsw_probe(struct platform_device *pdev)
+ 	netif_tx_napi_add(ndev, &cpsw->napi_tx,
+ 			  cpsw->quirk_irq ? cpsw_tx_poll : cpsw_tx_mq_poll,
+ 			  CPSW_POLL_WEIGHT);
+-	cpsw_split_res(ndev);
++	cpsw_split_res(cpsw);
+ 
+ 	/* register the network device */
+ 	SET_NETDEV_DEV(ndev, &pdev->dev);
 -- 
 2.17.1
 
