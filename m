@@ -7,56 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521D8C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8B0C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163E92084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A723206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271830;
-	bh=0qSyMZ3LFMDD9caeHToAgg55cmdb4bu0JA6O+lwFr7o=;
+	s=default; t=1556271838;
+	bh=z7jl4q+Sz0t+e1M8+Mf9R0KwnwHIR4tHvwSzs8HTemg=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ArpN6QhvVTGfMQFKc8v7vi4x+SYJKxZOpVMLNvXrMrvP9XuM06KYWNx0LdEUTc+mo
-	 EULOM5X3ZWE6SYTI9J92a4lFh6a2Tgl8ceZ/X9wJZhOEdmmC79xXU1C/GUwu4/mXms
-	 rPPAwgKUTN+7H7K2GLZozvDjGbBvOQzHWFaknQhk=
+	b=XKj9p9yI8wYmaaybQFdRRXS6y423uGP5l9flu178WKf4qwmpwK63EIwf7gj94HsVw
+	 TnYpJO9qeYBMTjSxnHPhZWh6v+5vBQH8GpAtEJ7PskJ5jjk4cmRGc3mp6y6Tk4ujte
+	 cmrz6Qto07j9eqC2VUcDuhw7ODnytgG6RAG0cVDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfDZJka (ORCPT
+        id S1726429AbfDZJn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:40:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45648 "EHLO
+        Fri, 26 Apr 2019 05:43:57 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45610 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfDZJk1 (ORCPT
+        with ESMTP id S1726406AbfDZJk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:40:27 -0400
+        Fri, 26 Apr 2019 05:40:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=fMI9Dp2SBKbFSrNSbSE2OMeX54Fzqze4r1Hb9eok2oM=; b=t5p4IG1EJnEo
-        3D7/rNKsH92O6eOMEhZeLWYqDlLVz7gRH0C6BmN9OQHFGZ97sifE2AWWGU1bQjjKxZmpM+WDSqNBQ
-        1TMs1TuA2aqJbdYdPSK9tOFdS0fKLWyuY+n8/EjtxCOz8NbauBH9HRWCxBVSaEHcRXOMnENd8Olhu
-        E+sDc=;
+        List-Archive; bh=xyrB61ZcsA7w8QQMNTNsT4INetcMTolXtVi1jB7Rq/8=; b=GtA0Bl5VRBLR
+        qAFBD0HucvTP/8Av/wiTwVIOkVhhdGcAeQXVO3qH6kavXkebELIThWJh3LnDIBMqVOfICYUY7ENXN
+        /VHlARMkmPGuZ+0tuIvAnjFoPLpEPpjb/WZCmEWDAZteyLHKTOE5on2oXgGA02+3q5uWEyvQhgeiu
+        mQFLc=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxL7-0003Hy-2F; Fri, 26 Apr 2019 09:40:17 +0000
+        id 1hJxL7-0003Hx-C8; Fri, 26 Apr 2019 09:40:17 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 0ECB7441D3F; Fri, 26 Apr 2019 10:40:16 +0100 (BST)
+        id 80440441D3E; Fri, 26 Apr 2019 10:40:15 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Chenglin Xu <chenglin.xu@mediatek.com>,
-        Chen Zhong <chen.zhong@mediatek.com>,
-        Flora Fu <flora.fu@mediatek.com>,
-        Henry Chen <henryc.chen@mediatek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: mt63xx: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: <20190421022656.5838-1-axel.lin@ingics.com>
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     broonie@kernel.org, jorge.ramirez-ortiz@linaro.org,
+        khasim.mohammed@linaro.org, lgirdwood@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: core: do not report EPROBE_DEFER as error but as debug" to the regulator tree
+In-Reply-To: <20190417192443.6501-1-jorge.ramirez-ortiz@linaro.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094016.0ECB7441D3F@finisterre.ee.mobilebroadband>
+Message-Id: <20190426094015.80440441D3E@finisterre.ee.mobilebroadband>
 Date:   Fri, 26 Apr 2019 10:40:15 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -65,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: mt63xx: Switch to SPDX identifier
+   regulator: core: do not report EPROBE_DEFER as error but as debug
 
 has been applied to the regulator tree at
 
@@ -90,139 +88,48 @@ to this mail.
 Thanks,
 Mark
 
-From fe669cb95ebb711161c27ba063f08ad20d55e761 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Sun, 21 Apr 2019 10:26:56 +0800
-Subject: [PATCH] regulator: mt63xx: Switch to SPDX identifier
+From b9816363c0e82f4cd8f9be8153fbc5b81b22911c Mon Sep 17 00:00:00 2001
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Date: Wed, 17 Apr 2019 21:24:43 +0200
+Subject: [PATCH] regulator: core: do not report EPROBE_DEFER as error but as
+ debug
 
-Convert MediaTek mt63xx PMIC drivers to SPDX identifier.
+Temporary failures to get a regulator (EPROBE_DEFER) should be logged
+as debug information instead of errors.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/mt6311-regulator.c | 17 ++++-------------
- drivers/regulator/mt6311-regulator.h | 10 +---------
- drivers/regulator/mt6323-regulator.c | 12 ++++--------
- drivers/regulator/mt6380-regulator.c | 17 ++++-------------
- drivers/regulator/mt6397-regulator.c | 17 ++++-------------
- 5 files changed, 17 insertions(+), 56 deletions(-)
+ drivers/regulator/core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/mt6311-regulator.c b/drivers/regulator/mt6311-regulator.c
-index 01d69f43d2b0..af95449d3590 100644
---- a/drivers/regulator/mt6311-regulator.c
-+++ b/drivers/regulator/mt6311-regulator.c
-@@ -1,16 +1,7 @@
--/*
-- * Copyright (c) 2015 MediaTek Inc.
-- * Author: Henry Chen <henryc.chen@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2015 MediaTek Inc.
-+// Author: Henry Chen <henryc.chen@mediatek.com>
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 5a9ebcf7fe7a..08ccabe07fe3 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -4345,8 +4345,6 @@ int regulator_bulk_get(struct device *dev, int num_consumers,
+ 						      consumers[i].supply);
+ 		if (IS_ERR(consumers[i].consumer)) {
+ 			ret = PTR_ERR(consumers[i].consumer);
+-			dev_err(dev, "Failed to get supply '%s': %d\n",
+-				consumers[i].supply, ret);
+ 			consumers[i].consumer = NULL;
+ 			goto err;
+ 		}
+@@ -4355,6 +4353,13 @@ int regulator_bulk_get(struct device *dev, int num_consumers,
+ 	return 0;
  
- #include <linux/err.h>
- #include <linux/gpio.h>
-diff --git a/drivers/regulator/mt6311-regulator.h b/drivers/regulator/mt6311-regulator.h
-index 5218db46a798..4904d6751714 100644
---- a/drivers/regulator/mt6311-regulator.h
-+++ b/drivers/regulator/mt6311-regulator.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015 MediaTek Inc.
-  * Author: Henry Chen <henryc.chen@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
+ err:
++	if (ret != -EPROBE_DEFER)
++		dev_err(dev, "Failed to get supply '%s': %d\n",
++			consumers[i].supply, ret);
++	else
++		dev_dbg(dev, "Failed to get supply '%s', deferring\n",
++			consumers[i].supply);
++
+ 	while (--i >= 0)
+ 		regulator_put(consumers[i].consumer);
  
- #ifndef __MT6311_REGULATOR_H__
-diff --git a/drivers/regulator/mt6323-regulator.c b/drivers/regulator/mt6323-regulator.c
-index 25b002328910..893ea190788a 100644
---- a/drivers/regulator/mt6323-regulator.c
-+++ b/drivers/regulator/mt6323-regulator.c
-@@ -1,11 +1,7 @@
--/*
-- * Copyright (c) 2016 MediaTek Inc.
-- * Author: Chen Zhong <chen.zhong@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2016 MediaTek Inc.
-+// Author: Chen Zhong <chen.zhong@mediatek.com>
- 
- #include <linux/module.h>
- #include <linux/of.h>
-diff --git a/drivers/regulator/mt6380-regulator.c b/drivers/regulator/mt6380-regulator.c
-index 86bc332df3f2..b6aed090b5e0 100644
---- a/drivers/regulator/mt6380-regulator.c
-+++ b/drivers/regulator/mt6380-regulator.c
-@@ -1,16 +1,7 @@
--/*
-- * Copyright (c) 2017 MediaTek Inc.
-- * Author: Chenglin Xu <chenglin.xu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2017 MediaTek Inc.
-+// Author: Chenglin Xu <chenglin.xu@mediatek.com>
- 
- #include <linux/module.h>
- #include <linux/of.h>
-diff --git a/drivers/regulator/mt6397-regulator.c b/drivers/regulator/mt6397-regulator.c
-index 3e6c8d99ec0f..fd9ed864a0c1 100644
---- a/drivers/regulator/mt6397-regulator.c
-+++ b/drivers/regulator/mt6397-regulator.c
-@@ -1,16 +1,7 @@
--/*
-- * Copyright (c) 2014 MediaTek Inc.
-- * Author: Flora Fu <flora.fu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (c) 2014 MediaTek Inc.
-+// Author: Flora Fu <flora.fu@mediatek.com>
- 
- #include <linux/module.h>
- #include <linux/of.h>
 -- 
 2.20.1
 
