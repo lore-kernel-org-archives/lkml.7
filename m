@@ -2,111 +2,78 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD0FC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED2EC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C27A2206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E77D2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bazxwUXf";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Vcrlu8NI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vHWqPAFF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfDZN43 (ORCPT
+        id S1726268AbfDZN6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:56:29 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48338 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfDZN41 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:56:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5EDB460770; Fri, 26 Apr 2019 13:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556286986;
-        bh=4FBBQRmUGuacHR6BqyvmerXZQsx6ZmHXRFdrwfWhthU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bazxwUXfHNF/bY6VOTy9kj4c9XDacMo/bK0bNM2iXhGV2mpVN/4FJrTNadjmjgQ3d
-         oYV8Pc7zrWA0zRoCt2Sj7FR//6C67wUx4rUP8h4fqEtO5nqxI8e6KJLQWLUokTcF7F
-         teLGQRM9S/DDXGETBYM+ucery+41unt8GNi0XwjA=
-Received: from c-hbandi-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: c-hbandi@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B667860770;
-        Fri, 26 Apr 2019 13:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556286985;
-        bh=4FBBQRmUGuacHR6BqyvmerXZQsx6ZmHXRFdrwfWhthU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vcrlu8NIMIeeTlUo60Zxlg4pt1ObH6lJu/vQiD7dCSf42zXi0LYxVfwpHMLCV2D80
-         DQQYUmxzNMBWf0a8kEZ5X61KDGRrFfCYEvuvaon6f8AXtGJTdKxuGTi0cucaZDVGaE
-         LIYXlnvQj7QFPxHSep6cnKhUMeu9QZM5zgBJm0XQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B667860770
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=c-hbandi@codeaurora.org
-From:   Harish Bandi <c-hbandi@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        anubhavg@codeaurora.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Harish Bandi <c-hbandi@codeaurora.org>
-Subject: [PATCH v8 2/2] dt-bindings: net: bluetooth: Add device tree bindings for QTI chip WCN3998
-Date:   Fri, 26 Apr 2019 19:26:02 +0530
-Message-Id: <1556286962-3132-3-git-send-email-c-hbandi@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556286962-3132-1-git-send-email-c-hbandi@codeaurora.org>
-References: <1556286962-3132-1-git-send-email-c-hbandi@codeaurora.org>
+        Fri, 26 Apr 2019 09:58:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45475 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbfDZN6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 09:58:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=uF9JbU/4qZ7cxPBDHX2EQMipbgYm5jplX+Xg36xsS5M=; b=vHWqPAFFVe84j/lGWR+pv2Rvky
+        CfRU9Rastk6A+w9yOKS9Iz+0ueNhtznV+tPDKvEVP2S87MpuaP195R0UymBLz3kotHlfOt0GHdf7b
+        uIuTQupjdCt9peIhU1zioOQTIMSxqS8+BMCSdL6DDiWADYagaVYjxdpuDp2eMkW4v/k8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hK1Mq-0000wp-9l; Fri, 26 Apr 2019 15:58:20 +0200
+Date:   Fri, 26 Apr 2019 15:58:20 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Esben Haabendal <esben@geanix.com>
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Yang Wei <yang.wei9@zte.com.cn>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 02/12] net: ll_temac: Extend support to non-device-tree
+ platforms
+Message-ID: <20190426135820.GE14432@lunn.ch>
+References: <20190426073231.4008-1-esben@geanix.com>
+ <20190426073231.4008-3-esben@geanix.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426073231.4008-3-esben@geanix.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add compatible string for the Qualcomm WCN3998 Bluetooth controller
+On Fri, Apr 26, 2019 at 09:32:21AM +0200, Esben Haabendal wrote:
+> Support initialization with platdata, so the driver can be used on
+> non-device-tree platforms.
+> 
+> For currently supported device-tree platforms, the driver should behave
+> as before.
+> 
+> Signed-off-by: Esben Haabendal <esben@geanix.com>
+> ---
+>  drivers/net/ethernet/xilinx/ll_temac.h      |   3 +
+>  drivers/net/ethernet/xilinx/ll_temac_main.c | 187 +++++++++++++++++++---------
+>  drivers/net/ethernet/xilinx/ll_temac_mdio.c |  23 +++-
+>  include/linux/xilinx_ll_temac.h             |  18 +++
 
-Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes in V7:
-- Added robh reviewed by tag in commit text
----
- Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Hi Esben
 
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index 824c0e2..7ef6118 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -11,20 +11,21 @@ Required properties:
-  - compatible: should contain one of the following:
-    * "qcom,qca6174-bt"
-    * "qcom,wcn3990-bt"
-+   * "qcom,wcn3998-bt"
- 
- Optional properties for compatible string qcom,qca6174-bt:
- 
-  - enable-gpios: gpio specifier used to enable chip
-  - clocks: clock provided to the controller (SUSCLK_32KHZ)
- 
--Required properties for compatible string qcom,wcn3990-bt:
-+Required properties for compatible string qcom,wcn399x-bt:
- 
-  - vddio-supply: VDD_IO supply regulator handle.
-  - vddxo-supply: VDD_XO supply regulator handle.
-  - vddrf-supply: VDD_RF supply regulator handle.
-  - vddch0-supply: VDD_CH0 supply regulator handle.
- 
--Optional properties for compatible string qcom,wcn3990-bt:
-+Optional properties for compatible string qcom,wcn399x-bt:
- 
-  - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Please place platform data include files in include/linux/platform_data/
 
+Thanks
+	Andrew
