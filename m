@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC4DC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B64FC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F1D208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF68208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQVzfXvt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q470hKxC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfD0Gnc (ORCPT
+        id S1726786AbfD0Gnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:43:32 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41594 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726580AbfD0Gn3 (ORCPT
+        Sat, 27 Apr 2019 02:43:35 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44684 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbfD0Gnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:43:29 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 188so2748264pfd.8;
-        Fri, 26 Apr 2019 23:43:28 -0700 (PDT)
+        Sat, 27 Apr 2019 02:43:32 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y12so2555205plk.11;
+        Fri, 26 Apr 2019 23:43:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QhBGq/JNavwlurWIVFo7GWw2xI+63VIDOiZrYQv9auY=;
-        b=kQVzfXvt7w7FyD24D6OW7cca/iq64cXIdYieWuyKwNk+RlpS1Vrvzmoacb3ff7XKNz
-         uSrIDJVnl0StI02S4mDmT9/orsTdFCLqxairNBVJHpFQOlVF+P545I79O3XIMap7MmNx
-         B+eyRkbN1Pn1P8cvmN/nIG6h/QsEeRGGk823Xen9FH/1q+TdS2le7wdgc7mk51khO50a
-         FM2ov6bJpTRs8rPyT3sOey+TdqaV/ShHovsU9ChNEC3Nj8Fx8yLDbxMu7UkHtsd0HXsr
-         xXsGi8x4xGLugp1QRQm3EmYH1Hg5T8pmM4cIqX1ra4UyE2ICcBAtQsttpAyF860DV5oa
-         hYYA==
+        bh=03x8MyH4ONo6RL8TDAuJcYQYBUTk8Xfu5EMEl5vv8zs=;
+        b=Q470hKxCA0zkhL+IQMRmPe5UQg42Gi+l2RRmW947taZyL//Jesf10pqg7iknajn5cM
+         6MahwRUBormFC9ROtXZzOCBPO1osFE8XuHCncIgLvsCHxLcNuXntyLIPTNUxNKWwnbuS
+         YivKpxFXT45f055xbj7gqKyZeZCL6izznlo4y+QcynGiNpgPJSJn6cIDoQUEWR8q3NIV
+         QQ28y5mhdxTCv3ZGyzW3vgvH+5eRIAil3M9uo1sFkym+2/eXjUEbYhGGuoRIn6PGQ204
+         szqozT+L1TEHgWXr+gjrabBNVx0fQWsxwFBogU0RCWe7qqaev2wbboj0cmVtOcpDQP9M
+         I7SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=QhBGq/JNavwlurWIVFo7GWw2xI+63VIDOiZrYQv9auY=;
-        b=ma9Y8FXXvDZcw5/LdPc3nI4VWFxI2Nb5kLBN/Icuti7FD1lfNL+mT4AOm76TyHryH6
-         mVA8ukX3EloI6nVpe4N9Ob00eiJUMaFHMDHL610XwZSgUb+TmQtbh5uordWJO5gCovfe
-         uRYlPI3W5O5pT5fA7MeTOQF9rk4eP5RwzRKhZNbj5Rf7wVWL+iDsIZhAGew3czPQ3uJF
-         F63/zREKcnDLmh4zoXxfj9lCg+ZBFioBjbkswGTZ52F2ngmzYkb8yhxwtQREvXzio6Uy
-         ONm0hfoqzGXTf5oFBCq3Uru5Tx1GPumBw+jJ/xt2Avv6mNMBTBqJo2kC147xlF1KEkwp
-         IPAA==
-X-Gm-Message-State: APjAAAX+6WbHVmZIFhQoBME5o5rfIpHsfQisxCoajCAzB0LPs6lvo4fD
-        fQojgaxVzrT0AjD55ahe330=
-X-Google-Smtp-Source: APXvYqzGKQmON9BzHH89UmuJkvJzJbwysA6AfztkU3vJ+XbGjoeBhsjpEhkWgnx/yazqn7g52/ieFg==
-X-Received: by 2002:a63:5466:: with SMTP id e38mr48658719pgm.340.1556347407789;
-        Fri, 26 Apr 2019 23:43:27 -0700 (PDT)
+        bh=03x8MyH4ONo6RL8TDAuJcYQYBUTk8Xfu5EMEl5vv8zs=;
+        b=kFXVFkmMXdfC7/oyY9p08Z7JSxqpYcZyQXqA7qOk+GmXBUx4XCdSEEQfabP3VDscEw
+         XYUiOpAJ9qgVsjuTMWBMF9dWTB3eR2EPG0o5HsYFGm2RuWy18KBoMpjPk/W6Q55gDUEZ
+         /yXEcJpM1vWwfKgdtB0VcVDqwtCCJKkhKdSWsIEBoMb21Gx1RbanstNE+Lq4Ff1GTgn1
+         4LSgoBV2TwgzPwS/07KkaCpObWFVjW+EqHTaz3DpZlmpShydFKvbr0khcvp6TPbF6AI7
+         F1lk3ftEh3U0kyTyhKvLVIqEJs0rGzAN3HiqvR+LaXxZZatwK0M+uM31woJamc7Asa0J
+         n58w==
+X-Gm-Message-State: APjAAAVYmRZkXlb/YFXP4ss3DSpub5Jw2FTlBbGOVhXXbBvN1/5Y3gGr
+        8ToK/3zPdRmEHoKNHgIv8mY=
+X-Google-Smtp-Source: APXvYqwS9mBb6vrC0DhVyMmyRT5ZRdKwezrJErmAVG/FEmt+6AsmQkMSAz9lRez80K2MggQYstDNlg==
+X-Received: by 2002:a17:902:bd0c:: with SMTP id p12mr17355851pls.50.1556347411683;
+        Fri, 26 Apr 2019 23:43:31 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.26
+        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 23:43:27 -0700 (PDT)
+        Fri, 26 Apr 2019 23:43:31 -0700 (PDT)
 From:   nadav.amit@gmail.com
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -71,11 +71,11 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
         will.deacon@arm.com, ard.biesheuvel@linaro.org,
         kristen@linux.intel.com, deneen.t.dock@intel.com,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH v6 16/24] mm: Make hibernate handle unmapped pages
-Date:   Fri, 26 Apr 2019 16:22:55 -0700
-Message-Id: <20190426232303.28381-17-nadav.amit@gmail.com>
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH v6 19/24] bpf: Use vmalloc special flag
+Date:   Fri, 26 Apr 2019 16:22:58 -0700
+Message-Id: <20190426232303.28381-20-nadav.amit@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426232303.28381-1-nadav.amit@gmail.com>
 References: <20190426232303.28381-1-nadav.amit@gmail.com>
@@ -86,151 +86,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 
-Make hibernate handle unmapped pages on the direct map when
-CONFIG_ARCH_HAS_SET_ALIAS is set. These functions allow for setting pages
-to invalid configurations, so now hibernate should check if the pages have
-valid mappings and handle if they are unmapped when doing a hibernate
-save operation.
+Use new flag VM_FLUSH_RESET_PERMS for handling freeing of special
+permissioned memory in vmalloc and remove places where memory was set RW
+before freeing which is no longer needed. Don't track if the memory is RO
+anymore because it is now tracked in vmalloc.
 
-Previously this checking was already done when CONFIG_DEBUG_PAGEALLOC
-was configured. It does not appear to have a big hibernating performance
-impact. The speed of the saving operation before this change was measured
-as 819.02 MB/s, and after was measured at 813.32 MB/s.
-
-Before:
-[    4.670938] PM: Wrote 171996 kbytes in 0.21 seconds (819.02 MB/s)
-
-After:
-[    4.504714] PM: Wrote 178932 kbytes in 0.22 seconds (813.32 MB/s)
-
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Borislav Petkov <bp@alien8.de>
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/mm/pageattr.c  |  4 ----
- include/linux/mm.h      | 18 ++++++------------
- kernel/power/snapshot.c |  5 +++--
- mm/page_alloc.c         |  7 +++++--
- 4 files changed, 14 insertions(+), 20 deletions(-)
+ include/linux/filter.h | 17 +++--------------
+ kernel/bpf/core.c      |  1 -
+ 2 files changed, 3 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 3574550192c6..daf4d645e537 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -2257,7 +2257,6 @@ int set_direct_map_default_noflush(struct page *page)
- 	return __set_pages_p(page, 1);
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 14ec3bdad9a9..7d3abde3f183 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -20,6 +20,7 @@
+ #include <linux/set_memory.h>
+ #include <linux/kallsyms.h>
+ #include <linux/if_vlan.h>
++#include <linux/vmalloc.h>
+ 
+ #include <net/sch_generic.h>
+ 
+@@ -503,7 +504,6 @@ struct bpf_prog {
+ 	u16			pages;		/* Number of allocated pages */
+ 	u16			jited:1,	/* Is our filter JIT'ed? */
+ 				jit_requested:1,/* archs need to JIT the prog */
+-				undo_set_mem:1,	/* Passed set_memory_ro() checkpoint */
+ 				gpl_compatible:1, /* Is filter GPL compatible? */
+ 				cb_access:1,	/* Is control block accessed? */
+ 				dst_needed:1,	/* Do we need dst entry? */
+@@ -733,27 +733,17 @@ bpf_ctx_narrow_access_ok(u32 off, u32 size, u32 size_default)
+ 
+ static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
+ {
+-	fp->undo_set_mem = 1;
++	set_vm_flush_reset_perms(fp);
+ 	set_memory_ro((unsigned long)fp, fp->pages);
  }
  
--#ifdef CONFIG_DEBUG_PAGEALLOC
- void __kernel_map_pages(struct page *page, int numpages, int enable)
- {
- 	if (PageHighMem(page))
-@@ -2302,11 +2301,8 @@ bool kernel_page_present(struct page *page)
- 	pte = lookup_address((unsigned long)page_address(page), &level);
- 	return (pte_val(*pte) & _PAGE_PRESENT);
- }
--
- #endif /* CONFIG_HIBERNATION */
- 
--#endif /* CONFIG_DEBUG_PAGEALLOC */
--
- int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 				   unsigned numpages, unsigned long page_flags)
- {
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 6b10c21630f5..083d7b4863ed 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2610,37 +2610,31 @@ static inline void kernel_poison_pages(struct page *page, int numpages,
- 					int enable) { }
- #endif
- 
--#ifdef CONFIG_DEBUG_PAGEALLOC
- extern bool _debug_pagealloc_enabled;
--extern void __kernel_map_pages(struct page *page, int numpages, int enable);
- 
- static inline bool debug_pagealloc_enabled(void)
- {
--	return _debug_pagealloc_enabled;
-+	return IS_ENABLED(CONFIG_DEBUG_PAGEALLOC) && _debug_pagealloc_enabled;
- }
- 
-+#if defined(CONFIG_DEBUG_PAGEALLOC) || defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP)
-+extern void __kernel_map_pages(struct page *page, int numpages, int enable);
-+
- static inline void
- kernel_map_pages(struct page *page, int numpages, int enable)
- {
--	if (!debug_pagealloc_enabled())
--		return;
--
- 	__kernel_map_pages(page, numpages, enable);
- }
- #ifdef CONFIG_HIBERNATION
- extern bool kernel_page_present(struct page *page);
- #endif	/* CONFIG_HIBERNATION */
--#else	/* CONFIG_DEBUG_PAGEALLOC */
-+#else	/* CONFIG_DEBUG_PAGEALLOC || CONFIG_ARCH_HAS_SET_DIRECT_MAP */
- static inline void
- kernel_map_pages(struct page *page, int numpages, int enable) {}
- #ifdef CONFIG_HIBERNATION
- static inline bool kernel_page_present(struct page *page) { return true; }
- #endif	/* CONFIG_HIBERNATION */
--static inline bool debug_pagealloc_enabled(void)
+-static inline void bpf_prog_unlock_ro(struct bpf_prog *fp)
 -{
--	return false;
+-	if (fp->undo_set_mem)
+-		set_memory_rw((unsigned long)fp, fp->pages);
 -}
--#endif	/* CONFIG_DEBUG_PAGEALLOC */
-+#endif	/* CONFIG_DEBUG_PAGEALLOC || CONFIG_ARCH_HAS_SET_DIRECT_MAP */
- 
- #ifdef __HAVE_ARCH_GATE_AREA
- extern struct vm_area_struct *get_gate_vma(struct mm_struct *mm);
-diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-index f08a1e4ee1d4..bc9558ab1e5b 100644
---- a/kernel/power/snapshot.c
-+++ b/kernel/power/snapshot.c
-@@ -1342,8 +1342,9 @@ static inline void do_copy_page(long *dst, long *src)
-  * safe_copy_page - Copy a page in a safe way.
-  *
-  * Check if the page we are going to copy is marked as present in the kernel
-- * page tables (this always is the case if CONFIG_DEBUG_PAGEALLOC is not set
-- * and in that case kernel_page_present() always returns 'true').
-+ * page tables. This always is the case if CONFIG_DEBUG_PAGEALLOC or
-+ * CONFIG_ARCH_HAS_SET_DIRECT_MAP is not set. In that case kernel_page_present()
-+ * always returns 'true'.
-  */
- static void safe_copy_page(void *dst, struct page *s_page)
+-
+ static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
  {
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d96ca5bc555b..34a70681a4af 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1131,7 +1131,9 @@ static __always_inline bool free_pages_prepare(struct page *page,
- 	}
- 	arch_free_page(page, order);
- 	kernel_poison_pages(page, 1 << order, 0);
--	kernel_map_pages(page, 1 << order, 0);
-+	if (debug_pagealloc_enabled())
-+		kernel_map_pages(page, 1 << order, 0);
-+
- 	kasan_free_nondeferred_pages(page, order);
++	set_vm_flush_reset_perms(hdr);
+ 	set_memory_ro((unsigned long)hdr, hdr->pages);
+ 	set_memory_x((unsigned long)hdr, hdr->pages);
+ }
  
- 	return true;
-@@ -2001,7 +2003,8 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
- 	set_page_refcounted(page);
+-static inline void bpf_jit_binary_unlock_ro(struct bpf_binary_header *hdr)
+-{
+-	set_memory_rw((unsigned long)hdr, hdr->pages);
+-}
+-
+ static inline struct bpf_binary_header *
+ bpf_jit_binary_hdr(const struct bpf_prog *fp)
+ {
+@@ -789,7 +779,6 @@ void __bpf_prog_free(struct bpf_prog *fp);
  
- 	arch_alloc_page(page, order);
--	kernel_map_pages(page, 1 << order, 1);
-+	if (debug_pagealloc_enabled())
-+		kernel_map_pages(page, 1 << order, 1);
- 	kasan_alloc_pages(page, order);
- 	kernel_poison_pages(page, 1 << order, 1);
- 	set_page_owner(page, order, gfp_flags);
+ static inline void bpf_prog_unlock_free(struct bpf_prog *fp)
+ {
+-	bpf_prog_unlock_ro(fp);
+ 	__bpf_prog_free(fp);
+ }
+ 
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index ff09d32a8a1b..c605397c79f0 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -848,7 +848,6 @@ void __weak bpf_jit_free(struct bpf_prog *fp)
+ 	if (fp->jited) {
+ 		struct bpf_binary_header *hdr = bpf_jit_binary_hdr(fp);
+ 
+-		bpf_jit_binary_unlock_ro(hdr);
+ 		bpf_jit_binary_free(hdr);
+ 
+ 		WARN_ON_ONCE(!bpf_prog_kallsyms_verify_off(fp));
 -- 
 2.17.1
 
