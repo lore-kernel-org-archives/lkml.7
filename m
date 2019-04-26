@@ -2,94 +2,106 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3548DC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51264C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E47CD206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:52:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Xs33s452"
+	by mail.kernel.org (Postfix) with ESMTP id 2A59E206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbfDZOwb (ORCPT
+        id S1726536AbfDZOwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:52:31 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]:34647 "EHLO
-        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfDZOwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:52:31 -0400
-Received: by mail-qt1-f182.google.com with SMTP id j6so4424699qtq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 07:52:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=48zgZZm9rHvCEp1pEqUhC0U3faF4KPhZf7qiHf9zYg0=;
-        b=Xs33s452X6QtzPCMCAtjr0M4pj8fZRIA6lwgvpWwu/cIIYP/lUyae2OIpm6XQLNdKy
-         AWQNsXk+6JWuzUrg6GKOlETU9g2B2AU1vA9bKtiXGdfReOwebMl/ppTKXW2J8Y0dZfke
-         eXBK663QRdQNjUz8h+GoZlZb4zEddEdwng4Y8hUmXSOolJ+rYVzC/OUPSxbF7azdFHa2
-         jR8sYQsEZbSj2OPxHczSLv61il9kWCTO6EAk8jXPZSFIpt8wchRUjbcNC9jGaPa+dPmX
-         v0FQsMmlG4Ik/Tdpqotn/UGz+LGzLLbCmARjsbXN2GOBlVoLTRsehiLvaHRSNtZ+t8XP
-         qa1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=48zgZZm9rHvCEp1pEqUhC0U3faF4KPhZf7qiHf9zYg0=;
-        b=dUPVTH7QL/kgUh7lE2eJMSZzOsGRMyGsAp8g/29kGyuaJALmLMZrCw+jdIHSn/hJpJ
-         vne7PGt+ueXOjEHOC9wy6dD9Erz/895Ok32c0A0SOQBLs3F1RbqN4Dcb6tr3vlqXPCAS
-         cj4yNlWa52YSeq738FohJ9lEjg9yGACDinVMfyHYCyvkawNV8bhH4QIrbcAD8ImgMe1P
-         p5jmqp+Q6nlMN9VoRe7dRY3AafpBwQQbmhEJFnpN5rx4U4sk7+DfEtHdfehnv03UpJL3
-         scBvJm56OAcHHUP8GNKLk7Z+i8cDNWN4JOoPciHx9awEurLr5QRVB6JRBcTU9bXUtZOm
-         kTew==
-X-Gm-Message-State: APjAAAUOhO9tVjH/Ncr/zIK2/zxR9eCDoVRR7GREhmN1YNDklR4ZykUp
-        LeIn5XGmv8UGkPNZpinDDcghZg==
-X-Google-Smtp-Source: APXvYqwAVI9GU8elWrhSomD5TS/PfqIKCx0Zk29tTGQeDfrgZtmKz7RRurmUfZ4VHuVfmHrwY153mw==
-X-Received: by 2002:ac8:379c:: with SMTP id d28mr24803403qtc.91.1556290350226;
-        Fri, 26 Apr 2019 07:52:30 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id g24sm3642158qkm.25.2019.04.26.07.52.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 07:52:29 -0700 (PDT)
-Message-ID: <1556290348.6132.6.camel@lca.pw>
-Subject: "iommu/amd: Set exclusion range correctly" causes smartpqi offline
-From:   Qian Cai <cai@lca.pw>
-To:     jroedel@suse.de
-Cc:     iommu@lists.linux-foundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Fri, 26 Apr 2019 10:52:28 -0400
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 26 Apr 2019 10:52:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43546 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbfDZOwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 10:52:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF53880D;
+        Fri, 26 Apr 2019 07:52:37 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAF503F5C1;
+        Fri, 26 Apr 2019 07:52:35 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 15:52:33 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ard.biesheuvel@linaro.org, julien.thierry@arm.com,
+        marc.zyngier@arm.com, catalin.marinas@arm.com,
+        suzuki.poulose@arm.com, will.deacon@arm.com,
+        christoffer.dall@arm.com, james.morse@arm.com
+Subject: Re: [PATCH v4 3/3] arm64/fpsimd: Don't disable softirq when touching
+ FPSIMD/SVE state
+Message-ID: <20190426145232.GK3567@e103592.cambridge.arm.com>
+References: <20190426143740.31973-1-julien.grall@arm.com>
+ <20190426143740.31973-4-julien.grall@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426143740.31973-4-julien.grall@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applying some memory pressure would causes smartpqi offline even in today's
-linux-next. This can always be reproduced by a LTP test cases [1] or sometimes
-just compiling kernels.
+On Fri, Apr 26, 2019 at 03:37:40PM +0100, Julien Grall wrote:
+> When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
+> the kernel may be able to use FPSIMD/SVE. This is for instance the case
+> for crypto code.
+> 
+> Any use of FPSIMD/SVE in the kernel are clearly marked by using the
+> function kernel_neon_{begin, end}. Furthermore, this can only be used
+> when may_use_simd() returns true.
+> 
+> The current implementation of may_use_simd() allows softirq to use
+> FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
+> When in use, softirqs usually fall back to a software method.
+> 
+> At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
+> when touching the FPSIMD/SVE context. This has the drawback to disable
+> all softirqs even if they are not using FPSIMD/SVE.
+> 
+> Since a softirq is supposed to check may_use_simd() anyway before
+> attempting to use FPSIMD/SVE, there is limited reason to keep softirq
+> disabled when touching the FPSIMD/SVE context. Instead, we can simply
+> disable preemption and mark the FPSIMD/SVE context as in use by setting
+> CPU's kernel_neon_busy flag.
 
-Reverting the commit "iommu/amd: Set exclusion range correctly" fixed the issue.
+fpsimd_context_busy?
 
-[  213.437112] smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT
-domain=0x0000 address=0x1000 flags=0x0000]
-[  213.447659] smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT
-domain=0x0000 address=0x1800 flags=0x0000]
-[  233.362013] smartpqi 0000:23:00.0: controller is offline: status code 0x14803
-[  233.369359] smartpqi 0000:23:00.0: controller offline
-[  233.388915] print_req_error: I/O error, dev sdb, sector 3317352 flags 2000001
-[  233.388921] sd 0:0:0:0: [sdb] tag#95 UNKNOWN(0x2003) Result: hostbyte=0x01
-driverbyte=0x00
-[  233.388931] sd 0:0:0:0: [sdb] tag#95 CDB: opcode=0x2a 2a 00 00 55 89 00 00 01
-08 00
-[  233.389003] Write-error on swap-device (254:1:4474640)
-[  233.389015] Write-error on swap-device (254:1:2190776)
-[  233.389023] Write-error on swap-device (254:1:8351936)
+> Two new helpers {get, put}_cpu_fpsimd_context is introduced to mark the
+> area using FPSIMD/SVE context and uses them in replacement of
 
-[1] /opt/ltp/testcases/bin/mtest01 -p80 -w
+Paragraph mangled during edit?
+
+-> "are introduced ... and they are used to replace ..."
+
+> local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
+> also re-implemented to use the new helpers.
+> 
+> Additionally, double-underscored versions of the helpers are provided to
+> be used in function called with interrupt masked. They are used for
+> sanity and also help to mark place where the FPSIMD context can be
+> manipulate freely.
+
+For the benefit of other readers, this should be more explicit.  Also,
+the distinction between the normal and __ helpers is that the latter
+can be caller with preemption disabled.
+
+To clarify the impact, we can say something like
+
+"These are only relevant on paths where irqs are disabled anyway, so
+they are not needed for correctness in the current code. Let's use them
+anyway though: this marks the critical sections clearly and will help
+to avoid mistakes during future maintenance."
+
+[...]
+
+(Sorry to nitpick)
+
+Cheers
+---Dave
