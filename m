@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1B3C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA02EC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0BE206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99BD5206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271916;
-	bh=pKnw5bX2kgm6adhTcrb5QWg6kn/GApkbivEw+41/awo=;
+	s=default; t=1556271920;
+	bh=4p1Pi4pZsoEPqt9DBJNIZ0iwd/ToTxdJnjDwN0alzl0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=d8Z2Jb9UfKk1n/UJKgKUA7CtWr5przfjHJbNLHChN+IKng2kLiC9MCcrK4HSu/hQL
-	 +DoCoCPIUEokyQHKEratFwo4xIFXxuYRdeFfQRXaI/LZxG+fKHWrmUj5ptblrqDWPA
-	 Xu/2MiO5YP9Rv9dqiUlnsRokxjN9/VTCwj9NtBbk=
+	b=htM6ISwVnP4jLJy/wOJr64RrKXn1WTTzUZpo20UtH+rIfzSt5kj/SnDTPlTpsOjIW
+	 F4NXjukm/qut47bGHMF1d/tAL1fd2NbOmiVSBFptioLYFofOlUe1p2iBN5PSyzll27
+	 BlmRDfO7fI75CgCSXqXPZWDQtKXxSd6lRmnHd+7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfDZJpO (ORCPT
+        id S1727389AbfDZJpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:45:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54052 "EHLO
+        Fri, 26 Apr 2019 05:45:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54170 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbfDZJpN (ORCPT
+        with ESMTP id S1726088AbfDZJpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:45:13 -0400
+        Fri, 26 Apr 2019 05:45:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=+BLQkyGLUZnxrewmUmEBXg5WSq7bdWZ6ieFR2b1QTDA=; b=fEM90vNGrzXn
-        A6cYoHbN4FBku0BY8zezZ2misK7fznmbSGU7LTIx++cWCZfnLSRrUeMm05WIXaA0Pn4+wBFQgusxz
-        w6FJNK9Jp/ACFjm6L+xEqNaIXR6iQ6pwXXjD8tG/F/X6Q4Kpg98uj+lEBwrdf8NTx9AMBIoRjm6sf
-        tOnBs=;
+        List-Archive; bh=q+zwuou8U8DvhcL65NHTR7cDygSOpux/5Y2Z7hQw9JI=; b=CT4VgEwZz+ta
+        3KX3XP8tirmUTO+fBsDZ6BdQj2FF8q8lMU920s0XuZtF2WSr5/Al8XRWK0QIQbZJfZgjxyvpjbRN0
+        M4Yug/HGhNA3iayllEEpV6oDa0rjxRsOiNgror5Gvz02FFH0wbDM1DJDd2L5D8e9Wb7lehGbyoDjM
+        WPV0M=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxPr-0003Qm-4f; Fri, 26 Apr 2019 09:45:11 +0000
+        id 1hJxPv-0003Qv-Ch; Fri, 26 Apr 2019 09:45:15 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 0C90A441D3B; Fri, 26 Apr 2019 10:45:08 +0100 (BST)
+        id 59F54441D3C; Fri, 26 Apr 2019 10:45:03 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: tps6524x: Constify regulator_ops" to the regulator tree
+Subject: Applied "regulator: tps6524x: Remove *rdev[N_REGULATORS] from struct tps6524x" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094508.0C90A441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:45:07 +0100 (BST)
+Message-Id: <20190426094503.59F54441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:45:03 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps6524x: Constify regulator_ops
+   regulator: tps6524x: Remove *rdev[N_REGULATORS] from struct tps6524x
 
 has been applied to the regulator tree at
 
@@ -85,32 +85,55 @@ to this mail.
 Thanks,
 Mark
 
-From 357db0279a230e009d4440db71c497f3360311bc Mon Sep 17 00:00:00 2001
+From 7a8b0e66df5ad04d0acf31d43b37be46504b9fbc Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Sat, 13 Apr 2019 15:30:01 +0800
-Subject: [PATCH] regulator: tps6524x: Constify regulator_ops
+Date: Sat, 13 Apr 2019 15:30:02 +0800
+Subject: [PATCH] regulator: tps6524x: Remove *rdev[N_REGULATORS] from struct
+ tps6524x
 
-The regulator_ops is never changed, make it const.
+Current code is using devm_regulator_register() so we don't need to store
+*rdev for clean up, use a local variable instead.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps6524x-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/tps6524x-regulator.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/regulator/tps6524x-regulator.c b/drivers/regulator/tps6524x-regulator.c
-index 67cac2682f50..c09223c34dbf 100644
+index c09223c34dbf..740aeccdfb1f 100644
 --- a/drivers/regulator/tps6524x-regulator.c
 +++ b/drivers/regulator/tps6524x-regulator.c
-@@ -565,7 +565,7 @@ static int is_supply_enabled(struct regulator_dev *rdev)
- 	return read_field(hw, &info->enable);
- }
+@@ -137,7 +137,6 @@ struct tps6524x {
+ 	struct spi_device	*spi;
+ 	struct mutex		lock;
+ 	struct regulator_desc	desc[N_REGULATORS];
+-	struct regulator_dev	*rdev[N_REGULATORS];
+ };
  
--static struct regulator_ops regulator_ops = {
-+static const struct regulator_ops regulator_ops = {
- 	.is_enabled		= is_supply_enabled,
- 	.enable			= enable_supply,
- 	.disable		= disable_supply,
+ static int __read_reg(struct tps6524x *hw, int reg)
+@@ -584,6 +583,7 @@ static int pmic_probe(struct spi_device *spi)
+ 	const struct supply_info *info = supply_info;
+ 	struct regulator_init_data *init_data;
+ 	struct regulator_config config = { };
++	struct regulator_dev *rdev;
+ 	int i;
+ 
+ 	init_data = dev_get_platdata(dev);
+@@ -616,10 +616,9 @@ static int pmic_probe(struct spi_device *spi)
+ 		config.init_data = init_data;
+ 		config.driver_data = hw;
+ 
+-		hw->rdev[i] = devm_regulator_register(dev, &hw->desc[i],
+-						      &config);
+-		if (IS_ERR(hw->rdev[i]))
+-			return PTR_ERR(hw->rdev[i]);
++		rdev = devm_regulator_register(dev, &hw->desc[i], &config);
++		if (IS_ERR(rdev))
++			return PTR_ERR(rdev);
+ 	}
+ 
+ 	return 0;
 -- 
 2.20.1
 
