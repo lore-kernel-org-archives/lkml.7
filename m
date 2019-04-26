@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847C2C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1025EC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DF62084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73702084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271666;
-	bh=pKnw5bX2kgm6adhTcrb5QWg6kn/GApkbivEw+41/awo=;
+	s=default; t=1556271671;
+	bh=hn73MQcyD3HwgSRtAW0hkIZpbsO2IPc2BPNyqQMhdBE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=US7innqdMc0avAtrkVtgqwxsQ//UVHgqOnGLm+2XzaeF6LvXTaPA7Jc/Js0Onm5o8
-	 2dHioLI06Fd6qHgwI4KwK5DQGi7VriEqvSxoGkJGadwSuFIRdy425SeFJyqZZVSRUq
-	 vnJ2jH6bTnp7kIkvIzDaRdy1XysoiEnj3IjHSDmo=
+	b=2RiV7NVREcWMxEWvnnSNUUTOW9iF26cZG29DBWAGSamgIE1Hsr3xAMjFoIiS5aDit
+	 dG9Oqln+1/iGEaDo8CBPyVIDbfx40f2mvwNctWmBQQsgGPUbMGV5fuwyrB6ue/GJuh
+	 gvoeVCsAGkjTkLlCIoUsBLmAAXHwITSf3jULHaXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfDZJlF (ORCPT
+        id S1726807AbfDZJlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:41:05 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46750 "EHLO
+        Fri, 26 Apr 2019 05:41:02 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46598 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbfDZJlD (ORCPT
+        with ESMTP id S1726757AbfDZJk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:41:03 -0400
+        Fri, 26 Apr 2019 05:40:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=+BLQkyGLUZnxrewmUmEBXg5WSq7bdWZ6ieFR2b1QTDA=; b=d8B7wzpeEq0R
-        zHCq3c+LYU3C2K/KwTzeN2/rbm2S5jWaR30MGsOYzSDPPNACu5qOUtgiJmkgaxB7y5flOOzCWdj06
-        wymFkFpnHzZWM+jsLxIVObdvcw3JctPEN2SrJTjXh/ye+uq2rVS1f1y/jg4psN8bnoEWVX+kINWRw
-        a1r1Y=;
+        List-Archive; bh=6VYLqXUBVRFyKDbu77wjUX5pAGqZzD8tzYGJB7Olpdg=; b=AUmJYZnBvyg3
+        OxmOE18ln0griCsbipUeXlH8AjHr6kmafFuRv17p2+YuXPHWgOYPOa7EbJ03sPQXdJ1Ot0OF7KWWK
+        9nbNnGuZeH4d+SslZlg4k9xI5/KSuZ2Q6w10F/HnFtXacVv+GKprTfoKGXNe/QywaJuGyIqh6+4zI
+        3rqZk=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxLo-0003Kl-Te; Fri, 26 Apr 2019 09:41:01 +0000
+        id 1hJxLj-0003KZ-HP; Fri, 26 Apr 2019 09:40:55 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id D81F9441D3B; Fri, 26 Apr 2019 10:40:59 +0100 (BST)
+        id 8A0F8441D3B; Fri, 26 Apr 2019 10:40:54 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: tps6524x: Constify regulator_ops" to the regulator tree
+Subject: Applied "regulator: max8998: Constify regulator_ops" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094059.D81F9441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:40:59 +0100 (BST)
+Message-Id: <20190426094054.8A0F8441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:40:54 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps6524x: Constify regulator_ops
+   regulator: max8998: Constify regulator_ops
 
 has been applied to the regulator tree at
 
@@ -85,32 +85,51 @@ to this mail.
 Thanks,
 Mark
 
-From 357db0279a230e009d4440db71c497f3360311bc Mon Sep 17 00:00:00 2001
+From 7d695f20c27f33173f2149d4d1c6e994e5c0b08e Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Sat, 13 Apr 2019 15:30:01 +0800
-Subject: [PATCH] regulator: tps6524x: Constify regulator_ops
+Date: Sun, 14 Apr 2019 20:48:17 +0800
+Subject: [PATCH] regulator: max8998: Constify regulator_ops
 
-The regulator_ops is never changed, make it const.
+These regulator_ops variables never need to be modified, make them const so
+compiler can put them to .rodata.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps6524x-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/max8998.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/regulator/tps6524x-regulator.c b/drivers/regulator/tps6524x-regulator.c
-index 67cac2682f50..c09223c34dbf 100644
---- a/drivers/regulator/tps6524x-regulator.c
-+++ b/drivers/regulator/tps6524x-regulator.c
-@@ -565,7 +565,7 @@ static int is_supply_enabled(struct regulator_dev *rdev)
- 	return read_field(hw, &info->enable);
+diff --git a/drivers/regulator/max8998.c b/drivers/regulator/max8998.c
+index 271bb736f3f5..43b69ebd086b 100644
+--- a/drivers/regulator/max8998.c
++++ b/drivers/regulator/max8998.c
+@@ -427,7 +427,7 @@ static int max8998_set_voltage_buck_time_sel(struct regulator_dev *rdev,
+ 	return 0;
  }
  
--static struct regulator_ops regulator_ops = {
-+static const struct regulator_ops regulator_ops = {
- 	.is_enabled		= is_supply_enabled,
- 	.enable			= enable_supply,
- 	.disable		= disable_supply,
+-static struct regulator_ops max8998_ldo_ops = {
++static const struct regulator_ops max8998_ldo_ops = {
+ 	.list_voltage		= regulator_list_voltage_linear,
+ 	.map_voltage		= regulator_map_voltage_linear,
+ 	.is_enabled		= max8998_ldo_is_enabled,
+@@ -437,7 +437,7 @@ static struct regulator_ops max8998_ldo_ops = {
+ 	.set_voltage_sel	= max8998_set_voltage_ldo_sel,
+ };
+ 
+-static struct regulator_ops max8998_buck_ops = {
++static const struct regulator_ops max8998_buck_ops = {
+ 	.list_voltage		= regulator_list_voltage_linear,
+ 	.map_voltage		= regulator_map_voltage_linear,
+ 	.is_enabled		= max8998_ldo_is_enabled,
+@@ -448,7 +448,7 @@ static struct regulator_ops max8998_buck_ops = {
+ 	.set_voltage_time_sel	= max8998_set_voltage_buck_time_sel,
+ };
+ 
+-static struct regulator_ops max8998_others_ops = {
++static const struct regulator_ops max8998_others_ops = {
+ 	.is_enabled		= max8998_ldo_is_enabled,
+ 	.enable			= max8998_ldo_enable,
+ 	.disable		= max8998_ldo_disable,
 -- 
 2.20.1
 
