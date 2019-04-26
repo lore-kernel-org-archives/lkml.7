@@ -7,155 +7,120 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC96C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F50C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5EBC206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8A32084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="u3ZWvJcv"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="v9/eTQvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfDZF74 (ORCPT
+        id S1727226AbfDZGAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 01:59:56 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:4713 "EHLO pegase1.c-s.fr"
+        Fri, 26 Apr 2019 02:00:07 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:58078 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbfDZF7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 01:59:54 -0400
+        id S1727031AbfDZF7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 01:59:52 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44r3Kz3yByz9v1vT;
-        Fri, 26 Apr 2019 07:59:51 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 44r3Kx3Qrqz9v1vR;
+        Fri, 26 Apr 2019 07:59:49 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=u3ZWvJcv; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=v9/eTQvb; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 1eTNAcPJdeIu; Fri, 26 Apr 2019 07:59:51 +0200 (CEST)
+        with ESMTP id KytzTKX3epHx; Fri, 26 Apr 2019 07:59:49 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44r3Kz2hZpz9v1tj;
-        Fri, 26 Apr 2019 07:59:51 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44r3Kx2H4dz9v1tj;
+        Fri, 26 Apr 2019 07:59:49 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556258391; bh=6CbrzkRb9RKVUNX5pyD8e/XjgXIgb01llI2Zcr1ERKw=;
+        t=1556258389; bh=OipMrZEUuXrG7q1MkdWXLM6wO75ULF04/ptA+u0mVgg=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=u3ZWvJcv37/VkU0yMfxSyyQHhGLG/zAcpee88kdokAjyW0dSkYjmQP+7dIA1adkG2
-         B4EBmuOhIBpSTU/u913v/o/14ZZmdmyXQgbkqs0EkNVamte0K+x22ysu3LvXqO3X7H
-         pjEgZ0mwzvKapOgQB818Sgi+XFPXWX7b6FE6LjVs=
+        b=v9/eTQvbMli5CHhjG1vh4UbZzN/3OZMF+3pbJAfmffbPdWRH8istEO7I1bnMAsKGf
+         2DSqsljaCVJBmPjKKYBYTHZLEnKpS+NOEn01W9HxxvdDCz76nIhy1jtUVrUtC3q1wL
+         GwYylaoyc97U6RWwkaZxfOdhlkMbl/JYRFh8IDYY=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4864A8B807;
-        Fri, 26 Apr 2019 07:59:52 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3766B8B807;
+        Fri, 26 Apr 2019 07:59:50 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 5hOiM4u1OHi2; Fri, 26 Apr 2019 07:59:52 +0200 (CEST)
+        with ESMTP id oYjmSiB0reEa; Fri, 26 Apr 2019 07:59:50 +0200 (CEST)
 Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F8858B74C;
-        Fri, 26 Apr 2019 07:59:52 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1D3918B74C;
+        Fri, 26 Apr 2019 07:59:50 +0200 (CEST)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 0AD6E66276; Fri, 26 Apr 2019 05:59:52 +0000 (UTC)
-Message-Id: <52555dbf9b237ac904c8c4c6b7c09c823c867a7b.1556258135.git.christophe.leroy@c-s.fr>
+        id F166E66276; Fri, 26 Apr 2019 05:59:49 +0000 (UTC)
+Message-Id: <5c2f144a4d08e5d21edec4f943c4e3077ab6eb1e.1556258135.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1556258134.git.christophe.leroy@c-s.fr>
 References: <cover.1556258134.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 16/17] powerpc/mm: flatten function __find_linux_pte() step
- 2
+Subject: [PATCH v2 14/17] powerpc/mm: cleanup remaining ifdef mess in
+ hugetlbpage.c
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 26 Apr 2019 05:59:52 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 05:59:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__find_linux_pte() is full of if/else which is hard to
-follow allthough the handling is pretty simple.
+Only 3 subarches support huge pages. So when it is either 2 of them,
+it is not the third one.
 
-Previous patch left { } blocks. This patch removes the first one
-by shifting its content to the left.
+And mmu_has_feature() is known by all subarches so IS_ENABLED() can
+be used instead of #ifdef
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/mm/pgtable.c | 62 +++++++++++++++++++++++------------------------
- 1 file changed, 30 insertions(+), 32 deletions(-)
+ arch/powerpc/mm/hugetlbpage.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-index d332abeedf0a..c1c6d0b79baa 100644
---- a/arch/powerpc/mm/pgtable.c
-+++ b/arch/powerpc/mm/pgtable.c
-@@ -369,39 +369,37 @@ pte_t *__find_linux_pte(pgd_t *pgdir, unsigned long ea,
- 			hpdp = (hugepd_t *)&pud;
- 			goto out_huge;
- 		}
--		{
--			pdshift = PMD_SHIFT;
--			pmdp = pmd_offset(&pud, ea);
--			pmd  = READ_ONCE(*pmdp);
--			/*
--			 * A hugepage collapse is captured by pmd_none, because
--			 * it mark the pmd none and do a hpte invalidate.
--			 */
--			if (pmd_none(pmd))
--				return NULL;
--
--			if (pmd_trans_huge(pmd) || pmd_devmap(pmd)) {
--				if (is_thp)
--					*is_thp = true;
--				ret_pte = (pte_t *) pmdp;
--				goto out;
--			}
--			/*
--			 * pmd_large check below will handle the swap pmd pte
--			 * we need to do both the check because they are config
--			 * dependent.
--			 */
--			if (pmd_huge(pmd) || pmd_large(pmd)) {
--				ret_pte = (pte_t *) pmdp;
--				goto out;
--			}
--			if (is_hugepd(__hugepd(pmd_val(pmd)))) {
--				hpdp = (hugepd_t *)&pmd;
--				goto out_huge;
--			}
--
--			return pte_offset_kernel(&pmd, ea);
-+		pdshift = PMD_SHIFT;
-+		pmdp = pmd_offset(&pud, ea);
-+		pmd  = READ_ONCE(*pmdp);
-+		/*
-+		 * A hugepage collapse is captured by pmd_none, because
-+		 * it mark the pmd none and do a hpte invalidate.
-+		 */
-+		if (pmd_none(pmd))
-+			return NULL;
-+
-+		if (pmd_trans_huge(pmd) || pmd_devmap(pmd)) {
-+			if (is_thp)
-+				*is_thp = true;
-+			ret_pte = (pte_t *)pmdp;
-+			goto out;
-+		}
-+		/*
-+		 * pmd_large check below will handle the swap pmd pte
-+		 * we need to do both the check because they are config
-+		 * dependent.
-+		 */
-+		if (pmd_huge(pmd) || pmd_large(pmd)) {
-+			ret_pte = (pte_t *)pmdp;
-+			goto out;
- 		}
-+		if (is_hugepd(__hugepd(pmd_val(pmd)))) {
-+			hpdp = (hugepd_t *)&pmd;
-+			goto out_huge;
-+		}
-+
-+		return pte_offset_kernel(&pmd, ea);
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index 265bd6d04233..1d5c6ec04351 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -226,7 +226,7 @@ int __init alloc_bootmem_huge_page(struct hstate *h)
+ 	return __alloc_bootmem_huge_page(h);
+ }
+ 
+-#if defined(CONFIG_PPC_FSL_BOOK3E) || defined(CONFIG_PPC_8xx)
++#ifndef CONFIG_PPC_BOOK3S_64
+ #define HUGEPD_FREELIST_SIZE \
+ 	((PAGE_SIZE - sizeof(struct hugepd_freelist)) / sizeof(pte_t))
+ 
+@@ -597,10 +597,10 @@ static int __init hugetlbpage_init(void)
+ 		return 0;
  	}
- out_huge:
- 	if (!hpdp)
+ 
+-#if !defined(CONFIG_PPC_FSL_BOOK3E) && !defined(CONFIG_PPC_8xx)
+-	if (!radix_enabled() && !mmu_has_feature(MMU_FTR_16M_PAGE))
++	if (IS_ENABLED(CONFIG_PPC_BOOK3S_64) && !radix_enabled() &&
++	    !mmu_has_feature(MMU_FTR_16M_PAGE))
+ 		return -ENODEV;
+-#endif
++
+ 	for (psize = 0; psize < MMU_PAGE_COUNT; ++psize) {
+ 		unsigned shift;
+ 		unsigned pdshift;
+@@ -638,10 +638,8 @@ static int __init hugetlbpage_init(void)
+ 			pgtable_cache_add(PTE_INDEX_SIZE);
+ 		else if (pdshift > shift)
+ 			pgtable_cache_add(pdshift - shift);
+-#if defined(CONFIG_PPC_FSL_BOOK3E) || defined(CONFIG_PPC_8xx)
+-		else
++		else if (IS_ENABLED(CONFIG_PPC_FSL_BOOK3E) || IS_ENABLED(CONFIG_PPC_8xx))
+ 			pgtable_cache_add(PTE_T_ORDER);
+-#endif
+ 	}
+ 
+ 	if (IS_ENABLED(HUGETLB_PAGE_SIZE_VARIABLE))
 -- 
 2.13.3
 
