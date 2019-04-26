@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4E5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06040C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0B4208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DB5208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hy7Zx1Xk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ar+hnKRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfDZPez (ORCPT
+        id S1727218AbfDZPfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:34:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35301 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfDZPew (ORCPT
+        Fri, 26 Apr 2019 11:35:00 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45459 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfDZPe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:34:52 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so1760133plp.2;
-        Fri, 26 Apr 2019 08:34:52 -0700 (PDT)
+        Fri, 26 Apr 2019 11:34:58 -0400
+Received: by mail-pg1-f193.google.com with SMTP id y27so1075334pgl.12;
+        Fri, 26 Apr 2019 08:34:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/yvtB3uaTRGxnRgaWP7FcK1I6Vvjpy6XLjw84eVyA1w=;
-        b=Hy7Zx1XkVkUjOYrBhQUrGQH6vA7nf1W1eDK0gCjj/dn5gdcK6I/Asx8LQ/TLeqv2nV
-         oxeteOlgOBjTHqsx94I1+vshwMJ0cRnFZSN/4R2/SLqSXeyRi2MAWBUguv0/KJFxBu+b
-         ZXz4imGMQJ3yMsYgnyYqUUt5W/RJB8Uvba2pi+lECjDymDg//8zbwxbONIgwO5cSr1T1
-         5rQb/x+Eq84OV07HmWKVbM1390/7wSoUO+dnZBYbMxHb5IN0jVyY1f3gol9+ctItwaBb
-         sz4acryjRWrtuSyXYg4F6GdHrnU9xVXFHMAEiffD8PuMCb6OK0e7/s+2CxYn/cIgjlIx
-         gmKg==
+        bh=6w+/ukhBs5A+/Cpc4cy3lRbWsMEd9es6i7ZvKVBddzs=;
+        b=ar+hnKRt9xUnyGmefS2iMG5EjolPiFrDp9Nf+0rIIyPKhjJQaxNzloVnIzTDIwL7iA
+         Yv0STlefWYMTZU9UH26Iiup2BtXIe/InVTAfqs9R9EdzY259S3IXxLIQQu9JlnQa4BZF
+         CHk/e9HbyRyN3ga7ZWKCUhofgJNHR5WZcjF7XQ5TxFwenJI4onqp+A3Zx1B766gK36V1
+         2RINT3Zpdr2u2SEhcsfuVVmTMg5Yq70uZQoMPrcGx+8iIi1GS8T00QLvwwz6H5MsC5G8
+         m2atqbJfc//HZ9JFRR+6oAfCOAas6Jm95goa4oXiPl0xRMiAYSSdbAfQ0Ny9QR4LgTRB
+         yc7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/yvtB3uaTRGxnRgaWP7FcK1I6Vvjpy6XLjw84eVyA1w=;
-        b=n+4m8/0FzAIHudk3ckU3EKaZsmPLZvdtuG7ImeXHKjPdqBHeQwcPoLKTdWNwxlQvb2
-         bZQKXgwGD9xn2nsDTx/EyJIvnr/aZGl8zkbftTq7ZDv0JFViIJMADcW8Ms7MgMZVTdF/
-         dSfmwpzcLGl9ae6OiAD5jdGLdSbH/eJ4tIfTi8DrvHEHmcBZksqXLrn33xojy5k1fCjP
-         6nPMXTug822+Ewv8zDutx4rC6F1ryg26MWQ95jUYH7+Eu2VDmUET/qOuZqtiv0B6i7iD
-         8hPHYuCd3cmzonLqXXlvt/u9NCGUsZQZulirZFSeSRNbqglWjB1tQeM/v9YV1vH9YCkj
-         fhBA==
-X-Gm-Message-State: APjAAAXyiBbzsYXTAeDjKn/DKr/HEchChW5H7gqgnS8dMpy/Y7pboxuL
-        eYukgPbSF7aTk2LLVB3CGXU=
-X-Google-Smtp-Source: APXvYqx+XFFSNMdyptPC6bheylkNX1OLLKht4m00w1EqHUFBc4bD1V3kgftEmEFOOeYx/JRxMZkSKQ==
-X-Received: by 2002:a17:902:8a4:: with SMTP id 33mr46785950pll.7.1556292892025;
-        Fri, 26 Apr 2019 08:34:52 -0700 (PDT)
+        bh=6w+/ukhBs5A+/Cpc4cy3lRbWsMEd9es6i7ZvKVBddzs=;
+        b=WMHzWeW12U/zt978EBcyobguaRd48wanc6F8rTP4C8xSTkgpnZMjEwOGW7d2ks0uyR
+         k+XIE3/Zp1//jefWRPdAz4cRmNuukwhn3G7Ke0s60W7IvMN5MUPlucGkdhBuWlG/DJz3
+         zMcEdI1CBsIGBK6REq84VokEXUp1lB64smvt8PHVUo7grAF9Y3GayXTVQr5PudcuoeXG
+         630deAFvp1l87cXxjuYgGI/tHBTMJacA7lTYtsWff5gEgK1YEjy2lN/GfI5KQvDvsz5t
+         hwQ7vqn9pR2f8r05IVPjb++iWJQUaxliFvRi6mxyr1avqREBqSUq6n5XIHcy6HmhotTg
+         zqLg==
+X-Gm-Message-State: APjAAAVkWf+SeSFbzs6NLdkEiKAQmCqIx+Q9MTEOzDcSffpMfFU+PqeJ
+        e/GWk3nn+Youdvm0qU1B81A=
+X-Google-Smtp-Source: APXvYqyhOjXBIHrE1PLiNyUHrTuBtyaXSkQWw+LvT/V5jz/U6qA+dmw6b+LPNvu0NoqoIBqrpOpLpw==
+X-Received: by 2002:a63:dc50:: with SMTP id f16mr44486519pgj.396.1556292897821;
+        Fri, 26 Apr 2019 08:34:57 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.34.46
+        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.34.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 08:34:51 -0700 (PDT)
+        Fri, 26 Apr 2019 08:34:57 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         mchehab+samsung@kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 26/27] Documentation: x86: convert x86_64/cpu-hotplug-spec to reST
-Date:   Fri, 26 Apr 2019 23:31:49 +0800
-Message-Id: <20190426153150.21228-27-changbin.du@gmail.com>
+Subject: [PATCH 27/27] Documentation: x86: convert x86_64/machinecheck to reST
+Date:   Fri, 26 Apr 2019 23:31:50 +0800
+Message-Id: <20190426153150.21228-28-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190426153150.21228-1-changbin.du@gmail.com>
 References: <20190426153150.21228-1-changbin.du@gmail.com>
@@ -79,37 +79,54 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- .../x86/x86_64/{cpu-hotplug-spec => cpu-hotplug-spec.rst}    | 5 ++++-
- Documentation/x86/x86_64/index.rst                           | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
- rename Documentation/x86/x86_64/{cpu-hotplug-spec => cpu-hotplug-spec.rst} (88%)
+ Documentation/x86/x86_64/index.rst                    |  1 +
+ .../x86/x86_64/{machinecheck => machinecheck.rst}     | 11 ++++++-----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
+ rename Documentation/x86/x86_64/{machinecheck => machinecheck.rst} (92%)
 
-diff --git a/Documentation/x86/x86_64/cpu-hotplug-spec b/Documentation/x86/x86_64/cpu-hotplug-spec.rst
-similarity index 88%
-rename from Documentation/x86/x86_64/cpu-hotplug-spec
-rename to Documentation/x86/x86_64/cpu-hotplug-spec.rst
-index 3c23e0587db3..8d1c91f0c880 100644
---- a/Documentation/x86/x86_64/cpu-hotplug-spec
-+++ b/Documentation/x86/x86_64/cpu-hotplug-spec.rst
-@@ -1,5 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================================
- Firmware support for CPU hotplug under Linux/x86-64
-----------------------------------------------------
-+===================================================
- 
- Linux/x86-64 supports CPU hotplug now. For various reasons Linux wants to
- know in advance of boot time the maximum number of CPUs that could be plugged
 diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
-index e2a324cde671..c04b6eab3c76 100644
+index c04b6eab3c76..d6eaaa5a35fc 100644
 --- a/Documentation/x86/x86_64/index.rst
 +++ b/Documentation/x86/x86_64/index.rst
-@@ -12,3 +12,4 @@ x86_64 Support
-    mm
+@@ -13,3 +13,4 @@ x86_64 Support
     5level-paging
     fake-numa-for-cpusets
-+   cpu-hotplug-spec
+    cpu-hotplug-spec
++   machinecheck
+diff --git a/Documentation/x86/x86_64/machinecheck b/Documentation/x86/x86_64/machinecheck.rst
+similarity index 92%
+rename from Documentation/x86/x86_64/machinecheck
+rename to Documentation/x86/x86_64/machinecheck.rst
+index d0648a74fceb..8e9d2d529a8d 100644
+--- a/Documentation/x86/x86_64/machinecheck
++++ b/Documentation/x86/x86_64/machinecheck.rst
+@@ -1,5 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
+ 
+-Configurable sysfs parameters for the x86-64 machine check code.
++===============================================================
++Configurable sysfs parameters for the x86-64 machine check code
++===============================================================
+ 
+ Machine checks report internal hardware error conditions detected
+ by the CPU. Uncorrected errors typically cause a machine check
+@@ -16,14 +19,12 @@ log then mcelog should run to collect and decode machine check entries
+ from /dev/mcelog. Normally mcelog should be run regularly from a cronjob.
+ 
+ Each CPU has a directory in /sys/devices/system/machinecheck/machinecheckN
+-(N = CPU number)
++(N = CPU number).
+ 
+ The directory contains some configurable entries:
+ 
+-Entries:
+-
+ bankNctl
+-(N bank number)
++	(N bank number)
+ 	64bit Hex bitmask enabling/disabling specific subevents for bank N
+ 	When a bit in the bitmask is zero then the respective
+ 	subevent will not be reported.
 -- 
 2.20.1
 
