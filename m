@@ -2,84 +2,100 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB9FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C194FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E46B2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA54206BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:10:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMHohC68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfDZMIh (ORCPT
+        id S1726188AbfDZMKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 08:08:37 -0400
-Received: from www62.your-server.de ([213.133.104.62]:40134 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfDZMIg (ORCPT
+        Fri, 26 Apr 2019 08:10:24 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39952 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfDZMKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 08:08:36 -0400
-Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hJzeN-00059X-Ex; Fri, 26 Apr 2019 14:08:20 +0200
-Received: from [178.199.41.31] (helo=linux.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hJzeN-0002hV-8j; Fri, 26 Apr 2019 14:08:19 +0200
-Subject: Re: [PATCH] bpf, x32: Fix bug for BPF_JMP | {BPF_JSGT, BPF_JSLE,
- BPF_JSLT, BPF_JSGE}
-To:     Wang YanQing <udknight@gmail.com>, ast@kernel.org,
-        davem@davemloft.net, kuznet@ms2.inr.ac.ru, tglx@linutronix.de,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190426105609.GA19147@udknight>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <6735a15f-57af-2d09-016e-d81b1877eca6@iogearbox.net>
-Date:   Fri, 26 Apr 2019 14:08:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Fri, 26 Apr 2019 08:10:24 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d46so2948453eda.7
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 05:10:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K6cWpzPYdvrM5xOSbjBFlERJHpYkz+I/GXvkEASQsMs=;
+        b=hMHohC68D87OBjxb5kVGiaEDeAoO33hy2jyfIt7pG7huHaxqtTGsnSCLrzaBmW1iaJ
+         KhgnXKXvaV4mUH5I6L/qfVNpvnIuXE750u9aROBTVb1GJtSNEfrEnuHdIgdH9Lg8pmet
+         ZSNA58CwCaJe1D7FR+E7zf6P1AfArKGVrGGrrDLTGegJrvAl3TRuM8m4eImI+pIWlMde
+         YuwYI0xt0Hmxmyai3TS4Qa2W4rhIE8r0Fw3pmymFEahSMckei6eOhox7lUXSNL4OYxEs
+         mSGphCE46TEzLjhADYgqBzM14VYymylxtA4pBqwFqcxCnFMs4DMll+OGAXEPK60rP1AQ
+         tWxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K6cWpzPYdvrM5xOSbjBFlERJHpYkz+I/GXvkEASQsMs=;
+        b=GVFvBhC/qKFbUqyqfk5M3h2dgYFKYArjrL64A694a6AdqjxgrByxN9FWHx6Zn8nYzE
+         nHO1/mmDnhohg/Y3LdWF9K/4ChC8uoUz3iFUH6gu5cL03LIdXEGuN+XwgaD+m5LSu5bZ
+         UKzlf8TALKQAaPp4/pJVyovVcwiiEQHojT3NWJvv8zUFRzr/W0r7KJR053RLLrdcssai
+         nW4m5oJebA5T1rtKBCGNM2GFWHEvibFr9LNIqjSiyNci3vV37/chOt0R8Y00pcXUPBjB
+         q08kdp7F+tHIVZgq9ketp3iZw+orM+rfN8SSVZ6iQprZsXu1t6WkgBIa1qbzfHvaatRf
+         daSw==
+X-Gm-Message-State: APjAAAW5mLaSI29ZoU4bdxA/UHzIb0m5aKKSa/GTUtNWuq9JbiKOfqJn
+        /vjr0HwoPtwfQC6OW4GKzIHxBC6d8ZxPU+BaFRg=
+X-Google-Smtp-Source: APXvYqxfN3bxndoMxgbIuIl4dIOc0y80SLjYhQ0ObqgGATSkuduCdLsf6ZZnhBrVpZK1c8Hms2y4J7Y6UORerCMkYwg=
+X-Received: by 2002:a17:906:1249:: with SMTP id u9mr18305012eja.58.1556280622287;
+ Fri, 26 Apr 2019 05:10:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190426105609.GA19147@udknight>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25431/Fri Apr 26 09:57:33 2019)
+References: <20190421193853.10188-1-daniel.baluta@nxp.com> <20190421193853.10188-3-daniel.baluta@nxp.com>
+ <20190426100025.GD14916@sirena.org.uk>
+In-Reply-To: <20190426100025.GD14916@sirena.org.uk>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Fri, 26 Apr 2019 15:10:10 +0300
+Message-ID: <CAEnQRZCPPr1iHvKEj=fOsE8A2iW=XZd=CaoFqAoUqJftg4pN9Q@mail.gmail.com>
+Subject: Re: [PATCH 2/3 v2] ASoC: fsl_sai: Add support for runtime pm
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wang,
+On Fri, Apr 26, 2019 at 1:01 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Sun, Apr 21, 2019 at 07:39:09PM +0000, Daniel Baluta wrote:
+> > Basically the same actions as for system PM, so make use
+> > of pm_runtime_force_suspend/pm_runtime_force_resume.
+>
+> This doesn't apply against current code, please check and resend.
 
-On 04/26/2019 12:56 PM, Wang YanQing wrote:
-> The current method to compare 64-bit numbers for conditional jump is:
-> 
-> 1) Compare the high 32-bit first.
-> 
-> 2) If the high 32-bit isn't the same, then goto step 4.
-> 
-> 3) Compare the low 32-bit.
-> 
-> 4) Check the desired condition.
-> 
-> This method is right for unsigned comparison, but it is buggy for signed
-> comparison, because it does signed comparison for low 32-bit too.
-> 
-> There is only one sign bit in 64-bit number, that is the MSB in the 64-bit
-> number, it is wrong to treat low 32-bit as signed number and do the signed
-> comparison for it.
-> 
-> This patch fixes the bug.
-> 
-> Signed-off-by: Wang YanQing <udknight@gmail.com>
+Hi Mark,
 
-I presume this issue has coverage in our BPF kselftest suite, right? (If
-not, please also add a test into the test_verifier tool.)
+This patch is already applied:
 
-Thanks,
-Daniel
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/commit/?h=for-next&id=812ad463e0894d78e93ab8017e0edbe69038c55c
+
+The only patch left in the series that needs to be applied is this:
+
+https://www.spinics.net/lists/alsa-devel/msg89733.html
+
+I will reply also to that email, to be easier for you to find it.
