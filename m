@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AB5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844F9C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED04208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5319A208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqQF5uy7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uiiwc03j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfDZPdb (ORCPT
+        id S1727020AbfDZPdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:33:31 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35180 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbfDZPd3 (ORCPT
+        Fri, 26 Apr 2019 11:33:38 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33328 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbfDZPdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:33:29 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so1758253plp.2;
-        Fri, 26 Apr 2019 08:33:29 -0700 (PDT)
+        Fri, 26 Apr 2019 11:33:36 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y3so908969plp.0;
+        Fri, 26 Apr 2019 08:33:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dk9nZS7LGFvUdGAy8fxGcY6/ybb9v25OpTL3KOWjoH8=;
-        b=EqQF5uy7qsW0PGF1LkdXZzoEGDoVfFmOhfiDFjurvJUy5ghsp+rFXx4M+07H7fIRXy
-         2eEP6LWttmqm3zpkstc/yD+n9evDEZQ81LeBKgROOLzXQnxMvH4e9IYtwBDdvnzt5wlP
-         NnM2LF9r/phBCN+MZmIGZnlmBnpibDLgQkZiJi4DrCSuaMV6eNIcs4OkYDdicC0r6wO9
-         qSXLj30kOkzooPcFcn815oOR8cpViIhor4i1IdXEgWDB93BinDFkjUWqyc1guZWaMvVE
-         uzwNfKbZx7rK26g+7SzjYbkWotDRjbVY02XqrRJxPZDWlVc+IH64Hygm/oFzygadq96p
-         LSQA==
+        bh=UytHbK/UgccrKF2XiktexSNLVuMa3rRCmAQJoran2Is=;
+        b=uiiwc03jXRCXUW9bWGmXHa8PVq7q5q/4z7vacLgp+AaCB0HroD/UB+mIcIquYdZaar
+         OiHKTj7ylUORAmNf7s3JhI2f1regp2mKmDbC/MgxP2MBLWaESv+gizuO593ulA+XkmSX
+         BsftGwXctlMBIOtKoydDGxVHv9rkD89V+u2Td5q1LRSTz+7igbWH4ODwc7qZhJoSzhew
+         cuxK+88evvIPFgUD4TQetUa739EnvskmZE9HmWXQhtAlAi9VirdLdVfKDvTVTSDGzGjK
+         1nQMGC9K7Vm//rjZod+6EFGL2XLuPwBJY0GvorqEgtPaMJMp8e8V7IGUdhqfvu27/sge
+         LUfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dk9nZS7LGFvUdGAy8fxGcY6/ybb9v25OpTL3KOWjoH8=;
-        b=UCB5a2COh0ww5We7NH1CThKSy5Rl5uXZ9AZ2CLheBI3Q6ePqz74WPjGjIlbMlHN7D4
-         MM7Heg/utUG0eWjYQzEC9MYd1IOsQmRdcpFwSLRfUDutt2qTa7PdLQvkXNYnHs9RGMMv
-         y/F5HzuwWBZp3xj+pXRE/bNt10xBeR7QX6xLGqB83SQ0Y5/FpDRzmJ8evn1bjUWGCVDc
-         Hs22CJBK3KTlyEXF+/eYo642cZ2W9ADmfvSThiwq5NhtuziXzigpxR4o5QkB5julsK6c
-         9W0c5IszEkh7+muuxUaLJO4wRwYS//Qq0cUX6vcKh9/mbNthVtOqGzsnolnSY5Eg5meb
-         sLlw==
-X-Gm-Message-State: APjAAAUeDILpjeKYye16oa3I3lLZ3irAXPIR2+M5Et0vJJZS3ycNX1uk
-        s85KI0zuwxas76icljuR5Aq5OS7A
-X-Google-Smtp-Source: APXvYqxoonTp3pjZZeHZUhcR5IM0oxIevA7h4d38raQjkDOE5t9MRwCdWaMYO/oqeoIpIdbr5/n4bw==
-X-Received: by 2002:a17:902:29e9:: with SMTP id h96mr27827612plb.258.1556292809152;
-        Fri, 26 Apr 2019 08:33:29 -0700 (PDT)
+        bh=UytHbK/UgccrKF2XiktexSNLVuMa3rRCmAQJoran2Is=;
+        b=Dae8CIZ9n/MsgRxSo61S+WEhAq+5uNh/SZ4wiO9Ei3pPVjn7vGf0rua1NruHuDVYM4
+         nNdd4d6RW/h8JVcuc1zm/jgr4828EGGPwDweNwCtfPJ+gH0VeTcNMe+0ZVp1xY+I2JZ1
+         YCHsb59HGccHVtmggyUFJw5acLs67R+tM3OBCXsRcMDxI3Nx7RFwBQ6WRfmsQFMM4ENq
+         3kUwlAQs7rFfVdl3CO1m7w7F4Hb351vDqbZ8zv621PUGVaPkpaEiRewJC+yMFVt3LmTj
+         udwxanQvHZowY6JlGDJ6DSY2q7BIBCqrl7tAQ84nF+jL4yGpKHEmw9RlIKqcmFxTX9rG
+         hZjQ==
+X-Gm-Message-State: APjAAAX1iAvGJxoNOXGKi6gaFQLPWlx+iVUwcxhKQarn1jQra2fF055G
+        WqfsDRLQD2+pc1lhpRnwexw=
+X-Google-Smtp-Source: APXvYqxrzT7x7OZTOLWnWZ73TDuVxYfQ3IP4rRim8rbSbWG0C6B7uaWXjNadZqbrl560PLJc65Z2Qg==
+X-Received: by 2002:a17:902:6b47:: with SMTP id g7mr508920plt.227.1556292815170;
+        Fri, 26 Apr 2019 08:33:35 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.33.23
+        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.33.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 08:33:28 -0700 (PDT)
+        Fri, 26 Apr 2019 08:33:34 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         mchehab+samsung@kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 14/27] Documentation: x86: convert amd-memory-encryption.txt to reST
-Date:   Fri, 26 Apr 2019 23:31:37 +0800
-Message-Id: <20190426153150.21228-15-changbin.du@gmail.com>
+Subject: [PATCH 15/27] Documentation: x86: convert pti.txt to reST
+Date:   Fri, 26 Apr 2019 23:31:38 +0800
+Message-Id: <20190426153150.21228-16-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190426153150.21228-1-changbin.du@gmail.com>
 References: <20190426153150.21228-1-changbin.du@gmail.com>
@@ -79,71 +80,77 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- ...ory-encryption.txt => amd-memory-encryption.rst} | 13 ++++++++++---
- Documentation/x86/index.rst                         |  1 +
- 2 files changed, 11 insertions(+), 3 deletions(-)
- rename Documentation/x86/{amd-memory-encryption.txt => amd-memory-encryption.rst} (94%)
+ Documentation/x86/index.rst            |  1 +
+ Documentation/x86/{pti.txt => pti.rst} | 17 +++++++++++++----
+ 2 files changed, 14 insertions(+), 4 deletions(-)
+ rename Documentation/x86/{pti.txt => pti.rst} (96%)
 
-diff --git a/Documentation/x86/amd-memory-encryption.txt b/Documentation/x86/amd-memory-encryption.rst
-similarity index 94%
-rename from Documentation/x86/amd-memory-encryption.txt
-rename to Documentation/x86/amd-memory-encryption.rst
-index afc41f544dab..c48d452d0718 100644
---- a/Documentation/x86/amd-memory-encryption.txt
-+++ b/Documentation/x86/amd-memory-encryption.rst
-@@ -1,3 +1,9 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================
-+AMD Memory Encryption
-+=====================
-+
- Secure Memory Encryption (SME) and Secure Encrypted Virtualization (SEV) are
- features found on AMD processors.
- 
-@@ -34,7 +40,7 @@ is operating in 64-bit or 32-bit PAE mode, in all other modes the SEV hardware
- forces the memory encryption bit to 1.
- 
- Support for SME and SEV can be determined through the CPUID instruction. The
--CPUID function 0x8000001f reports information related to SME:
-+CPUID function 0x8000001f reports information related to SME::
- 
- 	0x8000001f[eax]:
- 		Bit[0] indicates support for SME
-@@ -48,14 +54,14 @@ CPUID function 0x8000001f reports information related to SME:
- 			   addresses)
- 
- If support for SME is present, MSR 0xc00100010 (MSR_K8_SYSCFG) can be used to
--determine if SME is enabled and/or to enable memory encryption:
-+determine if SME is enabled and/or to enable memory encryption::
- 
- 	0xc0010010:
- 		Bit[23]   0 = memory encryption features are disabled
- 			  1 = memory encryption features are enabled
- 
- If SEV is supported, MSR 0xc0010131 (MSR_AMD64_SEV) can be used to determine if
--SEV is active:
-+SEV is active::
- 
- 	0xc0010131:
- 		Bit[0]	  0 = memory encryption is not active
-@@ -68,6 +74,7 @@ requirements for the system.  If this bit is not set upon Linux startup then
- Linux itself will not set it and memory encryption will not be possible.
- 
- The state of SME in the Linux kernel can be documented as follows:
-+
- 	- Supported:
- 	  The CPU supports SME (determined through CPUID instruction).
- 
 diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index 20091d3e5d97..a0426ab156bd 100644
+index a0426ab156bd..1c675cef14d7 100644
 --- a/Documentation/x86/index.rst
 +++ b/Documentation/x86/index.rst
-@@ -20,3 +20,4 @@ Linux x86 Support
-    pat
+@@ -21,3 +21,4 @@ Linux x86 Support
     protection-keys
     intel_mpx
-+   amd-memory-encryption
+    amd-memory-encryption
++   pti
+diff --git a/Documentation/x86/pti.txt b/Documentation/x86/pti.rst
+similarity index 96%
+rename from Documentation/x86/pti.txt
+rename to Documentation/x86/pti.rst
+index 5cd58439ad2d..4b858a9bad8d 100644
+--- a/Documentation/x86/pti.txt
++++ b/Documentation/x86/pti.rst
+@@ -1,9 +1,15 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==========================
++Page Table Isolation (PTI)
++==========================
++
+ Overview
+ ========
+ 
+-Page Table Isolation (pti, previously known as KAISER[1]) is a
++Page Table Isolation (pti, previously known as KAISER [1]_) is a
+ countermeasure against attacks on the shared user/kernel address
+-space such as the "Meltdown" approach[2].
++space such as the "Meltdown" approach [2]_.
+ 
+ To mitigate this class of attacks, we create an independent set of
+ page tables for use only when running userspace applications.  When
+@@ -60,6 +66,7 @@ Protection against side-channel attacks is important.  But,
+ this protection comes at a cost:
+ 
+ 1. Increased Memory Use
++
+   a. Each process now needs an order-1 PGD instead of order-0.
+      (Consumes an additional 4k per process).
+   b. The 'cpu_entry_area' structure must be 2MB in size and 2MB
+@@ -68,6 +75,7 @@ this protection comes at a cost:
+      is decompressed, but no space in the kernel image itself.
+ 
+ 2. Runtime Cost
++
+   a. CR3 manipulation to switch between the page table copies
+      must be done at interrupt, syscall, and exception entry
+      and exit (it can be skipped when the kernel is interrupted,
+@@ -142,6 +150,7 @@ ideally doing all of these in parallel:
+    interrupted, including nested NMIs.  Using "-c" boosts the rate of
+    NMIs, and using two -c with separate counters encourages nested NMIs
+    and less deterministic behavior.
++   ::
+ 
+ 	while true; do perf record -c 10000 -e instructions,cycles -a sleep 10; done
+ 
+@@ -182,5 +191,5 @@ that are worth noting here.
+    tended to be TLB invalidation issues.  Usually invalidating
+    the wrong PCID, or otherwise missing an invalidation.
+ 
+-1. https://gruss.cc/files/kaiser.pdf
+-2. https://meltdownattack.com/meltdown.pdf
++.. [1] https://gruss.cc/files/kaiser.pdf
++.. [2] https://meltdownattack.com/meltdown.pdf
 -- 
 2.20.1
 
