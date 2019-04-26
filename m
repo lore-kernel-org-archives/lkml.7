@@ -2,133 +2,78 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA15EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92B9C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942902077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E2D2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:09:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbfDZIJf (ORCPT
+        id S1726067AbfDZIJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 04:09:35 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:11469 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725854AbfDZIJe (ORCPT
+        Fri, 26 Apr 2019 04:09:39 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:58371 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725854AbfDZIJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 04:09:34 -0400
-X-UUID: cd9fc6e4eee9439f88dd73de72256b5f-20190426
-X-UUID: cd9fc6e4eee9439f88dd73de72256b5f-20190426
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 342274836; Fri, 26 Apr 2019 16:09:30 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 26 Apr 2019 16:09:29 +0800
-Received: from mtkslt306.mediatek.inc (10.21.14.136) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 26 Apr 2019 16:09:29 +0800
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Stanislaw Gruszka <sgruszka@redhat.com>
-CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v2] mt76: fix endianness sparse warnings
-Date:   Fri, 26 Apr 2019 16:09:22 +0800
-Message-ID: <d593c15bae7b4d72df17c3c4670ca9e28ef5c47f.1556265836.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 26 Apr 2019 04:09:38 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TQH-UjF_1556266174;
+Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TQH-UjF_1556266174)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 26 Apr 2019 16:09:35 +0800
+From:   Shile Zhang <shile.zhang@linux.alibaba.com>
+Subject: [Regression][stable] Major hackbench pipes regression due to commit
+ 'sched/fair: Search a task from the tail of the queue'
+To:     urezki@gmail.com
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <f3c31802-3276-fbf4-208f-a72b5d8c9170@linux.alibaba.com>
+Date:   Fri, 26 Apr 2019 16:09:34 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix many warnings with incorrect endian assumptions.
+Hi, Uladzislau
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
-Change since v2: use standard le16_to_cpu() instead of underscored version 
----
- drivers/net/wireless/mediatek/mt76/mt7603/mac.c |  2 +-
- drivers/net/wireless/mediatek/mt76/mt7615/mac.c | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+We found a major regression (more than -40%) of hackbench on 2VCPU 
+(skylake) virtual machine, with LTS kernel v4.19.36. Following commit be 
+bisect by test 'hackbench --thread --pipe --group 1 --loop 60000'
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-index 2f2961ee0a92..b1d96a46a41c 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-@@ -627,7 +627,7 @@ mt7603_mac_fill_rx(struct mt7603_dev *dev, struct sk_buff *skb)
- 	status->aggr = unicast &&
- 		       !ieee80211_is_qos_nullfunc(hdr->frame_control);
- 	status->tid = *ieee80211_get_qos_ctl(hdr) & IEEE80211_QOS_CTL_TID_MASK;
--	status->seqno = IEEE80211_SEQ_TO_SN(hdr->seq_ctrl);
-+	status->seqno = IEEE80211_SEQ_TO_SN(le16_to_cpu(hdr->seq_ctrl));
- 
- 	return 0;
- }
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-index 1bf3e7b5f6a7..b8f48d10f27a 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-@@ -235,7 +235,7 @@ int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
- 	status->aggr = unicast &&
- 		       !ieee80211_is_qos_nullfunc(hdr->frame_control);
- 	status->tid = *ieee80211_get_qos_ctl(hdr) & IEEE80211_QOS_CTL_TID_MASK;
--	status->seqno = IEEE80211_SEQ_TO_SN(hdr->seq_ctrl);
-+	status->seqno = IEEE80211_SEQ_TO_SN(le16_to_cpu(hdr->seq_ctrl));
- 
- 	return 0;
- }
-@@ -337,7 +337,7 @@ int mt7615_mac_write_txwi(struct mt7615_dev *dev, __le32 *txwi,
- 	struct ieee80211_vif *vif = info->control.vif;
- 	int tx_count = 8;
- 	u8 fc_type, fc_stype, p_fmt, q_idx, omac_idx = 0;
--	u16 fc = le16_to_cpu(hdr->frame_control);
-+	__le16 fc = hdr->frame_control;
- 	u16 seqno = 0;
- 	u32 val;
- 
-@@ -353,8 +353,8 @@ int mt7615_mac_write_txwi(struct mt7615_dev *dev, __le32 *txwi,
- 		tx_count = msta->rate_count;
- 	}
- 
--	fc_type = (fc & IEEE80211_FCTL_FTYPE) >> 2;
--	fc_stype = (fc & IEEE80211_FCTL_STYPE) >> 4;
-+	fc_type = (le16_to_cpu(fc) & IEEE80211_FCTL_FTYPE) >> 2;
-+	fc_stype = (le16_to_cpu(fc) & IEEE80211_FCTL_STYPE) >> 4;
- 
- 	if (ieee80211_is_data(fc)) {
- 		q_idx = skb_get_queue_mapping(skb);
-@@ -468,7 +468,7 @@ void mt7615_txp_skb_unmap(struct mt76_dev *dev,
- 	txp = (struct mt7615_txp *)(txwi + MT_TXD_SIZE);
- 	for (i = 1; i < txp->nbuf; i++)
- 		dma_unmap_single(dev->dev, le32_to_cpu(txp->buf[i]),
--				 le32_to_cpu(txp->len[i]), DMA_TO_DEVICE);
-+				 le16_to_cpu(txp->len[i]), DMA_TO_DEVICE);
- }
- 
- int mt7615_tx_prepare_skb(struct mt76_dev *mdev, void *txwi_ptr,
-@@ -506,7 +506,7 @@ int mt7615_tx_prepare_skb(struct mt76_dev *mdev, void *txwi_ptr,
- 	txp = (struct mt7615_txp *)(txwi + MT_TXD_SIZE);
- 	for (i = 0; i < nbuf; i++) {
- 		txp->buf[i] = cpu_to_le32(tx_info->buf[i + 1].addr);
--		txp->len[i] = cpu_to_le32(tx_info->buf[i + 1].len);
-+		txp->len[i] = cpu_to_le16(tx_info->buf[i + 1].len);
- 	}
- 	txp->nbuf = nbuf;
- 
--- 
-2.18.0
+---
+
+commit 93824900a2e242766f5fe6ae7697e3d7171aa234
+Author: Uladzislau Rezki <urezki@gmail.com>
+Date:   Wed Sep 13 12:24:30 2017 +0200
+
+     sched/fair: Search a task from the tail of the queue
+
+---
+
+-default: 21.048
+
+-revert: 14.385
+
+
+It said that the hackbench has slightly better performance with 40 
+groups in the commit log, but it seems more performance dropped with 
+less groups, such as less than 32 group. I also tried this benchmark 
+with newest v5.1-rc6 kernel, same regression was found.
+
+Could you please also have a check?
+
+Thanks!
+
+BRs/Shile
+
+
 
