@@ -2,80 +2,75 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E36C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA9CC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8215206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9407206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfDZLTj (ORCPT
+        id S1726199AbfDZLT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 07:19:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49472 "EHLO mx1.suse.de"
+        Fri, 26 Apr 2019 07:19:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49562 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725901AbfDZLTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 07:19:39 -0400
+        id S1725901AbfDZLT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 07:19:57 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1FFADAC10;
-        Fri, 26 Apr 2019 11:19:38 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id EEC94DA847; Fri, 26 Apr 2019 13:20:41 +0200 (CEST)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fix for 5.1-rc7
-Date:   Fri, 26 Apr 2019 13:20:36 +0200
-Message-Id: <cover.1556276662.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.21.0
+        by mx1.suse.de (Postfix) with ESMTP id 96AA3AC10;
+        Fri, 26 Apr 2019 11:19:55 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 9F67EE0143; Fri, 26 Apr 2019 13:19:54 +0200 (CEST)
+Date:   Fri, 26 Apr 2019 13:19:54 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Ahern <dsahern@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 0/3] make nla_nest_start() add NLA_F_NESTED flag
+Message-ID: <20190426111954.GG26549@unicorn.suse.cz>
+References: <cover.1556269635.git.mkubecek@suse.cz>
+ <1dcb87486a96785e3b9e6f337392aa904d977a0d.camel@sipsolutions.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1dcb87486a96785e3b9e6f337392aa904d977a0d.camel@sipsolutions.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Apr 26, 2019 at 11:24:15AM +0200, Johannes Berg wrote:
+> On Fri, 2019-04-26 at 09:13 +0000, Michal Kubecek wrote:
+> 
+> > Another observation was that even if NLA_F_NESTED flag was introduced in
+> > 2007, only few netlink based interfaces set it in kernel generated messages
+> > and even many recently added APIs omit it. That is unfortunate as without
+> > the flag, message parsers not familiar with attribute semantics cannot
+> > recognize nested attributes and do not see message structure; this affects
+> > e.g. wireshark dissector or mnl_nlmsg_fprintf() from libmnl.
+> 
+> Indeed.
+> 
+> I wonder if we should also (start) enforcing that the userspace sender
+> side sets this, if the policy is strict?
 
-one patch to fix a crash in io submission path, due to memory allocation
-errors. In short, the multipage bio work that landed in 5.1 caused
-larger bios that in turn require larger temporary memory for checksums.
-The patch is a workaround, we're going to rework the allocation so it
-does not require the vmalloc fallback.
+I suppose we should, at least the part that attribute with NLA_NESTED
+policy has NLA_F_NESTED flag. I'm not so sure about the opposite (i.e.
+that attributes with other policies do not have the flag) as when I was
+checking where kernel accesses nlattr::nla_type directly rather than
+with nla_type(), I stumbled upon an attribute NL80211_ATTR_VENDOR_DATA
+which has policy NLA_BINARY but is sometimes a nest, AFAICS.
 
-It took a while to identify that it's caused by patches in 5.1 and not a
-patchset that did some changes in error handling in the code. I've
-tested it on various memory/cpu combinations, it could hit OOM but does
-not crash.
-
-The timestamp of the patch is less than a day due to updates in the
-changelog, tests were running meanwhile.
-
-Please pull, thanks.
-
-----------------------------------------------------------------
-The following changes since commit 272e5326c7837697882ce3162029ba893059b616:
-
-  btrfs: prop: fix vanished compression property after failed set (2019-04-04 17:57:53 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.1-rc6-tag
-
-for you to fetch changes up to a3d46aea46f99d134b4e0726e4826b824c3e5980:
-
-  btrfs: Switch memory allocations in async csum calculation path to kvmalloc (2019-04-25 14:17:38 +0200)
-
-----------------------------------------------------------------
-Nikolay Borisov (1):
-      btrfs: Switch memory allocations in async csum calculation path to kvmalloc
-
- fs/btrfs/file-item.c    | 15 +++++++++++----
- fs/btrfs/ordered-data.c |  3 ++-
- 2 files changed, 13 insertions(+), 5 deletions(-)
+Michal
