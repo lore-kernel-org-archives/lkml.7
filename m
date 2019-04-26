@@ -2,147 +2,380 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A8CC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CF2C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC41206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB4C206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:23:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XdVa/UMZ"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pcg22AMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfDZOVt (ORCPT
+        id S1726271AbfDZOXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:21:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36079 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfDZOVt (ORCPT
+        Fri, 26 Apr 2019 10:23:41 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35639 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfDZOXl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:21:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id d19so3105335ioc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 07:21:48 -0700 (PDT)
+        Fri, 26 Apr 2019 10:23:41 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w24so1665995plp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 07:23:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FkJyFzPG+Rri4iB7SrmxtBQEBVd3BG8Vrjj6VUTWkYA=;
-        b=XdVa/UMZ+2UG5ezgRW6jI4d4YoHpC2a1yQWFMxLhp+3DzCPDHIfllBuCiApVqTp35m
-         xj0CCYCwt3lXMHuFh23K2LscHxyW0fvEFZyk7pSz8rU1wooo5woV2ZP9y2K62T9WTe4u
-         4HVqZBwoClJPNk9STT9DvWQ1hay3cJRZWRFMA=
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MeiWFYCogkcYnJ//i5z50/UiYO7k3k6xMTQbmKpPf4g=;
+        b=pcg22AMi3FyNVnN55PdUQXpYtQ//mBp9hGj3JpXW2fVTryAHhd1rz7mWhwkbo5+pes
+         pm8aeRt5mrxmgX+owNOzkQlj1tSS6JAtslaofexs+qu3gO7wZNxl7V8KIhwvX85JhX5/
+         4JjrrZIeOJvNrnIHUO5+q5ApJXot2iYilpCO4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FkJyFzPG+Rri4iB7SrmxtBQEBVd3BG8Vrjj6VUTWkYA=;
-        b=W481RdM16o0kH5BtXbdFbI5blr1jODlsrTwTaJuoNpGzN7ZvdOlzSdjsz7ns9HqzKq
-         hf4Zvb+E2XBUMzghlvZetxrQ39UUqsHbZ4QPbZUQGQOcmNldvP0/EMf6BprYDD6dDnK0
-         hb6VjzeBcqI8lS2zr/l6zgE+PFjtEp4RY/ZIoCHst0Nr3rp0WRHaV62vlOjTA6Z5YZ0F
-         k7iZ3rSDtS+DXEQ8Tlr9vmftjxasJfq6Chm3YmxTqCbifyum3ewNavXoIrmKpz4F32Mu
-         2J2lD7ON5qFmEtlemaBTtzsdJTQVA+inlyrgFri0mJE7B+HCo7VxErxGYl39lX2sF5qZ
-         L3AQ==
-X-Gm-Message-State: APjAAAXtPKULQAtZUGB6fibKH/Q7lXrwJs8xRFYjrJimq0X4blAv+vlb
-        PZd5oFY753YapLR5j+X3+rDzHQiaRoCkMsbnkaPa+g==
-X-Google-Smtp-Source: APXvYqz6Ch5zyVD60GP4DAl4HUmZk6GjcrmT/uENhh/KRlsF/uo1LX6FTfzvYTiI4znlMRGd18uOeYjzADIvxXaqSaU=
-X-Received: by 2002:a6b:b24c:: with SMTP id b73mr19343819iof.34.1556288508516;
- Fri, 26 Apr 2019 07:21:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MeiWFYCogkcYnJ//i5z50/UiYO7k3k6xMTQbmKpPf4g=;
+        b=ig+16d9pK3o5sC2VK2q4muD4qOQLDWL8Syz28Bol0NHCk9Liz+w+7uh4L/3V47cO68
+         USJjQjap7Y1ZlMwMLlHDEVtIhY/ShDD3234g0oYUj1Whr4XMgaw6/xLmMDfclDyYKPhP
+         DH5ZFeNy2m6HJzlK4dejhPeg6MVBBCR8GB6JMomyaEaw1yQdLVcy17O7TVxJl9ef+xQn
+         YaU4302Yzn7c9q/FJh98OWIheGyPvJag+wptId+4avMMO8uy4P5vXt0aHbN3jUrBQoa2
+         LqnK5aPTsUwriSSNtHPdgL694I+XjBL4GM/p5TpWnAtUhV9OkZoskaH7384BLvDa4c/K
+         tswg==
+X-Gm-Message-State: APjAAAV/XX+UuSuGc6pLScZo0wTy5Cn6aSZMYV3bMKDVtN3wg7VmP31t
+        Pv6kKwEcn4BpkXIIEyWxMFJ3UQ==
+X-Google-Smtp-Source: APXvYqwL2trOsqa+66I/NVhUbRU2WoqKCThu3hcpG7hSR/dLhEgMni1/Wl4321DOjAD90tPUJzbfIQ==
+X-Received: by 2002:a17:902:f81:: with SMTP id 1mr46299685plz.216.1556288620030;
+        Fri, 26 Apr 2019 07:23:40 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id p6sm31698310pfd.122.2019.04.26.07.23.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 07:23:39 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 10:23:37 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net,
+        rostedt@goodmis.org, dancol@google.com, sspatil@google.com,
+        jannh@google.com, surenb@google.com, timmurray@google.com,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        torvalds@linux-foundation.org, kernel-team@android.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jann Horn <jann@thejh.net>,
+        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, oleg@redhat.com,
+        viro@zeniv.linux.org.uk, linux-api@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] Add polling support to pidfd
+Message-ID: <20190426142337.GC261279@google.com>
+References: <20190425190010.46489-1-joel@joelfernandes.org>
+ <20190425222359.sqhboc4x4daznr6r@brauner.io>
 MIME-Version: 1.0
-References: <20190426053324.26443-1-kraxel@redhat.com>
-In-Reply-To: <20190426053324.26443-1-kraxel@redhat.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 26 Apr 2019 16:21:37 +0200
-Message-ID: <CAKMK7uG+vMU0hqqiKAswu=LqpkcXtLPqbYLRWgoAPpsQQV4qzA@mail.gmail.com>
-Subject: Re: [PATCH] Revert "drm/qxl: drop prime import/export callbacks"
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425222359.sqhboc4x4daznr6r@brauner.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 7:33 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> This reverts commit f4c34b1e2a37d5676180901fa6ff188bcb6371f8.
->
-> Simliar to commit a0cecc23cfcb Revert "drm/virtio: drop prime
-> import/export callbacks".  We have to do the same with qxl,
-> for the same reasons (it breaks DRI3).
->
-> Drop the WARN_ON_ONCE().
->
-> Fixes: f4c34b1e2a37d5676180901fa6ff188bcb6371f8
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+On Fri, Apr 26, 2019 at 12:24:04AM +0200, Christian Brauner wrote:
+> On Thu, Apr 25, 2019 at 03:00:09PM -0400, Joel Fernandes (Google) wrote:
+> > pidfd are file descriptors referring to a process created with the
+> > CLONE_PIDFD clone(2) flag. Android low memory killer (LMK) needs pidfd
+> > polling support to replace code that currently checks for existence of
+> > /proc/pid for knowing that a process that is signalled to be killed has
+> > died, which is both racy and slow. The pidfd poll approach is race-free,
+> > and also allows the LMK to do other things (such as by polling on other
+> > fds) while awaiting the process being killed to die.
+> 
+> Thanks for the patch!
+> 
+> Ok, let me be a little bit anal.
+> Please start the commit message with what this patch does and then add
 
-Maybe we need some helpers for virtual drivers which only allow
-self-reimport and nothing else at all? I think there's qxl, virgl,
-vmwgfx and maybe also vbox one who could use this ... Just a quick
-idea.
--Daniel
+The subject title is "Add polling support to pidfd", but ok I should write a
+better commit message.
 
-> ---
->  drivers/gpu/drm/qxl/qxl_drv.c   |  4 ++++
->  drivers/gpu/drm/qxl/qxl_prime.c | 12 ++++++++++++
->  2 files changed, 16 insertions(+)
->
-> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-> index 578d867a81d5..f33e349c4ec5 100644
-> --- a/drivers/gpu/drm/qxl/qxl_drv.c
-> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
-> @@ -255,10 +255,14 @@ static struct drm_driver qxl_driver = {
->  #if defined(CONFIG_DEBUG_FS)
->         .debugfs_init = qxl_debugfs_init,
->  #endif
-> +       .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
-> +       .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
->         .gem_prime_export = drm_gem_prime_export,
->         .gem_prime_import = drm_gem_prime_import,
->         .gem_prime_pin = qxl_gem_prime_pin,
->         .gem_prime_unpin = qxl_gem_prime_unpin,
-> +       .gem_prime_get_sg_table = qxl_gem_prime_get_sg_table,
-> +       .gem_prime_import_sg_table = qxl_gem_prime_import_sg_table,
->         .gem_prime_vmap = qxl_gem_prime_vmap,
->         .gem_prime_vunmap = qxl_gem_prime_vunmap,
->         .gem_prime_mmap = qxl_gem_prime_mmap,
-> diff --git a/drivers/gpu/drm/qxl/qxl_prime.c b/drivers/gpu/drm/qxl/qxl_prime.c
-> index 8b448eca1cd9..114653b471c6 100644
-> --- a/drivers/gpu/drm/qxl/qxl_prime.c
-> +++ b/drivers/gpu/drm/qxl/qxl_prime.c
-> @@ -42,6 +42,18 @@ void qxl_gem_prime_unpin(struct drm_gem_object *obj)
->         qxl_bo_unpin(bo);
->  }
->
-> +struct sg_table *qxl_gem_prime_get_sg_table(struct drm_gem_object *obj)
-> +{
-> +       return ERR_PTR(-ENOSYS);
-> +}
-> +
-> +struct drm_gem_object *qxl_gem_prime_import_sg_table(
-> +       struct drm_device *dev, struct dma_buf_attachment *attach,
-> +       struct sg_table *table)
-> +{
-> +       return ERR_PTR(-ENOSYS);
-> +}
-> +
->  void *qxl_gem_prime_vmap(struct drm_gem_object *obj)
->  {
->         struct qxl_bo *bo = gem_to_qxl_bo(obj);
-> --
-> 2.18.1
->
+> the justification why. You just say the "pidfd-poll" approach. You can
+> probably assume that CLONE_PIDFD is available for this patch. So
+> something like:
+> 
+> "This patch makes pidfds pollable. Specifically, it allows listeners to
+> be informed when the process the pidfd referes to exits. This patch only
+> introduces the ability to poll thread-group leaders since pidfds
+> currently can only reference those..."
+> 
+> Then justify the use-case and then go into implementation details.
+> That's usually how I would think about this:
+> - Change the codebase to do X
+> - Why do we need X
+> - Are there any technical details worth mentioning in the commit message
+> (- Are there any controversial points that people stumbled upon but that
+>   have been settled sufficiently.)
 
+Generally the "how" in the patch should be in the code, but ok.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+I changed the first 3 paragraphs of the changelog to the following, is that
+better? :
+
+Android low memory killer (LMK) needs to know when a process dies once
+it is sent the kill signal. It does so by checking for the existence of
+/proc/pid which is both racy and slow. For example, if a PID is reused
+between when LMK sends a kill signal and checks for existence of the
+PID, since the wrong PID is now possibly checked for existence.
+
+This patch adds polling support to pidfd. Using the polling support, LMK
+will be able to get notified when a process exists in race-free and fast
+way, and allows the LMK to do other things (such as by polling on other
+fds) while awaiting the process being killed to die.
+
+For notification to polling processes, we follow the same existing
+mechanism in the kernel used when the parent of the task group is to be
+notified of a child's death (do_notify_parent).  This is precisely when
+the tasks waiting on a poll of pidfd are also awakened in this patch.
+
+> > pidfd are file descriptors referring to a process created with the
+> > CLONE_PIDFD clone(2) flag. Android low memory killer (LMK) needs pidfd
+> > polling support to replace code that currently checks for existence of
+> > /proc/pid for knowing that a process that is signalled to be killed has
+> > died, which is both racy and slow. The pidfd poll approach is race-free,
+> > and also allows the LMK to do other things (such as by polling on other
+> > fds) while awaiting the process being killed to die.
+> 
+> > 
+> > It prevents a situation where a PID is reused between when LMK sends a
+> > kill signal and checks for existence of the PID, since the wrong PID is
+> > now possibly checked for existence.
+> > 
+> > In this patch, we follow the same existing mechanism in the kernel used
+> > when the parent of the task group is to be notified (do_notify_parent).
+> > This is when the tasks waiting on a poll of pidfd are also awakened.
+> > 
+> > We have decided to include the waitqueue in struct pid for the following
+> > reasons:
+> > 1. The wait queue has to survive for the lifetime of the poll. Including
+> > it in task_struct would not be option in this case because the task can
+> > be reaped and destroyed before the poll returns.
+> > 
+> > 2. By including the struct pid for the waitqueue means that during
+> > de_thread(), the new thread group leader automatically gets the new
+> > waitqueue/pid even though its task_struct is different.
+> > 
+> > Appropriate test cases are added in the second patch to provide coverage
+> > of all the cases the patch is handling.
+> > 
+> > Andy had a similar patch [1] in the past which was a good reference
+> > however this patch tries to handle different situations properly related
+> > to thread group existence, and how/where it notifies. And also solves
+> > other bugs (waitqueue lifetime).  Daniel had a similar patch [2]
+> > recently which this patch supercedes.
+> > 
+> > [1] https://lore.kernel.org/patchwork/patch/345098/
+> > [2] https://lore.kernel.org/lkml/20181029175322.189042-1-dancol@google.com/
+> > 
+> > Cc: luto@amacapital.net
+> > Cc: rostedt@goodmis.org
+> > Cc: dancol@google.com
+> > Cc: sspatil@google.com
+> > Cc: christian@brauner.io
+> > Cc: jannh@google.com
+> > Cc: surenb@google.com
+> > Cc: timmurray@google.com
+> > Cc: Jonathan Kowalski <bl0pbl33p@gmail.com>
+> > Cc: torvalds@linux-foundation.org
+> > Cc: kernel-team@android.com
+> 
+> These should all be in the form:
+> 
+> Cc: Firstname Lastname <email@address.com>
+
+If this bothers you too much, I can also just remove the CC list from the
+changelog here, and include it in my invocation of git-send-email instead..
+but I have seen commits in the tree that don't follow this rule.
+
+> 
+> There are people missing from the Cc that really should be there...
+
+If you look at the CC list of the email, people in the get_maintainer.pl
+script were also added. I did run get_maintainer.pl and checkpatch. But ok, I
+will add the folks you are suggesting as well. Thanks.
+
+> Even though he usually doesn't respond that often, please Cc Al on this.
+> If he responds it's usually rather important.
+
+No issues on that, but I am wondering if he should also be in MAINTAINERS
+file somewhere such that get_maintainer.pl does pick him up. I added him.
+
+> Oleg has reviewed your RFC patch quite substantially and given valuable
+> feedback and has an opinion on this thing and is best acquainted with
+> the exit code. So please add him to the Cc of the commit message in the
+> appropriate form and also add him to the Cc of the thread.
+
+Done.
+
+> Probably also want linux-api for good measure since a lot of people are
+> subscribed that would care about pollable pidfds. I'd also add Kees
+> since he had some interest in this work and David (Howells).
+
+Done, I added all of them and CC will go out to them next time. Thanks.
+
+> 
+> > Co-developed-by: Daniel Colascione <dancol@google.com>
+> 
+> Every CDB needs to give a SOB as well.
+
+Ok, done. thanks.
+
+> 
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > 
+> > ---
+> > 
+> > RFC -> v1:
+> > * Based on CLONE_PIDFD patches: https://lwn.net/Articles/786244/
+> > * Updated selftests.
+> > * Renamed poll wake function to do_notify_pidfd.
+> > * Removed depending on EXIT flags
+> > * Removed POLLERR flag since semantics are controversial and
+> >   we don't have usecases for it right now (later we can add if there's
+> >   a need for it).
+> > 
+> >  include/linux/pid.h |  3 +++
+> >  kernel/fork.c       | 33 +++++++++++++++++++++++++++++++++
+> >  kernel/pid.c        |  2 ++
+> >  kernel/signal.c     | 14 ++++++++++++++
+> >  4 files changed, 52 insertions(+)
+> > 
+> > diff --git a/include/linux/pid.h b/include/linux/pid.h
+> > index 3c8ef5a199ca..1484db6ca8d1 100644
+> > --- a/include/linux/pid.h
+> > +++ b/include/linux/pid.h
+> > @@ -3,6 +3,7 @@
+> >  #define _LINUX_PID_H
+> >  
+> >  #include <linux/rculist.h>
+> > +#include <linux/wait.h>
+> >  
+> >  enum pid_type
+> >  {
+> > @@ -60,6 +61,8 @@ struct pid
+> >  	unsigned int level;
+> >  	/* lists of tasks that use this pid */
+> >  	struct hlist_head tasks[PIDTYPE_MAX];
+> > +	/* wait queue for pidfd notifications */
+> > +	wait_queue_head_t wait_pidfd;
+> >  	struct rcu_head rcu;
+> >  	struct upid numbers[1];
+> >  };
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 5525837ed80e..fb3b614f6456 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -1685,8 +1685,41 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+> >  }
+> >  #endif
+> >  
+> > +static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
+> > +{
+> > +	struct task_struct *task;
+> > +	struct pid *pid;
+> > +	int poll_flags = 0;
+> > +
+> > +	/*
+> > +	 * tasklist_lock must be held because to avoid racing with
+> > +	 * changes in exit_state and wake up. Basically to avoid:
+> > +	 *
+> > +	 * P0: read exit_state = 0
+> > +	 * P1: write exit_state = EXIT_DEAD
+> > +	 * P1: Do a wake up - wq is empty, so do nothing
+> > +	 * P0: Queue for polling - wait forever.
+> > +	 */
+> > +	read_lock(&tasklist_lock);
+> > +	pid = file->private_data;
+> > +	task = pid_task(pid, PIDTYPE_PID);
+> > +	WARN_ON_ONCE(task && !thread_group_leader(task));
+> > +
+> > +	if (!task || (task->exit_state && thread_group_empty(task)))
+> > +		poll_flags = POLLIN | POLLRDNORM;
+> 
+> So we block until the thread-group is empty? Hm, the thread-group leader
+> remains in zombie state until all threads are gone. Should probably just
+> be a short comment somewhere that callers are only informed about a
+> whole thread-group exit and not about when the thread-group leader has
+> actually exited.
+
+Ok, I'll add a comment.
+
+> I would like the ability to extend this interface in the future to allow
+> for actually reading data from the pidfd on EPOLLIN.
+> POSIX specifies that POLLIN and POLLRDNORM are set even if the
+> message to be read is zero. So one cheap way of doing this would
+> probably be to do a 0 read/ioctl. That wouldn't hurt your very limited
+> usecase and people could test whether the read returned non-0 data and
+> if so they know this interface got extended. If we never extend it here
+> it won't matter.
+
+I am a bit confused. What specific changes to this patch are you proposing?
+This patch makes poll block until the process exits. In the future, we can
+make it unblock for a other reasons as well, that's fine with me. I don't see
+how this patch prevents such extensions.
+
+> > +	if (!poll_flags)
+> > +		poll_wait(file, &pid->wait_pidfd, pts);
+> > +
+> > +	read_unlock(&tasklist_lock);
+> > +
+> > +	return poll_flags;
+> > +}
+> 
+> 
+> > +
+> > +
+> >  const struct file_operations pidfd_fops = {
+> >  	.release = pidfd_release,
+> > +	.poll = pidfd_poll,
+> >  #ifdef CONFIG_PROC_FS
+> >  	.show_fdinfo = pidfd_show_fdinfo,
+> >  #endif
+> > diff --git a/kernel/pid.c b/kernel/pid.c
+> > index 20881598bdfa..5c90c239242f 100644
+> > --- a/kernel/pid.c
+> > +++ b/kernel/pid.c
+> > @@ -214,6 +214,8 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+> >  	for (type = 0; type < PIDTYPE_MAX; ++type)
+> >  		INIT_HLIST_HEAD(&pid->tasks[type]);
+> >  
+> > +	init_waitqueue_head(&pid->wait_pidfd);
+> > +
+> >  	upid = pid->numbers + ns->level;
+> >  	spin_lock_irq(&pidmap_lock);
+> >  	if (!(ns->pid_allocated & PIDNS_ADDING))
+> > diff --git a/kernel/signal.c b/kernel/signal.c
+> > index 1581140f2d99..16e7718316e5 100644
+> > --- a/kernel/signal.c
+> > +++ b/kernel/signal.c
+> > @@ -1800,6 +1800,17 @@ int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
+> >  	return ret;
+> >  }
+> >  
+> > +static void do_notify_pidfd(struct task_struct *task)
+> 
+> Maybe a short command that this helper can only be called when we know
+> that task is a thread-group leader wouldn't hurt so there's no confusion
+> later.
+
+Ok, will do.
+
+thanks,
+
+ - Joel
+
