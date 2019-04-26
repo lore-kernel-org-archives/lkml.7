@@ -2,109 +2,80 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C768EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3A1C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9060E206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:02:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yJNjghie"
+	by mail.kernel.org (Postfix) with ESMTP id B5C9420869
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556316180;
+	bh=zWgbe3sH6AyKzLwdPq0MEOIdtManQi4jsdsZX/XFkqc=;
+	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
+	b=FLi4LjEEIcjKPFVyezosTv6TgN8eA6O4ebRvHSEj4kKntrS0YC1mk/XThhVOLJdp7
+	 UCXDsJb3w+7TQIE1zDyL+fqT9ys1fpi0IWfhUpcqWloxH2NVvjpVkKnvi89z3Lo9ix
+	 K4ArJeRp86tS3Sk3O9Adkoprham/dMtTaERReEzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfDZWCv (ORCPT
+        id S1727105AbfDZWDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 18:02:51 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46217 "EHLO vps0.lunn.ch"
+        Fri, 26 Apr 2019 18:03:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbfDZWCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 18:02:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=BS5MJiT5HrdcX3ERI95iiVbRC6UTS1Yq0TpvT2OvyNg=; b=yJNjghie4ikHXySQNMVKjndVHE
-        rv1NmCt7iT45nhais9PC7Tz8u7Jvg4rS1TgRVnl6qwd6KRVys40o1P9kB1Ha8txSUrgBeTGoXKF9S
-        BE3k8Gkw8gcQVHz2BRVNKlnIVvIY1xCVIjuizm4LJirqC0Rhl2Rjy33JYKzI7CejzILg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hK8vK-0005ys-RR; Sat, 27 Apr 2019 00:02:26 +0200
-Date:   Sat, 27 Apr 2019 00:02:26 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Esben Haabendal <esben@geanix.com>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yang Wei <yang.wei9@zte.com.cn>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/12] net: ll_temac: Fix support for 64-bit platforms
-Message-ID: <20190426220226.GW4041@lunn.ch>
-References: <20190426073231.4008-1-esben@geanix.com>
- <20190426073231.4008-4-esben@geanix.com>
- <20190426114013.333e62c8@cakuba.netronome.com>
- <20190426205912.GI4041@lunn.ch>
- <20190426140856.78b786ee@cakuba.netronome.com>
+        id S1726632AbfDZWC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 18:02:59 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A19DD206C1;
+        Fri, 26 Apr 2019 22:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556316178;
+        bh=zWgbe3sH6AyKzLwdPq0MEOIdtManQi4jsdsZX/XFkqc=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=vWw9Kj9nQbmiJQbeUp1u16WmTL9GHxkUuzkCTvUjCHiBS9w8svynFpefU45yCW/IG
+         25vGSoYdiAlib1FVE3pkr1UA8lggyp1L2sY4jPjLZydccCo7McTP60aRskMUJmNoVP
+         zQmwcxTa56udTlmER5V9u/ovcJYkAKsaY/WVsk8I=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426140856.78b786ee@cakuba.netronome.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190426210651.GX14604@piout.net>
+References: <20190402125056.21509-1-alexandre.belloni@bootlin.com> <20190402125056.21509-8-alexandre.belloni@bootlin.com> <155622113579.15276.15900194435736283135@swboyd.mtv.corp.google.com> <20190425203139.GO14604@piout.net> <155622589096.15276.8583738150370510787@swboyd.mtv.corp.google.com> <20190425211009.GP14604@piout.net> <155622724107.15276.12946928869888731656@swboyd.mtv.corp.google.com> <20190426210651.GX14604@piout.net>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 7/7] clk: at91: add sam9x60 pmc driver
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <155631617779.168659.28330983552532693@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Fri, 26 Apr 2019 15:02:57 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 02:08:56PM -0700, Jakub Kicinski wrote:
-> On Fri, 26 Apr 2019 22:59:12 +0200, Andrew Lunn wrote:
-> > On Fri, Apr 26, 2019 at 11:40:13AM -0700, Jakub Kicinski wrote:
-> > > On Fri, 26 Apr 2019 09:32:22 +0200, Esben Haabendal wrote:  
-> > > > The use of buffer descriptor APP4 field (32-bit) for storing skb pointer
-> > > > obviously does not work on 64-bit platforms.
-> > > > As APP3 is also unused, we can use that to store the other half of 64-bit
-> > > > pointer values.
-> > > > 
-> > > > Contrary to what is hinted at in commit message of commit 15bfe05c8d63
-> > > > ("net: ethernet: xilinx: Mark XILINX_LL_TEMAC broken on 64-bit")
-> > > > there are no other pointers stored in cdmac_bd.
-> > > > 
-> > > > Signed-off-by: Esben Haabendal <esben@geanix.com>  
-> > > 
-> > > This is a bit strange, the driver stores the host's virtual address into
-> > > the HW descriptor?  
+Quoting Alexandre Belloni (2019-04-26 14:06:51)
+> On 25/04/2019 14:20:41-0700, Stephen Boyd wrote:
+> >=20
+> > Hmm I was just confused it seems. If you don't have two devices probing
+> > the same DT node with this compatible string then I think it can just be
+> > CLK_OF_DECLARE(). I was thinking that you were running into some sort of
+> > issue where the other driver using this same compatible couldn't probe.
+> >=20
+>=20
+> I tried separating it into two initializations and do as much as
+> possible in the platform driver but because the TCB clocks are
+> peripheral clocks that depend on most of the other ones, I didn't find
+> it convenient. This can safely be changed to CLK_OF_DECLARE. I can send
+> v4 if you want. This should probably be changed for the other drivers
+> too.
 
-Lets try that again
+I've fixed it locally, just haven't pushed it out. If you have other
+drivers that should be using CLK_OF_DECLARE then feel free to send a
+patch for it.
 
-Hi Jakub
-
-> > Hi Jukub
-> 
-> I need to start keeping track of all the ways my name gets spelled :)
-> I find it entertaining :)
-
-Sorry. 
-
-And i prefer entertaining over offended :-)
-
-> > This is reasonably common. You need some sort of cookie which links
-> > the hardware descriptor to the skbuf it points to. The hardware makes
-> > no use of it, it is just a cookie.
-> 
-> Right, but accesses to HW descriptor memory ring are significantly 
-> more expensive, especially on platforms which are not coherent with 
-> DMA operations (everything but x86?)
->
-> A preferable design is to have two descriptor rings - one for HW
-> descriptors and one for software context, no?
-
-Modern drivers do that. But this driver seems to be quite old.  And if
-you look at what it is used on, PPC & MICROBLAZE, they are old
-architectures, i don't think hardware access are that as expensive as
-for modern architectures.
-
-	  Andrew
