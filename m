@@ -2,113 +2,70 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851A4C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3145C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D88C206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E48F2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 11:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556277719;
+	bh=UTTAxG+Jg2VAeqcLpeFJKIEKlZAfzGGDG25z5H78rAM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sG1yqamLhnixXORFEKAJzvz+OP1Empq7TUVmM1YbEEtagilM/pglZ8y/CAOr/yh6T
+	 ZvYP5xXxKC9qrUAco0MamW00wZBde2Ytk+AJjwrpsu5UQlawe3dcvevAUdbsWEoUKI
+	 b/iCPqkXNDhzIObV14gwI5GeLGgzClIYTLx6elPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfDZLVX (ORCPT
+        id S1726247AbfDZLV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 07:21:23 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:49317 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfDZLVW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 07:21:22 -0400
-Received: from [192.168.1.110] ([95.117.100.117]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MGi6k-1hWcEn2BCk-00Dovr; Fri, 26 Apr 2019 13:20:47 +0200
-Subject: Re: [PATCH v17 1/3] proc: add /proc/<pid>/arch_status
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>, mingo@redhat.com,
-        peterz@infradead.org, hpa@zytor.com, ak@linux.intel.com,
-        tim.c.chen@linux.intel.com, dave.hansen@intel.com,
-        arjan@linux.intel.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, aubrey.li@intel.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>
-References: <20190421183529.9141-1-aubrey.li@linux.intel.com>
- <alpine.DEB.2.21.1904242310040.1762@nanos.tec.linutronix.de>
- <da1fcb4f-e856-d31f-7c72-76c969af3935@linux.intel.com>
- <6a9e6bd9-8e1a-9fe5-135d-c7a49697b5a4@metux.net>
- <4456cc68-5120-e820-90ed-cb5b5dfcd760@linux.intel.com>
- <ee1620d5-9650-5bfa-c458-fa2d051522b1@metux.net>
- <alpine.DEB.2.21.1904251249200.1960@nanos.tec.linutronix.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <c6977015-094f-ad28-bdfa-7d350247fa46@metux.net>
-Date:   Fri, 26 Apr 2019 13:20:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 26 Apr 2019 07:21:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbfDZLV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 07:21:58 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA3C4206C1;
+        Fri, 26 Apr 2019 11:21:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556277717;
+        bh=UTTAxG+Jg2VAeqcLpeFJKIEKlZAfzGGDG25z5H78rAM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t+6KkdQqRKDBxuQwEWECujbYKroyxMsUN1ZGCNldId/wYNBxex9hZZXZn2uJKXoRU
+         3vJAtRYLJFg7/3fvBkY2lkHFdXFIlVzUUk+NOrKPvpv1zWCvMWKhnNGVbVMj1QJPIS
+         7MAHS3/Z9G0fs1D+9HoIpeYne2/hwhOjoncJtc/g=
+Date:   Fri, 26 Apr 2019 16:51:51 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc:     heiko@sntech.de, broonie@kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: pl330: _stop: clear interrupt status
+Message-ID: <20190426112151.GQ28103@vkoul-mobl>
+References: <1554289582-43695-1-git-send-email-sugar.zhang@rock-chips.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1904251249200.1960@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:6iu2UDUJXIjEOUJT0Cq807pTiz8aNtPHO0/Nd2SmjG8k7DvYbKT
- p6RgWLM2jRCkeOFR7gdAgSVbX3R+QNc9EEfy7HbBOgpDLCD4zOniV0zYWZBSX9vwDrx07mb
- q9EMfEKgWacnR/Gz+hnKhO8Yf+ThwCpw2Gfpnyv87xukXD3pXkEJfmaZqwK+iS8gGfD/H6U
- FGuvdZ8mnErnqVFSLYfOA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XOai0o3jdag=:F+q7rwQXZ2HjIdJDqpDJjN
- mB7uwN43x9ka94h1p3FlkN012z4POQKkkmsgombvKdVsFh6K81bxKctOrOn3mN3biL/nwkwq7
- XDBgAOTiRdXMGbCn/9pwY8c0XAuqwNcUEkEr48hiVRhWTKgFRPoltT4ijaYDZPbWE6d+Gs9fK
- TGjPU6aPEqqH38mtZ70IEkoliuCG867HK3vTa7bQysYKroeJDZtgVe80aXe1fRZslUqUWdCXk
- XHPimo27XVLGt09IokG/J6EGkX3GYxrlBoCHM3ZSGaTslSQ3UtUiECrB2koPYvEjlKgT39h8P
- dLh7Qwqv2kAZn1Ros36qczzz/h/+YoRqiQacC7YPjxEARMGsPt8MfvP0+bDaZWIWLeEj0j3LR
- 5cGbiDoWIhEI2KTlyPPgq/jN/U6qgjyw5NNYVahE34aK0uk7jlbaX4XH1NN1jpi1EN5K424VA
- nc3Oy6TSA89nshXErp0zEMIR6CrnEdnRwrNF547085R1ZWDP4xKkGoPZY5POjhZ+/X1hXKcoA
- Y/DTzPWmxAlx/YGxYVFyttQz/2G4pvL5a020R3WcExOFwfNl7UCTOZ+oeG39J+8lP4WOMqmBR
- o/+kSi8t9iFvfix8OorggIgDdt//g9v8g5f2Thk4YJuypMlcxtjmEwKgsC5n0wN3aCeYC+V5e
- tqBfIc14tAURoiAUGHdiahBGjM3uT5phXQhfvCMgvNd1+ARmE9GLHDEo2NZFyY8wxlQXeY0Ka
- S95dIv7ijMVaiaV2fZ0qojmpLnnddUfsujtvYWu6qY8rZfuEjC5M43CHe6c=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554289582-43695-1-git-send-email-sugar.zhang@rock-chips.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.04.19 12:50, Thomas Gleixner wrote:
-> On Thu, 25 Apr 2019, Enrico Weigelt, metux IT consult wrote:
-> 
->> On 25.04.19 12:42, Li, Aubrey wrote:
->>>
->>> Yep, I'll make it disabled by default and not switchable and let arch select it.
->>>
->>
->> That's not quite what I've suggested. Instead:
->>
->> #1: make the switch depend on the arch's that support it
-> 
-> No. That's what select is for.
+On 03-04-19, 19:06, Sugar Zhang wrote:
+> This patch kill instructs the DMAC to immediately terminate
+> execution of a thread. and then clear the interrupt status,
+> at last, stop generating interrupts for DMA_SEV. to guarantee
+> the next dma start is clean. otherwise, one interrupt maybe leave
+> to next start and make some mistake.
 
-Just for clarification: I've proposed the depend, because not only some
-archs will support it - and avoid masses of #ifdef's in the code.
-Therefore, it can only be enabled, when the archi supports it.
-
-But if you insist in not having it configurable, letting the arch just
-select this feature, your approach makes sense.
-
->> #2: still leave it selectable to the user, so somebody who doesn't need
->>     it, can just disable it.
-> 
-> Well, the number of knobs is exploding over time and the number of people
-> actually tweaking them is close to 0. So no, we don't want to have the
-> extra tunable for everything and the world.
-
-The great configurability often is one of the major arguments for using
-Linux in the first place.
-
-Would you propose killing all the CONFIG_EMBEDDED/CONFIG_EXPERT
-related knobs ?
-
-
---mtx
+Applied, thanks
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+~Vinod
