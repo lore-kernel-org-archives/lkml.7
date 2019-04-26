@@ -2,114 +2,151 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308A8C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C18BC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03824206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:06:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2/Cj2E4"
+	by mail.kernel.org (Postfix) with ESMTP id 655A6206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:07:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbfDZHGt (ORCPT
+        id S1726049AbfDZHH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:06:49 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40072 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfDZHGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:06:49 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y49so165614qta.7
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 00:06:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m6HcQ1+0pWmKCOtOZFrgkZfRLyjP4/xTC1PdjicHU30=;
-        b=W2/Cj2E4FG6X1qKpZC6N2S+XAES13IBz9g+XnSDZYMjSw49jj/+v0BQw6tfX3qMsCW
-         s9gtLCxWwzWUHQ0mJYEqwREy+u3BxzLbfcfysnD5fcCKvcW2ZQjz6hrNWmUlSG4r+owZ
-         hQQJe0pcANzkDnuduZtUsbmnsq0XIIjfTplgKrv9eBG9xVrx6vBb8bn8HJgTd7jGe3wO
-         W0hh2srfXo9WMgxPRHKIO8JSENm6xAu4WBpnSiXm+ApgZ2zF7Wu9bVGiBDTMkKilTEg+
-         Ro5tEyyXAxmgtwHO5UgKBiifSjMlpdRBMtI/WYuac9HS6W4H0XxxRWp2DfL2WdQmLXO7
-         a94Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m6HcQ1+0pWmKCOtOZFrgkZfRLyjP4/xTC1PdjicHU30=;
-        b=cLrhA08bVUlAZsNpfz9WWEUMH+ypOtiyY9rT3VJxfYe6jExba9aB1/CRbIFoULTtq0
-         0lQlgp2NQm+aiLffrPmTQ+W4au/uwumWgtX3OHGMGBDAFTAGgWS8CkVVeW9lBvr5/nP9
-         dNcdqpr7HhF9I8vCbuThebhPAwMv32X1eu8rITljmhUFEwa77rjYPpAgtVpbP6ZXs6M/
-         WY350akZGP3GvlEeo0CJmjlXbvxXkSVAwQMYxp7WMvhLzb32hatb/T9R8hjHGo/Zd0bN
-         qaMwZmnixr9Xm2j/oFCbXwFoROVakHZcApAx2J25PWlwF+ayZ52TlBz44LP50yr0t4RX
-         e/gQ==
-X-Gm-Message-State: APjAAAXVQaWYfb5HQd5JMvy3gLZ2oSXtAAi3rt0CgDaySyZos+ot2VVH
-        kf53PC2JaUZIPyyyKdYf4Y+9+YWXia0QnQkfcKg=
-X-Google-Smtp-Source: APXvYqwwDONV66Ai74otPmyy5eAUlEZpG6e3qLemD6Ii2M0Gwn+2drW3vP5jeL1p2lhwhn2czk3RAqbC/T2bHo5vkF4=
-X-Received: by 2002:ac8:2843:: with SMTP id 3mr34486583qtr.327.1556262408677;
- Fri, 26 Apr 2019 00:06:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190424101934.51535-1-duyuyang@gmail.com> <20190424101934.51535-25-duyuyang@gmail.com>
- <20190425200336.GY12232@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190425200336.GY12232@hirez.programming.kicks-ass.net>
-From:   Yuyang Du <duyuyang@gmail.com>
-Date:   Fri, 26 Apr 2019 15:06:34 +0800
-Message-ID: <CAHttsrbf30jTT3XidoeWV7j2xovCvJuM3=qy4u1z_GC3dXYp8A@mail.gmail.com>
-Subject: Re: [PATCH 24/28] locking/lockdep: Remove !dir in lock irq usage check
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     will.deacon@arm.com, Ingo Molnar <mingo@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
-        Frederic Weisbecker <frederic@kernel.org>, tglx@linutronix.de,
-        LKML <linux-kernel@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 26 Apr 2019 03:07:57 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:20750 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbfDZHH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 03:07:56 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 43D1C18A20C5FBA130EA;
+        Fri, 26 Apr 2019 15:07:54 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x3Q77mA5066340;
+        Fri, 26 Apr 2019 15:07:48 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019042615082405-9648437 ;
+          Fri, 26 Apr 2019 15:08:24 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH v3] ARM: rockchip: fix a leaked reference by adding missing of_node_put
+Date:   Fri, 26 Apr 2019 15:08:08 +0800
+Message-Id: <1556262488-21072-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-04-26 15:08:24,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-04-26 15:07:31,
+        Serialize complete at 2019-04-26 15:07:31
+X-MAIL: mse-fl1.zte.com.cn x3Q77mA5066340
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for review.
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-On Fri, 26 Apr 2019 at 04:03, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Apr 24, 2019 at 06:19:30PM +0800, Yuyang Du wrote:
-> > In mark_lock_irq(), the following checks are performed:
-> >
-> >    ----------------------------------
-> >   |   ->      | unsafe | read unsafe |
-> >   |----------------------------------|
-> >   | safe      |  F  B  |    F* B*    |
-> >   |----------------------------------|
-> >   | read safe |  F? B* |      -      |
-> >    ----------------------------------
-> >
-> > Where:
-> > F: check_usage_forwards
-> > B: check_usage_backwards
-> > *: check enabled by STRICT_READ_CHECKS
-> > ?: check enabled by the !dir condition
-> >
-> > From checking point of view, the special F? case does not make sense,
-> > whereas it perhaps is made for peroformance concern. As later patch will
-> > address this issue, remove this exception, which makes the checks
-> > consistent later.
-> >
-> > With STRICT_READ_CHECKS = 1 which is default, there is no functional
-> > change.
->
-> Oh man.. thinking required and it is way late.. anyway this whole read
-> stuff made me remember we had a patch set on readlocks last year.
->
->   https://lkml.kernel.org/r/20180411135110.9217-1-boqun.feng@gmail.com
->
-> I remember reviewing that a few times and then it dropped on the floor,
-> probably because Spectre crap or something sucked up all my time again :/
->
-> Sorry Boqun!
+Detected by coccinelle with the following warnings:
+./arch/arm/mach-rockchip/pm.c:269:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 259, but without a corresponding object release within this function.
+./arch/arm/mach-rockchip/pm.c:275:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 259, but without a corresponding object release within this function
+./arch/arm/mach-rockchip/platsmp.c:281:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 272, but without a corresponding object release within this function.
+./arch/arm/mach-rockchip/platsmp.c:285:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 272, but without a corresponding object release within this function.
+./arch/arm/mach-rockchip/platsmp.c:289:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 272, but without a corresponding object release within this function.
+./arch/arm/mach-rockchip/platsmp.c:303:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 294, but without a corresponding object release within this function.
 
-Oh man, I thought about the read-write lock stuff, but I didn't know
-Boqun's patch. Let me hurt my brain looking at that patch.
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Suggested-by: Heiko Stuebner <heiko@sntech.de>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+v2: add a missing space between "adding" and "missing"
+v3: just add a regular of_node_put 
+
+ arch/arm/mach-rockchip/platsmp.c | 12 ++++++++++--
+ arch/arm/mach-rockchip/pm.c      |  2 ++
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-rockchip/platsmp.c b/arch/arm/mach-rockchip/platsmp.c
+index 4675d92..afd1514 100644
+--- a/arch/arm/mach-rockchip/platsmp.c
++++ b/arch/arm/mach-rockchip/platsmp.c
+@@ -278,19 +278,25 @@ static void __init rockchip_smp_prepare_cpus(unsigned int max_cpus)
+ 	sram_base_addr = of_iomap(node, 0);
+ 	if (!sram_base_addr) {
+ 		pr_err("%s: could not map sram registers\n", __func__);
++		of_node_put(node);
+ 		return;
+ 	}
+ 
+-	if (has_pmu && rockchip_smp_prepare_pmu())
++	if (has_pmu && rockchip_smp_prepare_pmu()) {
++		of_node_put(node);
+ 		return;
++	}
+ 
+ 	if (read_cpuid_part() == ARM_CPU_PART_CORTEX_A9) {
+-		if (rockchip_smp_prepare_sram(node))
++		if (rockchip_smp_prepare_sram(node)) {
++			of_node_put(node);
+ 			return;
++		}
+ 
+ 		/* enable the SCU power domain */
+ 		pmu_set_power_domain(PMU_PWRDN_SCU, true);
+ 
++		of_node_put(node);
+ 		node = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
+ 		if (!node) {
+ 			pr_err("%s: missing scu\n", __func__);
+@@ -300,6 +306,7 @@ static void __init rockchip_smp_prepare_cpus(unsigned int max_cpus)
+ 		scu_base_addr = of_iomap(node, 0);
+ 		if (!scu_base_addr) {
+ 			pr_err("%s: could not map scu registers\n", __func__);
++			of_node_put(node);
+ 			return;
+ 		}
+ 
+@@ -318,6 +325,7 @@ static void __init rockchip_smp_prepare_cpus(unsigned int max_cpus)
+ 		asm ("mrc p15, 1, %0, c9, c0, 2\n" : "=r" (l2ctlr));
+ 		ncores = ((l2ctlr >> 24) & 0x3) + 1;
+ 	}
++	of_node_put(node);
+ 
+ 	/* Make sure that all cores except the first are really off */
+ 	for (i = 1; i < ncores; i++)
+diff --git a/arch/arm/mach-rockchip/pm.c b/arch/arm/mach-rockchip/pm.c
+index 065b09e..4a4f914 100644
+--- a/arch/arm/mach-rockchip/pm.c
++++ b/arch/arm/mach-rockchip/pm.c
+@@ -266,12 +266,14 @@ static int __init rk3288_suspend_init(struct device_node *np)
+ 	rk3288_bootram_base = of_iomap(sram_np, 0);
+ 	if (!rk3288_bootram_base) {
+ 		pr_err("%s: could not map bootram base\n", __func__);
++		of_node_put(sram_np);
+ 		return -ENOMEM;
+ 	}
+ 
+ 	ret = of_address_to_resource(sram_np, 0, &res);
+ 	if (ret) {
+ 		pr_err("%s: could not get bootram phy addr\n", __func__);
++		of_node_put(sram_np);
+ 		return ret;
+ 	}
+ 	rk3288_bootram_phy = res.start;
+-- 
+2.9.5
+
