@@ -2,104 +2,62 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF17C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441D7C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D83208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1245C208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfDZPqH (ORCPT
+        id S1726451AbfDZPrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:46:07 -0400
-Received: from mga05.intel.com ([192.55.52.43]:60041 "EHLO mga05.intel.com"
+        Fri, 26 Apr 2019 11:47:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726228AbfDZPqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:46:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 08:46:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,398,1549958400"; 
-   d="scan'208";a="341089197"
-Received: from xulike-server.sh.intel.com ([10.239.48.134])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Apr 2019 08:46:05 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-Date:   Fri, 26 Apr 2019 23:44:46 +0800
-Message-Id: <1556293486-8888-1-git-send-email-like.xu@linux.intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S1726231AbfDZPrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:47:02 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C89208CA;
+        Fri, 26 Apr 2019 15:47:01 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1hK341-0002LK-0O; Fri, 26 Apr 2019 11:47:01 -0400
+Message-Id: <20190426154622.183993476@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Fri, 26 Apr 2019 11:46:22 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-linus][PATCH 0/3]  tracing: Minor fixes that will be going to Linus shortly
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to expose Intel V2 Extended Topology Enumeration Leaf for
-some new systems with multiple software-visible die within each package.
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+ftrace/urgent
 
-When CPUID executes with EAX set to 1FH, the processor returns information
-about extended topology enumeration data. Software must detect the presence
-of CPUID leaf 1FH by verifying (a) the highest leaf index supported by
-CPUID is >= 1FH, and (b) CPUID.1FH:EBX[15:0] reports a non-zero value.
+Head SHA1: d6097c9e4454adf1f8f2c9547c2fa6060d55d952
 
-Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
----
 
-==changelog==
-v3:
-- Redefine commit message and comment
+Jann Horn (1):
+      tracing: Fix buffer_ref pipe ops
 
-v2:
-- Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
-- Add comment to handle 0x1f anf 0xb in common code
-- Reduce check time in a descending-break style
+Peter Zijlstra (1):
+      trace: Fix preempt_enable_no_resched() abuse
 
-v1: https://lkml.org/lkml/2019/4/22/28
+Wenwen Wang (1):
+      tracing: Fix a memory leak by early error exit in trace_pid_write()
 
- arch/x86/kvm/cpuid.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index fd39516..176a67a 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -425,6 +425,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 
- 	switch (function) {
- 	case 0:
-+		/* Check if the cpuid leaf 0x1f is actually implemented */
-+		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
-+			entry->eax = 0x1f;
-+			break;
-+		}
- 		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
- 		break;
- 	case 1:
-@@ -544,7 +549,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 		entry->edx = edx.full;
- 		break;
- 	}
--	/* function 0xb has additional index. */
-+	/*
-+	 * Per Intel's SDM, 0x1f is a superset of 0xb, thus they can be handled
-+	 * by common code.
-+	 */
-+	case 0x1f:
- 	case 0xb: {
- 		int i, level_type;
- 
--- 
-1.8.3.1
-
+----
+ fs/splice.c                |  4 ++--
+ include/linux/pipe_fs_i.h  |  1 +
+ kernel/trace/ring_buffer.c |  2 +-
+ kernel/trace/trace.c       | 33 ++++++++++++++++++---------------
+ 4 files changed, 22 insertions(+), 18 deletions(-)
