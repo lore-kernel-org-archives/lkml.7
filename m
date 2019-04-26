@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE470C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E3FC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA0E2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550EF2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfDZHdP (ORCPT
+        id S1726218AbfDZHbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:33:15 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:2747 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726242AbfDZHbz (ORCPT
+        Fri, 26 Apr 2019 03:31:53 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29121 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbfDZHbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:31:55 -0400
+        Fri, 26 Apr 2019 03:31:47 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 26 Apr 2019 00:31:41 -0700
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Fri, 26 Apr 2019 00:31:44 -0700
 Received: from sc2-haas01-esx0118.eng.vmware.com (sc2-haas01-esx0118.eng.vmware.com [10.172.44.118])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 296F2412A3;
-        Fri, 26 Apr 2019 00:31:46 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 77C0D412A1;
+        Fri, 26 Apr 2019 00:31:45 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -43,71 +43,100 @@ CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <hpa@zytor.com>,
         <ard.biesheuvel@linaro.org>, <kristen@linux.intel.com>,
         <deneen.t.dock@intel.com>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
         Nadav Amit <namit@vmware.com>
-Subject: [PATCH v5 22/23] mm/tlb: Provide default nmi_uaccess_okay()
-Date:   Thu, 25 Apr 2019 17:11:42 -0700
-Message-ID: <20190426001143.4983-23-namit@vmware.com>
+Subject: [PATCH v5 03/23] x86/mm: Introduce temporary mm structs
+Date:   Thu, 25 Apr 2019 17:11:23 -0700
+Message-ID: <20190426001143.4983-4-namit@vmware.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426001143.4983-1-namit@vmware.com>
 References: <20190426001143.4983-1-namit@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: namit@vmware.com does not
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: namit@vmware.com does not
  designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-x86 has an nmi_uaccess_okay(), but other architectures do not.
-Arch-independent code might need to know whether access to user
-addresses is ok in an NMI context or in other code whose execution
-context is unknown.  Specifically, this function is needed for
-bpf_probe_write_user().
+From: Andy Lutomirski <luto@kernel.org>
 
-Add a default implementation of nmi_uaccess_okay() for architectures
-that do not have such a function.
+Using a dedicated page-table for temporary PTEs prevents other cores
+from using - even speculatively - these PTEs, thereby providing two
+benefits:
 
+(1) Security hardening: an attacker that gains kernel memory writing
+abilities cannot easily overwrite sensitive data.
+
+(2) Avoiding TLB shootdowns: the PTEs do not need to be flushed in
+remote page-tables.
+
+To do so a temporary mm_struct can be used. Mappings which are private
+for this mm can be set in the userspace part of the address-space.
+During the whole time in which the temporary mm is loaded, interrupts
+must be disabled.
+
+The first use-case for temporary mm struct, which will follow, is for
+poking the kernel text.
+
+[ Commit message was written by Nadav Amit ]
+
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/include/asm/tlbflush.h | 2 ++
- include/asm-generic/tlb.h       | 9 +++++++++
- 2 files changed, 11 insertions(+)
+ arch/x86/include/asm/mmu_context.h | 33 ++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 90926e8dd1f8..dee375831962 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -274,6 +274,8 @@ static inline bool nmi_uaccess_okay(void)
- 	return true;
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index 19d18fae6ec6..24dc3b810970 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -356,4 +356,37 @@ static inline unsigned long __get_current_cr3_fast(void)
+ 	return cr3;
  }
  
-+#define nmi_uaccess_okay nmi_uaccess_okay
++typedef struct {
++	struct mm_struct *mm;
++} temp_mm_state_t;
 +
- /* Initialize cr4 shadow for this CPU. */
- static inline void cr4_init_shadow(void)
- {
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index b9edc7608d90..480e5b2a5748 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -21,6 +21,15 @@
- #include <asm/tlbflush.h>
- #include <asm/cacheflush.h>
- 
 +/*
-+ * Blindly accessing user memory from NMI context can be dangerous
-+ * if we're in the middle of switching the current user task or switching
-+ * the loaded mm.
++ * Using a temporary mm allows to set temporary mappings that are not accessible
++ * by other CPUs. Such mappings are needed to perform sensitive memory writes
++ * that override the kernel memory protections (e.g., W^X), without exposing the
++ * temporary page-table mappings that are required for these write operations to
++ * other CPUs. Using a temporary mm also allows to avoid TLB shootdowns when the
++ * mapping is torn down.
++ *
++ * Context: The temporary mm needs to be used exclusively by a single core. To
++ *          harden security IRQs must be disabled while the temporary mm is
++ *          loaded, thereby preventing interrupt handler bugs from overriding
++ *          the kernel memory protection.
 + */
-+#ifndef nmi_uaccess_okay
-+# define nmi_uaccess_okay() true
-+#endif
++static inline temp_mm_state_t use_temporary_mm(struct mm_struct *mm)
++{
++	temp_mm_state_t temp_state;
 +
- #ifdef CONFIG_MMU
- 
- /*
++	lockdep_assert_irqs_disabled();
++	temp_state.mm = this_cpu_read(cpu_tlbstate.loaded_mm);
++	switch_mm_irqs_off(NULL, mm, current);
++	return temp_state;
++}
++
++static inline void unuse_temporary_mm(temp_mm_state_t prev_state)
++{
++	lockdep_assert_irqs_disabled();
++	switch_mm_irqs_off(NULL, prev_state.mm, current);
++}
++
+ #endif /* _ASM_X86_MMU_CONTEXT_H */
 -- 
 2.17.1
 
