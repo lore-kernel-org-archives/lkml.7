@@ -2,58 +2,60 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18F5C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83942C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7219920B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329372087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8lkxgGj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRSkWPKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfD0GnE (ORCPT
+        id S1726370AbfD0GnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:43:04 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37751 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfD0GnE (ORCPT
+        Sat, 27 Apr 2019 02:43:08 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35748 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfD0GnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:43:04 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g3so2757740pfi.4;
-        Fri, 26 Apr 2019 23:43:03 -0700 (PDT)
+        Sat, 27 Apr 2019 02:43:05 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t21so2760176pfh.2;
+        Fri, 26 Apr 2019 23:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eB6k5meLI0PLOK3mYE/JAtGJf13kBE3594LdTnKJT/c=;
-        b=P8lkxgGjxqraib3dGi6LmdBMJFStrMGH5f7zRkLtPm0LyLdsCOatl1WplqSO6Vox5O
-         QgceEyMkcGUHaPWov9uf5imUGYag+m6YfoDuve+tQrWc9Lnzck+ild+pJLBgqvAg+s4t
-         tc2ZnLBudjA7+23D9apTsU8/5POeUm+9GGrBRc4Ff/HdRlJm0u0gfx3vlhknVKnRGfnO
-         EiWhEn2/3fkfvOg0UEWNN2QVFDU+EZVBysGn0ITmKf0LFOg1DzCFALBMm4mesHSuLeC+
-         J6TfDcCHfeBFtjn2od2kGVTzYa6WawY6jvV0lo/aa6bLxoGhvPKYoxlpD6UDLrUUf+Hb
-         t5Qg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=2uQh+p4niM1XazCyX0W8SClLNopGSLFeOTKZKD97XRE=;
+        b=jRSkWPKFy+aX307nFA9nwPtBSyUtI3Rx2wzXkDoawmNR9EBxnEgbgOuHqpJlUzURZT
+         sV7k69m+oa16kaqF4hrYU8VlNGgLedRPtIQMrWtFfI1lYATZNKlBhFfYsdwu71vQpo8l
+         4hsC4E1OYjLOCvcQc0ZNw7818nwUnGdICNM7KZF/Pj8oVL04L5HnrLC4hGuv9gcmfZac
+         QEF3y8KkPlAdKQa7pk8VGNHlHNoii/EZVaGEr6IiXqB8Q9AYGmnR5/+s61lipbxEVDy4
+         WVZil8tiOMGEBeIN6IOofRQtzUr/x76R5xEihGyGfY+KVuW7UGM6aZN17saLTTNxIC81
+         Y9Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eB6k5meLI0PLOK3mYE/JAtGJf13kBE3594LdTnKJT/c=;
-        b=hxsHTJgwrE8zZNhAvMvFNc1XeUtcSlty+9WJyJajaacLW8ZeovmaOHNEgp+duDapSy
-         yTOrNN0iYDz2NUMeZ9hTtEdZmK6+AfYwGkloZ7XGWxrmA2x4jBwL81Tkh1etyzOA6KN1
-         lpyYAF6kspp1FykQEsbQK0x86/lc4lYXKQOVXRMHYyyiveKqIQhroKswP119z+e5WjSz
-         BVoYcjlRMi3zIScSIJNXlm3yBNm74Y5vpQwaG2xZX7mWMKbLYRzGc0IavnpCNcDSXoAN
-         obcEtHYLVV7oHkx5eHQ+6/UDJyfMeFzV5EuAEM296H9BkIDDp4NoSjT0UsA+1zSBo4oV
-         Vyag==
-X-Gm-Message-State: APjAAAUF6ASwob518eI+zrJDFsYejswwptHw4/FZUuG40Yotc98AYdfj
-        OLJdZTKwCAe+S5hiUZXl9VU=
-X-Google-Smtp-Source: APXvYqyb+o0qcII6hqlSl8V9sdm+gHB13Znu6WUBjFKn+pUN45+xAXNqkdkIsB0zzQNru3DiagNjEA==
-X-Received: by 2002:a65:430a:: with SMTP id j10mr48510698pgq.143.1556347382897;
-        Fri, 26 Apr 2019 23:43:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=2uQh+p4niM1XazCyX0W8SClLNopGSLFeOTKZKD97XRE=;
+        b=eQRV5guHUU2XfBvJ7o5ErGNaf4RMF6S2teOdi7D5Ob1F8dg6VrxlMlWVZL6thVr5vc
+         S2MkNjdLLi/mj1rw7+XRo2QMpi5dsjwnxU3HKgw6L9b7Aucf3ny7G8pUzc8cy3z0SwpN
+         6IUJEYPMC47/KK7VlODDH1zN0wTBGgyP3vaSP1siwSS5uQw8UMs8RVWirE9OsL4YTKcT
+         mQwk5QkCNMIIi7otJv2wYNKaTh9GbPQE0t4thZRyP+SD+6lQftkeYvpZjc9x38csR1Xa
+         Wla7wAGIZYS+PxOqe8gpt6plGDECW0uAnLCNrewhZV9vxR2K07W8GhG1EKDb6SO6nM6k
+         NZ4A==
+X-Gm-Message-State: APjAAAVR853iMmTG0Xk/iTIM3kSlkaCTjcrNx2tX89k5vX0vLwnyURMf
+        HD5JGc5ZvIVE9oXf2lNvp4E=
+X-Google-Smtp-Source: APXvYqxfDuRpBbYxO71iQgRCpp9YwcxdysZGYp8xW7ZBvNhCbiRnBK6qmFG1IHuGhuou8D2zduF20Q==
+X-Received: by 2002:a62:26c1:: with SMTP id m184mr12194274pfm.102.1556347384381;
+        Fri, 26 Apr 2019 23:43:04 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.00
+        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 23:43:01 -0700 (PDT)
+        Fri, 26 Apr 2019 23:43:03 -0700 (PDT)
 From:   nadav.amit@gmail.com
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -69,11 +71,16 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
         will.deacon@arm.com, ard.biesheuvel@linaro.org,
         kristen@linux.intel.com, deneen.t.dock@intel.com,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Nadav Amit <namit@vmware.com>
-Subject: [PATCH v6 00/24] x86: text_poke() fixes and executable lockdowns
-Date:   Fri, 26 Apr 2019 16:22:39 -0700
-Message-Id: <20190426232303.28381-1-nadav.amit@gmail.com>
+        Nadav Amit <namit@vmware.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v6 01/24] Fix "x86/alternatives: Lockdep-enforce text_mutex in text_poke*()"
+Date:   Fri, 26 Apr 2019 16:22:40 -0700
+Message-Id: <20190426232303.28381-2-nadav.amit@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190426232303.28381-1-nadav.amit@gmail.com>
+References: <20190426232303.28381-1-nadav.amit@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -81,155 +88,165 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nadav Amit <namit@vmware.com>
 
-*
-* This version fixes failed boots on 32-bit that were reported by 0day.
-* Patch 5 is added to initialize uprobes during fork initialization.
-* Patch 7 (which was 6 in the previous version) is updated - the code is
-* moved to common mm-init code with no further changes.
-*
+text_mutex is currently expected to be held before text_poke() is
+called, but kgdb does not take the mutex, and instead *supposedly*
+ensures the lock is not taken and will not be acquired by any other core
+while text_poke() is running.
 
-This patchset improves several overlapping issues around stale TLB
-entries and W^X violations. It is combined from "x86/alternative:
-text_poke() enhancements v7" [1] and "Don't leave executable TLB entries
-to freed pages v2" [2] patchsets that were conflicting.
+The reason for the "supposedly" comment is that it is not entirely clear
+that this would be the case if gdb_do_roundup is zero.
 
-The related issues that this fixes:
-1. Fixmap PTEs that are used for patching are available for access from
-  other cores and might be exploited. They are not even flushed from
-  the TLB in remote cores, so the risk is even higher. Address this
-  issue by introducing a temporary mm that is only used during
-  patching. Unfortunately, due to init ordering, fixmap is still used
-  during boot-time patching. Future patches can eliminate the need for
-  it.
-2. Missing lockdep assertion to ensure text_mutex is taken. It is
-  actually not always taken, so fix the instances that were found not
-  to take the lock (although they should be safe even without taking
-  the lock).
-3. Module_alloc returning memory that is RWX until a module is finished
-  loading.
-4. Sometimes when memory is freed via the module subsystem, an
-  executable permissioned TLB entry can remain to a freed page. If the
-  page is re-used to back an address that will receive data from
-  userspace, it can result in user data being mapped as executable in
-  the kernel. The root of this behavior is vfree lazily flushing the
-  TLB, but not lazily freeing the underlying pages.
+Create two wrapper functions, text_poke() and text_poke_kgdb(), which do
+or do not run the lockdep assertion respectively.
 
-Changes v5 to v6:
-- Move poking_mm initialization to common x86 mm init [0day]
-- Initialize uprobes during fork initialization [0day]
+While we are at it, change the return code of text_poke() to something
+meaningful. One day, callers might actually respect it and the existing
+BUG_ON() when patching fails could be removed. For kgdb, the return
+value can actually be used.
 
-Changes v4 to v5:
-- Change temporary state variable name [Borislav]
-- Commit log and comment fixes [Borislav]
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Fixes: 9222f606506c ("x86/alternatives: Lockdep-enforce text_mutex in text_poke*()")
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+---
+ arch/x86/include/asm/text-patching.h |  1 +
+ arch/x86/kernel/alternative.c        | 52 ++++++++++++++++++++--------
+ arch/x86/kernel/kgdb.c               | 11 +++---
+ 3 files changed, 45 insertions(+), 19 deletions(-)
 
-Changes v3 to v4:
-- Remove the size parameter from tramp_free() [Steven]
-- Remove caching of hw_breakpoint_active() [Sean]
-- Prevent the use of bpf_probe_write_user() while using temporary mm [Jann]
-- Fix build issues on other archs
-
-Changes v2 to v3:
-- Fix commit messages and comments [Boris]
-- Rename VM_HAS_SPECIAL_PERMS [Boris]
-- Remove unnecessary local variables [Boris]
-- Rename set_alias_*() functions [Boris, Andy]
-- Save/restore DR registers when using temporary mm
-- Move line deletion from patch 10 to patch 17
-
-Changes v1 to v2:
-- Adding "Reviewed-by tag" [Masami]
-- Comment instead of code to warn against module removal while
-  patching [Masami]
-- Avoiding open-coded TLB flush [Andy]
-- Remove "This patch" [Borislav Petkov]
-- Not set global bit during text poking [Andy, hpa]
-- Add Ack from [Pavel Machek]
-- Split patch 16 "Plug in new special vfree flag" into 4 patches (16-19)
-  to make it easier to review. There were no code changes.
-
-The changes from "Don't leave executable TLB entries to freed pages
-v2" to v1:
-- Add support for case of hibernate trying to save an unmapped page
-  on the directmap. (Ard Biesheuvel)
-- No week arch breakout for vfree-ing special memory (Andy Lutomirski)
-- Avoid changing deferred free code by moving modules init free to work
-  queue (Andy Lutomirski)
-- Plug in new flag for kprobes and ftrace
-- More arch generic names for set_pages functions (Ard Biesheuvel)
-- Fix for TLB not always flushing the directmap (Nadav Amit)
-
-Changes from "x86/alternative: text_poke() enhancements v7" to v1
-- Fix build failure on CONFIG_RANDOMIZE_BASE=n (Rick)
-- Remove text_poke usage from ftrace (Nadav)
-
-[1] https://lkml.org/lkml/2018/12/5/200
-[2] https://lkml.org/lkml/2018/12/11/1571
-
-Andy Lutomirski (1):
-  x86/mm: Introduce temporary mm structs
-
-Nadav Amit (16):
-  Fix "x86/alternatives: Lockdep-enforce text_mutex in text_poke*()"
-  x86/jump_label: Use text_poke_early() during early init
-  x86/mm: Save debug registers when loading a temporary mm
-  uprobes: Initialize uprobes earlier
-  fork: Provide a function for copying init_mm
-  x86/alternative: Initialize temporary mm for patching
-  x86/alternative: Use temporary mm for text poking
-  x86/kgdb: Avoid redundant comparison of patched code
-  x86/ftrace: Set trampoline pages as executable
-  x86/kprobes: Set instruction page as executable
-  x86/module: Avoid breaking W^X while loading modules
-  x86/jump-label: Remove support for custom poker
-  x86/alternative: Remove the return value of text_poke_*()
-  x86/alternative: Comment about module removal races
-  mm/tlb: Provide default nmi_uaccess_okay()
-  bpf: Fail bpf_probe_write_user() while mm is switched
-
-Rick Edgecombe (7):
-  x86/mm/cpa: Add set_direct_map_ functions
-  mm: Make hibernate handle unmapped pages
-  vmalloc: Add flag for free of special permsissions
-  modules: Use vmalloc special flag
-  bpf: Use vmalloc special flag
-  x86/ftrace: Use vmalloc special flag
-  x86/kprobes: Use vmalloc special flag
-
- arch/Kconfig                         |   4 +
- arch/x86/Kconfig                     |   1 +
- arch/x86/include/asm/fixmap.h        |   2 -
- arch/x86/include/asm/mmu_context.h   |  56 ++++++++
- arch/x86/include/asm/pgtable.h       |   3 +
- arch/x86/include/asm/set_memory.h    |   3 +
- arch/x86/include/asm/text-patching.h |   7 +-
- arch/x86/include/asm/tlbflush.h      |   2 +
- arch/x86/kernel/alternative.c        | 201 ++++++++++++++++++++-------
- arch/x86/kernel/ftrace.c             |  22 +--
- arch/x86/kernel/jump_label.c         |  21 ++-
- arch/x86/kernel/kgdb.c               |  25 +---
- arch/x86/kernel/kprobes/core.c       |  19 ++-
- arch/x86/kernel/module.c             |   2 +-
- arch/x86/mm/init.c                   |  37 +++++
- arch/x86/mm/pageattr.c               |  16 ++-
- arch/x86/xen/mmu_pv.c                |   2 -
- include/asm-generic/tlb.h            |   9 ++
- include/linux/filter.h               |  18 +--
- include/linux/mm.h                   |  18 +--
- include/linux/sched/task.h           |   1 +
- include/linux/set_memory.h           |  11 ++
- include/linux/uprobes.h              |   5 +
- include/linux/vmalloc.h              |  15 ++
- init/main.c                          |   3 +
- kernel/bpf/core.c                    |   1 -
- kernel/events/uprobes.c              |   8 +-
- kernel/fork.c                        |  25 +++-
- kernel/module.c                      |  82 ++++++-----
- kernel/power/snapshot.c              |   5 +-
- kernel/trace/bpf_trace.c             |   8 ++
- mm/page_alloc.c                      |   7 +-
- mm/vmalloc.c                         | 113 ++++++++++++---
- 33 files changed, 552 insertions(+), 200 deletions(-)
-
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index e85ff65c43c3..f8fc8e86cf01 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -35,6 +35,7 @@ extern void *text_poke_early(void *addr, const void *opcode, size_t len);
+  * inconsistent instruction while you patch.
+  */
+ extern void *text_poke(void *addr, const void *opcode, size_t len);
++extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
+ extern int poke_int3_handler(struct pt_regs *regs);
+ extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
+ extern int after_bootmem;
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 9a79c7808f9c..0a814d73547a 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -679,18 +679,7 @@ void *__init_or_module text_poke_early(void *addr, const void *opcode,
+ 	return addr;
+ }
+ 
+-/**
+- * text_poke - Update instructions on a live kernel
+- * @addr: address to modify
+- * @opcode: source of the copy
+- * @len: length to copy
+- *
+- * Only atomic text poke/set should be allowed when not doing early patching.
+- * It means the size must be writable atomically and the address must be aligned
+- * in a way that permits an atomic write. It also makes sure we fit on a single
+- * page.
+- */
+-void *text_poke(void *addr, const void *opcode, size_t len)
++static void *__text_poke(void *addr, const void *opcode, size_t len)
+ {
+ 	unsigned long flags;
+ 	char *vaddr;
+@@ -703,8 +692,6 @@ void *text_poke(void *addr, const void *opcode, size_t len)
+ 	 */
+ 	BUG_ON(!after_bootmem);
+ 
+-	lockdep_assert_held(&text_mutex);
+-
+ 	if (!core_kernel_text((unsigned long)addr)) {
+ 		pages[0] = vmalloc_to_page(addr);
+ 		pages[1] = vmalloc_to_page(addr + PAGE_SIZE);
+@@ -733,6 +720,43 @@ void *text_poke(void *addr, const void *opcode, size_t len)
+ 	return addr;
+ }
+ 
++/**
++ * text_poke - Update instructions on a live kernel
++ * @addr: address to modify
++ * @opcode: source of the copy
++ * @len: length to copy
++ *
++ * Only atomic text poke/set should be allowed when not doing early patching.
++ * It means the size must be writable atomically and the address must be aligned
++ * in a way that permits an atomic write. It also makes sure we fit on a single
++ * page.
++ */
++void *text_poke(void *addr, const void *opcode, size_t len)
++{
++	lockdep_assert_held(&text_mutex);
++
++	return __text_poke(addr, opcode, len);
++}
++
++/**
++ * text_poke_kgdb - Update instructions on a live kernel by kgdb
++ * @addr: address to modify
++ * @opcode: source of the copy
++ * @len: length to copy
++ *
++ * Only atomic text poke/set should be allowed when not doing early patching.
++ * It means the size must be writable atomically and the address must be aligned
++ * in a way that permits an atomic write. It also makes sure we fit on a single
++ * page.
++ *
++ * Context: should only be used by kgdb, which ensures no other core is running,
++ *	    despite the fact it does not hold the text_mutex.
++ */
++void *text_poke_kgdb(void *addr, const void *opcode, size_t len)
++{
++	return __text_poke(addr, opcode, len);
++}
++
+ static void do_sync_core(void *info)
+ {
+ 	sync_core();
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index 4ff6b4cdb941..2b203ee5b879 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -759,13 +759,13 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+ 	if (!err)
+ 		return err;
+ 	/*
+-	 * It is safe to call text_poke() because normal kernel execution
++	 * It is safe to call text_poke_kgdb() because normal kernel execution
+ 	 * is stopped on all cores, so long as the text_mutex is not locked.
+ 	 */
+ 	if (mutex_is_locked(&text_mutex))
+ 		return -EBUSY;
+-	text_poke((void *)bpt->bpt_addr, arch_kgdb_ops.gdb_bpt_instr,
+-		  BREAK_INSTR_SIZE);
++	text_poke_kgdb((void *)bpt->bpt_addr, arch_kgdb_ops.gdb_bpt_instr,
++		       BREAK_INSTR_SIZE);
+ 	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
+ 	if (err)
+ 		return err;
+@@ -784,12 +784,13 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
+ 	if (bpt->type != BP_POKE_BREAKPOINT)
+ 		goto knl_write;
+ 	/*
+-	 * It is safe to call text_poke() because normal kernel execution
++	 * It is safe to call text_poke_kgdb() because normal kernel execution
+ 	 * is stopped on all cores, so long as the text_mutex is not locked.
+ 	 */
+ 	if (mutex_is_locked(&text_mutex))
+ 		goto knl_write;
+-	text_poke((void *)bpt->bpt_addr, bpt->saved_instr, BREAK_INSTR_SIZE);
++	text_poke_kgdb((void *)bpt->bpt_addr, bpt->saved_instr,
++		       BREAK_INSTR_SIZE);
+ 	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
+ 	if (err || memcmp(opc, bpt->saved_instr, BREAK_INSTR_SIZE))
+ 		goto knl_write;
 -- 
 2.17.1
 
