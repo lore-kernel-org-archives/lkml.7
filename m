@@ -6,78 +6,77 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D9CC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54C9C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF1A72077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9368D2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbfDZKQl (ORCPT
+        id S1726197AbfDZKS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:16:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58948 "EHLO mx1.redhat.com"
+        Fri, 26 Apr 2019 06:18:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59792 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbfDZKQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:16:41 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1725944AbfDZKS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 06:18:56 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4C4D23082B4D;
-        Fri, 26 Apr 2019 10:16:41 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id CE7993088297;
+        Fri, 26 Apr 2019 10:18:55 +0000 (UTC)
 Received: from localhost (ovpn-12-17.pek2.redhat.com [10.72.12.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9360E600C7;
-        Fri, 26 Apr 2019 10:16:38 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 18:16:35 +0800
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 270241001E87;
+        Fri, 26 Apr 2019 10:18:54 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 18:18:52 +0800
 From:   Baoquan He <bhe@redhat.com>
 To:     Borislav Petkov <bp@alien8.de>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>, dyoung@redhat.com,
-        Kairui Song <kasong@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
- mapping before accessing it
-Message-ID: <20190426101635.GQ3584@localhost.localdomain>
-References: <20190419101733.GA10324@zn.tnic>
- <20190419105014.GE11060@MiWiFi-R3L-srv>
- <20190419112801.GB10324@zn.tnic>
- <20190419113621.GD10324@zn.tnic>
- <20190422143346.GD3584@localhost.localdomain>
- <20190422151723.GD21457@zn.tnic>
- <20190426095134.GP3584@localhost.localdomain>
- <20190426095800.GB4608@zn.tnic>
+Cc:     keescook@chromium.org, kirill@shutemov.name,
+        linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        mingo@kernel.org, hpa@zytor.com, peterz@infradead.org,
+        thgarnie@google.com, herbert@gondor.apana.org.au,
+        mike.travis@hpe.com, frank.ramsay@hpe.com,
+        yamada.masahiro@socionext.com
+Subject: Re: [PATCH v2 RESEND 2/2] x86/mm/KASLR: Fix the size of vmemmap
+ section
+Message-ID: <20190426101852.GR3584@localhost.localdomain>
+References: <20190414072804.12560-1-bhe@redhat.com>
+ <20190414072804.12560-3-bhe@redhat.com>
+ <20190415194755.GJ29317@zn.tnic>
+ <20190426092348.GO3584@localhost.localdomain>
+ <20190426100441.GC4608@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190426095800.GB4608@zn.tnic>
+In-Reply-To: <20190426100441.GC4608@zn.tnic>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 26 Apr 2019 10:16:41 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 26 Apr 2019 10:18:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/26/19 at 11:58am, Borislav Petkov wrote:
-> On Fri, Apr 26, 2019 at 05:51:34PM +0800, Baoquan He wrote:
-> > I can make a patch to add a bit into xloadflags, to indicate that this
-> > is kexec-ed kernel. It can help to differentiate kexec-ed kernel from
-> > kdump kernel.
+On 04/26/19 at 12:04pm, Borislav Petkov wrote:
+> On Fri, Apr 26, 2019 at 05:23:48PM +0800, Baoquan He wrote:
+> > I sent private mail to Kirill and Kees. Kirill haven't replied yet, he
+> > could be busy with something else as he doesn't show up recently on
+> > lkml.
 > 
-> From the recent snafu, the only thing we needed is to differentiate
-> between the *first* kernel and the following kernel(s) which has been
-> started/loaded using a kexec syscall.
+> I don't understand what the hurry is?
+> 
+> The merge window is imminent and we only pick obvious fixes. That
+> doesn't qualify as such, AFAICT.
 
-OK. To make sure I got it, the loader type 0xD is enough for this, right? 
+OK.
 
-It's fine to me, we can add it later if needed. I remember there's an
-issue in intel/amd iommu, in which we need differentiate between
-kexec/kdump kernel, but not very sure. I will check it when I have time
-to work on that.
+> 
+> > Kees kindly replied, and said he couldn't find this mail thread. He told
+> > I can add his Reviewed-by, as he has acked this patchset in v2
+> > thread. I just updated later to tune log and correct typos.
+> > http://lkml.kernel.org/r/CAGXu5j+o4aSx9mMDJqTMOp-VrvWes-2YEwR1f29z8dm0rUfzGQ@mail.gmail.com
+> 
+> Yes, when you get Reviewed-by:'s or other tags from reviewers, you
+> *add* them to your next submission when the patch doesn't change in
+> non-trivial fashion. You should know that...
 
-Thanks
-Baoquan
-
-
+OK, will remember it. Thanks.
