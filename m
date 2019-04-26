@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD4AC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFA8C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA33206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45833206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556272159;
-	bh=v2ARod7HjKep7IitZ+YopVdamp1JPG6yFnkBdKSIkZA=;
+	s=default; t=1556272165;
+	bh=xSNDp/GKHR3KfSIhmzeV28Ffmw4TDXFUh7swg3mvBYs=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=rB3Lum/aHbtSk9oCVYwGL9BTRzBX4quNzpbimW/lNl/JFd2hcm0+9qfQEwTDPXPZa
-	 ckFcycC9VcfjD/Oii9fLuyLSPROW04VryJQjZftA+LqDgVd5O36A6uxjl5HUI4LXe9
-	 D/S5erHNqy8LLCErjX8ATNniNSo2AOynk6fBcBQQ=
+	b=aVxE1wYw3DOWtVrEYY2kPczfnSqOUiR50IqH/E+Zz7Lm810R0gSUu6vlM9yvBhy+V
+	 pCx3bqGLFX+fUnJkNEUF98TX6FqKywSMQNpo7cSK119t56SK940NTFmbFJslQ/mm8p
+	 IOXMDZ8Clk9ja27dfg8oUQ4g0Y6cjZkAqVIH/bhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfDZJtS (ORCPT
+        id S1726915AbfDZJoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:49:18 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52582 "EHLO
+        Fri, 26 Apr 2019 05:44:24 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52378 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727161AbfDZJoZ (ORCPT
+        with ESMTP id S1725965AbfDZJoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:44:25 -0400
+        Fri, 26 Apr 2019 05:44:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=d7fwDPCLOnIsD8KW6qDPNj2rt1PnG3weU5JoQ4wyNxs=; b=C4vDOtLBwvFG
-        3GcroHVTTu1YBxbULsUVXAgtwm797iGABZhy3hvMtm87mGJcWkdR5ovU8WF1Y2lDEpb9nDJ3dmalv
-        dRBCkSf/bHx2NZ7pMjDa1WmxbVnO814E6nEWwI5SvuROED3ZuNivo9ZcJ4kraDts7liQdW9AMv6rs
-        AJan8=;
+        List-Archive; bh=dXU9O8UvY3fyqXAtNFCsvZlnSVuemzNArlamt/r46jY=; b=wWEajG3vcQzd
+        mn6wnXRf3jOm6tALPGJhW+1IBaWQxuER8Vzzfbb9djGDAGxUPBsfMhJqCpAWQ5919hp6qtHrSgJYU
+        y1OzxGXzaw6rugzD9ulWBF/AeGwHjsR+E9hsi0ZTfLm/qFRNezzVRIf+A04cyB9A3x37+mEHbuZ3C
+        uzrZg=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxP4-0003O5-Bw; Fri, 26 Apr 2019 09:44:22 +0000
+        id 1hJxP0-0003NR-JY; Fri, 26 Apr 2019 09:44:18 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 517F3441D3C; Fri, 26 Apr 2019 10:44:21 +0100 (BST)
+        id 88479441D3B; Fri, 26 Apr 2019 10:44:17 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Applied "regulator: ltc3589: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: <20190418114500.1098-3-axel.lin@ingics.com>
+Cc:     Gyungoh Yoo <gyungoh@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: sky81452: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190420072001.16900-2-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094421.517F3441D3C@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:44:21 +0100 (BST)
+Message-Id: <20190426094417.88479441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:44:17 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: ltc3589: Switch to SPDX identifier
+   regulator: sky81452: Switch to SPDX identifier
 
 has been applied to the regulator tree at
 
@@ -87,49 +87,49 @@ to this mail.
 Thanks,
 Mark
 
-From b2745697bfe46ce04af5493f194c6073e683b0f1 Mon Sep 17 00:00:00 2001
+From fb9bf5c8f15c98f96c6b80208113aa91fba83c8a Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Thu, 18 Apr 2019 19:45:00 +0800
-Subject: [PATCH] regulator: ltc3589: Switch to SPDX identifier
+Date: Sat, 20 Apr 2019 15:20:01 +0800
+Subject: [PATCH] regulator: sky81452: Switch to SPDX identifier
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/ltc3589.c | 24 ++++++------------------
+ drivers/regulator/sky81452-regulator.c | 24 ++++++------------------
  1 file changed, 6 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/regulator/ltc3589.c b/drivers/regulator/ltc3589.c
-index 077e73715514..9a037fdc5fc5 100644
---- a/drivers/regulator/ltc3589.c
-+++ b/drivers/regulator/ltc3589.c
+diff --git a/drivers/regulator/sky81452-regulator.c b/drivers/regulator/sky81452-regulator.c
+index eb2b60968a1a..177dede82a61 100644
+--- a/drivers/regulator/sky81452-regulator.c
++++ b/drivers/regulator/sky81452-regulator.c
 @@ -1,21 +1,9 @@
 -/*
-- * Linear Technology LTC3589,LTC3589-1 regulator support
+- * sky81452-regulator.c	SKY81452 regulator driver
 - *
-- * Copyright (c) 2014 Philipp Zabel <p.zabel@pengutronix.de>, Pengutronix
+- * Copyright 2014 Skyworks Solutions Inc.
+- * Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
 - *
-- * See file CREDITS for list of people who contributed to this
-- * project.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 2
 - * as published by the Free Software Foundation.
 - *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
 - *
+- * You should have received a copy of the GNU General Public License along
+- * with this program; if not, see <http://www.gnu.org/licenses/>.
 - */
 +// SPDX-License-Identifier: GPL-2.0
 +//
-+// Linear Technology LTC3589,LTC3589-1 regulator support
++// sky81452-regulator.c	SKY81452 regulator driver
 +//
-+// Copyright (c) 2014 Philipp Zabel <p.zabel@pengutronix.de>, Pengutronix
-+
- #include <linux/i2c.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
++// Copyright 2014 Skyworks Solutions Inc.
++// Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
+ 
+ #include <linux/module.h>
+ #include <linux/kernel.h>
 -- 
 2.20.1
 
