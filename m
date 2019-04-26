@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5554FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1D6C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248AD206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF23206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="PllH1iuU"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="fMhWGOoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfDZHkN (ORCPT
+        id S1726379AbfDZHkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:40:13 -0400
-Received: from first.geanix.com ([116.203.34.67]:59692 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbfDZHkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Apr 2019 03:40:12 -0400
+Received: from first.geanix.com ([116.203.34.67]:59668 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726239AbfDZHkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 03:40:09 -0400
 Received: from localhost (unknown [193.163.1.7])
-        by first.geanix.com (Postfix) with ESMTPSA id 67B27308E6E;
-        Fri, 26 Apr 2019 07:32:09 +0000 (UTC)
+        by first.geanix.com (Postfix) with ESMTPSA id E23ED308E61;
+        Fri, 26 Apr 2019 07:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1556263929; bh=WAkncToduk4yoBrBXENYCJGMDt9o4OJTuagsV08z/R0=;
+        t=1556263906; bh=07Y9Hc6b65DWtwZEe56zHmW9V/vLTjilRyyXLkgmM2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=PllH1iuUTi47rbMwaVhwZKeGC/CslkQjH8rfY0sOufq7Aa2SXLaQW2B+oofwIFwr7
-         /GbNbkVaB/i7G9M1rBKZjEKzB6DW/+NuLnNXHZUGjp5FyuRWeH9EgA1J/rVZqenMf5
-         AsN0ayL3HTr5l6GE0Vp233WS5Av1E0WRfy/9CO4Yt+gDBMJWkafKMBvUntxcMLJ4or
-         L0+BwY5IJHXeSpCFpSckFpjCOZddtQYSRBd/k9BR85o4zeNEfBRe/M/lXX5ZdJvJr6
-         mSW4X8s6Bg2G5MUs79ko5g71Wvm+JsSgXRE/vj9/Z4l5QxKf+gmdO6RiAxVquGqdTd
-         KqjGSwUwbxWcQ==
+        b=fMhWGOoit2/YJvLaHbjWEJQFtRIk6ylzXwtYlJGsoksTPcIGZtcB82gsVp5PAARTF
+         JjZ8EweijXYyUnJMUfB2l9qL3MfcllY7ci6sYBi2cHh6sNQzQlZtyGL/S7XwMgLoBd
+         W5rCgmriQXsNhAuOD62rYHKYXYckcFPhvix71o2s1BLF5jHMRl78aj6qX9J9qoTMYc
+         /uhRx7g2qJQKMEpCs5DqNgmEzKUV+6J35H8453iayi3VnK1JZ2CKW/VnWBOjD/BM20
+         sYZtxTbU/v5dPpOPuhUUo3+JTyTH+wRA0SGleK+VOAEO+y/FasTT/5+GyAOnn/ivXX
+         3L6Cwt/ga7Tbw==
 From:   Esben Haabendal <esben@geanix.com>
 To:     netdev@vger.kernel.org
 Cc:     "David S. Miller" <davem@davemloft.net>,
@@ -42,9 +42,9 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         YueHaibing <yuehaibing@huawei.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/12] net: ll_temac: Allow configuration of IRQ coalescing
-Date:   Fri, 26 Apr 2019 09:32:30 +0200
-Message-Id: <20190426073231.4008-12-esben@geanix.com>
+Subject: [PATCH 04/12] net: ll_temac: Add support for non-native register endianness
+Date:   Fri, 26 Apr 2019 09:32:23 +0200
+Message-Id: <20190426073231.4008-5-esben@geanix.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190426073231.4008-1-esben@geanix.com>
 References: <20190426073231.4008-1-esben@geanix.com>
@@ -55,115 +55,208 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows custom setup of IRQ coalescing for platforms using legacy
-platform_device. The irq timeout and count parameters can be used for
-tuning cpu load vs. latency.
+Replace the powerpc specific MMIO register access functions with the
+generic big-endian mmio access functions, and add support for
+little-endian access depending on configuration.
 
-I have maintained the 0x00000400 bit in TX_CHNL_CTRL.  It is specified as
-unused in the documentation I have available.  It does not make any
-difference in the hardware I have available, so it is left in to not risk
-breaking other platforms where it might be used.
+Big-endian access is maintained as the default, but little-endian can
+be configured in device-tree binding or in platform data.
+
+The temac_ior()/temac_iow() functions are replaced with macro wrappers
+to avoid modifying existing code more than necessary.
 
 Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
- drivers/net/ethernet/xilinx/ll_temac.h      |  4 +++
- drivers/net/ethernet/xilinx/ll_temac_main.c | 40 ++++++++++++++++++++---------
- include/linux/xilinx_ll_temac.h             |  5 ++++
- 3 files changed, 37 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/xilinx/ll_temac.h      | 12 ++--
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 87 +++++++++++++++++++++++------
+ include/linux/xilinx_ll_temac.h             |  2 +
+ 3 files changed, 79 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/net/ethernet/xilinx/ll_temac.h b/drivers/net/ethernet/xilinx/ll_temac.h
-index 990f9ed..1aeda08 100644
+index e338b4f..23d8dd5 100644
 --- a/drivers/net/ethernet/xilinx/ll_temac.h
 +++ b/drivers/net/ethernet/xilinx/ll_temac.h
-@@ -375,6 +375,10 @@ struct temac_local {
- 	int tx_bd_next;
- 	int tx_bd_tail;
+@@ -347,8 +347,10 @@ struct temac_local {
+ #ifdef CONFIG_PPC_DCR
+ 	dcr_host_t sdma_dcrs;
+ #endif
+-	u32 (*dma_in)(struct temac_local *, int);
+-	void (*dma_out)(struct temac_local *, int, u32);
++	u32 (*temac_ior)(struct temac_local *lp, int offset);
++	void (*temac_iow)(struct temac_local *lp, int offset, u32 value);
++	u32 (*dma_in)(struct temac_local *lp, int reg);
++	void (*dma_out)(struct temac_local *lp, int reg, u32 value);
+ 
+ 	int tx_irq;
+ 	int rx_irq;
+@@ -372,9 +374,11 @@ struct temac_local {
  	int rx_bd_ci;
-+
-+	/* DMA channel control setup */
-+	u32 tx_chnl_ctrl;
-+	u32 rx_chnl_ctrl;
  };
  
- /* Wrappers for temac_ior()/temac_iow() function pointers above */
++/* Wrappers for temac_ior()/temac_iow() function pointers above */
++#define temac_ior(lp, o) ((lp)->temac_ior(lp, o))
++#define temac_iow(lp, o, v) ((lp)->temac_iow(lp, o, v))
++
+ /* xilinx_temac.c */
+-u32 temac_ior(struct temac_local *lp, int offset);
+-void temac_iow(struct temac_local *lp, int offset, u32 value);
+ int temac_indirect_busywait(struct temac_local *lp);
+ u32 temac_indirect_in32(struct temac_local *lp, int reg);
+ void temac_indirect_out32(struct temac_local *lp, int reg, u32 value);
 diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index a5ec8ba..a30ac11 100644
+index a365bfd..9c1fb9b 100644
 --- a/drivers/net/ethernet/xilinx/ll_temac_main.c
 +++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -306,18 +306,15 @@ static int temac_dma_bd_init(struct net_device *ndev)
- 		lp->rx_bd_v[i].app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
+@@ -63,14 +63,24 @@
+  * Low level register access functions
+  */
+ 
+-u32 temac_ior(struct temac_local *lp, int offset)
++u32 _temac_ior_be(struct temac_local *lp, int offset)
+ {
+-	return in_be32(lp->regs + offset);
++	return ioread32be(lp->regs + offset);
+ }
+ 
+-void temac_iow(struct temac_local *lp, int offset, u32 value)
++void _temac_iow_be(struct temac_local *lp, int offset, u32 value)
+ {
+-	out_be32(lp->regs + offset, value);
++	return iowrite32be(value, lp->regs + offset);
++}
++
++u32 _temac_ior_le(struct temac_local *lp, int offset)
++{
++	return ioread32(lp->regs + offset);
++}
++
++void _temac_iow_le(struct temac_local *lp, int offset, u32 value)
++{
++	return iowrite32(value, lp->regs + offset);
+ }
+ 
+ int temac_indirect_busywait(struct temac_local *lp)
+@@ -121,23 +131,35 @@ void temac_indirect_out32(struct temac_local *lp, int reg, u32 value)
+ }
+ 
+ /**
+- * temac_dma_in32 - Memory mapped DMA read, this function expects a
+- * register input that is based on DCR word addresses which
+- * are then converted to memory mapped byte addresses
++ * temac_dma_in32_* - Memory mapped DMA read, these function expects a
++ * register input that is based on DCR word addresses which are then
++ * converted to memory mapped byte addresses.  To be assigned to
++ * lp->dma_in32.
+  */
+-static u32 temac_dma_in32(struct temac_local *lp, int reg)
++static u32 temac_dma_in32_be(struct temac_local *lp, int reg)
+ {
+-	return in_be32(lp->sdma_regs + (reg << 2));
++	return ioread32be(lp->sdma_regs + (reg << 2));
++}
++
++static u32 temac_dma_in32_le(struct temac_local *lp, int reg)
++{
++	return ioread32(lp->sdma_regs + (reg << 2));
+ }
+ 
+ /**
+- * temac_dma_out32 - Memory mapped DMA read, this function expects a
+- * register input that is based on DCR word addresses which
+- * are then converted to memory mapped byte addresses
++ * temac_dma_out32_* - Memory mapped DMA read, these function expects
++ * a register input that is based on DCR word addresses which are then
++ * converted to memory mapped byte addresses.  To be assigned to
++ * lp->dma_out32.
+  */
+-static void temac_dma_out32(struct temac_local *lp, int reg, u32 value)
++static void temac_dma_out32_be(struct temac_local *lp, int reg, u32 value)
++{
++	iowrite32be(value, lp->sdma_regs + (reg << 2));
++}
++
++static void temac_dma_out32_le(struct temac_local *lp, int reg, u32 value)
+ {
+-	out_be32(lp->sdma_regs + (reg << 2), value);
++	iowrite32(value, lp->sdma_regs + (reg << 2));
+ }
+ 
+ /* DMA register access functions can be DCR based or memory mapped.
+@@ -1024,6 +1046,7 @@ static int temac_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	const void *addr;
+ 	__be32 *p;
++	bool little_endian;
+ 	int rc = 0;
+ 
+ 	/* Init network device structure */
+@@ -1068,6 +1091,24 @@ static int temac_probe(struct platform_device *pdev)
+ 		return PTR_ERR(lp->regs);
  	}
  
--	lp->dma_out(lp, TX_CHNL_CTRL, 0x10220400 |
--					  CHNL_CTRL_IRQ_EN |
--					  CHNL_CTRL_IRQ_DLY_EN |
--					  CHNL_CTRL_IRQ_COAL_EN);
--	/* 0x10220483 */
--	/* 0x00100483 */
--	lp->dma_out(lp, RX_CHNL_CTRL, 0xff070000 |
--					  CHNL_CTRL_IRQ_EN |
--					  CHNL_CTRL_IRQ_DLY_EN |
--					  CHNL_CTRL_IRQ_COAL_EN |
--					  CHNL_CTRL_IRQ_IOE);
--	/* 0xff010283 */
-+	/* Configure DMA channel (irq setup) */
-+	lp->dma_out(lp, TX_CHNL_CTRL, lp->tx_chnl_ctrl |
-+		    0x00000400 | // Use 1 Bit Wide Counters. Currently Not Used!
-+		    CHNL_CTRL_IRQ_EN | CHNL_CTRL_IRQ_ERR_EN |
-+		    CHNL_CTRL_IRQ_DLY_EN | CHNL_CTRL_IRQ_COAL_EN);
-+	lp->dma_out(lp, RX_CHNL_CTRL, lp->rx_chnl_ctrl |
-+		    CHNL_CTRL_IRQ_IOE |
-+		    CHNL_CTRL_IRQ_EN | CHNL_CTRL_IRQ_ERR_EN |
-+		    CHNL_CTRL_IRQ_DLY_EN | CHNL_CTRL_IRQ_COAL_EN);
- 
- 	lp->dma_out(lp, RX_CURDESC_PTR,  lp->rx_bd_p);
- 	lp->dma_out(lp, RX_TAILDESC_PTR,
-@@ -1186,6 +1183,13 @@ static int temac_probe(struct platform_device *pdev)
- 		lp->rx_irq = irq_of_parse_and_map(dma_np, 0);
- 		lp->tx_irq = irq_of_parse_and_map(dma_np, 1);
- 
-+		/* Use defaults for IRQ delay/coalescing setup.  These
-+		 * are configuration values, so does not belong in
-+		 * device-tree.
-+		 */
-+		lp->tx_chnl_ctrl = 0x10220000;
-+		lp->rx_chnl_ctrl = 0xff070000;
++	/* Select register access functions with the specified
++	 * endianness mode.  Default for OF devices is big-endian.
++	 */
++	little_endian = false;
++	if (temac_np) {
++		if (of_get_property(temac_np, "little-endian", NULL))
++			little_endian = true;
++	} else if (pdata) {
++		little_endian = pdata->reg_little_endian;
++	}
++	if (little_endian) {
++		lp->temac_ior = _temac_ior_le;
++		lp->temac_iow = _temac_iow_le;
++	} else {
++		lp->temac_ior = _temac_ior_be;
++		lp->temac_iow = _temac_iow_be;
++	}
 +
- 		/* Finished with the DMA node; drop the reference */
- 		of_node_put(dma_np);
- 	} else if (pdata) {
-@@ -1209,6 +1213,18 @@ static int temac_probe(struct platform_device *pdev)
+ 	/* Setup checksum offload, but default to off if not specified */
+ 	lp->temac_features = 0;
+ 	if (temac_np) {
+@@ -1111,8 +1152,13 @@ static int temac_probe(struct platform_device *pdev)
+ 				of_node_put(dma_np);
+ 				return PTR_ERR(lp->sdma_regs);
+ 			}
+-			lp->dma_in = temac_dma_in32;
+-			lp->dma_out = temac_dma_out32;
++			if (of_get_property(dma_np, "little-endian", NULL)) {
++				lp->dma_in = temac_dma_in32_le;
++				lp->dma_out = temac_dma_out32_le;
++			} else {
++				lp->dma_in = temac_dma_in32_be;
++				lp->dma_out = temac_dma_out32_be;
++			}
+ 			dev_dbg(&pdev->dev, "MEM base: %p\n", lp->sdma_regs);
+ 		}
+ 
+@@ -1132,8 +1178,13 @@ static int temac_probe(struct platform_device *pdev)
+ 				"could not map DMA registers\n");
+ 			return PTR_ERR(lp->sdma_regs);
+ 		}
+-		lp->dma_in = temac_dma_in32;
+-		lp->dma_out = temac_dma_out32;
++		if (pdata->dma_little_endian) {
++			lp->dma_in = temac_dma_in32_le;
++			lp->dma_out = temac_dma_out32_le;
++		} else {
++			lp->dma_in = temac_dma_in32_be;
++			lp->dma_out = temac_dma_out32_be;
++		}
+ 
  		/* Get DMA RX and TX interrupts */
  		lp->rx_irq = platform_get_irq(pdev, 0);
- 		lp->tx_irq = platform_get_irq(pdev, 1);
-+
-+		/* IRQ delay/coalescing setup */
-+		if (pdata->tx_irq_timeout || pdata->tx_irq_count)
-+			lp->tx_chnl_ctrl = (pdata->tx_irq_timeout << 24) |
-+				(pdata->tx_irq_count << 16);
-+		else
-+			lp->tx_chnl_ctrl = 0x10220000;
-+		if (pdata->rx_irq_timeout || pdata->rx_irq_count)
-+			lp->rx_chnl_ctrl = (pdata->rx_irq_timeout << 24) |
-+				(pdata->rx_irq_count << 16);
-+		else
-+			lp->rx_chnl_ctrl = 0xff070000;
- 	}
- 
- 	/* Error handle returned DMA RX and TX interrupts */
 diff --git a/include/linux/xilinx_ll_temac.h b/include/linux/xilinx_ll_temac.h
-index c4c66be..e8d4c09 100644
+index 44d7dd6..53f9203 100644
 --- a/include/linux/xilinx_ll_temac.h
 +++ b/include/linux/xilinx_ll_temac.h
-@@ -21,6 +21,11 @@ struct ll_temac_platform_data {
- 	 * they share the same DCR bus bridge.
- 	 */
- 	struct mutex *indirect_mutex;
-+	/* DMA channel control setup */
-+	u8 tx_irq_timeout;	/* TX Interrupt Delay Time-out */
-+	u8 tx_irq_count;	/* TX Interrupt Coalescing Threshold Count */
-+	u8 rx_irq_timeout;	/* RX Interrupt Delay Time-out */
-+	u8 rx_irq_count;	/* RX Interrupt Coalescing Threshold Count */
+@@ -13,6 +13,8 @@ struct ll_temac_platform_data {
+ 	unsigned long long mdio_bus_id; /* Unique id for MDIO bus */
+ 	int phy_addr;		/* Address of the PHY to connect to */
+ 	phy_interface_t phy_interface; /* PHY interface mode */
++	bool reg_little_endian;	/* Little endian TEMAC register access  */
++	bool dma_little_endian;	/* Little endian DMA register access  */
  };
  
  #endif /* __LINUX_XILINX_LL_TEMAC_H */
