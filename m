@@ -2,92 +2,147 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6EDC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A8CC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF504206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC41206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:21:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lBLB0Yol"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XdVa/UMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfDZOVO (ORCPT
+        id S1726415AbfDZOVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:21:14 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45540 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbfDZOVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:21:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=6TOYRVLSYm3pTlQplTTOyVWUN3SL+or4WplAj6u3u6A=; b=lBLB0YolKVoDNMdFde2qgyArKA
-        uDp6BvGQ/+RJI1QDbFvUjoI71zb9wwyEWHdpNbwXXMnyec5DdkFWVUEwxKo44LcnC63rW/uj1Aaok
-        YTwMkwUV27KSMdZbhqP3lTuZdm/M8Iz4HhtduBhSL1P4oeWIOyNEjEoZl7MJjhMdEC5U=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hK1ip-0001G8-6M; Fri, 26 Apr 2019 16:21:03 +0200
-Date:   Fri, 26 Apr 2019 16:21:03 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Esben Haabendal <esben@geanix.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Yang Wei <yang.wei9@zte.com.cn>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/12] net: ll_temac: Fix iommu/swiotlb leak
-Message-ID: <20190426142103.GI14432@lunn.ch>
-References: <20190426073231.4008-1-esben@geanix.com>
- <20190426073231.4008-9-esben@geanix.com>
+        Fri, 26 Apr 2019 10:21:49 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36079 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfDZOVt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 10:21:49 -0400
+Received: by mail-io1-f67.google.com with SMTP id d19so3105335ioc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 07:21:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FkJyFzPG+Rri4iB7SrmxtBQEBVd3BG8Vrjj6VUTWkYA=;
+        b=XdVa/UMZ+2UG5ezgRW6jI4d4YoHpC2a1yQWFMxLhp+3DzCPDHIfllBuCiApVqTp35m
+         xj0CCYCwt3lXMHuFh23K2LscHxyW0fvEFZyk7pSz8rU1wooo5woV2ZP9y2K62T9WTe4u
+         4HVqZBwoClJPNk9STT9DvWQ1hay3cJRZWRFMA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FkJyFzPG+Rri4iB7SrmxtBQEBVd3BG8Vrjj6VUTWkYA=;
+        b=W481RdM16o0kH5BtXbdFbI5blr1jODlsrTwTaJuoNpGzN7ZvdOlzSdjsz7ns9HqzKq
+         hf4Zvb+E2XBUMzghlvZetxrQ39UUqsHbZ4QPbZUQGQOcmNldvP0/EMf6BprYDD6dDnK0
+         hb6VjzeBcqI8lS2zr/l6zgE+PFjtEp4RY/ZIoCHst0Nr3rp0WRHaV62vlOjTA6Z5YZ0F
+         k7iZ3rSDtS+DXEQ8Tlr9vmftjxasJfq6Chm3YmxTqCbifyum3ewNavXoIrmKpz4F32Mu
+         2J2lD7ON5qFmEtlemaBTtzsdJTQVA+inlyrgFri0mJE7B+HCo7VxErxGYl39lX2sF5qZ
+         L3AQ==
+X-Gm-Message-State: APjAAAXtPKULQAtZUGB6fibKH/Q7lXrwJs8xRFYjrJimq0X4blAv+vlb
+        PZd5oFY753YapLR5j+X3+rDzHQiaRoCkMsbnkaPa+g==
+X-Google-Smtp-Source: APXvYqz6Ch5zyVD60GP4DAl4HUmZk6GjcrmT/uENhh/KRlsF/uo1LX6FTfzvYTiI4znlMRGd18uOeYjzADIvxXaqSaU=
+X-Received: by 2002:a6b:b24c:: with SMTP id b73mr19343819iof.34.1556288508516;
+ Fri, 26 Apr 2019 07:21:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426073231.4008-9-esben@geanix.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190426053324.26443-1-kraxel@redhat.com>
+In-Reply-To: <20190426053324.26443-1-kraxel@redhat.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 26 Apr 2019 16:21:37 +0200
+Message-ID: <CAKMK7uG+vMU0hqqiKAswu=LqpkcXtLPqbYLRWgoAPpsQQV4qzA@mail.gmail.com>
+Subject: Re: [PATCH] Revert "drm/qxl: drop prime import/export callbacks"
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <spice-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 09:32:27AM +0200, Esben Haabendal wrote:
-> Unmap the actual buffer length, not the amount of data received.
+On Fri, Apr 26, 2019 at 7:33 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> This reverts commit f4c34b1e2a37d5676180901fa6ff188bcb6371f8.
+>
+> Simliar to commit a0cecc23cfcb Revert "drm/virtio: drop prime
+> import/export callbacks".  We have to do the same with qxl,
+> for the same reasons (it breaks DRI3).
+>
+> Drop the WARN_ON_ONCE().
+>
+> Fixes: f4c34b1e2a37d5676180901fa6ff188bcb6371f8
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 
-Hi Esben
+Maybe we need some helpers for virtual drivers which only allow
+self-reimport and nothing else at all? I think there's qxl, virgl,
+vmwgfx and maybe also vbox one who could use this ... Just a quick
+idea.
+-Daniel
 
-The patch Subject does not seem to match the content?
-
-Also, there can be performance advantages of just unmapping the
-received length. The unmap operation does a cache invalidate, which
-can be expensive. Consider the effort of unmapping a 64 byte ACK vs 9K
-jumbo frame?
-
-      Andrew
- 
-> Signed-off-by: Esben Haabendal <esben@geanix.com>
 > ---
->  drivers/net/ethernet/xilinx/ll_temac_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-> index 309f149..56d8077 100644
-> --- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-> +++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-> @@ -821,7 +821,7 @@ static void ll_temac_recv(struct net_device *ndev)
->  		length = be32_to_cpu(cur_p->app4) & 0x3FFF;
->  
->  		dma_unmap_single(ndev->dev.parent, be32_to_cpu(cur_p->phys),
-> -				 length, DMA_FROM_DEVICE);
-> +				 XTE_MAX_JUMBO_FRAME_SIZE, DMA_FROM_DEVICE);
->  
->  		skb_put(skb, length);
->  		skb->protocol = eth_type_trans(skb, ndev);
-> -- 
-> 2.4.11
-> 
+>  drivers/gpu/drm/qxl/qxl_drv.c   |  4 ++++
+>  drivers/gpu/drm/qxl/qxl_prime.c | 12 ++++++++++++
+>  2 files changed, 16 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
+> index 578d867a81d5..f33e349c4ec5 100644
+> --- a/drivers/gpu/drm/qxl/qxl_drv.c
+> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
+> @@ -255,10 +255,14 @@ static struct drm_driver qxl_driver = {
+>  #if defined(CONFIG_DEBUG_FS)
+>         .debugfs_init = qxl_debugfs_init,
+>  #endif
+> +       .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+> +       .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+>         .gem_prime_export = drm_gem_prime_export,
+>         .gem_prime_import = drm_gem_prime_import,
+>         .gem_prime_pin = qxl_gem_prime_pin,
+>         .gem_prime_unpin = qxl_gem_prime_unpin,
+> +       .gem_prime_get_sg_table = qxl_gem_prime_get_sg_table,
+> +       .gem_prime_import_sg_table = qxl_gem_prime_import_sg_table,
+>         .gem_prime_vmap = qxl_gem_prime_vmap,
+>         .gem_prime_vunmap = qxl_gem_prime_vunmap,
+>         .gem_prime_mmap = qxl_gem_prime_mmap,
+> diff --git a/drivers/gpu/drm/qxl/qxl_prime.c b/drivers/gpu/drm/qxl/qxl_prime.c
+> index 8b448eca1cd9..114653b471c6 100644
+> --- a/drivers/gpu/drm/qxl/qxl_prime.c
+> +++ b/drivers/gpu/drm/qxl/qxl_prime.c
+> @@ -42,6 +42,18 @@ void qxl_gem_prime_unpin(struct drm_gem_object *obj)
+>         qxl_bo_unpin(bo);
+>  }
+>
+> +struct sg_table *qxl_gem_prime_get_sg_table(struct drm_gem_object *obj)
+> +{
+> +       return ERR_PTR(-ENOSYS);
+> +}
+> +
+> +struct drm_gem_object *qxl_gem_prime_import_sg_table(
+> +       struct drm_device *dev, struct dma_buf_attachment *attach,
+> +       struct sg_table *table)
+> +{
+> +       return ERR_PTR(-ENOSYS);
+> +}
+> +
+>  void *qxl_gem_prime_vmap(struct drm_gem_object *obj)
+>  {
+>         struct qxl_bo *bo = gem_to_qxl_bo(obj);
+> --
+> 2.18.1
+>
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
