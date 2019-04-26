@@ -2,219 +2,262 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCBFC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05DBC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2204420878
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:27:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nt+JTcGX"
+	by mail.kernel.org (Postfix) with ESMTP id 9B70A206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbfDZB1a (ORCPT
+        id S1727159AbfDZBad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 21:27:30 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36082 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730592AbfDZB1B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 21:27:01 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 85so755295pgc.3;
-        Thu, 25 Apr 2019 18:27:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=AAMozjG2W0PZy93LSAs4zDJPg/GRcksOW95uh6hbVyE=;
-        b=nt+JTcGXkv86jkgeu09qHJji8VhOnTBhpYbkRRBXLogDkbTD8FALb2AzRq0LF36a9E
-         KIyFE7h9x0Xvn9GOdUfUlKLNm1WaFlg3fSdM8W4uwAdCkuPolR5wXrOO7hB8BlrgSBuE
-         ol+xfF7qhO49zPlZbgG1ETyPE0JrxdsdUdq4FdcK2pFnWOMqTsymoeSIq5u5j5aKXHuw
-         Qf5RDyfdszGznkzJ8WMA5/QYGZTveZaucqFb6Uosv8Zv8Bt9oU7HHBJqBU0KBIau4u+q
-         5yntuOEmGMFa8D8DuxbJzGHv2nSbA3ebWsnhN2EHzf5qGbJB2eSa0BdHwiccctHH37Yd
-         SBrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=AAMozjG2W0PZy93LSAs4zDJPg/GRcksOW95uh6hbVyE=;
-        b=ocrnTu80DZ+C1euFckaxcaYoq0Y9KpKT8IoJzPMg2RsH0m3DqnCqs5P0+GlbwvZcy4
-         PXKKROnVYuaJdC/OOlus+yFgzplWfdPu+LD89xudcDtgbfwBH5OZPurME0z3OFugJJQH
-         iJOLm6Ozr/WeY7pPQPAZJ10900zh5eW57XFw6qHpt8p894/ECMWh80fA7d25fgDfheAP
-         WZN3vHvQ3gUNAKvwkHsETFUuZBsHv+vebF3nZqmey8oGfa4UJuYHWa8ZoU92nJ0xtsni
-         wFggm1wxSuVz1oWgUz9kktI+fI5+ri6UGpMfTtWEAfrrMcE6kfHSKyNN7e79Fq6K6KO+
-         nO2Q==
-X-Gm-Message-State: APjAAAWP2XQIrQcG8TNudFXiqkUKyzMF3mMc61dAOK6gtMJDaRARLzpE
-        Z9tcNNE1gKaH6k8gEyk7I320vvr9
-X-Google-Smtp-Source: APXvYqy2rigHkSr60h7LR2D9//LNPenhzfLJwmO5f3tQURMSU7wmB7elqTksquts6Lh3Ir1iiSaw7Q==
-X-Received: by 2002:aa7:8dc2:: with SMTP id j2mr5358602pfr.82.1556242020175;
-        Thu, 25 Apr 2019 18:27:00 -0700 (PDT)
-Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id l184sm46494230pfc.98.2019.04.25.18.26.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Apr 2019 18:26:59 -0700 (PDT)
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
-        / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/6] media: staging/imx: Move add_video_device into capture_device_register
-Date:   Thu, 25 Apr 2019 18:26:44 -0700
-Message-Id: <20190426012647.7128-4-slongerbeam@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190426012647.7128-1-slongerbeam@gmail.com>
-References: <20190426012647.7128-1-slongerbeam@gmail.com>
+        Thu, 25 Apr 2019 21:30:33 -0400
+Received: from mga11.intel.com ([192.55.52.93]:36502 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbfDZBad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 21:30:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 18:30:32 -0700
+X-IronPort-AV: E=Sophos;i="5.60,395,1549958400"; 
+   d="scan'208";a="137552610"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.239.196.118]) ([10.239.196.118])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 25 Apr 2019 18:30:30 -0700
+Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
+References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
+ <20190424143238.GB18442@linux.intel.com>
+ <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
+ <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
+ <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
+ <be509b34ba01a22845363aeb0b0f053f25c2d9c1.camel@intel.com>
+ <7568a794-2e91-c84c-5b64-d33e394f0e2b@linux.intel.com>
+ <20190425141944.GA31197@linux.intel.com>
+ <5203b6ee-4a14-64b7-0237-dae2a977054d@linux.intel.com>
+ <6df520272ae8874fbc06d60664f17b518d9b8c5e.camel@intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <300e920b-03b6-2874-df6a-02e596f6cf96@linux.intel.com>
+Date:   Fri, 26 Apr 2019 09:30:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <6df520272ae8874fbc06d60664f17b518d9b8c5e.camel@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move imx_media_add_video_device() into imx_media_capture_device_register().
-Also the former has no error conditions to convert to void.
+On 2019/4/26 0:28, Xiaoyao Li wrote:
+> On Thu, 2019-04-25 at 23:33 +0800, Like Xu wrote:
+>> On 2019/4/25 22:19, Sean Christopherson wrote:
+>>> On Thu, Apr 25, 2019 at 03:07:35PM +0800, Like Xu wrote:
+>>>> On 2019/4/25 14:30, Xiaoyao Li wrote:
+>>>>>>> Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes
+>>>>>>> is
+>>>>>>> that we cannot assmue the reserved bits 31:16 of ECX is always 0 for
+>>>>>>> the
+>>>>>>> future generation.
+>>>
+>>> It doesn't matter if future CPUs use 31:16 for other things since this
+>>> code only cares about whether or not CPUID.1F exists.  The check
+>>> entry->eax >= 0x1f ensures that CPUID.1F will return zeros if the leaf
+>>> does *NOT* exist, ergo the check against CPUID.1F.ECX only needs to
+>>> look for a non-zero value.  CPUID.1F.ECX is the logical choice for
+>>> detecting support because it is guaranteed to be non-zero if the leaf
+>>> actually exists (because bits 15:8 will be non-zero).  Whether or not
+>>> bits 31:16 are non-zero is irrelevant.
+>>
+>> Here is a case:
+>>
+>> one future CPU may have "cpuid.0.eax > 0x1f" but not use multi-chip
+>> packaging technology thus its CPUID.1F leaf **could** not exist to
+>> expose multi-die info and it still use cpuid.0B leaf.
+>>
+>> So the entry->eax >= 0x1f check is true and cpuid_ecx(0x1f) check is
+>> true as well due to default return value. (one of my machines for
+>> cpuid.1f.ecx would return 0x00000064 without cpuid.1f support).
+> 
+> You mean entry->eax >= 0x1f, and CPUID.1F leaf doesn't exist.
+> In this case, cpuid_ecx(0x1f) must be zero.
+> 
+> You should the descripton of CPUID instruction in SDM. It says:
+> 
+>     If a value entered for CPUID.EAX is less than or equal to the maximum input
+>     value and the leaf is not supported on that processor then 0 is returned in
+>     all the registers.
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
----
- drivers/staging/media/imx/imx-ic-prpencvf.c   |  5 -----
- drivers/staging/media/imx/imx-media-capture.c |  3 +++
- drivers/staging/media/imx/imx-media-csi.c     |  7 +------
- drivers/staging/media/imx/imx-media-utils.c   |  9 ++++-----
- drivers/staging/media/imx/imx-media.h         |  4 ++--
- drivers/staging/media/imx/imx7-media-csi.c    | 12 +-----------
- 6 files changed, 11 insertions(+), 29 deletions(-)
+It's true.
 
-diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
-index ddcd87a17c71..8242d88dfb82 100644
---- a/drivers/staging/media/imx/imx-ic-prpencvf.c
-+++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
-@@ -1241,7 +1241,6 @@ static int prp_s_frame_interval(struct v4l2_subdev *sd,
- static int prp_registered(struct v4l2_subdev *sd)
- {
- 	struct prp_priv *priv = sd_to_priv(sd);
--	struct imx_ic_priv *ic_priv = priv->ic_priv;
- 	int i, ret;
- 	u32 code;
- 
-@@ -1271,10 +1270,6 @@ static int prp_registered(struct v4l2_subdev *sd)
- 	if (ret)
- 		return ret;
- 
--	ret = imx_media_add_video_device(ic_priv->md, priv->vdev);
--	if (ret)
--		goto unreg;
--
- 	ret = prp_init_controls(priv);
- 	if (ret)
- 		goto unreg;
-diff --git a/drivers/staging/media/imx/imx-media-capture.c b/drivers/staging/media/imx/imx-media-capture.c
-index 211ec4df2066..335084a6b0cd 100644
---- a/drivers/staging/media/imx/imx-media-capture.c
-+++ b/drivers/staging/media/imx/imx-media-capture.c
-@@ -780,6 +780,9 @@ int imx_media_capture_device_register(struct imx_media_video_dev *vdev)
- 
- 	vfd->ctrl_handler = &priv->ctrl_hdlr;
- 
-+	/* add vdev to the video device list */
-+	imx_media_add_video_device(priv->md, vdev);
-+
- 	return 0;
- unreg:
- 	video_unregister_device(vfd);
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index ea3d13103c91..c70fa6b509ae 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -1820,13 +1820,8 @@ static int csi_registered(struct v4l2_subdev *sd)
- 	if (ret)
- 		goto free_fim;
- 
--	ret = imx_media_add_video_device(priv->md, priv->vdev);
--	if (ret)
--		goto unreg;
--
- 	return 0;
--unreg:
--	imx_media_capture_device_unregister(priv->vdev);
-+
- free_fim:
- 	if (priv->fim)
- 		imx_media_fim_free(priv->fim);
-diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
-index c52aa59acd05..8a6e57652402 100644
---- a/drivers/staging/media/imx/imx-media-utils.c
-+++ b/drivers/staging/media/imx/imx-media-utils.c
-@@ -767,18 +767,17 @@ imx_media_find_subdev_by_devname(struct imx_media_dev *imxmd,
- EXPORT_SYMBOL_GPL(imx_media_find_subdev_by_devname);
- 
- /*
-- * Adds a video device to the master video device list. This is called by
-- * an async subdev that owns a video device when it is registered.
-+ * Adds a video device to the master video device list. This is called
-+ * when a video device is registered.
-  */
--int imx_media_add_video_device(struct imx_media_dev *imxmd,
--			       struct imx_media_video_dev *vdev)
-+void imx_media_add_video_device(struct imx_media_dev *imxmd,
-+				struct imx_media_video_dev *vdev)
- {
- 	mutex_lock(&imxmd->mutex);
- 
- 	list_add_tail(&vdev->list, &imxmd->vdev_list);
- 
- 	mutex_unlock(&imxmd->mutex);
--	return 0;
- }
- EXPORT_SYMBOL_GPL(imx_media_add_video_device);
- 
-diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
-index ba2d75bcc4c9..71e20f53ed7b 100644
---- a/drivers/staging/media/imx/imx-media.h
-+++ b/drivers/staging/media/imx/imx-media.h
-@@ -189,8 +189,8 @@ imx_media_find_subdev_by_fwnode(struct imx_media_dev *imxmd,
- struct v4l2_subdev *
- imx_media_find_subdev_by_devname(struct imx_media_dev *imxmd,
- 				 const char *devname);
--int imx_media_add_video_device(struct imx_media_dev *imxmd,
--			       struct imx_media_video_dev *vdev);
-+void imx_media_add_video_device(struct imx_media_dev *imxmd,
-+				struct imx_media_video_dev *vdev);
- int imx_media_find_mipi_csi2_channel(struct imx_media_dev *imxmd,
- 				     struct media_entity *start_entity);
- struct media_pad *
-diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index 96d01d8af874..f2037aba6e0e 100644
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -1126,17 +1126,7 @@ static int imx7_csi_registered(struct v4l2_subdev *sd)
- 	if (ret < 0)
- 		return ret;
- 
--	ret = imx_media_capture_device_register(csi->vdev);
--	if (ret < 0)
--		return ret;
--
--	ret = imx_media_add_video_device(csi->imxmd, csi->vdev);
--	if (ret < 0) {
--		imx_media_capture_device_unregister(csi->vdev);
--		return ret;
--	}
--
--	return 0;
-+	return imx_media_capture_device_register(csi->vdev);
- }
- 
- static void imx7_csi_unregistered(struct v4l2_subdev *sd)
--- 
-2.17.1
+> 
+> I can tell you why the cpuid.1f.exc return 0x00000064 in your machines.
+> That's the value of leaf 0x16, you can check the output of cpuid.0x0_eax, it
+> should be 0x00000016.
+
+I have to mention in this case, the cpuid.1f.ecx[31:8] is 0 as well.
+
+> 
+>> When we only cares about whether or not CPUID.1F exists,
+>> we may need (cpuid_ecx(0x1f) & 0x0000ff00) != 0 or just follow what host
+>> check_extended_topology_leaf() does.
+>>>
+>>>>>>
+>>>>>> It's true cause the statement in public spec is not "Reserved = 0" but
+>>>>>> "Bits 31 - 16: Reserved".
+>>>>>>
+>>>>>>>
+>>>>>>> In my opinion, Sean's codes is OK and much simple and clear.
+>>>>>>
+>>>>>> If the host cpuid.0.eax is greater than 0x1f but actually it doesn't
+>>>>>> have multi-chip packaging technology and we may want to expose
+>>>>>> entry->eax to some value smaller than 0x1f but greater than 0x14, much
+>>>>>> effort needs to apply on Sean's code.
+>>>>>>
+>>>>>> My improvement is good to overwrite cpuid.0.eax in future usage
+>>>>>> from the perspective of kvm feature setting not just from value check.
+>>>>>
+>>>>> Alright, there is something wrong in your code that you haven't
+>>>>> realised.
+>>>>>
+>>>>> When you do
+>>>>> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+>>>>>
+>>>>> it changes the entry->eax if entry->eax > 0x14. So you cannot directly
+>>>>> use
+>>>>> cpuid_ecx(0x1f). At least, you need to cache the value of entry->eax,
+>>>>> like:
+>>>>> 	
+>>>>> 	u32 max_leaf = entry->eax;
+>>>>> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+>>>>> 	
+>>>>> 	//...leaf between 0x14 and 0x1f
+>>>>> 	
+>>>>> 	if (max_leaf >= 0x1f && (cpuid_ecx(0x1f) & 0x0000ff00))
+>>>>>    		entry->eax = 0x1f;
+>>>>
+>>>> The cache value make no sense on this.
+>>>
+>>> Xiaoyao is pointing out that by limiting entry->eax to 0x14 (or 0xd), then
+>>> it can't be used to detect support for CPUID.1F since KVM will have lost
+>>> the required information.
+>>
+>> The point is that its existence does not really depend on cpuid.0.eax> =
+>> 0x1f. My test machine (CLX-AP, two die in one package) has cpuid.0.eax =
+>> 0x16 but does have CPUID.1F support (a bit strange on BIOS).
+> 
+> I think it must be something wrong with your CLX-AP.
+> I tested on my CLX-AP machine too, the cpuid.0x0_eax is 0x000000001f.
+
+You are suggesting that we should give up exposing cpuid.1f on this 
+strange machine and it's not **practical**.
+
+One of my CLX-AP machines is normal, but there is such another machine 
+with a bad BIOS configuration. We are supposed to take advantage of the 
+real hardware support instead of ignoring it just because of the 
+cpuid.0.eax limit.
+
+> 
+>>>
+>>>>> However, handling in increasing order in totally wrong. Since it's to
+>>>>> report the
+>>>>> max the leaf supported, we should handle in descending order, which is
+>>>>> what Sean
+>>>>> does.
+>>>>
+>>>> There is no need to check "entry->eax >= 0x1f" before "setting entry->eax
+>>>> =
+>>>> 0x1f" if and only if cpuid_ecx(0x1f) meets requirements.
+>>>
+>>> entry->eax absolutely needs to be checked, otherwise you have no idea what
+>>> CPUID leaf is actually being consumed.  For example, a CPU with a maximum
+>>> basic CPUID leaf of 0xB will report information that is indistinguishable
+>>> from the actual CPUID.1F, i.e. KVM will incorrectly think the CPU supports
+>>> CPUID.1F regardless of what heuristic is used to detect a "valid" CPUID.1F
+>>> if it only looks at the result of CPUID.1F.
+>>
+>> Based on what I mentioned, just reconsider this proposal:
+>>
+>> case 0:
+>>       entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+>>       if ((cpuid_ecx(0x1f) & 0x0000ff00)) != 0)
+>>           entry->eax = 0x1f;
+>>
+>> It increases the cpuid.0.ecx value along with the minimized feature
+>> requirement in a natural and readable way. Why don't we design a little
+>> bit future ahead of time?
+> 
+> There are two things I want to state:
+> 
+> 1. using cpuid_ecx(0x1f) to check the existence of leaf 1f is absolutely wrong.
+> 
+> Using the return value of E{A,B,C,D}X of cpuid leaf *N* to check the existence
+> of leaf *N* is totally wrong. We need first to ensure that cpuid.0_eax >= *N*,
+> that's the reason why we need cpuid.0_eax.
+> 
+> Specifically, about cpuid leaf 1f, in page 3-222 Vol.2A of latest SDM publish on
+> January 2019, the description of Input EAX = 1FH is:
+> 
+>     When CPUID executes with EAX set to 1FH, the processor returns information
+>     about extended topology enumeration data. Software must detect the presence
+>     of CPUID leaf 1FH by verifying (a) the highest leaf index supported by CPUID
+>     is >= 1FH, and (b) CPUID.1FH:EBX[15:0] reports a non-zero value.
+
+It's true and it's the official right way to check EBX rather than ECX. 
+Nice move, thanks xiaoyao.
+
+However we could do better considering all possible output of 
+cpuid.0.eax and cpuid.1f and my proposal for whether or not CPUID.1F 
+exists is to check cpuid.1f.ecx[31:8] practically as host check does.
+
+I don't insist on it and what do you think, Sean?
+
+> 
+> 2. Checking in descending manner is better that increasing manner.
+> 
+> In increasing manner, we have to check from the smallest one by one, there will
+> be some useless check for the smaller one.
+
+You see the uselessness and I see the necessity.
+The number of checks time is not critical.
+
+>     
+> However, in descending manner, once it finds the supported maxmium one, there is
+> no need to check the smaller leaf.
+
+It's not supposed to finds the maxmium one but the minimum value
+just recall the purpose of why we apply min().
+
+The descending if_else flow would be broken if kvm does not want to 
+expose 0x1f but a expected value smaller than 0x1f but larger than 0x14.
+
+We may add this kind of module parameter like f_intel_pt to apply min() 
+again and if so, an increasing manner helps a lot.
+
+The descending flat flow couldn't reduce the number of checks time
+and a temp value for original eax is introduced unavoidably.
+
+> 
+>>>
+>>>> An increasing manner helps to overwrite this value on demand in a flat
+>>>> code
+>>>> flow (easy to understand and maintain) not an if-else_if-else flow.
+>>>
+>>> Maybe in the future the code will need to be refactored as more cases are
+>>> added, but for now an if-else is quite readable.  Worry about the future
+>>> when it happens. :-)
+>>>
+>>
+>>
+> 
+> 
 
