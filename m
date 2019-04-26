@@ -2,229 +2,82 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9B9C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87187C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F612054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FCA20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:59:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1CU5hz3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfDZUwR (ORCPT
+        id S1726844AbfDZU7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 16:52:17 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:33347 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbfDZUwR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 16:52:17 -0400
-Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 1CC11240008;
-        Fri, 26 Apr 2019 20:52:13 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 22:52:13 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 7/7] clk: at91: add sam9x60 pmc driver
-Message-ID: <20190426205213.GW14604@piout.net>
-References: <20190402125056.21509-1-alexandre.belloni@bootlin.com>
- <20190402125056.21509-8-alexandre.belloni@bootlin.com>
- <155622113579.15276.15900194435736283135@swboyd.mtv.corp.google.com>
- <20190425203139.GO14604@piout.net>
- <155622589096.15276.8583738150370510787@swboyd.mtv.corp.google.com>
- <155622689471.15276.16322042541342557062@swboyd.mtv.corp.google.com>
+        Fri, 26 Apr 2019 16:59:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46043 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbfDZU7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 16:59:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=OCh7hT70whp/+unoMK2jqCVOcBFEvfKRG5b+VUOJD2I=; b=1CU5hz3nVs7ef8TMlXNAhWk/KB
+        Vj2QqJiBl+W/gF58XyYvADOZDqrxI3rRwOJkNmnxn1f+4jFw6p00hkERkOWbAnIDt1iwvAumCTd5q
+        Mjb48qJv4PHQhJctGvPCQIj/cav01dzGvhmBQTXpQSAb6Pt5h3oDcwjCAnLclCs+pJvY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hK7w8-0004ty-B9; Fri, 26 Apr 2019 22:59:12 +0200
+Date:   Fri, 26 Apr 2019 22:59:12 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Esben Haabendal <esben@geanix.com>, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Yang Wei <yang.wei9@zte.com.cn>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/12] net: ll_temac: Fix support for 64-bit platforms
+Message-ID: <20190426205912.GI4041@lunn.ch>
+References: <20190426073231.4008-1-esben@geanix.com>
+ <20190426073231.4008-4-esben@geanix.com>
+ <20190426114013.333e62c8@cakuba.netronome.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155622689471.15276.16322042541342557062@swboyd.mtv.corp.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190426114013.333e62c8@cakuba.netronome.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/04/2019 14:14:54-0700, Stephen Boyd wrote:
-> Quoting Stephen Boyd (2019-04-25 13:58:10)
-> > Quoting Alexandre Belloni (2019-04-25 13:31:39)
-> > > On 25/04/2019 12:38:55-0700, Stephen Boyd wrote:
-> > > > 
-> > > > const?
-> > > > 
-> > > 
-> > > Right, can you fix that up or should I send a new version?
-> > > 
+On Fri, Apr 26, 2019 at 11:40:13AM -0700, Jakub Kicinski wrote:
+> On Fri, 26 Apr 2019 09:32:22 +0200, Esben Haabendal wrote:
+> > The use of buffer descriptor APP4 field (32-bit) for storing skb pointer
+> > obviously does not work on 64-bit platforms.
+> > As APP3 is also unused, we can use that to store the other half of 64-bit
+> > pointer values.
 > > 
-> > I can fix it.
+> > Contrary to what is hinted at in commit message of commit 15bfe05c8d63
+> > ("net: ethernet: xilinx: Mark XILINX_LL_TEMAC broken on 64-bit")
+> > there are no other pointers stored in cdmac_bd.
+> > 
+> > Signed-off-by: Esben Haabendal <esben@geanix.com>
 > 
-> It's more complicated. I'll pile this patch on top. Maybe other
-> static data in drivers/clk/at91 can be const, but this at least covers
-> the struct clk_range ones.
-> 
+> This is a bit strange, the driver stores the host's virtual address into
+> the HW descriptor?
 
-Seems good to me.
+Hi Jukub
 
-> diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-> index b1af5a395423..0aabe49aed09 100644
-> --- a/drivers/clk/at91/at91sam9260.c
-> +++ b/drivers/clk/at91/at91sam9260.c
-> @@ -41,7 +41,7 @@ static u8 sam9260_plla_out[] = { 0, 2 };
->  
->  static u16 sam9260_plla_icpll[] = { 1, 1 };
->  
-> -static struct clk_range sam9260_plla_outputs[] = {
-> +static const struct clk_range sam9260_plla_outputs[] = {
->  	{ .min = 80000000, .max = 160000000 },
->  	{ .min = 150000000, .max = 240000000 },
->  };
-> @@ -58,7 +58,7 @@ static u8 sam9260_pllb_out[] = { 1 };
->  
->  static u16 sam9260_pllb_icpll[] = { 1 };
->  
-> -static struct clk_range sam9260_pllb_outputs[] = {
-> +static const struct clk_range sam9260_pllb_outputs[] = {
->  	{ .min = 70000000, .max = 130000000 },
->  };
->  
-> @@ -128,7 +128,7 @@ static u8 sam9g20_plla_out[] = { 0, 1, 2, 3, 0, 1, 2, 3 };
->  
->  static u16 sam9g20_plla_icpll[] = { 0, 0, 0, 0, 1, 1, 1, 1 };
->  
-> -static struct clk_range sam9g20_plla_outputs[] = {
-> +static const struct clk_range sam9g20_plla_outputs[] = {
->  	{ .min = 745000000, .max = 800000000 },
->  	{ .min = 695000000, .max = 750000000 },
->  	{ .min = 645000000, .max = 700000000 },
-> @@ -151,7 +151,7 @@ static u8 sam9g20_pllb_out[] = { 0 };
->  
->  static u16 sam9g20_pllb_icpll[] = { 0 };
->  
-> -static struct clk_range sam9g20_pllb_outputs[] = {
-> +static const struct clk_range sam9g20_pllb_outputs[] = {
->  	{ .min = 30000000, .max = 100000000 },
->  };
->  
-> @@ -182,7 +182,7 @@ static const struct clk_master_characteristics sam9261_mck_characteristics = {
->  	.divisors = { 1, 2, 4, 0 },
->  };
->  
-> -static struct clk_range sam9261_plla_outputs[] = {
-> +static const struct clk_range sam9261_plla_outputs[] = {
->  	{ .min = 80000000, .max = 200000000 },
->  	{ .min = 190000000, .max = 240000000 },
->  };
-> @@ -199,7 +199,7 @@ static u8 sam9261_pllb_out[] = { 1 };
->  
->  static u16 sam9261_pllb_icpll[] = { 1 };
->  
-> -static struct clk_range sam9261_pllb_outputs[] = {
-> +static const struct clk_range sam9261_pllb_outputs[] = {
->  	{ .min = 70000000, .max = 130000000 },
->  };
->  
-> @@ -262,7 +262,7 @@ static const struct clk_master_characteristics sam9263_mck_characteristics = {
->  	.divisors = { 1, 2, 4, 0 },
->  };
->  
-> -static struct clk_range sam9263_pll_outputs[] = {
-> +static const struct clk_range sam9263_pll_outputs[] = {
->  	{ .min = 80000000, .max = 200000000 },
->  	{ .min = 190000000, .max = 240000000 },
->  };
-> diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-> index 5aeef68b4bdd..0ac34cdaa106 100644
-> --- a/drivers/clk/at91/at91sam9rl.c
-> +++ b/drivers/clk/at91/at91sam9rl.c
-> @@ -14,7 +14,7 @@ static const struct clk_master_characteristics sam9rl_mck_characteristics = {
->  
->  static u8 sam9rl_plla_out[] = { 0, 2 };
->  
-> -static struct clk_range sam9rl_plla_outputs[] = {
-> +static const struct clk_range sam9rl_plla_outputs[] = {
->  	{ .min = 80000000, .max = 200000000 },
->  	{ .min = 190000000, .max = 240000000 },
->  };
-> diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-> index f5cfcbd85f10..0855f3a80cc7 100644
-> --- a/drivers/clk/at91/at91sam9x5.c
-> +++ b/drivers/clk/at91/at91sam9x5.c
-> @@ -17,7 +17,7 @@ static u8 plla_out[] = { 0, 1, 2, 3, 0, 1, 2, 3 };
->  
->  static u16 plla_icpll[] = { 0, 0, 0, 0, 1, 1, 1, 1 };
->  
-> -static struct clk_range plla_outputs[] = {
-> +static const struct clk_range plla_outputs[] = {
->  	{ .min = 745000000, .max = 800000000 },
->  	{ .min = 695000000, .max = 750000000 },
->  	{ .min = 645000000, .max = 700000000 },
-> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-> index fb9e9c4cdc8d..775b77a433f5 100644
-> --- a/drivers/clk/at91/pmc.h
-> +++ b/drivers/clk/at91/pmc.h
-> @@ -66,7 +66,7 @@ extern const struct clk_pll_layout sama5d3_pll_layout;
->  struct clk_pll_characteristics {
->  	struct clk_range input;
->  	int num_output;
-> -	struct clk_range *output;
-> +	const struct clk_range *output;
->  	u16 *icpll;
->  	u8 *out;
->  	u8 upll : 1;
-> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-> index 864ac060aed6..6340b1fc1828 100644
-> --- a/drivers/clk/at91/sam9x60.c
-> +++ b/drivers/clk/at91/sam9x60.c
-> @@ -21,7 +21,7 @@ static const struct clk_master_layout sam9x60_master_layout = {
->  	.offset = 0x28,
->  };
->  
-> -static struct clk_range plla_outputs[] = {
-> +static const struct clk_range plla_outputs[] = {
->  	{ .min = 300000000, .max = 600000000 },
->  };
->  
-> @@ -31,7 +31,7 @@ static const struct clk_pll_characteristics plla_characteristics = {
->  	.output = plla_outputs,
->  };
->  
-> -static struct clk_range upll_outputs[] = {
-> +static const struct clk_range upll_outputs[] = {
->  	{ .min = 300000000, .max = 500000000 },
->  };
->  
-> diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-> index 096156850e08..f3d3f6c8e261 100644
-> --- a/drivers/clk/at91/sama5d2.c
-> +++ b/drivers/clk/at91/sama5d2.c
-> @@ -16,7 +16,7 @@ static u8 plla_out[] = { 0 };
->  
->  static u16 plla_icpll[] = { 0 };
->  
-> -static struct clk_range plla_outputs[] = {
-> +static const struct clk_range plla_outputs[] = {
->  	{ .min = 600000000, .max = 1200000000 },
->  };
->  
-> diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-> index 840edca77821..25b156d4e645 100644
-> --- a/drivers/clk/at91/sama5d4.c
-> +++ b/drivers/clk/at91/sama5d4.c
-> @@ -16,7 +16,7 @@ static u8 plla_out[] = { 0 };
->  
->  static u16 plla_icpll[] = { 0 };
->  
-> -static struct clk_range plla_outputs[] = {
-> +static const struct clk_range plla_outputs[] = {
->  	{ .min = 600000000, .max = 1200000000 },
->  };
->  
+This is reasonably common. You need some sort of cookie which links
+the hardware descriptor to the skbuf it points to. The hardware makes
+no use of it, it is just a cookie.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+    Andrew
