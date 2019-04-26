@@ -2,104 +2,91 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0F0C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11281C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61BE6206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:57:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tstw7iZx"
+	by mail.kernel.org (Postfix) with ESMTP id DD603206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfDZQ5B (ORCPT
+        id S1726369AbfDZRAO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:57:01 -0400
-Received: from mail-oi1-f201.google.com ([209.85.167.201]:56632 "EHLO
-        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbfDZQ5A (ORCPT
+        Fri, 26 Apr 2019 13:00:14 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:60716 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfDZRAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:57:00 -0400
-Received: by mail-oi1-f201.google.com with SMTP id j202so1705526oih.23
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:57:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=LdtpNCBMXVEYh5+9sDcKIELQmRtwCEZfEh/KIYFOBOU=;
-        b=tstw7iZxA9nBCcJm42TviKa3bi3ItAr7vfTnG5YC9Kqym6BPPvFKMw4mIP/esb1Yre
-         /CMlYKOQJbOgKiCHWaeSZ1w+/XYFN9f4aLobh+zg4n7IbmnPQc0jkvCsUIRTDwa43Zwb
-         84S7GwrJ2F6mS7l2MkMjUuUxw+3zWXnLRozAko6nXAOUz0MgIg+mnXnwHXPSwr2ULpB6
-         83/g53qmLpOfbAncr55eDmfW0C+yLh0R8/TRQOJT9CC8Or6uneQm0hbGPU/omorcfvGZ
-         HcW6GH6eQ3lBvlPYvVs2YVDA2D6CmSxTljsmMGFbTMU1Rm17Z9MsIRgy1L4Xx4k1uz4D
-         yXPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=LdtpNCBMXVEYh5+9sDcKIELQmRtwCEZfEh/KIYFOBOU=;
-        b=UVIBwr79z9/rx3HW5mjjkbJcIt9Ssh3Alw38HTfjS85ZB8/2PBNWJep1OU/zc/tqW6
-         YavzKjKrbXVBp3a3DpLwMBargToxf5tdc1mTeUztwD73E3mVKK3sTpPxdRdF9CKKp/IR
-         D5gY/aeoUoDI173mjONfFwpQpV6r1kNoWUzbK7cNmXShE03h4OhKZbHY2P2U1ZGEY6lv
-         CMFXFL+UMlQtzUKA8FTb1fPRMgbD+bqYA3rK1igj5QAi+6l21Xv2nTEeU9aQp5ftwfza
-         IU6ychRxZQiRESy98N8m2RpkQPnXRE/bYagkANd7glV6NGx90FBY5AtxCLZ6ZOVrLUXr
-         kxLQ==
-X-Gm-Message-State: APjAAAUgiQzb0CLd8sQm3qrxnD/UZhhK/VG+g5KOTfFGKAdfQJNHZj9y
-        xZEUHzhkkZa4Z0zloCMgFyzaPdP2Tyl7
-X-Google-Smtp-Source: APXvYqxENZKm3ZkZkcsCV1tk0VR2N3BgC4a0+IxpAnry9JlIqN/BVvLewUEqBomJYIiy3BCfhYSlTLwujoih
-X-Received: by 2002:aca:5d57:: with SMTP id r84mr7966908oib.143.1556297820067;
- Fri, 26 Apr 2019 09:57:00 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 09:56:55 -0700
-Message-Id: <20190426165655.218228-1-venture@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH] misc: aspeed-p2a-ctrl: fix mixed declarations
-From:   Patrick Venture <venture@google.com>
-To:     venture@google.com, arnd@arndb.de, gregkh@linuxfoundation.org,
-        joel@jms.id.au, andrew@aj.id.au
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        arm@kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 26 Apr 2019 13:00:13 -0400
+Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 52EF3CEEB0;
+        Fri, 26 Apr 2019 19:08:22 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH v8 0/2] Enable Bluetooth functionality for WCN3998.
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <1556286962-3132-1-git-send-email-c-hbandi@codeaurora.org>
+Date:   Fri, 26 Apr 2019 19:00:10 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <548B5CB0-492C-4D64-B4A5-4D66F6016F46@holtmann.org>
+References: <1556286962-3132-1-git-send-email-c-hbandi@codeaurora.org>
+To:     Harish Bandi <c-hbandi@codeaurora.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix up mixed declarations and code in aspeed_p2a_mmap.
+Hi Harish,
 
-Tested: Verified the build had the error and that this patch resolved it
-and there were no other warnings or build errors associated with
-compilation of this driver.
+> This patch series we add support for WCN3998 BT chip set. This new chip set
+> is based from the WCN3990 with minimal power numbers. So here in this patch
+> The major difference between wcn3990 and WCN3998 is only power numbers.
+> where as init process and fw download is same with wcn3990.
+> So we add new compatible for WCN3998. 
+> Removed the Reading of regulator values from dts.
+> Added new compatible for WCN3998.
+> Changes in V8:
+> Removed export of qca_is_wcn399x() and added as inline function
+> Added robh reviewed by tag in commit text
+> Changes in V7:
+> Initialized rom_ver to 0 to fix compiler warning 
+> Changed Commit text for DT patch
+> Changes in V6:
+> changed return value to false in the qca_is_wcn399x()stub
+> Changes in V5:
+> changed is_qca_soc_type_wcn399x_family to
+> qca_is_wcn399x helper function 
+> Moved the qca_is_wcn399x function to btqca.c
+> modified the DT document for wcn399x as per driver code
+> Changes in V4:
+> Added is_qca_soc_type_wcn399x_family helper function 
+> to get the soc type is wcn399x or not.
+> Changes in V3:
+> updated to latest code base.
+> 
+> Harish Bandi (2):
+>  Bluetooth: hci_qca: Added support for WCN3998
+>  dt-bindings: net: bluetooth: Add device tree bindings for QTI chip
+>    WCN3998
+> 
+> .../devicetree/bindings/net/qualcomm-bluetooth.txt |  5 +--
+> drivers/bluetooth/btqca.c                          |  7 ++--
+> drivers/bluetooth/btqca.h                          | 11 +++++-
+> drivers/bluetooth/hci_qca.c                        | 40 ++++++++++++++--------
+> 4 files changed, 43 insertions(+), 20 deletions(-)
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Patrick Venture <venture@google.com>
----
- drivers/misc/aspeed-p2a-ctrl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+both patches have been applied to bluetooth-next tree.
 
-diff --git a/drivers/misc/aspeed-p2a-ctrl.c b/drivers/misc/aspeed-p2a-ctrl.c
-index 9736821972ef..b60fbeaffcbd 100644
---- a/drivers/misc/aspeed-p2a-ctrl.c
-+++ b/drivers/misc/aspeed-p2a-ctrl.c
-@@ -100,6 +100,7 @@ static void aspeed_p2a_disable_bridge(struct aspeed_p2a_ctrl *p2a_ctrl)
- static int aspeed_p2a_mmap(struct file *file, struct vm_area_struct *vma)
- {
- 	unsigned long vsize;
-+	pgprot_t prot;
- 	struct aspeed_p2a_user *priv = file->private_data;
- 	struct aspeed_p2a_ctrl *ctrl = priv->parent;
- 
-@@ -107,7 +108,7 @@ static int aspeed_p2a_mmap(struct file *file, struct vm_area_struct *vma)
- 		return -EINVAL;
- 
- 	vsize = vma->vm_end - vma->vm_start;
--	pgprot_t prot = vma->vm_page_prot;
-+	prot = vma->vm_page_prot;
- 
- 	if (vma->vm_pgoff + vsize > ctrl->mem_base + ctrl->mem_size)
- 		return -EINVAL;
--- 
-2.21.0.593.g511ec345e18-goog
+Regards
+
+Marcel
 
