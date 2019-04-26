@@ -2,137 +2,235 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5640C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A23EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F79D2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:00:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bECapwQA"
+	by mail.kernel.org (Postfix) with ESMTP id DFDE92067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbfDZNAV (ORCPT
+        id S1726271AbfDZNBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:00:21 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33213 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfDZNAU (ORCPT
+        Fri, 26 Apr 2019 09:01:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39068 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725901AbfDZNBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:00:20 -0400
-Received: by mail-ed1-f66.google.com with SMTP id d55so1249074ede.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 06:00:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Tv8k1IVq/bX2qC7pmlkXFVlPj0xCG5NKC7lZ4m2BLq8=;
-        b=bECapwQApPKcPhJL9GJXfilDKWtVLuZXVHOLzL/u/PjH258XPaJ71Hy8yfICZndGtr
-         DiSXGiOAzXwSliq9a5k+L8fRfGLniIDz5JvNk29HgXChs3LvAdatSwU25BOe3N4dqRg6
-         u1A7kodCe4w7nfAgDDEGWoem46hp6hQ9dpEo3mwLcjgHMYtGs0Wv3p1PtIeQLC92+do4
-         5ZzjYc09Zn3HR69LnsE52Kf4A4TSoe/JIZsu/6ur7TW9RG+qIakhBxM7e1hGpiPm3FcI
-         F9QmlmxTJDEk3xefe+cAG4uhtRej4uneUc22+/9ydZ3/idrih2SWs/DZddZzGIKmmrqH
-         Wk7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tv8k1IVq/bX2qC7pmlkXFVlPj0xCG5NKC7lZ4m2BLq8=;
-        b=n8vC8dmxEZ4sRlrUQlGA9VwCRUTUfRJ0qOVYS67i8wY1LlDhSvmAeCNTm15zjxsdyU
-         a04s41H4v/IZVnzfnfELTTcYJa7p81703WkTsNNma+NBvfLCcB0Gahr+7p6OLRePNqFO
-         p9ru1AztZub+6Vj9KQvRv3z/DDdiTodcSPXrX73BJ4CcaI/7FIG7SQvihbAHRK5GDD0y
-         d0Ouynvl+sMq/VcUQTkBqPIpTpVlcOYmt+cH5HemwZOU9wj/5HplCwX0R3e0pjS4zclx
-         SKkBpIMV3USegwdrbj9FIdrniIvC1lfuV1ti0BWWqcpb5xRItQsyZSm4XbIPdaLv2FMd
-         gCKA==
-X-Gm-Message-State: APjAAAWkCXnjSvF/ZmNxTRxMCQcsIsmOIRs7kiGyB8QN3y5M9R4m7TiT
-        UBKK/BSFZr8wYMZPb8AvHhE=
-X-Google-Smtp-Source: APXvYqwRy1eph5ZK/zVsF8C+hIBBBKlKu8slDTMOoC+bh0BAPuhQ2vTzNQB70JubpAByNlo2VxXe1g==
-X-Received: by 2002:a50:ad11:: with SMTP id y17mr28135238edc.184.1556283618973;
-        Fri, 26 Apr 2019 06:00:18 -0700 (PDT)
-Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id v9sm7058960ede.32.2019.04.26.06.00.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Apr 2019 06:00:17 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 06:00:15 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH 09/10] arm64: select DYNAMIC_DEBUG_RELATIVE_POINTERS
-Message-ID: <20190426130015.GA12483@archlinux-i9>
-References: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
- <20190409212517.7321-10-linux@rasmusvillemoes.dk>
- <CAK8P3a1by1-ZF2NoTdGbxv+AJu92d3Sp5L08BhLCA+0PNS8s2Q@mail.gmail.com>
- <94b816aa-ad36-75e6-8782-d141dec2e803@rasmusvillemoes.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94b816aa-ad36-75e6-8782-d141dec2e803@rasmusvillemoes.dk>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Fri, 26 Apr 2019 09:01:38 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QD0S3n144832
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:01:36 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s42g2g238-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:01:35 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Fri, 26 Apr 2019 14:01:34 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 26 Apr 2019 14:01:31 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3QD1TVr57082058
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Apr 2019 13:01:29 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7941C42052;
+        Fri, 26 Apr 2019 13:01:29 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D33F14203F;
+        Fri, 26 Apr 2019 13:01:28 +0000 (GMT)
+Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.145.15.72])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 26 Apr 2019 13:01:28 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: [PATCH v7 0/4] vfio: ap: AP Queue Interrupt Control
+Date:   Fri, 26 Apr 2019 15:01:24 +0200
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19042613-0016-0000-0000-000002758503
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042613-0017-0000-0000-000032D202A5
+Message-Id: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904260089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 12:05:57PM +0200, Rasmus Villemoes wrote:
-> On 26/04/2019 11.39, Arnd Bergmann wrote:
-> > On Tue, Apr 9, 2019 at 11:26 PM Rasmus Villemoes
-> > <linux@rasmusvillemoes.dk> wrote:
-> >>
-> >> Similar to GENERIC_BUG_RELATIVE_POINTERS, one can now relativize the
-> >> four const char* members of struct _ddebug, thus saving 16 bytes per
-> >> instance (one for each pr_debug(), dev_debug() etc. in a
-> >> CONFIG_DYNAMIC_DEBUG kernel). The asm-generic implementation seems to
-> >> work out-of-the-box, though this is only compile-tested.
-> >>
-> >> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> > 
-> > This causes a build regression when compiling with clang,
-> > see http://staging-storage.kernelci.org/next-clang/master/next-20190424/arm64/allmodconfig/clang-8/build.log
-> 
-> Yes, see also https://github.com/ClangBuiltLinux/linux/issues/456 .
-> 
-> The quickest short-term fix is to append "if CC_IS_GCC" to the select
-> statements. Then when a fix lands in clang one can change that to "if
-> CC_IS_GCC || CLANG_VERSION >= something". It's probably best if we fix
-> -next builds ASAP instead of waiting for knowing the proper value of
-> "something". Nathan, Nick, WDYT?
+This patch series implements PQAP/AQIC interception in KVM.
 
-Those select statements have to be added regardless, we might as well do
-it now. It should unbreak the auto builders because they use the latest
-clang stable version, which is 8.0.0.
+1) Data to handle GISA interrupt for AQIC
 
-For the record, the fix in Clang is https://reviews.llvm.org/D60887 and
-should land shortly unless there are any further objections, meaning
-this will be fixed in the 9.0.0 release.
+To implement this we need to add a new structure, vfio_ap_queue,
+to be able to retrieve the mediated device associated with a queue
+and specific values needed to register/unregister the interrupt
+structures:
+  - APQN: to be able to issue the commands and search for queue
+    structures
+  - NIB and old NIB : to unpin the NIB on clear IRQ
+  - ISC and old ISC : to unregister with the GIB interface
+  - matrix_mdev: to retrieve the associate matrix and mediated device
 
-'if CC_IS_GCC || CLANG_VERSION >= 90000' should do it on the arm64 and
-powerpc select statements (x86 works fine because %c support has always
-been present).
+Specific handling bei keeping old values when re-registering is
+needed because the guest could unregister interrupt in a invisble
+manner bei issuing an un-interceptible RESET command.
 
-> 
-> I had 0day verify my patches before sending them out officially, and
-> thought it also did clang builds. But apparently not, or not with enough
-> arch/.config combinations?
+Reset commands issued directly by the guest and indirectly when
+removing the guest unpin the memory and deregister the ISC.
 
-They do not do clang builds unfortunately. Nick was in contact with them
-before forced asm-goto on x86 happened and derailed that.
+The vfio_ap_queue is associated to the ap_device during the probe
+of the device and dissociated during the remove of the ap_device.
 
-We try to do our own tests and let people know when stuff breaks but
-that is usually after it hits -next, rather than the mailing list.
+The vfio_ap_queue is associated to the matrix mediated device during
+each interception of the AQIC command, so it do not need to be
+dissociated until the guest is terminated.
 
-> 
-> Rasmus
+The life of the vfio_ap_queue will be protected by the matrix_dev lock
+to guaranty that no change can occur to the CRYCB or that devices can
+not be removed when a vfio_ap_queue is in use.
 
-Cheers,
-Nathan
+2) KVM destroy race conditions
+
+To make sure that KVM do not vanish and GISA is still available
+when the VFIO_AP driver is in used we take a reference to KVM
+during the opening of the mediated device and release it on
+releasing the mediated device.
+
+3) Interception of PQAP
+
+The driver registers a hook structure to KVM providing:
+- a pointer to a function implementing PQAP(AQIC) handling
+- the reference to the module owner of the hook
+
+On interception by KVM we do not change the behavior, returning
+ -EOPNOTSUPP to the user in the case AP instructions are not
+supported by the host or by the guest.
+Otherwise we verify the exceptions cases before trying to call 
+the vfio_ap hook.
+
+In the case we do not find a hook we assume that the CRYCB has not
+been setup for the guest and is empty.
+
+
+4) Removing the AP device
+
+Removing the AP device without having unassign it is clearly
+discourage by the documentation.
+The patch series does not check if the queue is used by a
+guest and simply free the vfio_ap_queue.
+
+5) Associated QEMU patch
+
+There is a QEMU patch which is needed to enable the PQAP/AQIC
+facility in the guest.
+
+Posted in qemu-devel@nongnu.org as:
+Message-Id: <1550146494-21085-1-git-send-email-pmorel@linux.ibm.com>
+
+
+Pierre Morel (4):
+  s390: ap: kvm: add PQAP interception for AQIC
+  vfio: ap: register IOMMU VFIO notifier
+  s390: ap: implement PAPQ AQIC interception in kernel
+  s390: ap: kvm: Enable PQAP/AQIC facility for the guest
+
+ arch/s390/include/asm/kvm_host.h      |   7 +
+ arch/s390/kvm/priv.c                  |  86 +++++++++
+ arch/s390/tools/gen_facilities.c      |   1 +
+ drivers/s390/crypto/ap_bus.h          |   1 +
+ drivers/s390/crypto/vfio_ap_drv.c     |  30 ++-
+ drivers/s390/crypto/vfio_ap_ops.c     | 336 +++++++++++++++++++++++++++++++++-
+ drivers/s390/crypto/vfio_ap_private.h |  15 ++
+ 7 files changed, 468 insertions(+), 8 deletions(-)
+
+-- 
+2.7.4
+
+Changelog:
+
+Changelog from v6:
+- Not taking care if the AP queue is associated with a guest
+  admin is warn in the odcumentation
+ (Tony, Halil)
+- Using WARN_ON_ONCE, direct call to report specification errors
+  (Christian)
+- Wait until the IRQ bit is cleared when clearing interrupts
+ (Tony, Halil)
+- Some minor changes and add some comments before
+  vfio_ap_free_irq_data
+  (Pierre)
+- initializing the pointer to matrix_mdev in vfio_ap_queue 
+  during the interception and suppress the association during
+  assignment and the usage of lists.
+  (Tony, Halil)
+- Merging patches for creation of vfio_ap_queue, initialization
+  and use of vfio_ap_queue during interception of PQAP/AQIC
+  (Conny)
+
+Changelog from v5:
+- Refactoring of the PQAP interception after all discussions
+  (Conny, Halil (offline))
+- take a big lock around open to avoid parallel changes through
+  assignment
+- verify that at least one queue has a APID or APQI when
+  first assignment is done to not accept unavailable APID/APQI
+  (myself)
+- Adding comment for locks on free_list
+  (Conny)
+- Modified comment for 
+  "s390: ap: setup relation betwen KVM and mediated device"
+  (Halil)
+
+Changelog from v4:
+- Add forgotten locking for vfio_get_queue() in pqap callback
+  (Conny / Halil)
+- Add KVM reference counting to make sure GISA is free after IRQ
+  (Christian / Halil)
+- Take care that ISC = 0 is a valid ISC
+  (Halil)
+- Integrate the PQAP call back in a structure with module owner
+  reference counting to make sure the callback does not disappear.
+- Restrict functionality to always open KVM before opening the
+  VFIO device.
+- Search all devices in the vfio_ap driver list when associating
+  a queue to a mediated device
+  (Halil / Tony)
+- Get vfio_ap_free_irq() out of vfio_ap_mdev_reset_queue() to call
+  it always, whatever the result of the reset.
+  (Tony)
+
+Changelog from v3:
+- Associating the vfio_queues during APID/APQI assign
+  (Tony)
+- Dissociating the vfio_queues during APID/APQI unassign
+  (Tony)
+- Taking care that the guest can directly disable the interrupt
+  by using a RESET
+  (Halil)
+- Remove the patch creating the matrix bus to accelerate its
+  integration in Linux stable
+  (Christian)
+
+Changelog from v1:
+- Refactoring to handle interception in kernel instead of in
+  QEMU
+  (Halil)
+
