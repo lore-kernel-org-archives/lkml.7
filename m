@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0E9C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B7C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493AD208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7072208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbfDZHbz (ORCPT
+        id S1726315AbfDZHb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:31:55 -0400
+        Fri, 26 Apr 2019 03:31:58 -0400
 Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:2747 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725942AbfDZHbw (ORCPT
+        by vger.kernel.org with ESMTP id S1726197AbfDZHby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:31:52 -0400
+        Fri, 26 Apr 2019 03:31:54 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
  15.0.1156.6; Fri, 26 Apr 2019 00:31:40 -0700
 Received: from sc2-haas01-esx0118.eng.vmware.com (sc2-haas01-esx0118.eng.vmware.com [10.172.44.118])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id BC4EC412A4;
-        Fri, 26 Apr 2019 00:31:45 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 1086741299;
+        Fri, 26 Apr 2019 00:31:46 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -41,15 +41,10 @@ CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <hpa@zytor.com>,
         <linux-mm@kvack.org>, <will.deacon@arm.com>,
         <ard.biesheuvel@linaro.org>, <kristen@linux.intel.com>,
         <deneen.t.dock@intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH v5 11/23] x86/module: Avoid breaking W^X while loading modules
-Date:   Thu, 25 Apr 2019 17:11:31 -0700
-Message-ID: <20190426001143.4983-12-namit@vmware.com>
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+Subject: [PATCH v5 19/23] x86/ftrace: Use vmalloc special flag
+Date:   Thu, 25 Apr 2019 17:11:39 -0700
+Message-ID: <20190426001143.4983-20-namit@vmware.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426001143.4983-1-namit@vmware.com>
 References: <20190426001143.4983-1-namit@vmware.com>
@@ -62,123 +57,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When modules and BPF filters are loaded, there is a time window in
-which some memory is both writable and executable. An attacker that has
-already found another vulnerability (e.g., a dangling pointer) might be
-able to exploit this behavior to overwrite kernel code. Prevent having
-writable executable PTEs in this stage.
+From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 
-In addition, avoiding having W+X mappings can also slightly simplify the
-patching of modules code on initialization (e.g., by alternatives and
-static-key), as would be done in the next patch. This was actually the
-main motivation for this patch.
+Use new flag VM_FLUSH_RESET_PERMS for handling freeing of special
+permissioned memory in vmalloc and remove places where memory was set NX
+and RW before freeing which is no longer needed.
 
-To avoid having W+X mappings, set them initially as RW (NX) and after
-they are set as RO set them as X as well. Setting them as executable is
-done as a separate step to avoid one core in which the old PTE is cached
-(hence writable), and another which sees the updated PTE (executable),
-which would break the W^X protection.
-
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jessica Yu <jeyu@kernel.org>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: Andy Lutomirski <luto@amacapital.net>
-Signed-off-by: Nadav Amit <namit@vmware.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/kernel/alternative.c | 28 +++++++++++++++++++++-------
- arch/x86/kernel/module.c      |  2 +-
- include/linux/filter.h        |  1 +
- kernel/module.c               |  5 +++++
- 4 files changed, 28 insertions(+), 8 deletions(-)
+ arch/x86/kernel/ftrace.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 599203876c32..3d2b6b6fb20c 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -668,15 +668,29 @@ void __init alternative_instructions(void)
-  * handlers seeing an inconsistent instruction while you patch.
-  */
- void *__init_or_module text_poke_early(void *addr, const void *opcode,
--					      size_t len)
-+				       size_t len)
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 53ba1aa3a01f..0caf8122d680 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -678,12 +678,8 @@ static inline void *alloc_tramp(unsigned long size)
  {
- 	unsigned long flags;
--	local_irq_save(flags);
--	memcpy(addr, opcode, len);
--	local_irq_restore(flags);
--	sync_core();
--	/* Could also do a CLFLUSH here to speed up CPU recovery; but
--	   that causes hangs on some VIA CPUs. */
+ 	return module_alloc(size);
+ }
+-static inline void tramp_free(void *tramp, int size)
++static inline void tramp_free(void *tramp)
+ {
+-	int npages = PAGE_ALIGN(size) >> PAGE_SHIFT;
+-
+-	set_memory_nx((unsigned long)tramp, npages);
+-	set_memory_rw((unsigned long)tramp, npages);
+ 	module_memfree(tramp);
+ }
+ #else
+@@ -692,7 +688,7 @@ static inline void *alloc_tramp(unsigned long size)
+ {
+ 	return NULL;
+ }
+-static inline void tramp_free(void *tramp, int size) { }
++static inline void tramp_free(void *tramp) { }
+ #endif
+ 
+ /* Defined as markers to the end of the ftrace default trampolines */
+@@ -808,6 +804,8 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	/* ALLOC_TRAMP flags lets us know we created it */
+ 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
+ 
++	set_vm_flush_reset_perms(trampoline);
 +
-+	if (boot_cpu_has(X86_FEATURE_NX) &&
-+	    is_module_text_address((unsigned long)addr)) {
-+		/*
-+		 * Modules text is marked initially as non-executable, so the
-+		 * code cannot be running and speculative code-fetches are
-+		 * prevented. Just change the code.
-+		 */
-+		memcpy(addr, opcode, len);
-+	} else {
-+		local_irq_save(flags);
-+		memcpy(addr, opcode, len);
-+		local_irq_restore(flags);
-+		sync_core();
-+
-+		/*
-+		 * Could also do a CLFLUSH here to speed up CPU recovery; but
-+		 * that causes hangs on some VIA CPUs.
-+		 */
-+	}
- 	return addr;
+ 	/*
+ 	 * Module allocation needs to be completed by making the page
+ 	 * executable. The page is still writable, which is a security hazard,
+@@ -816,7 +814,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	set_memory_x((unsigned long)trampoline, npages);
+ 	return (unsigned long)trampoline;
+ fail:
+-	tramp_free(trampoline, *tramp_size);
++	tramp_free(trampoline);
+ 	return 0;
  }
  
-diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
-index b052e883dd8c..cfa3106faee4 100644
---- a/arch/x86/kernel/module.c
-+++ b/arch/x86/kernel/module.c
-@@ -87,7 +87,7 @@ void *module_alloc(unsigned long size)
- 	p = __vmalloc_node_range(size, MODULE_ALIGN,
- 				    MODULES_VADDR + get_module_load_offset(),
- 				    MODULES_END, GFP_KERNEL,
--				    PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
-+				    PAGE_KERNEL, 0, NUMA_NO_NODE,
- 				    __builtin_return_address(0));
- 	if (p && (kasan_module_alloc(p, size) < 0)) {
- 		vfree(p);
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 6074aa064b54..14ec3bdad9a9 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -746,6 +746,7 @@ static inline void bpf_prog_unlock_ro(struct bpf_prog *fp)
- static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
- {
- 	set_memory_ro((unsigned long)hdr, hdr->pages);
-+	set_memory_x((unsigned long)hdr, hdr->pages);
- }
- 
- static inline void bpf_jit_binary_unlock_ro(struct bpf_binary_header *hdr)
-diff --git a/kernel/module.c b/kernel/module.c
-index 0b9aa8ab89f0..2b2845ae983e 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1950,8 +1950,13 @@ void module_enable_ro(const struct module *mod, bool after_init)
+@@ -947,7 +945,7 @@ void arch_ftrace_trampoline_free(struct ftrace_ops *ops)
+ 	if (!ops || !(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
  		return;
  
- 	frob_text(&mod->core_layout, set_memory_ro);
-+	frob_text(&mod->core_layout, set_memory_x);
-+
- 	frob_rodata(&mod->core_layout, set_memory_ro);
-+
- 	frob_text(&mod->init_layout, set_memory_ro);
-+	frob_text(&mod->init_layout, set_memory_x);
-+
- 	frob_rodata(&mod->init_layout, set_memory_ro);
+-	tramp_free((void *)ops->trampoline, ops->trampoline_size);
++	tramp_free((void *)ops->trampoline);
+ 	ops->trampoline = 0;
+ }
  
- 	if (after_init)
 -- 
 2.17.1
 
