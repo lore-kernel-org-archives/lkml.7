@@ -2,62 +2,72 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45DAC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ED3C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD73208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD897208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfDZQsI (ORCPT
+        id S1726428AbfDZQsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:48:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53880 "EHLO mx1.suse.de"
+        Fri, 26 Apr 2019 12:48:47 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53826 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726279AbfDZQsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:48:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E1A19ACB1;
-        Fri, 26 Apr 2019 16:48:06 +0000 (UTC)
-Message-ID: <1556297285.22365.4.camel@suse.de>
-Subject: Re: [RFC PATCH RESEND] i2c-piix4: Add Hygon Dhyana SMBus support
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Pu Wen <puwen@hygon.cn>
-Cc:     bp@alien8.de, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>
-Date:   Fri, 26 Apr 2019 18:48:05 +0200
-In-Reply-To: <0c895129-23af-2fc6-0c99-61348a69f961@hygon.cn>
-References: <1555938607-2865-1-git-send-email-puwen@hygon.cn>
-         <20190426113751.77befab1@endymion>
-         <0c895129-23af-2fc6-0c99-61348a69f961@hygon.cn>
-Organization: Suse Linux
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726005AbfDZQsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:48:47 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id F13841AF6C3E100DF2EB;
+        Sat, 27 Apr 2019 00:48:44 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Apr 2019
+ 00:48:35 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <vilhelm.gray@gmail.com>, <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] counter: 104-quad-8: Make quad8_ops static
+Date:   Sat, 27 Apr 2019 00:48:16 +0800
+Message-ID: <20190426164816.37032-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-04-26 at 22:23 +0800, Pu Wen wrote:
-> On 2019/4/26 17:38, Jean Delvare wrote:
-> > I would like you to also document the new supported chipset in
-> > drivers/i2c/busses/Kconfig and Documentation/i2c/busses/i2c-piix4 as
-> > well as in the header comment of i2c-piix4.c itself. I know it seems
-> > redundant but it helps the user know which driver they need.
-> 
-> Because Hygon uses the same PCI device ID of AMD's, so is it appropriate 
-> to document with the name "Hygon CZ" or just "Hygon"?
+From: YueHaibing <yuehaibing@huawei.com>
 
-"Hygon CZ" please, as Hygon is the vendor not the device, and I can
-imagine you may create more devices in the future.
+Fix sparse warning:
 
-Thanks,
+drivers/counter/104-quad-8.c:836:26: warning:
+ symbol 'quad8_ops' was not declared. Should it be static?
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/counter/104-quad-8.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+index 4fa2931..00b113f 100644
+--- a/drivers/counter/104-quad-8.c
++++ b/drivers/counter/104-quad-8.c
+@@ -833,7 +833,7 @@ static int quad8_action_get(struct counter_device *counter,
+ 	return 0;
+ }
+ 
+-const struct counter_ops quad8_ops = {
++static const struct counter_ops quad8_ops = {
+ 	.signal_read = quad8_signal_read,
+ 	.count_read = quad8_count_read,
+ 	.count_write = quad8_count_write,
 -- 
-Jean Delvare
-SUSE L3 Support
+2.7.4
+
+
