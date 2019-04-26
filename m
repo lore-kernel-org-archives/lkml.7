@@ -2,117 +2,90 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E708C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4766EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AD32077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1643A206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726040AbfDZJeZ (ORCPT
+        id S1726048AbfDZJhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:34:25 -0400
-Received: from foss.arm.com ([217.140.101.70]:36688 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbfDZJeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:34:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 069A3A78;
-        Fri, 26 Apr 2019 02:34:24 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 015AF3F5AF;
-        Fri, 26 Apr 2019 02:34:21 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 10:34:14 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/2] RISC-V: Add DT documentation for SiFive L2 Cache
- Controller
-Message-ID: <20190426093358.GA28309@e107155-lin>
-References: <1556171696-7741-1-git-send-email-yash.shah@sifive.com>
- <1556171696-7741-2-git-send-email-yash.shah@sifive.com>
- <20190425101318.GA8469@e107155-lin>
- <CAJ2_jOEBqBnorz9PcQp72Jjju9RX_P8mU=Gq+0xCCcWsBiJksw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ2_jOEBqBnorz9PcQp72Jjju9RX_P8mU=Gq+0xCCcWsBiJksw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 26 Apr 2019 05:37:35 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55123 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfDZJhf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 05:37:35 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hJxIK-0004Mr-LY; Fri, 26 Apr 2019 11:37:24 +0200
+Message-ID: <1556271442.2584.29.camel@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH v2 06/15] spi: imx: fix ERR009165
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 26 Apr 2019 11:37:22 +0200
+In-Reply-To: <1556270196.9298.16.camel@nxp.com>
+References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
+         <1556265512-9130-7-git-send-email-yibin.gong@nxp.com>
+         <1556269635.2584.23.camel@pengutronix.de>
+         <1556270196.9298.16.camel@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 11:20:17AM +0530, Yash Shah wrote:
-> On Thu, Apr 25, 2019 at 3:43 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Thu, Apr 25, 2019 at 11:24:55AM +0530, Yash Shah wrote:
-> > > Add device tree bindings for SiFive FU540 L2 cache controller driver
-> > >
-> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> > > ---
-> > >  .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 53 ++++++++++++++++++++++
-> > >  1 file changed, 53 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > > new file mode 100644
-> > > index 0000000..15132e2
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > > @@ -0,0 +1,53 @@
-> > > +SiFive L2 Cache Controller
-> > > +--------------------------
-> > > +The SiFive Level 2 Cache Controller is used to provide access to fast copies
-> > > +of memory for masters in a Core Complex. The Level 2 Cache Controller also
-> > > +acts as directory-based coherency manager.
+Am Freitag, den 26.04.2019, 09:22 +0000 schrieb Robin Gong:
+> On 2019-04-26 at 11:07 +0200, Lucas Stach wrote:
+> > 
+> > Am Freitag, den 26.04.2019, 08:05 +0000 schrieb Robin Gong:
+> > >  static void mx51_setup_wml(struct spi_imx_data *spi_imx)
+> > >  {
+> > > +     u32 tx_wml = 0;
 > > > +
-> > > +Required Properties:
-> > > +--------------------
-> > > +- compatible: Should be "sifive,fu540-c000-ccache"
-> > > +
-> > > +- cache-block-size: Specifies the block size in bytes of the cache
-> > > +
-> > > +- cache-level: Should be set to 2 for a level 2 cache
-> > > +
-> > > +- cache-sets: Specifies the number of associativity sets of the cache
-> > > +
-> > > +- cache-size: Specifies the size in bytes of the cache
-> > > +
-> > > +- cache-unified: Specifies the cache is a unified cache
-> > > +
-> > > +- interrupt-parent: Must be core interrupt controller
-> > > +
-> > > +- interrupts: Must contain 3 entries (DirError, DataError and DataFail signals)
-> > > +
-> > > +- reg: Physical base address and size of L2 cache controller registers map
-> > > +
-> > > +- reg-names: Should be "control"
-> > > +
-> >
-> > It would be good if you mark the properties that are present in DT
-> > specification and those that are added for sifive,fu540-c000-ccache
+> > 
+> > With a wml of 0 you might set the maxburst of the TX dma channel to
+> > fifosize to minimize the performance impact of this workaround.
+> > 
+> > Regards,
+> > Lucas
 > 
-> I believe there isn't any property which is added explicitly for
-> sifive,fu540-c000-ccache.
-> 
+> Unfortunately, this is a MUST part of errata which cause performance
+> drop.
 
-reg and interrupts are generally optional for normal cache and may be
-required for cache controller like this. DT specification[1] covers
-only caches and not cache controllers.
+I'm not talking about changing the WML, but when the WML must be 0 you
+can safely increase the DMA burst size without overflowing the FIFO,
+which might recover some of of the performance loss.
 
---
 Regards,
-Sudeep
-
-[1] https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
+Lucas
