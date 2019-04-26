@@ -2,129 +2,150 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA17C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C25C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A3B2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:02:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YoG5sPR8"
+	by mail.kernel.org (Postfix) with ESMTP id 6970420878
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556236996;
+	bh=3ROU5RWM8jrkNTvPremtjm6JOJdcA3x6BEPw06kkMr4=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=pAEHvQZeaeLU//PP6WB6qdUi9ItjEEcABK8CFNtLwiMs0eIEmkEnEvi8X8o1cP8HA
+	 u1eLc4mPg+JBduhjmccJKcoGgMxKpFC6sgtIuro2zDcMTUGMzRPZ9sBuVdC8Ytjtm+
+	 wACGlO56XELho4Y9NTm6oYNOlpekwM0s+EDDrIdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbfDZAC1 (ORCPT
+        id S1729070AbfDZADO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 20:02:27 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45187 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfDZAC0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 20:02:26 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k92so1599897edc.12;
-        Thu, 25 Apr 2019 17:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qNWt+yHzCcOv3Jkt0k4++Eg836NGwpnCiiqTDO4DKCk=;
-        b=YoG5sPR8OvXAv2y5kn+zIqjMqVTEKq+9UR6+LtWSe+S1izDVM5cdHzzRvFmiXc8z4E
-         EV+rq93GLb/Y1Mm16bDrBHlA5OH9Q/rrZWuvjDnrLt9CK5fV1JgCZWFmPSOnW0BBPFdn
-         j+sIeI5C6aVJmouDTqDAd0HeDBMri2YEZ2rib61jiK/qfiiahZY2jBntVEYISD4zjlgx
-         LufHI9Hp80akQ5BEfZuihoVdotdD9lXWlJLrxYTHZwJoo2M2YR5uPboRnQi/Bh0ru1Sr
-         vT/XVBtstSdRpve32DZflm68qDZVRixL65sx7/2SahGTFgkxNUDNCx6g2rCnIQt0S12+
-         muOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qNWt+yHzCcOv3Jkt0k4++Eg836NGwpnCiiqTDO4DKCk=;
-        b=Xkh+m2TAg0iqwMeewD4aoyAZkCtEc4y+NCFEs0I+weeQyW6SU8yebtBdtj2S68+Mq/
-         w8HD3qMl0Yn7lf+rS+C7AeF8IPFEiEf/Q86OGxjn9Y+Zow0OYatEy1YP09GzoVWPz4o4
-         OF++JdHm0u2ZL5YT4umJR3d/Iz62PjIVLOc85++wOL1HFYhv0BvgizB5j+2G65fgX5EJ
-         Lsn1OMFHCnwnUY+U01V3PsPGXX65ZRcb/IggK87WREkx9lAZSUrNgMj/cuFmDE9NSHQ4
-         A+XFv+1hV9lJwKZVzbzDet2JSapd0JqyzgXLo17ytnHKU3iXabsDwbaVikZPoz+8UGRN
-         V82w==
-X-Gm-Message-State: APjAAAWuaGM6EKYj2fr+ztnF2jR7tSb1XL6Pwr+dWaecLhUNj+kxoK1h
-        Lz5EDz8YdxOuqgs7nr0B6US9M7aitWdgLZYslVw=
-X-Google-Smtp-Source: APXvYqxYQsFr5rROO/Sk5UTDGRlWF8obB2Jsuu25fCWW1QWOIkLHOG19fnwRkd7JEv/BAT2S7n+uOPedVK5ih7Xet+c=
-X-Received: by 2002:a17:906:d28c:: with SMTP id ay12mr20393489ejb.51.1556236944559;
- Thu, 25 Apr 2019 17:02:24 -0700 (PDT)
+        Thu, 25 Apr 2019 20:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbfDZADO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 20:03:14 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBDA32084F;
+        Fri, 26 Apr 2019 00:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556236992;
+        bh=3ROU5RWM8jrkNTvPremtjm6JOJdcA3x6BEPw06kkMr4=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=1jazwmzYvnSTNMU2xYXN1ijAypQZmc85tlfDU5cdp7Zclb9MRo6JGjJTOUB0zF49d
+         YneLQoLo32UW7wxm7MoovLq6Uv2XBc6g7RQ8QPuYW0WOmvcqIh/HWZk0BtCoERBLYF
+         4aVMe6Ll+6Tbh5+iKfRfGViWg7buVHLy+JJK6ggk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1556201031-3676-1-git-send-email-hofrat@osadl.org>
-In-Reply-To: <1556201031-3676-1-git-send-email-hofrat@osadl.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 25 Apr 2019 17:02:14 -0700
-Message-ID: <CAF6AEGu80YyDeGkShhrSSysmiHkNMWTL6H_uC1UJKzy88mwyGA@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: check for equals 0 only
-To:     Nicholas Mc Guire <hofrat@osadl.org>
-Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Archit Taneja <architt@codeaurora.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1556169264-31683-2-git-send-email-Anson.Huang@nxp.com>
+References: <1556169264-31683-1-git-send-email-Anson.Huang@nxp.com> <1556169264-31683-2-git-send-email-Anson.Huang@nxp.com>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/2] clk: imx: disable i.mx7ulp composite clock during initialization
+To:     "festevam@gmail.com" <festevam@gmail.com>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>
+Message-ID: <155623699177.15276.12577395377027956830@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 25 Apr 2019 17:03:11 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 7:09 AM Nicholas Mc Guire <hofrat@osadl.org> wrote:
->
-> wait_for_completion_timeout() returns 0 on timeout and aleast 1 otherwise
-> so checking for < makes no sense here.
->
-> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Quoting Anson Huang (2019-04-24 22:19:12)
+> i.MX7ULP peripheral clock ONLY allow parent/rate to be changed
+> with clock gated, however, during clock tree initialization, the
+> peripheral clock could be enabled by bootloader, but the prepare
+> count in clock tree is still zero, so clock core driver will allow
+> parent/rate changed even with CLK_SET_RATE_GATE/CLK_SET_PARENT_GATE
+
+That's a bug. Can you send a patch to fix the core framework code to
+fail an assigned rate or parent change if those flags are set? Or is
+that because the core doesn't respect these flags when they're buried in
+the middle of the clk tree and some rate or parent change comes in and
+affects the middle of the tree that has the flag set on it?
+
+> set, but the change will fail due to HW NOT allow parent/rate change
+> with clock enabled. It will cause clock HW status mismatch with
+> clock tree info and lead to function issue. Below is an example:
+>=20
+> usdhc0's pcc clock value is 0xC5000000 during kernel boot up, it
+> means usdhc0 clock is enabled, its parent is APLL_PFD1. In DT file,
+> the usdhc0 clock settings are as below:
+>=20
+> assigned-clocks =3D <&pcc2 IMX7ULP_CLK_USDHC0>;
+> assigned-clock-parents =3D <&scg1 IMX7ULP_CLK_NIC1_DIV>;
+>=20
+> when kernel boot up, the clock tree info is as below, but the usdhc0
+> PCC register is still 0xC5000000, which means its parent is still
+> from APLL_PFD1, which is incorrect and cause usdhc0 NOT work.
+>=20
+> nic1_clk       2        2        0   176000000          0     0  50000
+>     usdhc0       0        0        0   176000000          0     0  50000
+>=20
+> After making sure the peripheral clock is disabled during clock tree
+> initialization, the usdhc0 is working, and this change is necessary
+> for all i.MX7ULP peripheral clocks.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->
-> Problem located with an experimental coccinelle script
->
-> While this check does no harm in this form - it should be fixed anyway
-> to comply with the API see: kernel/sched/completion.c
->
-> Also noticed that get_maintainer.pl will not list linux-kernel@vger.kernel.org
-> when run on drivers/gpu/drm/msm/dsi/dsi_host.c - is that intentional ?
+>  drivers/clk/imx/clk-composite-7ulp.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>=20
+> diff --git a/drivers/clk/imx/clk-composite-7ulp.c b/drivers/clk/imx/clk-c=
+omposite-7ulp.c
+> index 060f860..1a05411 100644
+> --- a/drivers/clk/imx/clk-composite-7ulp.c
+> +++ b/drivers/clk/imx/clk-composite-7ulp.c
+> @@ -32,6 +32,7 @@ struct clk_hw *imx7ulp_clk_composite(const char *name,
+>         struct clk_gate *gate =3D NULL;
+>         struct clk_mux *mux =3D NULL;
+>         struct clk_hw *hw;
+> +       u32 val;
+> =20
+>         if (mux_present) {
+>                 mux =3D kzalloc(sizeof(*mux), GFP_KERNEL);
+> @@ -70,6 +71,18 @@ struct clk_hw *imx7ulp_clk_composite(const char *name,
+>                 gate_hw =3D &gate->hw;
+>                 gate->reg =3D reg;
+>                 gate->bit_idx =3D PCG_CGC_SHIFT;
+> +               /*
+> +                * make sure clock is gated during clock tree initializat=
+ion,
+> +                * the HW ONLY allow clock parent/rate changed with clock=
+ gated,
+> +                * during clock tree initialization, clocks could be enab=
+led
+> +                * by bootloader, so the HW status will mismatch with clo=
+ck tree
+> +                * prepare count, then clock core driver will allow paren=
+t/rate
+> +                * change since the prepare count is zero, but HW actually
+> +                * prevent the parent/rate change due to the clock is ena=
+bled.
+> +                */
 
-Thanks, I'll pull this in for -fixes
+Is it OK to forcibly gate the clk like this at init time? If so, why
+can't we force the clk off when we change the rate and then restore the
+on state after changing the rate? That would be more "robust" than doing
+it once here. Plus then we could remove the CLK_SET_RATE_GATE flag.
 
-as far as get_maintainer.pl.. I'm not entirely sure.. we don't list
-linux-kernel@vger.kernel.org explicitly, but neither do a lot of the
-other driver entries.  Possibly this is a oversight in the MAINTAINERS
-entry?  Either way, I guess I'd say that it isn't intentional.
-
-BR,
--R
-
->
-> Patch was compile-tested with: qcom_defconfig (implies DRM_MSM_DSI=y)
->
-> Patch is against v5.1-rc6 (localversion-next is next-20190424)
->
->  drivers/gpu/drm/msm/dsi/dsi_host.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> index 610183d..dc16067 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> @@ -1049,7 +1049,7 @@ static void dsi_wait4video_done(struct msm_dsi_host *msm_host)
->         ret = wait_for_completion_timeout(&msm_host->video_comp,
->                         msecs_to_jiffies(70));
->
-> -       if (ret <= 0)
-> +       if (ret == 0)
->                 DRM_DEV_ERROR(dev, "wait for video done timed out\n");
->
->         dsi_intr_ctrl(msm_host, DSI_IRQ_MASK_VIDEO_DONE, 0);
-> --
-> 2.1.4
->
+> +               val =3D readl_relaxed(reg);
+> +               val &=3D ~(1 << PCG_CGC_SHIFT);
+> +               writel_relaxed(val, reg);
+>         }
+> =20
