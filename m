@@ -2,113 +2,131 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954E4C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 04:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1345BC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 04:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE3A206A3
+	by mail.kernel.org (Postfix) with ESMTP id DB827212F5
 	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 04:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TuXUDwrV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NiRelQBK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfDZEkt (ORCPT
+        id S1727036AbfDZElX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 00:40:49 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38371 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfDZEks (ORCPT
+        Fri, 26 Apr 2019 00:41:23 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:17040 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfDZElX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 00:40:48 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f36so903222plb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 21:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=HyNPJz1X169VLMtNR26KKjpc2sEs9qFQ9M2v5D+bVv8=;
-        b=TuXUDwrVEIx8NtXEzDxtanN52U2D+wK2SVUg2swQN+sNP1mAy1NWpky8Qp5ichbZXZ
-         GCdmxf246D//n6ZjuGOKr71xuob2KfVnGBopnrj1lvKU6n4fT2xov6t3CfV/OEpiHrc7
-         qE8mKU80EeFyoT0pSSgVB2gf+r81CX/9quQafpsdimBj+5KWMZD3pzSCL3yd8xxdLCkj
-         6HdNHuGhW7xMa6LiRX98KGp8FI5v43XY/1PIfpukn5HuyBZwg+lgx2vBCx82gp/QdKu4
-         ujwAT+f8aUl11vYYaVPycP9+TDbSqtbOqrIwvZWUCU7bZu0PBw8OfQEIfmmyqYr9ncg8
-         xWrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=HyNPJz1X169VLMtNR26KKjpc2sEs9qFQ9M2v5D+bVv8=;
-        b=pjAM114+7USnZAx7Sm3tYiliQWFqlEiHNUTg6kVZ+XneRhfIW1h/fATE7/r0cyaq2T
-         z+YPtolWMG1UZha5COZax0Lt3nPZye1q7t4WY+X6OijNE5PmWkMJdTx7N3bKyHmXgRFh
-         8l4aPrdcbCrDYhHmojYTerVID2j3IxK5RciFpeT6u0nIGqmR+zSDNK/4qOZ2D0hBO4ME
-         T4DDxqBqSpN0+fLsM0GOTTBjimGgh6bB4dITC942jB5DCJvTRRb1umw0T+Rhv2k7e9DG
-         0WS8TmzwbwuZcDHpM5xCrbYSnprnRb1HRWI0CPLHARW9Wf/FWuxOw+Ch6Mwv+cZWwVUM
-         yScg==
-X-Gm-Message-State: APjAAAVAi8eqvSZfzoDVOjt+N8SrbM9uaDoNr6qqcrd4k5PXqx6hslGR
-        KV+WfY9qJO/fMjTiClHC1Wc=
-X-Google-Smtp-Source: APXvYqyd4vzJ9MypgChZoEQuJwJaKshCPYVtE2Jmcv9yHyorZNU4m+/ryO0jlMGkVsV1OL3eZ3xygQ==
-X-Received: by 2002:a17:902:8483:: with SMTP id c3mr42057501plo.19.1556253648136;
-        Thu, 25 Apr 2019 21:40:48 -0700 (PDT)
-Received: from localhost ([203.63.161.26])
-        by smtp.gmail.com with ESMTPSA id f22sm33926308pgv.45.2019.04.25.21.40.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Apr 2019 21:40:46 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 14:40:40 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH] kernel/sched: run nohz idle load balancer on HK_FLAG_MISC
- CPUs
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190412042613.28930-1-npiggin@gmail.com>
-        <20190425115620.GQ4038@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190425115620.GQ4038@hirez.programming.kicks-ass.net>
+        Fri, 26 Apr 2019 00:41:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1556253716; x=1587789716;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=MpWvheFOejWRs2zd9Qglh5YkbiX057ZAvN5hIeqKvGg=;
+  b=NiRelQBKakauQauElgyk8KQXFxtssVTsVlfTsxVB1MuTjX7WCuJtPxSJ
+   KTpLm1lP+5qmx1h+A0z7laMzBqrKOzQAg7x7JOxXZQJnBgCkwi31gvYbV
+   Hb1GyOcSy6qWY/CFEavecjqnwDSDKDEjmcI977M7DwVrveQ3qKLJeI+iI
+   t1WeLOhl6paNZAfoWS2qzKtuyopx0wojNXYgxJ2ejxcatiOl/uiEc/sV7
+   YxhAvOYeCag9URpX6gh7Wh+RMDaBlOlDYxBoc4CK7sbGgXBdwddL/ozu/
+   TJue/T044qYcQr2Z1VwvwTUJfSR8XXfmMWIccHA6T6fi6uYxdtVjHe1zE
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.60,396,1549900800"; 
+   d="scan'208";a="206023511"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 26 Apr 2019 12:41:55 +0800
+IronPort-SDR: z2K6iaIJlDslcti6kPdWyzkN4pri40PJhawW9UmjwZtOdL/pXPnOsjUi9GAoVOQvE4Ls8VZyDB
+ zzOj19D86aveVnxGnShc9RTzEz3G+GO7ulEe+3/7E0IIJ+jhcVciqkYEVBM++hpz0la9q3/AVV
+ +5vdtTI89QUPJ+1SSwaGGtJG0cNCymmNAaMmSwh4PURtTv9qh/Ty0PMyMnB6YYAWL5v7O7m1G4
+ RiQp0qmfUGHOM5UrSkt7p3ez5RWUdnD3XKcV8DOZKsm9Q4L6WEyumQYKq36kRYb7YnkhACOZNl
+ /Db1pg9qo8bfUmR9ochNUcEh
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP; 25 Apr 2019 21:20:00 -0700
+IronPort-SDR: U3aV7ee0cykZHXpN0/znPIqgRaqQfDMLXGGa8LArrP7M+zdfNNiDSefYqC50qQqSyAnAfA2mtE
+ T7qBObKPgcOlc/RzeNNWd4By+0xOsWJUVMH9+b9oq7x+523e7mezX+XfZMd1B02bYtz4G39DxP
+ 8te9T7QaBXt3D90DnF8wTlOwvXXwzzz5W3lJiy0ULk1RJXiHwgytRcjAxJ7aZF3/RT2DiO+lr+
+ yFDWbVTblOwKmQ1BC90SdBhwCwECPdYRp6zZzcAkQJOD5lS/l6Iiaf9TrQdMfgv2jZ0hZTZgPB
+ w2E=
+Received: from usa001205.ad.shared (HELO [10.86.53.92]) ([10.86.53.92])
+  by uls-op-cesaip01.wdc.com with ESMTP; 25 Apr 2019 21:41:23 -0700
+Subject: Re: [PATCH] tty: Don't force RISCV SBI console as preferred console
+To:     Anup Patel <Anup.Patel@wdc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20190425133435.56065-1-anup.patel@wdc.com>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <9a8be7ef-e62e-2a93-9170-e3dc70dfb25f@wdc.com>
+Date:   Thu, 25 Apr 2019 21:41:21 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1556253219.geomfr4bo2.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190425133435.56065-1-anup.patel@wdc.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra's on April 25, 2019 9:56 pm:
-> On Fri, Apr 12, 2019 at 02:26:13PM +1000, Nicholas Piggin wrote:
->> The nohz idle balancer runs on the lowest idle CPU. This can
->> interfere with isolated CPUs, so confine it to HK_FLAG_MISC
->> housekeeping CPUs.
->>=20
->> HK_FLAG_SCHED is not used for this because it is not set anywhere
->> at the moment. This could be folded into HK_FLAG_SCHED once that
->> option is fixed.
->=20
-> Frederic? Anyway, I thnk I'll take this patch as is.
+On 4/25/19 6:35 AM, Anup Patel wrote:
+> The Linux kernel will auto-disables all boot consoles whenever it
+> gets a preferred real console.
+> 
+> Currently on RISC-V systems, if we have a real console which is not
+> RISCV SBI console then boot consoles (such as earlycon=sbi) are not
+> auto-disabled when a real console (ttyS0 or ttySIF0) is available.
+> This results in duplicate prints at boot-time after kernel starts
+> using real console (i.e. ttyS0 or ttySIF0) if "earlycon=" kernel
+> parameter was passed by bootloader.
+> 
+> The reason for above issue is that RISCV SBI console always adds
+> itself as preferred console which is causing other real consoles
+> to be not used as preferred console.
+> 
 
-That would be great, thanks. We've been testing it in a staging
-environment (this is where they noticed the noise in the first
-place), and results have been as expected:
+Do we even need HVC_SBI console to be enabled by default? Disabling 
+CONFIG_HVC_RISCV_SBI seems to be fine while running in QEMU.
 
-  I've been able to test Nick's idle-loop load balancer (ILB) patch,=20
-  with and without the TEO cpuidle governor. With the ILB patch (and=20
-  nohz_full) I get a very quiet noise profile with either cpuidle=20
-  governor (menu or teo). For my tests, I don't see a meaningful=20
-  difference between the two governors.
+If we don't need it, I suggest we should remove the config option from 
+defconfig in addition to this patch.
 
-  [...]
+Regards,
+Atish
+> Ideally "console=" kernel parameter passed by bootloaders should
+> be the one selecting a preferred real console.
+> 
+> This patch fixes above issue by not forcing RISCV SBI console as
+> preferred console.
+> 
+> Fixes: afa6b1ccfad5 ("tty: New RISC-V SBI console driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>   drivers/tty/hvc/hvc_riscv_sbi.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/tty/hvc/hvc_riscv_sbi.c b/drivers/tty/hvc/hvc_riscv_sbi.c
+> index 75155bde2b88..31f53fa77e4a 100644
+> --- a/drivers/tty/hvc/hvc_riscv_sbi.c
+> +++ b/drivers/tty/hvc/hvc_riscv_sbi.c
+> @@ -53,7 +53,6 @@ device_initcall(hvc_sbi_init);
+>   static int __init hvc_sbi_console_init(void)
+>   {
+>   	hvc_instantiate(0, 0, &hvc_sbi_ops);
+> -	add_preferred_console("hvc", 0, NULL);
+>   
+>   	return 0;
+>   }
+> 
 
-  Bottom line: Nick's patch that constrains the ILB to run on non-nohz=20
-  cores has a noticeable noise-reduction effect. For this type of=20
-  workload, the choice of cpuidle governor, menu or teo, is immaterial.
-
-This is against a slightly backported RHEL kernel they are using, but
-no significant differences from upstream in these areas.
-
-Thanks,
-Nick
-
-=
