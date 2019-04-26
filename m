@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A70C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059FEC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D64A208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2F02087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XKJ4fAeB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYKIYvXm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfD0GpF (ORCPT
+        id S1726823AbfD0GpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:45:05 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42169 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfD0GnL (ORCPT
+        Sat, 27 Apr 2019 02:45:14 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34643 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbfD0GnG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:43:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id x15so2567500pln.9;
-        Fri, 26 Apr 2019 23:43:10 -0700 (PDT)
+        Sat, 27 Apr 2019 02:43:06 -0400
+Received: by mail-pg1-f194.google.com with SMTP id c13so1651968pgt.1;
+        Fri, 26 Apr 2019 23:43:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gMfxobg7i1AP5PQ14JM+oGjrmklNXXx9IUFM/PW54zo=;
-        b=XKJ4fAeBY8aGdbJDn84dW83HzgSvQACPuhXWJHvF1CWt6rAKSo0+tUCXqeDEYn8KGx
-         u3zXII+RSuYhdLmlbo5/0feDTgEEs6/tOmzti0w5Pevv/8Nua7dmelg2Hg1YTOM0HPNp
-         IuB1XxBtPV5C1LDrt4HWOamCYTjBpu9Uc9bqXu6wh2x58Sr/Usj1f74P/vpY9jMFSCFS
-         THBbi+fo5P15SNYnnZLc+khNDUp7StdyPifYfNcqKpXcU/HGBdU106YbtBqZ2gBNSvKt
-         YTZSQ/QqPm8CwczIhg2BokKOhThemqJ36d1wwJl1ZB93G6rLPD545DygLOMnvs67gNXF
-         w1Rg==
+        bh=Y4ax2hOd4Buhijx/oNSuXPhWpslJbmlh2LJYha9eHFk=;
+        b=RYKIYvXmL5tJ4u/bU0iLk60YO+Ox59zCcKmrYcUn0L0mc7KUA8ZtJ2R4XNYjQk2a8B
+         DcQM399thIjNSjXHuZQ6k7afM/SMh1l1QYkf2D0hRQ+1xwvUSHZnrIJ4UJtkR2NL1yLe
+         l1RYwwd0hroNUCsKi5IV5ZZNm8YzK8J7h42F1sPN4gG9Y1ehTjsd+VC718e5LdQep+gS
+         k/OhJCSCkHRbcX+8zk8NtqDpMNtIV6Cqdz0zcbSsIjK/yzdPAJzadIJkFTsIuXX0ujKs
+         CagOndVrfBrJnKlvTuPVqrDmZeIo9JxoUR6B70xI9bSBAuYLVmprrE1fKIlJc4O0C9hS
+         uf2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=gMfxobg7i1AP5PQ14JM+oGjrmklNXXx9IUFM/PW54zo=;
-        b=VTV3oNABLcWnQT6EyxfYkWKw+VCqL9kozgc+uQPe2ewZsoHcE3S9yVBZlAFpYhBNbz
-         7rq68VSTmRYxNsszQ8s5Vlwp4hOZemvnHQQKISpez0TbprktH90D+seVfxYVw8ndRTyG
-         I9ydMVYCE9ctxzcUKroA6SK8Z1A0tYz4Z8Id5F4BYC7FJ3AjxcpMCnLReoZQrs4WcHs3
-         d/F8E/YoLGT7XA1bcnuhoO8yok3zUru8WptkOegmVycUcvqNj0VnrECe/wzgCTe11fb7
-         PJlS56Zt+9qDwawTwXnNIv0ixb1JamSFn4pIObJ7P6ZiREEoxQWVcwU3Xb6toI3mJm6R
-         f2tQ==
-X-Gm-Message-State: APjAAAUiKMYfOfhAJ0UhztxLwnMMNTfMUy2MaLFgUBNvh5cNYJslMRna
-        5PHCBTbcphtklUIEDQrUf50=
-X-Google-Smtp-Source: APXvYqwk9lLXQyc9bNgKLLm6YtZMcI1PVJ4KR2rM1C+cN3nT9zotDQcbIXGbwEvAmUupbSpfYScE8w==
-X-Received: by 2002:a17:902:a7:: with SMTP id a36mr50206141pla.111.1556347390037;
-        Fri, 26 Apr 2019 23:43:10 -0700 (PDT)
+        bh=Y4ax2hOd4Buhijx/oNSuXPhWpslJbmlh2LJYha9eHFk=;
+        b=rSaTzuCf2BuOwLUgzt+pfo/Yj6lrJQJQHQOcSt5ZFaWenlhTmX/2oYyOA366c3XPsy
+         dEjDNUyo1FKmTO+aVeUMnvhmxjgb2wl7UlDp2WR7O/pAxmdu6RAf9FRD3afL85ehZqbl
+         RL0JmYcqgRzwL6+5mibSQXBhtMG0VW5jZYUVT9v2DgjR/3ueOoUITHkVNzgzSBQmkD6N
+         xOrAg0mQF5psZsX/mjdCvtAbYC8x10BC7Apd0eWqfDBO/ths6spjwHTuIKGQB3BhaP5a
+         54O5DWRC1f313n3uX6a/xdCS60UIKYC8dq3rnNDFnD/tQtqRM1XHe16xfVazH2jBszLN
+         3pYQ==
+X-Gm-Message-State: APjAAAVmA/gtp8uCQEe0f+B0IXzT5u0yIw4mpyrmJmQls+1YkuHxleen
+        s+VI4Bwc/TSh1s3uzIqOKd8=
+X-Google-Smtp-Source: APXvYqzYil+3Ftso1TWpSV8095HGNQL/URTfcLD+HpGX4LAA48WZkM07V5HZ0EJt2GuXBL8qYa+EnA==
+X-Received: by 2002:a63:b0b:: with SMTP id 11mr12676888pgl.445.1556347385725;
+        Fri, 26 Apr 2019 23:43:05 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.08
+        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 23:43:09 -0700 (PDT)
+        Fri, 26 Apr 2019 23:43:05 -0700 (PDT)
 From:   nadav.amit@gmail.com
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -72,10 +72,12 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
         kristen@linux.intel.com, deneen.t.dock@intel.com,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
         Nadav Amit <namit@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH v6 05/24] uprobes: Initialize uprobes earlier
-Date:   Fri, 26 Apr 2019 16:22:44 -0700
-Message-Id: <20190426232303.28381-6-nadav.amit@gmail.com>
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v6 02/24] x86/jump_label: Use text_poke_early() during early init
+Date:   Fri, 26 Apr 2019 16:22:41 -0700
+Message-Id: <20190426232303.28381-3-nadav.amit@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426232303.28381-1-nadav.amit@gmail.com>
 References: <20190426232303.28381-1-nadav.amit@gmail.com>
@@ -86,88 +88,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nadav Amit <namit@vmware.com>
 
-In order to have a separate address space for text poking, we need to
-duplicate init_mm early during start_kernel(). This, however, introduces
-a problem since uprobes functions are called from dup_mmap(), but
-uprobes is still not initialized in this early stage.
+There is no apparent reason not to use text_poke_early() during
+early-init, since no patching of code that might be on the stack is done
+and only a single core is running.
 
-Since uprobes initialization is necassary for fork, and since all the
-dependant initialization has been done when fork is initialized (percpu
-and vmalloc), move uprobes initialization to fork_init(). It does not
-seem uprobes introduces any security problem for the poking_mm.
+This is required for the next patches that would set a temporary mm for
+text poking, and this mm is only initialized after some static-keys are
+enabled/disabled.
 
-Crash and burn if uprobes initialization fails, similarly to other early
-initializations. Change the init_probes() name to probes_init() to match
-other early initialization functions name convention.
-
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Reported-by: kernel test robot <lkp@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- include/linux/uprobes.h | 5 +++++
- kernel/events/uprobes.c | 8 +++-----
- kernel/fork.c           | 1 +
- 3 files changed, 9 insertions(+), 5 deletions(-)
+ arch/x86/kernel/jump_label.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index 103a48a48872..12bf0b68ed92 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -115,6 +115,7 @@ struct uprobes_state {
- 	struct xol_area		*xol_area;
- };
+diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
+index f99bd26bd3f1..e7d8c636b228 100644
+--- a/arch/x86/kernel/jump_label.c
++++ b/arch/x86/kernel/jump_label.c
+@@ -50,7 +50,12 @@ static void __ref __jump_label_transform(struct jump_entry *entry,
+ 	jmp.offset = jump_entry_target(entry) -
+ 		     (jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
  
-+extern void __init uprobes_init(void);
- extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
- extern int set_orig_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
- extern bool is_swbp_insn(uprobe_opcode_t *insn);
-@@ -154,6 +155,10 @@ extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
- struct uprobes_state {
- };
+-	if (early_boot_irqs_disabled)
++	/*
++	 * As long as only a single processor is running and the code is still
++	 * not marked as RO, text_poke_early() can be used; Checking that
++	 * system_state is SYSTEM_BOOTING guarantees it.
++	 */
++	if (system_state == SYSTEM_BOOTING)
+ 		poker = text_poke_early;
  
-+static inline void uprobes_init(void)
-+{
-+}
-+
- #define uprobe_get_trap_addr(regs)	instruction_pointer(regs)
- 
- static inline int
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index c5cde87329c7..e6a0d6be87e3 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2294,16 +2294,14 @@ static struct notifier_block uprobe_exception_nb = {
- 	.priority		= INT_MAX-1,	/* notified after kprobes, kgdb */
- };
- 
--static int __init init_uprobes(void)
-+void __init uprobes_init(void)
- {
- 	int i;
- 
- 	for (i = 0; i < UPROBES_HASH_SZ; i++)
- 		mutex_init(&uprobes_mmap_mutex[i]);
- 
--	if (percpu_init_rwsem(&dup_mmap_sem))
--		return -ENOMEM;
-+	BUG_ON(percpu_init_rwsem(&dup_mmap_sem));
- 
--	return register_die_notifier(&uprobe_exception_nb);
-+	BUG_ON(register_die_notifier(&uprobe_exception_nb));
- }
--__initcall(init_uprobes);
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 9dcd18aa210b..44fba5e5e916 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -815,6 +815,7 @@ void __init fork_init(void)
- #endif
- 
- 	lockdep_init_task(&init_task);
-+	uprobes_init();
- }
- 
- int __weak arch_dup_task_struct(struct task_struct *dst,
+ 	if (type == JUMP_LABEL_JMP) {
 -- 
 2.17.1
 
