@@ -2,193 +2,103 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A978CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E25C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781C02084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:41:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556239279;
-	bh=GsFK9qZuv0FlaRjuXOccExgA31ahiLh6qHJ2B8nDco4=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=GaQU6tNfQLVdPwa9qtbZ29/ys874ajtAm6fNJi05ItWhqON15xXGEoDsZI7VdZ01n
-	 ZClKrNUOYqMzuPWNQz5Oq9hmVIGVjkDLCakl8yZiam5Xf0vVejXWAcKZa2GGNfb+BL
-	 zIAHRZ2zY2zyv0oCVLNJ5V7cgdCvjSiPYK7Q56ZU=
+	by mail.kernel.org (Postfix) with ESMTP id 5200320878
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:41:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="juG6XlKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfDZAlS (ORCPT
+        id S1728838AbfDZAli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 20:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbfDZAlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 20:41:17 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3FDB20878;
-        Fri, 26 Apr 2019 00:41:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556239276;
-        bh=GsFK9qZuv0FlaRjuXOccExgA31ahiLh6qHJ2B8nDco4=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=urKxPTmZAR1A/OIF3g68Ro0USKe2/uDQLMKmXtMjcS6VcB5uuoep9gCluxsh3kdEY
-         C++nqqMbV5wFNxXzrxFgOiLPorDOLK4rkTtI5RMiYnBvC/0h8kVZh97Up7MgrmZUsa
-         Iru7MEnnO8Cj8A4/xZQd9/Y79hujrU1RA6JDSboE=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 25 Apr 2019 20:41:38 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:52272 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfDZAlh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 20:41:37 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x3Q0fM9e006091;
+        Fri, 26 Apr 2019 09:41:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x3Q0fM9e006091
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556239283;
+        bh=B2BY+4uy73OfVMbPyRb8bs4BvjcV9oPqEcBy0fGq99A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=juG6XlKZx3lIQNmlQF9PS7qnZuZSJL8tLifhJXz8TTBPSYU0gdx3IPF0UFgUHZeAm
+         fojaDuc3P65aZmmU5YYYIw4D+yNX1ZhuKj5k7X9N4/dinXZNHnRZX9Bhe2WuWw38pN
+         ZXPoAIx9zklyKuSIVzdSWZY52wIpVubhqytpiEa1VOjzyzcvScNMYGMOXFfu3xdmhq
+         7IKmqscYn2e82GiZTgbXgz0wum6ZZR0NJgViDR6gQzxv1RpDVgP7IOKkDqCHBYYKuy
+         4/z+qb/Tp3Y7w/gKQL79+QX2SqNpcV9k61tOU+nigk7DQwZireH9QzFPU66GoPGPXM
+         FZtiYblpQn3vQ==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id t23so950060vso.10;
+        Thu, 25 Apr 2019 17:41:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAWbTUCJOY1Lfha7pEaXqClix8mJlMHxht6Dfe9QcyXeB731ENM4
+        5kwAn2DsuatjNHQNvQF2xjtCzTMIg2N08kxrcVc=
+X-Google-Smtp-Source: APXvYqzrvI62wAyV3oztFTcHZnYotQQXzdfnfZ8pfvebs68g2Ue5temtL2tlvSYuWGmEjw19B7nv02QGC82Gb3dzSGs=
+X-Received: by 2002:a67:7a43:: with SMTP id v64mr23427590vsc.54.1556239282077;
+ Thu, 25 Apr 2019 17:41:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1497cbbe-9748-87f1-2edc-daa54dbf6360@gmail.com>
-References: <20190414202009.31268-1-digetx@gmail.com> <20190414202009.31268-2-digetx@gmail.com> <155621927685.15276.16453873579880842057@swboyd.mtv.corp.google.com> <2b4f56cd-caf9-e6b5-6344-a045e08a9c91@gmail.com> <155623110849.15276.13181079281286430446@swboyd.mtv.corp.google.com> <1497cbbe-9748-87f1-2edc-daa54dbf6360@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 1/4] clk: tegra20/30: Add custom EMC clock implementation
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Message-ID: <155623927513.15276.3011897763001027401@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Thu, 25 Apr 2019 17:41:15 -0700
+References: <1554280344-10741-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1554280344-10741-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 26 Apr 2019 09:40:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQL0GFHRkYmvTT=Oa8PPkF0FBdgUK_BUQvjwrwNRBEBnQ@mail.gmail.com>
+Message-ID: <CAK7LNAQL0GFHRkYmvTT=Oa8PPkF0FBdgUK_BUQvjwrwNRBEBnQ@mail.gmail.com>
+Subject: Re: [PATCH] sparc: vdso: add FORCE to the build rule of %.so
+To:     "David S . Miller" <davem@davemloft.net>,
+        sparclinux <sparclinux@vger.kernel.org>
+Cc:     "ndesaulniers@google.com" <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Dmitry Osipenko (2019-04-25 17:03:11)
-> 26.04.2019 1:25, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > Quoting Dmitry Osipenko (2019-04-25 14:42:19)
-> >> 25.04.2019 22:07, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> Quoting Dmitry Osipenko (2019-04-14 13:20:06)
-> >>>> +{
-> >>>> +       struct clk *clk =3D __clk_lookup("emc");
-> >>>> +       struct tegra_clk_emc *emc;
-> >>>> +       struct clk_hw *hw;
-> >>>> +
-> >>>> +       if (clk) {
-> >>>> +               hw =3D __clk_get_hw(clk);
-> >>>> +               emc =3D to_tegra_clk_emc(hw);
-> >>>> +
-> >>>> +               emc->round_cb =3D round_cb;
-> >>>> +               emc->arg_cb =3D arg_cb;
-> >>>> +       }
-> >>>> +}
-> >>>> +
-> >>>> +bool tegra20_clk_emc_driver_available(void)
-> >>>> +{
-> >>>> +       struct clk *clk =3D __clk_lookup("emc");
-> >>>
-> >>> Can we avoid using __clk_lookup()? Maybe by having the clk_hw pointer=
- in
-> >>> this driver somehow?
-> >>
-> >> tegra20_clk_emc_driver_available() is a private function of the Tegra's
-> >> clk-core. Please note that prototype of this function is added to the
-> >> local "drivers/clk/tegra/clk.h" file.
-> >>
-> >> It is indeed possible to use clk pointer instead of __clk_lookup() and
-> >> I'll change that in v3 since it's causing some confusion.
-> >=20
-> > Can you use a clk_hw pointer directly? I'd like to see clk provider
-> > drivers only use struct clk_hw, and clk consumers only use struct clk.
->=20
-> The clk_hw pointers are not stored directly anywhere in the Tegra's
-> clk-driver, it will be a quite massive change to make the clk driver's
-> code to use clk_hw pointers instead of struct clk.
+Hi David,
 
-Well they must be stored in the clk driver somewhere because that's how
-the whole clk framework works.
 
->=20
-> I can add a global variable for the tegra_clk_emc pointer, but it is
-> not really necessary since there is __clk_get_hw.
->=20
-> Could you please explain what's the problem with __clk_get_hw?
+On Wed, Apr 3, 2019 at 5:34 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> $(call if_changed,...) must have FORCE as a prerequisite.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-If it's a large invasive change then no worries. The thin that's wrong
-with __clk_get_hw() is that it's using a struct clk, meaing that most
-likely this is a clk consumer driver doing something weird.
+Ping?
 
->=20
-> >>
-> >>>> +       struct tegra_clk_emc *emc; +       struct clk_hw *hw; + +
-> >>>> if (clk) { +               hw =3D __clk_get_hw(clk);
-> >>>
-> >>> This gets further to the point, we don't prefer to see drivers use
-> >>> __clk_get_hw() unless they absolutely need to. Maybe I don't
-> >>> understand the driver structure, but it seems like maybe the
-> >>> driver that's providing the callbacks could be the same driver
-> >>> that's registering these clks, and thus everything could be inside
-> >>> one file so that we don't have to pass around callbacks and clk_hw
-> >>> pointers? Commit text says "this is how it's been" but that's not
-> >>> a reason to keep doing it.
-> >>
-> >> Again, tegra20_clk_emc_driver_available() is for the Terga's
-> >> clk-core and not for the EMC (External Memory Controller) driver.
-> >> This function is used to determine whether EMC driver is ready to
-> >> handle clock-rate changes (PRE/POST rate-change notifications), clk
-> >> users can't get EMC clock until driver is ready (i.e. the "round"
-> >> callback is registered by the driver).
-> >=20
-> > Who are the other users of the EMC clk? Why does the EMC driver and
-> > the clk driver need to be in sync in such a way that requires us to
-> > check if some code in the EMC driver is ready before we can hand out
-> > clks from this clk provider? It looks like some tight coupling
-> > between these two pieces of code on the clk_get() path which is
-> > setting off alarms for me.
->=20
-> The other EMC clk user is the devfreq driver. We don't want the
-> devfreq driver to get and use the EMC clock if memory timing can't be
-> programmed.
 
-Alright, got it!
+>  arch/sparc/vdso/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
+> index 74e97f7..83c4b46 100644
+> --- a/arch/sparc/vdso/Makefile
+> +++ b/arch/sparc/vdso/Makefile
+> @@ -68,7 +68,7 @@ CFLAGS_REMOVE_vdso-note.o = -pg
+>  CFLAGS_REMOVE_vclock_gettime.o = -pg
+>
+>  $(obj)/%.so: OBJCOPYFLAGS := -S
+> -$(obj)/%.so: $(obj)/%.so.dbg
+> +$(obj)/%.so: $(obj)/%.so.dbg FORCE
+>         $(call if_changed,objcopy)
+>
+>  CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
+> --
+> 2.7.4
+>
 
-> That is correct.
->=20
-> > Is there some other entity that's needing to be deferred while the
-> > EMC and clk drivers tell each other that they're probed and ready so
-> > that these notifiers all work? Is that entity using clks directly
-> > instead of going through the EMC to change frequencies? If so, why
-> > can't we funnel that logic through EMC which then goes to the clk
-> > driver? That way it's clearly "thing that changes frequency" -> EMC
-> > -> clk controller call chain. It might even allow us to get rid of
-> > the rate notifiers?
-> >=20
->=20
-> That entity is the devfreq driver which uses EMC clk directly right
-> now.
->=20
->         https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
-it/tree/drivers/devfreq/tegra-devfreq.c#n484
->=20
-> I think we can funnel all the rate-changing logic through the EMC
-> drivers using the PM memory bandwidth QoS API, which is currently
-> unsupported by the drivers. And then indeed the rate notifiers won't
-> be needed.
 
-Why does PM QoS matter here? I'm mostly asking for the chain to be
-stacked and the devfreq driver to be the same as the EMC driver and then
-have the EMC/devfreq combo driver use clk APIs to set rates and do
-things before and after.
-
->=20
->         https://github.com/grate-driver/linux/commit/2aa2390dd0cb8bca98e4=
-cea6a29d7bda64a51bb3
->=20
-> Actually it will be the next step to wire up the PM QoS support to all
-> relevant drivers that I'm going to implement after the current
-> CLK/EMC/DEVFREQ patch sets will land, it's just not realistic to do
-> everything in a single hop.
-
-Ok. It doesn't make me feel great but I suppose if you don't disappear
-after this code is merged things will work out in the end.
-
+--
+Best Regards
+Masahiro Yamada
