@@ -2,274 +2,135 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B417DC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F36C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7989F208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12ED2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:26:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="R6U/Yor1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfDZRXL (ORCPT
+        id S1726296AbfDZR0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 13:23:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38318 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfDZRXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 13:23:10 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 49BC830B4795;
-        Fri, 26 Apr 2019 17:23:10 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A02295D71A;
-        Fri, 26 Apr 2019 17:23:04 +0000 (UTC)
-Subject: Re: [PATCH v2 19/19] iommu/vt-d: Add svm/sva invalidate function
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556062279-64135-20-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <26398960-f484-d5dd-eff5-c44810528194@redhat.com>
-Date:   Fri, 26 Apr 2019 19:23:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 26 Apr 2019 13:26:06 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46839 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfDZR0G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 13:26:06 -0400
+Received: by mail-pf1-f195.google.com with SMTP id j11so2025832pff.13
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 10:26:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0R0zKKad1LluAuAg+aebvByAUW+gKKtAQn2bc3N5PBk=;
+        b=R6U/Yor1OJkJyD71Twn7FGvpzVbGMhBazytbC3VNUXEY1uAXvIoLhg3yDyMCUSTaKS
+         4h4gfSGMZ8Apcw7m0pTqhFANCL8EtLUz4gpJuv+4idLW/Soa4eF7Qeq8qYhrkksZ9TAP
+         z5AD429/1jfxqVC406MgRJwx/yLWVpZ5/KJxg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0R0zKKad1LluAuAg+aebvByAUW+gKKtAQn2bc3N5PBk=;
+        b=GKo8jzTvQ5ts8wyAYgMZ7xHGtVBXHa9/yU71bpCzxQoqmuVBbNthOcnW8yDRtBImhH
+         QmNCNskHXhrRqYWDrVwTrVKu6isdbpxaFI19mOT7oJ8NCon9/wVo0rTPqok+ekhZ5kgo
+         hjOW3W8acMJu5IPLU0VExo3YsVUMccbUHo352ASICet4Zhhf/OMtItcweBkZ1fe7x4aA
+         YTDTIbQBPwvQJo9Hd41nHnxUy0gxMjEqJXpmWdn90iKyPKk5bNfy8W2QQhHsxmrVhaKa
+         zaB8uwBum0+eeDkaxpV8odgORgwdzA1NRuM6MHA0MGlc5pTOLnC8S4IIYwxSuDMNAy64
+         PXWQ==
+X-Gm-Message-State: APjAAAW6nwt2CaY4k82ECo0dXTflF0xhnxpYH5w4X8GeXpPlpPZhYc4I
+        K9BA0WqWy007Klu2nxYwOFSKKg==
+X-Google-Smtp-Source: APXvYqw/mw1DuGQHCZM5w5q9z8C6GS0EtuBkwpypEgMcOoNvUmm1bhVeIwOJMmSLBOE36SjULv+iQA==
+X-Received: by 2002:a63:d349:: with SMTP id u9mr42447261pgi.83.1556299565072;
+        Fri, 26 Apr 2019 10:26:05 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id n26sm48563567pfi.165.2019.04.26.10.26.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 10:26:04 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 13:26:02 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
+        Jann Horn <jann@thejh.net>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Michal Hocko <mhocko@suse.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Sandeep Patil <sspatil@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Murray <timmurray@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH v1 2/2] Add selftests for pidfd polling
+Message-ID: <20190426172602.GD261279@google.com>
+References: <20190425190010.46489-1-joel@joelfernandes.org>
+ <20190425190010.46489-2-joel@joelfernandes.org>
+ <20190425212917.yotnir4uqgpnh764@brauner.io>
+ <CAKOZueuPeqnWVCv8NnQNyStWBQLybkr2qqtfQ0MjzsfSQDymzg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1556062279-64135-20-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 26 Apr 2019 17:23:10 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOZueuPeqnWVCv8NnQNyStWBQLybkr2qqtfQ0MjzsfSQDymzg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-On 4/24/19 1:31 AM, Jacob Pan wrote:
-> When Shared Virtual Address (SVA) is enabled for a guest OS via
-> vIOMMU, we need to provide invalidation support at IOMMU API and driver
-> level. This patch adds Intel VT-d specific function to implement
-> iommu passdown invalidate API for shared virtual address.
+On Thu, Apr 25, 2019 at 03:07:48PM -0700, Daniel Colascione wrote:
+> On Thu, Apr 25, 2019 at 2:29 PM Christian Brauner <christian@brauner.io> wrote:
+> > This timing-based testing seems kinda odd to be honest. Can't we do
+> > something better than this?
 > 
-> The use case is for supporting caching structure invalidation
-> of assigned SVM capable devices. Emulated IOMMU exposes queue
-> invalidation capability and passes down all descriptors from the guest
-> to the physical IOMMU.
-> 
-> The assumption is that guest to host device ID mapping should be
-> resolved prior to calling IOMMU driver. Based on the device handle,
-> host IOMMU driver can replace certain fields before submit to the
-> invalidation queue.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-> ---
->  drivers/iommu/intel-iommu.c | 159 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 159 insertions(+)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 89989b5..54a3d22 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5338,6 +5338,164 @@ static void intel_iommu_aux_detach_device(struct iommu_domain *domain,
->  	aux_domain_remove_dev(to_dmar_domain(domain), dev);
->  }
->  
-> +/*
-> + * 2D array for converting and sanitizing IOMMU generic TLB granularity to
-> + * VT-d granularity. Invalidation is typically included in the unmap operation
-> + * as a result of DMA or VFIO unmap. However, for assigned device where guest
-> + * could own the first level page tables without being shadowed by QEMU. In
-> + * this case there is no pass down unmap to the host IOMMU as a result of unmap
-> + * in the guest. Only invalidations are trapped and passed down.
-> + * In all cases, only first level TLB invalidation (request with PASID) can be
-> + * passed down, therefore we do not include IOTLB granularity for request
-> + * without PASID (second level).
-> + *
-> + * For an example, to find the VT-d granularity encoding for IOTLB
-> + * type and page selective granularity within PASID:
-> + * X: indexed by iommu cache type
-> + * Y: indexed by enum iommu_inv_granularity
-> + * [IOMMU_INV_TYPE_TLB][IOMMU_INV_GRANU_PAGE_PASID]
-> + *
-> + * Granu_map array indicates validity of the table. 1: valid, 0: invalid
-> + *
-> + */
-> +const static int inv_type_granu_map[NR_IOMMU_CACHE_TYPE][NR_IOMMU_CACHE_INVAL_GRANU] = {
-The size is frozen for a given uapi version so I guess you can hardcode
-the limits for a given version.
-> +	/* PASID based IOTLB, support PASID selective and page selective */
-> +	{0, 1, 1},
-> +	/* PASID based dev TLBs, only support all PASIDs or single PASID */
-> +	{1, 1, 0},
-> +	/* PASID cache */
-> +	{1, 1, 0}
-> +};
-> +
-> +const static u64 inv_type_granu_table[NR_IOMMU_CACHE_TYPE][NR_IOMMU_CACHE_INVAL_GRANU] = {
-> +	/* PASID based IOTLB */
-> +	{0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
-> +	/* PASID based dev TLBs */
-> +	{QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},
-> +	/* PASID cache */
-> +	{QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},
-> +};
-Can't you use a single matrix instead, ie. inv_type_granu_table
+> Agreed. Timing-based tests have a substantial risk of becoming flaky.
+> We ought to be able to make these tests fully deterministic and not
+> subject to breakage from odd scheduling outcomes. We don't have
+> sleepable events for everything, granted, but sleep-waiting on a
+> condition with exponential backoff is fine in test code. In general,
+> if you start with a robust test, you can insert a sleep(100) anywhere
+> and not break the logic. Violating this rule always causes pain sooner
+> or later.
 
-> +
-> +static inline int to_vtd_granularity(int type, int granu, u64 *vtd_granu)
-> +{
-> +	if (type >= NR_IOMMU_CACHE_TYPE || granu >= NR_IOMMU_CACHE_INVAL_GRANU ||
-> +		!inv_type_granu_map[type][granu])
-> +		return -EINVAL;
-> +
-> +	*vtd_granu = inv_type_granu_table[type][granu];
-> +
-> +	return 0;
-> +}
-> +
-> +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
-> +{
-> +	u64 nr_pages;
-direct initialization?
-> +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9 for 2MB, etc.
-> +	 * IOMMU cache invalidate API passes granu_size in bytes, and number of
-> +	 * granu size in contiguous memory.
-> +	 */
-> +
-> +	nr_pages = (granu_size * nr_granules) >> VTD_PAGE_SHIFT;
-> +	return order_base_2(nr_pages);
-> +}
-> +
-> +static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
-> +		struct device *dev, struct iommu_cache_invalidate_info *inv_info)
-> +{
-> +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
-> +	struct device_domain_info *info;
-> +	struct intel_iommu *iommu;
-> +	unsigned long flags;
-> +	int cache_type;
-> +	u8 bus, devfn;
-> +	u16 did, sid;
-> +	int ret = 0;
-> +	u64 granu;
-> +	u64 size;
-> +
-> +	if (!inv_info || !dmar_domain ||
-> +		inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
-> +		return -EINVAL;
-> +
-> +	if (!dev || !dev_is_pci(dev))
-> +		return -ENODEV;
-> +
-> +	iommu = device_to_iommu(dev, &bus, &devfn);
-> +	if (!iommu)
-> +		return -ENODEV;
-> +
-> +	spin_lock(&iommu->lock);
-> +	spin_lock_irqsave(&device_domain_lock, flags);
-mix of _irqsave and non _irqsave looks suspicious to me.
-> +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus, devfn);
-> +	if (!info) {
-> +		ret = -EINVAL;
-> +		goto out_unlock;
-> +	}
-> +	did = dmar_domain->iommu_did[iommu->seq_id];
-> +	sid = PCI_DEVID(bus, devfn);
-> +	size = to_vtd_size(inv_info->addr_info.granule_size, inv_info->addr_info.nb_granules);
-> +
-> +	for_each_set_bit(cache_type, (unsigned long *)&inv_info->cache, NR_IOMMU_CACHE_TYPE) {
-> +
-> +		ret = to_vtd_granularity(cache_type, inv_info->granularity, &granu);
-> +		if (ret) {
-> +			pr_err("Invalid range type %d, granu %d\n", cache_type,
-s/Invalid range type %d, granu %d/Invalid cache type/granu combination
-(%d/%d)
-> +				inv_info->granularity);
-> +			break;
-> +		}
-> +
-> +		switch (BIT(cache_type)) {
-> +		case IOMMU_CACHE_INV_TYPE_IOTLB:
-> +			if (size && (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
-> +				pr_err("Address out of range, 0x%llx, size order %llu\n",
-> +					inv_info->addr_info.addr, size);
-> +				ret = -ERANGE;
-> +				goto out_unlock;
-> +			}
-> +
-> +			qi_flush_piotlb(iommu, did, mm_to_dma_pfn(inv_info->addr_info.addr),
-> +					inv_info->addr_info.pasid,
-> +					size, granu);
-> +
-> +			/*
-> +			 * Always flush device IOTLB if ATS is enabled since guest
-> +			 * vIOMMU exposes CM = 1, no device IOTLB flush will be passed
-> +			 * down. REVISIT: cannot assume Linux guest
-> +			 */
-> +			if (info->ats_enabled) {
-> +				qi_flush_dev_piotlb(iommu, sid, info->pfsid,
-> +						inv_info->addr_info.pasid, info->ats_qdep,
-> +						inv_info->addr_info.addr, size,
-> +						granu);
-> +			}
-> +			break;
-> +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
-> +			if (info->ats_enabled) {
-> +				qi_flush_dev_piotlb(iommu, sid, info->pfsid,
-> +						inv_info->addr_info.pasid, info->ats_qdep,
-> +						inv_info->addr_info.addr, size,
-> +						granu);
-> +			} else
-> +				pr_warn("Passdown device IOTLB flush w/o ATS!\n");
-> +
-> +			break;
-> +		case IOMMU_CACHE_INV_TYPE_PASID:
-> +			qi_flush_pasid_cache(iommu, did, granu, inv_info->pasid);
-> +
-> +			break;
-> +		default:
-> +			dev_err(dev, "Unsupported IOMMU invalidation type %d\n",
-> +				cache_type);
-> +			ret = -EINVAL;
-> +		}
-> +	}
-> +out_unlock:
-> +	spin_unlock(&iommu->lock);
-> +	spin_unlock_irqrestore(&device_domain_lock, flags);
-I would expect the opposite order
-> +
-> +	return ret;
-> +}
-> +
->  static int intel_iommu_map(struct iommu_domain *domain,
->  			   unsigned long iova, phys_addr_t hpa,
->  			   size_t size, int iommu_prot)
-> @@ -5769,6 +5927,7 @@ const struct iommu_ops intel_iommu_ops = {
->  	.dev_disable_feat	= intel_iommu_dev_disable_feat,
->  	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
->  #ifdef CONFIG_INTEL_IOMMU_SVM
-> +	.cache_invalidate	= intel_iommu_sva_invalidate,
->  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
->  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
->  #endif
-> 
-Thanks
+I prefer if you can be more specific about how to redesign the test. Please
+go through the code and make suggestions there. The tests have not been flaky
+in my experience. Some tests do depend on timing like the preemptoff tests,
+that can't be helped. Or a performance test that calculates framedrops.
 
-Eric
+In this case, we want to make sure that the poll unblocks at the right "time"
+that is when the non-leader thread exits, and not when the leader thread
+exits (test 1), or when the non-leader thread exits and not when the same
+non-leader previous did an execve (test 2).
+
+These are inherently timing related. Yes it is true that if this runs in a VM
+and if the VM CPU is preempted for a couple seconds, then the test can fail
+falsely. Still I would argue such a failure scenario of a multi-second CPU
+lock-up can cause more serious issues like RCU stalls, and that's not a test
+issue. We can increase the sleep intervals if you want, to reduce the risk of
+such scenarios.
+
+I would love to make the test not depend on timing, but I don't know how. And
+the tests caught issues that I had in my development flow, so the tests
+worked quite well in my experience.
+
+thanks,
+
+ - Joel
+
