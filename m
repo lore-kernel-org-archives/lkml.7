@@ -2,120 +2,131 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E66CC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53A9C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10174206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BD5206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i99qGsap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfDZG2Y (ORCPT
+        id S1727108AbfDZGeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 02:28:24 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:33994 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725800AbfDZG2X (ORCPT
+        Fri, 26 Apr 2019 02:34:05 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43835 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfDZGeF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 02:28:23 -0400
-Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8E06D43C0BA;
-        Fri, 26 Apr 2019 16:28:18 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hJuLJ-0006GU-0F; Fri, 26 Apr 2019 16:28:17 +1000
-Date:   Fri, 26 Apr 2019 16:28:16 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM TOPIC] Direct block mapping through fs for device
-Message-ID: <20190426062816.GG1454@dread.disaster.area>
-References: <20190426013814.GB3350@redhat.com>
+        Fri, 26 Apr 2019 02:34:05 -0400
+Received: by mail-pl1-f194.google.com with SMTP id n8so1034780plp.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 23:34:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bbSYJTmXjBVZearCiZ36NWRqAeUMukX6DPGvwKnl46Q=;
+        b=i99qGsapzMycxtkJiwxvpSxBJVNhpozutRz+rX2NhQS50s3v2EAGs24XYOKwLzlZy/
+         nvUKjxwyyAA0igwuj+vTQ74OPyORUdmGBYpLKh4qhMLj1PkTBL4S/z/6MD4nkOYwl1+4
+         QWOEZDp96atXu4oijK0HjdKexX45EjxIGLIUO/yRp9fHIIjlJyNEMWO76hFHbiGukwnC
+         BpgJ/UIbjlxeE8cF9K2+0PEykQj683A/o5aNep99Olwn/1AxGhfiOsPcKrc9aTCWxk/j
+         m4dG7MlDZ8VQDW9rAI6jX1wgyvSP3xHqvZtT3ljekQRIOozEPBCszmVsbsHqPgfSm2+A
+         SoxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bbSYJTmXjBVZearCiZ36NWRqAeUMukX6DPGvwKnl46Q=;
+        b=LOUBoD/uRTvYkfiM+QSzCye9mv75rS0vMG8VLdiaIuWe6duhMChKjOtemw7Rub6mp2
+         522+4OFw0qgq290bQ/ojZJW5TAOGnBm6kVXNaSOETt29HHnVUDNajGTWR3lSYos6LUfq
+         rHimlrnIt/ShX6nyH6XyD5xdEXuBW5R5yREE538rjnaXAeOjcPVFwkU/V25ktT1O9OGn
+         it3AB6fyRTnLySbAhRikdnEQjymuWT+cQKFzcGDzW1OxedIon+WzslZ04wwFsYv2cfOa
+         dP3D7H0DdTG55CrvqXHW6W4sa79WuNCcl1FEvewlsOQtuObHrxr1xfxjl13Ix2RKFRfW
+         3XpA==
+X-Gm-Message-State: APjAAAW4WURqCTNRqgQlHPJY7knWb7R5rnzXjNckVhAsWUMiLVix+D7e
+        xVvmL63c98AwHxmWMSQL3uU=
+X-Google-Smtp-Source: APXvYqzk7nqUHCsHNrXoviKE0lkh/auPwygLC1UBIjq/FhBsmKwmcTQK42f5rYKYIlizoHrAUG+mdA==
+X-Received: by 2002:a17:902:8b86:: with SMTP id ay6mr2986166plb.4.1556260443956;
+        Thu, 25 Apr 2019 23:34:03 -0700 (PDT)
+Received: from localhost.localdomain ([110.70.55.171])
+        by smtp.gmail.com with ESMTPSA id k3sm31410442pfb.175.2019.04.25.23.34.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Apr 2019 23:34:03 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: [RFC][PATCH] panic: make panic start/end messages consistent
+Date:   Fri, 26 Apr 2019 15:33:56 +0900
+Message-Id: <20190426063356.20453-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426013814.GB3350@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=oexKYjalfGEA:10
-        a=7-415B0cAAAA:8 a=VUkQmcHZEWhioDgAkr4A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 09:38:14PM -0400, Jerome Glisse wrote:
-> I see that they are still empty spot in LSF/MM schedule so i would like to
-> have a discussion on allowing direct block mapping of file for devices (nic,
-> gpu, fpga, ...). This is mm, fs and block discussion, thought the mm side
-> is pretty light ie only adding 2 callback to vm_operations_struct:
+We don't have consistency:
+- we always print panic header
+	pr_emerg("Kernel panic - not syncing:")
 
-The filesystem already has infrastructure for the bits it needs to
-provide. They are called file layout leases (how many times do I
-have to keep telling people this!), and what you do with the lease
-for the LBA range the filesystem maps for you is then something you
-can negotiate with the underlying block device.
+- but we don't always print panic footer
+	pr_emerg("---[ end Kernel panic - not syncing:")
 
-i.e. go look at how xfs_pnfs.c works to hand out block mappings to
-remote pNFS clients so they can directly access the underlying
-storage. Basically, anyone wanting to map blocks needs a file layout
-lease and then to manage the filesystem state over that range via
-these methods in the struct export_operations:
+For instance, no panic footer (end panic) message will be
+printed when panic_timeout is set - the kernel will either
+reboot immediately after console_flush_on_panic() (emergency
+restart) or after panic_timeout seconds. Additionally,
+panic_print_sys_info() goes before panic footer line, which
+doesn't look very right, panic_print_sys_info() is just
+additional debugging into.
 
-        int (*get_uuid)(struct super_block *sb, u8 *buf, u32 *len, u64 *offset);
-        int (*map_blocks)(struct inode *inode, loff_t offset,
-                          u64 len, struct iomap *iomap,
-                          bool write, u32 *device_generation);
-        int (*commit_blocks)(struct inode *inode, struct iomap *iomaps,
-                             int nr_iomaps, struct iattr *iattr);
+Let's make it consistent:
 
-Basically, before you read/write data, you map the blocks. if you've
-written data, then you need to commit the blocks (i.e. tell the fs
-they've been written to).
+	pr_emerg("Kernel panic - not syncing:")
+	dump_stack();
+	console_flush_on_panic();
+	pr_emerg("---[ end Kernel panic - not syncing:")
 
-The iomap will give you a contiguous LBA range and the block device
-they belong to, and you can then use that to whatever smart DMA stuff
-you need to do through the block device directly.
+	panic_print_sys_info();
+	/* the rest */
+	/* panic_timeout handling */
 
-If the filesystem wants the space back (e.g. because truncate) then
-the lease will be revoked. The client then must finish off it's
-outstanding operations, commit them and release the lease. To access
-the file range again, it must renew the lease and remap the file
-through ->map_blocks....
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+---
+ kernel/panic.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> So i would like to gather people feedback on general approach and few things
-> like:
->     - Do block device need to be able to invalidate such mapping too ?
-> 
->       It is easy for fs the to invalidate as it can walk file mappings
->       but block device do not know about file.
-
-If you are needing the block device to invalidate filesystem level
-information, then your model is all wrong.
-
->     - Do we want to provide some generic implementation to share accross
->       fs ?
-
-We already have a generic interface, filesystems other than XFS will
-need to implement them.
-
->     - Maybe some share helpers for block devices that could track file
->       corresponding to peer mapping ?
-
-If the application hasn't supplied the peer with the file it needs
-to access, get a lease from and then map an LBA range out of, then
-you are doing it all wrong.
-
-Cheers,
-
-Dave.
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 40882dad9f70..6482e4b54f0b 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -282,6 +282,7 @@ void panic(const char *fmt, ...)
+ 	 */
+ 	debug_locks_off();
+ 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
++	pr_emerg("---[ end Kernel panic - not syncing: %s ]---\n", buf);
+ 
+ 	panic_print_sys_info();
+ 
+@@ -331,8 +332,6 @@ void panic(const char *fmt, ...)
+ 		disabled_wait(caller);
+ 	}
+ #endif
+-	pr_emerg("---[ end Kernel panic - not syncing: %s ]---\n", buf);
+-
+ 	/* Do not scroll important messages printed above */
+ 	suppress_printk = 1;
+ 	local_irq_enable();
 -- 
-Dave Chinner
-david@fromorbit.com
+2.21.0
+
