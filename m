@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3B2C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB46C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67CD72089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7DC206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271745;
-	bh=K2ySgkkJ/vVyb5H6n7ZlgvywQ0H1fvKofiIswVl6OwA=;
+	s=default; t=1556271750;
+	bh=YSKy0BmgHyMLcnSBcqJ0V0onsha4Nq9C7l/vn3c3PKQ=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=aIJ9OpWJnDWqYXbeYhnZgDEpY5Hpqo7o+D/ijwFgHlG+w+q82hkrOCO3trSd4DxnI
-	 aY2CYoTCRYgerL16Ak39BpxeuQLjziMetEsOap1G+UfXCy7pUXNVG3FhwUriO2+sO8
-	 YuduRpyEPuqD4aDjcEPhF+FXVnx7ZGN+UgCE8OWA=
+	b=w+fscQqTpOXvudNbtrPQM/AB4DGz4XSPddt2Azzo+CrpoYYBDCfjbYiRKRIl55r75
+	 v0IeWIkUrl0xGacsp4XseY/chAeo1Rwq6ZacgG+v/AoWAEthSYfv7u7YIjkVTDfnU/
+	 HKw35V14JDQOXFUpyAh+v5KQTPIImRIvk3FeSBkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfDZJmY (ORCPT
+        id S1726961AbfDZJl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:42:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47442 "EHLO
+        Fri, 26 Apr 2019 05:41:27 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47312 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfDZJl2 (ORCPT
+        with ESMTP id S1726801AbfDZJlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:41:28 -0400
+        Fri, 26 Apr 2019 05:41:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=3ohanWmhL3ADLMG2WPamJnmRoopc2IqEaIFGICbebAA=; b=F65+DhzwGQVh
-        CENgZRuKphVpQt6ofbbFhrLcb2NNuGalvY4Cpx9v2cJEv/nVvndW6jgx27wgXuE8+UO2HewsRtKxr
-        SKSCHmpJFhXY2mDaSydG9ox5GxT3zJ0jJZz172+76/D9GsOkUmnv+S7igKivPine65pli0kjtbGY0
-        Q6vek=;
+        List-Archive; bh=VC95ZC4Yoz+U5KHgen2VRGk23+cMznfgDGGwJBiIDZA=; b=U1/d5V6a0Cgw
+        dOA6BMvGaTG4aROE0Pj2lFJZ0JB1xIEOA+lJ2FeHegG9hGpdemYxyxl3CjmWUDHSBA5moZzkzdpwf
+        YQB03+XXpa80p42vxVkXF6Ngk4yy9sgxfz5pKUVF2ERoPhQ/k+uv3M3IkVDPHQ44KW3Zrf79zCpRi
+        eLho0=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxMC-0003LX-6p; Fri, 26 Apr 2019 09:41:24 +0000
+        id 1hJxM7-0003LG-VD; Fri, 26 Apr 2019 09:41:20 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id DBA0B441D3B; Fri, 26 Apr 2019 10:41:22 +0100 (BST)
+        id CC7D1441D3C; Fri, 26 Apr 2019 10:41:18 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: db8500-prcmu: Convert to use simplified DT parsing" to the regulator tree
+Subject: Applied "regulator: ab8500-ext: Remove *rdev from struct ab8500_ext_regulator_info" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094122.DBA0B441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:41:22 +0100 (BST)
+Message-Id: <20190426094118.CC7D1441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:41:18 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: db8500-prcmu: Convert to use simplified DT parsing
+   regulator: ab8500-ext: Remove *rdev from struct ab8500_ext_regulator_info
 
 has been applied to the regulator tree at
 
@@ -85,320 +85,90 @@ to this mail.
 Thanks,
 Mark
 
-From 92722a8fac5349fa2f249dcb366c6083d193922f Mon Sep 17 00:00:00 2001
+From 80a9c22a9da953146eacb5b8eb2b16691d4d9925 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 12 Apr 2019 09:54:20 +0800
-Subject: [PATCH] regulator: db8500-prcmu: Convert to use simplified DT parsing
+Date: Fri, 12 Apr 2019 22:06:57 +0800
+Subject: [PATCH] regulator: ab8500-ext: Remove *rdev from struct
+ ab8500_ext_regulator_info
 
-Use regulator core's simplified DT parsing code to simplify the driver
-implementation.
+Current code is using devm_regulator_register() so we don't need to save
+*rdev for clean up, use a local variable instead.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/db8500-prcmu.c | 139 ++++++++++---------------------
- 1 file changed, 42 insertions(+), 97 deletions(-)
+ drivers/regulator/ab8500-ext.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/regulator/db8500-prcmu.c b/drivers/regulator/db8500-prcmu.c
-index 863bd3de42a7..c2a3ccfc510e 100644
---- a/drivers/regulator/db8500-prcmu.c
-+++ b/drivers/regulator/db8500-prcmu.c
-@@ -214,6 +214,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_VAPE] = {
- 		.desc = {
- 			.name	= "db8500-vape",
-+			.of_match = of_match_ptr("db8500_vape"),
- 			.id	= DB8500_REGULATOR_VAPE,
- 			.ops	= &db8500_regulator_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -223,6 +224,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_VARM] = {
- 		.desc = {
- 			.name	= "db8500-varm",
-+			.of_match = of_match_ptr("db8500_varm"),
- 			.id	= DB8500_REGULATOR_VARM,
- 			.ops	= &db8500_regulator_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -232,6 +234,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_VMODEM] = {
- 		.desc = {
- 			.name	= "db8500-vmodem",
-+			.of_match = of_match_ptr("db8500_vmodem"),
- 			.id	= DB8500_REGULATOR_VMODEM,
- 			.ops	= &db8500_regulator_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -241,6 +244,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_VPLL] = {
- 		.desc = {
- 			.name	= "db8500-vpll",
-+			.of_match = of_match_ptr("db8500_vpll"),
- 			.id	= DB8500_REGULATOR_VPLL,
- 			.ops	= &db8500_regulator_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -250,6 +254,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_VSMPS1] = {
- 		.desc = {
- 			.name	= "db8500-vsmps1",
-+			.of_match = of_match_ptr("db8500_vsmps1"),
- 			.id	= DB8500_REGULATOR_VSMPS1,
- 			.ops	= &db8500_regulator_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -259,6 +264,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_VSMPS2] = {
- 		.desc = {
- 			.name	= "db8500-vsmps2",
-+			.of_match = of_match_ptr("db8500_vsmps2"),
- 			.id	= DB8500_REGULATOR_VSMPS2,
- 			.ops	= &db8500_regulator_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -271,6 +277,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_VSMPS3] = {
- 		.desc = {
- 			.name	= "db8500-vsmps3",
-+			.of_match = of_match_ptr("db8500_vsmps3"),
- 			.id	= DB8500_REGULATOR_VSMPS3,
- 			.ops	= &db8500_regulator_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -280,6 +287,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_VRF1] = {
- 		.desc = {
- 			.name	= "db8500-vrf1",
-+			.of_match = of_match_ptr("db8500_vrf1"),
- 			.id	= DB8500_REGULATOR_VRF1,
- 			.ops	= &db8500_regulator_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -289,6 +297,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_SVAMMDSP] = {
- 		.desc = {
- 			.name	= "db8500-sva-mmdsp",
-+			.of_match = of_match_ptr("db8500_sva_mmdsp"),
- 			.id	= DB8500_REGULATOR_SWITCH_SVAMMDSP,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -299,6 +308,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_SVAMMDSPRET] = {
- 		.desc = {
- 			.name	= "db8500-sva-mmdsp-ret",
-+			.of_match = of_match_ptr("db8500_sva_mmdsp_ret"),
- 			.id	= DB8500_REGULATOR_SWITCH_SVAMMDSPRET,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -310,6 +320,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_SVAPIPE] = {
- 		.desc = {
- 			.name	= "db8500-sva-pipe",
-+			.of_match = of_match_ptr("db8500_sva_pipe"),
- 			.id	= DB8500_REGULATOR_SWITCH_SVAPIPE,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -320,6 +331,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_SIAMMDSP] = {
- 		.desc = {
- 			.name	= "db8500-sia-mmdsp",
-+			.of_match = of_match_ptr("db8500_sia_mmdsp"),
- 			.id	= DB8500_REGULATOR_SWITCH_SIAMMDSP,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -330,6 +342,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_SIAMMDSPRET] = {
- 		.desc = {
- 			.name	= "db8500-sia-mmdsp-ret",
-+			.of_match = of_match_ptr("db8500_sia_mmdsp_ret"),
- 			.id	= DB8500_REGULATOR_SWITCH_SIAMMDSPRET,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -341,6 +354,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_SIAPIPE] = {
- 		.desc = {
- 			.name	= "db8500-sia-pipe",
-+			.of_match = of_match_ptr("db8500_sia_pipe"),
- 			.id	= DB8500_REGULATOR_SWITCH_SIAPIPE,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -351,6 +365,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_SGA] = {
- 		.desc = {
- 			.name	= "db8500-sga",
-+			.of_match = of_match_ptr("db8500_sga"),
- 			.id	= DB8500_REGULATOR_SWITCH_SGA,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -361,6 +376,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_B2R2_MCDE] = {
- 		.desc = {
- 			.name	= "db8500-b2r2-mcde",
-+			.of_match = of_match_ptr("db8500_b2r2_mcde"),
- 			.id	= DB8500_REGULATOR_SWITCH_B2R2_MCDE,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -371,6 +387,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_ESRAM12] = {
- 		.desc = {
- 			.name	= "db8500-esram12",
-+			.of_match = of_match_ptr("db8500_esram12"),
- 			.id	= DB8500_REGULATOR_SWITCH_ESRAM12,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -382,6 +399,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_ESRAM12RET] = {
- 		.desc = {
- 			.name	= "db8500-esram12-ret",
-+			.of_match = of_match_ptr("db8500_esram12_ret"),
- 			.id	= DB8500_REGULATOR_SWITCH_ESRAM12RET,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -393,6 +411,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_ESRAM34] = {
- 		.desc = {
- 			.name	= "db8500-esram34",
-+			.of_match = of_match_ptr("db8500_esram34"),
- 			.id	= DB8500_REGULATOR_SWITCH_ESRAM34,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -404,6 +423,7 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	[DB8500_REGULATOR_SWITCH_ESRAM34RET] = {
- 		.desc = {
- 			.name	= "db8500-esram34-ret",
-+			.of_match = of_match_ptr("db8500_esram34_ret"),
- 			.id	= DB8500_REGULATOR_SWITCH_ESRAM34RET,
- 			.ops	= &db8500_regulator_switch_ops,
- 			.type	= REGULATOR_VOLTAGE,
-@@ -414,113 +434,38 @@ dbx500_regulator_info[DB8500_NUM_REGULATORS] = {
- 	},
- };
- 
--static int db8500_regulator_register(struct platform_device *pdev,
--					struct regulator_init_data *init_data,
--					int id,
--					struct device_node *np)
-+static int db8500_regulator_probe(struct platform_device *pdev)
- {
-+	struct regulator_init_data *db8500_init_data;
- 	struct dbx500_regulator_info *info;
+diff --git a/drivers/regulator/ab8500-ext.c b/drivers/regulator/ab8500-ext.c
+index 2ca00045eb99..89ddbabca2af 100644
+--- a/drivers/regulator/ab8500-ext.c
++++ b/drivers/regulator/ab8500-ext.c
+@@ -479,7 +479,6 @@ static struct ab8500_regulator_platform_data ab8500_regulator_plat_data = {
+  * struct ab8500_ext_regulator_info - ab8500 regulator information
+  * @dev: device pointer
+  * @desc: regulator description
+- * @rdev: regulator device
+  * @cfg: regulator configuration (extension of regulator FW configuration)
+  * @update_bank: bank to control on/off
+  * @update_reg: register to control on/off
+@@ -495,7 +494,6 @@ static struct ab8500_regulator_platform_data ab8500_regulator_plat_data = {
+ struct ab8500_ext_regulator_info {
+ 	struct device *dev;
+ 	struct regulator_desc desc;
+-	struct regulator_dev *rdev;
+ 	struct ab8500_ext_regulator_cfg *cfg;
+ 	u8 update_bank;
+ 	u8 update_reg;
+@@ -530,7 +528,7 @@ static int ab8500_ext_regulator_enable(struct regulator_dev *rdev)
+ 		info->update_bank, info->update_reg,
+ 		info->update_mask, regval);
+ 	if (ret < 0) {
+-		dev_err(rdev_get_dev(info->rdev),
++		dev_err(rdev_get_dev(rdev),
+ 			"couldn't set enable bits for regulator\n");
+ 		return ret;
+ 	}
+@@ -566,7 +564,7 @@ static int ab8500_ext_regulator_disable(struct regulator_dev *rdev)
+ 		info->update_bank, info->update_reg,
+ 		info->update_mask, regval);
+ 	if (ret < 0) {
+-		dev_err(rdev_get_dev(info->rdev),
++		dev_err(rdev_get_dev(rdev),
+ 			"couldn't set disable bits for regulator\n");
+ 		return ret;
+ 	}
+@@ -797,6 +795,7 @@ static int ab8500_ext_regulator_probe(struct platform_device *pdev)
+ 	struct ab8500_regulator_platform_data *pdata = &ab8500_regulator_plat_data;
+ 	struct device_node *np = pdev->dev.of_node;
  	struct regulator_config config = { };
--	int err;
--
--	/* assign per-regulator data */
--	info = &dbx500_regulator_info[id];
--	info->dev = &pdev->dev;
--
--	config.dev = &pdev->dev;
--	config.init_data = init_data;
--	config.driver_data = info;
--	config.of_node = np;
--
--	/* register with the regulator framework */
--	info->rdev = devm_regulator_register(&pdev->dev, &info->desc, &config);
--	if (IS_ERR(info->rdev)) {
--		err = PTR_ERR(info->rdev);
--		dev_err(&pdev->dev, "failed to register %s: err %i\n",
--			info->desc.name, err);
--		return err;
--	}
--
--	dev_dbg(rdev_get_dev(info->rdev),
--		"regulator-%s-probed\n", info->desc.name);
-+	int err, i;
++	struct regulator_dev *rdev;
+ 	int i, err;
  
--	return 0;
--}
--
--static struct of_regulator_match db8500_regulator_matches[] = {
--	{ .name	= "db8500_vape",          .driver_data = (void *) DB8500_REGULATOR_VAPE, },
--	{ .name	= "db8500_varm",          .driver_data = (void *) DB8500_REGULATOR_VARM, },
--	{ .name	= "db8500_vmodem",        .driver_data = (void *) DB8500_REGULATOR_VMODEM, },
--	{ .name	= "db8500_vpll",          .driver_data = (void *) DB8500_REGULATOR_VPLL, },
--	{ .name	= "db8500_vsmps1",        .driver_data = (void *) DB8500_REGULATOR_VSMPS1, },
--	{ .name	= "db8500_vsmps2",        .driver_data = (void *) DB8500_REGULATOR_VSMPS2, },
--	{ .name	= "db8500_vsmps3",        .driver_data = (void *) DB8500_REGULATOR_VSMPS3, },
--	{ .name	= "db8500_vrf1",          .driver_data = (void *) DB8500_REGULATOR_VRF1, },
--	{ .name	= "db8500_sva_mmdsp",     .driver_data = (void *) DB8500_REGULATOR_SWITCH_SVAMMDSP, },
--	{ .name	= "db8500_sva_mmdsp_ret", .driver_data = (void *) DB8500_REGULATOR_SWITCH_SVAMMDSPRET, },
--	{ .name	= "db8500_sva_pipe",      .driver_data = (void *) DB8500_REGULATOR_SWITCH_SVAPIPE, },
--	{ .name	= "db8500_sia_mmdsp",     .driver_data = (void *) DB8500_REGULATOR_SWITCH_SIAMMDSP, },
--	{ .name	= "db8500_sia_mmdsp_ret", .driver_data = (void *) DB8500_REGULATOR_SWITCH_SIAMMDSPRET, },
--	{ .name	= "db8500_sia_pipe",      .driver_data = (void *) DB8500_REGULATOR_SWITCH_SIAPIPE, },
--	{ .name	= "db8500_sga",           .driver_data = (void *) DB8500_REGULATOR_SWITCH_SGA, },
--	{ .name	= "db8500_b2r2_mcde",     .driver_data = (void *) DB8500_REGULATOR_SWITCH_B2R2_MCDE, },
--	{ .name	= "db8500_esram12",       .driver_data = (void *) DB8500_REGULATOR_SWITCH_ESRAM12, },
--	{ .name	= "db8500_esram12_ret",   .driver_data = (void *) DB8500_REGULATOR_SWITCH_ESRAM12RET, },
--	{ .name	= "db8500_esram34",       .driver_data = (void *) DB8500_REGULATOR_SWITCH_ESRAM34, },
--	{ .name	= "db8500_esram34_ret",   .driver_data = (void *) DB8500_REGULATOR_SWITCH_ESRAM34RET, },
--};
--
--static int
--db8500_regulator_of_probe(struct platform_device *pdev,
--			struct device_node *np)
--{
--	int i, err;
-+	db8500_init_data = dev_get_platdata(&pdev->dev);
+ 	if (np) {
+@@ -850,17 +849,15 @@ static int ab8500_ext_regulator_probe(struct platform_device *pdev)
+ 			&pdata->ext_regulator[i];
  
- 	for (i = 0; i < ARRAY_SIZE(dbx500_regulator_info); i++) {
--		err = db8500_regulator_register(
--			pdev, db8500_regulator_matches[i].init_data,
--			i, db8500_regulator_matches[i].of_node);
--		if (err)
-+		/* assign per-regulator data */
-+		info = &dbx500_regulator_info[i];
-+		info->dev = &pdev->dev;
-+
-+		config.driver_data = info;
-+		config.dev = &pdev->dev;
-+		if (db8500_init_data)
-+			config.init_data = &db8500_init_data[i];
-+
-+		info->rdev = devm_regulator_register(&pdev->dev, &info->desc,
-+						     &config);
-+		if (IS_ERR(info->rdev)) {
-+			err = PTR_ERR(info->rdev);
-+			dev_err(&pdev->dev, "failed to register %s: err %i\n",
-+				info->desc.name, err);
- 			return err;
--	}
--
--	return 0;
--}
--
--static int db8500_regulator_probe(struct platform_device *pdev)
--{
--	struct regulator_init_data *db8500_init_data =
--					dev_get_platdata(&pdev->dev);
--	struct device_node *np = pdev->dev.of_node;
--	int i, err;
--
--	/* register all regulators */
--	if (np) {
--		err = of_regulator_match(&pdev->dev, np,
--					db8500_regulator_matches,
--					ARRAY_SIZE(db8500_regulator_matches));
--		if (err < 0) {
--			dev_err(&pdev->dev,
--				"Error parsing regulator init data: %d\n", err);
+ 		/* register regulator with framework */
+-		info->rdev = devm_regulator_register(&pdev->dev, &info->desc,
+-						     &config);
+-		if (IS_ERR(info->rdev)) {
+-			err = PTR_ERR(info->rdev);
++		rdev = devm_regulator_register(&pdev->dev, &info->desc,
++					       &config);
++		if (IS_ERR(rdev)) {
+ 			dev_err(&pdev->dev, "failed to register regulator %s\n",
+ 					info->desc.name);
 -			return err;
--		}
--
--		err = db8500_regulator_of_probe(pdev, np);
--		if (err)
--			return err;
--	} else {
--		for (i = 0; i < ARRAY_SIZE(dbx500_regulator_info); i++) {
--			err = db8500_regulator_register(pdev,
--							&db8500_init_data[i],
--							i, NULL);
--			if (err)
--				return err;
++			return PTR_ERR(rdev);
  		}
-+		dev_dbg(&pdev->dev, "regulator-%s-probed\n", info->desc.name);
+ 
+-		dev_dbg(rdev_get_dev(info->rdev),
+-			"%s-probed\n", info->desc.name);
++		dev_dbg(&pdev->dev, "%s-probed\n", info->desc.name);
  	}
  
--	err = ux500_regulator_debug_init(pdev,
--					 dbx500_regulator_info,
--					 ARRAY_SIZE(dbx500_regulator_info));
-+	ux500_regulator_debug_init(pdev, dbx500_regulator_info,
-+				   ARRAY_SIZE(dbx500_regulator_info));
  	return 0;
- }
- 
 -- 
 2.20.1
 
