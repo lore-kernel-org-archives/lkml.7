@@ -2,100 +2,148 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E00C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1880C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0A1206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77ED4206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:24:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ucsc.edu header.i=@ucsc.edu header.b="rYfvjc8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfDZQWy (ORCPT
+        id S1726308AbfDZQYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:22:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59626 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbfDZQWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:22:54 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1A2B3309D071;
-        Fri, 26 Apr 2019 16:22:54 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D93A01001E87;
-        Fri, 26 Apr 2019 16:22:47 +0000 (UTC)
-Subject: Re: [PATCH v2 17/19] iommu: Add max num of cache and granu types
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556062279-64135-18-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <a9f2c804-24a8-03fb-96ac-0c4661870dd5@redhat.com>
-Date:   Fri, 26 Apr 2019 18:22:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 26 Apr 2019 12:24:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:32875 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfDZQYJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:24:09 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s18so5284886wrp.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ucsc.edu; s=ucsc-google-2018;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UzhCyWVw2ohKAqlWgQxAK1pFWZImjiKlk+1POr4aVyE=;
+        b=rYfvjc8pDeEnoXFyh0FcY5gFVGfdHYxr43H7Taz7k/21srXuCPCjn6AQvrCWRCqdKW
+         xgZFeh9Hchpzd2GZI3xJV6WMPE6ceyLTeQD+sSM/jz4EoOCZIvNnp+7LobYp2BhWja9F
+         EsMF9rwYelFUBEblVkBrWNDhhaIxvlUZeCYuQGUS0nDtfTzup0r+H6CIpcxkw6S4X18Y
+         hAUY0KowaDPkmZgIEJWpwZ1Y2jRY5iJk8lKOBh/FOxmEuU0Us6/40qBuANgrd7UaOeok
+         reClcFDGKBAgIAIWCO3zMTr7x+pHHWgkN0A/OUuTZ1E9Ji0R5HN8Xm5dJ5QNE1VCDfj3
+         1Brg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UzhCyWVw2ohKAqlWgQxAK1pFWZImjiKlk+1POr4aVyE=;
+        b=tqSACbrytCo+TaTDjpyhY16V/WmTBmMfKAyGOXPg76zsz03NbKT71YWvld/SvrWRms
+         bRErigaFasgjNw0ot64cB7WsWR/meYRHlJ0uIjHwRbkOYYSpoZmoevrGcR88i/ghu9MZ
+         htfnd25iF+JNMiiXsjR5ZtGJqwd+ds1cyaGPHsb+giJhGM3UftjOXGJNHvPkFcoILbo8
+         2CxH28vhPe/kZ3O5+Wkn1HXK/vwYt7aitPbcXB7LaZ23zcg3fk5WhqxiZGHuo9FjLmQO
+         g8D26b6orrocTIorsXMGsm8FPg8WviDI2kK37oiX+gLewSbX7071zWJ3KRiaVHCQ4Qno
+         4S9w==
+X-Gm-Message-State: APjAAAVLOoanZgG5q0pEEDjqgmh4auu9bwc215JMjSi5fQWr9pJibiHr
+        bsAxevjSPYRF05FxR7+O+sgWjQTrPi03hvAiAPBWXQ==
+X-Google-Smtp-Source: APXvYqyNQtA10mj+UkS+PgFWurtyKJGpvmkrWdZUeuJZ8s9rM9xvJdBA6xCjOCzRLoQvvRuvG4wcHz9ZZLHdV3xmqRE=
+X-Received: by 2002:a5d:4e92:: with SMTP id e18mr249636wru.302.1556295847150;
+ Fri, 26 Apr 2019 09:24:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1556062279-64135-18-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 26 Apr 2019 16:22:54 +0000 (UTC)
+References: <20190425052152.6571-1-hlitz@ucsc.edu> <66434cc7-2bac-dd10-6edc-4560e6a0f89f@intel.com>
+ <F305CAB7-F566-40D7-BC91-E88DE821520B@javigon.com> <a1df8967-2169-1c43-c55a-e2144fa53b9a@intel.com>
+In-Reply-To: <a1df8967-2169-1c43-c55a-e2144fa53b9a@intel.com>
+From:   Heiner Litz <hlitz@ucsc.edu>
+Date:   Fri, 26 Apr 2019 09:23:55 -0700
+Message-ID: <CAJbgVnWsHQRpEPkd77E6u0hoW5jKQaOGR-3dW9+drGNq_JYpfA@mail.gmail.com>
+Subject: Re: [PATCH] lightnvm: pblk: Introduce hot-cold data separation
+To:     Igor Konopko <igor.j.konopko@intel.com>
+Cc:     =?UTF-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>,
+        Heiner Litz <hlitz@ucsc.edu>,
+        =?UTF-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Hans Holmberg <hans.holmberg@cnexlabs.com>,
+        linux-block@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+Nice catch Igor, I hadn't thought of that.
 
-On 4/24/19 1:31 AM, Jacob Pan wrote:
-> To convert to/from cache types and granularities between generic and
-> VT-d specific counterparts, a 2D arrary is used. Introduce the limits
-array
-> to help define the converstion array size.
-conversion
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  include/uapi/linux/iommu.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> index 5c95905..2d8fac8 100644
-> --- a/include/uapi/linux/iommu.h
-> +++ b/include/uapi/linux/iommu.h
-> @@ -197,6 +197,7 @@ struct iommu_inv_addr_info {
->  	__u64	granule_size;
->  	__u64	nb_granules;
->  };
-> +#define NR_IOMMU_CACHE_INVAL_GRANU	(3)
->  
->  /**
->   * First level/stage invalidation information
-> @@ -235,6 +236,7 @@ struct iommu_cache_invalidate_info {
->  		struct iommu_inv_addr_info addr_info;
->  	};
->  };
-> +#define NR_IOMMU_CACHE_TYPE		(3)
->  /**
->   * struct gpasid_bind_data - Information about device and guest PASID binding
->   * @gcr3:	Guest CR3 value from guest mm
-> 
-Is it really something that needs to be exposed in the uapi?
+Nevertheless, here is what I think: In the absence of a flush we don't
+need to enforce ordering so we don't care about recovering the older
+gc'ed write. If we completed a flush after the user write, we should
+have already invalidated the gc mapping and hence will not recover it.
+Let me know if I am missing something.
 
-Thanks
-
-Eric
+On Fri, Apr 26, 2019 at 6:46 AM Igor Konopko <igor.j.konopko@intel.com> wro=
+te:
+>
+>
+>
+> On 26.04.2019 12:04, Javier Gonz=C3=A1lez wrote:
+> >
+> >> On 26 Apr 2019, at 11.11, Igor Konopko <igor.j.konopko@intel.com> wrot=
+e:
+> >>
+> >> On 25.04.2019 07:21, Heiner Litz wrote:
+> >>> Introduce the capability to manage multiple open lines. Maintain one =
+line
+> >>> for user writes (hot) and a second line for gc writes (cold). As user=
+ and
+> >>> gc writes still utilize a shared ring buffer, in rare cases a multi-s=
+ector
+> >>> write will contain both gc and user data. This is acceptable, as on a
+> >>> tested SSD with minimum write size of 64KB, less than 1% of all write=
+s
+> >>> contain both hot and cold sectors.
+> >>
+> >> Hi Heiner
+> >>
+> >> Generally I really like this changes, I was thinking about sth similar=
+ since a while, so it is very good to see that patch.
+> >>
+> >> I have a one question related to this patch, since it is not very clea=
+r for me - how you ensure the data integrity in following scenarios:
+> >> -we have open line X for user data and line Y for GC
+> >> -GC writes LBA=3DN to line Y
+> >> -user writes LBA=3DN to line X
+> >> -we have power failure when both line X and Y were not written complet=
+ely
+> >> -during pblk creation we are executing OOB metadata recovery
+> >> And here is the question, how we distinguish whether LBA=3DN from line=
+ Y or LBA=3DN from line X is the valid one?
+> >> Line X and Y might have seq_id either descending or ascending - this w=
+ould create two possible scenarios too.
+> >>
+> >> Thanks
+> >> Igor
+> >>
+> >
+> > You are right, I think this is possible in the current implementation.
+> >
+> > We need an extra constrain so that we only GC lines above the GC line
+> > ID. This way, when we order lines on recovery, we can guarantee
+> > consistency. This means potentially that we would need several open
+> > lines for GC to avoid padding in case this constrain forces to choose a
+> > line with an ID higher than the GC line ID.
+> >
+> > What do you think?
+>
+> I'm not sure yet about your approach, I need to think and analyze this a
+> little more.
+>
+> I also believe that probably we need to ensure that current user data
+> line seq_id is always above the current GC line seq_id or sth like that.
+> We cannot also then GC any data from the lines which are still open, but
+> I believe that this is a case even right now.
+>
+> >
+> > Thanks,
+> > Javier
+> >
