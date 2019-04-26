@@ -2,157 +2,167 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FD2C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0105C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D576A206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CCA206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:18:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="Ia7LIXkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730526AbfDZA6f (ORCPT
+        id S1729047AbfDZBMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 20:58:35 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57104 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfDZA6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 20:58:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69AA680D;
-        Thu, 25 Apr 2019 17:58:34 -0700 (PDT)
-Received: from [192.168.100.241] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD0313F246;
-        Thu, 25 Apr 2019 17:58:33 -0700 (PDT)
-Subject: Re: [PATCH 4/4] perf: arm_spe: Enable ACPI/Platform automatic module
- loading
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        rjw@rjwysocki.net, lenb@kernel.org, mark.rutland@arm.com,
-        sudeep.holla@arm.com, james.morse@arm.com,
-        lorenzo.pieralisi@arm.com, linuxarm@huawei.com
-References: <20190326223938.5365-1-jeremy.linton@arm.com>
- <20190326223938.5365-5-jeremy.linton@arm.com>
- <20190404170423.GC28932@fuggles.cambridge.arm.com>
- <065cc8ae-f2c0-e493-b0a6-5c7340db37f5@arm.com>
- <20190416135055.GA3313@fuggles.cambridge.arm.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <1345818a-3a4a-e919-2168-e2950cee07b6@arm.com>
-Date:   Thu, 25 Apr 2019 19:58:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 25 Apr 2019 21:12:37 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59377 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbfDZBMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 21:12:37 -0400
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 44qwyV1jlZz9s47; Fri, 26 Apr 2019 11:12:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1556241154;
+        bh=gc/cTdxayd/FE8y1ioTx5z9x+DBO2F8ahhTRwAc+hoY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ia7LIXkFggmk7Xt5w8IhK/4t30fnD38EtcLzXOBXaenQod6yDcaRFOwtQLDCBSacO
+         GcQWa56kx10krpWzblqgvc7E0PnWO1+L+YoNYR2gP/Swgji5vQeZhr52bVWl04TB0r
+         cYH+RPeKItdAI0Z5GZU/liQ3LkokqIzCvHGpXZXU=
+Date:   Fri, 26 Apr 2019 11:05:17 +1000
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Michael Ellerman <michael@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Nick Piggin <npiggin@gmail.com>
+Subject: Re: powerpc hugepage leak caused by 576ed913 "block: use
+ bio_add_page in bio_iov_iter_get_pages"
+Message-ID: <20190426010517.GA7378@umbus.fritz.box>
+References: <20190423054131.GB31496@umbus.fritz.box>
+ <20190425061958.GA7881@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190416135055.GA3313@fuggles.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+Content-Disposition: inline
+In-Reply-To: <20190425061958.GA7881@lst.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 4/16/19 8:50 AM, Will Deacon wrote:
-> On Thu, Apr 04, 2019 at 12:24:38PM -0500, Jeremy Linton wrote:
->> On 4/4/19 12:04 PM, Will Deacon wrote:
->>> On Tue, Mar 26, 2019 at 05:39:38PM -0500, Jeremy Linton wrote:
->>>> Lets add the MODULE_TABLE and platform id_table entries so that
->>>> the SPE driver can attach to the ACPI platform device created by
->>>> the core pmu code.
->>>>
->>>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->>>> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
->>>> ---
->>>>    drivers/perf/arm_spe_pmu.c | 11 +++++++++--
->>>>    1 file changed, 9 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
->>>> index 7cb766dafe85..ffa2c76c08bb 100644
->>>> --- a/drivers/perf/arm_spe_pmu.c
->>>> +++ b/drivers/perf/arm_spe_pmu.c
->>>> @@ -1176,7 +1176,13 @@ static const struct of_device_id arm_spe_pmu_of_match[] = {
->>>>    };
->>>>    MODULE_DEVICE_TABLE(of, arm_spe_pmu_of_match);
->>>> -static int arm_spe_pmu_device_dt_probe(struct platform_device *pdev)
->>>> +static const struct platform_device_id arm_spe_match[] = {
->>>> +	{ "arm,spe-v1", 0},
->>>
->>> It would be nice if we could avoid duplicating this string from the ACPI
->>> parsing code.
->>
->> Ok sure, I just need to find a good common place for it.
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There doesn't appear to be a good common place for this, so maybe 
-arm_pmu.h, which can then be included in the spe driver is the right thing.
+On Thu, Apr 25, 2019 at 08:19:58AM +0200, Christoph Hellwig wrote:
+> Just curious:  What exact trees do you see this with?  This area
+> changed a lot with the multipage bvec support, and subsequent fixes.
 
+So, I tried it with 576ed913 itself and with 576ed913^ to verify that
+it didn't happen there.  The problem also occurred with Linus' tree as
+of when I started bisecting, which appears to have been 444fe991.
+Actually, come to that, here's the whole bisect log in case it's
+helpful:
 
->>
->>>
->>>> +	{ }
->>>> +};
->>>> +MODULE_DEVICE_TABLE(platform, arm_spe_match);
->>>> +
->>>> +static int arm_spe_pmu_device_probe(struct platform_device *pdev)
->>>>    {
->>>>    	int ret;
->>>>    	struct arm_spe_pmu *spe_pmu;
->>>> @@ -1236,11 +1242,12 @@ static int arm_spe_pmu_device_remove(struct platform_device *pdev)
->>>>    }
->>>>    static struct platform_driver arm_spe_pmu_driver = {
->>>> +	.id_table = arm_spe_match,
->>>>    	.driver	= {
->>>>    		.name		= DRVNAME,
->>>>    		.of_match_table	= of_match_ptr(arm_spe_pmu_of_match),
->>>
->>> Hmm, so some other drivers don't hook .id_table like you do, but instead
->>> hook .acpi_match_table in the driver structure. Is that not better?
->>
->> This isn't actually an ACPI device, (aka not defined in the namespace), so
->> its missing much of the ACPI functionality. I think that also means its
->> needs to be declared this way.
-> 
-> Looking at platform_match(), I'd really like to avoid having both an
-> .id_table and an .of_match_table field.
+# git bisect log
+git bisect start
+# good: [bebc6082da0a9f5d47a1ea2edc099bf671058bd4] Linux 4.14
+git bisect good bebc6082da0a9f5d47a1ea2edc099bf671058bd4
+# bad: [444fe991353987c1c9bc5ab1f903d01f1b4ad415] Merge tag 'riscv-for-linu=
+s-5.1-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/palmer/riscv-li=
+nux
+git bisect bad 444fe991353987c1c9bc5ab1f903d01f1b4ad415
+# good: [399c4129eba6145924ab90363352b7bdcd554751] Merge tag 'pxa-for-4.19-=
+dma_slave_map' of https://github.com/rjarzmik/linux
+git bisect good 399c4129eba6145924ab90363352b7bdcd554751
+# bad: [73b6f96cbc0162787bcbdac5f538167084c8d605] Merge branch 'drm-fixes-4=
+=2E20' of git://people.freedesktop.org/~agd5f/linux into drm-fixes
+git bisect bad 73b6f96cbc0162787bcbdac5f538167084c8d605
+# good: [85a585918fb4122ad26b6febaec5c3c90bf2535c] Merge tag 'loadpin-secur=
+ity-next' of https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux int=
+o next-loadpin
+git bisect good 85a585918fb4122ad26b6febaec5c3c90bf2535c
+# bad: [3acbd2de6bc3af215c6ed7732dfc097d1e238503] Merge tag 'sound-4.20-rc1=
+' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+git bisect bad 3acbd2de6bc3af215c6ed7732dfc097d1e238503
+# good: [8f18da47211554f1ef674fef627c05f23b75a8e0] Merge branch 'master' of=
+ git://git.kernel.org/pub/scm/linux/kernel/git/klassert/ipsec-next
+git bisect good 8f18da47211554f1ef674fef627c05f23b75a8e0
+# bad: [0d1b82cd8ac2e8856ae9045c97782ac1c359929c] Merge branch 'ras-core-fo=
+r-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect bad 0d1b82cd8ac2e8856ae9045c97782ac1c359929c
+# bad: [1650ac53066577a5e83fe3e9d992c9311597ff8c] Merge tag 'mmc-v4.20' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
+git bisect bad 1650ac53066577a5e83fe3e9d992c9311597ff8c
+# bad: [6ab9e09238fdfd742fe23b81e2d385a1cab49d9b] Merge tag 'for-4.20/block=
+-20181021' of git://git.kernel.dk/linux-block
+git bisect bad 6ab9e09238fdfd742fe23b81e2d385a1cab49d9b
+# good: [528985117126f11beea339cf39120ee99da04cd2] Merge tag 'arm64-upstrea=
+m' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
+git bisect good 528985117126f11beea339cf39120ee99da04cd2
+# bad: [2cf99bbd106f89fc72f778e8ad9d5538f1ef939b] lightnvm: pblk: add helpe=
+rs for chunk addresses
+git bisect bad 2cf99bbd106f89fc72f778e8ad9d5538f1ef939b
+# bad: [33b14f67a4e1eabd219fd6543da8f15ed86b641c] nvme: register ns_id attr=
+ibutes as default sysfs groups
+git bisect bad 33b14f67a4e1eabd219fd6543da8f15ed86b641c
+# bad: [27ca1d4ed04ea29dc77b47190a3cc82697023e76] block: move req_gap_back_=
+merge to blk.h
+git bisect bad 27ca1d4ed04ea29dc77b47190a3cc82697023e76
+# bad: [07b05bcc3213ac9f8c28c9d835b4bf3d5798cc60] blkcg: convert blkg_looku=
+p_create to find closest blkg
+git bisect bad 07b05bcc3213ac9f8c28c9d835b4bf3d5798cc60
+# good: [cbeb869a3d1110450186b738199963c5e68c2a71] block, bfq: correctly ch=
+arge and reset entity service in all cases
+git bisect good cbeb869a3d1110450186b738199963c5e68c2a71
+# bad: [576ed9135489c723fb39b97c4e2c73428d06dd78] block: use bio_add_page i=
+n bio_iov_iter_get_pages
+git bisect bad 576ed9135489c723fb39b97c4e2c73428d06dd78
+# good: [c8765de0adfcaaf4ffb2d951e07444f00ffa9453] blok, bfq: do not plug I=
+/O if all queues are weight-raised
+git bisect good c8765de0adfcaaf4ffb2d951e07444f00ffa9453
+# first bad commit: [576ed9135489c723fb39b97c4e2c73428d06dd78] block: use b=
+io_add_page in bio_iov_iter_get_pages
 
+The problem also occurred with the RHEL8 downstream kernel tree.
+That's based on 4.18, but has 576ed913 backported.
 
-> 
-> acpi_of_match_device() will actually use the .of_match_table, but it relies
-> on ACPI_COMPANION returning a valid acpi_device. If we don't have one of
+> So I'd be really curious if it can be reproduced with Jens' latest
+> block for-5.2 tree (which should be in latest linux-next).
 
-Right, via the fwnode it can cause an acpi DSDT defined device with a 
-_DSD "compatible" property to match an entry in the of_match_table 
-compatible string. I don't think this is us...
+I'll see if I can try that when I next get access to the machine.
 
-> those, perhaps we can use the .id_table exclusively and drop the
-> .of_match_table instead?
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-This definitely made me do my homework, the following is AFAIK:
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Its possible to match on just a .id_table, but this requires matching 
-the OF device name against the id_table name rather than against the OF 
-compatible string (*). This doesn't seem like a good idea, despite 
-platform_device_id entries being significantly smaller than the 
-of_device_id ones. Plus, I think we end up with two duplicate tables 
-because we still need the MODULE_TABLE(of,xxx) to assure that userspace 
-can associate the modalias with the module.
+-----BEGIN PGP SIGNATURE-----
 
-OTOH, it seems possible to match on module name directly 
-('arm_spe_pmu'), but this limits us to only a single device type for all 
-ACPI device variations unless we put platform checks in the module 
-itself (ick!). I suspect in the future if a spe.v2 were to come out this 
-would be a problem unless a separate module were created. Then there is 
-the fact this still needs a platform_device_id table, as the modalias 
-will read "platform:arm_spe_pmu". Which will cause people to question 
-why its not just assigned and matched against the .id_table.
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlzCWU0ACgkQbDjKyiDZ
+s5LH3BAAn2hSOM3+dwLehrQVwc4k+3c4Hmw+7p5wrgOgIGkH9MDR/SUzNxOZkhM4
+hzhHZfwOQ4R+t3eJpWyW2QrY7uBrRryyYnvZPu9yigZvuj0B5cfEgbV6UiyZVIyI
+L1xdYdKkd0Yajne4mf+FfR/td1YL50A+qrh62VbQvoUVXFTFJeWCR1Klm1VGdQ2o
+RYL/89BmDzyN2YWDK2CrWTn/GKFGnBwRoUoKl0ibjHeRFaTI4S2PkqtIGJTSWHPo
+fEhWv26SrFuXceGSywEJxk/GMF+V0xFOGpMvhoIM5pC28xq5z03MEQ4CYJd8Or75
+TMaXE4ksK41U3ITTEqpoqqy4V/h4FbihtUPzM8oOj8tVJMPVGBpTI5281VMYIp7p
+POHrBnwyKDYyPVtkXRMs93s3O+CBFAWRp8Kgc+08BaZCTMtSjeSJkVxeL9nUG8xM
+6IQCe1pByeEK8HDmwdf45qgmmQYir3Ceb9toznp2mt7F5RRRSy0GVs643FQi1Ref
+crg/BkVU4rlgkbkcWdRBZRxdWbpZ90yT9pE7+5aaBs3fdL9/FfXYorokpKlI98WG
+w+ZK+Z3vqr2ncxDtOmY/hZeKj5KgeJ/SFo26PAWORbN6aiG4HziO4+fkdt521vNA
+hqua9mghyAwunKrUhkzfv/ECm9saThllOriBpBNGlvvzFK3EjNU=
+=I9iT
+-----END PGP SIGNATURE-----
 
-
-*(interestingly trivia: There doesn't appear to be a single arm64 module 
-which matches on a MODULE_TABLE OF name. They only match type or 
-compatible. Out of the 3534 modules on my machine only three do any OF 
-table type matching, ipmi_si and two drivers for freescale networking 
-fsl_pq_mdio and gianfar_driver. In those cases, i'm not even sure its 
-actually necessary.)
-
+--45Z9DzgjV8m4Oswq--
