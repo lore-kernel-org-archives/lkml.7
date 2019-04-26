@@ -6,24 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E1CC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D4DC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA4D9206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF341206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfDZVrx (ORCPT
+        id S1727245AbfDZVr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 17:47:53 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:43915 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfDZVrj (ORCPT
+        Fri, 26 Apr 2019 17:47:59 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:38491 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727105AbfDZVrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 17:47:39 -0400
+        Fri, 26 Apr 2019 17:47:36 -0400
+X-Originating-IP: 90.66.53.80
 Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8D637240007;
-        Fri, 26 Apr 2019 21:47:36 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id A832040004;
+        Fri, 26 Apr 2019 21:47:33 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -32,10 +33,11 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Romain Izard <romain.izard.pro@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 7/9] clocksource/drivers/tcb_clksrc: Rename the file for consistency
-Date:   Fri, 26 Apr 2019 23:47:16 +0200
-Message-Id: <20190426214718.13470-8-alexandre.belloni@bootlin.com>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v3 5/9] clocksource/drivers/tcb_clksrc: move Kconfig option
+Date:   Fri, 26 Apr 2019 23:47:14 +0200
+Message-Id: <20190426214718.13470-6-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190426214718.13470-1-alexandre.belloni@bootlin.com>
 References: <20190426214718.13470-1-alexandre.belloni@bootlin.com>
@@ -46,33 +48,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the sake of consistency, let's rename the file to a name similar
-to other file names in this directory.
+Move the ATMEL_TCB_CLKSRC option to drivers/clocksource and make it silent
+if COMPILE_TEST is not selected.
 
+Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clocksource/Makefile                            | 2 +-
- drivers/clocksource/{tcb_clksrc.c => timer-atmel-tcb.c} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename drivers/clocksource/{tcb_clksrc.c => timer-atmel-tcb.c} (100%)
+ drivers/clocksource/Kconfig |  7 +++++++
+ drivers/misc/Kconfig        | 14 --------------
+ 2 files changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index be6e0fbc7489..923b9b60c909 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -3,7 +3,7 @@ obj-$(CONFIG_TIMER_OF)		+= timer-of.o
- obj-$(CONFIG_TIMER_PROBE)	+= timer-probe.o
- obj-$(CONFIG_ATMEL_PIT)		+= timer-atmel-pit.o
- obj-$(CONFIG_ATMEL_ST)		+= timer-atmel-st.o
--obj-$(CONFIG_ATMEL_TCB_CLKSRC)	+= tcb_clksrc.o
-+obj-$(CONFIG_ATMEL_TCB_CLKSRC)	+= timer-atmel-tcb.o
- obj-$(CONFIG_X86_PM_TIMER)	+= acpi_pm.o
- obj-$(CONFIG_SCx200HR_TIMER)	+= scx200_hrt.o
- obj-$(CONFIG_CS5535_CLOCK_EVENT_SRC)	+= timer-cs5535.o
-diff --git a/drivers/clocksource/tcb_clksrc.c b/drivers/clocksource/timer-atmel-tcb.c
-similarity index 100%
-rename from drivers/clocksource/tcb_clksrc.c
-rename to drivers/clocksource/timer-atmel-tcb.c
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 171502a356aa..e38ef4906e30 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -410,6 +410,13 @@ config ATMEL_ST
+ 	help
+ 	  Support for the Atmel ST timer.
+ 
++config ATMEL_TCB_CLKSRC
++	bool "Atmel TC Block timer driver" if COMPILE_TEST
++	depends on HAS_IOMEM
++	select TIMER_OF if OF
++	help
++	  Support for Timer Counter Blocks on Atmel SoCs.
++
+ config CLKSRC_EXYNOS_MCT
+ 	bool "Exynos multi core timer driver" if COMPILE_TEST
+ 	depends on ARM || ARM64
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 268a01d3d6f3..c84033909395 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -59,20 +59,6 @@ config ATMEL_TCLIB
+ 	  blocks found on many Atmel processors.  This facilitates using
+ 	  these blocks by different drivers despite processor differences.
+ 
+-config ATMEL_TCB_CLKSRC
+-	bool "TC Block Clocksource"
+-	depends on ARCH_AT91
+-	select TIMER_OF if OF
+-	default y
+-	help
+-	  Select this to get a high precision clocksource based on a
+-	  TC block with a 5+ MHz base clock rate.  Two timer channels
+-	  are combined to make a single 32-bit timer.
+-
+-	  When GENERIC_CLOCKEVENTS is defined, the third timer channel
+-	  may be used as a clock event device supporting oneshot mode
+-	  (delays of up to two seconds) based on the 32 KiHz clock.
+-
+ config DUMMY_IRQ
+ 	tristate "Dummy IRQ handler"
+ 	default n
 -- 
 2.20.1
 
