@@ -2,99 +2,121 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C255EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136C0C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F28E208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556296584;
-	bh=j5VmV0LTqlo0cJ5wg0tlMwL1js3aQ2hrIi+wcItV89Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ps+KXKupqXpJSJ+jqeEj/Kcs+6BTHbBIXQRc1bIguMyOxOxTWm3OD6mkFvbhqA3j2
-	 hNmXCg0soypiPH1BjLm1yyNVG+FzLPfTSH4rqtZTGXYN0N45PRH20tvCIebnoIrA1n
-	 jviFs/EZl8WTjR9pcIu0B9KjVEVEhclW78F9clPQ=
+	by mail.kernel.org (Postfix) with ESMTP id D56C7208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:36:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bT7vNF0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfDZQgX (ORCPT
+        id S1726366AbfDZQgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:36:23 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37732 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfDZQgV (ORCPT
+        Fri, 26 Apr 2019 12:36:37 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46356 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfDZQgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:36:21 -0400
-Received: by mail-lj1-f194.google.com with SMTP id b12so2310172lji.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:36:19 -0700 (PDT)
+        Fri, 26 Apr 2019 12:36:37 -0400
+Received: by mail-io1-f68.google.com with SMTP id p23so3400958iol.13
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:36:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DEdb/dXXS4BmabuVj7tMWOPVyS6P8uPlgXYLftrG0EE=;
-        b=h75dC+nGCj4qVfVP3NHHhRACGt5wq2lEMV1zHeI3Kn4urKTnUOrgSoQytgde9qbpVM
-         GiVmB9UUGvPuXqMHWTcMf1b+bF9oQArQw9zod389zdpwyU1eUVhD4roCfLsmJb6m6f36
-         V9ftvlpDloxCg9bY8bUbqmhGa1yeP8oFSSIzA=
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=8YFSmy43A9WMb2hFNjp4Kp0KhLiSpFsnJWtqoKhqoqA=;
+        b=bT7vNF0U7/w5duxS4o8nuiZVTUZeAM6utJZ09nU3kylt4YIKd4F6jX2Od9xtBrbyJ+
+         VRI67rUBd+c518GnVHEG8GqqefgWdVV6cMjJFAwF2nLhfbXGqMxA1kxUFHPm9IIsdKib
+         EeoSqOYxko/GDwpqDO0vcRltwGTMJKZ/GRfW8y1YvQLNK6naJlA7fj9vJ87nwuTtIW6b
+         jbXkm5G7tjU2s/IM6K5TKB5YQIA+k81nDJetHN3OPe+vaWNvuy4cFMw660MxIY5brVBy
+         Rwxl5jJ7j9oNNmb9AbmB4lDK2MEZAFkEpCjMdTr0DhSCuaGUGjBluDQR0Vr1vlV3P343
+         RVHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DEdb/dXXS4BmabuVj7tMWOPVyS6P8uPlgXYLftrG0EE=;
-        b=CCsHPzO8gSZ4k0r8hfUD9sbj7gR3CC3ZoBZOGXt3F90IEi3mj9GlOp15JcDvl35ZLO
-         JQIKiylhKIvckYksZScA8peUuhTvYV3TFd/YWgyLZizhsZ2DzRsZtz5TN+Ab49j73aM5
-         fPSGEvA07itvZgbIN7qTfc8bSCXVfgXWpckaJwsF65NfBI9I32XwIZGGNqgkPdpLvuu8
-         xeC+xJ3/x01I71664q7u7vqSiCck2ktoq+tu7vMK1nYlKZS4LPb9bkBU0LcGx3mae6A8
-         3yfZJFBSEek63tHaKWf53HccaCP++bHzSGSwG82Xj15EHq+OQkNX0NgqDlyxew+bMRCE
-         r0NQ==
-X-Gm-Message-State: APjAAAWaXJvxVsdxkqCOurw7eb9H4hdixU/TwRIFpcjtJ2zw263kIj8M
-        fG6C6co6QumUc/g5jAhjQsYCmQm4qd8=
-X-Google-Smtp-Source: APXvYqwBxkx4UTN1GqiB2bvT7XxUfhEeWbSVEPa8ZgmO8NE/o5kpi1C9JkOHcyLp5hJiC9mdv041jw==
-X-Received: by 2002:a2e:7a09:: with SMTP id v9mr24209284ljc.167.1556296578355;
-        Fri, 26 Apr 2019 09:36:18 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id p11sm2862203lfh.27.2019.04.26.09.36.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 09:36:17 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id q10so3487707ljc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:36:17 -0700 (PDT)
-X-Received: by 2002:a2e:960b:: with SMTP id v11mr24952343ljh.135.1556296576721;
- Fri, 26 Apr 2019 09:36:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=8YFSmy43A9WMb2hFNjp4Kp0KhLiSpFsnJWtqoKhqoqA=;
+        b=UAL2ikDo0X4ftajPL8vFOCTMQYJkHFHRRyc/OcgLIAtfHfquW4lJql1H8RLIfhXech
+         xkvRgepxLbG/HYwQNVUa7k62Nqvkn9pc2UoMs6foM+1aW1G08g1Fn0IbKD/RTn62C/gN
+         MccPcqYVJp2lgYGhacNaSYbdQyEXYUtMkQVReezrIQbfjZKdf/qaa4rGuBSso7zNgXKY
+         iCyHTYql2GzrEC2wfnANDQImJ+c5xi0MP2h5w99O+AHivHeSggJb6XKDaKiQVEdZTK3K
+         ez9Hw4lAY+xQcDgSggs0RxntKFgRlfxDvs8Svk2+s1NK0mygRbdYAWYzwB7UJ6r8ZLUm
+         zAAQ==
+X-Gm-Message-State: APjAAAXH28jZCCfAHgGCyC8xlsa7FUh9PCFUrUtE4WC83rTQi9HMU0Sr
+        nNIMUuPelh6xaJbn41iBO1lDyA==
+X-Google-Smtp-Source: APXvYqxKBSi+Pat5Kmulifsj2VZcOqjDA96kFYBbMSOjTmeOaripioncPr3pfaotvQ8HYmrODuppVA==
+X-Received: by 2002:a6b:ee02:: with SMTP id i2mr4720621ioh.219.1556296596458;
+        Fri, 26 Apr 2019 09:36:36 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id l68sm11566550itb.29.2019.04.26.09.36.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 09:36:35 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 09:36:34 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Rob Herring <robh+dt@kernel.org>
+cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Walmsley <paul@pwsan.com>, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: serial: add documentation for the
+ SiFive UART driver
+In-Reply-To: <CAL_JsqLMFmkM3YHS3BK9LBdidmqRMZn0w+_WUGg7zZvyv3g=sw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1904260931310.28496@viisi.sifive.com>
+References: <20190413020111.23400-1-paul.walmsley@sifive.com> <20190413020111.23400-2-paul.walmsley@sifive.com> <CAL_JsqLMFmkM3YHS3BK9LBdidmqRMZn0w+_WUGg7zZvyv3g=sw@mail.gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <20190425174739.27604-1-idryomov@gmail.com> <CAHk-=wgPBx9xPWY7obK60=RTnOF3Ln0j9XkhYbekML=Fi3bFXg@mail.gmail.com>
- <342ef35feb1110197108068d10e518742823a210.camel@kernel.org>
- <20190425200941.GW2217@ZenIV.linux.org.uk> <86674e79e9f24e81feda75bc3c0dd4215604ffa5.camel@kernel.org>
-In-Reply-To: <86674e79e9f24e81feda75bc3c0dd4215604ffa5.camel@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 26 Apr 2019 09:36:00 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiaZoELovfo4gkfxB0zi6k5pQJNkmSRsEoWYr_z-oupiQ@mail.gmail.com>
-Message-ID: <CAHk-=wiaZoELovfo4gkfxB0zi6k5pQJNkmSRsEoWYr_z-oupiQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Ceph fixes for 5.1-rc7
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 9:25 AM Jeff Layton <jlayton@kernel.org> wrote:
->
-> Is it really ok to union the count and rcu_head there?
+On Fri, 26 Apr 2019, Rob Herring wrote:
 
-It should be fine, because the rcu_count should only ever be used once
-the count has gone to zero and the name cannot be found any more.
+> On Fri, Apr 12, 2019 at 9:01 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> >
+> > Add DT binding documentation for the Linux driver for the SiFive
+> > asynchronous serial IP block.
+> >
+> > This revision incorporates changes based on feedback from Rob
+> > Herring <robh@kernel.org>.
+> >
+> > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> > Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> > Cc: linux-serial@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-riscv@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Palmer Dabbelt <palmer@sifive.com>
+> > ---
+> >  .../bindings/serial/sifive-serial.txt         | 33 +++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-And while RCU path walking may find and use the *name* after the
-dentry has been killed off (but not free'd yet), all the actual
-external_name() accesses should be serialized by the dentry lock, so
-there's no access to those fields once the dentry is dead.
+Thanks Rob.
 
-At least that's how it's supposed to work. Al would be the final
-arbiter on this.
+> However, what about flow-control configuration? You'd better think now
+> about what the default is and overriding that.
 
-             Linus
+The underlying IP doesn't support it.
+
+https://github.com/sifive/riscv-linux/blob/dev/paulw/dts-v5.1-rc6-experimental/drivers/tty/serial/sifive.c#L30
+
+
+- Paul
+
