@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB97C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B889DC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3CD208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3A02084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271955;
-	bh=3GroomHUx5fWuhqJzHQkhpQjm03ivv5CeF+GDnai3mo=;
+	s=default; t=1556271960;
+	bh=wEzHlnIYYy3+cbyIkBF8oZfb36ujIDJ4gCszpo6m2OU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=vmRebWeQzDsNAj7P88ivcrl1pdEnyZLJnPV4k6wvDGFrZcbEK3Y9ioSp77Tvrjp6X
-	 9G/Xns0OlNQnHZRvK8h1zr/84z0gdIKH2g6GejpjReW74iqatwWBiO1aCUkkyli3wg
-	 IirFUQJ6nWt+zRBWuo0wgBxE94L6Na3tD8/ZsQkU=
+	b=f+xZbZCGW3A0taVsyRKsAFWZqSVtTcBlMP7SRdnCzsabJdFvFD6LzDGhqMfYlwbXD
+	 b8AJn+4CArj0WhKKTgbXlG4P+r88d7wZS6QmU7G5MbX2xShziybQb2QYTusdPx0G5j
+	 yHJg3t6Whf77cl2o21w9xb6aUxdRn690EsnyX6Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfDZJpy (ORCPT
+        id S1727478AbfDZJp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:45:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55210 "EHLO
+        Fri, 26 Apr 2019 05:45:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55364 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727446AbfDZJpv (ORCPT
+        with ESMTP id S1727463AbfDZJp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:45:51 -0400
+        Fri, 26 Apr 2019 05:45:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=wVJ90d8QrBrlpK1ud0JzgUVGzVI/Rrfuz/Fm2nlLYvA=; b=fMIvleHN5U+S
-        nj3EIm+Z31nZIeRf1A26CSnS1OlktfDm8JnwJmSDHQCBjH7hDaZVMlHXX2qooPUsQMGDVAmn5JDew
-        5XlwCOYKoreLZowA1t7VEnfV+RRBepugXKJpMXsmR6sLqgr2UtvTkmwkY29WCmOU4VF3OCHR3Vyww
-        pbmbc=;
+        List-Archive; bh=bK3wjfx2/zbC1galWJ5AQXsN4RrCXPQtqtkXr6htEA8=; b=Xz0t3p6c/2Q3
+        L+PO/GV+UieocOzJLY1Atz8Of40EJwzWfmGFnim+2DcTw5fkJEkY0qcdQ82fh/j0orCDdw7/AkgB3
+        pmT86jD48LlKn9csIYnjRr6DGUkz6T4MLZTXUHg4ad5R8Q0os18aK4tPhMmGliNJfFVhKWjyv2DTU
+        pjh3g=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxQT-0003SF-Ln; Fri, 26 Apr 2019 09:45:49 +0000
+        id 1hJxQX-0003SU-Gq; Fri, 26 Apr 2019 09:45:53 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id B1AF0441D3B; Fri, 26 Apr 2019 10:45:48 +0100 (BST)
+        id 74FAD441D3B; Fri, 26 Apr 2019 10:45:52 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: mcp16502: Remove setup_regulators function" to the regulator tree
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Applied "regulator: vexpress: Constify regulator_ops" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094548.B1AF0441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:45:48 +0100 (BST)
+Message-Id: <20190426094552.74FAD441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:45:52 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: mcp16502: Remove setup_regulators function
+   regulator: vexpress: Constify regulator_ops
 
 has been applied to the regulator tree at
 
@@ -85,83 +86,39 @@ to this mail.
 Thanks,
 Mark
 
-From 784c24c3e45cc665226e8529d79f319af7cfd09c Mon Sep 17 00:00:00 2001
+From ab54a4d7b0dd5f36cb6c2da83894590bc8bda5a5 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Thu, 11 Apr 2019 09:59:23 +0800
-Subject: [PATCH] regulator: mcp16502: Remove setup_regulators function
+Date: Thu, 11 Apr 2019 00:19:37 +0800
+Subject: [PATCH] regulator: vexpress: Constify regulator_ops
 
-It seems a little bit odd current code pass struct regulator_config rather
-than a pointer to setup_regulators. The setup_regulators is so simple and
-only has one caller, so remove it.
+vexpress_regulator_ops_ro and vexpress_regulator_ops are never changed,
+make them const.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/mcp16502.c | 37 +++++++++++-------------------------
- 1 file changed, 11 insertions(+), 26 deletions(-)
+ drivers/regulator/vexpress-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/mcp16502.c b/drivers/regulator/mcp16502.c
-index 9292ab8736c7..e5a02711cb46 100644
---- a/drivers/regulator/mcp16502.c
-+++ b/drivers/regulator/mcp16502.c
-@@ -427,36 +427,15 @@ static const struct regmap_config mcp16502_regmap_config = {
- 	.wr_table	= &mcp16502_yes_reg_table,
+diff --git a/drivers/regulator/vexpress-regulator.c b/drivers/regulator/vexpress-regulator.c
+index c810cbbd463f..ca4230fe9e77 100644
+--- a/drivers/regulator/vexpress-regulator.c
++++ b/drivers/regulator/vexpress-regulator.c
+@@ -46,11 +46,11 @@ static int vexpress_regulator_set_voltage(struct regulator_dev *regdev,
+ 	return regmap_write(reg->regmap, 0, min_uV);
+ }
+ 
+-static struct regulator_ops vexpress_regulator_ops_ro = {
++static const struct regulator_ops vexpress_regulator_ops_ro = {
+ 	.get_voltage = vexpress_regulator_get_voltage,
  };
  
--/*
-- * set_up_regulators() - initialize all regulators
-- */
--static int setup_regulators(struct mcp16502 *mcp, struct device *dev,
--			    struct regulator_config config)
--{
--	struct regulator_dev *rdev;
--	int i;
--
--	for (i = 0; i < NUM_REGULATORS; i++) {
--		rdev = devm_regulator_register(dev, &mcp16502_desc[i], &config);
--		if (IS_ERR(rdev)) {
--			dev_err(dev,
--				"failed to register %s regulator %ld\n",
--				mcp16502_desc[i].name, PTR_ERR(rdev));
--			return PTR_ERR(rdev);
--		}
--	}
--
--	return 0;
--}
--
- static int mcp16502_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
- {
- 	struct regulator_config config = { };
-+	struct regulator_dev *rdev;
- 	struct device *dev;
- 	struct mcp16502 *mcp;
- 	struct regmap *rmap;
--	int ret = 0;
-+	int i, ret;
- 
- 	dev = &client->dev;
- 	config.dev = dev;
-@@ -482,9 +461,15 @@ static int mcp16502_probe(struct i2c_client *client,
- 		return PTR_ERR(mcp->lpm);
- 	}
- 
--	ret = setup_regulators(mcp, dev, config);
--	if (ret != 0)
--		return ret;
-+	for (i = 0; i < NUM_REGULATORS; i++) {
-+		rdev = devm_regulator_register(dev, &mcp16502_desc[i], &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(dev,
-+				"failed to register %s regulator %ld\n",
-+				mcp16502_desc[i].name, PTR_ERR(rdev));
-+			return PTR_ERR(rdev);
-+		}
-+	}
- 
- 	mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_ACTIVE);
- 
+-static struct regulator_ops vexpress_regulator_ops = {
++static const struct regulator_ops vexpress_regulator_ops = {
+ 	.get_voltage = vexpress_regulator_get_voltage,
+ 	.set_voltage = vexpress_regulator_set_voltage,
+ };
 -- 
 2.20.1
 
