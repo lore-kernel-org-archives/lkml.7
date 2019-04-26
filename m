@@ -2,164 +2,139 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1278C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6204C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D696206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD5C2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 08:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbfDZIMU (ORCPT
+        id S1725993AbfDZIRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 04:12:20 -0400
-Received: from p-mail-ext.rd.orange.com ([161.106.1.9]:48304 "EHLO
-        p-mail-ext.rd.orange.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfDZIMT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 04:12:19 -0400
-Received: from p-mail-ext.rd.orange.com (localhost [127.0.0.1])
-        by localhost (Postfix) with SMTP id E5CD45616B8;
-        Fri, 26 Apr 2019 10:12:01 +0200 (CEST)
-Received: from p-mail-int.rd.francetelecom.fr (p-mail-int.rd.francetelecom.fr [10.192.117.12])
-        by p-mail-ext.rd.orange.com (Postfix) with ESMTP id DA50F5616A9;
-        Fri, 26 Apr 2019 10:11:53 +0200 (CEST)
-Received: from p-mail-int.rd.francetelecom.fr (localhost.localdomain [127.0.0.1])
-        by localhost (Postfix) with SMTP id E230018169F;
-        Fri, 26 Apr 2019 10:11:54 +0200 (CEST)
-Received: from [10.193.71.88] (yd-CZC9059FTQ.rd.francetelecom.fr [10.193.71.88])
-        by p-mail-int.rd.francetelecom.fr (Postfix) with ESMTP id 8EC9718152B;
-        Fri, 26 Apr 2019 10:11:54 +0200 (CEST)
-Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190329080058.21736-1-pierre.cregut@orange.com>
- <20190405223300.GD159318@google.com>
-From:   CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
-Message-ID: <744273fd-8045-7527-ad29-fa19adf6d015@orange.com>
-Date:   Fri, 26 Apr 2019 10:11:54 +0200
+        Fri, 26 Apr 2019 04:17:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42313 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbfDZIRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 04:17:23 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7B0468831D;
+        Fri, 26 Apr 2019 08:17:22 +0000 (UTC)
+Received: from [10.36.112.23] (ovpn-112-23.ams2.redhat.com [10.36.112.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BCC8618376;
+        Fri, 26 Apr 2019 08:17:20 +0000 (UTC)
+Subject: Re: [REGRESSION 5.0.x] Windows XP broken on KVM
+To:     Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jiri Slaby <jslaby@suse.cz>, linux-kernel@vger.kernel.org
+References: <s5hy347pxtf.wl-tiwai@suse.de> <20190418075328.GA19532@kroah.com>
+ <s5hr29zpwkx.wl-tiwai@suse.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <e5b125e6-5707-99cb-e227-cb7b9af75711@redhat.com>
+Date:   Fri, 26 Apr 2019 10:17:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190405223300.GD159318@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <s5hr29zpwkx.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-PMX-Version: 6.4.6.2792898, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2019.4.26.80616, AntiVirus-Engine: 5.60.0, AntiVirus-Data: 2019.4.26.5600000
-X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
- MULTIPLE_RCPTS 0.1, HTML_00_01 0.05, HTML_00_10 0.05, BODY_SIZE_4000_4999 0, BODY_SIZE_5000_LESS 0, BODY_SIZE_7000_LESS 0, FROM_NAME_PHRASE 0, IN_REP_TO 0, LEGITIMATE_SIGNS 0, MSG_THREAD 0, MULTIPLE_REAL_RCPTS 0, REFERENCES 0, SINGLE_URI_IN_BODY 0, URI_WITH_PATH_ONLY 0, __ANY_URI 0, __BOUNCE_CHALLENGE_SUBJ 0, __BOUNCE_NDR_SUBJ_EXEMPT 0, __CP_URI_IN_BODY 0, __CT 0, __CTE 0, __CT_TEXT_PLAIN 0, __DQ_NEG_HEUR 0, __DQ_NEG_IP 0, __FORWARDED_MSG 0, __FRAUD_MONEY_CURRENCY 0, __FRAUD_MONEY_CURRENCY_DOLLAR 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_REFERENCES 0, __HTTPS_URI 0, __IN_REP_TO 0, __MIME_TEXT_ONLY 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_VERSION 0, __MOZILLA_USER_AGENT 0, __MULTIPLE_RCPTS_CC_X2 0, __NO_HTML_TAG_RAW 0, __PHISH_SPEAR_SUBJ_PREDICATE 0, __REFERENCES 0, __SANE_MSGID 0, __SINGLE_URI_TEXT 0, __SUBJ_ALPHA_END 0, __SUBJ_ALPHA_NEGATE 0, __SUBJ_REPLY 0,
- __TO_MALFORMED_2 0, __TO_NAME 0, __TO_NAME_DIFF_FROM_ACC 0, __TO_REAL_NAMES 0, __URI_IN_BODY 0, __URI_NOT_IMG 0, __URI_NO_WWW 0, __URI_NS , __URI_WITH_PATH 0, __USER_AGENT 0'
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 26 Apr 2019 08:17:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I also initially thought that kobject_uevent generated the netlink event
-but this is not the case. This is generated by the specific driver in use.
-For the Intel i40e driver, this is the call to i40e_do_reset_safe in
-i40e_pci_sriov_configure that sends the event.
-It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
-finally calls the generic pci_enable_sriov function.
-
-So the proposed patch works well for the i40e driver (x710 cards) because
-the update to num_VFs is fast enough to be committed before the event is
-received. It may not work with other cards. The same is true for the zero
-value and there is no guarantee for other cards.
-
-The clean solution would be to lock the device in sriov_numvfs_show.
-I guess that there are good reasons why locks have been avoided
-in sysfs getter functions so let us explore other approaches.
-
-We can either return a "not settled" value (-1) or (probably better)
-do not return a value but an error (-EAGAIN returned by the show
-function).
-
-To distinguish this "not settled" situation we can either:
-* overload the meaning of num_VFs (eg make it negative)
-   but it is an unsigned short.
-* add a bool to pci_sriov struct (rather simple but modifies a well
-   established structure).
-* use the fact that not_settled => device is locked and use
-   mutex_is_locked as an over approximation.
-
-The later is not perfect but requires minimal changes to
-sriov_numvfs_show:
-
-      if (mutex_is_locked(&dev->mutex))
-          return -EAGAIN;
-
-In all cases, the device could be locked or the boolean set just
-after the test. But I don't think there is a case where causality
-would be violated.Thank you in advance for your recommendations.  
-I will update the patch according to your instructions.
-
-Le 06/04/2019 à 00:33, Bjorn Helgaas a écrit :
-> On Fri, Mar 29, 2019 at 09:00:58AM +0100, Pierre Crégut wrote:
->> Ensure that iov->num_VFs is set before a netlink message is sent
->> when the number of VFs is changed. Only the path for num_VFs > 0
->> is affected. The path for num_VFs = 0 is already correct.
+On 18/04/19 10:05, Takashi Iwai wrote:
+> On Thu, 18 Apr 2019 09:53:28 +0200,
+> Greg Kroah-Hartman wrote:
 >>
->> Monitoring programs can relie on netlink messages to track interface
->> change and query their state in /sys. But when sriov_numvfs is set to a
->> positive value, the netlink message is sent before the value is available
->> in sysfs. The value read after the message is received is always zero.
-> Thanks, Pierre!  Can you clue me in on where exactly the connection
-> from sriov_enable() to netlink is?
->
-> I see one side of the race is with sriov_numvfs_show(), but I don't
-> know where the netlink message is sent.  Is that connected with the
-> kobject_uevent(KOBJ_CHANGE)?
->
-> One thing this would help with is figuring out exactly how *much*
-> earlier we need to set iov->num_VFs.  It looks like the current patch
-> sets it before we actually enable the VFs, so a user could read
-> /sys/.../sriov_numvfs and get the wrong value.  Of course, that's
-> unavoidable; the question is whether it's OK to get the new value
-> *before* it actually takes effect, or whether we want to return a
-> stale value until after it takes effect.
->
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
->> Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
->> ---
->> note: the behaviour can be tested with the following shell script also
->> available on the bugzilla (d being the phy device name):
+>> On Thu, Apr 18, 2019 at 09:38:52AM +0200, Takashi Iwai wrote:
+>>> Hi,
+>>>
+>>> we've got a regression report on the recent 5.0.x kernel, starting
+>>> from 5.0.6, where Windows XP can't boot on KVM any longer.
+>>>
+>>> The culprit seems to be the patch
+>>>    KVM: x86: update %rip after emulating IO
+>>> with the upstream commit 45def77ebf79e2e8942b89ed79294d97ce914fa0.
+>>> Reverting this alone fixed the problem.
+>>>
+>>> The report is found at openSUSE bugzilla:
+>>>   https://bugzilla.suse.com/show_bug.cgi?id=1132694
+>>>
+>>> Is there already a followup fix?  If not, we need to revert it from
+>>> stable, at least.
 >>
->> ip monitor dev $d | grep --line-buffered "^[0-9]*:" | \
->> while read line; do cat /sys/class/net/$d/device/sriov_numvfs; done
->>
->>   drivers/pci/iov.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
->> index 3aa115ed3a65..a9655c10e87f 100644
->> --- a/drivers/pci/iov.c
->> +++ b/drivers/pci/iov.c
->> @@ -351,6 +351,7 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
->>   		goto err_pcibios;
->>   	}
->>   
->> +	iov->num_VFs = nr_virtfn;
->>   	pci_iov_set_numvfs(dev, nr_virtfn);
->>   	iov->ctrl |= PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE;
->>   	pci_cfg_access_lock(dev);
->> @@ -363,7 +364,6 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
->>   		goto err_pcibios;
->>   
->>   	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
->> -	iov->num_VFs = nr_virtfn;
->>   
->>   	return 0;
->>   
->> @@ -379,6 +379,7 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
->>   	if (iov->link != dev->devfn)
->>   		sysfs_remove_link(&dev->dev.kobj, "dep_link");
->>   
->> +	iov->num_VFs = 0;
->>   	pci_iov_set_numvfs(dev, 0);
->>   	return rc;
->>   }
->> -- 
->> 2.17.1
->>
+>> Is this also a problem in 5.1-rc5?
+> 
+> Only 5.0.x has been tested, so far.
+> I'll ask the reporter to try 5.1-rc if Paolo can't reproduce the
+> problem in his side.
+
+Back from vacation.  I'll try AMD, that's the most likely culprit.
+
+Paolo
+
