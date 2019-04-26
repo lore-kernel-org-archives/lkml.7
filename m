@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6969C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6750BC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7642920B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A632087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfcv0jVy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLUUcPuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfD0Goj (ORCPT
+        id S1726475AbfD0GnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:44:39 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42640 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbfD0GnV (ORCPT
+        Sat, 27 Apr 2019 02:43:17 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39589 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbfD0GnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:43:21 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w25so2743878pfi.9;
-        Fri, 26 Apr 2019 23:43:21 -0700 (PDT)
+        Sat, 27 Apr 2019 02:43:13 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i17so2752686pfo.6;
+        Fri, 26 Apr 2019 23:43:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yNv4uuWY37+QDIo+8eJ5Cs1RQKFygWuhu/mUpTFc+50=;
-        b=qfcv0jVylRwgUSdFp0yVo6y3SoCAOjol9XbR7W5+lwraaEg2QoXyt+VrAjGp9wzdAn
-         BOm9G9cC4mrsWbrKkWfeWua0CLcUhNFX2UYmr160CAGJNRPhpKunjycWCJnpjaUptQXK
-         FymoezD52jYoCa9vw1d8DrTtNcDpUD3gesH2ZoYEwsgq0bZE6tTukM9zPOscjJPRRiHd
-         0d0EQKT1ASnMLtYxkgiq4MVCWAUZf/kjKC/u6ibFbPlbEhDhs/jBfSTvPAadE2T4MBPs
-         yoHMRLVUDfJJ0O31Q2uS3OPiszz2lAVHUHfzcDpTk8KxpsBn4aqr0vTCALbdk7a/EPYd
-         2uWQ==
+        bh=PqX9u33LMatWrF2rdzOLAo8PTOZ3S7r/OUOEdwJc/wY=;
+        b=dLUUcPucbWSjI0KF0GYdfa3//vc9Trf9GNL1Jxgol/lAzL/Qif+nwieAhan1enOtj9
+         IEvF0toGPmi5evSU5LGqWY70kCiO3p7KKseN+96U+aK7PFiGt1LmM5YwgAU+lA6dRruQ
+         txGFF06hrpSSsexZDBeyJTD8iZpafmkscb7dw3FJPuVKduR/83ccqIn9U64Bhl7mXai2
+         QvPXBsrBhxIENhDIjXt5l8fioHpUH4RBLdAlGLQjejsyatNlX3PJPjeZX8AdLYgJMv+s
+         txk3ENcm6pNvFPMHYkZ9djMndR8b2wvyhfIPdTbE4Wq/3iIH/ChGjSPLA1uzJUN9rbuN
+         8qpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=yNv4uuWY37+QDIo+8eJ5Cs1RQKFygWuhu/mUpTFc+50=;
-        b=e36XDmzl6UQXWwFVnf1Aho7OYa6xYxx/ohzJMVW9lHybNH2PZQdH8bKlDrUn2puVx/
-         HrODl7AvP0qb/38oQYRDHwjENuuFmbysNLhayn7KAjkWNwmzWxpb2p9wZZ80Kko0zlOh
-         m33D5qlUf4EpEoI6Yo/raL9lm9KANbzYTczEf8jqvJCW+uQV8cj1zbkIOY30ayPWO6t7
-         KMTkHoRxr5yKENMHV86B6bkDzj3rbmHTunDaJ+nLe5iwQLo8qNxwxouY/901FCPIJnuE
-         bdsvfOwbpKfu85tnX6J13UwqPSchNti/M6I4yUwYo9OUmbOun9hVf8MKHSlrGLRSum/Y
-         xuWQ==
-X-Gm-Message-State: APjAAAVic7Kmx599MCiIJZgM1lzjuP0Vyvi5p/aQtl7ZrzCe/B2QJNIR
-        z05MD8SrRAYoLHRVtfO0bxk=
-X-Google-Smtp-Source: APXvYqxCgMCnuubydaHXfJIDthz2u46RkKoNrhpM9xg9spe5Zm1Eq7YBRg8tloTlDMLwvkBDrQMPvQ==
-X-Received: by 2002:a63:7f0b:: with SMTP id a11mr44847434pgd.234.1556347400564;
-        Fri, 26 Apr 2019 23:43:20 -0700 (PDT)
+        bh=PqX9u33LMatWrF2rdzOLAo8PTOZ3S7r/OUOEdwJc/wY=;
+        b=MpzUHKHRLuLNCnjqKwh5aDOS/RMRuyLJHcKIntH58XrVerfMm837tZ4VmlqIshatUu
+         DO36cym+5UjHGP86LxReQCG5V+fnUl+7Yj/Df1uz86mPOEGf83+VpdQLduRD6uURcE4Y
+         8ZT/rNMBBg+x+Nu08liE0f8MAR5fJUR9BfyFs4cFVOQuClZRws0E0Vc7YqrWGUvWUEGj
+         MD7eYwcQWK3laModgNSaXnlWkJ1kaxj3KmEhWDzWuI0jnM5WDCX0JWESusEfv7eNN5s7
+         BbcNJasVhXaGnCwRY7bOC4tdWVNoxDUjbt3pRMqCk3lmw91lgtDrNj9IgBO5Rjzlqs8c
+         2XrA==
+X-Gm-Message-State: APjAAAV2n2rOG0CRTPE2FGXTFYJLK/86mW9Ueav7qKEVpB158t9or/Ja
+        SLV+1pRtGguXRsZuoW/I8vQ=
+X-Google-Smtp-Source: APXvYqwtiOYLXN6z+omvr9q5XmanCyE26RTxB/9RLJMeynpzcv4zb2Q6alFcE2kD+WU/ILJ0eVx92Q==
+X-Received: by 2002:aa7:920b:: with SMTP id 11mr49825084pfo.3.1556347392003;
+        Fri, 26 Apr 2019 23:43:12 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.19
+        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 23:43:20 -0700 (PDT)
+        Fri, 26 Apr 2019 23:43:11 -0700 (PDT)
 From:   nadav.amit@gmail.com
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -71,10 +71,12 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
         will.deacon@arm.com, ard.biesheuvel@linaro.org,
         kristen@linux.intel.com, deneen.t.dock@intel.com,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Nadav Amit <namit@vmware.com>
-Subject: [PATCH v6 11/24] x86/kprobes: Set instruction page as executable
-Date:   Fri, 26 Apr 2019 16:22:50 -0700
-Message-Id: <20190426232303.28381-12-nadav.amit@gmail.com>
+        Nadav Amit <namit@vmware.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: [PATCH v6 06/24] fork: Provide a function for copying init_mm
+Date:   Fri, 26 Apr 2019 16:22:45 -0700
+Message-Id: <20190426232303.28381-7-nadav.amit@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426232303.28381-1-nadav.amit@gmail.com>
 References: <20190426232303.28381-1-nadav.amit@gmail.com>
@@ -85,62 +87,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nadav Amit <namit@vmware.com>
 
-Set the page as executable after allocation.  This patch is a
-preparatory patch for a following patch that makes module allocated
-pages non-executable.
+Provide a function for copying init_mm. This function will be later used
+for setting a temporary mm.
 
-While at it, do some small cleanup of what appears to be unnecessary
-masking.
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/kernel/kprobes/core.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ include/linux/sched/task.h |  1 +
+ kernel/fork.c              | 24 ++++++++++++++++++------
+ 2 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index a034cb808e7e..1591852d3ac4 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -431,8 +431,20 @@ void *alloc_insn_page(void)
- 	void *page;
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 2e97a2227045..f1227f2c38a4 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -76,6 +76,7 @@ extern void exit_itimers(struct signal_struct *);
+ extern long _do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *, unsigned long);
+ extern long do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *);
+ struct task_struct *fork_idle(int);
++struct mm_struct *copy_init_mm(void);
+ extern pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
+ extern long kernel_wait4(pid_t, int __user *, int, struct rusage *);
  
- 	page = module_alloc(PAGE_SIZE);
--	if (page)
--		set_memory_ro((unsigned long)page & PAGE_MASK, 1);
-+	if (!page)
-+		return NULL;
-+
-+	/*
-+	 * First make the page read-only, and only then make it executable to
-+	 * prevent it from being W+X in between.
-+	 */
-+	set_memory_ro((unsigned long)page, 1);
-+
-+	/*
-+	 * TODO: Once additional kernel code protection mechanisms are set, ensure
-+	 * that the page was not maliciously altered and it is still zeroed.
-+	 */
-+	set_memory_x((unsigned long)page, 1);
- 
- 	return page;
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 44fba5e5e916..fbe9dfcd8680 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1299,13 +1299,20 @@ void mm_release(struct task_struct *tsk, struct mm_struct *mm)
+ 		complete_vfork_done(tsk);
  }
-@@ -440,8 +452,12 @@ void *alloc_insn_page(void)
- /* Recover page to RW mode before releasing it */
- void free_insn_page(void *page)
+ 
+-/*
+- * Allocate a new mm structure and copy contents from the
+- * mm structure of the passed in task structure.
++/**
++ * dup_mm() - duplicates an existing mm structure
++ * @tsk: the task_struct with which the new mm will be associated.
++ * @oldmm: the mm to duplicate.
++ *
++ * Allocates a new mm structure and duplicates the provided @oldmm structure
++ * content into it.
++ *
++ * Return: the duplicated mm or NULL on failure.
+  */
+-static struct mm_struct *dup_mm(struct task_struct *tsk)
++static struct mm_struct *dup_mm(struct task_struct *tsk,
++				struct mm_struct *oldmm)
  {
--	set_memory_nx((unsigned long)page & PAGE_MASK, 1);
--	set_memory_rw((unsigned long)page & PAGE_MASK, 1);
-+	/*
-+	 * First make the page non-executable, and only then make it writable to
-+	 * prevent it from being W+X in between.
-+	 */
-+	set_memory_nx((unsigned long)page, 1);
-+	set_memory_rw((unsigned long)page, 1);
- 	module_memfree(page);
+-	struct mm_struct *mm, *oldmm = current->mm;
++	struct mm_struct *mm;
+ 	int err;
+ 
+ 	mm = allocate_mm();
+@@ -1372,7 +1379,7 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
+ 	}
+ 
+ 	retval = -ENOMEM;
+-	mm = dup_mm(tsk);
++	mm = dup_mm(tsk, current->mm);
+ 	if (!mm)
+ 		goto fail_nomem;
+ 
+@@ -2187,6 +2194,11 @@ struct task_struct *fork_idle(int cpu)
+ 	return task;
  }
  
++struct mm_struct *copy_init_mm(void)
++{
++	return dup_mm(NULL, &init_mm);
++}
++
+ /*
+  *  Ok, this is the main fork-routine.
+  *
 -- 
 2.17.1
 
