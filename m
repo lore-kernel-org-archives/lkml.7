@@ -2,90 +2,215 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC26C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC53C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFB7206BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556242722;
-	bh=d7Ir08bBi4TxEsMumxprS2fXxUkfiMgE/kM9QWPr980=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=yuiTNlAqKhmiVE8ZkURFK/s7K74GcaNn/xdX7+eR5XwHipwGGgLNl40LfOPihOf+U
-	 21BHaWvqNFLOFzeeRlq+4LWQII7tHG6+25INsuib1LdV31yZtaQ+r5LdltA/IuMQqm
-	 Al0RhbMRwljyc3ZdXt14lVgek5IbbfGnqby8bXoo=
+	by mail.kernel.org (Postfix) with ESMTP id DA84F206BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:41:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="amOUcrVB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbfDZBil (ORCPT
+        id S1727674AbfDZBld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 21:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52430 "EHLO mail.kernel.org"
+        Thu, 25 Apr 2019 21:41:33 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41637 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbfDZBik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 21:38:40 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726026AbfDZBld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 21:41:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9950B206BF;
-        Fri, 26 Apr 2019 01:38:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556242719;
-        bh=d7Ir08bBi4TxEsMumxprS2fXxUkfiMgE/kM9QWPr980=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=sj5suOkRDhCCYxAvrgjb1iZT5s/Wanay10AblXBH01zNZ29HZEPhYQGo6JfxbVdJV
-         s4tkKeb4pV7vS+80pITct4vvjYvKfcB785xQnG7eAN8Yk8s616nKvMCNyHAIB9sSVA
-         V2353gHuQqL6RSilh3guUfmi8uMSOeN+DxkBlt94=
-Content-Type: text/plain; charset="utf-8"
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44qxbs2Xz1z9s5c;
+        Fri, 26 Apr 2019 11:41:28 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556242889;
+        bh=Eo7KWMfTSb+VbVLOSl4HcpbcDwTAVUQSQBsc4DepwcU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=amOUcrVBWjbf/tv0KFJzyFjVQK7pL0KueYUCIWVLz0FI1l56J+25Vny4BXzRm6VHf
+         AD1F+kIhpkCJEEG6ai7EnGtAWm1mycIhKgV+Lmsck1yp7hIdFdBW8YJU/krd2vwxhu
+         gaRfewPCAoGmpwktdR/Jm5mvcWIsQrUFAGZ7+G2kB2H/UNCESEJMNH7QeA4muNESn8
+         wsFsAOKGN8sG+Dvt/bg/DJZcVP4Pe4K9qKQECXS+S+LvS0V0I6nlygePJCO9HWYn1D
+         aSobLVzY3ZYGPYyEmvODu68xkzuEq50UPcYwRvU7g4dgdUpMAT7jn5aXdvFV90Adpp
+         BlXxINJj/S26A==
+Date:   Fri, 26 Apr 2019 11:41:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Westphal <fw@strlen.de>
+Subject: linux-next: manual merge of the ipsec-next tree with the ipsec tree
+Message-ID: <20190426114120.73e906e3@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190411082618.3502-1-paul.walmsley@sifive.com>
-References: <20190411082618.3502-1-paul.walmsley@sifive.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 0/3] clk: add driver for the SiFive FU540 PRCI and PLLs it controls
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        mturquette@baylibre.com
-Message-ID: <155624271876.15276.8637203698438742304@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Thu, 25 Apr 2019 18:38:38 -0700
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/2PEW0RL1QWRzfjPqg+1fO77"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Paul Walmsley (2019-04-11 01:26:16)
-> clk: add driver for the SiFive FU540 PRCI and PLLs it controls
->=20
-> Add a driver for the SiFive FU540 PRCI IP block, which handles clock and
-> some device reset control for the SiFive FU540 chip.  Also add a driver-
-> independent library for the Analog Bits Wide-Range PLL (WRPLL), used by
-> the PRCI driver to monitor and control the WRPLL instances on the FU540
-> chip.
->=20
-> Boot-tested on a SiFive HiFive Unleashed board, using BBL and the
-> open-source FSBL with a mainline-focused DTB.
->=20
-> This third version incorporates changes requested by Stephen Boyd
-> <sboyd@kernel.org> and Rob Herring <robh@kernel.org>.
->=20
-> This patch series is also available, along with the DT macro prerequisite
-> patch, at:
+--Sig_/2PEW0RL1QWRzfjPqg+1fO77
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Can you please send the dt macro patch along with the rest of the
-patches? I can't apply these patches and build them without it.
-Typically the macro patch is part of the binding patch and Rob
-acks/reviews it as one change. Then I pick that up and the clk driver
-parts and they get pulled into whatever SoC tree is using the bindings
-header with and those defines get merged up through some other path..
+Hi all,
 
->=20
-> https://github.com/sifive/riscv-linux/tree/dev/paulw/prci-v5.1-rc4
->=20
+Today's linux-next merge of the ipsec-next tree got a conflict in:
 
-I suppose I'll go and fetch it from here manually.
+  net/ipv4/xfrm4_policy.c
 
+between commit:
+
+  8742dc86d0c7 ("xfrm4: Fix uninitialized memory read in _decode_session4")
+
+from the ipsec tree and commit:
+
+  c53ac41e3720 ("xfrm: remove decode_session indirection from afinfo_policy=
+")
+
+from the ipsec-next tree.
+
+I fixed it up (the code changed by the former has been moved by the latter
+- see below) and can carry the fix as necessary. This is now fixed as
+far as linux-next is concerned, but any non trivial conflicts should be
+mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 26 Apr 2019 11:37:41 +1000
+Subject: [PATCH] xfrm4: fix up for moved _decode_session4
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ net/xfrm/xfrm_policy.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index 410233c5681e..7a43ae6b2a44 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -3264,7 +3264,8 @@ static void
+ decode_session4(struct sk_buff *skb, struct flowi *fl, bool reverse)
+ {
+ 	const struct iphdr *iph =3D ip_hdr(skb);
+-	u8 *xprth =3D skb_network_header(skb) + iph->ihl * 4;
++	int ihl =3D iph->ihl;
++	u8 *xprth =3D skb_network_header(skb) + ihl * 4;
+ 	struct flowi4 *fl4 =3D &fl->u.ip4;
+ 	int oif =3D 0;
+=20
+@@ -3275,6 +3276,11 @@ decode_session4(struct sk_buff *skb, struct flowi *f=
+l, bool reverse)
+ 	fl4->flowi4_mark =3D skb->mark;
+ 	fl4->flowi4_oif =3D reverse ? skb->skb_iif : oif;
+=20
++	fl4->flowi4_proto =3D iph->protocol;
++	fl4->daddr =3D reverse ? iph->saddr : iph->daddr;
++	fl4->saddr =3D reverse ? iph->daddr : iph->saddr;
++	fl4->flowi4_tos =3D iph->tos;
++
+ 	if (!ip_is_fragment(iph)) {
+ 		switch (iph->protocol) {
+ 		case IPPROTO_UDP:
+@@ -3286,7 +3292,7 @@ decode_session4(struct sk_buff *skb, struct flowi *fl=
+, bool reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ports;
+=20
+-				xprth =3D skb_network_header(skb) + iph->ihl * 4;
++				xprth =3D skb_network_header(skb) + ihl * 4;
+ 				ports =3D (__be16 *)xprth;
+=20
+ 				fl4->fl4_sport =3D ports[!!reverse];
+@@ -3298,7 +3304,7 @@ decode_session4(struct sk_buff *skb, struct flowi *fl=
+, bool reverse)
+ 			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
+ 				u8 *icmp;
+=20
+-				xprth =3D skb_network_header(skb) + iph->ihl * 4;
++				xprth =3D skb_network_header(skb) + ihl * 4;
+ 				icmp =3D xprth;
+=20
+ 				fl4->fl4_icmp_type =3D icmp[0];
+@@ -3310,7 +3316,7 @@ decode_session4(struct sk_buff *skb, struct flowi *fl=
+, bool reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be32 *ehdr;
+=20
+-				xprth =3D skb_network_header(skb) + iph->ihl * 4;
++				xprth =3D skb_network_header(skb) + ihl * 4;
+ 				ehdr =3D (__be32 *)xprth;
+=20
+ 				fl4->fl4_ipsec_spi =3D ehdr[0];
+@@ -3321,7 +3327,7 @@ decode_session4(struct sk_buff *skb, struct flowi *fl=
+, bool reverse)
+ 			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
+ 				__be32 *ah_hdr;
+=20
+-				xprth =3D skb_network_header(skb) + iph->ihl * 4;
++				xprth =3D skb_network_header(skb) + ihl * 4;
+ 				ah_hdr =3D (__be32 *)xprth;
+=20
+ 				fl4->fl4_ipsec_spi =3D ah_hdr[1];
+@@ -3332,7 +3338,7 @@ decode_session4(struct sk_buff *skb, struct flowi *fl=
+, bool reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ipcomp_hdr;
+=20
+-				xprth =3D skb_network_header(skb) + iph->ihl * 4;
++				xprth =3D skb_network_header(skb) + ihl * 4;
+ 				ipcomp_hdr =3D (__be16 *)xprth;
+=20
+ 				fl4->fl4_ipsec_spi =3D htonl(ntohs(ipcomp_hdr[1]));
+@@ -3344,7 +3350,7 @@ decode_session4(struct sk_buff *skb, struct flowi *fl=
+, bool reverse)
+ 				__be16 *greflags;
+ 				__be32 *gre_hdr;
+=20
+-				xprth =3D skb_network_header(skb) + iph->ihl * 4;
++				xprth =3D skb_network_header(skb) + ihl * 4;
+ 				greflags =3D (__be16 *)xprth;
+ 				gre_hdr =3D (__be32 *)xprth;
+=20
+@@ -3360,10 +3366,6 @@ decode_session4(struct sk_buff *skb, struct flowi *f=
+l, bool reverse)
+ 			break;
+ 		}
+ 	}
+-	fl4->flowi4_proto =3D iph->protocol;
+-	fl4->daddr =3D reverse ? iph->saddr : iph->daddr;
+-	fl4->saddr =3D reverse ? iph->daddr : iph->saddr;
+-	fl4->flowi4_tos =3D iph->tos;
+ }
+=20
+ #if IS_ENABLED(CONFIG_IPV6)
+--=20
+2.20.1
+
+
+--Sig_/2PEW0RL1QWRzfjPqg+1fO77
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzCYcAACgkQAVBC80lX
+0GxCSQgAoUSviUA41IlJYlzas/i369vwYlzK1Yev1JEIJkO8PHlfuttTZ4FG28y1
+itsitGtUBumgRjl4EQNPmft1zZKM124mqBTiIMhnXqMxH+O+KxRxpgdyAFbkwjJn
+wuzAJyyi+Z1tORKY2hfqU2t4po2ue7qSz6yB86QazUK+9XI22nUZ7iTZSVLxHKbQ
+VT5O4kWhftBNr9ts0Ut3ndBEtYLJ/rQJDsrnW1717zLI83ESWmUR5rrZLylrLLb0
+fbhNwDZZBa4MhIVUGSvZ08Z2KoSnJF6R0Uvk7zXT5mpip8NeGlQs0ULhi+mKlajh
+nYqoDBVrCyMMaKsSzOddGPC7/+Pwxw==
+=NdZV
+-----END PGP SIGNATURE-----
+
+--Sig_/2PEW0RL1QWRzfjPqg+1fO77--
