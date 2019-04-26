@@ -2,65 +2,158 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506AFC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEF1C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F830208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851C22077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfDZP3t (ORCPT
+        id S1726271AbfDZPbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:29:49 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:37656 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726172AbfDZP3s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:29:48 -0400
-Received: from localhost (unknown [12.154.31.190])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 46883145E49C8;
-        Fri, 26 Apr 2019 08:29:48 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 11:29:46 -0400 (EDT)
-Message-Id: <20190426.112946.1319839231077035351.davem@davemloft.net>
-To:     gustavo@embeddedor.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keescook@chromium.org
-Subject: Re: [PATCH net-next] cnic: Refactor code and mark expected switch
- fall-through
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190424163732.GA12492@embeddedor>
-References: <20190424163732.GA12492@embeddedor>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 26 Apr 2019 08:29:48 -0700 (PDT)
+        Fri, 26 Apr 2019 11:31:20 -0400
+Received: from foss.arm.com ([217.140.101.70]:44448 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726172AbfDZPbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:31:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6663D80D;
+        Fri, 26 Apr 2019 08:31:19 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 611063F5C1;
+        Fri, 26 Apr 2019 08:31:17 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 16:31:14 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     julien.thierry@arm.com, marc.zyngier@arm.com,
+        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        christoffer.dall@arm.com, james.morse@arm.com,
+        suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 3/3] arm64/fpsimd: Don't disable softirq when touching
+ FPSIMD/SVE state
+Message-ID: <20190426153114.GL3567@e103592.cambridge.arm.com>
+References: <20190426143740.31973-1-julien.grall@arm.com>
+ <20190426143740.31973-4-julien.grall@arm.com>
+ <20190426145232.GK3567@e103592.cambridge.arm.com>
+ <322340c7-0c97-76f8-8ab8-875040b4459c@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <322340c7-0c97-76f8-8ab8-875040b4459c@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogIkd1c3Rhdm8gQS4gUi4gU2lsdmEiIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPg0KRGF0
-ZTogV2VkLCAyNCBBcHIgMjAxOSAxMTozNzozMiAtMDUwMA0KDQo+IEluIHByZXBhcmF0aW9uIHRv
-IGVuYWJsaW5nIC1XaW1wbGljaXQtZmFsbHRocm91Z2gsIHJlZmFjdG9yIGNvZGUgYQ0KPiBiaXQg
-YW5kIG1hcmsgc3dpdGNoIGNhc2VzIHdoZXJlIHdlIGFyZSBleHBlY3RpbmcgdG8gZmFsbCB0aHJv
-dWdoLg0KPiANCj4gVGhpcyBwYXRjaCBmaXhlcyB0aGUgZm9sbG93aW5nIHdhcm5pbmc6DQo+IA0K
-PiBkcml2ZXJzL25ldC9ldGhlcm5ldC9icm9hZGNvbS9jbmljLmM6IEluIGZ1bmN0aW9uIKFjbmlj
-X2NtX3Byb2Nlc3Nfa2NxZaI6DQo+IGRyaXZlcnMvbmV0L2V0aGVybmV0L2Jyb2FkY29tL2NuaWMu
-Yzo0MDQ0OjExOiB3YXJuaW5nOiB0aGlzIHN0YXRlbWVudCBtYXkgZmFsbCB0aHJvdWdoIFstV2lt
-cGxpY2l0LWZhbGx0aHJvdWdoPV0NCj4gICAgIG9wY29kZSA9IEw0X0tDUUVfT1BDT0RFX1ZBTFVF
-X0NMT1NFX0NPTVA7DQo+IGRyaXZlcnMvbmV0L2V0aGVybmV0L2Jyb2FkY29tL2NuaWMuYzo0MDUw
-OjI6IG5vdGU6IGhlcmUNCj4gICBjYXNlIEw0X0tDUUVfT1BDT0RFX1ZBTFVFX1JFU0VUX1JFQ0VJ
-VkVEOg0KPiAgIF5+fn4NCj4gDQo+IFdhcm5pbmcgbGV2ZWwgMyB3YXMgdXNlZDogLVdpbXBsaWNp
-dC1mYWxsdGhyb3VnaD0zDQo+IA0KPiBOb3RpY2UgdGhhdCwgaW4gdGhpcyBwYXJ0aWN1bGFyIGNh
-c2UsIHRoZSBjb2RlIGNvbW1lbnQgaXMgbW9kaWZpZWQNCj4gaW4gYWNjb3JkYW5jZSB3aXRoIHdo
-YXQgR0NDIGlzIGV4cGVjdGluZyB0byBmaW5kLg0KPiANCj4gVGhpcyBwYXRjaCBpcyBwYXJ0IG9m
-IHRoZSBvbmdvaW5nIGVmZm9ydHMgdG8gZW5hYmxlDQo+IC1XaW1wbGljaXQtZmFsbHRocm91Z2gu
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBHdXN0YXZvIEEuIFIuIFNpbHZhIDxndXN0YXZvQGVtYmVk
-ZGVkb3IuY29tPg0KDQpBcHBsaWVkLg0K
+On Fri, Apr 26, 2019 at 04:06:02PM +0100, Julien Grall wrote:
+> Hi,
+> 
+> On 26/04/2019 15:52, Dave Martin wrote:
+> >On Fri, Apr 26, 2019 at 03:37:40PM +0100, Julien Grall wrote:
+> >>When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
+> >>the kernel may be able to use FPSIMD/SVE. This is for instance the case
+> >>for crypto code.
+> >>
+> >>Any use of FPSIMD/SVE in the kernel are clearly marked by using the
+> >>function kernel_neon_{begin, end}. Furthermore, this can only be used
+> >>when may_use_simd() returns true.
+> >>
+> >>The current implementation of may_use_simd() allows softirq to use
+> >>FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
+> >>When in use, softirqs usually fall back to a software method.
+> >>
+> >>At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
+> >>when touching the FPSIMD/SVE context. This has the drawback to disable
+> >>all softirqs even if they are not using FPSIMD/SVE.
+> >>
+> >>Since a softirq is supposed to check may_use_simd() anyway before
+> >>attempting to use FPSIMD/SVE, there is limited reason to keep softirq
+> >>disabled when touching the FPSIMD/SVE context. Instead, we can simply
+> >>disable preemption and mark the FPSIMD/SVE context as in use by setting
+> >>CPU's kernel_neon_busy flag.
+> >
+> >fpsimd_context_busy?
+> 
+> Yes.
+> 
+> >
+> >>Two new helpers {get, put}_cpu_fpsimd_context is introduced to mark the
+> >>area using FPSIMD/SVE context and uses them in replacement of
+> >
+> >Paragraph mangled during edit?
+> 
+> Possibly, I will update it.
+> 
+> >
+> >-> "are introduced ... and they are used to replace ..."
+> >
+> >>local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
+> >>also re-implemented to use the new helpers.
+> >>
+> >>Additionally, double-underscored versions of the helpers are provided to
+> >>be used in function called with interrupt masked. They are used for
+> >>sanity and also help to mark place where the FPSIMD context can be
+> >>manipulate freely.
+> >
+> >For the benefit of other readers, this should be more explicit.  Also,
+> >the distinction between the normal and __ helpers is that the latter
+> >can be caller with preemption disabled.
+> >
+> >To clarify the impact, we can say something like
+> >
+> >"These are only relevant on paths where irqs are disabled anyway, so
+> >they are not needed for correctness in the current code. Let's use them
+> >anyway though: this marks the critical sections clearly and will help
+> >to avoid mistakes during future maintenance."
+> 
+> How about the following commit message?
+> 
+>     arm64/fpsimd: Don't disable softirq when touching FPSIMD/SVE state
+> 
+>     When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
+>     the kernel may be able to use FPSIMD/SVE. This is for instance the case
+>     for crypto code.
+> 
+>     Any use of FPSIMD/SVE in the kernel are clearly marked by using the
+>     function kernel_neon_{begin, end}. Furthermore, this can only be used
+>     when may_use_simd() returns true.
+> 
+>     The current implementation of may_use_simd() allows softirq to use
+>     FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
+>     When in use, softirqs usually fall back to a software method.
+> 
+>     At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
+>     when touching the FPSIMD/SVE context. This has the drawback to disable
+>     all softirqs even if they are not using FPSIMD/SVE.
+> 
+>     Since a softirq is supposed to check may_use_simd() anyway before
+>     attempting to use FPSIMD/SVE, there is limited reason to keep softirq
+>     disabled when touching the FPSIMD/SVE context. Instead, we can simply
+>     disable preemption and mark the FPSIMD/SVE context as in use by setting
+>     CPU's fpsimd_context_busy flag.
+> 
+>     Two new helpers {get, put}_cpu_fpsimd_context are introduced to mark
+>     the area using FPSIMD/SVE context and they are used to replace
+>     local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
+>     also re-implemented to use the new helpers.
+> 
+>     Additionally, double-underscored versions of the helpers are provided to
+>     called when preemption is already disabled. These are only relevant on
+>     paths where irqs are disabled anyway, so they are not needed for
+>     correctness in the current code. Let's use them anyway though: this
+>     marks critical sections clearly and will help to avoid mistakes during
+>     future maintenance.
+
+Looks good to me.
+
+Reviewed-by: Dave Martin <Dave.Martin@arm.com>
+
+(For the diff as well as the commit message, obviously.)
+
+Cheers
+---Dave
