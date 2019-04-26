@@ -2,129 +2,219 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79950C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 23:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FABAC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 23:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F46C206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 23:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgaWIYQV"
+	by mail.kernel.org (Postfix) with ESMTP id 6B8B1206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 23:57:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfDZXpJ (ORCPT
+        id S1727202AbfDZX5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 19:45:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44392 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfDZXpJ (ORCPT
+        Fri, 26 Apr 2019 19:57:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54564 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727158AbfDZX5B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 19:45:09 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h16so4355437ljg.11;
-        Fri, 26 Apr 2019 16:45:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CdWPjc0qLahLl4UGeEnInzJxeTMxgYrydP5xRWP12qg=;
-        b=HgaWIYQVcBtV0x6xtew0Tm1bFcM4TepLDmWS3tGBxOw6j5ycThRn6JXiYBiq90Jo80
-         tUV/ZQYx04YgzckAXs7iMuDICSyKdj6HTLiRWcNywUEDPPhC2MLaXHWssN/C/GallvgN
-         PDA0qOW9mbZcit/FKF6v1zmLXu/d2U0xQdwpLj7F/57IZF1n8MibBLoscwOXKW1tbKNh
-         ESqH8ThddqUQU752c6s3g9eF56gJqDS+6ljJ9etZL8cZe+cy8wTYq+jfqohN8qqGOzxk
-         2kUuBW6kex60rUOVz4YWO/O5Y3Z+CI4Qbm5hkzTfFBw0P1JJcSirRh3nFR56sQLGcqzZ
-         iBUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CdWPjc0qLahLl4UGeEnInzJxeTMxgYrydP5xRWP12qg=;
-        b=RP6uO73v0Uq3MsAL5UzG9LFC088l306F5hUX9XDX0N2g1VxcJ1BTHnPI+z3Ww+Gcbf
-         fO2GVxVH3yoHjlb2ocz02N6cqAdE2tpd7vR4GF+jQ18wdLfqOAQ+ba5cSR2AGxQvVqX5
-         PtAPsVeNkH203H0g91k8JmGEF7vfn9EnQAWBVc8QFV+MBJEZag7SnnUEQq4e6/VZ2lR/
-         VdHJyNBynJEHKeQm7WgM+To4D3mjtlwwRWDDr146Mbr5hI3Yktzs8kc0LcW8WpsGAsT0
-         nlkotCtOMY4IoF/kJVhgismHa99P2gbjwK5ZLy9pj/7XuaXw/I1YGu97ppJiIEiWkpwL
-         dmrg==
-X-Gm-Message-State: APjAAAWD/9vADAAIiSuSksJWSm0EbMhirjzU8cWC/u3nl9XElijfMbT/
-        vc/AxnDu3OU/Engdy4O5JDs=
-X-Google-Smtp-Source: APXvYqzfKH4P0h9+dewdZ7o6E8OXsa2LO4w/WYsCqVSe2tLqPJwPWdQrlH0quLWucIhMFq2PPyFXkw==
-X-Received: by 2002:a2e:9bcc:: with SMTP id w12mr5485572ljj.72.1556322306913;
-        Fri, 26 Apr 2019 16:45:06 -0700 (PDT)
-Received: from mobilestation ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id n1sm559023ljg.84.2019.04.26.16.45.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 26 Apr 2019 16:45:06 -0700 (PDT)
-Date:   Sat, 27 Apr 2019 02:45:04 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] net: phy: realtek: Add rtl8211e rx/tx delays
- config
-Message-ID: <20190426234503.y6nm5hekyclmgftc@mobilestation>
-References: <20190426093010.9609-1-fancer.lancer@gmail.com>
- <20190426212112.5624-1-fancer.lancer@gmail.com>
- <20190426214050.GU4041@lunn.ch>
+        Fri, 26 Apr 2019 19:57:01 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QNiGgU108909
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 19:56:59 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s49h4defd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 19:56:59 -0400
+Received: from localhost
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Sat, 27 Apr 2019 00:56:58 +0100
+Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 27 Apr 2019 00:56:53 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3QNupCu10879282
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Apr 2019 23:56:51 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A725DC6057;
+        Fri, 26 Apr 2019 23:56:51 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17FABC6055;
+        Fri, 26 Apr 2019 23:56:48 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.148.98])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Fri, 26 Apr 2019 23:56:47 +0000 (GMT)
+References: <20190129134750-mutt-send-email-mst@kernel.org> <877eefxvyb.fsf@morokweng.localdomain> <20190204144048-mutt-send-email-mst@kernel.org> <87ef71seve.fsf@morokweng.localdomain> <20190320171027-mutt-send-email-mst@kernel.org> <87tvfvbwpb.fsf@morokweng.localdomain> <20190323165456-mutt-send-email-mst@kernel.org> <87a7go71hz.fsf@morokweng.localdomain> <20190419190258-mutt-send-email-mst@kernel.org> <875zr228zf.fsf@morokweng.localdomain> <20190424210813-mutt-send-email-mst@kernel.org>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Michael Roth <mdroth@linux.vnet.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>
+Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+In-reply-to: <20190424210813-mutt-send-email-mst@kernel.org>
+Date:   Fri, 26 Apr 2019 20:56:43 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426214050.GU4041@lunn.ch>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19042623-0004-0000-0000-000015048871
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011001; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01194867; UDB=6.00626493; IPR=6.00975701;
+ MB=3.00026613; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-26 23:56:56
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042623-0005-0000-0000-00008B6B307A
+Message-Id: <871s1o1ft0.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904260151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 11:40:50PM +0200, Andrew Lunn wrote:
-> On Sat, Apr 27, 2019 at 12:21:11AM +0300, Serge Semin wrote:
-> > There are two chip pins named TXDLY and RXDLY which actually adds the 2ns
-> > delays to TXC and RXC for TXD/RXD latching. Alas this is the only
-> > documented info regarding the RGMII timing control configurations the PHY
-> > provides. It turns out the same settings can be setup via MDIO registers
-> > hidden in the extension pages layout. Particularly the extension page 0xa4
-> > provides a register 0x1c, which bits 1 and 2 control the described delays.
-> > They are used to implement the "rgmii-{id,rxid,txid}" phy-mode.
-> > 
-> > The hidden RGMII configs register utilization was found in the rtl8211e
-> > U-boot driver:
-> > https://elixir.bootlin.com/u-boot/v2019.01/source/drivers/net/phy/realtek.c#L99
-> > 
-> > There is also a freebsd-folks discussion regarding this register:
-> > https://reviews.freebsd.org/D13591
-> > 
-> > It confirms that the register bits field must control the so called
-> > configuration pins described in the table 12-13 of the official PHY
-> > datasheet:
-> > 8:6 = PHY Address
-> > 5:4 = Auto-Negotiation
-> > 3 = Interface Mode Select
-> > 2 = RX Delay
-> > 1 = TX Delay
-> > 0 = SELRGV
-> > 
-> > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-> 
-> 
-> Hi Serge
-> 
-> Next time please include a patch 0 containing a cover note explaining
-> the who series.
-> 
 
-Sure as long as the patchset gets to be much bigger than two small
-patches with an obvious reason to be merged.
+Michael S. Tsirkin <mst@redhat.com> writes:
 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> 
+> On Wed, Apr 24, 2019 at 10:01:56PM -0300, Thiago Jung Bauermann wrote:
+>>
+>> Michael S. Tsirkin <mst@redhat.com> writes:
+>>
+>> > On Wed, Apr 17, 2019 at 06:42:00PM -0300, Thiago Jung Bauermann wrote:
+>> >>
+>> >> Michael S. Tsirkin <mst@redhat.com> writes:
+>> >>
+>> >> > On Thu, Mar 21, 2019 at 09:05:04PM -0300, Thiago Jung Bauermann wrote:
+>> >> >>
+>> >> >> Michael S. Tsirkin <mst@redhat.com> writes:
+>> >> >>
+>> >> >> > On Wed, Mar 20, 2019 at 01:13:41PM -0300, Thiago Jung Bauermann wrote:
+>> >> >> >> >From what I understand of the ACCESS_PLATFORM definition, the host will
+>> >> >> >> only ever try to access memory addresses that are supplied to it by the
+>> >> >> >> guest, so all of the secure guest memory that the host cares about is
+>> >> >> >> accessible:
+>> >> >> >>
+>> >> >> >>     If this feature bit is set to 0, then the device has same access to
+>> >> >> >>     memory addresses supplied to it as the driver has. In particular,
+>> >> >> >>     the device will always use physical addresses matching addresses
+>> >> >> >>     used by the driver (typically meaning physical addresses used by the
+>> >> >> >>     CPU) and not translated further, and can access any address supplied
+>> >> >> >>     to it by the driver. When clear, this overrides any
+>> >> >> >>     platform-specific description of whether device access is limited or
+>> >> >> >>     translated in any way, e.g. whether an IOMMU may be present.
+>> >> >> >>
+>> >> >> >> All of the above is true for POWER guests, whether they are secure
+>> >> >> >> guests or not.
+>> >> >> >>
+>> >> >> >> Or are you saying that a virtio device may want to access memory
+>> >> >> >> addresses that weren't supplied to it by the driver?
+>> >> >> >
+>> >> >> > Your logic would apply to IOMMUs as well.  For your mode, there are
+>> >> >> > specific encrypted memory regions that driver has access to but device
+>> >> >> > does not. that seems to violate the constraint.
+>> >> >>
+>> >> >> Right, if there's a pre-configured 1:1 mapping in the IOMMU such that
+>> >> >> the device can ignore the IOMMU for all practical purposes I would
+>> >> >> indeed say that the logic would apply to IOMMUs as well. :-)
+>> >> >>
+>> >> >> I guess I'm still struggling with the purpose of signalling to the
+>> >> >> driver that the host may not have access to memory addresses that it
+>> >> >> will never try to access.
+>> >> >
+>> >> > For example, one of the benefits is to signal to host that driver does
+>> >> > not expect ability to access all memory. If it does, host can
+>> >> > fail initialization gracefully.
+>> >>
+>> >> But why would the ability to access all memory be necessary or even
+>> >> useful? When would the host access memory that the driver didn't tell it
+>> >> to access?
+>> >
+>> > When I say all memory I mean even memory not allowed by the IOMMU.
+>>
+>> Yes, but why? How is that memory relevant?
+>
+> It's relevant when driver is not trusted to only supply correct
+> addresses. The feature was originally designed to support userspace
+> drivers within guests.
 
-Thanks.)
+Ah, thanks for clarifying. I don't think that's a problem in our case.
+If the guest provides an incorrect address, the hardware simply won't
+allow the host to access it.
 
--Sergey
+>> >> >> > Another idea is maybe something like virtio-iommu?
+>> >> >>
+>> >> >> You mean, have legacy guests use virtio-iommu to request an IOMMU
+>> >> >> bypass? If so, it's an interesting idea for new guests but it doesn't
+>> >> >> help with guests that are out today in the field, which don't have A
+>> >> >> virtio-iommu driver.
+>> >> >
+>> >> > I presume legacy guests don't use encrypted memory so why do we
+>> >> > worry about them at all?
+>> >>
+>> >> They don't use encrypted memory, but a host machine will run a mix of
+>> >> secure and legacy guests. And since the hypervisor doesn't know whether
+>> >> a guest will be secure or not at the time it is launched, legacy guests
+>> >> will have to be launched with the same configuration as secure guests.
+>> >
+>> > OK and so I think the issue is that hosts generally fail if they set
+>> > ACCESS_PLATFORM and guests do not negotiate it.
+>> > So you can not just set ACCESS_PLATFORM for everyone.
+>> > Is that the issue here?
+>>
+>> Yes, that is one half of the issue. The other is that even if hosts
+>> didn't fail, existing legacy guests wouldn't "take the initiative" of
+>> not negotiating ACCESS_PLATFORM to get the improved performance. They'd
+>> have to be modified to do that.
+>
+> So there's a non-encrypted guest, hypervisor wants to set
+> ACCESS_PLATFORM to allow encrypted guests but that will slow down legacy
+> guests since their vIOMMU emulation is very slow.
 
->     Andrew
+Yes.
+
+> So enabling support for encryption slows down non-encrypted guests. Not
+> great but not the end of the world, considering even older guests that
+> don't support ACCESS_PLATFORM are completely broken and you do not seem
+> to be too worried by that.
+
+Well, I guess that would be the third half of the issue. :-)
+
+> For future non-encrypted guests, bypassing the emulated IOMMU for when
+> that emulated IOMMU is very slow might be solvable in some other way,
+> e.g. with virtio-iommu. Which reminds me, could you look at
+> virtio-iommu as a solution for some of the issues?
+> Review of that patchset from that POV would be appreciated.
+
+Yes, I will have a look. As you mentioned already, virtio-iommu doesn't
+define a way to request iommu bypass for a device so that would have to
+be added.
+
+Though to be honest in practice I don't think such a feature in
+virtio-iommu would make things easier for us, at least in the short
+term. It would take the same effort to define a powerpc-specific
+hypercall to accomplish the same thing (easier, in fact since we
+wouldn't have to implement the rest of virtio-iommu). In fact, there
+already is such hypercall, but it is only defined for VIO devices
+(RTAS_IBM_SET_TCE_BYPASS in QEMU). We would have to make it work on
+virtio devices as well.
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
