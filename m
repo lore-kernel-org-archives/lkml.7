@@ -2,182 +2,123 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE658C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D559FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD03208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50DB2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:59:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jTE1IRCS"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TMVBPPzj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfDZP7A (ORCPT
+        id S1726974AbfDZP7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:59:00 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:1645 "EHLO pegase1.c-s.fr"
+        Fri, 26 Apr 2019 11:59:06 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:58303 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbfDZP6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:58:04 -0400
+        id S1726176AbfDZP6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:58:01 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44rJc91x3Qz9v0yS;
-        Fri, 26 Apr 2019 17:58:01 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 44rJc53SbZz9v0yN;
+        Fri, 26 Apr 2019 17:57:57 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=jTE1IRCS; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=TMVBPPzj; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 9oIV4NkfemJi; Fri, 26 Apr 2019 17:58:01 +0200 (CEST)
+        with ESMTP id JDtwAN5XxmpI; Fri, 26 Apr 2019 17:57:57 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44rJc90vL1z9v0yM;
-        Fri, 26 Apr 2019 17:58:01 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44rJc52P1Gz9v0yM;
+        Fri, 26 Apr 2019 17:57:57 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556294281; bh=3DWGS9kMt63W7GvktUW2iENPZqw4tVdX6j0rhiOzvIo=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=jTE1IRCShE3m7t04jgd6gFeGMsk80kMzyf524fmZ9myY1iQpcqKmaL8CFUkiZyRBN
-         iiXKnBs62jSc4bHvPyo8FrDlu9IcMWRHvp+rZHYcWuq3YXzxoQpkmdueNRJG8eOctB
-         ZXYmrbRSv2C5P6tN8eL/K5go88x0OPx+lxdOkJYY=
+        t=1556294277; bh=1+acrHFJLr9UrRjdl8XyLYhyxj6dEcynOoW4q8cZozM=;
+        h=From:Subject:To:Cc:Date:From;
+        b=TMVBPPzjmehsmCf/jqqhT66Y/Je04iwlu3YCvHHpUrpPovp1HiOxru8Maz/QSaFHN
+         tGHUnXqoI71gRDt2ZRBEJXh7nzgNpdorKhUGdD5xki341r8sSyXWCJXQFT3cAhQG70
+         v4BVt3MANoOseKrEFgQeY3btf3kbFWJiloboVa00=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BBB028B94A;
-        Fri, 26 Apr 2019 17:58:02 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DCA4B8B94A;
+        Fri, 26 Apr 2019 17:57:58 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id YbZ5QGnrHNpt; Fri, 26 Apr 2019 17:58:02 +0200 (CEST)
+        with ESMTP id W7R2WclulTzX; Fri, 26 Apr 2019 17:57:58 +0200 (CEST)
 Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 98A7D8B82F;
-        Fri, 26 Apr 2019 17:58:02 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AF1A88B82F;
+        Fri, 26 Apr 2019 17:57:58 +0200 (CEST)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 866C5666FE; Fri, 26 Apr 2019 15:58:02 +0000 (UTC)
-Message-Id: <4f8ba02f8fbd355a140b5c33c8186e2c037a45a1.1556293738.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1556293738.git.christophe.leroy@c-s.fr>
-References: <cover.1556293738.git.christophe.leroy@c-s.fr>
+        id 75EC6666FE; Fri, 26 Apr 2019 15:57:58 +0000 (UTC)
+Message-Id: <cover.1556293738.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 04/15] powerpc/mm: move pgtable_t in asm/mmu.h
+Subject: [PATCH v2 00/15] Refactor pgalloc stuff
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 26 Apr 2019 15:58:02 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 15:57:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pgtable_t is now identical for all subarches, move it to the
-top level asm/mmu.h
+This series converts book3e64 to pte_fragment and refactor
+things that are common among subarches.
 
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/include/asm/book3s/32/mmu-hash.h | 4 ----
- arch/powerpc/include/asm/book3s/64/mmu.h      | 8 --------
- arch/powerpc/include/asm/mmu.h                | 3 +++
- arch/powerpc/include/asm/nohash/32/mmu.h      | 6 ------
- arch/powerpc/include/asm/nohash/64/mmu.h      | 6 ------
- 5 files changed, 3 insertions(+), 24 deletions(-)
+Changes in v2:
+- Rebased on latest merge branch (b251649c77625b7ad4430e518dc0f1608be9edf4)
+- Resolved conflicts, especially due to the addition of MAX_PHYSMEM_BITS in
+asm/nohash/64/mmu.h ==> moved it to asm/nohash/mmu-book3e.h
+- compilation test at http://kisskb.ellerman.id.au/kisskb/head/cf0b6c1ff5ca934bbe02f88b1b1ba533b386225e/
 
-diff --git a/arch/powerpc/include/asm/book3s/32/mmu-hash.h b/arch/powerpc/include/asm/book3s/32/mmu-hash.h
-index f9eae105a9f4..2e277ca0170f 100644
---- a/arch/powerpc/include/asm/book3s/32/mmu-hash.h
-+++ b/arch/powerpc/include/asm/book3s/32/mmu-hash.h
-@@ -10,8 +10,6 @@
-  * BATs
-  */
- 
--#include <asm/page.h>
--
- /* Block size masks */
- #define BL_128K	0x000
- #define BL_256K 0x001
-@@ -49,8 +47,6 @@ struct ppc_bat {
- 	u32 batu;
- 	u32 batl;
- };
--
--typedef pte_t *pgtable_t;
- #endif /* !__ASSEMBLY__ */
- 
- /*
-diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/powerpc/include/asm/book3s/64/mmu.h
-index 230a9dec7677..d4a94c2b29f2 100644
---- a/arch/powerpc/include/asm/book3s/64/mmu.h
-+++ b/arch/powerpc/include/asm/book3s/64/mmu.h
-@@ -25,14 +25,6 @@ struct mmu_psize_def {
- 	};
- };
- extern struct mmu_psize_def mmu_psize_defs[MMU_PAGE_COUNT];
--
--/*
-- * For BOOK3s 64 with 4k and 64K linux page size
-- * we want to use pointers, because the page table
-- * actually store pfn
-- */
--typedef pte_t *pgtable_t;
--
- #endif /* __ASSEMBLY__ */
- 
- /*
-diff --git a/arch/powerpc/include/asm/mmu.h b/arch/powerpc/include/asm/mmu.h
-index d86c5641bd97..ba94ce8c22d7 100644
---- a/arch/powerpc/include/asm/mmu.h
-+++ b/arch/powerpc/include/asm/mmu.h
-@@ -129,6 +129,9 @@
- #ifndef __ASSEMBLY__
- #include <linux/bug.h>
- #include <asm/cputable.h>
-+#include <asm/page.h>
-+
-+typedef pte_t *pgtable_t;
- 
- #ifdef CONFIG_PPC_FSL_BOOK3E
- #include <asm/percpu.h>
-diff --git a/arch/powerpc/include/asm/nohash/32/mmu.h b/arch/powerpc/include/asm/nohash/32/mmu.h
-index 7d94a36d57d2..af0e8b54876a 100644
---- a/arch/powerpc/include/asm/nohash/32/mmu.h
-+++ b/arch/powerpc/include/asm/nohash/32/mmu.h
-@@ -2,8 +2,6 @@
- #ifndef _ASM_POWERPC_NOHASH_32_MMU_H_
- #define _ASM_POWERPC_NOHASH_32_MMU_H_
- 
--#include <asm/page.h>
--
- #if defined(CONFIG_40x)
- /* 40x-style software loaded TLB */
- #include <asm/nohash/32/mmu-40x.h>
-@@ -18,8 +16,4 @@
- #include <asm/nohash/32/mmu-8xx.h>
- #endif
- 
--#ifndef __ASSEMBLY__
--typedef pte_t *pgtable_t;
--#endif
--
- #endif /* _ASM_POWERPC_NOHASH_32_MMU_H_ */
-diff --git a/arch/powerpc/include/asm/nohash/64/mmu.h b/arch/powerpc/include/asm/nohash/64/mmu.h
-index 26e05ce8f5aa..e490ecdac012 100644
---- a/arch/powerpc/include/asm/nohash/64/mmu.h
-+++ b/arch/powerpc/include/asm/nohash/64/mmu.h
-@@ -4,13 +4,7 @@
- 
- #define MAX_PHYSMEM_BITS        44
- 
--#include <asm/page.h>
--
- /* Freescale Book-E software loaded TLB or Book-3e (ISA 2.06+) MMU */
- #include <asm/nohash/mmu-book3e.h>
- 
--#ifndef __ASSEMBLY__
--typedef pte_t *pgtable_t;
--#endif
--
- #endif /* _ASM_POWERPC_NOHASH_64_MMU_H_ */
+Christophe Leroy (15):
+  powerpc/mm: drop __bad_pte()
+  powerpc/mm: define __pud_free_tlb() at all time on nohash/64
+  powerpc/mm: convert Book3E 64 to pte_fragment
+  powerpc/mm: move pgtable_t in asm/mmu.h
+  powerpc/mm: get rid of nohash/32/mmu.h and nohash/64/mmu.h
+  powerpc/Kconfig: select PPC_MM_SLICES from subarch type
+  powerpc/book3e: move early_alloc_pgtable() to init section
+  powerpc/mm: don't use pte_alloc_kernel() until slab is available on
+    PPC32
+  powerpc/mm: inline pte_alloc_one_kernel() and pte_alloc_one() on PPC32
+  powerpc/mm: refactor pte_alloc_one() and pte_free() families
+    definition.
+  powerpc/mm: refactor definition of pgtable_cache[]
+  powerpc/mm: Only keep one version of pmd_populate() functions on
+    nohash/32
+  powerpc/mm: refactor pgtable freeing functions on nohash
+  powerpc/mm: refactor pmd_pgtable()
+  powerpc/mm: refactor pgd_alloc() and pgd_free() on nohash
+
+ arch/powerpc/include/asm/book3s/32/mmu-hash.h |   4 -
+ arch/powerpc/include/asm/book3s/32/pgalloc.h  |  41 ---------
+ arch/powerpc/include/asm/book3s/64/mmu.h      |   8 --
+ arch/powerpc/include/asm/book3s/64/pgalloc.h  |  49 ----------
+ arch/powerpc/include/asm/mmu.h                |   3 +
+ arch/powerpc/include/asm/mmu_context.h        |   6 --
+ arch/powerpc/include/asm/nohash/32/mmu.h      |  25 ------
+ arch/powerpc/include/asm/nohash/32/pgalloc.h  | 123 ++------------------------
+ arch/powerpc/include/asm/nohash/64/mmu.h      |  14 ---
+ arch/powerpc/include/asm/nohash/64/pgalloc.h  | 117 +-----------------------
+ arch/powerpc/include/asm/nohash/mmu-book3e.h  |   2 +
+ arch/powerpc/include/asm/nohash/mmu.h         |  16 +++-
+ arch/powerpc/include/asm/nohash/pgalloc.h     |  56 ++++++++++++
+ arch/powerpc/include/asm/pgalloc.h            |  51 +++++++++++
+ arch/powerpc/mm/Makefile                      |   4 +-
+ arch/powerpc/mm/mmu_context.c                 |   2 +-
+ arch/powerpc/mm/pgtable-book3e.c              |   4 +-
+ arch/powerpc/mm/pgtable_32.c                  |  42 +++++----
+ arch/powerpc/platforms/Kconfig.cputype        |   4 +-
+ 19 files changed, 167 insertions(+), 404 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/nohash/32/mmu.h
+ delete mode 100644 arch/powerpc/include/asm/nohash/64/mmu.h
+
 -- 
 2.13.3
 
