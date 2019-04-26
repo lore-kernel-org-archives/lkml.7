@@ -2,88 +2,105 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FBBC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A28C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BEF8206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61D9206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:47:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uHDrqvgR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfDZHqj (ORCPT
+        id S1726083AbfDZHrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:46:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33312 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfDZHqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:46:37 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 11BC180F83;
-        Fri, 26 Apr 2019 07:46:37 +0000 (UTC)
-Received: from localhost (unknown [10.40.205.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A31D5D71A;
-        Fri, 26 Apr 2019 07:46:34 +0000 (UTC)
+        Fri, 26 Apr 2019 03:47:06 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46466 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725971AbfDZHrE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 03:47:04 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3Q7fqWA006575;
+        Fri, 26 Apr 2019 09:46:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=qG1VfsI3fxdSj6pt9TWh5gXyJBxhTVY7G8wRmG7VLxI=;
+ b=uHDrqvgR2tJiKspUjumvUdrt86Bh1P5O5Nj51TrrlE0VwP+yytnz87AoKyg4kmVZ1mZL
+ SdEfGTHO+tTLSiHSIXtXSfBpzZ+NXSCAbdUE7yZqO8UeisOLXMcDDQG2OyFkLgAjWSiP
+ 7aTHewjXlcnJKVNnvQO1rEFnXoDvxrVZTPRS7GJZUaz9CelGDwonGnoSgWvLa7Q6Pfll
+ jeJ16f+ubsD5ZnZLB7lOi7HQ7wcgKgRaCer0kWJqpq+lK7I+4VLIhTofJAqbQJJvLwx9
+ 8FluNObS9p0Niu1NOXFQOenHE47ogg78Q+LBg8yI9jgeg59vkfLMkciMa+PEwQNW9fgR QA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rytadjmmw-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 26 Apr 2019 09:46:49 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F3A163D;
+        Fri, 26 Apr 2019 07:46:47 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CE7CE130F;
+        Fri, 26 Apr 2019 07:46:47 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 26 Apr
+ 2019 09:46:47 +0200
+Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
+ (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 26 Apr
+ 2019 09:46:47 +0200
+From:   Ludovic Barre <ludovic.Barre@st.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Ludovic Barre <ludovic.barre@st.com>
+Subject: [PATCH V2 0/5] mmc: mmci: add busy detect for stm32 sdmmc variant
 Date:   Fri, 26 Apr 2019 09:46:33 +0200
-From:   Stanislaw Gruszka <sgruszka@redhat.com>
-To:     Ryder Lee <ryder.lee@mediatek.com>
-Cc:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Felix Fietkau <nbd@nbd.name>, Roy Luo <royluo@google.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mt76: fix endianness sparse warnings
-Message-ID: <20190426074632.GA3568@redhat.com>
-References: <865a5eb36f295fc81e3dcbe95929dcfce4956897.1556203212.git.ryder.lee@mediatek.com>
+Message-ID: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <865a5eb36f295fc81e3dcbe95929dcfce4956897.1556203212.git.ryder.lee@mediatek.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 26 Apr 2019 07:46:37 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.237]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 10:42:01PM +0800, Ryder Lee wrote:
-> Fix many warnings with incorrect endian assumptions.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  drivers/net/wireless/mediatek/mt76/mt7603/mac.c |  2 +-
->  drivers/net/wireless/mediatek/mt76/mt7615/mac.c | 12 ++++++------
->  2 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-> index 2f2961ee0a92..af5769d05e6f 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-> @@ -627,7 +627,7 @@ mt7603_mac_fill_rx(struct mt7603_dev *dev, struct sk_buff *skb)
->  	status->aggr = unicast &&
->  		       !ieee80211_is_qos_nullfunc(hdr->frame_control);
->  	status->tid = *ieee80211_get_qos_ctl(hdr) & IEEE80211_QOS_CTL_TID_MASK;
-> -	status->seqno = IEEE80211_SEQ_TO_SN(hdr->seq_ctrl);
-> +	status->seqno = IEEE80211_SEQ_TO_SN(__le16_to_cpu(hdr->seq_ctrl));
->  
->  	return 0;
->  }
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-> index 1bf3e7b5f6a7..4b934b0f5a39 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-> @@ -235,7 +235,7 @@ int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
->  	status->aggr = unicast &&
->  		       !ieee80211_is_qos_nullfunc(hdr->frame_control);
->  	status->tid = *ieee80211_get_qos_ctl(hdr) & IEEE80211_QOS_CTL_TID_MASK;
-> -	status->seqno = IEEE80211_SEQ_TO_SN(hdr->seq_ctrl);
-> +	status->seqno = IEEE80211_SEQ_TO_SN(__le16_to_cpu(hdr->seq_ctrl));
+From: Ludovic Barre <ludovic.barre@st.com>
 
-Is there any reason to use underscored version instead of standard le16_to_cpu() ?
+This patch series adds busy detect for stm32 sdmmc variant.
+Some adaptations are required:
+-Avoid to check and poll busy status when is not expected.
+-Clear busy status bit if busy_detect_flag and busy_detect_mask are
+ different.
+-Add hardware busy timeout with MMCIDATATIMER register.
 
-Stanislaw
+V2:
+-mmci_cmd_irq cleanup in separate patch.
+-simplify the busy_detect_flag exclude
+-replace sdmmc specific comment in
+"mmc: mmci: avoid fake busy polling in mmci_irq"
+to focus on common behavior
+
+Ludovic Barre (5):
+  mmc: mmci: cleanup mmci_cmd_irq for busy detect feature
+  mmc: mmci: avoid fake busy polling in mmci_irq
+  mmc: mmci: fix clear of busy detect status
+  mmc: mmci: add hardware busy timeout feature
+  mmc: mmci: add busy detect for stm32 sdmmc variant
+
+ drivers/mmc/host/mmci.c | 61 ++++++++++++++++++++++++++++++++++++++-----------
+ drivers/mmc/host/mmci.h |  3 +++
+ 2 files changed, 51 insertions(+), 13 deletions(-)
+
+-- 
+2.7.4
+
