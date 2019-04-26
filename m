@@ -2,172 +2,118 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE29C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3AEC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB592084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3AB02077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfDZOqM (ORCPT
+        id S1726703AbfDZOqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:46:12 -0400
-Received: from foss.arm.com ([217.140.101.70]:43372 "EHLO foss.arm.com"
+        Fri, 26 Apr 2019 10:46:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:41437 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbfDZOqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:46:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FFEE80D;
-        Fri, 26 Apr 2019 07:46:11 -0700 (PDT)
-Received: from [10.1.194.42] (e108754-lin.cambridge.arm.com [10.1.194.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F34413F5C1;
-        Fri, 26 Apr 2019 07:46:08 -0700 (PDT)
-Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, rui.zhang@intel.com
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
- <b777c6da-0fe2-96d2-240d-96b065a3f18d@arm.com> <5CC2F07D.1080603@linaro.org>
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-Message-ID: <ba5f4033-2b8f-250c-4933-dfe6273e0908@arm.com>
-Date:   Fri, 26 Apr 2019 15:46:08 +0100
+        id S1726039AbfDZOqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 10:46:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 07:46:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,397,1549958400"; 
+   d="scan'208";a="165331429"
+Received: from gbotts-mobl.amr.corp.intel.com (HELO [10.254.86.96]) ([10.254.86.96])
+  by fmsmga004.fm.intel.com with ESMTP; 26 Apr 2019 07:46:19 -0700
+Subject: Re: [RFC PATCH 2/7] x86/sci: add core implementation for system call
+ isolation
+To:     Mike Rapoport <rppt@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com>
+ <1556228754-12996-3-git-send-email-rppt@linux.ibm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <627d9321-466f-c4ed-c658-6b8567648dc6@intel.com>
+Date:   Fri, 26 Apr 2019 07:46:18 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <5CC2F07D.1080603@linaro.org>
+In-Reply-To: <1556228754-12996-3-git-send-email-rppt@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thara,
+On 4/25/19 2:45 PM, Mike Rapoport wrote:
+> After the isolated system call finishes, the mappings created during its
+> execution are cleared.
 
->>> Regarding testing, basic build, boot and sanity testing have been
->>> performed on hikey960 mainline kernel with debian file system.
->>> Further, aobench (An occlusion renderer for benchmarking realworld
->>> floating point performance), dhrystone and hackbench test have been
->>> run with the thermal pressure algorithm. During testing, due to
->>> constraints of step wise governor in dealing with big little systems,
->>> cpu cooling was disabled on little core, the idea being that
->>> big core will heat up and cpu cooling device will throttle the
->>> frequency of the big cores there by limiting the maximum available
->>> capacity and the scheduler will spread out tasks to little cores as well.
->>> Finally, this patch series has been boot tested on db410C running v5.1-rc4
->>> kernel.
->>>
->>
->> Did you try using IPA as well? It is better equipped to deal with
->> big-LITTLE systems and it's more probable IPA will be used for these
->> systems, where your solution will have the biggest impact as well.
->> The difference will be that you'll have both the big cluster and the
->> LITTLE cluster capped in different proportions depending on their
->> utilization and their efficiency.
-> 
-> No. I did not use IPA simply because it was not enabled in mainline. I
-> agree it is better equipped  to deal with big-little systems. The idea
-> to remove cpu cooling on little cluster was to in some (not the
-> cleanest) manner to mimic this. But I agree that IPA testing is possibly
-> the next step.Any help in this regard is appreciated.
-> 
+Yikes.  I guess that stops someone from calling write() a bunch of times
+on every filesystem using every block device driver and all the DM code
+to get a lot of code/data faulted in.  But, it also means not even
+long-running processes will ever have a chance of behaving anything
+close to normally.
 
-I see CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y in the defconfig for arm64:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/configs/defconfig?h=v5.1-rc6#n413
-
-You can enable the use of it or make it default in the defconfig.
-
-Also, Hikey960 has the needed setup in DT:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/hisilicon/hi3660.dtsi?h=v5.1-rc6#n1093
-
-This should work fine.
-
->>
->>> During the course of development various methods of capturing
->>> and reflecting thermal pressure were implemented.
->>>
->>> The first method to be evaluated was to convert the
->>> capped max frequency into capacity and have the scheduler use the
->>> instantaneous value when updating cpu_capacity.
->>> This method is referenced as "Instantaneous Thermal Pressure" in the
->>> test results below. 
->>>
->>> The next two methods employs different methods of averaging the
->>> thermal pressure before applying it when updating cpu_capacity.
->>> The first of these methods re-used the PELT algorithm already present
->>> in the kernel that does the averaging of rt and dl load and utilization.
->>> This method is referenced as "Thermal Pressure Averaging using PELT fmwk"
->>> in the test results below.
->>>
->>> The final method employs an averaging algorithm that collects and
->>> decays thermal pressure based on the decay period. In this method,
->>> the decay period is configurable. This method is referenced as
->>> "Thermal Pressure Averaging non-PELT Algo. Decay : XXX ms" in the
->>> test results below.
->>>
->>> The test results below shows 3-5% improvement in performance when
->>> using the third solution compared to the default system today where
->>> scheduler is unware of cpu capacity limitations due to thermal events.
->>>
->>
->> Did you happen to record the amount of capping imposed on the big cores
->> when these results were obtained? Did you find scenarios where the
->> capacity of the bigs resulted in being lower than the capacity of the
->> LITTLEs (capacity inversion)?
->> This is one case where we'll see a big impact in considering thermal
->> pressure.
-> 
-> I think I saw capacity inversion in some scenarios. I did not
-> particularly capture them.
-> 
-
-It would be good to observe this and possibly correlate the amount of
-capping with resulting behavior and performance numbers. This would
-give more confidence in the testing coverage.
-
-You can create a specific testcase for capacity inversion by only
-capping the big CPUs, as you've done for these tests, and by running
-sysbench/dhrystone for example with at least nr_big_cpus tasks.
-
-This assumes that the bigs fully utilized would generate enough heat and
-would be capped enough to achieve a capacity lower than the littles,
-which on Hikey960 I don't doubt it can be obtained.
-
->>
->> Also, given that these are more or less sustained workloads, I'm
->> wondering if there is any effect on workloads running on an uncapped
->> system following capping. I would image such a test being composed of a
->> single threaded period (no capping) followed by a multi-threaded period
->> (with capping), continued in a loop. It might be interesting to have
->> something like this as well, as part of your test coverage
-> 
-> I do not understand this. There is either capping for a workload or no
-> capping. There is no sysctl entry to turn on or off capping.
-> 
-
-I was thinking of this as a second hand effect. If you have only one big
-CPU even fully utilized, with the others quiet, you might not see any
-capping. But when you have a multi-threaded workload, with all or at
-least the bigs at a high OPP, the platform will definitely overheat and
-there will be capping. 
-
-Thanks,
-Ionela.
-
-> Regards
-> Thara
->>
->>
->> Thanks,
->> Ionela.
->>
-> 
-> 
+Is this something you think can be rectified or is there something
+fundamental that would keep SCI page tables from being cached across
+different invocations of the same syscall?
