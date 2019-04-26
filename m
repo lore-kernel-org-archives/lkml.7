@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2D6C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 002F2C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE602087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8B7208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bic4fgDh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4m/oBqS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfD0GnN (ORCPT
+        id S1726506AbfD0GnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:43:13 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33561 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfD0GnI (ORCPT
+        Sat, 27 Apr 2019 02:43:18 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37994 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfD0GnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:43:08 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y3so1735493plp.0;
-        Fri, 26 Apr 2019 23:43:07 -0700 (PDT)
+        Sat, 27 Apr 2019 02:43:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id j26so2630474pgl.5;
+        Fri, 26 Apr 2019 23:43:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fM02CdP3EHsEznyJ/zI3DVkvywjW2Y0W5QE/m/kGqS8=;
-        b=Bic4fgDhw/zNUsH9AvCevjRRuqcBr7SeEwPi/mNBJHeVn3HWTtTQy0lqVBwB+uwJON
-         033sEQUJVf4JsE8w16M+5haGmPR56gXJit7dknF2eDmFepylyOdGJlykH0b1NW+PihEa
-         WnVuUa5XLxRLLr06QvgHjZbZbm6umZ2Z7Tk21XFYdu0XsSy3LVhSR76ovrEOyDS4RqXk
-         ethcFURK2XAu1qKbwE8JJm/EyYlwhoXg4rc/DRAR47BR1Lx07vr+RFt4HZ8bItbsDTBV
-         RxWJwnwgvwuNGmSEvPkHWRxMq59R7mUfHELo2gZLY6QtoYxwGmeesmwvk7AesQMYnBzh
-         N2AQ==
+        bh=ZPFv6m+iH8EeSMp9wFrys9PGKYZJjpGjv1/CHTAfS5M=;
+        b=p4m/oBqSG6KLPf+AqtV3OdSRGsnlwAcOGjTsQ1oMvTgRjsaBLxL2oqlvHbnUOD7DhC
+         llMjaQPUwxdsPmzYP1Xk4zg6iskJI0V3bcjSumFgJeyn32g+AQyeuwbnaKNcunnSGV+X
+         jFrW4YEgTD0CVzhuajD3RiuuFodFK5pQf/h/OASbcijhEUNJeR4GOVIaxGkMApARhJuz
+         heZkZxY0ibC3WGtyGA9X5OpN8Qanr6vPnIs32DNHYf97D5Hp43Bu1zzc+18KCpllyi2H
+         mACL4axXMqmHb8f85O6m0qGesKiJyaJ8E2Q7anmXlyeLMnsiSJBU8Ye4Tm8bsUaDuaL0
+         //Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=fM02CdP3EHsEznyJ/zI3DVkvywjW2Y0W5QE/m/kGqS8=;
-        b=e5nJILoW4Yh5mRcRPAYkwBgBwgQE8F8ZWff9Qy3k0Td1uCsVNrv9SnjrpjGTfBK04c
-         lojNPuNwOaRc/xPUHR5snNQCuXJ+ZHMaauaG4CBjZO03VGqBvTKLBnsU+R87m/c9+ciR
-         X9N37emomnkAnctBGm1TRfAkMIHE5icGFjhZvmxGESLtvPhe0Z/ziAuK+fADrIsiOjBg
-         NWXGMkUGfF5g4DuW5ookEz9wR8EsGkqrJsm4rdV+b4OILWeWLfqWDgqK8r8ezRPjkO4u
-         kQW7n4CyRwQFCGaO3fbh5kVbsnmtw7VVxjGQ5zNo2wLuKlGB4s587rXJX33UqWcBmzuC
-         VtgA==
-X-Gm-Message-State: APjAAAVCvWKTlJdMEjjUw6QmRdirFHf4Pfgyv17OXkn2qL3rU4RQZLTO
-        7m+LfOIYaO+twLZnihucWEU=
-X-Google-Smtp-Source: APXvYqxN6NLybNs8lwtcaE7rd9moWK47+PtSS3OruWZmc0YNonCQSY0zJUJKCwxGbV5SIYzeiwOfdw==
-X-Received: by 2002:a17:902:d83:: with SMTP id 3mr52111624plv.125.1556347387028;
-        Fri, 26 Apr 2019 23:43:07 -0700 (PDT)
+        bh=ZPFv6m+iH8EeSMp9wFrys9PGKYZJjpGjv1/CHTAfS5M=;
+        b=HrUWTORv8RqtCriOxgaZJk70YjQUI58MWa5/IGvSPXHFiNnvsF96X5VnLqZPpmgldO
+         VjNgu6xpQxrpv00FIIkFw//R2vpNDMbXHLoF48ajGpv/tcHOCsQwSVTsFvtFt6gIyoLT
+         Rb9JYWbUJ89M/gL+RoRemuJHKx4gWxHSzF+apjAPWjm70AW+VUe7oY6OCUe7BuU7agT6
+         SROlcDBa8sg8D8/1O2rR8kzWPiXLcsKDIaeyjGoRyTTQPXKvcvFZd0kRASdq8d/dsYKo
+         tVIwSBD7Qoi6v7XAhDe9gucBI9dw6igBI5hL14BKTgAkxdeao+L2jnz9079WsWYiP5LL
+         bw/g==
+X-Gm-Message-State: APjAAAUMOG8BBtRB41oJaGREU5r/W+e7RUyWVGqpr3XgQFO4x+cEW/KV
+        aj5nvw8ssPTjH2cKY9TGiQI=
+X-Google-Smtp-Source: APXvYqyVtXk5iHrU+w85KghleSi1h9IdIHLthG9HVX8BbnAS3s4DC3QPi8s9GkBRV20LWDs74Eyk7w==
+X-Received: by 2002:a63:1359:: with SMTP id 25mr46901248pgt.92.1556347393845;
+        Fri, 26 Apr 2019 23:43:13 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.05
+        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 23:43:06 -0700 (PDT)
+        Fri, 26 Apr 2019 23:43:13 -0700 (PDT)
 From:   nadav.amit@gmail.com
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -71,12 +71,12 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
         will.deacon@arm.com, ard.biesheuvel@linaro.org,
         kristen@linux.intel.com, deneen.t.dock@intel.com,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Nadav Amit <namit@vmware.com>,
         Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Nadav Amit <namit@vmware.com>
-Subject: [PATCH v6 03/24] x86/mm: Introduce temporary mm structs
-Date:   Fri, 26 Apr 2019 16:22:42 -0700
-Message-Id: <20190426232303.28381-4-nadav.amit@gmail.com>
+        Dave Hansen <dave.hansen@intel.com>
+Subject: [PATCH v6 07/24] x86/alternative: Initialize temporary mm for patching
+Date:   Fri, 26 Apr 2019 16:22:46 -0700
+Message-Id: <20190426232303.28381-8-nadav.amit@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426232303.28381-1-nadav.amit@gmail.com>
 References: <20190426232303.28381-1-nadav.amit@gmail.com>
@@ -85,82 +85,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Nadav Amit <namit@vmware.com>
 
-Using a dedicated page-table for temporary PTEs prevents other cores
-from using - even speculatively - these PTEs, thereby providing two
-benefits:
+To prevent improper use of the PTEs that are used for text patching, the
+next patches will use a temporary mm struct. Initailize it by copying
+the init mm.
 
-(1) Security hardening: an attacker that gains kernel memory writing
-abilities cannot easily overwrite sensitive data.
+The address that will be used for patching is taken from the lower area
+that is usually used for the task memory. Doing so prevents the need to
+frequently synchronize the temporary-mm (e.g., when BPF programs are
+installed), since different PGDs are used for the task memory.
 
-(2) Avoiding TLB shootdowns: the PTEs do not need to be flushed in
-remote page-tables.
-
-To do so a temporary mm_struct can be used. Mappings which are private
-for this mm can be set in the userspace part of the address-space.
-During the whole time in which the temporary mm is loaded, interrupts
-must be disabled.
-
-The first use-case for temporary mm struct, which will follow, is for
-poking the kernel text.
-
-[ Commit message was written by Nadav Amit ]
+Finally, randomize the address of the PTEs to harden against exploits
+that use these PTEs.
 
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Dave Hansen <dave.hansen@intel.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/include/asm/mmu_context.h | 33 ++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/x86/include/asm/pgtable.h       |  3 +++
+ arch/x86/include/asm/text-patching.h |  2 ++
+ arch/x86/kernel/alternative.c        |  3 +++
+ arch/x86/mm/init.c                   | 37 ++++++++++++++++++++++++++++
+ init/main.c                          |  3 +++
+ 5 files changed, 48 insertions(+)
 
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 19d18fae6ec6..24dc3b810970 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -356,4 +356,37 @@ static inline unsigned long __get_current_cr3_fast(void)
- 	return cr3;
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 5cfbbb6d458d..6b6bfdfe83aa 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -1038,6 +1038,9 @@ static inline void __meminit init_trampoline_default(void)
+ 	/* Default trampoline pgd value */
+ 	trampoline_pgd_entry = init_top_pgt[pgd_index(__PAGE_OFFSET)];
+ }
++
++void __init poking_init(void);
++
+ # ifdef CONFIG_RANDOMIZE_MEMORY
+ void __meminit init_trampoline(void);
+ # else
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index f8fc8e86cf01..a75eed841eed 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -39,5 +39,7 @@ extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
+ extern int poke_int3_handler(struct pt_regs *regs);
+ extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
+ extern int after_bootmem;
++extern __ro_after_init struct mm_struct *poking_mm;
++extern __ro_after_init unsigned long poking_addr;
+ 
+ #endif /* _ASM_X86_TEXT_PATCHING_H */
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 0a814d73547a..11d5c710a94f 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -679,6 +679,9 @@ void *__init_or_module text_poke_early(void *addr, const void *opcode,
+ 	return addr;
  }
  
-+typedef struct {
-+	struct mm_struct *mm;
-+} temp_mm_state_t;
++__ro_after_init struct mm_struct *poking_mm;
++__ro_after_init unsigned long poking_addr;
 +
+ static void *__text_poke(void *addr, const void *opcode, size_t len)
+ {
+ 	unsigned long flags;
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index f905a2371080..c25bb00955db 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -22,6 +22,7 @@
+ #include <asm/hypervisor.h>
+ #include <asm/cpufeature.h>
+ #include <asm/pti.h>
++#include <asm/text-patching.h>
+ 
+ /*
+  * We need to define the tracepoints somewhere, and tlb.c
+@@ -700,6 +701,42 @@ void __init init_mem_mapping(void)
+ 	early_memtest(0, max_pfn_mapped << PAGE_SHIFT);
+ }
+ 
 +/*
-+ * Using a temporary mm allows to set temporary mappings that are not accessible
-+ * by other CPUs. Such mappings are needed to perform sensitive memory writes
-+ * that override the kernel memory protections (e.g., W^X), without exposing the
-+ * temporary page-table mappings that are required for these write operations to
-+ * other CPUs. Using a temporary mm also allows to avoid TLB shootdowns when the
-+ * mapping is torn down.
-+ *
-+ * Context: The temporary mm needs to be used exclusively by a single core. To
-+ *          harden security IRQs must be disabled while the temporary mm is
-+ *          loaded, thereby preventing interrupt handler bugs from overriding
-+ *          the kernel memory protection.
++ * Initialize an mm_struct to be used during poking and a pointer to be used
++ * during patching.
 + */
-+static inline temp_mm_state_t use_temporary_mm(struct mm_struct *mm)
++void __init poking_init(void)
 +{
-+	temp_mm_state_t temp_state;
++	spinlock_t *ptl;
++	pte_t *ptep;
 +
-+	lockdep_assert_irqs_disabled();
-+	temp_state.mm = this_cpu_read(cpu_tlbstate.loaded_mm);
-+	switch_mm_irqs_off(NULL, mm, current);
-+	return temp_state;
++	pr_err("%s\n", __func__);
++	poking_mm = copy_init_mm();
++	BUG_ON(!poking_mm);
++
++	/*
++	 * Randomize the poking address, but make sure that the following page
++	 * will be mapped at the same PMD. We need 2 pages, so find space for 3,
++	 * and adjust the address if the PMD ends after the first one.
++	 */
++	poking_addr = TASK_UNMAPPED_BASE;
++	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
++		poking_addr += (kaslr_get_random_long("Poking") & PAGE_MASK) %
++			(TASK_SIZE - TASK_UNMAPPED_BASE - 3 * PAGE_SIZE);
++
++	if (((poking_addr + PAGE_SIZE) & ~PMD_MASK) == 0)
++		poking_addr += PAGE_SIZE;
++
++	/*
++	 * We need to trigger the allocation of the page-tables that will be
++	 * needed for poking now. Later, poking may be performed in an atomic
++	 * section, which might cause allocation to fail.
++	 */
++	ptep = get_locked_pte(poking_mm, poking_addr, &ptl);
++	BUG_ON(!ptep);
++	pte_unmap_unlock(ptep, ptl);
 +}
 +
-+static inline void unuse_temporary_mm(temp_mm_state_t prev_state)
-+{
-+	lockdep_assert_irqs_disabled();
-+	switch_mm_irqs_off(NULL, prev_state.mm, current);
-+}
+ /*
+  * devmem_is_allowed() checks to see if /dev/mem access to a certain address
+  * is valid. The argument is a physical page number.
+diff --git a/init/main.c b/init/main.c
+index 598e278b46f7..949eed8015ec 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -504,6 +504,8 @@ void __init __weak thread_stack_cache_init(void)
+ 
+ void __init __weak mem_encrypt_init(void) { }
+ 
++void __init __weak poking_init(void) { }
 +
- #endif /* _ASM_X86_MMU_CONTEXT_H */
+ bool initcall_debug;
+ core_param(initcall_debug, initcall_debug, bool, 0644);
+ 
+@@ -737,6 +739,7 @@ asmlinkage __visible void __init start_kernel(void)
+ 	taskstats_init_early();
+ 	delayacct_init();
+ 
++	poking_init();
+ 	check_bugs();
+ 
+ 	acpi_subsystem_init();
 -- 
 2.17.1
 
