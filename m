@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7452DC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67555C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4441A20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F51520B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556303345;
-	bh=Tmqzy32XGQfb99U/hUBF1rbLUPylqVacMlS2Hrby3j4=;
+	s=default; t=1556303347;
+	bh=qPguXvk3S40sXOgTeAXxt29eR11ACNXOhNQRyIoZS7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qx2+YXElYIs/rRQc4Pa73sxsb6yjBm8QcVEvrjec9hz7yochWuEImhLQAZM7csnnK
-	 H16dL5W4U4HQahgH4kaNkDzc62Hv8lwd8sUsdBC+l9XBYUn8t4OWA5M6RThNmeqJs7
-	 x1w0ajWZx7kgqwktTKuVv4x4u6Pwk3qEydZnaEag=
+	b=fJwknDy5dZ34fAWj7a6YqpTjDmXpRi/cohf+0OL57UaTLHUdq88ZMiXfqTl/Um7FX
+	 bTk2DfaBpiPzecmha9jMdpQb2g5tsfPNaOxeQ/POzKxU4x341umonaRnJKn8bpOtF5
+	 ZaUMrgBD/GcW/+CfIhwhHz3/IewXPYOvUeKT+3w4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfDZS26 (ORCPT
+        id S1726481AbfDZS3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 14:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46928 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 14:29:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbfDZS24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 14:28:56 -0400
+        id S1726409AbfDZS26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 14:28:58 -0400
 Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8B1920B7C;
-        Fri, 26 Apr 2019 18:28:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE81A21655;
+        Fri, 26 Apr 2019 18:28:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556303335;
-        bh=Tmqzy32XGQfb99U/hUBF1rbLUPylqVacMlS2Hrby3j4=;
+        s=default; t=1556303337;
+        bh=qPguXvk3S40sXOgTeAXxt29eR11ACNXOhNQRyIoZS7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WORJQH/P5NuYNOEARycZEMFB2PNYuFM/fkEPqczwA2glTHwA6o2J/VEHRLX/PEOIr
-         XjBtBkMoanEhgfYC3+yliQE1RiOIBGYGCkkzPwmYaXYzAtf0zBUbkxbyBEGzQ3Y4tX
-         FUIMitHRvjtJOd4bktPvQ4/aUmVB9V/ORdz9FtKE=
+        b=iBRasJCyL4p+vhW0pIUG8ly+IDXVGFUojd110zzACOkg6/Acop5Qe3hxZWPV7bLC6
+         Hj9KFqPyudUOMKklwD6GVJfukmZdaqe5Y0j0Qh0GxIvheRg65t1Dmo3Wrbzutqs0eC
+         RM5db/pAiEzJDatZjRg0zNczopQ6Fr60Fbig2lFI=
 From:   Jeff Layton <jlayton@kernel.org>
 To:     viro@zeniv.linux.org.uk
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         miklos@szeredi.hu, gregkh@linuxfoundation.org, tj@kernel.org,
         jack@suse.cz, amir73il@gmail.com, paul@paul-moore.com,
         eparis@redhat.com, linux-audit@redhat.com, rafael@kernel.org
-Subject: [PATCH 3/5] fsnotify: have fsnotify() take a qstr instead of a string
-Date:   Fri, 26 Apr 2019 14:28:45 -0400
-Message-Id: <20190426182847.25088-4-jlayton@kernel.org>
+Subject: [PATCH 5/5] audit: fix audit_compare_dname_path to take a qstr
+Date:   Fri, 26 Apr 2019 14:28:47 -0400
+Message-Id: <20190426182847.25088-6-jlayton@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190426182847.25088-1-jlayton@kernel.org>
 References: <20190426182847.25088-1-jlayton@kernel.org>
@@ -57,147 +57,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This means that kernfs_notify_workfn has to grow a strlen as well.
+...and eliminate its strlen call.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/kernfs/file.c                 |  6 ++++--
- fs/notify/fsnotify.c             |  8 ++++----
- include/linux/fsnotify.h         | 10 +++++-----
- include/linux/fsnotify_backend.h |  4 ++--
- 4 files changed, 15 insertions(+), 13 deletions(-)
+ kernel/audit.h          | 3 ++-
+ kernel/audit_fsnotify.c | 2 +-
+ kernel/audit_watch.c    | 6 +++---
+ kernel/auditfilter.c    | 7 ++++---
+ kernel/auditsc.c        | 7 +++----
+ 5 files changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
-index ae948aaa4c53..a43283c515f4 100644
---- a/fs/kernfs/file.c
-+++ b/fs/kernfs/file.c
-@@ -885,6 +885,8 @@ static void kernfs_notify_workfn(struct work_struct *work)
- 	list_for_each_entry(info, &kernfs_root(kn)->supers, node) {
- 		struct kernfs_node *parent;
- 		struct inode *inode;
-+		const struct qstr name = { .name = kn->name,
-+					   .len  = strlen(kn->name) };
- 
- 		/*
- 		 * We want fsnotify_modify() on @kn but as the
-@@ -903,7 +905,7 @@ static void kernfs_notify_workfn(struct work_struct *work)
- 			p_inode = ilookup(info->sb, parent->id.ino);
- 			if (p_inode) {
- 				fsnotify(p_inode, FS_MODIFY | FS_EVENT_ON_CHILD,
--					 inode, FSNOTIFY_EVENT_INODE, kn->name, 0);
-+					 inode, FSNOTIFY_EVENT_INODE, &name, 0);
- 				iput(p_inode);
- 			}
- 
-@@ -911,7 +913,7 @@ static void kernfs_notify_workfn(struct work_struct *work)
- 		}
- 
- 		fsnotify(inode, FS_MODIFY, inode, FSNOTIFY_EVENT_INODE,
--			 kn->name, 0);
-+			 &name, 0);
- 		iput(inode);
+diff --git a/kernel/audit.h b/kernel/audit.h
+index 958d5b8fc1b3..8c581fd38050 100644
+--- a/kernel/audit.h
++++ b/kernel/audit.h
+@@ -231,7 +231,8 @@ extern int audit_comparator(const u32 left, const u32 op, const u32 right);
+ extern int audit_uid_comparator(kuid_t left, u32 op, kuid_t right);
+ extern int audit_gid_comparator(kgid_t left, u32 op, kgid_t right);
+ extern int parent_len(const char *path);
+-extern int audit_compare_dname_path(const char *dname, const char *path, int plen);
++extern int audit_compare_dname_path(const struct qstr *dname, const char *path,
++				    int plen);
+ extern struct sk_buff *audit_make_reply(int seq, int type, int done, int multi,
+ 					const void *payload, int size);
+ extern void		    audit_panic(const char *message);
+diff --git a/kernel/audit_fsnotify.c b/kernel/audit_fsnotify.c
+index 6def7f426ba6..af281e965d24 100644
+--- a/kernel/audit_fsnotify.c
++++ b/kernel/audit_fsnotify.c
+@@ -188,7 +188,7 @@ static int audit_mark_handle_event(struct fsnotify_group *group,
  	}
  
-diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-index fb22f76329ae..9cbb5ae11d2f 100644
---- a/fs/notify/fsnotify.c
-+++ b/fs/notify/fsnotify.c
-@@ -179,10 +179,10 @@ int __fsnotify_parent(const struct path *path, struct dentry *dentry, __u32 mask
- 		take_dentry_name_snapshot(&name, dentry);
- 		if (path)
- 			ret = fsnotify(p_inode, mask, path, FSNOTIFY_EVENT_PATH,
--				       name.name.name, 0);
-+				       &name.name, 0);
- 		else
- 			ret = fsnotify(p_inode, mask, dentry->d_inode, FSNOTIFY_EVENT_INODE,
--				       name.name.name, 0);
-+				       &name.name, 0);
- 		release_dentry_name_snapshot(&name);
+ 	if (mask & (FS_CREATE|FS_MOVED_TO|FS_DELETE|FS_MOVED_FROM)) {
+-		if (audit_compare_dname_path(dname->name, audit_mark->path,
++		if (audit_compare_dname_path(dname, audit_mark->path,
+ 					     AUDIT_NAME_FULL))
+ 			return 0;
+ 		audit_update_mark(audit_mark, inode);
+diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
+index 3c12fd5b680e..b50c574223fa 100644
+--- a/kernel/audit_watch.c
++++ b/kernel/audit_watch.c
+@@ -255,7 +255,7 @@ static void audit_watch_log_rule_change(struct audit_krule *r, struct audit_watc
+ 
+ /* Update inode info in audit rules based on filesystem event. */
+ static void audit_update_watch(struct audit_parent *parent,
+-			       const char *dname, dev_t dev,
++			       const struct qstr *dname, dev_t dev,
+ 			       unsigned long ino, unsigned invalidating)
+ {
+ 	struct audit_watch *owatch, *nwatch, *nextw;
+@@ -507,9 +507,9 @@ static int audit_watch_handle_event(struct fsnotify_group *group,
  	}
  
-@@ -325,7 +325,7 @@ static void fsnotify_iter_next(struct fsnotify_iter_info *iter_info)
-  * notification event in whatever means they feel necessary.
+ 	if (mask & (FS_CREATE|FS_MOVED_TO) && inode)
+-		audit_update_watch(parent, dname->name, inode->i_sb->s_dev, inode->i_ino, 0);
++		audit_update_watch(parent, dname, inode->i_sb->s_dev, inode->i_ino, 0);
+ 	else if (mask & (FS_DELETE|FS_MOVED_FROM))
+-		audit_update_watch(parent, dname->name, AUDIT_DEV_UNSET, AUDIT_INO_UNSET, 1);
++		audit_update_watch(parent, dname, AUDIT_DEV_UNSET, AUDIT_INO_UNSET, 1);
+ 	else if (mask & (FS_DELETE_SELF|FS_UNMOUNT|FS_MOVE_SELF))
+ 		audit_remove_parent_watches(parent);
+ 
+diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+index 63f8b3f26fab..6f585b48f4ef 100644
+--- a/kernel/auditfilter.c
++++ b/kernel/auditfilter.c
+@@ -1290,12 +1290,13 @@ int parent_len(const char *path)
+  * @parentlen:	length of the parent if known. Passing in AUDIT_NAME_FULL
+  * 		here indicates that we must compute this value.
   */
- int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
--	     const unsigned char *file_name, u32 cookie)
-+	     const struct qstr *file_name, u32 cookie)
+-int audit_compare_dname_path(const char *dname, const char *path, int parentlen)
++int audit_compare_dname_path(const struct qstr *dname, const char *path,
++			     int parentlen)
  {
- 	struct fsnotify_iter_info iter_info = {};
- 	struct super_block *sb = to_tell->i_sb;
-@@ -379,7 +379,7 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
- 	 */
- 	while (fsnotify_iter_select_report_types(&iter_info)) {
- 		ret = send_to_group(to_tell, mask, data, data_is, cookie,
--				    file_name, &iter_info);
-+				    file_name->name, &iter_info);
+ 	int dlen, pathlen;
+ 	const char *p;
  
- 		if (ret && (mask & ALL_FSNOTIFY_PERM_EVENTS))
- 			goto out;
-diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
-index 2de90a7e388b..66e322df78a3 100644
---- a/include/linux/fsnotify.h
-+++ b/include/linux/fsnotify.h
-@@ -27,7 +27,7 @@ static inline int fsnotify_dirent(struct inode *dir, struct dentry *dentry,
- 				  __u32 mask)
- {
- 	return fsnotify(dir, mask, d_inode(dentry), FSNOTIFY_EVENT_INODE,
--			dentry->d_name.name, 0);
-+			&dentry->d_name, 0);
+-	dlen = strlen(dname);
++	dlen = dname->len;
+ 	pathlen = strlen(path);
+ 	if (pathlen < dlen)
+ 		return 1;
+@@ -1306,7 +1307,7 @@ int audit_compare_dname_path(const char *dname, const char *path, int parentlen)
+ 
+ 	p = path + parentlen;
+ 
+-	return strncmp(p, dname, dlen);
++	return strncmp(p, dname->name, dlen);
  }
  
- /* Notify this dentry's parent about a child's events. */
-@@ -122,9 +122,9 @@ static inline void fsnotify_move(struct inode *old_dir, struct inode *new_dir,
- 	}
- 
- 	fsnotify(old_dir, old_dir_mask, source, FSNOTIFY_EVENT_INODE,
--		 old_name->name, fs_cookie);
-+		 old_name, fs_cookie);
- 	fsnotify(new_dir, new_dir_mask, source, FSNOTIFY_EVENT_INODE,
--		 moved->d_name.name, fs_cookie);
-+		 &moved->d_name, fs_cookie);
- 
- 	if (target)
- 		fsnotify_link_count(target);
-@@ -177,7 +177,7 @@ static inline void fsnotify_nameremove(struct dentry *dentry, int isdir)
- 	take_dentry_name_snapshot(&name, dentry);
- 
- 	fsnotify(d_inode(parent), mask, d_inode(dentry), FSNOTIFY_EVENT_INODE,
--		 name.name.name, 0);
-+		 &name.name, 0);
- 
- 	release_dentry_name_snapshot(&name);
- 	dput(parent);
-@@ -217,7 +217,7 @@ static inline void fsnotify_link(struct inode *dir, struct inode *inode, struct
- 	fsnotify_link_count(inode);
- 	audit_inode_child(dir, new_dentry, AUDIT_TYPE_CHILD_CREATE);
- 
--	fsnotify(dir, FS_CREATE, inode, FSNOTIFY_EVENT_INODE, new_dentry->d_name.name, 0);
-+	fsnotify(dir, FS_CREATE, inode, FSNOTIFY_EVENT_INODE, &new_dentry->d_name, 0);
- }
- 
- /*
-diff --git a/include/linux/fsnotify_backend.h b/include/linux/fsnotify_backend.h
-index dfc28fcb4de8..7eb7821766d5 100644
---- a/include/linux/fsnotify_backend.h
-+++ b/include/linux/fsnotify_backend.h
-@@ -350,7 +350,7 @@ struct fsnotify_mark {
- 
- /* main fsnotify call to send events */
- extern int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
--		    const unsigned char *name, u32 cookie);
-+		    const struct qstr *name, u32 cookie);
- extern int __fsnotify_parent(const struct path *path, struct dentry *dentry, __u32 mask);
- extern void __fsnotify_inode_delete(struct inode *inode);
- extern void __fsnotify_vfsmount_delete(struct vfsmount *mnt);
-@@ -505,7 +505,7 @@ static inline void fsnotify_init_event(struct fsnotify_event *event,
- #else
- 
- static inline int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
--			   const unsigned char *name, u32 cookie)
-+			   const struct qstr *name, u32 cookie)
+ int audit_filter(int msgtype, unsigned int listtype)
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index d1eab1d4a930..05e06b766af1 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -2045,7 +2045,6 @@ void __audit_inode_child(struct inode *parent,
  {
- 	return 0;
- }
+ 	struct audit_context *context = audit_context();
+ 	struct inode *inode = d_backing_inode(dentry);
+-	const char *dname = dentry->d_name.name;
+ 	struct audit_names *n, *found_parent = NULL, *found_child = NULL;
+ 	struct audit_entry *e;
+ 	struct list_head *list = &audit_filter_list[AUDIT_FILTER_FS];
+@@ -2083,7 +2082,7 @@ void __audit_inode_child(struct inode *parent,
+ 			continue;
+ 
+ 		if (n->ino == parent->i_ino && n->dev == parent->i_sb->s_dev &&
+-		    !audit_compare_dname_path(dname,
++		    !audit_compare_dname_path(&dentry->d_name,
+ 					      n->name->name, n->name_len)) {
+ 			if (n->type == AUDIT_TYPE_UNKNOWN)
+ 				n->type = AUDIT_TYPE_PARENT;
+@@ -2099,8 +2098,8 @@ void __audit_inode_child(struct inode *parent,
+ 		    (n->type != type && n->type != AUDIT_TYPE_UNKNOWN))
+ 			continue;
+ 
+-		if (!strcmp(dname, n->name->name) ||
+-		    !audit_compare_dname_path(dname, n->name->name,
++		if (!strcmp(dentry->d_name.name, n->name->name) ||
++		    !audit_compare_dname_path(&dentry->d_name, n->name->name,
+ 						found_parent ?
+ 						found_parent->name_len :
+ 						AUDIT_NAME_FULL)) {
 -- 
 2.20.1
 
