@@ -2,109 +2,129 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32586C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220B4C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9B3208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE819208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfDZPoY (ORCPT
+        id S1726474AbfDZPos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:44:24 -0400
-Received: from gecko.sbs.de ([194.138.37.40]:39988 "EHLO gecko.sbs.de"
+        Fri, 26 Apr 2019 11:44:48 -0400
+Received: from mga04.intel.com ([192.55.52.120]:32277 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbfDZPoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:44:24 -0400
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id x3QFiCJG019432
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Apr 2019 17:44:12 +0200
-Received: from [167.87.22.130] ([167.87.22.130])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x3QFiBTm030321;
-        Fri, 26 Apr 2019 17:44:11 +0200
-Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-References: <20190424081802.GV2654@lahna.fi.intel.com>
- <5a28f22c-22f7-760a-d076-68ff19800d44@siemens.com>
- <20190424084259.GW2654@lahna.fi.intel.com>
- <7e328b7e-f4f0-851a-4152-a9ffd058201c@siemens.com>
- <20190424094506.GA2654@lahna.fi.intel.com>
- <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
- <20190424100130.GB2654@lahna.fi.intel.com>
- <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
- <20190424103306.GC2654@lahna.fi.intel.com>
- <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
- <20190426130615.GT9224@smile.fi.intel.com>
- <CACRpkdY=m1QJVqvERiAY+7taUgjPXn=9U2Eajx7d7NPo-iNhiA@mail.gmail.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <63b179c9-242d-ae90-9c33-49ed256bde28@siemens.com>
-Date:   Fri, 26 Apr 2019 17:44:10 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        id S1726255AbfDZPos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:44:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 08:44:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,398,1549958400"; 
+   d="scan'208";a="139087744"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 26 Apr 2019 08:44:47 -0700
+Date:   Fri, 26 Apr 2019 08:47:31 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Pan Bian <bianpan2016@163.com>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: iommu/vt-d: drop mm use count if address is not canonical
+Message-ID: <20190426084731.7481d384@jacob-builder>
+In-Reply-To: <20190426133846.GC24576@8bytes.org>
+References: <1555492377-79859-1-git-send-email-bianpan2016@163.com>
+        <20190426133846.GC24576@8bytes.org>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdY=m1QJVqvERiAY+7taUgjPXn=9U2Eajx7d7NPo-iNhiA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.19 16:41, Linus Walleij wrote:
-> On Fri, Apr 26, 2019 at 3:06 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
->> On Wed, Apr 24, 2019 at 12:39:35PM +0200, Jan Kiszka wrote:
->>> On 24.04.19 12:33, Mika Westerberg wrote:
->>>> On Wed, Apr 24, 2019 at 12:19:02PM +0200, Jan Kiszka wrote:
->>
->>>>> And even if that were possible, we would be back to the square of existing
->>>>> devices without those definitions. If this were a recent chipset, I would
->>>>> say, "go, fix future firmware versions". But this one is legacy.
->>>>
->>>> Is it fixing some real issue with these legacy platforms? I mean without
->>>> the patch some GPE event is not handled properly? It was not clear to me
->>>> from the commit message.
->>>>
->>>
->>> Without that patch, you are forced to poll for event changes in your
->>> application, timer-driven. There are application that cannot process these
->>> GPIOs because they lack such logic (mraa with node-red-node-intel-gpio is a
->>> public example).
->>
->> Just a side note: MRAA is a hack itself. It abuses almost all interfaces Linux
->> kernel provides.
+On Fri, 26 Apr 2019 15:38:46 +0200
+Joerg Roedel <joro@8bytes.org> wrote:
+
+> [ Adding more people. ]
 > 
-> I think it's pretty clean for GPIOs these days. My colleague Manivannan
-> was part of cleaning it up a while back and since then it is doing
-> what userspace should be doing if userspace absolutely cannot
-> abstain from using GPIOs directly (i.e. uses the character device).
-> https://github.com/intel-iot-devkit/mraa/blob/master/src/gpio/gpio_chardev.c
+> On Wed, Apr 17, 2019 at 05:12:57PM +0800, Pan Bian wrote:
+> > The use count of svm->mm is incremented by mmget_not_zero. However,
+> > it is not dropped when the address is not canonical. This patch
+> > fixes the bug.
+> > 
+> > Fixes: 9d8c3af31607("iommu/vt-d: IOMMU Page Request needs to check
+> > if address is canonical.")
+> > 
+> > Signed-off-by: Pan Bian <bianpan2016@163.com>
+> > ---
+> >  drivers/iommu/intel-svm.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> > index 3a4b09a..2630d2e 100644
+> > --- a/drivers/iommu/intel-svm.c
+> > +++ b/drivers/iommu/intel-svm.c
+> > @@ -574,8 +574,10 @@ static irqreturn_t prq_event_thread(int irq,
+> > void *d) goto bad_req;
+> >  
+> >  		/* If address is not canonical, return invalid
+> > response */
+> > -		if (!is_canonical_address(address))
+> > +		if (!is_canonical_address(address)) {
+> > +			mmput(svm->mm);
+> >  			goto bad_req;
+> > +		}
+> >  
+> >  		down_read(&svm->mm->mmap_sem);
+> >  		vma = find_extend_vma(svm->mm, address);  
 > 
-> I don't know about other resources than GPIOs though.
+> I think it is better to move the canonical address check before
+> mmget_not_zero() like in the diff below. But I let David and Jacob
+> comment on this.
+> 
+Looks good to me. Tested with PRQ and fake non canonical address then
+send an invalid page response.
 
-That's valuable progress!
+ Tested-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-OTOH, there still seem to be the broken pattern to address pins via hard-coded 
-GPIO numbers. This broke our neck, e.g., when trying to replace the hacky BSP 
-kernel with upstream. I started to create better infrastructure but never fished 
-that.
 
-Thanks,
-Jan
+> Regards,
+> 
+> 	Joerg
+> 
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index 8f87304f915c..5e9e1eee8336 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -586,14 +586,15 @@ static irqreturn_t prq_event_thread(int irq,
+> void *d)
+>  		 * any faults on kernel addresses. */
+>  		if (!svm->mm)
+>  			goto bad_req;
+> -		/* If the mm is already defunct, don't handle
+> faults. */
+> -		if (!mmget_not_zero(svm->mm))
+> -			goto bad_req;
+>  
+>  		/* If address is not canonical, return invalid
+> response */ if (!is_canonical_address(address))
+>  			goto bad_req;
+>  
+> +		/* If the mm is already defunct, don't handle
+> faults. */
+> +		if (!mmget_not_zero(svm->mm))
+> +			goto bad_req;
+> +
+>  		down_read(&svm->mm->mmap_sem);
+>  		vma = find_extend_vma(svm->mm, address);
+>  		if (!vma || address < vma->vm_start)
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+[Jacob Pan]
