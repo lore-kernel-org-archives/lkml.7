@@ -2,150 +2,160 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DE9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F84C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC70920B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556295908;
-	bh=ABJsl1OYlXo5oCrplPjx0+jERPR8tTNV1AQiWovjWOg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=nJlC4eusTmBn6a3MCxkNVnVcNwvgx5eumFkNJN4EIg4Tcrta5wAHJyG0zG91MsL2k
-	 lqsXrXzlwB2NyX3UNAOgtkoqLorIrs58R5AFCeiv/U6M8tkoZFxb2AlT+VWX8O3wEH
-	 3O0xXcLnJU5VQwuaxKOi1CdoT6x8juxg69p6sp5c=
+	by mail.kernel.org (Postfix) with ESMTP id 39BA1206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:26:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GqTWyDWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfDZQZH (ORCPT
+        id S1726315AbfDZQ0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfDZQZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:25:07 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C5D0206C1;
-        Fri, 26 Apr 2019 16:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556295905;
-        bh=ABJsl1OYlXo5oCrplPjx0+jERPR8tTNV1AQiWovjWOg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=E7WogDTQJ/CejPyf/P2WtArMhSks8Zkyu19xQRxYVOzvd5CQQ9M7FTB65m5XOS1T8
-         sIb0bnBFThjdRLk4B0MkSw/PONEHIL5oJ46LCOyH68+Q1qELPaEg5qSlpM+vtBpemv
-         iFN4Zr0f7WR2qL7snikqaI3I80X4mS2AQ7hcSzzM=
-Message-ID: <86674e79e9f24e81feda75bc3c0dd4215604ffa5.camel@kernel.org>
-Subject: Re: [GIT PULL] Ceph fixes for 5.1-rc7
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Date:   Fri, 26 Apr 2019 12:25:03 -0400
-In-Reply-To: <20190425200941.GW2217@ZenIV.linux.org.uk>
-References: <20190425174739.27604-1-idryomov@gmail.com>
-         <CAHk-=wgPBx9xPWY7obK60=RTnOF3Ln0j9XkhYbekML=Fi3bFXg@mail.gmail.com>
-         <342ef35feb1110197108068d10e518742823a210.camel@kernel.org>
-         <20190425200941.GW2217@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 26 Apr 2019 12:26:36 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46055 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbfDZQ0g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:26:36 -0400
+Received: by mail-io1-f67.google.com with SMTP id e8so3384531ioe.12
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:26:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V9QBvS1HDt9yRiJcfN0SfX1WCVVbWxGwFPxxo9FQbL8=;
+        b=GqTWyDWpEeNJX4Gc79wUxopFK2Py5f+GSwre78pof74X2hFPo0P+XU2fxZfQ61ofxh
+         TxX6aOP9re7vZxV7nFR+Mt+vcz8BidW8fj0lzWd/pX4+fn4YONGFoB6Yey27tmriWEkz
+         qXZ3shm4btZLXNK+g+1fgJMiDOWDBfUy3h2Gb0oNFfOB1mwogetJ/T13o7FoMYahrC0g
+         lZNgjZQo7V+AQXSNCo56IDphJOgcYYydAS2FZksVJzIuJ3etOoSVXo1Ko3DGfbldjd0+
+         YUPSIObAc1tDRGQFEy35T319PL4iBcQflm7H5Y3zActHHeB+J/zQ7H6cT3LF1lVuKbIj
+         mFkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V9QBvS1HDt9yRiJcfN0SfX1WCVVbWxGwFPxxo9FQbL8=;
+        b=Venr4Wm7ki7XSBgtHzLT/1i3fWvh2KewJ5dxAqvWDbbf9uofKlebAZDVp36kpRc1gN
+         alE/3E+nvVg9ae4Zcy61wmV/rx2PtaOnAc8AZtT3/VQ8+WUu4FSzFNoRScscxf8fENyd
+         1/wedR2Qegby+QxSEKmOA5ENKv0GW4LIDM/VVsMdTk4Vs8+bTQ63YsOHKAx+J88M9KZi
+         mprcBRD0rdQMwwGn5foeHJdZaQUSGD2/PV8FrJErO92QGaL1UTuwTRFL+rXiT41N2agk
+         i3y8N1Lzmcjm5rICqbS5M/HOI2JU+NIjLvNsBXA9AHAaqUAo2ng+bBw73UvyM2I+httR
+         aLlw==
+X-Gm-Message-State: APjAAAV3TFZW5bLsaIZASLbfFAavg1Y7NKn0P6H0Ed5+vXPwhFQuP9W6
+        jlzeWt/U+D4/MMWSQ1wD5RqLczFzsxgigfXFpT2faQ==
+X-Google-Smtp-Source: APXvYqzmqAmr+acBs/S+LHQdZVVHbvsy+S6W77S2KAMTr7bSvx9S6J37uwYXwSSCXIiO9y4xOKmlxY9sPbHh0IbXy2g=
+X-Received: by 2002:a6b:ea0e:: with SMTP id m14mr19784348ioc.86.1556295995642;
+ Fri, 26 Apr 2019 09:26:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190412102738.12679-1-leo.yan@linaro.org>
+In-Reply-To: <20190412102738.12679-1-leo.yan@linaro.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Fri, 26 Apr 2019 10:26:24 -0600
+Message-ID: <CANLsYkyFXEiYh78uhhQRiqAOvv_u+oq5GS3z3-Lbj6RHm7x+sQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] CoreSight: Support static funnel with DT binding consolidation
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-04-25 at 21:09 +0100, Al Viro wrote:
-> On Thu, Apr 25, 2019 at 02:23:59PM -0400, Jeff Layton wrote:
-> 
-> > I took a quick look at the dcache code to see if we had something like
-> > that before I did this, but I guess I didn't look closely enough. Those
-> > routines do look nicer than my hand-rolled version.
-> > 
-> > I'll look at spinning up a patch to switch that over in the near future.
-> 
-> Jeff asked to put the name length in there; looking at the existing users,
-> it does make sense.  I propose turning struct name_snapshot into
-> 
-> struct name_snapshot {
->         struct qstr name;
->         unsigned char inline_name[DNAME_INLINE_LEN];
-> };
-> 
-> with
-> void take_dentry_name_snapshot(struct name_snapshot *name, struct dentry *dentry)
-> {
->         spin_lock(&dentry->d_lock);
-> 	name->name = dentry->d_name;
->         if (unlikely(dname_external(dentry))) {
->                 struct external_name *p = external_name(dentry);
->                 atomic_inc(&p->u.count);
->         } else {
->                 memcpy(name->inline_name, dentry->d_iname,
->                        dentry->d_name.len + 1);
->                 name->name.name = name->inline_name;
->         }
-> 	spin_unlock(&dentry->d_lock);
-> }
-> 
-> and callers adjusted, initially simply by turning snapshot.name into
-> snapshot.name.name.  Next step: overlayfs call site becoming
->         take_dentry_name_snapshot(&name, real);
->         this = lookup_one_len(name.name.name, connected, name.name.len);
-> Next: snotify stuff switched to passing struct qstr * - fsnotify_move()
-> first, then fsnotify().  That one would
-> 	* leave callers passing NULL alone
-> 	* have the callers passing snapshot.name.name pass &snapshot.name
-> 	* fsnotify_dirent() pass the entire &dentry->d_name, not just
-> dentry->d_name.name (that's dependent upon parent being held exclusive;
-> devpts plays fast and loose here, relying upon the lack of any kind of
-> renames, explicit or implicit, in that fs)
-> 	* ditto for remaining call in fsnotify_move() (both parents
-> are locked in all callers, thankfully)
-> 	* ditto for fsnotify_link()
-> 	* kernfs callers in kernfs_notify_workfn() would grow strlen().
-> Next: send_to_group() and ->handle_event() instances switched to passing
-> struct qstr *.
-> Next: inotify_handle_event() doesn't need to bother with strlen().
-> Next: audit_update_watch() and audit_compare_dname_path() switched to
-> struct qstr *.  Callers in __audit_inode_child() pass the entire
-> &dentry->d_name.  strlen() inside audit_compare_dname_path() goes away.
-> 
-> Objections?
+On Fri, 12 Apr 2019 at 04:27, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> Since before there have no platforms use static funnel in mainline
+> kernel (though maybe some in-house SoC has used it but didn't upstream
+> for mainline kernel yet so we don't be aware for it), when enable
+> CoreSight DT binding for hikey960, we found the SoC uses the static
+> funnel in the link path and but it's not supported in CoreSight funnel
+> driver.
+>
+> When support static funnel it's found the DT binding compatible string
+> doesn't follow the same fashion between replicator and funnel; so the
+> first two patches are firstly to refine the replicator DT binding and
+> correspondingly, change the replicator driver to support new DT binding
+> compatible.
+>
+> Patch 0003 is to update DT documentation to support static funnel (we
+> call it as non-configurable funnel in documentation) and unify the
+> compatible string with the same fashion for replicator and funnel.
+>
+> Patch 0004 is to support the static funnel in the CoreSight funnel
+> driver.
+>
+> The consolidated DT binding compatible strings are as below:
+>
+>   Dynamic replicator:
+>     "arm,coresight-dynamic-replicator", "arm,primecell";
+>
+>   Static replicator:
+>     "arm,coresight-static-replicator";
+>     "arm,coresight-replicator"; (obsolete)
+>
+>   Static funnel:
+>     "arm,coresight-static-funnel";
+>
+>   Dynamic funnel:
+>     "arm,coresight-dynamic-funnel", "arm,primecell";
+>     "arm,coresight-funnel", "arm,primecell"; (obsolete)
+>
+> This patch set has been rebased on CoreSight next branch [1] with
+> latest commit d5d246a56af0 ("coresight: Merge the static and dynamic
+> replicator drivers") and tested on Hikey960/Hikey with perf commands:
+>
+>   Hikey960:
+>
+>   # perf record -e cs_etm/@ec033000.etr/ --per-thread ./main
+>   # perf report --tui
+>
+>   Hikey:
+>
+>   # perf record -e cs_etm/@f6404000.etr/ --per-thread uname
+>   # perf report --tui
+>
+> [1] https://git.linaro.org/kernel/coresight.git/log/?h=next
+>
+> == Changes for v5 ==
+> * Marked the the obsolete compatible strings to be more abvious
+>   (Suzuki).
+> * Used pr_warn_once() to print out warning if DT binding uses
+>   the  obsolete compatible string (Suzuki).
+>
+> == Changes for v4 ==
+> * Consolidate the DT binding compatible strings for replicator and
+>   funnel (Mathieu).
+> * Changed replicator driver to support new compatible string.
+>
+>
+> Leo Yan (4):
+>   dt-bindings: arm: coresight: Add new compatible for static replicator
+>   coresight: replicator: Add new device id for static replicator
+>   dt-bindings: arm: coresight: Unify funnel DT binding
+>   coresight: funnel: Support static funnel
+>
+>  .../devicetree/bindings/arm/coresight.txt     |  60 +++++++--
+>  .../hwtracing/coresight/coresight-funnel.c    | 116 ++++++++++++++----
+>  .../coresight/coresight-replicator.c          |   6 +-
+>  3 files changed, 147 insertions(+), 35 deletions(-)
 
-I have some patches that do what you lay out above. They build but I
-haven't ran them through much testing yet.
-
-It turns out though that using name_snapshot from ceph is a bit more
-tricky. In some cases, we have to call ceph_mdsc_build_path to build up
-a full path string. We can't easily populate a name_snapshot from there
-because struct external_name is only defined in fs/dcache.c.
-
-I could add some routines to do this, but it feels a lot like I'm
-abusing internal dcache interfaces. I'll keep thinking about it though.
-
-While we're on the subject though:
-
-struct external_name {
-        union {
-                atomic_t count;
-                struct rcu_head head;
-        } u;
-        unsigned char name[];
-};
-
-Is it really ok to union the count and rcu_head there?
-
-I haven't trawled through all of the code yet, but what prevents someone
-from trying to access the count inside an RCU critical section, after
-call_rcu has been called on it?
+I have applied this set.
 
 Thanks,
--- 
-Jeff Layton <jlayton@kernel.org>
+Mathieu
 
+>
+> --
+> 2.17.1
+>
