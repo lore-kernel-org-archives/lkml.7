@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDB3C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C63C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22913206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1907A208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271896;
-	bh=sK85wNMU/96XkfkAJK+U9WxIqwpDV/OKo2rr3tEfq5k=;
+	s=default; t=1556271898;
+	bh=8VuQpOA4jISLuYFOK4XE94BQW08uJOWkMHofL24Q9kg=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=2OLRC16MGPRYuWjBfL7AH8myoacpOXITnTw1/DCXQjLqtgYHaS53wnSBuNaRSrQD7
-	 tEBY0zmZ0pc2pjBbSxTuqFbZVMtpluKQ1TuDbLOu9r0cU2m8qIFSHKYe/qIfJfN9d2
-	 YzuEgzKW0Joxzmvo2qtwqGFfUa+oIeVnF/l1JLEU=
+	b=kn+32Fmh4MJ2L89ozR66TennbZWOdNkdo2C72UKVaJcyCfqEtl6RyzjUQazPUErZl
+	 oJrDctM8VR80f1b+b+T22AGd2eTYz7Lqr+nS3/uT9VyUlJF5FWKN9mncpWZfCDar9G
+	 u6karv3TITrA1l9lX/qci+7+aRzpJeS2mGV7NqGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfDZJoz (ORCPT
+        id S1726074AbfDZJo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:44:55 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53298 "EHLO
+        Fri, 26 Apr 2019 05:44:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53428 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfDZJot (ORCPT
+        with ESMTP id S1727295AbfDZJow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:44:49 -0400
+        Fri, 26 Apr 2019 05:44:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=BVjhokI7gu+paERydgpKZEsS8C/K0/37ZUVB7oGK16Q=; b=TqHi32LXDyfP
-        VrsjcSezp4nfIYIqA5L1h7tsYVwgu/5rgtyfcUphaHvfua2nS0gJQomi1KDiFUa+fhvcVIMfduONr
-        puA7Z0O95xg/RXHoNysDhQwrtSd3F6cbQuddRq5LX5i+0SLojmtxF9qZvLVXJ4UZVsqxpv/bBBBZ4
-        eL6FM=;
+        List-Archive; bh=axDDG7PwE6M2jCoK5T7mMY0IW7GHNhqDrSLPGCwYrMQ=; b=vWhuTY61UqBn
+        7qmdG5KVrp+qH62Op0UwATRMHIHciPtZVE+6HwHgQyNw8kEIQ/gHI4b3KKprpg4Uzm10/uum8F3Gz
+        diZYBXYA3w4GaWbVNHnBSjKT0weAaSGj1Dbg7SAh/+mFrHHEud6DlvzM/u/mKSNXoTJHhlc+BoNNI
+        A2wWQ=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxPP-0003PW-9j; Fri, 26 Apr 2019 09:44:43 +0000
+        id 1hJxPR-0003Pa-Bc; Fri, 26 Apr 2019 09:44:45 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 4AC89441D3B; Fri, 26 Apr 2019 10:44:42 +0100 (BST)
+        id 54E4C441D3B; Fri, 26 Apr 2019 10:44:44 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
+To:     kbuild test robot <lkp@intel.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: stm32-pwr: Fix return value check in stm32_pwr_regulator_probe()" to the regulator tree
+Subject: Applied "regulator: ready_mask_table[] can be static" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094442.4AC89441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:44:42 +0100 (BST)
+Message-Id: <20190426094444.54E4C441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:44:44 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: stm32-pwr: Fix return value check in stm32_pwr_regulator_probe()
+   regulator: ready_mask_table[] can be static
 
 has been applied to the regulator tree at
 
@@ -85,39 +85,49 @@ to this mail.
 Thanks,
 Mark
 
-From dc62f951a6a8490bcccc7b6de36cd85bd57be740 Mon Sep 17 00:00:00 2001
-From: Wei Yongjun <weiyongjun1@huawei.com>
-Date: Wed, 17 Apr 2019 02:30:59 +0000
-Subject: [PATCH] regulator: stm32-pwr: Fix return value check in
- stm32_pwr_regulator_probe()
-
-In case of error, the function of_iomap() returns NULL pointer not
-ERR_PTR(). The IS_ERR() test in the return value check should be
-replaced with NULL test.
+From 82f26185a91298a21aa33a985893dd5f8ed4c75a Mon Sep 17 00:00:00 2001
+From: kbuild test robot <lkp@intel.com>
+Date: Tue, 16 Apr 2019 00:52:38 +0800
+Subject: [PATCH] regulator: ready_mask_table[] can be static
 
 Fixes: 6cdae8173f67 ("regulator: Add support for stm32 power regulators")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/stm32-pwr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/stm32-pwr.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
-index 222d593d76a2..7b39a41530d4 100644
+index e434b26d4c8b..222d593d76a2 100644
 --- a/drivers/regulator/stm32-pwr.c
 +++ b/drivers/regulator/stm32-pwr.c
-@@ -140,9 +140,9 @@ static int stm32_pwr_regulator_probe(struct platform_device *pdev)
- 	int i, ret = 0;
+@@ -32,7 +32,7 @@ enum {
+ 	STM32PWR_REG_NUM_REGS
+ };
  
- 	base = of_iomap(np, 0);
--	if (IS_ERR(base)) {
-+	if (!base) {
- 		dev_err(&pdev->dev, "Unable to map IO memory\n");
--		return PTR_ERR(base);
-+		return -ENOMEM;
- 	}
+-u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
++static u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
+ 	[PWR_REG11] = REG_1_1_RDY,
+ 	[PWR_REG18] = REG_1_8_RDY,
+ 	[PWR_USB33] = USB_3_3_RDY,
+@@ -44,7 +44,7 @@ struct stm32_pwr_reg {
+ 	u32 ready_mask;
+ };
  
- 	config.dev = &pdev->dev;
+-int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
++static int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
+ {
+ 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
+ 	u32 val;
+@@ -54,7 +54,7 @@ int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
+ 	return (val & priv->ready_mask);
+ }
+ 
+-int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
++static int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
+ {
+ 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
+ 	u32 val;
 -- 
 2.20.1
 
