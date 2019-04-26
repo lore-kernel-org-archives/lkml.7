@@ -2,139 +2,108 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2ADDC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D49C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D9420869
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B204C20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:05:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="deVVfzHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfDZTE5 (ORCPT
+        id S1726769AbfDZTFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 15:04:57 -0400
-Received: from mga18.intel.com ([134.134.136.126]:53900 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbfDZTE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 15:04:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 12:04:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,398,1549958400"; 
-   d="scan'208";a="227039216"
-Received: from ray.jf.intel.com (HELO [10.7.201.133]) ([10.7.201.133])
-  by orsmga001.jf.intel.com with ESMTP; 26 Apr 2019 12:04:55 -0700
-Subject: Re: [RFC PATCH] x86/fpu: Don't unconditionally add
- XFEATURE_MASK_FPSSE on sigentry
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, jannh@google.com,
-        riel@surriel.com, mingo@redhat.com, bp@suse.de, Jason@zx2c4.com,
-        luto@kernel.org, tglx@linutronix.de, rkrcmar@redhat.com,
-        mingo@kernel.org, hpa@zytor.com, kvm@vger.kernel.org,
-        pbonzini@redhat.com, kurt.kanzenbach@linutronix.de
-References: <20190425173545.sogxyptbaqvoofm6@linutronix.de>
- <cbb4c3de-1e12-c325-fa7f-40bc63c495e7@intel.com>
- <20190426072659.swew4mvfz7dfjyqq@linutronix.de>
- <89ed2d26-a73c-99ad-76d8-e4b46755c783@intel.com>
- <20190426165013.mdgd2ocmdgkhja7n@linutronix.de>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <76afd2e7-40fb-15a4-d183-22e4b50de43d@intel.com>
-Date:   Fri, 26 Apr 2019 12:04:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 26 Apr 2019 15:05:02 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35414 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbfDZTFB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 15:05:01 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so2001503plp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 12:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=z9AyiFqY1ENFqV9YmNMD37qROLwE6fbwD+4JkmtFGY4=;
+        b=deVVfzHQ41dDSpLyAFByS7i7feCsT9AN5gFZpSyEv2k6Gt025jvy8sbD3Po7T+y7rK
+         wlyzPVU8RaAJNOUIZIXsxVeTsdfT3iZkyBFS3LDDzqdEiuYskAUL976W+oTM4n2lyB9u
+         W7dnBKtq6b+Dn9vbrgnQ3Ox8PvAu1m0d2aJJ0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=z9AyiFqY1ENFqV9YmNMD37qROLwE6fbwD+4JkmtFGY4=;
+        b=jx6rqLVjEXmWPf6KKTYvuXJdZjbQ1dLnqwHEMs+v8v7ugKeyuHn4vfbLGVI6IP72RX
+         yyHLlc69E60POzaimnTzeyDc6Emt/UvdyPnLQTf8A6Q3GTU2AoAovVX/JDmGkdTA+NEK
+         MYRxrFuQsLtFScsxtsoGBmfizm3oTP7MfPM6U2Q2FaxCVHk24tmxW34+TnB/HwfZuszV
+         VMrchhkvo49d+cBCXqYN678QY+iBpRBBGc04WoJNWiBipJOJ1Z9wfPlw11+Yr9U2nhCl
+         pIpJGJSQsO7t8Od3zDCpAbIWEARbUnUZj3NsCN1usmHeAbS6U//2C4k3hL4JOGax0dMx
+         CInQ==
+X-Gm-Message-State: APjAAAWTX29R87YeJJ9HjUHWtRPlmjzpMiFfimaDaIISfpqwKy0Bgopk
+        ZpXM6jgUuLGAGurR/PqwsdTTJlsHEsc=
+X-Google-Smtp-Source: APXvYqybObXn2RDEoCZH3ICMc6DaHbqAHmavixCVsnORgBMonxDOiirZLpqm/ij7kF7oXPdICnIsuA==
+X-Received: by 2002:a17:902:7c90:: with SMTP id y16mr4355637pll.309.1556305499652;
+        Fri, 26 Apr 2019 12:04:59 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id j22sm7756797pfi.139.2019.04.26.12.04.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 12:04:58 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        dietmar.eggemann@arm.com, gregkh@linuxfoundation.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>, mhiramat@kernel.org,
+        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>, yhs@fb.com
+Subject: [PATCH v7 resend 2/2] init/config: Do not select BUILD_BIN2C for IKCONFIG
+Date:   Fri, 26 Apr 2019 15:04:30 -0400
+Message-Id: <20190426190430.172543-2-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+In-Reply-To: <20190426190430.172543-1-joel@joelfernandes.org>
+References: <20190426190430.172543-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-In-Reply-To: <20190426165013.mdgd2ocmdgkhja7n@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/26/19 9:50 AM, Sebastian Andrzej Siewior wrote:
-> On 2019-04-26 09:33:28 [-0700], Dave Hansen wrote:
->> On 4/26/19 12:26 AM, Sebastian Andrzej Siewior wrote:
->>>> That's just a guess, though.
->>>>
->>>> If we care, I think we should just use XSAVE instead of XSAVEOPT and
->>>> trying to reconstruct the init state in software.
->>> We can't use XSAVE directly in the slowpath. We need to reconstruct the
->>> init state. We have the mxcsr quirk. We would need just to extend it and
->>> set the FP area to init state if the FP state is missing like we do in
->>> fpstate_sanitize_xstate().
->>
->> Can you remind me why we can't use XSAVE directly in the slow path?
-> 
-> Where to? In the fastpath we XSAVE directly to task's stack. We are
-> in the slowpath because this failed.
-I'm looking at the code and having a bit of a hard time connecting it to
-what you're saying here.
+Since commit 13610aa908dc ("kernel/configs: use .incbin directive to
+embed config_data.gz"), IKCONFIG no longer uses BUILD_BIN2C so prevent
+it from being selected in Kconfig.
 
-We are in copy_fpstate_to_sigframe(), right?  Let's assume we are
-using_compacted_format().  If copy_fpregs_to_sigframe() fails to copy,
-we return immediately and never get to the save_xstate_epilog() code in
-question.
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ init/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-So, to even get to save_xstate_epilog(), we had to do a *successful*
-copy_fpstate_to_sigframe() which, on XSAVE systems will use
-copy_xregs_to_user() which already uses plain XSAVE (not XSAVEOPT).
+diff --git a/init/Kconfig b/init/Kconfig
+index 47c0db6e63a5..26a364a95b57 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -562,7 +562,6 @@ config BUILD_BIN2C
+ 
+ config IKCONFIG
+ 	tristate "Kernel .config support"
+-	select BUILD_BIN2C
+ 	---help---
+ 	  This option enables the complete Linux kernel ".config" file
+ 	  contents to be saved in the kernel. It provides documentation
+-- 
+2.21.0.593.g511ec345e18-goog
 
-save_xstate_epilog() goes and tries to set XFEATURE_MASK_FPSSE on this
-XSAVE (literally the XSAVE instruction) generated header.
-
-But, if we're dealing with header.xfeatures generated by an XSAVE with
-the RFBM=-1, I don't understand how header.xfeatures could ever *not*
-have XFEATURE_MASK_FPSSE set.  The only way would be if we had gotten
-here after using FXSAVE, but I believe that's impossible since those
-systems have use_xsave()==0.
-
-IOW, I think the patch is right, but I'm not sure I totally agree with
-the reasoning.
