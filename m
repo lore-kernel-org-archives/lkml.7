@@ -2,210 +2,131 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A273C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C085CC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E593206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:46:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556282761;
-	bh=ydMoE2lxrI6T7Lp8FQ7vaxTOP0crHdPE0/Pvavc1xig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hNoTjsA0l0En0UCC1FSGDii0U4XS6hV5b1C+UZ0Ii/8JRf/tRmoK4ykEsjmLEt8WJ
-	 uf01yQzquse909dXsI04Mw4GeTfJmxks2BYUsmP6+OZyyRiBu8Jx89+EkrJM82GGCp
-	 JCsFM/EN7F4MT+JuOA2U5Jw8l8l7lVCvkCwkYm6A=
+	by mail.kernel.org (Postfix) with ESMTP id 8C115208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:47:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rzOqZ3PA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfDZMqA (ORCPT
+        id S1726193AbfDZMrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 08:46:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbfDZMp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 08:45:57 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06A72206C1;
-        Fri, 26 Apr 2019 12:45:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556282757;
-        bh=ydMoE2lxrI6T7Lp8FQ7vaxTOP0crHdPE0/Pvavc1xig=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N4+MwCuKZi80NxAWVk7chnP02NuwecayAFdiOG7mb/zXxfop5+166celMECSOYOBE
-         GTJakMg3B9ezWhFmK6b+nWmluePQufQg7Apmj+H+rXOKEjbZs4cRIJ8jB3RvCFHIxO
-         7vb+jOeDOiidDRYiCUF7ox3Obh1iw4XbHpre8s14=
-Date:   Fri, 26 Apr 2019 18:15:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [V3 1/2] dmaengine: fsl-dpaa2-qdma: Add the DPDMAI(Data Path DMA
- Interface) support
-Message-ID: <20190426124550.GE28103@vkoul-mobl>
-References: <20190409072212.15860-1-peng.ma@nxp.com>
+        Fri, 26 Apr 2019 08:47:37 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36732 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfDZMrh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 08:47:37 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3QClV0e044677;
+        Fri, 26 Apr 2019 07:47:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556282851;
+        bh=6LF5OdRDuHCfc0cyukVkeI8LwRs9rG+hXGHWyOb3aUg=;
+        h=From:To:CC:Subject:Date;
+        b=rzOqZ3PAVPkDu0DLCzjeq67B1qQOiVSe4c0bmI7mbIGQNJR4ZBxRUpX9Fz/9YwRx4
+         JV/LvwK3t4sluB20KAirZyh9rKeqNY9zYnpYb5V4EPSZ7XMOLgmiCWYk0Zcnitx9U+
+         dcY3hVGMDkFax2e7Bs1MIjc7cYZ2ljVwDtKXtH5I=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3QClVlY078721
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Apr 2019 07:47:31 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 26
+ Apr 2019 07:47:31 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 26 Apr 2019 07:47:31 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3QClSk7108115;
+        Fri, 26 Apr 2019 07:47:28 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH] dt-bindings: PCI: Add PCI EP DT binding documentation for AM654
+Date:   Fri, 26 Apr 2019 18:16:20 +0530
+Message-ID: <20190426124620.28881-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409072212.15860-1-peng.ma@nxp.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-04-19, 15:22, Peng Ma wrote:
+Add devicetree binding documentation for PCIe in EP mode present in
+AM654 SoC.
 
-Subject missed PATCH tag!
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ .../devicetree/bindings/pci/pci-keystone.txt  | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-> The MC exports the DPDMAI object as an interface to operate the DPAA2 QDMA
-
-whats MC, DPDMAI, DPAA2
-
-> Engine. The DPDMAI enables sending frame-based requests to QDMA and receiving
-> back confirmation response on transaction completion, utilizing the DPAA2 QBMan
-> infrastructure. DPDMAI object provides up to two priorities for processing QDMA
-> requests.
-
-> +int dpdmai_open(struct fsl_mc_io *mc_io,
-> +		u32 cmd_flags,
-> +		int dpdmai_id,
-> +		u16 *token)
-
-could be written as:
-
-int dpdmai_open(struct fsl_mc_io *mc_io, u32 cmd_flags,
-                int dpdmai_id, u16 *token)
-
-Looks neater, right? It would be to reread coding guidelines and run
-checkpatch with --strict on this
-
-
-> +{
-> +	struct fsl_mc_command cmd = { 0 };
-
-where is this defined?
-
-> +	struct dpdmai_cmd_open *cmd_params;
-> +	int err;
-> +
-> +	/* prepare command */
-> +	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_OPEN,
-> +					  cmd_flags,
-> +					  0);
-> +
-> +	cmd_params = (struct dpdmai_cmd_open *)cmd.params;
-
-I dont like casts, can you explain
-
-> +	cmd_params->dpdmai_id = cpu_to_le32(dpdmai_id);
-> +
-> +	/* send command to mc*/
-> +	err = mc_send_command(mc_io, &cmd);
-> +	if (err)
-> +		return err;
-> +
-> +	/* retrieve response parameters */
-> +	*token = mc_cmd_hdr_read_token(&cmd);
-> +	return 0;
-> +}
-
-who will call this API?
-
-> +int dpdmai_create(struct fsl_mc_io *mc_io,
-> +		  u32 cmd_flags,
-> +		  const struct dpdmai_cfg *cfg,
-> +		  u16 *token)
-> +{
-> +	struct fsl_mc_command cmd = { 0 };
-> +	int err;
-> +
-> +	/* prepare command */
-> +	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_CREATE,
-> +					  cmd_flags,
-> +					  0);
-
-why waste a line, last arg can be in previous line!
-
-> +int dpdmai_get_tx_queue(struct fsl_mc_io *mc_io,
-> +			u32 cmd_flags,
-> +			u16 token,
-> +			u8 priority,
-> +			struct dpdmai_tx_queue_attr *attr)
-> +{
-> +	struct fsl_mc_command cmd = { 0 };
-> +	struct dpdmai_cmd_queue *cmd_params;
-> +	struct dpdmai_rsp_get_tx_queue *rsp_params;
-> +	int err;
-> +
-> +	/* prepare command */
-> +	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_GET_TX_QUEUE,
-> +					  cmd_flags,
-> +					  token);
-> +
-> +	cmd_params = (struct dpdmai_cmd_queue *)cmd.params;
-> +	cmd_params->queue = priority;
-> +
-> +	/* send command to mc*/
-> +	err = mc_send_command(mc_io, &cmd);
-> +	if (err)
-> +		return err;
-> +
-> +	/* retrieve response parameters */
-> +
-> +	rsp_params = (struct dpdmai_rsp_get_tx_queue *)cmd.params;
-> +	attr->fqid = le32_to_cpu(rsp_params->fqid);
-> +
-> +	return 0;
-> +}
-
-Okay this file does not use any of dmaengine apis, is this a dmaengine
-driver?
-
-> diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.h b/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
-> new file mode 100644
-> index 0000000..c8a7b7f
-> --- /dev/null
-> +++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
-> @@ -0,0 +1,524 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright 2014-2018 NXP */
-> +
-> +/*
-> + * Redistribution and use in source and binary forms, with or without
-> + * modification, are permitted provided that the following conditions are met:
-> + * * Redistributions of source code must retain the above copyright
-> + * notice, this list of conditions and the following disclaimer.
-> + * * Redistributions in binary form must reproduce the above copyright
-> + * notice, this list of conditions and the following disclaimer in the
-> + * documentation and/or other materials provided with the distribution.
-> + * * Neither the name of the above-listed copyright holders nor the
-> + * names of any contributors may be used to endorse or promote products
-> + * derived from this software without specific prior written permission.
-> + *
-> + *
-> + * ALTERNATIVELY, this software may be distributed under the terms of the
-> + * GNU General Public License ("GPL") as published by the Free Software
-> + * Foundation, either version 2 of that License or (at your option) any
-> + * later version.
-> + *
-> + * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-> + * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-> + * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-> + * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
-> + * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-> + * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-> + * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-> + * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-> + * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-> + * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-> + * POSSIBILITY OF SUCH DAMAGE.
-> + */
-
-we have SiPDX tag, why do you need ths here!
-
+diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+index 5c60e911b8b1..358f9adf95ad 100644
+--- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
++++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+@@ -69,3 +69,47 @@ Optional properties:-
+ DesignWare DT Properties not applicable for Keystone PCI
+ 
+ 1. pcie_bus clock-names not used.  Instead, a phandle to phys is used.
++
++AM654 PCIe Endpoint
++===================
++
++Required Properties:-
++
++compatibility: Should be "ti,am654-pcie-ep" for EP on AM654x SoC
++reg: Four register ranges as listed in the reg-names property
++reg-names: "dbics" for the DesignWare PCIe registers, "app" for the
++	   TI specific application registers, "atu" for the
++	   Address Translation Unit configuration registers and
++	   "addr_space" used to map remote RC address space
++num-ib-windows: As specified in
++		Documentation/devicetree/bindings/pci/designware-pcie.txt
++num-ob-windows: As specified in
++		Documentation/devicetree/bindings/pci/designware-pcie.txt
++num-lanes: As specified in
++	   Documentation/devicetree/bindings/pci/designware-pcie.txt
++power-domains: As documented by the generic PM domain bindings in
++	       Documentation/devicetree/bindings/power/power_domain.txt.
++ti,syscon-pcie-mode: phandle to the device control module required to configure
++		      PCI in either RC mode or EP mode.
++
++Optional properties:-
++
++phys: list of PHY specifiers (used by generic PHY framework)
++phy-names: must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
++               number of lanes as specified in *num-lanes* property.
++("phys" and "phy-names" DT bindings are specified in
++Documentation/devicetree/bindings/phy/phy-bindings.txt)
++interrupts: platform interrupt for error interrupts.
++
++pcie-ep {
++	compatible = "ti,am654-pcie-ep";
++	reg =  <0x5500000 0x1000>, <0x5501000 0x1000>,
++	       <0x10000000 0x8000000>, <0x5506000 0x1000>;
++	reg-names = "app", "dbics", "addr_space", "atu";
++	power-domains = <&k3_pds 120>;
++	ti,syscon-pcie-mode = <&pcie0_mode>;
++	num-lanes = <1>;
++	num-ib-windows = <16>;
++	num-ob-windows = <16>;
++	interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
++};
 -- 
-~Vinod
+2.17.1
+
