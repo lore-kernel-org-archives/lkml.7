@@ -7,54 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99513C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC507C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFB52084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B38206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271870;
-	bh=bafbRjcIViyQ1asnJtUap4qmPZGCxeuelFvZ9TQ9xcI=;
+	s=default; t=1556271877;
+	bh=I2FNRtczGzk21Vm89j5uL18xDHbNlA/XLHAu4k4tG54=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=d1ehedlUS8OAu+A/Icr1NHSR15SvZjTUpVLDfdACnH0UrgnHsl+pnzg7ASbinH9ge
-	 EaZHkxR2BAjlJy4OoflAr+77t/nJ0EhgJE3Buof+Y0ABSjZYTZPzicSBWkKNSyDg6w
-	 UZZeOyDfndk3/A9k139sX7rPHa9T7SE2qxzqdf4c=
+	b=cDUL7BNVcBUGcPfVlabKV4uGiiDbRDj9dXaw2D3dR/3Ykx8fzCsw9Qjk4LARzr2n/
+	 FpkvgnGwGBObTr7TFlGmlei7ZCjBYUQ3BDEEdFe/DMphHZ07rclsMQ/9QhJkqbGCCr
+	 cmlxxXc6181l6Sd8inVqtIoLHbkz1ja4rKl8Iyq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfDZJo3 (ORCPT
+        id S1727280AbfDZJog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:44:29 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52584 "EHLO
+        Fri, 26 Apr 2019 05:44:36 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52790 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbfDZJo0 (ORCPT
+        with ESMTP id S1727256AbfDZJob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:44:26 -0400
+        Fri, 26 Apr 2019 05:44:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ybCv+AMB/M4tLd+C+RITBIzDGzDJLvUMLnICpqlzlzM=; b=tkyLtfBp8dyl
-        5xbzj3ZxEsoGS21NUE9DhCJjIe/WnsUGiu/ajc5rasMa1zmF/kEI/KtNEZnVu+nPN83uOqw6+IOVR
-        QQgQ29ZI/pZoNkLVeN3eaDqzEtmIbqKi2mgJhDPI/dGoCFx+U4Fga6Pfc4SBWhlrdGRsKIdiv8PjY
-        lZ75w=;
+        List-Archive; bh=E3N1mqlK16rcDuCwK6cL46faH8yVA6X6urV3DBCfcoA=; b=sJZ4ao7aeJBR
+        pXJ8zmu6l4LH8YWdUjcKZDJPfli3i5nAX0fTeRu1dirRbmMRvf6Fg/10U13DwzZAfD3UVzCt5JwiW
+        LkgsqHPOavFP+oIIn5NDW6YMfF1lGhWQ4ZsjmRRMmRUQi4HUPX5rX43NHuFYvbuOcWLG7HHalUFHm
+        y6oxU=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxP4-0003O9-RV; Fri, 26 Apr 2019 09:44:22 +0000
+        id 1hJxP3-0003Ns-AC; Fri, 26 Apr 2019 09:44:21 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id CA9AC441D3B; Fri, 26 Apr 2019 10:44:21 +0100 (BST)
+        id 57248441D3C; Fri, 26 Apr 2019 10:44:20 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Applied "regulator: ltc3589: Get rid of struct ltc3589_regulator" to the regulator tree
-In-Reply-To: <20190418114500.1098-2-axel.lin@ingics.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Wadim Egorov <w.egorov@phytec.de>,
+        Yunfan Zhang <yfzhang@marvell.com>
+Subject: Applied "regulator: fan53555: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190419005824.21533-2-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094421.CA9AC441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:44:21 +0100 (BST)
+Message-Id: <20190426094420.57248441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:44:20 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: ltc3589: Get rid of struct ltc3589_regulator
+   regulator: fan53555: Switch to SPDX identifier
 
 has been applied to the regulator tree at
 
@@ -87,154 +90,49 @@ to this mail.
 Thanks,
 Mark
 
-From 63c7c2962ae715f3e1ed042db9046b36af637611 Mon Sep 17 00:00:00 2001
+From 6a1beee2fe379f7a846ec095c82f181ca36a8437 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Thu, 18 Apr 2019 19:44:59 +0800
-Subject: [PATCH] regulator: ltc3589: Get rid of struct ltc3589_regulator
-
-After converting to use simplified DT parsing, the struct ltc3589_regulator
-only has a desc member. So let's remove struct ltc3589_regulator and use
-struct regulator_desc instead.
+Date: Fri, 19 Apr 2019 08:58:24 +0800
+Subject: [PATCH] regulator: fan53555: Switch to SPDX identifier
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/ltc3589.c | 69 +++++++++++++++++--------------------
- 1 file changed, 31 insertions(+), 38 deletions(-)
+ drivers/regulator/fan53555.c | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/regulator/ltc3589.c b/drivers/regulator/ltc3589.c
-index 35741f476024..077e73715514 100644
---- a/drivers/regulator/ltc3589.c
-+++ b/drivers/regulator/ltc3589.c
-@@ -84,15 +84,11 @@ enum ltc3589_reg {
- 	LTC3589_NUM_REGULATORS,
- };
- 
--struct ltc3589_regulator {
--	struct regulator_desc desc;
--};
--
- struct ltc3589 {
- 	struct regmap *regmap;
- 	struct device *dev;
- 	enum ltc3589_variant variant;
--	struct ltc3589_regulator regulator_descs[LTC3589_NUM_REGULATORS];
-+	struct regulator_desc regulator_descs[LTC3589_NUM_REGULATORS];
- 	struct regulator_dev *regulators[LTC3589_NUM_REGULATORS];
- };
- 
-@@ -209,7 +205,7 @@ static int ltc3589_of_parse_cb(struct device_node *np,
- 			       struct regulator_config *config)
- {
- 	struct ltc3589 *ltc3589 = config->driver_data;
--	struct ltc3589_regulator *rdesc = &ltc3589->regulator_descs[desc->id];
-+	struct regulator_desc *rdesc = &ltc3589->regulator_descs[desc->id];
- 	u32 r[2];
- 	int ret;
- 
-@@ -227,36 +223,34 @@ static int ltc3589_of_parse_cb(struct device_node *np,
- 	if (!r[0] || !r[1])
- 		return 0;
- 
--	rdesc->desc.min_uV = ltc3589_scale(desc->min_uV, r[0], r[1]);
--	rdesc->desc.uV_step = ltc3589_scale(desc->uV_step, r[0], r[1]);
--	rdesc->desc.fixed_uV = ltc3589_scale(desc->fixed_uV, r[0], r[1]);
-+	rdesc->min_uV = ltc3589_scale(desc->min_uV, r[0], r[1]);
-+	rdesc->uV_step = ltc3589_scale(desc->uV_step, r[0], r[1]);
-+	rdesc->fixed_uV = ltc3589_scale(desc->fixed_uV, r[0], r[1]);
- 
- 	return 0;
- }
- 
- #define LTC3589_REG(_name, _of_name, _ops, en_bit, dtv1_reg, dtv_mask, go_bit)\
- 	[LTC3589_ ## _name] = {						\
--		.desc = {						\
--			.name = #_name,					\
--			.of_match = of_match_ptr(#_of_name),		\
--			.regulators_node = of_match_ptr("regulators"),	\
--			.of_parse_cb = ltc3589_of_parse_cb,		\
--			.n_voltages = (dtv_mask) + 1,			\
--			.min_uV = (go_bit) ? 362500 : 0,		\
--			.uV_step = (go_bit) ? 12500 : 0,		\
--			.ramp_delay = (go_bit) ? 1750 : 0,		\
--			.fixed_uV = (dtv_mask) ? 0 : 800000,		\
--			.ops = &ltc3589_ ## _ops ## _regulator_ops,	\
--			.type = REGULATOR_VOLTAGE,			\
--			.id = LTC3589_ ## _name,			\
--			.owner = THIS_MODULE,				\
--			.vsel_reg = (dtv1_reg),			\
--			.vsel_mask = (dtv_mask),			\
--			.apply_reg = (go_bit) ? LTC3589_VCCR : 0,	\
--			.apply_bit = (go_bit),				\
--			.enable_reg = (en_bit) ? LTC3589_OVEN : 0,	\
--			.enable_mask = (en_bit),			\
--		},							\
-+		.name = #_name,						\
-+		.of_match = of_match_ptr(#_of_name),			\
-+		.regulators_node = of_match_ptr("regulators"),		\
-+		.of_parse_cb = ltc3589_of_parse_cb,			\
-+		.n_voltages = (dtv_mask) + 1,				\
-+		.min_uV = (go_bit) ? 362500 : 0,			\
-+		.uV_step = (go_bit) ? 12500 : 0,			\
-+		.ramp_delay = (go_bit) ? 1750 : 0,			\
-+		.fixed_uV = (dtv_mask) ? 0 : 800000,			\
-+		.ops = &ltc3589_ ## _ops ## _regulator_ops,		\
-+		.type = REGULATOR_VOLTAGE,				\
-+		.id = LTC3589_ ## _name,				\
-+		.owner = THIS_MODULE,					\
-+		.vsel_reg = (dtv1_reg),					\
-+		.vsel_mask = (dtv_mask),				\
-+		.apply_reg = (go_bit) ? LTC3589_VCCR : 0,		\
-+		.apply_bit = (go_bit),					\
-+		.enable_reg = (en_bit) ? LTC3589_OVEN : 0,		\
-+		.enable_mask = (en_bit),				\
- 	}
- 
- #define LTC3589_LINEAR_REG(_name, _of_name, _dtv1)			\
-@@ -267,7 +261,7 @@ static int ltc3589_of_parse_cb(struct device_node *np,
- #define LTC3589_FIXED_REG(_name, _of_name)				\
- 	LTC3589_REG(_name, _of_name, fixed, LTC3589_OVEN_ ## _name, 0, 0, 0)
- 
--static struct ltc3589_regulator ltc3589_regulators[LTC3589_NUM_REGULATORS] = {
-+static const struct regulator_desc ltc3589_regulators[] = {
- 	LTC3589_LINEAR_REG(SW1, sw1, B1DTV1),
- 	LTC3589_LINEAR_REG(SW2, sw2, B2DTV1),
- 	LTC3589_LINEAR_REG(SW3, sw3, B3DTV1),
-@@ -403,7 +397,7 @@ static int ltc3589_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
- 	struct device *dev = &client->dev;
--	struct ltc3589_regulator *descs;
-+	struct regulator_desc *descs;
- 	struct ltc3589 *ltc3589;
- 	int i, ret;
- 
-@@ -422,11 +416,11 @@ static int ltc3589_probe(struct i2c_client *client,
- 	descs = ltc3589->regulator_descs;
- 	memcpy(descs, ltc3589_regulators, sizeof(ltc3589_regulators));
- 	if (ltc3589->variant == LTC3589) {
--		descs[LTC3589_LDO3].desc.fixed_uV = 1800000;
--		descs[LTC3589_LDO4].desc.volt_table = ltc3589_ldo4;
-+		descs[LTC3589_LDO3].fixed_uV = 1800000;
-+		descs[LTC3589_LDO4].volt_table = ltc3589_ldo4;
- 	} else {
--		descs[LTC3589_LDO3].desc.fixed_uV = 2800000;
--		descs[LTC3589_LDO4].desc.volt_table = ltc3589_12_ldo4;
-+		descs[LTC3589_LDO3].fixed_uV = 2800000;
-+		descs[LTC3589_LDO4].volt_table = ltc3589_12_ldo4;
- 	}
- 
- 	ltc3589->regmap = devm_regmap_init_i2c(client, &ltc3589_regmap_config);
-@@ -437,8 +431,7 @@ static int ltc3589_probe(struct i2c_client *client,
- 	}
- 
- 	for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
--		struct ltc3589_regulator *rdesc = &ltc3589->regulator_descs[i];
--		struct regulator_desc *desc = &rdesc->desc;
-+		struct regulator_desc *desc = &ltc3589->regulator_descs[i];
- 		struct regulator_config config = { };
- 
- 		config.dev = dev;
+diff --git a/drivers/regulator/fan53555.c b/drivers/regulator/fan53555.c
+index e2caf4173ab5..dbe477da4e55 100644
+--- a/drivers/regulator/fan53555.c
++++ b/drivers/regulator/fan53555.c
+@@ -1,17 +1,13 @@
+-/*
+- * FAN53555 Fairchild Digitally Programmable TinyBuck Regulator Driver.
+- *
+- * Supported Part Numbers:
+- * FAN53555UC00X/01X/03X/04X/05X
+- *
+- * Copyright (c) 2012 Marvell Technology Ltd.
+- * Yunfan Zhang <yfzhang@marvell.com>
+- *
+- * This package is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// FAN53555 Fairchild Digitally Programmable TinyBuck Regulator Driver.
++//
++// Supported Part Numbers:
++// FAN53555UC00X/01X/03X/04X/05X
++//
++// Copyright (c) 2012 Marvell Technology Ltd.
++// Yunfan Zhang <yfzhang@marvell.com>
++
+ #include <linux/module.h>
+ #include <linux/param.h>
+ #include <linux/err.h>
 -- 
 2.20.1
 
