@@ -2,301 +2,204 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06823C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CE5C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D2620693
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6273320693
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:35:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lI6iUpjr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ToQpN1nH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfDZTfi (ORCPT
+        id S1726781AbfDZTfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 15:35:38 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46574 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfDZTfi (ORCPT
+        Fri, 26 Apr 2019 15:35:54 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:43828 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfDZTfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 15:35:38 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w26so5356145qto.13;
-        Fri, 26 Apr 2019 12:35:37 -0700 (PDT)
+        Fri, 26 Apr 2019 15:35:53 -0400
+Received: by mail-ua1-f68.google.com with SMTP id n16so1563216uae.10
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 12:35:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uGX1CfH8kr8UbgRwc1CrT6QTBsEK1fDhCrYFKOiiw64=;
-        b=lI6iUpjr2EV0vaSlH2XxrPrxoU06/zz/Or3Xh5Og2cQHpgCgSumSKDdkLdgMjaFYL6
-         TCsZVX9R6/6OeDbViHPlm/kTD3M0WuLBoqfhEbVoCrrd+ftf14CzNNhuckpAPAbDxoBI
-         Lkfd0bVqYg8/Szlzw5oSvyJ2Ntj4In0pIZsWzqfFEfQN/pVWexcXUZ3obEiRemXbUxxD
-         yskyh0KEphqk2CsZzyRhlA/4OoNoPjOfIh8GxaBXOWZ61MoQmtakjsYPtwer8c1ff3Ss
-         CsYlIgY5gybo/m/qzUT3xczm6mD3lQX5u6L1P8AI9kmqjXi7LVyHf+OwJLq3HkWs9e3l
-         7rMw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WATsd3UqXoXpbwyAriLf8lYSkx71OaMFlFNZiq1bdpg=;
+        b=ToQpN1nH067QlOMRClecTcoz5tc2bKjASoIrVK4JqKOzaEkSn3CtTnXA2pX2qpnHSN
+         JxcggYMQN33NM7pyoCBL54aaSx1X0pb7alCtoNemekODZo/OElnojAgJdVQWG9YQRlg2
+         zR0jpRtl88/65fMP/DdQIiiCsfoSPtPc/Gp70OCDBuXNbs3LMckeQ05IUTIWM3BBg1U2
+         ZvvOa/O7VAIeKPP673/8k37ccmp+eBJ3yi8bNlwe0Yr+lRFlEhrRv1IzYverZ8rQvoCE
+         kbcEIWjWFl003O1P/Kt3AMeSHLn7ilindydLuU3maNGoyjswk0Z1OYuuIJmlfHOC/Wc0
+         4PZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uGX1CfH8kr8UbgRwc1CrT6QTBsEK1fDhCrYFKOiiw64=;
-        b=pEHwnv6NSGMefdK59BMaPf5MGEfHb43GfZ6xhXkKzd+LM/D2RwgQH0p+RvQvKMo+iy
-         LSfevuvmG5xqrDBq/CESpUJLm/xZJlW+r01w+kWX4xw5YAD3AKdCt04qJmT2s60bMRlK
-         B25bcspFV8J4avgw1X77cZw+zbf7g2XyrkPSdR25T93oC4/+ns21C4VnE040sLlwHOL/
-         xjO+IX3aXPwKrKtEuQUaosUsRoiWmV6+7fgEwlE0J80QMvU9YOgygcCJvMGpGt+BY8kZ
-         M+Q5V8twScA53e/hODL9b4TL/yGdhu4lDrKJ0w+8Z83WsTc2hsIwewOCYKjWpGJ/ojae
-         FNsA==
-X-Gm-Message-State: APjAAAUxYfeNFY+N+aIRVOG1tyyNBMrQ+bm5oIVzWW92XzsFwqfJdoaD
-        swHnVuPO3EnnS+XMxClmv3o=
-X-Google-Smtp-Source: APXvYqwIQy0CTpcJ2CgaN/wLkytE63Pk/aP005n/mpozr5fTzJ0Sdm5lgxlqn6ps21O5aUaHIUl7Rw==
-X-Received: by 2002:ac8:3159:: with SMTP id h25mr25587030qtb.61.1556307336664;
-        Fri, 26 Apr 2019 12:35:36 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id c13sm4203358qkk.11.2019.04.26.12.35.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 12:35:35 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CCCED4111F; Fri, 26 Apr 2019 16:35:31 -0300 (-03)
-Date:   Fri, 26 Apr 2019 16:35:31 -0300
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: perf tools build broken after v5.1-rc1
-Message-ID: <20190426193531.GC28586@kernel.org>
-References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
- <20190422152027.GB11750@kernel.org>
- <20190425214800.GC21829@kernel.org>
- <20190426192834.GB28586@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WATsd3UqXoXpbwyAriLf8lYSkx71OaMFlFNZiq1bdpg=;
+        b=AjlgxYvx8HH0XMTgnMin9jZXKBdkPDermnqaJBIf5smmJECleDybXzcq09NbvlzdUb
+         zlKyMyf248LGe8QsQ9kGOPpFvtqerV2AgJLb3F97/i1UiQ9YaqSMvs9BXipRM2ts+suY
+         LRi2FBNzUj88g2jxE3cs7v+8VMwy5iNRMR+TmjehkCqnQrLr7T9eY9Mayy03NfIW1eLI
+         4CWRda6fJDJZv2+orneppgkYb0pNbJ9q0N5soYx3xsuI+YzWwiUFu86KEVOa9NfNsHyG
+         tt0qqVLL7dYiTZOx8HIPly9cx+Fphc3LmcCXp4hr56uP83B8NuS1t0bY7MSV344YMeO8
+         R9BQ==
+X-Gm-Message-State: APjAAAVcT92rmbXTFdWjLEzkyRApfHhQFMkO+wMw85ZtWYOat4M7Wdo4
+        ssCQKSJ6ABVNTXpWi/zHzAxH+KeagqzWkFaeqWv/VQ==
+X-Google-Smtp-Source: APXvYqzpKmOugosFSsRqPJFIZXf4ZQAJFg5KS4Aodc7eXTgRFayBazVlDEN26AcpYboxUCiIJftT2C5ciYJ5IL+6adg=
+X-Received: by 2002:ab0:60cd:: with SMTP id g13mr13767383uam.85.1556307352005;
+ Fri, 26 Apr 2019 12:35:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426192834.GB28586@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190425190010.46489-1-joel@joelfernandes.org>
+ <20190425190010.46489-2-joel@joelfernandes.org> <20190425212917.yotnir4uqgpnh764@brauner.io>
+ <CAKOZueuPeqnWVCv8NnQNyStWBQLybkr2qqtfQ0MjzsfSQDymzg@mail.gmail.com> <20190426172602.GD261279@google.com>
+In-Reply-To: <20190426172602.GD261279@google.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Fri, 26 Apr 2019 12:35:40 -0700
+Message-ID: <CAKOZuetFw9MnZCrXbcFTCFD9Jq8bZwzdcEi_OYHMMv2R_sgNNA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] Add selftests for pidfd polling
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
+        Jann Horn <jann@thejh.net>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Michal Hocko <mhocko@suse.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Sandeep Patil <sspatil@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Murray <timmurray@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tycho Andersen <tycho@tycho.ws>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Apr 26, 2019 at 04:28:34PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Apr 25, 2019 at 06:48:00PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Mon, Apr 22, 2019 at 12:20:27PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Fri, Apr 19, 2019 at 04:32:58PM -0700, Vineet Gupta escreveu:
-> > > > When building perf for ARC (v5.1-rc2) I get the following
-> > >  
-> > > > | In file included from bench/futex-hash.c:26:
-> > > > | bench/futex.h: In function 'futex_wait':
-> > > > | bench/futex.h:37:10: error: 'SYS_futex' undeclared (first use in this function);
-> > >  
-> > > > git bisect led to 1a787fc5ba18ac767e635c58d06a0b46876184e3 ("tools headers uapi:
-> > > > Sync copy of asm-generic/unistd.h with the kernel sources")
-> > > 
-> > > Humm, I have to check why this:
-> > > 
-> > > [perfbuilder@quaco ~]$ podman images | grep ARC
-> > > docker.io/acmel/linux-perf-tools-build-fedora                24-x-ARC-uClibc          4c259582a8e6   5 weeks ago      846 MB
-> > > [perfbuilder@quaco ~]$
-> > > 
-> > > isn't catching this... :-\
-> > > 
-> > > FROM docker.io/fedora:24
-> > > MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > ENV TOOLCHAIN=arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install
-> > > ENV CROSS=arc-linux-
-> > > ENV SOURCEFILE=${TOOLCHAIN}.tar.gz
-> > > RUN dnf -y install make flex bison binutils gcc wget tar bzip2 bc findutils xz
-> > > RUN wget https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/releases/download/arc-2017.09-rc2/${SOURCEFILE}
-> > > <SNIP>
-> > > COPY rx_and_build.sh /
-> > > ENV EXTRA_MAKE_ARGS=NO_LIBBPF=1
-> > > ENV ARCH=arc
-> > > ENV CROSS_COMPILE=/${TOOLCHAIN}/bin/${CROSS}
-> > > ENV EXTRA_CFLAGS=-matomic
-> > 
-> > So, now I have a libnuma crossbuilt in this container that allows me to
-> > build a ARC perf binary linked with zlib and numactl-devel, but only
-> > after I applied the fix below.
-> > 
-> > Can you please provide the feature detection header in the build? I.e.
-> > what I have with my ARC cross build container right now, after applying
-> > the patch below is:
-> 
-> So, switched from the uCLibc build system to the glibc based one, so
-> that I could get elfutils building (it needs argp that isn't available
-> with uCLibc) I have it reproduced, see below, now I'm testing with the
-> fix, which is to grab the unistd.h files you noticed missing for the
-> arches that are present in tools/arch/, will post results soon
+On Fri, Apr 26, 2019 at 10:26 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> On Thu, Apr 25, 2019 at 03:07:48PM -0700, Daniel Colascione wrote:
+> > On Thu, Apr 25, 2019 at 2:29 PM Christian Brauner <christian@brauner.io> wrote:
+> > > This timing-based testing seems kinda odd to be honest. Can't we do
+> > > something better than this?
+> >
+> > Agreed. Timing-based tests have a substantial risk of becoming flaky.
+> > We ought to be able to make these tests fully deterministic and not
+> > subject to breakage from odd scheduling outcomes. We don't have
+> > sleepable events for everything, granted, but sleep-waiting on a
+> > condition with exponential backoff is fine in test code. In general,
+> > if you start with a robust test, you can insert a sleep(100) anywhere
+> > and not break the logic. Violating this rule always causes pain sooner
+> > or later.
+>
+> I prefer if you can be more specific about how to redesign the test. Please
+> go through the code and make suggestions there. The tests have not been flaky
+> in my experience.
 
-Yep, now it builds:
+You've been running them in an ideal environment.
 
-/tmp/build/perf/perf: ELF 32-bit LSB executable, *unknown arch 0xc3* version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-arc.so.2, for GNU/Linux 3.9.0, with debug_info, not stripped
+Some tests do depend on timing like the preemptoff tests,
+> that can't be helped. Or a performance test that calculates framedrops.
 
-With this patch:
+Performance tests are *about* timing. This is a functional test. Here,
+we care about sequencing, not timing, and using a bare sleep instead
+of sleeping with a condition check (see below) is always flaky.
 
-commit dd423246b321967eace3f3e0fe73d638050b447c
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Mon Apr 22 15:21:35 2019 -0300
+> In this case, we want to make sure that the poll unblocks at the right "time"
+> that is when the non-leader thread exits, and not when the leader thread
+> exits (test 1), or when the non-leader thread exits and not when the same
+> non-leader previous did an execve (test 2).
 
-    WIP
-    
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Instead of sleeping, you want to wait for some condition. Right now,
+in a bunch of places, the test does something like this:
 
-diff --git a/tools/arch/arc/include/uapi/asm/unistd.h b/tools/arch/arc/include/uapi/asm/unistd.h
-new file mode 100644
-index 000000000000..5eafa1115162
---- /dev/null
-+++ b/tools/arch/arc/include/uapi/asm/unistd.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright (C) 2004, 2007-2010, 2011-2012 Synopsys, Inc. (www.synopsys.com)
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/******** no-legacy-syscalls-ABI *******/
-+
-+/*
-+ * Non-typical guard macro to enable inclusion twice in ARCH sys.c
-+ * That is how the Generic syscall wrapper generator works
-+ */
-+#if !defined(_UAPI_ASM_ARC_UNISTD_H) || defined(__SYSCALL)
-+#define _UAPI_ASM_ARC_UNISTD_H
-+
-+#define __ARCH_WANT_RENAMEAT
-+#define __ARCH_WANT_STAT64
-+#define __ARCH_WANT_SET_GET_RLIMIT
-+#define __ARCH_WANT_SYS_EXECVE
-+#define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SYS_VFORK
-+#define __ARCH_WANT_SYS_FORK
-+#define __ARCH_WANT_TIME32_SYSCALLS
-+
-+#define sys_mmap2 sys_mmap_pgoff
-+
-+#include <asm-generic/unistd.h>
-+
-+#define NR_syscalls	__NR_syscalls
-+
-+/* Generic syscall (fs/filesystems.c - lost in asm-generic/unistd.h */
-+#define __NR_sysfs		(__NR_arch_specific_syscall + 3)
-+
-+/* ARC specific syscall */
-+#define __NR_cacheflush		(__NR_arch_specific_syscall + 0)
-+#define __NR_arc_settls		(__NR_arch_specific_syscall + 1)
-+#define __NR_arc_gettls		(__NR_arch_specific_syscall + 2)
-+#define __NR_arc_usr_cmpxchg	(__NR_arch_specific_syscall + 4)
-+
-+__SYSCALL(__NR_cacheflush, sys_cacheflush)
-+__SYSCALL(__NR_arc_settls, sys_arc_settls)
-+__SYSCALL(__NR_arc_gettls, sys_arc_gettls)
-+__SYSCALL(__NR_arc_usr_cmpxchg, sys_arc_usr_cmpxchg)
-+__SYSCALL(__NR_sysfs, sys_sysfs)
-+
-+#undef __SYSCALL
-+
-+#endif
-diff --git a/tools/arch/hexagon/include/uapi/asm/unistd.h b/tools/arch/hexagon/include/uapi/asm/unistd.h
-new file mode 100644
-index 000000000000..432c4db1b623
---- /dev/null
-+++ b/tools/arch/hexagon/include/uapi/asm/unistd.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Syscall support for Hexagon
-+ *
-+ * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-+ * 02110-1301, USA.
-+ */
-+
-+/*
-+ *  The kernel pulls this unistd.h in three different ways:
-+ *  1.  the "normal" way which gets all the __NR defines
-+ *  2.  with __SYSCALL defined to produce function declarations
-+ *  3.  with __SYSCALL defined to produce syscall table initialization
-+ *  See also:  syscalltab.c
-+ */
-+
-+#define sys_mmap2 sys_mmap_pgoff
-+#define __ARCH_WANT_RENAMEAT
-+#define __ARCH_WANT_STAT64
-+#define __ARCH_WANT_SET_GET_RLIMIT
-+#define __ARCH_WANT_SYS_EXECVE
-+#define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SYS_VFORK
-+#define __ARCH_WANT_SYS_FORK
-+#define __ARCH_WANT_TIME32_SYSCALLS
-+
-+#include <asm-generic/unistd.h>
-diff --git a/tools/arch/riscv/include/uapi/asm/unistd.h b/tools/arch/riscv/include/uapi/asm/unistd.h
-new file mode 100644
-index 000000000000..0e2eeeb1fd27
---- /dev/null
-+++ b/tools/arch/riscv/include/uapi/asm/unistd.h
-@@ -0,0 +1,42 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright (C) 2018 David Abdurachmanov <david.abdurachmanov@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifdef __LP64__
-+#define __ARCH_WANT_NEW_STAT
-+#define __ARCH_WANT_SET_GET_RLIMIT
-+#endif /* __LP64__ */
-+
-+#include <asm-generic/unistd.h>
-+
-+/*
-+ * Allows the instruction cache to be flushed from userspace.  Despite RISC-V
-+ * having a direct 'fence.i' instruction available to userspace (which we
-+ * can't trap!), that's not actually viable when running on Linux because the
-+ * kernel might schedule a process on another hart.  There is no way for
-+ * userspace to handle this without invoking the kernel (as it doesn't know the
-+ * thread->hart mappings), so we've defined a RISC-V specific system call to
-+ * flush the instruction cache.
-+ *
-+ * __NR_riscv_flush_icache is defined to flush the instruction cache over an
-+ * address range, with the flush applying to either all threads or just the
-+ * caller.  We don't currently do anything with the address range, that's just
-+ * in there for forwards compatibility.
-+ */
-+#ifndef __NR_riscv_flush_icache
-+#define __NR_riscv_flush_icache (__NR_arch_specific_syscall + 15)
-+#endif
-+__SYSCALL(__NR_riscv_flush_icache, sys_riscv_flush_icache)
+do_something()
+sleep(SOME_TIMEOUT)
+check(some_condition())
+
+You can replace each of these clauses with something like this:
+
+do_something()
+start_time = now()
+while(!some_condition() && now() - start_time < LONG_TIMEOUT)
+  sleep(SHORT_DELAY)
+check(some_condition())
+
+This way, you're insensitive to timing, up to LONG_TIMEOUT (which can
+be something like a minute). Yes, you can always write
+sleep(LARGE_TIMEOUT) instead, but a good, robust value of LONG_TIMEOUT
+(which should be tens of seconds) would make the test take far too
+long to run in the happy case.
+
+Note that this code is fine:
+
+check(!some_condition())
+sleep(SOME_REASONABLE_TIMEOUT)
+check(!some_condition())
+
+It's okay to sleep for a little while and check that something did
+*not* happen, but it's not okay for the test to *fail* due to
+scheduling delays. The difference is that
+sleeping-and-checking-that-something-didn't-happen can only generate
+false negatives when checking for failures, and it's much better from
+a code health perspective for a test to sometimes fail to detect a bug
+than for it to fire occasionally when there's no bug actually present.
+
+> These are inherently timing related.
+
+No they aren't. We don't care how long these operations take. We only
+care that they happen in the right order.
+
+(Well, we do care about performance, but not for the purposes of this
+functional test.)
+
+> Yes it is true that if this runs in a VM
+> and if the VM CPU is preempted for a couple seconds, then the test can fail
+> falsely. Still I would argue such a failure scenario of a multi-second CPU
+> lock-up can cause more serious issues like RCU stalls, and that's not a test
+> issue. We can increase the sleep intervals if you want, to reduce the risk of
+> such scenarios.
+>
+> I would love to make the test not depend on timing, but I don't know how.
+
+For threads, implement some_condition() above by opening a /proc
+directory to the task you want. You can look by death by looking for
+zombie status in stat or ESRCH.
+
+If you want to test that poll() actually unblocks on exit (as opposed
+to EPOLLIN-ing immediately when the waited process is already dead),
+do something like this:
+
+- [Main test thread] Start subprocess, getting a pidfd
+- [Subprocess] Wait forever
+- [Main test thread] Start a waiter thread
+- [Waiter test thread] poll(2) (or epoll, if you insist) on process exit
+- [Main test thread] sleep(FAIRLY_SHORT_TIMEOUT)
+- [Main test thread] Check that the subprocess is alive
+- [Main test thread] pthread_tryjoin_np (make sure the waiter thread
+is still alive)
+- [Main test thread] Kill the subprocess (or one of its threads, for
+testing the leader-exit case)
+- [Main test thread] pthread_timedjoin_np(LONG_TIMEOUT) the waiter thread
+- [Waiter test thread] poll(2) returns and thread exits
+- [Main test thread] pthread_join returns: test succeeds (or the
+pthread_timedjoin_np fails with ETIMEOUT, it means poll(2) didn't
+unblock, and the test should fail).
+
+Tests that sleep for synchronization *do* end up being flaky. That the
+flakiness doesn't show up in local iterative testing doesn't mean that
+the test is adequately robust.
