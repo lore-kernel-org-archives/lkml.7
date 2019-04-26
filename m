@@ -2,140 +2,86 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD02EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16404C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A145D206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:18:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DbMWvxV7"
+	by mail.kernel.org (Postfix) with ESMTP id 04D1E206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfDZCSA (ORCPT
+        id S1727343AbfDZCSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 22:18:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42473 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726086AbfDZCSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 22:18:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44qyPv3JfGz9s70;
-        Fri, 26 Apr 2019 12:17:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556245076;
-        bh=Qqgp1DAA42BKNh/pC10z5JxEM/PAd80YG6YdJcPqr14=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DbMWvxV7pB7y/Ahxx5cLJ/5hs4Moo0Fk4ua4v4Xil/gah1YoPQ22I4VEMUMq0Qj83
-         5f9QZod6X5Kwu9tKC7adpCDaZ8wdFlwxAcMaOa5nj+25kusk+HsLkoYAXQHZKPRENR
-         59IEeG+RO0oe2Gme5A7A0zYUsOphR/cumUT4jQETPDshmab/SzCsAXC+PSJdcrG8xV
-         4cjwSJBN5CHjIWsiq3iEx29XAuFQmsfGShh0bWpFUBt7GMeMYdkZhOzuuEr3VJbz7W
-         CWSv09tEs2YtESf7ytsJDAm+RMtGw59TRXyly1BcWpND8cD9YW0UZz0A5/l0oxIBVW
-         y6qHiNnJnibIQ==
-Date:   Fri, 26 Apr 2019 12:17:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        =?UTF-8?B?TWFyYy1BbmRyw6k=?= Lureau <marcandre.lureau@redhat.com>,
-        Noralf =?UTF-8?B?VHLDuG5uZXM=?= <noralf@tronnes.org>
-Subject: linux-next: build failure after merge of the drm tree
-Message-ID: <20190426121735.54ff8785@canb.auug.org.au>
+        Thu, 25 Apr 2019 22:18:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37666 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726086AbfDZCSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 22:18:14 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CF38B5D256DEA74723D7;
+        Fri, 26 Apr 2019 10:18:11 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 26 Apr 2019 10:18:01 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <james.morse@arm.com>
+CC:     <wangxiongfeng2@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] firmware: arm_sdei: Prohibit probing in '_sdei_handler'
+Date:   Fri, 26 Apr 2019 10:16:36 +0800
+Message-ID: <1556244996-1047-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/CxWqRw_sHO9W/Gm/1zGUIvr"; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/CxWqRw_sHO9W/Gm/1zGUIvr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Functions called in '_sdei_handler' are needed to be marked as
+'nokprobe'. Because these functions are called in NMI context and
+neither the arch-code's debug infrastructure nor kprobes core supports
+this.
 
-Hi all,
-
-After merging the drm tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
-
-drivers/gpu/drm/virtio/virtgpu_prime.c:43:18: error: redefinition of 'virtg=
-pu_gem_prime_get_sg_table'
- struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj)
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/virtio/virtgpu_prime.c:31:18: note: previous definition of =
-'virtgpu_gem_prime_get_sg_table' was here
- struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj)
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Caused by a bad automaic merge between commit
-
-  a0cecc23cfcb ("Revert "drm/virtio: drop prime import/export callbacks"")
-
-from Linus' tree and commit
-
-  98f41dc3b3ee ("drm/virtio: implement prime export")
-
-from the drm tree.
-
-I dropped the version of this function from the drm-fixes tree:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 26 Apr 2019 12:13:26 +1000
-Subject: [PATCH] drm/virtio: fix up bad merge of virtgpu_gem_prime_get_sg_t=
-able
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 ---
- drivers/gpu/drm/virtio/virtgpu_prime.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/firmware/arm_sdei.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virti=
-o/virtgpu_prime.c
-index 0f670fc6c954..8fbf71bd0c5e 100644
---- a/drivers/gpu/drm/virtio/virtgpu_prime.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
-@@ -40,11 +40,6 @@ struct sg_table *virtgpu_gem_prime_get_sg_table(struct d=
-rm_gem_object *obj)
- 				     bo->tbo.ttm->num_pages);
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index e6376f9..9cd70d1 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -165,6 +165,7 @@ static int invoke_sdei_fn(unsigned long function_id, unsigned long arg0,
+ 
+ 	return err;
  }
-=20
--struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj)
--{
--	return ERR_PTR(-ENODEV);
--}
--
- struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
- 	struct drm_device *dev, struct dma_buf_attachment *attach,
- 	struct sg_table *table)
---=20
-2.20.1
++NOKPROBE_SYMBOL(invoke_sdei_fn);
+ 
+ static struct sdei_event *sdei_event_find(u32 event_num)
+ {
+@@ -879,6 +880,7 @@ static void sdei_smccc_smc(unsigned long function_id,
+ {
+ 	arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4, 0, 0, res);
+ }
++NOKPROBE_SYMBOL(sdei_smccc_smc);
+ 
+ static void sdei_smccc_hvc(unsigned long function_id,
+ 			   unsigned long arg0, unsigned long arg1,
+@@ -887,6 +889,7 @@ static void sdei_smccc_hvc(unsigned long function_id,
+ {
+ 	arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4, 0, 0, res);
+ }
++NOKPROBE_SYMBOL(sdei_smccc_hvc);
+ 
+ int sdei_register_ghes(struct ghes *ghes, sdei_event_callback *normal_cb,
+ 		       sdei_event_callback *critical_cb)
+-- 
+1.7.12.4
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CxWqRw_sHO9W/Gm/1zGUIvr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzCaj8ACgkQAVBC80lX
-0GxFpwf/TFuH0ZkexQDGAbpdNoL3tS0ByjHqfnk94wixNeEwLSb3GxiNzPUJJBmb
-HAzl4RVWa4aS6S1QyJPUa8lFA3op/k83vPWtavYVB4CWk/USsKY1ZzFBcz6g8ulW
-3E2bm3ZnAci+2VyreJnkAqlEKF1m5VjfiWcLmi4Co7dzye01JyQ0rnDd8ZYuGgRO
-3iOnLmJba58Hk0fMRMt6xNC/cyuMXPs/h+1MD6YyJTWz6VxXBEEBwXoY6w1zQCBd
-RH5y7lxfTdLyHY4/0+vy1wQIriCL2EzA3yXbDiN47ESUbCexsm+djVUGzSyEU1zG
-95iFa/9WsoSo+fW8ffex+HI0FUAHnQ==
-=0kOG
------END PGP SIGNATURE-----
-
---Sig_/CxWqRw_sHO9W/Gm/1zGUIvr--
