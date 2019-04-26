@@ -2,115 +2,132 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE10C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB46C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C002B2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556303021;
-	bh=mASCdQcdtvrBHo9JPU2wxd7Q3ey4lTIdYXalzgpA4zg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FE0nA9HgeUL1M9AKUbdZM64o66FaWrY9CZQ8tY3CuQiT0vQDCVRYSnJIoj0C90xyA
-	 R/OxuAiPiYwZyEQNF/I86xpS0sagRwmqgpqa23h53ClaZGZo51ioAYlKq/ZF99da5/
-	 9uS5D7TctM8F/Cyjn9GwkS/mP5d2a5j1KYdW3SkU=
+	by mail.kernel.org (Postfix) with ESMTP id 5100B2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:27:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUh/0jFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfDZSXk (ORCPT
+        id S1726267AbfDZS1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 14:23:40 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39171 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfDZSXk (ORCPT
+        Fri, 26 Apr 2019 14:27:03 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39595 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfDZS1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 14:23:40 -0400
-Received: by mail-oi1-f195.google.com with SMTP id n187so3677045oih.6;
-        Fri, 26 Apr 2019 11:23:39 -0700 (PDT)
+        Fri, 26 Apr 2019 14:27:02 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l18so2001371pgj.6;
+        Fri, 26 Apr 2019 11:27:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JAjwuc39AddYOCTUpAuM9uE4idFBuger2xGgrN2miVE=;
+        b=RUh/0jFCU1wSaTlGkPOqd9JdA1mmukszuCuzVJkC3yKTKpX/FKI5j482VscslFYIYP
+         EkexQ7pIWzp1E83GR5ehEjLx3pPKqba7sJiRNU7AklOg9KENkctWngHvRLuVk2SY3c5W
+         BymIkkjqUyQufNvjUluUg/nHstHXvcY61rCE0tTqeZlbrzS5cHe3dddJXf51tyHXa2G2
+         q38FwTamVd/Y/CU6hyUnW8uB2dKiY/co6apEdfxu0M9iaEavdRYwtfxVyDz1LeeZ7LqI
+         vV1TPVQGXuTtN8qCxLLTCDpLXKPkZt1SERfM5MfV6OTCSKZuVEoDZV5nBc+2k4BYDemE
+         U4Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BclqWzR9xQNC3VZkmeZkRjdAcsFivWvX2grYqBpgwlg=;
-        b=geVQK/4V/h9PgTxnvoobrcbWvu9jHTNmkiy5zV7nPYdsUOEkOChY5ubsja+xqrny6Z
-         SBJ5SpFNKIGJfWC1/iRl1q8JEDWUl8hQz9o2ujMoW+gAb2Vd5iJ9gxG8xOpzhm7noSro
-         DUzJ6nQDcqg/tbGJtnu+xUmGW67GO1A0pZeMcYiEluTkUOHkygIuwS55MfWHVMGxCa2F
-         EZlXLI/N/ygw7VhgsfTu1LVc90O4ZJzSbbvKurNL1QZxWGgfOl0XkMitPVFhkUMQWmSA
-         7lESJROCFZ17TOA4c14bR2TyK1o6jC0L3poyggZ9gcv15wPGj4k3j7zwPqqhCDVFxtsl
-         U/DA==
-X-Gm-Message-State: APjAAAXJOJZdwZbMjO73WjsVff0xFe8L9CtRqgAxyn5z1SmGxqXe90Zm
-        HkI15wvSs7NGNDVOPHSYCA==
-X-Google-Smtp-Source: APXvYqy+mNyRq7qWwKHwynV/eXclovN7iyVjta3XvZEMBRmzSNitmmHoTXSt3Vs0ok9iUTsDhR1KyQ==
-X-Received: by 2002:aca:bf83:: with SMTP id p125mr7908077oif.47.1556303018852;
-        Fri, 26 Apr 2019 11:23:38 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y9sm10270133otk.20.2019.04.26.11.23.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 11:23:38 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 13:23:37 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 6/9] dt-bindings: display: hdmi-connector: Add DDC
- power supply
-Message-ID: <20190426182337.GA22245@bogus>
-References: <20190413165418.27880-1-megous@megous.com>
- <20190413165418.27880-7-megous@megous.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JAjwuc39AddYOCTUpAuM9uE4idFBuger2xGgrN2miVE=;
+        b=ublt4NhcG8DAoqomnehQCPDHIerJkKQ55MBvz+e106uaVe8AIyGIyZkfJrVdgaoihL
+         qjFBKqHimEkqFJRdX7dH7TyIsuyD4tpuzc/3uNrno7ooWJWbLnfnPTr55LdrXfd4Mllm
+         xIIb4gwkSOdkBxBckFiSifTQayY1QXgDSN1xx2piN42w1v+cpPqkfPUNvKwbe0wg4xwW
+         muNPMKpUqIE03zGnuvvpoXgY/wNvauANe8w8ogCVJXs1EULptIgBXAHWVmtHXgQoSo42
+         TEDhXWGdTiYHQpU1i7yGgb61eWUwWMKLH95Dey+GE9JmJEZonWTwE4RPC0RYdoRrZ2Rr
+         08aA==
+X-Gm-Message-State: APjAAAV8sEb6db1wmssjqdM0TeX7FxxUGYkPSUURx1sb2ZPhGXhF9fOx
+        DLahH0Vuc5LUFuhIVc+wmhXpDTetHyQlCtRk5nw=
+X-Google-Smtp-Source: APXvYqxF5luGqSNZCj/7rH2W4AWnNqj5mPAi3G2Cx8X+JCPt3U/Lrtzw+SgE/OCJbGZ1NID8nc/N93rx7rfPe1hAj8A=
+X-Received: by 2002:a62:2603:: with SMTP id m3mr9679339pfm.232.1556303221827;
+ Fri, 26 Apr 2019 11:27:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190413165418.27880-7-megous@megous.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
+ <20190424103306.GC2654@lahna.fi.intel.com> <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
+ <20190426130615.GT9224@smile.fi.intel.com> <bd5453e1-0279-02ab-3304-edc6ebf509dc@siemens.com>
+ <bc856e19-470d-7655-5680-a031831ab513@metux.net> <2f3da791-4a10-c2c4-dc5a-22ad16ed7be6@siemens.com>
+ <CAHp75VfonL_f1GjRFFhp59R8U+bGzT9pcC7p8XDJ32-_cxT29g@mail.gmail.com>
+ <20190426173329.GA31161@Mani-XPS-13-9360> <CAHp75VdcS_LaKNhaKsFaWa9ReQw4KRDRpc-81kv0Hb9wbZFCTg@mail.gmail.com>
+ <20190426175237.GA31751@Mani-XPS-13-9360>
+In-Reply-To: <20190426175237.GA31751@Mani-XPS-13-9360>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 26 Apr 2019 21:26:50 +0300
+Message-ID: <CAHp75Vd6CtNRFZ1-7OSe5xzqNXNYQQP4-vck=3rMeq2QVZ7pCw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 06:54:15PM +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
-> on-board voltage shifting logic for the DDC bus to be usable. Use
-> ddc-supply on the hdmi-connector to model this.
-> 
-> Add binding documentation for optional ddc-supply property.
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-> index 508aee461e0d..33085aeb0bb9 100644
-> --- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-> +++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-> @@ -9,6 +9,7 @@ Optional properties:
->  - label: a symbolic name for the connector
->  - hpd-gpios: HPD GPIO number
->  - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
-> +- ddc-supply: the power supply for the DDC bus
+On Fri, Apr 26, 2019 at 8:52 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> On Fri, Apr 26, 2019 at 08:44:36PM +0300, Andy Shevchenko wrote:
+> > On Fri, Apr 26, 2019 at 8:33 PM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > > On Fri, Apr 26, 2019 at 08:20:19PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Apr 26, 2019 at 7:05 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
+> > > > > On 26.04.19 16:42, Enrico Weigelt, metux IT consult wrote:
+> > > > > > On 26.04.19 15:36, Jan Kiszka wrote:
+> >
+> > > > The problem here is opaque number. This has to be chip + *relative* pin number/
+> > > > See this:
+> > > > https://stackoverflow.com/questions/55532410/how-do-linux-gpio-numbers-get-their-values/55579640#55579640
+> > > >
+> > >
+> > > But for platform like 96Boards we don't need controller specific lookup, these
+> > > are all handled by the platform code [1] so that the users can use the standard
+> > > pinout number to access GPIOs.
+> >
+> > This is a complete mistake.
+> >
+> > There is *no* global GPIO numbers anymore in Linux. (I don't count
+> > very old legacy platforms)
+> > Read above, it applies to DT or whatever resource provider.
+> >
+>
+> I think you misunderstood what I said.
 
-It's not just for DDC. It powers the chips in bridge dongles for 
-example. Pretty much every diagram I find just calls it 5V or +5V.
+I think you misunderstood what I said. :)
 
-So how about '5V-supply' or 'v5V-supply'?
+>  I referred the standard 96Boards
+> pinout and in the MRAA platform code, individual boards just map their
+> GPIO chip and line number based on that. I didn't mean the deprecated
+> global linux numbering.
 
-Rob
+It can be easily broken by shuffling DT, kernel cnfiguration and
+adding some GPIO expanders. Note, no C-code mangling is involved.
+
+>
+> https://github.com/intel-iot-devkit/mraa/blob/master/src/arm/96boards.c#L109
+>
+> And of couse as Jan mentioned, the chip number will change when some
+> other external GPIO controller got probed before but so far we haven't
+> got to it!
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
