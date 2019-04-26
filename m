@@ -2,94 +2,151 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3810FC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBE2C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EADC20878
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1AB2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbfDZAFE (ORCPT
+        id S1729579AbfDZAHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 20:05:04 -0400
-Received: from mga18.intel.com ([134.134.136.126]:18239 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbfDZAFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 20:05:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 17:05:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,395,1549958400"; 
-   d="scan'208";a="134457201"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga007.jf.intel.com with ESMTP; 25 Apr 2019 17:05:03 -0700
-Received: from orsmsx103.amr.corp.intel.com ([169.254.5.76]) by
- ORSMSX107.amr.corp.intel.com ([169.254.1.17]) with mapi id 14.03.0415.000;
- Thu, 25 Apr 2019 17:05:03 -0700
-From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
-CC:     Sasha Levin <sashal@kernel.org>, Joseph Yasi <joe.yasi@gmail.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "e1000-devel@lists.sourceforge.net" 
-        <e1000-devel@lists.sourceforge.net>
-Subject: RE: [PATCH 2/2] e1000e: start network tx queue only when link is up
-Thread-Topic: [PATCH 2/2] e1000e: start network tx queue only when link is up
-Thread-Index: AQHU9PWEP7ZO9G38rk2Elc+mnFjspaZNnE3w
-Date:   Fri, 26 Apr 2019 00:05:02 +0000
-Message-ID: <309B89C4C689E141A5FF6A0C5FB2118B9703A79B@ORSMSX103.amr.corp.intel.com>
-References: <155548879651.3454.13167784936351314661.stgit@buzz>
- <155548880068.3454.1621821881762819373.stgit@buzz>
-In-Reply-To: <155548880068.3454.1621821881762819373.stgit@buzz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWVlZTJhZDctNTBlOS00NTA5LThiZWQtMmQzZTAzMmY3YWNjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTlVkbUQ5OTlPTGx3aEN3cDN0eDd4TVNheGpGTFFyNTNibGkwQXhqV2g4dFljWnpJVEZjY2ZvUWt0TkQxS2w0YiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 25 Apr 2019 20:07:07 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:50911 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfDZAHH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 20:07:07 -0400
+Received: by mail-io1-f70.google.com with SMTP id b26so1345158ioa.17
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 17:07:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ncsg7IXdsrfkQ0KmZEk6J1vVZHSi1l6+kyeA64/DwGw=;
+        b=rUay8ykcB7NqpewHRS/XauJSZhjzkJJgSeotOzOrLC0kb7ED7daHc6zXdfC63HC212
+         a3hud7VzpUjWSkQcZ0VMZlBL2LdcdQW8nGMuFLD03Pvli/9aLRK4FbndQgdu31RZD3oC
+         Zl+2rvRE5Dv1XAwNcn5OQiEeGZro7ktVgPw2lPcHazoWoZio2mFy0N23zBx7Wiy9ZNOg
+         sALPYIrqmtiVaQUj/hjn5eBMhzfBYqtAFPJNbj1CLxKa6XQKyw7haQIeVEksRyw5q4nK
+         CRgYDpXRahO8KgA6oOirPQw1kLhGgxX/opEowdB7Sz2w2FV2N2wAol5lTDm4pW84Sgb2
+         HVOA==
+X-Gm-Message-State: APjAAAUQgZo4G4NlPuw++kOtXgfp+E4Bx3SO7/jUsRgMDPkdF8R3iIXu
+        5RCi1/mfR4zgSecEBXoBgHRCHP5ETOrvCLHnbY0L5bZ0HDRG
+X-Google-Smtp-Source: APXvYqzRaxQ9a/L1TNIL4VmzU7hmo/Ga4ufLTpRcgEaFev+WsdcgwEfKNCm0dPFxSDJIM4eCf5NTk+MZsT4109ryOTxzZQNB3tvJ
 MIME-Version: 1.0
+X-Received: by 2002:a5e:db02:: with SMTP id q2mr6442598iop.293.1556237225841;
+ Thu, 25 Apr 2019 17:07:05 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 17:07:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000859f5058763b7c3@google.com>
+Subject: general protection fault in vcpu_enter_guest (2)
+From:   syzbot <syzbot+f7e65445a40d3e0e4ebf@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBLb25zdGFudGluIEtobGVibmlrb3YgW21haWx0bzpraGxlYm5pa292QHlhbmRleC10
-ZWFtLnJ1XQ0KPiBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDE3LCAyMDE5IDE6MTMgQU0NCj4gVG86
-IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGludGVsLXdpcmVkLWxhbkBsaXN0cy5vc3Vvc2wub3Jn
-OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgS2lyc2hlciwgSmVmZnJleSBUIDxq
-ZWZmcmV5LnQua2lyc2hlckBpbnRlbC5jb20+DQo+IENjOiBTYXNoYSBMZXZpbiA8c2FzaGFsQGtl
-cm5lbC5vcmc+OyBKb3NlcGggWWFzaSA8am9lLnlhc2lAZ21haWwuY29tPjsNCj4gQnJvd24sIEFh
-cm9uIEYgPGFhcm9uLmYuYnJvd25AaW50ZWwuY29tPjsgQWxleGFuZGVyIER1eWNrDQo+IDxhbGV4
-YW5kZXIuZHV5Y2tAZ21haWwuY29tPjsgZTEwMDAtZGV2ZWxAbGlzdHMuc291cmNlZm9yZ2UubmV0
-DQo+IFN1YmplY3Q6IFtQQVRDSCAyLzJdIGUxMDAwZTogc3RhcnQgbmV0d29yayB0eCBxdWV1ZSBv
-bmx5IHdoZW4gbGluayBpcyB1cA0KPiANCj4gRHJpdmVyIGRvZXMgbm90IHdhbnQgdG8ga2VlcCBw
-YWNrZXRzIGluIHR4IHF1ZXVlIHdoZW4gbGluayBpcyBsb3N0Lg0KPiBCdXQgcHJlc2VudCBjb2Rl
-IG9ubHkgcmVzZXQgTklDIHRvIGZsdXNoIHRoZW0sIGJ1dCBkb2VzIG5vdCBwcmV2ZW50DQo+IHF1
-ZXVpbmcgbmV3IHBhY2tldHMuIE1vcmVvdmVyIHJlc2V0IHNlcXVlbmNlIGl0c2VsZiBjb3VsZCBn
-ZW5lcmF0ZQ0KPiBuZXcgcGFja2V0cyB2aWEgbmV0Y29uc29sZSBhbmQgTklDIGZhbGxzIGludG8g
-ZW5kbGVzcyByZXNldCBsb29wLg0KPiANCj4gVGhpcyBwYXRjaCB3YWtlcyB0eCBxdWV1ZSBvbmx5
-IHdoZW4gTklDIGlzIHJlYWR5IHRvIHNlbmQgcGFja2V0cy4NCj4gDQo+IFRoaXMgaXMgcHJvcGVy
-IGZpeCBmb3IgcHJvYmxlbSBhZGRyZXNzZWQgYnkgY29tbWl0IDBmOWU5ODBiZjVlZQ0KPiAoImUx
-MDAwZTogZml4IGN5Y2xpYyByZXNldHMgYXQgbGluayB1cCB3aXRoIGFjdGl2ZSB0eCIpLg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogS29uc3RhbnRpbiBLaGxlYm5pa292IDxraGxlYm5pa292QHlhbmRl
-eC10ZWFtLnJ1Pg0KPiBTdWdnZXN0ZWQtYnk6IEFsZXhhbmRlciBEdXljayA8YWxleGFuZGVyLmR1
-eWNrQGdtYWlsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9lMTAw
-MGUvbmV0ZGV2LmMgfCAgICA2ICsrKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9u
-cygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQpUZXN0ZWQtYnk6IEFhcm9uIEJyb3duIDxhYXJvbi5m
-LmJyb3duQGludGVsLmNvbT4NCkFnYWluLCBtb3JlIG9mIGEgcmVncmVzc2lvbiBjaGVjayB0aGFu
-IGEgdGVzdCB0aGF0IHRoZSBwYXRjaCBzb2x2ZXMgdGhlIHByb2JsZW0gYXMgSSBkaWQgbm90IG1h
-bmFnZSB0byB0cmlnZ2VyIHRoZSBoYW5nLg0K
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    76c938fc Add linux-next specific files for 20190423
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16863d28a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=62738d35457c577d
+dashboard link: https://syzkaller.appspot.com/bug?extid=f7e65445a40d3e0e4ebf
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1364a6d4a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17c25dc4a00000
+
+Bisection is inconclusive: the first bad commit could be any of:
+
+57bf67e7 KVM: lapic: Disable timer advancement if adaptive tuning goes  
+haywire
+39497d76 KVM: lapic: Track lapic timer advance per vCPU
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17a32fc4a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f7e65445a40d3e0e4ebf@syzkaller.appspotmail.com
+
+L1TF CPU bug present and SMT on, data leak possible. See CVE-2018-3646 and  
+https://www.kernel.org/doc/html/latest/admin-guide/l1tf.html for details.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 7872 Comm: syz-executor233 Not tainted 5.1.0-rc6-next-20190423  
+#29
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:vcpu_enter_guest+0xbcd/0x5fb0 arch/x86/kvm/x86.c:7895
+Code: 48 c1 ea 03 80 3c 02 00 0f 85 6f 48 00 00 49 8b 9f b0 03 00 00 48 b8  
+00 00 00 00 00 fc ff df 48 8d 7b 78 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84  
+c0 74 08 3c 03 0f 8e 39 48 00 00 8b 5b 78 31 ff 89
+RSP: 0018:ffff88808bd4fa00 EFLAGS: 00010006
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff810d1ec9
+RDX: 000000000000000f RSI: ffffffff810ceef2 RDI: 0000000000000078
+RBP: ffff88808bd4fb10 R08: ffff8880a912e580 R09: ffffed1015d05dd0
+R10: ffffed1015d05dcf R11: ffff8880ae82ee7b R12: ffff88808f3e006c
+R13: 0000000000000001 R14: ffff88808f3e0070 R15: ffff88808f3e0040
+FS:  00007f7adb927700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa0427eb000 CR3: 00000000939e4000 CR4: 00000000001426f0
+Call Trace:
+  vcpu_run arch/x86/kvm/x86.c:8037 [inline]
+  kvm_arch_vcpu_ioctl_run+0x425/0x1750 arch/x86/kvm/x86.c:8245
+  kvm_vcpu_ioctl+0x4dc/0xf90 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2684
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446779
+Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7adb926db8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006dbc48 RCX: 0000000000446779
+RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000005
+RBP: 00000000006dbc40 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc4c
+R13: 00007fff1cfa7c1f R14: 00007f7adb9279c0 R15: 20c49ba5e353f7cf
+Modules linked in:
+---[ end trace da6276bd16a5f99d ]---
+RIP: 0010:vcpu_enter_guest+0xbcd/0x5fb0 arch/x86/kvm/x86.c:7895
+Code: 48 c1 ea 03 80 3c 02 00 0f 85 6f 48 00 00 49 8b 9f b0 03 00 00 48 b8  
+00 00 00 00 00 fc ff df 48 8d 7b 78 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84  
+c0 74 08 3c 03 0f 8e 39 48 00 00 8b 5b 78 31 ff 89
+RSP: 0018:ffff88808bd4fa00 EFLAGS: 00010006
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff810d1ec9
+RDX: 000000000000000f RSI: ffffffff810ceef2 RDI: 0000000000000078
+RBP: ffff88808bd4fb10 R08: ffff8880a912e580 R09: ffffed1015d05dd0
+R10: ffffed1015d05dcf R11: ffff8880ae82ee7b R12: ffff88808f3e006c
+R13: 0000000000000001 R14: ffff88808f3e0070 R15: ffff88808f3e0040
+FS:  00007f7adb927700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa0427eb000 CR3: 00000000939e4000 CR4: 00000000001426f0
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
