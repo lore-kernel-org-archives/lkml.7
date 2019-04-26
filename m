@@ -2,183 +2,127 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C1FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C3FC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BF12077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78866214AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NzhXVdzV"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FXCct+jy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbfDZJbs (ORCPT
+        id S1726303AbfDZJce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:31:48 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46877 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfDZJbr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:31:47 -0400
-Received: by mail-lf1-f68.google.com with SMTP id k18so1823220lfj.13;
-        Fri, 26 Apr 2019 02:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8XngklsEx7FjQ3aFz/vWthXQwMXtqDaLXO4qZKwIGnM=;
-        b=NzhXVdzVLOPW7juNy1wbBPURSp9M0sO5UrNBIZrd8orzYK2rsGL9q2dXf/4Se7chTR
-         pOKf8/nwPG6n/Vwc6FhQuSEHAALlprNN2MWJBkNWnSQVLKRj89C8Fa/UaWfchFwHGhrB
-         4ECh8+GBJoiikigtIUfsZDAz23VNv/ol6Q2QYowALlAgp9ke4bLRmvPyvzbaRzRxoIkS
-         oJlz8aIt8pkV+kWsAIiF+d5Z/ZmnXbb0V45CqayFxDJrFyw6CrvmhD7C4mYLqCVSRXPQ
-         UJoh7QrzWzirtHQ6PIJoJ8Ih2BfWzm5B6xl4hduXLSBi72UFStrtgmdAyasnBIBnOK5R
-         Dftg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8XngklsEx7FjQ3aFz/vWthXQwMXtqDaLXO4qZKwIGnM=;
-        b=B7EQbUMButnlJwwjjicNe/ndYCfr7qH43Kx2uzLsDuFmz58FVGHU5rzlFwA84R6gAz
-         Vr+qzpxgJSW5/QOUBegk8hFTbYEY8GgncOL0HPp0OIh2PrX8lP7k+y354zPu+spZ9mX8
-         otjSRajk/WXCeWPER8k8FC7bTVy2BO4k2VdGcoib27CFTyzF8BSauCM6tdioM3PyNLQs
-         w4k23calpSiYEOVU1fTfTodyiuFB1Qe78h03qQ+wy1xbw1JLirtySfWMlaxHa9pK1WgU
-         2jNSQZubhfmNSslrYk52sk3TW1tI2sq5UUTRu2oHg2M/+pxNyyg+9j5YwEym0zpVoKRz
-         viJg==
-X-Gm-Message-State: APjAAAVcQcJChc80IF2oLybG2SBQBgouDEYHq2TuE4TBoPyHYlETQTB5
-        GYDBFkuMVOIgur5rHp/cW9jXZZDJOGY=
-X-Google-Smtp-Source: APXvYqx3VglXoX4j1jUiw/1sM/w/boItLHSKInk0NTWrB4+05ESU/3qu7Wno/iuBRl5wuUrYBLkqzQ==
-X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr10688538lfn.10.1556271105187;
-        Fri, 26 Apr 2019 02:31:45 -0700 (PDT)
-Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id a1sm1418767lfc.17.2019.04.26.02.31.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 02:31:44 -0700 (PDT)
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: phy: realtek: Add rtl8211e rx/tx delays config
-Date:   Fri, 26 Apr 2019 12:30:10 +0300
-Message-Id: <20190426093010.9609-1-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 26 Apr 2019 05:32:34 -0400
+Received: from mail-eopbgr60058.outbound.protection.outlook.com ([40.107.6.58]:18717
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725935AbfDZJcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 05:32:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IazLXwc71o1/8ca6HqydOeHii79txbKZU8tSwBYMFUM=;
+ b=FXCct+jyWewlKqibGn89bLikQP55DixYxyhcTA9qW/x2wuaXBk2TbMAKA/xtOoh5iWndAGpJApNY3kHbLyVorQMdfDW2sGTtck/9G1nTts9moia6ZcWM2Hqo4bk/8clPPNQo+dpwL5mwIo5gA6HaHUzxXHjBJ/Qp+4c9ilZsKp8=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB4174.eurprd04.prod.outlook.com (52.134.30.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.13; Fri, 26 Apr 2019 09:32:29 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1835.010; Fri, 26 Apr 2019
+ 09:32:29 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH v2 07/15] spi: imx: remove ERR009165 workaround
+ on i.mx6ul
+Thread-Topic: [EXT] Re: [PATCH v2 07/15] spi: imx: remove ERR009165 workaround
+ on i.mx6ul
+Thread-Index: AQHU/AbaiLNd2lkp3kyyQFeWzzS7gqZOJ5QAgAAEjIA=
+Date:   Fri, 26 Apr 2019 09:32:29 +0000
+Message-ID: <1556270773.32214.5.camel@nxp.com>
+References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
+         <1556265512-9130-8-git-send-email-yibin.gong@nxp.com>
+         <1556269796.2584.25.camel@pengutronix.de>
+In-Reply-To: <1556269796.2584.25.camel@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e7f356c2-c461-4e67-40ee-08d6ca2a1a02
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4174;
+x-ms-traffictypediagnostic: VI1PR04MB4174:
+x-microsoft-antispam-prvs: <VI1PR04MB4174B58796BC9474B5F0D6BA893E0@VI1PR04MB4174.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 001968DD50
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(376002)(396003)(366004)(189003)(199004)(71190400001)(3846002)(53936002)(6512007)(71200400001)(36756003)(229853002)(2906002)(97736004)(5660300002)(4326008)(103116003)(6436002)(6246003)(6116002)(25786009)(256004)(6486002)(14444005)(305945005)(7416002)(7736002)(14454004)(64756008)(99286004)(66066001)(478600001)(316002)(186003)(102836004)(6506007)(66946007)(110136005)(73956011)(76116006)(91956017)(66556008)(53546011)(26005)(68736007)(446003)(50226002)(476003)(2616005)(11346002)(486006)(86362001)(8676002)(2201001)(54906003)(8936002)(81166006)(81156014)(2501003)(66476007)(76176011)(66446008)(99106002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4174;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: acY8Ts2tiUcXiDv7xG5AAfbx7A9EZ7KtA3YKy+aIgSZSwuEEU7cGRo2G27lLaa35EWU5A1E1rVOMzwV86dpoA65XpHWvb26w+JFhxpVNO6OpAeXVwQIz2/6GvvYvD7G53cHVXqHVdz4Y4+Bo2YLSM2mp7nN1z/Z8Yl25LO1pUDbqBDkXJlAFc9w3ACzFVHpDs6ZAe2c0gWzT3klPXM/nHoYFhkbvoSWcmfpwPKIqUgDcPfMNcperB6g9EdJ25BEuXA4UsiPG7oy6DAR6Ae4duh3+ZFZSiKPLF1EQGCpTLwziTG9Vlo7xX8bPcTy5xzEmsfkCXokWI3uk4RgifTAvWtMq3mUunBH416dp9gIZZ5bf4KgM3yqc9VoRvvjX6zCqrHuN1gja7KyQHAN4+BRiep/N/7D77eQk4Tt/vMI9bDI=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F4809C4EB129E94C9772A7F15C79E018@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7f356c2-c461-4e67-40ee-08d6ca2a1a02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2019 09:32:29.2045
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two chip pins named TXDLY and RXDLY which actually addes
-the 2ns delays to TXC and RXC for TXD/RXD latching. Alas it is only
-documented info regarding the RGMII timing control configurations
-the PHY provides. It turnes out the same settings can be setup
-via MDIO registers hidden in the extension pages layout.
-Particularly the extension page 0xa4 provides a register 0x1c,
-which bits 1 and 2 control the described delays. They are used
-to implemet the "rgmii-{id,rxid,txid}" phy-mode.
-
-The hidden RGMII configs register utilization was found in the
-rtl8211e U-boot driver:
-https://elixir.bootlin.com/u-boot/v2019.01/source/drivers/net/phy/realtek.c#L99
-
-There is also a freebsd discussion regarding this register:
-https://reviews.freebsd.org/D13591
-
-It confirms that the register bits field must control the so called
-configuration pins described in the table 12-13 of the official PHY
-datasheet:
-8:6 = PHY Address
-5:4 = Auto-Negotiation
-3 = Interface Mode Select
-2 = RX Delay
-1 = TX Delay
-0 = SELRGV
-
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
----
- drivers/net/phy/realtek.c | 44 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
-
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index 10df52ccddfe..8776b94d91ed 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -23,11 +23,14 @@
- 
- #define RTL821x_INSR				0x13
- 
-+#define RTL821x_EXT_PAGE_SELECT			0x1e
- #define RTL821x_PAGE_SELECT			0x1f
- 
- #define RTL8211F_INSR				0x1d
- 
- #define RTL8211F_TX_DELAY			BIT(8)
-+#define RTL8211E_TX_DELAY			BIT(1)
-+#define RTL8211E_RX_DELAY			BIT(2)
- 
- #define RTL8201F_ISR				0x1e
- #define RTL8201F_IER				0x13
-@@ -174,6 +177,46 @@ static int rtl8211f_config_init(struct phy_device *phydev)
- 	return phy_modify_paged(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY, val);
- }
- 
-+static int rtl8211e_config_init(struct phy_device *phydev)
-+{
-+	int ret, oldpage;
-+	u16 val = 0;
-+
-+	ret = genphy_config_init(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* enable TX/RX delay for rgmii-* modes, otherwise disable it */
-+	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
-+		val = RTL8211E_TX_DELAY | RTL8211E_RX_DELAY;
-+	else if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-+		val = RTL8211E_TX_DELAY;
-+	else if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-+		val = RTL8211E_RX_DELAY;
-+
-+	/* According to a sample driver there is a 0x1c config register on
-+	 * a 0xa4 extension page (0x7) layout. It can be used to disable/enable
-+	 * the RX/TX delays otherwise controlled by hardware strobes. It can
-+	 * also be used to customize the whole configuration register:
-+	 * 8:6 = PHY Address, 5:4 = Auto-Negotiation, 3 = Interface Mode Select,
-+	 * 2 = RX Delay, 1 = TX Delay, 0 = SELRGV (see original PHY datasheet
-+	 * for details).
-+	 */
-+	oldpage = phy_select_page(phydev, 0x7);
-+	if (oldpage < 0)
-+		goto err_restore_page;
-+
-+	ret = phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
-+	if (!ret)
-+		goto err_restore_page;
-+
-+	ret = phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
-+			 val);
-+
-+err_restore_page:
-+	return phy_restore_page(phydev, oldpage, ret);
-+}
-+
- static int rtl8211b_suspend(struct phy_device *phydev)
- {
- 	phy_write(phydev, MII_MMD_DATA, BIT(9));
-@@ -257,6 +300,7 @@ static struct phy_driver realtek_drvs[] = {
- 		PHY_ID_MATCH_EXACT(0x001cc915),
- 		.name		= "RTL8211E Gigabit Ethernet",
- 		.features	= PHY_GBIT_FEATURES,
-+		.config_init	= &rtl8211e_config_init,
- 		.ack_interrupt	= &rtl821x_ack_interrupt,
- 		.config_intr	= &rtl8211e_config_intr,
- 		.suspend	= genphy_suspend,
--- 
-2.21.0
-
+T24gMjAxOS0wNC0yNiBhdCAxMTowOSArMDIwMCwgTHVjYXMgU3RhY2ggd3JvdGU6DQo+wqANCj4g
+PiDCoHN0YXRpYyBpbmxpbmUgaW50IGlzX2lteDUzX2Vjc3BpKHN0cnVjdCBzcGlfaW14X2RhdGEg
+KmQpDQo+ID4gQEAgLTU4NSw5ICs1ODcsMTYgQEAgc3RhdGljIGludCBteDUxX2Vjc3BpX3ByZXBh
+cmVfdHJhbnNmZXIoc3RydWN0DQo+ID4gc3BpX2lteF9kYXRhICpzcGlfaW14LA0KPiA+IMKgwqDC
+oMKgwqDCoGN0cmwgfD0gbXg1MV9lY3NwaV9jbGtkaXYoc3BpX2lteCwgdC0+c3BlZWRfaHosICZj
+bGspOw0KPiA+IMKgwqDCoMKgwqDCoHNwaV9pbXgtPnNwaV9idXNfY2xrID0gY2xrOw0KPiA+IA0K
+PiA+IC3CoMKgwqDCoMKgLyogRVJSMDA5MTY1OiB3b3JrIGluIFhIQyBtb2RlIGFzIFBJTyAqLw0K
+PiA+IC3CoMKgwqDCoMKgaWYgKHNwaV9pbXgtPnVzZWRtYSkNCj4gPiAtwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBjdHJsICY9IH5NWDUxX0VDU1BJX0NUUkxfU01DOw0KPiA+ICvCoMKgwqDCoMKg
+LyoNCj4gPiArwqDCoMKgwqDCoMKgKiBFUlIwMDkxNjU6IHdvcmsgaW4gWEhDIG1vZGUgaW5zdGVh
+ZCBvZiBTTUMgYXMgUElPIG9uIHRoZQ0KPiA+IGNoaXBzDQo+ID4gK8KgwqDCoMKgwqDCoCogYmVm
+b3JlIGkubXg2dWwuDQo+ID4gK8KgwqDCoMKgwqDCoCovDQo+ID4gK8KgwqDCoMKgwqBpZiAoc3Bp
+X2lteC0+dXNlZG1hKSB7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKHNwaV9p
+bXgtPmRldnR5cGVfZGF0YS0+ZGV2dHlwZSA9PSBJTVg2VUxfRUNTUEkpDQo+ID4gDQo+ID4gPSwg
+b3RoZXJ3aXNlIHRoZSB3b3JrYXJvdW5kIG1pZ2h0IGJlIGFwcGxpZWQgdG8gbGF0ZXIgZ2VuZXJh
+dGlvbnMNCj4gPiBvZg0KPiB0aGUgY29yZSBpZiBtb3JlIGFyZSBhZGRlZCBsYXRlci4NCj4gDQo+
+IFJlZ2FyZHMsDQo+IEx1Y2FzDQpVbmRlcnN0b29kIHlvdXIgcG9pbnQsIGJ1dCBmb3Igbm93IGNo
+b29zZSBkaWZmZXJlbnQgY29tcGF0aWJsZSBuYW1lDQpjb3VsZCBhcHBseSB0aGlzIHdvcmthcm91
+bmQgb3Igbm90LiBJIHByZWZlciB0byBsZWF2ZSBpdCBmb3IgbmV4dCBlY3NwaQ0KSVAgdXBncmFk
+ZSBpZiBpdCByZWFsbHkgY29tZSBpbiB0aGUgZnV0dXJlLCBvdGhlcndpc2UgdGhhdCAnPj0nIGJy
+aW5nDQphIGxpdHRsZSBiaXQgY29uZnVzZSBpZiB0aGVyZSBpcyBubyB1cGRhdGUgZm9yIGVjc3Bp
+IElQLi4u
