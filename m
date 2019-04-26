@@ -2,199 +2,161 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D05C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E05CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5F4206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556272177;
-	bh=lkO6Rz2DiapVeRSd0t08iMd6FYynDAws5LZk6Y39F5M=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=yKF0GKXf16XfYUaulswP4LQabHGxjDl1ry+hP4k/yJ0XDi1/hw5IwpYiFuMIrGUap
-	 mR4iYBNtu5H8XaBNEBivX+LcwkNeN4mavfs0Cbjl++JObbhm10zby1cxb7PBCr39Hi
-	 pXDFD8eKeFq6BbUAo6/az/4JMh72l2Znjn2eRklI=
+	by mail.kernel.org (Postfix) with ESMTP id 12A8C206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfDZJtg (ORCPT
+        id S1726411AbfDZJuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:49:36 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45424 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDZJkV (ORCPT
+        Fri, 26 Apr 2019 05:50:19 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:45652 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfDZJuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:40:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=RSLf2VHcn1xnUInCdFeL3Ts/cHHcDwd9UlEvJRmoBa0=; b=Jl4pnAdBKOu0
-        5haoJmfDmPp9qh0lwmtR9Ks4/eO8AMAQkkTrB0/fjqum04nAJuBrgZv+8DCZdUk9b5/qErWCYHBY/
-        hFbYDFJiMBMxEsLanZcCd+uQrF3sCaPoeLG/n3WGqIWguM+yKaRa2JiK0hai046YiQM2viFaaIKmH
-        t+9Zk=;
-Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxL7-0003Hv-0H; Fri, 26 Apr 2019 09:40:17 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 071FC441D3D; Fri, 26 Apr 2019 10:40:15 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: sy8106a: Get rid of struct sy8106a" to the regulator tree
-In-Reply-To: <20190420030125.6661-1-axel.lin@ingics.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190426094015.071FC441D3D@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:40:14 +0100 (BST)
+        Fri, 26 Apr 2019 05:50:18 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 0012425AEA8;
+        Fri, 26 Apr 2019 19:50:14 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 57ED29403ED; Fri, 26 Apr 2019 11:50:12 +0200 (CEST)
+Date:   Fri, 26 Apr 2019 11:50:12 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tfranzen@de.adit-jv.com,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH] arm64: dts: ulcb-kf: Add support for TI WL1837
+Message-ID: <20190426095012.xzyzevvmom4fzdcd@verge.net.au>
+References: <20190411124102.22442-1-spapageorgiou@de.adit-jv.com>
+ <20190425111245.GA7258@vmlxhi-102.adit-jv.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425111245.GA7258@vmlxhi-102.adit-jv.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi,
 
-   regulator: sy8106a: Get rid of struct sy8106a
+from my point of view what is required is a review.
+I will try to find someone to do so.
+I apologise for not doing so earlier.
 
-has been applied to the regulator tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 5d7ebba38bafa8f6eba2540e8a36233ea6d6d0dc Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Sat, 20 Apr 2019 11:01:25 +0800
-Subject: [PATCH] regulator: sy8106a: Get rid of struct sy8106a
-
-All the fields in struct sy8106a are only used in sy8106a_i2c_probe(), so
-use local variables instead.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/sy8106a-regulator.c | 40 +++++++++------------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/regulator/sy8106a-regulator.c b/drivers/regulator/sy8106a-regulator.c
-index 65fbd1f0b612..42e03b2c10a0 100644
---- a/drivers/regulator/sy8106a-regulator.c
-+++ b/drivers/regulator/sy8106a-regulator.c
-@@ -22,12 +22,6 @@
-  */
- #define SY8106A_GO_BIT			BIT(7)
- 
--struct sy8106a {
--	struct regulator_dev *rdev;
--	struct regmap *regmap;
--	u32 fixed_voltage;
--};
--
- static const struct regmap_config sy8106a_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
-@@ -70,36 +64,32 @@ static const struct regulator_desc sy8106a_reg = {
- static int sy8106a_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
- {
--	struct sy8106a *chip;
- 	struct device *dev = &i2c->dev;
--	struct regulator_dev *rdev = NULL;
-+	struct regulator_dev *rdev;
- 	struct regulator_config config = { };
-+	struct regmap *regmap;
- 	unsigned int reg, vsel;
-+	u32 fixed_voltage;
- 	int error;
- 
--	chip = devm_kzalloc(&i2c->dev, sizeof(struct sy8106a), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
--
- 	error = of_property_read_u32(dev->of_node, "silergy,fixed-microvolt",
--				     &chip->fixed_voltage);
-+				     &fixed_voltage);
- 	if (error)
- 		return error;
- 
--	if (chip->fixed_voltage < SY8106A_MIN_MV * 1000 ||
--	    chip->fixed_voltage > SY8106A_MAX_MV * 1000)
-+	if (fixed_voltage < SY8106A_MIN_MV * 1000 ||
-+	    fixed_voltage > SY8106A_MAX_MV * 1000)
- 		return -EINVAL;
- 
--	chip->regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
--	if (IS_ERR(chip->regmap)) {
--		error = PTR_ERR(chip->regmap);
-+	regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		error = PTR_ERR(regmap);
- 		dev_err(dev, "Failed to allocate register map: %d\n", error);
- 		return error;
- 	}
- 
- 	config.dev = &i2c->dev;
--	config.regmap = chip->regmap;
--	config.driver_data = chip;
-+	config.regmap = regmap;
- 
- 	config.of_node = dev->of_node;
- 	config.init_data = of_get_regulator_init_data(dev, dev->of_node,
-@@ -109,15 +99,15 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c,
- 		return -ENOMEM;
- 
- 	/* Ensure GO_BIT is enabled when probing */
--	error = regmap_read(chip->regmap, SY8106A_REG_VOUT1_SEL, &reg);
-+	error = regmap_read(regmap, SY8106A_REG_VOUT1_SEL, &reg);
- 	if (error)
- 		return error;
- 
- 	if (!(reg & SY8106A_GO_BIT)) {
--		vsel = (chip->fixed_voltage / 1000 - SY8106A_MIN_MV) /
-+		vsel = (fixed_voltage / 1000 - SY8106A_MIN_MV) /
- 		       SY8106A_STEP_MV;
- 
--		error = regmap_write(chip->regmap, SY8106A_REG_VOUT1_SEL,
-+		error = regmap_write(regmap, SY8106A_REG_VOUT1_SEL,
- 				     vsel | SY8106A_GO_BIT);
- 		if (error)
- 			return error;
-@@ -131,10 +121,6 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c,
- 		return error;
- 	}
- 
--	chip->rdev = rdev;
--
--	i2c_set_clientdata(i2c, chip);
--
- 	return 0;
- }
- 
--- 
-2.20.1
-
+On Thu, Apr 25, 2019 at 01:12:45PM +0200, Eugeniu Rosca wrote:
+> Hi Simon,
+> 
+> Do we have any chance getting this upstream? If so, would you kindly
+> list the acceptance criteria we have to conform to?
+> 
+> Many thanks.
+> 
+> On Thu, Apr 11, 2019 at 02:41:03PM +0200, Spyridon Papageorgiou wrote:
+> > This patch adds description of TI WL1837 and links interfaces
+> > to communicate with the IC, namely the SDIO interface to WLAN.
+> > 
+> > Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
+> > ---
+> >  arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 49 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> > index 7a09576..27851a7 100644
+> > --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> > @@ -38,6 +38,18 @@
+> >  		regulator-min-microvolt = <5000000>;
+> >  		regulator-max-microvolt = <5000000>;
+> >  	};
+> > +
+> > +	wlan_en: regulator-wlan_en {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "wlan-en-regulator";
+> > +
+> > +		regulator-min-microvolt = <3300000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +
+> > +		gpio = <&gpio_exp_74 4 GPIO_ACTIVE_HIGH>;
+> > +		startup-delay-us = <70000>;
+> > +		enable-active-high;
+> > +	};
+> >  };
+> >  
+> >  &can0 {
+> > @@ -88,6 +100,13 @@
+> >  			line-name = "Audio_Out_OFF";
+> >  		};
+> >  
+> > +		sd-wifi-mux {
+> > +			gpio-hog;
+> > +			gpios = <5 GPIO_ACTIVE_HIGH>;
+> > +			output-low;	/* Connect WL1837 */
+> > +			line-name = "SD WiFi mux";
+> > +		};
+> > +
+> >  		hub_pwen {
+> >  			gpio-hog;
+> >  			gpios = <6 GPIO_ACTIVE_HIGH>;
+> > @@ -254,6 +273,12 @@
+> >  		function = "scif1";
+> >  	};
+> >  
+> > +	sdhi3_pins: sdhi3 {
+> > +		groups = "sdhi3_data4", "sdhi3_ctrl";
+> > +		function = "sdhi3";
+> > +		power-source = <3300>;
+> > +	};
+> > +
+> >  	usb0_pins: usb0 {
+> >  		groups = "usb0";
+> >  		function = "usb0";
+> > @@ -273,6 +298,30 @@
+> >  	status = "okay";
+> >  };
+> >  
+> > +&sdhi3 {
+> > +	pinctrl-0 = <&sdhi3_pins>;
+> > +	pinctrl-names = "default";
+> > +
+> > +	vmmc-supply = <&wlan_en>;
+> > +	vqmmc-supply = <&wlan_en>;
+> > +	bus-width = <4>;
+> > +	no-1-8-v;
+> > +	non-removable;
+> > +	cap-power-off-card;
+> > +	keep-power-in-suspend;
+> > +	max-frequency = <26000000>;
+> > +	status = "okay";
+> > +
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	wlcore: wlcore@2 {
+> > +		compatible = "ti,wl1837";
+> > +		reg = <2>;
+> > +		interrupt-parent = <&gpio1>;
+> > +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> > +	};
+> > +};
+> > +
+> >  &usb2_phy0 {
+> >  	pinctrl-0 = <&usb0_pins>;
+> >  	pinctrl-names = "default";
+> > -- 
+> > 2.7.4
+> > 
+> 
+> -- 
+> Best regards,
+> Eugeniu.
+> 
