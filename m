@@ -2,348 +2,142 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53727C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFF3C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D1C206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B4B2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556271820;
+	bh=DdBSdm5TL3z05CQUTqpvTxj9GXse+B1DOXyKtHgnfnE=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=DVC9SvoI6qVFd7piSPN0dF4HxcT2AxZ6fW9PWTjVNbtu0Ku8lLJJGejQv0kNxYqF4
+	 fa5aMmAOlFMjoFzhBvU44mTuTmOblaSfTj4p9SQIR3FOR62pilIXupmWADCzMzct86
+	 F6c6fpLU/aELaG0ajWZ/0efbb50v2Zgl4yDLugWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfDZJn1 (ORCPT
+        id S1727059AbfDZJni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:43:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7693 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726199AbfDZJnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:43:12 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E57D04EC870E357402F4;
-        Fri, 26 Apr 2019 17:43:09 +0800 (CST)
-Received: from linux-ioko.site (10.71.200.31) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 26 Apr 2019 17:42:59 +0800
-From:   Jian Shen <shenjian15@huawei.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>
-Subject: [PATCH topic-hns-5.1 2/3] {topost} net: hns3: add autoneg and change speed support for fibre port
-Date:   Fri, 26 Apr 2019 17:42:42 +0800
-Message-ID: <1556271763-24142-3-git-send-email-shenjian15@huawei.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556271763-24142-1-git-send-email-shenjian15@huawei.com>
-References: <1556271763-24142-1-git-send-email-shenjian15@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.71.200.31]
-X-CFilter-Loop: Reflected
+        Fri, 26 Apr 2019 05:43:38 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46164 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbfDZJko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 05:40:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=jtTH0TpgOBBUDtpKKnyrbTESZBwmjBlYdKBRoCyTaqs=; b=v1zzMBFxgmRw
+        HiIeEDdhtGFhoDDhgiI0tMMVb61SY+CEEEMFWuZygB7kv1oybuClMgWdJ6rXViFIUMxVKYu532yAq
+        /WDc+yCMzGaRFpWQWvtfx/vftAj14IMLvt/xi+PJmWqDeXB6A5xaPx4W3/Xv2V14FWux1uXblcbq1
+        5SgYE=;
+Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hJxLV-0003Jw-G0; Fri, 26 Apr 2019 09:40:41 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 3865E441D3B; Fri, 26 Apr 2019 10:40:40 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: tps80031: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: 
+X-Patchwork-Hint: ignore
+Message-Id: <20190426094040.3865E441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:40:40 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously, our driver only supports phydev to autoneg or change
-port speed. This patch adds support for fibre port, driver get
-media speed capability and autoneg capability from firmware. If
-autoneg on, the user configure speed may be overwrote.
+The patch
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+   regulator: tps80031: Switch to SPDX identifier
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From fd1a4da3bfd77d3fe15165948b948ead2b522c1c Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Tue, 16 Apr 2019 18:17:29 +0800
+Subject: [PATCH] regulator: tps80031: Switch to SPDX identifier
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  6 ++
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 88 ++++++++++++++++++++--
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 76 +++++++++++++++++--
- 3 files changed, 160 insertions(+), 10 deletions(-)
+ drivers/regulator/tps80031-regulator.c | 34 ++++++++------------------
+ 1 file changed, 10 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 926889a..010ba8a 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -236,6 +236,8 @@ struct hnae3_ae_dev {
-  *   Get negotiation status,speed and duplex
-  * get_media_type()
-  *   Get media type of MAC
-+ * check_port_speed()
-+ *   Check target speed whether is supported
-  * adjust_link()
-  *   Adjust link status
-  * set_loopback()
-@@ -252,6 +254,8 @@ struct hnae3_ae_dev {
-  *   set auto autonegotiation of pause frame use
-  * get_autoneg()
-  *   get auto autonegotiation of pause frame use
-+ * restart_autoneg()
-+ *   restart autonegotiation
-  * get_coalesce_usecs()
-  *   get usecs to delay a TX interrupt after a packet is sent
-  * get_rx_max_coalesced_frames()
-@@ -351,6 +355,7 @@ struct hnae3_ae_ops {
+diff --git a/drivers/regulator/tps80031-regulator.c b/drivers/regulator/tps80031-regulator.c
+index 8e65a13e2ef5..85a6a8ca8c1b 100644
+--- a/drivers/regulator/tps80031-regulator.c
++++ b/drivers/regulator/tps80031-regulator.c
+@@ -1,27 +1,13 @@
+-/*
+- * tps80031-regulator.c -- TI TPS80031 regulator driver.
+- *
+- * Regulator driver for TI TPS80031/TPS80032 Fully Integrated Power
+- * Management with Power Path and Battery Charger.
+- *
+- * Copyright (c) 2012, NVIDIA Corporation.
+- *
+- * Author: Laxman Dewangan <ldewangan@nvidia.com>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation version 2.
+- *
+- * This program is distributed "as is" WITHOUT ANY WARRANTY of any kind,
+- * whether express or implied; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+- * 02111-1307, USA
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// tps80031-regulator.c -- TI TPS80031 regulator driver.
++//
++// Regulator driver for TI TPS80031/TPS80032 Fully Integrated Power
++// Management with Power Path and Battery Charger.
++//
++// Copyright (c) 2012, NVIDIA Corporation.
++//
++// Author: Laxman Dewangan <ldewangan@nvidia.com>
  
- 	void (*get_media_type)(struct hnae3_handle *handle, u8 *media_type,
- 			       u8 *module_type);
-+	int (*check_port_speed)(struct hnae3_handle *handle, u32 speed);
- 	void (*adjust_link)(struct hnae3_handle *handle, int speed, int duplex);
- 	int (*set_loopback)(struct hnae3_handle *handle,
- 			    enum hnae3_loop loop_mode, bool en);
-@@ -366,6 +371,7 @@ struct hnae3_ae_ops {
- 
- 	int (*set_autoneg)(struct hnae3_handle *handle, bool enable);
- 	int (*get_autoneg)(struct hnae3_handle *handle);
-+	int (*restart_autoneg)(struct hnae3_handle *handle);
- 
- 	void (*get_coalesce_usecs)(struct hnae3_handle *handle,
- 				   u32 *tx_usecs, u32 *rx_usecs);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index fe387a4..5089de4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -681,9 +681,53 @@ static int hns3_get_link_ksettings(struct net_device *netdev,
- 	return 0;
- }
- 
-+static int hns3_check_ksettings_param(struct net_device *netdev,
-+				      const struct ethtool_link_ksettings *cmd)
-+{
-+	struct hnae3_handle *handle = hns3_get_handle(netdev);
-+	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
-+	u8 module_type = HNAE3_MODULE_TYPE_UNKNOWN;
-+	u8 media_type = HNAE3_MEDIA_TYPE_UNKNOWN;
-+	u8 autoneg;
-+	u32 speed;
-+	u8 duplex;
-+	int ret;
-+
-+	if (ops->get_ksettings_an_result) {
-+		ops->get_ksettings_an_result(handle, &autoneg, &speed, &duplex);
-+		if (cmd->base.autoneg == autoneg && cmd->base.speed == speed &&
-+		    cmd->base.duplex == duplex)
-+			return 0;
-+	}
-+
-+	if (ops->get_media_type)
-+		ops->get_media_type(handle, &media_type, &module_type);
-+
-+	if (cmd->base.duplex != DUPLEX_FULL &&
-+	    media_type != HNAE3_MEDIA_TYPE_COPPER) {
-+		netdev_err(netdev,
-+			   "only copper port supports half duplex!");
-+		return -EINVAL;
-+	}
-+
-+	if (ops->check_port_speed) {
-+		ret = ops->check_port_speed(handle, speed);
-+		if (ret) {
-+			netdev_err(netdev, "unsupported speed\n");
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int hns3_set_link_ksettings(struct net_device *netdev,
- 				   const struct ethtool_link_ksettings *cmd)
- {
-+	struct hnae3_handle *handle = hns3_get_handle(netdev);
-+	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
-+	int ret = 0;
-+
- 	/* Chip don't support this mode. */
- 	if (cmd->base.speed == SPEED_1000 && cmd->base.duplex == DUPLEX_HALF)
- 		return -EINVAL;
-@@ -692,7 +736,24 @@ static int hns3_set_link_ksettings(struct net_device *netdev,
- 	if (netdev->phydev)
- 		return phy_ethtool_ksettings_set(netdev->phydev, cmd);
- 
--	return -EOPNOTSUPP;
-+	if (handle->pdev->revision == 0x20)
-+		return -EOPNOTSUPP;
-+
-+	ret = hns3_check_ksettings_param(netdev, cmd);
-+	if (ret)
-+		return ret;
-+
-+	if (ops->set_autoneg) {
-+		ret = ops->set_autoneg(handle, cmd->base.autoneg);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (ops->cfg_mac_speed_dup_h)
-+		ret = ops->cfg_mac_speed_dup_h(handle, cmd->base.speed,
-+					       cmd->base.duplex);
-+
-+	return ret;
- }
- 
- static u32 hns3_get_rss_key_size(struct net_device *netdev)
-@@ -889,19 +950,36 @@ static int hns3_set_rxnfc(struct net_device *netdev, struct ethtool_rxnfc *cmd)
- 
- static int hns3_nway_reset(struct net_device *netdev)
- {
-+	struct hnae3_handle *handle = hns3_get_handle(netdev);
-+	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
- 	struct phy_device *phy = netdev->phydev;
-+	int autoneg;
- 
- 	if (!netif_running(netdev))
- 		return 0;
- 
--	/* Only support nway_reset for netdev with phy attached for now */
--	if (!phy)
-+	if (hns3_nic_resetting(netdev)) {
-+		netdev_err(netdev, "dev resetting!");
-+		return -EBUSY;
-+	}
-+
-+	if (!ops->get_autoneg || !ops->restart_autoneg)
- 		return -EOPNOTSUPP;
- 
--	if (phy->autoneg != AUTONEG_ENABLE)
-+	autoneg = ops->get_autoneg(handle);
-+	if (autoneg != AUTONEG_ENABLE) {
-+		netdev_err(netdev,
-+			   "Autoneg is off, don't support to restart it\n");
- 		return -EINVAL;
-+	}
-+
-+	if (phy)
-+		return genphy_restart_aneg(phy);
-+
-+	if (handle->pdev->revision == 0x20)
-+		return -EOPNOTSUPP;
- 
--	return genphy_restart_aneg(phy);
-+	return ops->restart_autoneg(handle);
- }
- 
- static void hns3_get_channels(struct net_device *netdev,
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index c0f969e..ea3ac4c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -843,6 +843,48 @@ static int hclge_parse_speed(int speed_cmd, int *speed)
- 	return 0;
- }
- 
-+static int hclge_check_port_speed(struct hnae3_handle *handle, u32 speed)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+	u32 speed_ability = hdev->hw.mac.speed_ability;
-+	u32 speed_bit = 0;
-+
-+	switch (speed) {
-+	case HCLGE_MAC_SPEED_10M:
-+		speed_bit = HCLGE_SUPPORT_10M_BIT;
-+		break;
-+	case HCLGE_MAC_SPEED_100M:
-+		speed_bit = HCLGE_SUPPORT_100M_BIT;
-+		break;
-+	case HCLGE_MAC_SPEED_1G:
-+		speed_bit = HCLGE_SUPPORT_1G_BIT;
-+		break;
-+	case HCLGE_MAC_SPEED_10G:
-+		speed_bit = HCLGE_SUPPORT_10G_BIT;
-+		break;
-+	case HCLGE_MAC_SPEED_25G:
-+		speed_bit = HCLGE_SUPPORT_25G_BIT;
-+		break;
-+	case HCLGE_MAC_SPEED_40G:
-+		speed_bit = HCLGE_SUPPORT_40G_BIT;
-+		break;
-+	case HCLGE_MAC_SPEED_50G:
-+		speed_bit = HCLGE_SUPPORT_50G_BIT;
-+		break;
-+	case HCLGE_MAC_SPEED_100G:
-+		speed_bit = HCLGE_SUPPORT_100G_BIT;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (speed_bit & speed_ability)
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
- static void hclge_convert_setting_sr(struct hclge_mac *mac, u8 speed_ability)
- {
- 	if (speed_ability & HCLGE_SUPPORT_10G_BIT)
-@@ -2190,6 +2232,16 @@ static int hclge_set_autoneg(struct hnae3_handle *handle, bool enable)
- 	struct hclge_vport *vport = hclge_get_vport(handle);
- 	struct hclge_dev *hdev = vport->back;
- 
-+	if (!hdev->hw.mac.support_autoneg) {
-+		if (enable) {
-+			dev_err(&hdev->pdev->dev,
-+				"autoneg is not supported by current port\n");
-+			return -EOPNOTSUPP;
-+		} else {
-+			return 0;
-+		}
-+	}
-+
- 	return hclge_set_autoneg_en(hdev, enable);
- }
- 
-@@ -2205,6 +2257,18 @@ static int hclge_get_autoneg(struct hnae3_handle *handle)
- 	return hdev->hw.mac.autoneg;
- }
- 
-+static int hclge_restart_autoneg(struct hnae3_handle *handle)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+	int ret;
-+
-+	ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
-+	if (ret)
-+		return ret;
-+	return hclge_notify_client(hdev, HNAE3_UP_CLIENT);
-+}
-+
- static int hclge_mac_init(struct hclge_dev *hdev)
- {
- 	struct hclge_mac *mac = &hdev->hw.mac;
-@@ -7945,13 +8009,13 @@ static int hclge_set_pauseparam(struct hnae3_handle *handle, u32 auto_neg,
- 	if (!fc_autoneg)
- 		return hclge_cfg_pauseparam(hdev, rx_en, tx_en);
- 
--	/* Only support flow control negotiation for netdev with
--	 * phy attached for now.
--	 */
--	if (!phydev)
-+	if (phydev)
-+		return phy_start_aneg(phydev);
-+
-+	if (hdev->pdev->revision == 0x20)
- 		return -EOPNOTSUPP;
- 
--	return phy_start_aneg(phydev);
-+	return hclge_restart_autoneg(handle);
- }
- 
- static void hclge_get_ksettings_an_result(struct hnae3_handle *handle,
-@@ -9076,6 +9140,7 @@ static int hclge_gro_en(struct hnae3_handle *handle, bool enable)
- 	.get_ksettings_an_result = hclge_get_ksettings_an_result,
- 	.cfg_mac_speed_dup_h = hclge_cfg_mac_speed_dup_h,
- 	.get_media_type = hclge_get_media_type,
-+	.check_port_speed = hclge_check_port_speed,
- 	.get_rss_key_size = hclge_get_rss_key_size,
- 	.get_rss_indir_size = hclge_get_rss_indir_size,
- 	.get_rss = hclge_get_rss,
-@@ -9092,6 +9157,7 @@ static int hclge_gro_en(struct hnae3_handle *handle, bool enable)
- 	.rm_mc_addr = hclge_rm_mc_addr,
- 	.set_autoneg = hclge_set_autoneg,
- 	.get_autoneg = hclge_get_autoneg,
-+	.restart_autoneg = hclge_restart_autoneg,
- 	.get_pauseparam = hclge_get_pauseparam,
- 	.set_pauseparam = hclge_set_pauseparam,
- 	.set_mtu = hclge_set_mtu,
+ #include <linux/delay.h>
+ #include <linux/err.h>
 -- 
-1.9.1
+2.20.1
 
