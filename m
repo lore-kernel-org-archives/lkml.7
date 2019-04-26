@@ -2,183 +2,111 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF6FC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52173C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7AE208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF7F2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfDZNCE (ORCPT
+        id S1726448AbfDZNCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:02:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48502 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726060AbfDZNBj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:01:39 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QCsRji100594
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:01:37 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s40xt5k4v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:01:37 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Fri, 26 Apr 2019 14:01:35 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 26 Apr 2019 14:01:32 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3QD1U1j47841436
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Apr 2019 13:01:31 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA96642042;
-        Fri, 26 Apr 2019 13:01:30 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40D3C42059;
-        Fri, 26 Apr 2019 13:01:30 +0000 (GMT)
-Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.145.15.72])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 26 Apr 2019 13:01:30 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
-        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: [PATCH v7 2/4] vfio: ap: register IOMMU VFIO notifier
-Date:   Fri, 26 Apr 2019 15:01:26 +0200
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
-References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19042613-0020-0000-0000-000003368277
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042613-0021-0000-0000-00002188F39F
-Message-Id: <1556283688-556-3-git-send-email-pmorel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904260089
+        Fri, 26 Apr 2019 09:02:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19974 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbfDZNCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 09:02:16 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 06:02:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,397,1549958400"; 
+   d="scan'208";a="319201866"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga005.jf.intel.com with ESMTP; 26 Apr 2019 06:02:05 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hK0UO-0004El-E7; Fri, 26 Apr 2019 16:02:04 +0300
+Date:   Fri, 26 Apr 2019 16:02:04 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Tobin C . Harding" <me@tobin.cc>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/10] vsprintf: Prevent silent crashes and
+ consolidate error handling
+Message-ID: <20190426130204.GS9224@smile.fi.intel.com>
+References: <20190417115350.20479-1-pmladek@suse.com>
+ <20190419015112.GA18748@jagdpanzerIV>
+ <20190424135306.xiuhj6dmzrgytulp@pathway.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424135306.xiuhj6dmzrgytulp@pathway.suse.cz>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To be able to use the VFIO interface to facilitate the
-mediated device memory pinning/unpinning we need to register
-a notifier for IOMMU.
+On Wed, Apr 24, 2019 at 03:53:06PM +0200, Petr Mladek wrote:
+> On Fri 2019-04-19 10:51:12, Sergey Senozhatsky wrote:
+> > On (04/17/19 13:53), Petr Mladek wrote:
+> > > Crash in vsprintf() might be silent when it happens under logbuf_lock
+> > > in vprintk_emit(). This patch set prevents most of the crashes by probing
+> > > the address. The check is done only by %s and some %p* specifiers that need
+> > > to dereference the address.
+> > >
+> > > Only the first byte of the address is checked to keep it simple. It should
+> > > be enough to catch most problems.
+> > >
+> > > The check is explicitly done in each function that does the dereference.
+> > > It helps to avoid the questionable strchr() of affected specifiers. This
+> > > change motivated me to do some preparation patches that consolidated
+> > > the error handling and cleaned the code a bit.
+> > 
+> > The patch set looks OK to me.
+> > 
+> > I got confused by 'pC?' error string, but once you start looking
+> > at it as a regex (? - zero or one occurrences) things look OK.
+> > Regex in dmesg/serial output might be something very new to people,
+> > stack traces, after all, is a rather common error reporting mechanism.
+> > So the previous "WARN_ON() + exact unrecognized fmt[N] char" was not
+> > totally awful or wrong (well, it was, before we introduced printk_safe()),
+> > but I don't have strong objections against that new regex thing.
+> > 
+> > FWIW,
+> > Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> 
+> Thanks a lot for review.
+> 
+> I have pushed the entire patchset into printk.git,
+> branch for-5.2-vsprintf-hardening to get some
+> test coverage via linux-next.
+> 
+> I still expect some feedback, especially from Andy
+> who seems to have a vacation these days.
+> I think that Andy wanted these changes rather sooner
+> than later, so I hope that he would be fine with it.
+> I could take it back in case of disagreement.
 
-While we will start to pin one guest page for the interrupt indicator
-byte, this is still ok with ballooning as this page will never be
-used by the guest virtio-balloon driver.
-So the pinned page will never be freed. And even a broken guest does
-so, that would not impact the host as the original page is still
-in control by vfio.
+They are good enough to me, thanks!
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c     | 43 ++++++++++++++++++++++++++++++++++-
- drivers/s390/crypto/vfio_ap_private.h |  2 ++
- 2 files changed, 44 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 900b9cf..e8e87bf 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -759,6 +759,35 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
- 	return 0;
- }
- 
-+/*
-+ * vfio_ap_mdev_iommu_notifier: IOMMU notifier callback
-+ *
-+ * @nb: The notifier block
-+ * @action: Action to be taken
-+ * @data: data associated with the request
-+ *
-+ * For an UNMAP request, unpin the guest IOVA (the NIB guest address we
-+ * pinned before). Other requests are ignored.
-+ *
-+ */
-+static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
-+				       unsigned long action, void *data)
-+{
-+	struct ap_matrix_mdev *matrix_mdev;
-+
-+	matrix_mdev = container_of(nb, struct ap_matrix_mdev, iommu_notifier);
-+
-+	if (action == VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
-+		struct vfio_iommu_type1_dma_unmap *unmap = data;
-+		unsigned long g_pfn = unmap->iova >> PAGE_SHIFT;
-+
-+		vfio_unpin_pages(mdev_dev(matrix_mdev->mdev), &g_pfn, 1);
-+		return NOTIFY_OK;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
- static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
- 				       unsigned long action, void *data)
- {
-@@ -858,7 +887,17 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
- 		return ret;
- 	}
- 
--	return 0;
-+	matrix_mdev->iommu_notifier.notifier_call = vfio_ap_mdev_iommu_notifier;
-+	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
-+	ret = vfio_register_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
-+				     &events, &matrix_mdev->iommu_notifier);
-+	if (!ret)
-+		return ret;
-+
-+	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
-+				 &matrix_mdev->group_notifier);
-+	module_put(THIS_MODULE);
-+	return ret;
- }
- 
- static void vfio_ap_mdev_release(struct mdev_device *mdev)
-@@ -869,6 +908,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
- 		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
- 
- 	vfio_ap_mdev_reset_queues(mdev);
-+	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
-+				 &matrix_mdev->iommu_notifier);
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
- 				 &matrix_mdev->group_notifier);
- 	matrix_mdev->kvm = NULL;
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index a910be1..18dcc4d 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -81,8 +81,10 @@ struct ap_matrix_mdev {
- 	struct list_head node;
- 	struct ap_matrix matrix;
- 	struct notifier_block group_notifier;
-+	struct notifier_block iommu_notifier;
- 	struct kvm *kvm;
- 	struct kvm_s390_module_hook pqap_hook;
-+	struct mdev_device *mdev;
- };
- 
- extern int vfio_ap_mdev_register(void);
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+
 
