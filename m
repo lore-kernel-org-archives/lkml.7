@@ -2,117 +2,80 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C046C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB80C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A305206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144C0206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:05:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hyyYKEUT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfDZUFY (ORCPT
+        id S1726900AbfDZUFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 16:05:24 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:35695 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfDZUFX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 16:05:23 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hK75p-0001VA-Ib; Fri, 26 Apr 2019 22:05:09 +0200
-Date:   Fri, 26 Apr 2019 22:05:09 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, jannh@google.com,
-        riel@surriel.com, mingo@redhat.com, bp@suse.de, Jason@zx2c4.com,
-        luto@kernel.org, tglx@linutronix.de, rkrcmar@redhat.com,
-        mingo@kernel.org, hpa@zytor.com, kvm@vger.kernel.org,
-        pbonzini@redhat.com, kurt.kanzenbach@linutronix.de
-Subject: Re: [RFC PATCH] x86/fpu: Don't unconditionally add
- XFEATURE_MASK_FPSSE on sigentry
-Message-ID: <20190426200509.3q5ngl44o64q2lg2@linutronix.de>
-References: <20190425173545.sogxyptbaqvoofm6@linutronix.de>
- <cbb4c3de-1e12-c325-fa7f-40bc63c495e7@intel.com>
- <20190426072659.swew4mvfz7dfjyqq@linutronix.de>
- <89ed2d26-a73c-99ad-76d8-e4b46755c783@intel.com>
- <20190426165013.mdgd2ocmdgkhja7n@linutronix.de>
- <76afd2e7-40fb-15a4-d183-22e4b50de43d@intel.com>
+        Fri, 26 Apr 2019 16:05:30 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45964 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726824AbfDZUF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 16:05:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=n8D5SWOR0NCEwB3Adrs41RtWTB1GNLwZRWOWg86mWCk=; b=hyyYKEUT2N21ugLhrRHS/XPqai
+        1OjHyql+xtk32rdHnoFvE/SaZmFSgJv9UvFBQsAJXKX95W97YJOc617btXjJonX9WXj2vBNp4Sh3i
+        Ba9Y/YqcewBJkaSC6vsi64nXRAqjUzD5IUHcp9WJDLMMhkzUfx/D/6mZOu0i02FX/a+I=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hK761-0004PU-WB; Fri, 26 Apr 2019 22:05:22 +0200
+Date:   Fri, 26 Apr 2019 22:05:21 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: realtek: Add rtl8211e rx/tx delays config
+Message-ID: <20190426200521.GH4041@lunn.ch>
+References: <20190426093010.9609-1-fancer.lancer@gmail.com>
+ <20190426132821.GB14432@lunn.ch>
+ <20190426191935.ihppqlmtpemzp3kr@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <76afd2e7-40fb-15a4-d183-22e4b50de43d@intel.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190426191935.ihppqlmtpemzp3kr@mobilestation>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-26 12:04:55 [-0700], Dave Hansen wrote:
-> I'm looking at the code and having a bit of a hard time connecting it to
-> what you're saying here.
+> Hello Andrew
 > 
-> We are in copy_fpstate_to_sigframe(), right?  Let's assume we are
-> using_compacted_format().  If copy_fpregs_to_sigframe() fails to copy,
-> we return immediately and never get to the save_xstate_epilog() code in
-> question.
+> Thanks for the comment. I'll alter the code the way you said. The mode will
+> be changed by the config_init-function only if the interface is selected to be
+> rgmii-like (rgmii, rgmii-id, rgmii-txid and rgmii-rxid), otherwise it will
+> be left as is.
 > 
-> So, to even get to save_xstate_epilog(), we had to do a *successful*
-> copy_fpstate_to_sigframe() which, on XSAVE systems will use
-> copy_xregs_to_user() which already uses plain XSAVE (not XSAVEOPT).
+> But I've got a question regarding this then. What about for instance rtl8211f
+> phy config_init-method? It setups the delay config in any case, no matter
+> whether interface is configured to be of rgmii or another mode. Is it correct
+> to configure rtl8211e and rtl8211f differently? Especially seeing the U-boot
+> driver also perform the rtl8211f phy configuration.
 
-We are in:
+Hi Sergey
 
-copy_fpstate_to_sigframe()
- |
- copy_fpregs_to_sigframe() fails.
- |
- using_compacted_format()
-  |
-  copy_xstate_to_user()
-   |
-   __copy_xstate_to_user() the xstate_header
-   |
-   for (i = 0; i < XFEATURE_MAX; i++)
-    copy only XFEATURE_SSE + XFEATURE_YMM, other aren't set.
-   |
-   xfeatures_mxcsr_quirk() true, we copy
-   |
-   __copy_xstate_to_user() the xstate_fx_sw_bytes
+It is not correct and rtl8211f should be changed. Please add a second
+patch for that.
 
-Now. The FP part of the xsave has never been touched which means the
-bytes are not initialized. The are is filled with random conten on user
-stack. The saved xfeatures say only (XFEATURE_SSE | XFEATURE_YMM) so a
-XRESTOR of that gives us exactly what we stored.
+We got burnt recently with PHY drivers doing the wrong thing with
+respect to RGMII delays. We have learnt from that experience, but
+there is code in the kernel which still does things wrong.
 
-> save_xstate_epilog() goes and tries to set XFEATURE_MASK_FPSSE on this
-> XSAVE (literally the XSAVE instruction) generated header.
-
-Correct. But we never saved the "data" for XFEATURE_MASK_FP and, as noted
-above, the content is random garbage on the stack.
-Be setting XFEATURE_MASK_FPSSE we claim that suddenly that the FP part
-of the XSAVE area is valid which is not the case.
-
-> But, if we're dealing with header.xfeatures generated by an XSAVE with
-> the RFBM=-1, I don't understand how header.xfeatures could ever *not*
-> have XFEATURE_MASK_FPSSE set.  The only way would be if we had gotten
-> here after using FXSAVE, but I believe that's impossible since those
-> systems have use_xsave()==0.
-
-Look at the code path above. XSAVES stored the state in task's
-&fpu->state.xsave using XSAVES and we copied the *saved* bits so it
-looks like XSAVE. XFEATURE_MASK_FP was not set, so we skipped that area.
-
-> IOW, I think the patch is right, but I'm not sure I totally agree with
-> the reasoning.
-
-As I described in the path description: XSAVE (the fastpath, the code
-before I started touching it) would also not set XFEATURE_MASK_FP in
-xfeatures *but* would set FP area to its ini-state. Therefore the
-unconditional OR of XFEATURE_MASK_FPSSE does not hurt because the FP
-area was initialized to its initstate. The following restore would load
-a valid FP state.
-
-Sebastian
+      Andrew
