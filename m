@@ -2,144 +2,300 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFF5C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A28AC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F6A2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0ED206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfDZVsD (ORCPT
+        id S1727145AbfDZVrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 17:48:03 -0400
-Received: from mga01.intel.com ([192.55.52.88]:10130 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbfDZVsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 17:48:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Apr 2019 14:48:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,399,1549958400"; 
-   d="scan'208";a="341182723"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Apr 2019 14:47:59 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hK8hK-0003AJ-Gf; Sat, 27 Apr 2019 00:47:58 +0300
-Date:   Sat, 27 Apr 2019 00:47:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        hotwater438@tutanota.com, hdegoede@redhat.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: intel: Clear interrupt status in unmask callback
-Message-ID: <20190426214758.GC9224@smile.fi.intel.com>
-References: <20190422044539.16085-1-kai.heng.feng@canonical.com>
+        Fri, 26 Apr 2019 17:47:36 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48615 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727072AbfDZVrd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 17:47:33 -0400
+X-Originating-IP: 90.66.53.80
+Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id C4812240002;
+        Fri, 26 Apr 2019 21:47:28 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexander Dahl <ada@thorsis.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Romain Izard <romain.izard.pro@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v3 2/9] clocksource/drivers/tcb_clksrc: stop depending on atmel_tclib
+Date:   Fri, 26 Apr 2019 23:47:11 +0200
+Message-Id: <20190426214718.13470-3-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190426214718.13470-1-alexandre.belloni@bootlin.com>
+References: <20190426214718.13470-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190422044539.16085-1-kai.heng.feng@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 12:45:39PM +0800, Kai-Heng Feng wrote:
-> Commit a939bb57cd47 ("pinctrl: intel: implement gpio_irq_enable") was
-> added because clearing interrupt status bit is required to avoid
-> unexpected behavior.
-> 
-> Turns out the unmask callback also needs the fix, which can solve weird
-> IRQ triggering issues on I2C touchpad ELAN1200.
+atmel_tclib is probed too late in the boot process to be able to use the
+TCB as the boot clocksource. This is an issue for SoCs without the PIT
+(sams70, samv70 and samv71 families) as they simply currently can't boot.
 
-> -static void intel_gpio_irq_enable(struct irq_data *d)
-> -{
-> -	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> -	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
-> -	const struct intel_community *community;
-> -	const struct intel_padgroup *padgrp;
-> -	int pin;
-> -
-> -	pin = intel_gpio_to_pin(pctrl, irqd_to_hwirq(d), &community, &padgrp);
-> -	if (pin >= 0) {
-> -		unsigned int gpp, gpp_offset, is_offset;
-> -		unsigned long flags;
-> -		u32 value;
-> -
-> -		gpp = padgrp->reg_num;
-> -		gpp_offset = padgroup_offset(padgrp, pin);
-> -		is_offset = community->is_offset + gpp * 4;
-> -
-> -		raw_spin_lock_irqsave(&pctrl->lock, flags);
-> -		/* Clear interrupt status first to avoid unexpected interrupt */
-> -		writel(BIT(gpp_offset), community->regs + is_offset);
-> -
-> -		value = readl(community->regs + community->ie_offset + gpp * 4);
-> -		value |= BIT(gpp_offset);
-> -		writel(value, community->regs + community->ie_offset + gpp * 4);
-> -		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> -	}
-> -}
-> -
->  static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
->  {
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> @@ -963,6 +934,11 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
->  		reg = community->regs + community->ie_offset + gpp * 4;
->  
->  		raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +
-> +		/* Clear interrupt status first to avoid unexpected interrupt */
+Get rid of the atmel_tclib dependency and probe everything on our own using
+the correct device tree binding.
 
-> +		if (!mask)
+This also allows getting rid of ATMEL_TCB_CLKSRC_BLOCK and makes the driver
+a bit more flexible as the TCB is not hardcoded in the kernel anymore.
 
-Can we do this unconditionally?
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/clocksource/tcb_clksrc.c | 108 +++++++++++++++++++------------
+ drivers/misc/Kconfig             |  14 +---
+ 2 files changed, 70 insertions(+), 52 deletions(-)
 
-> +			writel(BIT(gpp_offset), community->regs + community->is_offset + gpp * 4);
-
-I would rather prefer to follow the below pattern, like
-
-reg = ...;
-writel(..., reg);
-
-or, to decrease calculus under spin lock, something like
-
-reg = ->regs + gpp * 4;
-
-writel(..., reg + is_offset);
-
-readl(reg + ie_offset);
-
-etc.
-
-> +
->  		value = readl(reg);
->  		if (mask)
->  			value &= ~BIT(gpp_offset);
-> @@ -1106,7 +1082,6 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
->  
->  static struct irq_chip intel_gpio_irqchip = {
->  	.name = "intel-gpio",
-
-> -	.irq_enable = intel_gpio_irq_enable,
-
-Is it possible scenario when IRQ enable is called, but not masking callbacks?
-For _AEI or GPE?
-
->  	.irq_ack = intel_gpio_irq_ack,
->  	.irq_mask = intel_gpio_irq_mask,
->  	.irq_unmask = intel_gpio_irq_unmask,
-
+diff --git a/drivers/clocksource/tcb_clksrc.c b/drivers/clocksource/tcb_clksrc.c
+index 138a12090149..bf68504da94a 100644
+--- a/drivers/clocksource/tcb_clksrc.c
++++ b/drivers/clocksource/tcb_clksrc.c
+@@ -9,7 +9,8 @@
+ #include <linux/err.h>
+ #include <linux/ioport.h>
+ #include <linux/io.h>
+-#include <linux/platform_device.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
+ #include <linux/syscore_ops.h>
+ #include <soc/at91/atmel_tcb.h>
+ 
+@@ -28,13 +29,6 @@
+  *     source, used in either periodic or oneshot mode.  This runs
+  *     at 32 KiHZ, and can handle delays of up to two seconds.
+  *
+- * A boot clocksource and clockevent source are also currently needed,
+- * unless the relevant platforms (ARM/AT91, AVR32/AT32) are changed so
+- * this code can be used when init_timers() is called, well before most
+- * devices are set up.  (Some low end AT91 parts, which can run uClinux,
+- * have only the timers in one TC block... they currently don't support
+- * the tclib code, because of that initialization issue.)
+- *
+  * REVISIT behavior during system suspend states... we should disable
+  * all clocks and save the power.  Easily done for clockevent devices,
+  * but clocksources won't necessarily get the needed notifications.
+@@ -112,7 +106,6 @@ void tc_clksrc_resume(struct clocksource *cs)
+ }
+ 
+ static struct clocksource clksrc = {
+-	.name           = "tcb_clksrc",
+ 	.rating         = 200,
+ 	.read           = tc_get_cycles,
+ 	.mask           = CLOCKSOURCE_MASK(32),
+@@ -214,7 +207,6 @@ static int tc_next_event(unsigned long delta, struct clock_event_device *d)
+ 
+ static struct tc_clkevt_device clkevt = {
+ 	.clkevt	= {
+-		.name			= "tc_clkevt",
+ 		.features		= CLOCK_EVT_FEAT_PERIODIC |
+ 					  CLOCK_EVT_FEAT_ONESHOT,
+ 		/* Should be lower than at91rm9200's system timer */
+@@ -330,39 +322,73 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
+ 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
+ }
+ 
+-static int __init tcb_clksrc_init(void)
+-{
+-	static char bootinfo[] __initdata
+-		= KERN_DEBUG "%s: tc%d at %d.%03d MHz\n";
++static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
++
++static const struct of_device_id atmel_tcb_of_match[] = {
++	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
++	{ .compatible = "atmel,at91sam9x5-tcb", .data = (void *)32, },
++	{ /* sentinel */ }
++};
+ 
+-	struct platform_device *pdev;
+-	struct atmel_tc *tc;
++static int __init tcb_clksrc_init(struct device_node *node)
++{
++	struct atmel_tc tc;
+ 	struct clk *t0_clk;
++	const struct of_device_id *match;
+ 	u32 rate, divided_rate = 0;
+ 	int best_divisor_idx = -1;
+ 	int clk32k_divisor_idx = -1;
++	int bits;
+ 	int i;
+ 	int ret;
+ 
+-	tc = atmel_tc_alloc(CONFIG_ATMEL_TCB_CLKSRC_BLOCK);
+-	if (!tc) {
+-		pr_debug("can't alloc TC for clocksource\n");
+-		return -ENODEV;
++	/* Protect against multiple calls */
++	if (tcaddr)
++		return 0;
++
++	tc.regs = of_iomap(node->parent, 0);
++	if (!tc.regs)
++		return -ENXIO;
++
++	t0_clk = of_clk_get_by_name(node->parent, "t0_clk");
++	if (IS_ERR(t0_clk))
++		return PTR_ERR(t0_clk);
++
++	tc.slow_clk = of_clk_get_by_name(node->parent, "slow_clk");
++	if (IS_ERR(tc.slow_clk))
++		return PTR_ERR(tc.slow_clk);
++
++	tc.clk[0] = t0_clk;
++	tc.clk[1] = of_clk_get_by_name(node->parent, "t1_clk");
++	if (IS_ERR(tc.clk[1]))
++		tc.clk[1] = t0_clk;
++	tc.clk[2] = of_clk_get_by_name(node->parent, "t2_clk");
++	if (IS_ERR(tc.clk[2]))
++		tc.clk[2] = t0_clk;
++
++	tc.irq[2] = of_irq_get(node->parent, 2);
++	if (tc.irq[2] <= 0) {
++		tc.irq[2] = of_irq_get(node->parent, 0);
++		if (tc.irq[2] <= 0)
++			return -EINVAL;
+ 	}
+-	tcaddr = tc->regs;
+-	pdev = tc->pdev;
+ 
+-	t0_clk = tc->clk[0];
++	match = of_match_node(atmel_tcb_of_match, node->parent);
++	bits = (uintptr_t)match->data;
++
++	for (i = 0; i < ARRAY_SIZE(tc.irq); i++)
++		writel(ATMEL_TC_ALL_IRQ, tc.regs + ATMEL_TC_REG(i, IDR));
++
+ 	ret = clk_prepare_enable(t0_clk);
+ 	if (ret) {
+ 		pr_debug("can't enable T0 clk\n");
+-		goto err_free_tc;
++		return ret;
+ 	}
+ 
+ 	/* How fast will we be counting?  Pick something over 5 MHz.  */
+ 	rate = (u32) clk_get_rate(t0_clk);
+-	for (i = 0; i < 5; i++) {
+-		unsigned divisor = atmel_tc_divisors[i];
++	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
++		unsigned divisor = atmel_tcb_divisors[i];
+ 		unsigned tmp;
+ 
+ 		/* remember 32 KiHz clock for later */
+@@ -381,27 +407,29 @@ static int __init tcb_clksrc_init(void)
+ 		best_divisor_idx = i;
+ 	}
+ 
+-
+-	printk(bootinfo, clksrc.name, CONFIG_ATMEL_TCB_CLKSRC_BLOCK,
+-			divided_rate / 1000000,
++	clksrc.name = kbasename(node->parent->full_name);
++	clkevt.clkevt.name = kbasename(node->parent->full_name);
++	pr_debug("%s at %d.%03d MHz\n", clksrc.name, divided_rate / 1000000,
+ 			((divided_rate % 1000000) + 500) / 1000);
+ 
+-	if (tc->tcb_config && tc->tcb_config->counter_width == 32) {
++	tcaddr = tc.regs;
++
++	if (bits == 32) {
+ 		/* use apropriate function to read 32 bit counter */
+ 		clksrc.read = tc_get_cycles32;
+ 		/* setup ony channel 0 */
+-		tcb_setup_single_chan(tc, best_divisor_idx);
++		tcb_setup_single_chan(&tc, best_divisor_idx);
+ 	} else {
+-		/* tclib will give us three clocks no matter what the
++		/* we have three clocks no matter what the
+ 		 * underlying platform supports.
+ 		 */
+-		ret = clk_prepare_enable(tc->clk[1]);
++		ret = clk_prepare_enable(tc.clk[1]);
+ 		if (ret) {
+ 			pr_debug("can't enable T1 clk\n");
+ 			goto err_disable_t0;
+ 		}
+ 		/* setup both channel 0 & 1 */
+-		tcb_setup_dual_chan(tc, best_divisor_idx);
++		tcb_setup_dual_chan(&tc, best_divisor_idx);
+ 	}
+ 
+ 	/* and away we go! */
+@@ -410,7 +438,7 @@ static int __init tcb_clksrc_init(void)
+ 		goto err_disable_t1;
+ 
+ 	/* channel 2:  periodic and oneshot timer support */
+-	ret = setup_clkevents(tc, clk32k_divisor_idx);
++	ret = setup_clkevents(&tc, clk32k_divisor_idx);
+ 	if (ret)
+ 		goto err_unregister_clksrc;
+ 
+@@ -420,14 +448,14 @@ static int __init tcb_clksrc_init(void)
+ 	clocksource_unregister(&clksrc);
+ 
+ err_disable_t1:
+-	if (!tc->tcb_config || tc->tcb_config->counter_width != 32)
+-		clk_disable_unprepare(tc->clk[1]);
++	if (bits != 32)
++		clk_disable_unprepare(tc.clk[1]);
+ 
+ err_disable_t0:
+ 	clk_disable_unprepare(t0_clk);
+ 
+-err_free_tc:
+-	atmel_tc_free(tc);
++	tcaddr = NULL;
++
+ 	return ret;
+ }
+-arch_initcall(tcb_clksrc_init);
++TIMER_OF_DECLARE(atmel_tcb_clksrc, "atmel,tcb-timer", tcb_clksrc_init);
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 42ab8ec92a04..268a01d3d6f3 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -61,7 +61,8 @@ config ATMEL_TCLIB
+ 
+ config ATMEL_TCB_CLKSRC
+ 	bool "TC Block Clocksource"
+-	depends on ATMEL_TCLIB
++	depends on ARCH_AT91
++	select TIMER_OF if OF
+ 	default y
+ 	help
+ 	  Select this to get a high precision clocksource based on a
+@@ -72,17 +73,6 @@ config ATMEL_TCB_CLKSRC
+ 	  may be used as a clock event device supporting oneshot mode
+ 	  (delays of up to two seconds) based on the 32 KiHz clock.
+ 
+-config ATMEL_TCB_CLKSRC_BLOCK
+-	int
+-	depends on ATMEL_TCB_CLKSRC
+-	default 0
+-	range 0 1
+-	help
+-	  Some chips provide more than one TC block, so you have the
+-	  choice of which one to use for the clock framework.  The other
+-	  TC can be used for other purposes, such as PWM generation and
+-	  interval timing.
+-
+ config DUMMY_IRQ
+ 	tristate "Dummy IRQ handler"
+ 	default n
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
