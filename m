@@ -2,105 +2,69 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C11C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CE6C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB91B20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7872064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfDZSwD (ORCPT
+        id S1726462AbfDZSwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 14:52:03 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41132 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfDZSwD (ORCPT
+        Fri, 26 Apr 2019 14:52:30 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:37059 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfDZSw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 14:52:03 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hK5x1-0005dL-1i; Fri, 26 Apr 2019 18:51:59 +0000
-Date:   Fri, 26 Apr 2019 19:51:59 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        miklos@szeredi.hu, gregkh@linuxfoundation.org, tj@kernel.org,
-        jack@suse.cz, amir73il@gmail.com, paul@paul-moore.com,
-        eparis@redhat.com, linux-audit@redhat.com, rafael@kernel.org
-Subject: Re: [PATCH 0/5] vfs: track the dentry name length in name_snapshot
-Message-ID: <20190426185158.GB2217@ZenIV.linux.org.uk>
-References: <20190426182847.25088-1-jlayton@kernel.org>
+        Fri, 26 Apr 2019 14:52:29 -0400
+X-Originating-IP: 90.66.53.80
+Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 7A3C0C0009;
+        Fri, 26 Apr 2019 18:52:26 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 20:52:25 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH next 21/25] rtc: Use dev_get_drvdata()
+Message-ID: <20190426185225.GU14604@piout.net>
+References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
+ <20190423075020.173734-22-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190426182847.25088-1-jlayton@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190423075020.173734-22-wangkefeng.wang@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 02:28:42PM -0400, Jeff Layton wrote:
-> name_snapshot will snapshot the current contents of a dentry's name for
-> later consumption. Several of those users end up needing to do a strlen
-> on the resulting string later. We already have that info in the original
-> dentry though, so we can do this a bit more efficiently by stuffing the
-> name length into the name_snapshot as well.
+On 23/04/2019 15:50:16+0800, Kefeng Wang wrote:
+> Using dev_get_drvdata directly.
 > 
-> This is not well tested, but it built and booted. Do we have a testsuite
-> that exercises the fsnotify code, in particular?
-
-FWIW, my variant sits in vfs.git@work.dcache.
-
-> Jeff Layton (5):
->   dcache: track the length of the string in struct name_snapshot
->   fsnotify: have fsnotify_move take a struct qstr instead of a string
->   fsnotify: have fsnotify() take a qstr instead of a string
->   fsnotify: change ->handle_event and send_to_group to take a qstr
->   audit: fix audit_compare_dname_path to take a qstr
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: linux-rtc@vger.kernel.org
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  drivers/rtc/rtc-hid-sensor-time.c |  3 +--
+>  drivers/rtc/rtc-pxa.c             |  3 +--
+>  drivers/rtc/rtc-rk808.c           |  6 ++----
+>  drivers/rtc/rtc-tx4939.c          | 17 ++++++-----------
+>  drivers/rtc/rtc-wm831x.c          | 18 +++++++-----------
+>  drivers/rtc/rtc-wm8350.c          | 12 ++++--------
+>  6 files changed, 21 insertions(+), 38 deletions(-)
 > 
->  fs/dcache.c                          | 11 +++++++----
->  fs/debugfs/inode.c                   |  2 +-
->  fs/kernfs/file.c                     |  6 ++++--
->  fs/namei.c                           |  4 ++--
->  fs/notify/dnotify/dnotify.c          |  2 +-
->  fs/notify/fanotify/fanotify.c        |  2 +-
->  fs/notify/fsnotify.c                 |  8 ++++----
->  fs/notify/inotify/inotify.h          |  2 +-
->  fs/notify/inotify/inotify_fsnotify.c |  6 +++---
->  fs/overlayfs/export.c                |  2 +-
->  include/linux/dcache.h               |  2 +-
->  include/linux/fsnotify.h             | 17 ++++++++---------
->  include/linux/fsnotify_backend.h     |  6 +++---
->  kernel/audit.h                       |  3 ++-
->  kernel/audit_fsnotify.c              |  5 +++--
->  kernel/audit_tree.c                  |  2 +-
->  kernel/audit_watch.c                 |  4 ++--
->  kernel/auditfilter.c                 |  7 ++++---
->  kernel/auditsc.c                     |  7 +++----
->  19 files changed, 52 insertions(+), 46 deletions(-)
+Applied, thanks.
 
- fs/dcache.c                          | 14 ++++++--------
- fs/debugfs/inode.c                   |  2 +-
- fs/kernfs/file.c                     |  6 ++++--
- fs/namei.c                           |  4 ++--
- fs/notify/dnotify/dnotify.c          |  2 +-
- fs/notify/fanotify/fanotify.c        |  2 +-
- fs/notify/fsnotify.c                 |  8 ++++----
- fs/notify/inotify/inotify.h          |  2 +-
- fs/notify/inotify/inotify_fsnotify.c |  6 +++---
- fs/overlayfs/export.c                |  2 +-
- include/linux/dcache.h               |  2 +-
- include/linux/fsnotify.h             | 10 +++++-----
- include/linux/fsnotify_backend.h     |  6 +++---
- kernel/audit.h                       |  2 +-
- kernel/audit_fsnotify.c              |  2 +-
- kernel/audit_tree.c                  |  2 +-
- kernel/audit_watch.c                 |  4 ++--
- kernel/auditfilter.c                 |  6 +++---
- kernel/auditsc.c                     |  4 ++--
- 19 files changed, 43 insertions(+), 43 deletions(-)
-
-here...
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
