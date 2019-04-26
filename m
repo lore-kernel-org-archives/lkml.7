@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE96AC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196E3C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA312084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7A32089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271973;
-	bh=I8BxiUhAA4FAdpMo9K5V9h2j8od2JFLl2YTxhFPX3nU=;
+	s=default; t=1556271978;
+	bh=Tnnve3F7+qpUpDciIJOJSEkq5ly35RvXQXv825Ol13Y=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=09oMjYoIjAZB3IGhHqekscOQEdvtIEnCNpjjHGXjBIbPjqbJ0CJOfJSKZs9+4SbSP
-	 yV2L8yuhK/JE88G4TNmo5swqVC64KtMW4YZ/EL9WH1sY3MyU52Rx+2pxPDXAwFYqIw
-	 49CTCP/lBfCzvLtMNDzOTLjT18PaEFhYIzJFVpr8=
+	b=v4CDOxHULuvx8A2MG/leSlYKkvHnFwom1lnnoOzAQNUqf3hLFCfh72bORttm350Rc
+	 /f+Fsja+25fX2p9/hm707mryYNHSiewvc34nP5VlPSoP8A5mw/KSfBgb7z/UoC6Som
+	 rCFIwdLLYNQKnEs9/MmC606UIZkzySewas4L4SRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfDZJqM (ORCPT
+        id S1727521AbfDZJqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:46:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55752 "EHLO
+        Fri, 26 Apr 2019 05:46:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55814 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbfDZJqJ (ORCPT
+        with ESMTP id S1726780AbfDZJqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:46:09 -0400
+        Fri, 26 Apr 2019 05:46:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=QbG6TVehOxvmLSmKg7kBE1f9BLeSxRMIzXjwwqLBKSw=; b=tf8CNoEziASD
-        UOjieW6hOhN2YQFBNuHk5xP3iELdj5RlW5sM9GM0m7n8QjmWmObnPrrdW4VwRShf7defqCe/n1Teg
-        qyvkrRwSHADGv34rbzi440Pl5V0svGJ9yCDjKDV7PPonTvdnTwQliBw7QcEKDUOQUOLj/qAMFeqQA
-        U7PW0=;
+        List-Archive; bh=qLRR6MocEvwWUyzxtvfDaOfugWuwqcsAx6MPwRM7T1w=; b=myFaUHdQk+v/
+        evPnwiMLtSXCb0OFiO3y1w2o9CQ+1F5NwT6amUyIHE+3KnJIiotbB77uMpojdNtW9XPv0EjS67sUC
+        zl7GFW7a7nUUuC0WF4RPT91+HeIdqTT97Mwr0JcIQX/ilVQkvztt9EUbdSpwlQRe/iLnpwTXZqkya
+        h2jUg=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxQl-0003T7-FC; Fri, 26 Apr 2019 09:46:07 +0000
+        id 1hJxQn-0003TC-6A; Fri, 26 Apr 2019 09:46:09 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 4AC7A441D3C; Fri, 26 Apr 2019 10:46:06 +0100 (BST)
+        id 7D93F441D3B; Fri, 26 Apr 2019 10:46:02 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: hi655x: Constify regulators array" to the regulator tree
+Subject: Applied "regulator: hi655x: Remove ctrl_mask field from struct hi655x_regulator" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094606.4AC7A441D3C@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:46:06 +0100 (BST)
+Message-Id: <20190426094602.7D93F441D3B@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:46:02 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: hi655x: Constify regulators array
+   regulator: hi655x: Remove ctrl_mask field from struct hi655x_regulator
 
 has been applied to the regulator tree at
 
@@ -85,33 +85,75 @@ to this mail.
 Thanks,
 Mark
 
-From 784816d46aae28f84a3ec5461b6cf69b6f02d62a Mon Sep 17 00:00:00 2001
+From 29e5cb657e2acdf902b0122ca58620ccd771f297 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Mon, 8 Apr 2019 20:09:32 +0800
-Subject: [PATCH] regulator: hi655x: Constify regulators array
+Date: Mon, 8 Apr 2019 20:09:33 +0800
+Subject: [PATCH] regulator: hi655x: Remove ctrl_mask field from struct
+ hi655x_regulator
 
-The regulators array should never need to be modified, make it const so
-compiler can put it to .rodata.
+The rdev->desc->enable_mask setting is always the same as
+BIT(regulator->ctrl_mask), so just use rdev->desc->enable_mask instead.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/hi655x-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/hi655x-regulator.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/regulator/hi655x-regulator.c b/drivers/regulator/hi655x-regulator.c
-index bba24a6fdb1e..460ae70d8b04 100644
+index 460ae70d8b04..6f6635daa026 100644
 --- a/drivers/regulator/hi655x-regulator.c
 +++ b/drivers/regulator/hi655x-regulator.c
-@@ -158,7 +158,7 @@ static const struct regulator_ops hi655x_ldo_linear_ops = {
- 	.ctrl_mask = cmask,                                      \
+@@ -28,7 +28,6 @@
+ struct hi655x_regulator {
+ 	unsigned int disable_reg;
+ 	unsigned int status_reg;
+-	unsigned int ctrl_mask;
+ 	struct regulator_desc rdesc;
+ };
+ 
+@@ -77,22 +76,18 @@ enum hi655x_regulator_id {
+ static int hi655x_is_enabled(struct regulator_dev *rdev)
+ {
+ 	unsigned int value = 0;
+-
+ 	struct hi655x_regulator *regulator = rdev_get_drvdata(rdev);
+ 
+ 	regmap_read(rdev->regmap, regulator->status_reg, &value);
+-	return (value & BIT(regulator->ctrl_mask));
++	return (value & rdev->desc->enable_mask);
  }
  
--static struct hi655x_regulator regulators[] = {
-+static const struct hi655x_regulator regulators[] = {
- 	HI655X_LDO_LINEAR(LDO2, 0x72, 0x07, 0x29, 0x2a, 0x2b, 0x01,
- 			  2500000, 8, 100000),
- 	HI655X_LDO(LDO7, 0x78, 0x07, 0x29, 0x2a, 0x2b, 0x06, ldo7_voltages),
+ static int hi655x_disable(struct regulator_dev *rdev)
+ {
+-	int ret = 0;
+-
+ 	struct hi655x_regulator *regulator = rdev_get_drvdata(rdev);
+ 
+-	ret = regmap_write(rdev->regmap, regulator->disable_reg,
+-			   BIT(regulator->ctrl_mask));
+-	return ret;
++	return regmap_write(rdev->regmap, regulator->disable_reg,
++			    rdev->desc->enable_mask);
+ }
+ 
+ static const struct regulator_ops hi655x_regulator_ops = {
+@@ -132,7 +127,6 @@ static const struct regulator_ops hi655x_ldo_linear_ops = {
+ 	},                                                       \
+ 	.disable_reg = HI655X_BUS_ADDR(dreg),                    \
+ 	.status_reg = HI655X_BUS_ADDR(sreg),                     \
+-	.ctrl_mask = cmask,                                      \
+ }
+ 
+ #define HI655X_LDO_LINEAR(_ID, vreg, vmask, ereg, dreg,          \
+@@ -155,7 +149,6 @@ static const struct regulator_ops hi655x_ldo_linear_ops = {
+ 	},                                                       \
+ 	.disable_reg = HI655X_BUS_ADDR(dreg),                    \
+ 	.status_reg = HI655X_BUS_ADDR(sreg),                     \
+-	.ctrl_mask = cmask,                                      \
+ }
+ 
+ static const struct hi655x_regulator regulators[] = {
 -- 
 2.20.1
 
