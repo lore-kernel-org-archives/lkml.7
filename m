@@ -2,135 +2,111 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4248EC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BD3C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 130A3208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D88B208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkHXdRvo"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="G6CRq2cv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfDZQm5 (ORCPT
+        id S1726710AbfDZQnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:42:57 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40130 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfDZQmg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:42:36 -0400
-Received: by mail-lf1-f68.google.com with SMTP id o16so2944727lfl.7;
-        Fri, 26 Apr 2019 09:42:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eWVEhVXV6Szyd9/44KMWrRQaDEl4L0ZWJnDi1/l1OvU=;
-        b=WkHXdRvo7xgf4zAkZ1FgFwoafjH+HccU9KLH1nV9eSay+kL9EbIhE6HkomyibxW1e4
-         lNHutCqEG+L35Mk8D6utdJQ97nVWRuksU1keF0ALEwIfHvmOpLMVogA/Wi5dsdXkj6ZH
-         heoVg3WDdIQwDg0auIn9YOkFfd1EjsS6W3Xm8S1MFOVqip9GQ5Q8M9dxn0u6389PMpTr
-         C5SXY+nN5SKa4QMyjEZQ6vNGwTxE0MxU2JzTkAD7zuNxehhx3MBHRh6z7wxd/gSBScS2
-         n+JZfX5Ahg5EbO2YYTuPLFt/ibIXN/yzINXn0rCyOrI7VZ5g7YpEmZD6TmN+KgxMm4bV
-         3/hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eWVEhVXV6Szyd9/44KMWrRQaDEl4L0ZWJnDi1/l1OvU=;
-        b=GbUGUDgc1r+KzlsdwPrkEyprJb5wq0KwuNL4u0QJcIoGrM+FAHadrTVi0JFq2lXmN/
-         Pr+zd3Dzq6WbrMzvKfq44DPEDFRjV+QHU1GkKni1B4FpbzKLWEyvQbWLdusj9E+gy9rs
-         l8sP/NAo0QbqFrtgcPdobjQo/8AvoLhNYC1DXeJ0kNjXpXNfZdOwlJI/7Jj66ceAVP7L
-         FBhiXlLpVN/+9Kcs5zBKgApt9mzgcdsImxUtgqM7ryfNmCQj/Pf6OVopmdDmSr44l5q0
-         BpeanPc5NFK0jeCoMsVkaX8LUdx0ZzjX0FzKuKS+hTg4j+XT0GXsFuO93gCYRauU4TWb
-         oKcQ==
-X-Gm-Message-State: APjAAAWiGh76j4Fqg04qPdW8iY2CgWzmyeocD4CmrhnBYPgOpmlZzfk/
-        pte4PdJapQNEFkcBuppxu6c=
-X-Google-Smtp-Source: APXvYqxhhrqH1igbuxLqu6Jv09PPhxp/Yw5Ugs/uQ7FpqteK7/kO4wqb+fOJ0yS80vA0LZ6oBCvrzQ==
-X-Received: by 2002:a19:7702:: with SMTP id s2mr26244975lfc.102.1556296954524;
-        Fri, 26 Apr 2019 09:42:34 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a315:5445:5300:2492:ad61:69f1:23cc])
-        by smtp.googlemail.com with ESMTPSA id q11sm5637807lfc.51.2019.04.26.09.42.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 09:42:33 -0700 (PDT)
-From:   =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-To:     kyungmin.park@samsung.com
-Cc:     bbrezillon@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 2/5] mtd: onenand/samsung: Make sure that bus clock is enabled
-Date:   Fri, 26 Apr 2019 18:42:21 +0200
-Message-Id: <20190426164224.11327-3-pawel.mikolaj.chmiel@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
-References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
+        Fri, 26 Apr 2019 12:43:15 -0400
+Received: from mail-eopbgr710084.outbound.protection.outlook.com ([40.107.71.84]:41632
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726167AbfDZQnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:43:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MLLKAhzdHx7DUdYm/ixbvignsGY2pog+oWt8K53xdOE=;
+ b=G6CRq2cvYPDcqznoif5lXD2FoBWbIhBrzH3TNJHAV+1oxm37LjqntTt+xfdFz/n4bOApsZPnhRfOvtReVFRFp+zxQI7e2/tlpTVvoCEEn08OI6WeoUMrzfPa59/1zZiHvrExm/K2BPJThdXo4lM3MrnL0ufX4P0BsMbAXeLZMPg=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4903.namprd05.prod.outlook.com (52.135.235.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.6; Fri, 26 Apr 2019 16:43:09 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e862:1b1b:7665:8094]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e862:1b1b:7665:8094%3]) with mapi id 15.20.1835.010; Fri, 26 Apr 2019
+ 16:43:09 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Damian Tometzki <linux_dti@icloud.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>, Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "kristen@linux.intel.com" <kristen@linux.intel.com>,
+        "deneen.t.dock@intel.com" <deneen.t.dock@intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+Subject: Re: [PATCH v5 14/23] x86/mm/cpa: Add set_direct_map_ functions
+Thread-Topic: [PATCH v5 14/23] x86/mm/cpa: Add set_direct_map_ functions
+Thread-Index: AQHU/E7LDKApHlfkUkuITMJWRFardKZOpaMA
+Date:   Fri, 26 Apr 2019 16:43:09 +0000
+Message-ID: <636228FC-71D6-418F-B671-4D6A3B69342C@vmware.com>
+References: <20190426001143.4983-1-namit@vmware.com>
+ <20190426001143.4983-15-namit@vmware.com>
+ <CAADWXX8yZJ9Z4yfqG9wQcb2r+0O7VCk2uQLcOU1=-BOnYhjnow@mail.gmail.com>
+In-Reply-To: <CAADWXX8yZJ9Z4yfqG9wQcb2r+0O7VCk2uQLcOU1=-BOnYhjnow@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 79778191-c6b0-4e1c-eb4a-08d6ca6643f9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB4903;
+x-ms-traffictypediagnostic: BYAPR05MB4903:
+x-microsoft-antispam-prvs: <BYAPR05MB4903D9CE7FDA7C97EA7CB71ED03E0@BYAPR05MB4903.namprd05.prod.outlook.com>
+x-forefront-prvs: 001968DD50
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(346002)(396003)(366004)(189003)(199004)(7416002)(4326008)(7736002)(476003)(66476007)(305945005)(25786009)(6512007)(2906002)(3846002)(6116002)(66066001)(8936002)(446003)(66446008)(186003)(64756008)(486006)(4744005)(66556008)(11346002)(6246003)(2616005)(26005)(53936002)(68736007)(5660300002)(73956011)(256004)(86362001)(66946007)(102836004)(53546011)(6506007)(76116006)(6436002)(54906003)(71200400001)(76176011)(81166006)(83716004)(316002)(99286004)(6916009)(81156014)(97736004)(8676002)(36756003)(6486002)(229853002)(33656002)(71190400001)(82746002)(478600001)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4903;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ch5Q0ftsms5PAZYP3L25ycivx2UG2U3d4o7m19Iy/OP40CSsWfsHcpUUdXi9MCzYmwpGGwi1vwR0NLdqooqHVlLTWv+t8ePq5qu8eoBao38U+kz+81lEM95jwcfwKRMRWvOqNto+HVEBgQ4z9/1W241V2aTWioNfAxsyWGSHo06vTtkkdumC1LK+knuW/12aZvfsmgkL+cN4dCRNcHRjI7/JkJlMZXkkhhQcyZMvOTpIN6lm4QQHakJYxaJ5K9mprXnfgZEjxVi9EmL1eXTztnxBbUA5GEqLAHa+J7KyBZFK3RAkrQyd6t7A9g0LZb0yM1THi17z/lQX8EtNs6Qml8+spixG9j7L+2A2i95SqBjyaRBSyKfOgqRu1lyTcrHPjDy+FbOD7X5KYXzYfO8t+TPNfeUh0mRP4zcqhvfqkyo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D1C68EF185691D48BD87873B5B102692@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79778191-c6b0-4e1c-eb4a-08d6ca6643f9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2019 16:43:09.2432
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4903
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Figa <tomasz.figa@gmail.com>
-
-This patch adds basic handling of controller bus clock to make sure that
-in device probe it is enabled and device can operate correctly. The
-clock is optional and driver behavior is identical as before this patch
-if not provided.
-
-Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
- drivers/mtd/nand/onenand/samsung.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/mtd/nand/onenand/samsung.c b/drivers/mtd/nand/onenand/samsung.c
-index a425f19a3876..9628bf5bc397 100644
---- a/drivers/mtd/nand/onenand/samsung.c
-+++ b/drivers/mtd/nand/onenand/samsung.c
-@@ -14,6 +14,7 @@
-  *	S5PC110: use DMA
-  */
- 
-+#include <linux/clk.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/sched.h>
-@@ -125,6 +126,7 @@ enum soc_type {
- struct s3c_onenand {
- 	struct mtd_info	*mtd;
- 	struct platform_device	*pdev;
-+	struct clk	*clk_bus;
- 	enum soc_type	type;
- 	void __iomem	*ctrl_base;
- 	void __iomem	*chip_base;
-@@ -916,6 +918,10 @@ static int s3c_onenand_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	onenand->clk_bus = devm_clk_get(&pdev->dev, "bus");
-+	if (!IS_ERR(onenand->clk_bus))
-+		clk_prepare_enable(onenand->clk_bus);
-+
- 	err = onenand_scan(mtd, 1);
- 	if (err)
- 		return err;
-@@ -947,6 +953,8 @@ static int s3c_onenand_remove(struct platform_device *pdev)
- 	struct mtd_info *mtd = platform_get_drvdata(pdev);
- 
- 	onenand_release(mtd);
-+	if (!IS_ERR(onenand->clk_bus))
-+		clk_disable_unprepare(onenand->clk_bus);
- 
- 	return 0;
- }
--- 
-2.20.1
-
+PiBPbiBBcHIgMjYsIDIwMTksIGF0IDk6NDAgQU0sIExpbnVzIFRvcnZhbGRzIDx0b3J2YWxkc0Bs
+aW51eC1mb3VuZGF0aW9uLm9yZz4gd3JvdGU6DQo+IA0KPiBOYWRhdiwNCj4gDQo+IEkgZ2V0DQo+
+IA0KPiAgICAgICBkbWFyYz1mYWlsIChwPVFVQVJBTlRJTkUgc3A9Tk9ORSBkaXM9UVVBUkFOVElO
+RSkgaGVhZGVyLmZyb209dm13YXJlLmNvbQ0KPiANCj4gZm9yIHRoZXNlIGVtYWlscywgYmVjYXVz
+ZSB0aGV5IGxhY2sgdGhlIHZtd2FyZSBES0lNIHNpZ25hdHVyZS4NCj4gDQo+IEl0IGNsZWFybHkg
+ZGlkIGdvIHRocm91Z2ggc29tZSB2bXdhcmUgbWFpbCBzZXJ2ZXJzLCBidXQgYXBwYXJlbnRseSBu
+b3QNCj4gdGhlICpyaWdodCogZXh0ZXJuYWwgdm13YXJlIFNNVFAgZ2F0ZXdheS4NCj4gDQo+IFBs
+ZWFzZSBjaGVjayB3aXRoIHZtd2FyZSBNSVMgd2hhdCB0aGUgcmlnaHQgU01UUCBzZXR1cCBmb3Ig
+Z2l0LXNlbmQtZW1haWwgaXMuDQoNCkVyci4uIFNvcnJ5IGZvciB0aGF0LiBGb3IgdGhlIHRpbWUg
+YmVpbmcgSeKAmWxsIHVzZSBnbWFpbCBpbnN0ZWFkLg0KDQo=
