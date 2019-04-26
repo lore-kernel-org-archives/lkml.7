@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7A4C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF61C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94596206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902EA2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556258431;
-	bh=jnmuq7yqnIOJMkcmN7f+GLPkX7bV2tjbMM3SZN5ocns=;
+	s=default; t=1556258439;
+	bh=1UTOSXycFtZsxSBcMI1jrkPR5+ySKiezxlXD+FlrPUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=by1XKYlOfj/KP5+UesPzhQpe5mpYy5UXDjU3O4rbRshObQSnywmlg+xbteIDoL2RQ
-	 tjsC1QRZeSfurlD7qTe/Td0ve+V5bYFY/7PbebyupHt8jNrKXc9Lj8YOmreJqzoisT
-	 vzDKoEZtt7tlzvOx3iOk4U9wnHgyjS42nRw3LdGQ=
+	b=ozGDR+1VR8LgJc/YuXH6Yw8S+kPwmsG3lDJxVbJd1KuFHV6wj1B8FSBHtAnZnq2mc
+	 +tq/PTFEZ3jtnLUaNrpPjxaijm1vobJnwSBNfQE7sPiHc4sJ4uJR3Xh8zwUtydVaQD
+	 ZHJTcJBLEbme3UT31uacmx+XlKamMBZltEo+mb+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfDZGAa (ORCPT
+        id S1727466AbfDZGAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 02:00:30 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38085 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfDZGAJ (ORCPT
+        Fri, 26 Apr 2019 02:00:38 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40905 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfDZGAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 02:00:09 -0400
-Received: by mail-lj1-f196.google.com with SMTP id p14so1790630ljg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 23:00:07 -0700 (PDT)
+        Fri, 26 Apr 2019 02:00:08 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t10so741389ljg.7
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 23:00:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xt1S7YWTN5fkfDZ1Qpl5OKzw3BI4K8ze5odHv7qZycI=;
-        b=WJMXf8iP2Ty4T4TZEp4+EVaIEOaM4+sP94acqT2pSyruGgTMMsYI+FQu9GoOVv/iYL
-         M2Q31xZBZcvMBXyVblfvKRJ7V6lerngPM2UWorgRjSSHGLvsyn/iQWCVWRRt1cD444FQ
-         1bj73NCYKouR9c4xVrhuu7lgtI+rDN/c3UbyGXfcNcAqadj9sb4LpjIJw/p/FvXNP9Z1
-         ABYwUGqKQH6r6BFiSgBCH3ThEhWQkSxK2HtuDzdFFAADlBGyNxYQj1xZaZXN34kyeAxU
-         oQnuV5DCrWsVZ17xZ3Y/RhRq0hTktqb6F8ufM4IN9ns5QfxKkl2qgqxJ2X+ZHK5aDL90
-         9NYg==
-X-Gm-Message-State: APjAAAXN8hyOy7BCgt91U1Moc5MuszveRAYkbV5XH00dYAEMmn7U3yec
-        uTlq7oUBpyZtSj0f4MoBkyw=
-X-Google-Smtp-Source: APXvYqyurOWEHrT4Fz2SjjTTLem3zFo+cihUAkrxaD7l6NkYbhhrJ8YNzD6DFd/OKXTkD/njtJ6C6A==
-X-Received: by 2002:a2e:974d:: with SMTP id f13mr23528804ljj.140.1556258407188;
-        Thu, 25 Apr 2019 23:00:07 -0700 (PDT)
+        bh=L2dvYDWXEfCHqR0qNXZkLgcnw57HtnJmA/hujsX0G3Q=;
+        b=Cd8B0RoEaWDPqTbgLFWCUKoRdXtu/WZvxp4k26liA4zeAYUU+jgw7hpOrSeN+5Xr4y
+         BCvS5QQ5xN2GhDjoqLtiHpIBqyKEB6Ml2i8rbNeJm7lOj0TvdCGDrFu33eXhBZQOWx1w
+         wkekcc9PVUgABrpyj4CJFSe0MZ/Q1uUgp3PZSPcWKijnCV0usOouCaNu04rCqn3gAOyH
+         p18ZVSlGSY7oK45nu0UJjCmhf+0haJnBpHiGI9uG7XTjp3tzQJWtpz0oXZe4Ynmq2/yU
+         PfsLw+FRwjQWZx35mh2LgAUfSRiohYNi8slT9c/yJJm+j5LammSjJVoRRP/4Xfpcl/k0
+         J3pQ==
+X-Gm-Message-State: APjAAAUxfimAudSI1xoHmfJeU1F4j+3zjn1l1dv1a1NffsKWM9BYH2+d
+        aU0PNipFxlhzSol1mV4taJXl6x5Z
+X-Google-Smtp-Source: APXvYqxoXyfjXqb+pfz4b6xzVUsIXb9vLLq6oWKViuTsW+q1Hyb5iAlFDxNFqw62v5vPNHce5x9g9g==
+X-Received: by 2002:a2e:9bc7:: with SMTP id w7mr19097293ljj.58.1556258406131;
+        Thu, 25 Apr 2019 23:00:06 -0700 (PDT)
 Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id y20sm1584684ljh.27.2019.04.25.23.00.04
+        by smtp.gmail.com with ESMTPSA id t15sm1297931ljd.22.2019.04.25.23.00.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Thu, 25 Apr 2019 23:00:04 -0700 (PDT)
 Received: from johan by xi.terra with local (Exim 4.91)
         (envelope-from <johan@xi.terra>)
-        id 1hJttz-0003WC-Pk; Fri, 26 Apr 2019 08:00:03 +0200
+        id 1hJttz-0003W7-MZ; Fri, 26 Apr 2019 08:00:03 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
@@ -59,9 +60,9 @@ Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
         Jens Taprogge <jens.taprogge@taprogge.org>,
         Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 3/3] tty: cpm_uart: drop unused iflag macro
-Date:   Fri, 26 Apr 2019 07:59:25 +0200
-Message-Id: <20190426055925.13430-4-johan@kernel.org>
+Subject: [PATCH 2/3] tty: ipoctal: drop unused iflag macro
+Date:   Fri, 26 Apr 2019 07:59:24 +0200
+Message-Id: <20190426055925.13430-3-johan@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190426055925.13430-1-johan@kernel.org>
 References: <20190426055925.13430-1-johan@kernel.org>
@@ -72,27 +73,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the RELEVANT_IFLAG() macro which hasn't been used at least since
-the dawn of git.
+Drop the RELEVANT_IFLAG() macro which has never been used.
 
+Cc: Samuel Iglesias Gonsalvez <siglesias@igalia.com>
+Cc: Jens Taprogge <jens.taprogge@taprogge.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/tty/serial/cpm_uart/cpm_uart_core.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/ipack/devices/ipoctal.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-index b929c7ae3a27..505262b1c6c2 100644
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -567,8 +567,6 @@ static void cpm_uart_set_termios(struct uart_port *port,
- 	/*
- 	 * Set up parity check flag
- 	 */
--#define RELEVANT_IFLAG(iflag) (iflag & (IGNBRK|BRKINT|IGNPAR|PARMRK|INPCK))
--
- 	port->read_status_mask = (BD_SC_EMPTY | BD_SC_OV);
- 	if (termios->c_iflag & INPCK)
- 		port->read_status_mask |= BD_SC_FR | BD_SC_PR;
+diff --git a/drivers/ipack/devices/ipoctal.h b/drivers/ipack/devices/ipoctal.h
+index 7fede0eb6a0c..78e4fc81fb03 100644
+--- a/drivers/ipack/devices/ipoctal.h
++++ b/drivers/ipack/devices/ipoctal.h
+@@ -18,7 +18,6 @@
+ #define NR_CHANNELS		8
+ #define IPOCTAL_MAX_BOARDS	16
+ #define MAX_DEVICES		(NR_CHANNELS * IPOCTAL_MAX_BOARDS)
+-#define RELEVANT_IFLAG(iflag) ((iflag) & (IGNBRK|BRKINT|IGNPAR|PARMRK|INPCK))
+ 
+ /**
+  * struct ipoctal_stats -- Stats since last reset
 -- 
 2.21.0
 
