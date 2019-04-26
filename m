@@ -2,95 +2,109 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1846FC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D296BC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B752077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7082077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:58:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="eivAiBeh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfDZP5o (ORCPT
+        id S1726425AbfDZP6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:57:44 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:55363 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfDZP5n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:57:43 -0400
-Received: from orion.localdomain ([95.117.100.117]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1Mn1mb-1gu2CX0u3D-00k8E5 for <linux-kernel@vger.kernel.org>; Fri, 26 Apr
- 2019 17:57:42 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Subject: [PATCH] lib: devres: devm_ioremap_resource() make res parameter const
-Date:   Fri, 26 Apr 2019 17:57:40 +0200
-Message-Id: <1556294260-24074-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:cCC4sROK495NEVbKTvMKV7BA4OZ6LEsSync5KvsRkwIMqs8dZio
- rivHlMgb8of8KIv1DjoQLQ2+lcSkEgKkXA0Qzk920bfJ7VJZ5wCPXgWwPGwea8Sm4wH00kS
- lXNhH1zNSjUi7TVL9aJveFktuJjFQckK0ARdyUZ2SOgpxbnDkoUy+OvJiN8MR0QOoHcSXNm
- Z0Y2sVgY6QUW82WPTjXwg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MVU9aLFQFDI=:gR9JkxU2xnTDbj8qGfOhnd
- UPLybJrv1AAbmoUNZhRm+SbXXVC+4umAfPdPJGpF4hfpukihuRvUjsQIE3fEgC0YRHNVJ3Fpl
- kE2aeEecMz4WUFOpu6fNMn8teHgy8whyMULv5AZ1B9+SckxSLrR5nUO1fs1dFoTmPVIHHMnsu
- JDt4vtcn3exZUIQh3nyvUEIrPhhEyhGefXyKT5MdPJ2ZSmR3BZGEaQXJmap/LSaFCMK0a397e
- ZB4nYCcCI9fVtjqlnWMRnVHH4t9YKZ1cOM3ri7CqUYcoUl12mZbVSlqlG/cVMXMrWdE8B6ZNL
- jTpNjuuYnN7zbJAFrkYmwORUgyS3WJkbaKC83gcc2k64osOoMrp+w3WDi7OaVsGWIqfA0BSeh
- 2I3HXIjQbDg+CoN40bWBpaPtNhmbkwHZ4van8so/mh3wFmexrTSZBeLwUgVBc+PkiQ6N+tfCw
- nwStjp+53hWrkv8hyBom0OBNwPK4JqH0qkxC9UgboPVMGMAvBDd8kS+wOhk5V/4gpizh/S1tK
- UvTrk5Kp2OKNHvcB/XM8XOtNz3hBHDVd+MHlH2aosdLoFFJzwb07ZCv5+4pPwsv3jwk5Tf1nz
- lwlFuIrBQCFZN1dMM7NPTY+fuJFDkDyseLFtTDky5Z9rrMVnunWTpBAsB8PSaViDnNGMbwSmP
- oxAD/3xcLRzLk1XuO4vdQErhvIwQaku/WnXoL6aTZthM/dYrij+wkxNT26fFSLdE9WywWXoG7
- DE23bry6NvSf553gbsBYoxRq8TRV0p82Y9ISMw==
+        Fri, 26 Apr 2019 11:58:01 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46733 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbfDZP6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:58:00 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44rJc61125z9v0yP;
+        Fri, 26 Apr 2019 17:57:58 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=eivAiBeh; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id T1B0LvTdY-hS; Fri, 26 Apr 2019 17:57:58 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44rJc5709Lz9v0yM;
+        Fri, 26 Apr 2019 17:57:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1556294278; bh=SVi+SDeWRkjZkI0Xgx66cF1/0UxrLkSEuBhxEfJ8Y/8=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=eivAiBehDdfkQoErjDw0vtHvC9MO1XIV2v/W8Y8IrfpOf01GWUkTmz+nKJ36913g6
+         GZzB0YZseIgcYF5JW3PHwO8H2kXAR8k/iG++KasTkBletYQP801u9rEG8Df2RLP6i5
+         6RD3ByG6WAm9DRK/j9NDLczvWI/m+CR5B4w9XsVA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9A8A48B94A;
+        Fri, 26 Apr 2019 17:57:59 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id XcYnrsF3PcYB; Fri, 26 Apr 2019 17:57:59 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.6])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7EEE78B82F;
+        Fri, 26 Apr 2019 17:57:59 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 74392666FE; Fri, 26 Apr 2019 15:57:59 +0000 (UTC)
+Message-Id: <e727e0a19c059566903745ee71a7bc5c46458dcb.1556293738.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1556293738.git.christophe.leroy@c-s.fr>
+References: <cover.1556293738.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 01/15] powerpc/mm: drop __bad_pte()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        aneesh.kumar@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 26 Apr 2019 15:57:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_ioremap_resource() doesn't change the passed struct resource,
-so it can be a const pointer.
+This has never been called (since Kernel has been in git at least),
+drop it.
 
-Now, calls sites w/ fixed resources can declare them static.
-(in some cases possibly even __initconst)
-
-Signed-off-by: Enrico Weigelt <info@metux.net>
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- include/linux/device.h | 3 ++-
- lib/devres.c           | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/book3s/32/pgalloc.h | 2 --
+ arch/powerpc/include/asm/nohash/32/pgalloc.h | 2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 4e6987e..d1a7d64 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -704,7 +704,8 @@ extern unsigned long devm_get_free_pages(struct device *dev,
- 					 gfp_t gfp_mask, unsigned int order);
- extern void devm_free_pages(struct device *dev, unsigned long addr);
- 
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res);
- 
- void __iomem *devm_of_iomap(struct device *dev,
- 			    struct device_node *node, int index,
-diff --git a/lib/devres.c b/lib/devres.c
-index 69bed2f..6a0e9bd 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -131,7 +131,8 @@ void devm_iounmap(struct device *dev, void __iomem *addr)
-  *	if (IS_ERR(base))
-  *		return PTR_ERR(base);
+diff --git a/arch/powerpc/include/asm/book3s/32/pgalloc.h b/arch/powerpc/include/asm/book3s/32/pgalloc.h
+index 3633502e102c..645af86cd072 100644
+--- a/arch/powerpc/include/asm/book3s/32/pgalloc.h
++++ b/arch/powerpc/include/asm/book3s/32/pgalloc.h
+@@ -22,8 +22,6 @@
   */
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res)
- {
- 	resource_size_t size;
- 	void __iomem *dest_ptr;
+ #define MAX_PGTABLE_INDEX_SIZE	0xf
+ 
+-extern void __bad_pte(pmd_t *pmd);
+-
+ extern struct kmem_cache *pgtable_cache[];
+ #define PGT_CACHE(shift) pgtable_cache[shift]
+ 
+diff --git a/arch/powerpc/include/asm/nohash/32/pgalloc.h b/arch/powerpc/include/asm/nohash/32/pgalloc.h
+index bd186e85b4f7..ea265a578eb0 100644
+--- a/arch/powerpc/include/asm/nohash/32/pgalloc.h
++++ b/arch/powerpc/include/asm/nohash/32/pgalloc.h
+@@ -22,8 +22,6 @@
+  */
+ #define MAX_PGTABLE_INDEX_SIZE	0xf
+ 
+-extern void __bad_pte(pmd_t *pmd);
+-
+ extern struct kmem_cache *pgtable_cache[];
+ #define PGT_CACHE(shift) pgtable_cache[shift]
+ 
 -- 
-1.9.1
+2.13.3
 
