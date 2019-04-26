@@ -2,162 +2,545 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 679C6C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EEAC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 426BB2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24272077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556269468;
+	bh=oaqJ4XeJcIqTwxDXJS+Prw+8FL8QU7tX8NVewNv+6cE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PtgIttK9A0JOsDVNGuvxei6aURN6lEjVn6VSpDWl1XTdEqEJ+o2+vSERlsiU8sbc2
+	 98PEncg2x1+cZ3Hn5U14zJXj4yN4Yv2J4Koes6FZhgcOHc5qNYiMyPIGUjO/zS+dAT
+	 kA7rBfMQUmky70qXBrblyFBlMajBYxAFVPlwObxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfDZJEF (ORCPT
+        id S1726218AbfDZJE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:04:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:24829 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfDZJEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:04:04 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3352E81256;
-        Fri, 26 Apr 2019 09:04:04 +0000 (UTC)
-Received: from [10.36.117.165] (ovpn-117-165.ams2.redhat.com [10.36.117.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 345E117D44;
-        Fri, 26 Apr 2019 09:04:02 +0000 (UTC)
-Subject: Re: [PATCH] KVM: s390: vsie: Do not shadow CRYCB when no AP and no
- keys
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, cohuck@redhat.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com,
-        borntraeger@de.ibm.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com
-References: <1556269010-22258-1-git-send-email-pmorel@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
- 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
- xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
- jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
- s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
- m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
- MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
- z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
- dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
- UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
- 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
- uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
- 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
- 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
- xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
- 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
- hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
- u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
- gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
- rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
- BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
- KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
- NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
- YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
- lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
- qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
- C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
- W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
- TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
- +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <fcb4dd93-0035-2d19-10db-7c22b7a21606@redhat.com>
-Date:   Fri, 26 Apr 2019 11:04:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 26 Apr 2019 05:04:26 -0400
+Received: from casper.infradead.org ([85.118.1.10]:48850 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfDZJE0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 05:04:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=2ZruMK64mj4AL/gl4vWVP2/e1nRqjm5wwCF5LAmjNz4=; b=Q6hUyF7FPPjFDdfO3jRlkZJzcg
+        c9o6xwPWUoDQ5XC3nX2XLTMG7TfR4LWSw0ELBEr8QV2mbmBuq3jzy1tX0zOJpy+i0Huh8o80LTm2f
+        91ofvUD1+M8fhmMpQVU1LEMZjHAGiLSYfPt8AWxEu1vDpuKoaQHhSDsXH7gwfK5/1W2bXZDjpY5U4
+        EOG471y7hrtBlP+sJp0HRx08boE3Uptia8HDd4tnIHtsEKs3XYB2Gq/ML0LRfLm5urStPiYVDcRjP
+        46HND8OU5g6O33CwiCH58jVAkuF3kDIB9xJbHZljYCdJk6Gos5T0QAmL+y559ydw3VelBEbR6r+yS
+        snKWqd7A==;
+Received: from [179.95.39.209] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJwmI-0003oc-B4; Fri, 26 Apr 2019 09:04:19 +0000
+Date:   Fri, 26 Apr 2019 06:04:12 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v2 20/79] docs: livepatch: convert docs to ReST and
+ rename to *.rst
+Message-ID: <20190426060412.7e5ef7b4@coco.lan>
+In-Reply-To: <20190426081056.xa3lkbpc75cebxf4@pathway.suse.cz>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+        <ed6b33aa15f9bf7f5dd54ce936b9f1aa4de64a3d.1555938376.git.mchehab+samsung@kernel.org>
+        <20190426081056.xa3lkbpc75cebxf4@pathway.suse.cz>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1556269010-22258-1-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 26 Apr 2019 09:04:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.04.19 10:56, Pierre Morel wrote:
-> When the guest do not have AP instructions nor Key management
-> we should return without shadowing the CRYCB.
+Em Fri, 26 Apr 2019 10:10:56 +0200
+Petr Mladek <pmladek@suse.com> escreveu:
+
+> On Mon 2019-04-22 10:27:09, Mauro Carvalho Chehab wrote:
+> > Convert livepatch documentation to ReST format. The changes
+> > are mostly trivial, as the documents are already on a good
+> > shape. Just a few markup changes are needed for Sphinx to
+> > properly parse the docs.
+> > 
+> > The conversion is actually:
+> >   - add blank lines and identation in order to identify paragraphs;
+> >   - fix tables markups;
+> >   - add some lists markups;
+> >   - mark literal blocks;
+> >   - The in-file TOC becomes a comment, in order to skip it from the
+> >     output, as Sphinx already generates an index there.
+> >   - adjust title markups.
+> > 
+> > At its new index.rst, let's add a :orphan: while this is not linked to
+> > the main index.rst file, in order to avoid build warnings.  
 > 
-> We did not check correctly in the past.
+> Thanks a lot for the conversion.
 > 
-> Fixes: b10bd9a256ae ("s390: vsie: Use effective CRYCBD.31 to check CRYCBD
-> validity")
-
-We should really try to pay more attention, commit b10bd9a256ae already
-was supposed to fix 6ee74098201b.
-
-Unfortunately, I don't have access to documentation and can't verify.
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
-> Fixes: 6ee74098201b ("KVM: s390: vsie: allow CRYCB FORMAT-0")
+> It made me to review style of all documents. I would like add
+> the following changes to make them more consistent.
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> I can added as extra patch or merged with your one.
+> Whatewer works better for you or documentation people.
+
+If you prefer, feel free to merge it on your tree. 
+
+I don't mind if you fold your patche with my patch or apply 
+as a followup patch. Whatever works best for you.
+
+> 
+> 
+> From 4cecbde44205ba4a9f777cac33ef3469cd46e7f2 Mon Sep 17 00:00:00 2001
+> From: Petr Mladek <pmladek@suse.com>
+> Date: Thu, 25 Apr 2019 16:58:21 +0200
+> Subject: [PATCH] docs/livepatch: Unify style of livepatch documentation in the
+>  ReST format
+> 
+> Make the structure of "Livepatch module Elf format" document similar
+> to the main "Livepatch" document.
+> 
+> Also make the structure of "(Un)patching Callbacks" document similar
+> to the "Shadow Variables" document.
+> 
+> It fixes the most visible inconsistencies of the documentation
+> generated from the ReST format.
+> 
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+
+Patch looks good to me. 
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
 > ---
->  arch/s390/kvm/vsie.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  Documentation/livepatch/callbacks.rst         |  33 ++---
+>  Documentation/livepatch/module-elf-format.rst | 186 ++++++++++++--------------
+>  2 files changed, 104 insertions(+), 115 deletions(-)
 > 
-> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-> index c6983d9..ac411e9 100644
-> --- a/arch/s390/kvm/vsie.c
-> +++ b/arch/s390/kvm/vsie.c
-> @@ -290,6 +290,7 @@ static int shadow_crycb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
->  	u8 ecb3_flags;
->  	u32 ecd_flags;
->  	int apie_h;
-> +	int apie_s;
->  	int key_msk = test_kvm_facility(vcpu->kvm, 76);
->  	int fmt_o = crycbd_o & CRYCB_FORMAT_MASK;
->  	int fmt_h = vcpu->arch.sie_block->crycbd & CRYCB_FORMAT_MASK;
-> @@ -298,7 +299,8 @@ static int shadow_crycb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
->  	scb_s->crycbd = 0;
+> diff --git a/Documentation/livepatch/callbacks.rst b/Documentation/livepatch/callbacks.rst
+> index d76d1f0d9fcf..470944aa8658 100644
+> --- a/Documentation/livepatch/callbacks.rst
+> +++ b/Documentation/livepatch/callbacks.rst
+> @@ -4,7 +4,7 @@
 >  
->  	apie_h = vcpu->arch.sie_block->eca & ECA_APIE;
-> -	if (!apie_h && (!key_msk || fmt_o == CRYCB_FORMAT0))
-> +	apie_s = apie_h & scb_o->eca;
-> +	if (!apie_s && (!key_msk || (fmt_o == CRYCB_FORMAT0)))
->  		return 0;
+>  Livepatch (un)patch-callbacks provide a mechanism for livepatch modules
+>  to execute callback functions when a kernel object is (un)patched.  They
+> -can be considered a "power feature" that extends livepatching abilities
+> +can be considered a **power feature** that **extends livepatching abilities**
+>  to include:
 >  
->  	if (!crycb_addr)
-> @@ -309,7 +311,7 @@ static int shadow_crycb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
->  		    ((crycb_addr + 128) & PAGE_MASK))
->  			return set_validity_icpt(scb_s, 0x003CU);
+>    - Safe updates to global data
+> @@ -17,6 +17,9 @@ In most cases, (un)patch callbacks will need to be used in conjunction
+>  with memory barriers and kernel synchronization primitives, like
+>  mutexes/spinlocks, or even stop_machine(), to avoid concurrency issues.
 >  
-> -	if (apie_h && (scb_o->eca & ECA_APIE)) {
-> +	if (apie_s) {
->  		ret = setup_apcb(vcpu, &vsie_page->crycb, crycb_addr,
->  				 vcpu->kvm->arch.crypto.crycb,
->  				 fmt_o, fmt_h);
-> 
+> +1. Motivation
+> +=============
+> +
+>  Callbacks differ from existing kernel facilities:
+>  
+>    - Module init/exit code doesn't run when disabling and re-enabling a
+> @@ -28,6 +31,9 @@ Callbacks are part of the klp_object structure and their implementation
+>  is specific to that klp_object.  Other livepatch objects may or may not
+>  be patched, irrespective of the target klp_object's current state.
+>  
+> +2. Callback types
+> +=================
+> +
+>  Callbacks can be registered for the following livepatch actions:
+>  
+>    * Pre-patch
+> @@ -47,6 +53,9 @@ be patched, irrespective of the target klp_object's current state.
+>                     been restored and no tasks are running patched code,
+>                     used to cleanup pre-patch callback resources
+>  
+> +3. How it works
+> +===============
+> +
+>  Each callback is optional, omitting one does not preclude specifying any
+>  other.  However, the livepatching core executes the handlers in
+>  symmetry: pre-patch callbacks have a post-unpatch counterpart and
+> @@ -90,11 +99,14 @@ If the object did successfully patch, but the patch transition never
+>  started for some reason (e.g., if another object failed to patch),
+>  only the post-unpatch callback will be called.
+>  
+> +4. Use cases
+> +============
+>  
+> -Example Use-cases
+> -=================
+> +Sample livepatch modules demonstrating the callback API can be found in
+> +samples/livepatch/ directory.  These samples were modified for use in
+> +kselftests and can be found in the lib/livepatch directory.
+>  
+> -Update global data
+> +Global data update
+>  ------------------
+>  
+>  A pre-patch callback can be useful to update a global variable.  For
+> @@ -107,24 +119,15 @@ patch the data *after* patching is complete with a post-patch callback,
+>  so that tcp_send_challenge_ack() could first be changed to read
+>  sysctl_tcp_challenge_ack_limit with READ_ONCE.
+>  
+> -
+> -Support __init and probe function patches
+> +__init and probe function patches support
+>  -----------------------------------------
+>  
+>  Although __init and probe functions are not directly livepatch-able, it
+>  may be possible to implement similar updates via pre/post-patch
+>  callbacks.
+>  
+> -48900cb6af42 ("virtio-net: drop NETIF_F_FRAGLIST") change the way that
+> +The commit ``48900cb6af42 ("virtio-net: drop NETIF_F_FRAGLIST")`` change the way that
+>  virtnet_probe() initialized its driver's net_device features.  A
+>  pre/post-patch callback could iterate over all such devices, making a
+>  similar change to their hw_features value.  (Client functions of the
+>  value may need to be updated accordingly.)
+> -
+> -
+> -Other Examples
+> -==============
+> -
+> -Sample livepatch modules demonstrating the callback API can be found in
+> -samples/livepatch/ directory.  These samples were modified for use in
+> -kselftests and can be found in the lib/livepatch directory.
+> diff --git a/Documentation/livepatch/module-elf-format.rst b/Documentation/livepatch/module-elf-format.rst
+> index 7f557c6f6deb..2a591e6f8e6c 100644
+> --- a/Documentation/livepatch/module-elf-format.rst
+> +++ b/Documentation/livepatch/module-elf-format.rst
+> @@ -7,30 +7,18 @@ This document outlines the Elf format requirements that livepatch modules must f
+>  
+>  .. Table of Contents
+>  
+> -   0. Background and motivation
+> -   1. Livepatch modinfo field
+> -   2. Livepatch relocation sections
+> -      2.1 What are livepatch relocation sections?
+> -      2.2 Livepatch relocation section format
+> -          2.2.1 Required flags
+> -          2.2.2 Required name format
+> -          2.2.3 Example livepatch relocation section names
+> -          2.2.4 Example `readelf --sections` output
+> -          2.2.5 Example `readelf --relocs` output
+> -   3. Livepatch symbols
+> -      3.1 What are livepatch symbols?
+> -      3.2 A livepatch module's symbol table
+> -      3.3 Livepatch symbol format
+> -          3.3.1 Required flags
+> -          3.3.2 Required name format
+> -          3.3.3 Example livepatch symbol names
+> -          3.3.4 Example `readelf --symbols` output
+> -   4. Architecture-specific sections
+> -   5. Symbol table and Elf section access
+> -
+> -----------------------------
+> -0. Background and motivation
+> -----------------------------
+> +   1. Background and motivation
+> +   2. Livepatch modinfo field
+> +   3. Livepatch relocation sections
+> +      3.1 Livepatch relocation section format
+> +   4. Livepatch symbols
+> +      4.1 A livepatch module's symbol table
+> +      4.2 Livepatch symbol format
+> +   5. Architecture-specific sections
+> +   6. Symbol table and Elf section access
+> +
+> +1. Background and motivation
+> +============================
+>  
+>  Formerly, livepatch required separate architecture-specific code to write
+>  relocations. However, arch-specific code to write relocations already
+> @@ -52,8 +40,8 @@ relocation sections and symbols, which are described in this document. The
+>  Elf constants used to mark livepatch symbols and relocation sections were
+>  selected from OS-specific ranges according to the definitions from glibc.
+>  
+> -0.1 Why does livepatch need to write its own relocations?
+> ----------------------------------------------------------
+> +Why does livepatch need to write its own relocations?
+> +-----------------------------------------------------
+>  A typical livepatch module contains patched versions of functions that can
+>  reference non-exported global symbols and non-included local symbols.
+>  Relocations referencing these types of symbols cannot be left in as-is
+> @@ -72,13 +60,8 @@ relas reference are special livepatch symbols (see section 2 and 3). The
+>  arch-specific livepatch relocation code is replaced by a call to
+>  apply_relocate_add().
+>  
+> -================================
+> -PATCH MODULE FORMAT REQUIREMENTS
+> -================================
+> -
+> ---------------------------
+> -1. Livepatch modinfo field
+> ---------------------------
+> +2. Livepatch modinfo field
+> +==========================
+>  
+>  Livepatch modules are required to have the "livepatch" modinfo attribute.
+>  See the sample livepatch module in samples/livepatch/ for how this is done.
+> @@ -87,8 +70,10 @@ Livepatch modules can be identified by users by using the 'modinfo' command
+>  and looking for the presence of the "livepatch" field. This field is also
+>  used by the kernel module loader to identify livepatch modules.
+>  
+> -Example modinfo output:
+> ------------------------
+> +Example:
+> +--------
+> +
+> +**Modinfo output:**
+>  
+>  ::
+>  
+> @@ -99,13 +84,9 @@ used by the kernel module loader to identify livepatch modules.
+>  	depends:
+>  	vermagic:		4.3.0+ SMP mod_unload
+>  
+> ---------------------------------
+> -2. Livepatch relocation sections
+> ---------------------------------
+> +3. Livepatch relocation sections
+> +================================
+>  
+> --------------------------------------------
+> -2.1 What are livepatch relocation sections?
+> --------------------------------------------
+>  A livepatch module manages its own Elf relocation sections to apply
+>  relocations to modules as well as to the kernel (vmlinux) at the
+>  appropriate time. For example, if a patch module patches a driver that is
+> @@ -130,12 +111,9 @@ Every symbol referenced by a rela in a livepatch relocation section is a
+>  livepatch symbol. These must be resolved before livepatch can call
+>  apply_relocate_add(). See Section 3 for more information.
+>  
+> ----------------------------------------
+> -2.2 Livepatch relocation section format
+> ----------------------------------------
+> +3.1 Livepatch relocation section format
+> +=======================================
+>  
+> -2.2.1 Required flags
+> ---------------------
+>  Livepatch relocation sections must be marked with the SHF_RELA_LIVEPATCH
+>  section flag. See include/uapi/linux/elf.h for the definition. The module
+>  loader recognizes this flag and will avoid applying those relocation sections
+> @@ -143,8 +121,6 @@ at patch module load time. These sections must also be marked with SHF_ALLOC,
+>  so that the module loader doesn't discard them on module load (i.e. they will
+>  be copied into memory along with the other SHF_ALLOC sections).
+>  
+> -2.2.2 Required name format
+> ---------------------------
+>  The name of a livepatch relocation section must conform to the following
+>  format::
+>  
+> @@ -153,19 +129,28 @@ The name of a livepatch relocation section must conform to the following
+>    |________||_____| |__________|
+>       [A]      [B]        [C]
+>  
+> -  [A] The relocation section name is prefixed with the string ".klp.rela."
+> -  [B] The name of the object (i.e. "vmlinux" or name of module) to
+> -      which the relocation section belongs follows immediately after the prefix.
+> -  [C] The actual name of the section to which this relocation section applies.
+> +[A]
+> +  The relocation section name is prefixed with the string ".klp.rela."
+>  
+> -2.2.3 Example livepatch relocation section names:
+> --------------------------------------------------
+> -.klp.rela.ext4.text.ext4_attr_store
+> -.klp.rela.vmlinux.text.cmdline_proc_show
+> +[B]
+> +  The name of the object (i.e. "vmlinux" or name of module) to
+> +  which the relocation section belongs follows immediately after the prefix.
+>  
+> -2.2.4 Example `readelf --sections` output for a patch
+> -module that patches vmlinux and modules 9p, btrfs, ext4:
+> ---------------------------------------------------------
+> +[C]
+> +  The actual name of the section to which this relocation section applies.
+> +
+> +Examples:
+> +---------
+> +
+> +**Livepatch relocation section names:**
+> +
+> +::
+> +
+> +  .klp.rela.ext4.text.ext4_attr_store
+> +  .klp.rela.vmlinux.text.cmdline_proc_show
+> +
+> +**`readelf --sections` output for a patch
+> +module that patches vmlinux and modules 9p, btrfs, ext4:**
+>  
+>  ::
+>  
+> @@ -182,13 +167,14 @@ The name of a livepatch relocation section must conform to the following
+>    [ snip ]                                       ^                                             ^
+>                                                   |                                             |
+>                                                  [*]                                           [*]
+> -  [*] Livepatch relocation sections are SHT_RELA sections but with a few special
+> +
+> +[*]
+> +  Livepatch relocation sections are SHT_RELA sections but with a few special
+>    characteristics. Notice that they are marked SHF_ALLOC ("A") so that they will
+>    not be discarded when the module is loaded into memory, as well as with the
+>    SHF_RELA_LIVEPATCH flag ("o" - for OS-specific).
+>  
+> -2.2.5 Example `readelf --relocs` output for a patch module:
+> ------------------------------------------------------------
+> +**`readelf --relocs` output for a patch module:**
+>  
+>  ::
+>  
+> @@ -200,16 +186,14 @@ The name of a livepatch relocation section must conform to the following
+>    000000000000004c  0000004900000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.snprintf,0 - 4
+>    [ snip ]                                                                   ^
+>                                                                               |
+> -                                                                          [*]
+> -  [*] Every symbol referenced by a relocation is a livepatch symbol.
+> +                                                                            [*]
+> +
+> +[*]
+> +  Every symbol referenced by a relocation is a livepatch symbol.
+>  
+> ---------------------
+> -3. Livepatch symbols
+> ---------------------
+> +4. Livepatch symbols
+> +====================
+>  
+> --------------------------------
+> -3.1 What are livepatch symbols?
+> --------------------------------
+>  Livepatch symbols are symbols referred to by livepatch relocation sections.
+>  These are symbols accessed from new versions of functions for patched
+>  objects, whose addresses cannot be resolved by the module loader (because
+> @@ -229,9 +213,8 @@ loader can identify and ignore them. Livepatch modules keep these symbols
+>  in their symbol tables, and the symbol table is made accessible through
+>  module->symtab.
+>  
+> --------------------------------------
+> -3.2 A livepatch module's symbol table
+> --------------------------------------
+> +4.1 A livepatch module's symbol table
+> +=====================================
+>  Normally, a stripped down copy of a module's symbol table (containing only
+>  "core" symbols) is made available through module->symtab (See layout_symtab()
+>  in kernel/module.c). For livepatch modules, the symbol table copied into memory
+> @@ -255,18 +238,13 @@ preserved in order for apply_relocate_add() to find the right symbol.
+>    94: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.printk,0
+>    [ snip ]
+>  
+> ----------------------------
+> -3.3 Livepatch symbol format
+> ----------------------------
+> +4.2 Livepatch symbol format
+> +===========================
+>  
+> -3.3.1 Required flags
+> ---------------------
+>  Livepatch symbols must have their section index marked as SHN_LIVEPATCH, so
+>  that the module loader can identify them and not attempt to resolve them.
+>  See include/uapi/linux/elf.h for the actual definitions.
+>  
+> -3.3.2 Required name format
+> ---------------------------
+>  Livepatch symbol names must conform to the following format::
+>  
+>    .klp.sym.objname.symbol_name,sympos
+> @@ -274,17 +252,26 @@ See include/uapi/linux/elf.h for the actual definitions.
+>    |_______||_____| |_________| |
+>       [A]     [B]       [C]    [D]
+>  
+> -  [A] The symbol name is prefixed with the string ".klp.sym."
+> -  [B] The name of the object (i.e. "vmlinux" or name of module) to
+> -      which the symbol belongs follows immediately after the prefix.
+> -  [C] The actual name of the symbol.
+> -  [D] The position of the symbol in the object (as according to kallsyms)
+> -      This is used to differentiate duplicate symbols within the same
+> -      object. The symbol position is expressed numerically (0, 1, 2...).
+> -      The symbol position of a unique symbol is 0.
+> +[A]
+> +  The symbol name is prefixed with the string ".klp.sym."
+> +
+> +[B]
+> +  The name of the object (i.e. "vmlinux" or name of module) to
+> +  which the symbol belongs follows immediately after the prefix.
+>  
+> -3.3.3 Example livepatch symbol names:
+> --------------------------------------
+> +[C]
+> +  The actual name of the symbol.
+> +
+> +[D]
+> +  The position of the symbol in the object (as according to kallsyms)
+> +  This is used to differentiate duplicate symbols within the same
+> +  object. The symbol position is expressed numerically (0, 1, 2...).
+> +  The symbol position of a unique symbol is 0.
+> +
+> +Examples:
+> +---------
+> +
+> +**Livepatch symbol names:**
+>  
+>  ::
+>  
+> @@ -292,8 +279,7 @@ See include/uapi/linux/elf.h for the actual definitions.
+>  	.klp.sym.vmlinux.printk,0
+>  	.klp.sym.btrfs.btrfs_ktype,0
+>  
+> -3.3.4 Example `readelf --symbols` output for a patch module:
+> -------------------------------------------------------------
+> +**`readelf --symbols` output for a patch module:**
+>  
+>  ::
+>  
+> @@ -307,12 +293,13 @@ See include/uapi/linux/elf.h for the actual definitions.
+>      [ snip ]                                               ^
+>                                                             |
+>                                                            [*]
+> -  [*] Note that the 'Ndx' (Section index) for these symbols is SHN_LIVEPATCH (0xff20).
+> -      "OS" means OS-specific.
+>  
+> ----------------------------------
+> -4. Architecture-specific sections
+> ----------------------------------
+> +[*]
+> +  Note that the 'Ndx' (Section index) for these symbols is SHN_LIVEPATCH (0xff20).
+> +  "OS" means OS-specific.
+> +
+> +5. Architecture-specific sections
+> +=================================
+>  Architectures may override arch_klp_init_object_loaded() to perform
+>  additional arch-specific tasks when a target module loads, such as applying
+>  arch-specific sections. On x86 for example, we must apply per-object
+> @@ -321,9 +308,8 @@ These sections must be prefixed with ".klp.arch.$objname." so that they can
+>  be easily identified when iterating through a patch module's Elf sections
+>  (See arch/x86/kernel/livepatch.c for a complete example).
+>  
+> ---------------------------------------
+> -5. Symbol table and Elf section access
+> ---------------------------------------
+> +6. Symbol table and Elf section access
+> +======================================
+>  A livepatch module's symbol table is accessible through module->symtab.
+>  
+>  Since apply_relocate_add() requires access to a module's section headers,
 
 
--- 
 
 Thanks,
-
-David / dhildenb
+Mauro
