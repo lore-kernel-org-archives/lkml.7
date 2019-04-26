@@ -3,51 +3,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBE2C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B689C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1AB2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5902084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbfDZAHH (ORCPT
+        id S1729507AbfDZAHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 25 Apr 2019 20:07:07 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:50911 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfDZAHH (ORCPT
+Received: from mail-it1-f198.google.com ([209.85.166.198]:38246 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbfDZAHH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Apr 2019 20:07:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id b26so1345158ioa.17
+Received: by mail-it1-f198.google.com with SMTP id r198so1295420itb.3
         for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 17:07:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ncsg7IXdsrfkQ0KmZEk6J1vVZHSi1l6+kyeA64/DwGw=;
-        b=rUay8ykcB7NqpewHRS/XauJSZhjzkJJgSeotOzOrLC0kb7ED7daHc6zXdfC63HC212
-         a3hud7VzpUjWSkQcZ0VMZlBL2LdcdQW8nGMuFLD03Pvli/9aLRK4FbndQgdu31RZD3oC
-         Zl+2rvRE5Dv1XAwNcn5OQiEeGZro7ktVgPw2lPcHazoWoZio2mFy0N23zBx7Wiy9ZNOg
-         sALPYIrqmtiVaQUj/hjn5eBMhzfBYqtAFPJNbj1CLxKa6XQKyw7haQIeVEksRyw5q4nK
-         CRgYDpXRahO8KgA6oOirPQw1kLhGgxX/opEowdB7Sz2w2FV2N2wAol5lTDm4pW84Sgb2
-         HVOA==
-X-Gm-Message-State: APjAAAUQgZo4G4NlPuw++kOtXgfp+E4Bx3SO7/jUsRgMDPkdF8R3iIXu
-        5RCi1/mfR4zgSecEBXoBgHRCHP5ETOrvCLHnbY0L5bZ0HDRG
-X-Google-Smtp-Source: APXvYqzRaxQ9a/L1TNIL4VmzU7hmo/Ga4ufLTpRcgEaFev+WsdcgwEfKNCm0dPFxSDJIM4eCf5NTk+MZsT4109ryOTxzZQNB3tvJ
+        bh=fAgF82Ea2Le34CGlmCfmPkgW8wzL1xNX4ul2vnGLbqg=;
+        b=H6F/tH7XIFp3LaUAkEYVB9dL4WdlrcXJRZcxkM/0ORZYwCN7CVTRG1mVWfkqlgr3GZ
+         iFj1vNmqMKXMXR37hjki8E/GNbqewmkifYGW+b9sOHKtFBbF/EQPqMWlj6hvZ+o+N82I
+         YK3Cs3pGVptA7348pxfXwLzGYon8O6YpefIvMmMPyfs2edCWK0rukUq38gIX1MXdZEnK
+         J7ZZtONoyDOhyNfcHi7ebGDhnDG0zSRhLpx5nD2jUXB6WSPqkLGFUHaY3TcuQU9ZMUvh
+         VAIoDZdIVnqxzGCM9dqufHPU+6SAAhQvrABh4nGgwD7PgbQ5Hr5wE7Bmqg7FOJyIw9zG
+         YXCg==
+X-Gm-Message-State: APjAAAU4XyrjYYrsVCzTYTdrJWq7vsWlUgR+GV1AYsUqV9fvCVGDgJ92
+        yQTwU7ia1T4nb1u+pbcUBgs0XI+T2Epp13gS/OeQkuBgYe0m
+X-Google-Smtp-Source: APXvYqx1+KWaM23X4Gts3o/eoZTfzNtcpuot+WCHclkmMhxL+rboqKmGXe1Skygd2TLpPvIdPNM3o2IImEZOGY3PH4fzPBlN0WW8
 MIME-Version: 1.0
-X-Received: by 2002:a5e:db02:: with SMTP id q2mr6442598iop.293.1556237225841;
- Thu, 25 Apr 2019 17:07:05 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 17:07:05 -0700
+X-Received: by 2002:a02:9108:: with SMTP id a8mr12061074jag.107.1556237226085;
+ Thu, 25 Apr 2019 17:07:06 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 17:07:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000859f5058763b7c3@google.com>
-Subject: general protection fault in vcpu_enter_guest (2)
-From:   syzbot <syzbot+f7e65445a40d3e0e4ebf@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Message-ID: <0000000000000c1b5b058763b7b9@google.com>
+Subject: possible deadlock in do_io_accounting (2)
+From:   syzbot <syzbot+d7d7de240978094ce2ef@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, akpm@linux-foundation.org,
+        casey@schaufler-ca.com, keescook@chromium.org,
+        kent.overstreet@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,86 +59,178 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    76c938fc Add linux-next specific files for 20190423
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16863d28a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=62738d35457c577d
-dashboard link: https://syzkaller.appspot.com/bug?extid=f7e65445a40d3e0e4ebf
+HEAD commit:    085b7755 Linux 5.1-rc6
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=132444f4a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a42d110b47dd6b36
+dashboard link: https://syzkaller.appspot.com/bug?extid=d7d7de240978094ce2ef
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1364a6d4a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17c25dc4a00000
 
-Bisection is inconclusive: the first bad commit could be any of:
-
-57bf67e7 KVM: lapic: Disable timer advancement if adaptive tuning goes  
-haywire
-39497d76 KVM: lapic: Track lapic timer advance per vCPU
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17a32fc4a00000
+Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f7e65445a40d3e0e4ebf@syzkaller.appspotmail.com
+Reported-by: syzbot+d7d7de240978094ce2ef@syzkaller.appspotmail.com
 
-L1TF CPU bug present and SMT on, data leak possible. See CVE-2018-3646 and  
-https://www.kernel.org/doc/html/latest/admin-guide/l1tf.html for details.
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 7872 Comm: syz-executor233 Not tainted 5.1.0-rc6-next-20190423  
-#29
+======================================================
+WARNING: possible circular locking dependency detected
+5.1.0-rc6 #79 Not tainted
+------------------------------------------------------
+syz-executor.5/18117 is trying to acquire lock:
+00000000d18ffe87 (&sig->cred_guard_mutex){+.+.}, at:  
+do_io_accounting+0x1f4/0x830 fs/proc/base.c:2740
+
+but task is already holding lock:
+00000000229ae1ca (&p->lock){+.+.}, at: seq_read+0x71/0x1130  
+fs/seq_file.c:161
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #3 (&p->lock){+.+.}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+        __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+        __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
+        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+        seq_read+0x71/0x1130 fs/seq_file.c:161
+        proc_reg_read+0x1fe/0x2c0 fs/proc/inode.c:227
+        do_loop_readv_writev fs/read_write.c:701 [inline]
+        do_loop_readv_writev fs/read_write.c:688 [inline]
+        do_iter_read+0x4a9/0x660 fs/read_write.c:922
+        vfs_readv+0xf0/0x160 fs/read_write.c:984
+        kernel_readv fs/splice.c:358 [inline]
+        default_file_splice_read+0x475/0x890 fs/splice.c:413
+        do_splice_to+0x12a/0x190 fs/splice.c:876
+        splice_direct_to_actor+0x2d2/0x970 fs/splice.c:953
+        do_splice_direct+0x1da/0x2a0 fs/splice.c:1062
+        do_sendfile+0x597/0xd00 fs/read_write.c:1443
+        __do_sys_sendfile64 fs/read_write.c:1504 [inline]
+        __se_sys_sendfile64 fs/read_write.c:1490 [inline]
+        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1490
+        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #2 (sb_writers#3){.+.+}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+        percpu_down_read include/linux/percpu-rwsem.h:36 [inline]
+        __sb_start_write+0x20b/0x360 fs/super.c:1613
+        sb_start_write include/linux/fs.h:1621 [inline]
+        mnt_want_write+0x3f/0xc0 fs/namespace.c:358
+        ovl_want_write+0x76/0xa0 fs/overlayfs/util.c:24
+        ovl_create_object+0xb3/0x2c0 fs/overlayfs/dir.c:599
+        ovl_create+0x28/0x30 fs/overlayfs/dir.c:630
+        lookup_open+0x12e0/0x1b10 fs/namei.c:3232
+        do_last fs/namei.c:3322 [inline]
+        path_openat+0x14ac/0x46e0 fs/namei.c:3533
+        do_filp_open+0x1a1/0x280 fs/namei.c:3563
+        do_sys_open+0x3fe/0x5d0 fs/open.c:1069
+        __do_sys_open fs/open.c:1087 [inline]
+        __se_sys_open fs/open.c:1082 [inline]
+        __x64_sys_open+0x7e/0xc0 fs/open.c:1082
+        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #1 (&ovl_i_mutex_dir_key[depth]){++++}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+        down_read+0x3b/0x90 kernel/locking/rwsem.c:24
+        inode_lock_shared include/linux/fs.h:782 [inline]
+        do_last fs/namei.c:3321 [inline]
+        path_openat+0x1e98/0x46e0 fs/namei.c:3533
+        do_filp_open+0x1a1/0x280 fs/namei.c:3563
+        do_open_execat+0x137/0x690 fs/exec.c:856
+        __do_execve_file.isra.0+0x178d/0x23f0 fs/exec.c:1758
+        do_execveat_common fs/exec.c:1865 [inline]
+        do_execve fs/exec.c:1882 [inline]
+        __do_sys_execve fs/exec.c:1958 [inline]
+        __se_sys_execve fs/exec.c:1953 [inline]
+        __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
+        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&sig->cred_guard_mutex){+.+.}:
+        check_prevs_add kernel/locking/lockdep.c:2333 [inline]
+        validate_chain kernel/locking/lockdep.c:2714 [inline]
+        __lock_acquire+0x239c/0x3fb0 kernel/locking/lockdep.c:3701
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+        __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+        __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
+        mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1102
+        do_io_accounting+0x1f4/0x830 fs/proc/base.c:2740
+        proc_tid_io_accounting+0x20/0x30 fs/proc/base.c:2783
+        proc_single_show+0xf6/0x170 fs/proc/base.c:744
+        seq_read+0x4db/0x1130 fs/seq_file.c:229
+        do_loop_readv_writev fs/read_write.c:701 [inline]
+        do_loop_readv_writev fs/read_write.c:688 [inline]
+        do_iter_read+0x4a9/0x660 fs/read_write.c:922
+        vfs_readv+0xf0/0x160 fs/read_write.c:984
+        do_preadv+0x1c4/0x280 fs/read_write.c:1068
+        __do_sys_preadv fs/read_write.c:1118 [inline]
+        __se_sys_preadv fs/read_write.c:1113 [inline]
+        __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1113
+        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+Chain exists of:
+   &sig->cred_guard_mutex --> sb_writers#3 --> &p->lock
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(&p->lock);
+                                lock(sb_writers#3);
+                                lock(&p->lock);
+   lock(&sig->cred_guard_mutex);
+
+  *** DEADLOCK ***
+
+1 lock held by syz-executor.5/18117:
+  #0: 00000000229ae1ca (&p->lock){+.+.}, at: seq_read+0x71/0x1130  
+fs/seq_file.c:161
+
+stack backtrace:
+CPU: 1 PID: 18117 Comm: syz-executor.5 Not tainted 5.1.0-rc6 #79
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:vcpu_enter_guest+0xbcd/0x5fb0 arch/x86/kvm/x86.c:7895
-Code: 48 c1 ea 03 80 3c 02 00 0f 85 6f 48 00 00 49 8b 9f b0 03 00 00 48 b8  
-00 00 00 00 00 fc ff df 48 8d 7b 78 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84  
-c0 74 08 3c 03 0f 8e 39 48 00 00 8b 5b 78 31 ff 89
-RSP: 0018:ffff88808bd4fa00 EFLAGS: 00010006
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff810d1ec9
-RDX: 000000000000000f RSI: ffffffff810ceef2 RDI: 0000000000000078
-RBP: ffff88808bd4fb10 R08: ffff8880a912e580 R09: ffffed1015d05dd0
-R10: ffffed1015d05dcf R11: ffff8880ae82ee7b R12: ffff88808f3e006c
-R13: 0000000000000001 R14: ffff88808f3e0070 R15: ffff88808f3e0040
-FS:  00007f7adb927700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa0427eb000 CR3: 00000000939e4000 CR4: 00000000001426f0
 Call Trace:
-  vcpu_run arch/x86/kvm/x86.c:8037 [inline]
-  kvm_arch_vcpu_ioctl_run+0x425/0x1750 arch/x86/kvm/x86.c:8245
-  kvm_vcpu_ioctl+0x4dc/0xf90 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2684
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_circular_bug.isra.0.cold+0x1cc/0x28f kernel/locking/lockdep.c:1571
+  check_prev_add.constprop.0+0xf11/0x23c0 kernel/locking/lockdep.c:2220
+  check_prevs_add kernel/locking/lockdep.c:2333 [inline]
+  validate_chain kernel/locking/lockdep.c:2714 [inline]
+  __lock_acquire+0x239c/0x3fb0 kernel/locking/lockdep.c:3701
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+  __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+  __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
+  mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1102
+  do_io_accounting+0x1f4/0x830 fs/proc/base.c:2740
+  proc_tid_io_accounting+0x20/0x30 fs/proc/base.c:2783
+  proc_single_show+0xf6/0x170 fs/proc/base.c:744
+  seq_read+0x4db/0x1130 fs/seq_file.c:229
+  do_loop_readv_writev fs/read_write.c:701 [inline]
+  do_loop_readv_writev fs/read_write.c:688 [inline]
+  do_iter_read+0x4a9/0x660 fs/read_write.c:922
+  vfs_readv+0xf0/0x160 fs/read_write.c:984
+  do_preadv+0x1c4/0x280 fs/read_write.c:1068
+  __do_sys_preadv fs/read_write.c:1118 [inline]
+  __se_sys_preadv fs/read_write.c:1113 [inline]
+  __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1113
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446779
-Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+RIP: 0033:0x458c29
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7adb926db8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000006dbc48 RCX: 0000000000446779
-RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000005
-RBP: 00000000006dbc40 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc4c
-R13: 00007fff1cfa7c1f R14: 00007f7adb9279c0 R15: 20c49ba5e353f7cf
-Modules linked in:
----[ end trace da6276bd16a5f99d ]---
-RIP: 0010:vcpu_enter_guest+0xbcd/0x5fb0 arch/x86/kvm/x86.c:7895
-Code: 48 c1 ea 03 80 3c 02 00 0f 85 6f 48 00 00 49 8b 9f b0 03 00 00 48 b8  
-00 00 00 00 00 fc ff df 48 8d 7b 78 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84  
-c0 74 08 3c 03 0f 8e 39 48 00 00 8b 5b 78 31 ff 89
-RSP: 0018:ffff88808bd4fa00 EFLAGS: 00010006
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff810d1ec9
-RDX: 000000000000000f RSI: ffffffff810ceef2 RDI: 0000000000000078
-RBP: ffff88808bd4fb10 R08: ffff8880a912e580 R09: ffffed1015d05dd0
-R10: ffffed1015d05dcf R11: ffff8880ae82ee7b R12: ffff88808f3e006c
-R13: 0000000000000001 R14: ffff88808f3e0070 R15: ffff88808f3e0040
-FS:  00007f7adb927700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa0427eb000 CR3: 00000000939e4000 CR4: 00000000001426f0
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007feb95b47c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458c29
+RDX: 2000000000000113 RSI: 0000000020000480 RDI: 0000000000000005
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007feb95b486d4
+R13: 00000000004c5969 R14: 00000000004d9cc8 R15: 00000000ffffffff
 
 
 ---
@@ -147,6 +240,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
