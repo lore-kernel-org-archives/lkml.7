@@ -2,127 +2,152 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B897C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBAAC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A4D206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:37:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GDTV36us"
+	by mail.kernel.org (Postfix) with ESMTP id 98753206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556318500;
+	bh=TSlLR0SoV4yY+s+9Jlsb3CLGNH37LofNhjQxRe0j7ig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ACA6QfVYKG0CzMlUkAdoTXFz3Zlyg5DrGUXg8v7g65UJ5jaH11HicspXaHudqi0uh
+	 tc3n3g/jxD1nb4dKfRbQsbi0GjD3ZPlb1eDfEwXCkQr7G7bLNW3inNph7/Gu6CLvW9
+	 7/8YunGj25KIhAuSBTqiXqYQXqpAkfvKZNZS/Rs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfDZWhj (ORCPT
+        id S1727104AbfDZWlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 18:37:39 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:35915 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfDZWhj (ORCPT
+        Fri, 26 Apr 2019 18:41:39 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36482 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfDZWlj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 18:37:39 -0400
-Received: by mail-vk1-f193.google.com with SMTP id w140so1139568vkd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 15:37:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qp2COoOzGcxdcXg+1vxxR4TSzk1B6a7b+NmLr2MP/+E=;
-        b=GDTV36usGs9JvO3YlJf4bV518rXaI+FjHtyCnUnFNzinoMyt/IzuPD4xszpG3F8Yd0
-         BQEmx1/r4zB2tO/kjez5Og1bYakqtkU8XWnmYLG8aIDdC+CmOg+BYU66TuLgLTxIVlMQ
-         mOCtg0PvUrbfsqQf2tMJpGQrXlj3SGej5ZeHQ=
+        Fri, 26 Apr 2019 18:41:39 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l203so4213854oia.3;
+        Fri, 26 Apr 2019 15:41:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qp2COoOzGcxdcXg+1vxxR4TSzk1B6a7b+NmLr2MP/+E=;
-        b=CwyJ+FVv9AVq4kc9scsreXYXxyDpAfIUHnBf0Cbzyh/u+xt9ML+JsyfnkaoFKVWbqK
-         OgRvhDwfLIWyjy3ccdMBu7kRJPmoxyk1sNL6MbQNpVcqt1vAXFYacAT9L5W4Ut1wJx3/
-         LHJD65adTRKQnzxQbPf35qKIV+uE8l6vLYQS4iAEdVO2c1ljuY7FRt2iTgdSx0PL2rEf
-         T9Zwfw77DN2J5JyM2yIoL3QD73b927GvwkIVdvQDorjg3wpf6N5P/KKizipMDINZtSCV
-         lSPsHDsvBH8Pos3iA/TUhCM0by3a/ESlRtjegWbqWpShUTp6RCaB3CyQ17mfpgvhLyZs
-         +CLg==
-X-Gm-Message-State: APjAAAW60tXbSjx1QA5jBG4WWVu7HQ/mqEiqPQ3YewkdnmlonVt3cwGC
-        bE0/Z/KMXaEzOToLzWaDI6UGrZ0QclA=
-X-Google-Smtp-Source: APXvYqzNPoFnF3SwnuJsSDI2LLIqDigjJJkKFUI1ZHQ59eb1EAUzuBha/cV+wq7TtGuIyxhhqvmREw==
-X-Received: by 2002:a1f:2ccb:: with SMTP id s194mr12338389vks.24.1556318258134;
-        Fri, 26 Apr 2019 15:37:38 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id m23sm37202285vsl.24.2019.04.26.15.37.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 15:37:35 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id l17so1731724uar.4
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 15:37:35 -0700 (PDT)
-X-Received: by 2002:ab0:4870:: with SMTP id c45mr2929546uad.21.1556318255153;
- Fri, 26 Apr 2019 15:37:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PsdEdDTbsz+N7C5OSHpzo5ojKTZZOZ+w3y29AXWU3a0=;
+        b=USj0sm7W3Oj2QGmVQHsqAVsPc701QX+koKUEer5eMGldKvz6fgqxWQGWnFzNcMB5fc
+         woVAKmWXsZP6TZckUSzNhg83yFY/5K8iH0Q3S/ImIvchEA2ot9loM4DyCp/q8RnZoNht
+         ngf4+tvn+ELlnSHXOWgjdd+FSYKemvBMnW7uezke75Tn8goKo6A9KV8m/eyn556YW0g+
+         QBPERH1aebhBLsb3dUo529WmvUHR3TX3Ac3OuTpa2LqKpp/x122VDba2L0lT8raPh1iv
+         g3oaMZw7sgNeMcXLeYUI0ZOfn4YqX9LoijjsV9Vzh4vBrsPKdqW9+JremfjnUO+FYJzz
+         HZLQ==
+X-Gm-Message-State: APjAAAVAT5QcKRaG0ey1tzqTCZH6miFlQHkeI7ZPBJYWaS3UPDtE+maS
+        saZ1VXSVjLrboCeBGK225A==
+X-Google-Smtp-Source: APXvYqzzmEbC/NuD5L8a9Vj0ZUk4s85sFCjNd6YoWDJUPGt8PPb+Skw3FBdVQPhaSCv3ksmJRDcfww==
+X-Received: by 2002:aca:f1d4:: with SMTP id p203mr9098222oih.154.1556318497952;
+        Fri, 26 Apr 2019 15:41:37 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f16sm3915279otq.15.2019.04.26.15.41.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 15:41:36 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 17:41:36 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     broonie@kernel.org, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        bbrezillon@kernel.org, dwmw2@infradead.org, lee.jones@linaro.org,
+        mark.rutland@arm.com, computersforpeace@gmal.com,
+        paul.burton@mips.com, stefan@agner.ch, christophe.kerello@st.com,
+        liang.yang@amlogic.com, geert@linux-m68k.org,
+        devicetree@vger.kernel.org, marcel.ziswiler@toradex.com,
+        linux-mtd@lists.infradead.org, richard@nod.at,
+        miquel.raynal@bootlin.com, juliensu@mxic.com.tw,
+        zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v3 4/4] dt-bindings: mfd: Document Macronix MX25F0A
+ controller bindings
+Message-ID: <20190426224136.GA636@bogus>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555320234-15802-5-git-send-email-masonccyang@mxic.com.tw>
 MIME-Version: 1.0
-References: <20190423225959.43742-1-dianders@chromium.org>
-In-Reply-To: <20190423225959.43742-1-dianders@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 26 Apr 2019 15:37:23 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W=JW_W0FsPoNOA_ZSDptC0AGLVAiTm=o2HH8bmFeNPaA@mail.gmail.com>
-Message-ID: <CAD=FV=W=JW_W0FsPoNOA_ZSDptC0AGLVAiTm=o2HH8bmFeNPaA@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: errata: Workaround errata A12 857271 / A17 857272
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jose Salvador Climent Bayarri <Salva.Climent@arm.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Bobby Batacharia <bbatacha@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tony Lindgren <tony@atomide.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555320234-15802-5-git-send-email-masonccyang@mxic.com.tw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Apr 23, 2019 at 4:00 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> This adds support for working around errata A12 857271 / A17 857272.
-> These errata were causing hangs on rk3288-based Chromebooks and it was
-> confirmed that this workaround fixed the problems.  In the Chrome OS
-> 3.14 kernel this was treated as two errata: ERRATA_FOOBAR [1] and
-> ERRATA_CR711784 [2].  Apparently the two errata got lumped together at
-> some point in time.
->
-> Let's actually get the workaround landed.
->
-> [1] https://crrev.com/c/342753
-> [2] https://crbug.com/711784
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Sonny Rao <sonnyrao@chromium.org>
+On Mon, Apr 15, 2019 at 05:23:54PM +0800, Mason Yang wrote:
+> Document the bindings used by the Macronix MX25F0A MFD controller.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
 > ---
->
-> Changes in v2:
-> - Squashed bits 10 and 11 into one errata.
->
->  arch/arm/Kconfig      | 18 ++++++++++++++++++
->  arch/arm/mm/proc-v7.S | 10 ++++++++++
->  2 files changed, 28 insertions(+)
+>  .../devicetree/bindings/mfd/mxic-mx25f0a.txt       | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+> new file mode 100644
+> index 0000000..7f3e0f8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+> @@ -0,0 +1,51 @@
+> +Macronix MX25F0A MultiFunction Device Tree Bindings
+> +----------------------------------------------------
+> +
+> +MX25F0A is a MultiFunction Device with SPI and raw NAND, which
+> +supports either spi host controller or raw nand controller.
+> +
+> +Required properties:
+> +- compatible: should be "mxic,mx25f0a"
+> +- #address-cells: should be 1
+> +- #size-cells: should be 0
+> +- reg: should contain 2 entries, one for the registers and one for the direct
+> +       mapping area in SPI mode.
+> +- reg-names: should contain "regs" and "dirmap"
+> +- interrupts: interrupt line connected to this MFD controller
+> +- SPI controller driver:
+> +		- clock-names: should contain "ps_clk", "send_clk" and
+> +			       "send_dly_clk"
+> +		- clocks: should contain 3 entries for the "ps_clk", "send_clk"
+> +			  and "send_dly_clk" clocks
+> +
+> +- Raw nand controller driver.
+> +		- nand-ecc-mode = "soft";
+> +		- nand-ecc-algo = "bch";
+> +
+> +Example:
+> +
+> +	mxic: mx25f0a@43c30000 {
+> +		compatible = "mxic,mx25f0a";
+> +		reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
+> +		reg-names = "regs", "dirmap";
+> +
+> +		/* spi */
+> +		clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> +		clock-names = "send_clk", "send_dly_clk", "ps_clk";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		flash@0 {
+> +			compatible = "jedec,spi-nor";
+> +			reg = <0>;
+> +			spi-max-frequency = <25000000>;
+> +			spi-tx-bus-width = <4>;
+> +			spi-rx-bus-width = <4>;
+> +		};
+> +
+> +		/* nand */
 
-Breadcrumbs: this has been submitted to RMK's patch tracking system.  See:
+Don't you need a nand child node? I'm not sure how that's going to work 
+as you are already using the number space (i.e. reg) for SPI CS number 
+and you can't really mix number spaces within a node level.
 
-https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=8861/1
-
--Doug
+> +		nand-ecc-mode = "soft";
+> +		nand-ecc-algo = "bch";
+> +		nand-ecc-step-size = <512>;
+> +		nand-ecc-strength = <8>;
+> +	};
+> -- 
+> 1.9.1
+> 
