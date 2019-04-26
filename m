@@ -2,262 +2,220 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05DBC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D9CC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B70A206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E17206BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 01:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ZaYePW6F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfDZBad (ORCPT
+        id S1727139AbfDZBhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 21:30:33 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36502 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfDZBad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 21:30:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 18:30:32 -0700
-X-IronPort-AV: E=Sophos;i="5.60,395,1549958400"; 
-   d="scan'208";a="137552610"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.239.196.118]) ([10.239.196.118])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 25 Apr 2019 18:30:30 -0700
-Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
-References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
- <20190424143238.GB18442@linux.intel.com>
- <bcc3a8ea-1fd0-124c-c472-7c096e0f8014@linux.intel.com>
- <c5d7dd8a51c606f38314ef4c7bb0702caeecbe7e.camel@intel.com>
- <30857e40-05b6-0f4c-d07c-919de08c90ac@linux.intel.com>
- <be509b34ba01a22845363aeb0b0f053f25c2d9c1.camel@intel.com>
- <7568a794-2e91-c84c-5b64-d33e394f0e2b@linux.intel.com>
- <20190425141944.GA31197@linux.intel.com>
- <5203b6ee-4a14-64b7-0237-dae2a977054d@linux.intel.com>
- <6df520272ae8874fbc06d60664f17b518d9b8c5e.camel@intel.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <300e920b-03b6-2874-df6a-02e596f6cf96@linux.intel.com>
-Date:   Fri, 26 Apr 2019 09:30:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 25 Apr 2019 21:37:54 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:25004 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfDZBhx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 21:37:53 -0400
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x3Q1baMl026223;
+        Fri, 26 Apr 2019 10:37:37 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x3Q1baMl026223
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556242657;
+        bh=O0qtrKYIpIe7gV+LLpOkDIfO+YUShwi3bTDlZP6f+Mk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZaYePW6FXtZ2WAyQbaT4hqT/yeNXTdKaTfTOiT0O8Hx9L9Cx4GGRl4xE+sVbbFvFa
+         ZrqAbuZ8gc4v3pW39wvWUEcBEizn8638aA8bO+iz+7IQdZhhyLUhFzS00Az2P+PJsZ
+         BIc31sLYyXVjjsbbFNGmHlO2BqShoUhNoCxRoE0r4Dr0qNwevH/baBIWM7rYjDN8NS
+         bCRV+pfAyvYj1nqiVIJOqdx82/oDZo1PmqceWbNjdpT7hdwWZX9O+V098yVsO4jCNI
+         AvMGrlFP7F/fWVhYMWi2qTM623Fdoj9mOUmES5cqvleOfyobrjmRBuw2TZfJ1M603M
+         8UaYqiwJWiXHg==
+X-Nifty-SrcIP: [209.85.221.175]
+Received: by mail-vk1-f175.google.com with SMTP id l17so418296vke.7;
+        Thu, 25 Apr 2019 18:37:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAXl1zG/oFwy3PIeL+GEUpibdRwy+M5uON8IIyug7PfNtsgOd7wd
+        xU/wJySoGlx5oJ0PHXYY4B07AjHIh8bHo9ZnLCY=
+X-Google-Smtp-Source: APXvYqzDEXMgtrlycT2Fi+pJzCVBZyg7pUCRh57e2jYq3aJETCucZ3BLMlFLrR9UryHRz/URhUy9KXlpnJiFh74sy8Y=
+X-Received: by 2002:a1f:c288:: with SMTP id s130mr22999671vkf.0.1556242655887;
+ Thu, 25 Apr 2019 18:37:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6df520272ae8874fbc06d60664f17b518d9b8c5e.camel@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1553859161-2628-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1553859161-2628-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 26 Apr 2019 10:36:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR6bT93kmyPCzJg2ZFvk239nz0nyVX5z23G+8Y0Wiba1Q@mail.gmail.com>
+Message-ID: <CAK7LNAR6bT93kmyPCzJg2ZFvk239nz0nyVX5z23G+8Y0Wiba1Q@mail.gmail.com>
+Subject: Re: [PATCH v2] drm: prefix header search paths with $(srctree)/
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        nouveau@lists.freedesktop.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        "James (Qian) Wang" <james.qian.wang@arm.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        amd-gfx@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        intel-gvt-dev@lists.freedesktop.org,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/26 0:28, Xiaoyao Li wrote:
-> On Thu, 2019-04-25 at 23:33 +0800, Like Xu wrote:
->> On 2019/4/25 22:19, Sean Christopherson wrote:
->>> On Thu, Apr 25, 2019 at 03:07:35PM +0800, Like Xu wrote:
->>>> On 2019/4/25 14:30, Xiaoyao Li wrote:
->>>>>>> Besides, the problem of simply using cpuid_exc(0x1f) in Sean's codes
->>>>>>> is
->>>>>>> that we cannot assmue the reserved bits 31:16 of ECX is always 0 for
->>>>>>> the
->>>>>>> future generation.
->>>
->>> It doesn't matter if future CPUs use 31:16 for other things since this
->>> code only cares about whether or not CPUID.1F exists.  The check
->>> entry->eax >= 0x1f ensures that CPUID.1F will return zeros if the leaf
->>> does *NOT* exist, ergo the check against CPUID.1F.ECX only needs to
->>> look for a non-zero value.  CPUID.1F.ECX is the logical choice for
->>> detecting support because it is guaranteed to be non-zero if the leaf
->>> actually exists (because bits 15:8 will be non-zero).  Whether or not
->>> bits 31:16 are non-zero is irrelevant.
->>
->> Here is a case:
->>
->> one future CPU may have "cpuid.0.eax > 0x1f" but not use multi-chip
->> packaging technology thus its CPUID.1F leaf **could** not exist to
->> expose multi-die info and it still use cpuid.0B leaf.
->>
->> So the entry->eax >= 0x1f check is true and cpuid_ecx(0x1f) check is
->> true as well due to default return value. (one of my machines for
->> cpuid.1f.ecx would return 0x00000064 without cpuid.1f support).
-> 
-> You mean entry->eax >= 0x1f, and CPUID.1F leaf doesn't exist.
-> In this case, cpuid_ecx(0x1f) must be zero.
-> 
-> You should the descripton of CPUID instruction in SDM. It says:
-> 
->     If a value entered for CPUID.EAX is less than or equal to the maximum input
->     value and the leaf is not supported on that processor then 0 is returned in
->     all the registers.
+Hi.
 
-It's true.
 
-> 
-> I can tell you why the cpuid.1f.exc return 0x00000064 in your machines.
-> That's the value of leaf 0x16, you can check the output of cpuid.0x0_eax, it
-> should be 0x00000016.
+On Fri, Mar 29, 2019 at 8:37 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Currently, the Kbuild core manipulates header search paths in a crazy
+> way [1].
+>
+> To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
+> the search paths in the srctree. Some Makefiles are already written in
+> that way, but not all. The goal of this work is to make the notation
+> consistent, and finally get rid of the gross hacks.
+>
+> Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
+> ("kbuild: do not drop -I without parameter").
+>
+> [1]: https://patchwork.kernel.org/patch/9632347/
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>
+> I put all gpu/drm changes into a single patch because
+> they are trivial conversion.
+>
+> If you are interested in the big picture of this work,
+> the full patch set is available at the following URL.
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git build-test
 
-I have to mention in this case, the cpuid.1f.ecx[31:8] is 0 as well.
 
-> 
->> When we only cares about whether or not CPUID.1F exists,
->> we may need (cpuid_ecx(0x1f) & 0x0000ff00) != 0 or just follow what host
->> check_extended_topology_leaf() does.
->>>
->>>>>>
->>>>>> It's true cause the statement in public spec is not "Reserved = 0" but
->>>>>> "Bits 31 - 16: Reserved".
->>>>>>
->>>>>>>
->>>>>>> In my opinion, Sean's codes is OK and much simple and clear.
->>>>>>
->>>>>> If the host cpuid.0.eax is greater than 0x1f but actually it doesn't
->>>>>> have multi-chip packaging technology and we may want to expose
->>>>>> entry->eax to some value smaller than 0x1f but greater than 0x14, much
->>>>>> effort needs to apply on Sean's code.
->>>>>>
->>>>>> My improvement is good to overwrite cpuid.0.eax in future usage
->>>>>> from the perspective of kvm feature setting not just from value check.
->>>>>
->>>>> Alright, there is something wrong in your code that you haven't
->>>>> realised.
->>>>>
->>>>> When you do
->>>>> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
->>>>>
->>>>> it changes the entry->eax if entry->eax > 0x14. So you cannot directly
->>>>> use
->>>>> cpuid_ecx(0x1f). At least, you need to cache the value of entry->eax,
->>>>> like:
->>>>> 	
->>>>> 	u32 max_leaf = entry->eax;
->>>>> 	entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
->>>>> 	
->>>>> 	//...leaf between 0x14 and 0x1f
->>>>> 	
->>>>> 	if (max_leaf >= 0x1f && (cpuid_ecx(0x1f) & 0x0000ff00))
->>>>>    		entry->eax = 0x1f;
->>>>
->>>> The cache value make no sense on this.
->>>
->>> Xiaoyao is pointing out that by limiting entry->eax to 0x14 (or 0xd), then
->>> it can't be used to detect support for CPUID.1F since KVM will have lost
->>> the required information.
->>
->> The point is that its existence does not really depend on cpuid.0.eax> =
->> 0x1f. My test machine (CLX-AP, two die in one package) has cpuid.0.eax =
->> 0x16 but does have CPUID.1F support (a bit strange on BIOS).
-> 
-> I think it must be something wrong with your CLX-AP.
-> I tested on my CLX-AP machine too, the cpuid.0x0_eax is 0x000000001f.
+Is somebody taking care of this?
 
-You are suggesting that we should give up exposing cpuid.1f on this 
-strange machine and it's not **practical**.
 
-One of my CLX-AP machines is normal, but there is such another machine 
-with a bad BIOS configuration. We are supposed to take advantage of the 
-real hardware support instead of ignoring it just because of the 
-cpuid.0.eax limit.
 
-> 
->>>
->>>>> However, handling in increasing order in totally wrong. Since it's to
->>>>> report the
->>>>> max the leaf supported, we should handle in descending order, which is
->>>>> what Sean
->>>>> does.
->>>>
->>>> There is no need to check "entry->eax >= 0x1f" before "setting entry->eax
->>>> =
->>>> 0x1f" if and only if cpuid_ecx(0x1f) meets requirements.
->>>
->>> entry->eax absolutely needs to be checked, otherwise you have no idea what
->>> CPUID leaf is actually being consumed.  For example, a CPU with a maximum
->>> basic CPUID leaf of 0xB will report information that is indistinguishable
->>> from the actual CPUID.1F, i.e. KVM will incorrectly think the CPU supports
->>> CPUID.1F regardless of what heuristic is used to detect a "valid" CPUID.1F
->>> if it only looks at the result of CPUID.1F.
->>
->> Based on what I mentioned, just reconsider this proposal:
->>
->> case 0:
->>       entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
->>       if ((cpuid_ecx(0x1f) & 0x0000ff00)) != 0)
->>           entry->eax = 0x1f;
->>
->> It increases the cpuid.0.ecx value along with the minimized feature
->> requirement in a natural and readable way. Why don't we design a little
->> bit future ahead of time?
-> 
-> There are two things I want to state:
-> 
-> 1. using cpuid_ecx(0x1f) to check the existence of leaf 1f is absolutely wrong.
-> 
-> Using the return value of E{A,B,C,D}X of cpuid leaf *N* to check the existence
-> of leaf *N* is totally wrong. We need first to ensure that cpuid.0_eax >= *N*,
-> that's the reason why we need cpuid.0_eax.
-> 
-> Specifically, about cpuid leaf 1f, in page 3-222 Vol.2A of latest SDM publish on
-> January 2019, the description of Input EAX = 1FH is:
-> 
->     When CPUID executes with EAX set to 1FH, the processor returns information
->     about extended topology enumeration data. Software must detect the presence
->     of CPUID leaf 1FH by verifying (a) the highest leaf index supported by CPUID
->     is >= 1FH, and (b) CPUID.1FH:EBX[15:0] reports a non-zero value.
+>
+> Changes in v2:
+>   - fix up the new driver komeda
+>   - Add Sam's Reviewed-by
+>
+>  drivers/gpu/drm/amd/amdgpu/Makefile         | 2 +-
+>  drivers/gpu/drm/amd/lib/Makefile            | 2 +-
+>  drivers/gpu/drm/arm/display/komeda/Makefile | 4 ++--
+>  drivers/gpu/drm/i915/gvt/Makefile           | 2 +-
+>  drivers/gpu/drm/msm/Makefile                | 6 +++---
+>  drivers/gpu/drm/nouveau/Kbuild              | 8 ++++----
+>  6 files changed, 12 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/Makefile b/drivers/gpu/drm/amd/amdgpu/Makefile
+> index 466da59..62bf9da 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/Makefile
+> +++ b/drivers/gpu/drm/amd/amdgpu/Makefile
+> @@ -23,7 +23,7 @@
+>  # Makefile for the drm device driver.  This driver provides support for the
+>  # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
+>
+> -FULL_AMD_PATH=$(src)/..
+> +FULL_AMD_PATH=$(srctree)/$(src)/..
+>  DISPLAY_FOLDER_NAME=display
+>  FULL_AMD_DISPLAY_PATH = $(FULL_AMD_PATH)/$(DISPLAY_FOLDER_NAME)
+>
+> diff --git a/drivers/gpu/drm/amd/lib/Makefile b/drivers/gpu/drm/amd/lib/Makefile
+> index 6902430..d534992 100644
+> --- a/drivers/gpu/drm/amd/lib/Makefile
+> +++ b/drivers/gpu/drm/amd/lib/Makefile
+> @@ -27,6 +27,6 @@
+>  # driver components or later moved to kernel/lib for sharing with
+>  # other drivers.
+>
+> -ccflags-y := -I$(src)/../include
+> +ccflags-y := -I $(srctree)/$(src)/../include
+>
+>  obj-$(CONFIG_CHASH) += chash.o
+> diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile b/drivers/gpu/drm/arm/display/komeda/Makefile
+> index 1b875e5..a72e30c 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/Makefile
+> +++ b/drivers/gpu/drm/arm/display/komeda/Makefile
+> @@ -1,8 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>
+>  ccflags-y := \
+> -       -I$(src)/../include \
+> -       -I$(src)
+> +       -I $(srctree)/$(src)/../include \
+> +       -I $(srctree)/$(src)
+>
+>  komeda-y := \
+>         komeda_drv.o \
+> diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/gvt/Makefile
+> index 271fb46..ea8324a 100644
+> --- a/drivers/gpu/drm/i915/gvt/Makefile
+> +++ b/drivers/gpu/drm/i915/gvt/Makefile
+> @@ -5,5 +5,5 @@ GVT_SOURCE := gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o firmware.o \
+>         execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o debugfs.o \
+>         fb_decoder.o dmabuf.o page_track.o
+>
+> -ccflags-y                              += -I$(src) -I$(src)/$(GVT_DIR)
+> +ccflags-y                              += -I $(srctree)/$(src) -I $(srctree)/$(src)/$(GVT_DIR)/
+>  i915-y                                 += $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
+> diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
+> index 56a70c7..b7b1ebd 100644
+> --- a/drivers/gpu/drm/msm/Makefile
+> +++ b/drivers/gpu/drm/msm/Makefile
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -ccflags-y := -Idrivers/gpu/drm/msm
+> -ccflags-y += -Idrivers/gpu/drm/msm/disp/dpu1
+> -ccflags-$(CONFIG_DRM_MSM_DSI) += -Idrivers/gpu/drm/msm/dsi
+> +ccflags-y := -I $(srctree)/$(src)
+> +ccflags-y += -I $(srctree)/$(src)/disp/dpu1
+> +ccflags-$(CONFIG_DRM_MSM_DSI) += -I $(srctree)/$(src)/dsi
+>
+>  msm-y := \
+>         adreno/adreno_device.o \
+> diff --git a/drivers/gpu/drm/nouveau/Kbuild b/drivers/gpu/drm/nouveau/Kbuild
+> index ea3035e..4fae728 100644
+> --- a/drivers/gpu/drm/nouveau/Kbuild
+> +++ b/drivers/gpu/drm/nouveau/Kbuild
+> @@ -1,7 +1,7 @@
+> -ccflags-y += -I$(src)/include
+> -ccflags-y += -I$(src)/include/nvkm
+> -ccflags-y += -I$(src)/nvkm
+> -ccflags-y += -I$(src)
+> +ccflags-y += -I $(srctree)/$(src)/include
+> +ccflags-y += -I $(srctree)/$(src)/include/nvkm
+> +ccflags-y += -I $(srctree)/$(src)/nvkm
+> +ccflags-y += -I $(srctree)/$(src)
+>
+>  # NVKM - HW resource manager
+>  #- code also used by various userspace tools/tests
+> --
+> 2.7.4
+>
 
-It's true and it's the official right way to check EBX rather than ECX. 
-Nice move, thanks xiaoyao.
 
-However we could do better considering all possible output of 
-cpuid.0.eax and cpuid.1f and my proposal for whether or not CPUID.1F 
-exists is to check cpuid.1f.ecx[31:8] practically as host check does.
-
-I don't insist on it and what do you think, Sean?
-
-> 
-> 2. Checking in descending manner is better that increasing manner.
-> 
-> In increasing manner, we have to check from the smallest one by one, there will
-> be some useless check for the smaller one.
-
-You see the uselessness and I see the necessity.
-The number of checks time is not critical.
-
->     
-> However, in descending manner, once it finds the supported maxmium one, there is
-> no need to check the smaller leaf.
-
-It's not supposed to finds the maxmium one but the minimum value
-just recall the purpose of why we apply min().
-
-The descending if_else flow would be broken if kvm does not want to 
-expose 0x1f but a expected value smaller than 0x1f but larger than 0x14.
-
-We may add this kind of module parameter like f_intel_pt to apply min() 
-again and if so, an increasing manner helps a lot.
-
-The descending flat flow couldn't reduce the number of checks time
-and a temp value for original eax is introduced unavoidably.
-
-> 
->>>
->>>> An increasing manner helps to overwrite this value on demand in a flat
->>>> code
->>>> flow (easy to understand and maintain) not an if-else_if-else flow.
->>>
->>> Maybe in the future the code will need to be refactored as more cases are
->>> added, but for now an if-else is quite readable.  Worry about the future
->>> when it happens. :-)
->>>
->>
->>
-> 
-> 
-
+-- 
+Best Regards
+Masahiro Yamada
