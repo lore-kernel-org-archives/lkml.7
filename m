@@ -2,52 +2,52 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A23EC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAA7C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFDE92067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BDF1208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbfDZNBi (ORCPT
+        id S1726359AbfDZNBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:01:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39068 "EHLO
+        Fri, 26 Apr 2019 09:01:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39280 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725901AbfDZNBi (ORCPT
+        by vger.kernel.org with ESMTP id S1726124AbfDZNBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:01:38 -0400
+        Fri, 26 Apr 2019 09:01:39 -0400
 Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QD0S3n144832
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:01:36 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s42g2g238-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QD0VdM144983
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:01:37 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s42g2g24p-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:01:35 -0400
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:01:36 -0400
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
         Fri, 26 Apr 2019 14:01:34 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
         Fri, 26 Apr 2019 14:01:31 +0100
 Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3QD1TVr57082058
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3QD1U7I49610846
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Apr 2019 13:01:29 GMT
+        Fri, 26 Apr 2019 13:01:30 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7941C42052;
+        by IMSVA (Postfix) with ESMTP id 2F0FD42054;
+        Fri, 26 Apr 2019 13:01:30 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E53C42042;
         Fri, 26 Apr 2019 13:01:29 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D33F14203F;
-        Fri, 26 Apr 2019 13:01:28 +0000 (GMT)
 Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.145.15.72])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 26 Apr 2019 13:01:28 +0000 (GMT)
+        Fri, 26 Apr 2019 13:01:29 +0000 (GMT)
 From:   Pierre Morel <pmorel@linux.ibm.com>
 To:     borntraeger@de.ibm.com
 Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
@@ -55,18 +55,20 @@ Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
         kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
         pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
         heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: [PATCH v7 0/4] vfio: ap: AP Queue Interrupt Control
-Date:   Fri, 26 Apr 2019 15:01:24 +0200
+Subject: [PATCH v7 1/4] s390: ap: kvm: add PQAP interception for AQIC
+Date:   Fri, 26 Apr 2019 15:01:25 +0200
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19042613-0016-0000-0000-000002758503
+x-cbid: 19042613-0012-0000-0000-0000031581AE
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042613-0017-0000-0000-000032D202A5
-Message-Id: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+x-cbparentid: 19042613-0013-0000-0000-0000214DDFE8
+Message-Id: <1556283688-556-2-git-send-email-pmorel@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1904260089
@@ -75,162 +77,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series implements PQAP/AQIC interception in KVM.
+We prepare the interception of the PQAP/AQIC instruction for
+the case the AQIC facility is enabled in the guest.
 
-1) Data to handle GISA interrupt for AQIC
+First of all we do not want to change existing behavior when
+intercepting AP instructions without the SIE allowing the guest
+to use AP instructions.
 
-To implement this we need to add a new structure, vfio_ap_queue,
-to be able to retrieve the mediated device associated with a queue
-and specific values needed to register/unregister the interrupt
-structures:
-  - APQN: to be able to issue the commands and search for queue
-    structures
-  - NIB and old NIB : to unpin the NIB on clear IRQ
-  - ISC and old ISC : to unregister with the GIB interface
-  - matrix_mdev: to retrieve the associate matrix and mediated device
+In this patch we only handle the AQIC interception allowed by
+facility 65 which will be enabled when the complete interception
+infrastructure will be present.
 
-Specific handling bei keeping old values when re-registering is
-needed because the guest could unregister interrupt in a invisble
-manner bei issuing an un-interceptible RESET command.
+We add a callback inside the KVM arch structure for s390 for
+a VFIO driver to handle a specific response to the PQAP
+instruction with the AQIC command and only this command.
 
-Reset commands issued directly by the guest and indirectly when
-removing the guest unpin the memory and deregister the ISC.
+But we want to be able to return a correct answer to the guest
+even there is no VFIO AP driver in the kernel.
+Therefor, we inject the correct exceptions from inside KVM for the
+case the callback is not initialized, which happens when the vfio_ap
+driver is not loaded.
 
-The vfio_ap_queue is associated to the ap_device during the probe
-of the device and dissociated during the remove of the ap_device.
+We do consider the responsability of the driver to always initialize
+the PQAP callback if it defines queues by initializing the CRYCB for
+a guest.
+If the callback has been setup we call it.
+If not we setup an answer considering that no queue is available
+for the guest when no callback has been setup.
 
-The vfio_ap_queue is associated to the matrix mediated device during
-each interception of the AQIC command, so it do not need to be
-dissociated until the guest is terminated.
+Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+---
+ arch/s390/include/asm/kvm_host.h      |  7 +++
+ arch/s390/kvm/priv.c                  | 86 +++++++++++++++++++++++++++++++++++
+ drivers/s390/crypto/vfio_ap_private.h |  2 +
+ 3 files changed, 95 insertions(+)
 
-The life of the vfio_ap_queue will be protected by the matrix_dev lock
-to guaranty that no change can occur to the CRYCB or that devices can
-not be removed when a vfio_ap_queue is in use.
-
-2) KVM destroy race conditions
-
-To make sure that KVM do not vanish and GISA is still available
-when the VFIO_AP driver is in used we take a reference to KVM
-during the opening of the mediated device and release it on
-releasing the mediated device.
-
-3) Interception of PQAP
-
-The driver registers a hook structure to KVM providing:
-- a pointer to a function implementing PQAP(AQIC) handling
-- the reference to the module owner of the hook
-
-On interception by KVM we do not change the behavior, returning
- -EOPNOTSUPP to the user in the case AP instructions are not
-supported by the host or by the guest.
-Otherwise we verify the exceptions cases before trying to call 
-the vfio_ap hook.
-
-In the case we do not find a hook we assume that the CRYCB has not
-been setup for the guest and is empty.
-
-
-4) Removing the AP device
-
-Removing the AP device without having unassign it is clearly
-discourage by the documentation.
-The patch series does not check if the queue is used by a
-guest and simply free the vfio_ap_queue.
-
-5) Associated QEMU patch
-
-There is a QEMU patch which is needed to enable the PQAP/AQIC
-facility in the guest.
-
-Posted in qemu-devel@nongnu.org as:
-Message-Id: <1550146494-21085-1-git-send-email-pmorel@linux.ibm.com>
-
-
-Pierre Morel (4):
-  s390: ap: kvm: add PQAP interception for AQIC
-  vfio: ap: register IOMMU VFIO notifier
-  s390: ap: implement PAPQ AQIC interception in kernel
-  s390: ap: kvm: Enable PQAP/AQIC facility for the guest
-
- arch/s390/include/asm/kvm_host.h      |   7 +
- arch/s390/kvm/priv.c                  |  86 +++++++++
- arch/s390/tools/gen_facilities.c      |   1 +
- drivers/s390/crypto/ap_bus.h          |   1 +
- drivers/s390/crypto/vfio_ap_drv.c     |  30 ++-
- drivers/s390/crypto/vfio_ap_ops.c     | 336 +++++++++++++++++++++++++++++++++-
- drivers/s390/crypto/vfio_ap_private.h |  15 ++
- 7 files changed, 468 insertions(+), 8 deletions(-)
-
+diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+index 9fff9ab..af10a11 100644
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -18,6 +18,7 @@
+ #include <linux/kvm_host.h>
+ #include <linux/kvm.h>
+ #include <linux/seqlock.h>
++#include <linux/module.h>
+ #include <asm/debug.h>
+ #include <asm/cpu.h>
+ #include <asm/fpu/api.h>
+@@ -722,8 +723,14 @@ struct kvm_s390_cpu_model {
+ 	unsigned short ibc;
+ };
+ 
++struct kvm_s390_module_hook {
++	int (*hook)(struct kvm_vcpu *vcpu);
++	struct module *owner;
++};
++
+ struct kvm_s390_crypto {
+ 	struct kvm_s390_crypto_cb *crycb;
++	struct kvm_s390_module_hook *pqap_hook;
+ 	__u32 crycbd;
+ 	__u8 aes_kw;
+ 	__u8 dea_kw;
+diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
+index 8679bd7..a9be84f 100644
+--- a/arch/s390/kvm/priv.c
++++ b/arch/s390/kvm/priv.c
+@@ -27,6 +27,7 @@
+ #include <asm/io.h>
+ #include <asm/ptrace.h>
+ #include <asm/sclp.h>
++#include <asm/ap.h>
+ #include "gaccess.h"
+ #include "kvm-s390.h"
+ #include "trace.h"
+@@ -592,6 +593,89 @@ static int handle_io_inst(struct kvm_vcpu *vcpu)
+ 	}
+ }
+ 
++/*
++ * handle_pqap: Handling pqap interception
++ * @vcpu: the vcpu having issue the pqap instruction
++ *
++ * We now support PQAP/AQIC instructions and we need to correctly
++ * answer the guest even if no dedicated driver's hook is available.
++ *
++ * The intercepting code calls a dedicated callback for this instruction
++ * if a driver did register one in the CRYPTO satellite of the
++ * SIE block.
++ *
++ * If no callback is available, the queues are not available, return this
++ * response code to the caller and set CC to 3.
++ * Else return the response code returned by the callback.
++ */
++static int handle_pqap(struct kvm_vcpu *vcpu)
++{
++	struct ap_queue_status status = {};
++	unsigned long reg0;
++	int ret;
++	uint8_t fc;
++
++	/* Verify that the AP instruction are available */
++	if (!ap_instructions_available())
++		return -EOPNOTSUPP;
++	/* Verify that the guest is allowed to use AP instructions */
++	if (!(vcpu->arch.sie_block->eca & ECA_APIE))
++		return -EOPNOTSUPP;
++	/*
++	 * The only possibly intercepted functions when AP instructions are
++	 * available for the guest are AQIC and TAPQ with the t bit set
++	 * since we do not set IC.3 (FIII) we currently will only intercept
++	 * the AQIC function code.
++	 */
++	reg0 = vcpu->run->s.regs.gprs[0];
++	fc = reg0 >> 24;
++	if (WARN_ON_ONCE(fc != 0x03))
++		return -EOPNOTSUPP;
++
++	/* PQAP instruction is allowed for guest kernel only */
++	if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE)
++		return kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
++
++	/* Common PQAP instruction specification exceptions */
++	/* bits 41-47 must all be zeros */
++	if (reg0 & 0x007f0000UL)
++		return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
++	/* APFT not install and T bit set */
++	if (!test_kvm_facility(vcpu->kvm, 15) && (reg0 & 0x00800000UL))
++		return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
++	/* APXA not installed and APID greater 64 or APQI greater 16 */
++	if (!(vcpu->kvm->arch.crypto.crycbd & 0x02) && (reg0 & 0x0000c0f0UL))
++		return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
++
++	/* AQIC function code specific exception */
++	/* facility 65 not present for AQIC function code */
++	if (!test_kvm_facility(vcpu->kvm, 65))
++		return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
++
++	/*
++	 * Verify that the hook callback is registered, lock the owner
++	 * and call the hook.
++	 */
++	if (vcpu->kvm->arch.crypto.pqap_hook) {
++		if (!try_module_get(vcpu->kvm->arch.crypto.pqap_hook->owner))
++			return -EOPNOTSUPP;
++		ret = vcpu->kvm->arch.crypto.pqap_hook->hook(vcpu);
++		module_put(vcpu->kvm->arch.crypto.pqap_hook->owner);
++		if (!ret && vcpu->run->s.regs.gprs[1] & 0x00ff0000)
++			kvm_s390_set_psw_cc(vcpu, 3);
++		return ret;
++	}
++	/*
++	 * A vfio_driver must register a hook.
++	 * No hook means no driver to enable the SIE CRYCB and no queues.
++	 * We send this response to the guest.
++	 */
++	status.response_code = 0x01;
++	memcpy(&vcpu->run->s.regs.gprs[1], &status, sizeof(status));
++	kvm_s390_set_psw_cc(vcpu, 3);
++	return 0;
++}
++
+ static int handle_stfl(struct kvm_vcpu *vcpu)
+ {
+ 	int rc;
+@@ -878,6 +962,8 @@ int kvm_s390_handle_b2(struct kvm_vcpu *vcpu)
+ 		return handle_sthyi(vcpu);
+ 	case 0x7d:
+ 		return handle_stsi(vcpu);
++	case 0xaf:
++		return handle_pqap(vcpu);
+ 	case 0xb1:
+ 		return handle_stfl(vcpu);
+ 	case 0xb2:
+diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+index 76b7f98..a910be1 100644
+--- a/drivers/s390/crypto/vfio_ap_private.h
++++ b/drivers/s390/crypto/vfio_ap_private.h
+@@ -16,6 +16,7 @@
+ #include <linux/mdev.h>
+ #include <linux/delay.h>
+ #include <linux/mutex.h>
++#include <linux/kvm_host.h>
+ 
+ #include "ap_bus.h"
+ 
+@@ -81,6 +82,7 @@ struct ap_matrix_mdev {
+ 	struct ap_matrix matrix;
+ 	struct notifier_block group_notifier;
+ 	struct kvm *kvm;
++	struct kvm_s390_module_hook pqap_hook;
+ };
+ 
+ extern int vfio_ap_mdev_register(void);
 -- 
 2.7.4
-
-Changelog:
-
-Changelog from v6:
-- Not taking care if the AP queue is associated with a guest
-  admin is warn in the odcumentation
- (Tony, Halil)
-- Using WARN_ON_ONCE, direct call to report specification errors
-  (Christian)
-- Wait until the IRQ bit is cleared when clearing interrupts
- (Tony, Halil)
-- Some minor changes and add some comments before
-  vfio_ap_free_irq_data
-  (Pierre)
-- initializing the pointer to matrix_mdev in vfio_ap_queue 
-  during the interception and suppress the association during
-  assignment and the usage of lists.
-  (Tony, Halil)
-- Merging patches for creation of vfio_ap_queue, initialization
-  and use of vfio_ap_queue during interception of PQAP/AQIC
-  (Conny)
-
-Changelog from v5:
-- Refactoring of the PQAP interception after all discussions
-  (Conny, Halil (offline))
-- take a big lock around open to avoid parallel changes through
-  assignment
-- verify that at least one queue has a APID or APQI when
-  first assignment is done to not accept unavailable APID/APQI
-  (myself)
-- Adding comment for locks on free_list
-  (Conny)
-- Modified comment for 
-  "s390: ap: setup relation betwen KVM and mediated device"
-  (Halil)
-
-Changelog from v4:
-- Add forgotten locking for vfio_get_queue() in pqap callback
-  (Conny / Halil)
-- Add KVM reference counting to make sure GISA is free after IRQ
-  (Christian / Halil)
-- Take care that ISC = 0 is a valid ISC
-  (Halil)
-- Integrate the PQAP call back in a structure with module owner
-  reference counting to make sure the callback does not disappear.
-- Restrict functionality to always open KVM before opening the
-  VFIO device.
-- Search all devices in the vfio_ap driver list when associating
-  a queue to a mediated device
-  (Halil / Tony)
-- Get vfio_ap_free_irq() out of vfio_ap_mdev_reset_queue() to call
-  it always, whatever the result of the reset.
-  (Tony)
-
-Changelog from v3:
-- Associating the vfio_queues during APID/APQI assign
-  (Tony)
-- Dissociating the vfio_queues during APID/APQI unassign
-  (Tony)
-- Taking care that the guest can directly disable the interrupt
-  by using a RESET
-  (Halil)
-- Remove the patch creating the matrix bus to accelerate its
-  integration in Linux stable
-  (Christian)
-
-Changelog from v1:
-- Refactoring to handle interception in kernel instead of in
-  QEMU
-  (Halil)
 
