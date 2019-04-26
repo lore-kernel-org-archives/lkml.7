@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFA8C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83197C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45833206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529272084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556272165;
-	bh=xSNDp/GKHR3KfSIhmzeV28Ffmw4TDXFUh7swg3mvBYs=;
+	s=default; t=1556272170;
+	bh=r9G/QmqjpwFKHE1TrHDCe+ZI4QAeD27c7tMPWUMudxk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=aVxE1wYw3DOWtVrEYY2kPczfnSqOUiR50IqH/E+Zz7Lm810R0gSUu6vlM9yvBhy+V
-	 pCx3bqGLFX+fUnJkNEUF98TX6FqKywSMQNpo7cSK119t56SK940NTFmbFJslQ/mm8p
-	 IOXMDZ8Clk9ja27dfg8oUQ4g0Y6cjZkAqVIH/bhA=
+	b=2nauaR2AZrvs7nZb2pWAuuRDQJ2N1T6hmGv7h9alZdkifWch+p1vw2JO/4577SqdT
+	 Uc4hkbDRVph29nZv21N8hqmZ6xVOeZg4yWV5hidMS94RaiaL8/AdW8zo4mGkD4Fxwp
+	 nj3fVuTdRXhkPwBb2WQY3ROKH8qLZl74fVM5JRvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfDZJoY (ORCPT
+        id S1727018AbfDZJt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:44:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52378 "EHLO
+        Fri, 26 Apr 2019 05:49:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52414 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfDZJoV (ORCPT
+        with ESMTP id S1726144AbfDZJoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:44:21 -0400
+        Fri, 26 Apr 2019 05:44:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=dXU9O8UvY3fyqXAtNFCsvZlnSVuemzNArlamt/r46jY=; b=wWEajG3vcQzd
-        mn6wnXRf3jOm6tALPGJhW+1IBaWQxuER8Vzzfbb9djGDAGxUPBsfMhJqCpAWQ5919hp6qtHrSgJYU
-        y1OzxGXzaw6rugzD9ulWBF/AeGwHjsR+E9hsi0ZTfLm/qFRNezzVRIf+A04cyB9A3x37+mEHbuZ3C
-        uzrZg=;
+        List-Archive; bh=KAcY/s7oJs9++l+fGugLAh5paI9N5WflR0A8BUl5Jjk=; b=BxSjcAWwoe/l
+        JpJLS2oHDGs8a+YFUqA9FP1OJuXtW5wPbJdflPnlPckM8WslMpo6DLB5EfXVBSLw++1NvfsA3Kudd
+        wcl+LbeYvuuddvxMQvBaVmA0Q5CuPOzGsP9SRNhbVvONRlpmCiwH5mI7GEq13kJiusSOhr6UMcW/t
+        T3CqM=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxP0-0003NR-JY; Fri, 26 Apr 2019 09:44:18 +0000
+        id 1hJxP1-0003NU-6E; Fri, 26 Apr 2019 09:44:19 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 88479441D3B; Fri, 26 Apr 2019 10:44:17 +0100 (BST)
+        id 24876441D3C; Fri, 26 Apr 2019 10:44:18 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     Gyungoh Yoo <gyungoh@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: sky81452: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: <20190420072001.16900-2-axel.lin@ingics.com>
+Subject: Applied "regulator: sky81452: Constify sky81452_reg_ops" to the regulator tree
+In-Reply-To: <20190420072001.16900-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094417.88479441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:44:17 +0100 (BST)
+Message-Id: <20190426094418.24876441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:44:18 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: sky81452: Switch to SPDX identifier
+   regulator: sky81452: Constify sky81452_reg_ops
 
 has been applied to the regulator tree at
 
@@ -87,49 +87,32 @@ to this mail.
 Thanks,
 Mark
 
-From fb9bf5c8f15c98f96c6b80208113aa91fba83c8a Mon Sep 17 00:00:00 2001
+From c7e3ddd129d5181e1581dd5a1af4e8714a8650ad Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Sat, 20 Apr 2019 15:20:01 +0800
-Subject: [PATCH] regulator: sky81452: Switch to SPDX identifier
+Date: Sat, 20 Apr 2019 15:20:00 +0800
+Subject: [PATCH] regulator: sky81452: Constify sky81452_reg_ops
+
+sky81452_reg_ops is never changed, make it const.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/sky81452-regulator.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+ drivers/regulator/sky81452-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/regulator/sky81452-regulator.c b/drivers/regulator/sky81452-regulator.c
-index eb2b60968a1a..177dede82a61 100644
+index 647860611916..eb2b60968a1a 100644
 --- a/drivers/regulator/sky81452-regulator.c
 +++ b/drivers/regulator/sky81452-regulator.c
-@@ -1,21 +1,9 @@
--/*
-- * sky81452-regulator.c	SKY81452 regulator driver
-- *
-- * Copyright 2014 Skyworks Solutions Inc.
-- * Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2
-- * as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License along
-- * with this program; if not, see <http://www.gnu.org/licenses/>.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// sky81452-regulator.c	SKY81452 regulator driver
-+//
-+// Copyright 2014 Skyworks Solutions Inc.
-+// Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
+@@ -34,7 +34,7 @@
+ #define SKY81452_LEN	0x40
+ #define SKY81452_LOUT	0x1F
  
- #include <linux/module.h>
- #include <linux/kernel.h>
+-static struct regulator_ops sky81452_reg_ops = {
++static const struct regulator_ops sky81452_reg_ops = {
+ 	.list_voltage = regulator_list_voltage_linear_range,
+ 	.map_voltage = regulator_map_voltage_linear_range,
+ 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
 -- 
 2.20.1
 
