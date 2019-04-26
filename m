@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00299C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3230EC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDC032089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052902084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfDZHd1 (ORCPT
+        id S1726769AbfDZHdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:33:27 -0400
+        Fri, 26 Apr 2019 03:33:39 -0400
 Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:2747 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726181AbfDZHbx (ORCPT
+        by vger.kernel.org with ESMTP id S1725899AbfDZHbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:31:53 -0400
+        Fri, 26 Apr 2019 03:31:48 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
  15.0.1156.6; Fri, 26 Apr 2019 00:31:40 -0700
 Received: from sc2-haas01-esx0118.eng.vmware.com (sc2-haas01-esx0118.eng.vmware.com [10.172.44.118])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id E15254129A;
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 9879D412A1;
         Fri, 26 Apr 2019 00:31:45 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
@@ -33,7 +33,7 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Andy Lutomirski <luto@kernel.org>,
         Ingo Molnar <mingo@redhat.com>
 CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
         Nadav Amit <nadav.amit@gmail.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         <linux_dti@icloud.com>, <linux-integrity@vger.kernel.org>,
@@ -43,11 +43,13 @@ CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <hpa@zytor.com>,
         <ard.biesheuvel@linaro.org>, <kristen@linux.intel.com>,
         <deneen.t.dock@intel.com>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH v5 15/23] mm: Make hibernate handle unmapped pages
-Date:   Thu, 25 Apr 2019 17:11:35 -0700
-Message-ID: <20190426001143.4983-16-namit@vmware.com>
+        Nadav Amit <namit@vmware.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>
+Subject: [PATCH v5 07/23] x86/alternative: Use temporary mm for text poking
+Date:   Thu, 25 Apr 2019 17:11:27 -0700
+Message-ID: <20190426001143.4983-8-namit@vmware.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426001143.4983-1-namit@vmware.com>
 References: <20190426001143.4983-1-namit@vmware.com>
@@ -60,153 +62,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+text_poke() can potentially compromise security as it sets temporary
+PTEs in the fixmap. These PTEs might be used to rewrite the kernel code
+from other cores accidentally or maliciously, if an attacker gains the
+ability to write onto kernel memory.
 
-Make hibernate handle unmapped pages on the direct map when
-CONFIG_ARCH_HAS_SET_ALIAS is set. These functions allow for setting pages
-to invalid configurations, so now hibernate should check if the pages have
-valid mappings and handle if they are unmapped when doing a hibernate
-save operation.
+Moreover, since remote TLBs are not flushed after the temporary PTEs are
+removed, the time-window in which the code is writable is not limited if
+the fixmap PTEs - maliciously or accidentally - are cached in the TLB.
+To address these potential security hazards, use a temporary mm for
+patching the code.
 
-Previously this checking was already done when CONFIG_DEBUG_PAGEALLOC
-was configured. It does not appear to have a big hibernating performance
-impact. The speed of the saving operation before this change was measured
-as 819.02 MB/s, and after was measured at 813.32 MB/s.
+Finally, text_poke() is also not conservative enough when mapping pages,
+as it always tries to map 2 pages, even when a single one is sufficient.
+So try to be more conservative, and do not map more than needed.
 
-Before:
-[    4.670938] PM: Wrote 171996 kbytes in 0.21 seconds (819.02 MB/s)
-
-After:
-[    4.504714] PM: Wrote 178932 kbytes in 0.22 seconds (813.32 MB/s)
-
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Borislav Petkov <bp@alien8.de>
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/mm/pageattr.c  |  4 ----
- include/linux/mm.h      | 18 ++++++------------
- kernel/power/snapshot.c |  5 +++--
- mm/page_alloc.c         |  7 +++++--
- 4 files changed, 14 insertions(+), 20 deletions(-)
+ arch/x86/include/asm/fixmap.h |   2 -
+ arch/x86/kernel/alternative.c | 108 +++++++++++++++++++++++++++-------
+ arch/x86/xen/mmu_pv.c         |   2 -
+ 3 files changed, 86 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 3574550192c6..daf4d645e537 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -2257,7 +2257,6 @@ int set_direct_map_default_noflush(struct page *page)
- 	return __set_pages_p(page, 1);
- }
- 
--#ifdef CONFIG_DEBUG_PAGEALLOC
- void __kernel_map_pages(struct page *page, int numpages, int enable)
- {
- 	if (PageHighMem(page))
-@@ -2302,11 +2301,8 @@ bool kernel_page_present(struct page *page)
- 	pte = lookup_address((unsigned long)page_address(page), &level);
- 	return (pte_val(*pte) & _PAGE_PRESENT);
- }
--
- #endif /* CONFIG_HIBERNATION */
- 
--#endif /* CONFIG_DEBUG_PAGEALLOC */
--
- int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 				   unsigned numpages, unsigned long page_flags)
- {
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 6b10c21630f5..083d7b4863ed 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2610,37 +2610,31 @@ static inline void kernel_poison_pages(struct page *page, int numpages,
- 					int enable) { }
+diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+index 50ba74a34a37..9da8cccdf3fb 100644
+--- a/arch/x86/include/asm/fixmap.h
++++ b/arch/x86/include/asm/fixmap.h
+@@ -103,8 +103,6 @@ enum fixed_addresses {
+ #ifdef CONFIG_PARAVIRT
+ 	FIX_PARAVIRT_BOOTMAP,
  #endif
+-	FIX_TEXT_POKE1,	/* reserve 2 pages for text_poke() */
+-	FIX_TEXT_POKE0, /* first page is last, because allocation is backward */
+ #ifdef	CONFIG_X86_INTEL_MID
+ 	FIX_LNW_VRTC,
+ #endif
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 11d5c710a94f..599203876c32 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -12,6 +12,7 @@
+ #include <linux/slab.h>
+ #include <linux/kdebug.h>
+ #include <linux/kprobes.h>
++#include <linux/mmu_context.h>
+ #include <asm/text-patching.h>
+ #include <asm/alternative.h>
+ #include <asm/sections.h>
+@@ -684,41 +685,104 @@ __ro_after_init unsigned long poking_addr;
  
--#ifdef CONFIG_DEBUG_PAGEALLOC
- extern bool _debug_pagealloc_enabled;
--extern void __kernel_map_pages(struct page *page, int numpages, int enable);
- 
- static inline bool debug_pagealloc_enabled(void)
+ static void *__text_poke(void *addr, const void *opcode, size_t len)
  {
--	return _debug_pagealloc_enabled;
-+	return IS_ENABLED(CONFIG_DEBUG_PAGEALLOC) && _debug_pagealloc_enabled;
- }
++	bool cross_page_boundary = offset_in_page(addr) + len > PAGE_SIZE;
++	struct page *pages[2] = {NULL};
++	temp_mm_state_t prev;
+ 	unsigned long flags;
+-	char *vaddr;
+-	struct page *pages[2];
+-	int i;
++	pte_t pte, *ptep;
++	spinlock_t *ptl;
++	pgprot_t pgprot;
  
-+#if defined(CONFIG_DEBUG_PAGEALLOC) || defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP)
-+extern void __kernel_map_pages(struct page *page, int numpages, int enable);
-+
- static inline void
- kernel_map_pages(struct page *page, int numpages, int enable)
- {
--	if (!debug_pagealloc_enabled())
--		return;
--
- 	__kernel_map_pages(page, numpages, enable);
- }
- #ifdef CONFIG_HIBERNATION
- extern bool kernel_page_present(struct page *page);
- #endif	/* CONFIG_HIBERNATION */
--#else	/* CONFIG_DEBUG_PAGEALLOC */
-+#else	/* CONFIG_DEBUG_PAGEALLOC || CONFIG_ARCH_HAS_SET_DIRECT_MAP */
- static inline void
- kernel_map_pages(struct page *page, int numpages, int enable) {}
- #ifdef CONFIG_HIBERNATION
- static inline bool kernel_page_present(struct page *page) { return true; }
- #endif	/* CONFIG_HIBERNATION */
--static inline bool debug_pagealloc_enabled(void)
--{
--	return false;
--}
--#endif	/* CONFIG_DEBUG_PAGEALLOC */
-+#endif	/* CONFIG_DEBUG_PAGEALLOC || CONFIG_ARCH_HAS_SET_DIRECT_MAP */
+ 	/*
+-	 * While boot memory allocator is runnig we cannot use struct
+-	 * pages as they are not yet initialized.
++	 * While boot memory allocator is running we cannot use struct pages as
++	 * they are not yet initialized. There is no way to recover.
+ 	 */
+ 	BUG_ON(!after_bootmem);
  
- #ifdef __HAVE_ARCH_GATE_AREA
- extern struct vm_area_struct *get_gate_vma(struct mm_struct *mm);
-diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-index f08a1e4ee1d4..bc9558ab1e5b 100644
---- a/kernel/power/snapshot.c
-+++ b/kernel/power/snapshot.c
-@@ -1342,8 +1342,9 @@ static inline void do_copy_page(long *dst, long *src)
-  * safe_copy_page - Copy a page in a safe way.
-  *
-  * Check if the page we are going to copy is marked as present in the kernel
-- * page tables (this always is the case if CONFIG_DEBUG_PAGEALLOC is not set
-- * and in that case kernel_page_present() always returns 'true').
-+ * page tables. This always is the case if CONFIG_DEBUG_PAGEALLOC or
-+ * CONFIG_ARCH_HAS_SET_DIRECT_MAP is not set. In that case kernel_page_present()
-+ * always returns 'true'.
-  */
- static void safe_copy_page(void *dst, struct page *s_page)
- {
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d96ca5bc555b..34a70681a4af 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1131,7 +1131,9 @@ static __always_inline bool free_pages_prepare(struct page *page,
+ 	if (!core_kernel_text((unsigned long)addr)) {
+ 		pages[0] = vmalloc_to_page(addr);
+-		pages[1] = vmalloc_to_page(addr + PAGE_SIZE);
++		if (cross_page_boundary)
++			pages[1] = vmalloc_to_page(addr + PAGE_SIZE);
+ 	} else {
+ 		pages[0] = virt_to_page(addr);
+ 		WARN_ON(!PageReserved(pages[0]));
+-		pages[1] = virt_to_page(addr + PAGE_SIZE);
++		if (cross_page_boundary)
++			pages[1] = virt_to_page(addr + PAGE_SIZE);
  	}
- 	arch_free_page(page, order);
- 	kernel_poison_pages(page, 1 << order, 0);
--	kernel_map_pages(page, 1 << order, 0);
-+	if (debug_pagealloc_enabled())
-+		kernel_map_pages(page, 1 << order, 0);
+-	BUG_ON(!pages[0]);
++	/*
++	 * If something went wrong, crash and burn since recovery paths are not
++	 * implemented.
++	 */
++	BUG_ON(!pages[0] || (cross_page_boundary && !pages[1]));
 +
- 	kasan_free_nondeferred_pages(page, order);
- 
- 	return true;
-@@ -2001,7 +2003,8 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
- 	set_page_refcounted(page);
- 
- 	arch_alloc_page(page, order);
--	kernel_map_pages(page, 1 << order, 1);
-+	if (debug_pagealloc_enabled())
-+		kernel_map_pages(page, 1 << order, 1);
- 	kasan_alloc_pages(page, order);
- 	kernel_poison_pages(page, 1 << order, 1);
- 	set_page_owner(page, order, gfp_flags);
+ 	local_irq_save(flags);
+-	set_fixmap(FIX_TEXT_POKE0, page_to_phys(pages[0]));
+-	if (pages[1])
+-		set_fixmap(FIX_TEXT_POKE1, page_to_phys(pages[1]));
+-	vaddr = (char *)fix_to_virt(FIX_TEXT_POKE0);
+-	memcpy(&vaddr[(unsigned long)addr & ~PAGE_MASK], opcode, len);
+-	clear_fixmap(FIX_TEXT_POKE0);
+-	if (pages[1])
+-		clear_fixmap(FIX_TEXT_POKE1);
+-	local_flush_tlb();
+-	sync_core();
+-	/* Could also do a CLFLUSH here to speed up CPU recovery; but
+-	   that causes hangs on some VIA CPUs. */
+-	for (i = 0; i < len; i++)
+-		BUG_ON(((char *)addr)[i] != ((char *)opcode)[i]);
++
++	/*
++	 * Map the page without the global bit, as TLB flushing is done with
++	 * flush_tlb_mm_range(), which is intended for non-global PTEs.
++	 */
++	pgprot = __pgprot(pgprot_val(PAGE_KERNEL) & ~_PAGE_GLOBAL);
++
++	/*
++	 * The lock is not really needed, but this allows to avoid open-coding.
++	 */
++	ptep = get_locked_pte(poking_mm, poking_addr, &ptl);
++
++	/*
++	 * This must not fail; preallocated in poking_init().
++	 */
++	VM_BUG_ON(!ptep);
++
++	pte = mk_pte(pages[0], pgprot);
++	set_pte_at(poking_mm, poking_addr, ptep, pte);
++
++	if (cross_page_boundary) {
++		pte = mk_pte(pages[1], pgprot);
++		set_pte_at(poking_mm, poking_addr + PAGE_SIZE, ptep + 1, pte);
++	}
++
++	/*
++	 * Loading the temporary mm behaves as a compiler barrier, which
++	 * guarantees that the PTE will be set at the time memcpy() is done.
++	 */
++	prev = use_temporary_mm(poking_mm);
++
++	kasan_disable_current();
++	memcpy((u8 *)poking_addr + offset_in_page(addr), opcode, len);
++	kasan_enable_current();
++
++	/*
++	 * Ensure that the PTE is only cleared after the instructions of memcpy
++	 * were issued by using a compiler barrier.
++	 */
++	barrier();
++
++	pte_clear(poking_mm, poking_addr, ptep);
++	if (cross_page_boundary)
++		pte_clear(poking_mm, poking_addr + PAGE_SIZE, ptep + 1);
++
++	/*
++	 * Loading the previous page-table hierarchy requires a serializing
++	 * instruction that already allows the core to see the updated version.
++	 * Xen-PV is assumed to serialize execution in a similar manner.
++	 */
++	unuse_temporary_mm(prev);
++
++	/*
++	 * Flushing the TLB might involve IPIs, which would require enabled
++	 * IRQs, but not if the mm is not used, as it is in this point.
++	 */
++	flush_tlb_mm_range(poking_mm, poking_addr, poking_addr +
++			   (cross_page_boundary ? 2 : 1) * PAGE_SIZE,
++			   PAGE_SHIFT, false);
++
++	/*
++	 * If the text does not match what we just wrote then something is
++	 * fundamentally screwy; there's nothing we can really do about that.
++	 */
++	BUG_ON(memcmp(addr, opcode, len));
++
++	pte_unmap_unlock(ptep, ptl);
+ 	local_irq_restore(flags);
+ 	return addr;
+ }
+diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
+index a21e1734fc1f..beb44e22afdf 100644
+--- a/arch/x86/xen/mmu_pv.c
++++ b/arch/x86/xen/mmu_pv.c
+@@ -2318,8 +2318,6 @@ static void xen_set_fixmap(unsigned idx, phys_addr_t phys, pgprot_t prot)
+ #elif defined(CONFIG_X86_VSYSCALL_EMULATION)
+ 	case VSYSCALL_PAGE:
+ #endif
+-	case FIX_TEXT_POKE0:
+-	case FIX_TEXT_POKE1:
+ 		/* All local page mappings */
+ 		pte = pfn_pte(phys, prot);
+ 		break;
 -- 
 2.17.1
 
