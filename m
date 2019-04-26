@@ -2,165 +2,142 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5D9C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEAEC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC9220873
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:51:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdlKa/z+"
+	by mail.kernel.org (Postfix) with ESMTP id 3B3C3206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556308986;
+	bh=MFsvDnfrVK3sHArh5k3FT74saEQojAOtl9AUQbsx/48=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
+	b=Ml+6yB9O+CZ4wlfYEZL9AdrbMsMuduOA5ul8Z819reMzDGd8MbTaAI8+HaJwFMV36
+	 1pOH/ciKCq5cuDPRy8Qv4NJUmzXYy+HjsK6VtL69Uawi6CPcaOVFPmzjLpTQyvnozM
+	 VRLvC2/ck9t1v+Z5j+aZHQBPfMc57R17MFz007Bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfDZTvL (ORCPT
+        id S1726780AbfDZUDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 15:51:11 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:47047 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfDZTvL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 15:51:11 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h21so3930823ljk.13;
-        Fri, 26 Apr 2019 12:51:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=W7Eko1srITLoagm5AOEYzT49Ks2nbUdIhy1p1jQ52ic=;
-        b=KdlKa/z+qr0ywDldwyabD179jRnY/DhCxQlMSWzD0j0qnJ0gKlXeoIY99pvX+0dCx+
-         m63GP0TvzcV6+WPzseQgUNXLm+TNc4V850EO4TQFqZd+7w77ySCRc0Jh/QVGk1q170En
-         dnSzmJxJgI6l+Aqd5pDz2ODhdjvmQEGZfL6PO3RAwEvCxzfC3xmJ9L1a8+P1+j9xDpuC
-         z+swjRWG9ObvgWKx3E5DxKNNjn3jiid/oCaIVNkGPItvI5PwhvQqMcQuVDltVGWIkcda
-         pmWoZkG6lGcfi5iaGbAjRNgSaXRonSkK2p8H5QaigcSMmcrBEUMVbIaQMMzr8XIMmsI6
-         RJpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=W7Eko1srITLoagm5AOEYzT49Ks2nbUdIhy1p1jQ52ic=;
-        b=FJ8WnBa3f25Hjn6/8YCkTKSlBchxlFOgpy35ZZ1WhTDVm3FOuaV36/718rh9gxbcSJ
-         hWqnTziNXX+Qn9bzrdNbcaPSDiQOIwqSEGW4RITwRSqBGZ1l/Kafm+WD57VLF1P+B0HS
-         eLZscfPO/c9iXGmCW9sD5Kuwe8/YiW1VYPhUeNyeJof5itwQyAQVpoKoIfpaxdQr3dTP
-         grWYGGKY9nRLGvh8eXLEyC+/fXpfkuNvBBqk7QNHVMG4UAfg5SuRI9Rj4+D4wzsDxIYs
-         BYy+a5yxskpKiIiIfTmlYf0btUy+mWfx1mVMbupBMwT8L5nhhfve3/HqcQcUbO1y6mFf
-         wyag==
-X-Gm-Message-State: APjAAAV4iBwSIkvQ0oaxze4Vw3IEcz4C79f01tXnE/RHQxwnrfeLwe40
-        8cLw8jzqz+6uNq4pC5HNnP8=
-X-Google-Smtp-Source: APXvYqx+JnTd5FBVHykchXZ23cx3l66iZ4Zjw27evxYPNBrLhUQk9xEDLSs+jgD3B2zifS+EwwkNzw==
-X-Received: by 2002:a2e:9c51:: with SMTP id t17mr25714319ljj.104.1556308268785;
-        Fri, 26 Apr 2019 12:51:08 -0700 (PDT)
-Received: from [10.17.182.120] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id 63sm5765438lfz.2.2019.04.26.12.51.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 12:51:08 -0700 (PDT)
-Subject: Re: [PATCH] ARM: mach-shmobile: Don't configure ARCH timer if PSCI is
- enabled
-To:     Julien Grall <julien.grall@arm.com>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     horms@verge.net.au, magnus.damm@gmail.com, linux@armlinux.org.uk,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-References: <1555521040-16706-1-git-send-email-olekstysh@gmail.com>
- <1b33dca4-e3ae-4588-05f2-37b23ac8df78@arm.com>
- <8c9a1480-7956-9265-14c8-3fbb472e097d@gmail.com>
- <c08c0d02-37f9-9f53-62b9-e5012097d94a@arm.com>
-From:   Oleksandr <olekstysh@gmail.com>
-Message-ID: <e8798fa4-a0dc-7c85-e294-bdf6dad6ec74@gmail.com>
-Date:   Fri, 26 Apr 2019 22:51:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 26 Apr 2019 16:03:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726400AbfDZUDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 16:03:05 -0400
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1F30208CB;
+        Fri, 26 Apr 2019 20:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556308984;
+        bh=MFsvDnfrVK3sHArh5k3FT74saEQojAOtl9AUQbsx/48=;
+        h=References:In-Reply-To:From:Date:Subject:To:From;
+        b=a+ypkL0LFB9m7K05kXXBx7yK55lw2jAY8ndWIG7Hqyq3QPXRBkOly+mzOAl9h+3T9
+         eMWj6wjmU0pmQttmKwp4R19fEA68MLT6j4P2w1y9g/H6kW+x3Cu1Fg8/oySQBpPFnS
+         Jn0jSYqbO2IVzHCfnfwKZaE4l7HZ9lV9zxcePUdo=
+Received: by mail-qk1-f169.google.com with SMTP id k189so2657610qkc.0;
+        Fri, 26 Apr 2019 13:03:03 -0700 (PDT)
+X-Gm-Message-State: APjAAAXSA1jZxK6oL03h33mhga9etedo7KcGDyRegGTUhFzVV3vC00ct
+        6S/00VW5b6CCD4KIIeLjbGLu9k2J34e6FUrJkw==
+X-Google-Smtp-Source: APXvYqw59w9DDW8H3XE3kRQ09i69KESQMWVGK8gINk/MNesTnNgbjR9TQBMpNBYMi1kRo5LmvWfNwJC8uvX/zvdBqP0=
+X-Received: by 2002:a37:5c81:: with SMTP id q123mr20861653qkb.29.1556308983103;
+ Fri, 26 Apr 2019 13:03:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c08c0d02-37f9-9f53-62b9-e5012097d94a@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190413165418.27880-1-megous@megous.com> <20190413165418.27880-7-megous@megous.com>
+ <20190426182337.GA22245@bogus> <20190426192031.wtoaxctjo2qxxquq@core.my.home>
+In-Reply-To: <20190426192031.wtoaxctjo2qxxquq@core.my.home>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 26 Apr 2019 15:02:50 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+o1j6AGL9UnhN1tV150DsFug6pg+UPEJ9EKqBc6rgq_w@mail.gmail.com>
+Message-ID: <CAL_Jsq+o1j6AGL9UnhN1tV150DsFug6pg+UPEJ9EKqBc6rgq_w@mail.gmail.com>
+Subject: Re: [PATCH v4 6/9] dt-bindings: display: hdmi-connector: Add DDC
+ power supply
+To:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 24.04.19 15:31, Julien Grall wrote:
-> Hi,
-
-Hi Julien
-
-
+On Fri, Apr 26, 2019 at 2:20 PM Ond=C5=99ej Jirman <megous@megous.com> wrot=
+e:
 >
->>
->> As I answered in a previous email:
->>
->>  > But "#if !defined(CONFIG_ARM_PSCI)" wraps secure_cntvoff_init() 
->> call as
->>  > well, which resets CNTVOFF,
->>
->>  > and this is something I tried to avoid the first from being 
->> executed on
->>  > a CPU, which is in SVC mode (when running on top of Xen).
->>
->> What would be a proper way to avoid calling secure_cntvoff_init() at 
->> runtime?
->>
->> Check that we are already in non-secure mode and/or cntvoff is 
->> already 0?
+> On Fri, Apr 26, 2019 at 01:23:37PM -0500, Rob Herring wrote:
+> > On Sat, Apr 13, 2019 at 06:54:15PM +0200, megous@megous.com wrote:
+> > > From: Ondrej Jirman <megous@megous.com>
+> > >
+> > > Some Allwinner SoC using boards (Orange Pi 3 for example) need to ena=
+ble
+> > > on-board voltage shifting logic for the DDC bus to be usable. Use
+> > > ddc-supply on the hdmi-connector to model this.
+> > >
+> > > Add binding documentation for optional ddc-supply property.
+> > >
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > > ---
+> > >  .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1=
+ +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/connector/hdmi=
+-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-c=
+onnector.txt
+> > > index 508aee461e0d..33085aeb0bb9 100644
+> > > --- a/Documentation/devicetree/bindings/display/connector/hdmi-connec=
+tor.txt
+> > > +++ b/Documentation/devicetree/bindings/display/connector/hdmi-connec=
+tor.txt
+> > > @@ -9,6 +9,7 @@ Optional properties:
+> > >  - label: a symbolic name for the connector
+> > >  - hpd-gpios: HPD GPIO number
+> > >  - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID =
+probing
+> > > +- ddc-supply: the power supply for the DDC bus
+> >
+> > It's not just for DDC. It powers the chips in bridge dongles for
+> > example. Pretty much every diagram I find just calls it 5V or +5V.
+> >
+> > So how about '5V-supply' or 'v5V-supply'?
 >
-> CNTVOFF is controlled by the hypervisor, so you cannot access it from 
-> Dom0.
+> Just to be sure, the schematic that inspired this change looks like this:
 >
-> If none of this code should be necessary when PSCI is enabled, then 
-> you can check the presence of PSCI (see psci_smp_available()).
-
-
-If I am not mistaken, U-Boot resets CNTVOFF before leaving monitor mode 
-(switching to non-secure state). This happens if "support for booting in 
-non-secure mode" is enabled.
-
-This is a mandatory option for PSCI support as well as for support for 
-hardware virtualization.
-
-So the presence of PSCI would be an indicator, if CNTVOFF was configured 
-in U-Boot and we don't need to.
-
- From other hand, Gen2 Linux may be booted in non-secure mode, without 
-PSCI support...
-
-
-I was thinking about checking the presence of "enable-method = psci" in 
-CPU node, but probably psci_smp_available() is better option.
-
-Also, there is a specific device-tree property 
-"arm,cpu-registers-not-fw-configured" [1], but I am not sure whether it 
-is appropriate to use here.
-
-
+> https://megous.com/dl/tmp/33b2971de6943e9d.png
 >
-> Another solution is to check whether we are running on xen (see 
-> xen_domain()).
->
-> In any case, I would still surround the two checks because the 
-> "armgcnt" should really not be touched by Dom0.
+> HDMI-5V is always on, and what is really being enabled here are mosfets
+> connected to DDC_CEC_EN and not the HDMI-5V power supply. So in this case=
+ it
+> really is just for DDC. It is conceivable that some boards may need both =
+to
+> enable 5V for HDMI circuitry and some separate power shifting logic for
+> DDC bus.
 
-Agree.
+Okay, not what I thought you were defining. DDC_CEC_EN is a GPIO line?
+I wouldn't characterize this as a voltage rail, so I don't think it
+should be a supply. Perhaps 'ddc-en-gpios'?
 
-I will add two checks in V2.
+We certainly want to make it clear this is not the 5V supply.
 
-
-Thank you!
-
-
-[1]
-
-https://elixir.bootlin.com/linux/v5.1-rc6/source/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml#L68
-
-
->
-> Cheers,
->
--- 
-Regards,
-
-Oleksandr Tyshchenko
-
+Rob
