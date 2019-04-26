@@ -2,154 +2,113 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCF5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584A1C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009BE206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A669206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:30:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S96Zv1qC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfDZK0p (ORCPT
+        id S1726190AbfDZKa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:26:45 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38180 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbfDZK0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:26:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C44FA78;
-        Fri, 26 Apr 2019 03:26:44 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E57F93F7BD;
-        Fri, 26 Apr 2019 03:26:42 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 11:26:38 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     rostedt@goodmis.org, peterz@infradead.org,
-        dietmar.eggemann@arm.com, bristot@redhat.com,
-        juri.lelli@redhat.com, williams@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: Tracehooks in scheduler
-Message-ID: <20190426102635.almrj7bbjqlbt77n@queper01-lin>
-References: <20190407175235.5c2livciovwgq7mm@e107158-lin.cambridge.arm.com>
- <20190409082450.mkcobfbmohhxqk6k@e107158-lin.cambridge.arm.com>
- <20190415144945.tumeop4djyj45v6k@e107158-lin.cambridge.arm.com>
+        Fri, 26 Apr 2019 06:30:26 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39215 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfDZKa0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 06:30:26 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q10so2443678ljc.6;
+        Fri, 26 Apr 2019 03:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8zqBMm2GfWpJOZGBcn2P97vjljYhCv1sr0X7foSj8jU=;
+        b=S96Zv1qCBN53W1/5PAc3QwCClD2ceJ165SWyI+J2d/I6s+MJOvfliacB6ISHN/4+Mt
+         cx1EEVjJv+yjwsynikRmwqPKx8WygNnPSqCkBvMTVdBSrIbHBkwPNYtruRbUpGSNEvV9
+         AhprCHYiY6m5vVyAxKWC8XjxvRxkDMq2pfyrF8xuPDpVFvKY5dB+eKGMU/Fwfw7nsSMC
+         G2NJEVraGlHYbGQiV1EiK0zHQsTzP8VIQomYbTubQBQbgvabWKYYySmvHb+DVVsdJT3Y
+         lDVV86NUWnwrg2WZ5/J1rEE88fjUgZJXLFObwZDhS5cPLPtawOUizmn4qMbBDjw6xo0w
+         Sjog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8zqBMm2GfWpJOZGBcn2P97vjljYhCv1sr0X7foSj8jU=;
+        b=iw8ue+YtNXmy/cLF5Fk1ZoruyhTBFZTpvtwyvlvGkzELAt2CyFsnGwjbY8SGuIL3AK
+         ULVqBsrM6CWOBfxf0AaBXT00RDOEBtDsJaj5F4H6Umjj6adiirzT7FzFvzw9xbrZHRtS
+         AdBN/oVwyuMAS7ZMw4MIvJx9fVSI5hPBucSjMaHQRDfndYScexE5CDxfmFKslX8zjrzg
+         +F9l2z1CEXbrk60RmuQmtx9EhH96orkvYrvLVlZKOQUTSUgAasJa4t6o/m2T+A+BJe3N
+         GK3Z7K/ol04H2D5oAR8CnDt3SOpGZlHAC7QpZaXxYVe+08XmCIe+TNKmYNPzlpDgezAj
+         49Mg==
+X-Gm-Message-State: APjAAAWK8C0zpco7Q8UExALo/Nu7agfJ7rRuAz3w4gKtnctEO9PDdbLT
+        sFc56QkLi31SiE9YDxDLQQs=
+X-Google-Smtp-Source: APXvYqzyVmCPjMsfn16taSQR340qE0hdIaRk6v+750SYDWOcitpTuLMHpZchtHXHtqAtawypq79EaQ==
+X-Received: by 2002:a2e:9196:: with SMTP id f22mr24332953ljg.82.1556274623646;
+        Fri, 26 Apr 2019 03:30:23 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id o3sm5509729lfn.41.2019.04.26.03.30.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 03:30:22 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] spi: Clear SPI_CS_HIGH flag from bad_bits for GPIO chip-select
+Date:   Fri, 26 Apr 2019 13:30:07 +0300
+Message-Id: <20190426103007.29612-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415144945.tumeop4djyj45v6k@e107158-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qais,
+When GPIO chip-select is used nothing prevents any available SPI
+controllers to work with both CS-high and traditional CS-low modes.
+In fact the SPI bus core code already does it, so we don't need to
+introduce any modification there. But spi_setup() still fails to
+switch the interface settings if CS-high flag is set for the case
+of GPIO-driven slave chip-select when the SPI controller doesn't
+support the hardwired CS-inversion. Lets fix it by clearing the
+SPI_CS_HIGH flag out from bad_bits (unsupported by controller) when
+client chip is selected by GPIO.
 
-On Monday 15 Apr 2019 at 15:49:45 (+0100), Qais Yousef wrote:
-> Hi Steve, Peter
-> 
-> > On 04/07/19 18:52, Qais Yousef wrote:
-> > > Hi Steve, Peter
-> > > 
-> > > I know the topic has sprung up in the past but I couldn't find anything that
-> > > points into any conclusion.
-> > > 
-> > > As far as I understand new TRACE_EVENTS() in the scheduler (and probably other
-> > > subsystems) isn't desirable as it intorduces a sort of ABI that can be painful
-> > > to maintain.
-> > > 
-> > > But for us to be able to test various aspect of EAS, we rely on some events
-> > > that track load_avg, util_avg and some other metrics in the scheduler.
-> > > Example of such patches that are in android and we maintain out of tree can be
-> > > found here:
-> > > 
-> > > https://android.googlesource.com/kernel/common/+/42903694913697da88a4ac627a92bbfdf44f0a2e
-> > > https://android.googlesource.com/kernel/common/+/6dfaed989ea4ca223f0913dfc11cdafd9664fc1c
-> > > 
-> > > Dietmar and Quentin pointed me to a discussion you guys had with Daniel Bristot
-> > > in the last LPC when he had a similar need. So it is something that could
-> > > benefit other users as well.
-> > > 
-> > > What is the best way forward to be able to add tracehooks into the scheduler
-> > > and any other subsystem for that matters?
-> > > 
-> > > We tried using DECLARE_TRACE() to create a tracepoint which doesn't export
-> > > anything in /sys/kernel/debug/tracing/events and hoped that we can use eBPF or
-> > > a kernel module to attach to this tracepoint and access the args to inject our
-> > > own trace_printks() but this didn't work. The glue logic necessary to attach
-> > > to this tracepoint in a similar manner to how RAW_TRACEPOINT() in eBPF works
-> > > isn't there AFAICT.
-> > > 
-> > > I can post the full example if the above doesn't make sense. I am still
-> > > familiarizing myself with the different aspects of this code as well. There
-> > > might be support for what we want but I failed to figure out the magic
-> > > combination to get it to work.
-> > > 
-> > > If I got this glue logic done, would this be an acceptable solution? If not, do
-> > > you have any suggestions on how to progress?
-> 
-> I have written some patches in hope it'll clarify further what we are trying to
-> achieve here and what would be the best possible approach about it.
-> 
-> I have taken two approaches to solve the problem.
-> 
-> 
-> 1.
-> 
-> 	https://github.com/qais-yousef/linux/commit/e7d0aa7ff1328195f314b0730c4cc744dec4261e
-> 
-> 	In this approach everything we need is already available and we just
-> 	need to create new tracepoints as described in
-> 	Documentation/trace/tracepoints.rst and export it with
-> 	EXPORT_TRACEPOINT_SYMBOL_GPL().
-> 
-> 	A user then can have an out of tree module to probe this tp and
-> 	manipulate it as they like.
-> 
-> 	Example of such a module is here, the pelt_se tp is to demo the
-> 	approach:
-> 
-> 	https://github.com/qais-yousef/tracepoints-helpers/blob/master/module-pelt-se/probe_tp_pelt_se.c
-> 
-> 	Googling around I can see that the use of
-> 	EXPORT_TRACEPOINT_SYMBOL_GPL() is not desired unless the module is
-> 	in-tree which I doubt will be the case here.
-> 
-> 	https://lore.kernel.org/lkml/20150422130052.4996e231@gandalf.local.home/
-> 
-> 2.
-> 	https://github.com/qais-yousef/linux/commit/fb9fea29edb8af327e6b2bf3bc41469a8e66df8b
-> 	https://github.com/qais-yousef/linux/commit/edd2498c5bbfca1a26acd151a4e3323e511f3455
-> 
-> 	In this approach I try to allow attaching to a TP using eBPF. Sadly the
-> 	current infrastructure is lacking so I hacked the above up to create a
-> 	new DECLARE_TRACE_HOOK() macro which will allow using eBPF but without
-> 	exporting anything in debugfs that can constitute an ABI.
-> 
-> 	The following eBPF program can be used then to attach and access some
-> 	info at the TP:
-> 
-> 	https://github.com/qais-yousef/tracepoints-helpers/blob/master/bpf/tp_trace_printk_pelt_se
-> 
-> 
-> Does any of the above approaches make sense?
+This feature is useful for slave devices, which in accordance with
+communication protocol can work with both active-high and active-low
+chip-selects. I am aware of one such device. It is MMC-SPI interface,
+when at init sequence the driver needs to perform a read operation with
+low and high chip-select sequentially (requirement of 74 clock cycles
+with both chipselect, see the mmc_spi driver for details).
 
-For the EAS-testing use-case you mentioned earlier, it's really for
-debugging so we don't actually need the eBPF safety. None of this is
-supposed to run in production I would say. So I tend to prefer option 1
-if that works for everybody interested in this thing.
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+---
+ drivers/spi/spi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-And then what would be the story ? We would carry a module out-of-tree
-in our test suite to extract scheduler data and then post-process it in
-userspace or something ? Since that would be an out-of-tree module,
-upstream doesn't commit to anything to userspace, so perhaps that could
-work.
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 93986f879b09..49808892ef35 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2943,6 +2943,11 @@ int spi_setup(struct spi_device *spi)
+ 	 * so it is ignored here.
+ 	 */
+ 	bad_bits = spi->mode & ~(spi->controller->mode_bits | SPI_CS_WORD);
++	/* nothing prevents from working with active-high CS in case if it
++	 * is driven by GPIO.
++	 */
++	if (gpio_is_valid(spi->cs_gpio))
++		bad_bits &= ~SPI_CS_HIGH;
+ 	ugly_bits = bad_bits &
+ 		    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL |
+ 		     SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL);
+-- 
+2.21.0
 
-Another thing, should these sched tracepoints be guarded by sched_debug ?
-
-Thanks,
-Quentin
