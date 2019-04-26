@@ -2,97 +2,85 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFF3C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 03:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34EEC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 03:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039BB20675
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 03:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD599206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 03:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556248834;
+	bh=doT94EsfN4oZ0Ad7UzKtW97ysKR4N5ATd2SRdRFi9hs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pQ+RpVgxX32Q2xbDPwR84qoYSWtIqBaBon71M/LIM9Hb8SGpGgjAVFzAL4ILd203V
+	 w1U7ZXQWIauo0O4rtVtuBhkO5GHSCKCwM4Yvs7Sfq/nbadQE0kc4eRCMtXTyB56YVs
+	 GTEcnPFKaiMerVIURA+FzEaLLB9zZ6cNtULjJAPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfDZDTO (ORCPT
+        id S1728370AbfDZDUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 23:19:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:27433 "EHLO mga02.intel.com"
+        Thu, 25 Apr 2019 23:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726855AbfDZDTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 23:19:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 20:19:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,396,1549958400"; 
-   d="scan'208";a="319087374"
-Received: from xulike-server.sh.intel.com ([10.239.48.134])
-  by orsmga005.jf.intel.com with ESMTP; 25 Apr 2019 20:19:12 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-Date:   Fri, 26 Apr 2019 11:17:52 +0800
-Message-Id: <1556248672-6469-1-git-send-email-like.xu@linux.intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S1726006AbfDZDUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 23:20:33 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A466620675;
+        Fri, 26 Apr 2019 03:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556248832;
+        bh=doT94EsfN4oZ0Ad7UzKtW97ysKR4N5ATd2SRdRFi9hs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=akrkvNjrnCviZez/ibMSc+UYrOnLdUjkJHNbuPhL1jdNoZTbSOZt9tG3LoSFMz8ov
+         m7XoVRtjjWfbK1HFZAe75nia0U12dd97dPKMfVki9wNL3BVjcW3N7esPErc0iExfju
+         lGBtS/YJZ4HtZvaKOc4Lxj7w23LD73iTzCog2qf8=
+Date:   Fri, 26 Apr 2019 11:20:04 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     "festevam@gmail.com" <festevam@gmail.com>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 1/2] clk: imx7ulp: update nic1_bus_clk parent info
+Message-ID: <20190426032003.GC7980@dragon>
+References: <1556169264-31683-1-git-send-email-Anson.Huang@nxp.com>
+ <155623701103.15276.18082131746292726812@swboyd.mtv.corp.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155623701103.15276.18082131746292726812@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some new systems have multiple software-visible die within each package.
-Add support to expose Intel V2 Extended Topology Enumeration Leaf CPUID.1F.
+On Thu, Apr 25, 2019 at 05:03:31PM -0700, Stephen Boyd wrote:
+> Quoting Anson Huang (2019-04-24 22:19:07)
+> > Since i.MX7ULP B0 chip, nic1_bus_clk's parent is changed to
+> > from nic0_clk directly, update it accordingly.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> 
+> Looks ok. Shawn, will you pick it up?
 
-Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
----
+Stephen,
 
-==changelog==
-v2:
-- Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
-- Add comment to handle 0x1f anf 0xb in common code
-- Reduce check time in a descending-break style
+I prefer you directly pick up any i.MX clock patches that look good,
+after I already send you PR.  I will start again for next cycle
+around -rc1.
 
-v1: https://lkml.org/lkml/2019/4/22/28
-
- arch/x86/kvm/cpuid.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index fd39516..f9b529e 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -425,6 +425,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 
- 	switch (function) {
- 	case 0:
-+		/* Check if the cpuid leaf 0x1f is actually implemented */
-+		if (entry->eax >= 0x1f && (cpuid_ebx(0x1f) & 0x0000ffff)) {
-+			entry->eax = 0x1f;
-+			break;
-+		}
- 		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
- 		break;
- 	case 1:
-@@ -544,7 +549,12 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 		entry->edx = edx.full;
- 		break;
- 	}
--	/* function 0xb has additional index. */
-+	/*
-+	 * Intel documentation states that 0x1f and 0xb have
-+	 * identical formats and thus can be handled by common code.
-+	 * (Intel SDM Vol. 2A - Instruction Set Reference - CPUID)
-+	 */
-+	case 0x1f:
- 	case 0xb: {
- 		int i, level_type;
- 
--- 
-1.8.3.1
-
+Shawn
