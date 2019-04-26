@@ -2,95 +2,94 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF351C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82137C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B678C206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5794120869
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 20:10:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556309457;
+	bh=zvMIY3ZjlsnK+W8Ojy2hzj1MbYF8LcXtNJYDxM6Omc4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dtI9uZ4AABFNMVY8LOSXM9uxi53Razx0GBYfyP33Gr+2qLvo+HQpvsOdKwMS98WT6
+	 EEVaCG/HsNOc6ZwDtYCJ0c+stcB1Jhst6XHR+fBbQgS9aLODlbwybGPfGbOYTTcSoM
+	 v+wgbsPvmWzirHXkam8YVH1M/uHnVC4VwELb1xDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfDZUKK (ORCPT
+        id S1726862AbfDZUK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 16:10:10 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40812 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfDZUKK (ORCPT
+        Fri, 26 Apr 2019 16:10:56 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46532 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfDZUKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 16:10:10 -0400
-Received: from localhost.localdomain (unknown [IPv6:2804:431:9718:9080:8461:642a:3a75:dbc6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 971D426C476;
-        Fri, 26 Apr 2019 21:10:06 +0100 (BST)
-From:   Helen Koike <helen.koike@collabora.com>
-To:     dm-devel@redhat.com
-Cc:     kernel@collabora.com, Helen Koike <helen.koike@collabora.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>
-Subject: [PATCH] dm: init: fix max devices/targets checks
-Date:   Fri, 26 Apr 2019 17:09:55 -0300
-Message-Id: <20190426200955.17886-1-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 26 Apr 2019 16:10:55 -0400
+Received: by mail-ot1-f68.google.com with SMTP id s24so3669429otk.13;
+        Fri, 26 Apr 2019 13:10:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EIrViTHQy/HhbaZAFL1n34DvIIYgJIxX3veMFIez2DQ=;
+        b=bGGwFX7X3Z4Vah/Wwmii8LLzIDfJ3nfUEIkz6qkiD2N2TL3Dg88/IhdL2Fg7leWVD6
+         qyQ3smQyYVxULC5m+qzW1+6U0BstcBdwBQRicejrb1syGi/ycQRxYwAtpMihIIQKvZcZ
+         H+bLYwZj6Dzjn9BpB+2oNAx0IK9odsJ/8leHkwpHZ+3fqUewR5OlKHX/ONKOt4Jk/ha9
+         Ss33jskr89tGhC+yXz8ihLM53rXmSaGOQjbTOHTa/lek0l58F9Xz2eb/4Wi8fPndHVfQ
+         dLCQDfk5n6bF+5nGq+5klgiJE+TQrnqfSrqN3YvwNxorhfnrZWiZ7O29n7zK5JhyU0wh
+         2eIA==
+X-Gm-Message-State: APjAAAWNbZKtH7dEyDeIjzV5OrDfn81n2TQdqAb3xMlt/Fk2eVFiLiRk
+        zEGb1Fk+yZ+c6uDljDmANA==
+X-Google-Smtp-Source: APXvYqz6sJpskQDgC2ryPjI0HgjLYWa/4xq+SyCHkVIXMqM1IxQaTGS+dkK6beNBDWC/ZTfXgB/ueg==
+X-Received: by 2002:a05:6830:1342:: with SMTP id r2mr28483459otq.105.1556309454488;
+        Fri, 26 Apr 2019 13:10:54 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 38sm5564328otg.10.2019.04.26.13.10.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 13:10:53 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 15:10:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
+        devicetree@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-arm-kernel@lists.infradead.org, nsekhar@ti.com,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 2/5] dt-bindings: mtd: Add binding documentation for
+ HyperFlash
+Message-ID: <20190426201052.GA24002@bogus>
+References: <20190423104814.5762-1-vigneshr@ti.com>
+ <20190423104814.5762-3-vigneshr@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423104814.5762-3-vigneshr@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dm-init should allow up to DM_MAX_{DEVICES,TARGETS} for devices/targets,
-and not DM_MAX_{DEVICES,TARGETS} - 1.
+On Tue, 23 Apr 2019 16:18:11 +0530, Vignesh Raghavendra wrote:
+> Add DT binding documentation for HyperFlash devices.
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+>  .../devicetree/bindings/mtd/cypress,hyperflash.txt  | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
+> 
 
-Fix the checks and also fix the error message when the number of devices
-is surpassed.
-
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-
----
-Hi,
-
-This patch was tested by manipulating DM_MAX_TARGETS and DM_MAX_DEVICES
-macros and making sure the test cases in the following test script[1] was
-passing or failing when they should.
-
-[1] https://gitlab.collabora.com/koike/dm-cmdline-test
-
-Thanks
-Helen
-
- drivers/md/dm-init.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/md/dm-init.c b/drivers/md/dm-init.c
-index 4b76f84424c3..352e803f566e 100644
---- a/drivers/md/dm-init.c
-+++ b/drivers/md/dm-init.c
-@@ -160,7 +160,7 @@ static int __init dm_parse_table(struct dm_device *dev, char *str)
- 
- 	while (table_entry) {
- 		DMDEBUG("parsing table \"%s\"", str);
--		if (++dev->dmi.target_count >= DM_MAX_TARGETS) {
-+		if (++dev->dmi.target_count > DM_MAX_TARGETS) {
- 			DMERR("too many targets %u > %d",
- 			      dev->dmi.target_count, DM_MAX_TARGETS);
- 			return -EINVAL;
-@@ -242,9 +242,9 @@ static int __init dm_parse_devices(struct list_head *devices, char *str)
- 			return -ENOMEM;
- 		list_add_tail(&dev->list, devices);
- 
--		if (++ndev >= DM_MAX_DEVICES) {
--			DMERR("too many targets %u > %d",
--			      dev->dmi.target_count, DM_MAX_TARGETS);
-+		if (++ndev > DM_MAX_DEVICES) {
-+			DMERR("too many devices %lu > %d",
-+			      ndev, DM_MAX_DEVICES);
- 			return -EINVAL;
- 		}
- 
--- 
-2.20.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
