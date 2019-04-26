@@ -7,52 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837ACC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521D8C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E4C206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163E92084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556271825;
-	bh=/vuUdDVm34fRwmovIYnuSmNH8xuKnAlMcXp9rwknnz4=;
+	s=default; t=1556271830;
+	bh=0qSyMZ3LFMDD9caeHToAgg55cmdb4bu0JA6O+lwFr7o=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=R+zPnlDEuY6ItlGfkXpFAM358j140CL2TXiBHQYEbnQz6Pot+OgwX2Ogn6gcPMOR5
-	 iwHsP174J04XSyMlogAOeTVOI6do3FHQdK0+0zZuf4XGMNYZvWmpOmU1pd+VDuAJMb
-	 8zTCnewxEGxkMTmYBCWDv517Czx2KQiTEvKz1g2k=
+	b=ArpN6QhvVTGfMQFKc8v7vi4x+SYJKxZOpVMLNvXrMrvP9XuM06KYWNx0LdEUTc+mo
+	 EULOM5X3ZWE6SYTI9J92a4lFh6a2Tgl8ceZ/X9wJZhOEdmmC79xXU1C/GUwu4/mXms
+	 rPPAwgKUTN+7H7K2GLZozvDjGbBvOQzHWFaknQhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfDZJkg (ORCPT
+        id S1726462AbfDZJka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:40:36 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45796 "EHLO
+        Fri, 26 Apr 2019 05:40:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45648 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbfDZJkc (ORCPT
+        with ESMTP id S1726418AbfDZJk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:40:32 -0400
+        Fri, 26 Apr 2019 05:40:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=+jNPf8v0/6A8D2tJ8E+qjySuFvexSs904+oZO0E29lw=; b=WIwQqGBQTTnB
-        y6wrYfZm+rKTPVt9cKd2Wel89u0t4dn3zkNqjLcL9Xbk2rX9/LJfUYMRV/JuQYIQsI61wzxDO59l/
-        dT1lAe99cNCg1ulOtadrPuxb/3rAFch0fLntka3YvW5j8fpZC+8IXTXTsgQMu69GW4btq7kDM1yDL
-        GNrHQ=;
+        List-Archive; bh=fMI9Dp2SBKbFSrNSbSE2OMeX54Fzqze4r1Hb9eok2oM=; b=t5p4IG1EJnEo
+        3D7/rNKsH92O6eOMEhZeLWYqDlLVz7gRH0C6BmN9OQHFGZ97sifE2AWWGU1bQjjKxZmpM+WDSqNBQ
+        1TMs1TuA2aqJbdYdPSK9tOFdS0fKLWyuY+n8/EjtxCOz8NbauBH9HRWCxBVSaEHcRXOMnENd8Olhu
+        E+sDc=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxLJ-0003JF-Vt; Fri, 26 Apr 2019 09:40:30 +0000
+        id 1hJxL7-0003Hy-2F; Fri, 26 Apr 2019 09:40:17 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 42B51441D3B; Fri, 26 Apr 2019 10:40:24 +0100 (BST)
+        id 0ECB7441D3F; Fri, 26 Apr 2019 10:40:16 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: wm8350: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: 
+Cc:     Chenglin Xu <chenglin.xu@mediatek.com>,
+        Chen Zhong <chen.zhong@mediatek.com>,
+        Flora Fu <flora.fu@mediatek.com>,
+        Henry Chen <henryc.chen@mediatek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: mt63xx: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190421022656.5838-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190426094024.42B51441D3B@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 10:40:24 +0100 (BST)
+Message-Id: <20190426094016.0ECB7441D3F@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 10:40:15 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: wm8350: Switch to SPDX identifier
+   regulator: mt63xx: Switch to SPDX identifier
 
 has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -85,46 +90,139 @@ to this mail.
 Thanks,
 Mark
 
-From 87dbc5eb3cff166f8107f5be6a53db858211f23e Mon Sep 17 00:00:00 2001
+From fe669cb95ebb711161c27ba063f08ad20d55e761 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Wed, 17 Apr 2019 22:16:31 +0800
-Subject: [PATCH] regulator: wm8350: Switch to SPDX identifier
+Date: Sun, 21 Apr 2019 10:26:56 +0800
+Subject: [PATCH] regulator: mt63xx: Switch to SPDX identifier
+
+Convert MediaTek mt63xx PMIC drivers to SPDX identifier.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/wm8350-regulator.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ drivers/regulator/mt6311-regulator.c | 17 ++++-------------
+ drivers/regulator/mt6311-regulator.h | 10 +---------
+ drivers/regulator/mt6323-regulator.c | 12 ++++--------
+ drivers/regulator/mt6380-regulator.c | 17 ++++-------------
+ drivers/regulator/mt6397-regulator.c | 17 ++++-------------
+ 5 files changed, 17 insertions(+), 56 deletions(-)
 
-diff --git a/drivers/regulator/wm8350-regulator.c b/drivers/regulator/wm8350-regulator.c
-index 0eb3f3a33caa..56d6168a888d 100644
---- a/drivers/regulator/wm8350-regulator.c
-+++ b/drivers/regulator/wm8350-regulator.c
-@@ -1,16 +1,11 @@
+diff --git a/drivers/regulator/mt6311-regulator.c b/drivers/regulator/mt6311-regulator.c
+index 01d69f43d2b0..af95449d3590 100644
+--- a/drivers/regulator/mt6311-regulator.c
++++ b/drivers/regulator/mt6311-regulator.c
+@@ -1,16 +1,7 @@
 -/*
-- * wm8350.c  --  Voltage and current regulation for the Wolfson WM8350 PMIC
+- * Copyright (c) 2015 MediaTek Inc.
+- * Author: Henry Chen <henryc.chen@mediatek.com>
 - *
-- * Copyright 2007, 2008 Wolfson Microelectronics PLC.
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
 - *
-- * Author: Liam Girdwood
-- *         linux@wolfsonmicro.com
-- *
-- *  This program is free software; you can redistribute  it and/or modify it
-- *  under  the terms of  the GNU General  Public License as published by the
-- *  Free Software Foundation;  either version 2 of the  License, or (at your
-- *  option) any later version.
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
 - */
-+// SPDX-License-Identifier: GPL-2.0+
++// SPDX-License-Identifier: GPL-2.0
 +//
-+// wm8350.c  --  Voltage and current regulation for the Wolfson WM8350 PMIC
++// Copyright (c) 2015 MediaTek Inc.
++// Author: Henry Chen <henryc.chen@mediatek.com>
+ 
+ #include <linux/err.h>
+ #include <linux/gpio.h>
+diff --git a/drivers/regulator/mt6311-regulator.h b/drivers/regulator/mt6311-regulator.h
+index 5218db46a798..4904d6751714 100644
+--- a/drivers/regulator/mt6311-regulator.h
++++ b/drivers/regulator/mt6311-regulator.h
+@@ -1,15 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2015 MediaTek Inc.
+  * Author: Henry Chen <henryc.chen@mediatek.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
+ 
+ #ifndef __MT6311_REGULATOR_H__
+diff --git a/drivers/regulator/mt6323-regulator.c b/drivers/regulator/mt6323-regulator.c
+index 25b002328910..893ea190788a 100644
+--- a/drivers/regulator/mt6323-regulator.c
++++ b/drivers/regulator/mt6323-regulator.c
+@@ -1,11 +1,7 @@
+-/*
+- * Copyright (c) 2016 MediaTek Inc.
+- * Author: Chen Zhong <chen.zhong@mediatek.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- */
++// SPDX-License-Identifier: GPL-2.0
 +//
-+// Copyright 2007, 2008 Wolfson Microelectronics PLC.
-+//
-+// Author: Liam Girdwood
-+//         linux@wolfsonmicro.com
++// Copyright (c) 2016 MediaTek Inc.
++// Author: Chen Zhong <chen.zhong@mediatek.com>
  
  #include <linux/module.h>
- #include <linux/moduleparam.h>
+ #include <linux/of.h>
+diff --git a/drivers/regulator/mt6380-regulator.c b/drivers/regulator/mt6380-regulator.c
+index 86bc332df3f2..b6aed090b5e0 100644
+--- a/drivers/regulator/mt6380-regulator.c
++++ b/drivers/regulator/mt6380-regulator.c
+@@ -1,16 +1,7 @@
+-/*
+- * Copyright (c) 2017 MediaTek Inc.
+- * Author: Chenglin Xu <chenglin.xu@mediatek.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (c) 2017 MediaTek Inc.
++// Author: Chenglin Xu <chenglin.xu@mediatek.com>
+ 
+ #include <linux/module.h>
+ #include <linux/of.h>
+diff --git a/drivers/regulator/mt6397-regulator.c b/drivers/regulator/mt6397-regulator.c
+index 3e6c8d99ec0f..fd9ed864a0c1 100644
+--- a/drivers/regulator/mt6397-regulator.c
++++ b/drivers/regulator/mt6397-regulator.c
+@@ -1,16 +1,7 @@
+-/*
+- * Copyright (c) 2014 MediaTek Inc.
+- * Author: Flora Fu <flora.fu@mediatek.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (c) 2014 MediaTek Inc.
++// Author: Flora Fu <flora.fu@mediatek.com>
+ 
+ #include <linux/module.h>
+ #include <linux/of.h>
 -- 
 2.20.1
 
