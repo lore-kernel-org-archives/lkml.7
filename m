@@ -2,152 +2,170 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBAAC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2387FC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98753206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:41:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556318500;
-	bh=TSlLR0SoV4yY+s+9Jlsb3CLGNH37LofNhjQxRe0j7ig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ACA6QfVYKG0CzMlUkAdoTXFz3Zlyg5DrGUXg8v7g65UJ5jaH11HicspXaHudqi0uh
-	 tc3n3g/jxD1nb4dKfRbQsbi0GjD3ZPlb1eDfEwXCkQr7G7bLNW3inNph7/Gu6CLvW9
-	 7/8YunGj25KIhAuSBTqiXqYQXqpAkfvKZNZS/Rs0=
+	by mail.kernel.org (Postfix) with ESMTP id ED1F82077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 22:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfDZWlj (ORCPT
+        id S1727108AbfDZWrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 18:41:39 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36482 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfDZWlj (ORCPT
+        Fri, 26 Apr 2019 18:47:12 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:41663 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfDZWrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 18:41:39 -0400
-Received: by mail-oi1-f193.google.com with SMTP id l203so4213854oia.3;
-        Fri, 26 Apr 2019 15:41:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PsdEdDTbsz+N7C5OSHpzo5ojKTZZOZ+w3y29AXWU3a0=;
-        b=USj0sm7W3Oj2QGmVQHsqAVsPc701QX+koKUEer5eMGldKvz6fgqxWQGWnFzNcMB5fc
-         woVAKmWXsZP6TZckUSzNhg83yFY/5K8iH0Q3S/ImIvchEA2ot9loM4DyCp/q8RnZoNht
-         ngf4+tvn+ELlnSHXOWgjdd+FSYKemvBMnW7uezke75Tn8goKo6A9KV8m/eyn556YW0g+
-         QBPERH1aebhBLsb3dUo529WmvUHR3TX3Ac3OuTpa2LqKpp/x122VDba2L0lT8raPh1iv
-         g3oaMZw7sgNeMcXLeYUI0ZOfn4YqX9LoijjsV9Vzh4vBrsPKdqW9+JremfjnUO+FYJzz
-         HZLQ==
-X-Gm-Message-State: APjAAAVAT5QcKRaG0ey1tzqTCZH6miFlQHkeI7ZPBJYWaS3UPDtE+maS
-        saZ1VXSVjLrboCeBGK225A==
-X-Google-Smtp-Source: APXvYqzzmEbC/NuD5L8a9Vj0ZUk4s85sFCjNd6YoWDJUPGt8PPb+Skw3FBdVQPhaSCv3ksmJRDcfww==
-X-Received: by 2002:aca:f1d4:: with SMTP id p203mr9098222oih.154.1556318497952;
-        Fri, 26 Apr 2019 15:41:37 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f16sm3915279otq.15.2019.04.26.15.41.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 15:41:36 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 17:41:36 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     broonie@kernel.org, marek.vasut@gmail.com,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        bbrezillon@kernel.org, dwmw2@infradead.org, lee.jones@linaro.org,
-        mark.rutland@arm.com, computersforpeace@gmal.com,
-        paul.burton@mips.com, stefan@agner.ch, christophe.kerello@st.com,
-        liang.yang@amlogic.com, geert@linux-m68k.org,
-        devicetree@vger.kernel.org, marcel.ziswiler@toradex.com,
-        linux-mtd@lists.infradead.org, richard@nod.at,
-        miquel.raynal@bootlin.com, juliensu@mxic.com.tw,
-        zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 4/4] dt-bindings: mfd: Document Macronix MX25F0A
- controller bindings
-Message-ID: <20190426224136.GA636@bogus>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
- <1555320234-15802-5-git-send-email-masonccyang@mxic.com.tw>
+        Fri, 26 Apr 2019 18:47:12 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 44rTh96Twyz1r8jx;
+        Sat, 27 Apr 2019 00:47:05 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 44rTh95mjlz1rYnv;
+        Sat, 27 Apr 2019 00:47:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id uOsB_hESmOF0; Sat, 27 Apr 2019 00:47:03 +0200 (CEST)
+X-Auth-Info: NojtBbQNt0lRWepNZb6UcE2SrgHSeBnh4mtHX2U0P3A=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Sat, 27 Apr 2019 00:47:03 +0200 (CEST)
+Date:   Sat, 27 Apr 2019 00:46:53 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Joseph Myers <joseph@codesourcery.com>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Stepan Golosunov <stepan@golosunov.pp.ru>
+Subject: Re: [PATCH 1/2] y2038: make CONFIG_64BIT_TIME unconditional
+Message-ID: <20190427004653.3cecd1cb@jawa>
+In-Reply-To: <20190426142531.1378357-1-arnd@arndb.de>
+References: <20190426142531.1378357-1-arnd@arndb.de>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555320234-15802-5-git-send-email-masonccyang@mxic.com.tw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/_6NaI2Iq9rN8j+AFUvQm+Gq"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:23:54PM +0800, Mason Yang wrote:
-> Document the bindings used by the Macronix MX25F0A MFD controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+--Sig_/_6NaI2Iq9rN8j+AFUvQm+Gq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Arnd,
+
+> As Stepan Golosunov points out, we made a small mistake in the
+> get_timespec64() function in the kernel. It was originally added under
+> the assumption that CONFIG_64BIT_TIME would get enabled on all 32-bit
+> and 64-bit architectures, but when I did the conversion, I only turned
+> it on for 32-bit ones.
+>=20
+> The effect is that the get_timespec64() function never clears the
+> upper half of the tv_nsec field for 32-bit tasks in compat mode.
+> Clearing this is required for POSIX compliant behavior of functions
+> that pass a 'timespec' structure with a 64-bit tv_sec and a 32-bit
+> tv_nsec, plus uninitialized padding.
+
+On my 32 bit ARM setup (with CONFIG_COMPAT_32BIT_TIME=3Dy) for
+Y2038 test:
+
+- I do use clock_settime64 [1] to set 64 bit tv_sec
+  with 32 bit tv_nsec and 32 bit unnamed padding.
+
+- I also may use clock_settime32 as a fallback (but it will not work
+  beyond Y2038) if the 64 bit version is not available for any reason.
+
+In the get_timespec64() the in_compat_syscall() returns 0 [2], so the
+padding bits are not cleared.
+
+This imposes the in glibc requirement to zero the padding before passing
+it to the Linux kernel.
+
+At least for my setup (32bit ARM with 64 bit time support) this patch is
+not fixing anything.
+
+
+Moreover, the described above problem doesn't matter on native 64 bit
+systems as there both fields are 64 bit (no padding required).
+
+
+Note:
+[1] -
+https://elixir.bootlin.com/linux/v5.1-rc6/source/arch/arm/tools/syscall.tbl=
+#L421
+
+[2] - include/linux/compat.h -> CONFIG_COMPAT is not defined - as a
+result in_compat_syscall() returns 0.
+
+>=20
+> The easiest fix for linux-5.1 is to just make the Kconfig symbol
+> unconditional, as it was originally intended. As a follow-up,
+> we should remove any #ifdef CONFIG_64BIT_TIME completely.
+>=20
+> Link:
+> https://lore.kernel.org/lkml/20190422090710.bmxdhhankurhafxq@sghpc.golosu=
+nov.pp.ru/
+> Cc: Lukasz Majewski <lukma@denx.de> Cc: Stepan Golosunov
+> <stepan@golosunov.pp.ru> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  .../devicetree/bindings/mfd/mxic-mx25f0a.txt       | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
-> new file mode 100644
-> index 0000000..7f3e0f8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
-> @@ -0,0 +1,51 @@
-> +Macronix MX25F0A MultiFunction Device Tree Bindings
-> +----------------------------------------------------
-> +
-> +MX25F0A is a MultiFunction Device with SPI and raw NAND, which
-> +supports either spi host controller or raw nand controller.
-> +
-> +Required properties:
-> +- compatible: should be "mxic,mx25f0a"
-> +- #address-cells: should be 1
-> +- #size-cells: should be 0
-> +- reg: should contain 2 entries, one for the registers and one for the direct
-> +       mapping area in SPI mode.
-> +- reg-names: should contain "regs" and "dirmap"
-> +- interrupts: interrupt line connected to this MFD controller
-> +- SPI controller driver:
-> +		- clock-names: should contain "ps_clk", "send_clk" and
-> +			       "send_dly_clk"
-> +		- clocks: should contain 3 entries for the "ps_clk", "send_clk"
-> +			  and "send_dly_clk" clocks
-> +
-> +- Raw nand controller driver.
-> +		- nand-ecc-mode = "soft";
-> +		- nand-ecc-algo = "bch";
-> +
-> +Example:
-> +
-> +	mxic: mx25f0a@43c30000 {
-> +		compatible = "mxic,mx25f0a";
-> +		reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
-> +		reg-names = "regs", "dirmap";
-> +
-> +		/* spi */
-> +		clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-> +		clock-names = "send_clk", "send_dly_clk", "ps_clk";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		flash@0 {
-> +			compatible = "jedec,spi-nor";
-> +			reg = <0>;
-> +			spi-max-frequency = <25000000>;
-> +			spi-tx-bus-width = <4>;
-> +			spi-rx-bus-width = <4>;
-> +		};
-> +
-> +		/* nand */
+> Please apply this one as a bugfix for 5.1
+> ---
+>  arch/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 33687dddd86a..9092e0ffe4d3 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -764,7 +764,7 @@ config COMPAT_OLD_SIGACTION
+>  	bool
+> =20
+>  config 64BIT_TIME
+> -	def_bool ARCH_HAS_64BIT_TIME
+> +	def_bool y
+>  	help
+>  	  This should be selected by all architectures that need to
+> support new system calls with a 64-bit time_t. This is relevant on
+> all 32-bit
 
-Don't you need a nand child node? I'm not sure how that's going to work 
-as you are already using the number space (i.e. reg) for SPI CS number 
-and you can't really mix number spaces within a node level.
 
-> +		nand-ecc-mode = "soft";
-> +		nand-ecc-algo = "bch";
-> +		nand-ecc-step-size = <512>;
-> +		nand-ecc-strength = <8>;
-> +	};
-> -- 
-> 1.9.1
-> 
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/_6NaI2Iq9rN8j+AFUvQm+Gq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlzDil0ACgkQAR8vZIA0
+zr0zBggAg6PBgVsYGM8MNUE2NtAly+92AXI4PUHZmZkpydU8cwWInSugT47ndqM1
++oxXrRq6rUevuiO5lAAYHvxOOoXDiRE5R9JfK0EeJKZINy7wIzDw+CBcgiw9TQW7
+QBJcQlI76H6TyUoOrgahXc6feZknkb7ZKSY0LGfimcr0pbvYL++uBCUA+HLuQgJc
+/OjMwj4IONkI+TiVGrDmFbPKCAzplff9516/KbZL0HFWIFE+4BEPgsEGC5cIYTss
+P50CXNlehPxEjKOheGEkpCVy83ToExpd/AnvCl02AMeFqdDN4WZgBmW6a1Y5bwts
+b6rnlJsgbohRnroLc06XFCIuRyq5Cw==
+=2yaG
+-----END PGP SIGNATURE-----
+
+--Sig_/_6NaI2Iq9rN8j+AFUvQm+Gq--
