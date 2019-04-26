@@ -2,72 +2,69 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ED3C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155AAC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD897208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D11208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556297405;
+	bh=hOelocWnR51tLRtqJvkZMcF9Mx6VTZ9xVokW9xTEFks=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=fnd2UN6vV/7KEuud8fgXcEhPxNtqCsoDUQQhA+QFOnbscEf/wquDsqCd4FgyNmvWV
+	 2ipDykdGoT06hV6bgPakPmR9TG8ZnWAMqvSSgCJQg9TlJ1WtD+AglQBhtM8VYLAUxc
+	 xf5k0aqcQWzTz0lWk3v3+hnwRH/jiIK7XTDkMBq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfDZQsr (ORCPT
+        id S1726341AbfDZQuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:48:47 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53826 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726005AbfDZQsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:48:47 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id F13841AF6C3E100DF2EB;
-        Sat, 27 Apr 2019 00:48:44 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 27 Apr 2019
- 00:48:35 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <vilhelm.gray@gmail.com>, <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] counter: 104-quad-8: Make quad8_ops static
-Date:   Sat, 27 Apr 2019 00:48:16 +0800
-Message-ID: <20190426164816.37032-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+        Fri, 26 Apr 2019 12:50:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbfDZQuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 12:50:04 -0400
+Subject: Re: [GIT PULL] SMB3 Fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556297403;
+        bh=hOelocWnR51tLRtqJvkZMcF9Mx6VTZ9xVokW9xTEFks=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=FLIebNgvkBgNPn29OQFk7DtchHS9ghXccCazVGSnKD09M1tLAQa6X0Dzdc0eqiYQt
+         3CxKYhAYs8GsvOvXw1v72GUxQlaLawQE73kOX2HrYatqoizNElcx+lEJFsiULeX6vL
+         v+uOPMhXOigLiMGyUn+SQnEnHEvyMb6yb0dhHUio=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAH2r5mv8tvPpdbwJCrUeumxUG5G9QGm2j9zn-gWbU2bc3qS=WQ@mail.gmail.com>
+References: <CAH2r5mv8tvPpdbwJCrUeumxUG5G9QGm2j9zn-gWbU2bc3qS=WQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAH2r5mv8tvPpdbwJCrUeumxUG5G9QGm2j9zn-gWbU2bc3qS=WQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
+ tags/5.1-rc6-smb3-fixes
+X-PR-Tracked-Commit-Id: 13f5938d8264b5501368523c4513ff26608a33e8
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 58130235bfcceb9198a3d979c91b04ea383a0fae
+Message-Id: <155629740380.7104.14864053840962838346.pr-tracker-bot@kernel.org>
+Date:   Fri, 26 Apr 2019 16:50:03 +0000
+To:     Steve French <smfrench@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+The pull request you sent on Thu, 25 Apr 2019 19:23:40 -0500:
 
-Fix sparse warning:
+> git://git.samba.org/sfrench/cifs-2.6.git tags/5.1-rc6-smb3-fixes
 
-drivers/counter/104-quad-8.c:836:26: warning:
- symbol 'quad8_ops' was not declared. Should it be static?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/58130235bfcceb9198a3d979c91b04ea383a0fae
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/counter/104-quad-8.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you!
 
-diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
-index 4fa2931..00b113f 100644
---- a/drivers/counter/104-quad-8.c
-+++ b/drivers/counter/104-quad-8.c
-@@ -833,7 +833,7 @@ static int quad8_action_get(struct counter_device *counter,
- 	return 0;
- }
- 
--const struct counter_ops quad8_ops = {
-+static const struct counter_ops quad8_ops = {
- 	.signal_read = quad8_signal_read,
- 	.count_read = quad8_count_read,
- 	.count_write = quad8_count_write,
 -- 
-2.7.4
-
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
