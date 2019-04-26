@@ -6,48 +6,39 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11975C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EC3C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFF121537
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3F020B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfDZPrE (ORCPT
+        id S1726669AbfDZPrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:47:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50068 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 11:47:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbfDZPrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726243AbfDZPrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Apr 2019 11:47:03 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77C7B214AE;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F7E1208E4;
         Fri, 26 Apr 2019 15:47:02 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hK341-0002Mr-JL; Fri, 26 Apr 2019 11:47:01 -0400
-Message-Id: <20190426154701.478779075@goodmis.org>
+        id 1hK341-0002Lq-6K; Fri, 26 Apr 2019 11:47:01 -0400
+Message-Id: <20190426154701.085532147@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 26 Apr 2019 11:46:25 -0400
+Date:   Fri, 26 Apr 2019 11:46:23 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [for-linus][PATCH 3/3] trace: Fix preempt_enable_no_resched() abuse
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org,
+        Jann Horn <jannh@google.com>
+Subject: [for-linus][PATCH 1/3] tracing: Fix buffer_ref pipe ops
 References: <20190426154622.183993476@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -56,47 +47,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Jann Horn <jannh@google.com>
 
-Unless the very next line is schedule(), or implies it, one must not use
-preempt_enable_no_resched(). It can cause a preemption to go missing and
-thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
+This fixes multiple issues in buffer_pipe_buf_ops:
 
-Link: http://lkml.kernel.org/r/20190423200318.GY14281@hirez.programming.kicks-ass.net
+ - The ->steal() handler must not return zero unless the pipe buffer has
+   the only reference to the page. But generic_pipe_buf_steal() assumes
+   that every reference to the pipe is tracked by the page's refcount,
+   which isn't true for these buffers - buffer_pipe_buf_get(), which
+   duplicates a buffer, doesn't touch the page's refcount.
+   Fix it by using generic_pipe_buf_nosteal(), which refuses every
+   attempted theft. It should be easy to actually support ->steal, but the
+   only current users of pipe_buf_steal() are the virtio console and FUSE,
+   and they also only use it as an optimization. So it's probably not worth
+   the effort.
+ - The ->get() and ->release() handlers can be invoked concurrently on pipe
+   buffers backed by the same struct buffer_ref. Make them safe against
+   concurrency by using refcount_t.
+ - The pointers stored in ->private were only zeroed out when the last
+   reference to the buffer_ref was dropped. As far as I know, this
+   shouldn't be necessary anyway, but if we do it, let's always do it.
 
-Cc: Waiman Long <longman@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: http://lkml.kernel.org/r/20190404215925.253531-1-jannh@google.com
+
 Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: the arch/x86 maintainers <x86@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: huang ying <huang.ying.caritas@gmail.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: stable@vger.kernel.org
-Fixes: 2c2d7329d8af ("tracing/ftrace: use preempt_enable_no_resched_notrace in ring_buffer_time_stamp()")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Fixes: 73a757e63114d ("ring-buffer: Return reader page back into existing ring buffer")
+Signed-off-by: Jann Horn <jannh@google.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/splice.c               |  4 ++--
+ include/linux/pipe_fs_i.h |  1 +
+ kernel/trace/trace.c      | 28 ++++++++++++++--------------
+ 3 files changed, 17 insertions(+), 16 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 41b6f96e5366..4ee8d8aa3d0f 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -762,7 +762,7 @@ u64 ring_buffer_time_stamp(struct ring_buffer *buffer, int cpu)
+diff --git a/fs/splice.c b/fs/splice.c
+index 3ee7e82df48f..e75807380caa 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -330,8 +330,8 @@ const struct pipe_buf_operations default_pipe_buf_ops = {
+ 	.get = generic_pipe_buf_get,
+ };
  
- 	preempt_disable_notrace();
- 	time = rb_time_stamp(buffer);
--	preempt_enable_no_resched_notrace();
-+	preempt_enable_notrace();
- 
- 	return time;
+-static int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
+-				    struct pipe_buffer *buf)
++int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
++			     struct pipe_buffer *buf)
+ {
+ 	return 1;
  }
+diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
+index 787d224ff43e..a830e9a00eb9 100644
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -174,6 +174,7 @@ void free_pipe_info(struct pipe_inode_info *);
+ void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
++int generic_pipe_buf_nosteal(struct pipe_inode_info *, struct pipe_buffer *);
+ void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
+ void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 21153e64bf1c..0cfa13a60086 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -7025,19 +7025,23 @@ struct buffer_ref {
+ 	struct ring_buffer	*buffer;
+ 	void			*page;
+ 	int			cpu;
+-	int			ref;
++	refcount_t		refcount;
+ };
+ 
++static void buffer_ref_release(struct buffer_ref *ref)
++{
++	if (!refcount_dec_and_test(&ref->refcount))
++		return;
++	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
++	kfree(ref);
++}
++
+ static void buffer_pipe_buf_release(struct pipe_inode_info *pipe,
+ 				    struct pipe_buffer *buf)
+ {
+ 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
+ 
+-	if (--ref->ref)
+-		return;
+-
+-	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
+-	kfree(ref);
++	buffer_ref_release(ref);
+ 	buf->private = 0;
+ }
+ 
+@@ -7046,14 +7050,14 @@ static void buffer_pipe_buf_get(struct pipe_inode_info *pipe,
+ {
+ 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
+ 
+-	ref->ref++;
++	refcount_inc(&ref->refcount);
+ }
+ 
+ /* Pipe buffer operations for a buffer. */
+ static const struct pipe_buf_operations buffer_pipe_buf_ops = {
+ 	.confirm		= generic_pipe_buf_confirm,
+ 	.release		= buffer_pipe_buf_release,
+-	.steal			= generic_pipe_buf_steal,
++	.steal			= generic_pipe_buf_nosteal,
+ 	.get			= buffer_pipe_buf_get,
+ };
+ 
+@@ -7066,11 +7070,7 @@ static void buffer_spd_release(struct splice_pipe_desc *spd, unsigned int i)
+ 	struct buffer_ref *ref =
+ 		(struct buffer_ref *)spd->partial[i].private;
+ 
+-	if (--ref->ref)
+-		return;
+-
+-	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
+-	kfree(ref);
++	buffer_ref_release(ref);
+ 	spd->partial[i].private = 0;
+ }
+ 
+@@ -7125,7 +7125,7 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 			break;
+ 		}
+ 
+-		ref->ref = 1;
++		refcount_set(&ref->refcount, 1);
+ 		ref->buffer = iter->trace_buffer->buffer;
+ 		ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
+ 		if (IS_ERR(ref->page)) {
 -- 
 2.20.1
 
