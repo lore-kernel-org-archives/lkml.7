@@ -2,127 +2,178 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C31C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCB3C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7C52077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B68F2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 13:09:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="p3FQxIBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbfDZNIa (ORCPT
+        id S1726198AbfDZNJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 09:08:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35874 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726013AbfDZNIa (ORCPT
+        Fri, 26 Apr 2019 09:09:53 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.114]:38561 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726013AbfDZNJw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 09:08:30 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3QD50sD158820
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:08:29 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s410y5gpa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 09:08:19 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Fri, 26 Apr 2019 14:07:43 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 26 Apr 2019 14:07:39 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3QD7cmY30212172
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Apr 2019 13:07:38 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8F43442045;
-        Fri, 26 Apr 2019 13:07:38 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 465114203F;
-        Fri, 26 Apr 2019 13:07:38 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 26 Apr 2019 13:07:38 +0000 (GMT)
-Date:   Fri, 26 Apr 2019 15:07:36 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Prarit Bhargava <prarit@redhat.com>, Jessica Yu <jeyu@kernel.org>
-Cc:     linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Cathy Avery <cavery@redhat.com>
-Subject: [-next] system hangs likely due to "modules: Only return -EEXIST for
- modules that have finished loading"
+        Fri, 26 Apr 2019 09:09:52 -0400
+Received: from [85.158.142.201] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.eu-central-1.aws.symcld.net id D1/D0-24742-D1303CC5; Fri, 26 Apr 2019 13:09:49 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1VSf0wTZxjud3e9noQjH0XDa7VGmxkz5SrVqOc
+  fJo4/ljPBZIvRGYORgx60Wg5oi8KWKJAgikGXLBIhCmwpKKAB6zYV8QfFH9VEVEQRAwawzqzE
+  jYBRjEbsxxXn/nve53ne533f5OVo4wBr4pRCr+JWZZeFjWEcy9nVgpnuSksebYoRex8EKPHoc
+  IgV3/QeoMSH7cdZ8d2zEoN4sP2IXmx7ewatN0htE6WsdLFm0CD5mw+y0pVXjazU+vsjRrp8fp
+  KSJvwLvjNs0zvVjNzCdL1jNNxJ59XGF450Bg3FqC+uAsVwDG6l4X1jEyKFEVdR8LTmPKUVwwg
+  mW/ojyiyOxSL8EhxiCZ6Nd0Ho1k2amGjcS0HZ1JSBCAlYgs4HVynNtAGqWomJ4BUQLG2exgxe
+  DOf+Oq2vQBzHYxmmBjcR2oi/gfKSSorQs3AKnCr/ntAIm+F1Sct0J40T4WmobjodMAZfxz1aw
+  3Pg7+cf9ZpfgdulT5DGJ8HdvhAikYAXQeUQo9Fm6Kk7FLVshHcjbQy5BPAAglrfYcNM743um1
+  GTCL5DZdHmPOir/iM6dz4cCV6jtOYGFg4HjrHaLZkwduJuNGgBNFcORyfcp6GiY1CvXZME9Zf
+  G2Z/R1zVfHFfzhaThZdD46yhNMI/j4XZ1iKlHTDMSM9zObIc3R3a6BFtysmCzrRRWC6vWWOUf
+  hQyrUiBkKqrXLUdEq7zHY/UU5WS67FZV8fpR5NPs+ezaC6j+ZHYAzeUoyxx+33ggzRiXkWsvc
+  sgexw53gUvxBNB8jrMAv4bqSjPGu5VspTDL6Yq864wMXKxlNl9NZN6TJ+d4nNmadAcJ3LXfhk
+  /QRkbNVRVTIp9FTJiYHAXq54iZp+9BZlMCj3Q6nTE2T3HnOL3/18MokUOWBF4lKbFO1ft5Uji
+  yBBVZwt4UIEt45f8kUzHKnxxKyS1/9OZG+HFXj3vP5rM/hepW6exb9v2zMzW9oeGlVLW9WKq0
+  6Y6aU/fndwtLuhe+nTjbOdA+sbg/pfR6S3pQ5Z//+WLeqd5d9bv95W168d/te5Ni22v71iVfi
+  ttQsTnrK9Po2DNfybbr374crD6ZtrXoB1T2sb/oQ+pea4d9JN7CeByybSnt9sifADAHluvvAw
+  AA
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-23.tower-246.messagelabs.com!1556284188!5196372!1
+X-Originating-IP: [104.47.6.54]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 21430 invoked from network); 26 Apr 2019 13:09:48 -0000
+Received: from mail-ve1eur02lp2054.outbound.protection.outlook.com (HELO EUR02-VE1-obe.outbound.protection.outlook.com) (104.47.6.54)
+  by server-23.tower-246.messagelabs.com with AES256-SHA256 encrypted SMTP; 26 Apr 2019 13:09:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WdkaOm5aXI6nESQvvlWQ53pd29tP2ZvaMbF08tvHdGI=;
+ b=p3FQxIBrrJCa+mg31rHjOtPvPpyUPWVwKznUinFzIfDitCRaHzWgrWUOsZQTGT0XWg9N6qB3bSBsjioraEQoE+kxBBeH4rL6iXJ1rU+zAZ07AW7Ni7OoO/897C3mYp0qL6lbX6OOpCv9Gmes9OTuRCfSiDVIsVRGYLv04GQMYO0=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1201.EURPRD10.PROD.OUTLOOK.COM (10.169.155.145) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.12; Fri, 26 Apr 2019 13:09:46 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::45b2:d8a8:e1c:b971]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::45b2:d8a8:e1c:b971%5]) with mapi id 15.20.1835.010; Fri, 26 Apr 2019
+ 13:09:46 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Logesh Kolandavel <logesh.kolandavel@timesys.com>,
+        Support Opensource <Support.Opensource@diasemi.com>
+CC:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] ASoC: da7213: fix DAI_CLK_EN register bit overwrite
+Thread-Topic: [PATCH] ASoC: da7213: fix DAI_CLK_EN register bit overwrite
+Thread-Index: AQHU+yq7Y7Mbpm6Qg0e28e7V2NTrjaZOaYiw
+Date:   Fri, 26 Apr 2019 13:09:46 +0000
+Message-ID: <AM5PR1001MB0994D9131132C60AB4DAB7F3803E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190425054249.5675-1-logesh.kolandavel@timesys.com>
+In-Reply-To: <20190425054249.5675-1-logesh.kolandavel@timesys.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.50]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c0353017-2192-4abf-a77e-08d6ca4874fc
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:AM5PR1001MB1201;
+x-ms-traffictypediagnostic: AM5PR1001MB1201:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-microsoft-antispam-prvs: <AM5PR1001MB120117B9EC35681376DA3AFCA73E0@AM5PR1001MB1201.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 001968DD50
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(39860400002)(136003)(346002)(199004)(189003)(256004)(11346002)(6436002)(97736004)(229853002)(3846002)(2906002)(33656002)(4326008)(14444005)(8936002)(54906003)(14454004)(66946007)(186003)(66446008)(76176011)(64756008)(66556008)(66476007)(6246003)(6116002)(73956011)(68736007)(26005)(110136005)(6506007)(72206003)(478600001)(53546011)(76116006)(52536014)(55236004)(316002)(102836004)(53936002)(446003)(6636002)(99286004)(486006)(7736002)(305945005)(25786009)(74316002)(8676002)(66066001)(81166006)(7696005)(81156014)(55016002)(71200400001)(71190400001)(86362001)(476003)(9686003)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1201;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ghIu83GVw9J555F3D6oBc4JOC6hxsNVGoAXkJUMGbHgzV2ulGL2nWKumfbeiTxuyQ7znmNK/wzpF4otapCrvuzLlIsIGx1biLweCVL1BxkQTRvQ47cJXG7VlWhZ7t4lT1TFQa/W92nX5QmrdaW++Bm9RYxPr+wmNHNbNky7F4PMpyHdZ48z/X+4RfHuue3nM9/Y/0l9Alqe5CQvsUiNUBoO7U8t3jFTZMjzazrQQq3I8UPWbuS9MGh5lJ51975kABd9qtQ4+87nGPa4nAP3SAevGFRUQMQ83a96TQPuBnlWLp+Zs4m1H1Abm4O6W4g2p20Y6i91FPmDtAmtEYe1ssUHPA7kOv7m+CGceJ4rfUdCm+8twe9rqVtOwI3hRoG3/q7pCzGAld+ELv3kmaGDDi6M3YwtZoJBGXO3O37IAXcI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19042613-0008-0000-0000-000002E0837B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042613-0009-0000-0000-0000224CE125
-Message-Id: <20190426130736.GB8646@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904260090
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0353017-2192-4abf-a77e-08d6ca4874fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2019 13:09:46.6993
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1201
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Prarit,
+On 25 April 2019 06:43, Logesh Kolandavel wrote:
 
-it looks like your commit f9a75c1d717f ("modules: Only return -EEXIST
-for modules that have finished loading") _sometimes_ causes hangs on
-s390. This is unfortunately not 100% reproducible, however the
-mentioned commit seems to be the only relevant one in modules.c.
+> From: Logesh <logesh.kolandavel@timesys.com>
+>=20
+> If the da7213 codec is configured as Master with the DAPM power down
+> delay time set, 'snd_soc_component_write' function overwrites the
+> DAI_CLK_EN bit of DAI_CLK_MODE register which leads to audio play
+> only once until it re-initialize after codec power up.
+>=20
+> Signed-off-by: Logesh <logesh.kolandavel@timesys.com>
+> ---
+>  sound/soc/codecs/da7213.c | 4 +++-
+>  sound/soc/codecs/da7213.h | 2 ++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/sound/soc/codecs/da7213.c b/sound/soc/codecs/da7213.c
+> index 92d006a5283e..306e01684bda 100644
+> --- a/sound/soc/codecs/da7213.c
+> +++ b/sound/soc/codecs/da7213.c
+> @@ -1305,7 +1305,9 @@ static int da7213_set_dai_fmt(struct snd_soc_dai
+> *codec_dai, unsigned int fmt)
+>  	/* By default only 64 BCLK per WCLK is supported */
+>  	dai_clk_mode |=3D DA7213_DAI_BCLKS_PER_WCLK_64;
+>=20
+> -	snd_soc_component_write(component, DA7213_DAI_CLK_MODE,
+> dai_clk_mode);
+> +	snd_soc_component_update_bits(component,
+> DA7213_DAI_CLK_MODE,
+> +			    DA7213_DAI_CLK_POL_MASK |
+> DA7213_DAI_WCLK_POL_MASK,
 
-What I see is a hanging system with messages like this on the console:
+We'll also need to add the mask DA7213_DAI_BCLKS_PER_WCLK_MASK' here as wel=
+l as
+we're setting 'DA7213_DAI_BCLKS_PER_WCLK_64' for this register just prior t=
+o
+this call. Didn't spot that in earlier conversations.
 
-[   65.876040] rcu: INFO: rcu_sched self-detected stall on CPU
-[   65.876049] rcu:     7-....: (5999 ticks this GP) idle=eae/1/0x4000000000000002 softirq=1181/1181 fqs=2729
-[   65.876078]  (t=6000 jiffies g=-471 q=17196)
-[   65.876084] Task dump for CPU 7:
-[   65.876088] systemd-udevd   R  running task        0   731    721 0x06000004
-[   65.876097] Call Trace:
-[   65.876113] ([<0000000000abb264>] __schedule+0x2e4/0x6e0)
-[   65.876122]  [<00000000001ee486>] finished_loading+0x4e/0xb0
-[   65.876128]  [<00000000001f1ed6>] load_module+0xcce/0x27a0
-[   65.876134]  [<00000000001f3af0>] __s390x_sys_init_module+0x148/0x178
-[   65.876142]  [<0000000000ac0766>] system_call+0x2aa/0x2c8
-
-crash's backtrace of this task looks like this:
-
-PID: 731    TASK: 1e79ba000         CPU: 7   COMMAND: "systemd-udevd"
- LOWCORE INFO:
-  -psw      : 0x0704c00180000000 0x0000000000ab666a
-  -function : memcmp at ab666a
-  -prefix   : 0x7fe32000
-  -cpu timer: 0x7fffff5784d0f048
-  -clock cmp: 0xd60757081cd70d00
-  -general registers:
-     0x0000000000000009 0x0000000000000009
-     0x000003ff80347321 000000000000000000
-     0x000003ff8034f321 000000000000000000
-     0x000000000000001e 0x000003ff8c592708
-     0x000003e0047da900 0x000003ff8034f318
-     0x0000000000000001 0x0000000000000009
-     0x000003ff80347300 0x0000000000ad81b8
-     0x00000000001ee062 0x000003e004357cb0
-[...]
- #0 [3e004357cf0] load_module at 1f1eb0
- #1 [3e004357dd0] __se_sys_init_module at 1f3af0
- #2 [3e004357ea8] system_call at ac0766
- PSW:  0705000180000000 000003ff8c27ad3e (user space)
- GPRS: 000002aa280d2fb0 000003ff8c27ad3c 0000000000000080 00000000000035fd
-       000003ff8c592708 000002aa280c8770 0000000000000000 000002aa280d7130
-       0000000000020000 000002aa28915760 000003ff8c592708 000002aa280c00b0
-       000003ff8c8fff80 000002aa280c00b0 000003ff8c58a456 000003ffe9cfde90
-
-I did not look any further into the dump, however since the commit
-touches exactly the code path which seems to be looping... ;)
+> +			    dai_clk_mode);
+>  	snd_soc_component_update_bits(component, DA7213_DAI_CTRL,
+> DA7213_DAI_FORMAT_MASK,
+>  			    dai_ctrl);
+>  	snd_soc_component_write(component, DA7213_DAI_OFFSET,
+> dai_offset);
+> diff --git a/sound/soc/codecs/da7213.h b/sound/soc/codecs/da7213.h
+> index 5a78dba1dcb5..9d31efc3cfe5 100644
+> --- a/sound/soc/codecs/da7213.h
+> +++ b/sound/soc/codecs/da7213.h
+> @@ -181,7 +181,9 @@
+>  #define DA7213_DAI_BCLKS_PER_WCLK_256				(0x3 << 0)
+>  #define DA7213_DAI_BCLKS_PER_WCLK_MASK
+> 	(0x3 << 0)
+>  #define DA7213_DAI_CLK_POL_INV					(0x1 << 2)
+> +#define DA7213_DAI_CLK_POL_MASK
+> 	(0x1 << 2)
+>  #define DA7213_DAI_WCLK_POL_INV					(0x1 << 3)
+> +#define DA7213_DAI_WCLK_POL_MASK				(0x1 << 3)
+>  #define DA7213_DAI_CLK_EN_MASK					(0x1 << 7)
+>=20
+>  /* DA7213_DAI_CTRL =3D 0x29 */
+> --
+> 2.21.0
 
