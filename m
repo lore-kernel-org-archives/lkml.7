@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD91FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8F2C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8142A206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1CB206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfDZGpy (ORCPT
+        id S1726311AbfDZGqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 02:45:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55144 "EHLO
+        Fri, 26 Apr 2019 02:46:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55204 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725893AbfDZGpx (ORCPT
+        by vger.kernel.org with ESMTP id S1725893AbfDZGqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 02:45:53 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3Q6ck8I069858
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 02:45:52 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s3sa58npa-1
+        Fri, 26 Apr 2019 02:46:00 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3Q6ciFF075566
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 02:45:59 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s3u2ymn1m-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 02:45:51 -0400
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 02:45:59 -0400
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Fri, 26 Apr 2019 07:45:49 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 26 Apr 2019 07:45:57 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 26 Apr 2019 07:45:47 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3Q6jkGG49873026
+        Fri, 26 Apr 2019 07:45:54 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3Q6jrm050855956
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Apr 2019 06:45:46 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78CFE4203F;
-        Fri, 26 Apr 2019 06:45:46 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E130642045;
-        Fri, 26 Apr 2019 06:45:44 +0000 (GMT)
+        Fri, 26 Apr 2019 06:45:53 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5DE85A405B;
+        Fri, 26 Apr 2019 06:45:53 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6EDBA405F;
+        Fri, 26 Apr 2019 06:45:51 +0000 (GMT)
 Received: from skywalker.linux.ibm.com (unknown [9.193.89.254])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 26 Apr 2019 06:45:44 +0000 (GMT)
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 26 Apr 2019 06:45:51 +0000 (GMT)
 X-Mailer: emacs 26.1 (via feedmail 11-beta-1 Q)
 From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 To:     Christophe Leroy <christophe.leroy@c-s.fr>,
@@ -55,17 +55,17 @@ To:     Christophe Leroy <christophe.leroy@c-s.fr>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 05/11] powerpc/mm: get rid of mm_ctx_slice_mask_xxx()
-In-Reply-To: <cc95821273df454eb146871bf6e5eeabef7c4ac9.1556202029.git.christophe.leroy@c-s.fr>
-References: <cover.1556202028.git.christophe.leroy@c-s.fr> <cc95821273df454eb146871bf6e5eeabef7c4ac9.1556202029.git.christophe.leroy@c-s.fr>
-Date:   Fri, 26 Apr 2019 12:07:28 +0530
+Subject: Re: [PATCH v2 07/11] powerpc/mm: remove a couple of #ifdef CONFIG_PPC_64K_PAGES in mm/slice.c
+In-Reply-To: <cf8573caf0896a7a1a7fee72280ca09f7096923b.1556202029.git.christophe.leroy@c-s.fr>
+References: <cover.1556202028.git.christophe.leroy@c-s.fr> <cf8573caf0896a7a1a7fee72280ca09f7096923b.1556202029.git.christophe.leroy@c-s.fr>
+Date:   Fri, 26 Apr 2019 12:10:59 +0530
 MIME-Version: 1.0
 Content-Type: text/plain
 X-TM-AS-GCONF: 00
-x-cbid: 19042606-0020-0000-0000-000003365EFE
+x-cbid: 19042606-4275-0000-0000-0000032E6D18
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042606-0021-0000-0000-00002188CE73
-Message-Id: <87wojh9srb.fsf@linux.ibm.com>
+x-cbparentid: 19042606-4276-0000-0000-0000383DBC47
+Message-Id: <87tvel9slg.fsf@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-26_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -80,101 +80,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
-> Now that slice_mask_for_size() is in mmu.h, the mm_ctx_slice_mask_xxx()
-> are not needed anymore, so drop them. Note that the 8xx ones where
-> not used anyway.
+> This patch replaces a couple of #ifdef CONFIG_PPC_64K_PAGES
+> by IS_ENABLED(CONFIG_PPC_64K_PAGES) to improve code maintainability.
 >
 
 Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
 > Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > ---
->  arch/powerpc/include/asm/book3s/64/mmu.h     | 32 ++++------------------------
->  arch/powerpc/include/asm/nohash/32/mmu-8xx.h | 17 ---------------
->  2 files changed, 4 insertions(+), 45 deletions(-)
+>  arch/powerpc/mm/slice.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 >
-> diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/powerpc/include/asm/book3s/64/mmu.h
-> index ad00355f874f..e3d7f1404e20 100644
-> --- a/arch/powerpc/include/asm/book3s/64/mmu.h
-> +++ b/arch/powerpc/include/asm/book3s/64/mmu.h
-> @@ -179,45 +179,21 @@ static inline void mm_ctx_set_slb_addr_limit(mm_context_t *ctx, unsigned long li
->  	ctx->hash_context->slb_addr_limit = limit;
->  }
+> diff --git a/arch/powerpc/mm/slice.c b/arch/powerpc/mm/slice.c
+> index 840c4118a185..ace97d953040 100644
+> --- a/arch/powerpc/mm/slice.c
+> +++ b/arch/powerpc/mm/slice.c
+> @@ -606,14 +606,13 @@ unsigned long slice_get_unmapped_area(unsigned long addr, unsigned long len,
+>  	newaddr = slice_find_area(mm, len, &potential_mask,
+>  				  psize, topdown, high_limit);
 >  
 > -#ifdef CONFIG_PPC_64K_PAGES
-> -static inline struct slice_mask *mm_ctx_slice_mask_64k(mm_context_t *ctx)
-> -{
-> -	return &ctx->hash_context->mask_64k;
-> -}
+> -	if (newaddr == -ENOMEM && psize == MMU_PAGE_64K) {
+> +	if (IS_ENABLED(CONFIG_PPC_64K_PAGES) && newaddr == -ENOMEM &&
+> +	    psize == MMU_PAGE_64K) {
+>  		/* retry the search with 4k-page slices included */
+>  		slice_or_mask(&potential_mask, &potential_mask, compat_maskp);
+>  		newaddr = slice_find_area(mm, len, &potential_mask,
+>  					  psize, topdown, high_limit);
+>  	}
 > -#endif
-> -
-> -static inline struct slice_mask *mm_ctx_slice_mask_4k(mm_context_t *ctx)
-> -{
-> -	return &ctx->hash_context->mask_4k;
-> -}
-> -
-> -#ifdef CONFIG_HUGETLB_PAGE
-> -static inline struct slice_mask *mm_ctx_slice_mask_16m(mm_context_t *ctx)
-> -{
-> -	return &ctx->hash_context->mask_16m;
-> -}
-> -
-> -static inline struct slice_mask *mm_ctx_slice_mask_16g(mm_context_t *ctx)
-> -{
-> -	return &ctx->hash_context->mask_16g;
-> -}
-> -#endif
-> -
->  static inline struct slice_mask *slice_mask_for_size(mm_context_t *ctx, int psize)
->  {
->  #ifdef CONFIG_PPC_64K_PAGES
->  	if (psize == MMU_PAGE_64K)
-> -		return mm_ctx_slice_mask_64k(&ctx);
-> +		return &ctx->hash_context->mask_64k;
->  #endif
->  #ifdef CONFIG_HUGETLB_PAGE
->  	if (psize == MMU_PAGE_16M)
-> -		return mm_ctx_slice_mask_16m(&ctx);
-> +		return &ctx->hash_context->mask_16m;
->  	if (psize == MMU_PAGE_16G)
-> -		return mm_ctx_slice_mask_16g(&ctx);
-> +		return &ctx->hash_context->mask_16g;
->  #endif
->  	VM_BUG_ON(psize != MMU_PAGE_4K);
 >  
-> -	return mm_ctx_slice_mask_4k(&ctx);
-> +	return &ctx->hash_context->mask_4k;
+>  	if (newaddr == -ENOMEM)
+>  		return -ENOMEM;
+> @@ -784,9 +783,9 @@ int slice_is_hugepage_only_range(struct mm_struct *mm, unsigned long addr,
+>  	VM_BUG_ON(radix_enabled());
+>  
+>  	maskp = slice_mask_for_size(&mm->context, psize);
+> -#ifdef CONFIG_PPC_64K_PAGES
+> +
+>  	/* We need to account for 4k slices too */
+> -	if (psize == MMU_PAGE_64K) {
+> +	if (IS_ENABLED(CONFIG_PPC_64K_PAGES) && psize == MMU_PAGE_64K) {
+>  		const struct slice_mask *compat_maskp;
+>  		struct slice_mask available;
+>  
+> @@ -794,7 +793,6 @@ int slice_is_hugepage_only_range(struct mm_struct *mm, unsigned long addr,
+>  		slice_or_mask(&available, maskp, compat_maskp);
+>  		return !slice_check_range_fits(mm, &available, addr, len);
+>  	}
+> -#endif
+>  
+>  	return !slice_check_range_fits(mm, maskp, addr, len);
 >  }
->  
->  #ifdef CONFIG_PPC_SUBPAGE_PROT
-> diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-> index a0f6844a1498..beded4df1f50 100644
-> --- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-> +++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-> @@ -255,23 +255,6 @@ static inline void mm_ctx_set_slb_addr_limit(mm_context_t *ctx, unsigned long li
->  	ctx->slb_addr_limit = limit;
->  }
->  
-> -static inline struct slice_mask *mm_ctx_slice_mask_base(mm_context_t *ctx)
-> -{
-> -	return &ctx->mask_base_psize;
-> -}
-> -
-> -#ifdef CONFIG_HUGETLB_PAGE
-> -static inline struct slice_mask *mm_ctx_slice_mask_512k(mm_context_t *ctx)
-> -{
-> -	return &ctx->mask_512k;
-> -}
-> -
-> -static inline struct slice_mask *mm_ctx_slice_mask_8m(mm_context_t *ctx)
-> -{
-> -	return &ctx->mask_8m;
-> -}
-> -#endif
-> -
->  static inline struct slice_mask *slice_mask_for_size(mm_context_t *ctx, int psize)
->  {
->  #ifdef CONFIG_HUGETLB_PAGE
 > -- 
 > 2.13.3
 
