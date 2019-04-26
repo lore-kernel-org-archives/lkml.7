@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DE6C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FEDC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE542206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3C720684
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:40:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="K73oALg9"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="hdsOklcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfDZHkq (ORCPT
+        id S1726622AbfDZHky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:40:46 -0400
-Received: from first.geanix.com ([116.203.34.67]:59694 "EHLO first.geanix.com"
+        Fri, 26 Apr 2019 03:40:54 -0400
+Received: from first.geanix.com ([116.203.34.67]:59674 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbfDZHkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:40:10 -0400
+        id S1726267AbfDZHkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 03:40:09 -0400
 Received: from localhost (unknown [193.163.1.7])
-        by first.geanix.com (Postfix) with ESMTPSA id 61D72308E6C;
-        Fri, 26 Apr 2019 07:32:04 +0000 (UTC)
+        by first.geanix.com (Postfix) with ESMTPSA id DF28E308E6A;
+        Fri, 26 Apr 2019 07:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1556263924; bh=5313xtr+yNTDsmcuqCe32aXr10PBLG2AXuF4LR0QT74=;
+        t=1556263922; bh=jata0gS+b58PoHcR/CW2gpAhHvZ0Y9BcaAX0xDtVHQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=K73oALg9SpWLS7rqOazJrUv2DeyjYsvaG0bILbpx4xaHV/kTxrl3Mc7ubfubSANJC
-         RJQIDdSfg9mzU4HbOmN75iZNcG8/89BbQG5YOrUJheFHKHXTSbwxP132jBQxYFtMDC
-         DaeK3xdEpj6dI7tl+O1hAbq3mPTIkVsMbH/fMxVfVUWioJZJGzUVe5kTuRxe4mB74Y
-         hcVqhoJphpZhOZor1G24eVt9hMFQgXFFG+x/Rw6WjCFJtnCbNRjGS0wXoUg7MOD8Gv
-         CBwgUEtkEx48adEAEjFxsAUJVHbCrDLhc5wEdEQ4VkR4NR3JzP15f/HDotXIZ3A+km
-         B/dNt6ecCRxjw==
+        b=hdsOklcYIGQGxetJ6/da4dG0+pgr/em8/ppV+9xGcv8amFpYoOkz5eLSEoggWN33x
+         VFu0dL1CZyV88Dlvbj6ymQGwyMBp1uHXEF7fAeyP3RSjA/DpwBarhndI7gCW6S/oAl
+         BFsSbO1MTp+jw4Z8dlaIaM/EWVeyIkgLxNimFZ2PnHkGYZS2H7Ppzyd1+eCt34urxj
+         7MU8Sv3SDIVRhb9s7y7QQjZfg5WviuG7KzyHpe0hffdHcHdzXoBZ22AfSZ4UonEHqP
+         EwlhldwkYLlK+TBLATPa77tqREtZPITGfuhUDPMud4c3ieimRfVrZy+tEPxx40H4g3
+         /wJWbQ8iQUCcA==
 From:   Esben Haabendal <esben@geanix.com>
 To:     netdev@vger.kernel.org
 Cc:     "David S. Miller" <davem@davemloft.net>,
         Michal Simek <michal.simek@xilinx.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
-        Yang Wei <yang.wei9@zte.com.cn>,
         YueHaibing <yuehaibing@huawei.com>,
+        Yang Wei <yang.wei9@zte.com.cn>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/12] net: ll_temac: Replace bad usage of msleep() with usleep_range()
-Date:   Fri, 26 Apr 2019 09:32:29 +0200
-Message-Id: <20190426073231.4008-11-esben@geanix.com>
+Subject: [PATCH 09/12] net: ll_temac: Fix bug causing buffer descriptor overrun
+Date:   Fri, 26 Apr 2019 09:32:28 +0200
+Message-Id: <20190426073231.4008-10-esben@geanix.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190426073231.4008-1-esben@geanix.com>
 References: <20190426073231.4008-1-esben@geanix.com>
@@ -55,8 +55,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use usleep_range() to avoid problems with msleep() actually sleeping
-much longer than expected.
+As we are actually using a BD for both the skb and each frag contained in
+it, the oldest TX BD would be overwritten when there was exactly one BD
+less than needed.
 
 Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
@@ -64,18 +65,18 @@ Signed-off-by: Esben Haabendal <esben@geanix.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index def3886..a5ec8ba 100644
+index 56d8077..def3886 100644
 --- a/drivers/net/ethernet/xilinx/ll_temac_main.c
 +++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -92,7 +92,7 @@ int temac_indirect_busywait(struct temac_local *lp)
- 			WARN_ON(1);
- 			return -ETIMEDOUT;
- 		}
--		msleep(1);
-+		usleep_range(500, 1000);
- 	}
- 	return 0;
- }
+@@ -745,7 +745,7 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	start_p = lp->tx_bd_p + sizeof(*lp->tx_bd_v) * lp->tx_bd_tail;
+ 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+ 
+-	if (temac_check_tx_bd_space(lp, num_frag)) {
++	if (temac_check_tx_bd_space(lp, num_frag + 1)) {
+ 		if (!netif_queue_stopped(ndev))
+ 			netif_stop_queue(ndev);
+ 		return NETDEV_TX_BUSY;
 -- 
 2.4.11
 
