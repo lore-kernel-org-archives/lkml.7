@@ -1,140 +1,119 @@
 Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4551FC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BF2C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15866206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556272290;
-	bh=oHb6MF8lC+JY413MjCf3LDQb7TZIAPF1qTlZ2YvlOBQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QO/yRf3h3sKBgSM6WfWO4KKDbetwwWRWE1LcSdVe/RNqTgy5i3h4ko79Q7Xkx1sYa
-	 qq/j4/Kx2sLrIT5iITHVCSm26Yh0W8bJTyztwaHxwj+70nwj6T3Ob/ED13EPVxeXLY
-	 KgzKDj/TzQxEEHAZ3QDz2oNjawaKoShFiPCOmYOs=
+	by mail.kernel.org (Postfix) with ESMTP id 8F94C2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfDZJv3 (ORCPT
+        id S1726410AbfDZJvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:51:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52442 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfDZJv2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:51:28 -0400
-Received: by mail-wm1-f68.google.com with SMTP id j13so3057871wmh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 02:51:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eIBUFNukdDQCSXCFAOGIysYD96g9fxkE9hYS/NQtUbQ=;
-        b=Mub1JIm+6yGSpxTJNCw09BR55aYZEz/mdljtny3p9Kl3Sxic8HLWMO8ek+qIG8eEza
-         cCcSmCIqV4QKy0e5G6qtI6GW6KrHIpJ050qDWAkSYgtRF1QAMMQpKbgTW+wvN4E1PoDh
-         04NnQ+9XpWxen2MAs1BV8gdi1E9vsBWgYnEjTVWp7uz263b9V98prHsR+LqmLzU1fKh5
-         JSXTkEuYSEK6Agao9yYdik0e2P8jXpLWHDEy15jyP+xI54NZj2p7fmc6a+rB8ja+idAM
-         VC3sXXxkkLHGNr0biiAuL0/EFYtp6WLLCe63YIHIzIpi5gp8OPyR94PeIuvMoMcuMCS3
-         dn8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eIBUFNukdDQCSXCFAOGIysYD96g9fxkE9hYS/NQtUbQ=;
-        b=nGzUVoBRI5yX+jcg8DFtA7Www6Iwy1Wcbjr4ex1AwfryahRcc+DombbPsrJ4KlBzEI
-         /5EoZ962hwCi+G59KLag5kq91qMa2GjHSR1mbGiOfx04a6Yohc5q1/R8IdxDCvdQLVg/
-         +Esa+kGNpXEK8IbHXeDWqX6Z2owEE4wem+XMmF9WfRcQtH0Usz4l6Dxt5rv05gHgNNcF
-         gbyxnmJO+YkY1/tfEcQP6QIIQ0nwU6+cwVJpsrd0cgABVkDv9ma7/O03XRZtq7ro4hIV
-         35bgTpiVbeF7HYaq+3vgvzb0rXujKADWf8AE/ztllF89ez32h/yTLCiRQYKUfe3xjV4S
-         3OYQ==
-X-Gm-Message-State: APjAAAWD28UJzTQFU3ZFpseafmixXJLsthJKsMUdqMNSpc7oeUt8fm+6
-        EmZBCfuvo8rxqEO27mi8GY4=
-X-Google-Smtp-Source: APXvYqxPsta3t3N5z6tP32HWxCwj88fuhqWnRzW4fIyVk/IzfbALojztbWz7GohMblYv84WJwtnntA==
-X-Received: by 2002:a1c:6342:: with SMTP id x63mr7149854wmb.58.1556272286920;
-        Fri, 26 Apr 2019 02:51:26 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id y125sm36631305wmc.39.2019.04.26.02.51.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 02:51:26 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 11:51:23 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Aubrey Li <aubrey.intel@gmail.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
+        Fri, 26 Apr 2019 05:51:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55025 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbfDZJvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 05:51:40 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A4092285BE;
+        Fri, 26 Apr 2019 09:51:40 +0000 (UTC)
+Received: from localhost (ovpn-12-17.pek2.redhat.com [10.72.12.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7AA9010018E0;
+        Fri, 26 Apr 2019 09:51:37 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 17:51:34 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>, dyoung@redhat.com,
+        Kairui Song <kasong@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Fr?d?ric Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-Message-ID: <20190426095123.GE126896@gmail.com>
-References: <cover.1556025155.git.vpillai@digitalocean.com>
- <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
- <20190424140013.GA14594@sinkpad>
- <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
- <20190425095508.GA8387@gmail.com>
- <20190425144619.GX18914@techsingularity.net>
- <20190425185343.GA122353@gmail.com>
- <20190425213145.GY18914@techsingularity.net>
+        linux-kernel@vger.kernel.org, Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
+ mapping before accessing it
+Message-ID: <20190426095134.GP3584@localhost.localdomain>
+References: <20190419101733.GA10324@zn.tnic>
+ <20190419105014.GE11060@MiWiFi-R3L-srv>
+ <20190419112801.GB10324@zn.tnic>
+ <20190419113621.GD10324@zn.tnic>
+ <20190422143346.GD3584@localhost.localdomain>
+ <20190422151723.GD21457@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425213145.GY18914@techsingularity.net>
+In-Reply-To: <20190422151723.GD21457@zn.tnic>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 26 Apr 2019 09:51:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Mel Gorman <mgorman@techsingularity.net> wrote:
-
-> > Interesting.
-> > 
-> > Here too I'm wondering whether the scheduler could do something to 
-> > improve the saturated case: which *is* an important workload, as kernel 
-> > hackers tend to over-load their systems a bit when building kernel, to 
-> > make sure the system is at least 100% utilized. ;-)
-> > 
+On 04/22/19 at 05:17pm, Borislav Petkov wrote:
+> + hpa
 > 
-> Every so often I try but I never managed to settle on a heuristic that 
-> helped this case without breaking others. The biggest hurdle is that 
-> typically things are better if migrations are low but it's hard to do 
-> that in a way that does not also stack tasks on the same CPUs 
-> prematurely.
+> On Mon, Apr 22, 2019 at 10:33:46PM +0800, Baoquan He wrote:
+> > On 04/19/19 at 01:36pm, Borislav Petkov wrote:
+> > > On Fri, Apr 19, 2019 at 01:28:01PM +0200, Borislav Petkov wrote:
+> > > > Read again what I said: "should all be passed through boot_params".
+> > > > Which means, boot_params should be extended with a field of a flag to
+> > > > say: "this is a kexec'ed kernel".
+> > > 
+> > > And by that I mean similar to the XLF_EFI_KEXEC mechanism. The first
+> > > kernel or kexec(1) should prepare the info needed by the kexec'ed
+> > > kernel.
+> > 
+> > We have set the loader type to '0x0D << 4' for kexec specifically, in both
+> > kexec_load and kexec_file_load. We can check this to identify if it's
+> > kexec-ed kernel or not.
+> > 
+> > Update patch with it?
+> > 
+> > static void *bzImage64_load(struct kimage *image, char *kernel,
+> >                             unsigned long kernel_len, char *initrd,
+> >                             unsigned long initrd_len, char *cmdline,
+> >                             unsigned long cmdline_len)
+> > {
+> > 
+> > 	...
+> > 	/* bootloader info. Do we need a separate ID for kexec kernel loader? */
+> >         params->hdr.type_of_loader = 0x0D << 4;
+> 
+> That's already documented in Documentation/x86/boot.txt
+> 
+> Field name:     type_of_loader
+> Type:           write (obligatory)
+> Offset/size:    0x210/1
+> Protocol:       2.00+
+> 
+> 	...
+> 
+>         D  kexec-tools
+> 
+> And yes, the question in the code is still valid: do we need a separate ID.
+> 
+> I'd say no and we'll simply call 0xD all kernels loaded using a
+> kexec-type syscall.
 
-So instead of using a heuristic (which are fragile and most of them are 
-also annoyingly non-deterministic and increase overall noise and make 
-measurements harder) I'd suggest using SCHED_BATCH just as a hardcore 
-toggle to maximize for CPU-bound throughput.
+Yes, agree. Time has proved we don't need a separate ID, just 0x0D is
+fine for both kexec/kdump. We can clear it away now.
 
-It's not used very much, but the kernel build could use it by default 
-(i.e. we could use a "chrt -b" call within the main Makefile), so it 
-would be the perfect guinea pig and wouldn't affect anything else.
+I can make a patch to add a bit into xloadflags, to indicate that this
+is kexec-ed kernel. It can help to differentiate kexec-ed kernel from
+kdump kernel. As we know, kdump kernel is recognized with /proc/vmcore
+existence. While during kernel initialization stage, or /proc/vmcore is
+not validated in some cases, the adding bit may help.
 
-I.e. we could use SCHED_BATCH to maximize kernel build speed, with no no 
-regard to latency (within SCHED_BATCH workloads). I suspect this will 
-also maximize bandwidth of a lot of other real-world, highly parallel but 
-interacting processing workloads.
+Thoughts?
 
-[ I'd even be willing to rename it to SCHED_KBUILD, internally. ;-) ]
-
-Thanks,
-
-	Ingo
+Thanks
+Baoquan
