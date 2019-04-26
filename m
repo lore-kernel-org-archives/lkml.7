@@ -2,95 +2,263 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB31C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BDBC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 234D3206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF352084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNTWjE07"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qpqMTA86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfDZGsx (ORCPT
+        id S1726119AbfDZGtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 02:48:53 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44239 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfDZGsw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 02:48:52 -0400
-Received: by mail-qt1-f193.google.com with SMTP id s10so2928821qtc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2019 23:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0POyLSgTrR0cPu+lRcZ2Dj16pZj2mLzXP6Wsc0XCaug=;
-        b=dNTWjE07dMd4kkvHt8BeIn1upbMveHLGyVFM0eJaRNYx02mC0zMH5QAXKsoixxNvnJ
-         Uc7aefhoersCDNe/CwQ7FfvsNc81dI2RTtTtPdwclV4yigCfg0YnOPFpbqFjb74wPoMi
-         JJeUPFPb7aCEfoZAI/ZJxXFtyCIDfEjv+M6WNnjwWkrfvebCLgM9E3dO+exxlJwuaxPE
-         SAQp9A6oZhx+O49R+rPhQlq5Gn1kQ3DBqWBhYxA9czSjwB+4j/6Ewqo+DtoF+fkC8E7U
-         fVgoeSN70m4M7hH1xGlu4pKAv58rvFqABv4Y6CB4Xato/dPQuYzIG1sRTPqOD/+xMY1L
-         IfLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0POyLSgTrR0cPu+lRcZ2Dj16pZj2mLzXP6Wsc0XCaug=;
-        b=Tzv4ACMK2WYtSJ+HZq3BKEKUhklWcDS806QTy05ExmFJyiNmN2tAsy8TleNo4t5YfC
-         GxkPqYp3f2TjratCl6PqeZVHzHjyKLdu6jmHzBH4zNKZEfqvvV2D6c97VPRAqarsG3Xh
-         2Cse98UmO0xLMPznj0hgRuP+yek+uQ1Ls6MlZtu5iWYvmKFUsY+Js38fOIrt1sVYdcjY
-         9KonkLtSthakFyWpAlVaGJQBB41IM/Xg6dz+bRdzHIw8NXtIWF7awKxfgv0gAycJFFzy
-         sAcSgA/nZXp3MJs0721Cl8hXTSvyuKB2OzJ7U1vK6Ahjd+nnIMnxVU1LCmaJAgDqY9ao
-         1wKQ==
-X-Gm-Message-State: APjAAAWq9fFuh6Devl8fP3xkwLpe6G7BTvzHs6gtKB6xxT+STAOARydD
-        JcpAJag26lluJrLPuA1hFnQWryYKWwOvLc8R+chTOM6Mc20dzg==
-X-Google-Smtp-Source: APXvYqwh4G9XLOqAT4TREBAqZ3V41J1YYWF85s9uaFjB1tB7sVMD0huYw/HSzOsQVaiqaczBMiFcJe+2DhVQFwMKYJc=
-X-Received: by 2002:ac8:6c8:: with SMTP id j8mr16047807qth.57.1556261331629;
- Thu, 25 Apr 2019 23:48:51 -0700 (PDT)
+        Fri, 26 Apr 2019 02:49:47 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:37093 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbfDZGtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 02:49:46 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44r4RX0nBBz9v1Sk;
+        Fri, 26 Apr 2019 08:49:44 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=qpqMTA86; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id xfvZg8Ew45Gg; Fri, 26 Apr 2019 08:49:44 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44r4RW6b7Rz9v1SV;
+        Fri, 26 Apr 2019 08:49:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1556261383; bh=GzEdmEEEkZVWRdKf3SoBkKMtHsbYKYU+G+/lsHQcejY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=qpqMTA86avVGzl6UZEUdrqJds1JqjAlOgQ0FBt8FqRY1273sLxP+8FkH+p0+wPK5U
+         tSvlWaeVfWOeI2rHvQwlLufBUT0EsdqbYlHzpPpvnKA6NPQzfesQIAft/jDvSVcCrK
+         uaR+Z5bqS8vtUnRGUtytC6rrN7mpkHBCi93ow2h0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D67218B836;
+        Fri, 26 Apr 2019 08:49:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 2DOfGyFpociC; Fri, 26 Apr 2019 08:49:44 +0200 (CEST)
+Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.6])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A6AA88B82F;
+        Fri, 26 Apr 2019 08:49:44 +0200 (CEST)
+Subject: Re: [PATCH v2 11/11] powerpc/mm: drop slice DEBUG
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <cover.1556202028.git.christophe.leroy@c-s.fr>
+ <f263887b4ca31f4bb0fe77823e301c28ba27c796.1556202029.git.christophe.leroy@c-s.fr>
+ <87lfzx9sfc.fsf@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <eccb51f0-9696-a2b1-8fc2-aeb79f53e382@c-s.fr>
+Date:   Fri, 26 Apr 2019 08:49:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190424101934.51535-1-duyuyang@gmail.com> <20190424101934.51535-21-duyuyang@gmail.com>
- <20190425194831.GV12232@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190425194831.GV12232@hirez.programming.kicks-ass.net>
-From:   Yuyang Du <duyuyang@gmail.com>
-Date:   Fri, 26 Apr 2019 14:48:37 +0800
-Message-ID: <CAHttsrbC5My5n0nbu-OP31X-118bfEiemEn8neP9zxVwfErkBw@mail.gmail.com>
-Subject: Re: [PATCH 20/28] locking/lockdep: Refactorize check_noncircular and check_redundant
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     will.deacon@arm.com, Ingo Molnar <mingo@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
-        Frederic Weisbecker <frederic@kernel.org>, tglx@linutronix.de,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87lfzx9sfc.fsf@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for review.
 
-On Fri, 26 Apr 2019 at 03:48, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Apr 24, 2019 at 06:19:26PM +0800, Yuyang Du wrote:
-> > These two functions now handle different check results themselves. A new
-> > check_path function is added to check whether there is a path in the
-> > dependency graph. No functional change.
->
-> This looks good, however I completely forgot we still had the redundant
-> thing.
->
-> It was added for cross-release (which has since been reverted) which
-> would generate a lot of redundant links (IIRC) but having it makes the
-> reports more convoluted -- basically, if we had an A-B-C relation, then
-> A-C will not be added to the graph because it is already covered. This
-> then means any report will include B, even though a shorter cycle might
-> have been possible.
->
-> Maybe we should make the whole redundant check depend on LOCKDEP_SMALL
-> for now.
 
-Sure. I can do that.
+Le 26/04/2019 à 08:44, Aneesh Kumar K.V a écrit :
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> 
+>> slice is now an improved functionnality. Drop the DEBUG stuff.
+>>
+> 
+> I would like to keep that. I helped a lot when moving address ranges and
+> it should not have any runtime impact.
+
+Ok for me.
+
+Christophe
+
+> 
+> 
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+>>   arch/powerpc/mm/slice.c | 62 ++++---------------------------------------------
+>>   1 file changed, 4 insertions(+), 58 deletions(-)
+>>
+>> diff --git a/arch/powerpc/mm/slice.c b/arch/powerpc/mm/slice.c
+>> index 97fbf7b54422..a9d803738b65 100644
+>> --- a/arch/powerpc/mm/slice.c
+>> +++ b/arch/powerpc/mm/slice.c
+>> @@ -41,28 +41,6 @@
+>>   
+>>   static DEFINE_SPINLOCK(slice_convert_lock);
+>>   
+>> -#ifdef DEBUG
+>> -int _slice_debug = 1;
+>> -
+>> -static void slice_print_mask(const char *label, const struct slice_mask *mask)
+>> -{
+>> -	if (!_slice_debug)
+>> -		return;
+>> -	pr_devel("%s low_slice: %*pbl\n", label,
+>> -			(int)SLICE_NUM_LOW, &mask->low_slices);
+>> -	pr_devel("%s high_slice: %*pbl\n", label,
+>> -			(int)SLICE_NUM_HIGH, mask->high_slices);
+>> -}
+>> -
+>> -#define slice_dbg(fmt...) do { if (_slice_debug) pr_devel(fmt); } while (0)
+>> -
+>> -#else
+>> -
+>> -static void slice_print_mask(const char *label, const struct slice_mask *mask) {}
+>> -#define slice_dbg(fmt...)
+>> -
+>> -#endif
+>> -
+>>   static inline bool slice_addr_is_low(unsigned long addr)
+>>   {
+>>   	u64 tmp = (u64)addr;
+>> @@ -207,9 +185,6 @@ static void slice_convert(struct mm_struct *mm,
+>>   	unsigned long i, flags;
+>>   	int old_psize;
+>>   
+>> -	slice_dbg("slice_convert(mm=%p, psize=%d)\n", mm, psize);
+>> -	slice_print_mask(" mask", mask);
+>> -
+>>   	psize_mask = slice_mask_for_size(&mm->context, psize);
+>>   
+>>   	/* We need to use a spinlock here to protect against
+>> @@ -255,10 +230,6 @@ static void slice_convert(struct mm_struct *mm,
+>>   				(((unsigned long)psize) << (mask_index * 4));
+>>   	}
+>>   
+>> -	slice_dbg(" lsps=%lx, hsps=%lx\n",
+>> -		  (unsigned long)mm_ctx_low_slices(&mm->context),
+>> -		  (unsigned long)mm_ctx_high_slices(&mm->context));
+>> -
+>>   	spin_unlock_irqrestore(&slice_convert_lock, flags);
+>>   
+>>   	copro_flush_all_slbs(mm);
+>> @@ -485,14 +456,9 @@ unsigned long slice_get_unmapped_area(unsigned long addr, unsigned long len,
+>>   	BUG_ON(mm_ctx_slb_addr_limit(&mm->context) == 0);
+>>   	VM_BUG_ON(radix_enabled());
+>>   
+>> -	slice_dbg("slice_get_unmapped_area(mm=%p, psize=%d...\n", mm, psize);
+>> -	slice_dbg(" addr=%lx, len=%lx, flags=%lx, topdown=%d\n",
+>> -		  addr, len, flags, topdown);
+>> -
+>>   	/* If hint, make sure it matches our alignment restrictions */
+>>   	if (!fixed && addr) {
+>>   		addr = _ALIGN_UP(addr, page_size);
+>> -		slice_dbg(" aligned addr=%lx\n", addr);
+>>   		/* Ignore hint if it's too large or overlaps a VMA */
+>>   		if (addr > high_limit - len || addr < mmap_min_addr ||
+>>   		    !slice_area_is_free(mm, addr, len))
+>> @@ -538,17 +504,12 @@ unsigned long slice_get_unmapped_area(unsigned long addr, unsigned long len,
+>>   		slice_copy_mask(&good_mask, maskp);
+>>   	}
+>>   
+>> -	slice_print_mask(" good_mask", &good_mask);
+>> -	if (compat_maskp)
+>> -		slice_print_mask(" compat_mask", compat_maskp);
+>> -
+>>   	/* First check hint if it's valid or if we have MAP_FIXED */
+>>   	if (addr != 0 || fixed) {
+>>   		/* Check if we fit in the good mask. If we do, we just return,
+>>   		 * nothing else to do
+>>   		 */
+>>   		if (slice_check_range_fits(mm, &good_mask, addr, len)) {
+>> -			slice_dbg(" fits good !\n");
+>>   			newaddr = addr;
+>>   			goto return_addr;
+>>   		}
+>> @@ -558,13 +519,10 @@ unsigned long slice_get_unmapped_area(unsigned long addr, unsigned long len,
+>>   		 */
+>>   		newaddr = slice_find_area(mm, len, &good_mask,
+>>   					  psize, topdown, high_limit);
+>> -		if (newaddr != -ENOMEM) {
+>> -			/* Found within the good mask, we don't have to setup,
+>> -			 * we thus return directly
+>> -			 */
+>> -			slice_dbg(" found area at 0x%lx\n", newaddr);
+>> +
+>> +		/* Found within good mask, don't have to setup, thus return directly */
+>> +		if (newaddr != -ENOMEM)
+>>   			goto return_addr;
+>> -		}
+>>   	}
+>>   	/*
+>>   	 * We don't fit in the good mask, check what other slices are
+>> @@ -572,11 +530,9 @@ unsigned long slice_get_unmapped_area(unsigned long addr, unsigned long len,
+>>   	 */
+>>   	slice_mask_for_free(mm, &potential_mask, high_limit);
+>>   	slice_or_mask(&potential_mask, &potential_mask, &good_mask);
+>> -	slice_print_mask(" potential", &potential_mask);
+>>   
+>>   	if (addr != 0 || fixed) {
+>>   		if (slice_check_range_fits(mm, &potential_mask, addr, len)) {
+>> -			slice_dbg(" fits potential !\n");
+>>   			newaddr = addr;
+>>   			goto convert;
+>>   		}
+>> @@ -586,18 +542,14 @@ unsigned long slice_get_unmapped_area(unsigned long addr, unsigned long len,
+>>   	if (fixed)
+>>   		return -EBUSY;
+>>   
+>> -	slice_dbg(" search...\n");
+>> -
+>>   	/* If we had a hint that didn't work out, see if we can fit
+>>   	 * anywhere in the good area.
+>>   	 */
+>>   	if (addr) {
+>>   		newaddr = slice_find_area(mm, len, &good_mask,
+>>   					  psize, topdown, high_limit);
+>> -		if (newaddr != -ENOMEM) {
+>> -			slice_dbg(" found area at 0x%lx\n", newaddr);
+>> +		if (newaddr != -ENOMEM)
+>>   			goto return_addr;
+>> -		}
+>>   	}
+>>   
+>>   	/* Now let's see if we can find something in the existing slices
+>> @@ -618,8 +570,6 @@ unsigned long slice_get_unmapped_area(unsigned long addr, unsigned long len,
+>>   		return -ENOMEM;
+>>   
+>>   	slice_range_to_mask(newaddr, len, &potential_mask);
+>> -	slice_dbg(" found potential area at 0x%lx\n", newaddr);
+>> -	slice_print_mask(" mask", &potential_mask);
+>>   
+>>    convert:
+>>   	/*
+>> @@ -697,8 +647,6 @@ void slice_init_new_context_exec(struct mm_struct *mm)
+>>   	struct slice_mask *mask;
+>>   	unsigned int psize = mmu_virtual_psize;
+>>   
+>> -	slice_dbg("slice_init_new_context_exec(mm=%p)\n", mm);
+>> -
+>>   	/*
+>>   	 * In the case of exec, use the default limit. In the
+>>   	 * case of fork it is just inherited from the mm being
+>> @@ -730,8 +678,6 @@ void slice_setup_new_exec(void)
+>>   {
+>>   	struct mm_struct *mm = current->mm;
+>>   
+>> -	slice_dbg("slice_setup_new_exec(mm=%p)\n", mm);
+>> -
+>>   	if (!is_32bit_task())
+>>   		return;
+>>   
+>> -- 
+>> 2.13.3
