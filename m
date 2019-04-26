@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC02C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE41C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB6E2067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12F22067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556273001;
-	bh=K73kZUZgP7QY1o/JqTOvxr4VE5347itELPQLK9XtfIk=;
+	s=default; t=1556273004;
+	bh=DG0loXfvj9yaq+mAx7xlD/0tgG4NXVG8lcHKfbdXLNw=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=QWqLI0bCb1k7L/UCkinrB4QG5mHCqzZ/jXnlsd587HZf2+eEp4Shlv1HeNHHLNowX
-	 cSQomJbWoEPlNGxxxqJrAKJ5JoU+4eBXry8xZaN65CYZ33bq1aZFjhBvZ2jX9XrUtX
-	 5IDFUFdFQ4Hx5tFCH4Vu3NIhEX9xj2dLti7TpKVM=
+	b=yeBYj/R+kF68o1S2T3UpZBnKmuYI0BD90r83y7Tw+aLFax2ZvPFphnGv9+F4RrQWO
+	 K7w5uLEpghO28rv6o2gbTfFZ4jVEiA9KJNdAq+MlBhhNPzlgCKKREtq1BSdR89MTVJ
+	 gy+QhWhuMlQQSbR1UB+5uo7f23FbIrvmqDErzlqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfDZKDU (ORCPT
+        id S1726518AbfDZKDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:03:20 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56384 "EHLO
+        Fri, 26 Apr 2019 06:03:22 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56388 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbfDZKDT (ORCPT
+        with ESMTP id S1726294AbfDZKDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:03:19 -0400
+        Fri, 26 Apr 2019 06:03:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=KjNMNb765zI1hYk26q4soQ/GP4v3MHL0WC0oyXFM8os=; b=XakyfLm/3SYe
-        dICz3oUJxjnjFV5HSQsNV2cPyqadD9m/cKTzOReIt4wW48T6N1dHyVidB8S7LnWjFvCWyZyNwQp7L
-        nm2xaLoZa2B9Tu95bydrKb/PO9lX1ZV2zMhkbpcgKBgjksqzU0BiuruEg4LxEw9tfTjYYKta1djS0
-        6cAho=;
+        List-Archive; bh=yn1VngQRjJiFNRmEx4lMx8PUCcq5l+a7FmYTSWE1Dso=; b=NJz7NIQZnj5S
+        YL9ac3m6xaUCm/VQjQKOcqI8y55vtpcPoEguDraqeGvo5/OaSP9JdKi4+NlLMo4uxNU1u/7P+vNGB
+        Zll92WdRG1F2xntLpEPVszZ0q6ipZctd8uBh6S0MoqqHiepyj/IhB1Uq39sBCOzwqCNwRUWiuSDCG
+        6NjOw=;
 Received: from [37.205.61.202] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hJxhF-0003kh-Dh; Fri, 26 Apr 2019 10:03:09 +0000
+        id 1hJxhJ-0003kn-EC; Fri, 26 Apr 2019 10:03:13 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 5F504441D3C; Fri, 26 Apr 2019 11:03:08 +0100 (BST)
+        id 44169441D3C; Fri, 26 Apr 2019 11:03:12 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     alsa-devel@alsa-project.org,
@@ -52,11 +52,11 @@ Cc:     alsa-devel@alsa-project.org,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         od@zcrc.me
-Subject: Applied "ASoC: simple-card: Read pin switches conf from devicetree" to the asoc tree
-In-Reply-To: <20190426022550.31359-2-paul@crapouillou.net>
+Subject: Applied "ASoC: simple-card-utils: add asoc_simple_parse_pin_switches()" to the asoc tree
+In-Reply-To: <20190426022550.31359-1-paul@crapouillou.net>
 X-Patchwork-Hint: ignore
-Message-Id: <20190426100308.5F504441D3C@finisterre.ee.mobilebroadband>
-Date:   Fri, 26 Apr 2019 11:03:08 +0100 (BST)
+Message-Id: <20190426100312.44169441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri, 26 Apr 2019 11:03:12 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: simple-card: Read pin switches conf from devicetree
+   ASoC: simple-card-utils: add asoc_simple_parse_pin_switches()
 
 has been applied to the asoc tree at
 
@@ -89,37 +89,103 @@ to this mail.
 Thanks,
 Mark
 
-From 552f2d7edd38e29073f8036191320f09b534c480 Mon Sep 17 00:00:00 2001
+From 90194281ee8b01fc5a223a12ac90006ae98862c4 Mon Sep 17 00:00:00 2001
 From: Paul Cercueil <paul@crapouillou.net>
-Date: Fri, 26 Apr 2019 04:25:50 +0200
-Subject: [PATCH] ASoC: simple-card: Read pin switches conf from devicetree
+Date: Fri, 26 Apr 2019 04:25:49 +0200
+Subject: [PATCH] ASoC: simple-card-utils: add asoc_simple_parse_pin_switches()
 
-When the routing path between a widget (e.g. "Speaker") and the codec
-goes through an external amplifier, having a pin switch for this widget
-allows the amplifier to be disabled when the widget is not to be used
-(e.g. when using headphones).
+This function is a helper that permits to create pin switch controls for
+a list of widgets whose names are listed in the PREFIX "pin-switches"
+devicetree property.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/generic/simple-card.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/sound/simple_card_utils.h     |  2 +
+ sound/soc/generic/simple-card-utils.c | 57 +++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
 
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index 335ead0cbb8a..9b568f578bcd 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -464,6 +464,10 @@ static int simple_parse_of(struct asoc_simple_priv *priv)
- 	if (ret < 0)
- 		return ret;
+diff --git a/include/sound/simple_card_utils.h b/include/sound/simple_card_utils.h
+index 67dc3ee6ed01..3429888347e7 100644
+--- a/include/sound/simple_card_utils.h
++++ b/include/sound/simple_card_utils.h
+@@ -133,6 +133,8 @@ int asoc_simple_parse_routing(struct snd_soc_card *card,
+ 				      char *prefix);
+ int asoc_simple_parse_widgets(struct snd_soc_card *card,
+ 				      char *prefix);
++int asoc_simple_parse_pin_switches(struct snd_soc_card *card,
++				   char *prefix);
  
-+	ret = asoc_simple_parse_pin_switches(card, PREFIX);
+ int asoc_simple_init_jack(struct snd_soc_card *card,
+ 			       struct asoc_simple_jack *sjack,
+diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+index db1458a19985..f4c6375d11c7 100644
+--- a/sound/soc/generic/simple-card-utils.c
++++ b/sound/soc/generic/simple-card-utils.c
+@@ -430,6 +430,63 @@ int asoc_simple_parse_widgets(struct snd_soc_card *card,
+ }
+ EXPORT_SYMBOL_GPL(asoc_simple_parse_widgets);
+ 
++int asoc_simple_parse_pin_switches(struct snd_soc_card *card,
++				   char *prefix)
++{
++	const unsigned int nb_controls_max = 16;
++	const char **strings, *control_name;
++	struct snd_kcontrol_new *controls;
++	struct device *dev = card->dev;
++	unsigned int i, nb_controls;
++	char prop[128];
++	int ret;
++
++	if (!prefix)
++		prefix = "";
++
++	snprintf(prop, sizeof(prop), "%s%s", prefix, "pin-switches");
++
++	if (!of_property_read_bool(dev->of_node, prop))
++		return 0;
++
++	strings = devm_kcalloc(dev, nb_controls_max,
++			       sizeof(*strings), GFP_KERNEL);
++	if (!strings)
++		return -ENOMEM;
++
++	ret = of_property_read_string_array(dev->of_node, prop,
++					    strings, nb_controls_max);
 +	if (ret < 0)
 +		return ret;
 +
- 	/* Single/Muti DAI link(s) & New style of DT node */
- 	memset(&li, 0, sizeof(li));
- 	for (li.cpu = 1; li.cpu >= 0; li.cpu--) {
++	nb_controls = (unsigned int)ret;
++
++	controls = devm_kcalloc(dev, nb_controls,
++				sizeof(*controls), GFP_KERNEL);
++	if (!controls)
++		return -ENOMEM;
++
++	for (i = 0; i < nb_controls; i++) {
++		control_name = devm_kasprintf(dev, GFP_KERNEL,
++					      "%s Switch", strings[i]);
++		if (!control_name)
++			return -ENOMEM;
++
++		controls[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
++		controls[i].name = control_name;
++		controls[i].info = snd_soc_dapm_info_pin_switch;
++		controls[i].get = snd_soc_dapm_get_pin_switch;
++		controls[i].put = snd_soc_dapm_put_pin_switch;
++		controls[i].private_value = (unsigned long)strings[i];
++	}
++
++	card->controls = controls;
++	card->num_controls = nb_controls;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(asoc_simple_parse_pin_switches);
++
+ int asoc_simple_init_jack(struct snd_soc_card *card,
+ 			  struct asoc_simple_jack *sjack,
+ 			  int is_hp, char *prefix)
 -- 
 2.20.1
 
