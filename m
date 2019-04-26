@@ -2,139 +2,206 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E571C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2A9C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77166208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429832084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 16:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qt35qG0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfDZQGr (ORCPT
+        id S1726522AbfDZQH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 12:06:47 -0400
-Received: from gateway30.websitewelcome.com ([192.185.192.34]:15794 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726299AbfDZQGq (ORCPT
+        Fri, 26 Apr 2019 12:07:28 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46866 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfDZQH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 12:06:46 -0400
-X-Greylist: delayed 1249 seconds by postgrey-1.27 at vger.kernel.org; Fri, 26 Apr 2019 12:06:45 EDT
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id BCCC1D892
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 10:45:55 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id K32xhJm1iiQerK32xh0QYi; Fri, 26 Apr 2019 10:45:55 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.223] (port=42728 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hK32x-003qin-D2; Fri, 26 Apr 2019 10:45:55 -0500
-Subject: Re: [PATCH net-next] net: socket: Fix missing break in switch
- statement
-To:     David Miller <davem@davemloft.net>
-Cc:     arnd@arndb.de, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190424153124.GA9475@embeddedor>
- <20190426.112911.295562414103597921.davem@davemloft.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <437c77d4-99a8-5350-3bd8-c9a44d5c18b6@embeddedor.com>
-Date:   Fri, 26 Apr 2019 10:45:54 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 26 Apr 2019 12:07:28 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t17so5099254wrw.13;
+        Fri, 26 Apr 2019 09:07:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Dt7eA8/Rb6cygGAF7Blffe6UBX8AUE/LgVAg18GA+j0=;
+        b=qt35qG0isL8+xlbkD8siGE7BJeb0DDp6YDtisS8Y8uuX4dMUr2r2aSuG/O1EmdbFa3
+         fyNxV0OApFPgoLpO5bL+63paWT/ARpC/bpTIZNfifhuvGK/lD47WEPB1OARaR7Y32t02
+         YIJ8RmKYqpZC2j2WZEe/mkFmnDQSjb+xAkQp+7FaAT6cPK6pe1teAs2qZAT+GljnQFUj
+         j0U/yoY1nx57wzsn4kXpIqnSchTTq86ysvErRi3vSclWuvnhfS0FGorvP8v8fyxAwAiP
+         0xdLkZ40GB/OUcfgNO+0C9sHiyTqyLx0JDL7YAWhcQXuGNBrh6Nn+J9HZV52W/E9uCHM
+         w2zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Dt7eA8/Rb6cygGAF7Blffe6UBX8AUE/LgVAg18GA+j0=;
+        b=FbUryDUUqnlAzdDeG5Mj0us9bLMPwJTXWoEps4u+qQqzl8h/eRi6Wx3FhIHkWLzBa8
+         ER5r2WdXJuhL1r+IgH7TqMMwzTGMwQPKzzZ/3dyFB8QSVb1nPHYsgotsc2HBsMU4+4GK
+         +LxjSefkskmnIdng5k8lR6TPWFGWP6NZDR2NRYPt9gcSwsSKgHqQOpAzlb4lkE+3U2Tq
+         J7HG/eW/rkzin6qHNOODL87EFX/m/MdJnipKIF3DgNFiA+ISSJxNNVKhurgHqYkimmcN
+         BGuwn3PaLU/W0xJlfYLXUSM472NbP+HM1c2sveBSkKAI32n2yTs+vTz3c3z5Cefi6Ekr
+         Dzdw==
+X-Gm-Message-State: APjAAAVm59yLdQEKS5JWViXcauaObvCk5XufJvYA7XCZwq0MKX3CNrwM
+        F4JeVM+QVLJKbsJw8F2BCfs=
+X-Google-Smtp-Source: APXvYqwfioVpSEjaBZV5h4w4DX/4OMAFnAELKYGVWqgEmlU+3BIEZtqD/4kiy9hN9BhsLHK88nLyIA==
+X-Received: by 2002:a5d:5308:: with SMTP id e8mr376855wrv.126.1556294845102;
+        Fri, 26 Apr 2019 09:07:25 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id m14sm13973248wru.51.2019.04.26.09.07.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 09:07:24 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 18:07:23 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, mark.rutland@arm.com, jonathanh@nvidia.com,
+        kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V5 11/16] dt-bindings: PHY: P2U: Add Tegra 194 P2U block
+Message-ID: <20190426160723.GB3204@ulmo>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-12-vidyas@nvidia.com>
+ <20190426154519.GA19329@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20190426.112911.295562414103597921.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.223
-X-Source-L: No
-X-Exim-ID: 1hK32x-003qin-D2
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.127.223]:42728
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
+Content-Disposition: inline
+In-Reply-To: <20190426154519.GA19329@bogus>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--oC1+HKm2/end4ao3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/26/19 10:29 AM, David Miller wrote:
-> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> Date: Wed, 24 Apr 2019 10:31:24 -0500
-> 
->> Add missing break statement in order to prevent the code from falling
->> through to cases SIOCGSTAMP_NEW and SIOCGSTAMPNS_NEW.
->>
->> This bug was found thanks to the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Fixes: 0768e17073dc ("net: socket: implement 64-bit timestamps")
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> Applied.
-> 
+On Fri, Apr 26, 2019 at 10:45:19AM -0500, Rob Herring wrote:
+> On Wed, Apr 24, 2019 at 10:49:59AM +0530, Vidya Sagar wrote:
+> > Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
+> > module instantiated one for each PCIe lane between Synopsys Designware =
+core
+> > based PCIe IP and Universal PHY block.
+>=20
+> Missing Sob.
+>=20
+> > ---
+> > Changes since [v4]:
+> > * None
+> >=20
+> > Changes since [v3]:
+> > * None
+> >=20
+> > Changes since [v2]:
+> > * Changed node label to reflect new format that includes either 'hsio' =
+or
+> >   'nvhs' in its name to reflect which UPHY brick they belong to
+> >=20
+> > Changes since [v1]:
+> > * This is a new patch in v2 series
+> >=20
+> >  .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-=
+p2u.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt=
+ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+> > new file mode 100644
+> > index 000000000000..8b543cba483b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+> > @@ -0,0 +1,28 @@
+> > +NVIDIA Tegra194 P2U binding
+> > +
+> > +Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVID=
+IA High
+> > +Speed) each interfacing with 12 and 8 P2U instances respectively.
+> > +A P2U instance is a glue logic between Synopsys DesignWare Core PCIe I=
+P's PIPE
+> > +interface and PHY of HSIO/NVHS bricks. Each P2U instance represents on=
+e PCIe
+> > +lane.
+> > +
+> > +Required properties:
+> > +- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
+> > +- reg: Should be the physical address space and length of respective e=
+ach P2U
+> > +       instance.
+> > +- reg-names: Must include the entry "ctl".
+>=20
+> -names is pointless when there is only 1.
 
-Great. :)
+We've occasionally done this in the past for other types of resources.
+When we did it was to preempt having to verbosely describe exactly what
+order -names entries need to be in if ever a new entry was required.
 
-Thanks, Dave.
---
-Gustavo
+For example, if we document only one clock for a module and leave out
+the clock-names property, then if ever we need to add another clock, it
+means that clock-names must be documented in such a way that the "main"
+clock (the one that was always documented) would need to be first in the
+list of clock-names, so that it's matching entry in the clocks property
+is at index 0, because that's effectively what the ABI is.
+
+I think the same essentially applies to memory regions, though
+admittedly I have a hard time seeing us add a second region at any point
+in the future.
+
+Thierry
+
+> > +
+> > +Required properties for PHY port node:
+> > +- #phy-cells: Defined by generic PHY bindings.  Must be 0.
+> > +
+> > +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
+> > +
+> > +Example:
+> > +
+> > +p2u_hsio_0: p2u@3e10000 {
+>=20
+> phy@...
+>=20
+> > +	compatible =3D "nvidia,tegra194-p2u";
+> > +	reg =3D <0x03e10000 0x10000>;
+> > +	reg-names =3D "ctl";
+> > +
+> > +	#phy-cells =3D <0>;
+> > +};
+> > --=20
+> > 2.17.1
+> >=20
+
+--oC1+HKm2/end4ao3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzDLLgACgkQ3SOs138+
+s6Epyg/+NYm+Bee23zwcz30bxm/XqjxnKrbi7tlfaFwLhhNbvr4sECS2qNrK6Yzw
+t9bFEDDP0KXY6I5iHtS6uYkbnbq2+BEF8mb+oOp6LFs72oRvKYwyp0egPfeTKQfv
+JjOsIhjSl1s8j40YcGFoxyQJfmupn14urCdweCupzZjwjVvN8SyJnVNnluYlVHAj
++fiFXPmu+7gb1wcPJz3kXWg0GB+vQ38bnRZgYMmyJyN3eARxe2i6lziV9L5GAWyy
+e6bFtrQmV+WqceQPSju97FmUaf729sQHsIWdOsHyFr06N35Pxide0xjIsI5IScDN
+O3dEqag60K+QslnhI1WX9CeziIUar4dqqbjKSUWMVz0DXX6CkUph/U7mpqQD1plc
+R20q77ocK1II9m3kJTRYUTPIYoQeOV7tQNFFCm5DBb89SnMCGFxg0nhUHIXsg0Kk
+p36fig2OZ2ihv34YIifZEOCjv0UeJ9AsrcSdkQe+D4Xh1x/hedvp+kX0IcD1ypqX
+yIJU1/lTFJF/GPfLi+ddQI9Q7mXbZTqq3ieivL7svkT+FSQVRxPGG36V2xg2Ofon
+LtNWLOzk00cRCbkyvb1EabQtGpQAwfl5IrpC10NCVFal8jDLcoe2Kzc3zluGsjMo
+MzrCt52OX6Iq8rDwxBJEIUqyo/JqOomDAe4hd99AZcmnr0rxFIs=
+=sHyD
+-----END PGP SIGNATURE-----
+
+--oC1+HKm2/end4ao3--
