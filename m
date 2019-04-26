@@ -6,101 +6,77 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47296C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76655C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15D7D206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4F7206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 21:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556315080;
-	bh=hzMCaXq00R7Ba0Bl3/TM5mRKao7pulosDrD4EQ1M+2c=;
+	s=default; t=1556315142;
+	bh=XzXNABoAKNkpocBuqx1viF3gTN17qt4X8eq70Ew0xyQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kiw9pDUgnty9njPlF6kaCvtvlNKO23blxGnOIosqd0pRkLTl0rVcjfiGVYHmXcW8D
-	 yHCUSrNqS3lE8B0xdU8gkQCOCy4XfeOfp9CX1KEWhaMROV6pUBKC/Xt39lL3pj5ByS
-	 +2bvQ0131+NwMqcGIWrCg8G3bYjcNuDm7Vt3NgZ8=
+	b=XvrRNBfrW3zNMC/qUQhy+TYkA+kv75Pjub8yZDMqpn4zXIYq3w8NXSLaISQ1ndF+k
+	 U4hscN9//O1aMH9bWzmifoCZ35gYjifeD7tvSP3GNoYrQvRVBrm16VpCp/lNyCQ6H8
+	 frRwLQcAih6f8myPUzIPneyt60BQLbbUecCrp5Ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfDZVoj (ORCPT
+        id S1727029AbfDZVpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 17:44:39 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39125 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfDZVoi (ORCPT
+        Fri, 26 Apr 2019 17:45:41 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42031 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfDZVpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 17:44:38 -0400
-Received: by mail-ot1-f66.google.com with SMTP id o39so3907125ota.6;
-        Fri, 26 Apr 2019 14:44:38 -0700 (PDT)
+        Fri, 26 Apr 2019 17:45:40 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f23so3886261otl.9;
+        Fri, 26 Apr 2019 14:45:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v/cjsNw2NB4sPUKQIAWaww9R5us1EWq66EYd/vmRR+E=;
-        b=uB70AVVdHKpPVlxaAkxsw39ziri7FXjrkNdV8EKT7NSbL5C4rVg6rraoizdkWe+fLe
-         3oKQLR+7f4LvDv9PN6VNu0+VWHq1nhDBf2LBTqTe4mvRtRoFk3LQzDu2e9zmKgYAlW48
-         yJcNXmVowIqsCHM74YNlI6g6fKzLKs6jeQ42vuCMB1fd34Glpf/3t8ySG1hOA6DfJZ4e
-         sJbtFM6Jp7rzQkgCmQhhucF9CM96mV9Xx3voyP3ppFjLLH7Rn8ok1SH3gb1cwnFaQaVz
-         JBJ3U8dKshiqu+KGldcwv96DGmibe4e93oJTwCJW9bchyA/uyt4rLpmmg5Ll8Br7NpjL
-         K8mA==
-X-Gm-Message-State: APjAAAUUJP02yg4+/sWQ1ovcPOzEopq9SZu5dncHAwz2nGWB4R0kp7rP
-        c/t4c6nrq09Y4TKvhzrqLQ==
-X-Google-Smtp-Source: APXvYqzPSNoMcHwqGgKXwZYQEUCOgGIwLLUpLR0zTjMv9LXIZE0oOPjbbspsIWWwFcX2LEIJqdRiyw==
-X-Received: by 2002:a05:6830:1656:: with SMTP id h22mr482995otr.144.1556315077874;
-        Fri, 26 Apr 2019 14:44:37 -0700 (PDT)
+        bh=uixqWZkXYqMmHxhf1bJFrlRr6J6RhaltFblgUArN8CY=;
+        b=lujZGMKteL9hnsRn0CFzo+igshlvZCC9hTBD5wRNA9l1f1/47fPgn9YhwtvEJXZZuF
+         6+kheYT7P/VKly1ZnWire9IuPpSFj+Ka/hcoS+s1ELlahYSJGFCvyqXof/hhoOhn3W9h
+         ZWnfqTGhiE8ROUS9E4RW1a39qqAPXruJ4updcD0LWSx6iNql2LXzBAn4gTZ5Sovaos9y
+         6fs+WfoJQpGRwy7qHO/7nrF/BGVKusuVWkkA8B88a4vMtjmkULGZRuhUPUoy9niqUxZi
+         RwFdMKI9zEGgN96IvoVtZPv6PpL7akf+cAkiLeOtCeCEFQNBmG2h8pzDKTIv6vh8qBTC
+         x8mQ==
+X-Gm-Message-State: APjAAAWVqpjR4HsCXZP6uVrpv16SRtx8B1ByR3ur6VK+IA4eLQH/Ymtl
+        qdU+DGSxLrh9PzEO3xNAXg==
+X-Google-Smtp-Source: APXvYqyFL232FQopAeyXtwXlJdFgy4h/dz+IuPMIi6LrbiayrLXwjtQv+4qUbdp0zYZZMZTYu51jJg==
+X-Received: by 2002:a9d:5f06:: with SMTP id f6mr28619446oti.18.1556315139985;
+        Fri, 26 Apr 2019 14:45:39 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n3sm10998762oia.46.2019.04.26.14.44.37
+        by smtp.gmail.com with ESMTPSA id i11sm10482364otl.27.2019.04.26.14.45.38
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 14:44:37 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 16:44:36 -0500
+        Fri, 26 Apr 2019 14:45:39 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 16:45:38 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Megan Wachs <megan@sifive.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: clk: add documentation for the
- SiFive PRCI driver
-Message-ID: <20190426214436.GA29815@bogus>
-References: <20190411082733.3736-2-paul.walmsley@sifive.com>
- <20190411082733.3736-3-paul.walmsley@sifive.com>
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     jbrunet@baylibre.com, narmstrong@baylibre.com,
+        khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: clk: g12a-clkc: add Temperature
+ Sensor clock ID
+Message-ID: <20190426214538.GA29979@bogus>
+References: <20190412100221.26740-1-glaroque@baylibre.com>
+ <20190412100221.26740-2-glaroque@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190411082733.3736-3-paul.walmsley@sifive.com>
+In-Reply-To: <20190412100221.26740-2-glaroque@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Apr 2019 01:27:34 -0700, Paul Walmsley wrote:
-> Add DT binding documentation for the Linux driver for the SiFive
-> PRCI clock & reset control IP block, as found on the SiFive
-> FU540 chip.
+On Fri, Apr 12, 2019 at 12:02:20PM +0200, Guillaume La Roque wrote:
+> Add clock id used by temperature sensor for G12A Socs
 > 
-> This version includes changes requested by Stephen Boyd
-> <sboyd@kernel.org> and Rob Herring <robh@kernel.org>, and
-> fixes some errors in the initial version.
-> 
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Megan Wachs <megan@sifive.com>
-> Cc: linux-clk@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > ---
->  .../bindings/clock/sifive/fu540-prci.txt      | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
-> 
+>  include/dt-bindings/clock/g12a-clkc.h | 1 +
+>  1 file changed, 1 insertion(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
