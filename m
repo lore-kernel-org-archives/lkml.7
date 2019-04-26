@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEDCC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD659C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF46208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B3FC2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:32:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKIptMud"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbhJcu1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfDZPcp (ORCPT
+        id S1726802AbfDZPcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:32:45 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43661 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfDZPcl (ORCPT
+        Fri, 26 Apr 2019 11:32:48 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41059 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfDZPcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:32:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e67so1893379pfe.10;
-        Fri, 26 Apr 2019 08:32:40 -0700 (PDT)
+        Fri, 26 Apr 2019 11:32:46 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d9so1745054pls.8;
+        Fri, 26 Apr 2019 08:32:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=n9lwqiKGdUroDww2WFkm9jYtVCvbzItCk9Ugl1HYVfw=;
-        b=HKIptMudEQ+6us8JHx15m5uF+NLQr5slcrd6kSybISCA6LP8MSN/2/RAk2zh2u1Mue
-         XFTYBS8/AB8YRhZlWTsRsoNBXPlszGois3doU65bvodFDouOBsw/Ft7QXPXEwas+oG9j
-         lo49GqZW4Nr1JwYozCaAQt9Ere888KXcKKFhU77aZOvP9HM3Ka/wcltEd+FBVzUODFAN
-         4stURUq9mmPq+tCz0xMrsBi5eeXx3m2grZr3LHNH/cw2lWHNYNwtL+28sTAxHhPW3pXL
-         FHRWL3He2hqfdwf7CX8wU/QLue80w3oVGNGP7emmdF8ty5N4f693NqShVjGSsotCnFXl
-         7+JA==
+        bh=Qw8iXfD3ItYngoQYik6Jp498D9sHvHA3oeNnrYYHbk4=;
+        b=fbhJcu1fG3OoONfHlhroaCt4w35XyEL5Fz9jSI8bcoiIQbYGvjbKPMT5TH71zVzc4q
+         KQEXfRHIRCKPAcivQQaVVHkQwemG9xmcbm3WkoY4XN+0K6TiguCQjgA4ilc3q4CX8OIR
+         P7Q/AeMwLfwn+WNZ/63FLraCp+PeX7GMlelcq5wsm3u3unOUwRnAMZbB8UiPX6ZhZlEm
+         cT/c+4d6KFyOS2zoW1NbPLWvjYmEijdTD/8vIdDBqGEDvJR1E3rXDtGyxDjeyR5puORt
+         RjG9Mqqkulne++QEBLZ6iv4NGScYU871KdY317nchCLPZ8ocCRV2CIKH02Ua9o6s57Qc
+         D6Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=n9lwqiKGdUroDww2WFkm9jYtVCvbzItCk9Ugl1HYVfw=;
-        b=r3vlJ5u+2eJliKgQDK7j/NuonG/ZOzpZL8FMbnIX6nHFwE8CDsDhx6JPUpfj6urIlc
-         k/eNOeolgAvcc6ytETmhyu9KsqDE5iLLqap1HD7zw7F04my+mjCrq7VQf+87dEqVc+Kt
-         ZdqmyAVfqweuQHKmQF6lxYYllDbjv8sS26gs3me+cTyUY1s43aqq/MJonb8IKMXrk6PT
-         IsEvzP41hG8/n3+H9htCZ7MM4miQJZKFx68MFO6nSp5p6XOCBgpCFv1hJqsOM3qhBeAh
-         WdtM4fabTd0u5Kgg3QRYXGzsIETiXv888jFcTQ+wl4QLiSVSpHYikUT5g0eQYLJgn/G5
-         V2jg==
-X-Gm-Message-State: APjAAAXdBno02RI5saA+y3SZFNrhWRXe3dLjDR36G/IeQEdjTOk/ZR84
-        xlYmucmsVxbssooXg3WUpn4=
-X-Google-Smtp-Source: APXvYqxF9PR+YusJwQ4Wt1zdaXFT9Q82Vdhg9k3YBt7amEk+kNEJJ5KKyiW0jHmhp+cB9936Z774YA==
-X-Received: by 2002:a63:fb4d:: with SMTP id w13mr44723968pgj.397.1556292760600;
-        Fri, 26 Apr 2019 08:32:40 -0700 (PDT)
+        bh=Qw8iXfD3ItYngoQYik6Jp498D9sHvHA3oeNnrYYHbk4=;
+        b=i8I2/uPRBkjffgBkh/WTywVWW7x+Z/uv+whgIPqGMJVfOk9aaRyD4pPKjyVTItuCqF
+         ted5z3bWIDO2rTnGrnMso930bCZELEWPp7ZxbN7x4XcYq4NO39ZIGVI5+jQ/p0m8Wbvt
+         H52z4KgZCbbdBlsdJtpElCQIS5RZiz9TFkXaJ5JxPynmLFGmiQ8FnROAC6wI+S1Jdoxy
+         vs1rYYP6sDG9R3eAGTJXOa8bzI18UTowlxYlXz0OG+QhavsecQr6CIkDPHYAfuutCDBe
+         pEM8umnapCMONq8lUts1o/J/KLyvxQ0w9uHm63rd3dBeTQBTcAiIQU+2PoHuXIA9Rtix
+         55Mg==
+X-Gm-Message-State: APjAAAXuCNLfFWc3R98+bLZVcRInLgIArgDY9KZBRFkWtxTzdf7cZM0V
+        08wCdwxF+ng/BcbM+s2FT34=
+X-Google-Smtp-Source: APXvYqxXWUREqCKF57ycqs65HZcNJIa6R+UZEfCR7D4k2cNb+Ngkz+g1LaaDcgv3y/uJWz0rz74hzQ==
+X-Received: by 2002:a17:902:29e9:: with SMTP id h96mr27823553plb.258.1556292765921;
+        Fri, 26 Apr 2019 08:32:45 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.32.35
+        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.32.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 08:32:39 -0700 (PDT)
+        Fri, 26 Apr 2019 08:32:45 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         mchehab+samsung@kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 05/27] Documentation: x86: convert kernel-stacks to reST
-Date:   Fri, 26 Apr 2019 23:31:28 +0800
-Message-Id: <20190426153150.21228-6-changbin.du@gmail.com>
+Subject: [PATCH 06/27] Documentation: x86: convert entry_64.txt to reST
+Date:   Fri, 26 Apr 2019 23:31:29 +0800
+Message-Id: <20190426153150.21228-7-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190426153150.21228-1-changbin.du@gmail.com>
 References: <20190426153150.21228-1-changbin.du@gmail.com>
@@ -79,77 +79,64 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- Documentation/x86/index.rst                   |  1 +
- .../x86/{kernel-stacks => kernel-stacks.rst}  | 20 ++++++++++++-------
- 2 files changed, 14 insertions(+), 7 deletions(-)
- rename Documentation/x86/{kernel-stacks => kernel-stacks.rst} (92%)
+ Documentation/x86/{entry_64.txt => entry_64.rst} | 12 +++++++++---
+ Documentation/x86/index.rst                      |  1 +
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+ rename Documentation/x86/{entry_64.txt => entry_64.rst} (95%)
 
-diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index c0bfd0bd6000..489f4f4179c4 100644
---- a/Documentation/x86/index.rst
-+++ b/Documentation/x86/index.rst
-@@ -11,3 +11,4 @@ Linux x86 Support
-    boot
-    topology
-    exception-tables
-+   kernel-stacks
-diff --git a/Documentation/x86/kernel-stacks b/Documentation/x86/kernel-stacks.rst
-similarity index 92%
-rename from Documentation/x86/kernel-stacks
-rename to Documentation/x86/kernel-stacks.rst
-index 9a0aa4d3a866..3e6bf5940db0 100644
---- a/Documentation/x86/kernel-stacks
-+++ b/Documentation/x86/kernel-stacks.rst
-@@ -1,5 +1,11 @@
+diff --git a/Documentation/x86/entry_64.txt b/Documentation/x86/entry_64.rst
+similarity index 95%
+rename from Documentation/x86/entry_64.txt
+rename to Documentation/x86/entry_64.rst
+index c1df8eba9dfd..a48b3f6ebbe8 100644
+--- a/Documentation/x86/entry_64.txt
++++ b/Documentation/x86/entry_64.rst
+@@ -1,3 +1,9 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=============
-+Kernel Stacks
-+=============
++==============
++Kernel Entries
++==============
 +
- Kernel stacks on x86-64 bit
-----------------------------
-+===========================
+ This file documents some of the kernel entries in
+ arch/x86/entry/entry_64.S.  A lot of this explanation is adapted from
+ an email from Ingo Molnar:
+@@ -59,7 +65,7 @@ Now, there's a secondary complication: there's a cheap way to test
+ which mode the CPU is in and an expensive way.
  
- Most of the text from Keith Owens, hacked by AK
+ The cheap way is to pick this info off the entry frame on the kernel
+-stack, from the CS of the ptregs area of the kernel stack:
++stack, from the CS of the ptregs area of the kernel stack::
  
-@@ -57,7 +63,7 @@ IST events with the same code to be nested.  However in most cases, the
- stack size allocated to an IST assumes no nesting for the same code.
- If that assumption is ever broken then the stacks will become corrupt.
+ 	xorl %ebx,%ebx
+ 	testl $3,CS+8(%rsp)
+@@ -67,7 +73,7 @@ stack, from the CS of the ptregs area of the kernel stack:
+ 	SWAPGS
  
--The currently assigned IST stacks are :-
-+The currently assigned IST stacks are :
+ The expensive (paranoid) way is to read back the MSR_GS_BASE value
+-(which is what SWAPGS modifies):
++(which is what SWAPGS modifies)::
  
- * DOUBLEFAULT_STACK.  EXCEPTION_STKSZ (PAGE_SIZE).
+ 	movl $1,%ebx
+ 	movl $MSR_GS_BASE,%ecx
+@@ -76,7 +82,7 @@ The expensive (paranoid) way is to read back the MSR_GS_BASE value
+ 	js 1f   /* negative -> in kernel */
+ 	SWAPGS
+ 	xorl %ebx,%ebx
+-1:	ret
++  1:	ret
  
-@@ -98,7 +104,7 @@ For more details see the Intel IA32 or AMD AMD64 architecture manuals.
- 
- 
- Printing backtraces on x86
----------------------------
-+==========================
- 
- The question about the '?' preceding function names in an x86 stacktrace
- keeps popping up, here's an indepth explanation. It helps if the reader
-@@ -108,7 +114,7 @@ arch/x86/kernel/dumpstack.c.
- Adapted from Ingo's mail, Message-ID: <20150521101614.GA10889@gmail.com>:
- 
- We always scan the full kernel stack for return addresses stored on
--the kernel stack(s) [*], from stack top to stack bottom, and print out
-+the kernel stack(s) [1]_, from stack top to stack bottom, and print out
- anything that 'looks like' a kernel text address.
- 
- If it fits into the frame pointer chain, we print it without a question
-@@ -136,6 +142,6 @@ that look like kernel text addresses, so if debug information is wrong,
- we still print out the real call chain as well - just with more question
- marks than ideal.
- 
--[*] For things like IRQ and IST stacks, we also scan those stacks, in
--    the right order, and try to cross from one stack into another
--    reconstructing the call chain. This works most of the time.
-+.. [1] For things like IRQ and IST stacks, we also scan those stacks, in
-+       the right order, and try to cross from one stack into another
-+       reconstructing the call chain. This works most of the time.
+ If we are at an interrupt or user-trap/gate-alike boundary then we can
+ use the faster check: the stack will be a reliable indicator of
+diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+index 489f4f4179c4..8a666c5abc85 100644
+--- a/Documentation/x86/index.rst
++++ b/Documentation/x86/index.rst
+@@ -12,3 +12,4 @@ Linux x86 Support
+    topology
+    exception-tables
+    kernel-stacks
++   entry_64
 -- 
 2.20.1
 
