@@ -2,108 +2,129 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96779C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA17C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951802084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A3B2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 00:02:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YoG5sPR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfDZAAs (ORCPT
+        id S1728919AbfDZAC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 20:00:48 -0400
-Received: from mga18.intel.com ([134.134.136.126]:18064 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbfDZAAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 20:00:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Apr 2019 17:00:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,395,1549958400"; 
-   d="scan'208";a="138898243"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by orsmga006.jf.intel.com with ESMTP; 25 Apr 2019 17:00:44 -0700
-Received: from orsmsx124.amr.corp.intel.com (10.22.240.120) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Thu, 25 Apr 2019 17:00:44 -0700
-Received: from orsmsx103.amr.corp.intel.com ([169.254.5.76]) by
- ORSMSX124.amr.corp.intel.com ([169.254.2.120]) with mapi id 14.03.0415.000;
- Thu, 25 Apr 2019 17:00:44 -0700
-From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
-CC:     Sasha Levin <sashal@kernel.org>, Joseph Yasi <joe.yasi@gmail.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "e1000-devel@lists.sourceforge.net" 
-        <e1000-devel@lists.sourceforge.net>
-Subject: RE: [PATCH 1/2] Revert "e1000e: fix cyclic resets at link up with
- active tx"
-Thread-Topic: [PATCH 1/2] Revert "e1000e: fix cyclic resets at link up with
- active tx"
-Thread-Index: AQHU9PWDXnsTk6v0rkGLLfpWFtfVXKZNm+oQ
-Date:   Fri, 26 Apr 2019 00:00:44 +0000
-Message-ID: <309B89C4C689E141A5FF6A0C5FB2118B9703A782@ORSMSX103.amr.corp.intel.com>
-References: <155548879651.3454.13167784936351314661.stgit@buzz>
-In-Reply-To: <155548879651.3454.13167784936351314661.stgit@buzz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzkwODk3MWQtMzMxNi00YmNjLTgxNmQtMDEzMWM3MjdlOWFkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiV1M1NGVUN1U5SXRvWkNaUnlBZVgycGU0Yys2TUI4WjBDQ2FGYTAzZUVranJpWTEwcEJoUmsyaEFSczJkdldkTCJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 25 Apr 2019 20:02:27 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45187 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfDZAC0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 20:02:26 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k92so1599897edc.12;
+        Thu, 25 Apr 2019 17:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qNWt+yHzCcOv3Jkt0k4++Eg836NGwpnCiiqTDO4DKCk=;
+        b=YoG5sPR8OvXAv2y5kn+zIqjMqVTEKq+9UR6+LtWSe+S1izDVM5cdHzzRvFmiXc8z4E
+         EV+rq93GLb/Y1Mm16bDrBHlA5OH9Q/rrZWuvjDnrLt9CK5fV1JgCZWFmPSOnW0BBPFdn
+         j+sIeI5C6aVJmouDTqDAd0HeDBMri2YEZ2rib61jiK/qfiiahZY2jBntVEYISD4zjlgx
+         LufHI9Hp80akQ5BEfZuihoVdotdD9lXWlJLrxYTHZwJoo2M2YR5uPboRnQi/Bh0ru1Sr
+         vT/XVBtstSdRpve32DZflm68qDZVRixL65sx7/2SahGTFgkxNUDNCx6g2rCnIQt0S12+
+         muOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qNWt+yHzCcOv3Jkt0k4++Eg836NGwpnCiiqTDO4DKCk=;
+        b=Xkh+m2TAg0iqwMeewD4aoyAZkCtEc4y+NCFEs0I+weeQyW6SU8yebtBdtj2S68+Mq/
+         w8HD3qMl0Yn7lf+rS+C7AeF8IPFEiEf/Q86OGxjn9Y+Zow0OYatEy1YP09GzoVWPz4o4
+         OF++JdHm0u2ZL5YT4umJR3d/Iz62PjIVLOc85++wOL1HFYhv0BvgizB5j+2G65fgX5EJ
+         Lsn1OMFHCnwnUY+U01V3PsPGXX65ZRcb/IggK87WREkx9lAZSUrNgMj/cuFmDE9NSHQ4
+         A+XFv+1hV9lJwKZVzbzDet2JSapd0JqyzgXLo17ytnHKU3iXabsDwbaVikZPoz+8UGRN
+         V82w==
+X-Gm-Message-State: APjAAAWuaGM6EKYj2fr+ztnF2jR7tSb1XL6Pwr+dWaecLhUNj+kxoK1h
+        Lz5EDz8YdxOuqgs7nr0B6US9M7aitWdgLZYslVw=
+X-Google-Smtp-Source: APXvYqxYQsFr5rROO/Sk5UTDGRlWF8obB2Jsuu25fCWW1QWOIkLHOG19fnwRkd7JEv/BAT2S7n+uOPedVK5ih7Xet+c=
+X-Received: by 2002:a17:906:d28c:: with SMTP id ay12mr20393489ejb.51.1556236944559;
+ Thu, 25 Apr 2019 17:02:24 -0700 (PDT)
 MIME-Version: 1.0
+References: <1556201031-3676-1-git-send-email-hofrat@osadl.org>
+In-Reply-To: <1556201031-3676-1-git-send-email-hofrat@osadl.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 25 Apr 2019 17:02:14 -0700
+Message-ID: <CAF6AEGu80YyDeGkShhrSSysmiHkNMWTL6H_uC1UJKzy88mwyGA@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm: check for equals 0 only
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Archit Taneja <architt@codeaurora.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBLb25zdGFudGluIEtobGVibmlrb3YgW21haWx0bzpraGxlYm5pa292QHlhbmRleC10
-ZWFtLnJ1XQ0KPiBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDE3LCAyMDE5IDE6MTMgQU0NCj4gVG86
-IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGludGVsLXdpcmVkLWxhbkBsaXN0cy5vc3Vvc2wub3Jn
-OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgS2lyc2hlciwgSmVmZnJleSBUIDxq
-ZWZmcmV5LnQua2lyc2hlckBpbnRlbC5jb20+DQo+IENjOiBTYXNoYSBMZXZpbiA8c2FzaGFsQGtl
-cm5lbC5vcmc+OyBKb3NlcGggWWFzaSA8am9lLnlhc2lAZ21haWwuY29tPjsNCj4gQnJvd24sIEFh
-cm9uIEYgPGFhcm9uLmYuYnJvd25AaW50ZWwuY29tPjsgQWxleGFuZGVyIER1eWNrDQo+IDxhbGV4
-YW5kZXIuZHV5Y2tAZ21haWwuY29tPjsgZTEwMDAtZGV2ZWxAbGlzdHMuc291cmNlZm9yZ2UubmV0
-DQo+IFN1YmplY3Q6IFtQQVRDSCAxLzJdIFJldmVydCAiZTEwMDBlOiBmaXggY3ljbGljIHJlc2V0
-cyBhdCBsaW5rIHVwIHdpdGggYWN0aXZlIHR4Ig0KPiANCj4gVGhpcyByZXZlcnRzIGNvbW1pdCAw
-ZjllOTgwYmY1ZWUxYTk3ZTJlNDAxYzg0NmIyYWY5ODllYjIxYzYxLg0KPiANCj4gVGhhdCBjaGFu
-Z2UgY2FzZWQgZmFsc2UtcG9zaXRpdmUgd2FybmluZyBhYm91dCBoYXJkd2FyZSBoYW5nOg0KPiAN
-Cj4gZTEwMDBlOiBldGgwIE5JQyBMaW5rIGlzIFVwIDEwMDAgTWJwcyBGdWxsIER1cGxleCwgRmxv
-dyBDb250cm9sOiBSeC9UeA0KPiBJUHY2OiBBRERSQ09ORihORVRERVZfQ0hBTkdFKTogZXRoMDog
-bGluayBiZWNvbWVzIHJlYWR5DQo+IGUxMDAwZSAwMDAwOjAwOjFmLjYgZXRoMDogRGV0ZWN0ZWQg
-SGFyZHdhcmUgVW5pdCBIYW5nOg0KPiAgICBUREggICAgICAgICAgICAgICAgICA8MD4NCj4gICAg
-VERUICAgICAgICAgICAgICAgICAgPDE+DQo+ICAgIG5leHRfdG9fdXNlICAgICAgICAgIDwxPg0K
-PiAgICBuZXh0X3RvX2NsZWFuICAgICAgICA8MD4NCj4gYnVmZmVyX2luZm9bbmV4dF90b19jbGVh
-bl06DQo+ICAgIHRpbWVfc3RhbXAgICAgICAgICAgIDxmZmZiYTdhNz4NCj4gICAgbmV4dF90b193
-YXRjaCAgICAgICAgPDA+DQo+ICAgIGppZmZpZXMgICAgICAgICAgICAgIDxmZmZiYjE0MD4NCj4g
-ICAgbmV4dF90b193YXRjaC5zdGF0dXMgPDA+DQo+IE1BQyBTdGF0dXMgICAgICAgICAgICAgPDQw
-MDgwMDgwPg0KPiBQSFkgU3RhdHVzICAgICAgICAgICAgIDw3OTQ5Pg0KPiBQSFkgMTAwMEJBU0Ut
-VCBTdGF0dXMgIDwwPg0KPiBQSFkgRXh0ZW5kZWQgU3RhdHVzICAgIDwzMDAwPg0KPiBQQ0kgU3Rh
-dHVzICAgICAgICAgICAgIDwxMD4NCj4gZTEwMDBlOiBldGgwIE5JQyBMaW5rIGlzIFVwIDEwMDAg
-TWJwcyBGdWxsIER1cGxleCwgRmxvdyBDb250cm9sOiBSeC9UeA0KPiANCj4gQmVzaWRlcyB3YXJu
-aW5nIGV2ZXJ5dGhpbmcgd29ya3MgZmluZS4NCj4gT3JpZ2luYWwgaXNzdWUgd2lsbCBiZSBmaXhl
-ZCBwcm9wZXJ0eSBpbiBmb2xsb3dpbmcgcGF0Y2guDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBLb25z
-dGFudGluIEtobGVibmlrb3YgPGtobGVibmlrb3ZAeWFuZGV4LXRlYW0ucnU+DQo+IFJlcG9ydGVk
-LWJ5OiBKb3NlcGggWWFzaSA8am9lLnlhc2lAZ21haWwuY29tPg0KPiBMaW5rOiBodHRwczovL2J1
-Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTIwMzE3NQ0KPiAtLS0NCj4gIGRyaXZl
-cnMvbmV0L2V0aGVybmV0L2ludGVsL2UxMDAwZS9uZXRkZXYuYyB8ICAgMTUgKysrKysrKysrLS0t
-LS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0K
-DQpUZXN0ZWQtYnk6IEFhcm9uIEJyb3duIDxhYXJvbi5mLmJyb3duQGludGVsLmNvbT4NClRoaXMg
-d2FzIG1vcmUgb2YgYSByZWdyZXNzaW9uIGNoZWNrIGFzIEkgbmV2ZXIgZGlkIG1hbmFnZSB0byBy
-ZXBsaWNhdGUgdGhlIHR4IGhhbmcsIGV2ZW4gd2l0aCBzZWVtaW5nbHkgdGhlIHNhbWUgaGFyZHdh
-cmUuDQo=
+On Thu, Apr 25, 2019 at 7:09 AM Nicholas Mc Guire <hofrat@osadl.org> wrote:
+>
+> wait_for_completion_timeout() returns 0 on timeout and aleast 1 otherwise
+> so checking for < makes no sense here.
+>
+> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+> ---
+>
+> Problem located with an experimental coccinelle script
+>
+> While this check does no harm in this form - it should be fixed anyway
+> to comply with the API see: kernel/sched/completion.c
+>
+> Also noticed that get_maintainer.pl will not list linux-kernel@vger.kernel.org
+> when run on drivers/gpu/drm/msm/dsi/dsi_host.c - is that intentional ?
+
+Thanks, I'll pull this in for -fixes
+
+as far as get_maintainer.pl.. I'm not entirely sure.. we don't list
+linux-kernel@vger.kernel.org explicitly, but neither do a lot of the
+other driver entries.  Possibly this is a oversight in the MAINTAINERS
+entry?  Either way, I guess I'd say that it isn't intentional.
+
+BR,
+-R
+
+>
+> Patch was compile-tested with: qcom_defconfig (implies DRM_MSM_DSI=y)
+>
+> Patch is against v5.1-rc6 (localversion-next is next-20190424)
+>
+>  drivers/gpu/drm/msm/dsi/dsi_host.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> index 610183d..dc16067 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> @@ -1049,7 +1049,7 @@ static void dsi_wait4video_done(struct msm_dsi_host *msm_host)
+>         ret = wait_for_completion_timeout(&msm_host->video_comp,
+>                         msecs_to_jiffies(70));
+>
+> -       if (ret <= 0)
+> +       if (ret == 0)
+>                 DRM_DEV_ERROR(dev, "wait for video done timed out\n");
+>
+>         dsi_intr_ctrl(msm_host, DSI_IRQ_MASK_VIDEO_DONE, 0);
+> --
+> 2.1.4
+>
