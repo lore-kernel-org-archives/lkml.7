@@ -2,86 +2,112 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC01C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25B5C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCC72067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C45C2067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Lx+SAFNT"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="J1u2eDCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfDZKEo (ORCPT
+        id S1726426AbfDZKGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:04:44 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:48988 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfDZKEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:04:43 -0400
-Received: from zn.tnic (p200300EC2F0E4E00083B53278C752809.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:4e00:83b:5327:8c75:2809])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C625A1EC0380;
-        Fri, 26 Apr 2019 12:04:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1556273081;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=auPB1WPrdnNiit8/jBeISgz2+faVgg7bplqJPpgozAw=;
-        b=Lx+SAFNTKBvij+WocoOvv7amFC96vx2dzt3Ha48Ih/UMVywEHJN0Ai/UKEBhXK/xxR47x4
-        aq8odr2rZcjNHL/BXFKuQyiYXcEAZQ0GcXGBH8G6gCoSnUGLjEZsenAifcV+Un2x9UVSm3
-        aMVhciwtWZG/UszNZQFeVEWV5kgsdSw=
-Date:   Fri, 26 Apr 2019 12:04:41 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     keescook@chromium.org, kirill@shutemov.name,
-        linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, hpa@zytor.com, peterz@infradead.org,
-        thgarnie@google.com, herbert@gondor.apana.org.au,
-        mike.travis@hpe.com, frank.ramsay@hpe.com,
-        yamada.masahiro@socionext.com
-Subject: Re: [PATCH v2 RESEND 2/2] x86/mm/KASLR: Fix the size of vmemmap
- section
-Message-ID: <20190426100441.GC4608@zn.tnic>
-References: <20190414072804.12560-1-bhe@redhat.com>
- <20190414072804.12560-3-bhe@redhat.com>
- <20190415194755.GJ29317@zn.tnic>
- <20190426092348.GO3584@localhost.localdomain>
+        Fri, 26 Apr 2019 06:06:02 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37307 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfDZKGB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 06:06:01 -0400
+Received: by mail-lf1-f67.google.com with SMTP id h126so2053160lfh.4
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 03:06:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=V6YfoSDGzpRc5jf/Ret2tebWXfDQiQOnbiio0o2ZU6E=;
+        b=J1u2eDCGJ2gEioZTB921qsXqhJT6wj/kGUqepebtFVKjTSdJggMoCosui9RSYJo6Jy
+         VzsD/zhtV+95zn57iya3oiKD0AoMsu7h6C9mh8KhSttxweUag0JmZFPXmZJna/iouiiu
+         lNBqkaCqEeQPxhrZDX/w1tWKj3vBVlQVMS5IM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V6YfoSDGzpRc5jf/Ret2tebWXfDQiQOnbiio0o2ZU6E=;
+        b=Z43ByYlPb6DCErI6qee9s9spfSmUsI/rYlM6bYHoBCo20HHcUAbFyw7Lec8rkkkC2t
+         U+s6mlc5TF4PvWgkVUvwPl/Sa2J2Lqu7W6Xa6Oy/4w/wwICZc4qq6Rcx1lJT+T9SMxNl
+         Iajpqg0efl4lAeQOQXQvLpJeTGbq/uMmu9zhLCNrhnugmhBbjlYknGHG09nofbsaQa2/
+         pT26+B5+jTiChJzyp91xn7UmHb9CeONrKXryq/lFn+wgD7moZ9bj16kbLeyKQHyApmQc
+         1kN+vAnlQbJAGgyNb4HnW5P4qUg8Lc6mZsb9s50Tx1KD0nvnmVvKm+/yQV+wWakipVMV
+         m98g==
+X-Gm-Message-State: APjAAAVlRfoaGCj4BAACLY8nSoQPCx4VdmJ0mzcq4OCheU8IpN4N9Eq/
+        50UrniluP+WQk9lzZE3iiC+mZg==
+X-Google-Smtp-Source: APXvYqyQ/3Ze+NoK18P3XhfyG2CTLYM7V7o3VpK8T6b+OrXiZ7EaMMNLhQA69cVTra4J966OKvyOOw==
+X-Received: by 2002:ac2:482e:: with SMTP id 14mr21642162lft.1.1556273159457;
+        Fri, 26 Apr 2019 03:05:59 -0700 (PDT)
+Received: from [172.16.11.26] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id y19sm5484183lfb.24.2019.04.26.03.05.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 03:05:58 -0700 (PDT)
+Subject: Re: [PATCH 09/10] arm64: select DYNAMIC_DEBUG_RELATIVE_POINTERS
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+References: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
+ <20190409212517.7321-10-linux@rasmusvillemoes.dk>
+ <CAK8P3a1by1-ZF2NoTdGbxv+AJu92d3Sp5L08BhLCA+0PNS8s2Q@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <94b816aa-ad36-75e6-8782-d141dec2e803@rasmusvillemoes.dk>
+Date:   Fri, 26 Apr 2019 12:05:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <CAK8P3a1by1-ZF2NoTdGbxv+AJu92d3Sp5L08BhLCA+0PNS8s2Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190426092348.GO3584@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 05:23:48PM +0800, Baoquan He wrote:
-> I sent private mail to Kirill and Kees. Kirill haven't replied yet, he
-> could be busy with something else as he doesn't show up recently on
-> lkml.
+On 26/04/2019 11.39, Arnd Bergmann wrote:
+> On Tue, Apr 9, 2019 at 11:26 PM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+>>
+>> Similar to GENERIC_BUG_RELATIVE_POINTERS, one can now relativize the
+>> four const char* members of struct _ddebug, thus saving 16 bytes per
+>> instance (one for each pr_debug(), dev_debug() etc. in a
+>> CONFIG_DYNAMIC_DEBUG kernel). The asm-generic implementation seems to
+>> work out-of-the-box, though this is only compile-tested.
+>>
+>> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> 
+> This causes a build regression when compiling with clang,
+> see http://staging-storage.kernelci.org/next-clang/master/next-20190424/arm64/allmodconfig/clang-8/build.log
 
-I don't understand what the hurry is?
+Yes, see also https://github.com/ClangBuiltLinux/linux/issues/456 .
 
-The merge window is imminent and we only pick obvious fixes. That
-doesn't qualify as such, AFAICT.
+The quickest short-term fix is to append "if CC_IS_GCC" to the select
+statements. Then when a fix lands in clang one can change that to "if
+CC_IS_GCC || CLANG_VERSION >= something". It's probably best if we fix
+-next builds ASAP instead of waiting for knowing the proper value of
+"something". Nathan, Nick, WDYT?
 
-> Kees kindly replied, and said he couldn't find this mail thread. He told
-> I can add his Reviewed-by, as he has acked this patchset in v2
-> thread. I just updated later to tune log and correct typos.
-> http://lkml.kernel.org/r/CAGXu5j+o4aSx9mMDJqTMOp-VrvWes-2YEwR1f29z8dm0rUfzGQ@mail.gmail.com
+I had 0day verify my patches before sending them out officially, and
+thought it also did clang builds. But apparently not, or not with enough
+arch/.config combinations?
 
-Yes, when you get Reviewed-by:'s or other tags from reviewers, you
-*add* them to your next submission when the patch doesn't change in
-non-trivial fashion. You should know that...
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Rasmus
