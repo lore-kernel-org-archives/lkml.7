@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307ECC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4751FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D81208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EC5208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJhkWf7s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="laRhwvTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfDZPdT (ORCPT
+        id S1726983AbfDZPd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:33:19 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35164 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbfDZPdS (ORCPT
+        Fri, 26 Apr 2019 11:33:26 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46798 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbfDZPdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:33:18 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so1757984plp.2;
-        Fri, 26 Apr 2019 08:33:17 -0700 (PDT)
+        Fri, 26 Apr 2019 11:33:24 -0400
+Received: by mail-pl1-f194.google.com with SMTP id o7so1728490pll.13;
+        Fri, 26 Apr 2019 08:33:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jhUgUnVwH131/xczA7BMawqjAt3u+4QIhEzyPGkH5gg=;
-        b=RJhkWf7sm6bpcSYZUFM7l2vN1+aMdX6QBeCRKTZI5lWZL6wXxsmecJ2XICAWttvrnG
-         6BYdIGhmnV0CgNfO7g2zrAZT2ez2+dga6AujhU4eIp9R7CQfdE4KfCB3lsDpt6gY/yBZ
-         nNcnQnNK0yJ5fJIpp1R3OcRQHZ68AHp9VYPUS+6bKn707UhS/tAvZtVGajE+TB/tK3rE
-         33rKJGih8MsUmp+Ivu7eNaP8KhTwS/BsgSfRiTBHnizuxBpWp01Imi1nOlpu/8o6w0qr
-         jq5j4tOmzDCrKsF31HIo3daYv61o3ln0sf7nd+B08b776uvYCrHk+k2H54slC1U50GqM
-         peUQ==
+        bh=u1tp2ELIbvCM7I/PHHScr2H+N6Dz10Lsm+qX631gMBk=;
+        b=laRhwvTeRcvCsT6udv8sTnh1zlTwbHUOZCWUFjfVsA0yBkGml/uYFOAfKP/EKlxA0+
+         NleiMSjcegBJneVMd3C1LwV91Oasjf88yLYJhs8wvwxnX++3q1kcJTEHBGttZZZr1vD+
+         MlT8fOOTFAfCn30YSpisUqv1d9gU9C3OvGMZe/EP365GMZG1OqZIMyvSgR835fWuANyC
+         86wrtmVvFMwPh4YCjRoQH60UxN+l+vkPMgPE/aAmThxBsCfemDci5YvFQ//W1hrYjHBO
+         EvRrkLceJwbTlLnY8GTv6l53COwAgsOqNt+C9WmVyIiZj0+kiQLEWE8Tlyzb+v50FnC1
+         SGVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jhUgUnVwH131/xczA7BMawqjAt3u+4QIhEzyPGkH5gg=;
-        b=YeAaHh5beRkRbjBAQ1ICCKxklj9YhcSw+thwsXzH2s2fpoaqsZcsK9vIPSYqXMwRHk
-         6TktS80ZPvAyHJrW968gWpjM/FlHRP6eEbd0g6j9ZhNxINW5898RJPIgXFvxx5ZpWCG4
-         k8zhoT7GirAN9C7wN8FB3af0dsmk0epYvsD7gKOoe9OX5XjiMUCVJ7NaU0sHDX710GIV
-         GACe0r30DI+zKBfg55waclmHaUEd+ykqaz/88h0uCGjRkD4QKyEfDuwmFRnRzTRYQ5VD
-         PptlP3w4ayxUf6w9rE5GGOcFW24lSE+03AVXLpB0oiZwFVGCHV78uBYJqPjE4RO6qCsk
-         XIJA==
-X-Gm-Message-State: APjAAAWFyFSs+2ZgKbntQDxYyCjZW+OfIRQLDhzHiMZvyzABfb4WFchW
-        4eFsX4OE0vrw/V4qAsN+c3c=
-X-Google-Smtp-Source: APXvYqw+5MNiJwzvUyNuA4V9hTXMnyJGu6i+Nb+FqIeQP4dX5UtZYoGaeMY4TVdYMRwujv+cQmCGLQ==
-X-Received: by 2002:a17:902:28a9:: with SMTP id f38mr46042133plb.295.1556292797359;
-        Fri, 26 Apr 2019 08:33:17 -0700 (PDT)
+        bh=u1tp2ELIbvCM7I/PHHScr2H+N6Dz10Lsm+qX631gMBk=;
+        b=rUEaHVpZ4R8y6jtzJhC0KznQurVsFDVe2+5CleUyq3W4LqQxcIezlD9YINoPPnk8IV
+         PpUkGXTWoQfnypV4YovJwGn6LZLpSiSDnNG3c2WHoemx5QUQXeiZ1yCAnwee+9jrhjpf
+         2TJp3pamFxOBjlH7ThsDv6Yh10fB243N2nO6puMFugpYiPaNo5vhwK7fMJm6lDVXQs28
+         M1I9GqjmtOD5x3FMnuvzVvWKtKF9ICGpWM/UvIf4riX09iHpljBEeIPJnPRnfTyCUWa8
+         5MPX6r3gt6aF3XzR1HEMuUBThkcl+k9i8AQMJ3fXH7Z+qOD42kpXXDtD+vRt1p2ietRL
+         zYPg==
+X-Gm-Message-State: APjAAAXu0za1drMgeBmr6m6tKOx6WXFqtxDbVrqtjbD8EOLd5/a3A+dF
+        CvI1eRUqNy5LDfCFRCQX3jE=
+X-Google-Smtp-Source: APXvYqzCo7fcTM3/NajckTiLlwpoTD5AxcMlVqCA2boHtLOdoCsudiRBKBsKKYFT+ffceA4InRI/fQ==
+X-Received: by 2002:a17:902:6b0b:: with SMTP id o11mr10101853plk.266.1556292803160;
+        Fri, 26 Apr 2019 08:33:23 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.33.12
+        by smtp.gmail.com with ESMTPSA id b1sm29024833pgq.15.2019.04.26.08.33.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 08:33:16 -0700 (PDT)
+        Fri, 26 Apr 2019 08:33:22 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         mchehab+samsung@kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 12/27] Documentation: x86: convert protection-keys.txt to reST
-Date:   Fri, 26 Apr 2019 23:31:35 +0800
-Message-Id: <20190426153150.21228-13-changbin.du@gmail.com>
+Subject: [PATCH 13/27] Documentation: x86: convert intel_mpx.txt to reST
+Date:   Fri, 26 Apr 2019 23:31:36 +0800
+Message-Id: <20190426153150.21228-14-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190426153150.21228-1-changbin.du@gmail.com>
 References: <20190426153150.21228-1-changbin.du@gmail.com>
@@ -79,113 +80,207 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- Documentation/x86/index.rst                   |  1 +
- ...rotection-keys.txt => protection-keys.rst} | 33 ++++++++++++-------
- 2 files changed, 22 insertions(+), 12 deletions(-)
- rename Documentation/x86/{protection-keys.txt => protection-keys.rst} (83%)
+ Documentation/x86/index.rst                   |   1 +
+ .../x86/{intel_mpx.txt => intel_mpx.rst}      | 120 ++++++++++--------
+ 2 files changed, 65 insertions(+), 56 deletions(-)
+ rename Documentation/x86/{intel_mpx.txt => intel_mpx.rst} (75%)
 
 diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index e06b5c0ea883..576628b121cc 100644
+index 576628b121cc..20091d3e5d97 100644
 --- a/Documentation/x86/index.rst
 +++ b/Documentation/x86/index.rst
-@@ -18,3 +18,4 @@ Linux x86 Support
-    tlb
+@@ -19,3 +19,4 @@ Linux x86 Support
     mtrr
     pat
-+   protection-keys
-diff --git a/Documentation/x86/protection-keys.txt b/Documentation/x86/protection-keys.rst
-similarity index 83%
-rename from Documentation/x86/protection-keys.txt
-rename to Documentation/x86/protection-keys.rst
-index ecb0d2dadfb7..49d9833af871 100644
---- a/Documentation/x86/protection-keys.txt
-+++ b/Documentation/x86/protection-keys.rst
-@@ -1,3 +1,9 @@
+    protection-keys
++   intel_mpx
+diff --git a/Documentation/x86/intel_mpx.txt b/Documentation/x86/intel_mpx.rst
+similarity index 75%
+rename from Documentation/x86/intel_mpx.txt
+rename to Documentation/x86/intel_mpx.rst
+index 85d0549ad846..387a640941a6 100644
+--- a/Documentation/x86/intel_mpx.txt
++++ b/Documentation/x86/intel_mpx.rst
+@@ -1,5 +1,11 @@
+-1. Intel(R) MPX Overview
+-========================
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+======================
-+Memory Protection Keys
-+======================
++===========================================
++Intel(R) Memory Protection Extensions (MPX)
++===========================================
 +
- Memory Protection Keys for Userspace (PKU aka PKEYs) is a feature
- which is found on Intel's Skylake "Scalable Processor" Server CPUs.
- It will be avalable in future non-server parts.
-@@ -23,9 +29,10 @@ even though there is theoretically space in the PAE PTEs.  These
- permissions are enforced on data access only and have no effect on
- instruction fetches.
++Intel(R) MPX Overview
++=====================
  
--=========================== Syscalls ===========================
-+Syscalls
-+========
+ Intel(R) Memory Protection Extensions (Intel(R) MPX) is a new capability
+ introduced into Intel Architecture. Intel MPX provides hardware features
+@@ -7,7 +13,7 @@ that can be used in conjunction with compiler changes to check memory
+ references, for those references whose compile-time normal intentions are
+ usurped at runtime due to buffer overflow or underflow.
  
--There are 3 system calls which directly interact with pkeys:
-+There are 3 system calls which directly interact with pkeys::
+-You can tell if your CPU supports MPX by looking in /proc/cpuinfo:
++You can tell if your CPU supports MPX by looking in /proc/cpuinfo::
  
- 	int pkey_alloc(unsigned long flags, unsigned long init_access_rights)
- 	int pkey_free(int pkey);
-@@ -37,6 +44,7 @@ pkey_alloc().  An application calls the WRPKRU instruction
- directly in order to change access permissions to memory covered
- with a key.  In this example WRPKRU is wrapped by a C function
- called pkey_set().
+ 	cat /proc/cpuinfo  | grep ' mpx '
+ 
+@@ -21,8 +27,8 @@ can be downloaded from
+ http://software.intel.com/en-us/articles/intel-software-development-emulator
+ 
+ 
+-2. How to get the advantage of MPX
+-==================================
++How to get the advantage of MPX
++===============================
+ 
+ For MPX to work, changes are required in the kernel, binutils and compiler.
+ No source changes are required for applications, just a recompile.
+@@ -84,14 +90,15 @@ Kernel MPX Code:
+    is unmapped.
+ 
+ 
+-3. How does MPX kernel code work
+-================================
++How does MPX kernel code work
++=============================
+ 
+ Handling #BR faults caused by MPX
+ ---------------------------------
+ 
+ When MPX is enabled, there are 2 new situations that can generate
+ #BR faults.
++
+   * new bounds tables (BT) need to be allocated to save bounds.
+   * bounds violation caused by MPX instructions.
+ 
+@@ -124,37 +131,37 @@ the kernel. It can theoretically be done completely from userspace. Here
+ are a few ways this could be done. We don't think any of them are practical
+ in the real-world, but here they are.
+ 
+-Q: Can virtual space simply be reserved for the bounds tables so that we
+-   never have to allocate them?
+-A: MPX-enabled application will possibly create a lot of bounds tables in
+-   process address space to save bounds information. These tables can take
+-   up huge swaths of memory (as much as 80% of the memory on the system)
+-   even if we clean them up aggressively. In the worst-case scenario, the
+-   tables can be 4x the size of the data structure being tracked. IOW, a
+-   1-page structure can require 4 bounds-table pages. An X-GB virtual
+-   area needs 4*X GB of virtual space, plus 2GB for the bounds directory.
+-   If we were to preallocate them for the 128TB of user virtual address
+-   space, we would need to reserve 512TB+2GB, which is larger than the
+-   entire virtual address space today. This means they can not be reserved
+-   ahead of time. Also, a single process's pre-populated bounds directory
+-   consumes 2GB of virtual *AND* physical memory. IOW, it's completely
+-   infeasible to prepopulate bounds directories.
+-
+-Q: Can we preallocate bounds table space at the same time memory is
+-   allocated which might contain pointers that might eventually need
+-   bounds tables?
+-A: This would work if we could hook the site of each and every memory
+-   allocation syscall. This can be done for small, constrained applications.
+-   But, it isn't practical at a larger scale since a given app has no
+-   way of controlling how all the parts of the app might allocate memory
+-   (think libraries). The kernel is really the only place to intercept
+-   these calls.
+-
+-Q: Could a bounds fault be handed to userspace and the tables allocated
+-   there in a signal handler instead of in the kernel?
+-A: mmap() is not on the list of safe async handler functions and even
+-   if mmap() would work it still requires locking or nasty tricks to
+-   keep track of the allocation state there.
++:Q: Can virtual space simply be reserved for the bounds tables so that we
++    never have to allocate them?
++:A: MPX-enabled application will possibly create a lot of bounds tables in
++    process address space to save bounds information. These tables can take
++    up huge swaths of memory (as much as 80% of the memory on the system)
++    even if we clean them up aggressively. In the worst-case scenario, the
++    tables can be 4x the size of the data structure being tracked. IOW, a
++    1-page structure can require 4 bounds-table pages. An X-GB virtual
++    area needs 4*X GB of virtual space, plus 2GB for the bounds directory.
++    If we were to preallocate them for the 128TB of user virtual address
++    space, we would need to reserve 512TB+2GB, which is larger than the
++    entire virtual address space today. This means they can not be reserved
++    ahead of time. Also, a single process's pre-populated bounds directory
++    consumes 2GB of virtual *AND* physical memory. IOW, it's completely
++    infeasible to prepopulate bounds directories.
++
++:Q: Can we preallocate bounds table space at the same time memory is
++    allocated which might contain pointers that might eventually need
++    bounds tables?
++:A: This would work if we could hook the site of each and every memory
++    allocation syscall. This can be done for small, constrained applications.
++    But, it isn't practical at a larger scale since a given app has no
++    way of controlling how all the parts of the app might allocate memory
++    (think libraries). The kernel is really the only place to intercept
++    these calls.
++
++:Q: Could a bounds fault be handed to userspace and the tables allocated
++    there in a signal handler instead of in the kernel?
++:A: mmap() is not on the list of safe async handler functions and even
++    if mmap() would work it still requires locking or nasty tricks to
++    keep track of the allocation state there.
+ 
+ Having ruled out all of the userspace-only approaches for managing
+ bounds tables that we could think of, we create them on demand in
+@@ -167,20 +174,20 @@ If a #BR is generated due to a bounds violation caused by MPX.
+ We need to decode MPX instructions to get violation address and
+ set this address into extended struct siginfo.
+ 
+-The _sigfault field of struct siginfo is extended as follow:
+-
+-87		/* SIGILL, SIGFPE, SIGSEGV, SIGBUS */
+-88		struct {
+-89			void __user *_addr; /* faulting insn/memory ref. */
+-90 #ifdef __ARCH_SI_TRAPNO
+-91			int _trapno;	/* TRAP # which caused the signal */
+-92 #endif
+-93			short _addr_lsb; /* LSB of the reported address */
+-94			struct {
+-95				void __user *_lower;
+-96				void __user *_upper;
+-97			} _addr_bnd;
+-98		} _sigfault;
++The _sigfault field of struct siginfo is extended as follow::
++
++  87		/* SIGILL, SIGFPE, SIGSEGV, SIGBUS */
++  88		struct {
++  89			void __user *_addr; /* faulting insn/memory ref. */
++  90 #ifdef __ARCH_SI_TRAPNO
++  91			int _trapno;	/* TRAP # which caused the signal */
++  92 #endif
++  93			short _addr_lsb; /* LSB of the reported address */
++  94			struct {
++  95				void __user *_lower;
++  96				void __user *_upper;
++  97			} _addr_bnd;
++  98		} _sigfault;
+ 
+ The '_addr' field refers to violation address, and new '_addr_and'
+ field refers to the upper/lower bounds when a #BR is caused.
+@@ -209,9 +216,10 @@ Adding new prctl commands
+ 
+ Two new prctl commands are added to enable and disable MPX bounds tables
+ management in kernel.
 +::
  
- 	int real_prot = PROT_READ|PROT_WRITE;
- 	pkey = pkey_alloc(0, PKEY_DISABLE_WRITE);
-@@ -45,43 +53,44 @@ called pkey_set().
- 	... application runs here
+-155	#define PR_MPX_ENABLE_MANAGEMENT	43
+-156	#define PR_MPX_DISABLE_MANAGEMENT	44
++  155	#define PR_MPX_ENABLE_MANAGEMENT	43
++  156	#define PR_MPX_DISABLE_MANAGEMENT	44
  
- Now, if the application needs to update the data at 'ptr', it can
--gain access, do the update, then remove its write access:
-+gain access, do the update, then remove its write access::
+ Runtime library in userspace is responsible for allocation of bounds
+ directory. So kernel have to use XSAVE instruction to get the base
+@@ -223,8 +231,8 @@ into struct mm_struct to be used in future during PR_MPX_ENABLE_MANAGEMENT
+ command execution.
  
- 	pkey_set(pkey, 0); // clear PKEY_DISABLE_WRITE
- 	*ptr = foo; // assign something
- 	pkey_set(pkey, PKEY_DISABLE_WRITE); // set PKEY_DISABLE_WRITE again
  
- Now when it frees the memory, it will also free the pkey since it
--is no longer in use:
-+is no longer in use::
+-4. Special rules
+-================
++Special rules
++=============
  
- 	munmap(ptr, PAGE_SIZE);
- 	pkey_free(pkey);
- 
--(Note: pkey_set() is a wrapper for the RDPKRU and WRPKRU instructions.
-- An example implementation can be found in
-- tools/testing/selftests/x86/protection_keys.c)
-+.. note:: pkey_set() is a wrapper for the RDPKRU and WRPKRU instructions.
-+          An example implementation can be found in
-+          tools/testing/selftests/x86/protection_keys.c.
- 
--=========================== Behavior ===========================
-+Behavior
-+========
- 
- The kernel attempts to make protection keys consistent with the
--behavior of a plain mprotect().  For instance if you do this:
-+behavior of a plain mprotect().  For instance if you do this::
- 
- 	mprotect(ptr, size, PROT_NONE);
- 	something(ptr);
- 
--you can expect the same effects with protection keys when doing this:
-+you can expect the same effects with protection keys when doing this::
- 
- 	pkey = pkey_alloc(0, PKEY_DISABLE_WRITE | PKEY_DISABLE_READ);
- 	pkey_mprotect(ptr, size, PROT_READ|PROT_WRITE, pkey);
- 	something(ptr);
- 
- That should be true whether something() is a direct access to 'ptr'
--like:
-+like::
- 
- 	*ptr = foo;
- 
- or when the kernel does the access on the application's behalf like
--with a read():
-+with a read()::
- 
- 	read(fd, ptr, 1);
- 
+ 1) If userspace is requesting help from the kernel to do the management
+ of bounds tables, it may not create or modify entries in the bounds directory.
 -- 
 2.20.1
 
