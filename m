@@ -2,125 +2,282 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A57C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:15:27 +0000 (UTC)
-Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287AA2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e2Jq6NeF"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 287AA2084F
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=linaro.org
-Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC61C4321B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:16:33 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 3B23120B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556306193;
+	bh=fgrUw4+4eGLDp3Tr8ukRLb/YYGgAoe889Q1n7oE2JoI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0taiTn0w5/b71U0yedzkesYK86tNtNX24ALDxCImjEZEmCTEjcarvcktBDO2bd9oT
+	 pW4OHC6VguT6ZI4oo1rMRLZkbpoyTkjL+nxJI6zSTRNVw2fTT72q90saoZBFof6F+D
+	 ZaIXF85TTTKiaguO7MqMFekvt9S+DK/ZYPHZAsa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfDZTPZ (ORCPT
+        id S1726534AbfDZTQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 15:15:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42037 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfDZTPY (ORCPT
+        Fri, 26 Apr 2019 15:16:31 -0400
+Received: from casper.infradead.org ([85.118.1.10]:37718 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfDZTQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 15:15:24 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g3so5796716wrx.9
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 12:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WZ/vAAa0X/NtLjj3yurjTJR/c2NdPPFOeqtxoYjAra4=;
-        b=e2Jq6NeFOkrkb5tcKAr86K0ml0paks5BSvSabhnLF0W1JZ7gHdDtZNE+KlHn28doMD
-         922g01NnvqWh9VTwKH2m0q/gvLtxvCOjKgI6UldT9po5/ISfnoZYWL0YzzwYvEPoEP0l
-         X+7/3RSqRdAVsWKS0P5+x01h48FsIbD5twTeSWjHAtjeWSv3KW+kdewko4TP91oqvv4u
-         Kn0WDeOaXgcxpoLdtQSMxCYL1QtdH7bYMxA64bE75KNysdcr92KqkzjTG9WgFaPkqeST
-         /c+3KLmr3g75wMK/6As1wpBkA/HAGItItZRr9gUr2rPnl06zvpgdwWiJ6dv6TbdOPMBl
-         ZAVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=WZ/vAAa0X/NtLjj3yurjTJR/c2NdPPFOeqtxoYjAra4=;
-        b=XYJSovbtgSXxODTE3Argiw76oxgxHR3WFcL/AL5+yqSFKv+c1roKfrrgx55PFqqVZD
-         KCyrcg2lAcFICBcC+JoP4rylOYtygt52/Z65jxuxa3KqoBJ1mF9TwUF0tzgZ35rftYzh
-         Mg+JVB0JXC4hW71Y/aT96/tizVuj+kCjKKI2F276lKpgUDwn0jnIr6J3vDLblo//OqYw
-         u9KaTF+IQgiqiHv+QZ8+tkPddPAESF4leoaMWNXtJf0wNteLWq143rXxlZACa4g365s6
-         FPXT2dV7P6qIjoM9CKKLNCY65+DHtGx6iZ8mRdXHxSkoEPvCv3Y7skRFBw02S+iL66U2
-         mEGw==
-X-Gm-Message-State: APjAAAVNiAC4ZeKFmw6LDcW8yi/1yn2U5JpKykc93rDV29bdDtozeFfh
-        wbrhnUVBeCaxtWPokehZZ397AM6seWw=
-X-Google-Smtp-Source: APXvYqzzdLlY2dU5lMAVFhz206phB4noYNFjVKpigUWx85PrQrQNdm3T7bg5itIZByQb8RrB97WzbQ==
-X-Received: by 2002:adf:9c91:: with SMTP id d17mr6841850wre.285.1556306122664;
-        Fri, 26 Apr 2019 12:15:22 -0700 (PDT)
-Received: from localhost ([49.248.199.210])
-        by smtp.gmail.com with ESMTPSA id v13sm49730975wrg.46.2019.04.26.12.15.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 12:15:21 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH v1] thermal: Add some error messages
-Date:   Sat, 27 Apr 2019 00:45:15 +0530
-Message-Id: <640cd0cd93e199459af6d6d04bad228e909faf54.1556305991.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1556305991.git.amit.kucheria@linaro.org>
-References: <cover.1556305991.git.amit.kucheria@linaro.org>
+        Fri, 26 Apr 2019 15:16:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=HWDhwOXbwvR9hSiwk3BzeFj8jMUYc8gIu/moWm4CNN0=; b=u77WsnUeEu8rheh3mLag1QIWRv
+        iUMISEruIXqLY6xGhUhp6cdpRbxpvRurIKA79VlSVFQQQnXvDrCBZbZ8zaDUV7Bh4sFnSDoyJv9oX
+        JKlZ451sJ57xvPmiXlQ2Io0v89a/56n8LPMYp108Os4QVJbJVgxhtwENMIBhqlG5PzR8hwc0HESvl
+        vbG0XHwibPyMlZQmsnB9g1PSVXNoELfv+fl99vdR0IsddY0JVo874JsihZczNlV9F11nDaNocurFD
+        roqNcyfgL0AcSY+WXzQShpUt4XFCJ2DnweKd18tNVU5qWgFLXhQiKXiZANSTYFqglxk35wqPosYN5
+        lWSFsyaA==;
+Received: from [179.95.39.209] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hK6Kg-0006jX-Pd; Fri, 26 Apr 2019 19:16:27 +0000
+Date:   Fri, 26 Apr 2019 16:16:22 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH 1/2] Docs: An initial automarkup extension for sphinx
+Message-ID: <20190426161622.7bc4dd54@coco.lan>
+In-Reply-To: <20190426153255.7e424a45@coco.lan>
+References: <20190425200125.12302-1-corbet@lwn.net>
+        <20190425200125.12302-2-corbet@lwn.net>
+        <20190426153255.7e424a45@coco.lan>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When registering a thermal zone device, we currently return -EINVAL in
-four cases. This is makes is a little hard to debug the real cause of
-the failure.
+Em Fri, 26 Apr 2019 15:32:55 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
 
-Print some error messages to make it easier for developer to figure out
-what happened.
+> Em Thu, 25 Apr 2019 14:01:24 -0600
+> Jonathan Corbet <corbet@lwn.net> escreveu:
+> 
+> > Rather than fill our text files with :c:func:`function()` syntax, just do
+> > the markup via a hook into the sphinx build process.  As is always the
+> > case, the real problem is detecting the situations where this markup should
+> > *not* be done.
+> > 
+> > Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+> > ---
+> >  Documentation/conf.py              |  3 +-
+> >  Documentation/sphinx/automarkup.py | 90 ++++++++++++++++++++++++++++++
+> >  2 files changed, 92 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/sphinx/automarkup.py
+> > 
+> > diff --git a/Documentation/conf.py b/Documentation/conf.py
+> > index 72647a38b5c2..ba7b2846b1c5 100644
+> > --- a/Documentation/conf.py
+> > +++ b/Documentation/conf.py
+> > @@ -34,7 +34,8 @@ needs_sphinx = '1.3'
+> >  # Add any Sphinx extension module names here, as strings. They can be
+> >  # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+> >  # ones.
+> > -extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig']
+> > +extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain',
+> > +              'kfigure', 'sphinx.ext.ifconfig', 'automarkup']
+> >  
+> >  # The name of the math extension changed on Sphinx 1.4
+> >  if major == 1 and minor > 3:
+> > diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
+> > new file mode 100644
+> > index 000000000000..c47469372bae
+> > --- /dev/null
+> > +++ b/Documentation/sphinx/automarkup.py
+> > @@ -0,0 +1,90 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# This is a little Sphinx extension that tries to apply certain kinds
+> > +# of markup automatically so we can keep it out of the text files
+> > +# themselves.
+> > +#
+> > +# It's possible that this could be done better by hooking into the build
+> > +# much later and traversing through the doctree.  That would eliminate the
+> > +# need to duplicate some RST parsing and perhaps be less fragile, at the
+> > +# cost of some more complexity and the need to generate the cross-reference
+> > +# links ourselves.
+> > +#
+> > +# Copyright 2019 Jonathan Corbet <corbet@lwn.net>
+> > +#
+> > +from __future__ import print_function
+> > +import re
+> > +import sphinx
+> > +
+> > +#
+> > +# Regex nastiness.  Of course.
+> > +# Try to identify "function()" that's not already marked up some
+> > +# other way.  Sphinx doesn't like a lot of stuff right after a
+> > +# :c:func: block (i.e. ":c:func:`mmap()`s" flakes out), so the last
+> > +# bit tries to restrict matches to things that won't create trouble.
+> > +#
+> > +RE_function = re.compile(r'(^|\s+)([\w\d_]+\(\))([.,/\s]|$)')  
+> 
+> IMHO, this looks good enough to avoid trouble, maybe except if one
+> wants to write a document explaining this functionality at the
+> doc-guide/kernel-doc.rst.
+> 
+> Anyway, the way it is written, we could still explain it by adding
+> a "\ " after the func, e. g.:
+> 
+> 	When you write a function like: func()\ , the automarkup
+> 	extension will automatically convert it into:
+> 	``:c:func:`func()```.
+> 
+> So, this looks OK on my eyes.
+> 
+> > +#
+> > +# Lines consisting of a single underline character.
+> > +#
+> > +RE_underline = re.compile(r'^([-=~])\1+$')  
+> 
+> Hmm... why are you calling this "underline"? Sounds a bad name to me,
+> as it took me a while to understand what you meant.
+> 
+> From the code I'm inferring that this is meant to track 3 of the
+> possible symbols used as a (sub).*title markup. On several places 
+> we use other symbols:'^', '~', '.', '*' (and others) as sub-sub(sub..)
+> title markups.
+> 
+> I would instead define this Regex as:
+> 
+> 	RE_title_markup = re.compile(r'^([^\w\d])\1+$')
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- drivers/thermal/thermal_core.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+In time:
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 6590bb5cb688..51cb6d2bf7a2 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -1189,17 +1189,26 @@ thermal_zone_device_register(const char *type, int trips, int mask,
- 	int count;
- 	struct thermal_governor *governor;
- 
--	if (!type || strlen(type) == 0)
-+	if (!type || strlen(type) == 0) {
-+		pr_err("Error: No thermal zone type defined");
- 		return ERR_PTR(-EINVAL);
-+	}
- 
--	if (type && strlen(type) >= THERMAL_NAME_LENGTH)
-+	if (type && strlen(type) >= THERMAL_NAME_LENGTH) {
-+		pr_err("Error: Thermal zone name (%s) too long, should be under %d chars",
-+		       type, THERMAL_NAME_LENGTH);
- 		return ERR_PTR(-EINVAL);
-+	}
- 
--	if (trips > THERMAL_MAX_TRIPS || trips < 0 || mask >> trips)
-+	if (trips > THERMAL_MAX_TRIPS || trips < 0 || mask >> trips) {
-+		pr_err("Error: Incorrect number of thermal trips");
- 		return ERR_PTR(-EINVAL);
-+	}
- 
--	if (!ops)
-+	if (!ops) {
-+		pr_err("Error: Thermal zone device ops not defined");
- 		return ERR_PTR(-EINVAL);
-+	}
- 
- 	if (trips > 0 && (!ops->get_trip_type || !ops->get_trip_temp))
- 		return ERR_PTR(-EINVAL);
--- 
-2.17.1
+	RE_title_markup = re.compile(r'^([^\w\d\s])\1+$')
 
+As otherwise it would get whitespaces/tabs :-)
+
+Also, please notice that this is pure review - didn't actually try to
+apply your patch or test with or without the proposed changes :-)
+
+> 
+> You should probably need another regex for the title itself:
+> 
+> 	RE_possible_title = re.compile(r'^(\S.*\S)\s*$')
+> 
+> in order to get the size of the matched line. Doing a doing len(previous)
+> will get you false positives.
+> 
+> As on Sphinx, **all** titles should start at the first column,
+> or it will produce a severe error[1], we can use such regex to
+> minimize parsing errors.
+> 
+> [1] and either crash or keep running some endless loop internally.
+> Not being bad enough, it will also invalidate all the previously
+> cached data, losing a lot of time next time you try to build the
+> docs.
+> 
+> ---
+> 
+> on a separate matter (but related to automarkup matter - and to what
+> I would name underline), as a future feature, perhaps we could also add
+> a parser for:
+> 
+> 	_something that requires underlines_
+> 
+> Underlined text is probably the only feature that we use on several docs
+> with Sphinx doesn't support (there are some extensions for that - I guess,
+> but it sounds simple enough to have a parser here).
+> 
+> This can be tricky to get it right, as just underlines_ is a
+> cross reference markup - so, I would only add this after we improve the
+> script to come after Sphinx own markup processing.
+> 
+> ---
+> 
+> > +#
+> > +# Starting a literal block.
+> > +#
+> > +RE_literal = re.compile(r'^(\s*)(.*::\s*|\.\.\s+code-block::.*)$')
+> > +#
+> > +# Just get the white space beginning a line.
+> > +#
+> > +RE_whitesp = re.compile(r'^(\s*)')
+> > +
+> > +def MangleFile(app, docname, text):
+> > +    ret = [ ]
+> > +    previous = ''
+> > +    literal = False
+> > +    for line in text[0].split('\n'):
+> > +        #
+> > +        # See if we might be ending a literal block, as denoted by
+> > +        # an indent no greater than when we started.
+> > +        #
+> > +        if literal and len(line) > 0:
+> > +            m = RE_whitesp.match(line)  # Should always match
+> > +            if len(m.group(1).expandtabs()) <= lit_indent:
+> > +                literal = False
+> > +        #
+> > +        # Blank lines, directives, and lines within literal blocks
+> > +        # should not be messed with.
+> > +        #
+> > +        if literal or len(line) == 0 or line[0] == '.':
+> > +            ret.append(line)  
+> 
+> 
+> > +        #
+> > +        # Is this an underline line?  If so, and it is the same length
+> > +        # as the previous line, we may have mangled a heading line in
+> > +        # error, so undo it.
+> > +        #
+> > +        elif RE_underline.match(line):
+> > +            if len(line) == len(previous):  
+> 
+> No, that doesn't seem enough. I would, instead, use the regex I
+> proposed before, in order to check if the previous line starts with
+> a non-space, and getting the length only up to the last non-space
+> (yeah, unfortunately, we have some text files that have extra blank
+> spaces at line's tail).
+> 
+> > +                ret[-1] = previous
+> > +            ret.append(line)
+> > +        #
+> > +        # Normal line - perform substitutions.
+> > +        #
+> > +        else:
+> > +            ret.append(RE_function.sub(r'\1:c:func:`\2`\3', line))
+> > +        #
+> > +        # Might we be starting a literal block?  If so make note of
+> > +        # the fact.
+> > +        #
+> > +        m = RE_literal.match(line)
+> > +        if m:
+> > +            literal = True
+> > +            lit_indent = len(m.group(1).expandtabs())
+> > +        previous = line
+> > +    text[0] = '\n'.join(ret)
+> > +
+> > +def setup(app):
+> > +    app.connect('source-read', MangleFile)
+> > +
+> > +    return dict(
+> > +        parallel_read_safe = True,
+> > +        parallel_write_safe = True
+> > +    )  
+> 
+> The remaining looks fine to me - although I'm not a Sphinx-extension
+> expert, and my knowledge of python is far from being perfect.
+> 
+> Thanks,
+> Mauro
+
+
+
+Thanks,
+Mauro
