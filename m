@@ -2,88 +2,123 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC13C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB4FC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34FB92084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B90E2084F
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 17:04:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q1JGHWp/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfDZRCI (ORCPT
+        id S1726345AbfDZREl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 13:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbfDZRCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 13:02:07 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 876DF206E0;
-        Fri, 26 Apr 2019 17:02:06 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 13:02:04 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     <pmladek@suse.com>, <sergey.senozhatsky@gmail.com>,
-        <andriy.shevchenko@linux.intel.com>, <geert+renesas@glider.be>,
-        <me@tobin.cc>, <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH -next] lib/vsprintf: Make function pointer_string static
-Message-ID: <20190426130204.23a5a05c@gandalf.local.home>
-In-Reply-To: <20190426164630.22104-1-yuehaibing@huawei.com>
-References: <20190426164630.22104-1-yuehaibing@huawei.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 26 Apr 2019 13:04:41 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38947 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfDZREk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 13:04:40 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l18so1911334pgj.6;
+        Fri, 26 Apr 2019 10:04:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7zNlK1betosrFH/BCVaeqIioafWUd8DPdFnWt1Oy7GQ=;
+        b=Q1JGHWp/6QJkmaxij4MEyeszUMRmP9c12l2fDn1WI9mZ2RS11GeOaqOyNkJlVCok2/
+         YV58rkDQnJXin+xz7bDguh1oluWhSDr9w2Wd6/EdAkRorCOKVZN+hnXpmszA9X8KUwsV
+         wOqfK2m40tVx4nnsw1d+CEM89xgf0Ql5SavNlWPbrNxNX93AKsf+Qm0gN1/PA42GIJLi
+         eb3Y+JruVAtuaEVOa4dsLiWEON8e69/53YiTvA5Xll/jz63K7VrhEiCUttBYHR7uA8Nu
+         /EZPl7uZBDq5JBn2x0Kptu3DLbOgHzt3OKPBinYQXXPUZ4Vv3IjvGgfOgT3xOYNP0g3D
+         gwpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=7zNlK1betosrFH/BCVaeqIioafWUd8DPdFnWt1Oy7GQ=;
+        b=htuiIvDbnWsgcO/j8zb/ojfpk9DNTl3dttOOlGNoE5xdcjQXYk7xPbF5/Js4cJBdRx
+         VKcjQxipxLmhGdwb0aHxcOQYCIcs3Op5WauhXgvlPEwFzKTd4hLha9Vu8FmNuGwzKEh9
+         9tuBJ6ywM7MninBvhDeth8rq9NMVvN//CZGmn4wmbrcjZREtbjAbA+U/grTxQHaxcaQP
+         mE2m04dVUSvB9AgvObdA4NTAS06OaxYebkKy6TakdMObFo9ALsw2TiVATfZ6IfGW+DMJ
+         TGHggh/CcZNNB41kxWJ+HDjqXBnwqPIFh78dn+ko93E9za2Kup8r9H+D1r8akKBztD6x
+         qvMw==
+X-Gm-Message-State: APjAAAWo9HlP4K/0LETRHvvhbFJtGvFgx78qD6qy5sxji2bhqYJ2z3rm
+        kR9hGX9T9Kwnr5ISz4EZRKE=
+X-Google-Smtp-Source: APXvYqysBR49sd/I3qpTj292b80UptiG2M/+wC1xYonyovDMjXV6NTGeQaw+1M/gxkAYKrdkbprzcg==
+X-Received: by 2002:a62:4595:: with SMTP id n21mr48726359pfi.79.1556298279995;
+        Fri, 26 Apr 2019 10:04:39 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 6sm33834436pfj.95.2019.04.26.10.04.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 10:04:38 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 10:04:37 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Enric Balletbo Serra <eballetbo@gmail.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Chris Health <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] power: supply: Add driver for Microchip UCS1002
+Message-ID: <20190426170437.GA9087@roeck-us.net>
+References: <20190417084457.28747-1-andrew.smirnov@gmail.com>
+ <20190417084457.28747-3-andrew.smirnov@gmail.com>
+ <CAFqH_53vo__70Xm5pOoLvqPG2iNN32VP5cbFCatDq=o0GLYzsA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFqH_53vo__70Xm5pOoLvqPG2iNN32VP5cbFCatDq=o0GLYzsA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 27 Apr 2019 00:46:30 +0800
-Yue Haibing <yuehaibing@huawei.com> wrote:
-
-> From: YueHaibing <yuehaibing@huawei.com>
+On Fri, Apr 26, 2019 at 06:51:51PM +0200, Enric Balletbo Serra wrote:
+> Hi Andrey,
 > 
-> Fix sparse warning:
+> Many thanks to push this upstream. Actually this the fifth version [1]
+> of this patchset. I think that is interesting for the maintainers
+> maintain the history and the changelog.
 > 
-> lib/vsprintf.c:673:6: warning:
->  symbol 'pointer_string' was not declared. Should it be static?
+> [1] https://lkml.org/lkml/2016/3/14/233
 > 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  lib/vsprintf.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Missatge de Andrey Smirnov <andrew.smirnov@gmail.com> del dia dc., 17
+> d’abr. 2019 a les 10:46:
+> >
+> > Add driver for Microchip UCS1002 Programmable USB Port Power
+> > Controller with Charger Emulation. The driver exposed a power supply
+> > device to control/monitor various parameter of the device as well as a
+> > regulator to allow controlling VBUS line.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Chris Health <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Cc: Sebastian Reichel <sre@kernel.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > ---
+
+...
+
+> > +       static const int bit_weights_uAh[BITS_PER_TYPE(u32)] = {
+> > +               0, 0, 0, 0, 0, 0, 3, 5,
+> > +
 > 
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index 1f367f3..7b0a614 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -670,8 +670,9 @@ char *string(char *buf, char *end, const char *s,
->  	return string_nocheck(buf, end, s, spec);
->  }
->  
-> -char *pointer_string(char *buf, char *end, const void *ptr,
-> -		     struct printf_spec spec)
-> +static char *pointer_string(char *buf, char *end,
+> nit: I personally don't like these empty lines here.
+> 
+I stumbled over those as well, but then I realized that they
+split up the 32 bit into bytes, so it does make some sense. 
 
-Looks like commit "vsprintf: Do not check address of well-known
-strings" removed the: "static noinline_for_stack"
-
-Does pointer_string() need that still?
-
-Petr?
-
--- Steve
-
-
-> +			    const void *ptr,
-> +			    struct printf_spec spec)
->  {
->  	spec.base = 16;
->  	spec.flags |= SMALL;
-
+Guenter
