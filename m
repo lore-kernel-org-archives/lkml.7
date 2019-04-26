@@ -2,380 +2,326 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CF2C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73028C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB4C206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3886A206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pcg22AMi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNKjPJXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbfDZOXl (ORCPT
+        id S1726380AbfDZOYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:23:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35639 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfDZOXl (ORCPT
+        Fri, 26 Apr 2019 10:24:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46416 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfDZOYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:23:41 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w24so1665995plp.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 07:23:40 -0700 (PDT)
+        Fri, 26 Apr 2019 10:24:05 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j11so1790713pff.13;
+        Fri, 26 Apr 2019 07:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=MeiWFYCogkcYnJ//i5z50/UiYO7k3k6xMTQbmKpPf4g=;
-        b=pcg22AMi3FyNVnN55PdUQXpYtQ//mBp9hGj3JpXW2fVTryAHhd1rz7mWhwkbo5+pes
-         pm8aeRt5mrxmgX+owNOzkQlj1tSS6JAtslaofexs+qu3gO7wZNxl7V8KIhwvX85JhX5/
-         4JjrrZIeOJvNrnIHUO5+q5ApJXot2iYilpCO4=
+        bh=8AQ2GkngH1De/6XzGohWoAVpJB2lelkaRG8sTS9mhMQ=;
+        b=bNKjPJXYCcnMRb4CgyavROJDvz580E5qQgxUpn/9Mj6rjtE0rYaq0SxQoBgfO48vmk
+         /VfzrOZ8ZN8qUeLoAGxLZORUANQ3JCesRjEORUbuogBqZk+YHD0xGKrJT/GoGnaToe4r
+         kwbSTcZgXfi2jii8y2pKTvsBggAdJjkCsr0MaQw6K6c35I+nGHQzH3by0XgR8LUZxl36
+         SEQDlRGZmg0vt2B8cihXYdTPvB+3iwfaOgZ6NnBjiv/E5HnhtZrNsUFX8CT4A3b4ZKgZ
+         d3fhwF+uOta6W9nuvJxkbiNrEqTHqb6Z5QV0VzcQqypw2PTKlQwfL6YSN9c46hWTSdCy
+         B88A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MeiWFYCogkcYnJ//i5z50/UiYO7k3k6xMTQbmKpPf4g=;
-        b=ig+16d9pK3o5sC2VK2q4muD4qOQLDWL8Syz28Bol0NHCk9Liz+w+7uh4L/3V47cO68
-         USJjQjap7Y1ZlMwMLlHDEVtIhY/ShDD3234g0oYUj1Whr4XMgaw6/xLmMDfclDyYKPhP
-         DH5ZFeNy2m6HJzlK4dejhPeg6MVBBCR8GB6JMomyaEaw1yQdLVcy17O7TVxJl9ef+xQn
-         YaU4302Yzn7c9q/FJh98OWIheGyPvJag+wptId+4avMMO8uy4P5vXt0aHbN3jUrBQoa2
-         LqnK5aPTsUwriSSNtHPdgL694I+XjBL4GM/p5TpWnAtUhV9OkZoskaH7384BLvDa4c/K
-         tswg==
-X-Gm-Message-State: APjAAAV/XX+UuSuGc6pLScZo0wTy5Cn6aSZMYV3bMKDVtN3wg7VmP31t
-        Pv6kKwEcn4BpkXIIEyWxMFJ3UQ==
-X-Google-Smtp-Source: APXvYqwL2trOsqa+66I/NVhUbRU2WoqKCThu3hcpG7hSR/dLhEgMni1/Wl4321DOjAD90tPUJzbfIQ==
-X-Received: by 2002:a17:902:f81:: with SMTP id 1mr46299685plz.216.1556288620030;
-        Fri, 26 Apr 2019 07:23:40 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p6sm31698310pfd.122.2019.04.26.07.23.38
+        bh=8AQ2GkngH1De/6XzGohWoAVpJB2lelkaRG8sTS9mhMQ=;
+        b=dmpQsIQDGt3hmq7VCF6Ab1NQy9bX5Y3oCdjosnmQ8yYNQjp4WrX3wi4evmZ4MKTX2Z
+         NZ+erGdfOkGPxyYYQPA2TN6+xYFoUValqDiz0X3u0tgAfvkkEvda29bvYymLceg1Szf8
+         wsJIsJSuF5RW0aOYHzDQhFPBy72Y9bWGWpFdob3W8klEEi9PM8c9DJoK2ni5uUKI9sdQ
+         0fDRR19uSgpaUXiMj+DUuU9BKFVMGrpWIkwkK5uXG4785VO3f4t2KaEZJjqGul44XD4J
+         l6TW8b8pOMjl/K+omcKzfdmsR5qAg1HEybkD1laYgbhXZoHwh/n/KaPLN6oeLpSyVdHm
+         tZYg==
+X-Gm-Message-State: APjAAAWc7iqVA40DahPy7e6AMMd6XiIAqPL8+sc3/o0T6DT9AGV2ZQx4
+        yBw8m1KyblcHXpRNPTJKJM4=
+X-Google-Smtp-Source: APXvYqzOhSS96XBS6//FlzBxLAJB7NizGmVPmh3diujylNVWoJ/k4w9X4288juAjaooqChU9jWEdcQ==
+X-Received: by 2002:a65:4489:: with SMTP id l9mr42554893pgq.1.1556288643966;
+        Fri, 26 Apr 2019 07:24:03 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id e23sm35659131pfd.11.2019.04.26.07.23.57
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 07:23:39 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 10:23:37 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net,
-        rostedt@goodmis.org, dancol@google.com, sspatil@google.com,
-        jannh@google.com, surenb@google.com, timmurray@google.com,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        torvalds@linux-foundation.org, kernel-team@android.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jann Horn <jann@thejh.net>,
-        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, oleg@redhat.com,
-        viro@zeniv.linux.org.uk, linux-api@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] Add polling support to pidfd
-Message-ID: <20190426142337.GC261279@google.com>
-References: <20190425190010.46489-1-joel@joelfernandes.org>
- <20190425222359.sqhboc4x4daznr6r@brauner.io>
+        Fri, 26 Apr 2019 07:24:03 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 22:23:54 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 39/63] Documentation: x86: convert topology.txt to reST
+Message-ID: <20190426142352.dyrxkzrw6h7hgyv4@mail.google.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+ <20190423162932.21428-40-changbin.du@gmail.com>
+ <20190424144407.0df2c2f5@coco.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425222359.sqhboc4x4daznr6r@brauner.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190424144407.0df2c2f5@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 12:24:04AM +0200, Christian Brauner wrote:
-> On Thu, Apr 25, 2019 at 03:00:09PM -0400, Joel Fernandes (Google) wrote:
-> > pidfd are file descriptors referring to a process created with the
-> > CLONE_PIDFD clone(2) flag. Android low memory killer (LMK) needs pidfd
-> > polling support to replace code that currently checks for existence of
-> > /proc/pid for knowing that a process that is signalled to be killed has
-> > died, which is both racy and slow. The pidfd poll approach is race-free,
-> > and also allows the LMK to do other things (such as by polling on other
-> > fds) while awaiting the process being killed to die.
+On Wed, Apr 24, 2019 at 02:44:07PM -0300, Mauro Carvalho Chehab wrote:
+> Em Wed, 24 Apr 2019 00:29:08 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
 > 
-> Thanks for the patch!
-> 
-> Ok, let me be a little bit anal.
-> Please start the commit message with what this patch does and then add
-
-The subject title is "Add polling support to pidfd", but ok I should write a
-better commit message.
-
-> the justification why. You just say the "pidfd-poll" approach. You can
-> probably assume that CLONE_PIDFD is available for this patch. So
-> something like:
-> 
-> "This patch makes pidfds pollable. Specifically, it allows listeners to
-> be informed when the process the pidfd referes to exits. This patch only
-> introduces the ability to poll thread-group leaders since pidfds
-> currently can only reference those..."
-> 
-> Then justify the use-case and then go into implementation details.
-> That's usually how I would think about this:
-> - Change the codebase to do X
-> - Why do we need X
-> - Are there any technical details worth mentioning in the commit message
-> (- Are there any controversial points that people stumbled upon but that
->   have been settled sufficiently.)
-
-Generally the "how" in the patch should be in the code, but ok.
-
-I changed the first 3 paragraphs of the changelog to the following, is that
-better? :
-
-Android low memory killer (LMK) needs to know when a process dies once
-it is sent the kill signal. It does so by checking for the existence of
-/proc/pid which is both racy and slow. For example, if a PID is reused
-between when LMK sends a kill signal and checks for existence of the
-PID, since the wrong PID is now possibly checked for existence.
-
-This patch adds polling support to pidfd. Using the polling support, LMK
-will be able to get notified when a process exists in race-free and fast
-way, and allows the LMK to do other things (such as by polling on other
-fds) while awaiting the process being killed to die.
-
-For notification to polling processes, we follow the same existing
-mechanism in the kernel used when the parent of the task group is to be
-notified of a child's death (do_notify_parent).  This is precisely when
-the tasks waiting on a poll of pidfd are also awakened in this patch.
-
-> > pidfd are file descriptors referring to a process created with the
-> > CLONE_PIDFD clone(2) flag. Android low memory killer (LMK) needs pidfd
-> > polling support to replace code that currently checks for existence of
-> > /proc/pid for knowing that a process that is signalled to be killed has
-> > died, which is both racy and slow. The pidfd poll approach is race-free,
-> > and also allows the LMK to do other things (such as by polling on other
-> > fds) while awaiting the process being killed to die.
-> 
+> > This converts the plain text documentation to reStructuredText format and
+> > add it to Sphinx TOC tree. No essential content change.
 > > 
-> > It prevents a situation where a PID is reused between when LMK sends a
-> > kill signal and checks for existence of the PID, since the wrong PID is
-> > now possibly checked for existence.
-> > 
-> > In this patch, we follow the same existing mechanism in the kernel used
-> > when the parent of the task group is to be notified (do_notify_parent).
-> > This is when the tasks waiting on a poll of pidfd are also awakened.
-> > 
-> > We have decided to include the waitqueue in struct pid for the following
-> > reasons:
-> > 1. The wait queue has to survive for the lifetime of the poll. Including
-> > it in task_struct would not be option in this case because the task can
-> > be reaped and destroyed before the poll returns.
-> > 
-> > 2. By including the struct pid for the waitqueue means that during
-> > de_thread(), the new thread group leader automatically gets the new
-> > waitqueue/pid even though its task_struct is different.
-> > 
-> > Appropriate test cases are added in the second patch to provide coverage
-> > of all the cases the patch is handling.
-> > 
-> > Andy had a similar patch [1] in the past which was a good reference
-> > however this patch tries to handle different situations properly related
-> > to thread group existence, and how/where it notifies. And also solves
-> > other bugs (waitqueue lifetime).  Daniel had a similar patch [2]
-> > recently which this patch supercedes.
-> > 
-> > [1] https://lore.kernel.org/patchwork/patch/345098/
-> > [2] https://lore.kernel.org/lkml/20181029175322.189042-1-dancol@google.com/
-> > 
-> > Cc: luto@amacapital.net
-> > Cc: rostedt@goodmis.org
-> > Cc: dancol@google.com
-> > Cc: sspatil@google.com
-> > Cc: christian@brauner.io
-> > Cc: jannh@google.com
-> > Cc: surenb@google.com
-> > Cc: timmurray@google.com
-> > Cc: Jonathan Kowalski <bl0pbl33p@gmail.com>
-> > Cc: torvalds@linux-foundation.org
-> > Cc: kernel-team@android.com
-> 
-> These should all be in the form:
-> 
-> Cc: Firstname Lastname <email@address.com>
-
-If this bothers you too much, I can also just remove the CC list from the
-changelog here, and include it in my invocation of git-send-email instead..
-but I have seen commits in the tree that don't follow this rule.
-
-> 
-> There are people missing from the Cc that really should be there...
-
-If you look at the CC list of the email, people in the get_maintainer.pl
-script were also added. I did run get_maintainer.pl and checkpatch. But ok, I
-will add the folks you are suggesting as well. Thanks.
-
-> Even though he usually doesn't respond that often, please Cc Al on this.
-> If he responds it's usually rather important.
-
-No issues on that, but I am wondering if he should also be in MAINTAINERS
-file somewhere such that get_maintainer.pl does pick him up. I added him.
-
-> Oleg has reviewed your RFC patch quite substantially and given valuable
-> feedback and has an opinion on this thing and is best acquainted with
-> the exit code. So please add him to the Cc of the commit message in the
-> appropriate form and also add him to the Cc of the thread.
-
-Done.
-
-> Probably also want linux-api for good measure since a lot of people are
-> subscribed that would care about pollable pidfds. I'd also add Kees
-> since he had some interest in this work and David (Howells).
-
-Done, I added all of them and CC will go out to them next time. Thanks.
-
-> 
-> > Co-developed-by: Daniel Colascione <dancol@google.com>
-> 
-> Every CDB needs to give a SOB as well.
-
-Ok, done. thanks.
-
-> 
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > > ---
+> >  Documentation/x86/index.rst    |   1 +
+> >  Documentation/x86/topology.rst | 228 +++++++++++++++++++++++++++++++++
+> >  Documentation/x86/topology.txt | 217 -------------------------------
+> >  3 files changed, 229 insertions(+), 217 deletions(-)
+> >  create mode 100644 Documentation/x86/topology.rst
+> >  delete mode 100644 Documentation/x86/topology.txt
+> 
+> Why? Please preserve as much as possible from the original file...
+> it is really hard to see what you're doing. Most of those x86
+> files are already almost at ReST format (like this one). There's
+> absolutely **no reason** why you would do so much radical changes
+> that would below the 50% similarity threshold that would make git
+> to recognize as a change on the same file!
+>
+My editor changed the indent. I need to redo this conversion. Thanks.
+
+> I'll give a quick review on this one, but it is really hard to be
+> sure that something is missing, when the similarity is too low.
+> 
 > > 
-> > RFC -> v1:
-> > * Based on CLONE_PIDFD patches: https://lwn.net/Articles/786244/
-> > * Updated selftests.
-> > * Renamed poll wake function to do_notify_pidfd.
-> > * Removed depending on EXIT flags
-> > * Removed POLLERR flag since semantics are controversial and
-> >   we don't have usecases for it right now (later we can add if there's
-> >   a need for it).
-> > 
-> >  include/linux/pid.h |  3 +++
-> >  kernel/fork.c       | 33 +++++++++++++++++++++++++++++++++
-> >  kernel/pid.c        |  2 ++
-> >  kernel/signal.c     | 14 ++++++++++++++
-> >  4 files changed, 52 insertions(+)
-> > 
-> > diff --git a/include/linux/pid.h b/include/linux/pid.h
-> > index 3c8ef5a199ca..1484db6ca8d1 100644
-> > --- a/include/linux/pid.h
-> > +++ b/include/linux/pid.h
-> > @@ -3,6 +3,7 @@
-> >  #define _LINUX_PID_H
+> > diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+> > index 8f08caf4fbbb..2033791e53bc 100644
+> > --- a/Documentation/x86/index.rst
+> > +++ b/Documentation/x86/index.rst
+> > @@ -9,3 +9,4 @@ Linux x86 Support
+> >     :numbered:
 > >  
-> >  #include <linux/rculist.h>
-> > +#include <linux/wait.h>
-> >  
-> >  enum pid_type
-> >  {
-> > @@ -60,6 +61,8 @@ struct pid
-> >  	unsigned int level;
-> >  	/* lists of tasks that use this pid */
-> >  	struct hlist_head tasks[PIDTYPE_MAX];
-> > +	/* wait queue for pidfd notifications */
-> > +	wait_queue_head_t wait_pidfd;
-> >  	struct rcu_head rcu;
-> >  	struct upid numbers[1];
-> >  };
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 5525837ed80e..fb3b614f6456 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -1685,8 +1685,41 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
-> >  }
-> >  #endif
-> >  
-> > +static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
-> > +{
-> > +	struct task_struct *task;
-> > +	struct pid *pid;
-> > +	int poll_flags = 0;
+> >     boot
+> > +   topology
+> > diff --git a/Documentation/x86/topology.rst b/Documentation/x86/topology.rst
+> > new file mode 100644
+> > index 000000000000..1df5f56f4882
+> > --- /dev/null
+> > +++ b/Documentation/x86/topology.rst
+> > @@ -0,0 +1,228 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
 > > +
-> > +	/*
-> > +	 * tasklist_lock must be held because to avoid racing with
-> > +	 * changes in exit_state and wake up. Basically to avoid:
-> > +	 *
-> > +	 * P0: read exit_state = 0
-> > +	 * P1: write exit_state = EXIT_DEAD
-> > +	 * P1: Do a wake up - wq is empty, so do nothing
-> > +	 * P0: Queue for polling - wait forever.
-> > +	 */
-> > +	read_lock(&tasklist_lock);
-> > +	pid = file->private_data;
-> > +	task = pid_task(pid, PIDTYPE_PID);
-> > +	WARN_ON_ONCE(task && !thread_group_leader(task));
+> > +============
+> > +x86 Topology
+> > +============
 > > +
-> > +	if (!task || (task->exit_state && thread_group_empty(task)))
-> > +		poll_flags = POLLIN | POLLRDNORM;
+> > +This documents and clarifies the main aspects of x86 topology modelling and
+> > +representation in the kernel. Update/change when doing changes to the
+> > +respective code.
+> > +
+> > +The architecture-agnostic topology definitions are in
+> > +Documentation/cputopology.txt. This file holds x86-specific
+> > +differences/specialities which must not necessarily apply to the generic
+> > +definitions. Thus, the way to read up on Linux topology on x86 is to start
+> > +with the generic one and look at this one in parallel for the x86 specifics.
+> > +
+> > +Needless to say, code should use the generic functions - this file is *only*
+> > +here to *document* the inner workings of x86 topology.
+> > +
+> > +Started by Thomas Gleixner <tglx@linutronix.de> and Borislav Petkov <bp@alien8.de>.
+> > +
+> > +The main aim of the topology facilities is to present adequate interfaces to
+> > +code which needs to know/query/use the structure of the running system wrt
+> > +threads, cores, packages, etc.
+> > +
+> > +The kernel does not care about the concept of physical sockets because a
+> > +socket has no relevance to software. It's an electromechanical component. In
+> > +the past a socket always contained a single package (see below), but with the
+> > +advent of Multi Chip Modules (MCM) a socket can hold more than one package. So
+> > +there might be still references to sockets in the code, but they are of
+> > +historical nature and should be cleaned up.
+> > +
+> > +The topology of a system is described in the units of:
+> > +
+> > +    - packages
+> > +    - cores
+> > +    - threads 
+> > +
+> > +Package
+> > +=======
+> > +
+> > +Packages contain a number of cores plus shared resources, e.g. DRAM
+> > +controller, shared caches etc.
+> > +
+> > +AMD nomenclature for package is 'Node'.
+> > +
+> > +Package-related topology information in the kernel:
+> > +
+> > +  - cpuinfo_x86.x86_max_cores:
+> > +
+> > +    The number of cores in a package. This information is retrieved via CPUID.
+> > +
+> > +  - cpuinfo_x86.phys_proc_id:
+> > +
+> > +    The physical ID of the package. This information is retrieved via CPUID
+> > +    and deduced from the APIC IDs of the cores in the package.
+> > +
+> > +  - cpuinfo_x86.logical_id:
+> > +
+> > +    The logical ID of the package. As we do not trust BIOSes to enumerate the
+> > +    packages in a consistent way, we introduced the concept of logical package
+> > +    ID so we can sanely calculate the number of maximum possible packages in
+> > +    the system and have the packages enumerated linearly.
+> > +
+> > +  - topology_max_packages():
+> > +
+> > +    The maximum possible number of packages in the system. Helpful for per
+> > +    package facilities to preallocate per package information.
+> > +
+> > +  - cpu_llc_id:
+> > +
+> > +    A per-CPU variable containing:
+> > +
+> > +    - On Intel, the first APIC ID of the list of CPUs sharing the Last Level
+> > +      Cache.
+> > +
+> > +    - On AMD, the Node ID or Core Complex ID containing the Last Level
+> > +      Cache. In general, it is a number identifying an LLC uniquely on the
+> > +      system.
+> > +
+> > +Cores
+> > +=====
+> > +
+> > +A core consists of 1 or more threads. It does not matter whether the threads
+> > +are SMT- or CMT-type threads.
+> > +
+> > +AMDs nomenclature for a CMT core is "Compute Unit". The kernel always uses
+> > +"core".
+> > +
+> > +Core-related topology information in the kernel:
+> > +
+> > +  - smp_num_siblings:
+> > +
+> > +    The number of threads in a core. The number of threads in a package can be
+> > +    calculated by::
+> > +
+> > +      threads_per_package = cpuinfo_x86.x86_max_cores * smp_num_siblings
+> > +
+> > +
+> > +Threads
+> > +=======
+> > +
+> > +A thread is a single scheduling unit. It's the equivalent to a logical Linux
+> > +CPU.
+> > +
+> > +AMDs nomenclature for CMT threads is "Compute Unit Core". The kernel always
+> > +uses "thread".
+> > +
+> > +Thread-related topology information in the kernel:
+> > +
+> > +  - topology_core_cpumask():
+> > +
+> > +    The cpumask contains all online threads in the package to which a thread
+> > +    belongs.
+> > +
+> > +    The number of online threads is also printed in /proc/cpuinfo "siblings."
+> > +
+> > +  - topology_sibling_cpumask():
+> > +
+> > +    The cpumask contains all online threads in the core to which a thread
+> > +    belongs.
+> > +
+> > +  - topology_logical_package_id():
+> > +
+> > +    The logical package ID to which a thread belongs.
+> > +
+> > +  - topology_physical_package_id():
+> > +
+> > +    The physical package ID to which a thread belongs.
+> > +
+> > +  - topology_core_id();
+> > +
+> > +    The ID of the core to which a thread belongs. It is also printed in /proc/cpuinfo
+> > +    "core_id."
+> > +
+> > +
+> > +
+> > +System topology examples
+> > +========================
+> > +
+> > +.. note:: The alternative Linux CPU enumeration depends on how the BIOS
+> > +  enumerates the threads. Many BIOSes enumerate all threads 0 first and
+> > +  then all threads 1. That has the "advantage" that the logical Linux CPU
+> > +  numbers of threads 0 stay the same whether threads are enabled or not.
+> > +  That's merely an implementation detail and has no practical impact.
+> > +
+> > +1) Single Package, Single Core
+> > +::
 > 
-> So we block until the thread-group is empty? Hm, the thread-group leader
-> remains in zombie state until all threads are gone. Should probably just
-> be a short comment somewhere that callers are only informed about a
-> whole thread-group exit and not about when the thread-group leader has
-> actually exited.
-
-Ok, I'll add a comment.
-
-> I would like the ability to extend this interface in the future to allow
-> for actually reading data from the pidfd on EPOLLIN.
-> POSIX specifies that POLLIN and POLLRDNORM are set even if the
-> message to be read is zero. So one cheap way of doing this would
-> probably be to do a 0 read/ioctl. That wouldn't hurt your very limited
-> usecase and people could test whether the read returned non-0 data and
-> if so they know this interface got extended. If we never extend it here
-> it won't matter.
-
-I am a bit confused. What specific changes to this patch are you proposing?
-This patch makes poll block until the process exits. In the future, we can
-make it unblock for a other reasons as well, that's fine with me. I don't see
-how this patch prevents such extensions.
-
-> > +	if (!poll_flags)
-> > +		poll_wait(file, &pid->wait_pidfd, pts);
-> > +
-> > +	read_unlock(&tasklist_lock);
-> > +
-> > +	return poll_flags;
-> > +}
+> I would just place the :: on the above line. Same applies to similar
+> cases on this file.
 > 
+Sure.
+
+> > +
+> > +   [package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
+> > +
+> > +2) Single Package, Dual Core
+> > +
+> > +  a) One thread per core
+> > +  ::
+> > +
+> > +    [package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
+> > +          -> [core 1] -> [thread 0] -> Linux CPU 1
+> 
+> Something got broken here.
 > 
 > > +
+> > +  b) Two threads per core
+> > +  ::
 > > +
-> >  const struct file_operations pidfd_fops = {
-> >  	.release = pidfd_release,
-> > +	.poll = pidfd_poll,
-> >  #ifdef CONFIG_PROC_FS
-> >  	.show_fdinfo = pidfd_show_fdinfo,
-> >  #endif
-> > diff --git a/kernel/pid.c b/kernel/pid.c
-> > index 20881598bdfa..5c90c239242f 100644
-> > --- a/kernel/pid.c
-> > +++ b/kernel/pid.c
-> > @@ -214,6 +214,8 @@ struct pid *alloc_pid(struct pid_namespace *ns)
-> >  	for (type = 0; type < PIDTYPE_MAX; ++type)
-> >  		INIT_HLIST_HEAD(&pid->tasks[type]);
-> >  
-> > +	init_waitqueue_head(&pid->wait_pidfd);
-> > +
-> >  	upid = pid->numbers + ns->level;
-> >  	spin_lock_irq(&pidmap_lock);
-> >  	if (!(ns->pid_allocated & PIDNS_ADDING))
-> > diff --git a/kernel/signal.c b/kernel/signal.c
-> > index 1581140f2d99..16e7718316e5 100644
-> > --- a/kernel/signal.c
-> > +++ b/kernel/signal.c
-> > @@ -1800,6 +1800,17 @@ int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
-> >  	return ret;
-> >  }
-> >  
-> > +static void do_notify_pidfd(struct task_struct *task)
+> > +    [package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
+> > +          -> [thread 1] -> Linux CPU 1
+> > +          -> [core 1] -> [thread 0] -> Linux CPU 2
+> > +          -> [thread 1] -> Linux CPU 3
 > 
-> Maybe a short command that this helper can only be called when we know
-> that task is a thread-group leader wouldn't hurt so there's no confusion
-> later.
+> And here... This one, for example, should be, instead:
+> 
+>         [package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
+>                                 -> [thread 1] -> Linux CPU 1
+>                     -> [core 1] -> [thread 0] -> Linux CPU 2
+>                                 -> [thread 1] -> Linux CPU 3
+> 
+> Clearly there's something that it is messing with tabs on your
+> x86 conversion.
+>
+Sorry for such mistake. I will check them one by one.
 
-Ok, will do.
+> I'll stop my review here, as it sounds pointless to review it,
+> as there are too many broken whitespace stuff on your
+> conversion.
+> 
+> Thanks,
+> Mauro
 
-thanks,
-
- - Joel
-
+-- 
+Cheers,
+Changbin Du
