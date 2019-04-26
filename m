@@ -3,80 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54C9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CE7C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9368D2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121DE2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfDZKS4 (ORCPT
+        id S1726294AbfDZKTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:18:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59792 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfDZKS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:18:56 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CE7993088297;
-        Fri, 26 Apr 2019 10:18:55 +0000 (UTC)
-Received: from localhost (ovpn-12-17.pek2.redhat.com [10.72.12.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 270241001E87;
-        Fri, 26 Apr 2019 10:18:54 +0000 (UTC)
-Date:   Fri, 26 Apr 2019 18:18:52 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     keescook@chromium.org, kirill@shutemov.name,
-        linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, hpa@zytor.com, peterz@infradead.org,
-        thgarnie@google.com, herbert@gondor.apana.org.au,
-        mike.travis@hpe.com, frank.ramsay@hpe.com,
-        yamada.masahiro@socionext.com
-Subject: Re: [PATCH v2 RESEND 2/2] x86/mm/KASLR: Fix the size of vmemmap
- section
-Message-ID: <20190426101852.GR3584@localhost.localdomain>
-References: <20190414072804.12560-1-bhe@redhat.com>
- <20190414072804.12560-3-bhe@redhat.com>
- <20190415194755.GJ29317@zn.tnic>
- <20190426092348.GO3584@localhost.localdomain>
- <20190426100441.GC4608@zn.tnic>
+        Fri, 26 Apr 2019 06:19:51 -0400
+Received: from outbound-smtp24.blacknight.com ([81.17.249.192]:53301 "EHLO
+        outbound-smtp24.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725942AbfDZKTv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 06:19:51 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp24.blacknight.com (Postfix) with ESMTPS id EE94FB8918
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 11:19:48 +0100 (IST)
+Received: (qmail 10966 invoked from network); 26 Apr 2019 10:19:48 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 26 Apr 2019 10:19:48 -0000
+Date:   Fri, 26 Apr 2019 11:19:47 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Fr?d?ric Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190426101947.GZ18914@techsingularity.net>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+ <20190424140013.GA14594@sinkpad>
+ <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
+ <20190425095508.GA8387@gmail.com>
+ <20190425144619.GX18914@techsingularity.net>
+ <20190425185343.GA122353@gmail.com>
+ <20190425213145.GY18914@techsingularity.net>
+ <20190426094545.GD126896@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20190426100441.GC4608@zn.tnic>
+In-Reply-To: <20190426094545.GD126896@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 26 Apr 2019 10:18:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/26/19 at 12:04pm, Borislav Petkov wrote:
-> On Fri, Apr 26, 2019 at 05:23:48PM +0800, Baoquan He wrote:
-> > I sent private mail to Kirill and Kees. Kirill haven't replied yet, he
-> > could be busy with something else as he doesn't show up recently on
-> > lkml.
+On Fri, Apr 26, 2019 at 11:45:45AM +0200, Ingo Molnar wrote:
 > 
-> I don't understand what the hurry is?
+> * Mel Gorman <mgorman@techsingularity.net> wrote:
 > 
-> The merge window is imminent and we only pick obvious fixes. That
-> doesn't qualify as such, AFAICT.
+> > > > I can show a comparison with equal levels of parallelisation but with 
+> > > > HT off, it is a completely broken configuration and I do not think a 
+> > > > comparison like that makes any sense.
+> > > 
+> > > I would still be interested in that comparison, because I'd like
+> > > to learn whether there's any true *inherent* performance advantage to 
+> > > HyperThreading for that particular workload, for exactly tuned 
+> > > parallelism.
+> > > 
+> > 
+> > It really isn't a fair comparison. MPI seems to behave very differently
+> > when a machine is saturated. It's documented as changing its behaviour
+> > as it tries to avoid the worst consequences of saturation.
+> > 
+> > Curiously, the results on the 2-socket machine were not as bad as I
+> > feared when the HT configuration is running with twice the number of
+> > threads as there are CPUs
+> > 
+> > Amean     bt      771.15 (   0.00%)     1086.74 * -40.93%*
+> > Amean     cg      445.92 (   0.00%)      543.41 * -21.86%*
+> > Amean     ep       70.01 (   0.00%)       96.29 * -37.53%*
+> > Amean     is       16.75 (   0.00%)       21.19 * -26.51%*
+> > Amean     lu      882.84 (   0.00%)      595.14 *  32.59%*
+> > Amean     mg       84.10 (   0.00%)       80.02 *   4.84%*
+> > Amean     sp     1353.88 (   0.00%)     1384.10 *  -2.23%*
+> 
+> Yeah, so what I wanted to suggest is a parallel numeric throughput test 
+> with few inter-process data dependencies, and see whether HT actually 
+> improves total throughput versus the no-HT case.
+> 
+> No over-saturation - but exactly as many threads as logical CPUs.
+> 
+> I.e. with 20 physical cores and 40 logical CPUs the numbers to compare 
+> would be a 'nosmt' benchmark running 20 threads, versus a SMT test 
+> running 40 threads.
+> 
+> I.e. how much does SMT improve total throughput when the workload's 
+> parallelism is tuned to utilize 100% of the available CPUs?
+> 
+> Does this make sense?
+> 
 
-OK.
+Yes. Here is the comparison.
 
-> 
-> > Kees kindly replied, and said he couldn't find this mail thread. He told
-> > I can add his Reviewed-by, as he has acked this patchset in v2
-> > thread. I just updated later to tune log and correct typos.
-> > http://lkml.kernel.org/r/CAGXu5j+o4aSx9mMDJqTMOp-VrvWes-2YEwR1f29z8dm0rUfzGQ@mail.gmail.com
-> 
-> Yes, when you get Reviewed-by:'s or other tags from reviewers, you
-> *add* them to your next submission when the patch doesn't change in
-> non-trivial fashion. You should know that...
+Amean     bt      678.75 (   0.00%)      789.13 * -16.26%*
+Amean     cg      261.22 (   0.00%)      428.82 * -64.16%*
+Amean     ep       55.36 (   0.00%)       84.41 * -52.48%*
+Amean     is       13.25 (   0.00%)       17.82 * -34.47%*
+Amean     lu     1065.08 (   0.00%)     1090.44 (  -2.38%)
+Amean     mg       89.96 (   0.00%)       84.28 *   6.31%*
+Amean     sp     1579.52 (   0.00%)     1506.16 *   4.64%*
+Amean     ua      611.87 (   0.00%)      663.26 *  -8.40%*
 
-OK, will remember it. Thanks.
+This is the socket machine and with HT On, there are 80 logical CPUs
+versus HT Off with 40 logical CPUs.
+
+-- 
+Mel Gorman
+SUSE Labs
