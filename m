@@ -2,121 +2,74 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55452C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85960C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BEFA2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:26:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SM9bxojQ"
+	by mail.kernel.org (Postfix) with ESMTP id 49CC32077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfDZP0b (ORCPT
+        id S1726417AbfDZP0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:26:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37322 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfDZP0a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:26:30 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r6so5007672wrm.4;
-        Fri, 26 Apr 2019 08:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V0SNaA0nEp4NEznqEA+NA6qfRftkgT/+RnqJg67XDDQ=;
-        b=SM9bxojQPSBmqQQVSvsDOVle93PrvwJWmY4OxPN0mmUlOeSEjlstv5HsJ/Mhfbfzi9
-         BAXwlfgNkGFEfxFA8eLa85qp7SSoLOBy5b7vLeQG0lVHEnkB8TtQGM93dGfhKvhmqV5x
-         XK/+zxLnqPQ9731mtAzaeu7eNCshXQNLTbeRQju+1+H1/O57JeOW59Hbmzm2/JTM5l5R
-         1kxLx/4s/4Y7xsXlKEJibGCgW/Z+QzJ36LlPSkpfU8hW8PjnTvH7bYzixBw1Hp95acdn
-         vJ9CdmI+mftwh7QfSq17I97Z1lAQKP5zfyYa09nYW109dDp5SNbppj43GNVczH3X4yzD
-         dhpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V0SNaA0nEp4NEznqEA+NA6qfRftkgT/+RnqJg67XDDQ=;
-        b=UTWCLUzGhg3H/dtX/q5dTF7PUzYqcXghctFyaXCrM0twXgbLfz3Qp4YzV7d1z8fFkU
-         AqCmGk89psyNPFS/IPyVyUKojX0hO1hvtcV0jNL3k6eR6fpEua+aEIhBdQ8jIE8mwaWK
-         wk8/2twK6LwgPqesNcUQslcE83dlixal5ok2BMesrtJH1yEhnmnDflRPknaVG/RORqmG
-         dWbRscz+EEvmJAd9dvF8lC3rYbCjUmv6HZ4p5fE6DXTvdcBYHHfV2zZPDIDRbuS5ZJzd
-         bQKon9J7Geqt31zAr0+Vbwupjg1wefIofg9llASaZajhukh2Kk5ptuMjWeRo0RiaweBb
-         /PAg==
-X-Gm-Message-State: APjAAAWizxRxPYHGAHpZSDjTl8laYNRLJ5rHY785iAtZ2oa68ipcnEmk
-        br/Zx7ryxWtSgwU0zb8s+5A=
-X-Google-Smtp-Source: APXvYqw7/anK5JnbqxGLUMsdL+B4zuaiJmr3tkm7vHqYBTqwds5dMyl1TXGtrq2erWcBisYe2qwuSw==
-X-Received: by 2002:adf:dc4a:: with SMTP id m10mr29861095wrj.0.1556292388228;
-        Fri, 26 Apr 2019 08:26:28 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id y197sm25921452wmd.34.2019.04.26.08.26.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 08:26:27 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 17:26:26 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Tero Kristo <t-kristo@ti.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>, linux-pwm@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH] clk: Remove CLK_IS_BASIC clk flag
-Message-ID: <20190426152626.GD19559@ulmo>
-References: <20190425181447.60726-1-sboyd@kernel.org>
+        Fri, 26 Apr 2019 11:26:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39854 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726266AbfDZP0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:26:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 726E6AB7D;
+        Fri, 26 Apr 2019 15:26:34 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 17:26:32 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     iommu@lists.linux-foundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: "iommu/amd: Set exclusion range correctly" causes smartpqi
+ offline
+Message-ID: <20190426152632.GC3173@suse.de>
+References: <1556290348.6132.6.camel@lca.pw>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3Pql8miugIZX0722"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190425181447.60726-1-sboyd@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1556290348.6132.6.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 26, 2019 at 10:52:28AM -0400, Qian Cai wrote:
+> Applying some memory pressure would causes smartpqi offline even in today's
+> linux-next. This can always be reproduced by a LTP test cases [1] or sometimes
+> just compiling kernels.
+> 
+> Reverting the commit "iommu/amd: Set exclusion range correctly" fixed the issue.
+> 
+> [  213.437112] smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT
+> domain=0x0000 address=0x1000 flags=0x0000]
+> [  213.447659] smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT
+> domain=0x0000 address=0x1800 flags=0x0000]
+> [  233.362013] smartpqi 0000:23:00.0: controller is offline: status code 0x14803
+> [  233.369359] smartpqi 0000:23:00.0: controller offline
+> [  233.388915] print_req_error: I/O error, dev sdb, sector 3317352 flags 2000001
+> [  233.388921] sd 0:0:0:0: [sdb] tag#95 UNKNOWN(0x2003) Result: hostbyte=0x01
+> driverbyte=0x00
+> [  233.388931] sd 0:0:0:0: [sdb] tag#95 CDB: opcode=0x2a 2a 00 00 55 89 00 00 01
+> 08 00
+> [  233.389003] Write-error on swap-device (254:1:4474640)
+> [  233.389015] Write-error on swap-device (254:1:2190776)
+> [  233.389023] Write-error on swap-device (254:1:8351936)
+> 
+> [1] /opt/ltp/testcases/bin/mtest01 -p80 -w
 
---3Pql8miugIZX0722
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I can't explain that, can you please boot with 'amd_iommu_dump' on the
+kernel command line and send me dmesg after boot?
 
-On Thu, Apr 25, 2019 at 11:14:47AM -0700, Stephen Boyd wrote:
-[...]
-> base-commit: 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b
-> prerequisite-patch-id: 6196ca807a15f9f4a67d5e6b8668b4f13442ac15
-> prerequisite-patch-id: 9532946d1be40c2b20af0591ac4636a4cf3b14dd
-> prerequisite-patch-id: 4e4a9591f5a4ac0d5a72e694da8fdae8c8dda352
-> prerequisite-patch-id: bcd75306e64ff866989a978127f6b16f7575d0d3
+Thanks,
 
-Just curious: what are these? I mean, I have a pretty good guess what
-these are, but how do you use them?
-
-Thierry
-
---3Pql8miugIZX0722
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzDIyEACgkQ3SOs138+
-s6E+3w//QY2u+1dP4U77H2Ps8hLK4fFnok0GiK/ZyE+yaditfEYdCZqS/hh1xG74
-OEKrMRaCAl1A8DyAJJzro7Iqnxgs1N81PPGVzvl5je2hNiN2ODnhtk+mmFuuUBf3
-QwBxhXzVDiCGtrlkBtpnMlRymurRvS+SIuDK6fyzArGjgbaVXREozJ06Q3aytemZ
-gMfT3AZ5laijFVEfd6vtKrK8hJkMHTHDzpN/uDZ5hlZFEoWstRqluQR404vxZr3h
-3rq0Oq5ECOt9go4+ZHnXfO0QwubsRVpuF1O+8U9L8WQsWUKKppmrB0veuvTNoq9W
-m70l8deU/Tn4j7VXu5pyJbREZj7UC2flPgTgPrhonsUSTQo+s28pehxWk0I8jGVp
-xc5Z2Ie+uoKt+SBIchug6Q2TX3jLDyynplLJGcHDsfI0HsB21mW507fGI1odzUTM
-4Nglwx8c+LjynVJGKZI/NbXMOEkMQLUitsrM/tOyyQi0ew4144Hc7i3PVOpX60zE
-dy7mmJEJ+80zaPXqjw5meMFq4v476Z8icKSZbHyUJaSrPdr/8f22s73ocQAhF4re
-/kb+odtUNfV4+V4BN2RX3W4d8jqux9Hwnr2fGfcuRt8VnO7F8t6LUcswka9Umt0k
-h91yTD/BQGste7Fa/Q4Y/4ZZMidnTVnzoLa+sqZaBnX4BUOIz6U=
-=ghXI
------END PGP SIGNATURE-----
-
---3Pql8miugIZX0722--
+	Joerg
