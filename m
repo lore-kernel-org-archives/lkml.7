@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460B2C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F45C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17BF3208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6924E2087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:44:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhMsROzO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlRIHgbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfD0Gob (ORCPT
+        id S1727282AbfD0Gok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:44:31 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42643 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfD0GnY (ORCPT
+        Sat, 27 Apr 2019 02:44:40 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43190 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfD0GnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:43:24 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w25so2743913pfi.9;
-        Fri, 26 Apr 2019 23:43:23 -0700 (PDT)
+        Sat, 27 Apr 2019 02:43:17 -0400
+Received: by mail-pl1-f196.google.com with SMTP id n8so2559750plp.10;
+        Fri, 26 Apr 2019 23:43:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=g3nO4xFM3yb0X+OIqTEtEp6LbffMj61RqStKCNeSSiM=;
-        b=IhMsROzOX/uvsuQybijdR85Kqaxq4yWzjUoagIOqk1LVY6OLTEXQbjBmXHD5WxbAzP
-         cmCoo1zMlycyEW/HfwZCgn/X+0dMFPFHyqqtEUKq6AZF6jWZrRVIUAiE8jxYjY0M9MT3
-         Ik7ZKhQeM7kg+3gB06XcTjx2xBZpPGhS55GH7o8s674YL85Zg5fEINa05kjxM9iG+Kfo
-         SEIwp8JxZ7vs+rhoqI+mg8MouUQf2Zul6cu4rspQPkk8FxQa/9RXPXX4OwkD3jy0+Z/+
-         SBrns4/qvGYQvjrl9OPoH7DBVBfA0arFpsKvUBwFWEn4L2+Z7qiKOGh0M4x1w7s8Fe9M
-         Y7uQ==
+        bh=3mFI7V2IpbwOhuCcp+g9CO2dE2meFXsvyyAeb18NWyo=;
+        b=JlRIHgbr6HB0GM/dfrBCsDnNLxTkOKzTB7qYCbAx4tDSjiPWdWErWZcgNMKz3646h4
+         C8cKj9bZkmi6cPWikKj5uJAC7SrSg/qfrmI03cXhBRcOJHEMan3BYUSQ1ScXOsNa4u3Z
+         IDQ4DfzWzmEsKN3rKTGM5uTvN695pUVNWWV4a8LMMvLzAhr7fWiHf2k7ZmkakgE11lMg
+         wbrOSfmIb0CTjB/azGiS0/j+OjbriGytqXhtU6Bd27x2yAPLaWXYIt792EgmySvUAGOQ
+         9VF/satnq8MCbRYyAQp+FRH27QsFCLaAp8PdnQobxJM8asT3n363jT4JX9FD5F/9ebkE
+         0Uqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=g3nO4xFM3yb0X+OIqTEtEp6LbffMj61RqStKCNeSSiM=;
-        b=LUFmfSZcRq+o6XrAutLGr61MSM5f8+xjqQvDZdY2O1qFAEhVNEufDOesCgYVB3iQmE
-         TR723i337mfyO0D9+Mub9sQroN/z1mftT81CHNlM5dkEWgtyubsvbPjN9yVItcrwEx20
-         KvTaMsBVuqUrXLPE4T/7fGBSVuih4EaD+0xanPHzTvG8BIa5iCosgDwPPlhS9GyDeosK
-         h730Fy7kU9neldz2zWERUdfI1P5pmQq5hHndWLYq0qNwZ93NekPgy341Ll74aEFlVrm5
-         rrHRnlQFX9uVI7nSDdQwTG8lAdvNR7fBdcpvtMZRnbaoyNEOJtz1scQ7OSXk+AAhbRvD
-         Wj7Q==
-X-Gm-Message-State: APjAAAXnQN31cyTgxJAnEdAGXpNYvf6AE3My6C33aEuXifLFEscPIXk/
-        unDL4fowi5pWkRmoeSU/kB8=
-X-Google-Smtp-Source: APXvYqyXozv8RJ3un5KRfku6J9oOZngaXmf1Y0t3bUJMwzL1TSTEhjmbFCgyEeDgaxJqumt2ZQ+7aA==
-X-Received: by 2002:a62:5fc7:: with SMTP id t190mr50793424pfb.191.1556347403359;
-        Fri, 26 Apr 2019 23:43:23 -0700 (PDT)
+        bh=3mFI7V2IpbwOhuCcp+g9CO2dE2meFXsvyyAeb18NWyo=;
+        b=Fb2V3scDSuIaD9RsJA5v4YGq3jzdnjbX11GqbT381MORxzQExTxtzQQd+InbiJk2I5
+         8nwCHLZlabvHLnuUb1X7q1n6G6Lq/gBi1Od9CKc2nioFZsnYX1ZjNYuWLsdw+0Tjn4TH
+         f7Wd0KCiZMqONkUfm7GJk0eQ7meuGsgqiOqs3QLnC8wND/R5ciH+kz4mRZ18UKMYah/V
+         uA5dSN2TFrtqLR48WmHiiqqzX2wyjKBrryKLjtqVXEgmq29oyr7m6Vhbfhs2YTdquxdN
+         RMKcwGZXCEmv1EHCyrC1ziVZ2SO2JHe/N7aE0M+yEtb4SqCs3alrnj/ITGLuuLSXP9z+
+         kSsw==
+X-Gm-Message-State: APjAAAUZpDRKLHtbae36L/n0J+5S0Y0DAH76955DFPID1Gs16v7mNlo9
+        dBSgrrl4k4tf2pSTUcT6yI8=
+X-Google-Smtp-Source: APXvYqx2WhBZnJIn8mqH1b7ixt4GF/6k4yp110M4lMdf7eXq6Mz7eqmVNfTsfdPSyk5JMfubTGyIEQ==
+X-Received: by 2002:a17:902:2927:: with SMTP id g36mr48053244plb.6.1556347396829;
+        Fri, 26 Apr 2019 23:43:16 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.22
+        by smtp.gmail.com with ESMTPSA id j22sm36460145pfn.129.2019.04.26.23.43.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 23:43:22 -0700 (PDT)
+        Fri, 26 Apr 2019 23:43:16 -0700 (PDT)
 From:   nadav.amit@gmail.com
 To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -71,13 +71,10 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
         will.deacon@arm.com, ard.biesheuvel@linaro.org,
         kristen@linux.intel.com, deneen.t.dock@intel.com,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v6 13/24] x86/jump-label: Remove support for custom poker
-Date:   Fri, 26 Apr 2019 16:22:52 -0700
-Message-Id: <20190426232303.28381-14-nadav.amit@gmail.com>
+        Nadav Amit <namit@vmware.com>
+Subject: [PATCH v6 09/24] x86/kgdb: Avoid redundant comparison of patched code
+Date:   Fri, 26 Apr 2019 16:22:48 -0700
+Message-Id: <20190426232303.28381-10-nadav.amit@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426232303.28381-1-nadav.amit@gmail.com>
 References: <20190426232303.28381-1-nadav.amit@gmail.com>
@@ -88,89 +85,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nadav Amit <namit@vmware.com>
 
-There are only two types of poking: early and breakpoint based. The use
-of a function pointer to perform poking complicates the code and is
-probably inefficient due to the use of indirect branches.
+text_poke() already ensures that the written value is the correct one
+and fails if that is not the case. There is no need for an additional
+comparison. Remove it.
 
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/kernel/jump_label.c | 26 ++++++++++----------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
+ arch/x86/kernel/kgdb.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
-index e7d8c636b228..e631c358f7f4 100644
---- a/arch/x86/kernel/jump_label.c
-+++ b/arch/x86/kernel/jump_label.c
-@@ -37,7 +37,6 @@ static void bug_at(unsigned char *ip, int line)
- 
- static void __ref __jump_label_transform(struct jump_entry *entry,
- 					 enum jump_label_type type,
--					 void *(*poker)(void *, const void *, size_t),
- 					 int init)
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index 2b203ee5b879..13b13311b792 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -747,7 +747,6 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long ip)
+ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
  {
- 	union jump_code_union jmp;
-@@ -50,14 +49,6 @@ static void __ref __jump_label_transform(struct jump_entry *entry,
- 	jmp.offset = jump_entry_target(entry) -
- 		     (jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
+ 	int err;
+-	char opc[BREAK_INSTR_SIZE];
  
--	/*
--	 * As long as only a single processor is running and the code is still
--	 * not marked as RO, text_poke_early() can be used; Checking that
--	 * system_state is SYSTEM_BOOTING guarantees it.
--	 */
--	if (system_state == SYSTEM_BOOTING)
--		poker = text_poke_early;
+ 	bpt->type = BP_BREAKPOINT;
+ 	err = probe_kernel_read(bpt->saved_instr, (char *)bpt->bpt_addr,
+@@ -766,11 +765,6 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+ 		return -EBUSY;
+ 	text_poke_kgdb((void *)bpt->bpt_addr, arch_kgdb_ops.gdb_bpt_instr,
+ 		       BREAK_INSTR_SIZE);
+-	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
+-	if (err)
+-		return err;
+-	if (memcmp(opc, arch_kgdb_ops.gdb_bpt_instr, BREAK_INSTR_SIZE))
+-		return -EINVAL;
+ 	bpt->type = BP_POKE_BREAKPOINT;
+ 
+ 	return err;
+@@ -778,9 +772,6 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+ 
+ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
+ {
+-	int err;
+-	char opc[BREAK_INSTR_SIZE];
 -
- 	if (type == JUMP_LABEL_JMP) {
- 		if (init) {
- 			expect = default_nop; line = __LINE__;
-@@ -80,16 +71,19 @@ static void __ref __jump_label_transform(struct jump_entry *entry,
- 		bug_at((void *)jump_entry_code(entry), line);
- 
+ 	if (bpt->type != BP_POKE_BREAKPOINT)
+ 		goto knl_write;
  	/*
--	 * Make text_poke_bp() a default fallback poker.
-+	 * As long as only a single processor is running and the code is still
-+	 * not marked as RO, text_poke_early() can be used; Checking that
-+	 * system_state is SYSTEM_BOOTING guarantees it. It will be set to
-+	 * SYSTEM_SCHEDULING before other cores are awaken and before the
-+	 * code is write-protected.
- 	 *
- 	 * At the time the change is being done, just ignore whether we
- 	 * are doing nop -> jump or jump -> nop transition, and assume
- 	 * always nop being the 'currently valid' instruction
--	 *
- 	 */
--	if (poker) {
--		(*poker)((void *)jump_entry_code(entry), code,
--			 JUMP_LABEL_NOP_SIZE);
-+	if (init || system_state == SYSTEM_BOOTING) {
-+		text_poke_early((void *)jump_entry_code(entry), code,
-+				JUMP_LABEL_NOP_SIZE);
- 		return;
- 	}
+@@ -791,10 +782,7 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
+ 		goto knl_write;
+ 	text_poke_kgdb((void *)bpt->bpt_addr, bpt->saved_instr,
+ 		       BREAK_INSTR_SIZE);
+-	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
+-	if (err || memcmp(opc, bpt->saved_instr, BREAK_INSTR_SIZE))
+-		goto knl_write;
+-	return err;
++	return 0;
  
-@@ -101,7 +95,7 @@ void arch_jump_label_transform(struct jump_entry *entry,
- 			       enum jump_label_type type)
- {
- 	mutex_lock(&text_mutex);
--	__jump_label_transform(entry, type, NULL, 0);
-+	__jump_label_transform(entry, type, 0);
- 	mutex_unlock(&text_mutex);
- }
- 
-@@ -131,5 +125,5 @@ __init_or_module void arch_jump_label_transform_static(struct jump_entry *entry,
- 			jlstate = JL_STATE_NO_UPDATE;
- 	}
- 	if (jlstate == JL_STATE_UPDATE)
--		__jump_label_transform(entry, type, text_poke_early, 1);
-+		__jump_label_transform(entry, type, 1);
- }
+ knl_write:
+ 	return probe_kernel_write((char *)bpt->bpt_addr,
 -- 
 2.17.1
 
