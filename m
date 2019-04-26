@@ -2,112 +2,131 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7698C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6327C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBC2206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A2Ovcpju"
+	by mail.kernel.org (Postfix) with ESMTP id C20AB206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfDZOCW (ORCPT
+        id S1726363AbfDZOCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:02:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35682 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfDZOCW (ORCPT
+        Fri, 26 Apr 2019 10:02:38 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:54948 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726039AbfDZOCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:02:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ngzfdohvXqSUVZnRL5smiig+x3FdhK7oHwWhG+cjpGA=; b=A2OvcpjuZlnGx8SM9RnopTxWZ
-        6op1Z0KKtOzcNSIOLl1ULOMy0oTEjWC9hNw/TuGeKteeud+h7tpBX9v0VafcMajkOFr1eXk7hpPhi
-        XF40UcNDY6ke5PwBB4HOS43E8icf4hNgQjz01v9m6I+vcq0vA7CYY5PPA+iHI1FvPzTmDDW4znjtf
-        4L3ISCoJ7xHPFAusgYsE0o2HO+KC3J/vEbKN0cUAbmEsKhH5cpYrXiGt3inB0gvQkAM3iA8rYwQUq
-        +FmJ1GrzhltCUK+D7//8Zmpd0P58nuAtBEvABfgZ1KMKsPzuZr26yOGvtUJ4+0SGwZkcpPx+8dGh3
-        oOpjJlKQw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hK1QZ-0007V3-1q; Fri, 26 Apr 2019 14:02:11 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3FCB5286B7D80; Fri, 26 Apr 2019 16:02:09 +0200 (CEST)
-Date:   Fri, 26 Apr 2019 16:02:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 09/17] sched: Introduce sched_class::pick_task()
-Message-ID: <20190426140209.GA2623@hirez.programming.kicks-ass.net>
-References: <cover.1556025155.git.vpillai@digitalocean.com>
- <e2f1d30b0b3bb62c01824f422badf159147982d7.1556025155.git.vpillai@digitalocean.com>
+        Fri, 26 Apr 2019 10:02:38 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x3QE12pF023693
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Apr 2019 10:01:03 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 240BF420EEC; Fri, 26 Apr 2019 10:01:02 -0400 (EDT)
+Date:   Fri, 26 Apr 2019 10:01:02 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc:     Eric Biggers <ebiggers3@gmail.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Ingo Molnar <mingo@kernel.org>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Message-ID: <20190426140102.GA4922@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Ingo Molnar <mingo@kernel.org>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+References: <2236FBA76BA1254E88B949DDB74E612BA4C51962@IRSMSX102.ger.corp.intel.com>
+ <20190416120822.GV11158@hirez.programming.kicks-ass.net>
+ <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
+ <20190416154348.GB3004@mit.edu>
+ <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com>
+ <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com>
+ <20190417151555.GG4686@mit.edu>
+ <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e2f1d30b0b3bb62c01824f422badf159147982d7.1556025155.git.vpillai@digitalocean.com>
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 04:18:14PM +0000, Vineeth Remanan Pillai wrote:
-> +static struct task_struct *
-> +pick_task_fair(struct rq *rq)
-> +{
-> +	struct cfs_rq *cfs_rq = &rq->cfs;
-> +	struct sched_entity *se;
-> +
-> +	if (!cfs_rq->nr_running)
-> +		return NULL;
-> +
-> +	do {
-> +		struct sched_entity *curr = cfs_rq->curr;
-> +
-> +		se = pick_next_entity(cfs_rq, NULL);
-> +
-> +		if (!(se || curr))
-> +			return NULL;
+On Fri, Apr 26, 2019 at 11:33:09AM +0000, Reshetova, Elena wrote:
+> Adding Eric and Herbert to continue discussion for the chacha part. 
+> So, as a short summary I am trying to find out a fast (fast enough to be used per syscall
+> invocation) source of random bits with good enough security properties. 
+> I started to look into chacha kernel implementation and while it seems that it is designed to 
+> work with any number of rounds, it does not expose less than 12 rounds primitive. 
+> I guess this is done for security sake, since 12 is probably the lowest bound we want people
+> to use for the purpose of encryption/decryption, but if we are to build an efficient RNG,
+> chacha8 probably is a good tradeoff between security and speed. 
+> 
+> What are people's opinions/perceptions on this? Has it been considered before to create a
+> kernel RNG based on chacha?
 
-I didn't get around to reading the original discussion here, but how can
-that possibly be?
+Well, sure.  The get_random_bytes() kernel interface and the
+getrandom(2) system call uses a CRNG based on chacha20.  See
+extract_crng() and crng_reseed() in drivers/char/random.c.
 
-I can see !se, in that case curr is still selected.
+It *is* possible to use an arbitrary number of rounds if you use the
+low level interface exposed as chacha_block(), which is an
+EXPORT_SYMBOL interface so even modules can use it.  "Does not expose
+less than 12 rounds" applies only if you are using the high-level
+crypto interface.
 
-I can also see !curr, in that case curr is put.
+We have used cut down crypto algorithms for performance critical
+applications before; at one point, we were using a cut down MD4(!) for
+initial TCP sequence number generation.  But that was getting rekeyed
+every five minutes, and the goal was to make it just hard enough that
+there were other easier ways of DOS attacking a server.
 
-But I cannot see !se && !curr, per the above check we know
-cfs_rq->nr_running != 0, so there must be a cfs task to find. This means
-either curr or se must exist.
+I'm not a cryptographer, so I'd really us to hear from multiple
+experts about the security level of, say, ChaCha8 so we understand
+exactly kind of security we'd offering.  And I'd want that interface
+to be named so that it's clear it's only intended for a very specific
+use case, since it will be tempting for other kernel developers to use
+it in other contexts, with undue consideration.
 
-> +
-> +		if (curr) {
-> +			if (se && curr->on_rq)
-> +				update_curr(cfs_rq);
-> +
-> +			if (!se || entity_before(curr, se))
-> +				se = curr;
-> +		}
-> +
-> +		cfs_rq = group_cfs_rq(se);
-> +	} while (cfs_rq);
-> +
-> +	return task_of(se);
-> +}
+      	    	      	   	 - Ted
