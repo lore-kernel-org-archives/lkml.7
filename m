@@ -4,174 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C028C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0442DC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61499206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4AD206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 06:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="rWqy9a9x"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="A96QoSzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfDZGAz (ORCPT
+        id S1726853AbfDZF7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 02:00:55 -0400
+        Fri, 26 Apr 2019 01:59:46 -0400
 Received: from pegase1.c-s.fr ([93.17.236.30]:3025 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfDZF7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 01:59:47 -0400
+        id S1726526AbfDZF7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 01:59:43 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44r3Ks2V8jz9v1vM;
-        Fri, 26 Apr 2019 07:59:45 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 44r3Kp1Pjqz9v1vJ;
+        Fri, 26 Apr 2019 07:59:42 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=rWqy9a9x; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=A96QoSzQ; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id AeOdWqkp6QY3; Fri, 26 Apr 2019 07:59:45 +0200 (CEST)
+        with ESMTP id UDFXUH6Fg6pQ; Fri, 26 Apr 2019 07:59:42 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44r3Ks1SQXz9v1tj;
-        Fri, 26 Apr 2019 07:59:45 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44r3Kp0NsCz9v1tj;
+        Fri, 26 Apr 2019 07:59:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556258385; bh=Pk5RQ9wCD9+Ck6hgpF4fQOfimKb1UKnJCQj5/13kDgQ=;
+        t=1556258382; bh=qa1ySCxrgDtFzpCm3Hk8b75Dd9MlSE7Bb5hnz+xe+ac=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=rWqy9a9xqhleBO6dRS4o6aoPc0saWR1arKZQjBLNHP9p5TuUckOZormXe2zs9Iuzw
-         sz4tWJ480SuhuZMv1nQj0Ydwcpb5nCKcHHo/EKORP6Fy9kexnT0xfouvnYZ+Hp2f1c
-         AiLnbqoAUiuOVdmYmx5FcZiA9sgrq9eYSTOwDvm8=
+        b=A96QoSzQPJb8456Fag9MjVD7FkkudFYnIs6CNp9z/4kGoi5QyGImdlFUhwNmS9BXS
+         H3msmXsr2jKf3k01ayOm62vQ8Fiz20NPNIscmjv7TsypYZ2gNx5/Q+NO31Fb/QJPU4
+         s2xqQl4e4Ekjv0M0PBHi0DEDL2Zs1APuMOxQvn/0=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1A2028B807;
-        Fri, 26 Apr 2019 07:59:46 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E741A8B807;
+        Fri, 26 Apr 2019 07:59:42 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ueT4PrQv3fE9; Fri, 26 Apr 2019 07:59:46 +0200 (CEST)
+        with ESMTP id WAy7JshsJNGs; Fri, 26 Apr 2019 07:59:42 +0200 (CEST)
 Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EC3508B74C;
-        Fri, 26 Apr 2019 07:59:45 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C08558B74C;
+        Fri, 26 Apr 2019 07:59:42 +0200 (CEST)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id CB4D966276; Fri, 26 Apr 2019 05:59:45 +0000 (UTC)
-Message-Id: <bc2a61a0616187e9f57aee186f83b2857d9845d5.1556258135.git.christophe.leroy@c-s.fr>
+        id AB86566278; Fri, 26 Apr 2019 05:59:42 +0000 (UTC)
+Message-Id: <192a738d386a605095e1fee1d45b63917abbdf1e.1556258135.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1556258134.git.christophe.leroy@c-s.fr>
 References: <cover.1556258134.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 10/17] powerpc/mm: add a helper to populate hugepd
+Subject: [PATCH v2 07/17] powerpc/mm: make hugetlbpage.c depend on
+ CONFIG_HUGETLB_PAGE
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 26 Apr 2019 05:59:45 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 05:59:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchs adds a subarch helper to populate hugepd.
+The only function in hugetlbpage.c which doesn't depend on
+CONFIG_HUGETLB_PAGE is gup_hugepte(), and this function is
+only called from gup_huge_pd() which depends on
+CONFIG_HUGETLB_PAGE so all the content of hugetlbpage.c
+depends on CONFIG_HUGETLB_PAGE.
+
+This patch modifies Makefile to only compile hugetlbpage.c
+when CONFIG_HUGETLB_PAGE is set.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/book3s/64/hugetlb.h     |  5 +++++
- arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h |  8 ++++++++
- arch/powerpc/include/asm/nohash/hugetlb-book3e.h |  6 ++++++
- arch/powerpc/mm/hugetlbpage.c                    | 20 +-------------------
- 4 files changed, 20 insertions(+), 19 deletions(-)
+ arch/powerpc/mm/Makefile      | 2 +-
+ arch/powerpc/mm/hugetlbpage.c | 5 -----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/hugetlb.h b/arch/powerpc/include/asm/book3s/64/hugetlb.h
-index 7c99f018f7b5..5537046b4c78 100644
---- a/arch/powerpc/include/asm/book3s/64/hugetlb.h
-+++ b/arch/powerpc/include/asm/book3s/64/hugetlb.h
-@@ -100,6 +100,11 @@ static inline pte_t *hugepte_offset(hugepd_t hpd, unsigned long addr,
- 	return hugepd_page(hpd) + idx;
- }
- 
-+static inline void hugepd_populate(hugepd_t *hpdp, pte_t *new, unsigned int pshift)
-+{
-+	*hpdp = __hugepd(__pa(new) | HUGEPD_VAL_BITS | (shift_to_mmu_psize(pshift) << 2));
-+}
-+
- void flush_hugetlb_page(struct vm_area_struct *vma, unsigned long vmaddr);
- 
- #endif
-diff --git a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-index 27acd2ad2176..d9aa72fd76b3 100644
---- a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_POWERPC_NOHASH_32_HUGETLB_8XX_H
- #define _ASM_POWERPC_NOHASH_32_HUGETLB_8XX_H
- 
-+#define PAGE_SHIFT_8M		23
-+
- static inline pte_t *hugepd_page(hugepd_t hpd)
- {
- 	VM_BUG_ON(!hugepd_ok(hpd));
-@@ -28,4 +30,10 @@ static inline void flush_hugetlb_page(struct vm_area_struct *vma,
- 	flush_tlb_page(vma, vmaddr);
- }
- 
-+static inline void hugepd_populate(hugepd_t *hpdp, pte_t *new, unsigned int pshift)
-+{
-+	*hpdp = __hugepd(__pa(new) | _PMD_USER | _PMD_PRESENT |
-+			 (pshift == PAGE_SHIFT_8M ? _PMD_PAGE_8M : _PMD_PAGE_512K));
-+}
-+
- #endif /* _ASM_POWERPC_NOHASH_32_HUGETLB_8XX_H */
-diff --git a/arch/powerpc/include/asm/nohash/hugetlb-book3e.h b/arch/powerpc/include/asm/nohash/hugetlb-book3e.h
-index e94f1cd048ee..51439bcfe313 100644
---- a/arch/powerpc/include/asm/nohash/hugetlb-book3e.h
-+++ b/arch/powerpc/include/asm/nohash/hugetlb-book3e.h
-@@ -28,4 +28,10 @@ static inline pte_t *hugepte_offset(hugepd_t hpd, unsigned long addr,
- 
- void flush_hugetlb_page(struct vm_area_struct *vma, unsigned long vmaddr);
- 
-+static inline void hugepd_populate(hugepd_t *hpdp, pte_t *new, unsigned int pshift)
-+{
-+	/* We use the old format for PPC_FSL_BOOK3E */
-+	*hpdp = __hugepd(((unsigned long)new & ~PD_HUGE) | pshift);
-+}
-+
- #endif /* _ASM_POWERPC_NOHASH_HUGETLB_BOOK3E_H */
+diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
+index 2c23d1ece034..20b900537fc9 100644
+--- a/arch/powerpc/mm/Makefile
++++ b/arch/powerpc/mm/Makefile
+@@ -33,7 +33,7 @@ obj-$(CONFIG_PPC_FSL_BOOK3E)	+= fsl_booke_mmu.o
+ obj-$(CONFIG_NEED_MULTIPLE_NODES) += numa.o
+ obj-$(CONFIG_PPC_SPLPAR)	+= vphn.o
+ obj-$(CONFIG_PPC_MM_SLICES)	+= slice.o
+-obj-y				+= hugetlbpage.o
++obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+ ifdef CONFIG_HUGETLB_PAGE
+ obj-$(CONFIG_PPC_BOOK3S_64)	+= hugetlbpage-hash64.o
+ obj-$(CONFIG_PPC_RADIX_MMU)	+= hugetlbpage-radix.o
 diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index ef0f5b8e87fd..0322a0617371 100644
+index 81daa0e38665..809f8f167962 100644
 --- a/arch/powerpc/mm/hugetlbpage.c
 +++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -26,12 +26,6 @@
+@@ -26,9 +26,6 @@
  #include <asm/hugetlb.h>
  #include <asm/pte-walk.h>
  
--#define PAGE_SHIFT_64K	16
--#define PAGE_SHIFT_512K	19
--#define PAGE_SHIFT_8M	23
--#define PAGE_SHIFT_16M	24
--#define PAGE_SHIFT_16G	34
 -
- bool hugetlb_disabled = false;
- 
- unsigned int HPAGE_SHIFT;
-@@ -95,19 +89,7 @@ static int __hugepte_alloc(struct mm_struct *mm, hugepd_t *hpdp,
- 	for (i = 0; i < num_hugepd; i++, hpdp++) {
- 		if (unlikely(!hugepd_none(*hpdp)))
- 			break;
--		else {
--#ifdef CONFIG_PPC_BOOK3S_64
--			*hpdp = __hugepd(__pa(new) | HUGEPD_VAL_BITS |
--					 (shift_to_mmu_psize(pshift) << 2));
--#elif defined(CONFIG_PPC_8xx)
--			*hpdp = __hugepd(__pa(new) | _PMD_USER |
--					 (pshift == PAGE_SHIFT_8M ? _PMD_PAGE_8M :
--					  _PMD_PAGE_512K) | _PMD_PRESENT);
--#else
--			/* We use the old format for PPC_FSL_BOOK3E */
--			*hpdp = __hugepd(((unsigned long)new & ~PD_HUGE) | pshift);
--#endif
--		}
-+		hugepd_populate(hpdp, new, pshift);
+-#ifdef CONFIG_HUGETLB_PAGE
+-
+ #define PAGE_SHIFT_64K	16
+ #define PAGE_SHIFT_512K	19
+ #define PAGE_SHIFT_8M	23
+@@ -756,8 +753,6 @@ void flush_dcache_icache_hugepage(struct page *page)
  	}
- 	/* If we bailed from the for loop early, an error occurred, clean up */
- 	if (i < num_hugepd) {
+ }
+ 
+-#endif /* CONFIG_HUGETLB_PAGE */
+-
+ int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
+ 		unsigned long end, int write, struct page **pages, int *nr)
+ {
 -- 
 2.13.3
 
