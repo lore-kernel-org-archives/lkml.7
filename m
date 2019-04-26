@@ -2,107 +2,131 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFDFC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D91C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F21E206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:30:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cNNMfOjf"
+	by mail.kernel.org (Postfix) with ESMTP id 75C7A206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 14:30:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556289031;
+	bh=+CgIByK4xaetqopphwulVdK7RYppoILHRQ9dNf0zA74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xWsoZXu1D+krKbSLKRQBI3cLTOusNIqs4Ksxubeq49fmtzJkyQpmCsNah/6jIzYCb
+	 a+qmmuEAHu9sfSVWeg6Rb6hB7Ug4Z3qY2wJ6WuijC0hZ/Cn78FDpXdv0ijYy5Uvwuk
+	 if1/u7wBrxH2Vh8M502cMCfuOoPMaOo7DHgQVjLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfDZOaT (ORCPT
+        id S1726518AbfDZOaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 10:30:19 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39214 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726172AbfDZOaS (ORCPT
+        Fri, 26 Apr 2019 10:30:30 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36218 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfDZOa3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 10:30:18 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l18so1721039pgj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 07:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V1+CcfaeA5cndPo10X2D8Z3LRtIWeGy3NIk3ykbCnms=;
-        b=cNNMfOjfndrXKTFjgV+Q9wj/+PpYSS1CcVQPSJaYbBSpVybLgs2sdYyqJsKkzUIFFE
-         HHRXh7W7IUUPTTaimKU0pSnNhXfD4vlZC9n3d2KoqfJSi3ChG3SrxUVxwSIFe3ixVxlH
-         h6XfdRNaGBp1P7355ybonLr1V0bv6dMX6zRSVOSJe0XgIArt8CUzQBWi3w8eXIlFa3vF
-         Ys0ZzpPVebND13PnaHp8jHiNsF7dIJ0w5sHaqqDTiw/pwXD7QZvOhBXoUFEFAKACDYk+
-         b5s2mxi4dRT13q98ddejBvTlo/SxhX8x+bpGUAmj3yIQm0gNhHxNWfgu5jgYPpyodhRp
-         3jnQ==
+        Fri, 26 Apr 2019 10:30:29 -0400
+Received: by mail-oi1-f195.google.com with SMTP id l203so3100289oia.3;
+        Fri, 26 Apr 2019 07:30:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V1+CcfaeA5cndPo10X2D8Z3LRtIWeGy3NIk3ykbCnms=;
-        b=RHUnQnhU4a75TJmRME5QSeE5xtSw24pxboJnsv3xP+25xCRmwBl2qGeKJwYpseMUIo
-         iFURYbF8JzfDDqfF7J3q+YoE+zaihGtzadmEjfUruAvmZ8y89wPBb0jRqVT6cX3cIQf1
-         8kG71uOtKfPK8LhOvtzXzx08w7y0sqcArotaoi9riH4XdI039DwNXbkIsw997IWx5aI1
-         kFNvWLcV+fuBtWaCsVqJAIpbprgAn1o9+FXWHm9wuelxo60QAhDCnmqJRJxAPQ4R95eK
-         j93ErEX9L77ue6ZZxjTQXdOTZ8PvKnJWaSxpeEtFgBdsdQI6jPZd17hEv6Z24bZMdstu
-         xuYQ==
-X-Gm-Message-State: APjAAAUpfPqsUHsU/kiTeXxF5L+ymVxdsxTcv7iroGlcG2B061Wu4OMH
-        6UZeS83bzJRf75atXIbb153rDG/5+q00rK4kAyJzrg==
-X-Google-Smtp-Source: APXvYqyBwQ++728Ta+TCBYlekvvSelBJQpoJb6GVE/PvFnS2Z7Z0aUAb3KeRFuBAoikipYLbNeaUY4YI5HStE5Km0wY=
-X-Received: by 2002:a63:e850:: with SMTP id a16mr44282265pgk.195.1556289017748;
- Fri, 26 Apr 2019 07:30:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VNG/0QpUCaT9lx2u5hHDw2Uwd0JzNWO4DjhMbkVIeuw=;
+        b=jdTAcF+aJFooptJRfOuLufmI7QrRIRBZfPnyQanG+sQjzsuIwPOVbK1DdoXMcxkUXN
+         ZH5nnFG3gqeJQ2d3DnNH2B8i1m7hQebKEytxO+eKPdrOEBwtsVUs+yl63reMP+Fq8UuE
+         5/EhW+cNDvue2KmKT5OdVjjLnH6AYdLY0eo9+N+1dx0EiVxVLeMnh656mmBEFzCli/3Z
+         sxtSq2gLWjM4C1gqnGuQWxYHDNr90w0u6eRrvxQTUiFGqvk1ihktUszqDbpQ5OmYXkPC
+         ujiMUIUolQF1B1Ntsxz9KDnWrxL9UM7upStzvY2cIFGcOtoQw4juuraQWEJlhEiyQIVI
+         qwsw==
+X-Gm-Message-State: APjAAAWnoWUATd1xiGSjhv5TT913MRh9ywCWB5pR92yX5b3vddswmhIl
+        a+BgYeB49VB8hVUrdSklpQ==
+X-Google-Smtp-Source: APXvYqy6niOVpevFXbrBpfSYrmPPwaca4AgezLS9/JVhRiw+sgF2t41sPPeQDVj7hkQenEW/O8z3Iw==
+X-Received: by 2002:aca:da07:: with SMTP id r7mr7638281oig.5.1556289028625;
+        Fri, 26 Apr 2019 07:30:28 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j18sm9969662otq.68.2019.04.26.07.30.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 07:30:27 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 09:30:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH v5 1/6] dt-bindings: ap806: add the cluster clock node in
+ the syscon file
+Message-ID: <20190426143027.GA17777@bogus>
+References: <20190423095107.21091-1-gregory.clement@bootlin.com>
+ <20190423095107.21091-2-gregory.clement@bootlin.com>
 MIME-Version: 1.0
-References: <20190426155653.2cdebc5d@canb.auug.org.au> <20190426062548.GB5920@kroah.com>
-In-Reply-To: <20190426062548.GB5920@kroah.com>
-From:   Patrick Venture <venture@google.com>
-Date:   Fri, 26 Apr 2019 07:30:06 -0700
-Message-ID: <CAO=notwQFWRVDtoH+NGWpm647pJHVFvVoPm3EKdKmdrRUmDZqw@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the char-misc tree
-To:     Greg KH <greg@kroah.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423095107.21091-2-gregory.clement@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 11:25 PM Greg KH <greg@kroah.com> wrote:
->
-> On Fri, Apr 26, 2019 at 03:56:53PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > After merging the char-misc tree, today's linux-next build (x86_64
-> > allmodconfig) produced this warning:
-> >
-> > drivers/misc/aspeed-p2a-ctrl.c: In function 'aspeed_p2a_mmap':
-> > drivers/misc/aspeed-p2a-ctrl.c:110:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-> >   pgprot_t prot = vma->vm_page_prot;
-> >   ^~~~~~~~
-> >
-> > Introduced by commit
-> >
-> >   01c60dcea9f7 ("drivers/misc: Add Aspeed P2A control driver")
->
-> Patrick, I thought you fixed all of these already?  Can you send a patch
-> again?
+On Tue, Apr 23, 2019 at 11:51:02AM +0200, Gregory CLEMENT wrote:
+> Document the device tree binding for the cluster clock controllers found
+> in the Armada 7K/8K SoCs.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  .../arm/marvell/ap806-system-controller.txt   | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+> index 7b8b8eb0191f..a65d3e9ff915 100644
+> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+> @@ -143,3 +143,29 @@ ap_syscon1: system-controller@6f8000 {
+>  		#thermal-sensor-cells = <1>;
+>  	};
+>  };
+> +
+> +Cluster clocks:
+> +---------------
+> +
+> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
+> +cluster contain up to 2 CPUs running at the same frequency.
+> +
+> +Required properties:
+> +- compatible: must be  "marvell,ap806-cpu-clock";
+> +- #clock-cells : should be set to 1.
+> +- clocks : shall be the input parents clock phandle for the clock.
+> +- reg: register range associated the cluster clocks, offset must be 0
+> +  and the size have to be the whole size of the system-controller
+> +
+> +
+> +ap_syscon1: system-controller@6f8000 {
+> +	compatible = "syscon", "simple-mfd";
 
-I fixed the ones caught by the robot.  I'll have to switch up my build
-environment a bit to fault on warnings for the kernel, not sure why it
-isn't --
+This should have a specific compatible.
 
->
-> Can you also make the driver so it can build with CONFIG_COMPILE_TEST
-> enabled so that others can find your problems earlier in the review
-> process?
+> +	reg = <0x6f8000 0x1000>;
+> +
+> +	cpu_clk: clock-cpu@0 {
+> +		compatible = "marvell,ap806-cpu-clock";
+> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
+> +		#clock-cells = <1>;
+> +		reg = <0x0 0x1000>;
 
-Roger that.
+This takes the entire address range of the parent, then why the child 
+node? You can't add any other child nodes without creating an overlap.
 
->
-> thanks,
->
-> greg k-h
+Your example also won't compile.
+
+Rob
