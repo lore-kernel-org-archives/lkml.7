@@ -2,213 +2,211 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD600C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6A0C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C21D2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91321208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfDZPxu (ORCPT
+        id S1726362AbfDZPyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:53:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49972 "EHLO mx1.redhat.com"
+        Fri, 26 Apr 2019 11:54:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726176AbfDZPxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:53:49 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726176AbfDZPyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:54:00 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CF4AD308A11E;
-        Fri, 26 Apr 2019 15:53:48 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AD71C691A6;
-        Fri, 26 Apr 2019 15:53:45 +0000 (UTC)
-From:   Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v2 14/19] iommu: Add guest PASID bind function
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556062279-64135-15-git-send-email-jacob.jun.pan@linux.intel.com>
-Message-ID: <35194a94-ed09-d086-8725-f7e1bdfbb877@redhat.com>
-Date:   Fri, 26 Apr 2019 17:53:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 01C902077B;
+        Fri, 26 Apr 2019 15:53:58 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 11:53:57 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] tracing: Minor fixes
+Message-ID: <20190426115357.3ef86b4a@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1556062279-64135-15-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 26 Apr 2019 15:53:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
 
-On 4/24/19 1:31 AM, Jacob Pan wrote:
-> Guest shared virtual address (SVA) may require host to shadow guest
-> PASID tables. Guest PASID can also be allocated from the host via
-> enlightened interfaces. In this case, guest needs to bind the guest
-> mm, i.e. cr3 in guest phisical address to the actual PASID table in
-physical
-> the host IOMMU. Nesting will be turned on such that guest virtual
-> address can go through a two level translation:
-> - 1st level translates GVA to GPA
-> - 2nd level translates GPA to HPA
-> This patch introduces APIs to bind guest PASID data to the assigned
-> device entry in the physical IOMMU. See the diagram below for usage
-> explaination.
-> 
->     .-------------.  .---------------------------.
->     |   vIOMMU    |  | Guest process mm, FL only |
->     |             |  '---------------------------'
->     .----------------/
->     | PASID Entry |--- PASID cache flush -
->     '-------------'                       |
->     |             |                       V
->     |             |
->     '-------------'
-> Guest
-> ------| Shadow |--------------------------|------------
->       v        v                          v
-> Host
->     .-------------.  .----------------------.
->     |   pIOMMU    |  | Bind FL for GVA-GPA  |
->     |             |  '----------------------'
->     .----------------/  |
->     | PASID Entry |     V (Nested xlate)
->     '----------------\.---------------------.
->     |             |   |Set SL to GPA-HPA    |
->     |             |   '---------------------'
->     '-------------'
-> 
-> Where:
->  - FL = First level/stage one page tables
->  - SL = Second level/stage two page tables
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
->  drivers/iommu/iommu.c      | 20 ++++++++++++++++++++
->  include/linux/iommu.h      | 10 ++++++++++
->  include/uapi/linux/iommu.h | 15 ++++++++++++++-
->  3 files changed, 44 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 498c28a..072f8f3 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -1561,6 +1561,26 @@ int iommu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
->  }
->  EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
->  
-> +int iommu_sva_bind_gpasid(struct iommu_domain *domain,
-> +			struct device *dev, struct gpasid_bind_data *data)
-> +{
-> +	if (unlikely(!domain->ops->sva_bind_gpasid))
-> +		return -ENODEV;
-> +
-> +	return domain->ops->sva_bind_gpasid(domain, dev, data);
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_sva_bind_gpasid);
-> +
-> +int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
-> +			int pasid)
-> +{
-> +	if (unlikely(!domain->ops->sva_unbind_gpasid))
-> +		return -ENODEV;
-> +
-> +	return domain->ops->sva_unbind_gpasid(dev, pasid);
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
-> +
->  static void __iommu_detach_device(struct iommu_domain *domain,
->  				  struct device *dev)
->  {
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 4b92e4b..611388e 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -231,6 +231,8 @@ struct iommu_sva_ops {
->   * @detach_pasid_table: detach the pasid table
->   * @cache_invalidate: invalidate translation caches
->   * @pgsize_bitmap: bitmap of all possible supported page sizes
-> + * @sva_bind_gpasid: bind guest pasid and mm
-> + * @sva_unbind_gpasid: unbind guest pasid and mm
->   */
->  struct iommu_ops {
->  	bool (*capable)(enum iommu_cap);
-> @@ -295,6 +297,10 @@ struct iommu_ops {
->  
->  	int (*cache_invalidate)(struct iommu_domain *domain, struct device *dev,
->  				struct iommu_cache_invalidate_info *inv_info);
-> +	int (*sva_bind_gpasid)(struct iommu_domain *domain,
-> +			struct device *dev, struct gpasid_bind_data *data);
-> +
-> +	int (*sva_unbind_gpasid)(struct device *dev, int pasid);
-So I am confused now. As the scalable mode PASID table entry contains
-both the FL and SL PT pointers, will you ever use the
-attach/detach_pasid_table or are we the only known users on ARM?
+Linus,
 
->  
->  	unsigned long pgsize_bitmap;
->  };
-> @@ -409,6 +415,10 @@ extern void iommu_detach_pasid_table(struct iommu_domain *domain);
->  extern int iommu_cache_invalidate(struct iommu_domain *domain,
->  				  struct device *dev,
->  				  struct iommu_cache_invalidate_info *inv_info);
-> +extern int iommu_sva_bind_gpasid(struct iommu_domain *domain,
-> +		struct device *dev, struct gpasid_bind_data *data);
-> +extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
-> +				struct device *dev, int pasid);
-definition in !CONFIG_IOMMU_API case?
->  extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
->  extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
->  extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
-> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> index 61a3fb7..5c95905 100644
-> --- a/include/uapi/linux/iommu.h
-> +++ b/include/uapi/linux/iommu.h
-> @@ -235,6 +235,19 @@ struct iommu_cache_invalidate_info {
->  		struct iommu_inv_addr_info addr_info;
->  	};
->  };
-> -
-> +/**
-> + * struct gpasid_bind_data - Information about device and guest PASID binding
-> + * @gcr3:	Guest CR3 value from guest mm
-> + * @pasid:	Process address space ID used for the guest mm
-> + * @addr_width:	Guest address width. Paging mode can also be derived.
-> + */
-> +struct gpasid_bind_data {
-> +	__u64 gcr3;
-> +	__u32 pasid;
-> +	__u32 addr_width;
-> +	__u32 flags;
-> +#define	IOMMU_SVA_GPASID_SRE	BIT(0) /* supervisor request */
-> +	__u8 padding[4];
-> +};
+There tracing fixes:
+
+ - Use "nosteal" for ring buffer splice pages
+ - Memory leak fix in error path of trace_pid_write()
+ - Fix preempt_enable_no_resched() (use preempt_enable()) in ring buffer code
 
 
-Thanks
+Please pull the latest trace-v5.1-rc6 tree, which can be found at:
 
-Eric
->  
->  #endif /* _UAPI_IOMMU_H */
-> 
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+trace-v5.1-rc6
+
+Tag SHA1: 18d3b6ef227e69c4620f9ac687bd5200ce5169bc
+Head SHA1: d6097c9e4454adf1f8f2c9547c2fa6060d55d952
+
+
+Jann Horn (1):
+      tracing: Fix buffer_ref pipe ops
+
+Peter Zijlstra (1):
+      trace: Fix preempt_enable_no_resched() abuse
+
+Wenwen Wang (1):
+      tracing: Fix a memory leak by early error exit in trace_pid_write()
+
+----
+ fs/splice.c                |  4 ++--
+ include/linux/pipe_fs_i.h  |  1 +
+ kernel/trace/ring_buffer.c |  2 +-
+ kernel/trace/trace.c       | 33 ++++++++++++++++++---------------
+ 4 files changed, 22 insertions(+), 18 deletions(-)
+---------------------------
+diff --git a/fs/splice.c b/fs/splice.c
+index 3ee7e82df48f..e75807380caa 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -330,8 +330,8 @@ const struct pipe_buf_operations default_pipe_buf_ops = {
+ 	.get = generic_pipe_buf_get,
+ };
+ 
+-static int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
+-				    struct pipe_buffer *buf)
++int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
++			     struct pipe_buffer *buf)
+ {
+ 	return 1;
+ }
+diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
+index 787d224ff43e..a830e9a00eb9 100644
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -174,6 +174,7 @@ void free_pipe_info(struct pipe_inode_info *);
+ void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
++int generic_pipe_buf_nosteal(struct pipe_inode_info *, struct pipe_buffer *);
+ void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
+ void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
+ 
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 41b6f96e5366..4ee8d8aa3d0f 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -762,7 +762,7 @@ u64 ring_buffer_time_stamp(struct ring_buffer *buffer, int cpu)
+ 
+ 	preempt_disable_notrace();
+ 	time = rb_time_stamp(buffer);
+-	preempt_enable_no_resched_notrace();
++	preempt_enable_notrace();
+ 
+ 	return time;
+ }
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 21153e64bf1c..46f68fad6373 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -496,8 +496,10 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
+ 	 * not modified.
+ 	 */
+ 	pid_list = kmalloc(sizeof(*pid_list), GFP_KERNEL);
+-	if (!pid_list)
++	if (!pid_list) {
++		trace_parser_put(&parser);
+ 		return -ENOMEM;
++	}
+ 
+ 	pid_list->pid_max = READ_ONCE(pid_max);
+ 
+@@ -507,6 +509,7 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
+ 
+ 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
+ 	if (!pid_list->pids) {
++		trace_parser_put(&parser);
+ 		kfree(pid_list);
+ 		return -ENOMEM;
+ 	}
+@@ -7025,19 +7028,23 @@ struct buffer_ref {
+ 	struct ring_buffer	*buffer;
+ 	void			*page;
+ 	int			cpu;
+-	int			ref;
++	refcount_t		refcount;
+ };
+ 
++static void buffer_ref_release(struct buffer_ref *ref)
++{
++	if (!refcount_dec_and_test(&ref->refcount))
++		return;
++	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
++	kfree(ref);
++}
++
+ static void buffer_pipe_buf_release(struct pipe_inode_info *pipe,
+ 				    struct pipe_buffer *buf)
+ {
+ 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
+ 
+-	if (--ref->ref)
+-		return;
+-
+-	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
+-	kfree(ref);
++	buffer_ref_release(ref);
+ 	buf->private = 0;
+ }
+ 
+@@ -7046,14 +7053,14 @@ static void buffer_pipe_buf_get(struct pipe_inode_info *pipe,
+ {
+ 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
+ 
+-	ref->ref++;
++	refcount_inc(&ref->refcount);
+ }
+ 
+ /* Pipe buffer operations for a buffer. */
+ static const struct pipe_buf_operations buffer_pipe_buf_ops = {
+ 	.confirm		= generic_pipe_buf_confirm,
+ 	.release		= buffer_pipe_buf_release,
+-	.steal			= generic_pipe_buf_steal,
++	.steal			= generic_pipe_buf_nosteal,
+ 	.get			= buffer_pipe_buf_get,
+ };
+ 
+@@ -7066,11 +7073,7 @@ static void buffer_spd_release(struct splice_pipe_desc *spd, unsigned int i)
+ 	struct buffer_ref *ref =
+ 		(struct buffer_ref *)spd->partial[i].private;
+ 
+-	if (--ref->ref)
+-		return;
+-
+-	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
+-	kfree(ref);
++	buffer_ref_release(ref);
+ 	spd->partial[i].private = 0;
+ }
+ 
+@@ -7125,7 +7128,7 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 			break;
+ 		}
+ 
+-		ref->ref = 1;
++		refcount_set(&ref->refcount, 1);
+ 		ref->buffer = iter->trace_buffer->buffer;
+ 		ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
+ 		if (IS_ERR(ref->page)) {
