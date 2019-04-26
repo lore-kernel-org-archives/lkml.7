@@ -2,327 +2,165 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1840CC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5D9C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72A22077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC9220873
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 19:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="xhzaJw20"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdlKa/z+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfDZTuV (ORCPT
+        id S1726960AbfDZTvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 15:50:21 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:46840 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfDZTuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 15:50:15 -0400
-Received: from localhost.localdomain (80-110-119-101.cgn.dynamic.surfer.at [80.110.119.101])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id DCD2AC534A;
-        Fri, 26 Apr 2019 19:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1556308211; bh=QEjqScJXzk089oJ7g7no45LVh2ccgjvAnPyeRhnvr/8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=xhzaJw20q1jy1I5B+XWcsJCYl97uLLujb+8aPDSX8Sg33+vvNmRkzcPGVmIpnoPX7
-         njQnf9JJb1zoIk5hxH9usP7aQb8oRhtq8RT47+g2Ig+7HqegSyHKiufag2Ex9Gqq/6
-         WnYodFnc+9iRu9MYJEuRh9nxJ1VJuD0HZlvilPAw=
-From:   Luca Weiss <luca@z3ntu.xyz>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
-        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Rob Herring <robh@kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
-        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
-        , TOUCHSCREEN)...),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
-        Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH v5 2/3] Input: add a driver for GPIO controllable vibrators
-Date:   Fri, 26 Apr 2019 21:47:46 +0200
-Message-Id: <20190426194747.22256-2-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190426194747.22256-1-luca@z3ntu.xyz>
-References: <20190426194747.22256-1-luca@z3ntu.xyz>
+        Fri, 26 Apr 2019 15:51:11 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:47047 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfDZTvL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 15:51:11 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h21so3930823ljk.13;
+        Fri, 26 Apr 2019 12:51:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=W7Eko1srITLoagm5AOEYzT49Ks2nbUdIhy1p1jQ52ic=;
+        b=KdlKa/z+qr0ywDldwyabD179jRnY/DhCxQlMSWzD0j0qnJ0gKlXeoIY99pvX+0dCx+
+         m63GP0TvzcV6+WPzseQgUNXLm+TNc4V850EO4TQFqZd+7w77ySCRc0Jh/QVGk1q170En
+         dnSzmJxJgI6l+Aqd5pDz2ODhdjvmQEGZfL6PO3RAwEvCxzfC3xmJ9L1a8+P1+j9xDpuC
+         z+swjRWG9ObvgWKx3E5DxKNNjn3jiid/oCaIVNkGPItvI5PwhvQqMcQuVDltVGWIkcda
+         pmWoZkG6lGcfi5iaGbAjRNgSaXRonSkK2p8H5QaigcSMmcrBEUMVbIaQMMzr8XIMmsI6
+         RJpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=W7Eko1srITLoagm5AOEYzT49Ks2nbUdIhy1p1jQ52ic=;
+        b=FJ8WnBa3f25Hjn6/8YCkTKSlBchxlFOgpy35ZZ1WhTDVm3FOuaV36/718rh9gxbcSJ
+         hWqnTziNXX+Qn9bzrdNbcaPSDiQOIwqSEGW4RITwRSqBGZ1l/Kafm+WD57VLF1P+B0HS
+         eLZscfPO/c9iXGmCW9sD5Kuwe8/YiW1VYPhUeNyeJof5itwQyAQVpoKoIfpaxdQr3dTP
+         grWYGGKY9nRLGvh8eXLEyC+/fXpfkuNvBBqk7QNHVMG4UAfg5SuRI9Rj4+D4wzsDxIYs
+         BYy+a5yxskpKiIiIfTmlYf0btUy+mWfx1mVMbupBMwT8L5nhhfve3/HqcQcUbO1y6mFf
+         wyag==
+X-Gm-Message-State: APjAAAV4iBwSIkvQ0oaxze4Vw3IEcz4C79f01tXnE/RHQxwnrfeLwe40
+        8cLw8jzqz+6uNq4pC5HNnP8=
+X-Google-Smtp-Source: APXvYqx+JnTd5FBVHykchXZ23cx3l66iZ4Zjw27evxYPNBrLhUQk9xEDLSs+jgD3B2zifS+EwwkNzw==
+X-Received: by 2002:a2e:9c51:: with SMTP id t17mr25714319ljj.104.1556308268785;
+        Fri, 26 Apr 2019 12:51:08 -0700 (PDT)
+Received: from [10.17.182.120] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id 63sm5765438lfz.2.2019.04.26.12.51.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 12:51:08 -0700 (PDT)
+Subject: Re: [PATCH] ARM: mach-shmobile: Don't configure ARCH timer if PSCI is
+ enabled
+To:     Julien Grall <julien.grall@arm.com>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     horms@verge.net.au, magnus.damm@gmail.com, linux@armlinux.org.uk,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+References: <1555521040-16706-1-git-send-email-olekstysh@gmail.com>
+ <1b33dca4-e3ae-4588-05f2-37b23ac8df78@arm.com>
+ <8c9a1480-7956-9265-14c8-3fbb472e097d@gmail.com>
+ <c08c0d02-37f9-9f53-62b9-e5012097d94a@arm.com>
+From:   Oleksandr <olekstysh@gmail.com>
+Message-ID: <e8798fa4-a0dc-7c85-e294-bdf6dad6ec74@gmail.com>
+Date:   Fri, 26 Apr 2019 22:51:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <c08c0d02-37f9-9f53-62b9-e5012097d94a@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a simple driver for GPIO controllable vibrators.
-It will be used by the Fairphone 2.
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- drivers/input/misc/Kconfig      |  12 ++
- drivers/input/misc/Makefile     |   1 +
- drivers/input/misc/gpio-vibra.c | 209 ++++++++++++++++++++++++++++++++
- 3 files changed, 222 insertions(+)
- create mode 100644 drivers/input/misc/gpio-vibra.c
+On 24.04.19 15:31, Julien Grall wrote:
+> Hi,
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index e15ed1bb8558..6dfe9e2fe5b1 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -290,6 +290,18 @@ config INPUT_GPIO_DECODER
- 	 To compile this driver as a module, choose M here: the module
- 	 will be called gpio_decoder.
- 
-+config INPUT_GPIO_VIBRA
-+	tristate "GPIO vibrator support"
-+	depends on GPIOLIB || COMPILE_TEST
-+	select INPUT_FF_MEMLESS
-+	help
-+	  Say Y here to get support for GPIO based vibrator devices.
-+
-+	  If unsure, say N.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called gpio-vibra.
-+
- config INPUT_IXP4XX_BEEPER
- 	tristate "IXP4XX Beeper support"
- 	depends on ARCH_IXP4XX
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index b936c5b1d4ac..f38ebbdb05e2 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
- obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
- obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
- obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
-+obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
- obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
- obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
- obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
-diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
-new file mode 100644
-index 000000000000..b76c81015de9
---- /dev/null
-+++ b/drivers/input/misc/gpio-vibra.c
-@@ -0,0 +1,209 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ *  GPIO vibrator driver
-+ *
-+ *  Copyright (C) 2019 Luca Weiss <luca@z3ntu.xyz>
-+ *
-+ *  Based on PWM vibrator driver:
-+ *  Copyright (C) 2017 Collabora Ltd.
-+ *
-+ *  Based on previous work from:
-+ *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov@gmail.com>
-+ *
-+ *  Based on PWM beeper driver:
-+ *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
-+ */
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/input.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+
-+struct gpio_vibrator {
-+	struct input_dev *input;
-+	struct gpio_desc *gpio;
-+	struct regulator *vcc;
-+
-+	struct work_struct play_work;
-+	bool running;
-+	bool vcc_on;
-+};
-+
-+static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
-+{
-+	struct device *pdev = vibrator->input->dev.parent;
-+	int err;
-+
-+	if (!vibrator->vcc_on) {
-+		err = regulator_enable(vibrator->vcc);
-+		if (err) {
-+			dev_err(pdev, "failed to enable regulator: %d\n", err);
-+			return err;
-+		}
-+		vibrator->vcc_on = true;
-+	}
-+
-+	gpiod_set_value_cansleep(vibrator->gpio, 1);
-+
-+	return 0;
-+}
-+
-+static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
-+{
-+	gpiod_set_value_cansleep(vibrator->gpio, 0);
-+
-+	if (vibrator->vcc_on) {
-+		regulator_disable(vibrator->vcc);
-+		vibrator->vcc_on = false;
-+	}
-+}
-+
-+static void gpio_vibrator_play_work(struct work_struct *work)
-+{
-+	struct gpio_vibrator *vibrator =
-+		container_of(work, struct gpio_vibrator, play_work);
-+
-+	if (vibrator->running)
-+		gpio_vibrator_start(vibrator);
-+	else
-+		gpio_vibrator_stop(vibrator);
-+}
-+
-+static int gpio_vibrator_play_effect(struct input_dev *dev, void *data,
-+				     struct ff_effect *effect)
-+{
-+	struct gpio_vibrator *vibrator = input_get_drvdata(dev);
-+
-+	int level = effect->u.rumble.strong_magnitude;
-+
-+	if (!level)
-+		level = effect->u.rumble.weak_magnitude;
-+
-+	if (level)
-+		vibrator->running = true;
-+	else
-+		vibrator->running = false;
-+
-+	schedule_work(&vibrator->play_work);
-+
-+	return 0;
-+}
-+
-+static void gpio_vibrator_close(struct input_dev *input)
-+{
-+	struct gpio_vibrator *vibrator = input_get_drvdata(input);
-+
-+	cancel_work_sync(&vibrator->play_work);
-+	gpio_vibrator_stop(vibrator);
-+	vibrator->running = false;
-+}
-+
-+static int gpio_vibrator_probe(struct platform_device *pdev)
-+{
-+	struct gpio_vibrator *vibrator;
-+	int err;
-+
-+	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
-+	if (!vibrator)
-+		return -ENOMEM;
-+
-+	vibrator->input = devm_input_allocate_device(&pdev->dev);
-+	if (!vibrator->input)
-+		return -ENOMEM;
-+
-+	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-+	err = PTR_ERR_OR_ZERO(vibrator->vcc);
-+	if (err) {
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to request regulator: %d\n",
-+				err);
-+		return err;
-+	}
-+
-+	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
-+	err = PTR_ERR_OR_ZERO(vibrator->gpio);
-+	if (err) {
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to request main gpio: %d\n",
-+				err);
-+		return err;
-+	}
-+
-+	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
-+
-+	vibrator->input->name = "gpio-vibrator";
-+	vibrator->input->id.bustype = BUS_HOST;
-+	vibrator->input->close = gpio_vibrator_close;
-+
-+	input_set_drvdata(vibrator->input, vibrator);
-+	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
-+
-+	err = input_ff_create_memless(vibrator->input, NULL,
-+				      gpio_vibrator_play_effect);
-+	if (err) {
-+		dev_err(&pdev->dev, "Couldn't create FF dev: %d\n", err);
-+		return err;
-+	}
-+
-+	err = input_register_device(vibrator->input);
-+	if (err) {
-+		dev_err(&pdev->dev, "Couldn't register input dev: %d\n", err);
-+		return err;
-+	}
-+
-+	platform_set_drvdata(pdev, vibrator);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
-+{
-+	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
-+
-+	cancel_work_sync(&vibrator->play_work);
-+	if (vibrator->running)
-+		gpio_vibrator_stop(vibrator);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused gpio_vibrator_resume(struct device *dev)
-+{
-+	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
-+
-+	if (vibrator->running)
-+		gpio_vibrator_start(vibrator);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(gpio_vibrator_pm_ops,
-+			 gpio_vibrator_suspend, gpio_vibrator_resume);
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id gpio_vibra_dt_match_table[] = {
-+	{ .compatible = "gpio-vibrator" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
-+#endif
-+
-+static struct platform_driver gpio_vibrator_driver = {
-+	.probe	= gpio_vibrator_probe,
-+	.driver	= {
-+		.name	= "gpio-vibrator",
-+		.pm	= &gpio_vibrator_pm_ops,
-+		.of_match_table = of_match_ptr(gpio_vibra_dt_match_table),
-+	},
-+};
-+module_platform_driver(gpio_vibrator_driver);
-+
-+MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xy>");
-+MODULE_DESCRIPTION("GPIO vibrator driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:gpio-vibrator");
+Hi Julien
+
+
+>
+>>
+>> As I answered in a previous email:
+>>
+>>  > But "#if !defined(CONFIG_ARM_PSCI)" wraps secure_cntvoff_init() 
+>> call as
+>>  > well, which resets CNTVOFF,
+>>
+>>  > and this is something I tried to avoid the first from being 
+>> executed on
+>>  > a CPU, which is in SVC mode (when running on top of Xen).
+>>
+>> What would be a proper way to avoid calling secure_cntvoff_init() at 
+>> runtime?
+>>
+>> Check that we are already in non-secure mode and/or cntvoff is 
+>> already 0?
+>
+> CNTVOFF is controlled by the hypervisor, so you cannot access it from 
+> Dom0.
+>
+> If none of this code should be necessary when PSCI is enabled, then 
+> you can check the presence of PSCI (see psci_smp_available()).
+
+
+If I am not mistaken, U-Boot resets CNTVOFF before leaving monitor mode 
+(switching to non-secure state). This happens if "support for booting in 
+non-secure mode" is enabled.
+
+This is a mandatory option for PSCI support as well as for support for 
+hardware virtualization.
+
+So the presence of PSCI would be an indicator, if CNTVOFF was configured 
+in U-Boot and we don't need to.
+
+ From other hand, Gen2 Linux may be booted in non-secure mode, without 
+PSCI support...
+
+
+I was thinking about checking the presence of "enable-method = psci" in 
+CPU node, but probably psci_smp_available() is better option.
+
+Also, there is a specific device-tree property 
+"arm,cpu-registers-not-fw-configured" [1], but I am not sure whether it 
+is appropriate to use here.
+
+
+>
+> Another solution is to check whether we are running on xen (see 
+> xen_domain()).
+>
+> In any case, I would still surround the two checks because the 
+> "armgcnt" should really not be touched by Dom0.
+
+Agree.
+
+I will add two checks in V2.
+
+
+Thank you!
+
+
+[1]
+
+https://elixir.bootlin.com/linux/v5.1-rc6/source/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml#L68
+
+
+>
+> Cheers,
+>
 -- 
-2.21.0
+Regards,
+
+Oleksandr Tyshchenko
 
