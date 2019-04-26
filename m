@@ -2,117 +2,125 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50579C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15E2C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2190B206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B180020675
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:07:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uy1VTQH1"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="lL2n9vt8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfDZPGv (ORCPT
+        id S1726632AbfDZPHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:06:51 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35789 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfDZPGv (ORCPT
+        Fri, 26 Apr 2019 11:07:30 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45300 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfDZPHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:06:51 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j20so2764477lfh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 08:06:49 -0700 (PDT)
+        Fri, 26 Apr 2019 11:07:30 -0400
+Received: by mail-pl1-f193.google.com with SMTP id o5so1704576pls.12
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 08:07:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uK1bPzXfoKqtAuaxFD9Fq0QPMIelpERA39QXbQVkvIg=;
-        b=Uy1VTQH1+NF1sh+lwHjoPc4Ep9K2d8TefI4IG/PIxokwnNKQ/L2A14hJhvPbRVcoFy
-         RpTUAzE5j3sywdjGfCe/nBkE57lXS2tSBxovsAjCbB9pekvm0J4z7f1HjeCE+noUOOh5
-         qeFybjLsuVap6L6JCZzbG3xEqymrOvMgtK7sP005PaD/WsrJeKfCB0p3rKfZ5hIc8pYC
-         Nr9yeZu9lkGw6P7k+dOMPz79Hykzc3pNiMDkHQDNXA+KrpuCBRPa7gDmFt+ItDECJdsy
-         MbtL5Ia6hPxfIxt034pQLeVWG6ykR46S1dp3FMPIWLco1jih118lgV6HbtO5jElM9HjF
-         yqJw==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=IiTlllJV7T8Ybav7NUjeUyZVUhhnS7kZRU1PPhbGkJM=;
+        b=lL2n9vt8GnIPUDFoTEJvf33Y5pQF3uo+rWu5qEgbH4HLxkSLx9jcc9TgyzRHksCYAj
+         fmqBt8KcPRhmOtkK37ubeAfoG6y85dhMIr00G8/l5QKNCrHl+uAHYqZa3tqrKJGN/hNF
+         zMa3B964tLPhi0oSvuAu+2gT3es4gkyza8ZHVSBXBM3/lziiDPPsEq1fEoXGTlrl9ymn
+         HW+jVq0eHkWEj5PWkmH+nzUBebi0aQ1DIrGkI35HSVEbH8s6MoxMjQlUwrNbge+pBTwd
+         EISfz9afMMiyAm8SlpyJVhLYaLgXSI/p17RwVC/21KPAGuwHhTZG4PtV9zb52apojoWM
+         ss8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uK1bPzXfoKqtAuaxFD9Fq0QPMIelpERA39QXbQVkvIg=;
-        b=GGEEAP9XnrhTc6oc2Dx0QXK+uhkoaTHyuZH7DxrVOpgA22pIGHr4AUsn6id3qFV5Fb
-         jNMni7DU1fM27qhRNptXHlGYoUsS9ew3LEgph5gGewmBTqTID51r76Llg0KdrxNLMcbe
-         c/9IdEpIytPk0lm3uy8eh5QH9sPgc5xWyHVOiGe2e2cuMmDaLg5BdaiUmcNAiPXfXWFx
-         D3/fd8pbBOmuIutqod8cPUxlfGRrcdzh8A0Mavr62RGc7vHIj10v/FghjB/P+xeCSLqo
-         R9kntlcW2hjEIyn6FQ3flCWXO8LEM8KAzAt2N3AZ9z2+qPsIjG1Gp6hkHKj0nBxuHkp/
-         gXqA==
-X-Gm-Message-State: APjAAAUUjCV+PNO4DHeoYj2vEtwh2FawjDbimQlgwGVN906VlqZJSDHS
-        T987VrLuR6OQazwz+76wy3s=
-X-Google-Smtp-Source: APXvYqzBuRAqCPFkR5+/YMDV+V9w4WpXskZfYfptKWo+v6n34mGJw53MRtyvwLFksaSbZdZwCmtfmA==
-X-Received: by 2002:a19:48c9:: with SMTP id v192mr24276282lfa.136.1556291208973;
-        Fri, 26 Apr 2019 08:06:48 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a315:5445:5300:2492:ad61:69f1:23cc])
-        by smtp.googlemail.com with ESMTPSA id o3sm5636622lfn.41.2019.04.26.08.06.47
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=IiTlllJV7T8Ybav7NUjeUyZVUhhnS7kZRU1PPhbGkJM=;
+        b=pqcKM8Yn3zavK6AARlSaFuz1eY9lfgWAtLAIDWaLzkXm4gzEmaVS2ay/YsD7b4cKlT
+         tt9jnM+M6eb2vCRnVi8VMrhZUyTA2KnCZD6bZ+bw3cdmE7O9Ew+Iwae988+Xy+a/ZfB8
+         dDrk/zFJLlfRUuPh4YpMghG6rdU8z/duEicB8B5BskkrmF54pz5YM9XHFynZrPc+sJCl
+         gwt3rn2vkk9o1mh0VMU4MIZ2EI8Qn1LHCy5upFZNdJW7HySZ7DEK3jMKGFhsMetNf4K0
+         EcnTJn2wj1BzBqbfPO6uklT4pV0AEiuflfH4LedS+/HUAu06LONpIg/a57zliCMhNIHd
+         TPbA==
+X-Gm-Message-State: APjAAAUz69q9Qb8XJhXqjBzoHDqPy8PerjF0GoylFiJRinEhYbXjBIWP
+        U0w4vJnl+Oh0CDkQfYkj+IcmXQ==
+X-Google-Smtp-Source: APXvYqxw6s47f9ZtAEqXzz4CE/DWzlsYAbZ43O38HXxSazAc+xuzWMJmNzZfd0ZmQluLX4nGUmluqQ==
+X-Received: by 2002:a17:902:7b8e:: with SMTP id w14mr28880635pll.202.1556291249630;
+        Fri, 26 Apr 2019 08:07:29 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:dd4b:950:9d5a:d566? ([2601:646:c200:1ef2:dd4b:950:9d5a:d566])
+        by smtp.gmail.com with ESMTPSA id l15sm11072795pgb.71.2019.04.26.08.07.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 08:06:48 -0700 (PDT)
-From:   =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-To:     kyungmin.park@samsung.com
-Cc:     bbrezillon@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        marek.vasut@gmail.com, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH] mtd: onenand: Add support for 8Gb datasize onenand
-Date:   Fri, 26 Apr 2019 17:06:34 +0200
-Message-Id: <20190426150634.5643-1-pawel.mikolaj.chmiel@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 26 Apr 2019 08:07:28 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH 2/7] x86/sci: add core implementation for system call isolation
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <1556290658.2833.28.camel@HansenPartnership.com>
+Date:   Fri, 26 Apr 2019 08:07:27 -0700
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <54090243-E4C7-4C66-8025-AFE0DF5DF337@amacapital.net>
+References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com> <1556228754-12996-3-git-send-email-rppt@linux.ibm.com> <627d9321-466f-c4ed-c658-6b8567648dc6@intel.com> <1556290658.2833.28.camel@HansenPartnership.com>
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
 
-Used in several S5PV210-based Galaxy S devices, among them SGH-T959V,
-SGH-T959P, SGH-T839, and SPH-D700.
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
- drivers/mtd/nand/onenand/onenand_base.c | 2 ++
- include/linux/mtd/onenand_regs.h        | 1 +
- 2 files changed, 3 insertions(+)
+> On Apr 26, 2019, at 7:57 AM, James Bottomley <James.Bottomley@hansenpartne=
+rship.com> wrote:
+>=20
+>> On Fri, 2019-04-26 at 07:46 -0700, Dave Hansen wrote:
+>>> On 4/25/19 2:45 PM, Mike Rapoport wrote:
+>>> After the isolated system call finishes, the mappings created
+>>> during its execution are cleared.
+>>=20
+>> Yikes.  I guess that stops someone from calling write() a bunch of
+>> times on every filesystem using every block device driver and all the
+>> DM code to get a lot of code/data faulted in.  But, it also means not
+>> even long-running processes will ever have a chance of behaving
+>> anything close to normally.
+>>=20
+>> Is this something you think can be rectified or is there something
+>> fundamental that would keep SCI page tables from being cached across
+>> different invocations of the same syscall?
+>=20
+> There is some work being done to look at pre-populating the isolated
+> address space with the expected execution footprint of the system call,
+> yes.  It lessens the ROP gadget protection slightly because you might
+> find a gadget in the pre-populated code, but it solves a lot of the
+> overhead problem.
+>=20
 
-diff --git a/drivers/mtd/nand/onenand/onenand_base.c b/drivers/mtd/nand/onenand/onenand_base.c
-index 4ca4b194e7d7..abdef0bd1367 100644
---- a/drivers/mtd/nand/onenand/onenand_base.c
-+++ b/drivers/mtd/nand/onenand/onenand_base.c
-@@ -3260,6 +3260,8 @@ static void onenand_check_features(struct mtd_info *mtd)
- 
- 	/* Lock scheme */
- 	switch (density) {
-+	case ONENAND_DEVICE_DENSITY_8Gb:
-+		this->options |= ONENAND_HAS_NOP_1;
- 	case ONENAND_DEVICE_DENSITY_4Gb:
- 		if (ONENAND_IS_DDP(this))
- 			this->options |= ONENAND_HAS_2PLANE;
-diff --git a/include/linux/mtd/onenand_regs.h b/include/linux/mtd/onenand_regs.h
-index d60130f88eed..9640d707cbf8 100644
---- a/include/linux/mtd/onenand_regs.h
-+++ b/include/linux/mtd/onenand_regs.h
-@@ -80,6 +80,7 @@
- #define ONENAND_DEVICE_DENSITY_1Gb	(0x003)
- #define ONENAND_DEVICE_DENSITY_2Gb	(0x004)
- #define ONENAND_DEVICE_DENSITY_4Gb	(0x005)
-+#define ONENAND_DEVICE_DENSITY_8Gb	(0x006)
- 
- /*
-  * Version ID Register F002h (R)
--- 
-2.20.1
+I=E2=80=99m not even remotely a ROP expert, but: what stops a ROP payload fr=
+om using all the =E2=80=9Cfault-in=E2=80=9D gadgets that exist =E2=80=94 any=
+ function that can return on an error without doing to much will fault in th=
+e whole page containing the function.
 
+To improve this, we would want some thing that would try to check whether th=
+e caller is actually supposed to call the callee, which is more or less the h=
+ard part of CFI.  So can=E2=80=99t we just do CFI and call it a day?
+
+On top of that, a robust, maintainable implementation of this thing seems ve=
+ry complicated =E2=80=94 for example, what happens if vfree() gets called?
