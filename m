@@ -2,117 +2,146 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66FBC43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FF8C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D353E206BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16575206BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 02:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WuQV9dkG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfDZCZD (ORCPT
+        id S1728381AbfDZC0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Apr 2019 22:25:03 -0400
-Received: from mx.socionext.com ([202.248.49.38]:12843 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfDZCZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Apr 2019 22:25:03 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 26 Apr 2019 11:25:01 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 6A4A5180B6F;
-        Fri, 26 Apr 2019 11:25:01 +0900 (JST)
-Received: from 10.213.24.1 (10.213.24.1) by m-FILTER with ESMTP; Fri, 26 Apr 2019 11:25:01 +0900
-Received: from SOC-EX01V.e01.socionext.com (10.213.24.21) by
- SOC-EX03V.e01.socionext.com (10.213.24.23) with Microsoft SMTP Server (TLS)
- id 15.0.995.29; Fri, 26 Apr 2019 11:25:01 +0900
-Received: from SOC-EX01V.e01.socionext.com ([10.213.24.21]) by
- SOC-EX01V.e01.socionext.com ([10.213.24.21]) with mapi id 15.00.0995.028;
- Fri, 26 Apr 2019 11:25:00 +0900
-From:   <yamada.masahiro@socionext.com>
-To:     <airlied@gmail.com>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
-        <sam@ravnborg.org>, <David1.Zhou@amd.com>,
-        <amd-gfx@lists.freedesktop.org>, <james.qian.wang@arm.com>,
-        <bskeggs@redhat.com>, <linux-arm-msm@vger.kernel.org>,
-        <intel-gfx@lists.freedesktop.org>,
-        <intel-gvt-dev@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <christian.koenig@amd.com>,
-        <alexander.deucher@amd.com>, <freedreno@lists.freedesktop.org>
-Subject: RE: [Intel-gfx] [PATCH v2] drm: prefix header search paths with
- $(srctree)/
-Thread-Topic: [Intel-gfx] [PATCH v2] drm: prefix header search paths with
- $(srctree)/
-Thread-Index: AQHU5iNkiUzKiT+mAU6E3XIaV/Lv/KZNPe2AgAALpgCAAJguoA==
-Date:   Fri, 26 Apr 2019 02:25:00 +0000
-Message-ID: <8d04d30e86a54b3e9b27b30ac0ab3822@SOC-EX01V.e01.socionext.com>
-References: <1553859161-2628-1-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNAR6bT93kmyPCzJg2ZFvk239nz0nyVX5z23G+8Y0Wiba1Q@mail.gmail.com>
- <CAPM=9txpmjQqh0eLA1sMjcDatQG83vk=juLehiUDi=sBO+c9Tg@mail.gmail.com>
-In-Reply-To: <CAPM=9txpmjQqh0eLA1sMjcDatQG83vk=juLehiUDi=sBO+c9Tg@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-securitypolicycheck: OK by SHieldMailChecker v2.5.2
-x-shieldmailcheckerpolicyversion: POLICY190117
-x-originating-ip: [10.213.24.1]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 25 Apr 2019 22:26:02 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:39252 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728269AbfDZC0C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Apr 2019 22:26:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1556245560; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=XpPFglC39Lepd2C8rXS0wGjtZOwr35DRBGQT+aRjR8o=;
+        b=WuQV9dkGg1BIOQqYR3H699slUZkovPSu8EtmvmKnRlS2lIPsBC3EM2y/jUzF+zKpaNleaj
+        v3N2iDTun0r4+TaH3rUKgfMWZircsJ9n2CYZGsubp8vUIGQauuB/OBJV9Qqv+VDjxWgkbK
+        FF383Q4Mhnu1o6BYAfOwN9Y+lyweYpM=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, od@zcrc.me,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/2] ASoC: simple-card-utils: add asoc_simple_parse_pin_switches()
+Date:   Fri, 26 Apr 2019 04:25:49 +0200
+Message-Id: <20190426022550.31359-1-paul@crapouillou.net>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGF2ZSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEYXZlIEFp
-cmxpZSBbbWFpbHRvOmFpcmxpZWRAZ21haWwuY29tXQ0KPiBTZW50OiBGcmlkYXksIEFwcmlsIDI2
-LCAyMDE5IDExOjE5IEFNDQo+IFRvOiBZYW1hZGEsIE1hc2FoaXJvL+WxseeUsCDnnJ/lvJggPHlh
-bWFkYS5tYXNhaGlyb0Bzb2Npb25leHQuY29tPg0KPiBDYzogRGF2aWQgQWlybGllIDxhaXJsaWVk
-QGxpbnV4LmllPjsgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPjsNCj4gZHJpLWRldmVs
-IDxkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnPjsgbm91dmVhdQ0KPiA8bm91dmVhdUBs
-aXN0cy5mcmVlZGVza3RvcC5vcmc+OyBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+OyBE
-YXZpZA0KPiAoQ2h1bk1pbmcpIFpob3UgPERhdmlkMS5aaG91QGFtZC5jb20+OyBhbWQtZ2Z4IG1h
-aWxpbmcgbGlzdA0KPiA8YW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmc+OyBKYW1lcyAoUWlh
-bikgV2FuZw0KPiA8amFtZXMucWlhbi53YW5nQGFybS5jb20+OyBCZW4gU2tlZ2dzIDxic2tlZ2dz
-QHJlZGhhdC5jb20+Ow0KPiBsaW51eC1hcm0tbXNtIDxsaW51eC1hcm0tbXNtQHZnZXIua2VybmVs
-Lm9yZz47IEludGVsIEdyYXBoaWNzDQo+IERldmVsb3BtZW50IDxpbnRlbC1nZnhAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnPjsNCj4gaW50ZWwtZ3Z0LWRldkBsaXN0cy5mcmVlZGVza3RvcC5vcmc7IExp
-bnV4IEtlcm5lbCBNYWlsaW5nIExpc3QNCj4gPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+
-OyBDaHJpc3RpYW4gS8O2bmlnDQo+IDxjaHJpc3RpYW4ua29lbmlnQGFtZC5jb20+OyBBbGV4IERl
-dWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFtZC5jb20+Ow0KPiBmcmVlZHJlbm9AbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnDQo+IFN1YmplY3Q6IFJlOiBbSW50ZWwtZ2Z4XSBbUEFUQ0ggdjJdIGRybTog
-cHJlZml4IGhlYWRlciBzZWFyY2ggcGF0aHMgd2l0aA0KPiAkKHNyY3RyZWUpLw0KPiANCj4gT24g
-RnJpLCAyNiBBcHIgMjAxOSBhdCAxMTo0NiwgTWFzYWhpcm8gWWFtYWRhDQo+IDx5YW1hZGEubWFz
-YWhpcm9Ac29jaW9uZXh0LmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaS4NCj4gPg0KPiA+DQo+ID4g
-T24gRnJpLCBNYXIgMjksIDIwMTkgYXQgODozNyBQTSBNYXNhaGlybyBZYW1hZGENCj4gPiA8eWFt
-YWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+IHdyb3RlOg0KPiA+ID4NCj4gPiA+IEN1cnJlbnRs
-eSwgdGhlIEtidWlsZCBjb3JlIG1hbmlwdWxhdGVzIGhlYWRlciBzZWFyY2ggcGF0aHMgaW4gYSBj
-cmF6eQ0KPiA+ID4gd2F5IFsxXS4NCj4gPiA+DQo+ID4gPiBUbyBmaXggdGhpcyBtZXNzLCBJIHdh
-bnQgYWxsIE1ha2VmaWxlcyB0byBhZGQgZXhwbGljaXQgJChzcmN0cmVlKS8gdG8NCj4gPiA+IHRo
-ZSBzZWFyY2ggcGF0aHMgaW4gdGhlIHNyY3RyZWUuIFNvbWUgTWFrZWZpbGVzIGFyZSBhbHJlYWR5
-IHdyaXR0ZW4NCj4gaW4NCj4gPiA+IHRoYXQgd2F5LCBidXQgbm90IGFsbC4gVGhlIGdvYWwgb2Yg
-dGhpcyB3b3JrIGlzIHRvIG1ha2UgdGhlIG5vdGF0aW9uDQo+ID4gPiBjb25zaXN0ZW50LCBhbmQg
-ZmluYWxseSBnZXQgcmlkIG9mIHRoZSBncm9zcyBoYWNrcy4NCj4gPiA+DQo+ID4gPiBIYXZpbmcg
-d2hpdGVzcGFjZXMgYWZ0ZXIgLUkgZG9lcyBub3QgbWF0dGVyIHNpbmNlIGNvbW1pdCA0OGY2ZTNj
-ZjViYzYNCj4gPiA+ICgia2J1aWxkOiBkbyBub3QgZHJvcCAtSSB3aXRob3V0IHBhcmFtZXRlciIp
-Lg0KPiA+ID4NCj4gPiA+IFsxXTogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85
-NjMyMzQ3Lw0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1hc2FoaXJvIFlhbWFkYSA8eWFt
-YWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+DQo+ID4gPiBSZXZpZXdlZC1ieTogU2FtIFJhdm5i
-b3JnIDxzYW1AcmF2bmJvcmcub3JnPg0KPiA+ID4gLS0tDQo+ID4gPg0KPiA+ID4gSSBwdXQgYWxs
-IGdwdS9kcm0gY2hhbmdlcyBpbnRvIGEgc2luZ2xlIHBhdGNoIGJlY2F1c2UNCj4gPiA+IHRoZXkg
-YXJlIHRyaXZpYWwgY29udmVyc2lvbi4NCj4gPiA+DQo+ID4gPiBJZiB5b3UgYXJlIGludGVyZXN0
-ZWQgaW4gdGhlIGJpZyBwaWN0dXJlIG9mIHRoaXMgd29yaywNCj4gPiA+IHRoZSBmdWxsIHBhdGNo
-IHNldCBpcyBhdmFpbGFibGUgYXQgdGhlIGZvbGxvd2luZyBVUkwuDQo+ID4gPg0KPiA+ID4NCj4g
-Z2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L21hc2FoaXJveS9s
-aW51eC1rYnVpbGQuZw0KPiBpdCBidWlsZC10ZXN0DQo+ID4NCj4gPg0KPiA+IElzIHNvbWVib2R5
-IHRha2luZyBjYXJlIG9mIHRoaXM/DQo+ID4NCj4gDQo+IEFyZSB5b3UgZXhwZWN0aW5nIHRoaXMg
-dG8gYmUgbWVyZ2VkIGluIHRoZSBkcm0gdHJlZT8gaWYgc28gcGxlYXNlDQo+IGluZGljYXRlIHRo
-YXQgd2hlbiBwb3N0aW5nLg0KDQoNClNvcnJ5IGZvciB1bmNsZWFybmVzcy4NCg0KQ291bGQgeW91
-IGFwcGx5IHRoaXMgdG8geW91ciBkcm0gdHJlZT8NCg0KVGhhbmtzLg0KDQoNCg0KDQo+IEknZCBh
-c3N1bWVkIHRoaXMgd291bGQgZ28gdmlhIGtidWlsZCB0cmVlLg0KPiANCj4gSWYgdGhlIGxhdGVy
-LA0KPiBBY2tlZC1ieTogRGF2ZSBBaXJsaWUgPGFpcmxpZWRAcmVkaGF0LmNvbT4NCj4gRGF2ZS4N
-Cg==
+This function is a helper that permits to create pin switch controls for
+a list of widgets whose names are listed in the PREFIX "pin-switches"
+devicetree property.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+
+Notes:
+    v2: - Rebase on top of for-next
+        - Rename to asoc_simple_parse_pin_switches()
+
+ include/sound/simple_card_utils.h     |  2 +
+ sound/soc/generic/simple-card-utils.c | 57 +++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
+
+diff --git a/include/sound/simple_card_utils.h b/include/sound/simple_card_utils.h
+index 67dc3ee6ed01..3429888347e7 100644
+--- a/include/sound/simple_card_utils.h
++++ b/include/sound/simple_card_utils.h
+@@ -133,6 +133,8 @@ int asoc_simple_parse_routing(struct snd_soc_card *card,
+ 				      char *prefix);
+ int asoc_simple_parse_widgets(struct snd_soc_card *card,
+ 				      char *prefix);
++int asoc_simple_parse_pin_switches(struct snd_soc_card *card,
++				   char *prefix);
+ 
+ int asoc_simple_init_jack(struct snd_soc_card *card,
+ 			       struct asoc_simple_jack *sjack,
+diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+index db1458a19985..f4c6375d11c7 100644
+--- a/sound/soc/generic/simple-card-utils.c
++++ b/sound/soc/generic/simple-card-utils.c
+@@ -430,6 +430,63 @@ int asoc_simple_parse_widgets(struct snd_soc_card *card,
+ }
+ EXPORT_SYMBOL_GPL(asoc_simple_parse_widgets);
+ 
++int asoc_simple_parse_pin_switches(struct snd_soc_card *card,
++				   char *prefix)
++{
++	const unsigned int nb_controls_max = 16;
++	const char **strings, *control_name;
++	struct snd_kcontrol_new *controls;
++	struct device *dev = card->dev;
++	unsigned int i, nb_controls;
++	char prop[128];
++	int ret;
++
++	if (!prefix)
++		prefix = "";
++
++	snprintf(prop, sizeof(prop), "%s%s", prefix, "pin-switches");
++
++	if (!of_property_read_bool(dev->of_node, prop))
++		return 0;
++
++	strings = devm_kcalloc(dev, nb_controls_max,
++			       sizeof(*strings), GFP_KERNEL);
++	if (!strings)
++		return -ENOMEM;
++
++	ret = of_property_read_string_array(dev->of_node, prop,
++					    strings, nb_controls_max);
++	if (ret < 0)
++		return ret;
++
++	nb_controls = (unsigned int)ret;
++
++	controls = devm_kcalloc(dev, nb_controls,
++				sizeof(*controls), GFP_KERNEL);
++	if (!controls)
++		return -ENOMEM;
++
++	for (i = 0; i < nb_controls; i++) {
++		control_name = devm_kasprintf(dev, GFP_KERNEL,
++					      "%s Switch", strings[i]);
++		if (!control_name)
++			return -ENOMEM;
++
++		controls[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
++		controls[i].name = control_name;
++		controls[i].info = snd_soc_dapm_info_pin_switch;
++		controls[i].get = snd_soc_dapm_get_pin_switch;
++		controls[i].put = snd_soc_dapm_put_pin_switch;
++		controls[i].private_value = (unsigned long)strings[i];
++	}
++
++	card->controls = controls;
++	card->num_controls = nb_controls;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(asoc_simple_parse_pin_switches);
++
+ int asoc_simple_init_jack(struct snd_soc_card *card,
+ 			  struct asoc_simple_jack *sjack,
+ 			  int is_hp, char *prefix)
+-- 
+2.21.0.593.g511ec345e18
+
