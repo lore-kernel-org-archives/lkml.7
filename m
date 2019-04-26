@@ -2,173 +2,102 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F6BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF6CC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F08206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 357B2206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 10:51:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jc14yonO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfDZKtD (ORCPT
+        id S1726321AbfDZKvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 06:49:03 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38504 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbfDZKtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 06:49:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7091780D;
-        Fri, 26 Apr 2019 03:49:02 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BDB53F5AF;
-        Fri, 26 Apr 2019 03:49:00 -0700 (PDT)
-Date:   Fri, 26 Apr 2019 11:48:57 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     ard.biesheuvel@linaro.org, marc.zyngier@arm.com,
-        catalin.marinas@arm.com, julien.thierry@arm.com,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        christoffer.dall@arm.com, james.morse@arm.com,
-        linux-arm-kernel@lists.infradead.org, suzuki.poulose@arm.com
-Subject: Re: [PATCH v3 3/3] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-Message-ID: <20190426104856.GJ3567@e103592.cambridge.arm.com>
-References: <20190423135719.11306-1-julien.grall@arm.com>
- <20190423135719.11306-4-julien.grall@arm.com>
- <20190424131734.GT3567@e103592.cambridge.arm.com>
- <ab9294b0-a360-df28-ca5c-ba4974f6c5a5@arm.com>
- <20190425163937.GI3567@e103592.cambridge.arm.com>
- <971994b0-052e-6a93-3949-0b05d2b558e5@arm.com>
+        Fri, 26 Apr 2019 06:51:20 -0400
+Received: from mail-eopbgr00059.outbound.protection.outlook.com ([40.107.0.59]:34627
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725944AbfDZKvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 06:51:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+kpa4DZFjHApjeOq5Uyop56mHymAHoyJKTKyHdALSlY=;
+ b=jc14yonO59sM9GFWZ4L9qrWifLkg2y4wyZOigc36ADpXsmpqQSUAI41EKqDqOI7SsrV+DqhFzZKCNuFC7EXIQwOo7M+u5TzrWL16NFKzpwIKpken8cB4zUw0iWzLKLSQFyJTOcCUu2sZe3GOOQMmpZq3ygvDDB+WyVdNWELIM6M=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6608.eurprd04.prod.outlook.com (20.179.235.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.14; Fri, 26 Apr 2019 10:51:16 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::6c03:86ad:729d:e311]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::6c03:86ad:729d:e311%7]) with mapi id 15.20.1835.010; Fri, 26 Apr 2019
+ 10:51:16 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V3] ASoC: fsl_esai: Add pm runtime function
+Thread-Topic: [PATCH V3] ASoC: fsl_esai: Add pm runtime function
+Thread-Index: AdT8HbMvSOaQ4ZXUSdmDjif4uXLhnQ==
+Date:   Fri, 26 Apr 2019 10:51:15 +0000
+Message-ID: <VE1PR04MB64797233B0BFE833550094C3E33E0@VE1PR04MB6479.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 95928519-81a2-4eee-2700-08d6ca351b5e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6608;
+x-ms-traffictypediagnostic: VE1PR04MB6608:
+x-microsoft-antispam-prvs: <VE1PR04MB660838539FCF74606343F858E33E0@VE1PR04MB6608.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 001968DD50
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(39860400002)(136003)(366004)(199004)(189003)(6506007)(7696005)(9686003)(186003)(5660300002)(66066001)(4744005)(97736004)(71200400001)(102836004)(71190400001)(6916009)(53936002)(316002)(66556008)(99286004)(64756008)(66946007)(81156014)(76116006)(14454004)(26005)(6116002)(66446008)(3846002)(486006)(81166006)(476003)(66476007)(73956011)(7736002)(478600001)(8936002)(6436002)(14444005)(4326008)(68736007)(74316002)(54906003)(6246003)(86362001)(55016002)(2906002)(33656002)(25786009)(229853002)(52536014)(8676002)(256004)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6608;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jJQ+nwNUQTF9eLCHITHHfWob7Z+Y22VTqM2Wp9DjqUQKpJ36VYzOo5PoSuajdsRFC8dSZ6JO4Kw7sci1vvLpR03Q0e35ysP3unh/ip2RL0wXq+D2ByR5kmymNib3+mwEe2KbK7CssdTNE93jFkCvY6w9/heJNOOmuRn3idc8M8PTkAflr6AaNqhGHQCUchKwOgh+GaynrF5x1Pb912DEGd7H2J9bfrdXf5iTga74KEN9LXduTNE8BTV7zIKQgM6eHkdo52JMJoKcPl/0O1ai0c06x+F5L+iVycZKajGQR+sGah2X/TS4e5NV583SjC0ljwtt6KYDutZLVijqbeVKBAWc72xmdxPyyn1wn3RFaW7SGRYFyhbLubiAtpgrYLPZQ1jJwKOi3prAS7FvtcTeL46kt1f19SHWl4XH8dRhFbY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <971994b0-052e-6a93-3949-0b05d2b558e5@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95928519-81a2-4eee-2700-08d6ca351b5e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2019 10:51:15.9945
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6608
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 06:12:59PM +0100, Julien Grall wrote:
-> Hi Dave,
-> 
-> On 25/04/2019 17:39, Dave Martin wrote:
-> >On Thu, Apr 25, 2019 at 04:57:26PM +0100, Julien Grall wrote:
-> >>Hi Dave,
-> >>
-> >>On 24/04/2019 14:17, Dave Martin wrote:
-> >>>On Tue, Apr 23, 2019 at 02:57:19PM +0100, Julien Grall wrote:
+Hi Mark
 
-[...]
-
-> >>>(For that you also need fpsimd_save_and_flush_cpu_state(), or just use
-> >>>kernel_neon_begin() instead.)
-> >>>
-> >>>[...]
-> >>>
-> >>>>@@ -922,6 +971,8 @@ void fpsimd_thread_switch(struct task_struct *next)
-> >>>>  	if (!system_supports_fpsimd())
-> >>>>  		return;
-> >>>>+	__get_cpu_fpsimd_context();
-> >>>>+
-> >>>>  	/* Save unsaved fpsimd state, if any: */
-> >>>>  	fpsimd_save();
-> >>>>@@ -936,6 +987,8 @@ void fpsimd_thread_switch(struct task_struct *next)
-> >>>>  	update_tsk_thread_flag(next, TIF_FOREIGN_FPSTATE,
-> >>>>  			       wrong_task || wrong_cpu);
-> >>>>+
-> >>>>+	__put_cpu_fpsimd_context();
-> >>>
-> >>>There should be a note in the commit message explaining why these are
-> >>>here.
-> >>>
-> >>>Are they actually needed, other than to keep
-> >>>WARN_ON(have_cpu_fpsimd_context()) happy elsewhere?
-> >>
-> >>It depends on how fpsimd_thread_switch() is called. I will answer more below.
-> >>
-> >>>
-> >>>Does PREEMPT_RT allow non-threaded softirqs to execute while we're in
-> >>>this code?
-> >>
-> >>This has nothing to do with PREEMPT_RT. Softirqs might be executed after
-> >>handling interrupt (see irq_exit()).
-> >>
-> >>A call to preempt_disable() will not be enough to prevent softirqs, you
-> >>actually need to either mask interrupts or have BH disabled.
-> >>
-> >>fpsimd_thread_switch() seems to be only called from the context switch code.
-> >>AFAICT, interrupt will be masked. Therefore, holding the FPSIMD CPU is not
-> >>necessary. However...
-> >>
-> >>>
-> >>>
-> >>>OTOH, if the overall effect on performance remains positive, we can
-> >>>probably argue that these operations make the code more self-describing
-> >>>and help guard against mistakes during future maintanence, even if
-> >>>they're not strictly needed today.
-> >>
-> >>.... I think it would help guard against mistakes. The more I haven't seen
-> >>any performance impact in the benchmark.
+>=20
+> On Mon, Apr 22, 2019 at 02:31:55AM +0000, S.j. Wang wrote:
+> > Add pm runtime support and move clock handling there.
+> > Close the clocks at suspend to reduce the power consumption.
 > >
-> >Which generally seems a good thing.  The commit message should explain
-> >that these are being added for hygiene rather than necessity here,
-> >though.
-> 
-> I will update the commit message.
+> > fsl_esai_suspend is replaced by pm_runtime_force_suspend.
+> > fsl_esai_resume is replaced by pm_runtime_force_resume.
+>=20
+> This doesn't apply against current code, please check and resend.
 
-Thanks
+Which branch are you using?  I tried for-next and for-linus, both
+Are successful applied.
 
-[...]
-
-> >>>>-/*
-> >>>>- * Save the FPSIMD state to memory and invalidate cpu view.
-> >>>>- * This function must be called with softirqs (and preemption) disabled.
-> >>>>- */
-> >>>>+/* Save the FPSIMD state to memory and invalidate cpu view. */
-> >>>>  void fpsimd_save_and_flush_cpu_state(void)
-> >>>>  {
-> >>>>+	get_cpu_fpsimd_context();
-> >>>>  	fpsimd_save();
-> >>>>  	fpsimd_flush_cpu_state();
-> >>>>+	put_cpu_fpsimd_context();
-> >>>>  }
-> >>>
-> >>>Again, are these added just to keep WARN_ON()s happy?
-> >>
-> >>!preemptible() is not sufficient to prevent softirq running. You also need
-> >>to have either interrupt masked or BH disabled.
-> >
-> >So, why was the code safe before this series?  (In fact, _was_ it safe?)
-> >
-> >AFAICT, we have local_irq_disable() around context switch, which covers
-> >preempt notifiers (where kvm_arch_vcpu_put_fp() gets called) and
-> >fpsimd_thread_switch(): this is what prevents softirqs from firing.
-> 
-> That's correct, both callers of the function will have IRQs masked. Also,
-> the function fpsimd_save() contained:
->     WARN_ON(!in_softirq() && !irqs_disabled());
-> 
-> So we were covered in case of misuse.
-
-OK -- my main worry here was that there might be a bug in mainline.
-
-Adding protection where none existed previously raises the question of
-whether we're papering over an existing bug, so it's good to mention in
-the commit message if this is not the case.
-
-> >So, while it's clean to have get/put here, I still don't see why they're
-> >required.
-> >
-> >I think the arguments are basically similar to fpsimd_thread_switch().
-> >Since fpsimd_save_and_flush_cpu_state() and fpsimd_thread_switch() are
-> >called from similar contexts, is makes sense to keep them aligned.
-> 
-> Yes, this is for hygiene rather than a real bug (thought the WARN_ON() in
-> fpsimd_save() would fire). I will update the message accordingly.
-
-OK, thanks
----Dave
+Best regards
+Wang shengjiu
