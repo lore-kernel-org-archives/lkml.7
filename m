@@ -2,197 +2,190 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,UPPERCASE_50_75 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4F8C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EBBC43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB3E2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C1D206BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 12:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgCU5E+m"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+gsWbVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbfDZMLo (ORCPT
+        id S1726296AbfDZMNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 08:11:44 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33924 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfDZMLo (ORCPT
+        Fri, 26 Apr 2019 08:13:21 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40687 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfDZMNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 08:11:44 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a6so3000226edv.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 05:11:42 -0700 (PDT)
+        Fri, 26 Apr 2019 08:13:21 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d31so1546405pgl.7;
+        Fri, 26 Apr 2019 05:13:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Iv+Qt/L8mJZ+qcF89VURhvr8O3ic6BiHoQtS2O+mf6w=;
-        b=KgCU5E+mQUaAngkEPf8GYVsgqKE13B7je9UgwHKl0P6aQOkh12SOT9rGZ4lXG/7OXp
-         8EeYa761UjVrsvbrqf4098fXcYb5CL5m3kl+IUhJTHT7NB9pbYn7nnxGeGJIOWn7AgwE
-         QviFVg/QJhNo4/HEDWZBgrDpHjigmxreOePeknoFMqGRFVm9w/Xh+RDhtD/ScKPLpWZk
-         0YoXcdyapohDn57eiQvYOXRXQWlciTA2IiqEGndjEjYsKMhwaGicwUqFjRyy80bd9lVU
-         T1Ls1gTw9aAsqZJThE6575U9o1snUuNn0x9zTPwI1RsAdSXczFQ7eK9Bcp4WvkpgaFx0
-         WVRQ==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wD0OjhU7ka4LGT9gkwOuIYoWKFPBcZLGIcvMIyWAXLo=;
+        b=k+gsWbVp/E1AMuZ+h9liMTRaJRwfBKbWmAITq2nYGiG9+yr0YJoNv2mc7N06OJRrHp
+         NdOLhN0eGjjlvn7Ge4tNWkmVZVRMnODt198NvhKEeWXuAzkvQAJAFlDMtlDMXvcPoqmG
+         x5CcjjNsc+oYo7k3/BzNfvjECZKzj2n8SyElNOygXRBoFgEoejSf37XWc4gtie5HmVI4
+         zdj+aHILVUx64Ie3CJyfV+5kCLsH9rt8yEpTSiHhhj9apuOp71uURFB7WIR+JGaVM00e
+         YfMkaIzZjSW+krkB92hI5JLmKHeILnGleupwomKNH6rGL7Xp2E0ygHg3xwWOnzFwJgt6
+         CMPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Iv+Qt/L8mJZ+qcF89VURhvr8O3ic6BiHoQtS2O+mf6w=;
-        b=LTP2DDBjyeNibMNXtpKOjg9aL8Tg7NYmpxMVgH7lWPZNUYFTTP8EswtqvYwWxZPbjW
-         Tk2oo5apVKc3JiiDasUWCMJ76LdhGNoGAXlOwTjFRLmDDFA1v4gEehPge1VJJFMYgfDT
-         905qjQf2w9wjGJyEzWixNRc5usLP6wZ0cqbWXuaHAT36AVKaNwrQ870nl9BI6TND1Ua3
-         xUvHXt39I5ZOubNoibTo39VNIFaCHKNR2HYYYIO/ynJDjc5pesahNKbgmjqYjfZuyAzq
-         U636Lz8TuPhXBox04dOr2oH8TZcKZYl6zAp323li8wl6mne8Vm3J4aKdSWNYKSYhDlPA
-         iW5A==
-X-Gm-Message-State: APjAAAVwhKyXK1ONfmi6wPO31YSAbiFQZQ0TD2+IK6rJfBlbrxCK9OiQ
-        bt6zHSljs51u78xPrZdd1HzwDF494WmRNQCY9Ac=
-X-Google-Smtp-Source: APXvYqwg1tBQB8xAZ3L8jvxGUswWVPmzCPfBxX5vwnT3za6d2x7T4b6Y67klyNoMzXl9S9A9zAfjFLiLY1eYF1svXSw=
-X-Received: by 2002:a50:a3c2:: with SMTP id t2mr27861786edb.46.1556280702041;
- Fri, 26 Apr 2019 05:11:42 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wD0OjhU7ka4LGT9gkwOuIYoWKFPBcZLGIcvMIyWAXLo=;
+        b=Mn4r7r2oFxCvfDy1RrfNizTe2TqtXrd8fSnnfl6thrxqH9Ff3rNziyDIJ8zgCLFuFz
+         nZCMxQjEVabP1ax9heVXn8l8pjDYt83pjlFPeQOdDW1xgAHJ4MX0sSK8HxHoDQObu/If
+         DRHWYOLEbCcK4E2tqbvABG+8tq21OhEC+9QCFr2G5piyV0vHPjHoyKVtfjVF8FghHwyP
+         4+YKNxs5oJRB01V0/Es0yenHKRNIxCC2fNldFL0lyt9ul7Asr/bnegPs94RvSXq4v8H7
+         nPDWJZWsq0lm8TJPbso5CZ7Cx3wEOMp+R5iUJPx+eSji883QwtfaUJRcGZ7n28K7pdiG
+         niag==
+X-Gm-Message-State: APjAAAXyFXeTf8NX+FEV9MdwsiNCQou8fq/wXdKRWhZcIatosraHp4Vz
+        AChUZ9sSNMVVEmzlXgXEJbDjalCu
+X-Google-Smtp-Source: APXvYqzLATIcdHO4qbeKRPCfRJD/mNg05oyIqQRG7PTgHVQsANj62I4vHgFcArCl1z+NpoVT5saMgw==
+X-Received: by 2002:a63:f115:: with SMTP id f21mr42885893pgi.65.1556280799877;
+        Fri, 26 Apr 2019 05:13:19 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l184sm51343460pfc.98.2019.04.26.05.13.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 05:13:18 -0700 (PDT)
+Subject: Re: [PATCH] usbnet: ipheth: Simplify device detection
+To:     Simon Horman <horms@verge.net.au>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1556128704-10831-1-git-send-email-linux@roeck-us.net>
+ <20190426112703.lrceujboxox6no3y@verge.net.au>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <339d6eb5-0534-a455-735f-2abf28d5f509@roeck-us.net>
+Date:   Fri, 26 Apr 2019 05:13:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190422190213.30726-1-daniel.baluta@nxp.com> <20190422190213.30726-4-daniel.baluta@nxp.com>
-In-Reply-To: <20190422190213.30726-4-daniel.baluta@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Fri, 26 Apr 2019 15:11:30 +0300
-Message-ID: <CAEnQRZCK5dPoD7TunxLsf8EXVb-99Vb0OQnaqa2rmAQu3eyWvw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] ASoC: fsl_sai: Move clock operation to PM runtime
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     "broonie@kernel.org" <broonie@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190426112703.lrceujboxox6no3y@verge.net.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On 4/26/19 4:27 AM, Simon Horman wrote:
+> On Wed, Apr 24, 2019 at 10:58:24AM -0700, Guenter Roeck wrote:
+>> All Apple products use the same protocol for tethering over USB.
+>> To simplify the code and make it future proof, use
+>> USB_VENDOR_AND_INTERFACE_INFO() instead of
+>> USB_DEVICE_AND_INTERFACE_INFO() to automatically detect and support
+>> all existing and future Apple products using the same interface.
+> 
+> What if future Apple products behave differently?
+> 
 
-This is the only patch in the series that wasn't applied.
+Sure, Apple may decide to use the same device/class/subclass/protocol
+identifier for a different protocol. That is unlikely but possible.
 
-On Mon, Apr 22, 2019 at 10:03 PM Daniel Baluta <daniel.baluta@nxp.com> wrote:
->
-> From: Shengjiu Wang <shengjiu.wang@nxp.com>
->
-> Turn off/on clocks when device enters suspend/resume. This
-> can help saving power.
->
-> As a further optimization, we turn off/on mclk only when SAI
-> is in master mode because otherwise mclk is externally provided.
->
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  sound/soc/fsl/fsl_sai.c | 54 +++++++++++++++++++++++++++++++++--------
->  1 file changed, 44 insertions(+), 10 deletions(-)
->
-> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> index 8623b7f882b9..7fd1a81ec1aa 100644
-> --- a/sound/soc/fsl/fsl_sai.c
-> +++ b/sound/soc/fsl/fsl_sai.c
-> @@ -596,15 +596,8 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
->  {
->         struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
->         bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-> -       struct device *dev = &sai->pdev->dev;
->         int ret;
->
-> -       ret = clk_prepare_enable(sai->bus_clk);
-> -       if (ret) {
-> -               dev_err(dev, "failed to enable bus clock: %d\n", ret);
-> -               return ret;
-> -       }
-> -
->         regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx), FSL_SAI_CR3_TRCE,
->                            FSL_SAI_CR3_TRCE);
->
-> @@ -621,8 +614,6 @@ static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
->         bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
->
->         regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx), FSL_SAI_CR3_TRCE, 0);
-> -
-> -       clk_disable_unprepare(sai->bus_clk);
->  }
->
->  static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
-> @@ -932,6 +923,14 @@ static int fsl_sai_runtime_suspend(struct device *dev)
->  {
->         struct fsl_sai *sai = dev_get_drvdata(dev);
->
-> +       if (sai->mclk_streams & BIT(SNDRV_PCM_STREAM_CAPTURE))
-> +               clk_disable_unprepare(sai->mclk_clk[sai->mclk_id[0]]);
-> +
-> +       if (sai->mclk_streams & BIT(SNDRV_PCM_STREAM_PLAYBACK))
-> +               clk_disable_unprepare(sai->mclk_clk[sai->mclk_id[1]]);
-> +
-> +       clk_disable_unprepare(sai->bus_clk);
-> +
->         regcache_cache_only(sai->regmap, true);
->         regcache_mark_dirty(sai->regmap);
->
-> @@ -941,6 +940,25 @@ static int fsl_sai_runtime_suspend(struct device *dev)
->  static int fsl_sai_runtime_resume(struct device *dev)
->  {
->         struct fsl_sai *sai = dev_get_drvdata(dev);
-> +       int ret;
-> +
-> +       ret = clk_prepare_enable(sai->bus_clk);
-> +       if (ret) {
-> +               dev_err(dev, "failed to enable bus clock: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       if (sai->mclk_streams & BIT(SNDRV_PCM_STREAM_PLAYBACK)) {
-> +               ret = clk_prepare_enable(sai->mclk_clk[sai->mclk_id[1]]);
-> +               if (ret)
-> +                       goto disable_bus_clk;
-> +       }
-> +
-> +       if (sai->mclk_streams & BIT(SNDRV_PCM_STREAM_CAPTURE)) {
-> +               ret = clk_prepare_enable(sai->mclk_clk[sai->mclk_id[0]]);
-> +               if (ret)
-> +                       goto disable_tx_clk;
-> +       }
->
->         regcache_cache_only(sai->regmap, false);
->         regmap_write(sai->regmap, FSL_SAI_TCSR, FSL_SAI_CSR_SR);
-> @@ -948,7 +966,23 @@ static int fsl_sai_runtime_resume(struct device *dev)
->         usleep_range(1000, 2000);
->         regmap_write(sai->regmap, FSL_SAI_TCSR, 0);
->         regmap_write(sai->regmap, FSL_SAI_RCSR, 0);
-> -       return regcache_sync(sai->regmap);
-> +
-> +       ret = regcache_sync(sai->regmap);
-> +       if (ret)
-> +               goto disable_rx_clk;
-> +
-> +       return 0;
-> +
-> +disable_rx_clk:
-> +       if (sai->mclk_streams & BIT(SNDRV_PCM_STREAM_CAPTURE))
-> +               clk_disable_unprepare(sai->mclk_clk[sai->mclk_id[0]]);
-> +disable_tx_clk:
-> +       if (sai->mclk_streams & BIT(SNDRV_PCM_STREAM_PLAYBACK))
-> +               clk_disable_unprepare(sai->mclk_clk[sai->mclk_id[1]]);
-> +disable_bus_clk:
-> +       clk_disable_unprepare(sai->bus_clk);
-> +
-> +       return ret;
->  }
->  #endif /* CONFIG_PM */
->
-> --
-> 2.17.1
->
+If the associated risk is considered higher than the benefit of supporting
+new devices announcing the same protocol with a different product id,
+please feel free to ignore (or nack) this patch.
+
+Thanks,
+Guenter
+
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>> Tested with various iPads and iPhones up to X. iPhone 6 and later
+>> up to and including X all use product ID 0x12a8, so this patch is
+>> not strictly required, but it does simplify the code.
+>>
+>>   drivers/net/usb/ipheth.c | 58 +++---------------------------------------------
+>>   1 file changed, 3 insertions(+), 55 deletions(-)
+>>
+>> diff --git a/drivers/net/usb/ipheth.c b/drivers/net/usb/ipheth.c
+>> index 3d8a70d3ea9b..a01a71a7e48d 100644
+>> --- a/drivers/net/usb/ipheth.c
+>> +++ b/drivers/net/usb/ipheth.c
+>> @@ -54,17 +54,6 @@
+>>   #include <linux/workqueue.h>
+>>   
+>>   #define USB_VENDOR_APPLE        0x05ac
+>> -#define USB_PRODUCT_IPHONE      0x1290
+>> -#define USB_PRODUCT_IPHONE_3G   0x1292
+>> -#define USB_PRODUCT_IPHONE_3GS  0x1294
+>> -#define USB_PRODUCT_IPHONE_4	0x1297
+>> -#define USB_PRODUCT_IPAD 0x129a
+>> -#define USB_PRODUCT_IPAD_2	0x12a2
+>> -#define USB_PRODUCT_IPAD_3	0x12a6
+>> -#define USB_PRODUCT_IPAD_MINI    0x12ab
+>> -#define USB_PRODUCT_IPHONE_4_VZW 0x129c
+>> -#define USB_PRODUCT_IPHONE_4S	0x12a0
+>> -#define USB_PRODUCT_IPHONE_5	0x12a8
+>>   
+>>   #define IPHETH_USBINTF_CLASS    255
+>>   #define IPHETH_USBINTF_SUBCLASS 253
+>> @@ -88,50 +77,9 @@
+>>   #define IPHETH_CARRIER_ON       0x04
+>>   
+>>   static const struct usb_device_id ipheth_table[] = {
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPHONE,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPHONE_3G,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPHONE_3GS,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPHONE_4,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPAD,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPAD_2,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPAD_3,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPAD_MINI,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPHONE_4_VZW,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPHONE_4S,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> -	{ USB_DEVICE_AND_INTERFACE_INFO(
+>> -		USB_VENDOR_APPLE, USB_PRODUCT_IPHONE_5,
+>> -		IPHETH_USBINTF_CLASS, IPHETH_USBINTF_SUBCLASS,
+>> -		IPHETH_USBINTF_PROTO) },
+>> +	{ USB_VENDOR_AND_INTERFACE_INFO(USB_VENDOR_APPLE, IPHETH_USBINTF_CLASS,
+>> +					IPHETH_USBINTF_SUBCLASS,
+>> +					IPHETH_USBINTF_PROTO) },
+>>   	{ }
+>>   };
+>>   MODULE_DEVICE_TABLE(usb, ipheth_table);
+>> -- 
+>> 2.7.4
+>>
+> 
+
