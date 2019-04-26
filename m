@@ -2,188 +2,240 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476C2C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289B5C43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA67206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556293203;
-	bh=aAaugfC/CUVO6dTBORWe1tSSO4TClAgWzURPCFvwM1w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AxgMCVjttdCLvynBLY3Bq/Ov6b3Nc9aClqLAH4+4QlLOOyyJ9MgcP5h25zISy4bHU
-	 QTrqsKu3c8fsOrlo9fhCEa4Jrlbd2splyaMWtAaO2vlKHIjjeqlUgMObqs/dTisJEe
-	 jh2Qapb45FN0txt0KE8LTiOzexSVwuP2JYng3osI=
+	by mail.kernel.org (Postfix) with ESMTP id 009C0206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 15:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfDZPkC (ORCPT
+        id S1726524AbfDZPmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 11:40:02 -0400
-Received: from casper.infradead.org ([85.118.1.10]:49582 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbfDZPkC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 11:40:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=16uZ7IKY0ZVsZFtwWmnG9sJK2gJj5IMiMiqr4KT0ZEk=; b=XiaUviSKZNFfj4JRA7RP2kQTqs
-        n4LDrrJTBX6ngJPQW9v5PExJGOW4e7Uu6ZwJQRMZH9rv9FAnjBwnKSjeXU7yyuhFI7/C+yxxJMjG9
-        hcTpWSDBzSBJVstBSk22/H9It8lenLtTKuW0NL0TSskwKHrFScTXtRlhcdyL4GrOtM1wwKw6MDuea
-        Q6uyemYRl/p4SxJQTfT8bWxvqpAYQnf+Ia0l0rYwrkVv0TNc+TgI5tQfmrDdgB53UbQd8NyBftAUD
-        1bpJd6ict1FsZAzFUkZdNPmZVJRBcZUtGJCNZj23Eq9LaRJ5+Sjsb8sedFHVtVr64mRlC7yHIhs22
-        71RAL6qw==;
-Received: from [179.95.39.209] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hK2x5-0007rx-3e; Fri, 26 Apr 2019 15:39:51 +0000
-Date:   Fri, 26 Apr 2019 12:39:46 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/27] Include linux x86 docs into Sphinx TOC tree
-Message-ID: <20190426123946.554730b8@coco.lan>
-In-Reply-To: <20190426153150.21228-1-changbin.du@gmail.com>
-References: <20190426153150.21228-1-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 26 Apr 2019 11:42:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48392 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbfDZPmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 11:42:13 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8DF1C3134338;
+        Fri, 26 Apr 2019 15:42:12 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 18C9F5C221;
+        Fri, 26 Apr 2019 15:42:06 +0000 (UTC)
+From:   Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH v2 13/19] iommu/vt-d: Add nested translation support
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yi L <yi.l.liu@linux.intel.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556062279-64135-14-git-send-email-jacob.jun.pan@linux.intel.com>
+Message-ID: <b567b35b-4547-89db-fd88-4cef526e2e72@redhat.com>
+Date:   Fri, 26 Apr 2019 17:42:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1556062279-64135-14-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 26 Apr 2019 15:42:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 26 Apr 2019 23:31:23 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+Hi Jacob,
 
-> Hi all,
-> 
-> The kernel now uses Sphinx to generate intelligent and beautiful documentation
-> from reStructuredText files. I converted most of the Linux x86 docs to rst
-> format in this serias.
-> 
-> For you to preview, please visit below url:
-> http://www.bytemem.com:8080/kernel-doc/index.html
+On 4/24/19 1:31 AM, Jacob Pan wrote:
+> Nested translation mode is supported in VT-d 3.0 Spec.CH 3.8.
+> With PASID granular translation type set to 0x11b, translation
+> result from the first level(FL) also subject to a second level(SL)
+> page table translation. This mode is used for SVA virtualization,
+> where FL performs guest virtual to guest physical translation and
+> SL performs guest physical to host physical translation.
 
-Do you have a URL for the git tree? It is probably easier to merge from
-it on a tem branch locally, specially for some patches like 02/27, were 
-git didn't understand the conversion as a rename.
-
+The title of the patch sounds a bit misleading to me as this patch
+"just" adds a helper to set the PASID table entry in nested mode. There
+is no caller yet.
 > 
-> Thank you!
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+> ---
+>  drivers/iommu/intel-pasid.c | 101 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/iommu/intel-pasid.h |  11 +++++
+>  2 files changed, 112 insertions(+)
 > 
-> Changbin Du (27):
->   Documentation: add Linux x86 docs to Sphinx TOC tree
->   Documentation: x86: convert boot.txt to reST
->   Documentation: x86: convert topology.txt to reST
->   Documentation: x86: convert exception-tables.txt to reST
->   Documentation: x86: convert kernel-stacks to reST
->   Documentation: x86: convert entry_64.txt to reST
->   Documentation: x86: convert earlyprintk.txt to reST
->   Documentation: x86: convert zero-page.txt to reST
->   Documentation: x86: convert tlb.txt to reST
->   Documentation: x86: convert mtrr.txt to reST
->   Documentation: x86: convert pat.txt to reST
->   Documentation: x86: convert protection-keys.txt to reST
->   Documentation: x86: convert intel_mpx.txt to reST
->   Documentation: x86: convert amd-memory-encryption.txt to reST
->   Documentation: x86: convert pti.txt to reST
->   Documentation: x86: convert microcode.txt to reST
->   Documentation: x86: convert resctrl_ui.txt to reST
->   Documentation: x86: convert orc-unwinder.txt to reST
->   Documentation: x86: convert usb-legacy-support.txt to reST
->   Documentation: x86: convert i386/IO-APIC.txt to reST
->   Documentation: x86: convert x86_64/boot-options.txt to reST
->   Documentation: x86: convert x86_64/uefi.txt to reST
->   Documentation: x86: convert x86_64/mm.txt to reST
->   Documentation: x86: convert x86_64/5level-paging.txt to reST
->   Documentation: x86: convert x86_64/fake-numa-for-cpusets to reST
->   Documentation: x86: convert x86_64/cpu-hotplug-spec to reST
->   Documentation: x86: convert x86_64/machinecheck to reST
+> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+> index d339e8f..04127cf 100644
+> --- a/drivers/iommu/intel-pasid.c
+> +++ b/drivers/iommu/intel-pasid.c
+> @@ -688,3 +688,104 @@ int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
+>  
+>  	return 0;
+>  }
+> +
+> +/**
+> + * intel_pasid_setup_nested() - Set up PASID entry for nested translation
+> + * which is used for vSVA. The first level page tables are used for
+> + * GVA-GPA translation in the guest, second level page tables are used
+> + * for GPA to HPA translation.
+> + *
+> + * @iommu:      Iommu which the device belong to
+> + * @dev:        Device to be set up for translation
+> + * @pgd:        First level PGD, treated as GPA
+nit: @gpgd
+
+spec naming could be used as well: FLPTPTR: First Level Page
+Translation Pointer
+> + * @pasid:      PASID to be programmed in the device PASID table
+> + * @flags:      Additional info such as supervisor PASID
+> + * @domain:     Domain info for setting up second level page tables
+> + * @addr_width: Address width of the first level (guest)
+> + */
+> +int intel_pasid_setup_nested(struct intel_iommu *iommu,
+> +			struct device *dev, pgd_t *gpgd,
+> +			int pasid, int flags,
+> +			struct dmar_domain *domain,
+> +			int addr_width)
+> +{
+> +	struct pasid_entry *pte;
+> +	struct dma_pte *pgd;
+> +	u64 pgd_val;
+> +	int agaw;
+> +	u16 did;
+> +
+> +	if (!ecap_nest(iommu->ecap)) {
+> +		pr_err("No nested translation support on %s\n",
+> +		       iommu->name);
+IOMMU: %s: ;-)
+> +		return -EINVAL;
+> +	}
+> +
+> +	pte = intel_pasid_get_entry(dev, pasid);
+> +	if (WARN_ON(!pte))
+> +		return -EINVAL;
+> +
+> +	pasid_clear_entry(pte);
+> +
+> +	/* Sanity checking performed by caller to make sure address
+> +	 * width matching in two dimensions:
+> +	 * 1. CPU vs. IOMMU
+> +	 * 2. Guest vs. Host.
+> +	 */
+> +	switch (addr_width) {
+> +	case 57:
+> +		pasid_set_flpm(pte, 1);
+> +		break;
+> +	case 48:
+> +		pasid_set_flpm(pte, 0);
+> +		break;
+> +	default:
+> +		dev_err(dev, "Invalid paging mode %d\n", addr_width);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Setup the first level page table pointer in GPA */
+> +	pasid_set_flptr(pte, (u64)gpgd);
+> +	if (flags & PASID_FLAG_SUPERVISOR_MODE) {
+> +		if (!ecap_srs(iommu->ecap)) {
+> +			pr_err("No supervisor request support on %s\n",
+> +			       iommu->name);
+> +			return -EINVAL;
+> +		}
+> +		pasid_set_sre(pte);
+> +	}
+> +
+> +	/* Setup the second level based on the given domain */
+> +	pgd = domain->pgd;
+> +
+> +	for (agaw = domain->agaw; agaw != iommu->agaw; agaw--) {
+> +		pgd = phys_to_virt(dma_pte_addr(pgd));
+> +		if (!dma_pte_present(pgd)) {
+> +			dev_err(dev, "Invalid domain page table\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +	pgd_val = virt_to_phys(pgd);
+> +	pasid_set_slptr(pte, pgd_val);
+> +	pasid_set_fault_enable(pte);
+> +
+> +	did = domain->iommu_did[iommu->seq_id];
+> +	pasid_set_domain_id(pte, did);
+> +
+> +	pasid_set_address_width(pte, agaw);
+> +	pasid_set_page_snoop(pte, !!ecap_smpwc(iommu->ecap));
+> +
+> +	pasid_set_translation_type(pte, PASID_ENTRY_PGTT_NESTED);
+> +	pasid_set_present(pte);
+> +
+> +	if (!ecap_coherent(iommu->ecap))
+> +		clflush_cache_range(pte, sizeof(*pte));
+> +
+> +	if (cap_caching_mode(iommu->cap)) {
+> +		pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+> +		iotlb_invalidation_with_pasid(iommu, did, pasid);
+> +	} else
+> +		iommu_flush_write_buffer(iommu);
+a bunch of that code is duplicated from
+intel_pasid_setup_second_level(). I wonder if you could devise a common
+helper function?
+
+Thanks
+
+Eric
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/iommu/intel-pasid.h b/drivers/iommu/intel-pasid.h
+> index 0999dfe..c4fc1af 100644
+> --- a/drivers/iommu/intel-pasid.h
+> +++ b/drivers/iommu/intel-pasid.h
+> @@ -42,6 +42,7 @@
+>   * to vmalloc or even module mappings.
+>   */
+>  #define PASID_FLAG_SUPERVISOR_MODE	BIT(0)
+> +#define PASID_FLAG_NESTED		BIT(1)
+>  
+>  struct pasid_dir_entry {
+>  	u64 val;
+> @@ -51,6 +52,11 @@ struct pasid_entry {
+>  	u64 val[8];
+>  };
+>  
+> +#define PASID_ENTRY_PGTT_FL_ONLY	(1)
+> +#define PASID_ENTRY_PGTT_SL_ONLY	(2)
+> +#define PASID_ENTRY_PGTT_NESTED		(3)
+> +#define PASID_ENTRY_PGTT_PT		(4)
+> +
+>  /* The representative of a PASID table */
+>  struct pasid_table {
+>  	void			*table;		/* pasid table pointer */
+> @@ -77,6 +83,11 @@ int intel_pasid_setup_second_level(struct intel_iommu *iommu,
+>  int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
+>  				   struct dmar_domain *domain,
+>  				   struct device *dev, int pasid);
+> +int intel_pasid_setup_nested(struct intel_iommu *iommu,
+> +			struct device *dev, pgd_t *pgd,
+> +			int pasid, int flags,
+> +			struct dmar_domain *domain,
+> +			int addr_width);
+>  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
+>  				 struct device *dev, int pasid);
+>  int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid);
 > 
->  Documentation/index.rst                       |    1 +
->  ...cryption.txt => amd-memory-encryption.rst} |   13 +-
->  Documentation/x86/boot.rst                    | 1238 +++++++++++++++++
->  Documentation/x86/boot.txt                    | 1130 ---------------
->  .../x86/{earlyprintk.txt => earlyprintk.rst}  |  103 +-
->  .../x86/{entry_64.txt => entry_64.rst}        |   12 +-
->  ...eption-tables.txt => exception-tables.rst} |  231 +--
->  .../x86/i386/{IO-APIC.txt => IO-APIC.rst}     |   26 +-
->  Documentation/x86/i386/index.rst              |   10 +
->  Documentation/x86/index.rst                   |   30 +
->  .../x86/{intel_mpx.txt => intel_mpx.rst}      |  120 +-
->  .../x86/{kernel-stacks => kernel-stacks.rst}  |   20 +-
->  .../x86/{microcode.txt => microcode.rst}      |   62 +-
->  Documentation/x86/mtrr.rst                    |  350 +++++
->  Documentation/x86/mtrr.txt                    |  329 -----
->  .../{orc-unwinder.txt => orc-unwinder.rst}    |   27 +-
->  Documentation/x86/pat.rst                     |  235 ++++
->  Documentation/x86/pat.txt                     |  230 ---
->  ...rotection-keys.txt => protection-keys.rst} |   33 +-
->  Documentation/x86/{pti.txt => pti.rst}        |   17 +-
->  .../x86/{resctrl_ui.txt => resctrl_ui.rst}    |  913 ++++++------
->  Documentation/x86/{tlb.txt => tlb.rst}        |   30 +-
->  .../x86/{topology.txt => topology.rst}        |   92 +-
->  ...acy-support.txt => usb-legacy-support.rst} |    8 +-
->  .../{5level-paging.txt => 5level-paging.rst}  |   16 +-
->  Documentation/x86/x86_64/boot-options.rst     |  326 +++++
->  Documentation/x86/x86_64/boot-options.txt     |  278 ----
->  ...{cpu-hotplug-spec => cpu-hotplug-spec.rst} |    5 +-
->  ...-for-cpusets => fake-numa-for-cpusets.rst} |   25 +-
->  Documentation/x86/x86_64/index.rst            |   16 +
->  .../x86_64/{machinecheck => machinecheck.rst} |   11 +-
->  Documentation/x86/x86_64/mm.rst               |  161 +++
->  Documentation/x86/x86_64/mm.txt               |  153 --
->  .../x86/x86_64/{uefi.txt => uefi.rst}         |   30 +-
->  Documentation/x86/zero-page.rst               |   45 +
->  Documentation/x86/zero-page.txt               |   40 -
->  36 files changed, 3412 insertions(+), 2954 deletions(-)
->  rename Documentation/x86/{amd-memory-encryption.txt => amd-memory-encryption.rst} (94%)
->  create mode 100644 Documentation/x86/boot.rst
->  delete mode 100644 Documentation/x86/boot.txt
->  rename Documentation/x86/{earlyprintk.txt => earlyprintk.rst} (59%)
->  rename Documentation/x86/{entry_64.txt => entry_64.rst} (95%)
->  rename Documentation/x86/{exception-tables.txt => exception-tables.rst} (67%)
->  rename Documentation/x86/i386/{IO-APIC.txt => IO-APIC.rst} (93%)
->  create mode 100644 Documentation/x86/i386/index.rst
->  create mode 100644 Documentation/x86/index.rst
->  rename Documentation/x86/{intel_mpx.txt => intel_mpx.rst} (75%)
->  rename Documentation/x86/{kernel-stacks => kernel-stacks.rst} (92%)
->  rename Documentation/x86/{microcode.txt => microcode.rst} (81%)
->  create mode 100644 Documentation/x86/mtrr.rst
->  delete mode 100644 Documentation/x86/mtrr.txt
->  rename Documentation/x86/{orc-unwinder.txt => orc-unwinder.rst} (93%)
->  create mode 100644 Documentation/x86/pat.rst
->  delete mode 100644 Documentation/x86/pat.txt
->  rename Documentation/x86/{protection-keys.txt => protection-keys.rst} (83%)
->  rename Documentation/x86/{pti.txt => pti.rst} (96%)
->  rename Documentation/x86/{resctrl_ui.txt => resctrl_ui.rst} (68%)
->  rename Documentation/x86/{tlb.txt => tlb.rst} (81%)
->  rename Documentation/x86/{topology.txt => topology.rst} (74%)
->  rename Documentation/x86/{usb-legacy-support.txt => usb-legacy-support.rst} (92%)
->  rename Documentation/x86/x86_64/{5level-paging.txt => 5level-paging.rst} (91%)
->  create mode 100644 Documentation/x86/x86_64/boot-options.rst
->  delete mode 100644 Documentation/x86/x86_64/boot-options.txt
->  rename Documentation/x86/x86_64/{cpu-hotplug-spec => cpu-hotplug-spec.rst} (88%)
->  rename Documentation/x86/x86_64/{fake-numa-for-cpusets => fake-numa-for-cpusets.rst} (85%)
->  create mode 100644 Documentation/x86/x86_64/index.rst
->  rename Documentation/x86/x86_64/{machinecheck => machinecheck.rst} (92%)
->  create mode 100644 Documentation/x86/x86_64/mm.rst
->  delete mode 100644 Documentation/x86/x86_64/mm.txt
->  rename Documentation/x86/x86_64/{uefi.txt => uefi.rst} (79%)
->  create mode 100644 Documentation/x86/zero-page.rst
->  delete mode 100644 Documentation/x86/zero-page.txt
-> 
-
-
-
-Thanks,
-Mauro
