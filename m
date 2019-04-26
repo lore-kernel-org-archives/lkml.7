@@ -2,158 +2,191 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCB1C43218
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA7DC43219
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFBA208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206F820675
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 09:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbfDZJLb (ORCPT
+        id S1726155AbfDZJNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 05:11:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbfDZJLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 05:11:30 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1FAC631475F2;
-        Fri, 26 Apr 2019 09:11:30 +0000 (UTC)
-Received: from [10.36.117.165] (ovpn-117-165.ams2.redhat.com [10.36.117.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C88A60F8E;
-        Fri, 26 Apr 2019 09:11:25 +0000 (UTC)
-Subject: Re: [PATCH v1 2/7] s390x/mm: Implement arch_remove_memory()
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, akpm@linux-foundation.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>
-References: <20190424102511.29318-1-david@redhat.com>
- <20190424102511.29318-3-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <e4f92602-4eb8-2096-33ef-29ce5714a379@redhat.com>
-Date:   Fri, 26 Apr 2019 11:11:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190424102511.29318-3-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 26 Apr 2019 09:11:30 +0000 (UTC)
+        Fri, 26 Apr 2019 05:13:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51548 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725935AbfDZJNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 05:13:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 22D3AAD0A;
+        Fri, 26 Apr 2019 09:13:04 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 0BB94E0143; Fri, 26 Apr 2019 11:13:03 +0200 (CEST)
+Message-Id: <cover.1556269635.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next 0/3] make nla_nest_start() add NLA_F_NESTED flag
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 26 Apr 2019 11:13:03 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.04.19 12:25, David Hildenbrand wrote:
-> Will come in handy when wanting to handle errors after
-> arch_add_memory().
-> 
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Oscar Salvador <osalvador@suse.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  arch/s390/mm/init.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index 31b1071315d7..2636d62df04e 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -237,12 +237,13 @@ int arch_add_memory(int nid, u64 start, u64 size,
->  void arch_remove_memory(int nid, u64 start, u64 size,
->  			struct vmem_altmap *altmap)
->  {
-> -	/*
-> -	 * There is no hardware or firmware interface which could trigger a
-> -	 * hot memory remove on s390. So there is nothing that needs to be
-> -	 * implemented.
-> -	 */
-> -	BUG();
-> +	unsigned long start_pfn = start >> PAGE_SHIFT;
-> +	unsigned long nr_pages = size >> PAGE_SHIFT;
-> +	struct zone *zone;
-> +
-> +	vmem_remove_mapping(start, size);
-> +	zone = page_zone(pfn_to_page(start_pfn));
-> +	__remove_pages(zone, start_pfn, nr_pages, altmap);
+One of the comments in recent review of the ethtool netlink series pointed
+out that proposed ethnl_nest_start() helper which adds NLA_F_NESTED to
+second argument of nla_nest_start() is not really specific to ethtool
+netlink code. That is hard to argue with as closer inspection revealed that
+exactly the same helper already exists in ipset code (except it's a macro
+rather than an inline function).
 
-I guess the correct way is to remove the mapping after __remove_pages.
-But as the pages should not be touched by anybody, it shouldn't really
-matter. Will change when I resend.
+Another observation was that even if NLA_F_NESTED flag was introduced in
+2007, only few netlink based interfaces set it in kernel generated messages
+and even many recently added APIs omit it. That is unfortunate as without
+the flag, message parsers not familiar with attribute semantics cannot
+recognize nested attributes and do not see message structure; this affects
+e.g. wireshark dissector or mnl_nlmsg_fprintf() from libmnl.
 
->  }
->  #endif
->  #endif /* CONFIG_MEMORY_HOTPLUG */
-> 
+This is why I'm suggesting to rename existing nla_nest_start() to different
+name (nla_nest_start_noflag) and reintroduce nla_nest_start() as a wrapper
+adding NLA_F_NESTED flag. This is implemented in first patch which is
+mostly generated by spatch. Second patch drops ipset helper macros which
+lose their purpose. Third patch cleans up minor coding style issues found
+by checkpatch.pl in first patch.
 
+We could leave nla_nest_start() untouched and simply add a wrapper adding
+NLA_F_NESTED but that would probably preserve the state when even most new
+code doesn't set the flag.
+
+Michal Kubecek (3):
+  netlink: make nla_nest_start() add NLA_F_NESTED flag
+  ipset: drop ipset_nest_start() and ipset_nest_end()
+  net: fix two coding style issues
+
+ drivers/block/drbd/drbd_nl.c                |   8 +-
+ drivers/block/nbd.c                         |   4 +-
+ drivers/infiniband/core/nldev.c             |   9 +-
+ drivers/infiniband/hw/cxgb4/restrack.c      |   8 +-
+ drivers/net/bonding/bond_netlink.c          |   8 +-
+ drivers/net/ieee802154/mac802154_hwsim.c    |   6 +-
+ drivers/net/macsec.c                        |  27 +--
+ drivers/net/macvlan.c                       |   2 +-
+ drivers/net/team/team.c                     |   8 +-
+ drivers/net/wireless/ath/wil6210/cfg80211.c |   4 +-
+ include/linux/netfilter/ipset/ip_set.h      |  11 +-
+ include/net/netlink.h                       |  26 ++-
+ kernel/taskstats.c                          |   2 +-
+ net/8021q/vlan_netlink.c                    |   4 +-
+ net/bridge/br_mdb.c                         |  17 +-
+ net/bridge/br_netlink.c                     |   8 +-
+ net/bridge/br_netlink_tunnel.c              |   2 +-
+ net/core/devlink.c                          |  78 ++++----
+ net/core/lwt_bpf.c                          |   2 +-
+ net/core/lwtunnel.c                         |   2 +-
+ net/core/neighbour.c                        |   2 +-
+ net/core/rtnetlink.c                        |  48 ++---
+ net/dcb/dcbnl.c                             |  40 ++--
+ net/decnet/dn_table.c                       |   3 +-
+ net/ieee802154/nl802154.c                   |  34 ++--
+ net/ipv4/fib_semantics.c                    |   2 +-
+ net/ipv4/ipmr.c                             |   6 +-
+ net/ipv4/ipmr_base.c                        |   2 +-
+ net/ipv4/tcp_metrics.c                      |   2 +-
+ net/ipv6/addrconf.c                         |   2 +-
+ net/ipv6/route.c                            |   2 +-
+ net/ipv6/seg6_local.c                       |   2 +-
+ net/l2tp/l2tp_netlink.c                     |   4 +-
+ net/mpls/af_mpls.c                          |   2 +-
+ net/ncsi/ncsi-netlink.c                     |  12 +-
+ net/netfilter/ipset/ip_set_bitmap_gen.h     |  14 +-
+ net/netfilter/ipset/ip_set_hash_gen.h       |  14 +-
+ net/netfilter/ipset/ip_set_list_set.c       |  14 +-
+ net/netfilter/ipvs/ip_vs_ctl.c              |  10 +-
+ net/netfilter/nf_conntrack_netlink.c        |  40 ++--
+ net/netfilter/nf_conntrack_proto_dccp.c     |   2 +-
+ net/netfilter/nf_conntrack_proto_sctp.c     |   2 +-
+ net/netfilter/nf_conntrack_proto_tcp.c      |   2 +-
+ net/netfilter/nf_tables_api.c               |  29 +--
+ net/netfilter/nfnetlink_cthelper.c          |   7 +-
+ net/netfilter/nfnetlink_cttimeout.c         |   4 +-
+ net/netfilter/nfnetlink_queue.c             |   2 +-
+ net/netfilter/nft_ct.c                      |   2 +-
+ net/netfilter/nft_tunnel.c                  |   6 +-
+ net/netlabel/netlabel_cipso_v4.c            |  14 +-
+ net/netlabel/netlabel_mgmt.c                |   8 +-
+ net/netlink/genetlink.c                     |  12 +-
+ net/nfc/netlink.c                           |   4 +-
+ net/openvswitch/conntrack.c                 |   6 +-
+ net/openvswitch/datapath.c                  |   7 +-
+ net/openvswitch/flow_netlink.c              |  33 ++--
+ net/openvswitch/meter.c                     |   8 +-
+ net/openvswitch/vport-vxlan.c               |   2 +-
+ net/openvswitch/vport.c                     |   2 +-
+ net/packet/diag.c                           |   2 +-
+ net/sched/act_api.c                         |  14 +-
+ net/sched/act_ife.c                         |   2 +-
+ net/sched/act_pedit.c                       |   5 +-
+ net/sched/act_tunnel_key.c                  |   4 +-
+ net/sched/cls_api.c                         |   4 +-
+ net/sched/cls_basic.c                       |   2 +-
+ net/sched/cls_bpf.c                         |   2 +-
+ net/sched/cls_cgroup.c                      |   2 +-
+ net/sched/cls_flow.c                        |   2 +-
+ net/sched/cls_flower.c                      |   8 +-
+ net/sched/cls_fw.c                          |   2 +-
+ net/sched/cls_matchall.c                    |   2 +-
+ net/sched/cls_route.c                       |   2 +-
+ net/sched/cls_rsvp.h                        |   2 +-
+ net/sched/cls_tcindex.c                     |   2 +-
+ net/sched/cls_u32.c                         |   2 +-
+ net/sched/ematch.c                          |   4 +-
+ net/sched/sch_api.c                         |   2 +-
+ net/sched/sch_atm.c                         |   2 +-
+ net/sched/sch_cake.c                        |  10 +-
+ net/sched/sch_cbq.c                         |   4 +-
+ net/sched/sch_cbs.c                         |   2 +-
+ net/sched/sch_choke.c                       |   2 +-
+ net/sched/sch_codel.c                       |   2 +-
+ net/sched/sch_drr.c                         |   2 +-
+ net/sched/sch_dsmark.c                      |   4 +-
+ net/sched/sch_etf.c                         |   2 +-
+ net/sched/sch_fq.c                          |   2 +-
+ net/sched/sch_fq_codel.c                    |   2 +-
+ net/sched/sch_gred.c                        |   8 +-
+ net/sched/sch_hfsc.c                        |   2 +-
+ net/sched/sch_hhf.c                         |   2 +-
+ net/sched/sch_htb.c                         |   4 +-
+ net/sched/sch_ingress.c                     |   2 +-
+ net/sched/sch_mqprio.c                      |   4 +-
+ net/sched/sch_netem.c                       |   2 +-
+ net/sched/sch_pie.c                         |   2 +-
+ net/sched/sch_qfq.c                         |   2 +-
+ net/sched/sch_red.c                         |   2 +-
+ net/sched/sch_sfb.c                         |   2 +-
+ net/sched/sch_taprio.c                      |   7 +-
+ net/sched/sch_tbf.c                         |   2 +-
+ net/tipc/bearer.c                           |   8 +-
+ net/tipc/group.c                            |   2 +-
+ net/tipc/link.c                             |  12 +-
+ net/tipc/monitor.c                          |   4 +-
+ net/tipc/name_table.c                       |   4 +-
+ net/tipc/net.c                              |   2 +-
+ net/tipc/netlink_compat.c                   |  24 +--
+ net/tipc/node.c                             |   4 +-
+ net/tipc/socket.c                           |  10 +-
+ net/tipc/udp_media.c                        |   2 +-
+ net/wireless/nl80211.c                      | 192 +++++++++++---------
+ net/wireless/pmsr.c                         |  12 +-
+ 114 files changed, 565 insertions(+), 494 deletions(-)
 
 -- 
+2.21.0
 
-Thanks,
-
-David / dhildenb
