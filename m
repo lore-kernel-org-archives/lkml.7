@@ -2,167 +2,110 @@ Return-Path: <SRS0=fl2C=S4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73A1C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFB8C43218
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7F92077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:02:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="LO2yBP/4"
+	by mail.kernel.org (Postfix) with ESMTP id C9A212077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 18:04:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbfDZSC4 (ORCPT
+        id S1726295AbfDZSE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 14:02:56 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39525 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfDZSCz (ORCPT
+        Fri, 26 Apr 2019 14:04:27 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:55505 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726005AbfDZSE1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 14:02:55 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i17so2091012pfo.6
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 11:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:date:message-id:subject
-         :references:in-reply-to:to:cc;
-        bh=uf9+Gc4IGjm5bXfQmbt+aGr/dzzLVRS2xZVZ9HE9m58=;
-        b=LO2yBP/43Gaxq2G427F4quiP0FFiCIk+EbiXVQe5DTb0hxctE2AttHWb6tWuexLs3L
-         ZkgG1bwlvK7lyTAodQcHTtnOIHnbCFp9kz0q5A0+btCGRUTPSe0ZDv/yUcUGoaI4Rnlk
-         POZD7BlXQwFPt1fFpDSqeXtHETEWLhggiXmUS7fRcPEHbEKMnALPeB2xOwiFoJBB6XqV
-         doRFYnnnMI40ZmQb8mE1Lgw+qjcbkk2g59wZvyeOR7s+5xpjLqhxr0BhfZT+vtLzmeT2
-         pNJbsy6DDny9FxIJnnFyBwYu1AkprSd5oSgpU/8x9kx6LPOL9cmTqq+QBhTSJsDQVwa+
-         NiJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version:date
-         :message-id:subject:references:in-reply-to:to:cc;
-        bh=uf9+Gc4IGjm5bXfQmbt+aGr/dzzLVRS2xZVZ9HE9m58=;
-        b=CElRMXMZxYE0a9X6cK3f0i1iUAOcNoVH7phrrNZ1SUbkLiML6fmkfp8vJcbOfDp91O
-         PWl8ypj1P6N+xcteOGIZDcS3VR2jEdfwmvk0iR8Ba3FnWzxH0/Ej5IO7DySfn1KJmMCl
-         q4N0n4p+yCLLNTXJBQlVFJu8JwQWs+LQOykScxqNM9QezxOuACNTJo2qpzws4M3N2nAn
-         PyNT0JtvhCFA7ePVLGuGGoewiuz+iV2xKqFIZotkRoS1I4BQ74w4PeYVKmD5kw/dx/bl
-         mQPGJLfvNrMI8nhzSvBCiYWNjXb3sH5bdjVbZQwQ+TONITVZWG/pc3Nq5bmuhvm8kE5k
-         njcQ==
-X-Gm-Message-State: APjAAAUTryxBY997erNbfL824+McOB+KSv6lMtiwBcrCwQe/901HQwYi
-        mJW7ETeT6V4XIZUm9zdMdhKUVA==
-X-Google-Smtp-Source: APXvYqzBEXuTEM05o6uGn8vlD4CMCKRLEInJ6zCYpq9KPk9r3ASAk9h3Sp5XQ3azdexwEX66AO8sKw==
-X-Received: by 2002:a62:e213:: with SMTP id a19mr46999249pfi.85.1556301774455;
-        Fri, 26 Apr 2019 11:02:54 -0700 (PDT)
-Received: from ?IPv6:2601:647:5803:15b9:2926:d41b:33e7:d8df? ([2601:647:5803:15b9:2926:d41b:33e7:d8df])
-        by smtp.gmail.com with ESMTPSA id f8sm8533429pfk.88.2019.04.26.11.02.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 11:02:53 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Date:   Fri, 26 Apr 2019 10:40:18 -0700
-Message-Id: <8E695557-1CD2-431A-99CC-49A4E8247BAE@amacapital.net>
-Subject: Re: [RFC PATCH 2/7] x86/sci: add core implementation for system call isolation
-References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com> <1556228754-12996-3-git-send-email-rppt@linux.ibm.com> <627d9321-466f-c4ed-c658-6b8567648dc6@intel.com> <1556290658.2833.28.camel@HansenPartnership.com> <54090243-E4C7-4C66-8025-AFE0DF5DF337@amacapital.net> <1556291961.2833.42.camel@HansenPartnership.com>
-In-Reply-To: <1556291961.2833.42.camel@HansenPartnership.com>
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org, x86@kernel.org
-X-Mailer: iPhone Mail (16E227)
+        Fri, 26 Apr 2019 14:04:27 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x3QI2ZMY003336
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Apr 2019 14:02:36 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 28CB2420003; Fri, 26 Apr 2019 14:02:35 -0400 (EDT)
+Date:   Fri, 26 Apr 2019 14:02:35 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     "Reshetova, Elena" <elena.reshetova@intel.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        David Laight <David.Laight@aculab.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Message-ID: <20190426180235.GC9835@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        David Laight <David.Laight@aculab.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+References: <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
+ <20190416154348.GB3004@mit.edu>
+ <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com>
+ <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com>
+ <20190417151555.GG4686@mit.edu>
+ <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
+ <20190426140102.GA4922@mit.edu>
+ <20190426174419.GB691@sol.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426174419.GB691@sol.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 26, 2019 at 10:44:20AM -0700, Eric Biggers wrote:
+> Would it be possibly to call ChaCha20 through the actual crypto API so that SIMD
+> instructions (e.g. AVX-2) could be used?  That would make it *much* faster.
+> Also consider AES-CTR with AES-NI instructions.
 
+It's not obvious SIMD instructions will be faster in practice, since
+it requires saving and restoring the vector/FPU registers.  If you're
+going to be doing a *lot* of vector processing (for example when doing
+block-level RAID-5 / RAID-6 computations), it might be worth it.  But
+if you're only going to be turning the crank for 12 or 20 rounds, the
+overhead of calling kernel_fpu_begin() and kernel_fpu_end() is
+probably going to make this worth it.
 
-> On Apr 26, 2019, at 8:19 AM, James Bottomley <James.Bottomley@hansenpartne=
-rship.com> wrote:
->=20
-> On Fri, 2019-04-26 at 08:07 -0700, Andy Lutomirski wrote:
->>> On Apr 26, 2019, at 7:57 AM, James Bottomley <James.Bottomley@hanse
->>> npartnership.com> wrote:
->>>=20
->>>>> On Fri, 2019-04-26 at 07:46 -0700, Dave Hansen wrote:
->>>>> On 4/25/19 2:45 PM, Mike Rapoport wrote:
->>>>> After the isolated system call finishes, the mappings created
->>>>> during its execution are cleared.
->>>>=20
->>>> Yikes.  I guess that stops someone from calling write() a bunch
->>>> of times on every filesystem using every block device driver and
->>>> all the DM code to get a lot of code/data faulted in.  But, it
->>>> also means not even long-running processes will ever have a
->>>> chance of behaving anything close to normally.
->>>>=20
->>>> Is this something you think can be rectified or is there
->>>> something fundamental that would keep SCI page tables from being
->>>> cached across different invocations of the same syscall?
->>>=20
->>> There is some work being done to look at pre-populating the
->>> isolated address space with the expected execution footprint of the
->>> system call, yes.  It lessens the ROP gadget protection slightly
->>> because you might find a gadget in the pre-populated code, but it
->>> solves a lot of the overhead problem.
->>=20
->> I=E2=80=99m not even remotely a ROP expert, but: what stops a ROP payload=
+As far as using aesni (if available) is concerned, since we don't need
+to worry about interoperability between two systems ala IPSEC, it's
+definitely something that's worth investigating.
 
->> from using all the =E2=80=9Cfault-in=E2=80=9D gadgets that exist =E2=80=94=
- any function that
->> can return on an error without doing to much will fault in the whole
->> page containing the function.
->=20
-> The address space pre-population is still per syscall, so you don't get
-> access to the code footprint of a different syscall.  So the isolated
-> address space is created anew for every system call, it's just pre-
-> populated with that system call's expected footprint.
-
-That=E2=80=99s not what I mean. Suppose I want to use a ROP gadget in vmallo=
-c(), but vmalloc isn=E2=80=99t in the page tables. Then first push vmalloc i=
-tself into the stack. As long as RDI contains a sufficiently ridiculous valu=
-e, it should just return without doing anything. And it can return right bac=
-k into the ROP gadget, which is now available.
-
->=20
->> To improve this, we would want some thing that would try to check
->> whether the caller is actually supposed to call the callee, which is
->> more or less the hard part of CFI.  So can=E2=80=99t we just do CFI and c=
-all
->> it a day?
->=20
-> By CFI you mean control flow integrity?  In theory I believe so, yes,
-> but in practice doesn't it require a lot of semantic object information
-> which is easy to get from higher level languages like java but a bit
-> more difficult for plain C.
-
-Yes. As I understand it, grsecurity instruments gcc to create some kind of h=
-ash of all function signatures. Then any indirect call can effectively verif=
-y that it=E2=80=99s calling a function of the right type. And every return v=
-erified a cookie.
-
-On CET CPUs, RET gets checked directly, and I don=E2=80=99t see the benefit o=
-f SCI.
-
->=20
->> On top of that, a robust, maintainable implementation of this thing
->> seems very complicated =E2=80=94 for example, what happens if vfree() get=
-s
->> called?
->=20
-> Address space Local vs global object tracking is another thing on our
-> list.  What we'd probably do is verify the global object was allowed to
-> be freed and then hand it off safely to the main kernel address space.
->=20
->=20
-
-This seems exceedingly complicated.=
+       	    	       		 	      - Ted
