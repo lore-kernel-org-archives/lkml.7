@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B20C43219
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1F5C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24FC2084F
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896EC20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Apr 2019 07:32:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfDZHcN (ORCPT
+        id S1726503AbfDZHcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 03:32:13 -0400
+        Fri, 26 Apr 2019 03:32:23 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29121 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726379AbfDZHcE (ORCPT
+        by vger.kernel.org with ESMTP id S1726402AbfDZHcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 03:32:04 -0400
+        Fri, 26 Apr 2019 03:32:21 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
  15.0.1156.6; Fri, 26 Apr 2019 00:31:44 -0700
 Received: from sc2-haas01-esx0118.eng.vmware.com (sc2-haas01-esx0118.eng.vmware.com [10.172.44.118])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id CF76F41298;
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id F2B3F41225;
         Fri, 26 Apr 2019 00:31:45 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
@@ -42,13 +42,11 @@ CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <hpa@zytor.com>,
         <ard.biesheuvel@linaro.org>, <kristen@linux.intel.com>,
         <deneen.t.dock@intel.com>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v5 13/23] x86/alternative: Remove the return value of text_poke_*()
-Date:   Thu, 25 Apr 2019 17:11:33 -0700
-Message-ID: <20190426001143.4983-14-namit@vmware.com>
+        Jessica Yu <jeyu@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v5 17/23] modules: Use vmalloc special flag
+Date:   Thu, 25 Apr 2019 17:11:37 -0700
+Message-ID: <20190426001143.4983-18-namit@vmware.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190426001143.4983-1-namit@vmware.com>
 References: <20190426001143.4983-1-namit@vmware.com>
@@ -61,92 +59,200 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The return value of text_poke_early() and text_poke_bp() is useless.
-Remove it.
+From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Nadav Amit <namit@vmware.com>
+Use new flag for handling freeing of special permissioned memory in vmalloc
+and remove places where memory was set RW before freeing which is no longer
+needed.
+
+Since freeing of VM_FLUSH_RESET_PERMS memory is not supported in an
+interrupt by vmalloc, the freeing of init sections is moved to a work
+queue. Instead of call_rcu it now uses synchronize_rcu() in the work
+queue.
+
+Lastly, there is now a WARN_ON in module_memfree since it should not be
+called in an interrupt with special memory as is required for
+VM_FLUSH_RESET_PERMS.
+
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/include/asm/text-patching.h |  4 ++--
- arch/x86/kernel/alternative.c        | 11 ++++-------
- 2 files changed, 6 insertions(+), 9 deletions(-)
+ kernel/module.c | 77 +++++++++++++++++++++++++------------------------
+ 1 file changed, 39 insertions(+), 38 deletions(-)
 
-diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
-index a75eed841eed..c90678fd391a 100644
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -18,7 +18,7 @@ static inline void apply_paravirt(struct paravirt_patch_site *start,
- #define __parainstructions_end	NULL
+diff --git a/kernel/module.c b/kernel/module.c
+index 2b2845ae983e..a9020bdd4cf6 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -98,6 +98,10 @@ DEFINE_MUTEX(module_mutex);
+ EXPORT_SYMBOL_GPL(module_mutex);
+ static LIST_HEAD(modules);
+ 
++/* Work queue for freeing init sections in success case */
++static struct work_struct init_free_wq;
++static struct llist_head init_free_list;
++
+ #ifdef CONFIG_MODULES_TREE_LOOKUP
+ 
+ /*
+@@ -1949,6 +1953,8 @@ void module_enable_ro(const struct module *mod, bool after_init)
+ 	if (!rodata_enabled)
+ 		return;
+ 
++	set_vm_flush_reset_perms(mod->core_layout.base);
++	set_vm_flush_reset_perms(mod->init_layout.base);
+ 	frob_text(&mod->core_layout, set_memory_ro);
+ 	frob_text(&mod->core_layout, set_memory_x);
+ 
+@@ -1972,15 +1978,6 @@ static void module_enable_nx(const struct module *mod)
+ 	frob_writable_data(&mod->init_layout, set_memory_nx);
+ }
+ 
+-static void module_disable_nx(const struct module *mod)
+-{
+-	frob_rodata(&mod->core_layout, set_memory_x);
+-	frob_ro_after_init(&mod->core_layout, set_memory_x);
+-	frob_writable_data(&mod->core_layout, set_memory_x);
+-	frob_rodata(&mod->init_layout, set_memory_x);
+-	frob_writable_data(&mod->init_layout, set_memory_x);
+-}
+-
+ /* Iterate through all modules and set each module's text as RW */
+ void set_all_modules_text_rw(void)
+ {
+@@ -2024,23 +2021,8 @@ void set_all_modules_text_ro(void)
+ 	}
+ 	mutex_unlock(&module_mutex);
+ }
+-
+-static void disable_ro_nx(const struct module_layout *layout)
+-{
+-	if (rodata_enabled) {
+-		frob_text(layout, set_memory_rw);
+-		frob_rodata(layout, set_memory_rw);
+-		frob_ro_after_init(layout, set_memory_rw);
+-	}
+-	frob_rodata(layout, set_memory_x);
+-	frob_ro_after_init(layout, set_memory_x);
+-	frob_writable_data(layout, set_memory_x);
+-}
+-
+ #else
+-static void disable_ro_nx(const struct module_layout *layout) { }
+ static void module_enable_nx(const struct module *mod) { }
+-static void module_disable_nx(const struct module *mod) { }
  #endif
  
--extern void *text_poke_early(void *addr, const void *opcode, size_t len);
-+extern void text_poke_early(void *addr, const void *opcode, size_t len);
+ #ifdef CONFIG_LIVEPATCH
+@@ -2120,6 +2102,11 @@ static void free_module_elf(struct module *mod)
  
- /*
-  * Clear and restore the kernel write-protection flag on the local CPU.
-@@ -37,7 +37,7 @@ extern void *text_poke_early(void *addr, const void *opcode, size_t len);
- extern void *text_poke(void *addr, const void *opcode, size_t len);
- extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
- extern int poke_int3_handler(struct pt_regs *regs);
--extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
-+extern void text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
- extern int after_bootmem;
- extern __ro_after_init struct mm_struct *poking_mm;
- extern __ro_after_init unsigned long poking_addr;
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 3d2b6b6fb20c..18f959975ea0 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -265,7 +265,7 @@ static void __init_or_module add_nops(void *insns, unsigned int len)
- 
- extern struct alt_instr __alt_instructions[], __alt_instructions_end[];
- extern s32 __smp_locks[], __smp_locks_end[];
--void *text_poke_early(void *addr, const void *opcode, size_t len);
-+void text_poke_early(void *addr, const void *opcode, size_t len);
- 
- /*
-  * Are we looking at a near JMP with a 1 or 4-byte displacement.
-@@ -667,8 +667,8 @@ void __init alternative_instructions(void)
-  * instructions. And on the local CPU you need to be protected again NMI or MCE
-  * handlers seeing an inconsistent instruction while you patch.
-  */
--void *__init_or_module text_poke_early(void *addr, const void *opcode,
--				       size_t len)
-+void __init_or_module text_poke_early(void *addr, const void *opcode,
-+				      size_t len)
+ void __weak module_memfree(void *module_region)
  {
- 	unsigned long flags;
- 
-@@ -691,7 +691,6 @@ void *__init_or_module text_poke_early(void *addr, const void *opcode,
- 		 * that causes hangs on some VIA CPUs.
- 		 */
- 	}
--	return addr;
++	/*
++	 * This memory may be RO, and freeing RO memory in an interrupt is not
++	 * supported by vmalloc.
++	 */
++	WARN_ON(in_interrupt());
+ 	vfree(module_region);
  }
  
- __ro_after_init struct mm_struct *poking_mm;
-@@ -893,7 +892,7 @@ NOKPROBE_SYMBOL(poke_int3_handler);
-  *	  replacing opcode
-  *	- sync cores
-  */
--void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
-+void text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
- {
- 	unsigned char int3 = 0xcc;
+@@ -2171,7 +2158,6 @@ static void free_module(struct module *mod)
+ 	mutex_unlock(&module_mutex);
  
-@@ -935,7 +934,5 @@ void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
- 	 * the writing of the new instruction.
+ 	/* This may be empty, but that's OK */
+-	disable_ro_nx(&mod->init_layout);
+ 	module_arch_freeing_init(mod);
+ 	module_memfree(mod->init_layout.base);
+ 	kfree(mod->args);
+@@ -2181,7 +2167,6 @@ static void free_module(struct module *mod)
+ 	lockdep_free_key_range(mod->core_layout.base, mod->core_layout.size);
+ 
+ 	/* Finally, free the core (containing the module structure) */
+-	disable_ro_nx(&mod->core_layout);
+ 	module_memfree(mod->core_layout.base);
+ }
+ 
+@@ -3420,17 +3405,34 @@ static void do_mod_ctors(struct module *mod)
+ 
+ /* For freeing module_init on success, in case kallsyms traversing */
+ struct mod_initfree {
+-	struct rcu_head rcu;
++	struct llist_node node;
+ 	void *module_init;
+ };
+ 
+-static void do_free_init(struct rcu_head *head)
++static void do_free_init(struct work_struct *w)
+ {
+-	struct mod_initfree *m = container_of(head, struct mod_initfree, rcu);
+-	module_memfree(m->module_init);
+-	kfree(m);
++	struct llist_node *pos, *n, *list;
++	struct mod_initfree *initfree;
++
++	list = llist_del_all(&init_free_list);
++
++	synchronize_rcu();
++
++	llist_for_each_safe(pos, n, list) {
++		initfree = container_of(pos, struct mod_initfree, node);
++		module_memfree(initfree->module_init);
++		kfree(initfree);
++	}
+ }
+ 
++static int __init modules_wq_init(void)
++{
++	INIT_WORK(&init_free_wq, do_free_init);
++	init_llist_head(&init_free_list);
++	return 0;
++}
++module_init(modules_wq_init);
++
+ /*
+  * This is where the real work happens.
+  *
+@@ -3507,7 +3509,6 @@ static noinline int do_init_module(struct module *mod)
+ #endif
+ 	module_enable_ro(mod, true);
+ 	mod_tree_remove_init(mod);
+-	disable_ro_nx(&mod->init_layout);
+ 	module_arch_freeing_init(mod);
+ 	mod->init_layout.base = NULL;
+ 	mod->init_layout.size = 0;
+@@ -3518,14 +3519,18 @@ static noinline int do_init_module(struct module *mod)
+ 	 * We want to free module_init, but be aware that kallsyms may be
+ 	 * walking this with preempt disabled.  In all the failure paths, we
+ 	 * call synchronize_rcu(), but we don't want to slow down the success
+-	 * path, so use actual RCU here.
++	 * path. module_memfree() cannot be called in an interrupt, so do the
++	 * work and call synchronize_rcu() in a work queue.
++	 *
+ 	 * Note that module_alloc() on most architectures creates W+X page
+ 	 * mappings which won't be cleaned up until do_free_init() runs.  Any
+ 	 * code such as mark_rodata_ro() which depends on those mappings to
+ 	 * be cleaned up needs to sync with the queued work - ie
+ 	 * rcu_barrier()
  	 */
- 	bp_patching_in_progress = false;
--
--	return addr;
- }
+-	call_rcu(&freeinit->rcu, do_free_init);
++	if (llist_add(&freeinit->node, &init_free_list))
++		schedule_work(&init_free_wq);
++
+ 	mutex_unlock(&module_mutex);
+ 	wake_up_all(&module_wq);
  
+@@ -3822,10 +3827,6 @@ static int load_module(struct load_info *info, const char __user *uargs,
+ 	module_bug_cleanup(mod);
+ 	mutex_unlock(&module_mutex);
+ 
+-	/* we can't deallocate the module until we clear memory protection */
+-	module_disable_ro(mod);
+-	module_disable_nx(mod);
+-
+  ddebug_cleanup:
+ 	ftrace_release_mod(mod);
+ 	dynamic_debug_remove(mod, info->debug);
 -- 
 2.17.1
 
