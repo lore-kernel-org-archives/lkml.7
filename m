@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2B0C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D402C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCD02166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6551215EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329390;
-	bh=GeydHFG1eJ5qovFlGzTowDpHkwhZanT6iLB3kIRMeZc=;
+	s=default; t=1556329394;
+	bh=dU91GnZdObkxpX84TDZpbTY6xu180IXb8sa8B2luH+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FsvffkvQqfWYm6JdHx4UEcLf/JUH7RLBudqrvstqbgXu9xOyoCPRJ5z+gA5xo3C7/
-	 e7dWzMXlYMyMrH8upbuJmRx6CXQVhfxFsAvU4bMttc6PhNh3VJj3cuTHNOQQ2W+sn7
-	 JUVWCtvdlbewxiaE4JElKGKuzbevZ3r2sfrZbjz8=
+	b=vvOA8fA/b6d5aWMV6xZurTVXz8gfLrUm/85oTYeb+5sODtYEPFLRVgV0pplbKNbKU
+	 purV6Mig7RK/SsWHZTHftTQotzfSQAmMY5OKpBhgFNQTtVS5b6rGizX6VdAwNce2Jd
+	 wMkhI3xH5tcB9GNA9v6b7bqfs4rkQlI/f8kthEA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfD0BnJ (ORCPT
+        id S1728737AbfD0BnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:43:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47194 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbfD0BnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:02 -0400
+        id S1727946AbfD0BnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1F4B2166E;
-        Sat, 27 Apr 2019 01:43:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EEA8208CB;
+        Sat, 27 Apr 2019 01:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329381;
-        bh=GeydHFG1eJ5qovFlGzTowDpHkwhZanT6iLB3kIRMeZc=;
+        s=default; t=1556329390;
+        bh=dU91GnZdObkxpX84TDZpbTY6xu180IXb8sa8B2luH+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ypQKevY0GWHcfJMblhHSk2vz86wbExP1Vc21wppeOKAeBLrKGWw5+JUUHA0XLG3tG
-         nPOY7nmWt0FeScP9nTlCKSD5Y9NMOdVsNAQ8MTEH8e9zewGjHl/tuDqXQzLp+j1eLF
-         bzDIB2+Wd933EvAoQLYPAfw1VHqT63V13EyUtacE=
+        b=GXNa7Z3TnzmgpC8+tZPqSzS++XP+EiH4VXE/IyyUETkWjK1II1NyCYlpPYGpcBp50
+         Gl1li3BDL4Mp8Pv9bNJNRs8OY0D5zeWpG08lCSfX/sjN7sXHktdIUXsR7yi+eQL9pK
+         Z1DJeJWIEjWhdvg/3blmwZyEHdSshE1e0b2WxouM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Longpeng <longpeng2@huawei.com>, Gonglei <arei.gonglei@huawei.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.14 20/32] virtio_pci: fix a NULL pointer reference in vp_del_vqs
-Date:   Fri, 26 Apr 2019 21:42:11 -0400
-Message-Id: <20190427014224.8274-20-sashal@kernel.org>
+Cc:     Tzung-Bi Shih <tzungbi@google.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 25/32] ASoC: Intel: kbl: fix wrong number of channels
+Date:   Fri, 26 Apr 2019 21:42:16 -0400
+Message-Id: <20190427014224.8274-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
 References: <20190427014224.8274-1-sashal@kernel.org>
@@ -60,68 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng <longpeng2@huawei.com>
+From: Tzung-Bi Shih <tzungbi@google.com>
 
-[ Upstream commit 6a8aae68c87349dbbcd46eac380bc43cdb98a13b ]
+[ Upstream commit d6ba3f815bc5f3c4249d15c8bc5fbb012651b4a4 ]
 
-If the msix_affinity_masks is alloced failed, then we'll
-try to free some resources in vp_free_vectors() that may
-access it directly.
+Fix wrong setting on number of channels.  The context wants to set
+constraint to 2 channels instead of 4.
 
-We met the following stack in our production:
-[   29.296767] BUG: unable to handle kernel NULL pointer dereference at  (null)
-[   29.311151] IP: [<ffffffffc04fe35a>] vp_free_vectors+0x6a/0x150 [virtio_pci]
-[   29.324787] PGD 0
-[   29.333224] Oops: 0000 [#1] SMP
-[...]
-[   29.425175] RIP: 0010:[<ffffffffc04fe35a>]  [<ffffffffc04fe35a>] vp_free_vectors+0x6a/0x150 [virtio_pci]
-[   29.441405] RSP: 0018:ffff9a55c2dcfa10  EFLAGS: 00010206
-[   29.453491] RAX: 0000000000000000 RBX: ffff9a55c322c400 RCX: 0000000000000000
-[   29.467488] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9a55c322c400
-[   29.481461] RBP: ffff9a55c2dcfa20 R08: 0000000000000000 R09: ffffc1b6806ff020
-[   29.495427] R10: 0000000000000e95 R11: 0000000000aaaaaa R12: 0000000000000000
-[   29.509414] R13: 0000000000010000 R14: ffff9a55bd2d9e98 R15: ffff9a55c322c400
-[   29.523407] FS:  00007fdcba69f8c0(0000) GS:ffff9a55c2840000(0000) knlGS:0000000000000000
-[   29.538472] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   29.551621] CR2: 0000000000000000 CR3: 000000003ce52000 CR4: 00000000003607a0
-[   29.565886] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   29.580055] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   29.594122] Call Trace:
-[   29.603446]  [<ffffffffc04fe8a2>] vp_request_msix_vectors+0xe2/0x260 [virtio_pci]
-[   29.618017]  [<ffffffffc04fedc5>] vp_try_to_find_vqs+0x95/0x3b0 [virtio_pci]
-[   29.632152]  [<ffffffffc04ff117>] vp_find_vqs+0x37/0xb0 [virtio_pci]
-[   29.645582]  [<ffffffffc057bf63>] init_vq+0x153/0x260 [virtio_blk]
-[   29.658831]  [<ffffffffc057c1e8>] virtblk_probe+0xe8/0x87f [virtio_blk]
-[...]
-
-Cc: Gonglei <arei.gonglei@huawei.com>
-Signed-off-by: Longpeng <longpeng2@huawei.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_pci_common.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
-index 1c4797e53f68..80a3704939cd 100644
---- a/drivers/virtio/virtio_pci_common.c
-+++ b/drivers/virtio/virtio_pci_common.c
-@@ -254,9 +254,11 @@ void vp_del_vqs(struct virtio_device *vdev)
- 	for (i = 0; i < vp_dev->msix_used_vectors; ++i)
- 		free_irq(pci_irq_vector(vp_dev->pci_dev, i), vp_dev);
+diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+index 69ab55956492..41cb1fefbd42 100644
+--- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
++++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+@@ -405,7 +405,7 @@ static const struct snd_pcm_hw_constraint_list constraints_dmic_channels = {
+ };
  
--	for (i = 0; i < vp_dev->msix_vectors; i++)
--		if (vp_dev->msix_affinity_masks[i])
--			free_cpumask_var(vp_dev->msix_affinity_masks[i]);
-+	if (vp_dev->msix_affinity_masks) {
-+		for (i = 0; i < vp_dev->msix_vectors; i++)
-+			if (vp_dev->msix_affinity_masks[i])
-+				free_cpumask_var(vp_dev->msix_affinity_masks[i]);
-+	}
+ static const unsigned int dmic_2ch[] = {
+-	4,
++	2,
+ };
  
- 	if (vp_dev->msix_enabled) {
- 		/* Disable the vector used for configuration */
+ static const struct snd_pcm_hw_constraint_list constraints_dmic_2ch = {
 -- 
 2.19.1
 
