@@ -2,211 +2,178 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85795C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 02:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C6DC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44108206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 02:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605222084F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:01:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuSkYC6d"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kOXVefpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfD0CrJ (ORCPT
+        id S1727325AbfD0DBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 22:47:09 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46911 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbfD0CrJ (ORCPT
+        Fri, 26 Apr 2019 23:01:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36774 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfD0DBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 22:47:09 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n2so2429405pgg.13;
-        Fri, 26 Apr 2019 19:47:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DTbobDXu46tz6rQCEUq+Jc4zXHSm7T9KuFg/tSyacXM=;
-        b=LuSkYC6dFmup5V7EpcFZJkhdPar+Gq2j7/RIt8F8NwGdlVclP0LLnENwLCexja+0y3
-         a/VofzBy1UTNppoC6+x7CYkYzUQDt4NOmZRE+iLWzbWFUZeIDlJQfKx/b9vOCjCMeM4W
-         P9r/tOtbs2B1SmguCo3WkJfFsPRIECyMpQLzpKud3twUfboKEh0v8zy1chVq6x2jwN2x
-         gM+/h3TuslIgv68SqX/ltAH9F1TkVSdGpMAqnUjaCAKwWjox52JRROr6u12rAks5swYZ
-         bHoEFY60tVlgGo7329AzNV/aAvfalEl/7y6Fp7x4E3t2hjjEeCIvLVASSDjLxIKOHcfI
-         idzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DTbobDXu46tz6rQCEUq+Jc4zXHSm7T9KuFg/tSyacXM=;
-        b=fhBzpXLnZxbe5lZHU9LwxjGdPJs6byyq890ZmRSHp7ntTT+6Xhsb+ia9tRvba4MyOa
-         8gNXpz3mb8AviusDblpLHQZ4yrlOSIFVnrXeUthjYV+L6Ayif0lK2HVpp8oNjmT36zTC
-         CNEybUY6LV4g8G6kX/gY5oZIC00zDu5Y2FCOjobiOkTI0efjVOYrvKRDxaKhdO142Qec
-         1MT8fAVEONkyAlbr/SCJyExcg99+VUhvdYKWg4ytHgHfaVqbqvIdTCRi9cGV9Qj+awfB
-         SQdbD+WaRX+2dNTES+pxwF5dML8cFnpu/J/ZCoHn2CcTJL0o7H13Snrmd9mnNK5TlORr
-         7Z4g==
-X-Gm-Message-State: APjAAAW9TwmwGhvw7WCcgQlSRMjML6BJpwtvA7cyQ8OiSSci/8b/S4eO
-        mpguIcDy6ONsl0+xcyboGrqYHwEl
-X-Google-Smtp-Source: APXvYqxso8p5BC1fYJwaW45xzmTVZATJeoYbftWiPomeUgakawZRFrx0d9sDAypoup+0Z5R41x+e9A==
-X-Received: by 2002:a63:c749:: with SMTP id v9mr25147157pgg.432.1556333227762;
-        Fri, 26 Apr 2019 19:47:07 -0700 (PDT)
-Received: from mail.google.com ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id f20sm57188138pff.176.2019.04.26.19.47.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 19:47:07 -0700 (PDT)
-Date:   Sat, 27 Apr 2019 10:47:00 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/27] Include linux x86 docs into Sphinx TOC tree
-Message-ID: <20190427024659.iav7ajabw7cljrxw@mail.google.com>
-References: <20190426153150.21228-1-changbin.du@gmail.com>
- <20190426123946.554730b8@coco.lan>
+        Fri, 26 Apr 2019 23:01:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3R30noV097744;
+        Fri, 26 Apr 2019 22:00:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556334049;
+        bh=LZCR6iKbbXEPqBepbMx2w7d7Lo5FnctqMVgc8kv1M8c=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kOXVefpVWhb+zgn7q7TtEgyIS434p2jRwv5o/p3xTQ2d4S3EfLhpPH3GewqtMEz2G
+         3eA1ksje+vUy96srr55lUzSys5AjfUPwWrobn7PfqpSlK/oCL2p/hLI5SlQpPOrk6/
+         RREYqGTo9KZEtsBkOBymtE+IytLXw4Txz03X7iFI=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3R30nG1036899
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Apr 2019 22:00:49 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 26
+ Apr 2019 22:00:49 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 26 Apr 2019 22:00:48 -0500
+Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3R30hwL099822;
+        Fri, 26 Apr 2019 22:00:44 -0500
+Subject: Re: [PATCH v4 4/5] dt-bindings: mtd: Add bindings for TI's AM654
+ HyperBus memory controller
+To:     Rob Herring <robh@kernel.org>
+CC:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
+        <devicetree@vger.kernel.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        <linux-arm-kernel@lists.infradead.org>, <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+References: <20190423104814.5762-1-vigneshr@ti.com>
+ <20190423104814.5762-5-vigneshr@ti.com> <20190426202025.GA24486@bogus>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <0972151d-5911-5a6e-da36-8fa8e1761e30@ti.com>
+Date:   Sat, 27 Apr 2019 08:31:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426123946.554730b8@coco.lan>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190426202025.GA24486@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 12:39:46PM -0300, Mauro Carvalho Chehab wrote:
-> Em Fri, 26 Apr 2019 23:31:23 +0800
-> Changbin Du <changbin.du@gmail.com> escreveu:
-> 
-> > Hi all,
-> > 
-> > The kernel now uses Sphinx to generate intelligent and beautiful documentation
-> > from reStructuredText files. I converted most of the Linux x86 docs to rst
-> > format in this serias.
-> > 
-> > For you to preview, please visit below url:
-> > http://www.bytemem.com:8080/kernel-doc/index.html
-> 
-> Do you have a URL for the git tree? It is probably easier to merge from
-> it on a tem branch locally, specially for some patches like 02/27, were 
-> git didn't understand the conversion as a rename.
->
-yeah, I can send a pull request if @maintainer prefers.
 
-> > 
-> > Thank you!
-> > 
-> > Changbin Du (27):
-> >   Documentation: add Linux x86 docs to Sphinx TOC tree
-> >   Documentation: x86: convert boot.txt to reST
-> >   Documentation: x86: convert topology.txt to reST
-> >   Documentation: x86: convert exception-tables.txt to reST
-> >   Documentation: x86: convert kernel-stacks to reST
-> >   Documentation: x86: convert entry_64.txt to reST
-> >   Documentation: x86: convert earlyprintk.txt to reST
-> >   Documentation: x86: convert zero-page.txt to reST
-> >   Documentation: x86: convert tlb.txt to reST
-> >   Documentation: x86: convert mtrr.txt to reST
-> >   Documentation: x86: convert pat.txt to reST
-> >   Documentation: x86: convert protection-keys.txt to reST
-> >   Documentation: x86: convert intel_mpx.txt to reST
-> >   Documentation: x86: convert amd-memory-encryption.txt to reST
-> >   Documentation: x86: convert pti.txt to reST
-> >   Documentation: x86: convert microcode.txt to reST
-> >   Documentation: x86: convert resctrl_ui.txt to reST
-> >   Documentation: x86: convert orc-unwinder.txt to reST
-> >   Documentation: x86: convert usb-legacy-support.txt to reST
-> >   Documentation: x86: convert i386/IO-APIC.txt to reST
-> >   Documentation: x86: convert x86_64/boot-options.txt to reST
-> >   Documentation: x86: convert x86_64/uefi.txt to reST
-> >   Documentation: x86: convert x86_64/mm.txt to reST
-> >   Documentation: x86: convert x86_64/5level-paging.txt to reST
-> >   Documentation: x86: convert x86_64/fake-numa-for-cpusets to reST
-> >   Documentation: x86: convert x86_64/cpu-hotplug-spec to reST
-> >   Documentation: x86: convert x86_64/machinecheck to reST
-> > 
-> >  Documentation/index.rst                       |    1 +
-> >  ...cryption.txt => amd-memory-encryption.rst} |   13 +-
-> >  Documentation/x86/boot.rst                    | 1238 +++++++++++++++++
-> >  Documentation/x86/boot.txt                    | 1130 ---------------
-> >  .../x86/{earlyprintk.txt => earlyprintk.rst}  |  103 +-
-> >  .../x86/{entry_64.txt => entry_64.rst}        |   12 +-
-> >  ...eption-tables.txt => exception-tables.rst} |  231 +--
-> >  .../x86/i386/{IO-APIC.txt => IO-APIC.rst}     |   26 +-
-> >  Documentation/x86/i386/index.rst              |   10 +
-> >  Documentation/x86/index.rst                   |   30 +
-> >  .../x86/{intel_mpx.txt => intel_mpx.rst}      |  120 +-
-> >  .../x86/{kernel-stacks => kernel-stacks.rst}  |   20 +-
-> >  .../x86/{microcode.txt => microcode.rst}      |   62 +-
-> >  Documentation/x86/mtrr.rst                    |  350 +++++
-> >  Documentation/x86/mtrr.txt                    |  329 -----
-> >  .../{orc-unwinder.txt => orc-unwinder.rst}    |   27 +-
-> >  Documentation/x86/pat.rst                     |  235 ++++
-> >  Documentation/x86/pat.txt                     |  230 ---
-> >  ...rotection-keys.txt => protection-keys.rst} |   33 +-
-> >  Documentation/x86/{pti.txt => pti.rst}        |   17 +-
-> >  .../x86/{resctrl_ui.txt => resctrl_ui.rst}    |  913 ++++++------
-> >  Documentation/x86/{tlb.txt => tlb.rst}        |   30 +-
-> >  .../x86/{topology.txt => topology.rst}        |   92 +-
-> >  ...acy-support.txt => usb-legacy-support.rst} |    8 +-
-> >  .../{5level-paging.txt => 5level-paging.rst}  |   16 +-
-> >  Documentation/x86/x86_64/boot-options.rst     |  326 +++++
-> >  Documentation/x86/x86_64/boot-options.txt     |  278 ----
-> >  ...{cpu-hotplug-spec => cpu-hotplug-spec.rst} |    5 +-
-> >  ...-for-cpusets => fake-numa-for-cpusets.rst} |   25 +-
-> >  Documentation/x86/x86_64/index.rst            |   16 +
-> >  .../x86_64/{machinecheck => machinecheck.rst} |   11 +-
-> >  Documentation/x86/x86_64/mm.rst               |  161 +++
-> >  Documentation/x86/x86_64/mm.txt               |  153 --
-> >  .../x86/x86_64/{uefi.txt => uefi.rst}         |   30 +-
-> >  Documentation/x86/zero-page.rst               |   45 +
-> >  Documentation/x86/zero-page.txt               |   40 -
-> >  36 files changed, 3412 insertions(+), 2954 deletions(-)
-> >  rename Documentation/x86/{amd-memory-encryption.txt => amd-memory-encryption.rst} (94%)
-> >  create mode 100644 Documentation/x86/boot.rst
-> >  delete mode 100644 Documentation/x86/boot.txt
-> >  rename Documentation/x86/{earlyprintk.txt => earlyprintk.rst} (59%)
-> >  rename Documentation/x86/{entry_64.txt => entry_64.rst} (95%)
-> >  rename Documentation/x86/{exception-tables.txt => exception-tables.rst} (67%)
-> >  rename Documentation/x86/i386/{IO-APIC.txt => IO-APIC.rst} (93%)
-> >  create mode 100644 Documentation/x86/i386/index.rst
-> >  create mode 100644 Documentation/x86/index.rst
-> >  rename Documentation/x86/{intel_mpx.txt => intel_mpx.rst} (75%)
-> >  rename Documentation/x86/{kernel-stacks => kernel-stacks.rst} (92%)
-> >  rename Documentation/x86/{microcode.txt => microcode.rst} (81%)
-> >  create mode 100644 Documentation/x86/mtrr.rst
-> >  delete mode 100644 Documentation/x86/mtrr.txt
-> >  rename Documentation/x86/{orc-unwinder.txt => orc-unwinder.rst} (93%)
-> >  create mode 100644 Documentation/x86/pat.rst
-> >  delete mode 100644 Documentation/x86/pat.txt
-> >  rename Documentation/x86/{protection-keys.txt => protection-keys.rst} (83%)
-> >  rename Documentation/x86/{pti.txt => pti.rst} (96%)
-> >  rename Documentation/x86/{resctrl_ui.txt => resctrl_ui.rst} (68%)
-> >  rename Documentation/x86/{tlb.txt => tlb.rst} (81%)
-> >  rename Documentation/x86/{topology.txt => topology.rst} (74%)
-> >  rename Documentation/x86/{usb-legacy-support.txt => usb-legacy-support.rst} (92%)
-> >  rename Documentation/x86/x86_64/{5level-paging.txt => 5level-paging.rst} (91%)
-> >  create mode 100644 Documentation/x86/x86_64/boot-options.rst
-> >  delete mode 100644 Documentation/x86/x86_64/boot-options.txt
-> >  rename Documentation/x86/x86_64/{cpu-hotplug-spec => cpu-hotplug-spec.rst} (88%)
-> >  rename Documentation/x86/x86_64/{fake-numa-for-cpusets => fake-numa-for-cpusets.rst} (85%)
-> >  create mode 100644 Documentation/x86/x86_64/index.rst
-> >  rename Documentation/x86/x86_64/{machinecheck => machinecheck.rst} (92%)
-> >  create mode 100644 Documentation/x86/x86_64/mm.rst
-> >  delete mode 100644 Documentation/x86/x86_64/mm.txt
-> >  rename Documentation/x86/x86_64/{uefi.txt => uefi.rst} (79%)
-> >  create mode 100644 Documentation/x86/zero-page.rst
-> >  delete mode 100644 Documentation/x86/zero-page.txt
-> > 
+
+On 27/04/19 1:50 AM, Rob Herring wrote:
+> On Tue, Apr 23, 2019 at 04:18:13PM +0530, Vignesh Raghavendra wrote:
+>> Add binding documentation for TI's HyperBus memory controller present on
+>> AM654 SoC.
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> ---
+>>  .../devicetree/bindings/mtd/ti,am654-hbmc.txt | 32 +++++++++++++++++++
+>>  MAINTAINERS                                   |  1 +
+>>  2 files changed, 33 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+>> new file mode 100644
+>> index 000000000000..fc87c7918389
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+>> @@ -0,0 +1,32 @@
+>> +Bindings for HyperBus Memory Controller (HBMC) on TI's K3 family of SoCs
+>> +
+>> +Required properties:
+>> +- compatible : "ti,am654-hbmc" for AM654 SoC
+>> +- reg : Two entries:
+>> +	First entry pointed to the register space of HBMC controller
+>> +	Second entry pointing to the memory map region dedicated for
+>> +	MMIO access to attached flash devices
+>> +- ranges : Address range allocated for each chipselect in the MMIO space
+>> +
+>> +Optional properties:
+>> +- mux-controls : phandle to the multiplexer that controls selection of
+>> +		 HBMC vs OSPI. Mux state of 1 indicates HBMC is selected.
 > 
+> So 1 is also the default because your example doesn't have the property?
 > 
+
+No default is 0. Will fix the example.
+
+>> +
+>> +Example:
+>> +
+>> +	hbmc: hbmc@47034000 {
+>> +		compatible = "ti,am654-hbmc";
+>> +		reg = <0x0 0x47034000 0x0 0x100>,
+>> +			<0x5 0x00000000 0x1 0x0000000>;
+>> +		power-domains = <&k3_pds 55>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
+>> +			 <0x1 0x5 0x04000000 0x4000000>; /* CS1 - 64MB
 > 
-> Thanks,
-> Mauro
+> This is wrong. You need 2 cells for the child address. The first cell is 
+> the CS and the 2nd cell is the offset (typically 0). Otherwise you have 
+> overlapping addresses with child addresses 0 and 1.
+> 
+
+Oops, didn't think of that. Will fix in the next version.
+
+>> +
+>> +		/* Slave flash node */
+>> +		flash@0 {
+> 
+> And then the unit-address here would be '0,0'.
+> 
+>> +			compatible = "cypress,hyperflash";
+> 
+> Doesn't match what you defined for this binding.
+
+Will update. Thanks for the review!
+
+> 
+>> +			reg = <0x0 0x4000000>;
+>> +		};
+>> +	};
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index a5f22f85c848..1ade81f9a32a 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -7258,6 +7258,7 @@ S:	Supported
+>>  F:	drivers/mtd/hyperbus/
+>>  F:	include/linux/mtd/hyperbus.h
+>>  F:	Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
+>> +F:	Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+>>  
+>>  HYPERVISOR VIRTUAL CONSOLE DRIVER
+>>  L:	linuxppc-dev@lists.ozlabs.org
+>> -- 
+>> 2.21.0
+>>
 
 -- 
-Cheers,
-Changbin Du
+Regards
+Vignesh
