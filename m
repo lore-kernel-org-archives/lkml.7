@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C272C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77675C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A122087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582912087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfD0MyH (ORCPT
+        id S1727523AbfD0MyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:54:07 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:36297 "EHLO
+        Sat, 27 Apr 2019 08:54:15 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:46579 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727363AbfD0Mxe (ORCPT
+        with ESMTP id S1727354AbfD0Mxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:53:34 -0400
+        Sat, 27 Apr 2019 08:53:33 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N1fei-1gegIM1SdE-011xhz; Sat, 27 Apr 2019 14:53:06 +0200
+ 1N79q8-1ghy553AGC-017Rst; Sat, 27 Apr 2019 14:53:03 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,86 +34,79 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 38/41] drivers: tty: serial: xilinx_uartps: fill mapsize and use it
-Date:   Sat, 27 Apr 2019 14:52:19 +0200
-Message-Id: <1556369542-13247-39-git-send-email-info@metux.net>
+Subject: [PATCH 35/41] drivers: tty: serial: 8250: add mapsize to platform data
+Date:   Sat, 27 Apr 2019 14:52:16 +0200
+Message-Id: <1556369542-13247-36-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:VtPNlXzPCRVCI3k6aUN/2RTDRVtNySvUetW2m1i45Od16fYdx6y
- LS0k0V6K9tTbj9vRmp5ZCjL/mOHH5UpOiIqa//lNidg8lexGQDtGIijbeiQYs9a5ONTZ41P
- /QJB/7RWi0uO5xDMBNsrF+ru49A7jV2roH/XamiBQrb9q1XduKueamQiuyXwbKmDF6vMy65
- SexEhyAOG2uVr2I4z3nnw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vdDn587xvd4=:4RpbDZcbrZSWSyIEGlsv8U
- 0K/I8sTnMUV5V0+BjvOPaxxEwIozbULnFUa3IkYA47OU1n2ZzOGt7QzRwMPMuqMALSKhvyuAl
- t6yxt1msPA6kyUDppcf5bgSpylyoQ+W3C3CEite19ArJ0t2AwR6wilppKV3Jh+KUD0mfjD37s
- puKb7aoMCoZdZ9cOEaWpB8YfmHh2SeNm3SKcsAkE7vcrHhkRch80ahpP21xLnNLrzWFwCiTuU
- WSN3vp3JWGFtDHw/p2jQySYFGI9Vvh91eVlMxXKQnLF8yiehURKGk5Y9GEuaj9RXP5HmHyXjL
- lkZ4wlyKfUEpxD3Tl6j6hawA4nl7XcPNysl3Seys3+VcrP/aydSp4ueltBl6mcp8g5r8Iu5uk
- FkL08ODMZnsQE8pOye6cuMetb4LkUBCKcprXMYP3ryPqZt7eZBS2lqFiNuPM8xsH9a6WEgJYl
- I8UzUK30NOx46sp+1PsMg6yTempKzXES5ap5lEgIV0nJrAM21L0mN5/+t0oEjzTtfatOFX5uk
- M8KVoYNe+W+PKDYsTRSESAgizrPxXk4EkwtRVnV0jmEmUaN3alDd8SqnV0Gu3ROymNZhrZzjz
- UqyzBRlfWbCGoVNw2LXOb1DGrDLQx+dvJriCIMgZ17xzGKlGAboXpbywthlWS4UNNov0IADCk
- lffkQK22QhbX1XOmZDBYc2dE7NUMWkmiM2KbFwEs43p6iiUf7jDM/pMtGNBfUfwU5YV9haj7W
- AFEnEYlgHisqoTzmsKB1b9VQMJVErA9QCIapeg==
+X-Provags-ID: V03:K1:JcK0nmXUqvVZov6FpygbFCYx2SBIMbt8YBo1Pyu7lLXpjQoFRY+
+ pUU91A2VFsC0opVj58fPkR0Q6FJXQi2dkc/wvSXJs1UuyFbz9fA4rXDWaSqNdJmI+Ni3NVN
+ GCHT5mxv7iA219z7s0oyXnMLdcGAYrX/sQa9g9+0osWcxqkU8TBbfxVPdIH8z0lkkec4VUA
+ Jy3EMpSULncwPlRSUSCNg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HKE131FklXQ=:N+5TupvitkXMK24q5/jyxA
+ sIX3ic5BD+uHPAGs20GJwkwPl9UDpk0TIanYdXumBoGIe0pn8xQHfMNAGWo6dzwFRYczrf7xW
+ TxJABWtuVu+JiQ10VmrYJ6qbGD6m4TbE/uBc0upnH9JxQ1cVsfzzBmwiGXmmAaK657CfdpoPS
+ Fz7U84teAYYbICi2O4GD/aLJ8uzK2AiOYExJtogutwoUfYQhEeqnt1MAK5B8+inbvVsZudb+l
+ JJHjzlpoU/Oc+93FvVVMaymuIzy9f5R5gZGyofQ18Ch3DkihSAI67zUaYRbcl98qsSoKBF0qU
+ 0Bi3tP98ckrPEa8aT6/eEbWNDmQIaMq18HS/MVAYgP0Spig/t1UW2ix047NzAc3r2ovU57cD/
+ m3113f332KKSzj3AKd4QtXe9A+c95IFcsbX/8ZcEtEUh4OjJicZ9FooqDctilf0RHzaAa2R0C
+ rBL1UlQkiaGPBiXr/zXerWVeQj+YNsmUc6K/CvV8fuooCj8sZm9wrLZ8jVV/8DBx0EmiKK0FQ
+ FMksN9EPcLIzrmxsrW7WAaj8ObKHty46EJiN+qpvZ7NIRTVKtyKeC7eYev77pxyv6ynBQwIto
+ XvolrpgZ5uald3Dm9wAVwKn9K+v7AhEHQZv/NkEVcxJbA6C5VQ4xHu1nfwLeN8MtF/mnGnkCL
+ 7eovd4m1Pa0fyY2AFdvo5Xvee3L7sL7797X+E77dYhJ60wioVIWdRHlMcJMcL86pG4RtHQe3Y
+ 1TtyyEi0bqAfCKemGdUTrRo5E1LDoLRshCvoXw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fill the struct uart_port->mapsize field and use it, insteaf of
-hardcoded values in many places. This makes the code layout a bit
-more consistent and easily allows using generic helpers for the
-io memory handling.
+Adding a mapsize field for the 8250 port platform data struct,
+so we can now set the resource size (eg. *1) and don't need
+funny runtime detections like serial8250_port_size() anymore.
 
-Candidates for such helpers could be eg. the request+ioremap and
-iounmap+release combinations.
+For now, serial8250_port_size() is called everytime we need
+the io resource size. That function checks which chip we
+actually have and returns the appropriate size. This approach
+is a bit clumpsy and not entirely easy to understand, and
+it's a violation of layers :p
+
+Obviously, that information cannot change after the driver init,
+so we can safely do that probing once on driver init and just
+use the stored value later.
+
+*1) arch/mips/alchemy/common/platform.c
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/xilinx_uartps.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/tty/serial/8250/8250_core.c | 1 +
+ include/linux/serial_8250.h         | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 74089f5..cf8ca66 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -953,15 +953,15 @@ static int cdns_uart_verify_port(struct uart_port *port,
-  */
- static int cdns_uart_request_port(struct uart_port *port)
- {
--	if (!request_mem_region(port->mapbase, CDNS_UART_REGISTER_SPACE,
-+	if (!request_mem_region(port->mapbase, port->mapsize,
- 					 CDNS_UART_NAME)) {
- 		return -ENOMEM;
- 	}
- 
--	port->membase = ioremap(port->mapbase, CDNS_UART_REGISTER_SPACE);
-+	port->membase = ioremap(port->mapbase, port->mapsize);
- 	if (!port->membase) {
- 		dev_err(port->dev, "Unable to map registers\n");
--		release_mem_region(port->mapbase, CDNS_UART_REGISTER_SPACE);
-+		release_mem_region(port->mapbase, port->mapsize);
- 		return -ENOMEM;
- 	}
- 	return 0;
-@@ -976,7 +976,7 @@ static int cdns_uart_request_port(struct uart_port *port)
-  */
- static void cdns_uart_release_port(struct uart_port *port)
- {
--	release_mem_region(port->mapbase, CDNS_UART_REGISTER_SPACE);
-+	release_mem_region(port->mapbase, port->mapsize);
- 	iounmap(port->membase);
- 	port->membase = NULL;
- }
-@@ -1627,6 +1627,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 	 * and triggers invocation of the config_port() entry point.
- 	 */
- 	port->mapbase = res->start;
-+	port->mapsize = CDNS_UART_REGISTER_SPACE;
- 	port->irq = irq;
- 	port->dev = &pdev->dev;
- 	port->uartclk = clk_get_rate(cdns_uart_data->uartclk);
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index e441221..71a398b 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -814,6 +814,7 @@ static int serial8250_probe(struct platform_device *dev)
+ 		uart.port.iotype	= p->iotype;
+ 		uart.port.flags		= p->flags;
+ 		uart.port.mapbase	= p->mapbase;
++		uart.port.mapsize	= p->mapsize;
+ 		uart.port.hub6		= p->hub6;
+ 		uart.port.private_data	= p->private_data;
+ 		uart.port.type		= p->type;
+diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
+index 5a655ba..8b8183a 100644
+--- a/include/linux/serial_8250.h
++++ b/include/linux/serial_8250.h
+@@ -22,6 +22,7 @@ struct plat_serial8250_port {
+ 	unsigned long	iobase;		/* io base address */
+ 	void __iomem	*membase;	/* ioremap cookie or NULL */
+ 	resource_size_t	mapbase;	/* resource base */
++	resource_size_t	mapsize;	/* resource size */
+ 	unsigned int	irq;		/* interrupt number */
+ 	unsigned long	irqflags;	/* request_irq flags */
+ 	unsigned int	uartclk;	/* UART clock rate */
 -- 
 1.9.1
 
