@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1729C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A85C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2F120679
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37FB206E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556330134;
-	bh=OCnH7WOWAgQ9SOfDI03xifZW0Gp9lxA6GJuyAqvUtKA=;
+	s=default; t=1556330139;
+	bh=9wxgPu0ztq6m1YVb/9c8SpBgLiynpp40Xv953t4reww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=so58qMB5xGPqgBN7C1SGCTeYbWeQp3rLxuIjOnuXcHBs8BG4p5LLA3Vyow667xmf6
-	 TbdWsNvHPD3E9zWpdYmk2lUE4HHi42YlVjv4S3hI+kbZi33CE/SA+fbqnt45wiwObw
-	 CZnrCXJ2QHzyzMrXwsp4iNVREWS+AkZC66KMISNw=
+	b=z3xMlJuUltmQmVFOKc+f/QET7XljE8ACV2GKjDownO5l1+TA0CBELTMFltMoEqNBv
+	 uiMVHcrkbXCdosCqiengXSMN62aHzrDXttLSoRXkDci4liDlvJ0RxL7rLBrO/MrgrL
+	 2FURXMasvBSZ0CZpl891Wi29VE3TyHOrCro3mYh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfD0BjL (ORCPT
+        id S1727526AbfD0BjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:39:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbfD0BjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Apr 2019 21:39:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727480AbfD0BjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:39:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F3142087C;
-        Sat, 27 Apr 2019 01:39:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A92982084F;
+        Sat, 27 Apr 2019 01:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329149;
-        bh=OCnH7WOWAgQ9SOfDI03xifZW0Gp9lxA6GJuyAqvUtKA=;
+        s=default; t=1556329147;
+        bh=9wxgPu0ztq6m1YVb/9c8SpBgLiynpp40Xv953t4reww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ubhTfIOiLiAYi6+3j8kwThZJ9yz0tbQ4fegqi6vfHMQGZ/Z7Lv5/vnz723gfuzVBe
-         5xEl4GNE6W725/WCbOVwiAbDF7z6SHnyv/IIPWabeMQ8xkoA6xv+03+7fj+l6Mipnk
-         ApRX+IjarcI5IriWKHANmAAEMPG407NoB4/Nwf8k=
+        b=eAsZi5tT6TQFB7wc/H9tg2hCyLlrwFESyJxz67RwqRlf2Bgc9LPqEyvcNy+pfEKb+
+         ubcEBptuM5IsWXsyi/HGMbWWUZ6FGnqS4a432582CkVU06MrslZeC0024z25ua3y4Z
+         kPkt7+fH1fki8NL1wZ/sAeC31bk2sEH0r62taUnI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 24/79] IB/hfi1: Clear the IOWAIT pending bits when QP is put into error state
-Date:   Fri, 26 Apr 2019 21:37:43 -0400
-Message-Id: <20190427013838.6596-24-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, Jyri Sarha <jsarha@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 23/79] drm/omap: hdmi4_cec: Fix CEC clock handling for PM
+Date:   Fri, 26 Apr 2019 21:37:42 -0400
+Message-Id: <20190427013838.6596-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -60,47 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 93b289b9aff66eca7575b09f36f5abbeca8e6167 ]
+[ Upstream commit 36a1da15b5df493241b0011d2185fdd724ac1ed1 ]
 
-When a QP is put into error state, it may be waiting for send engine
-resources. In this case, the QP will be removed from the send engine's
-waiting list, but its IOWAIT pending bits are not cleared. This will
-normally not have any major impact as the QP is being destroyed.  However,
-the QP still needs to wind down its operations, such as draining the send
-queue by scheduling the send engine. Clearing the pending bits will avoid
-any potential complications. In addition, if the QP will eventually hang,
-clearing the pending bits can help debugging by presenting a consistent
-picture if the user dumps the qp_stats.
+If CONFIG_OMAP4_DSS_HDMI_CEC is enabled in .config, deeper SoC idle
+states are blocked because the CEC clock gets always enabled on init.
 
-This patch clears a QP's IOWAIT_PENDING_IB and IO_PENDING_TID bits in
-priv->s_iowait.flags in this case.
+Let's fix the issue by moving the CEC clock handling to happen later in
+hdmi_cec_adap_enable() as suggested by Hans Verkuil <hverkuil@xs4all.nl>.
+This way the CEC clock gets only enabled when needed. This can be tested
+by doing cec-ctl --playback to enable the CEC, and doing cec-ctl --clear
+to disable it.
 
-Fixes: 5da0fc9dbf89 ("IB/hfi1: Prepare resource waits for dual leg")
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Alex Estrin <alex.estrin@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Let's also fix the typo for "divider" in the comments while at it.
+
+Fixes: 8d7f934df8d8 ("omapdrm: hdmi4_cec: add OMAP4 HDMI CEC support")
+Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Jyri Sarha <jsarha@ti.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190326151438.32414-1-tony@atomide.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/qp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c | 26 ++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/qp.c b/drivers/infiniband/hw/hfi1/qp.c
-index 5866f358ea04..df8e812804b3 100644
---- a/drivers/infiniband/hw/hfi1/qp.c
-+++ b/drivers/infiniband/hw/hfi1/qp.c
-@@ -834,6 +834,8 @@ void notify_error_qp(struct rvt_qp *qp)
- 		if (!list_empty(&priv->s_iowait.list) &&
- 		    !(qp->s_flags & RVT_S_BUSY)) {
- 			qp->s_flags &= ~HFI1_S_ANY_WAIT_IO;
-+			iowait_clear_flag(&priv->s_iowait, IOWAIT_PENDING_IB);
-+			iowait_clear_flag(&priv->s_iowait, IOWAIT_PENDING_TID);
- 			list_del_init(&priv->s_iowait.list);
- 			priv->s_iowait.lock = NULL;
- 			rvt_put_qp(qp);
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
+index 340383150fb9..ebf9c96d43ee 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
+@@ -175,6 +175,7 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
+ 		REG_FLD_MOD(core->base, HDMI_CORE_SYS_INTR_UNMASK4, 0, 3, 3);
+ 		hdmi_wp_clear_irqenable(core->wp, HDMI_IRQ_CORE);
+ 		hdmi_wp_set_irqstatus(core->wp, HDMI_IRQ_CORE);
++		REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
+ 		hdmi4_core_disable(core);
+ 		return 0;
+ 	}
+@@ -182,16 +183,24 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
+ 	if (err)
+ 		return err;
+ 
++	/*
++	 * Initialize CEC clock divider: CEC needs 2MHz clock hence
++	 * set the divider to 24 to get 48/24=2MHz clock
++	 */
++	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0x18, 5, 0);
++
+ 	/* Clear TX FIFO */
+ 	if (!hdmi_cec_clear_tx_fifo(adap)) {
+ 		pr_err("cec-%s: could not clear TX FIFO\n", adap->name);
+-		return -EIO;
++		err = -EIO;
++		goto err_disable_clk;
+ 	}
+ 
+ 	/* Clear RX FIFO */
+ 	if (!hdmi_cec_clear_rx_fifo(adap)) {
+ 		pr_err("cec-%s: could not clear RX FIFO\n", adap->name);
+-		return -EIO;
++		err = -EIO;
++		goto err_disable_clk;
+ 	}
+ 
+ 	/* Clear CEC interrupts */
+@@ -236,6 +245,12 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
+ 		hdmi_write_reg(core->base, HDMI_CEC_INT_STATUS_1, temp);
+ 	}
+ 	return 0;
++
++err_disable_clk:
++	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
++	hdmi4_core_disable(core);
++
++	return err;
+ }
+ 
+ static int hdmi_cec_adap_log_addr(struct cec_adapter *adap, u8 log_addr)
+@@ -333,11 +348,8 @@ int hdmi4_cec_init(struct platform_device *pdev, struct hdmi_core_data *core,
+ 		return ret;
+ 	core->wp = wp;
+ 
+-	/*
+-	 * Initialize CEC clock divider: CEC needs 2MHz clock hence
+-	 * set the devider to 24 to get 48/24=2MHz clock
+-	 */
+-	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0x18, 5, 0);
++	/* Disable clock initially, hdmi_cec_adap_enable() manages it */
++	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
+ 
+ 	ret = cec_register_adapter(core->adap, &pdev->dev);
+ 	if (ret < 0) {
 -- 
 2.19.1
 
