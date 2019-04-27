@@ -2,90 +2,66 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C074EC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7852BC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1E92087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B312087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfD0MLI (ORCPT
+        id S1726404AbfD0MTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:11:08 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:41888 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfD0MLI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:11:08 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 29D079E8528;
-        Sat, 27 Apr 2019 13:11:05 +0100 (BST)
-Date:   Sat, 27 Apr 2019 13:11:03 +0100
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     Alexandre <amergnat@baylibre.com>
-Cc:     Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        baylibre-upstreaming@groups.io
-Subject: Re: [PATCH v2 3/3] iio: Add PAT9125 optical tracker sensor
-Message-ID: <20190427131103.1ce00b1c@archlinux>
-In-Reply-To: <8abd482d-ae1e-ba86-c050-317fc0208fe6@baylibre.com>
-References: <1556016046-31231-1-git-send-email-amergnat@baylibre.com>
-        <1556016046-31231-4-git-send-email-amergnat@baylibre.com>
-        <alpine.DEB.2.21.1904231302210.24175@vps.pmeerw.net>
-        <8abd482d-ae1e-ba86-c050-317fc0208fe6@baylibre.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 27 Apr 2019 08:19:00 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7698 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725912AbfD0MS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 08:18:59 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9F52574E80E277DEDA13;
+        Sat, 27 Apr 2019 20:18:57 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.188.190) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 27 Apr 2019 20:18:49 +0800
+From:   ChenGang <cg.chen@huawei.com>
+To:     <mark@fasheh.com>, <jlbec@evilplan.org>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        <ocfs2-devel@oss.oracle.com>, ChenGang <cg.chen@huawei.com>
+Subject: [PATCH] fs: ocfs: fix spelling mistake "heartbeart" -> "heartbeat"
+Date:   Sat, 27 Apr 2019 20:22:35 +0800
+Message-ID: <1556367755-118120-1-git-send-email-cg.chen@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.188.190]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019 16:06:56 +0200
-Alexandre <amergnat@baylibre.com> wrote:
+There is a spelling mistake in o2hb_do_disk_heartbeat debug message.Fix it.
 
-> Hi Peter,
-> 
-> On 4/23/19 13:33, Peter Meerwald-Stadler wrote:
-> >
-> > how is this thing different from a mouse device?  
-> 
-> I developed this driver to detect the board movement which can't be 
-> detected by accelerometer (very slow motion). I admit this use case can 
-> be handled by an input, and I'm agree with you, PAT9125 driver could be 
-> an input. But this chip is able to track different kind of motion (flat 
-> and rotation), and additionally have an interrupt GPIO, so using it like 
-> input limit the driver potential. This chip is designed to work in 
-> industrial measurement or embedded systems, and the IIO API match with 
-> these environments, so IIO is the best way to exploit the entire 
-> potential of this chip.
-> 
-> As I understand (from 
-> https://www.kernel.org/doc/html/v4.12/input/event-codes.html#mice ), 
-> mouse driver must report values when the device move. This feature 
-> souldn't be mandatory for an optical tracker driver, specially for cases 
-> where user prefers to use buffer or poll only when he need data.
+Signed-off-by: ChenGang <cg.chen@huawei.com>
+---
+ fs/ocfs2/cluster/heartbeat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Given the 'placement' of this driver isn't totally obvious, please
-make sure to cc linux-input and Dmitry (maintainer) on V3.
-
-Probably no one will mind, but the last thing we want is someone
-else to put forward an input driver and we end up with two drivers
-for the same thing.
-
-Thanks,
-
-Jonathan
-
-> 
-> All other comments will be fixed in V3.
-> 
-> Regards,
-> 
-> Alexandre
-> 
+diff --git a/fs/ocfs2/cluster/heartbeat.c b/fs/ocfs2/cluster/heartbeat.c
+index f3c20b2..e4e7df1 100644
+--- a/fs/ocfs2/cluster/heartbeat.c
++++ b/fs/ocfs2/cluster/heartbeat.c
+@@ -1198,7 +1198,7 @@ static int o2hb_do_disk_heartbeat(struct o2hb_region *reg)
+ 	if (atomic_read(&reg->hr_steady_iterations) != 0) {
+ 		if (atomic_dec_and_test(&reg->hr_unsteady_iterations)) {
+ 			printk(KERN_NOTICE "o2hb: Unable to stabilize "
+-			       "heartbeart on region %s (%s)\n",
++			       "heartbeat on region %s (%s)\n",
+ 			       config_item_name(&reg->hr_item),
+ 			       reg->hr_dev_name);
+ 			atomic_set(&reg->hr_steady_iterations, 0);
+-- 
+1.8.5.6
 
