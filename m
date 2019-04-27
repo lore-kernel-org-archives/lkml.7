@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466DEC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FD8C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A8A208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F8F206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbfD0P1r (ORCPT
+        id S1728401AbfD0P2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:27:47 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33138 "EHLO
+        Sat, 27 Apr 2019 11:28:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33106 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727363AbfD0PPW (ORCPT
+        by vger.kernel.org with ESMTP id S1727351AbfD0PPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:22 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2s-000144-T6; Sat, 27 Apr 2019 16:15:19 +0100
+        id 1hKP2t-0000zG-4w; Sat, 27 Apr 2019 16:15:19 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2o-0004es-6g; Sat, 27 Apr 2019 16:15:14 +0100
+        id 1hKP2o-0004f8-8p; Sat, 27 Apr 2019 16:15:14 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Arend van Spriel" <arend@broadcom.com>,
-        "Pieter-Paul Giesberts" <pieter-paul.giesberts@broadcom.com>,
+        "Arend van Spriel" <arend.vanspriel@broadcom.com>,
         "Kalle Valo" <kvalo@codeaurora.org>,
-        "Franky Lin" <franky.lin@broadcom.com>
+        "Franky Lin" <franky.lin@broadcom.com>,
+        "Hante Meuleman" <hante.meuleman@broadcom.com>,
+        "Pieter-Paul Giesberts" <pieter-paul.giesberts@broadcom.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.452302109@decadent.org.uk>
+Message-ID: <lsq.1556377989.739448377@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 195/202] brcmfmac: screening firmware event packet
+Subject: [PATCH 3.16 198/202] brcmfmac: add subtype check for event
+ handling in data path
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,207 +59,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Franky Lin <franky.lin@broadcom.com>
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
 
-commit c56caa9db8abbbfb9e31325e0897705aa897db37 upstream.
+commit a4176ec356c73a46c07c181c6d04039fafa34a9f upstream.
 
-Firmware uses asynchronized events as a communication method to the
-host. The event packets are marked as ETH_P_LINK_CTL protocol type. For
-SDIO and PCIe bus, this kind of packets are delivered through virtual
-event channel not data channel. This patch adds a screening logic to
-make sure the event handler only processes the events coming from the
-correct channel.
+For USB there is no separate channel being used to pass events
+from firmware to the host driver and as such are passed over the
+data path. In order to detect mock event messages an additional
+check is needed on event subtype. This check is added conditionally
+using unlikely() keyword.
 
+Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
 Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
-Signed-off-by: Franky Lin <franky.lin@broadcom.com>
-Signed-off-by: Arend van Spriel <arend@broadcom.com>
+Reviewed-by: Franky Lin <franky.lin@broadcom.com>
+Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 [bwh: Backported to 3.16:
  - Drop changes to PCIe bus support
  - Adjust filenames]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/net/wireless/brcm80211/brcmfmac/dhd_bus.h
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/dhd_bus.h
-@@ -168,7 +168,9 @@ bool brcmf_c_prec_enq(struct device *dev
- 		      int prec);
- 
- /* Receive frame for delivery to OS.  Callee disposes of rxp. */
--void brcmf_rx_frame(struct device *dev, struct sk_buff *rxp);
-+void brcmf_rx_frame(struct device *dev, struct sk_buff *rxp, bool handle_evnt);
-+/* Receive async event packet from firmware. Callee disposes of rxp. */
-+void brcmf_rx_event(struct device *dev, struct sk_buff *rxp);
- 
- /* Indication from bus module regarding presence/insertion of dongle. */
- int brcmf_attach(struct device *dev);
 --- a/drivers/net/wireless/brcm80211/brcmfmac/dhd_linux.c
 +++ b/drivers/net/wireless/brcm80211/brcmfmac/dhd_linux.c
-@@ -306,16 +306,17 @@ void brcmf_txflowblock(struct device *de
- 	brcmf_fws_bus_blocked(drvr, state);
- }
+@@ -553,7 +553,8 @@ void brcmf_rx_frame(struct device *dev,
+ 	} else {
+ 		/* Process special event packets */
+ 		if (handle_event)
+-			brcmf_fweh_process_skb(ifp->drvr, skb);
++			brcmf_fweh_process_skb(ifp->drvr, skb,
++					       BCMILCP_SUBTYPE_VENDOR_LONG);
  
--static void brcmf_netif_rx(struct brcmf_if *ifp, struct sk_buff *skb)
-+static void brcmf_netif_rx(struct brcmf_if *ifp, struct sk_buff *skb,
-+			    bool handle_event)
- {
--	skb->dev = ifp->ndev;
--	skb->protocol = eth_type_trans(skb, skb->dev);
-+	skb->protocol = eth_type_trans(skb, ifp->ndev);
+ 		brcmf_netif_rx(ifp, skb);
+ 	}
+@@ -580,7 +581,7 @@ void brcmf_rx_event(struct device *dev,
  
- 	if (skb->pkt_type == PACKET_MULTICAST)
- 		ifp->stats.multicast++;
+ 	skb->protocol = eth_type_trans(skb, ifp->ndev);
  
- 	/* Process special event packets */
 -	brcmf_fweh_process_skb(ifp->drvr, skb);
-+	if (handle_event)
-+		brcmf_fweh_process_skb(ifp->drvr, skb);
- 
- 	if (!(ifp->ndev->flags & IFF_UP)) {
- 		brcmu_pkt_buf_free_skb(skb);
-@@ -376,7 +377,7 @@ static void brcmf_rxreorder_process_info
- 	/* validate flags and flow id */
- 	if (flags == 0xFF) {
- 		brcmf_err("invalid flags...so ignore this packet\n");
--		brcmf_netif_rx(ifp, pkt);
-+		brcmf_netif_rx(ifp, pkt, false);
- 		return;
- 	}
- 
-@@ -388,7 +389,7 @@ static void brcmf_rxreorder_process_info
- 		if (rfi == NULL) {
- 			brcmf_dbg(INFO, "received flags to cleanup, but no flow (%d) yet\n",
- 				  flow_id);
--			brcmf_netif_rx(ifp, pkt);
-+			brcmf_netif_rx(ifp, pkt, false);
- 			return;
- 		}
- 
-@@ -413,7 +414,7 @@ static void brcmf_rxreorder_process_info
- 		rfi = kzalloc(buf_size, GFP_ATOMIC);
- 		if (rfi == NULL) {
- 			brcmf_err("failed to alloc buffer\n");
--			brcmf_netif_rx(ifp, pkt);
-+			brcmf_netif_rx(ifp, pkt, false);
- 			return;
- 		}
- 
-@@ -527,11 +528,11 @@ static void brcmf_rxreorder_process_info
- netif_rx:
- 	skb_queue_walk_safe(&reorder_list, pkt, pnext) {
- 		__skb_unlink(pkt, &reorder_list);
--		brcmf_netif_rx(ifp, pkt);
-+		brcmf_netif_rx(ifp, pkt, false);
- 	}
++	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
+ 	brcmu_pkt_buf_free_skb(skb);
  }
  
--void brcmf_rx_frame(struct device *dev, struct sk_buff *skb)
-+void brcmf_rx_frame(struct device *dev, struct sk_buff *skb, bool handle_evnt)
+--- a/drivers/net/wireless/brcm80211/brcmfmac/fweh.h
++++ b/drivers/net/wireless/brcm80211/brcmfmac/fweh.h
+@@ -174,7 +174,7 @@ enum brcmf_fweh_event_code {
+  */
+ #define BRCM_OUI				"\x00\x10\x18"
+ #define BCMILCP_BCM_SUBTYPE_EVENT		1
+-
++#define BCMILCP_SUBTYPE_VENDOR_LONG		32769
+ 
+ /**
+  * struct brcm_ethhdr - broadcom specific ether header.
+@@ -292,10 +292,10 @@ void brcmf_fweh_process_event(struct brc
+ 			      u32 packet_len);
+ 
+ static inline void brcmf_fweh_process_skb(struct brcmf_pub *drvr,
+-					  struct sk_buff *skb)
++					  struct sk_buff *skb, u16 stype)
  {
- 	struct brcmf_if *ifp;
- 	struct brcmf_bus *bus_if = dev_get_drvdata(dev);
-@@ -555,7 +556,32 @@ void brcmf_rx_frame(struct device *dev,
- 	if (rd->reorder)
- 		brcmf_rxreorder_process_info(ifp, rd->reorder, skb);
- 	else
--		brcmf_netif_rx(ifp, skb);
-+		brcmf_netif_rx(ifp, skb, handle_evnt);
-+}
+ 	struct brcmf_event *event_packet;
+-	u16 usr_stype;
++	u16 subtype, usr_stype;
+ 
+ 	/* only process events when protocol matches */
+ 	if (skb->protocol != cpu_to_be16(ETH_P_LINK_CTL))
+@@ -304,8 +304,16 @@ static inline void brcmf_fweh_process_sk
+ 	if ((skb->len + ETH_HLEN) < sizeof(*event_packet))
+ 		return;
+ 
+-	/* check for BRCM oui match */
+ 	event_packet = (struct brcmf_event *)skb_mac_header(skb);
 +
-+void brcmf_rx_event(struct device *dev, struct sk_buff *skb)
-+{
-+	struct brcmf_if *ifp;
-+	struct brcmf_bus *bus_if = dev_get_drvdata(dev);
-+	struct brcmf_pub *drvr = bus_if->drvr;
-+	int ret;
-+
-+	brcmf_dbg(EVENT, "Enter: %s: rxp=%p\n", dev_name(dev), skb);
-+
-+	/* process and remove protocol-specific header */
-+	ret = brcmf_proto_hdrpull(drvr, true, skb, &ifp);
-+
-+	if (ret || !ifp || !ifp->ndev) {
-+		if (ret != -ENODATA && ifp)
-+			ifp->stats.rx_errors++;
-+		brcmu_pkt_buf_free_skb(skb);
-+		return;
++	/* check subtype if needed */
++	if (unlikely(stype)) {
++		subtype = get_unaligned_be16(&event_packet->hdr.subtype);
++		if (subtype != stype)
++			return;
 +	}
 +
-+	skb->protocol = eth_type_trans(skb, ifp->ndev);
-+
-+	brcmf_fweh_process_skb(ifp->drvr, skb);
-+	brcmu_pkt_buf_free_skb(skb);
- }
- 
- void brcmf_txfinalize(struct brcmf_pub *drvr, struct sk_buff *txp, u8 ifidx,
---- a/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
-@@ -1339,6 +1339,17 @@ static inline u8 brcmf_sdio_getdatoffset
- 	return (u8)((hdrvalue & SDPCM_DOFFSET_MASK) >> SDPCM_DOFFSET_SHIFT);
- }
- 
-+static inline bool brcmf_sdio_fromevntchan(u8 *swheader)
-+{
-+	u32 hdrvalue;
-+	u8 ret;
-+
-+	hdrvalue = *(u32 *)swheader;
-+	ret = (u8)((hdrvalue & SDPCM_CHANNEL_MASK) >> SDPCM_CHANNEL_SHIFT);
-+
-+	return (ret == SDPCM_EVENT_CHANNEL);
-+}
-+
- static int brcmf_sdio_hdparse(struct brcmf_sdio *bus, u8 *header,
- 			      struct brcmf_sdio_hdrinfo *rd,
- 			      enum brcmf_sdio_frmtype type)
-@@ -1699,7 +1710,11 @@ static u8 brcmf_sdio_rxglom(struct brcmf
- 					   pfirst->len, pfirst->next,
- 					   pfirst->prev);
- 			skb_unlink(pfirst, &bus->glom);
--			brcmf_rx_frame(bus->sdiodev->dev, pfirst);
-+			if (brcmf_sdio_fromevntchan(pfirst->data))
-+				brcmf_rx_event(bus->sdiodev->dev, pfirst);
-+			else
-+				brcmf_rx_frame(bus->sdiodev->dev, pfirst,
-+					       false);
- 			bus->sdcnt.rxglompkts++;
- 		}
- 
-@@ -2026,18 +2041,19 @@ static uint brcmf_sdio_readframes(struct
- 		__skb_trim(pkt, rd->len);
- 		skb_pull(pkt, rd->dat_offset);
- 
-+		if (pkt->len == 0)
-+			brcmu_pkt_buf_free_skb(pkt);
-+		else if (rd->channel == SDPCM_EVENT_CHANNEL)
-+			brcmf_rx_event(bus->sdiodev->dev, pkt);
-+		else
-+			brcmf_rx_frame(bus->sdiodev->dev, pkt,
-+				       false);
-+
- 		/* prepare the descriptor for the next read */
- 		rd->len = rd->len_nxtfrm << 4;
- 		rd->len_nxtfrm = 0;
- 		/* treat all packet as event if we don't know */
- 		rd->channel = SDPCM_EVENT_CHANNEL;
--
--		if (pkt->len == 0) {
--			brcmu_pkt_buf_free_skb(pkt);
--			continue;
--		}
--
--		brcmf_rx_frame(bus->sdiodev->dev, pkt);
- 	}
- 
- 	rxcount = maxframes - rxleft;
---- a/drivers/net/wireless/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/usb.c
-@@ -441,7 +441,7 @@ static void brcmf_usb_rx_complete(struct
- 
- 	if (devinfo->bus_pub.state == BRCMFMAC_USB_STATE_UP) {
- 		skb_put(skb, urb->actual_length);
--		brcmf_rx_frame(devinfo->dev, skb);
-+		brcmf_rx_frame(devinfo->dev, skb, true);
- 		brcmf_usb_rx_refill(devinfo, req);
- 	} else {
- 		brcmu_pkt_buf_free_skb(skb);
++	/* check for BRCM oui match */
+ 	if (memcmp(BRCM_OUI, &event_packet->hdr.oui[0],
+ 		   sizeof(event_packet->hdr.oui)))
+ 		return;
 
