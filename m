@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714E5C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561B4C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 385F621537
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 292DA205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556330164;
-	bh=+c61BKSb6nmxd2DA72ofE0nJ2DQCITWN2O5hvaus1X0=;
+	s=default; t=1556330185;
+	bh=o+KMaZFGCimfQyk7lMKqWpuKUx5OsoIu52T/ZheX1GM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6o9rbh9aI/HMvF4uAsaXAiXn94V8XIGMKNi9zou1mp0htT3kLuKJdnrOYUt/aZCA
-	 Vzg56E6QOF8JLnbMTFaweb6IoUSNEMuVS5YM4zpCdz2TfRGz4ZAOwSyBjlxMY9Cbd0
-	 PQ3/t/Od9iuldWDKu8YOGpI6Hpmu0bHKxlqHzIiM=
+	b=NuZwLNAGLmFtvT/mJ2bY0nfr1CIIHNjPd1q5/5d8wqPTAnZI8dvJJuvJ7UvIEujDj
+	 Sumoy9bmi9uV2aMKY38h1naXeFgY3YUsGVM88grm6zw1pLVK6Vyko/KBp6G0Wt4R+b
+	 77tW77HkWMx5VXo5gbF+bCVqUFzzLxNg5cYdfOiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbfD0B4D (ORCPT
+        id S1727444AbfD0BjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:39:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727443AbfD0BjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:39:01 -0400
+        id S1727426AbfD0Bi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:38:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4ABE208CB;
-        Sat, 27 Apr 2019 01:38:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F123F208CB;
+        Sat, 27 Apr 2019 01:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329140;
-        bh=+c61BKSb6nmxd2DA72ofE0nJ2DQCITWN2O5hvaus1X0=;
+        s=default; t=1556329135;
+        bh=o+KMaZFGCimfQyk7lMKqWpuKUx5OsoIu52T/ZheX1GM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oOP74druj3qouNzwtk5Qbx7hKaBIskjtECgSLGo21HPVqVH9j5a7VPAQSqJYNfs9X
-         9ZTjVItvx5Ipz/6ACvhP08wlRycJie8DBvVzuGjYDW/pDOu0KfKbgtZ0fmAYugHq9p
-         qIX9u7WQvqu3PLUV5bb+QP7TQGTR0HKFvaf+biM8=
+        b=zDnIt+Go+BuFXgAjTzBBFPDklJfbHoBhzxYqYK6SXMjkvWszUZWUXG6Ifk97f8Xn9
+         qgx0uRnHsIgrKrp4qCPzvMrlyWF/EKsu4aN3edZZsn0pSMe3Ip5mDbgxwZJ0mDI6FQ
+         Idb4tHpW7d4JKgKO61XWIs9Cdd+pao1yJs4UUiiI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 18/79] clk: meson-gxbb: round the vdec dividers to closest
-Date:   Fri, 26 Apr 2019 21:37:37 -0400
-Message-Id: <20190427013838.6596-18-sashal@kernel.org>
+Cc:     Shuming Fan <shumingf@realtek.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 16/79] ASoC: rt5682: recording has no sound after booting
+Date:   Fri, 26 Apr 2019 21:37:35 -0400
+Message-Id: <20190427013838.6596-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -60,46 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Jourdan <mjourdan@baylibre.com>
+From: Shuming Fan <shumingf@realtek.com>
 
-[ Upstream commit 9b70c697e87286ade406e6a02091757307dd4b7c ]
+[ Upstream commit 1c5b6a27e432e4fe170a924c8b41012271496a4c ]
 
-We want the video decoder clocks to always round to closest. While the
-muxes are already using CLK_MUX_ROUND_CLOSEST, the corresponding
-CLK_DIVIDER_ROUND_CLOSEST was forgotten for the dividers.
+If ASRC turns on, HW will use clk_dac as the reference clock
+whether recording or playback.
+Both of clk_dac and clk_adc should set proper clock while using ASRC.
 
-Fix this by adding the flag to the two vdec dividers.
-
-Fixes: a565242eb9fc ("clk: meson: gxbb: add the video decoder clocks")
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://lkml.kernel.org/r/20190319102537.2043-1-mjourdan@baylibre.com
+Signed-off-by: Shuming Fan <shumingf@realtek.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/gxbb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/codecs/rt5682.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
-index 65f2599e5243..08824b2cd142 100644
---- a/drivers/clk/meson/gxbb.c
-+++ b/drivers/clk/meson/gxbb.c
-@@ -2213,6 +2213,7 @@ static struct clk_regmap gxbb_vdec_1_div = {
- 		.offset = HHI_VDEC_CLK_CNTL,
- 		.shift = 0,
- 		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
- 	},
- 	.hw.init = &(struct clk_init_data){
- 		.name = "vdec_1_div",
-@@ -2258,6 +2259,7 @@ static struct clk_regmap gxbb_vdec_hevc_div = {
- 		.offset = HHI_VDEC2_CLK_CNTL,
- 		.shift = 16,
- 		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
- 	},
- 	.hw.init = &(struct clk_init_data){
- 		.name = "vdec_hevc_div",
+diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
+index 9331c13d2017..72ef2a0f6387 100644
+--- a/sound/soc/codecs/rt5682.c
++++ b/sound/soc/codecs/rt5682.c
+@@ -1202,7 +1202,7 @@ static int set_filter_clk(struct snd_soc_dapm_widget *w,
+ 	struct snd_soc_component *component =
+ 		snd_soc_dapm_to_component(w->dapm);
+ 	struct rt5682_priv *rt5682 = snd_soc_component_get_drvdata(component);
+-	int ref, val, reg, sft, mask, idx = -EINVAL;
++	int ref, val, reg, idx = -EINVAL;
+ 	static const int div_f[] = {1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48};
+ 	static const int div_o[] = {1, 2, 4, 6, 8, 12, 16, 24, 32, 48};
+ 
+@@ -1216,15 +1216,10 @@ static int set_filter_clk(struct snd_soc_dapm_widget *w,
+ 
+ 	idx = rt5682_div_sel(rt5682, ref, div_f, ARRAY_SIZE(div_f));
+ 
+-	if (w->shift == RT5682_PWR_ADC_S1F_BIT) {
++	if (w->shift == RT5682_PWR_ADC_S1F_BIT)
+ 		reg = RT5682_PLL_TRACK_3;
+-		sft = RT5682_ADC_OSR_SFT;
+-		mask = RT5682_ADC_OSR_MASK;
+-	} else {
++	else
+ 		reg = RT5682_PLL_TRACK_2;
+-		sft = RT5682_DAC_OSR_SFT;
+-		mask = RT5682_DAC_OSR_MASK;
+-	}
+ 
+ 	snd_soc_component_update_bits(component, reg,
+ 		RT5682_FILTER_CLK_DIV_MASK, idx << RT5682_FILTER_CLK_DIV_SFT);
+@@ -1236,7 +1231,8 @@ static int set_filter_clk(struct snd_soc_dapm_widget *w,
+ 	}
+ 
+ 	snd_soc_component_update_bits(component, RT5682_ADDA_CLK_1,
+-		mask, idx << sft);
++		RT5682_ADC_OSR_MASK | RT5682_DAC_OSR_MASK,
++		(idx << RT5682_ADC_OSR_SFT) | (idx << RT5682_DAC_OSR_SFT));
+ 
+ 	return 0;
+ }
 -- 
 2.19.1
 
