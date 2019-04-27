@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B8BC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAEBC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E813C206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A066D206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbfD0P31 (ORCPT
+        id S1728433AbfD0P3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:29:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32940 "EHLO
+        Sat, 27 Apr 2019 11:29:38 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32900 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726530AbfD0PPT (ORCPT
+        by vger.kernel.org with ESMTP id S1727275AbfD0PPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:19 -0400
+        Sat, 27 Apr 2019 11:15:18 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2p-00014H-Mg; Sat, 27 Apr 2019 16:15:15 +0100
+        id 1hKP2p-0000zA-VX; Sat, 27 Apr 2019 16:15:16 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2n-0004d2-73; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2n-0004dC-AW; Sat, 27 Apr 2019 16:15:13 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "YueHaibing" <yuehaibing@huawei.com>,
-        "Andrew Lunn" <andrew@lunn.ch>
+        "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "=?UTF-8?q?Jonathan=20Neusch=C3=A4fer?=" <j.neuschaefer@gmx.net>,
+        "Linus Walleij" <linus.walleij@linaro.org>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.472088206@decadent.org.uk>
+Message-ID: <lsq.1556377989.572472704@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 172/202] mdio_bus: Fix use-after-free on
- device_register fails
+Subject: [PATCH 3.16 174/202] mmc: spi: Fix card detection during probe
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,124 +56,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-commit 6ff7b060535e87c2ae14dd8548512abfdda528fb upstream.
+commit c9bd505dbd9d3dc80c496f88eafe70affdcf1ba6 upstream.
 
-KASAN has found use-after-free in fixed_mdio_bus_init,
-commit 0c692d07842a ("drivers/net/phy/mdio_bus.c: call
-put_device on device_register() failure") call put_device()
-while device_register() fails,give up the last reference
-to the device and allow mdiobus_release to be executed
-,kfreeing the bus. However in most drives, mdiobus_free
-be called to free the bus while mdiobus_register fails.
-use-after-free occurs when access bus again, this patch
-revert it to let mdiobus_free free the bus.
+When using the mmc_spi driver with a card-detect pin, I noticed that the
+card was not detected immediately after probe, but only after it was
+unplugged and plugged back in (and the CD IRQ fired).
 
-KASAN report details as below:
+The call tree looks something like this:
 
-BUG: KASAN: use-after-free in mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
-Read of size 4 at addr ffff8881dc824d78 by task syz-executor.0/3524
+mmc_spi_probe
+  mmc_add_host
+    mmc_start_host
+      _mmc_detect_change
+        mmc_schedule_delayed_work(&host->detect, 0)
+          mmc_rescan
+            host->bus_ops->detect(host)
+              mmc_detect
+                _mmc_detect_card_removed
+                  host->ops->get_cd(host)
+                    mmc_gpio_get_cd -> -ENOSYS (ctx->cd_gpio not set)
+  mmc_gpiod_request_cd
+    ctx->cd_gpio = desc
 
-CPU: 1 PID: 3524 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
- fixed_mdio_bus_init+0x283/0x1000 [fixed_phy]
- ? 0xffffffffc0e40000
- ? 0xffffffffc0e40000
- ? 0xffffffffc0e40000
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f6215c19c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
-RBP: 00007f6215c19c70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6215c1a6bc
-R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
+To fix this issue, call mmc_detect_change after the card-detect GPIO/IRQ
+is registered.
 
-Allocated by task 3524:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- mdiobus_alloc_size+0x54/0x1b0 drivers/net/phy/mdio_bus.c:143
- fixed_mdio_bus_init+0x163/0x1000 [fixed_phy]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 3524:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
- slab_free_hook mm/slub.c:1409 [inline]
- slab_free_freelist_hook mm/slub.c:1436 [inline]
- slab_free mm/slub.c:2986 [inline]
- kfree+0xe1/0x270 mm/slub.c:3938
- device_release+0x78/0x200 drivers/base/core.c:919
- kobject_cleanup lib/kobject.c:662 [inline]
- kobject_release lib/kobject.c:691 [inline]
- kref_put include/linux/kref.h:67 [inline]
- kobject_put+0x146/0x240 lib/kobject.c:708
- put_device+0x1c/0x30 drivers/base/core.c:2060
- __mdiobus_register+0x483/0x560 drivers/net/phy/mdio_bus.c:382
- fixed_mdio_bus_init+0x26b/0x1000 [fixed_phy]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881dc824c80
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 248 bytes inside of
- 2048-byte region [ffff8881dc824c80, ffff8881dc825480)
-The buggy address belongs to the page:
-page:ffffea0007720800 count:1 mapcount:0 mapping:ffff8881f6c02800 index:0x0 compound_mapcount: 0
-flags: 0x2fffc0000010200(slab|head)
-raw: 02fffc0000010200 0000000000000000 0000000500000001 ffff8881f6c02800
-raw: 0000000000000000 00000000800f000f 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881dc824c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8881dc824c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8881dc824d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                                ^
- ffff8881dc824d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881dc824e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: 0c692d07842a ("drivers/net/phy/mdio_bus.c: call put_device on device_register() failure")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/phy/mdio_bus.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/mmc/host/mmc_spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -261,7 +261,6 @@ int mdiobus_register(struct mii_bus *bus
- 	err = device_register(&bus->dev);
- 	if (err) {
- 		pr_err("mii_bus %s failed to register\n", bus->id);
--		put_device(&bus->dev);
- 		return -EINVAL;
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -1438,6 +1438,7 @@ static int mmc_spi_probe(struct spi_devi
+ 			goto fail_add_host;
+ 		mmc_gpiod_request_cd_irq(mmc);
  	}
++	mmc_detect_change(mmc, 0);
  
+ 	if (host->pdata && host->pdata->flags & MMC_SPI_USE_RO_GPIO) {
+ 		has_ro = true;
 
