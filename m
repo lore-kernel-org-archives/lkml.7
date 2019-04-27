@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477DFC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9DFC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8C62064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F2A20679
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329955;
-	bh=rhGKgLoAIN+SA/unJSFJ4JRNXXqT4RR7W2XucRBKwj8=;
+	s=default; t=1556329971;
+	bh=92uIhca7GyB1gsgvc9RN3WLo8M/n3LZi80oUxUqUW44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sQWgJFpgEZZWN69+ZkqoVRpApDEN5Odi1M6602tRGEofxkE+o1ZNfn/nTxHrsXwnM
-	 IyuuJtM7YYsLyxDueoNuh/BBDqkACH65QnBDULfh+ZB/vzH5d+GrZj0SAHM8OwhRMZ
-	 oE3PgNq/YwdRI5tfqqplKBUqVJPEc25BUwnZXB04=
+	b=v4YIRC83rYtFDJ8MERtXy7iRmn/k369EtnRUQSSUYq+7VO7Ypg34tXlOVuiUsjDWq
+	 fU9UrIUKHHcBxhNKdL3G4une9fHC5k4rkNwv7gIapuNjR1YEghAK3PSk2Xi72f9iuL
+	 89btkWRxLykuuQQqQJ0eIcIsoZCHxnMwji/lazGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfD0Bwe (ORCPT
+        id S1728344AbfD0Bwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44194 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbfD0Bke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:40:34 -0400
+        id S1727967AbfD0BkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:40:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28FCC214AE;
-        Sat, 27 Apr 2019 01:40:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCFC220B7C;
+        Sat, 27 Apr 2019 01:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329234;
-        bh=rhGKgLoAIN+SA/unJSFJ4JRNXXqT4RR7W2XucRBKwj8=;
+        s=default; t=1556329225;
+        bh=92uIhca7GyB1gsgvc9RN3WLo8M/n3LZi80oUxUqUW44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZ73YsYPdw/lCjb4oByq3QmBEJ+StKYS88R0ZiJTZhV8tgzee2ZpiFWGNlXYwzOKJ
-         m+nan0q1Eyzkm+bsBo68EEkRhCPG/g/gkHx06r1PjVADjyj9ZWMXaJsnYO2KoO2x+G
-         1xmv08VjiebdGTxR7cVrhXSmXnMRvVNX5TlH8lb0=
+        b=EnLBp2W4kIXAi8NjGJEM9sYcTSv1EP+qoYh4REyPF55oXHfiwjtguytuXK++1QPMN
+         fkfZjCgVLK6Syg143gv9/ZUuRvZ6qt/4VISe+mcs9VMyvQt4hnvSWtzw5wYeWrGZIu
+         a/2cmmID6BGpG/e17pHDCTjjI6HDtVQVF5yAwXjY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?David=20M=C3=BCller?= <dave.mueller@gmx.ch>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 71/79] platform/x86: pmc_atom: Drop __initconst on dmi table
-Date:   Fri, 26 Apr 2019 21:38:30 -0400
-Message-Id: <20190427013838.6596-71-sashal@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        James Smart <james.smart@broadcom.com>,
+        linux-nvme@lists.infradead.org, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 66/79] blk-mq: introduce blk_mq_complete_request_sync()
+Date:   Fri, 26 Apr 2019 21:38:25 -0400
+Message-Id: <20190427013838.6596-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,37 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit b995dcca7cf12f208cfd95fd9d5768dca7cccec7 ]
+[ Upstream commit 1b8f21b74c3c9c82fce5a751d7aefb7cc0b8d33d ]
 
-It's used by probe and that isn't an init function. Drop this so that we
-don't get a section mismatch.
+In NVMe's error handler, follows the typical steps of tearing down
+hardware for recovering controller:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: David Müller <dave.mueller@gmx.ch>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Fixes: 7c2e07130090 ("clk: x86: Add system specific quirk to mark clocks as critical")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+1) stop blk_mq hw queues
+2) stop the real hw queues
+3) cancel in-flight requests via
+	blk_mq_tagset_busy_iter(tags, cancel_request, ...)
+cancel_request():
+	mark the request as abort
+	blk_mq_complete_request(req);
+4) destroy real hw queues
+
+However, there may be race between #3 and #4, because blk_mq_complete_request()
+may run q->mq_ops->complete(rq) remotelly and asynchronously, and
+->complete(rq) may be run after #4.
+
+This patch introduces blk_mq_complete_request_sync() for fixing the
+above race.
+
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: linux-nvme@lists.infradead.org
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/pmc_atom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/blk-mq.c         | 7 +++++++
+ include/linux/blk-mq.h | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index eaec2d306481..c7039f52ad51 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -396,7 +396,7 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
-  * Some systems need one or more of their pmc_plt_clks to be
-  * marked as critical.
-  */
--static const struct dmi_system_id critclk_systems[] __initconst = {
-+static const struct dmi_system_id critclk_systems[] = {
- 	{
- 		.ident = "MPL CEC1x",
- 		.matches = {
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 16f9675c57e6..ce462c313806 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -657,6 +657,13 @@ bool blk_mq_complete_request(struct request *rq)
+ }
+ EXPORT_SYMBOL(blk_mq_complete_request);
+ 
++void blk_mq_complete_request_sync(struct request *rq)
++{
++	WRITE_ONCE(rq->state, MQ_RQ_COMPLETE);
++	rq->q->mq_ops->complete(rq);
++}
++EXPORT_SYMBOL_GPL(blk_mq_complete_request_sync);
++
+ int blk_mq_request_started(struct request *rq)
+ {
+ 	return blk_mq_rq_state(rq) != MQ_RQ_IDLE;
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 0e030f5f76b6..7e092bdac27f 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -306,6 +306,7 @@ void blk_mq_add_to_requeue_list(struct request *rq, bool at_head,
+ void blk_mq_kick_requeue_list(struct request_queue *q);
+ void blk_mq_delay_kick_requeue_list(struct request_queue *q, unsigned long msecs);
+ bool blk_mq_complete_request(struct request *rq);
++void blk_mq_complete_request_sync(struct request *rq);
+ bool blk_mq_bio_list_merge(struct request_queue *q, struct list_head *list,
+ 			   struct bio *bio);
+ bool blk_mq_queue_stopped(struct request_queue *q);
 -- 
 2.19.1
 
