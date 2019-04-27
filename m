@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E28BC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6BDC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA28214AE
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53D3C2087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfD0Mxf (ORCPT
+        id S1727463AbfD0Mxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:53:35 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:41939 "EHLO
+        Sat, 27 Apr 2019 08:53:55 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:54021 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbfD0Mx2 (ORCPT
+        with ESMTP id S1727375AbfD0Mxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:53:28 -0400
+        Sat, 27 Apr 2019 08:53:35 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M2wCi-1hLTog0PAy-003R4p; Sat, 27 Apr 2019 14:53:02 +0200
+ 1M4bA6-1hJp7z0BBm-001m7B; Sat, 27 Apr 2019 14:53:09 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,72 +34,86 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 33/41] drivers: tty: serial: zs: use dev_err() instead of printk()
-Date:   Sat, 27 Apr 2019 14:52:14 +0200
-Message-Id: <1556369542-13247-34-git-send-email-info@metux.net>
+Subject: [PATCH 41/41] drivers: tty: serial: lpc32xx_hs: fill mapsize and use it
+Date:   Sat, 27 Apr 2019 14:52:22 +0200
+Message-Id: <1556369542-13247-42-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:QF40RLIzjg39yF+kkJLwWE6eyJO2lDQl6Yzy88yH5771K+U+/wt
- 1Wjl3D+kIur6TBPIOh4jOyMYXzSox/0XX1Hcf4zFuPQmKc9TKSN1fBoJRYlf+0M/kOR3PC/
- l9Y251gM1AKpBxtXImahYkduMkU7yDZeVYsF1N1b7uZfo2UV2TlEEwBb0bCY34hAZbZneXk
- NbA8aA4/MktrW0coiKTyQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Eh3DZPiCkGY=:tjxD2QwfgapatdwHmJnkdr
- PSdGT9lcKoxn0vZ7Rp//x/uyFYBtQLUi29IcunkocMEKUs5YJFdHogbVsFAVMVJLZO8ZzntWV
- O7kttBq5DAGhsobsWXs4e23+7HwMITcEiszncVa9/3sUVc1cH0grthAJlNpQumTFiLTwCEiiy
- +AFXv1re1PUwC5xEmLzo9ui0isgMgVA1xQUwsRbOaPLMm9NhDZ+d0FJwbTo3KHNsiTsZFuWxL
- 9JQM7Z22RLBAG9wa3ASrrfM5zKmHkSEOPc2X/N82bli24aD3TTUO9a+J+ojmDWRplKpAIUyZT
- fXId/zFNr7AEGUcX7VezsKhscHBTO758/ZyMrcgNAMWDnhT/70u6TQvUuOifW8D/Y1Hghh6cB
- 4QO6ZhurmdxyZ0oOhuThszQgC1ht87ExyjwAYJVydH9z6gq+SRyceTbbE4E3B8S9L8NXdBQ/X
- zKuAsUqVCpO6cv0AGCVD4beEqaRkWxfry7+cFMzTYdlW9kxaiakkPg3peM6cGo/Y3aOswdDEM
- yOFjkyXAkmIJS/Cpq3mFMRySCepHNYPls7KvZMbIrJ54ISXVvnt2+YnC5ifFf5IWfXTwyd4en
- JgZaWxnJ+lu2qoKH06DlO+YuUroKlBo/Cj+M98Q3I29qfcokFkZmGZ4OCqvk9mLjVWnIDVpkp
- NK+vpcb7NDaHyHNl5rybbr37KyjM3iS4zuldMiVnuspOHZWY+urLdryZZCNfYizdguQmQcDYI
- VGv8B4cGjKb5Hp8pFpGXlDXptI7yMcxq50+aGQ==
+X-Provags-ID: V03:K1:NfvV5UR6Ok9kQv6ROMSW720NbVRt8zJA2j6SiVCta9zO0Jw5F68
+ oDYmpeAiqIZsk1sS86lqn4+pdFZWevIEnEZ69zvk7cMJbxGvaG9S0AMXx6E3vAMZVzd7pPE
+ dnjPcyK+WGDDc90Ms7ezLEUDc+ruGvc0EkFIZ+8daJJAv3bsvnnSUMXjXwFBnPEgLp6qoWu
+ RKq97jOfEVGzQSAvfA3Lw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kstkQConv8Y=:FRqaAKBl04WQWWJ/xhmytR
+ ow68932EyMejNE2ydtWTf0Nk48WsWDBX+U00qXQiCeX9RLfuAjZhJilURAne8iEvlgV02R+n0
+ A2GYXlH6RAocA+3/XNEogage/GN6dO4HAMa6C/jwf7JzbK5UWacs4I86YK6BjId9I8QaBDRgB
+ kf36Yrz9heQ6rpkUEPNwg7vs0J835p/+DW0ua1TLJJlSFnCt+nM1Z7WstcwbivmVU+gVR/Qqx
+ LJN2HlNYlbXhHrWMmA6exILj0ML6d2lYydBx/ivglWsiafz+dSezxWkhz08L8VIqiIK6dShE3
+ srcNtj9cCMeeXy/WuKz1SoACQyyWLzFX5vJ7HF9AD7gMD8mGgq8+HhaWZ4LUAaR/dSriR/R3e
+ B3lrMjPoO3yEqTwjmVNFPEHpLcxgHp3k0K3Z94bAYryqu/D8Q3Kol+4OglHPh7K6XXE7/78xA
+ oUHoCvvSmoukL8/pOHIkrZr9VoXnBeU4ZV3EjcqSp85aW5Q6jRGfhhvHsog/vo9c0GQByGKDm
+ IhDlqb2OO2SeLSFm9kDdRiPNxLsJCsxNdbJujreUgg5JbBJjQnJ034mhihaiaT1Aiki1mOiMB
+ OI/mo7wAX4gLt7UHYKkjXmMizG1VASLtLoiFffgH9E2VkMfVV4CHN+LQBdpOkpoUf5rl7srXx
+ Kiaqeii/5ydXPnHLqiI2CQtzy/PupKJZ0jWzWsaeQ4xVmH8rQepFc6frR/i5b/8B5xfPqj2Q5
+ /wVryOKfpTVqR4EsCEJA4sFCJJjcxbeUyiEL7g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using dev_err() instead of printk() for more consistent output.
-(prints device name, etc).
+Fill the struct uart_port->mapsize field and use it, insteaf of
+hardcoded values in many places. This makes the code layout a bit
+more consistent and easily allows using generic helpers for the
+io memory handling.
+
+Candidates for such helpers could be eg. the request+ioremap and
+iounmap+release combinations.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/zs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/lpc32xx_hs.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/zs.c b/drivers/tty/serial/zs.c
-index b03d3e4..adbfe79 100644
---- a/drivers/tty/serial/zs.c
-+++ b/drivers/tty/serial/zs.c
-@@ -767,7 +767,7 @@ static int zs_startup(struct uart_port *uport)
- 				  IRQF_SHARED, "scc", scc);
- 		if (ret) {
- 			atomic_add(-1, &scc->irq_guard);
--			printk(KERN_ERR "zs: can't get irq %d\n",
-+			dev_err(uport->dev, "zs: can't get irq %d\n",
- 			       zport->port.irq);
- 			return ret;
+diff --git a/drivers/tty/serial/lpc32xx_hs.c b/drivers/tty/serial/lpc32xx_hs.c
+index f4e27d0..d1f09aa 100644
+--- a/drivers/tty/serial/lpc32xx_hs.c
++++ b/drivers/tty/serial/lpc32xx_hs.c
+@@ -579,7 +579,7 @@ static void serial_lpc32xx_release_port(struct uart_port *port)
+ 			port->membase = NULL;
  		}
-@@ -995,7 +995,7 @@ static int zs_map_port(struct uart_port *uport)
- 		uport->membase = ioremap_nocache(uport->mapbase,
- 						 ZS_CHAN_IO_SIZE);
- 	if (!uport->membase) {
--		printk(KERN_ERR "zs: Cannot map MMIO\n");
-+		dev_err(port->dev, "zs: Cannot map MMIO\n");
- 		return -ENOMEM;
- 	}
- 	return 0;
-@@ -1006,7 +1006,7 @@ static int zs_request_port(struct uart_port *uport)
- 	int ret;
  
- 	if (!request_mem_region(uport->mapbase, ZS_CHAN_IO_SIZE, "scc")) {
--		printk(KERN_ERR "zs: Unable to reserve MMIO resource\n");
-+		dev_err(uport->dev, "zs: Unable to reserve MMIO resource\n");
- 		return -EBUSY;
+-		release_mem_region(port->mapbase, SZ_4K);
++		release_mem_region(port->mapbase, port->mapsize);
  	}
- 	ret = zs_map_port(uport);
+ }
+ 
+@@ -590,12 +590,15 @@ static int serial_lpc32xx_request_port(struct uart_port *port)
+ 	if ((port->iotype == UPIO_MEM32) && (port->mapbase)) {
+ 		ret = 0;
+ 
+-		if (!request_mem_region(port->mapbase, SZ_4K, MODNAME))
++		if (!request_mem_region(port->mapbase,
++					port->mapsize, MODNAME))
+ 			ret = -EBUSY;
+ 		else if (port->flags & UPF_IOREMAP) {
+-			port->membase = ioremap(port->mapbase, SZ_4K);
++			port->membase = ioremap(port->mapbase,
++						port->mapsize);
+ 			if (!port->membase) {
+-				release_mem_region(port->mapbase, SZ_4K);
++				release_mem_region(port->mapbase,
++						   port->mapsize);
+ 				ret = -ENOMEM;
+ 			}
+ 		}
+@@ -684,6 +687,7 @@ static int serial_hs_lpc32xx_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 	p->port.mapbase = res->start;
++	p->port.mapsize = SZ_4K;
+ 	p->port.membase = NULL;
+ 
+ 	ret = platform_get_irq(pdev, 0);
 -- 
 1.9.1
 
