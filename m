@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5845C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1FAC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 983D5206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29674206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfD0PTJ (ORCPT
+        id S1727930AbfD0PTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:19:09 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34168 "EHLO
+        Sat, 27 Apr 2019 11:19:05 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34196 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727668AbfD0PPi (ORCPT
+        by vger.kernel.org with ESMTP id S1727671AbfD0PPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:38 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP38-0000zA-Mi; Sat, 27 Apr 2019 16:15:34 +0100
+        id 1hKP38-00014L-K4; Sat, 27 Apr 2019 16:15:34 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2j-0004Sl-8Z; Sat, 27 Apr 2019 16:15:09 +0100
+        id 1hKP2j-0004SS-0m; Sat, 27 Apr 2019 16:15:09 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Suravee Suthikulpanit" <suravee.suthikulpanit@amd.com>,
-        "Joerg Roedel" <joro@8bytes.org>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
-        "Joerg Roedel" <jroedel@suse.de>,
-        "Brijesh Singh" <brijesh.singh@amd.com>
+        "Kyungtae Kim" <kt0755@gmail.com>,
+        "Oliver Hartkopp" <socketcan@hartkopp.net>,
+        "Marc Kleine-Budde" <mkl@pengutronix.de>,
+        "Andre Naujoks" <nautsch2@gmail.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.113640585@decadent.org.uk>
+Message-ID: <lsq.1556377989.792667218@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 064/202] iommu/amd: Fix IOMMU page flush when detach
- device from a domain
+Subject: [PATCH 3.16 060/202] can: bcm: check timer values before ktime
+ conversion
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,75 +58,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: Oliver Hartkopp <socketcan@hartkopp.net>
 
-commit 9825bd94e3a2baae1f4874767ae3a7d4c049720e upstream.
+commit 93171ba6f1deffd82f381d36cb13177872d023f6 upstream.
 
-When a VM is terminated, the VFIO driver detaches all pass-through
-devices from VFIO domain by clearing domain id and page table root
-pointer from each device table entry (DTE), and then invalidates
-the DTE. Then, the VFIO driver unmap pages and invalidate IOMMU pages.
+Kyungtae Kim detected a potential integer overflow in bcm_[rx|tx]_setup()
+when the conversion into ktime multiplies the given value with NSEC_PER_USEC
+(1000).
 
-Currently, the IOMMU driver keeps track of which IOMMU and how many
-devices are attached to the domain. When invalidate IOMMU pages,
-the driver checks if the IOMMU is still attached to the domain before
-issuing the invalidate page command.
+Reference: https://marc.info/?l=linux-can&m=154732118819828&w=2
 
-However, since VFIO has already detached all devices from the domain,
-the subsequent INVALIDATE_IOMMU_PAGES commands are being skipped as
-there is no IOMMU attached to the domain. This results in data
-corruption and could cause the PCI device to end up in indeterministic
-state.
+Add a check for the given tv_usec, so that the value stays below one second.
+Additionally limit the tv_sec value to a reasonable value for CAN related
+use-cases of 400 days and ensure all values to be positive.
 
-Fix this by invalidate IOMMU pages when detach a device, and
-before decrementing the per-domain device reference counts.
-
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Suggested-by: Joerg Roedel <joro@8bytes.org>
-Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Fixes: 6de8ad9b9ee0 ('x86/amd-iommu: Make iommu_flush_pages aware of multiple IOMMUs')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Tested-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Tested-by: Kyungtae Kim <kt0755@gmail.com>
+Acked-by: Andre Naujoks <nautsch2@gmail.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/iommu/amd_iommu.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ net/can/bcm.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2185,14 +2185,11 @@ static void do_attach(struct iommu_dev_d
+--- a/net/can/bcm.c
++++ b/net/can/bcm.c
+@@ -67,6 +67,9 @@
+  */
+ #define MAX_NFRAMES 256
  
- static void do_detach(struct iommu_dev_data *dev_data)
- {
-+	struct protection_domain *domain = dev_data->domain;
- 	struct amd_iommu *iommu;
- 
- 	iommu = amd_iommu_rlookup_table[dev_data->devid];
- 
--	/* decrease reference counters */
--	dev_data->domain->dev_iommu[iommu->index] -= 1;
--	dev_data->domain->dev_cnt                 -= 1;
--
- 	/* Update data structures */
- 	dev_data->domain = NULL;
- 	list_del(&dev_data->list);
-@@ -2200,6 +2197,16 @@ static void do_detach(struct iommu_dev_d
- 
- 	/* Flush the DTE entry */
- 	device_flush_dte(dev_data);
++/* limit timers to 400 days for sending/timeouts */
++#define BCM_TIMER_SEC_MAX (400 * 24 * 60 * 60)
 +
-+	/* Flush IOTLB */
-+	domain_flush_tlb_pde(domain);
-+
-+	/* Wait for the flushes to finish */
-+	domain_flush_complete(domain);
-+
-+	/* decrease reference counters - needs to happen after the flushes */
-+	domain->dev_iommu[iommu->index] -= 1;
-+	domain->dev_cnt                 -= 1;
+ /* use of last_frames[index].can_dlc */
+ #define RX_RECV    0x40 /* received data for this element */
+ #define RX_THR     0x80 /* element not been sent due to throttle feature */
+@@ -133,6 +136,22 @@ static inline struct bcm_sock *bcm_sk(co
+ 	return (struct bcm_sock *)sk;
  }
  
- /*
++/* check limitations for timeval provided by user */
++static bool bcm_is_invalid_tv(struct bcm_msg_head *msg_head)
++{
++	if ((msg_head->ival1.tv_sec < 0) ||
++	    (msg_head->ival1.tv_sec > BCM_TIMER_SEC_MAX) ||
++	    (msg_head->ival1.tv_usec < 0) ||
++	    (msg_head->ival1.tv_usec >= USEC_PER_SEC) ||
++	    (msg_head->ival2.tv_sec < 0) ||
++	    (msg_head->ival2.tv_sec > BCM_TIMER_SEC_MAX) ||
++	    (msg_head->ival2.tv_usec < 0) ||
++	    (msg_head->ival2.tv_usec >= USEC_PER_SEC))
++		return true;
++
++	return false;
++}
++
+ #define CFSIZ sizeof(struct can_frame)
+ #define OPSIZ sizeof(struct bcm_op)
+ #define MHSIZ sizeof(struct bcm_msg_head)
+@@ -851,6 +870,10 @@ static int bcm_tx_setup(struct bcm_msg_h
+ 	if (msg_head->nframes < 1 || msg_head->nframes > MAX_NFRAMES)
+ 		return -EINVAL;
+ 
++	/* check timeval limitations */
++	if ((msg_head->flags & SETTIMER) && bcm_is_invalid_tv(msg_head))
++		return -EINVAL;
++
+ 	/* check the given can_id */
+ 	op = bcm_find_op(&bo->tx_ops, msg_head->can_id, ifindex);
+ 
+@@ -1018,6 +1041,10 @@ static int bcm_rx_setup(struct bcm_msg_h
+ 	     (!(msg_head->can_id & CAN_RTR_FLAG))))
+ 		return -EINVAL;
+ 
++	/* check timeval limitations */
++	if ((msg_head->flags & SETTIMER) && bcm_is_invalid_tv(msg_head))
++		return -EINVAL;
++
+ 	/* check the given can_id */
+ 	op = bcm_find_op(&bo->rx_ops, msg_head->can_id, ifindex);
+ 	if (op) {
 
