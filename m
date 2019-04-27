@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56613C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F8FC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2402A206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9C1206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfD0P1m (ORCPT
+        id S1728410AbfD0P1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:27:42 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33134 "EHLO
+        Sat, 27 Apr 2019 11:27:46 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33160 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727366AbfD0PPW (ORCPT
+        by vger.kernel.org with ESMTP id S1727373AbfD0PPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:22 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2t-0000zQ-BD; Sat, 27 Apr 2019 16:15:19 +0100
+        id 1hKP2t-0000zP-9m; Sat, 27 Apr 2019 16:15:19 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2n-0004e5-TJ; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2o-0004eZ-3Q; Sat, 27 Apr 2019 16:15:14 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,21 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mauro Carvalho Chehab" <m.chehab@samsung.com>,
-        "Shuah Khan" <shuah.kh@samsung.com>,
-        "Antti Palosaari" <crope@iki.fi>
+        "Stephane Eranian" <eranian@google.com>,
+        "Jiri Olsa" <jolsa@redhat.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Vince Weaver" <vincent.weaver@maine.edu>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
+        "Jann Horn" <jannh@google.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        "Ingo Molnar" <mingo@kernel.org>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.101285957@decadent.org.uk>
+Message-ID: <lsq.1556377989.451943482@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 185/202] [media] media: em28xx-dvb - fix
- em28xx_dvb_resume() to not unregister i2c and dvb
+Subject: [PATCH 3.16 191/202] perf/core: Fix perf_event_open() vs.
+ execve() race
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,54 +63,175 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Shuah Khan <shuah.kh@samsung.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 6eb5e3399e8f45aa191ad21c0556bece8ea559f2 upstream.
+commit 79c9ce57eb2d5f1497546a3946b4ae21b6fdc438 upstream.
 
-em28xx_dvb_resume() unregisters i2c tuner, i2c demod, and dvb.
-This erroneous cleanup results in i2c tuner, i2c demod, and dvb
-devices unregistered and removed during resume. This error is a
-result of merge conflict between two patches that went into 3.15.
+Jann reported that the ptrace_may_access() check in
+find_lively_task_by_vpid() is racy against exec().
 
-Signed-off-by: Shuah Khan <shuah.kh@samsung.com>
-Reviewed-by: Antti Palosaari <crope@iki.fi>
-Signed-off-by: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Specifically:
+
+  perf_event_open()		execve()
+
+  ptrace_may_access()
+				commit_creds()
+  ...				if (get_dumpable() != SUID_DUMP_USER)
+				  perf_event_exit_task();
+  perf_install_in_context()
+
+would result in installing a counter across the creds boundary.
+
+Fix this by wrapping lots of perf_event_open() in cred_guard_mutex.
+This should be fine as perf_event_exit_task() is already called with
+cred_guard_mutex held, so all perf locks already nest inside it.
+
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[bwh: Backported to 3.16:
+ - Update another failure path in perf_event_open()
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/usb/em28xx/em28xx-dvb.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ kernel/events/core.c | 52 ++++++++++++++++++++++++++++++--------------
+ 1 file changed, 36 insertions(+), 16 deletions(-)
 
---- a/drivers/media/usb/em28xx/em28xx-dvb.c
-+++ b/drivers/media/usb/em28xx/em28xx-dvb.c
-@@ -1712,7 +1712,6 @@ static int em28xx_dvb_resume(struct em28
- 	em28xx_info("Resuming DVB extension\n");
- 	if (dev->dvb) {
- 		struct em28xx_dvb *dvb = dev->dvb;
--		struct i2c_client *client = dvb->i2c_client_tuner;
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -936,6 +936,7 @@ static void put_ctx(struct perf_event_co
+  * function.
+  *
+  * Lock order:
++ *    cred_guard_mutex
+  *	task_struct::perf_event_mutex
+  *	  perf_event_context::mutex
+  *	    perf_event_context::lock
+@@ -3231,7 +3232,6 @@ static struct task_struct *
+ find_lively_task_by_vpid(pid_t vpid)
+ {
+ 	struct task_struct *task;
+-	int err;
  
- 		if (dvb->fe[0]) {
- 			ret = dvb_frontend_resume(dvb->fe[0]);
-@@ -1723,22 +1722,6 @@ static int em28xx_dvb_resume(struct em28
- 			ret = dvb_frontend_resume(dvb->fe[1]);
- 			em28xx_info("fe1 resume %d\n", ret);
- 		}
--		/* remove I2C tuner */
--		if (client) {
--			module_put(client->dev.driver->owner);
--			i2c_unregister_device(client);
--		}
+ 	rcu_read_lock();
+ 	if (!vpid)
+@@ -3245,16 +3245,7 @@ find_lively_task_by_vpid(pid_t vpid)
+ 	if (!task)
+ 		return ERR_PTR(-ESRCH);
+ 
+-	/* Reuse ptrace permission checks for now. */
+-	err = -EACCES;
+-	if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
+-		goto errout;
 -
--		/* remove I2C demod */
--		client = dvb->i2c_client_demod;
--		if (client) {
--			module_put(client->dev.driver->owner);
--			i2c_unregister_device(client);
--		}
+ 	return task;
+-errout:
+-	put_task_struct(task);
+-	return ERR_PTR(err);
 -
--		em28xx_unregister_dvb(dvb);
--		kfree(dvb);
--		dev->dvb = NULL;
+ }
+ 
+ /*
+@@ -7491,18 +7482,36 @@ SYSCALL_DEFINE5(perf_event_open,
+ 
+ 	get_online_cpus();
+ 
++	if (task) {
++		err = mutex_lock_interruptible(&task->signal->cred_guard_mutex);
++		if (err)
++			goto err_cpus;
++
++		/*
++		 * Reuse ptrace permission checks for now.
++		 *
++		 * We must hold cred_guard_mutex across this and any potential
++		 * perf_install_in_context() call for this new event to
++		 * serialize against exec() altering our credentials (and the
++		 * perf_event_exit_task() that could imply).
++		 */
++		err = -EACCES;
++		if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
++			goto err_cred;
++	}
++
+ 	event = perf_event_alloc(&attr, cpu, task, group_leader, NULL,
+ 				 NULL, NULL);
+ 	if (IS_ERR(event)) {
+ 		err = PTR_ERR(event);
+-		goto err_cpus;
++		goto err_cred;
  	}
  
- 	return 0;
+ 	if (flags & PERF_FLAG_PID_CGROUP) {
+ 		err = perf_cgroup_connect(pid, event, &attr, group_leader);
+ 		if (err) {
+ 			__free_event(event);
+-			goto err_cpus;
++			goto err_cred;
+ 		}
+ 	}
+ 
+@@ -7552,11 +7561,6 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		goto err_alloc;
+ 	}
+ 
+-	if (task) {
+-		put_task_struct(task);
+-		task = NULL;
+-	}
+-
+ 	/*
+ 	 * Look up the group leader (we will attach this event to it):
+ 	 */
+@@ -7658,6 +7662,11 @@ SYSCALL_DEFINE5(perf_event_open,
+ 
+ 	WARN_ON_ONCE(ctx->parent_ctx);
+ 
++	/*
++	 * This is the point on no return; we cannot fail hereafter. This is
++	 * where we start modifying current state.
++	 */
++
+ 	if (move_group) {
+ 		/*
+ 		 * Wait for everybody to stop referencing the events through
+@@ -7683,6 +7692,11 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	}
+ 	mutex_unlock(&ctx->mutex);
+ 
++	if (task) {
++		mutex_unlock(&task->signal->cred_guard_mutex);
++		put_task_struct(task);
++	}
++
+ 	put_online_cpus();
+ 
+ 	event->owner = current;
+@@ -7722,6 +7736,9 @@ err_alloc:
+ 	 */
+ 	if (!event_file)
+ 		free_event(event);
++err_cred:
++	if (task)
++		mutex_unlock(&task->signal->cred_guard_mutex);
+ err_cpus:
+ 	put_online_cpus();
+ err_task:
+@@ -7956,6 +7973,9 @@ static void perf_event_exit_task_context
+ 
+ /*
+  * When a child task exits, feed back event values to parent events.
++ *
++ * Can be called with cred_guard_mutex held when called from
++ * install_exec_creds().
+  */
+ void perf_event_exit_task(struct task_struct *child)
+ {
 
