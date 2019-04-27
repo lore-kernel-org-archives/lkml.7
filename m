@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E322EC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C160C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6B6206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB57206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfD0P1O (ORCPT
+        id S1728139AbfD0P1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:27:14 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33212 "EHLO
+        Sat, 27 Apr 2019 11:27:13 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33286 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727394AbfD0PPY (ORCPT
+        by vger.kernel.org with ESMTP id S1727407AbfD0PPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:24 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2v-00014C-54; Sat, 27 Apr 2019 16:15:21 +0100
+        id 1hKP2v-0000zM-LR; Sat, 27 Apr 2019 16:15:21 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2n-0004e0-SS; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2n-0004dW-IT; Sat, 27 Apr 2019 16:15:13 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Nagarathnam Muthusamy" <nagarathnam.muthusamy@oracle.com>,
-        "kernel test robot" <fengguang.wu@intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
+        "David S. Miller" <davem@davemloft.net>,
+        "Andrew Lunn" <andrew@lunn.ch>,
+        "Rajasingh Thavamani" <T.Rajasingh@landisgyr.com>,
+        "Alexander Onnasch" <alexander.onnasch@landisgyr.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.969394570@decadent.org.uk>
+Message-ID: <lsq.1556377989.399158955@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 184/202] ipc/shm: Fix pid freeing.
+Subject: [PATCH 3.16 178/202] net: phy: Micrel KSZ8061: link failure after
+ cable connect
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,74 +58,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Rajasingh Thavamani <T.Rajasingh@landisgyr.com>
 
-commit 2236d4d39035b9839944603ec4b65ce71180a9ea upstream.
+commit 232ba3a51cc224b339c7114888ed7f0d4d95695e upstream.
 
-The 0day kernel test build report reported an oops:
->
->  IP: put_pid+0x22/0x5c
->  PGD 19efa067 P4D 19efa067 PUD 0
->  Oops: 0000 [#1]
->  CPU: 0 PID: 727 Comm: trinity Not tainted 4.16.0-rc2-00010-g98f929b #1
->  RIP: 0010:put_pid+0x22/0x5c
->  RSP: 0018:ffff986719f73e48 EFLAGS: 00010202
->  RAX: 00000006d765f710 RBX: ffff98671a4fa4d0 RCX: ffff986719f73d40
->  RDX: 000000006f6e6125 RSI: 0000000000000000 RDI: ffffffffa01e6d21
->  RBP: ffffffffa0955fe0 R08: 0000000000000020 R09: 0000000000000000
->  R10: 0000000000000078 R11: ffff986719f73e76 R12: 0000000000001000
->  R13: 00000000ffffffea R14: 0000000054000fb0 R15: 0000000000000000
->  FS:  00000000028c2880(0000) GS:ffffffffa06ad000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 0000000677846439 CR3: 0000000019fc1005 CR4: 00000000000606b0
->  Call Trace:
->   ? ipc_update_pid+0x36/0x3e
->   ? newseg+0x34c/0x3a6
->   ? ipcget+0x5d/0x528
->   ? entry_SYSCALL_64_after_hwframe+0x52/0xb7
->   ? SyS_shmget+0x5a/0x84
->   ? do_syscall_64+0x194/0x1b3
->   ? entry_SYSCALL_64_after_hwframe+0x42/0xb7
->  Code: ff 05 e7 20 9b 03 58 c9 c3 48 ff 05 85 21 9b 03 48 85 ff 74 4f 8b 47 04 8b 17 48 ff 05 7c 21 9b 03 48 83 c0 03 48 c1 e0 04 ff ca <48> 8b 44 07 08 74 1f 48 ff 05 6c 21 9b 03 ff 0f 0f 94 c2 48 ff
->  RIP: put_pid+0x22/0x5c RSP: ffff986719f73e48
->  CR2: 0000000677846439
->  ---[ end trace ab8c5cb4389d37c5 ]---
->  Kernel panic - not syncing: Fatal exception
+With Micrel KSZ8061 PHY, the link may occasionally not come up after
+Ethernet cable connect. The vendor's (Microchip, former Micrel) errata
+sheet 80000688A.pdf descripes the problem and possible workarounds in
+detail, see below.
+The batch implements workaround 1, which permanently fixes the issue.
 
-In newseg when changing shm_cprid and shm_lprid from pid_t to struct
-pid* I misread the kvmalloc as kvzalloc and thought shp was
-initialized to 0.  As that is not the case it is not safe to for the
-error handling to address shm_cprid and shm_lprid before they are
-initialized.
+DESCRIPTION
+Link-up may not occur properly when the Ethernet cable is initially
+connected. This issue occurs more commonly when the cable is connected
+slowly, but it may occur any time a cable is connected. This issue occurs
+in the auto-negotiation circuit, and will not occur if auto-negotiation
+is disabled (which requires that the two link partners be set to the
+same speed and duplex).
 
-Therefore move the cleanup of shm_cprid and shm_lprid from the no_file
-error cleanup path to the no_id error cleanup path.  Ensuring that an
-early error exit won't cause the oops above.
+END USER IMPLICATIONS
+When this issue occurs, link is not established. Subsequent cable
+plug/unplaug cycle will not correct the issue.
 
-Reported-by: kernel test robot <fengguang.wu@intel.com>
-Reviewed-by: Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
-[bwh: Backported to 3.16: adjust context]
+WORk AROUND
+There are four approaches to work around this issue:
+1. This issue can be prevented by setting bit 15 in MMD device address 1,
+   register 2, prior to connecting the cable or prior to setting the
+   Restart Auto-negotiation bit in register 0h. The MMD registers are
+   accessed via the indirect access registers Dh and Eh, or via the Micrel
+   EthUtil utility as shown here:
+   . if using the EthUtil utility (usually with a Micrel KSZ8061
+     Evaluation Board), type the following commands:
+     > address 1
+     > mmd 1
+     > iw 2 b61a
+   . Alternatively, write the following registers to write to the
+     indirect MMD register:
+     Write register Dh, data 0001h
+     Write register Eh, data 0002h
+     Write register Dh, data 4001h
+     Write register Eh, data B61Ah
+2. The issue can be avoided by disabling auto-negotiation in the KSZ8061,
+   either by the strapping option, or by clearing bit 12 in register 0h.
+   Care must be taken to ensure that the KSZ8061 and the link partner
+   will link with the same speed and duplex. Note that the KSZ8061
+   defaults to full-duplex when auto-negotiation is off, but other
+   devices may default to half-duplex in the event of failed
+   auto-negotiation.
+3. The issue can be avoided by connecting the cable prior to powering-up
+   or resetting the KSZ8061, and leaving it plugged in thereafter.
+4. If the above measures are not taken and the problem occurs, link can
+   be recovered by setting the Restart Auto-Negotiation bit in
+   register 0h, or by resetting or power cycling the device. Reset may
+   be either hardware reset or software reset (register 0h, bit 15).
+
+PLAN
+This errata will not be corrected in the future revision.
+
+Fixes: 7ab59dc15e2f ("drivers/net/phy/micrel_phy: Add support for new PHYs")
+Signed-off-by: Alexander Onnasch <alexander.onnasch@landisgyr.com>
+Signed-off-by: Rajasingh Thavamani <T.Rajasingh@landisgyr.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16:
+ - Include <linux/mdio.h> for register definition
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- ipc/shm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/ipc/shm.c
-+++ b/ipc/shm.c
-@@ -620,12 +620,12 @@ static int newseg(struct ipc_namespace *
- 	return error;
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -26,6 +26,7 @@
+ #include <linux/phy.h>
+ #include <linux/micrel_phy.h>
+ #include <linux/of.h>
++#include <linux/mdio.h>
  
- no_id:
-+	ipc_update_pid(&shp->shm_cprid, NULL);
-+	ipc_update_pid(&shp->shm_lprid, NULL);
- 	if (is_file_hugepages(file) && shp->mlock_user)
- 		user_shm_unlock(size, shp->mlock_user);
- 	fput(file);
- no_file:
--	ipc_update_pid(&shp->shm_cprid, NULL);
--	ipc_update_pid(&shp->shm_lprid, NULL);
- 	ipc_rcu_putref(shp, shm_rcu_free);
- 	return error;
+ /* Operation Mode Strap Override */
+ #define MII_KSZPHY_OMSO				0x16
+@@ -211,6 +212,17 @@ static int ks8051_config_init(struct phy
+ 	return rc < 0 ? rc : 0;
  }
+ 
++static int ksz8061_config_init(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = phy_write_mmd(phydev, MDIO_MMD_PMAPMD, MDIO_DEVID1, 0xB61A);
++	if (ret)
++		return ret;
++
++	return kszphy_config_init(phydev);
++}
++
+ static int ksz9021_load_values_from_of(struct phy_device *phydev,
+ 				       struct device_node *of_node, u16 reg,
+ 				       char *field1, char *field2,
+@@ -565,7 +577,7 @@ static struct phy_driver ksphy_driver[]
+ 	.phy_id_mask	= 0x00fffff0,
+ 	.features	= (PHY_BASIC_FEATURES | SUPPORTED_Pause),
+ 	.flags		= PHY_HAS_MAGICANEG | PHY_HAS_INTERRUPT,
+-	.config_init	= kszphy_config_init,
++	.config_init	= ksz8061_config_init,
+ 	.config_aneg	= genphy_config_aneg,
+ 	.read_status	= genphy_read_status,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
 
