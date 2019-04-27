@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18ECC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AACC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B08206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0255206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfD0Pbf (ORCPT
+        id S1728537AbfD0Pbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:31:35 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60880 "EHLO
+        Sat, 27 Apr 2019 11:31:33 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60870 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727028AbfD0PPO (ORCPT
+        by vger.kernel.org with ESMTP id S1726512AbfD0PPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:14 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2k-0000zK-DD; Sat, 27 Apr 2019 16:15:10 +0100
+        id 1hKP2m-00014C-Gc; Sat, 27 Apr 2019 16:15:12 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2h-0004Pe-NP; Sat, 27 Apr 2019 16:15:07 +0100
+        id 1hKP2m-0004Za-4K; Sat, 27 Apr 2019 16:15:12 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dongsheng Yang" <dongsheng.yang@easystack.cn>,
-        "Ilya Dryomov" <idryomov@gmail.com>
+        "David S. Miller" <davem@davemloft.net>,
+        "Jianlin Shi" <jishi@redhat.com>,
+        "Stefano Brivio" <sbrivio@redhat.com>,
+        "Oussama Ghorbel" <ghorbel@pivasoftware.com>,
+        "Hangbin Liu" <liuhangbin@gmail.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.929247906@decadent.org.uk>
+Message-ID: <lsq.1556377989.915778076@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 026/202] rbd: don't return 0 on unmap if
- RBD_DEV_FLAG_REMOVING is set
+Subject: [PATCH 3.16 139/202] sit: check if IPv6 enabled before calling
+ ip6_err_gen_icmpv6_unreach()
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,58 +59,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit 85f5a4d666fd9be73856ed16bb36c5af5b406b29 upstream.
+commit 173656accaf583698bac3f9e269884ba60d51ef4 upstream.
 
-There is a window between when RBD_DEV_FLAG_REMOVING is set and when
-the device is removed from rbd_dev_list.  During this window, we set
-"already" and return 0.
+If we disabled IPv6 from the kernel command line (ipv6.disable=1), we should
+not call ip6_err_gen_icmpv6_unreach(). This:
 
-Returning 0 from write(2) can confuse userspace tools because
-0 indicates that nothing was written.  In particular, "rbd unmap"
-will retry the write multiple times a second:
+  ip link add sit1 type sit local 192.0.2.1 remote 192.0.2.2 ttl 1
+  ip link set sit1 up
+  ip addr add 198.51.100.1/24 dev sit1
+  ping 198.51.100.2
 
-  10:28:05.463299 write(4, "0", 1)        = 0
-  10:28:05.463509 write(4, "0", 1)        = 0
-  10:28:05.463720 write(4, "0", 1)        = 0
-  10:28:05.463942 write(4, "0", 1)        = 0
-  10:28:05.464155 write(4, "0", 1)        = 0
+if IPv6 is disabled at boot time, will crash the kernel.
 
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Tested-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
+v2: there's no need to use in6_dev_get(), use __in6_dev_get() instead,
+    as we only need to check that idev exists and we are under
+    rcu_read_lock() (from netif_receive_skb_internal()).
+
+Reported-by: Jianlin Shi <jishi@redhat.com>
+Fixes: ca15a078bd90 ("sit: generate icmpv6 error when receiving icmpv4 error")
+Cc: Oussama Ghorbel <ghorbel@pivasoftware.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/block/rbd.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ net/ipv6/sit.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -5422,7 +5422,6 @@ static ssize_t do_rbd_remove(struct bus_
- 	struct list_head *tmp;
- 	int dev_id;
- 	unsigned long ul;
--	bool already = false;
- 	int ret;
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -576,7 +576,8 @@ static int ipip6_err(struct sk_buff *skb
+ 		goto out;
  
- 	ret = kstrtoul(buf, 10, &ul);
-@@ -5447,13 +5446,13 @@ static ssize_t do_rbd_remove(struct bus_
- 		spin_lock_irq(&rbd_dev->lock);
- 		if (rbd_dev->open_count)
- 			ret = -EBUSY;
--		else
--			already = test_and_set_bit(RBD_DEV_FLAG_REMOVING,
--							&rbd_dev->flags);
-+		else if (test_and_set_bit(RBD_DEV_FLAG_REMOVING,
-+					  &rbd_dev->flags))
-+			ret = -EINPROGRESS;
- 		spin_unlock_irq(&rbd_dev->lock);
- 	}
- 	spin_unlock(&rbd_dev_list_lock);
--	if (ret < 0 || already)
-+	if (ret)
- 		return ret;
+ 	err = 0;
+-	if (!ipip6_err_gen_icmpv6_unreach(skb))
++	if (__in6_dev_get(skb->dev) &&
++	    !ipip6_err_gen_icmpv6_unreach(skb))
+ 		goto out;
  
- 	rbd_dev_header_unwatch_sync(rbd_dev);
+ 	if (t->parms.iph.ttl == 0 && type == ICMP_TIME_EXCEEDED)
 
