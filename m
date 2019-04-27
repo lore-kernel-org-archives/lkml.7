@@ -2,91 +2,155 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AC6C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D260C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8580206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oEohW79p"
+	by mail.kernel.org (Postfix) with ESMTP id D7F23208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbfD0PVW (ORCPT
+        id S1728202AbfD0PVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:21:22 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46594 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727893AbfD0PVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:21:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=vASWoFYpeZXsfADUB9OGrtEdMcB7irROegImPbRXlKA=; b=oEohW79p3dAumS6lpU01nbQ0VW
-        wBekT3Va0NNANFWwUOt1L/C9s1CJM2AUPf1TvuPSnOanW0rw+Pgqb/3yNQgA39zVTdXnwX0YFkjU9
-        CxQzK02mUbAEjHYWPyGWybqJO8Y6KZ9tdY7kZWglVzkb07S3H1f2dw4N2fe4tMSMMNI4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hKP8X-00029R-RA; Sat, 27 Apr 2019 17:21:09 +0200
-Date:   Sat, 27 Apr 2019 17:21:09 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] net: phy: realtek: Add rtl8211e rx/tx delays
- config
-Message-ID: <20190427152109.GJ14432@lunn.ch>
-References: <20190426093010.9609-1-fancer.lancer@gmail.com>
- <20190426212112.5624-1-fancer.lancer@gmail.com>
- <20190426214050.GU4041@lunn.ch>
- <20190426234503.y6nm5hekyclmgftc@mobilestation>
- <fbf2ff24-a435-fe69-abcc-1f9326e1d61d@gmail.com>
- <20190427074400.is2hbij2k57f5daz@mobilestation>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Sat, 27 Apr 2019 11:21:37 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33854 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727569AbfD0PPc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 11:15:32 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hKP33-00014G-TV; Sat, 27 Apr 2019 16:15:30 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hKP2k-0004Wq-PT; Sat, 27 Apr 2019 16:15:10 +0100
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-In-Reply-To: <20190427074400.is2hbij2k57f5daz@mobilestation>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "=?UTF-8?Q?Pawe=C5=82=20?=Chmiel" <pawel.mikolaj.chmiel@gmail.com>,
+        "Jonathan Bakker" <xc-racer2@live.ca>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+Date:   Sat, 27 Apr 2019 16:13:09 +0100
+Message-ID: <lsq.1556377989.655136191@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 105/202] Input: bma150 - register input device after
+ setting private data
+In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > >> Hi Serge
-> > >>
-> > >> Next time please include a patch 0 containing a cover note explaining
-> > >> the who series.
-> > >>
-> > > 
-> > > Sure as long as the patchset gets to be much bigger than two small
-> > > patches with an obvious reason to be merged.
-> > 
-> > netdev likes to have a cover letter for patch count >= 1, probably
-> > something to be added to netdev-FAQ.rst.
-> > -- 
-> > Florian
-> 
-> Hello Florian
-> Really, even with count = 1? So just one patch with cover-letter? Doesn't it
-> seem redundant since at least a single patch can be thoroughly described in
-> it' commit message?
+3.16.66-rc1 review patch.  If anyone has any objections, please let me know.
 
-Hi Serge
+------------------
 
-David workflow is to put the patch set into a branch, and then merge
-the branch into his master, using the cover note as the merge commit
-message.
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-You occasionally see commit messages for count == 1, but not often.
-For > 1, if there is no cover note, somebody is likely to ask for one
-:-)
+commit 90cc55f067f6ca0e64e5e52883ece47d8af7b67b upstream.
 
-    Andrew
+Otherwise we introduce a race condition where userspace can request input
+before we're ready leading to null pointer dereference such as
+
+input: bma150 as /devices/platform/i2c-gpio-2/i2c-5/5-0038/input/input3
+Unable to handle kernel NULL pointer dereference at virtual address 00000018
+pgd = (ptrval)
+[00000018] *pgd=55dac831, *pte=00000000, *ppte=00000000
+Internal error: Oops: 17 [#1] PREEMPT ARM
+Modules linked in: bma150 input_polldev [last unloaded: bma150]
+CPU: 0 PID: 2870 Comm: accelerometer Not tainted 5.0.0-rc3-dirty #46
+Hardware name: Samsung S5PC110/S5PV210-based board
+PC is at input_event+0x8/0x60
+LR is at bma150_report_xyz+0x9c/0xe0 [bma150]
+pc : [<80450f70>]    lr : [<7f0a614c>]    psr: 800d0013
+sp : a4c1fd78  ip : 00000081  fp : 00020000
+r10: 00000000  r9 : a5e2944c  r8 : a7455000
+r7 : 00000016  r6 : 00000101  r5 : a7617940  r4 : 80909048
+r3 : fffffff2  r2 : 00000000  r1 : 00000003  r0 : 00000000
+Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+Control: 10c5387d  Table: 54e34019  DAC: 00000051
+Process accelerometer (pid: 2870, stack limit = 0x(ptrval))
+Stackck: (0xa4c1fd78 to 0xa4c20000)
+fd60:                                                       fffffff3 fc813f6c
+fd80: 40410581 d7530ce3 a5e2817c a7617f00 a5e29404 a5e2817c 00000000 7f008324
+fda0: a5e28000 8044f59c a5fdd9d0 a5e2945c a46a4a00 a5e29668 a7455000 80454f10
+fdc0: 80909048 a5e29668 a5fdd9d0 a46a4a00 806316d0 00000000 a46a4a00 801df5f0
+fde0: 00000000 d7530ce3 a4c1fec0 a46a4a00 00000000 a5fdd9d0 a46a4a08 801df53c
+fe00: 00000000 801d74bc a4c1fec0 00000000 a4c1ff70 00000000 a7038da8 00000000
+fe20: a46a4a00 801e91fc a411bbe0 801f2e88 00000004 00000000 80909048 00000041
+fe40: 00000000 00020000 00000000 dead4ead a6a88da0 00000000 ffffe000 806fcae8
+fe60: a4c1fec8 00000000 80909048 00000002 a5fdd9d0 a7660110 a411bab0 00000001
+fe80: dead4ead ffffffff ffffffff a4c1fe8c a4c1fe8c d7530ce3 20000013 80909048
+fea0: 80909048 a4c1ff70 00000001 fffff000 a4c1e000 00000005 00026038 801eabd8
+fec0: a7660110 a411bab0 b9394901 00000006 a696201b 76fb3000 00000000 a7039720
+fee0: a5fdd9d0 00000101 00000002 00000096 00000000 00000000 00000000 a4c1ff00
+ff00: a6b310f4 805cb174 a6b310f4 00000010 00000fe0 00000010 a4c1e000 d7530ce3
+ff20: 00000003 a5f41400 a5f41424 00000000 a6962000 00000000 00000003 00000002
+ff40: ffffff9c 000a0000 80909048 d7530ce3 a6962000 00000003 80909048 ffffff9c
+ff60: a6962000 801d890c 00000000 00000000 00020000 a7590000 00000004 00000100
+ff80: 00000001 d7530ce3 000288b8 00026320 000288b8 00000005 80101204 a4c1e000
+ffa0: 00000005 80101000 000288b8 00026320 000288b8 000a0000 00000000 00000000
+ffc0: 000288b8 00026320 000288b8 00000005 7eef3bac 000264e8 00028ad8 00026038
+ffe0: 00000005 7eef3300 76f76e91 76f78546 800d0030 000288b8 00000000 00000000
+[<80450f70>] (input_event) from [<a5e2817c>] (0xa5e2817c)
+Code: e1a08148 eaffffa8 e351001f 812fff1e (e590c018)
+---[ end trace 1c691ee85f2ff243 ]---
+
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/input/misc/bma150.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+--- a/drivers/input/misc/bma150.c
++++ b/drivers/input/misc/bma150.c
+@@ -483,13 +483,14 @@ static int bma150_register_input_device(
+ 	idev->close = bma150_irq_close;
+ 	input_set_drvdata(idev, bma150);
+ 
++	bma150->input = idev;
++
+ 	error = input_register_device(idev);
+ 	if (error) {
+ 		input_free_device(idev);
+ 		return error;
+ 	}
+ 
+-	bma150->input = idev;
+ 	return 0;
+ }
+ 
+@@ -512,15 +513,15 @@ static int bma150_register_polled_device
+ 
+ 	bma150_init_input_device(bma150, ipoll_dev->input);
+ 
++	bma150->input_polled = ipoll_dev;
++	bma150->input = ipoll_dev->input;
++
+ 	error = input_register_polled_device(ipoll_dev);
+ 	if (error) {
+ 		input_free_polled_device(ipoll_dev);
+ 		return error;
+ 	}
+ 
+-	bma150->input_polled = ipoll_dev;
+-	bma150->input = ipoll_dev->input;
+-
+ 	return 0;
+ }
+ 
+
