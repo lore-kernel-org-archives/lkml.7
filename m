@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BB3C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21122C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E77206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E664A206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329907;
-	bh=zBKPeTHLx+7gHS1gVcB9ZzU79/NDSGtAcXE7MyrHUk0=;
+	s=default; t=1556329912;
+	bh=EXGjGJeSu29yqXPI6hz9MnRcY3gvpS4p2pKEiRlIOFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BOrSinNUPwJy0T+TshZqgrfaAKb7shw91ZDLoLbAIbdgYf0WGSk4P0ogNWP+8uxCn
-	 HDdSuRCVh4mTXU4GrpI9I3MCixL/e6s7sLEvFeIZA+LhQy6PZJhyAwT30ayVx0WDSM
-	 6kvphfVcBmV97YSB+h5nLgiLgJFd8KX/tDAtjej0=
+	b=CbS1r/Kif8xyNZJXqasDO8cfMgDt6ySUocRaZBG7f9VbCqObsakCIdk5+xn7Gl3Yo
+	 0BXbQ46AxeVEeAojNrQplsuCQ9Qgwd/dgOiYbXZfpZdB1nKoRJgd8x2H2vhr+VV0Ih
+	 SFLLJdCnjki3L+Vcsj/pp9XgsEhhzG7KeHd7vYXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfD0Bvq (ORCPT
+        id S1728144AbfD0BlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:51:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44816 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:41:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbfD0BlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:03 -0400
+        id S1728106AbfD0Bk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:40:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2B4220B7C;
-        Sat, 27 Apr 2019 01:41:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2687208CB;
+        Sat, 27 Apr 2019 01:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329262;
-        bh=zBKPeTHLx+7gHS1gVcB9ZzU79/NDSGtAcXE7MyrHUk0=;
+        s=default; t=1556329257;
+        bh=EXGjGJeSu29yqXPI6hz9MnRcY3gvpS4p2pKEiRlIOFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2a1Vf8h5EDa/3Z8MUMwJALibBQ8rTo9T6vbK/ATxFcZXfi5VsVfYN7Mo6yuBxBz4M
-         RNmR8maAYPZiymB0S6L83OzaHu/bnEtsEoAK8cRpHYJcvN6Tg+UJb47NAaeXSODEaG
-         AYgVlumnu39SdrToHOMGmhJ8GQCPzGeRX6E0DHIw=
+        b=KTBggKgZ0FNvomtVw7L5ghHholkkNJ+4Rj3jDKVImmV8WHs0XuRDJ/y/Wo9H9nmd3
+         zn8JvKBhCbLBhVEmjLC0/uIBbCQ0h32J2kowGoLQDFD9L7VEBlVkGXOzAixxfNwB/p
+         Sgqwfa8OvYvrEV6cTp9umFgyTI9ZIMxKVerJqqhA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rander Wang <rander.wang@linux.intel.com>,
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 07/53] ASoC:intel:skl:fix a simultaneous playback & capture issue on hda platform
-Date:   Fri, 26 Apr 2019 21:40:04 -0400
-Message-Id: <20190427014051.7522-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 03/53] ASoC: ab8500: Mark expected switch fall-through
+Date:   Fri, 26 Apr 2019 21:40:00 -0400
+Message-Id: <20190427014051.7522-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,78 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@linux.intel.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit c899df3e9b0bf7b76e642aed1a214582ea7012d5 ]
+[ Upstream commit 102cefc8e879b707be0024fdc7bce1deeb359a5f ]
 
-If playback and capture are enabled concurrently, when the capture stops
-the output becomes inaudile. The playback application will become stuck
-and underrun after a timeout.
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-This is caused by mistaken use of the stream_id, which should only be
-set for playback and not for capture
+This patch fixes the following warning:
 
-Tested on Apollolake and Kabylake with SST driver.
+In file included from sound/soc/codecs/ab8500-codec.c:24:
+sound/soc/codecs/ab8500-codec.c: In function ‘ab8500_codec_set_dai_fmt’:
+./include/linux/device.h:1485:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sound/soc/codecs/ab8500-codec.c:2129:3: note: in expansion of macro ‘dev_err’
+   dev_err(dai->component->dev,
+   ^~~~~~~
+sound/soc/codecs/ab8500-codec.c:2132:2: note: here
+  default:
+  ^~~~~~~
 
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Warning level 3 was used: -Wimplicit-fallthrough=3
+
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/skylake/skl-pcm.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ sound/soc/codecs/ab8500-codec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/intel/skylake/skl-pcm.c b/sound/soc/intel/skylake/skl-pcm.c
-index 823e39103edd..6b2c8c6e7a00 100644
---- a/sound/soc/intel/skylake/skl-pcm.c
-+++ b/sound/soc/intel/skylake/skl-pcm.c
-@@ -180,6 +180,7 @@ int skl_pcm_link_dma_prepare(struct device *dev, struct skl_pipe_params *params)
- 	struct hdac_stream *hstream;
- 	struct hdac_ext_stream *stream;
- 	struct hdac_ext_link *link;
-+	unsigned char stream_tag;
- 
- 	hstream = snd_hdac_get_stream(bus, params->stream,
- 					params->link_dma_id + 1);
-@@ -198,10 +199,13 @@ int skl_pcm_link_dma_prepare(struct device *dev, struct skl_pipe_params *params)
- 
- 	snd_hdac_ext_link_stream_setup(stream, format_val);
- 
--	list_for_each_entry(link, &bus->hlink_list, list) {
--		if (link->index == params->link_index)
--			snd_hdac_ext_link_set_stream_id(link,
--					hstream->stream_tag);
-+	stream_tag = hstream->stream_tag;
-+	if (stream->hstream.direction == SNDRV_PCM_STREAM_PLAYBACK) {
-+		list_for_each_entry(link, &bus->hlink_list, list) {
-+			if (link->index == params->link_index)
-+				snd_hdac_ext_link_set_stream_id(link,
-+								stream_tag);
-+		}
- 	}
- 
- 	stream->link_prepared = 1;
-@@ -640,6 +644,7 @@ static int skl_link_hw_free(struct snd_pcm_substream *substream,
- 	struct hdac_ext_stream *link_dev =
- 				snd_soc_dai_get_dma_data(dai, substream);
- 	struct hdac_ext_link *link;
-+	unsigned char stream_tag;
- 
- 	dev_dbg(dai->dev, "%s: %s\n", __func__, dai->name);
- 
-@@ -649,7 +654,11 @@ static int skl_link_hw_free(struct snd_pcm_substream *substream,
- 	if (!link)
- 		return -EINVAL;
- 
--	snd_hdac_ext_link_clear_stream_id(link, hdac_stream(link_dev)->stream_tag);
-+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+		stream_tag = hdac_stream(link_dev)->stream_tag;
-+		snd_hdac_ext_link_clear_stream_id(link, stream_tag);
-+	}
-+
- 	snd_hdac_ext_stream_release(link_dev, HDAC_EXT_STREAM_TYPE_LINK);
- 	return 0;
- }
+diff --git a/sound/soc/codecs/ab8500-codec.c b/sound/soc/codecs/ab8500-codec.c
+index 03bbbcd3b6c1..87616b126018 100644
+--- a/sound/soc/codecs/ab8500-codec.c
++++ b/sound/soc/codecs/ab8500-codec.c
+@@ -2129,6 +2129,7 @@ static int ab8500_codec_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 		dev_err(dai->component->dev,
+ 			"%s: ERROR: The device is either a master or a slave.\n",
+ 			__func__);
++		/* fall through */
+ 	default:
+ 		dev_err(dai->component->dev,
+ 			"%s: ERROR: Unsupporter master mask 0x%x\n",
 -- 
 2.19.1
 
