@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC96C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8567EC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02860214AE
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480C9208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329143;
-	bh=eomcb+sG2VkeujLLoY/2gBspfyRjz+oAMkL9bqtd4o8=;
+	s=default; t=1556329147;
+	bh=MOcfdTIdKt3r/THIT3X54QIQga8YcER8cuZphZfvyxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AoPh/v856tbR+8v0AUvC/jN0cJhwrlig0k47SG2veO5O0NlPcP0SKVZzRXXxsyVqw
-	 aVUlYCfpCsG00RWI5+tcj2H2qGah3DfWCU6dwysz9X605+DZdE3+PKoxBKS+ZVoRAL
-	 dHhmqZi8TdAC1OqA8DEYUr7VEhQwyE9tdE+AWhq0=
+	b=O/g0ui5sODfi9cSv3X9VJWWqujesboIzTj56Qpd4OPVrOuBkSUCnUHbOjRi22jxB2
+	 LBmGEJOlk/dKfgegCarc4sW7Sgh2g7gN81By9ZkBLXF1SPVo/W8gnvNNv7LJEI7AHY
+	 Jkn6zLEG5Ul/8Ad3l6IJ+h26xqu/s53nCxzmM01o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfD0BjB (ORCPT
+        id S1727507AbfD0BjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:39:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42010 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:39:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727438AbfD0Bi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:38:59 -0400
+        id S1727480AbfD0BjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:39:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EC092084F;
-        Sat, 27 Apr 2019 01:38:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FBF2208CA;
+        Sat, 27 Apr 2019 01:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329139;
-        bh=eomcb+sG2VkeujLLoY/2gBspfyRjz+oAMkL9bqtd4o8=;
+        s=default; t=1556329144;
+        bh=MOcfdTIdKt3r/THIT3X54QIQga8YcER8cuZphZfvyxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Audzf8toag5sgzdrSiaSQdZYVuvFBjRj2x+W0fBccJKoSj15G3Y896P1vdisZhqiI
-         zXoVA+1awq3qYiCztwi742M7gux+H+cJiuuJcVqfWGewQOqq0vQ3HWuk1CJ3tDYuJH
-         bntEr6orIQenDuCQvFh8iTL8qelZwetlUCE7Ux1Q=
+        b=bOl+CINEY7rC8OB/Z7e/WATRh3sv9oGEq6Rd38St1batufAZgNctkDWsK19OinY7k
+         Ker/BAUSU9Nhvux2aE5ClqfbeHx0g13YKn40+/TkDAjq9KsKx1JI0UT6J3dnhhAIDc
+         iaIJb5UYQ/v4ncZ6DV+zFnAgSZlHzcR37beDb1l0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+Cc:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 5.0 17/79] ASoC: wm_adsp: Add locking to wm_adsp2_bus_error
-Date:   Fri, 26 Apr 2019 21:37:36 -0400
-Message-Id: <20190427013838.6596-17-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 22/79] ASoC: dapm: Fix NULL pointer dereference in snd_soc_dapm_free_kcontrol
+Date:   Fri, 26 Apr 2019 21:37:41 -0400
+Message-Id: <20190427013838.6596-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -59,67 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
 
-[ Upstream commit a2225a6d155fcb247fe4c6d87f7c91807462966d ]
+[ Upstream commit cacea3a90e211f0c111975535508d446a4a928d2 ]
 
-Best to lock across handling the bus error to ensure the DSP doesn't
-change power state as we are reading the status registers.
+w_text_param can be NULL and it is being dereferenced without checking.
+Add the missing sanity check to prevent  NULL pointer dereference.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm_adsp.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ sound/soc/soc-dapm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
-index 1dd291cebe67..b69ef01f4067 100644
---- a/sound/soc/codecs/wm_adsp.c
-+++ b/sound/soc/codecs/wm_adsp.c
-@@ -3821,11 +3821,13 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 	struct regmap *regmap = dsp->regmap;
- 	int ret = 0;
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index 20bad755888b..08ab5fef75dc 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -3840,6 +3840,10 @@ snd_soc_dapm_free_kcontrol(struct snd_soc_card *card,
+ 	int count;
  
-+	mutex_lock(&dsp->pwr_lock);
+ 	devm_kfree(card->dev, (void *)*private_value);
 +
- 	ret = regmap_read(regmap, dsp->base + ADSP2_LOCK_REGION_CTRL, &val);
- 	if (ret) {
- 		adsp_err(dsp,
- 			"Failed to read Region Lock Ctrl register: %d\n", ret);
--		return IRQ_HANDLED;
-+		goto error;
- 	}
- 
- 	if (val & ADSP2_WDT_TIMEOUT_STS_MASK) {
-@@ -3844,7 +3846,7 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 			adsp_err(dsp,
- 				 "Failed to read Bus Err Addr register: %d\n",
- 				 ret);
--			return IRQ_HANDLED;
-+			goto error;
- 		}
- 
- 		adsp_err(dsp, "bus error address = 0x%x\n",
-@@ -3857,7 +3859,7 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 			adsp_err(dsp,
- 				 "Failed to read Pmem Xmem Err Addr register: %d\n",
- 				 ret);
--			return IRQ_HANDLED;
-+			goto error;
- 		}
- 
- 		adsp_err(dsp, "xmem error address = 0x%x\n",
-@@ -3870,6 +3872,9 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 	regmap_update_bits(regmap, dsp->base + ADSP2_LOCK_REGION_CTRL,
- 			   ADSP2_CTRL_ERR_EINT, ADSP2_CTRL_ERR_EINT);
- 
-+error:
-+	mutex_unlock(&dsp->pwr_lock);
++	if (!w_param_text)
++		return;
 +
- 	return IRQ_HANDLED;
- }
- EXPORT_SYMBOL_GPL(wm_adsp2_bus_error);
+ 	for (count = 0 ; count < num_params; count++)
+ 		devm_kfree(card->dev, (void *)w_param_text[count]);
+ 	devm_kfree(card->dev, w_param_text);
 -- 
 2.19.1
 
