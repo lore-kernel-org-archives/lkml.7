@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5599BC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E063C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F021206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC98208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbfD0Pc4 (ORCPT
+        id S1728794AbfD0PdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:32:56 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60650 "EHLO
+        Sat, 27 Apr 2019 11:33:12 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60578 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726617AbfD0PPL (ORCPT
+        by vger.kernel.org with ESMTP id S1726508AbfD0PPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:11 -0400
+        Sat, 27 Apr 2019 11:15:10 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2h-0000zL-Ng; Sat, 27 Apr 2019 16:15:07 +0100
+        id 1hKP2h-0000zD-IU; Sat, 27 Apr 2019 16:15:07 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2h-0004Ol-Eg; Sat, 27 Apr 2019 16:15:07 +0100
+        id 1hKP2h-0004OH-9p; Sat, 27 Apr 2019 16:15:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Pierre-Louis Bossart" <pierre-louis.bossart@linux.intel.com>,
-        "Kangjie Lu" <kjlu@umn.edu>, "Mark Brown" <broonie@kernel.org>
+        "Max Schulze" <max.schulze@posteo.de>,
+        "Johan Hovold" <johan@kernel.org>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.470177912@decadent.org.uk>
+Message-ID: <lsq.1556377989.60807485@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 015/202] ASoC: atom: fix a missing check of
- snd_pcm_lib_malloc_pages
+Subject: [PATCH 3.16 009/202] USB: serial: simple: add Motorola Tetra
+ TPG2200 device id
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,37 +56,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Max Schulze <max.schulze@posteo.de>
 
-commit 44fabd8cdaaa3acb80ad2bb3b5c61ae2136af661 upstream.
+commit b81c2c33eab79dfd3650293b2227ee5c6036585c upstream.
 
-snd_pcm_lib_malloc_pages() may fail, so let's check its status and
-return its error code upstream.
+Add new Motorola Tetra device id for Motorola Solutions TETRA PEI device
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-[bwh: Backported to 3.16: adjust filename]
+T:  Bus=02 Lev=01 Prnt=01 Port=01 Cnt=01 Dev#=  4 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=0cad ProdID=9016 Rev=24.16
+S:  Manufacturer=Motorola Solutions, Inc.
+S:  Product=TETRA PEI interface
+C:  #Ifs= 2 Cfg#= 1 Atr=80 MxPwr=500mA
+I:  If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=00 Prot=00 Driver=usb_serial_simple
+I:  If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=00 Prot=00 Driver=usb_serial_simple
+
+Signed-off-by: Max Schulze <max.schulze@posteo.de>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/soc/intel/sst-mfld-platform-pcm.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/usb/serial/usb-serial-simple.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/sound/soc/intel/sst-mfld-platform-pcm.c
-+++ b/sound/soc/intel/sst-mfld-platform-pcm.c
-@@ -383,7 +383,13 @@ static snd_pcm_uframes_t sst_platform_pc
- static int sst_platform_pcm_hw_params(struct snd_pcm_substream *substream,
- 		struct snd_pcm_hw_params *params)
- {
--	snd_pcm_lib_malloc_pages(substream, params_buffer_bytes(params));
-+	int ret;
-+
-+	ret =
-+		snd_pcm_lib_malloc_pages(substream,
-+				params_buffer_bytes(params));
-+	if (ret)
-+		return ret;
- 	memset(substream->runtime->dma_area, 0, params_buffer_bytes(params));
+--- a/drivers/usb/serial/usb-serial-simple.c
++++ b/drivers/usb/serial/usb-serial-simple.c
+@@ -88,7 +88,8 @@ DEVICE(moto_modem, MOTO_IDS);
+ /* Motorola Tetra driver */
+ #define MOTOROLA_TETRA_IDS()			\
+ 	{ USB_DEVICE(0x0cad, 0x9011) },	/* Motorola Solutions TETRA PEI */ \
+-	{ USB_DEVICE(0x0cad, 0x9012) }	/* MTP6550 */
++	{ USB_DEVICE(0x0cad, 0x9012) },	/* MTP6550 */ \
++	{ USB_DEVICE(0x0cad, 0x9016) }	/* TPG2200 */
+ DEVICE(motorola_tetra, MOTOROLA_TETRA_IDS);
  
- 	return 0;
+ /* Novatel Wireless GPS driver */
 
