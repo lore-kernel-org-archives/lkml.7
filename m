@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E213C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8F4C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31E0206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81E4206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfD0Pct (ORCPT
+        id S1728780AbfD0Pc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:32:49 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60672 "EHLO
+        Sat, 27 Apr 2019 11:32:58 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60634 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726663AbfD0PPL (ORCPT
+        by vger.kernel.org with ESMTP id S1726596AbfD0PPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:11 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2h-0000zP-RY; Sat, 27 Apr 2019 16:15:07 +0100
+        id 1hKP2h-0000z6-C5; Sat, 27 Apr 2019 16:15:07 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2h-0004Oz-HA; Sat, 27 Apr 2019 16:15:07 +0100
+        id 1hKP2h-0004Nn-5W; Sat, 27 Apr 2019 16:15:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ido Schimmel" <idosch@idosch.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Willem de Bruijn" <willemb@google.com>
+        "Hans de Goede" <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.82863417@decadent.org.uk>
+Message-ID: <lsq.1556377989.974856129@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 018/202] packet: validate address length if non-zero
+Subject: [PATCH 3.16 003/202] ACPI: power: Skip duplicate power resource
+ references in _PRx
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,40 +56,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Willem de Bruijn <willemb@google.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 6b8d95f1795c42161dc0984b6863e95d6acf24ed upstream.
+commit 7d7b467cb95bf29597b417d4990160d4ea6d69b9 upstream.
 
-Validate packet socket address length if a length is given. Zero
-length is equivalent to not setting an address.
+Some ACPI tables contain duplicate power resource references like this:
 
-Fixes: 99137b7888f4 ("packet: validate address length")
-Reported-by: Ido Schimmel <idosch@idosch.org>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+        Name (_PR0, Package (0x04)  // _PR0: Power Resources for D0
+        {
+            P28P,
+            P18P,
+            P18P,
+            CLK4
+        })
+
+This causes a WARN_ON in sysfs_add_link_to_group() because we end up
+adding a link to the same acpi_device twice:
+
+sysfs: cannot create duplicate filename '/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/808622C1:00/OVTI2680:00/power_resources_D0/LNXPOWER:0a'
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.19.12-301.fc29.x86_64 #1
+Hardware name: Insyde CherryTrail/Type2 - Board Product Name, BIOS jumperx.T87.KFBNEEA02 04/13/2016
+Call Trace:
+ dump_stack+0x5c/0x80
+ sysfs_warn_dup.cold.3+0x17/0x2a
+ sysfs_do_create_link_sd.isra.2+0xa9/0xb0
+ sysfs_add_link_to_group+0x30/0x50
+ acpi_power_expose_list+0x74/0xa0
+ acpi_power_add_remove_device+0x50/0xa0
+ acpi_add_single_object+0x26b/0x5f0
+ acpi_bus_check_add+0xc4/0x250
+ ...
+
+To address this issue, make acpi_extract_power_resources() check for
+duplicates and simply skip them when found.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+[ rjw: Subject & changelog, comments ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/packet/af_packet.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/acpi/power.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2299,7 +2299,7 @@ static int tpacket_snd(struct packet_soc
- 						sll_addr)))
- 			goto out;
- 		proto	= saddr->sll_protocol;
--		addr	= saddr->sll_addr;
-+		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
- 		dev = dev_get_by_index(sock_net(&po->sk), saddr->sll_ifindex);
- 		if (addr && dev && saddr->sll_halen < dev->addr_len)
- 			goto out;
-@@ -2461,7 +2461,7 @@ static int packet_snd(struct socket *soc
- 		if (msg->msg_namelen < (saddr->sll_halen + offsetof(struct sockaddr_ll, sll_addr)))
- 			goto out;
- 		proto	= saddr->sll_protocol;
--		addr	= saddr->sll_addr;
-+		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
- 		dev = dev_get_by_index(sock_net(sk), saddr->sll_ifindex);
- 		if (addr && dev && saddr->sll_halen < dev->addr_len)
- 			goto out;
+--- a/drivers/acpi/power.c
++++ b/drivers/acpi/power.c
+@@ -132,6 +132,23 @@ void acpi_power_resources_list_free(stru
+ 	}
+ }
+ 
++static bool acpi_power_resource_is_dup(union acpi_object *package,
++				       unsigned int start, unsigned int i)
++{
++	acpi_handle rhandle, dup;
++	unsigned int j;
++
++	/* The caller is expected to check the package element types */
++	rhandle = package->package.elements[i].reference.handle;
++	for (j = start; j < i; j++) {
++		dup = package->package.elements[j].reference.handle;
++		if (dup == rhandle)
++			return true;
++	}
++
++	return false;
++}
++
+ int acpi_extract_power_resources(union acpi_object *package, unsigned int start,
+ 				 struct list_head *list)
+ {
+@@ -151,6 +168,11 @@ int acpi_extract_power_resources(union a
+ 			err = -ENODEV;
+ 			break;
+ 		}
++
++		/* Some ACPI tables contain duplicate power resource references */
++		if (acpi_power_resource_is_dup(package, start, i))
++			continue;
++
+ 		err = acpi_add_power_resource(rhandle);
+ 		if (err)
+ 			break;
 
