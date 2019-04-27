@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE95C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36436C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B80A208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1094920C01
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfD0Mx3 (ORCPT
+        id S1727430AbfD0Mxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:53:29 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:33807 "EHLO
+        Sat, 27 Apr 2019 08:53:37 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:56653 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbfD0MxX (ORCPT
+        with ESMTP id S1727385AbfD0Mxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:53:23 -0400
+        Sat, 27 Apr 2019 08:53:36 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N49Yn-1gckUf0Xp3-0101lS; Sat, 27 Apr 2019 14:52:36 +0200
+ 1MBltM-1hUJVl230m-00CCVD; Sat, 27 Apr 2019 14:53:05 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,57 +34,100 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 03/41] drivers: tty: serial: dz: fix missing parentheses
-Date:   Sat, 27 Apr 2019 14:51:44 +0200
-Message-Id: <1556369542-13247-4-git-send-email-info@metux.net>
+Subject: [PATCH 37/41] drivers: tty: serial: 8250: simplify io resource size computation
+Date:   Sat, 27 Apr 2019 14:52:18 +0200
+Message-Id: <1556369542-13247-38-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:DCKi2YoTk5F832OQUdu63uCQyxtOturAok1rJyvr3Cj1aB4PytR
- 39oykOLn/6maTSaugkdLtAO+JW6mtXKXNyEKmjf/LfUX+UrtldHzEn6VJRT6Ai5Wmv6fPJu
- zDbdAsnAWjMsVY/Lfxtu7H3H0VD9b6vzG1KkGY93toXvi1amjf/kUGN1jMaJH9MM+TdtJWy
- 6Qq+l2SfPMMVa3xrX3Dhg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hCaJcuTMeuA=:EB4ux1IA7Tt2VnO5QHlgjW
- pkbxMpPw2nta4CmIKC1kcgXZ8R3PVqr7ziHZCtHeUGvHHk9Qk9raYRBGZaF5IqaPVm6CNMnxr
- 9vty1/D38JGFJJSTwt3NFvurWC70JuBjH/BKAB8yESh6+wLopafjQqQPN8l2KX8SGQjfwv2xO
- TyzFvmsYNx3rtFuVJ/pJ1vV56+pzzVMgAzd7E0EpyYgb7DGVVlUR2LG1dxWjJ2Hof/It2Rmfz
- p9izFHquGUwtbxHeqxGGWvM4ijYINTbcCUZVJjV5oJC9/JYWT730WUlA9JIbF2xjIF7PBRVXX
- kASrSTWn7c2M2sc3c6bB50GRDqBH6dH94gztdOwsPoZ4cj+JQkPM6uX86/TUJ8e4WJY2B5iGU
- HP7+HVB4tQVuFWqAHT2uGAz6varlOIJ5yKrTIJx6feesH62tAViO17zmGulcYNIxOP3eNPMOD
- Hmet1YF6m/ZGilYNo9SR/pjTIMz1EyH8o7eL4CQcuBZ9FwhDFRYTxTY15EVLqHyCvQkPg27Rb
- 8uO0aVYpOJ/qo2qK8zbTnZCXXNRXdpe5e3F/ivKBz+b1Oa+zghaMw2mbTc4DrgKSeZzP1LTNm
- teKvpXO2ByNWbSgSgXOBtzriQtZsC2TVemyVqTtaDrQpo+R6tvq8EoDpEQZIo8UeRCmxfnM7Q
- CuTeQ7zz0fUVVIk54pr5H16riYLFpjz7OQg7RqO6kuwjj9BxIwYM6AphowGhGxOWdsrYDcB8I
- YsZWUl7WRUQ4eG9segmrTeI0ta1XPj9nf9dvOw==
+X-Provags-ID: V03:K1:ZXB7mz06Ly6MRfvhguoHM1IMTFUXYkIayQ68G7Km7tO2KigZSMd
+ WUDQTyk7nJWuJWfpUC2J3DXsXOHpTBXAQKmw4PEK4HGNm8oGTafIAx2Xk8Zj7ZVo8wGvu2C
+ WGMoTc/hfdwrsTKqgRSAMJYHomV0Lqh7b2/oYaNbGzZfASAsdwQhPLui2wYuEQ8VqWoKKUa
+ A6yCc5QHRSyk0dMUcyEUw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:93wra+Qsj5Y=:XHwmY3IHMhOTtTwYleFaYp
+ PCXSvCkNG306ssxvH2mmJYSPBHuXbTCJnleHmnh9t9Be+YdN0wLScPfILH4TKc90KfNN8Pxib
+ UrKW6/PxCpLn/Koj4G/g1lu6rJvrRaAw7qAJokpPoKm7tlOoEYEbry5kL7NN9DF8UEmOW6V1R
+ NfGRJ+lr4UX9x5IZAdAWGleM5Uj71lJWViQNgheekR8JDIdAUsTjLCAFS3uORFtDHMEELA5th
+ aIBXftbPsKFzzQwqtp6hKM9Xb+5YtjfYEH+Zcvd/evd24tVRKwoCXUpE6XIXjgWlSg8vRqP5i
+ +FSM27/iGFEOLhfrShGN8Sy9NxN/kONh9wFaa1yjGjTdb6l9VRsBP0TyRCF4/442yovIW/wYl
+ /ctIs4g7N2mOowGIllfQjlzB6Lo319VBhyz7wRm1D7F+/SoLc5fDUClXplUe0JrQcwNsF6pMp
+ mku/zHhL6iDvJtIn1LZ8HdIXWbn0uD4xY8kuBTQhenLreJezjR0STxZ3x1MCjMrYIDyuhL+qe
+ Z5+kqWq4G3SSFzy9KUuq21LUmqFvPKDnZfxekvgX18cU5HyvmnMFbzmG/YLO4bXRj873Hz0ee
+ 7EKcIgxKKL8Hex71R96Nvh25ouN3UuDsS5ISPRwUzfK+FEvkJYmFSnG9zoV90STqGCnyfMdSJ
+ +V+gWcjaqsBs30A/7RLXLbikyKWf01R/0aJ1X6QSSQa+03P0MI4nl4mFPHjcUGTfWZyezKlJ2
+ JXAC4DHk4/cwvJNWcmd8RV2n2dC+RgUhIxkunA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch warning:
+Simpily io resource size computation by setting mapsize field.
 
-  ERROR: Macros with complex values should be enclosed in parentheses
-  #912: FILE: dz.c:912:
-  +#define SERIAL_DZ_CONSOLE	&dz_console
+Some of the special cases handled by serial8250_port_size() can be
+simplified by putting this data to corresponding platform data
+or probe function.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/dz.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/alchemy/common/platform.c | 1 +
+ drivers/tty/serial/8250/8250.h      | 1 +
+ drivers/tty/serial/8250/8250_of.c   | 1 +
+ drivers/tty/serial/8250/8250_port.c | 6 +-----
+ 4 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/dz.c b/drivers/tty/serial/dz.c
-index fd4f0cc..b3e9313 100644
---- a/drivers/tty/serial/dz.c
-+++ b/drivers/tty/serial/dz.c
-@@ -909,7 +909,7 @@ static int __init dz_serial_console_init(void)
+diff --git a/arch/mips/alchemy/common/platform.c b/arch/mips/alchemy/common/platform.c
+index 1454d9f..226096d 100644
+--- a/arch/mips/alchemy/common/platform.c
++++ b/arch/mips/alchemy/common/platform.c
+@@ -51,6 +51,7 @@ static void alchemy_8250_pm(struct uart_port *port, unsigned int state,
+ #define PORT(_base, _irq)					\
+ 	{							\
+ 		.mapbase	= _base,			\
++		.mapsize	= 0x1000,			\
+ 		.irq		= _irq,				\
+ 		.regshift	= 2,				\
+ 		.iotype		= UPIO_AU,			\
+diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
+index 89e3f09..7984aad 100644
+--- a/drivers/tty/serial/8250/8250.h
++++ b/drivers/tty/serial/8250/8250.h
+@@ -105,6 +105,7 @@ struct serial8250_config {
  
- console_initcall(dz_serial_console_init);
+ #define SERIAL8250_PORT(_base, _irq) SERIAL8250_PORT_FLAGS(_base, _irq, 0)
  
--#define SERIAL_DZ_CONSOLE	&dz_console
-+#define SERIAL_DZ_CONSOLE	(&dz_console)
- #else
- #define SERIAL_DZ_CONSOLE	NULL
- #endif /* CONFIG_SERIAL_DZ_CONSOLE */
++#define SERIAL_RT2880_IOSIZE	0x100
+ 
+ static inline int serial_in(struct uart_8250_port *up, int offset)
+ {
+diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+index 0277479c..08157a1 100644
+--- a/drivers/tty/serial/8250/8250_of.c
++++ b/drivers/tty/serial/8250/8250_of.c
+@@ -185,6 +185,7 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
+ 
+ 	case PORT_RT2880:
+ 		port->iotype = UPIO_AU;
++		port->mapsize = SERIAL_RT2880_IOSIZE;
+ 		break;
+ 	}
+ 
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index d09af4c..51d6076 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2833,11 +2833,7 @@ unsigned int serial8250_port_size(struct uart_8250_port *pt)
+ {
+ 	if (pt->port.mapsize)
+ 		return pt->port.mapsize;
+-	if (pt->port.iotype == UPIO_AU) {
+-		if (pt->port.type == PORT_RT2880)
+-			return 0x100;
+-		return 0x1000;
+-	}
++
+ 	if (is_omap1_8250(pt))
+ 		return 0x16 << pt->port.regshift;
+ 
 -- 
 1.9.1
 
