@@ -2,105 +2,93 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3567C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05C2C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 02:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9FB2067D
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556330246;
-	bh=7F+q+eSEPcfodE25SQjyMkl5PNsmuS5dCgeo6QePAe4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f7kqEqlBxjNnzb7VLhQ03rf1pE9g/fL3xbsxbsKCBxnwCtL0u/dtQzd3UAaR/1lN7
-	 /OoJHc6FWf0NnxxaRnjm2hrmRKRgRMFdex6uetrVGm2rMO3qMc7reYEt0PbHoOPBs4
-	 D+qsKMNIdX70m6JWBs+jux5hsN/aatZviOUQECoU=
+	by mail.kernel.org (Postfix) with ESMTP id B477D206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 02:15:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="us0znVW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbfD0B5Z (ORCPT
+        id S1727314AbfD0CP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:57:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727300AbfD0Bio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:38:44 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3A732084F;
-        Sat, 27 Apr 2019 01:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329123;
-        bh=7F+q+eSEPcfodE25SQjyMkl5PNsmuS5dCgeo6QePAe4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BJoUEZd6N0m+fl/yq1QaJQsgnJL5cLulaO+A3h7vwmpKSCEhHvaYKOfa4Ln9Go44u
-         Txa6yX9a1QIO7Lp1s9sgyEItpDPKhTgaQmIv/7IqP8AMdQXQsHbJyrMc6FSuAVvWX9
-         vnfplVnzOeeQp6F48LsaXosZ08GplTlNbVLQITlI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 04/79] ASoC: stm32: sai: fix iec958 controls indexation
-Date:   Fri, 26 Apr 2019 21:37:23 -0400
-Message-Id: <20190427013838.6596-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
-References: <20190427013838.6596-1-sashal@kernel.org>
+        Fri, 26 Apr 2019 22:15:28 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46820 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727224AbfD0CP1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 22:15:27 -0400
+Received: by mail-lf1-f66.google.com with SMTP id k18so3680957lfj.13;
+        Fri, 26 Apr 2019 19:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5STeCG4aRVdHVTO/L7BJz/8etDEMrfGWk7jZsnXo3WE=;
+        b=us0znVW/TNtHr3ZFeFHTXc1qRhFGq/7Pf8bVZ8tcngMfaVcazmH6k+ZM2GPczZgRF+
+         Q2YE/UV+bRWRsnttw1kcFA3vTn7dlDve7BwlFI0sBp7Gmw2BMKGjdmasrDVl6R6lB15q
+         iBcmiOinPdfg6qoIsdaVigBeB/pRGWk7qvnOjcb8oeV5a6nBp1sUDu9uuJm8r6/tig4a
+         NzeXlcePLRSjZXvHHgtYcnW5eh2FRJom9hZODAFMEeMbEFEDbDmpyyILBumCCYAFXDs3
+         qGmpuSmK+Z8gXbhlhwHc0KJlcf+mEpxIU1F/Gj5AB+qio/1/g2n4yHAixyv21lts0fBM
+         FTQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5STeCG4aRVdHVTO/L7BJz/8etDEMrfGWk7jZsnXo3WE=;
+        b=s41iOcEOjEza2bKTu+aLiYkZcH2/hvRjmJiKSz4H0/V7FbUFE+CGNWN1NyiAuZ76SV
+         EcjBn6fat92cAJxLVgIvTsPkOIrrgOcxeDbpANSF/mQ+EA4EPK0+DWhODVTePjF7Pw+6
+         /5yTHa8P9moXP1u/MyaIOYAAzeYqK2WSky1xOg22e7PHjfeg9rVTETXABPtNKkpT8ble
+         qLWeFBAAQU1fB4qx5t8nxuqMDc6P96UKfI6u0Hw4dktzbRaue0zaqrct0vYLv0WpkaWm
+         MW5j6UPizfe5glogM76XTqFt09XS4eMY5rlZKw2XvoHMNTZPxFWes2RU0c2c0Mu+t9gG
+         4/0A==
+X-Gm-Message-State: APjAAAUDQ0L7l+mkRP7IJlLJZqJusJ9rq6jujyi5A6TJrb+U9aH/dH/0
+        kUkGzBf+Tm/LDxHOlWjep23NoNbCPBUf+6UDV5k=
+X-Google-Smtp-Source: APXvYqwnl4MtaxJCm3KVKR5hqFLEVtfUckAb8Gi9qRpBx2fE15oEqfYMb3o4CDplc9R269UHo281RD0lnBSJEVC8/i8=
+X-Received: by 2002:ac2:4109:: with SMTP id b9mr9285094lfi.90.1556331325560;
+ Fri, 26 Apr 2019 19:15:25 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190426184951.21812-1-mmullins@fb.com>
+In-Reply-To: <20190426184951.21812-1-mmullins@fb.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 26 Apr 2019 19:15:14 -0700
+Message-ID: <CAADnVQJuxuLC8uzSz1UWDQa3txc+aRdw4OkUmdBOjdezkUhd+A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 0/5] writable contexts for bpf raw tracepoints
+To:     Matt Mullins <mmullins@fb.com>
+Cc:     Andrew Hall <hall@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+On Fri, Apr 26, 2019 at 11:50 AM Matt Mullins <mmullins@fb.com> wrote:
+>
+> This adds an opt-in interface for tracepoints to expose a writable context to
+> BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE programs that are attached, while
+> supporting read-only access from existing BPF_PROG_TYPE_RAW_TRACEPOINT
+> programs, as well as from non-BPF-based tracepoints.
+>
+> The initial motivation is to support tracing that can be observed from the
+> remote end of an NBD socket, e.g. by adding flags to the struct nbd_request
+> header.  Earlier attempts included adding an NBD-specific tracepoint fd, but in
+> code review, I was recommended to implement it more generically -- as a result,
+> this patchset is far simpler than my initial try.
+>
+> v4->v5:
+>   * rebased onto bpf-next/master and fixed merge conflicts
+>   * "tools: sync bpf.h" also syncs comments that have previously changed
+>     in bpf-next
 
-[ Upstream commit 5f8a1000c3e630c3ac06f1d664eeaa755bce8823 ]
-
-Allow indexation of sai iec958 controls according
-to device id.
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/stm/stm32_sai_sub.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index d4825700b63f..8746a22841f0 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -100,7 +100,7 @@
-  * @slot_mask: rx or tx active slots mask. set at init or at runtime
-  * @data_size: PCM data width. corresponds to PCM substream width.
-  * @spdif_frm_cnt: S/PDIF playback frame counter
-- * @snd_aes_iec958: iec958 data
-+ * @iec958: iec958 data
-  * @ctrl_lock: control lock
-  */
- struct stm32_sai_sub_data {
-@@ -1070,11 +1070,12 @@ static int stm32_sai_pcm_new(struct snd_soc_pcm_runtime *rtd,
- 			     struct snd_soc_dai *cpu_dai)
- {
- 	struct stm32_sai_sub_data *sai = dev_get_drvdata(cpu_dai->dev);
-+	struct snd_kcontrol_new knew = iec958_ctls;
- 
- 	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
- 		dev_dbg(&sai->pdev->dev, "%s: register iec controls", __func__);
--		return snd_ctl_add(rtd->pcm->card,
--				   snd_ctl_new1(&iec958_ctls, sai));
-+		knew.device = rtd->pcm->device;
-+		return snd_ctl_add(rtd->pcm->card, snd_ctl_new1(&knew, sai));
- 	}
- 
- 	return 0;
--- 
-2.19.1
-
+Applied. Thanks!
