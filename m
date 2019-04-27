@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE9AC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D5FC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67CEB208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F0F208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfD0P2V (ORCPT
+        id S1728254AbfD0P2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:28:21 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33120 "EHLO
+        Sat, 27 Apr 2019 11:28:35 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33078 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727354AbfD0PPW (ORCPT
+        by vger.kernel.org with ESMTP id S1727329AbfD0PPV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:22 -0400
+        Sat, 27 Apr 2019 11:15:21 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2t-0000zB-4x; Sat, 27 Apr 2019 16:15:19 +0100
+        id 1hKP2s-00014H-DM; Sat, 27 Apr 2019 16:15:18 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2o-0004ei-57; Sat, 27 Apr 2019 16:15:14 +0100
+        id 1hKP2o-0004fH-Am; Sat, 27 Apr 2019 16:15:14 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,21 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hante Meuleman" <meuleman@broadcom.com>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Arend van Spriel" <arend@broadcom.com>,
-        "Pieter-Paul Giesberts" <pieterpg@broadcom.com>,
-        "Franky (Zhenhui) Lin" <frankyl@broadcom.com>
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Willy Tarreau" <w@1wt.eu>, "Oleg Nesterov" <oleg@redhat.com>,
+        "Robert =?UTF-8?Q?=C5=9Awi=C4=99cki?=" <robert@swiecki.net>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Al Viro" <viro@zeniv.linux.org.uk>,
+        "Kees Cook" <keescook@chromium.org>,
+        "David Howells" <dhowells@redhat.com>,
+        "Andy Lutomirski" <luto@amacapital.net>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.418735009@decadent.org.uk>
+Message-ID: <lsq.1556377989.761854587@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 193/202] brcmfmac: consolidate ifp lookup in driver core
+Subject: [PATCH 3.16 200/202] binfmt_elf: switch to new creds when
+ switching to new mm
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,125 +63,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arend van Spriel <arend@broadcom.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 75effb03ee8e4c9d4bbc909118ce5444b047dfde upstream.
+commit 9f834ec18defc369d73ccf9e87a2790bfa05bf46 upstream.
 
-In rx path the firmware provide an interface index which is used to
-map to a struct brcmf_if instance. However, this involves some trick
-that is done in two places. This is changed by having driver core
-providing brcmf_get_ifp() function.
+We used to delay switching to the new credentials until after we had
+mapped the executable (and possible elf interpreter).  That was kind of
+odd to begin with, since the new executable will actually then _run_
+with the new creds, but whatever.
 
-Reviewed-by: Hante Meuleman <meuleman@broadcom.com>
-Reviewed-by: Franky (Zhenhui) Lin <frankyl@broadcom.com>
-Reviewed-by: Pieter-Paul Giesberts <pieterpg@broadcom.com>
-Signed-off-by: Arend van Spriel <arend@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16:
- - Drop changes to PCIe bus support
- - Adjust filenames]
+The bigger problem was that we also want to make sure that we turn off
+prof events and tracing before we start mapping the new executable
+state.  So while this is a cleanup, it's also a fix for a possible
+information leak.
+
+Reported-by: Robert Święcki <robert@swiecki.net>
+Tested-by: Peter Zijlstra <peterz@infradead.org>
+Acked-by: David Howells <dhowells@redhat.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Andy Lutomirski <luto@amacapital.net>
+Acked-by: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Willy Tarreau <w@1wt.eu>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/net/wireless/brcm80211/brcmfmac/bcdc.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/bcdc.c
-@@ -276,6 +276,7 @@ brcmf_proto_bcdc_hdrpull(struct brcmf_pu
- 			 struct sk_buff *pktbuf)
- {
- 	struct brcmf_proto_bcdc_header *h;
-+	struct brcmf_if *ifp;
+ fs/binfmt_elf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -736,6 +736,7 @@ static int load_elf_binary(struct linux_
+ 		current->flags |= PF_RANDOMIZE;
  
- 	brcmf_dbg(BCDC, "Enter\n");
+ 	setup_new_exec(bprm);
++	install_exec_creds(bprm);
  
-@@ -289,30 +290,21 @@ brcmf_proto_bcdc_hdrpull(struct brcmf_pu
- 	trace_brcmf_bcdchdr(pktbuf->data);
- 	h = (struct brcmf_proto_bcdc_header *)(pktbuf->data);
- 
--	*ifidx = BCDC_GET_IF_IDX(h);
--	if (*ifidx >= BRCMF_MAX_IFS) {
--		brcmf_err("rx data ifnum out of range (%d)\n", *ifidx);
-+	ifp = brcmf_get_ifp(drvr, BCDC_GET_IF_IDX(h));
-+	if (IS_ERR_OR_NULL(ifp)) {
-+		brcmf_dbg(INFO, "no matching ifp found\n");
- 		return -EBADE;
+ 	/* Do this so that we can load the interpreter, if need be.  We will
+ 	   change some of these later */
+@@ -951,7 +952,6 @@ static int load_elf_binary(struct linux_
  	}
--	/* The ifidx is the idx to map to matching netdev/ifp. When receiving
--	 * events this is easy because it contains the bssidx which maps
--	 * 1-on-1 to the netdev/ifp. But for data frames the ifidx is rcvd.
--	 * bssidx 1 is used for p2p0 and no data can be received or
--	 * transmitted on it. Therefor bssidx is ifidx + 1 if ifidx > 0
--	 */
--	if (*ifidx)
--		(*ifidx)++;
--
- 	if (((h->flags & BCDC_FLAG_VER_MASK) >> BCDC_FLAG_VER_SHIFT) !=
- 	    BCDC_PROTO_VER) {
- 		brcmf_err("%s: non-BCDC packet received, flags 0x%x\n",
--			  brcmf_ifname(drvr, *ifidx), h->flags);
-+			  brcmf_ifname(drvr, ifp->ifidx), h->flags);
- 		return -EBADE;
- 	}
+ #endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */
  
- 	if (h->flags & BCDC_FLAG_SUM_GOOD) {
- 		brcmf_dbg(BCDC, "%s: BDC rcv, good checksum, flags 0x%x\n",
--			  brcmf_ifname(drvr, *ifidx), h->flags);
-+			  brcmf_ifname(drvr, ifp->ifidx), h->flags);
- 		pktbuf->ip_summed = CHECKSUM_UNNECESSARY;
- 	}
- 
-@@ -320,12 +312,15 @@ brcmf_proto_bcdc_hdrpull(struct brcmf_pu
- 
- 	skb_pull(pktbuf, BCDC_HEADER_LEN);
- 	if (do_fws)
--		brcmf_fws_hdrpull(drvr, *ifidx, h->data_offset << 2, pktbuf);
-+		brcmf_fws_hdrpull(drvr, ifp->ifidx, h->data_offset << 2,
-+				  pktbuf);
- 	else
- 		skb_pull(pktbuf, h->data_offset << 2);
- 
- 	if (pktbuf->len == 0)
- 		return -ENODATA;
-+
-+	*ifidx = ifp->ifidx;
- 	return 0;
- }
- 
---- a/drivers/net/wireless/brcm80211/brcmfmac/dhd_linux.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/dhd_linux.c
-@@ -81,6 +81,25 @@ char *brcmf_ifname(struct brcmf_pub *drv
- 	return "<if_none>";
- }
- 
-+struct brcmf_if *brcmf_get_ifp(struct brcmf_pub *drvr, int ifidx)
-+{
-+	if (ifidx < 0 || ifidx >= BRCMF_MAX_IFS) {
-+		brcmf_err("ifidx %d out of range\n", ifidx);
-+		return ERR_PTR(-ERANGE);
-+	}
-+
-+	/* The ifidx is the idx to map to matching netdev/ifp. When receiving
-+	 * events this is easy because it contains the bssidx which maps
-+	 * 1-on-1 to the netdev/ifp. But for data frames the ifidx is rcvd.
-+	 * bssidx 1 is used for p2p0 and no data can be received or
-+	 * transmitted on it. Therefor bssidx is ifidx + 1 if ifidx > 0
-+	 */
-+	if (ifidx)
-+		ifidx++;
-+
-+	return drvr->iflist[ifidx];
-+}
-+
- static void _brcmf_set_multicast_list(struct work_struct *work)
- {
- 	struct brcmf_if *ifp;
---- a/drivers/net/wireless/brcm80211/brcmfmac/dhd.h
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/dhd.h
-@@ -178,7 +178,7 @@ int brcmf_netdev_wait_pend8021x(struct n
- 
- /* Return pointer to interface name */
- char *brcmf_ifname(struct brcmf_pub *drvr, int idx);
--
-+struct brcmf_if *brcmf_get_ifp(struct brcmf_pub *drvr, int ifidx);
- int brcmf_net_attach(struct brcmf_if *ifp, bool rtnl_locked);
- struct brcmf_if *brcmf_add_if(struct brcmf_pub *drvr, s32 bssidx, s32 ifidx,
- 			      char *name, u8 *mac_addr);
+-	install_exec_creds(bprm);
+ 	retval = create_elf_tables(bprm, &loc->elf_ex,
+ 			  load_addr, interp_load_addr);
+ 	if (retval < 0) {
 
