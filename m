@@ -7,51 +7,57 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48480C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A394EC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF69208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740AD216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329376;
-	bh=KoqGDfFG6P4eELhrdxw4qI6CMJ4ya+2fqPUEP+TZfyo=;
+	s=default; t=1556329378;
+	bh=Vq0YWX+fQGkBdkg7BCnJ7nE84cRXDXfVDPD35t3RPqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UVCkl/CV9e5RX/12XwGNWZ9tRyrwwt4DsvBQssHCvv7BQVA6hsTCPQg9Qn/JU8ph1
-	 JHxAvvsqOOVj86Zb84qLQ6EvY4z9HySS5KpImI9rAYsuD5W/h6LKER9EUTGckH8IEh
-	 JsJfl9Dqe9RFr2CyiVwdFJBEALCMSo/rNYtQIlbQ=
+	b=lTH1nEnEFE2fxCxVxDs63NTxREZcinYwSFlOlID11NnSrXPwYn15DBm/f21CXIAtQ
+	 Q5LAAbOjQ4V3VqdX9gRbgJYMBElYA7m/6XEYvxNY/itVAo4Si9wN56w1RnPV+HOuMF
+	 hrOv/VSlOoWpEnIb9dYHdGF6Rl74IbPfRHLEm7n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbfD0Bmz (ORCPT
+        id S1728674AbfD0Bm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:42:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46950 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:42:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbfD0Bmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:42:51 -0400
+        id S1728660AbfD0Bmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:42:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C95512166E;
-        Sat, 27 Apr 2019 01:42:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D60F0215EA;
+        Sat, 27 Apr 2019 01:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329371;
-        bh=KoqGDfFG6P4eELhrdxw4qI6CMJ4ya+2fqPUEP+TZfyo=;
+        s=default; t=1556329374;
+        bh=Vq0YWX+fQGkBdkg7BCnJ7nE84cRXDXfVDPD35t3RPqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VxEGPIL1HrJMv/uuplybQ1reSzj3hnaQ2bOBz2Ehyjgg+E5UQ2pSi+tGaK/7jyssK
-         Rkql0TF3xE+djE0QRPPqZEfp1GaAfk0/fWBAGflVRItDGiXwojEAkvw/QHpeT+f/GE
-         ZO1U5lqjOpiPvGcj3p7VVblbT1+fs1/LBr4znNiY=
+        b=g/5j7SBwtT+m0JNOZeY8EMa2XzbcfNy2cyyuKXx12dzLS4tLv2AmDa1wJD3qoTIAE
+         LLwTBJkTdQyw+NqiMtZCYkMCt0o1c+2MjlAdSKNR8N4nhoXYBc8Y2G/HIM/uSAhOnP
+         4AEBD1kLRF9JsOMtpqydS8kTbUX6lEygiBFuXhUA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, tonyj@suse.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 14/32] perf/x86/intel: Initialize TFA MSR
-Date:   Fri, 26 Apr 2019 21:42:05 -0400
-Message-Id: <20190427014224.8274-14-sashal@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Borislav Petkov <bp@suse.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        NeilBrown <neilb@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Qiaowei Ren <qiaowei.ren@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 15/32] linux/kernel.h: Use parentheses around argument in u64_to_user_ptr()
+Date:   Fri, 26 Apr 2019 21:42:06 -0400
+Message-Id: <20190427014224.8274-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
 References: <20190427014224.8274-1-sashal@kernel.org>
@@ -64,48 +70,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit d7262457e35dbe239659e62654e56f8ddb814bed ]
+[ Upstream commit a0fe2c6479aab5723239b315ef1b552673f434a3 ]
 
-Stephane reported that the TFA MSR is not initialized by the kernel,
-but the TFA bit could set by firmware or as a leftover from a kexec,
-which makes the state inconsistent.
+Use parentheses around uses of the argument in u64_to_user_ptr() to
+ensure that the cast doesn't apply to part of the argument.
 
-Reported-by: Stephane Eranian <eranian@google.com>
-Tested-by: Nelson DSouza <nelson.dsouza@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+There are existing uses of the macro of the form
+
+  u64_to_user_ptr(A + B)
+
+which expands to
+
+  (void __user *)(uintptr_t)A + B
+
+(the cast applies to the first operand of the addition, the addition
+is a pointer addition). This happens to still work as intended, the
+semantic difference doesn't cause a difference in behavior.
+
+But I want to use u64_to_user_ptr() with a ternary operator in the
+argument, like so:
+
+  u64_to_user_ptr(A ? B : C)
+
+This currently doesn't work as intended.
+
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Andrei Vagin <avagin@openvz.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: NeilBrown <neilb@suse.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qiaowei Ren <qiaowei.ren@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: tonyj@suse.com
-Link: https://lkml.kernel.org/r/20190321123849.GN6521@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190329214652.258477-1-jannh@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/kernel.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 6e1a1ceeed51..d2279ece6976 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3427,6 +3427,12 @@ static void intel_pmu_cpu_starting(int cpu)
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 4b484ab9e163..1c5469adaa85 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -72,8 +72,8 @@
  
- 	cpuc->lbr_sel = NULL;
- 
-+	if (x86_pmu.flags & PMU_FL_TFA) {
-+		WARN_ON_ONCE(cpuc->tfa_shadow);
-+		cpuc->tfa_shadow = ~0ULL;
-+		intel_set_tfa(cpuc, false);
-+	}
-+
- 	if (x86_pmu.version > 1)
- 		flip_smm_bit(&x86_pmu.attr_freeze_on_smi);
+ #define u64_to_user_ptr(x) (		\
+ {					\
+-	typecheck(u64, x);		\
+-	(void __user *)(uintptr_t)x;	\
++	typecheck(u64, (x));		\
++	(void __user *)(uintptr_t)(x);	\
+ }					\
+ )
  
 -- 
 2.19.1
