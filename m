@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54F0C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D9C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48AB206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B143E206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfD0PPO (ORCPT
+        id S1728408AbfD0Pb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:15:14 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60588 "EHLO
+        Sat, 27 Apr 2019 11:31:26 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60890 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbfD0PPK (ORCPT
+        by vger.kernel.org with ESMTP id S1727099AbfD0PPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:10 -0400
+        Sat, 27 Apr 2019 11:15:14 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2h-0000zA-ED; Sat, 27 Apr 2019 16:15:07 +0100
+        id 1hKP2k-0000zL-BC; Sat, 27 Apr 2019 16:15:10 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2h-0004O2-7i; Sat, 27 Apr 2019 16:15:07 +0100
+        id 1hKP2h-0004Pi-OQ; Sat, 27 Apr 2019 16:15:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,20 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>
+        "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
+        "Julien D'Ascenzio" <jdascenzio@posteo.net>,
+        "Andrew Lunn" <andrew@lunn.ch>,
+        "Guenter Roeck" <linux@roeck-us.net>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Jamie Lentin" <jm@lentin.co.uk>,
+        "Gregory Clement" <gregory.clement@bootlin.com>,
+        "Jason Cooper" <jason@lakedaemon.net>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.447335859@decadent.org.uk>
+Message-ID: <lsq.1556377989.261714347@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 006/202] ALSA: usb-audio: Avoid access before bLength
- check in build_audio_procunit()
+Subject: [PATCH 3.16 027/202] ARM: dts: kirkwood: Fix polarity of GPIO fan
+ lines
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,45 +62,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit f4351a199cc120ff9d59e06d02e8657d08e6cc46 upstream.
+commit b5f034845e70916fd33e172fad5ad530a29c10ab upstream.
 
-The parser for the processing unit reads bNrInPins field before the
-bLength sanity check, which may lead to an out-of-bound access when a
-malformed descriptor is given.  Fix it by assignment after the bLength
-check.
+These two lines are active high, not active low. The bug was
+found when we changed the kernel to respect the polarity defined
+in the device tree.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 1b90e06b1429 ("ARM: kirkwood: Use devicetree to define DNS-32[05] fan")
+Cc: Jamie Lentin <jm@lentin.co.uk>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Julien D'Ascenzio <jdascenzio@posteo.net>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Tested-by: Jamie Lentin <jm@lentin.co.uk>
+Reported-by: Julien D'Ascenzio <jdascenzio@posteo.net>
+Tested-by: Julien D'Ascenzio <jdascenzio@posteo.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/usb/mixer.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/kirkwood-dnskw.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1787,7 +1787,7 @@ static int build_audio_procunit(struct m
- 				char *name)
- {
- 	struct uac_processing_unit_descriptor *desc = raw_desc;
--	int num_ins = desc->bNrInPins;
-+	int num_ins;
- 	struct usb_mixer_elem_info *cval;
- 	struct snd_kcontrol *kctl;
- 	int i, err, nameid, type, len;
-@@ -1802,7 +1802,13 @@ static int build_audio_procunit(struct m
- 		0, NULL, default_value_info
- 	};
- 
--	if (desc->bLength < 13 || desc->bLength < 13 + num_ins ||
-+	if (desc->bLength < 13) {
-+		usb_audio_err(state->chip, "invalid %s descriptor (id %d)\n", name, unitid);
-+		return -EINVAL;
-+	}
-+
-+	num_ins = desc->bNrInPins;
-+	if (desc->bLength < 13 + num_ins ||
- 	    desc->bLength < num_ins + uac_processing_unit_bControlSize(desc, state->mixer->protocol)) {
- 		usb_audio_err(state->chip, "invalid %s descriptor (id %d)\n", name, unitid);
- 		return -EINVAL;
+--- a/arch/arm/boot/dts/kirkwood-dnskw.dtsi
++++ b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
+@@ -35,8 +35,8 @@
+ 		compatible = "gpio-fan";
+ 		pinctrl-0 = <&pmx_fan_high_speed &pmx_fan_low_speed>;
+ 		pinctrl-names = "default";
+-		gpios = <&gpio1 14 GPIO_ACTIVE_LOW
+-			 &gpio1 13 GPIO_ACTIVE_LOW>;
++		gpios = <&gpio1 14 GPIO_ACTIVE_HIGH
++			 &gpio1 13 GPIO_ACTIVE_HIGH>;
+ 		gpio-fan,speed-map = <0    0
+ 				      3000 1
+ 				      6000 2>;
 
