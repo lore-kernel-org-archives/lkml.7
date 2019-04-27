@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16951C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB48C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57B1206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42B3208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfD0PVQ (ORCPT
+        id S1728111AbfD0PVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:21:16 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33914 "EHLO
+        Sat, 27 Apr 2019 11:21:18 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33932 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727578AbfD0PPd (ORCPT
+        by vger.kernel.org with ESMTP id S1727584AbfD0PPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:33 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP34-00014H-8G; Sat, 27 Apr 2019 16:15:30 +0100
+        id 1hKP34-00014I-O5; Sat, 27 Apr 2019 16:15:30 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2k-0004Wl-Nf; Sat, 27 Apr 2019 16:15:10 +0100
+        id 1hKP2k-0004Vw-Dk; Sat, 27 Apr 2019 16:15:10 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Miquel Raynal" <miquel.raynal@bootlin.com>,
-        "Manfred Schlaegl" <manfred.schlaegl@ginzinger.com>,
-        "Boris Brezillon" <bbrezillon@kernel.org>,
-        "Martin Kepplinger" <martin.kepplinger@ginzinger.com>,
-        "Han Xu" <han.xu@nxp.com>, "Fabio Estevam" <festevam@gmail.com>
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Jiri Olsa" <jolsa@kernel.org>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.707571002@decadent.org.uk>
+Message-ID: <lsq.1556377989.975962892@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 104/202] mtd: rawnand: gpmi: fix MX28 bus master
- lockup problem
+Subject: [PATCH 3.16 094/202] perf tests evsel-tp-sched: Fix bitwise operator
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,79 +59,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit d5d27fd9826b59979b184ec288e4812abac0e988 upstream.
+commit 489338a717a0dfbbd5a3fabccf172b78f0ac9015 upstream.
 
-Disable BCH soft reset according to MX23 erratum #2847 ("BCH soft
-reset may cause bus master lock up") for MX28 too. It has the same
-problem.
+Notice that the use of the bitwise OR operator '|' always leads to true
+in this particular case, which seems a bit suspicious due to the context
+in which this expression is being used.
 
-Observed problem: once per 100,000+ MX28 reboots NAND read failed on
-DMA timeout errors:
-[    1.770823] UBI: attaching mtd3 to ubi0
-[    2.768088] gpmi_nand: DMA timeout, last DMA :1
-[    3.958087] gpmi_nand: BCH timeout, last DMA :1
-[    4.156033] gpmi_nand: Error in ECC-based read: -110
-[    4.161136] UBI warning: ubi_io_read: error -110 while reading 64
-bytes from PEB 0:0, read only 0 bytes, retry
-[    4.171283] step 1 error
-[    4.173846] gpmi_nand: Chip: 0, Error -1
+Fix this by using bitwise AND operator '&' instead.
 
-Without BCH soft reset we successfully executed 1,000,000 MX28 reboots.
+This bug was detected with the help of Coccinelle.
 
-I have a quote from NXP regarding this problem, from July 18th 2016:
-
-"As the i.MX23 and i.MX28 are of the same generation, they share many
-characteristics. Unfortunately, also the erratas may be shared.
-In case of the documented erratas and the workarounds, you can also
-apply the workaround solution of one device on the other one. This have
-been reported, but I’m afraid that there are not an estimated date for
-updating the Errata documents.
-Please accept our apologies for any inconveniences this may cause."
-
-Fixes: 6f2a6a52560a ("mtd: nand: gpmi: reset BCH earlier, too, to avoid NAND startup problems")
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Acked-by: Han Xu <han.xu@nxp.com>
-Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
-[bwh: Backported to 3.16: adjust filename]
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 6a6cd11d4e57 ("perf test: Add test for the sched tracepoint format fields")
+Link: http://lkml.kernel.org/r/20190122233439.GA5868@embeddedor
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/mtd/nand/gpmi-nand/gpmi-lib.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ tools/perf/tests/evsel-tp-sched.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
-+++ b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
-@@ -168,9 +168,10 @@ int gpmi_init(struct gpmi_nand_data *thi
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -14,7 +14,7 @@ static int perf_evsel__test_field(struct
+ 		return -1;
+ 	}
  
- 	/*
- 	 * Reset BCH here, too. We got failures otherwise :(
--	 * See later BCH reset for explanation of MX23 handling
-+	 * See later BCH reset for explanation of MX23 and MX28 handling
- 	 */
--	ret = gpmi_reset_block(r->bch_regs, GPMI_IS_MX23(this));
-+	ret = gpmi_reset_block(r->bch_regs,
-+			       GPMI_IS_MX23(this) || GPMI_IS_MX28(this));
- 	if (ret)
- 		goto err_out;
- 
-@@ -275,12 +276,10 @@ int bch_set_geometry(struct gpmi_nand_da
- 	/*
- 	* Due to erratum #2847 of the MX23, the BCH cannot be soft reset on this
- 	* chip, otherwise it will lock up. So we skip resetting BCH on the MX23.
--	* On the other hand, the MX28 needs the reset, because one case has been
--	* seen where the BCH produced ECC errors constantly after 10000
--	* consecutive reboots. The latter case has not been seen on the MX23
--	* yet, still we don't know if it could happen there as well.
-+	* and MX28.
- 	*/
--	ret = gpmi_reset_block(r->bch_regs, GPMI_IS_MX23(this));
-+	ret = gpmi_reset_block(r->bch_regs,
-+			       GPMI_IS_MX23(this) || GPMI_IS_MX28(this));
- 	if (ret)
- 		goto err_out;
- 
+-	is_signed = !!(field->flags | FIELD_IS_SIGNED);
++	is_signed = !!(field->flags & FIELD_IS_SIGNED);
+ 	if (should_be_signed && !is_signed) {
+ 		pr_debug("%s: \"%s\" signedness(%d) is wrong, should be %d\n",
+ 			 evsel->name, name, is_signed, should_be_signed);
 
