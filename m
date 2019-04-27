@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77675C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9173C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582912087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F88208C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfD0MyP (ORCPT
+        id S1727535AbfD0MyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:54:15 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:46579 "EHLO
+        Sat, 27 Apr 2019 08:54:17 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:36535 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbfD0Mxd (ORCPT
+        with ESMTP id S1727357AbfD0Mxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 08:53:33 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N79q8-1ghy553AGC-017Rst; Sat, 27 Apr 2019 14:53:03 +0200
+ 1MS3r9-1hEZPX2dSN-00TRpw; Sat, 27 Apr 2019 14:53:04 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,79 +34,155 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 35/41] drivers: tty: serial: 8250: add mapsize to platform data
-Date:   Sat, 27 Apr 2019 14:52:16 +0200
-Message-Id: <1556369542-13247-36-git-send-email-info@metux.net>
+Subject: [PATCH 36/41] drivers: tty: serial: 8250: store mmio resource size in port struct
+Date:   Sat, 27 Apr 2019 14:52:17 +0200
+Message-Id: <1556369542-13247-37-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:JcK0nmXUqvVZov6FpygbFCYx2SBIMbt8YBo1Pyu7lLXpjQoFRY+
- pUU91A2VFsC0opVj58fPkR0Q6FJXQi2dkc/wvSXJs1UuyFbz9fA4rXDWaSqNdJmI+Ni3NVN
- GCHT5mxv7iA219z7s0oyXnMLdcGAYrX/sQa9g9+0osWcxqkU8TBbfxVPdIH8z0lkkec4VUA
- Jy3EMpSULncwPlRSUSCNg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HKE131FklXQ=:N+5TupvitkXMK24q5/jyxA
- sIX3ic5BD+uHPAGs20GJwkwPl9UDpk0TIanYdXumBoGIe0pn8xQHfMNAGWo6dzwFRYczrf7xW
- TxJABWtuVu+JiQ10VmrYJ6qbGD6m4TbE/uBc0upnH9JxQ1cVsfzzBmwiGXmmAaK657CfdpoPS
- Fz7U84teAYYbICi2O4GD/aLJ8uzK2AiOYExJtogutwoUfYQhEeqnt1MAK5B8+inbvVsZudb+l
- JJHjzlpoU/Oc+93FvVVMaymuIzy9f5R5gZGyofQ18Ch3DkihSAI67zUaYRbcl98qsSoKBF0qU
- 0Bi3tP98ckrPEa8aT6/eEbWNDmQIaMq18HS/MVAYgP0Spig/t1UW2ix047NzAc3r2ovU57cD/
- m3113f332KKSzj3AKd4QtXe9A+c95IFcsbX/8ZcEtEUh4OjJicZ9FooqDctilf0RHzaAa2R0C
- rBL1UlQkiaGPBiXr/zXerWVeQj+YNsmUc6K/CvV8fuooCj8sZm9wrLZ8jVV/8DBx0EmiKK0FQ
- FMksN9EPcLIzrmxsrW7WAaj8ObKHty46EJiN+qpvZ7NIRTVKtyKeC7eYev77pxyv6ynBQwIto
- XvolrpgZ5uald3Dm9wAVwKn9K+v7AhEHQZv/NkEVcxJbA6C5VQ4xHu1nfwLeN8MtF/mnGnkCL
- 7eovd4m1Pa0fyY2AFdvo5Xvee3L7sL7797X+E77dYhJ60wioVIWdRHlMcJMcL86pG4RtHQe3Y
- 1TtyyEi0bqAfCKemGdUTrRo5E1LDoLRshCvoXw==
+X-Provags-ID: V03:K1:5xh4xCURPmXUvaYJVhWOOLAQMBFKolTB1CtYzDRsCmMQTGj9Kze
+ 7Fbh3rf2q+OnFvF6rluf5naHkTWp2AKMpX/8qWmYyA8oK2d2GVmdCXs4872KOgx/atiTp7G
+ d+ALZSGvhXvKgBZpXx6a8p8ION7NAMwQ3bOjpLN0lyMQnletfe+ZuAytTgD3Wq6yfeTr+s+
+ ZII786NCtXHLUZuyeofOw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GZhL/NKGMsU=:pnMO/pRCh4WLDmq1DpqqkI
+ p740YhoZo3KQxvlsgHWL9Sn+LIr06u69K2ghV8d9qHNzoyiPomaqNU5cnYgdozqeDh29Rsgjv
+ ffKYhEy8LP/dM3+eJZyPqJby5XBIeyw+t/Yz/Gqu5DJyCCZ0qGn+obhaZrEAC1hn0dehex8LH
+ Y29Pludjbv/FLBcUH2QZ5aierVn9/bY69FTIeRIdUACuTWi6mi7zK5YHunkvSlaQzgvdXxNyL
+ dCjmGgw2Amr8S6h7ta+8i/sCpp8B7+3p+92RuIDy5BKINKaXuN3bN9MOGLjDGFwRqgRlti/Dj
+ LliFdWVz1UBHO2VJwClV0KGGWcYUjvjijY7zPH0IEBJB+EhJwtyrQ/KudHTCa33UAXq0+TUAT
+ EpoR7jQNlBnEiT/SFmsOgpGN8b7lsalx7rdGaNRvV+zYtMll9I9Ms1lsgy3xcw4VKqy4dxZuO
+ x+9uYESni8vxxkNVHa0vkDraGm51hKm5cxfVSh9b7Wrq8UfujbcasWoSCOB6Du0TKnFF9opiu
+ cjKF9J4+ZiXNe+dqu7B06scO0AubXzFYOUxDQSf7E44puHzDnYbEZJL1hnVUo1+0uhLdYXcfC
+ fPqwL7DvijxNj/uuYVU5ONNp5roM2diftSzOsvSbGpAzFmDa2YYt9ALX/fURAdlGRPFYSyGIs
+ gMntrnhErYZl3d/3yiz61Pbsjf9nvg9eaN8p31MgENeQofS70cF9FMmSpx7UxWsdjShkic4oX
+ n1nhOD1d3Z+rEp/YJb0U6rAZJ+vN4ZqBpXkcfw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding a mapsize field for the 8250 port platform data struct,
-so we can now set the resource size (eg. *1) and don't need
-funny runtime detections like serial8250_port_size() anymore.
+The io resource size is currently recomputed when it's needed but this
+actually needs to be done once (or drivers could specify fixed values)
 
-For now, serial8250_port_size() is called everytime we need
-the io resource size. That function checks which chip we
-actually have and returns the appropriate size. This approach
-is a bit clumpsy and not entirely easy to understand, and
-it's a violation of layers :p
-
-Obviously, that information cannot change after the driver init,
-so we can safely do that probing once on driver init and just
-use the stored value later.
-
-*1) arch/mips/alchemy/common/platform.c
+Simplify that by doing this computation only once and storing the result
+into the mapsize field. serial8250_register_8250_port() is now called
+only once on driver init, the previous call sites now just fetch the
+value from the mapsize field.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/8250/8250_core.c | 1 +
- include/linux/serial_8250.h         | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/tty/serial/8250/8250.h      |  2 ++
+ drivers/tty/serial/8250/8250_core.c |  3 +++
+ drivers/tty/serial/8250/8250_port.c | 33 +++++++++++++++------------------
+ 3 files changed, 20 insertions(+), 18 deletions(-)
 
+diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
+index ebfb0bd..89e3f09 100644
+--- a/drivers/tty/serial/8250/8250.h
++++ b/drivers/tty/serial/8250/8250.h
+@@ -255,3 +255,5 @@ static inline int serial_index(struct uart_port *port)
+ {
+ 	return port->minor - 64;
+ }
++
++unsigned int serial8250_port_size(struct uart_8250_port *pt);
 diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index e441221..71a398b 100644
+index 71a398b..a9d4ba1 100644
 --- a/drivers/tty/serial/8250/8250_core.c
 +++ b/drivers/tty/serial/8250/8250_core.c
-@@ -814,6 +814,7 @@ static int serial8250_probe(struct platform_device *dev)
- 		uart.port.iotype	= p->iotype;
- 		uart.port.flags		= p->flags;
- 		uart.port.mapbase	= p->mapbase;
-+		uart.port.mapsize	= p->mapsize;
- 		uart.port.hub6		= p->hub6;
- 		uart.port.private_data	= p->private_data;
- 		uart.port.type		= p->type;
-diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
-index 5a655ba..8b8183a 100644
---- a/include/linux/serial_8250.h
-+++ b/include/linux/serial_8250.h
-@@ -22,6 +22,7 @@ struct plat_serial8250_port {
- 	unsigned long	iobase;		/* io base address */
- 	void __iomem	*membase;	/* ioremap cookie or NULL */
- 	resource_size_t	mapbase;	/* resource base */
-+	resource_size_t	mapsize;	/* resource size */
- 	unsigned int	irq;		/* interrupt number */
- 	unsigned long	irqflags;	/* request_irq flags */
- 	unsigned int	uartclk;	/* UART clock rate */
+@@ -979,6 +979,9 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+ 	if (up->port.uartclk == 0)
+ 		return -EINVAL;
+ 
++	/* compute the mapsize in case the driver didn't specify one */
++	up->mapsize = serial8250_port_size(up);
++
+ 	mutex_lock(&serial_mutex);
+ 
+ 	uart = serial8250_find_match_or_unused(&up->port);
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index d2f3310..d09af4c 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2829,7 +2829,7 @@ void serial8250_do_pm(struct uart_port *port, unsigned int state,
+ 		serial8250_do_pm(port, state, oldstate);
+ }
+ 
+-static unsigned int serial8250_port_size(struct uart_8250_port *pt)
++unsigned int serial8250_port_size(struct uart_8250_port *pt)
+ {
+ 	if (pt->port.mapsize)
+ 		return pt->port.mapsize;
+@@ -2849,9 +2849,7 @@ static unsigned int serial8250_port_size(struct uart_8250_port *pt)
+  */
+ static int serial8250_request_std_resource(struct uart_8250_port *up)
+ {
+-	unsigned int size = serial8250_port_size(up);
+ 	struct uart_port *port = &up->port;
+-	int ret = 0;
+ 
+ 	switch (port->iotype) {
+ 	case UPIO_AU:
+@@ -2863,32 +2861,31 @@ static int serial8250_request_std_resource(struct uart_8250_port *up)
+ 		if (!port->mapbase)
+ 			break;
+ 
+-		if (!request_mem_region(port->mapbase, size, "serial")) {
+-			ret = -EBUSY;
+-			break;
+-		}
++		if (!request_mem_region(port->mapbase,
++					port->mapsize, "serial"))
++			return -EBUSY;
+ 
+ 		if (port->flags & UPF_IOREMAP) {
+-			port->membase = ioremap_nocache(port->mapbase, size);
+-			if (!port->membase) {
+-				release_mem_region(port->mapbase, size);
+-				ret = -ENOMEM;
+-			}
++			port->membase = ioremap_nocache(port->mapbase,
++							port->mapsize);
++			if (!port->membase)
++				release_mem_region(port->mapbase,
++						   port->mapsize);
++				return -ENOMEM;
+ 		}
+ 		break;
+ 
+ 	case UPIO_HUB6:
+ 	case UPIO_PORT:
+-		if (!request_region(port->iobase, size, "serial"))
+-			ret = -EBUSY;
++		if (!request_region(port->iobase, port->mapsize, "serial"))
++			return -EBUSY;
+ 		break;
+ 	}
+-	return ret;
++	return 0;
+ }
+ 
+ static void serial8250_release_std_resource(struct uart_8250_port *up)
+ {
+-	unsigned int size = serial8250_port_size(up);
+ 	struct uart_port *port = &up->port;
+ 
+ 	switch (port->iotype) {
+@@ -2906,12 +2903,12 @@ static void serial8250_release_std_resource(struct uart_8250_port *up)
+ 			port->membase = NULL;
+ 		}
+ 
+-		release_mem_region(port->mapbase, size);
++		release_mem_region(port->mapbase, port->mapsize);
+ 		break;
+ 
+ 	case UPIO_HUB6:
+ 	case UPIO_PORT:
+-		release_region(port->iobase, size);
++		release_region(port->iobase, port->mapsize);
+ 		break;
+ 	}
+ }
 -- 
 1.9.1
 
