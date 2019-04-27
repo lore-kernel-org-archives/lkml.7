@@ -2,103 +2,151 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79542C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D88C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 414ED204EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:00:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556388037;
-	bh=/zRjMbzBiv2s9JYXZwe5cYYSiAICagPWPRWCg0nrcts=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ufGpW7cTe+yIU/yxiCeMYmd4PB9BuaZ4frjYrvIV9xcxiNsemjKjYZ4fRUsXgLl91
-	 RLw5AudSaj9AXGY68aT98KicAijczyw5yF+gf9bcRsk9flnwYo0blL22bXY2w5wt6R
-	 SGKbl7fnjl/aLjdeB5TJ3o0YCcu0FMW5JRzu1tsQ=
+	by mail.kernel.org (Postfix) with ESMTP id 225DA2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfD0SAg (ORCPT
+        id S1726280AbfD0SEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 14:00:36 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55684 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfD0SAf (ORCPT
+        Sat, 27 Apr 2019 14:04:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35844 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725950AbfD0SEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 14:00:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/zRjMbzBiv2s9JYXZwe5cYYSiAICagPWPRWCg0nrcts=; b=qV5Obo3xI2dLbptH9kR7cfgfi
-        mJvknFCSHRfTRU78dZgZPoF3yiBinssokTAXOhGX2qTBEBwvCgd+1/jUs+HdjoXKoN8bYdTo7xCYV
-        octP9b4UqV935KZCD+fAkKicUF9X2+FTDzb8k+vMhzXfF6WWFI2kRClQ3NjZ1a+WWsBHU=;
-Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hKRcm-00051m-Fb; Sat, 27 Apr 2019 18:00:32 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 3BAB2441D3B; Sat, 27 Apr 2019 19:00:29 +0100 (BST)
-Date:   Sun, 28 Apr 2019 03:00:29 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.0 03/79] ASoC: ab8500: Mark expected switch
- fall-through
-Message-ID: <20190427180029.GK14916@sirena.org.uk>
-References: <20190427013838.6596-1-sashal@kernel.org>
- <20190427013838.6596-3-sashal@kernel.org>
- <20190427171410.GE14916@sirena.org.uk>
- <90e92595-1609-6c3b-b1d7-ca6a20a81f79@embeddedor.com>
+        Sat, 27 Apr 2019 14:04:06 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3RI3wjF072813
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 14:04:05 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s4fyra2rf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 14:04:05 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sat, 27 Apr 2019 19:04:04 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 27 Apr 2019 19:04:03 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3RI2lO827394194
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 27 Apr 2019 18:02:47 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29843B2068;
+        Sat, 27 Apr 2019 18:02:47 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0528CB2067;
+        Sat, 27 Apr 2019 18:02:47 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.220.189])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat, 27 Apr 2019 18:02:46 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id A606716C0E9F; Sat, 27 Apr 2019 11:02:46 -0700 (PDT)
+Date:   Sat, 27 Apr 2019 11:02:46 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, andrea.parri@amarulasolutions.com
+Subject: Question about sched_setaffinity()
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gBYU9MM4gf8jKg2V"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <90e92595-1609-6c3b-b1d7-ca6a20a81f79@embeddedor.com>
-X-Cookie: -- I have seen the FUN --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19042718-0072-0000-0000-000004220FCA
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011006; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01195222; UDB=6.00626710; IPR=6.00976064;
+ MB=3.00026624; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-27 18:04:04
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042718-0073-0000-0000-00004BFD9E12
+Message-Id: <20190427180246.GA15502@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-27_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=930 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904270129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello, Peter!
 
---gBYU9MM4gf8jKg2V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+TL;DR: If a normal !PF_NO_SETAFFINITY kthread invokes sched_setaffinity(),
+and sched_setaffinity() returns 0, is it expected behavior for that
+kthread to be running on some CPU other than one of the ones specified by
+the in_mask argument?  All CPUs are online, and there is no CPU-hotplug
+activity taking place.
 
-On Sat, Apr 27, 2019 at 12:31:22PM -0500, Gustavo A. R. Silva wrote:
-> On 4/27/19 12:14 PM, Mark Brown wrote:
+							Thanx, Paul
 
-> > Are we *realy* going to enable -Wimplicit-fallthrough in stable kernels
-> > and both backport all the fixes and add new fixes for the issues which
-> > don't have backportable fixes?
+Details:
 
-> I don't think so.
+I have long showed the following "toy" synchronize_rcu() implementation:
 
-> There are hundreds of these patches in mainline, and I think this is
-> the first time I see one of them being backported.
+	void synchronize_rcu(void)
+	{
+		int cpu;
 
-Right, this looked like a super weird thing to backport.
+		for_each_online_cpu(cpu)
+			run_on(cpu);
+	}
 
---gBYU9MM4gf8jKg2V
-Content-Type: application/pgp-signature; name="signature.asc"
+I decided that if I was going to show it, I should test it.  And it
+occurred to me that run_on() can be a call to sched_setaffinity():
 
------BEGIN PGP SIGNATURE-----
+	void synchronize_rcu(void)
+	{
+		int cpu;
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzEmLwACgkQJNaLcl1U
-h9AMewf+NcfgSMZeeFeumPEiOrm65mvlAlECmRvdyrB82psUkR1C3y7rM8Nx6DRM
-2SRWhnRHKcFhiXPZ2/jzZWMKMiWr5PWkVpjKq5uZO8dGQSexDm5TnvnKKxBa6M6O
-yPMRvgP0k6FegOttGRfnWT9zALo+Yp9P2jWTEkWMfdI7sd1UaHEqmMv80uCCMk1u
-s5DVQOlA/Pem3/t2IPxrr0Th4B3Q1vDQ0FuSL1q3qh2OCGeQD1bVq9L+6FZMCWpN
-8/hnr2RFmofRmdm5+JX2RkA4fue5tN1OhGumMLubVwE+Ep1LBeWW8GMdTXQAbPMi
-638BcHuoM9/Mm+bYUSZZe+pLyv5/QQ==
-=4fxy
------END PGP SIGNATURE-----
+		for_each_online_cpu(cpu)
+			sched_setaffinity(current->pid, cpumask_of(cpu));
+	}
 
---gBYU9MM4gf8jKg2V--
+This actually passes rcutorture.  But, as Andrea noted, not klitmus.
+After some investigation, it turned out that klitmus was creating kthreads
+with PF_NO_SETAFFINITY, hence the failures.  But that prompted me to
+put checks into my code: After all, rcutorture can be fooled.
+
+	void synchronize_rcu(void)
+	{
+		int cpu;
+
+		for_each_online_cpu(cpu) {
+			sched_setaffinity(current->pid, cpumask_of(cpu));
+			WARN_ON_ONCE(raw_smp_processor_id() != cpu);
+		}
+	}
+
+This triggers fairly quickly, usually in less than a minute of rcutorture
+testing.  And further investigation shows that sched_setaffinity()
+always returned 0.  So I tried this hack:
+
+	void synchronize_rcu(void)
+	{
+		int cpu;
+
+		for_each_online_cpu(cpu) {
+			while (raw_smp_processor_id() != cpu)
+				sched_setaffinity(current->pid, cpumask_of(cpu));
+			WARN_ON_ONCE(raw_smp_processor_id() != cpu);
+		}
+	}
+
+This never triggers, and rcutorture's grace-period rate is not significantly
+affected.
+
+Is this expected behavior?  Is there some configuration or setup that I
+might be missing?
+
