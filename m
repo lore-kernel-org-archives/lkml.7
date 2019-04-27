@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C00C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912C8C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB27206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6955D206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbfD0PSC (ORCPT
+        id S1727748AbfD0PSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:18:02 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34334 "EHLO
+        Sat, 27 Apr 2019 11:18:01 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34298 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727700AbfD0PPk (ORCPT
+        by vger.kernel.org with ESMTP id S1727693AbfD0PPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:40 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP3A-00014I-MO; Sat, 27 Apr 2019 16:15:36 +0100
+        id 1hKP3B-000144-5y; Sat, 27 Apr 2019 16:15:37 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2i-0004Rq-KP; Sat, 27 Apr 2019 16:15:08 +0100
+        id 1hKP2i-0004Rk-JW; Sat, 27 Apr 2019 16:15:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Samir Virmani" <samir@embedur.com>,
-        "Tycho Andersen" <tycho@tycho.ws>
+        bridge@lists.linux-foundation.org,
+        "David S. Miller" <davem@davemloft.net>,
+        "Nkolay Aleksandrov" <nikolay@cumulusnetworks.com>,
+        "Roopa Prabhu" <roopa@cumulusnetworks.com>,
+        "Yunjian Wang" <wangyunjian@huawei.com>,
+        "Stephen Hemminger" <stephen@networkplumber.org>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.891094013@decadent.org.uk>
+Message-ID: <lsq.1556377989.710221079@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 053/202] uart: Fix crash in uart_write and uart_put_char
+Subject: [PATCH 3.16 052/202] net: bridge: Fix ethernet header pointer
+ before check skb forwardable
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,100 +60,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Samir Virmani <samir@embedur.com>
+From: Yunjian Wang <wangyunjian@huawei.com>
 
-commit aff9cf5955185d1f183227e46c5f8673fa483813 upstream.
+commit 28c1382fa28f2e2d9d0d6f25ae879b5af2ecbd03 upstream.
 
-We were experiencing a crash similar to the one reported as part of
-commit:a5ba1d95e46e ("uart: fix race between uart_put_char() and
-uart_shutdown()") in our testbed as well. We continue to observe the same
-crash after integrating the commit a5ba1d95e46e ("uart: fix race between
-uart_put_char() and uart_shutdown()")
+The skb header should be set to ethernet header before using
+is_skb_forwardable. Because the ethernet header length has been
+considered in is_skb_forwardable(including dev->hard_header_len
+length).
 
-On reviewing the change, the port lock should be taken prior to checking for
-if (!circ->buf) in fn. __uart_put_char and other fns. that update the buffer
-uart_state->xmit.
+To reproduce the issue:
+1, add 2 ports on linux bridge br using following commands:
+$ brctl addbr br
+$ brctl addif br eth0
+$ brctl addif br eth1
+2, the MTU of eth0 and eth1 is 1500
+3, send a packet(Data 1480, UDP 8, IP 20, Ethernet 14, VLAN 4)
+from eth0 to eth1
 
-Traceback:
+So the expect result is packet larger than 1500 cannot pass through
+eth0 and eth1. But currently, the packet passes through success, it
+means eth1's MTU limit doesn't take effect.
 
-[11/27/2018 06:24:32.4870] Unable to handle kernel NULL pointer dereference
-                           at virtual address 0000003b
-
-[11/27/2018 06:24:32.4950] PC is at memcpy+0x48/0x180
-[11/27/2018 06:24:32.4950] LR is at uart_write+0x74/0x120
-[11/27/2018 06:24:32.4950] pc : [<ffffffc0002e6808>]
-                           lr : [<ffffffc0003747cc>] pstate: 000001c5
-[11/27/2018 06:24:32.4950] sp : ffffffc076433d30
-[11/27/2018 06:24:32.4950] x29: ffffffc076433d30 x28: 0000000000000140
-[11/27/2018 06:24:32.4950] x27: ffffffc0009b9d5e x26: ffffffc07ce36580
-[11/27/2018 06:24:32.4950] x25: 0000000000000000 x24: 0000000000000140
-[11/27/2018 06:24:32.4950] x23: ffffffc000891200 x22: ffffffc01fc34000
-[11/27/2018 06:24:32.4950] x21: 0000000000000fff x20: 0000000000000076
-[11/27/2018 06:24:32.4950] x19: 0000000000000076 x18: 0000000000000000
-[11/27/2018 06:24:32.4950] x17: 000000000047cf08 x16: ffffffc000099e68
-[11/27/2018 06:24:32.4950] x15: 0000000000000018 x14: 776d726966205948
-[11/27/2018 06:24:32.4950] x13: 50203a6c6974755f x12: 74647075205d3333
-[11/27/2018 06:24:32.4950] x11: 3a35323a36203831 x10: 30322f37322f3131
-[11/27/2018 06:24:32.4950] x9 : 5b205d303638342e x8 : 746164206f742070
-[11/27/2018 06:24:32.4950] x7 : 7520736920657261 x6 : 000000000000003b
-[11/27/2018 06:24:32.4950] x5 : 000000000000817a x4 : 0000000000000008
-[11/27/2018 06:24:32.4950] x3 : 2f37322f31312a5b x2 : 000000000000006e
-[11/27/2018 06:24:32.4950] x1 : ffffffc0009b9cf0 x0 : 000000000000003b
-
-[11/27/2018 06:24:32.4950] CPU2: stopping
-[11/27/2018 06:24:32.4950] CPU: 2 PID: 0 Comm: swapper/2 Tainted: P      D    O    4.1.51 #3
-[11/27/2018 06:24:32.4950] Hardware name: Broadcom-v8A (DT)
-[11/27/2018 06:24:32.4950] Call trace:
-[11/27/2018 06:24:32.4950] [<ffffffc0000883b8>] dump_backtrace+0x0/0x150
-[11/27/2018 06:24:32.4950] [<ffffffc00008851c>] show_stack+0x14/0x20
-[11/27/2018 06:24:32.4950] [<ffffffc0005ee810>] dump_stack+0x90/0xb0
-[11/27/2018 06:24:32.4950] [<ffffffc00008e844>] handle_IPI+0x18c/0x1a0
-[11/27/2018 06:24:32.4950] [<ffffffc000080c68>] gic_handle_irq+0x88/0x90
-
-Fixes: a5ba1d95e46e ("uart: fix race between uart_put_char() and uart_shutdown()")
-Signed-off-by: Samir Virmani <samir@embedur.com>
-Acked-by: Tycho Andersen <tycho@tycho.ws>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: f6367b4660dd ("bridge: use is_skb_forwardable in forward path")
+Cc: bridge@lists.linux-foundation.org
+Cc: Nkolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc: Roopa Prabhu <roopa@cumulusnetworks.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 [bwh: Backported to 3.16:
- - Keep open-coding uart_port_lock()
- - Adjust context]
+ - br_dev_queue_push_xmit() has to call nf_bridge_maybe_copy_header()
+   before pushing the Ethernet header
+ - adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/serial/serial_core.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -480,10 +480,12 @@ static inline int __uart_put_char(struct
- 	unsigned long flags;
- 	int ret = 0;
+--- a/net/bridge/br_forward.c
++++ b/net/bridge/br_forward.c
+@@ -38,16 +38,21 @@ static inline int should_deliver(const s
+ int br_dev_queue_push_xmit(struct sk_buff *skb)
+ {
+ 	/* ip_fragment doesn't copy the MAC header */
+-	if (nf_bridge_maybe_copy_header(skb) ||
+-	    !is_skb_forwardable(skb->dev, skb)) {
+-		kfree_skb(skb);
+-	} else {
+-		skb_push(skb, ETH_HLEN);
+-		br_drop_fake_rtable(skb);
+-		dev_queue_xmit(skb);
+-	}
++	if (nf_bridge_maybe_copy_header(skb))
++		goto drop;
++
++	skb_push(skb, ETH_HLEN);
++	if (!is_skb_forwardable(skb->dev, skb))
++		goto drop;
++
++	br_drop_fake_rtable(skb);
++	dev_queue_xmit(skb);
  
--	if (!circ->buf)
-+	spin_lock_irqsave(&port->lock, flags);
-+	if (!circ->buf) {
-+		spin_unlock_irqrestore(&port->lock, flags);
- 		return 0;
-+	}
+ 	return 0;
++
++drop:
++	kfree_skb(skb);
++	return 0;
+ }
  
--	spin_lock_irqsave(&port->lock, flags);
- 	if (uart_circ_chars_free(circ) != 0) {
- 		circ->buf[circ->head] = c;
- 		circ->head = (circ->head + 1) & (UART_XMIT_SIZE - 1);
-@@ -524,12 +526,14 @@ static int uart_write(struct tty_struct
+ int br_forward_finish(struct sk_buff *skb)
+@@ -66,12 +71,11 @@ static void __br_deliver(const struct ne
+ 	skb->dev = to->dev;
+ 
+ 	if (unlikely(netpoll_tx_running(to->br->dev))) {
++		skb_push(skb, ETH_HLEN);
+ 		if (!is_skb_forwardable(skb->dev, skb))
+ 			kfree_skb(skb);
+-		else {
+-			skb_push(skb, ETH_HLEN);
++		else
+ 			br_netpoll_send_skb(to, skb);
+-		}
+ 		return;
  	}
  
- 	port = state->uart_port;
-+	spin_lock_irqsave(&port->lock, flags);
- 	circ = &state->xmit;
- 
--	if (!circ->buf)
-+	if (!circ->buf) {
-+		spin_unlock_irqrestore(&port->lock, flags);
- 		return 0;
-+	}
- 
--	spin_lock_irqsave(&port->lock, flags);
- 	while (1) {
- 		c = CIRC_SPACE_TO_END(circ->head, circ->tail, UART_XMIT_SIZE);
- 		if (count < c)
 
