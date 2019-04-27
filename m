@@ -4,57 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70B2C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 19:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A264C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 19:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB222087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 19:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48BD22087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 19:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="fm+vjMnp"
+	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="JOvsdfrL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfD0TNY (ORCPT
+        id S1726405AbfD0TNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 15:13:24 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42633 "EHLO
+        Sat, 27 Apr 2019 15:13:34 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39384 "EHLO
         mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfD0TNW (ORCPT
+        with ESMTP id S1726006AbfD0TNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 15:13:22 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k9so2478240oig.9
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 12:13:21 -0700 (PDT)
+        Sat, 27 Apr 2019 15:13:19 -0400
+Received: by mail-oi1-f196.google.com with SMTP id n187so5495017oih.6
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 12:13:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yB3ceRNeie3ekFC/SUDDCaxF9O67AqC+ZxAxz2oma3A=;
-        b=fm+vjMnpYE5GOyxCJ9WFPRgoGhzGcvPKxyAcwvdjhgnLIKQ8q8iOimX5wvezJXglRJ
-         jiJ+iNyeCfJyZ/JSxELxGhjSbV9L+oVmXHkW+SmgVBuRzUl261mxDCQiTkfzWR4oo7U0
-         3O//BUKDFXnwh9BhO/B75L1eieWoV/8Hjue9QEnBJhiMAUnsQtmtEhDWpm/lGtHG1WOZ
-         1B5DkAD/VNwdfie93CymaL27kJaWY2oHy5uHZXVzjTSZ9w3nYbyh1E7qIKAtrknPdlmY
-         3KcCMwbYFli0bMygKoKzJ25cuWYHbI9T2exVy8Wv2nE3AtMMvUYOtDUgJM2v5KCbG1BD
-         CocA==
+        bh=72QnkVeZl7BGBdu2NJ1aFkR+mDly/cwA9f117/+WG0c=;
+        b=JOvsdfrLGx0Z/mfrolVdvjMD2RzCD1EcNkwvFBrR7Gj5V91Yg2TiQEJjbGYcV6K1F7
+         bXCIHfqsSe4SE55RivmoKL7NeBQ/tBk6O1YXCMbF3F9ZbltBRmk3I8BiJVRptv1l6o/F
+         Q1FFYbuQFwVigg7Gilr6q3kjrO1IqCzfXR/q5EDs1xqQMj9btcTweyM1dUm0492lLpjj
+         uswDJ0FpzNyz7bzuTd1XXqkcDLamerUFO5Bd5fnuUh3UXg73n0IBmgsC7echL3DB099G
+         imbUp/QPkvFZQq88fWPwReQyT1sqCl7Vau2/xfdSCSDtzewfp0rlkzhs/1pOeRLfjAKj
+         Dlgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=yB3ceRNeie3ekFC/SUDDCaxF9O67AqC+ZxAxz2oma3A=;
-        b=Bm2Jb32rkowif8NJrqmLgonIenG8oe0UnsgaGpwFOsnTFZqECvK59umnJjyKGm7tb6
-         9TpgWrnJR1QfmV8kcjNcLDa7j7fJGkXWnvoxA+L/5Y/rgKhOuHV3/MuP3zxBzjnOQZPJ
-         7b20bY6ORxQYqsBgca/oGlL77VPCAMWw3aIqCqtNWh/HR+9I/IUxHpzykCcy1aHCxIFC
-         BacT1msOJJog17XGLuiCgk4xYHVg8FY9/hLVZZM+ND4pRgkjUpBU4hOhgBQ4Uvt9z0VB
-         c6yMz/oiYWmSlzFt5jWEMecQsw5Hbk62f/ipb9zkvNTZEb07gxTYNdS7NNhlwpSr2gWN
-         qBaw==
-X-Gm-Message-State: APjAAAWqxcz9ipxOOFYyI2RgQDTtQOL1Zn62h1E/2smtlKJtY9Ff3eVf
-        P0VUgbqmzMtzK1QVkVTRpc4VqA==
-X-Google-Smtp-Source: APXvYqwXgTY+aJVdZninNhoXzMl5VJJNcGI6GKWPFcuOrPW3qwwDXU8j1HRDTiOgxzppjG8GUdDmkw==
-X-Received: by 2002:aca:97:: with SMTP id 145mr417673oia.36.1556392400983;
-        Sat, 27 Apr 2019 12:13:20 -0700 (PDT)
+        bh=72QnkVeZl7BGBdu2NJ1aFkR+mDly/cwA9f117/+WG0c=;
+        b=criUNUBs2QLShU9OLkTpPv0zp+sTqleWHNxymp/usCoA0ksPdg7JmTjAsQPC72BdbR
+         /lkwFL8D3i2BzoLh9IYiRsuPrfr7tubAe/54RbLU+7RvVCKJjGDLORw4LavaiQlhNeGL
+         qUKcFNecAhm96VjO7fgTZTK/1XH5UgVHXeU2SL5a/1i93relh5WrQJmPMNuFljLYOQ5x
+         lM36dRwjtaMUf91q3A+VnMr7osWUlQiyNWh7d2T3UcLyInMPt6O+LsY1pm36lMsDyDtb
+         p3Q1eVG7bsREGs3G87ihUX9wuka6JadIQxwVQ1StB4u5/LfMl/Ldk9jFa/XD3nCwAu4N
+         kU4A==
+X-Gm-Message-State: APjAAAU1EWDaRZQdTI7pSz8q5Cta8Qr2PlfP5UDGxTrmwu8VPifAW7HD
+        SfBeVwRFxdRuFAStAtz4LB3iIQ==
+X-Google-Smtp-Source: APXvYqytY1MBFt8L0ldKkuSzlceSWGuMYehjsfVSwHqCLLcOLvRtWODpjdApDIgV5tLzaYnwVQxZaw==
+X-Received: by 2002:aca:df44:: with SMTP id w65mr10517932oig.66.1556392398832;
+        Sat, 27 Apr 2019 12:13:18 -0700 (PDT)
 Received: from linux.fredlawl.com ([2600:1700:18a0:11d0:3d43:9acc:6ecc:a72c])
-        by smtp.gmail.com with ESMTPSA id d11sm342069otl.33.2019.04.27.12.13.20
+        by smtp.gmail.com with ESMTPSA id w2sm11373096otk.73.2019.04.27.12.13.17
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 27 Apr 2019 12:13:20 -0700 (PDT)
+        Sat, 27 Apr 2019 12:13:18 -0700 (PDT)
 From:   fred@fredlawl.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -62,9 +61,9 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         andriy.shevchenko@linux.intel.com, keith.busch@intel.com,
         mr.nuke.me@gmail.com, liudongdong3@huawei.com, thesven73@gmail.com,
         Frederick Lawler <fred@fredlawl.com>
-Subject: [PATCH 4/4] PCI/portdrv: Add dev_fmt() to port drivers
-Date:   Sat, 27 Apr 2019 14:13:04 -0500
-Message-Id: <20190427191304.32502-5-fred@fredlawl.com>
+Subject: [PATCH 3/4] PCI: pciehp: Remove unused macro definitions
+Date:   Sat, 27 Apr 2019 14:13:03 -0500
+Message-Id: <20190427191304.32502-4-fred@fredlawl.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190427191304.32502-1-fred@fredlawl.com>
 References: <20190427191304.32502-1-fred@fredlawl.com>
@@ -75,141 +74,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frederick Lawler <fred@fredlawl.com>
 
-Add dev_fmt() to port drivers.
+Now that all uses for the ctrl_*() printk wrappers are removed from
+files and replaces with pci_*() or pr_*() printk wrappers, remove the
+unused macro definitions. In addition to that, remove the MY_NAME macro.
 
 Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 ---
- drivers/pci/hotplug/pciehp_core.c  | 3 +++
- drivers/pci/hotplug/pciehp_ctrl.c  | 2 ++
- drivers/pci/hotplug/pciehp_hpc.c   | 3 +++
- drivers/pci/hotplug/pciehp_pci.c   | 2 ++
- drivers/pci/pcie/aer.c             | 3 +++
- drivers/pci/pcie/aer_inject.c      | 2 ++
- drivers/pci/pcie/bw_notification.c | 2 ++
- drivers/pci/pcie/dpc.c             | 2 ++
- drivers/pci/pcie/pme.c             | 2 ++
- 9 files changed, 21 insertions(+)
+ drivers/pci/hotplug/pciehp.h     | 27 ---------------------------
+ drivers/pci/hotplug/pciehp_hpc.c |  2 +-
+ 2 files changed, 1 insertion(+), 28 deletions(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index 430a47556813..b07d713fd4bd 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -17,6 +17,9 @@
-  *   Dely Sy <dely.l.sy@intel.com>"
-  */
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 506e1d923a1f..7d3a32a1504a 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -25,37 +25,10 @@
  
-+#define pr_fmt(fmt) "pciehp: " fmt
-+#define dev_fmt(fmt) pr_fmt(fmt)
-+
- #include <linux/moduleparam.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 345c02b1e8d7..969a9c72f65d 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -13,6 +13,8 @@
-  *
-  */
+ #include "../pcie/portdrv.h"
  
-+#define dev_fmt(fmt) "pciehp: " fmt
-+
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/pm_runtime.h>
+-#define MY_NAME	"pciehp"
+-
+ extern bool pciehp_poll_mode;
+ extern int pciehp_poll_time;
+ extern bool pciehp_debug;
+ 
+-#define dbg(format, arg...)						\
+-do {									\
+-	if (pciehp_debug)						\
+-		printk(KERN_DEBUG "%s: " format, MY_NAME, ## arg);	\
+-} while (0)
+-#define err(format, arg...)						\
+-	printk(KERN_ERR "%s: " format, MY_NAME, ## arg)
+-#define info(format, arg...)						\
+-	printk(KERN_INFO "%s: " format, MY_NAME, ## arg)
+-#define warn(format, arg...)						\
+-	printk(KERN_WARNING "%s: " format, MY_NAME, ## arg)
+-
+-#define ctrl_dbg(ctrl, format, arg...)					\
+-	do {								\
+-		if (pciehp_debug)					\
+-			dev_printk(KERN_DEBUG, &ctrl->pcie->device,	\
+-					format, ## arg);		\
+-	} while (0)
+-#define ctrl_err(ctrl, format, arg...)					\
+-	dev_err(&ctrl->pcie->device, format, ## arg)
+-#define ctrl_info(ctrl, format, arg...)					\
+-	dev_info(&ctrl->pcie->device, format, ## arg)
+-#define ctrl_warn(ctrl, format, arg...)					\
+-	dev_warn(&ctrl->pcie->device, format, ## arg)
+-
+ #define SLOT_NAME_SIZE 10
+ 
+ /**
 diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 28a132a0d9db..f2a3da105f5b 100644
+index 5e5631fd0171..28a132a0d9db 100644
 --- a/drivers/pci/hotplug/pciehp_hpc.c
 +++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -12,6 +12,9 @@
-  * Send feedback to <greg@kroah.com>,<kristen.c.accardi@intel.com>
-  */
+@@ -47,7 +47,7 @@ static inline int pciehp_request_irq(struct controller *ctrl)
  
-+#define pr_fmt(fmt) "pciehp: " fmt
-+#define dev_fmt(fmt) pr_fmt(fmt)
-+
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/jiffies.h>
-diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-index 55967ce567f6..04ccd535aca7 100644
---- a/drivers/pci/hotplug/pciehp_pci.c
-+++ b/drivers/pci/hotplug/pciehp_pci.c
-@@ -13,6 +13,8 @@
-  *
-  */
- 
-+#define dev_fmt(fmt) "pciehp: " fmt
-+
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/pci.h>
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 224d878a28b4..6fd67285423d 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -12,6 +12,9 @@
-  *    Andrew Patterson <andrew.patterson@hp.com>
-  */
- 
-+#define pr_fmt(fmt) "AER: " fmt
-+#define dev_fmt(fmt) pr_fmt(fmt)
-+
- #include <linux/cper.h>
- #include <linux/pci.h>
- #include <linux/pci-acpi.h>
-diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-index 610b617ae600..d4f6d49acd0c 100644
---- a/drivers/pci/pcie/aer_inject.c
-+++ b/drivers/pci/pcie/aer_inject.c
-@@ -12,6 +12,8 @@
-  *     Huang Ying <ying.huang@intel.com>
-  */
- 
-+#define dev_fmt(fmt) "AER: " fmt
-+
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/irq.h>
-diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
-index d2eae3b7cc0f..a4bb90562cd5 100644
---- a/drivers/pci/pcie/bw_notification.c
-+++ b/drivers/pci/pcie/bw_notification.c
-@@ -14,6 +14,8 @@
-  * and warns when links become degraded in operation.
-  */
- 
-+#define dev_fmt(fmt) "BWN: " fmt
-+
- #include "../pci.h"
- #include "portdrv.h"
- 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 72659286191b..b3c10cdc508a 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -6,6 +6,8 @@
-  * Copyright (C) 2016 Intel Corp.
-  */
- 
-+#define dev_fmt(fmt) "DPC: " fmt
-+
- #include <linux/aer.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index 54d593d10396..d6698423a6d6 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -7,6 +7,8 @@
-  * Copyright (C) 2009 Rafael J. Wysocki <rjw@sisk.pl>, Novell Inc.
-  */
- 
-+#define dev_fmt(fmt) "PME: " fmt
-+
- #include <linux/pci.h>
- #include <linux/kernel.h>
- #include <linux/errno.h>
+ 	/* Installs the interrupt handler */
+ 	retval = request_threaded_irq(irq, pciehp_isr, pciehp_ist,
+-				      IRQF_SHARED, MY_NAME, ctrl);
++				      IRQF_SHARED, "pciehp", ctrl);
+ 	if (retval)
+ 		pci_err(pdev, "Cannot get irq %d for the hotplug controller\n",
+ 			irq);
 -- 
 2.17.1
 
