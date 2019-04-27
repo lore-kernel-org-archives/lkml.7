@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EE6C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E213C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A7E206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31E0206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbfD0Pcl (ORCPT
+        id S1728767AbfD0Pct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:32:41 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60710 "EHLO
+        Sat, 27 Apr 2019 11:32:49 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60672 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726730AbfD0PPM (ORCPT
+        by vger.kernel.org with ESMTP id S1726663AbfD0PPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:12 -0400
+        Sat, 27 Apr 2019 11:15:11 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2j-0000z6-Tt; Sat, 27 Apr 2019 16:15:09 +0100
+        id 1hKP2h-0000zP-RY; Sat, 27 Apr 2019 16:15:07 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2h-0004PE-JJ; Sat, 27 Apr 2019 16:15:07 +0100
+        id 1hKP2h-0004Oz-HA; Sat, 27 Apr 2019 16:15:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Ivan Mironov" <mironov.ivan@gmail.com>
+        "Ido Schimmel" <idosch@idosch.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Willem de Bruijn" <willemb@google.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.332999005@decadent.org.uk>
+Message-ID: <lsq.1556377989.82863417@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 021/202] scsi: sd: Fix cache_type_store()
+Subject: [PATCH 3.16 018/202] packet: validate address length if non-zero
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,59 +56,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ivan Mironov <mironov.ivan@gmail.com>
+From: Willem de Bruijn <willemb@google.com>
 
-commit 44759979a49bfd2d20d789add7fa81a21eb1a4ab upstream.
+commit 6b8d95f1795c42161dc0984b6863e95d6acf24ed upstream.
 
-Changing of caching mode via /sys/devices/.../scsi_disk/.../cache_type may
-fail if device responds to MODE SENSE command with DPOFUA flag set, and
-then checks this flag to be not set on MODE SELECT command.
+Validate packet socket address length if a length is given. Zero
+length is equivalent to not setting an address.
 
-In this scenario, when trying to change cache_type, write always fails:
-
-	# echo "none" >cache_type
-	bash: echo: write error: Invalid argument
-
-And following appears in dmesg:
-
-	[13007.865745] sd 1:0:1:0: [sda] Sense Key : Illegal Request [current]
-	[13007.865753] sd 1:0:1:0: [sda] Add. Sense: Invalid field in parameter list
-
-=46romSBC-4 r15, 6.5.1 "Mode pages overview", description of DEVICE-SPECIFIC
-PARAMETER field in the mode parameter header:
-	...
-	The write protect (WP) bit for mode data sent with a MODE SELECT
-	command shall be ignored by the device server.
-	...
-	The DPOFUA bit is reserved for mode data sent with a MODE SELECT
-	command.
-	...
-
-The remaining bits in the DEVICE-SPECIFIC PARAMETER byte are also reserved
-and shall be set to zero.
-
-[mkp: shuffled commentary to commit description]
-
-Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 99137b7888f4 ("packet: validate address length")
+Reported-by: Ido Schimmel <idosch@idosch.org>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/sd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/packet/af_packet.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -194,6 +194,12 @@ cache_type_store(struct device *dev, str
- 	sp = buffer_data[0] & 0x80 ? 1 : 0;
- 	buffer_data[0] &= ~0x80;
- 
-+	/*
-+	 * Ensure WP, DPOFUA, and RESERVED fields are cleared in
-+	 * received mode parameter buffer before doing MODE SELECT.
-+	 */
-+	data.device_specific = 0;
-+
- 	if (scsi_mode_select(sdp, 1, sp, 8, buffer_data, len, SD_TIMEOUT,
- 			     SD_MAX_RETRIES, &data, &sshdr)) {
- 		if (scsi_sense_valid(&sshdr))
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -2299,7 +2299,7 @@ static int tpacket_snd(struct packet_soc
+ 						sll_addr)))
+ 			goto out;
+ 		proto	= saddr->sll_protocol;
+-		addr	= saddr->sll_addr;
++		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
+ 		dev = dev_get_by_index(sock_net(&po->sk), saddr->sll_ifindex);
+ 		if (addr && dev && saddr->sll_halen < dev->addr_len)
+ 			goto out;
+@@ -2461,7 +2461,7 @@ static int packet_snd(struct socket *soc
+ 		if (msg->msg_namelen < (saddr->sll_halen + offsetof(struct sockaddr_ll, sll_addr)))
+ 			goto out;
+ 		proto	= saddr->sll_protocol;
+-		addr	= saddr->sll_addr;
++		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
+ 		dev = dev_get_by_index(sock_net(sk), saddr->sll_ifindex);
+ 		if (addr && dev && saddr->sll_halen < dev->addr_len)
+ 			goto out;
 
