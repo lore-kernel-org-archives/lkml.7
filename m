@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF6AC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F315C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C3F208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02443205ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfD0PP6 (ORCPT
+        id S1727846AbfD0PPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:15:58 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33332 "EHLO
+        Sat, 27 Apr 2019 11:15:55 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33328 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727423AbfD0PPZ (ORCPT
+        by vger.kernel.org with ESMTP id S1727417AbfD0PPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:25 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2v-0000zB-To; Sat, 27 Apr 2019 16:15:22 +0100
+        id 1hKP2v-0000z8-VI; Sat, 27 Apr 2019 16:15:22 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2m-0004bT-NU; Sat, 27 Apr 2019 16:15:12 +0100
+        id 1hKP2n-0004db-KZ; Sat, 27 Apr 2019 16:15:13 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Taehee Yoo" <ap420073@gmail.com>,
-        "Florian Westphal" <fw@strlen.de>,
-        "Pablo Neira Ayuso" <pablo@netfilter.org>
+        "Hulk Robot" <hulkci@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "YueHaibing" <yuehaibing@huawei.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.639893397@decadent.org.uk>
+Message-ID: <lsq.1556377989.27880779@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 157/202] netfilter: nf_tables: nft_compat: fix
- refcount leak on xt module
+Subject: [PATCH 3.16 179/202] net: nfc: Fix NULL dereference on
+ nfc_llcp_build_tlv fails
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,286 +57,155 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Florian Westphal <fw@strlen.de>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit b8e9dc1c75714ceb53615743e1036f76e00f5a17 upstream.
+commit 58bdd544e2933a21a51eecf17c3f5f94038261b5 upstream.
 
-Taehee Yoo reported following bug:
-    iptables-compat -I OUTPUT -m cpu --cpu 0
-    iptables-compat -F
-    lsmod |grep xt_cpu
-    xt_cpu                 16384  1
+KASAN report this:
 
-Quote:
-"When above command is given, a netlink message has two expressions that
-are the cpu compat and the nft_counter.
-The nft_expr_type_get() in the nf_tables_expr_parse() successes
-first expression then, calls select_ops callback.
-(allocates memory and holds module)
-But, second nft_expr_type_get() in the nf_tables_expr_parse()
-returns -EAGAIN because of request_module().
-In that point, by the 'goto err1',
-the 'module_put(info[i].ops->type->owner)' is called.
-There is no release routine."
+BUG: KASAN: null-ptr-deref in nfc_llcp_build_gb+0x37f/0x540 [nfc]
+Read of size 3 at addr 0000000000000000 by task syz-executor.0/5401
 
-The core problem is that unlike all other expression,
-nft_compat select_ops has side effects.
+CPU: 0 PID: 5401 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ kasan_report+0x171/0x18d mm/kasan/report.c:321
+ memcpy+0x1f/0x50 mm/kasan/common.c:130
+ nfc_llcp_build_gb+0x37f/0x540 [nfc]
+ nfc_llcp_register_device+0x6eb/0xb50 [nfc]
+ nfc_register_device+0x50/0x1d0 [nfc]
+ nfcsim_device_new+0x394/0x67d [nfcsim]
+ ? 0xffffffffc1080000
+ nfcsim_init+0x6b/0x1000 [nfcsim]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f9cb79dcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
+RBP: 00007f9cb79dcc70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9cb79dd6bc
+R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
 
-1. it allocates dynamic memory which holds an nft ops struct.
-   In all other expressions, ops has static storage duration.
-2. It grabs references to the xt module that it is supposed to
-   invoke.
+nfc_llcp_build_tlv will return NULL on fails, caller should check it,
+otherwise will trigger a NULL dereference.
 
-Depending on where things go wrong, error unwinding doesn't
-always do the right thing.
-
-In the above scenario, a new nft_compat_expr is created and
-xt_cpu module gets loaded with a refcount of 1.
-
-Due to to -EAGAIN, the netlink messages get re-parsed.
-When that happens, nft_compat finds that xt_cpu is already present
-and increments module refcount again.
-
-This fixes the problem by making select_ops to have no visible
-side effects and removes all extra module_get/put.
-
-When select_ops creates a new nft_compat expression, the new
-expression has a refcount of 0, and the xt module gets its refcount
-incremented.
-
-When error happens, the next call finds existing entry, but will no
-longer increase the reference count -- the presence of existing
-nft_xt means we already hold a module reference.
-
-Because nft_xt_put is only called from nft_compat destroy hook,
-it will never see the initial zero reference count.
-->destroy can only be called after ->init(), and that will increase the
-refcount.
-
-Lastly, we now free nft_xt struct with kfree_rcu.
-Else, we get use-after free in nf_tables_rule_destroy:
-
-  while (expr != nft_expr_last(rule) && expr->ops) {
-    nf_tables_expr_destroy(ctx, expr);
-    expr = nft_expr_next(expr); // here
-
-nft_expr_next() dereferences expr->ops. This is safe
-for all users, as ops have static storage duration.
-In nft_compat case however, its ->destroy callback can
-free the memory that hold the ops structure.
-
-Tested-by: Taehee Yoo <ap420073@gmail.com>
-Reported-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-[bwh: Backported to 3.16: adjust context]
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: eda21f16a5ed ("NFC: Set MIU and RW values from CONNECT and CC LLCP frames")
+Fixes: d646960f7986 ("NFC: Initial LLCP support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/netfilter/nft_compat.c | 92 ++++++++++++++++++++++++--------------
- 1 file changed, 58 insertions(+), 34 deletions(-)
+ net/nfc/llcp_commands.c | 20 ++++++++++++++++++++
+ net/nfc/llcp_core.c     | 24 ++++++++++++++++++++----
+ 2 files changed, 40 insertions(+), 4 deletions(-)
 
---- a/net/netfilter/nft_compat.c
-+++ b/net/netfilter/nft_compat.c
-@@ -26,14 +26,24 @@ struct nft_xt {
- 	struct list_head	head;
- 	struct nft_expr_ops	ops;
- 	unsigned int		refcnt;
-+
-+	/* Unlike other expressions, ops doesn't have static storage duration.
-+	 * nft core assumes they do.  We use kfree_rcu so that nft core can
-+	 * can check expr->ops->size even after nft_compat->destroy() frees
-+	 * the nft_xt struct that holds the ops structure.
-+	 */
-+	struct rcu_head		rcu_head;
- };
- 
--static void nft_xt_put(struct nft_xt *xt)
-+static bool nft_xt_put(struct nft_xt *xt)
- {
- 	if (--xt->refcnt == 0) {
- 		list_del(&xt->head);
--		kfree(xt);
-+		kfree_rcu(xt, rcu_head);
-+		return true;
- 	}
-+
-+	return false;
- }
- 
- union nft_entry {
-@@ -177,6 +187,7 @@ nft_target_init(const struct nft_ctx *ct
- 	struct xt_target *target = expr->ops->data;
- 	struct xt_tgchk_param par;
- 	size_t size = XT_ALIGN(nla_len(tb[NFTA_TARGET_INFO]));
-+	struct nft_xt *nft_xt;
- 	u8 proto = 0;
- 	bool inv = false;
- 	union nft_entry e = {};
-@@ -187,25 +198,22 @@ nft_target_init(const struct nft_ctx *ct
- 	if (ctx->nla[NFTA_RULE_COMPAT]) {
- 		ret = nft_parse_compat(ctx->nla[NFTA_RULE_COMPAT], &proto, &inv);
- 		if (ret < 0)
--			goto err;
-+			return ret;
+--- a/net/nfc/llcp_commands.c
++++ b/net/nfc/llcp_commands.c
+@@ -418,6 +418,10 @@ int nfc_llcp_send_connect(struct nfc_llc
+ 						      sock->service_name,
+ 						      sock->service_name_len,
+ 						      &service_name_tlv_length);
++		if (!service_name_tlv) {
++			err = -ENOMEM;
++			goto error_tlv;
++		}
+ 		size += service_name_tlv_length;
  	}
  
- 	nft_target_set_tgchk_param(&par, ctx, target, info, &e, proto, inv);
+@@ -428,9 +432,17 @@ int nfc_llcp_send_connect(struct nfc_llc
  
- 	ret = xt_check_target(&par, size, proto, inv);
- 	if (ret < 0)
--		goto err;
-+		return ret;
- 
- 	/* The standard target cannot be used */
--	if (target->target == NULL) {
--		ret = -EINVAL;
--		goto err;
--	}
-+	if (!target->target)
-+		return -EINVAL;
- 
-+	nft_xt = container_of(expr->ops, struct nft_xt, ops);
-+	nft_xt->refcnt++;
- 	return 0;
--err:
--	module_put(target->me);
--	return ret;
- }
- 
- static void
-@@ -222,8 +230,8 @@ nft_target_destroy(const struct nft_ctx
- 	if (par.target->destroy != NULL)
- 		par.target->destroy(&par);
- 
--	nft_xt_put(container_of(expr->ops, struct nft_xt, ops));
--	module_put(target->me);
-+	if (nft_xt_put(container_of(expr->ops, struct nft_xt, ops)))
-+		module_put(target->me);
- }
- 
- static int
-@@ -383,6 +391,7 @@ nft_match_init(const struct nft_ctx *ctx
- 	struct xt_match *match = expr->ops->data;
- 	struct xt_mtchk_param par;
- 	size_t size = XT_ALIGN(nla_len(tb[NFTA_MATCH_INFO]));
-+	struct nft_xt *nft_xt;
- 	u8 proto = 0;
- 	bool inv = false;
- 	union nft_entry e = {};
-@@ -393,19 +402,18 @@ nft_match_init(const struct nft_ctx *ctx
- 	if (ctx->nla[NFTA_RULE_COMPAT]) {
- 		ret = nft_parse_compat(ctx->nla[NFTA_RULE_COMPAT], &proto, &inv);
- 		if (ret < 0)
--			goto err;
-+			return ret;
- 	}
- 
- 	nft_match_set_mtchk_param(&par, ctx, match, info, &e, proto, inv);
- 
- 	ret = xt_check_match(&par, size, proto, inv);
- 	if (ret < 0)
--		goto err;
-+		return ret;
- 
-+	nft_xt = container_of(expr->ops, struct nft_xt, ops);
-+	nft_xt->refcnt++;
- 	return 0;
--err:
--	module_put(match->me);
--	return ret;
- }
- 
- static void
-@@ -423,8 +431,8 @@ nft_match_destroy(const struct nft_ctx *
- 	if (par.match->destroy != NULL)
- 		par.match->destroy(&par);
- 
--	nft_xt_put(container_of(expr->ops, struct nft_xt, ops));
--	module_put(me);
-+	if (nft_xt_put(container_of(expr->ops, struct nft_xt, ops)))
-+		module_put(me);
- }
- 
- static int
-@@ -653,13 +661,8 @@ nft_match_select_ops(const struct nft_ct
- 	list_for_each_entry(nft_match, &nft_match_list, head) {
- 		struct xt_match *match = nft_match->ops.data;
- 
--		if (nft_match_cmp(match, mt_name, rev, family)) {
--			if (!try_module_get(match->me))
--				return ERR_PTR(-ENOENT);
--
--			nft_match->refcnt++;
-+		if (nft_match_cmp(match, mt_name, rev, family))
- 			return &nft_match->ops;
--		}
- 	}
- 
- 	match = xt_request_find_match(family, mt_name, rev);
-@@ -671,7 +674,7 @@ nft_match_select_ops(const struct nft_ct
- 	if (nft_match == NULL)
- 		return ERR_PTR(-ENOMEM);
- 
--	nft_match->refcnt = 1;
-+	nft_match->refcnt = 0;
- 	nft_match->ops.type = &nft_match_type;
- 	nft_match->ops.size = NFT_EXPR_SIZE(XT_ALIGN(match->matchsize) +
- 					    nft_compat_match_offset(match));
-@@ -728,13 +731,8 @@ nft_target_select_ops(const struct nft_c
- 	list_for_each_entry(nft_target, &nft_target_list, head) {
- 		struct xt_target *target = nft_target->ops.data;
- 
--		if (nft_target_cmp(target, tg_name, rev, family)) {
--			if (!try_module_get(target->me))
--				return ERR_PTR(-ENOENT);
--
--			nft_target->refcnt++;
-+		if (nft_target_cmp(target, tg_name, rev, family))
- 			return &nft_target->ops;
--		}
- 	}
- 
- 	target = xt_request_find_target(family, tg_name, rev);
-@@ -746,7 +744,7 @@ nft_target_select_ops(const struct nft_c
- 	if (nft_target == NULL)
- 		return ERR_PTR(-ENOMEM);
- 
--	nft_target->refcnt = 1;
-+	nft_target->refcnt = 0;
- 	nft_target->ops.type = &nft_target_type;
- 	nft_target->ops.size = NFT_EXPR_SIZE(XT_ALIGN(target->targetsize) +
- 					     nft_compat_target_offset(target));
-@@ -801,6 +799,32 @@ err_match:
- 
- static void __exit nft_compat_module_exit(void)
- {
-+	struct nft_xt *xt, *next;
-+
-+	/* list should be empty here, it can be non-empty only in case there
-+	 * was an error that caused nft_xt expr to not be initialized fully
-+	 * and noone else requested the same expression later.
-+	 *
-+	 * In this case, the lists contain 0-refcount entries that still
-+	 * hold module reference.
-+	 */
-+	list_for_each_entry_safe(xt, next, &nft_target_list, head) {
-+		struct xt_target *target = xt->ops.data;
-+
-+		if (WARN_ON_ONCE(xt->refcnt))
-+			continue;
-+		module_put(target->me);
-+		kfree(xt);
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
+ 				      &miux_tlv_length);
++	if (!miux_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
 +	}
-+
-+	list_for_each_entry_safe(xt, next, &nft_match_list, head) {
-+		struct xt_match *match = xt->ops.data;
-+
-+		if (WARN_ON_ONCE(xt->refcnt))
-+			continue;
-+		module_put(match->me);
-+		kfree(xt);
+ 	size += miux_tlv_length;
+ 
+ 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
++	if (!rw_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
 +	}
- 	nfnetlink_subsys_unregister(&nfnl_compat_subsys);
- 	nft_unregister_expr(&nft_target_type);
- 	nft_unregister_expr(&nft_match_type);
+ 	size += rw_tlv_length;
+ 
+ 	pr_debug("SKB size %d SN length %zu\n", size, sock->service_name_len);
+@@ -484,9 +496,17 @@ int nfc_llcp_send_cc(struct nfc_llcp_soc
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
+ 				      &miux_tlv_length);
++	if (!miux_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += miux_tlv_length;
+ 
+ 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
++	if (!rw_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += rw_tlv_length;
+ 
+ 	skb = llcp_allocate_pdu(sock, LLCP_PDU_CC, size);
+--- a/net/nfc/llcp_core.c
++++ b/net/nfc/llcp_core.c
+@@ -531,10 +531,10 @@ static u8 nfc_llcp_reserve_sdp_ssap(stru
+ 
+ static int nfc_llcp_build_gb(struct nfc_llcp_local *local)
+ {
+-	u8 *gb_cur, *version_tlv, version, version_length;
+-	u8 *lto_tlv, lto_length;
+-	u8 *wks_tlv, wks_length;
+-	u8 *miux_tlv, miux_length;
++	u8 *gb_cur, version, version_length;
++	u8 lto_length, wks_length, miux_length;
++	u8 *version_tlv = NULL, *lto_tlv = NULL,
++	   *wks_tlv = NULL, *miux_tlv = NULL;
+ 	__be16 wks = cpu_to_be16(local->local_wks);
+ 	u8 gb_len = 0;
+ 	int ret = 0;
+@@ -542,17 +542,33 @@ static int nfc_llcp_build_gb(struct nfc_
+ 	version = LLCP_VERSION_11;
+ 	version_tlv = nfc_llcp_build_tlv(LLCP_TLV_VERSION, &version,
+ 					 1, &version_length);
++	if (!version_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += version_length;
+ 
+ 	lto_tlv = nfc_llcp_build_tlv(LLCP_TLV_LTO, &local->lto, 1, &lto_length);
++	if (!lto_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += lto_length;
+ 
+ 	pr_debug("Local wks 0x%lx\n", local->local_wks);
+ 	wks_tlv = nfc_llcp_build_tlv(LLCP_TLV_WKS, (u8 *)&wks, 2, &wks_length);
++	if (!wks_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += wks_length;
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&local->miux, 0,
+ 				      &miux_length);
++	if (!miux_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += miux_length;
+ 
+ 	gb_len += ARRAY_SIZE(llcp_magic);
 
