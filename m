@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D941FC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CD0C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3737206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E02F208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfD0PUi (ORCPT
+        id S1728063AbfD0PUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:20:38 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33986 "EHLO
+        Sat, 27 Apr 2019 11:20:37 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33998 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727601AbfD0PPf (ORCPT
+        by vger.kernel.org with ESMTP id S1727606AbfD0PPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:35 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP35-00014L-NO; Sat, 27 Apr 2019 16:15:31 +0100
+        id 1hKP35-0000zP-NT; Sat, 27 Apr 2019 16:15:31 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2k-0004V5-4G; Sat, 27 Apr 2019 16:15:10 +0100
+        id 1hKP2j-0004UE-QO; Sat, 27 Apr 2019 16:15:09 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Vinod Koul" <vkoul@kernel.org>,
-        "Leonid Iziumtsev" <leonid.iziumtsev@gmail.com>
+        "Waiman Long" <longman@redhat.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Dave Chinner" <dchinner@redhat.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.355335819@decadent.org.uk>
+Message-ID: <lsq.1556377989.189435994@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 086/202] dmaengine: imx-dma: fix wrong callback invoke
+Subject: [PATCH 3.16 079/202] fs/dcache: Fix incorrect nr_dentry_unused
+ accounting in shrink_dcache_sb()
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,61 +57,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Leonid Iziumtsev <leonid.iziumtsev@gmail.com>
+From: Waiman Long <longman@redhat.com>
 
-commit 341198eda723c8c1cddbb006a89ad9e362502ea2 upstream.
+commit 1dbd449c9943e3145148cc893c2461b72ba6fef0 upstream.
 
-Once the "ld_queue" list is not empty, next descriptor will migrate
-into "ld_active" list. The "desc" variable will be overwritten
-during that transition. And later the dmaengine_desc_get_callback_invoke()
-will use it as an argument. As result we invoke wrong callback.
+The nr_dentry_unused per-cpu counter tracks dentries in both the LRU
+lists and the shrink lists where the DCACHE_LRU_LIST bit is set.
 
-That behaviour was in place since:
-commit fcaaba6c7136 ("dmaengine: imx-dma: fix callback path in tasklet").
-But after commit 4cd13c21b207 ("softirq: Let ksoftirqd do its job")
-things got worse, since possible delay between tasklet_schedule()
-from DMA irq handler and actual tasklet function execution got bigger.
-And that gave more time for new DMA request to be submitted and
-to be put into "ld_queue" list.
+The shrink_dcache_sb() function moves dentries from the LRU list to a
+shrink list and subtracts the dentry count from nr_dentry_unused.  This
+is incorrect as the nr_dentry_unused count will also be decremented in
+shrink_dentry_list() via d_shrink_del().
 
-It has been noticed that DMA issue is causing problems for "mxc-mmc"
-driver. While stressing the system with heavy network traffic and
-writing/reading to/from sd card simultaneously the timeout may happen:
+To fix this double decrement, the decrement in the shrink_dcache_sb()
+function is taken out.
 
-10013000.sdhci: mxcmci_watchdog: read time out (status = 0x30004900)
-
-That often lead to file system corruption.
-
-Signed-off-by: Leonid Iziumtsev <leonid.iziumtsev@gmail.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 4e717f5c1083 ("list_lru: remove special case function list_lru_dispose_all."
+Signed-off-by: Waiman Long <longman@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/dma/imx-dma.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/dcache.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/drivers/dma/imx-dma.c
-+++ b/drivers/dma/imx-dma.c
-@@ -624,7 +624,7 @@ static void imxdma_tasklet(unsigned long
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -1063,15 +1063,11 @@ static enum lru_status dentry_lru_isolat
+  */
+ void shrink_dcache_sb(struct super_block *sb)
  {
- 	struct imxdma_channel *imxdmac = (void *)data;
- 	struct imxdma_engine *imxdma = imxdmac->imxdma;
--	struct imxdma_desc *desc;
-+	struct imxdma_desc *desc, *next_desc;
- 	unsigned long flags;
+-	long freed;
+-
+ 	do {
+ 		LIST_HEAD(dispose);
  
- 	spin_lock_irqsave(&imxdma->lock, flags);
-@@ -654,10 +654,10 @@ static void imxdma_tasklet(unsigned long
- 	list_move_tail(imxdmac->ld_active.next, &imxdmac->ld_free);
- 
- 	if (!list_empty(&imxdmac->ld_queue)) {
--		desc = list_first_entry(&imxdmac->ld_queue, struct imxdma_desc,
--					node);
-+		next_desc = list_first_entry(&imxdmac->ld_queue,
-+					     struct imxdma_desc, node);
- 		list_move_tail(imxdmac->ld_queue.next, &imxdmac->ld_active);
--		if (imxdma_xfer_desc(desc) < 0)
-+		if (imxdma_xfer_desc(next_desc) < 0)
- 			dev_warn(imxdma->dev, "%s: channel: %d couldn't xfer desc\n",
- 				 __func__, imxdmac->channel);
- 	}
+-		freed = list_lru_walk(&sb->s_dentry_lru,
++		list_lru_walk(&sb->s_dentry_lru,
+ 			dentry_lru_isolate_shrink, &dispose, 1024);
+-
+-		this_cpu_sub(nr_dentry_unused, freed);
+ 		shrink_dentry_list(&dispose);
+ 		cond_resched();
+ 	} while (list_lru_count(&sb->s_dentry_lru) > 0);
 
