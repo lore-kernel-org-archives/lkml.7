@@ -3,26 +3,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F80BC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF53C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568202087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076B42087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfD0M4L (ORCPT
+        id S1727317AbfD0M4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:56:11 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:40151 "EHLO
+        Sat, 27 Apr 2019 08:56:10 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:52457 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbfD0MxK (ORCPT
+        with ESMTP id S1726726AbfD0MxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 08:53:10 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MmDAW-1gu8kq1m7s-00iDvn; Sat, 27 Apr 2019 14:52:40 +0200
+ 1MdeSn-1glaAQ1CHx-00ZjUI; Sat, 27 Apr 2019 14:52:47 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,81 +34,92 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 08/41] drivers: tty: serial: sb1250-duart: fix checkpatch warning on printk()
-Date:   Sat, 27 Apr 2019 14:51:49 +0200
-Message-Id: <1556369542-13247-9-git-send-email-info@metux.net>
+Subject: [PATCH 16/41] drivers: tty: serial: uartlite: fix overlong lines
+Date:   Sat, 27 Apr 2019 14:51:57 +0200
+Message-Id: <1556369542-13247-17-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:9XC3q0bfB2HQ4mApDU4u33n5sD/YoC7EqQPmqP5NMOedGA7sE7R
- zQ+4UMW4bXxRANtgf2zvHO2GKXDxkdKE28JdO/iNudeY0F3mJ+xc3fTNvs7ITqMXpD+h9nY
- QJb/I3M0+a59qd+LyzEcKpCXtBXjQ/BRgErxc0fambEKaAP14TyYVth7y55V4vy+3k5d+oN
- x/fGxgcPqoZSgK+QJd3pA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KbQ0fHA3Nqk=:FuSxcrnKlCstL3CnqMetR8
- enSY2gm0q2GMzPD3zuPC8fZO7HmPN6yxLTvM8eVFp60ICRPcNK4tMFyvmEXAwQhCqV+QlhVfY
- /3SomP72AOXBFjUdm37A6u738T8AWaYhzD3ax41xd/91uO6TvCLXB01NFygTZ69KjGGvd6dHl
- J9lyE8nv3ouQZE4YSkwJ+QPVxRnzV+nPfZBZk/QPt3B8dqdrBa8sVikNqDUZSkcX6lYQS36SE
- LOscWWeMcd9cDI+xfMIg49C4I58k/YvzfJVXt4DERZ2OqnsDVF39SPQ6mxZd8kyZyvkWY68FT
- v4aBhQVWDfpD1t0GubgtmYzo8UOl2KV+/SB6VWAzR3um3S2sxVGVPm3DwToX97W+XO2x/IxZK
- Q6Pr1u8NIEMSywIsghBEkavAFQJyp6Kw1JS9qBGMdHI80KFXdjgfG+6C3hhkvcy6C1d4Y3nMS
- g+SUL9XMx7ynle+l8ySONYsf3S9/5LAeIgUVPU0xC0OjIcIwKL5yM7en/m6fRkNDK5yzev23m
- aXQatsJ5bHJbeQqA6Vbp/dppRd+sjlJA37mRBhWORrP0GnCiSK/iBZGK1z624u2RV/axQxVU8
- FgXt6VT4izE0gGVOenS522mBiI0JYa1/T+aqrIxVh2Mgd9NqSega9IxAQlHRGjbwRynjJt5Sg
- 1101agAP9tCRr5Tje2tMwCcYDgbVyx7BPu9adznbugp+wmE/O4zeZ31tCdtTIo7gfOhkLPJ0f
- XXLVpK9o1Fyph8MTqd6Mt+RVaDYvSrfKML+CcA==
+X-Provags-ID: V03:K1:Ck93dTfp9+M+xebhyVSLDIJuo4MjSGOjDhbkWBRUIflN7U9qSCe
+ pUde8jE0w5A43JR5NuYza+AsYcjHeRQdVwFH5DfzOGQOqRZzgRch+fJcKukuNGfeEOytvZR
+ 5/10Xwz0fpHNGToPKDV3mQbY+HwaGvDTud8ym7VEBca8ousV2I6zja+sNCKPIsmKUiAW4+V
+ hJqAZT0gvkBV1/kztVb2Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lFLVA5ANqXA=:+nwoqH7LETA5l4ZD6Cy0by
+ 9QQxF9w7JwL9dfUQLkTSklNQAm9TDaWBKAb/AK8KrfiMTcGzLt9Ee5RiujQGuJAuFYCa25OaW
+ PsRCxkE462T85gSy8Pd/1exhcYQsoX46KyLQ4ZKSeHvVV8tbKS/OwkFfGrRHmBQ8UlBeXLZK5
+ ebF4s0a/Z8QgHeSqLp8Mld3p8Su8UoV9Y8qvT6GUpcFbwp930569alSTM8wqnyrp9aFJ3bviY
+ wC6Tzx19GZ9/leyIqE3JEmv02FWM4Ec4A6QWgiqsopsuDAzIuR2eWi4DxrYaPHzxccOjVXhW2
+ RfH12CPwxeEkAGqjze7Djw/S5IYL86ng+BscK9UV3x0uudrqH2DvL3151YkbTo13FkHwqeNnW
+ DIe1MAVVKDPOOe4QN7noYVLhRj71YKuN4gMT/LJ+u880TUoLEHCWMILbm5ZFZyvlzBG6K47hU
+ 9N57YDdSPilc+UdCPlSqXcQ4hJByXjZkI6wRREnTfmyit5sfL61G8Cy9lTvJngnoKEflZ/q/D
+ +VkFl7qZhum7WEPeks7u2yKFDTGflXCZYn2mA1tQq+cnqN0OJ85RJZpWS9w6/wqjPbVQmeHnX
+ K1uOze3TXyWYC56Tqwpenyo+uVz9fCc59R4P6VjWRvoYFvUN2alVsNGhQFk7qhdBWZ+GW9efn
+ J+EJarUbpowxoppGXDdCKd50A08hfJxVUT6cLO8NZbGm/sKEm6hc8cXIke/czqdZS6Z34iUaH
+ iiO7jtF61oWxoOCw5a6wqJbKewrFO8VHKUZg/A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-checkpatch complaints:
+Fix checkpatch warnings:
 
-    WARNING: printk() should include KERN_<LEVEL> facility level
-    #698: FILE: drivers/tty/serial/sb1250-duart.c:698:
-    +		printk(err);
+    WARNING: line over 80 characters
+    #283: FILE: drivers/tty/serial/uartlite.c:283:
+    +	ret = request_irq(port->irq, ulite_isr, IRQF_SHARED | IRQF_TRIGGER_RISING,
 
-    WARNING: printk() should include KERN_<LEVEL> facility level
-    #706: FILE: drivers/tty/serial/sb1250-duart.c:706:
-    +			printk(err);
+    WARNING: Missing a blank line after declarations
+    #577: FILE: drivers/tty/serial/uartlite.c:577:
+    +	struct earlycon_device *device = console->data;
+    +	uart_console_write(&device->port, s, n, early_uartlite_putc);
 
-Even though it's a false alarm here (the string is already prefixed
-w/ KERN_ERR), it's nicer to use pr_err() here, which also makes
-checkpatch happy.
+    WARNING: line over 80 characters
+    #590: FILE: drivers/tty/serial/uartlite.c:590:
+    +OF_EARLYCON_DECLARE(uartlite_b, "xlnx,opb-uartlite-1.00.b", early_uartlite_setup);
+
+    WARNING: line over 80 characters
+    #591: FILE: drivers/tty/serial/uartlite.c:591:
+    +OF_EARLYCON_DECLARE(uartlite_a, "xlnx,xps-uartlite-1.00.a", early_uartlite_setup);
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/sb1250-duart.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/uartlite.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/sb1250-duart.c b/drivers/tty/serial/sb1250-duart.c
-index b4342c8..227af87 100644
---- a/drivers/tty/serial/sb1250-duart.c
-+++ b/drivers/tty/serial/sb1250-duart.c
-@@ -689,13 +689,13 @@ static int sbd_map_port(struct uart_port *uport)
+diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
+index 6f79353..0140cec 100644
+--- a/drivers/tty/serial/uartlite.c
++++ b/drivers/tty/serial/uartlite.c
+@@ -280,7 +280,8 @@ static int ulite_startup(struct uart_port *port)
+ 		return ret;
+ 	}
  
- static int sbd_request_port(struct uart_port *uport)
+-	ret = request_irq(port->irq, ulite_isr, IRQF_SHARED | IRQF_TRIGGER_RISING,
++	ret = request_irq(port->irq, ulite_isr,
++			  IRQF_SHARED | IRQF_TRIGGER_RISING,
+ 			  "uartlite", port);
+ 	if (ret)
+ 		return ret;
+@@ -574,6 +575,7 @@ static void early_uartlite_write(struct console *console,
+ 				 const char *s, unsigned int n)
  {
--	const char *err = KERN_ERR "sbd: Unable to reserve MMIO resource\n";
-+	const char *err = "sbd: Unable to reserve MMIO resource\n";
- 	struct sbd_duart *duart = to_sport(uport)->duart;
- 	int ret = 0;
+ 	struct earlycon_device *device = console->data;
++
+ 	uart_console_write(&device->port, s, n, early_uartlite_putc);
+ }
  
- 	if (!request_mem_region(uport->mapbase, DUART_CHANREG_SPACING,
- 				"sb1250-duart")) {
--		printk(err);
-+		pr_err(err);
- 		return -EBUSY;
- 	}
- 	refcount_inc(&duart->map_guard);
-@@ -703,7 +703,7 @@ static int sbd_request_port(struct uart_port *uport)
- 		if (!request_mem_region(duart->mapctrl, DUART_CHANREG_SPACING,
- 					"sb1250-duart")) {
- 			refcount_dec(&duart->map_guard);
--			printk(err);
-+			pr_err(err);
- 			ret = -EBUSY;
- 		}
- 	}
+@@ -587,8 +589,10 @@ static int __init early_uartlite_setup(struct earlycon_device *device,
+ 	return 0;
+ }
+ EARLYCON_DECLARE(uartlite, early_uartlite_setup);
+-OF_EARLYCON_DECLARE(uartlite_b, "xlnx,opb-uartlite-1.00.b", early_uartlite_setup);
+-OF_EARLYCON_DECLARE(uartlite_a, "xlnx,xps-uartlite-1.00.a", early_uartlite_setup);
++OF_EARLYCON_DECLARE(uartlite_b, "xlnx,opb-uartlite-1.00.b",
++		    early_uartlite_setup);
++OF_EARLYCON_DECLARE(uartlite_a, "xlnx,xps-uartlite-1.00.a",
++		    early_uartlite_setup);
+ 
+ #endif /* CONFIG_SERIAL_UARTLITE_CONSOLE */
+ 
 -- 
 1.9.1
 
