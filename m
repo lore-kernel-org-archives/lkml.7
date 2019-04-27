@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0B2C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562FFC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F38206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FFF5206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329789;
-	bh=8AgzaH6M226APsNZiWmQf5E8EhUV1ApwFuYJyhlrJC8=;
+	s=default; t=1556329798;
+	bh=ieGh2GH9KJAGVH6l0lHgLbKL+x65MK5xcFbTnBnSKU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z/aGgmeVL/QAh973Hqi78V6vPrPI8tiw7WJGfWE797WoMgDSG9HsQQt4F1tlNSsvv
-	 ma0egQ55EVFIduai6hR9WLA2xU+W9TcvgLP/Lzpe7HjIVQEYhQsQevW+ZKnqzG7/Md
-	 RSE4g/cPuz2MDaeuqQnTud5C3XVQwa8RiyESX6lY=
+	b=yz8SN1M/hqcty5JTJ54UJF+8yGlMFDwNk7+UShOuLAkVQPVX/OGMFomSNI0uA2sdR
+	 B/03CZA/domDbc1yrumNnUMruXWL1HnYmAiAbDku9CZE4cx5hUDaF6A9ELIrN6a/18
+	 4cAtbMK0d45mLcl4/ZTMIapKicWRYGCy9Mz02f0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbfD0Bts (ORCPT
+        id S1728384AbfD0Blu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:49:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45908 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:41:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728396AbfD0Blw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:52 -0400
+        id S1728352AbfD0Blo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05561216B7;
-        Sat, 27 Apr 2019 01:41:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFDC1216FD;
+        Sat, 27 Apr 2019 01:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329311;
-        bh=8AgzaH6M226APsNZiWmQf5E8EhUV1ApwFuYJyhlrJC8=;
+        s=default; t=1556329303;
+        bh=ieGh2GH9KJAGVH6l0lHgLbKL+x65MK5xcFbTnBnSKU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y4WRDWPBwAY+e5zl1AE3KlY1clcOuaPBhf3Aa4+nmQDECcWXG2lMUVdRDlR/RbXa1
-         YUj21iCoAYJixgOzupoCw/RWDrrS6ZpssnvALe5ODbg7pcg6rqEkW4hcONYilQ9bP8
-         cTIXKUyT8kIg7+cbhJ+C6zrIXCV+22h5iZYtV5s0=
+        b=n7WFg2yaBCyPNCNpyZtyzA2uw8fAjSvixE79Z+KnMw2yEU3QHqEHzi3dktHhbpNm2
+         5Hu5VmkSWQ9aJcEvCq1HiJdinjZ9Mu5Y5upE/qhqdNWQROeHQs8Mt4SteY7eQzpeLB
+         YqkV93o0K2ZjOXcIh/eoOnpZ4MwcX+R9YGF4Iie8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     tiancyin <tianci.yin@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 36/53] drm/sun4i: tcon top: Fix NULL/invalid pointer dereference in sun8i_tcon_top_un/bind
-Date:   Fri, 26 Apr 2019 21:40:33 -0400
-Message-Id: <20190427014051.7522-36-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 30/53] drm/amd/display: fix cursor black issue
+Date:   Fri, 26 Apr 2019 21:40:27 -0400
+Message-Id: <20190427014051.7522-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -60,71 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: tiancyin <tianci.yin@amd.com>
 
-[ Upstream commit 1a07a94b47b1f528f39c3e6187b5eaf02efe44ea ]
+[ Upstream commit c1cefe115d1cdc460014483319d440b2f0d07c68 ]
 
-There are two problems here:
+[Why]
+the member sdr_white_level of struct dc_cursor_attributes was not
+initialized, then the random value result that
+dcn10_set_cursor_sdr_white_level() set error hw_scale value 0x20D9(normal
+value is 0x3c00), this cause the black cursor issue.
 
-1. Not all clk_data->hws[] need to be initialized, depending on various
-   configured quirks. This leads to NULL ptr deref in
-   clk_hw_unregister_gate() in sun8i_tcon_top_unbind()
-2. If there is error when registering the clk_data->hws[],
-   err_unregister_gates error path will try to unregister
-   IS_ERR()=true (invalid) pointer.
+[how]
+just initilize the obj of struct dc_cursor_attributes to zero to avoid
+the random value.
 
-For problem (1) I have this stack trace:
-
-Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000008
-Call trace:
- clk_hw_unregister+0x8/0x18
- clk_hw_unregister_gate+0x14/0x28
- sun8i_tcon_top_unbind+0x2c/0x60
- component_unbind.isra.4+0x2c/0x50
- component_bind_all+0x1d4/0x230
- sun4i_drv_bind+0xc4/0x1a0
- try_to_bring_up_master+0x164/0x1c0
- __component_add+0xa0/0x168
- component_add+0x10/0x18
- sun8i_dw_hdmi_probe+0x18/0x20
- platform_drv_probe+0x3c/0x70
- really_probe+0xcc/0x278
- driver_probe_device+0x34/0xa8
-
-Problem (2) was identified by head scratching.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190405233048.3823-1-megous@megous.com
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Tianci Yin <tianci.yin@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-index adcdf946c365..dfbcd1ad81a5 100644
---- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-@@ -217,7 +217,7 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 2b8b892eb846..76ee2de43ea6 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -4028,6 +4028,7 @@ static void handle_cursor_update(struct drm_plane *plane,
+ 	amdgpu_crtc->cursor_width = plane->state->crtc_w;
+ 	amdgpu_crtc->cursor_height = plane->state->crtc_h;
  
- err_unregister_gates:
- 	for (i = 0; i < CLK_NUM; i++)
--		if (clk_data->hws[i])
-+		if (!IS_ERR_OR_NULL(clk_data->hws[i]))
- 			clk_hw_unregister_gate(clk_data->hws[i]);
- 	clk_disable_unprepare(tcon_top->bus);
- err_assert_reset:
-@@ -235,7 +235,8 @@ static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
- 
- 	of_clk_del_provider(dev->of_node);
- 	for (i = 0; i < CLK_NUM; i++)
--		clk_hw_unregister_gate(clk_data->hws[i]);
-+		if (clk_data->hws[i])
-+			clk_hw_unregister_gate(clk_data->hws[i]);
- 
- 	clk_disable_unprepare(tcon_top->bus);
- 	reset_control_assert(tcon_top->rst);
++	memset(&attributes, 0, sizeof(attributes));
+ 	attributes.address.high_part = upper_32_bits(address);
+ 	attributes.address.low_part  = lower_32_bits(address);
+ 	attributes.width             = plane->state->crtc_w;
 -- 
 2.19.1
 
