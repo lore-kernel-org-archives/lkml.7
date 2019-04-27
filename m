@@ -2,118 +2,108 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A11C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1D6C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F012087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:30:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="A4h7Igia"
+	by mail.kernel.org (Postfix) with ESMTP id 8E700205ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbfD0GaW (ORCPT
+        id S1726236AbfD0GcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:30:22 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:64303 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfD0GaW (ORCPT
+        Sat, 27 Apr 2019 02:32:20 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:56125 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfD0GcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:30:22 -0400
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x3R6U6Wo000593;
-        Sat, 27 Apr 2019 15:30:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x3R6U6Wo000593
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556346607;
-        bh=2u3EwjWwXV67Bz4LM1eTbvzs6VRx/8lQZrbrqWRWzeQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=A4h7Igiam7BnsZkAcw2zeoGCJPVRLE68S1zGfFDpQteSlxy/bR02EIL8KTBcrrPP6
-         yIKBMoDHl2Dmdpkkhm0CAKDuEjsAdJAqV29J6lvoD0sYvl5B4vkhjTh9Q/29yzFv7T
-         CvZkjEGM6F7WRS88fTHN72vTiOPvZoX3Ukv7admE4iYPUKjkr28dAhw7TX7sfXW9kh
-         TZ6rASNE+XFb+UlpPwhxcTCcGR2q3tuQdU/UUBZkL9TZjUjFJxaO2rZ/9yETkNr+RA
-         blXCzQqMraBj3yQMtVEA0/VS/0G2GHngqPTCA4zx8VvTR8kLRtk/EQCFroAf8NJqZa
-         5VjBKlq2jopUw==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id s11so3221808vsn.0;
-        Fri, 26 Apr 2019 23:30:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAUdZr6FvssrmuzTtwBcYqCS8kGhmBOBtkUv/PzwofF836N8yiNJ
-        AkYV54JaefYJaFeEYx45LOq8vhxhkCIV48RD99M=
-X-Google-Smtp-Source: APXvYqwoLl94mqQvUuZSCflpCqRESqyi+Miwx88C+ge5cp+NL76Q+LnNKXeeTUs9qbsvoj9tL0Z+xf85lEg2Lr2FDFk=
-X-Received: by 2002:a67:ea89:: with SMTP id f9mr15571145vso.179.1556346606256;
- Fri, 26 Apr 2019 23:30:06 -0700 (PDT)
+        Sat, 27 Apr 2019 02:32:20 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 109D120025;
+        Sat, 27 Apr 2019 08:32:15 +0200 (CEST)
+Date:   Sat, 27 Apr 2019 08:32:14 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] drm: Add bus flag for Sharp-specific signals
+Message-ID: <20190427063214.GA13123@ravnborg.org>
+References: <20190425231854.24479-1-paul@crapouillou.net>
+ <20190425231854.24479-2-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20190426222237.13209-1-colin.king@canonical.com>
-In-Reply-To: <20190426222237.13209-1-colin.king@canonical.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 27 Apr 2019 15:29:30 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATC5b9yx79sF55hw1X9vZTJK8H+WsLRfy81_chZYRgTYw@mail.gmail.com>
-Message-ID: <CAK7LNATC5b9yx79sF55hw1X9vZTJK8H+WsLRfy81_chZYRgTYw@mail.gmail.com>
-Subject: Re: [PATCH][next] unicode: fix dereference of a potentially null pointer
-To:     Olaf Weber <olaf@sgi.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
-        "Theodore Ts'o" <tytso@mit.edu>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Colin King <colin.king@canonical.com>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425231854.24479-2-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
+        a=7gkXJVJtAAAA:8 a=o6lnpZa0LUvyYah9iqMA:9 a=CjuIK1q_8ugA:10
+        a=9LHmKk7ezEChjTCyhBa9:22 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Forwarding because this file is not in my tree.
+Hi Paul
 
-
-
-
-
-On Sat, Apr 27, 2019 at 7:22 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The pointer 'tree' is deferenced when assigning pointer 'trie', however
-> trie is being null checked a few lines later, so it could potentially
-> be null. Fix the potential null pointer dereference by only dereferencing
-> it after it has been null checked.
->
-> Addresses-Coverity: ("Dereference before null check")
-> Fixes: b08fcacaaaf4 ("unicode: introduce UTF-8 character database")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Fri, Apr 26, 2019 at 01:18:53AM +0200, Paul Cercueil wrote:
+> Add the DRM_BUS_FLAG_SHARP_SIGNALS to the drm_bus_flags enum.
+> 
+> This flags can be used when the display must be driven with the
+> Sharp-specific signals SPL, CLS, REV, PS.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  scripts/mkutf8data.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/scripts/mkutf8data.c b/scripts/mkutf8data.c
-> index 12ce94b43be6..0563ba679bbb 100644
-> --- a/scripts/mkutf8data.c
-> +++ b/scripts/mkutf8data.c
-> @@ -2706,7 +2706,7 @@ static utf8leaf_t *utf8hangul(const char *str, unsigned char *hangul)
->  static utf8leaf_t *utf8nlookup(struct tree *tree, unsigned char *hangul,
->                                const char *s, size_t len)
->  {
-> -       utf8trie_t      *trie = utf8data + tree->index;
-> +       utf8trie_t      *trie;
->         int             offlen;
->         int             offset;
->         int             mask;
-> @@ -2716,6 +2716,7 @@ static utf8leaf_t *utf8nlookup(struct tree *tree, unsigned char *hangul,
->                 return NULL;
->         if (len == 0)
->                 return NULL;
-> +       trie = utf8data + tree->index;
->         node = 1;
->         while (node) {
->                 offlen = (*trie & OFFLEN) >> OFFLEN_SHIFT;
-> --
-> 2.20.1
->
+> 
+> Notes:
+>     v3: New patch
+> 
+>  include/drm/drm_connector.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+> index 02a131202add..ac7d58fd1e03 100644
+> --- a/include/drm/drm_connector.h
+> +++ b/include/drm/drm_connector.h
+> @@ -323,6 +323,8 @@ enum drm_panel_orientation {
+>   *					edge of the pixel clock
+>   * @DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE:	Sync signals are sampled on the falling
+>   *					edge of the pixel clock
+> + * @DRM_BUS_FLAG_SHARP_SIGNALS:		Set if the Sharp-specific signals
+> + *					(SPL, CLS, PS, REV) must be used
+>   */
+>  enum drm_bus_flags {
+>  	DRM_BUS_FLAG_DE_LOW = BIT(0),
+> @@ -341,6 +343,7 @@ enum drm_bus_flags {
+>  	DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE = DRM_BUS_FLAG_SYNC_NEGEDGE,
+>  	DRM_BUS_FLAG_SYNC_SAMPLE_POSEDGE = DRM_BUS_FLAG_SYNC_NEGEDGE,
+>  	DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE = DRM_BUS_FLAG_SYNC_POSEDGE,
+> +	DRM_BUS_FLAG_SHARP_SIGNALS = BIT(8),
+>  };
 
+This solutions looks very good to me.
+Now the panel can report to the display driver that is needs the
+DRM_BUS_FLAG_SHARP_SIGNALS, so the display driver can adapt to the
+connected display.
+Obviously not many display drivers will support DRM_BUS_FLAG_SHARP_SIGNALS
+but the one that does now no longer need to include panel configuration.
 
---
-Best Regards
-Masahiro Yamada
+You can add:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+
+But we need Thierry or someone else with more knowledge in this
+area to comment on this before we can apply it.
+drm_bus_flag is today only timing related config, and there be a better
+way to do this.
+
+Thierry?
+
+	Sam
