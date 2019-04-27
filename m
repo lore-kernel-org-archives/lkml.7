@@ -1,196 +1,94 @@
 Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CA8C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ADAC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1612087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556361983;
-	bh=OqdY/Pfh7FQNnzidebfJ54kG3VLTvi9f3CcjSYFqtGI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=munji0LHTJESVXBiOHru2fMLFJRWwRQ3rCrEHX1pTS7XrBIaLYCz32nwhp2iC0FDh
-	 BrbVMOqdd19zxPSeh2bsQgDgQnSlGnyS0LdrA4XOJdaBT+yromlHIpdXyVvSpYwUJ1
-	 ijVuwalMsLZtAXltDhdhj34w8l9KLKbrSWDrNhh8=
+	by mail.kernel.org (Postfix) with ESMTP id 88B942087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:48:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="TIMNqvAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfD0KqW (ORCPT
+        id S1726255AbfD0Ksh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 06:46:22 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39158 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfD0KqV (ORCPT
+        Sat, 27 Apr 2019 06:48:37 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46447 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfD0Ksg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 06:46:21 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a9so8067890wrp.6;
-        Sat, 27 Apr 2019 03:46:19 -0700 (PDT)
+        Sat, 27 Apr 2019 06:48:36 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s24so4776999otk.13
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 03:48:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=xPSO7oJ3TTHplWc4133d26O3LVrGQFrQK7ot/N5WKb8=;
-        b=iHWAeykZHCFDxFy3680Aunv30P6sD1QDGJ2K2UX7UeCJZs4+FMT5RWJb7Hog4/R5r9
-         dm464UwSg9xMQ+y/Z5uVB2BGznF0SE9F8Kg3VXIWarHzUo2Zv1Wvbj/ZAtT1g6jIh9b7
-         y/3PLs3P3keba5yFj4miN1eRmesniXQJIk4eHjBfjfQoYfFitAejpaMGYBnli3jGX1lc
-         6U94wTq2CKBAYQ2kqNH2xUHuguqjvm5FdcCaujFsNqEHr1Y6JHrRclOlTD4kgUR+ogfH
-         UKNk7HQQDKIYlryRPWZXYC93srNNuZYpAYiUqhrBOsdQ05mCl/nJZnj/D+45V25B6rVL
-         o/RQ==
+        d=kinvolk.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=++lyK0/Przr4xnl8qGUSG2Yro7NLg7scLarfR5uNBzI=;
+        b=TIMNqvAxeGkJ99uzPJLiugrlM6P6HgYUKE9pbhj0Imnf0AMj22kGUQvNUozJiZ7LyC
+         fNN9WQIBeLQtbYGeOGissBVOCkhHCVCmSX6/XOATF3BlZwpOf54yYwCBEg6XCZ7ELoLo
+         8/XyUSH/P1a9ErNAlCpUXtmOPruEOq6UE8KfE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=xPSO7oJ3TTHplWc4133d26O3LVrGQFrQK7ot/N5WKb8=;
-        b=qfxgOT/qkWBGkV+HNbuXqB0HymfiNgSti1XoxamAuWue5CSF7heLV2qbNHhy1QJwzk
-         3g80rqPS8ycSJIFSpHTg1y+YZmJV/fcTKMKbG0vZf1cpBxfE9EJ5Q+JT7xEErtzuHgEf
-         WUun5AZEsLb/c/d0Rcozxxvorp+04CBwtkR1RzIvCFjugRZjF1/S+VaBzleMXfDblRpr
-         G796wDK3NmbQ8EymaKsXUpQtOr9pt4drDoTrMDiukVhifVBUTi85Hbe5txs+lqRhSWn5
-         YXjOR0PRRTKjc8+H3VH4r8fDnd9jmMI4Gpd9YbnEWpkcaKR1tsbSnDUmFnl8ZLSUJPcJ
-         JKsg==
-X-Gm-Message-State: APjAAAXZHXTAlyJjxTSbRdvHbSNy7YkKro0Dp76o/KgfVIRmIV2Ljmsf
-        kDdjdKYQRQUmSlx/G4+1Rjw=
-X-Google-Smtp-Source: APXvYqxY/dnkrLpW/gF+xVDmMuF7QvDiCj7GAGdhfgtGKCgk/7ONprlc+TDqzgFDBPe+eG8Nb+V+zw==
-X-Received: by 2002:a5d:6b46:: with SMTP id x6mr32608036wrw.313.1556361978927;
-        Sat, 27 Apr 2019 03:46:18 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id x14sm9639485wmi.32.2019.04.27.03.46.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 27 Apr 2019 03:46:18 -0700 (PDT)
-Date:   Sat, 27 Apr 2019 12:46:15 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux-MM <linux-mm@kvack.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [RFC PATCH 2/7] x86/sci: add core implementation for system call
- isolation
-Message-ID: <20190427104615.GA55518@gmail.com>
-References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com>
- <1556228754-12996-3-git-send-email-rppt@linux.ibm.com>
- <20190426083144.GA126896@gmail.com>
- <20190426095802.GA35515@gmail.com>
- <CALCETrV3xZdaMn_MQ5V5nORJbcAeMmpc=gq1=M9cmC_=tKVL3A@mail.gmail.com>
- <20190427084752.GA99668@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=++lyK0/Przr4xnl8qGUSG2Yro7NLg7scLarfR5uNBzI=;
+        b=qRyRovxlRU0vubhPFtyeJpCRCLOjWaRRqRrASnMXtbk9vTcpWYwW5mFGDSHJgQbzq5
+         hwHXHWUlGlMK7NKDDlP6mK0+lITxYV+v+Xd0+4GkcYZMhYXoobL1/7EGZsNdjPn3hjzK
+         V8iPz2anUBE7jQAEslpboHxk61USTjz9BqMqz4LYQaZ9BG2/aWPkpsZbrnzlLiWv4RBn
+         MxPWCwFpdBun1UsDHFccFJlxusaQskxYW9FLwaIIHDtw6XnMmxAB2tkUUYrzNzmUeUYW
+         uCt6HOwvsA7qFsUk24PTPbcjuDWdRMmiam6TnqAsjwUHzsIo40P/aFfUtU0qnJLEvLXj
+         XLQQ==
+X-Gm-Message-State: APjAAAUpRDilKWg2iiNC/U2x5osrahiWyBRFUxj7yfmt5DUoIrV6EyFo
+        Z+aTuWgoFWqNU84FL5t9s9HY/B1zMSsNLnR6jJremA==
+X-Google-Smtp-Source: APXvYqwD6+8uJPrc9C2GzFz6q8rAoafejRRSqHxtRlKBsAslu2z72AIfRUrptUK0dcZzzOmJlnmcgdNmKmMIZnzH1kk=
+X-Received: by 2002:a9d:4d91:: with SMTP id u17mr26660488otk.356.1556362115983;
+ Sat, 27 Apr 2019 03:48:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190427084752.GA99668@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190426154848.23490-1-alban@kinvolk.io> <20190426140323.4edf1127@cakuba.netronome.com>
+In-Reply-To: <20190426140323.4edf1127@cakuba.netronome.com>
+From:   Alban Crequy <alban@kinvolk.io>
+Date:   Sat, 27 Apr 2019 12:48:25 +0200
+Message-ID: <CADZs7q7O9TL5wXFBq_SgAdNCkzO=3tyLnF1_chthX3jao=PKqA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 1/4] bpf: sock ops: add netns ino and dev in
+ bpf context
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Alban Crequy <alban.crequy@gmail.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 26, 2019 at 11:03 PM Jakub Kicinski
+<jakub.kicinski@netronome.com> wrote:
+>
+> On Fri, 26 Apr 2019 17:48:45 +0200, Alban Crequy wrote:
+> > In the unlikely case where network namespaces are not compiled in
+> > (CONFIG_NET_NS=n), the verifier will not allow access to ->netns_*.
+>
+> Naive question - why return an error?  init_net should always be there,
+> no?
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+True for netns_dev. However, without CONFIG_NET_NS, we cannot access netns_ino:
 
-> * Andy Lutomirski <luto@kernel.org> wrote:
-> 
-> > > And no, I'm not arguing for Java or C#, but I am arguing for a saner
-> > > version of C.
-> > 
-> > IMO three are three credible choices:
-> > 
-> > 1. C with fairly strong CFI protection. Grsecurity has this (supposedly 
-> > — there’s a distinct lack of source code available), and clang is 
-> > gradually working on it.
-> > 
-> > 2. A safe language for parts of the kernel, e.g. drivers and maybe 
-> > eventually filesystems.  Rust is probably the only credible candidate. 
-> > Actually creating a decent Rust wrapper around the core kernel 
-> > facilities would be quite a bit of work.  Things like sysfs would be 
-> > interesting in Rust, since AFAIK few or even no drivers actually get 
-> > the locking fully correct.  This means that naive users of the API 
-> > cannot port directly to safe Rust, because all the races won't compile
-> > :)
-> > 
-> > 3. A sandbox for parts of the kernel, e.g. drivers.  The obvious 
-> > candidates are eBPF and WASM.
-> > 
-> > #2 will give very good performance.  #3 gives potentially stronger
-> > protection against a sandboxed component corrupting the kernel overall, 
-> > but it gives much weaker protection against a sandboxed component 
-> > corrupting itself.
-> > 
-> > In an ideal world, we could do #2 *and* #3.  Drivers could, for 
-> > example, be written in a language like Rust, compiled to WASM, and run 
-> > in the kernel.
-> 
-> So why not go for #1, which would still outperform #2/#3, right? Do we 
-> know what it would take, roughly, and how the runtime overhead looks 
-> like?
+(struct sock_common).possible_net_t.(struct net *):
 
-BTW., CFI protection is in essence a compiler (or hardware) technique to 
-detect stack frame or function pointer corruption after the fact.
+typedef struct {
+#ifdef CONFIG_NET_NS
+        struct net *net;
+#endif
+} possible_net_t;
 
-So I'm wondering whether there's a 4th choice as well, which avoids 
-control flow corruption *before* it happens:
-
- - A C language runtime that is a subset of current C syntax and 
-   semantics used in the kernel, and which doesn't allow access outside 
-   of existing objects and thus creates a strictly enforced separation 
-   between memory used for data, and memory used for code and control 
-   flow.
-
- - This would involve, at minimum:
-
-    - tracking every type and object and its inherent length and valid 
-      access patterns, and never losing track of its type.
-
-    - being a lot more organized about initialization, i.e. no 
-      uninitialized variables/fields.
-
-    - being a lot more strict about type conversions and pointers in 
-      general.
-
-    - ... and a metric ton of other details.
-
- - If such a runtime could co-exist without big complications with 
-   regular C kernel code then we could convert particular pieces of C 
-   code into this safe-C runtime step by step, and would also allow the 
-   compilation of a piece of code as regular C, or into the safe runtime.
-
- - If a particular function can be formally proven to be safe, it can be 
-   compiled as C - otherwise it would be compiled as safe-C.
-
- - ... or something like this.
-
-The advantage would be: data corruption could never be triggered by code 
-itself, if the compiler and runtime is correct. Return addresses and 
-stacks wouldn't have to be 'hardened' or 'checked', because they'd never 
-be corrupted in the first place. WX memory wouldn't be an issue as kernel 
-code could never jump into generated shell code or ROP gadgets.
-
-The disadvantage: the overhead of managing this, and any loss of 
-flexibility on the kernel programming side.
-
-Does this make sense, and if yes, does such a project exist already?
-(And no, I don't mean Java or C#.)
-
-Or would we in essence end up with a Java runtime, with C syntax?
-
-Thanks,
-
-	Ingo
+And I don't think it would make much sense to allow access to
+netns_dev but not netns_ino.
