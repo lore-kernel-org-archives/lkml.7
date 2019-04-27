@@ -2,109 +2,199 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E948C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E1AC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF64D20881
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9744C20693
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556385487;
-	bh=9Ni2YRPbf4GMMunOYWIHYcrCRiFTp5FPuVt13sVOpXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IZ3YPJa347IwFgQgzmb1PIXijezcB+Jhk6K+2TqrC0zPg2BmzqS4arvMe35sUfzpg
-	 oNns7nufyTHjhVk9F3iXUImvpqznEqCimGE02/Iq4218rHusIHNa/9bxNCbwTz/Mdb
-	 rxRHqvgNRkshDA6mDrzpsDv59zmlTeA22mk0cx58=
+	s=default; t=1556385605;
+	bh=bg2diye7/W+QkFoepDqbwLJ6OBqcwmiuQ6xt+slEIN8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=htCg/mC1OXHqoTKyJIAhZMV9yPyOWSxwRPDozNkhojQgda+qNHOAVUIvFGnUUkMms
+	 M8oZSBs0z3Lv0o0RBGTKW2eYIdINC4sva/ofGKC1dbBzbK87d+qyrf3Wyd1uArsdva
+	 OEsPcusjq4k4DkMrOnKBWbpYyyQTJk2TyE5xJ4i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfD0RSG (ORCPT
+        id S1726317AbfD0RUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 13:18:06 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40378 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD0RSG (ORCPT
+        Sat, 27 Apr 2019 13:20:04 -0400
+Received: from casper.infradead.org ([85.118.1.10]:49278 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfD0RUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 13:18:06 -0400
+        Sat, 27 Apr 2019 13:20:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9Ni2YRPbf4GMMunOYWIHYcrCRiFTp5FPuVt13sVOpXA=; b=daPx8YikwrUepaPWMqT4aN8tI
-        SsXhwvgRFVOFZwsMtbroir3Z3uFn2W3wa/io6Npseaelpj5R4Sx10dcqtBSDhLWea/OenRSOJzpt+
-        LmrSZnN7aIPhLKz5XY+Vdel7xQqa5tYtZR53RQatBvM5tjlZURKGKY3nLlR4iVaDcDDZQ=;
-Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hKQxS-0004YI-UN; Sat, 27 Apr 2019 17:17:51 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 1E81C441D3B; Sat, 27 Apr 2019 18:17:46 +0100 (BST)
-Date:   Sat, 27 Apr 2019 18:17:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/3 v2] ASoC: fsl_sai: Add support for runtime pm
-Message-ID: <20190427171746.GG14916@sirena.org.uk>
-References: <20190421193853.10188-1-daniel.baluta@nxp.com>
- <20190421193853.10188-3-daniel.baluta@nxp.com>
- <20190426100025.GD14916@sirena.org.uk>
- <CAEnQRZCPPr1iHvKEj=fOsE8A2iW=XZd=CaoFqAoUqJftg4pN9Q@mail.gmail.com>
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qtFQQAwoi09eUMZi/ZI9FG4BSUCxuVZYlTnZeG57ejo=; b=PNgDcDoCV0FPEAQWdflbHIHtIL
+        nIP8N0DRtVuY/xcFG3LUTS6xgFEhTiA30xveH5TKKAgjQzGNrXLEyXSPW9Y9MU0J6VWmbIBzhmnZy
+        7O12LpCRBKmNnCwAFqnbnElsgxzm2rsT212gNBtXZ3P1OMZpc564NsbeZsAUmkL1S+Z0fW32UQTp6
+        MNdoFZw2Bl1QYy65PDQCHI2yqo0XpfsP5uVmTDQrupQpBF78WGE8kpTDODgq3XchQDsaOPH2+Dqdp
+        yajMRiLAkZqz5k99SnMNcYC3KUod7WbdkH+0eguW3Z3O6Rw6OS7hVqAta30sXHptM272nz7DA5zcD
+        cGxElBgA==;
+Received: from 177.17.250.151.dynamic.adsl.gvt.net.br ([177.17.250.151] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hKQzV-0001cL-Uf; Sat, 27 Apr 2019 17:19:58 +0000
+Date:   Sat, 27 Apr 2019 14:19:52 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/27] Documentation: x86: convert zero-page.txt to reST
+Message-ID: <20190427141952.4727075e@coco.lan>
+In-Reply-To: <20190426153150.21228-9-changbin.du@gmail.com>
+References: <20190426153150.21228-1-changbin.du@gmail.com>
+        <20190426153150.21228-9-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="p7qwJlK53pWzbayA"
-Content-Disposition: inline
-In-Reply-To: <CAEnQRZCPPr1iHvKEj=fOsE8A2iW=XZd=CaoFqAoUqJftg4pN9Q@mail.gmail.com>
-X-Cookie: -- I have seen the FUN --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Fri, 26 Apr 2019 23:31:31 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
---p7qwJlK53pWzbayA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  Documentation/x86/index.rst     |  1 +
+>  Documentation/x86/zero-page.rst | 45 +++++++++++++++++++++++++++++++++
+>  Documentation/x86/zero-page.txt | 40 -----------------------------
+>  3 files changed, 46 insertions(+), 40 deletions(-)
+>  create mode 100644 Documentation/x86/zero-page.rst
+>  delete mode 100644 Documentation/x86/zero-page.txt
+> 
+> diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+> index 7b8388ebd43d..9a0b5f38ef6b 100644
+> --- a/Documentation/x86/index.rst
+> +++ b/Documentation/x86/index.rst
+> @@ -14,3 +14,4 @@ Linux x86 Support
+>     kernel-stacks
+>     entry_64
+>     earlyprintk
+> +   zero-page
+> diff --git a/Documentation/x86/zero-page.rst b/Documentation/x86/zero-page.rst
+> new file mode 100644
+> index 000000000000..70f10eabca86
+> --- /dev/null
+> +++ b/Documentation/x86/zero-page.rst
+> @@ -0,0 +1,45 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=========
+> +Zero Page
+> +=========
+> +The additional fields in struct boot_params as a part of 32-bit boot
+> +protocol of kernel. These should be filled by bootloader or 16-bit
+> +real-mode setup code of the kernel. References/settings to it mainly
+> +are in::
+> +
+> +  arch/x86/include/uapi/asm/bootparam.h
+> +
+> +===========	=====	=======================	================================
 
-On Fri, Apr 26, 2019 at 03:10:10PM +0300, Daniel Baluta wrote:
+Same comment that I made on a past patch: please extend the tail markup here...
 
-> The only patch left in the series that needs to be applied is this:
+> +Offset/Size	Proto	Name			Meaning
+> +
+> +000/040		ALL	screen_info		Text mode or frame buffer information
+> +						(struct screen_info)
+> +040/014		ALL	apm_bios_info		APM BIOS information (struct apm_bios_info)
+> +058/008		ALL	tboot_addr      	Physical address of tboot shared page
+> +060/010		ALL	ist_info		Intel SpeedStep (IST) BIOS support information
+> +						(struct ist_info)
+> +080/010		ALL	hd0_info		hd0 disk parameter, OBSOLETE!!
+> +090/010		ALL	hd1_info		hd1 disk parameter, OBSOLETE!!
+> +0A0/010		ALL	sys_desc_table		System description table (struct sys_desc_table),
+> +						OBSOLETE!!
+> +0B0/010		ALL	olpc_ofw_header		OLPC's OpenFirmware CIF and friends
+> +0C0/004		ALL	ext_ramdisk_image	ramdisk_image high 32bits
+> +0C4/004		ALL	ext_ramdisk_size	ramdisk_size high 32bits
+> +0C8/004		ALL	ext_cmd_line_ptr	cmd_line_ptr high 32bits
+> +140/080		ALL	edid_info		Video mode setup (struct edid_info)
+> +1C0/020		ALL	efi_info		EFI 32 information (struct efi_info)
+> +1E0/004		ALL	alt_mem_k		Alternative mem check, in KB
+> +1E4/004		ALL	scratch			Scratch field for the kernel setup code
+> +1E8/001		ALL	e820_entries		Number of entries in e820_table (below)
+> +1E9/001		ALL	eddbuf_entries		Number of entries in eddbuf (below)
+> +1EA/001		ALL	edd_mbr_sig_buf_entries	Number of entries in edd_mbr_sig_buffer
+> +						(below)
+> +1EB/001		ALL     kbd_status      	Numlock is enabled
+> +1EC/001		ALL     secure_boot		Secure boot is enabled in the firmware
+> +1EF/001		ALL	sentinel		Used to detect broken bootloaders
+> +290/040		ALL	edd_mbr_sig_buffer	EDD MBR signatures
+> +2D0/A00		ALL	e820_table		E820 memory map table
+> +						(array of struct e820_entry)
+> +D00/1EC		ALL	eddbuf			EDD data (array of struct edd_info)
+> +===========	=====	=======================	================================
 
-> https://www.spinics.net/lists/alsa-devel/msg89733.html
+... and here.
 
-> I will reply also to that email, to be easier for you to find it.
+After this change:
 
-Content free pings don't help...
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
---p7qwJlK53pWzbayA
-Content-Type: application/pgp-signature; name="signature.asc"
+> diff --git a/Documentation/x86/zero-page.txt b/Documentation/x86/zero-page.txt
+> deleted file mode 100644
+> index 68aed077f7b6..000000000000
+> --- a/Documentation/x86/zero-page.txt
+> +++ /dev/null
+> @@ -1,40 +0,0 @@
+> -The additional fields in struct boot_params as a part of 32-bit boot
+> -protocol of kernel. These should be filled by bootloader or 16-bit
+> -real-mode setup code of the kernel. References/settings to it mainly
+> -are in:
+> -
+> -  arch/x86/include/uapi/asm/bootparam.h
+> -
+> -
+> -Offset	Proto	Name		Meaning
+> -/Size
+> -
+> -000/040	ALL	screen_info	Text mode or frame buffer information
+> -				(struct screen_info)
+> -040/014	ALL	apm_bios_info	APM BIOS information (struct apm_bios_info)
+> -058/008	ALL	tboot_addr      Physical address of tboot shared page
+> -060/010	ALL	ist_info	Intel SpeedStep (IST) BIOS support information
+> -				(struct ist_info)
+> -080/010	ALL	hd0_info	hd0 disk parameter, OBSOLETE!!
+> -090/010	ALL	hd1_info	hd1 disk parameter, OBSOLETE!!
+> -0A0/010	ALL	sys_desc_table	System description table (struct sys_desc_table),
+> -				OBSOLETE!!
+> -0B0/010	ALL	olpc_ofw_header	OLPC's OpenFirmware CIF and friends
+> -0C0/004	ALL	ext_ramdisk_image ramdisk_image high 32bits
+> -0C4/004	ALL	ext_ramdisk_size  ramdisk_size high 32bits
+> -0C8/004	ALL	ext_cmd_line_ptr  cmd_line_ptr high 32bits
+> -140/080	ALL	edid_info	Video mode setup (struct edid_info)
+> -1C0/020	ALL	efi_info	EFI 32 information (struct efi_info)
+> -1E0/004	ALL	alt_mem_k	Alternative mem check, in KB
+> -1E4/004	ALL	scratch		Scratch field for the kernel setup code
+> -1E8/001	ALL	e820_entries	Number of entries in e820_table (below)
+> -1E9/001	ALL	eddbuf_entries	Number of entries in eddbuf (below)
+> -1EA/001	ALL	edd_mbr_sig_buf_entries	Number of entries in edd_mbr_sig_buffer
+> -				(below)
+> -1EB/001	ALL     kbd_status      Numlock is enabled
+> -1EC/001	ALL     secure_boot	Secure boot is enabled in the firmware
+> -1EF/001	ALL	sentinel	Used to detect broken bootloaders
+> -290/040	ALL	edd_mbr_sig_buffer EDD MBR signatures
+> -2D0/A00	ALL	e820_table	E820 memory map table
+> -				(array of struct e820_entry)
+> -D00/1EC	ALL	eddbuf		EDD data (array of struct edd_info)
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzEjrkACgkQJNaLcl1U
-h9AWVwf+KSlrvfBfUuZMLNHSHD7WREpZgHjLFsCPB8QHrdYC2CjypGjl9cjkYFDL
-zvVk9IotX8UodiLJN5KwgU9eO38JRbxXR+oVTN4+HnRIJv690m8LztYI9tAcqGIp
-2BvosaU2xv5RTitkpD8v3rykVDyAvDNvYDWK6gj8/Mz4UHi68onYaKMmoDNTnTKC
-9jAwU6oCeivjDydZIzMbyoQb1lUBpeHXHZrTn4e8iar9AfOEGEoR8QEhD+7D5k01
-y/t2YU6KD1U9YlHUK+FEfUeXLAMslI4284MVKw960xesrxvOcSltnQozVvR/tESL
-a+JaBF7FAsQc29UsdOCjSKKubkfKQw==
-=phjH
------END PGP SIGNATURE-----
 
---p7qwJlK53pWzbayA--
+Thanks,
+Mauro
