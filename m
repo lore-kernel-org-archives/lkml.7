@@ -2,102 +2,102 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A15C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 16:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F35C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 16:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9650B20693
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 16:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE3620693
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 16:34:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MQ0lfL6d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XA0RhfXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbfD0QcB (ORCPT
+        id S1726199AbfD0QeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 12:32:01 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46647 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfD0QcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 12:32:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=c8Bux03tjjC8g0RTzqUC1nUbzfL5pVXpfOPA0tXBHRg=; b=MQ0lfL6dxkAgb5GpK8RRtxkbd9
-        l4cp8MqqwAuN12ZCsK2fKY4xXvea7ZoYi5hP4+9GkeIQwpDO/vzWQc5P7/ItBl4HsvQOw/Q3fEwIW
-        aUUXZzu92B0JcV0AjOzPfJcbEOSEsV63RPz+CZRhNkRS6plNbLgyFxgErChiqspLgr/4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hKQEZ-0002go-EJ; Sat, 27 Apr 2019 18:31:27 +0200
-Date:   Sat, 27 Apr 2019 18:31:27 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Alban Bedel <albeu@free.fr>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-oxnas@groups.io,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 2/4] dt-bindings: doc: Reflect new NVMEM
- of_get_mac_address behaviour
-Message-ID: <20190427163127.GB9816@lunn.ch>
-References: <1556320002-26213-1-git-send-email-ynezz@true.cz>
- <1556320002-26213-3-git-send-email-ynezz@true.cz>
+        Sat, 27 Apr 2019 12:34:06 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42862 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfD0QeG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 12:34:06 -0400
+Received: by mail-io1-f66.google.com with SMTP id m188so5473559ioa.9;
+        Sat, 27 Apr 2019 09:34:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XEvDpPUhRZq1dLEcwfgrpdw5Bqx40j/OhihVlJzo794=;
+        b=XA0RhfXe0wftUHw2AzmePmRF1GUeiky6OfulKPNLYdpW7HhiRN4jkF6bYsbfaYbA8S
+         8O/P33bxVoUk31zZ2nZ39qPGNU5Ibgx90mqcxE4mWi15cE570m8z1eQxlqsk9KArwt+h
+         89qkQ/T8oFvFfOFKiSAyNrt73sIiD9cw+XiEz/RnuLZAiiAvIvQbIv1MIIDrxg1IBKoV
+         4xDjOb7c0TlNNUbk0DUkCqTrIR2enEJAHBw7RHYthzZmUyLp4ygemcUH8VmHbrD8MGj+
+         k7NMQmWsyth0pkTFt2jDzxTKXZT3ah4sgDHpr6extxuiow9FEA0dvFZQtk8M9ZeOP+6z
+         QaMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XEvDpPUhRZq1dLEcwfgrpdw5Bqx40j/OhihVlJzo794=;
+        b=MlDcFqjkCmjSVkHMkyKgcNIH/cZeJsuWwvM0UyiPUtLGdcArf2WIlvG80rLz06aNEj
+         7hff005AX4DJgi7bBJ0LZhTC1PG8HD3tavMij6whRP4JpZLyXUb2DAVHIqJaOmG2u5uZ
+         qP/fYBpe/5ypgUn8BHLqwqt1Djfo7OYlurEW4k/nUgxRDf+FfhwW+LHcJsl45wOTxf3n
+         5V+T/p4O1WokwHxxco4DUf9Nmjd71um3wZhqO/IklF/yICso0GOIG6KnOQlRMhjHVzoU
+         Bj4BeUEaSbElU60pXQYzCZ9yz4y/HX/fPxlo17CtPRtP6ViDeRh0IFbqup3S53rQ27NE
+         1bJA==
+X-Gm-Message-State: APjAAAXhExLClco4326ZKPmWlieHEkc42cEkod7EGN3NHjTq7/VpOGtW
+        G1SRV8fz3ZSARKpjZvudekM=
+X-Google-Smtp-Source: APXvYqwbHJI7m792lzw+7MV7zVXopqousiFs9iR5NQkQAUbNwEXONOfjgk5bFmmS2Hom81KafuR+ug==
+X-Received: by 2002:a6b:ba57:: with SMTP id k84mr26041475iof.211.1556382845471;
+        Sat, 27 Apr 2019 09:34:05 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id p67sm13781876itb.11.2019.04.27.09.34.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Apr 2019 09:34:04 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+        gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Subject: [PATCH] Staging: sm750fb: Change *array into *const array
+Date:   Sat, 27 Apr 2019 10:33:34 -0600
+Message-Id: <20190427163334.7109-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556320002-26213-3-git-send-email-ynezz@true.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-> index 2974e63..1e2bc9a 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet.txt
-> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
-> @@ -10,6 +10,8 @@ Documentation/devicetree/bindings/phy/phy-bindings.txt.
->    the boot program; should be used in cases where the MAC address assigned to
->    the device by the boot program is different from the "local-mac-address"
->    property;
-> +- nvmem-cells: phandle, reference to an nvmem node for the MAC address
-> +- nvmem-cell-names: string, should be "mac-address" if nvmem is to be used
+Resolve checkpatch warning for static const char * array by using const
+pointers.
 
-You put the new values after local-mac-address and mac-address. That
-suggests they are of lower priority. That conflicts with the current
-patch. If you think NVMEM should take priority, please put the
-properties first.
+Checkpatch Warning in sm750.c:
+static const char * array should probably be static const char * const
 
-	   Andrew
+Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+---
+ drivers/staging/sm750fb/sm750.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
+index 105089b97bf5..59568d18ce23 100644
+--- a/drivers/staging/sm750fb/sm750.c
++++ b/drivers/staging/sm750fb/sm750.c
+@@ -748,7 +748,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
+ 		lynx750_ext, NULL, vesa_modes,
+ 	};
+ 	int cdb[] = {ARRAY_SIZE(lynx750_ext), 0, VESA_MODEDB_SIZE};
+-	static const char *mdb_desc[] = {
++	static const char * const mdb_desc[] = {
+ 		"driver prepared modes",
+ 		"kernel prepared default modedb",
+ 		"kernel HELPERS prepared vesa_modes",
+-- 
+2.20.1
+
