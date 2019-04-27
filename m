@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC1AC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F7AC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C52206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B732086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329712;
-	bh=U7BiP04lB3YcN5B2Tokm4IXyjaL4m+4Sj+4dUOI+R0w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hYrIciiq5++1tUN+zBuuR/q6cFjK5Q5angU/vcGUBKE7bicylBwvORelc97Fngy/R
-	 6rwK2HfbwVkxcsO5xtgyRHuAilqbtehtI2JmpC1l+G7MPHmdw29SnKSKGesHyruDzj
-	 jQFX2uTCBvuSJLXi4LWXEUy+fPkUbz1nloCKd7W4=
+	s=default; t=1556329725;
+	bh=2VrxIXPzh7qElhPGuM2gjP6X4WGwjOXc3Ma+nNCB/jc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JOEEXlaTmdr1eV2CIygTxnGFwQ6AUTwi2EgtfXW2iH87+2ezpfCunfrAliLmIE3DN
+	 glviry8QXcia4FgmlHFoHZJt66m23JM0DYyrsQOGdLWnKQDRx3v6d1JtqFaZzAHB/r
+	 cdq30bs0N5NtR5z0m2rbO2DbgNqsJT23yc5fBcfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfD0Bsa (ORCPT
+        id S1728526AbfD0BmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46588 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728570AbfD0Bm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:42:27 -0400
+        id S1727563AbfD0BmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:42:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD5E82053B;
-        Sat, 27 Apr 2019 01:42:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8682621537;
+        Sat, 27 Apr 2019 01:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329346;
-        bh=U7BiP04lB3YcN5B2Tokm4IXyjaL4m+4Sj+4dUOI+R0w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nY6ag4OhEKjf/7+r0JgUxq/IXQhJBzpZPbRInODmPuAgLaJWJDKoP2+tLoJVyrZaL
-         O5fS+KmgUiCuSR2PPY/WG0bLYDakcb5xxo02Md7zwAunPlhPvJXcYBjcQMix43H8/W
-         7KRCOh8NradT982GJkU9+CJxYtHQKo9wga5oU/EY=
+        s=default; t=1556329329;
+        bh=2VrxIXPzh7qElhPGuM2gjP6X4WGwjOXc3Ma+nNCB/jc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sBhOaDaGZgLbM5iddWwnjvF0pYsUvasGIg8kbYvxrgi1LEHcY9s5RJnSY7u2I7nHF
+         d1reJZLhehk2aDuVybyr+9jJUIQzy76ME6QGUHsmnLXnilT7ptP4AxpahjHJcJwbtT
+         RgLZncvfUrIqwc2cUreH/sipaXswbNrrZtExFKDw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 01/32] ASoC: hdmi-codec: fix S/PDIF DAI
-Date:   Fri, 26 Apr 2019 21:41:52 -0400
-Message-Id: <20190427014224.8274-1-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 46/53] nvme-fc: correct csn initialization and increments on error
+Date:   Fri, 26 Apr 2019 21:40:43 -0400
+Message-Id: <20190427014051.7522-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
+References: <20190427014051.7522-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,176 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 2e95f984aae4cf0608d0ba2189c756f2bd50b44a ]
+[ Upstream commit 67f471b6ed3b09033c4ac77ea03f92afdb1989fe ]
 
-When using the S/PDIF DAI, there is no requirement to call
-snd_soc_dai_set_fmt() as there is no DAI format definition that defines
-S/PDIF.  In any case, S/PDIF does not have separate clocks, this is
-embedded into the data stream.
+This patch fixes a long-standing bug that initialized the FC-NVME
+cmnd iu CSN value to 1. Early FC-NVME specs had the connection starting
+with CSN=1. By the time the spec reached approval, the language had
+changed to state a connection should start with CSN=0.  This patch
+corrects the initialization value for FC-NVME connections.
 
-Consequently, when attempting to use TDA998x in S/PDIF mode, the attempt
-to configure TDA998x via the hw_params callback fails as the
-hdmi_codec_daifmt is left initialised to zero.
+Additionally, in reviewing the transport, the CSN value is assigned to
+the new IU early in the start routine. It's possible that a later dma
+map request may fail, causing the command to never be sent to the
+controller.  Change the location of the assignment so that it is
+immediately prior to calling the lldd. Add a comment block to explain
+the impacts if the lldd were to additionally fail sending the command.
 
-Since the S/PDIF DAI will only be used by S/PDIF, prepare the
-hdmi_codec_daifmt structure for this format.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdmi-codec.c | 118 +++++++++++++++++-----------------
- 1 file changed, 59 insertions(+), 59 deletions(-)
+ drivers/nvme/host/fc.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index cf3b905b4ead..7406695ee5dc 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -536,73 +536,71 @@ static int hdmi_codec_set_fmt(struct snd_soc_dai *dai,
- {
- 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
- 	struct hdmi_codec_daifmt cf = { 0 };
--	int ret = 0;
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 9375fa705d82..67dec8860bf3 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -1844,7 +1844,7 @@ nvme_fc_init_queue(struct nvme_fc_ctrl *ctrl, int idx)
+ 	memset(queue, 0, sizeof(*queue));
+ 	queue->ctrl = ctrl;
+ 	queue->qnum = idx;
+-	atomic_set(&queue->csn, 1);
++	atomic_set(&queue->csn, 0);
+ 	queue->dev = ctrl->dev;
  
- 	dev_dbg(dai->dev, "%s()\n", __func__);
+ 	if (idx > 0)
+@@ -1886,7 +1886,7 @@ nvme_fc_free_queue(struct nvme_fc_queue *queue)
+ 	 */
  
--	if (dai->id == DAI_ID_SPDIF) {
--		cf.fmt = HDMI_SPDIF;
--	} else {
--		switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
--		case SND_SOC_DAIFMT_CBM_CFM:
--			cf.bit_clk_master = 1;
--			cf.frame_clk_master = 1;
--			break;
--		case SND_SOC_DAIFMT_CBS_CFM:
--			cf.frame_clk_master = 1;
--			break;
--		case SND_SOC_DAIFMT_CBM_CFS:
--			cf.bit_clk_master = 1;
--			break;
--		case SND_SOC_DAIFMT_CBS_CFS:
--			break;
--		default:
--			return -EINVAL;
--		}
-+	if (dai->id == DAI_ID_SPDIF)
-+		return 0;
-+
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBM_CFM:
-+		cf.bit_clk_master = 1;
-+		cf.frame_clk_master = 1;
-+		break;
-+	case SND_SOC_DAIFMT_CBS_CFM:
-+		cf.frame_clk_master = 1;
-+		break;
-+	case SND_SOC_DAIFMT_CBM_CFS:
-+		cf.bit_clk_master = 1;
-+		break;
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
- 
--		switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
--		case SND_SOC_DAIFMT_NB_NF:
--			break;
--		case SND_SOC_DAIFMT_NB_IF:
--			cf.frame_clk_inv = 1;
--			break;
--		case SND_SOC_DAIFMT_IB_NF:
--			cf.bit_clk_inv = 1;
--			break;
--		case SND_SOC_DAIFMT_IB_IF:
--			cf.frame_clk_inv = 1;
--			cf.bit_clk_inv = 1;
--			break;
--		}
-+	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
-+	case SND_SOC_DAIFMT_NB_NF:
-+		break;
-+	case SND_SOC_DAIFMT_NB_IF:
-+		cf.frame_clk_inv = 1;
-+		break;
-+	case SND_SOC_DAIFMT_IB_NF:
-+		cf.bit_clk_inv = 1;
-+		break;
-+	case SND_SOC_DAIFMT_IB_IF:
-+		cf.frame_clk_inv = 1;
-+		cf.bit_clk_inv = 1;
-+		break;
-+	}
- 
--		switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
--		case SND_SOC_DAIFMT_I2S:
--			cf.fmt = HDMI_I2S;
--			break;
--		case SND_SOC_DAIFMT_DSP_A:
--			cf.fmt = HDMI_DSP_A;
--			break;
--		case SND_SOC_DAIFMT_DSP_B:
--			cf.fmt = HDMI_DSP_B;
--			break;
--		case SND_SOC_DAIFMT_RIGHT_J:
--			cf.fmt = HDMI_RIGHT_J;
--			break;
--		case SND_SOC_DAIFMT_LEFT_J:
--			cf.fmt = HDMI_LEFT_J;
--			break;
--		case SND_SOC_DAIFMT_AC97:
--			cf.fmt = HDMI_AC97;
--			break;
--		default:
--			dev_err(dai->dev, "Invalid DAI interface format\n");
--			return -EINVAL;
--		}
-+	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_I2S:
-+		cf.fmt = HDMI_I2S;
-+		break;
-+	case SND_SOC_DAIFMT_DSP_A:
-+		cf.fmt = HDMI_DSP_A;
-+		break;
-+	case SND_SOC_DAIFMT_DSP_B:
-+		cf.fmt = HDMI_DSP_B;
-+		break;
-+	case SND_SOC_DAIFMT_RIGHT_J:
-+		cf.fmt = HDMI_RIGHT_J;
-+		break;
-+	case SND_SOC_DAIFMT_LEFT_J:
-+		cf.fmt = HDMI_LEFT_J;
-+		break;
-+	case SND_SOC_DAIFMT_AC97:
-+		cf.fmt = HDMI_AC97;
-+		break;
-+	default:
-+		dev_err(dai->dev, "Invalid DAI interface format\n");
-+		return -EINVAL;
- 	}
- 
- 	hcp->daifmt[dai->id] = cf;
- 
--	return ret;
-+	return 0;
+ 	queue->connection_id = 0;
+-	atomic_set(&queue->csn, 1);
++	atomic_set(&queue->csn, 0);
  }
  
- static int hdmi_codec_digital_mute(struct snd_soc_dai *dai, int mute)
-@@ -784,8 +782,10 @@ static int hdmi_codec_probe(struct platform_device *pdev)
- 		i++;
- 	}
+ static void
+@@ -2182,7 +2182,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
+ {
+ 	struct nvme_fc_cmd_iu *cmdiu = &op->cmd_iu;
+ 	struct nvme_command *sqe = &cmdiu->sqe;
+-	u32 csn;
+ 	int ret, opstate;
  
--	if (hcd->spdif)
-+	if (hcd->spdif) {
- 		hcp->daidrv[i] = hdmi_spdif_dai;
-+		hcp->daifmt[DAI_ID_SPDIF].fmt = HDMI_SPDIF;
-+	}
+ 	/*
+@@ -2197,8 +2196,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
  
- 	ret = snd_soc_register_codec(dev, &hdmi_codec, hcp->daidrv,
- 				     dai_count);
+ 	/* format the FC-NVME CMD IU and fcp_req */
+ 	cmdiu->connection_id = cpu_to_be64(queue->connection_id);
+-	csn = atomic_inc_return(&queue->csn);
+-	cmdiu->csn = cpu_to_be32(csn);
+ 	cmdiu->data_len = cpu_to_be32(data_len);
+ 	switch (io_dir) {
+ 	case NVMEFC_FCP_WRITE:
+@@ -2256,11 +2253,24 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
+ 	if (!(op->flags & FCOP_FLAGS_AEN))
+ 		blk_mq_start_request(op->rq);
+ 
++	cmdiu->csn = cpu_to_be32(atomic_inc_return(&queue->csn));
+ 	ret = ctrl->lport->ops->fcp_io(&ctrl->lport->localport,
+ 					&ctrl->rport->remoteport,
+ 					queue->lldd_handle, &op->fcp_req);
+ 
+ 	if (ret) {
++		/*
++		 * If the lld fails to send the command is there an issue with
++		 * the csn value?  If the command that fails is the Connect,
++		 * no - as the connection won't be live.  If it is a command
++		 * post-connect, it's possible a gap in csn may be created.
++		 * Does this matter?  As Linux initiators don't send fused
++		 * commands, no.  The gap would exist, but as there's nothing
++		 * that depends on csn order to be delivered on the target
++		 * side, it shouldn't hurt.  It would be difficult for a
++		 * target to even detect the csn gap as it has no idea when the
++		 * cmd with the csn was supposed to arrive.
++		 */
+ 		opstate = atomic_xchg(&op->state, FCPOP_STATE_COMPLETE);
+ 		__nvme_fc_fcpop_chk_teardowns(ctrl, op, opstate);
+ 
 -- 
 2.19.1
 
