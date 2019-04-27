@@ -2,208 +2,114 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B99C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7B3C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E050206BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556358910;
-	bh=b0Nqrj9uhw7kYTrDjU6h5/dTRLaQJAuHHLuWpgKKkH4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=grOgtxkLS2dYfUNyaGSA3WktZ/2x6vXZyasfcD0Mi89B0hdReRS9Kx73p4xDXRkUD
-	 7m+RBC5c4WKcnT0V33gc19cVLcqy/WnU+yKjeiUUMIBcPWyi+nuCCDdUoHqtHNI+MB
-	 GIJDqHV1/FLf4u1yLyG9dCtCgFe4D4ZU7onglv+c=
+	by mail.kernel.org (Postfix) with ESMTP id 6BFFB2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfD0JzJ (ORCPT
+        id S1726376AbfD0KHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 05:55:09 -0400
-Received: from casper.infradead.org ([85.118.1.10]:34286 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfD0JzI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 05:55:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=TX5MgcqQkk3zac0vfZJisWBjIybTtuyDWso/ooWAlhM=; b=wKz0SqOi1x9gT7QAvl3b8BGLxp
-        iUuH4RxiieEZWoeNBtqjvRk2cZhXxqTnsWoq/DcWYjp95vM9+x7wdWUdNhnzlstAq/Txb95X5RYqZ
-        01bKIZ4vXuR3OgIltyOGhBJzCsgijbq7T4fA4GzWASgirQtgjKymtm+xYt9is2tQLEO2oa2erVTva
-        TSAOLBgRxP2HDI7n8H3YHp5AqQLcVM3KA4eCLxbaNiXUNMc+pLhe/xphxnVh6ACW4M4MB76B1ej+E
-        jr0I2YWwKKUEkgHH6GQldJOC2+U5lc5LRm9+1uTHV3GWgNYS1B0MjmpGB8PoWcEoZtptdFhaxdk2X
-        wSBaWD/Q==;
-Received: from 177.17.250.151.dynamic.adsl.gvt.net.br ([177.17.250.151] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hKK2s-0005mQ-Jz; Sat, 27 Apr 2019 09:54:59 +0000
-Date:   Sat, 27 Apr 2019 06:54:52 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/27] Include linux x86 docs into Sphinx TOC tree
-Message-ID: <20190427065452.183f60a3@coco.lan>
-In-Reply-To: <20190427024659.iav7ajabw7cljrxw@mail.google.com>
-References: <20190426153150.21228-1-changbin.du@gmail.com>
-        <20190426123946.554730b8@coco.lan>
-        <20190427024659.iav7ajabw7cljrxw@mail.google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 27 Apr 2019 06:07:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51308 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725902AbfD0KHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 06:07:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1C391ACBC;
+        Sat, 27 Apr 2019 10:07:45 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Nicolai Stange <nstange@suse.de>
+Subject: [PATCH 0/4] x86/ftrace: make ftrace_int3_handler() not to skip fops invocation
+Date:   Sat, 27 Apr 2019 12:06:35 +0200
+Message-Id: <20190427100639.15074-1-nstange@suse.de>
+X-Mailer: git-send-email 2.13.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, 27 Apr 2019 10:47:00 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+Hi,
 
-> On Fri, Apr 26, 2019 at 12:39:46PM -0300, Mauro Carvalho Chehab wrote:
-> > Em Fri, 26 Apr 2019 23:31:23 +0800
-> > Changbin Du <changbin.du@gmail.com> escreveu:
-> >   
-> > > Hi all,
-> > > 
-> > > The kernel now uses Sphinx to generate intelligent and beautiful documentation
-> > > from reStructuredText files. I converted most of the Linux x86 docs to rst
-> > > format in this serias.
-> > > 
-> > > For you to preview, please visit below url:
-> > > http://www.bytemem.com:8080/kernel-doc/index.html  
-> > 
-> > Do you have a URL for the git tree? It is probably easier to merge from
-> > it on a tem branch locally, specially for some patches like 02/27, were 
-> > git didn't understand the conversion as a rename.
-> >  
-> yeah, I can send a pull request if @maintainer prefers.
+this series is the result of the discussion to the RFC patch found at [1].
 
-No need for a pull request. I just want an URL so I can pull and be
-able to review the patches twitching the similarity detection of git
-(for example running git show -M10) in order to force git to consider
-patches like 02/27 as a renames.
+The goal is to make x86' ftrace_int3_handler() not to simply skip over
+the trapping instruction as this is problematic in the context of
+the live patching consistency model. For details, c.f. the commit message
+of [3/4] ("x86/ftrace: make ftrace_int3_handler() not to skip fops
+invocation").
 
-> 
-> > > 
-> > > Thank you!
-> > > 
-> > > Changbin Du (27):
-> > >   Documentation: add Linux x86 docs to Sphinx TOC tree
-> > >   Documentation: x86: convert boot.txt to reST
-> > >   Documentation: x86: convert topology.txt to reST
-> > >   Documentation: x86: convert exception-tables.txt to reST
-> > >   Documentation: x86: convert kernel-stacks to reST
-> > >   Documentation: x86: convert entry_64.txt to reST
-> > >   Documentation: x86: convert earlyprintk.txt to reST
-> > >   Documentation: x86: convert zero-page.txt to reST
-> > >   Documentation: x86: convert tlb.txt to reST
-> > >   Documentation: x86: convert mtrr.txt to reST
-> > >   Documentation: x86: convert pat.txt to reST
-> > >   Documentation: x86: convert protection-keys.txt to reST
-> > >   Documentation: x86: convert intel_mpx.txt to reST
-> > >   Documentation: x86: convert amd-memory-encryption.txt to reST
-> > >   Documentation: x86: convert pti.txt to reST
-> > >   Documentation: x86: convert microcode.txt to reST
-> > >   Documentation: x86: convert resctrl_ui.txt to reST
-> > >   Documentation: x86: convert orc-unwinder.txt to reST
-> > >   Documentation: x86: convert usb-legacy-support.txt to reST
-> > >   Documentation: x86: convert i386/IO-APIC.txt to reST
-> > >   Documentation: x86: convert x86_64/boot-options.txt to reST
-> > >   Documentation: x86: convert x86_64/uefi.txt to reST
-> > >   Documentation: x86: convert x86_64/mm.txt to reST
-> > >   Documentation: x86: convert x86_64/5level-paging.txt to reST
-> > >   Documentation: x86: convert x86_64/fake-numa-for-cpusets to reST
-> > >   Documentation: x86: convert x86_64/cpu-hotplug-spec to reST
-> > >   Documentation: x86: convert x86_64/machinecheck to reST
-> > > 
-> > >  Documentation/index.rst                       |    1 +
-> > >  ...cryption.txt => amd-memory-encryption.rst} |   13 +-
-> > >  Documentation/x86/boot.rst                    | 1238 +++++++++++++++++
-> > >  Documentation/x86/boot.txt                    | 1130 ---------------
-> > >  .../x86/{earlyprintk.txt => earlyprintk.rst}  |  103 +-
-> > >  .../x86/{entry_64.txt => entry_64.rst}        |   12 +-
-> > >  ...eption-tables.txt => exception-tables.rst} |  231 +--
-> > >  .../x86/i386/{IO-APIC.txt => IO-APIC.rst}     |   26 +-
-> > >  Documentation/x86/i386/index.rst              |   10 +
-> > >  Documentation/x86/index.rst                   |   30 +
-> > >  .../x86/{intel_mpx.txt => intel_mpx.rst}      |  120 +-
-> > >  .../x86/{kernel-stacks => kernel-stacks.rst}  |   20 +-
-> > >  .../x86/{microcode.txt => microcode.rst}      |   62 +-
-> > >  Documentation/x86/mtrr.rst                    |  350 +++++
-> > >  Documentation/x86/mtrr.txt                    |  329 -----
-> > >  .../{orc-unwinder.txt => orc-unwinder.rst}    |   27 +-
-> > >  Documentation/x86/pat.rst                     |  235 ++++
-> > >  Documentation/x86/pat.txt                     |  230 ---
-> > >  ...rotection-keys.txt => protection-keys.rst} |   33 +-
-> > >  Documentation/x86/{pti.txt => pti.rst}        |   17 +-
-> > >  .../x86/{resctrl_ui.txt => resctrl_ui.rst}    |  913 ++++++------
-> > >  Documentation/x86/{tlb.txt => tlb.rst}        |   30 +-
-> > >  .../x86/{topology.txt => topology.rst}        |   92 +-
-> > >  ...acy-support.txt => usb-legacy-support.rst} |    8 +-
-> > >  .../{5level-paging.txt => 5level-paging.rst}  |   16 +-
-> > >  Documentation/x86/x86_64/boot-options.rst     |  326 +++++
-> > >  Documentation/x86/x86_64/boot-options.txt     |  278 ----
-> > >  ...{cpu-hotplug-spec => cpu-hotplug-spec.rst} |    5 +-
-> > >  ...-for-cpusets => fake-numa-for-cpusets.rst} |   25 +-
-> > >  Documentation/x86/x86_64/index.rst            |   16 +
-> > >  .../x86_64/{machinecheck => machinecheck.rst} |   11 +-
-> > >  Documentation/x86/x86_64/mm.rst               |  161 +++
-> > >  Documentation/x86/x86_64/mm.txt               |  153 --
-> > >  .../x86/x86_64/{uefi.txt => uefi.rst}         |   30 +-
-> > >  Documentation/x86/zero-page.rst               |   45 +
-> > >  Documentation/x86/zero-page.txt               |   40 -
-> > >  36 files changed, 3412 insertions(+), 2954 deletions(-)
-> > >  rename Documentation/x86/{amd-memory-encryption.txt => amd-memory-encryption.rst} (94%)
-> > >  create mode 100644 Documentation/x86/boot.rst
-> > >  delete mode 100644 Documentation/x86/boot.txt
-> > >  rename Documentation/x86/{earlyprintk.txt => earlyprintk.rst} (59%)
-> > >  rename Documentation/x86/{entry_64.txt => entry_64.rst} (95%)
-> > >  rename Documentation/x86/{exception-tables.txt => exception-tables.rst} (67%)
-> > >  rename Documentation/x86/i386/{IO-APIC.txt => IO-APIC.rst} (93%)
-> > >  create mode 100644 Documentation/x86/i386/index.rst
-> > >  create mode 100644 Documentation/x86/index.rst
-> > >  rename Documentation/x86/{intel_mpx.txt => intel_mpx.rst} (75%)
-> > >  rename Documentation/x86/{kernel-stacks => kernel-stacks.rst} (92%)
-> > >  rename Documentation/x86/{microcode.txt => microcode.rst} (81%)
-> > >  create mode 100644 Documentation/x86/mtrr.rst
-> > >  delete mode 100644 Documentation/x86/mtrr.txt
-> > >  rename Documentation/x86/{orc-unwinder.txt => orc-unwinder.rst} (93%)
-> > >  create mode 100644 Documentation/x86/pat.rst
-> > >  delete mode 100644 Documentation/x86/pat.txt
-> > >  rename Documentation/x86/{protection-keys.txt => protection-keys.rst} (83%)
-> > >  rename Documentation/x86/{pti.txt => pti.rst} (96%)
-> > >  rename Documentation/x86/{resctrl_ui.txt => resctrl_ui.rst} (68%)
-> > >  rename Documentation/x86/{tlb.txt => tlb.rst} (81%)
-> > >  rename Documentation/x86/{topology.txt => topology.rst} (74%)
-> > >  rename Documentation/x86/{usb-legacy-support.txt => usb-legacy-support.rst} (92%)
-> > >  rename Documentation/x86/x86_64/{5level-paging.txt => 5level-paging.rst} (91%)
-> > >  create mode 100644 Documentation/x86/x86_64/boot-options.rst
-> > >  delete mode 100644 Documentation/x86/x86_64/boot-options.txt
-> > >  rename Documentation/x86/x86_64/{cpu-hotplug-spec => cpu-hotplug-spec.rst} (88%)
-> > >  rename Documentation/x86/x86_64/{fake-numa-for-cpusets => fake-numa-for-cpusets.rst} (85%)
-> > >  create mode 100644 Documentation/x86/x86_64/index.rst
-> > >  rename Documentation/x86/x86_64/{machinecheck => machinecheck.rst} (92%)
-> > >  create mode 100644 Documentation/x86/x86_64/mm.rst
-> > >  delete mode 100644 Documentation/x86/x86_64/mm.txt
-> > >  rename Documentation/x86/x86_64/{uefi.txt => uefi.rst} (79%)
-> > >  create mode 100644 Documentation/x86/zero-page.rst
-> > >  delete mode 100644 Documentation/x86/zero-page.txt
-> > >   
-> > 
-> > 
-> > 
-> > Thanks,
-> > Mauro  
-> 
+Everything is based on v5.1-rc6, please let me know in case you want me to
+rebase on somehing else.
 
+For x86_64, the live patching selftest added in [4/4] succeeds with this
+series applied and fails without it. On 32 bits I only compile-tested.
 
+checkpatch reports warnings about
+- an overlong line in assembly -- I chose to ignore that
+- MAINTAINERS perhaps needing updates due to the new files
+  arch/x86/kernel/ftrace_int3_stubs.S and
+  tools/testing/selftests/livepatch/test-livepatch-vs-ftrace.sh.
+  As the existing arch/x86/kernel/ftrace_{32,64}.S haven't got an
+  explicit entry either, this one is probably Ok? The selftest
+  definitely is.
+
+Changes to the RFC patch:
+- s/trampoline/stub/ to avoid confusion with the ftrace_ops' trampolines,
+- use a fixed size stack kept in struct thread_info for passing the
+  (adjusted) ->ip values from ftrace_int3_handler() to the stubs,
+- provide one stub for each of the two possible jump targets and hardcode
+  those,
+- add the live patching selftest.
 
 Thanks,
-Mauro
+
+Nicolai
+
+Nicolai Stange (4):
+  x86/thread_info: introduce ->ftrace_int3_stack member
+  ftrace: drop 'static' qualifier from ftrace_ops_list_func()
+  x86/ftrace: make ftrace_int3_handler() not to skip fops invocation
+  selftests/livepatch: add "ftrace a live patched function" test
+
+ arch/x86/include/asm/thread_info.h                 | 11 +++
+ arch/x86/kernel/Makefile                           |  1 +
+ arch/x86/kernel/asm-offsets.c                      |  8 +++
+ arch/x86/kernel/ftrace.c                           | 79 +++++++++++++++++++---
+ arch/x86/kernel/ftrace_int3_stubs.S                | 61 +++++++++++++++++
+ kernel/trace/ftrace.c                              |  8 +--
+ tools/testing/selftests/livepatch/Makefile         |  3 +-
+ .../livepatch/test-livepatch-vs-ftrace.sh          | 44 ++++++++++++
+ 8 files changed, 199 insertions(+), 16 deletions(-)
+ create mode 100644 arch/x86/kernel/ftrace_int3_stubs.S
+ create mode 100755 tools/testing/selftests/livepatch/test-livepatch-vs-ftrace.sh
+
+-- 
+2.13.7
+
