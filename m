@@ -2,104 +2,211 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9DAC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 02:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85795C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 02:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A50AB206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 02:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44108206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 02:47:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuSkYC6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfD0Col (ORCPT
+        id S1727371AbfD0CrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 22:44:41 -0400
-Received: from www.osadl.org ([62.245.132.105]:38105 "EHLO www.osadl.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbfD0Col (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 22:44:41 -0400
-Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3R2iJsp009196;
-        Sat, 27 Apr 2019 04:44:20 +0200
-From:   Nicholas Mc Guire <hofrat@osadl.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Matt Sickler <Matt.Sickler@daktronics.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH RFC] staging: kpc2000: use int for wait_for_completion_interruptible
-Date:   Sat, 27 Apr 2019 04:38:45 +0200
-Message-Id: <1556332725-7391-1-git-send-email-hofrat@osadl.org>
-X-Mailer: git-send-email 2.1.4
+        Fri, 26 Apr 2019 22:47:09 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46911 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbfD0CrJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 22:47:09 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n2so2429405pgg.13;
+        Fri, 26 Apr 2019 19:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DTbobDXu46tz6rQCEUq+Jc4zXHSm7T9KuFg/tSyacXM=;
+        b=LuSkYC6dFmup5V7EpcFZJkhdPar+Gq2j7/RIt8F8NwGdlVclP0LLnENwLCexja+0y3
+         a/VofzBy1UTNppoC6+x7CYkYzUQDt4NOmZRE+iLWzbWFUZeIDlJQfKx/b9vOCjCMeM4W
+         P9r/tOtbs2B1SmguCo3WkJfFsPRIECyMpQLzpKud3twUfboKEh0v8zy1chVq6x2jwN2x
+         gM+/h3TuslIgv68SqX/ltAH9F1TkVSdGpMAqnUjaCAKwWjox52JRROr6u12rAks5swYZ
+         bHoEFY60tVlgGo7329AzNV/aAvfalEl/7y6Fp7x4E3t2hjjEeCIvLVASSDjLxIKOHcfI
+         idzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DTbobDXu46tz6rQCEUq+Jc4zXHSm7T9KuFg/tSyacXM=;
+        b=fhBzpXLnZxbe5lZHU9LwxjGdPJs6byyq890ZmRSHp7ntTT+6Xhsb+ia9tRvba4MyOa
+         8gNXpz3mb8AviusDblpLHQZ4yrlOSIFVnrXeUthjYV+L6Ayif0lK2HVpp8oNjmT36zTC
+         CNEybUY6LV4g8G6kX/gY5oZIC00zDu5Y2FCOjobiOkTI0efjVOYrvKRDxaKhdO142Qec
+         1MT8fAVEONkyAlbr/SCJyExcg99+VUhvdYKWg4ytHgHfaVqbqvIdTCRi9cGV9Qj+awfB
+         SQdbD+WaRX+2dNTES+pxwF5dML8cFnpu/J/ZCoHn2CcTJL0o7H13Snrmd9mnNK5TlORr
+         7Z4g==
+X-Gm-Message-State: APjAAAW9TwmwGhvw7WCcgQlSRMjML6BJpwtvA7cyQ8OiSSci/8b/S4eO
+        mpguIcDy6ONsl0+xcyboGrqYHwEl
+X-Google-Smtp-Source: APXvYqxso8p5BC1fYJwaW45xzmTVZATJeoYbftWiPomeUgakawZRFrx0d9sDAypoup+0Z5R41x+e9A==
+X-Received: by 2002:a63:c749:: with SMTP id v9mr25147157pgg.432.1556333227762;
+        Fri, 26 Apr 2019 19:47:07 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id f20sm57188138pff.176.2019.04.26.19.47.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 19:47:07 -0700 (PDT)
+Date:   Sat, 27 Apr 2019 10:47:00 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/27] Include linux x86 docs into Sphinx TOC tree
+Message-ID: <20190427024659.iav7ajabw7cljrxw@mail.google.com>
+References: <20190426153150.21228-1-changbin.du@gmail.com>
+ <20190426123946.554730b8@coco.lan>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426123946.554730b8@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-weit_for_completion_interruptible returns in (0 on completion and 
--ERESTARTSYS on interruption) - so use an int not long for API conformance
-and simplify the logic here a bit: need not check explicitly for == 0 as
-this is either -ERESTARTSYS or 0.
+On Fri, Apr 26, 2019 at 12:39:46PM -0300, Mauro Carvalho Chehab wrote:
+> Em Fri, 26 Apr 2019 23:31:23 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
+> 
+> > Hi all,
+> > 
+> > The kernel now uses Sphinx to generate intelligent and beautiful documentation
+> > from reStructuredText files. I converted most of the Linux x86 docs to rst
+> > format in this serias.
+> > 
+> > For you to preview, please visit below url:
+> > http://www.bytemem.com:8080/kernel-doc/index.html
+> 
+> Do you have a URL for the git tree? It is probably easier to merge from
+> it on a tem branch locally, specially for some patches like 02/27, were 
+> git didn't understand the conversion as a rename.
+>
+yeah, I can send a pull request if @maintainer prefers.
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
----
+> > 
+> > Thank you!
+> > 
+> > Changbin Du (27):
+> >   Documentation: add Linux x86 docs to Sphinx TOC tree
+> >   Documentation: x86: convert boot.txt to reST
+> >   Documentation: x86: convert topology.txt to reST
+> >   Documentation: x86: convert exception-tables.txt to reST
+> >   Documentation: x86: convert kernel-stacks to reST
+> >   Documentation: x86: convert entry_64.txt to reST
+> >   Documentation: x86: convert earlyprintk.txt to reST
+> >   Documentation: x86: convert zero-page.txt to reST
+> >   Documentation: x86: convert tlb.txt to reST
+> >   Documentation: x86: convert mtrr.txt to reST
+> >   Documentation: x86: convert pat.txt to reST
+> >   Documentation: x86: convert protection-keys.txt to reST
+> >   Documentation: x86: convert intel_mpx.txt to reST
+> >   Documentation: x86: convert amd-memory-encryption.txt to reST
+> >   Documentation: x86: convert pti.txt to reST
+> >   Documentation: x86: convert microcode.txt to reST
+> >   Documentation: x86: convert resctrl_ui.txt to reST
+> >   Documentation: x86: convert orc-unwinder.txt to reST
+> >   Documentation: x86: convert usb-legacy-support.txt to reST
+> >   Documentation: x86: convert i386/IO-APIC.txt to reST
+> >   Documentation: x86: convert x86_64/boot-options.txt to reST
+> >   Documentation: x86: convert x86_64/uefi.txt to reST
+> >   Documentation: x86: convert x86_64/mm.txt to reST
+> >   Documentation: x86: convert x86_64/5level-paging.txt to reST
+> >   Documentation: x86: convert x86_64/fake-numa-for-cpusets to reST
+> >   Documentation: x86: convert x86_64/cpu-hotplug-spec to reST
+> >   Documentation: x86: convert x86_64/machinecheck to reST
+> > 
+> >  Documentation/index.rst                       |    1 +
+> >  ...cryption.txt => amd-memory-encryption.rst} |   13 +-
+> >  Documentation/x86/boot.rst                    | 1238 +++++++++++++++++
+> >  Documentation/x86/boot.txt                    | 1130 ---------------
+> >  .../x86/{earlyprintk.txt => earlyprintk.rst}  |  103 +-
+> >  .../x86/{entry_64.txt => entry_64.rst}        |   12 +-
+> >  ...eption-tables.txt => exception-tables.rst} |  231 +--
+> >  .../x86/i386/{IO-APIC.txt => IO-APIC.rst}     |   26 +-
+> >  Documentation/x86/i386/index.rst              |   10 +
+> >  Documentation/x86/index.rst                   |   30 +
+> >  .../x86/{intel_mpx.txt => intel_mpx.rst}      |  120 +-
+> >  .../x86/{kernel-stacks => kernel-stacks.rst}  |   20 +-
+> >  .../x86/{microcode.txt => microcode.rst}      |   62 +-
+> >  Documentation/x86/mtrr.rst                    |  350 +++++
+> >  Documentation/x86/mtrr.txt                    |  329 -----
+> >  .../{orc-unwinder.txt => orc-unwinder.rst}    |   27 +-
+> >  Documentation/x86/pat.rst                     |  235 ++++
+> >  Documentation/x86/pat.txt                     |  230 ---
+> >  ...rotection-keys.txt => protection-keys.rst} |   33 +-
+> >  Documentation/x86/{pti.txt => pti.rst}        |   17 +-
+> >  .../x86/{resctrl_ui.txt => resctrl_ui.rst}    |  913 ++++++------
+> >  Documentation/x86/{tlb.txt => tlb.rst}        |   30 +-
+> >  .../x86/{topology.txt => topology.rst}        |   92 +-
+> >  ...acy-support.txt => usb-legacy-support.rst} |    8 +-
+> >  .../{5level-paging.txt => 5level-paging.rst}  |   16 +-
+> >  Documentation/x86/x86_64/boot-options.rst     |  326 +++++
+> >  Documentation/x86/x86_64/boot-options.txt     |  278 ----
+> >  ...{cpu-hotplug-spec => cpu-hotplug-spec.rst} |    5 +-
+> >  ...-for-cpusets => fake-numa-for-cpusets.rst} |   25 +-
+> >  Documentation/x86/x86_64/index.rst            |   16 +
+> >  .../x86_64/{machinecheck => machinecheck.rst} |   11 +-
+> >  Documentation/x86/x86_64/mm.rst               |  161 +++
+> >  Documentation/x86/x86_64/mm.txt               |  153 --
+> >  .../x86/x86_64/{uefi.txt => uefi.rst}         |   30 +-
+> >  Documentation/x86/zero-page.rst               |   45 +
+> >  Documentation/x86/zero-page.txt               |   40 -
+> >  36 files changed, 3412 insertions(+), 2954 deletions(-)
+> >  rename Documentation/x86/{amd-memory-encryption.txt => amd-memory-encryption.rst} (94%)
+> >  create mode 100644 Documentation/x86/boot.rst
+> >  delete mode 100644 Documentation/x86/boot.txt
+> >  rename Documentation/x86/{earlyprintk.txt => earlyprintk.rst} (59%)
+> >  rename Documentation/x86/{entry_64.txt => entry_64.rst} (95%)
+> >  rename Documentation/x86/{exception-tables.txt => exception-tables.rst} (67%)
+> >  rename Documentation/x86/i386/{IO-APIC.txt => IO-APIC.rst} (93%)
+> >  create mode 100644 Documentation/x86/i386/index.rst
+> >  create mode 100644 Documentation/x86/index.rst
+> >  rename Documentation/x86/{intel_mpx.txt => intel_mpx.rst} (75%)
+> >  rename Documentation/x86/{kernel-stacks => kernel-stacks.rst} (92%)
+> >  rename Documentation/x86/{microcode.txt => microcode.rst} (81%)
+> >  create mode 100644 Documentation/x86/mtrr.rst
+> >  delete mode 100644 Documentation/x86/mtrr.txt
+> >  rename Documentation/x86/{orc-unwinder.txt => orc-unwinder.rst} (93%)
+> >  create mode 100644 Documentation/x86/pat.rst
+> >  delete mode 100644 Documentation/x86/pat.txt
+> >  rename Documentation/x86/{protection-keys.txt => protection-keys.rst} (83%)
+> >  rename Documentation/x86/{pti.txt => pti.rst} (96%)
+> >  rename Documentation/x86/{resctrl_ui.txt => resctrl_ui.rst} (68%)
+> >  rename Documentation/x86/{tlb.txt => tlb.rst} (81%)
+> >  rename Documentation/x86/{topology.txt => topology.rst} (74%)
+> >  rename Documentation/x86/{usb-legacy-support.txt => usb-legacy-support.rst} (92%)
+> >  rename Documentation/x86/x86_64/{5level-paging.txt => 5level-paging.rst} (91%)
+> >  create mode 100644 Documentation/x86/x86_64/boot-options.rst
+> >  delete mode 100644 Documentation/x86/x86_64/boot-options.txt
+> >  rename Documentation/x86/x86_64/{cpu-hotplug-spec => cpu-hotplug-spec.rst} (88%)
+> >  rename Documentation/x86/x86_64/{fake-numa-for-cpusets => fake-numa-for-cpusets.rst} (85%)
+> >  create mode 100644 Documentation/x86/x86_64/index.rst
+> >  rename Documentation/x86/x86_64/{machinecheck => machinecheck.rst} (92%)
+> >  create mode 100644 Documentation/x86/x86_64/mm.rst
+> >  delete mode 100644 Documentation/x86/x86_64/mm.txt
+> >  rename Documentation/x86/x86_64/{uefi.txt => uefi.rst} (79%)
+> >  create mode 100644 Documentation/x86/zero-page.rst
+> >  delete mode 100644 Documentation/x86/zero-page.txt
+> > 
+> 
+> 
+> 
+> Thanks,
+> Mauro
 
-Problem located with experimental API conformance checking cocci script
-
-Not sure if making such point-wise fixes makes much sense - this driver has
-a number of issues both style-wise and API compliance wise.
-
-Note that kpc_dma_transfer() returns int not long - currently rv (long) is
-being returned in most places (some places do return int) - so the return
-handling here is a bit inconsistent.
-
-Patch was compile-tested with: x86_64_defconfig + KPC2000=y, KPC2000_DMA=y
-(with a number of unrelated sparse warnings about non-declared symbols, and
- smatch warnings about overflowing constants as well as coccicheck warning
- about usless casting)
-
-Patch is against 5.1-rc6 (localversion-next is next-20190426)
-
- drivers/staging/kpc2000/kpc_dma/fileops.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-index 5741d2b..66f0d5a 100644
---- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-+++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-@@ -38,6 +38,7 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
- {
- 	unsigned int i = 0;
- 	long rv = 0;
-+	int ret = 0;
- 	struct kpc_dma_device *ldev;
- 	struct aio_cb_data *acd;
- 	DECLARE_COMPLETION_ONSTACK(done);
-@@ -180,16 +181,17 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
- 	
- 	// If this is a synchronous kiocb, we need to put the calling process to sleep until the transfer is complete
- 	if (kcb == NULL || is_sync_kiocb(kcb)){
--		rv = wait_for_completion_interruptible(&done);
--		// If the user aborted (rv == -ERESTARTSYS), we're no longer responsible for cleaning up the acd
--		if (rv == -ERESTARTSYS){
-+		ret = wait_for_completion_interruptible(&done);
-+		/* If the user aborted (ret == -ERESTARTSYS), we're
-+		 * no longer responsible for cleaning up the acd
-+		 *
-+		if (ret){
- 			acd->cpl = NULL;
--		}
--		if (rv == 0){
--			rv = acd->len;
-+		} else {
-+			ret = acd->len;
- 			kfree(acd);
- 		}
--		return rv;
-+		return ret
- 	}
- 	
- 	return -EIOCBQUEUED;
 -- 
-2.1.4
-
+Cheers,
+Changbin Du
