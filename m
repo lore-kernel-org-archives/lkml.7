@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D402C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D00EC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6551215EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C02208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329394;
-	bh=dU91GnZdObkxpX84TDZpbTY6xu180IXb8sa8B2luH+M=;
+	s=default; t=1556329404;
+	bh=///dZjT54zwiOyXToeS1aK7+O5zTcc6Kr8S21+1ePjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vvOA8fA/b6d5aWMV6xZurTVXz8gfLrUm/85oTYeb+5sODtYEPFLRVgV0pplbKNbKU
-	 purV6Mig7RK/SsWHZTHftTQotzfSQAmMY5OKpBhgFNQTtVS5b6rGizX6VdAwNce2Jd
-	 wMkhI3xH5tcB9GNA9v6b7bqfs4rkQlI/f8kthEA4=
+	b=xdItjOWjQPFpNPnGo+Ze5OqE9ZhfisQ2KXf8tNL8YdH7hUyOWSUJ24dDc90Hlh1yy
+	 b8STp8q3TjWdhb4lx5npmTT+FIjIn4yUsMshbHnTbBzQK2acyeGxTkVkuwThfpjCsv
+	 pZr1ZiopPUK3z2rUT8L0SSRq/wHEU/FX7MdmLfbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbfD0BnN (ORCPT
+        id S1728779AbfD0BnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:43:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47328 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:43:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727946AbfD0BnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:10 -0400
+        id S1728744AbfD0BnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EEA8208CB;
-        Sat, 27 Apr 2019 01:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD38B215EA;
+        Sat, 27 Apr 2019 01:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329390;
-        bh=dU91GnZdObkxpX84TDZpbTY6xu180IXb8sa8B2luH+M=;
+        s=default; t=1556329397;
+        bh=///dZjT54zwiOyXToeS1aK7+O5zTcc6Kr8S21+1ePjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GXNa7Z3TnzmgpC8+tZPqSzS++XP+EiH4VXE/IyyUETkWjK1II1NyCYlpPYGpcBp50
-         Gl1li3BDL4Mp8Pv9bNJNRs8OY0D5zeWpG08lCSfX/sjN7sXHktdIUXsR7yi+eQL9pK
-         Z1DJeJWIEjWhdvg/3blmwZyEHdSshE1e0b2WxouM=
+        b=sWR8LzzdjLSEjQL86xLLGN4hgePmy88SxKao0BWqPZnB1upEN28tIyemh/qevLrkQ
+         8H0WkyrDXV8bNmPOFgydwZvJ1BkwumNZRd+PSzFirqJ9WDq5ibgCtCDjjVXKCNlFlH
+         HMLFMiojODGZ6MERmYSozUVYGgl8cFcQltLdqI2s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tzung-Bi Shih <tzungbi@google.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 25/32] ASoC: Intel: kbl: fix wrong number of channels
-Date:   Fri, 26 Apr 2019 21:42:16 -0400
-Message-Id: <20190427014224.8274-25-sashal@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 29/32] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
+Date:   Fri, 26 Apr 2019 21:42:20 -0400
+Message-Id: <20190427014224.8274-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
 References: <20190427014224.8274-1-sashal@kernel.org>
@@ -59,34 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzung-Bi Shih <tzungbi@google.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit d6ba3f815bc5f3c4249d15c8bc5fbb012651b4a4 ]
+[ Upstream commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 ]
 
-Fix wrong setting on number of channels.  The context wants to set
-constraint to 2 channels instead of 4.
+syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
+is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
+(which is embedded into user-visible "struct nfs_mount_data" structure)
+despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
+bytes of AF_INET6 address to rpc_sockaddr2uaddr().
 
-Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Since "struct nfs_mount_data" structure is user-visible, we can't change
+"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
+assuming that everybody is using AF_INET family when passing address via
+"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
+
+[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
+
+Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-index 69ab55956492..41cb1fefbd42 100644
---- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-+++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-@@ -405,7 +405,7 @@ static const struct snd_pcm_hw_constraint_list constraints_dmic_channels = {
- };
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 77d8d03344c8..f464f8d9060c 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -2044,7 +2044,8 @@ static int nfs23_validate_mount_data(void *options,
+ 		memcpy(sap, &data->addr, sizeof(data->addr));
+ 		args->nfs_server.addrlen = sizeof(data->addr);
+ 		args->nfs_server.port = ntohs(data->addr.sin_port);
+-		if (!nfs_verify_server_address(sap))
++		if (sap->sa_family != AF_INET ||
++		    !nfs_verify_server_address(sap))
+ 			goto out_no_address;
  
- static const unsigned int dmic_2ch[] = {
--	4,
-+	2,
- };
- 
- static const struct snd_pcm_hw_constraint_list constraints_dmic_2ch = {
+ 		if (!(data->flags & NFS_MOUNT_TCP))
 -- 
 2.19.1
 
