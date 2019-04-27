@@ -2,121 +2,212 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C92C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6624BC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69912087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF052087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556389290;
-	bh=2y00pJ7Sy1RH0RaBP1rlxte+4YT4TxklyGy1xA/5XG8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r+OA/3UdEDWGRihSRbHCiUbCp021o1n75mZpYJrTez2znU9EzYf3SdayDoB/RZYg+
-	 IgdMOy7/cCHM/d9gd1/JLT7zphyhEAPDrqRyhlG4yhogI+OUpltENjl3Kp8PMK3T+u
-	 XEsm+13gkkLnDhqmSEgVb7a/CSIbczYR1SzyToYc=
+	s=default; t=1556389503;
+	bh=kh8D00/7ITgVGh0adID3knm2y1Cr8/pPhKFd7SLKMis=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LzCDk97PGJEfvjxg23vQMxWUuYylogPjUZ9Zft5rOyuP2VJKnOUTeqlR4VvkKTB9U
+	 yy+TPeoqxYP0F5XtV0/HIxnpSrY5WSGEpc1zRFK2BJZ0yICZMfvtLg6ttDrhoF81bl
+	 lPk+iU5fo6JQTiC6fu4tVen9iDLyFLmvUXohaS9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfD0SV2 (ORCPT
+        id S1726308AbfD0SZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 14:21:28 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34232 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfD0SV2 (ORCPT
+        Sat, 27 Apr 2019 14:25:02 -0400
+Received: from casper.infradead.org ([85.118.1.10]:51848 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfD0SZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 14:21:28 -0400
+        Sat, 27 Apr 2019 14:25:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=p01vbJpyOWJAdEXdJU0OCfw6W6SYYsQSTTr9W3aE80M=; b=oJ1uFElZv1svSo9snDycG0e8y
-        X48y5Srs/Ekw8ZvHe6Od0d3EayaPfXx2H79dKk9/lxbXPDG1wUIDDzU+rWqiyA+ExIDZSzmVRqvLb
-        8MGoXm/TgudGdCH7HjrW0xDCfvA5HEc3F4yFVR5AXbzxsQDSWOsafg76J0wJBGqUEV0MU=;
-Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hKRwq-00053h-RE; Sat, 27 Apr 2019 18:21:17 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 54AE1441D3B; Sat, 27 Apr 2019 19:21:13 +0100 (BST)
-Date:   Sun, 28 Apr 2019 03:21:13 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        bjorn.andersson@linaro.org, vinod.koul@linaro.org,
-        niklas.cassel@linaro.org, khasim.mohammed@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/3] drivers: regulator: qcom: add PMS405 SPMI regulator
-Message-ID: <20190427182113.GL14916@sirena.org.uk>
-References: <1548675904-18324-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1548675904-18324-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <20190204090301.GC23441@sirena.org.uk>
- <95276ca0-6896-a595-867a-184a518fa31f@linaro.org>
- <20190425183736.GF23183@sirena.org.uk>
- <022b3c6a-e356-3c5a-3c46-c6edcf4f8cd5@linaro.org>
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=wHts1d8Y6raq/bP++PtZKHYJGsQDFiyOnVnNB6iR6ug=; b=nWALiyYG9qmb9AK7Q+fRl4393o
+        IYRO8bNjqx0dSc8OxqaEnZDy8Pw5YP840GG5uUwzL3K8X/Z3vNWDmoEtwlQ33Dg+04V+y4jTUUnVe
+        iY+fz2lnrjaSFP9v8OMFojzyHyMSbKdKKKgw6NON+gKIHGi6FNVC60/J0USwwCE3LnzxAQAZZ/0gg
+        yrDbuJr0Ptm1fVpUDeRbTqZa1i+n6uqilu8KJlUg3TkyJVIB+QB6fgAzP9LD3W7b6VWd+HS4LHVW1
+        Yn2ysb11ICX7kN5Za39ksce6Ss38l9r2k8bY1kLSewvKdDfUlpcGWRDMzQ11KPp3svxcrIbz28+Ml
+        PTVmm9mg==;
+Received: from 177.17.250.151.dynamic.adsl.gvt.net.br ([177.17.250.151] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hKS0M-0004bX-Dh; Sat, 27 Apr 2019 18:24:55 +0000
+Date:   Sat, 27 Apr 2019 15:24:49 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 20/27] Documentation: x86: convert i386/IO-APIC.txt to
+ reST
+Message-ID: <20190427152449.19df3fcb@coco.lan>
+In-Reply-To: <20190426153150.21228-21-changbin.du@gmail.com>
+References: <20190426153150.21228-1-changbin.du@gmail.com>
+        <20190426153150.21228-21-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sCNd3Ivk/oijKKf1"
-Content-Disposition: inline
-In-Reply-To: <022b3c6a-e356-3c5a-3c46-c6edcf4f8cd5@linaro.org>
-X-Cookie: -- I have seen the FUN --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Fri, 26 Apr 2019 23:31:43 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
---sCNd3Ivk/oijKKf1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  .../x86/i386/{IO-APIC.txt => IO-APIC.rst}     | 26 ++++++++++++-------
+>  Documentation/x86/i386/index.rst              | 10 +++++++
+>  Documentation/x86/index.rst                   |  1 +
+>  3 files changed, 27 insertions(+), 10 deletions(-)
+>  rename Documentation/x86/i386/{IO-APIC.txt => IO-APIC.rst} (93%)
+>  create mode 100644 Documentation/x86/i386/index.rst
+> 
+> diff --git a/Documentation/x86/i386/IO-APIC.txt b/Documentation/x86/i386/IO-APIC.rst
+> similarity index 93%
+> rename from Documentation/x86/i386/IO-APIC.txt
+> rename to Documentation/x86/i386/IO-APIC.rst
+> index 15f5baf7e1b6..aec98f742763 100644
+> --- a/Documentation/x86/i386/IO-APIC.txt
+> +++ b/Documentation/x86/i386/IO-APIC.rst
+> @@ -1,3 +1,11 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=======
+> +IO-APIC
+> +=======
+> +
+> +:Author: Ingo Molnar <mingo@kernel.org>
+> +
+>  Most (all) Intel-MP compliant SMP boards have the so-called 'IO-APIC',
+>  which is an enhanced interrupt controller. It enables us to route
+>  hardware interrupts to multiple CPUs, or to CPU groups. Without an
+> @@ -13,7 +21,7 @@ usually worked around by the kernel. If your MP-compliant SMP board does
+>  not boot Linux, then consult the linux-smp mailing list archives first.
+>  
+>  If your box boots fine with enabled IO-APIC IRQs, then your
+> -/proc/interrupts will look like this one:
+> +/proc/interrupts will look like this one::
+>  
+>     ---------------------------->
+...
+     <----------------------------
 
-On Thu, Apr 25, 2019 at 09:44:00PM +0200, Jorge Ramirez wrote:
+I would remove those lines, as they sounds like a way used by the
+doc author to "escape" a literal block.
 
-> the way I see it, if I follow your suggestion and since we are not
-> allowed to extend spmi_regulator_find_range(), the only options are:
+Either way:
 
-> 1) duplicate verbatim this whole function
-> (spmi_regulator_select_voltage_same_range) with a minor change (this
-> amount of code duplication in the kernel seems rather unnecessary to me)
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-> 2) modify the struct spmi_regulator definition with a new operation that
-> calls a different implementation of find range (seems a massive overkill)
 
-Since the point of this change is AFAICT that this regulator only has a
-single linear range it seems like it should just be able to use the
-existing generic functions shouldn't it?  It just needs it's own
-set/get_voltage_sel() operations.  As far as I can see the main thing
-the driver is doing with the custom stuff is handling the fact that
-there's multiple ranges but that's not an issue for this regulator.
-It's possible I'm missing something there but that was the main thing
-(and we do have some generic support for multiple linear ranges in the
-helper code already, can't remember why this driver isn't using that -
-the ranges overlap IIRC?).
+>    hell:~> cat /proc/interrupts  
+> @@ -37,14 +45,14 @@ none of those IRQ sources is performance-critical.
+>  In the unlikely case that your board does not create a working mp-table,
+>  you can use the pirq= boot parameter to 'hand-construct' IRQ entries. This
+>  is non-trivial though and cannot be automated. One sample /etc/lilo.conf
+> -entry:
+> +entry::
+>  
+>  	append="pirq=15,11,10"
+>  
+>  The actual numbers depend on your system, on your PCI cards and on their
+>  PCI slot position. Usually PCI slots are 'daisy chained' before they are
+>  connected to the PCI chipset IRQ routing facility (the incoming PIRQ1-4
+> -lines):
+> +lines)::
+>  
+>                 ,-.        ,-.        ,-.        ,-.        ,-.
+>       PIRQ4 ----| |-.    ,-| |-.    ,-| |-.    ,-| |--------| |
+> @@ -56,7 +64,7 @@ lines):
+>       PIRQ1 ----| |-  `----| |-  `----| |-  `----| |--------| |
+>                 `-'        `-'        `-'        `-'        `-'
+>  
+> -Every PCI card emits a PCI IRQ, which can be INTA, INTB, INTC or INTD:
+> +Every PCI card emits a PCI IRQ, which can be INTA, INTB, INTC or INTD::
+>  
+>                                 ,-.
+>                           INTD--| |
+> @@ -78,19 +86,19 @@ to have non shared interrupts). Slot5 should be used for videocards, they
+>  do not use interrupts normally, thus they are not daisy chained either.
+>  
+>  so if you have your SCSI card (IRQ11) in Slot1, Tulip card (IRQ9) in
+> -Slot2, then you'll have to specify this pirq= line:
+> +Slot2, then you'll have to specify this pirq= line::
+>  
+>  	append="pirq=11,9"
+>  
+>  the following script tries to figure out such a default pirq= line from
+> -your PCI configuration:
+> +your PCI configuration::
+>  
+>  	echo -n pirq=; echo `scanpci | grep T_L | cut -c56-` | sed 's/ /,/g'
+>  
+>  note that this script won't work if you have skipped a few slots or if your
+>  board does not do default daisy-chaining. (or the IO-APIC has the PIRQ pins
+>  connected in some strange way). E.g. if in the above case you have your SCSI
+> -card (IRQ11) in Slot3, and have Slot1 empty:
+> +card (IRQ11) in Slot3, and have Slot1 empty::
+>  
+>  	append="pirq=0,9,11"
+>  
+> @@ -105,7 +113,7 @@ won't function properly (e.g. if it's inserted as a module).
+>  If you have 2 PCI buses, then you can use up to 8 pirq values, although such
+>  boards tend to have a good configuration.
+>  
+> -Be prepared that it might happen that you need some strange pirq line:
+> +Be prepared that it might happen that you need some strange pirq line::
+>  
+>  	append="pirq=0,0,0,0,0,0,9,11"
+>  
+> @@ -115,5 +123,3 @@ Good luck and mail to linux-smp@vger.kernel.org or
+>  linux-kernel@vger.kernel.org if you have any problems that are not covered
+>  by this document.
+>  
+> --- mingo
+> -
+> diff --git a/Documentation/x86/i386/index.rst b/Documentation/x86/i386/index.rst
+> new file mode 100644
+> index 000000000000..8747cf5bbd49
+> --- /dev/null
+> +++ b/Documentation/x86/i386/index.rst
+> @@ -0,0 +1,10 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +============
+> +i386 Support
+> +============
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   IO-APIC
+> diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+> index 526f7a008b8e..19323c5b89ce 100644
+> --- a/Documentation/x86/index.rst
+> +++ b/Documentation/x86/index.rst
+> @@ -26,3 +26,4 @@ Linux x86 Support
+>     microcode
+>     resctrl_ui
+>     usb-legacy-support
+> +   i386/index
 
-TBH looking at the uses of find_range() I'm not sure they're 100%
-sensible as they are - the existing _time_sel() is assuming we only need
-to work out the ramp time between voltages in the same range which is
-going to have trouble.
 
---sCNd3Ivk/oijKKf1
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzEnZYACgkQJNaLcl1U
-h9Be2wf/Ts0rAq3XrujapmG1sE36u6DgwDxHfPpMSejg40goWEljc2BT0WnUwqiC
-NRj8O2f8zXZJ6jEofNYk6dOO17ej93naTtIO34nDIU7KSB0q0DhyApUTMwGiFuC9
-b5Aoa1EvRAaqQ/Pr9n8XUHnDxgCJsMzDxz9w6dXlT0fgDnvoFnQAL1OYaHZjwb72
-Sgp/3sJSpniaTGO+F3QaSV/lmGJ/7bMRvvNSQZOpwYc10YRmuFOGcGw2WZp71G4q
-XUlyxvscZ77dvHs3p/p87mwuzJID6ZTxnIFcH3ScemFJE6DDSN4aRb1gfVZtrOIS
-qdrDP4sKHBDd+xxxcUqJVBtZaWHK/Q==
-=RPrf
------END PGP SIGNATURE-----
-
---sCNd3Ivk/oijKKf1--
+Thanks,
+Mauro
