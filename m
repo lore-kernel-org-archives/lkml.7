@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A85C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A729C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37FB206E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A92F206E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556330139;
-	bh=9wxgPu0ztq6m1YVb/9c8SpBgLiynpp40Xv953t4reww=;
+	s=default; t=1556330145;
+	bh=EORgHn6y+LW9CqXjwjHIfkrGzyJd3plfgq1dgFU7hb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3xMlJuUltmQmVFOKc+f/QET7XljE8ACV2GKjDownO5l1+TA0CBELTMFltMoEqNBv
-	 uiMVHcrkbXCdosCqiengXSMN62aHzrDXttLSoRXkDci4liDlvJ0RxL7rLBrO/MrgrL
-	 2FURXMasvBSZ0CZpl891Wi29VE3TyHOrCro3mYh8=
+	b=fxkWwnvYEtywWU70RM6EL9YCwPXH+UddgoTbOEVqNrKnHiTkMlJSH+s557dYffwEu
+	 aQ6xjsgzixrVw2N3VqmSQbctKJfeHaUQ6MA0qlH+KQbbCU+WMesXKeXevUK3FBdB1+
+	 ROkGw8ROznB53wwrxk+k6QTmpGviVCbYt6D39tJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbfD0BjK (ORCPT
+        id S1727495AbfD0BjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:39:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42206 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:39:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727480AbfD0BjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:39:08 -0400
+        id S1727461AbfD0BjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:39:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A92982084F;
-        Sat, 27 Apr 2019 01:39:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07C5220C01;
+        Sat, 27 Apr 2019 01:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329147;
-        bh=9wxgPu0ztq6m1YVb/9c8SpBgLiynpp40Xv953t4reww=;
+        s=default; t=1556329142;
+        bh=EORgHn6y+LW9CqXjwjHIfkrGzyJd3plfgq1dgFU7hb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eAsZi5tT6TQFB7wc/H9tg2hCyLlrwFESyJxz67RwqRlf2Bgc9LPqEyvcNy+pfEKb+
-         ubcEBptuM5IsWXsyi/HGMbWWUZ6FGnqS4a432582CkVU06MrslZeC0024z25ua3y4Z
-         kPkt7+fH1fki8NL1wZ/sAeC31bk2sEH0r62taUnI=
+        b=qDKJ1OaIRqvSNf110xJpSZMjNvb4YZKq43HiJUfv3Zfo6v4tgmJVo7CMnwHjs8Q0t
+         423YaQ1cb0q39ocKXUCw27rK54lJLEE+6nl9hNF/NoNxmJjxysqbPhnCSJSoPbl2dG
+         A5oQyFAeaI8tOQXKK2LwvrZvJ53cePVfXr0Zzczo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, Jyri Sarha <jsarha@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 23/79] drm/omap: hdmi4_cec: Fix CEC clock handling for PM
-Date:   Fri, 26 Apr 2019 21:37:42 -0400
-Message-Id: <20190427013838.6596-23-sashal@kernel.org>
+Cc:     Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 20/79] ASoC: stm32: dfsdm: fix debugfs warnings on entry creation
+Date:   Fri, 26 Apr 2019 21:37:39 -0400
+Message-Id: <20190427013838.6596-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -61,101 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-[ Upstream commit 36a1da15b5df493241b0011d2185fdd724ac1ed1 ]
+[ Upstream commit c47255b61129857b74b0d86eaf59335348be05e0 ]
 
-If CONFIG_OMAP4_DSS_HDMI_CEC is enabled in .config, deeper SoC idle
-states are blocked because the CEC clock gets always enabled on init.
+Register platform component with a prefix, to avoid warnings
+on debugfs entries creation, due to component name
+redundancy.
 
-Let's fix the issue by moving the CEC clock handling to happen later in
-hdmi_cec_adap_enable() as suggested by Hans Verkuil <hverkuil@xs4all.nl>.
-This way the CEC clock gets only enabled when needed. This can be tested
-by doing cec-ctl --playback to enable the CEC, and doing cec-ctl --clear
-to disable it.
-
-Let's also fix the typo for "divider" in the comments while at it.
-
-Fixes: 8d7f934df8d8 ("omapdrm: hdmi4_cec: add OMAP4 HDMI CEC support")
-Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Jyri Sarha <jsarha@ti.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190326151438.32414-1-tony@atomide.com
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c | 26 ++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ sound/soc/stm/stm32_adfsdm.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
-index 340383150fb9..ebf9c96d43ee 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
-@@ -175,6 +175,7 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
- 		REG_FLD_MOD(core->base, HDMI_CORE_SYS_INTR_UNMASK4, 0, 3, 3);
- 		hdmi_wp_clear_irqenable(core->wp, HDMI_IRQ_CORE);
- 		hdmi_wp_set_irqstatus(core->wp, HDMI_IRQ_CORE);
-+		REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
- 		hdmi4_core_disable(core);
- 		return 0;
- 	}
-@@ -182,16 +183,24 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
- 	if (err)
- 		return err;
+diff --git a/sound/soc/stm/stm32_adfsdm.c b/sound/soc/stm/stm32_adfsdm.c
+index 71d341b732a4..24948b95eb19 100644
+--- a/sound/soc/stm/stm32_adfsdm.c
++++ b/sound/soc/stm/stm32_adfsdm.c
+@@ -304,6 +304,7 @@ MODULE_DEVICE_TABLE(of, stm32_adfsdm_of_match);
+ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ {
+ 	struct stm32_adfsdm_priv *priv;
++	struct snd_soc_component *component;
+ 	int ret;
  
-+	/*
-+	 * Initialize CEC clock divider: CEC needs 2MHz clock hence
-+	 * set the divider to 24 to get 48/24=2MHz clock
-+	 */
-+	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0x18, 5, 0);
-+
- 	/* Clear TX FIFO */
- 	if (!hdmi_cec_clear_tx_fifo(adap)) {
- 		pr_err("cec-%s: could not clear TX FIFO\n", adap->name);
--		return -EIO;
-+		err = -EIO;
-+		goto err_disable_clk;
- 	}
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+@@ -331,9 +332,15 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->iio_cb))
+ 		return PTR_ERR(priv->iio_cb);
  
- 	/* Clear RX FIFO */
- 	if (!hdmi_cec_clear_rx_fifo(adap)) {
- 		pr_err("cec-%s: could not clear RX FIFO\n", adap->name);
--		return -EIO;
-+		err = -EIO;
-+		goto err_disable_clk;
- 	}
- 
- 	/* Clear CEC interrupts */
-@@ -236,6 +245,12 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
- 		hdmi_write_reg(core->base, HDMI_CEC_INT_STATUS_1, temp);
- 	}
- 	return 0;
+-	ret = devm_snd_soc_register_component(&pdev->dev,
+-					      &stm32_adfsdm_soc_platform,
+-					      NULL, 0);
++	component = devm_kzalloc(&pdev->dev, sizeof(*component), GFP_KERNEL);
++	if (!component)
++		return -ENOMEM;
++#ifdef CONFIG_DEBUG_FS
++	component->debugfs_prefix = "pcm";
++#endif
 +
-+err_disable_clk:
-+	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
-+	hdmi4_core_disable(core);
-+
-+	return err;
++	ret = snd_soc_add_component(&pdev->dev, component,
++				    &stm32_adfsdm_soc_platform, NULL, 0);
+ 	if (ret < 0)
+ 		dev_err(&pdev->dev, "%s: Failed to register PCM platform\n",
+ 			__func__);
+@@ -341,12 +348,20 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ 	return ret;
  }
  
- static int hdmi_cec_adap_log_addr(struct cec_adapter *adap, u8 log_addr)
-@@ -333,11 +348,8 @@ int hdmi4_cec_init(struct platform_device *pdev, struct hdmi_core_data *core,
- 		return ret;
- 	core->wp = wp;
++static int stm32_adfsdm_remove(struct platform_device *pdev)
++{
++	snd_soc_unregister_component(&pdev->dev);
++
++	return 0;
++}
++
+ static struct platform_driver stm32_adfsdm_driver = {
+ 	.driver = {
+ 		   .name = STM32_ADFSDM_DRV_NAME,
+ 		   .of_match_table = stm32_adfsdm_of_match,
+ 		   },
+ 	.probe = stm32_adfsdm_probe,
++	.remove = stm32_adfsdm_remove,
+ };
  
--	/*
--	 * Initialize CEC clock divider: CEC needs 2MHz clock hence
--	 * set the devider to 24 to get 48/24=2MHz clock
--	 */
--	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0x18, 5, 0);
-+	/* Disable clock initially, hdmi_cec_adap_enable() manages it */
-+	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
- 
- 	ret = cec_register_adapter(core->adap, &pdev->dev);
- 	if (ret < 0) {
+ module_platform_driver(stm32_adfsdm_driver);
 -- 
 2.19.1
 
