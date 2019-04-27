@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC565C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D85FC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E63206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC2A206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329832;
-	bh=KEzyeA90r3Dx8KJtuHa5LY3JWEQZjoB2VSp6bjiCCAU=;
+	s=default; t=1556329842;
+	bh=W441vUvKyZI3DLolgjroDMA/CMEv72SuN7sctSaCvEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRF4CY8Am5zmm7HAvCy2aTdwYdp6IBao2W3iLiQHrLjTBkwhOMjef+JalNJdXtmhk
-	 OqopCFo4pqZht2mYTytC7KamDulx/1Mn/4BVvEzB/IeW0BJ8gt1nmrISQ8SV8TeVOR
-	 ZP4MvDknLCAkIyWveTq5IAhPnukQpkwv5umVxXJI=
+	b=Tx2stCXyp8MgEITl1ZRT3eyLOc9QuuFlBfOQwsItvwSgaupxNTlwWNiLnCp26F1DM
+	 ka9j4AKZ8l3WQ+j94Xo/0NlPTDuzvBSOTsrWDuxVRvP837DSdGQ3w5k23qKRrCALwu
+	 TNyP9V2Fq3HxXxLW3CMFM3WL7VAez3jUIQWIsJfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfD0Bub (ORCPT
+        id S1728252AbfD0BlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:50:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728264AbfD0Bl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:27 -0400
+        id S1728240AbfD0BlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 678CB2146E;
-        Sat, 27 Apr 2019 01:41:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A96720C01;
+        Sat, 27 Apr 2019 01:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329287;
-        bh=KEzyeA90r3Dx8KJtuHa5LY3JWEQZjoB2VSp6bjiCCAU=;
+        s=default; t=1556329280;
+        bh=W441vUvKyZI3DLolgjroDMA/CMEv72SuN7sctSaCvEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2fQ2vQAAkhzS9UbMIDb38c3F6lnovIdtybHr7DT1hgIJIqOQ0yekDEtCilryYpHaK
-         0gLLp4pxxsMJsWsl+d2cfsBAQRqqiulOQ+vus++85toCuGIYJ80hkVv69xKC3S5/2g
-         6nQMpksWrt4lcR6jBgAlmTCpcxZ1LbokJ/UNmqbw=
+        b=Czz9j7G5NlcikK+SYLd0DsYYQLUWgx9d0mmMOCaSlGG/8Bsqi/EtIs6sjZ87/pB94
+         6mYaF+ThS6MYxxzMFFtGEnXrkUYJyTVMdXXDwOmtJ9STWL5werP0PSmGF1QB4NVC95
+         wACyVSpYc3PF8wy8OtAR2Eua1sAQV+lOJX2EbqI0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 23/53] drm/mediatek: Fix an error code in mtk_hdmi_dt_parse_pdata()
-Date:   Fri, 26 Apr 2019 21:40:20 -0400
-Message-Id: <20190427014051.7522-23-sashal@kernel.org>
+Cc:     Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/53] IB/hfi1: Eliminate opcode tests on mr deref
+Date:   Fri, 26 Apr 2019 21:40:16 -0400
+Message-Id: <20190427014051.7522-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -59,33 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-[ Upstream commit 2d85978341e6a32e7443d9f28639da254d53f400 ]
+[ Upstream commit a8639a79e85c18c16c10089edd589c7948f19bbd ]
 
-We don't want to overwrite "ret", it already holds the correct error
-code.  The "regmap" variable might be a valid pointer as this point.
+When an old ack_queue entry is used to store an incoming request, it may
+need to clean up the old entry if it is still referencing the
+MR. Originally only RDMA READ request needed to reference MR on the
+responder side and therefore the opcode was tested when cleaning up the
+old entry. The introduction of tid rdma specific operations in the
+ack_queue makes the specific opcode tests wrong.  Multiple opcodes (RDMA
+READ, TID RDMA READ, and TID RDMA WRITE) may need MR ref cleanup.
 
-Fixes: 8f83f26891e1 ("drm/mediatek: Add HDMI support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Remove the opcode specific tests associated with the ack_queue.
+
+Fixes: f48ad614c100 ("IB/hfi1: Move driver out of staging")
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/infiniband/hw/hfi1/rc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 643f5edd68fe..c7a77d6f612b 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1473,7 +1473,6 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	if (IS_ERR(regmap))
- 		ret = PTR_ERR(regmap);
- 	if (ret) {
--		ret = PTR_ERR(regmap);
- 		dev_err(dev,
- 			"Failed to get system configuration registers: %d\n",
- 			ret);
+diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
+index 6f013a565353..770c78c65730 100644
+--- a/drivers/infiniband/hw/hfi1/rc.c
++++ b/drivers/infiniband/hw/hfi1/rc.c
+@@ -2303,7 +2303,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
+ 			update_ack_queue(qp, next);
+ 		}
+ 		e = &qp->s_ack_queue[qp->r_head_ack_queue];
+-		if (e->opcode == OP(RDMA_READ_REQUEST) && e->rdma_sge.mr) {
++		if (e->rdma_sge.mr) {
+ 			rvt_put_mr(e->rdma_sge.mr);
+ 			e->rdma_sge.mr = NULL;
+ 		}
+@@ -2377,7 +2377,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
+ 			update_ack_queue(qp, next);
+ 		}
+ 		e = &qp->s_ack_queue[qp->r_head_ack_queue];
+-		if (e->opcode == OP(RDMA_READ_REQUEST) && e->rdma_sge.mr) {
++		if (e->rdma_sge.mr) {
+ 			rvt_put_mr(e->rdma_sge.mr);
+ 			e->rdma_sge.mr = NULL;
+ 		}
 -- 
 2.19.1
 
