@@ -2,115 +2,100 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A79BC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D490C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98A92087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28BA2087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:19:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxgHkvz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbfD0JST (ORCPT
+        id S1726399AbfD0JTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 05:18:19 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:53606 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfD0JST (ORCPT
+        Sat, 27 Apr 2019 05:19:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37860 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfD0JTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 05:18:19 -0400
-Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
-        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
-        id S23990717AbfD0JSPYKUmC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
-        Sat, 27 Apr 2019 11:18:15 +0200
-Date:   Sat, 27 Apr 2019 11:18:06 +0200
-From:   Ladislav Michl <ladis@linux-mips.org>
-To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mtd: rawnand: ams-delta: Drop board specific
- partition info
-Message-ID: <20190427091806.GA10143@lenoch>
-References: <20190324223344.24590-1-jmkrzyszt@gmail.com>
- <20190424180212.10830-1-jmkrzyszt@gmail.com>
- <20190424221428.GA4172@lenoch>
- <3173726.PU223hZCOI@z50>
+        Sat, 27 Apr 2019 05:19:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g3so2888551pfi.4;
+        Sat, 27 Apr 2019 02:19:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Gg/uK4hT6erpZ9y7ys+gWQjOqjeDr2lhneKZX4LpVYQ=;
+        b=IxgHkvz5aNsXC9JiJTT3Kwd64QRsfiQ7GF3sH96LTAcMK4dGRiBgMQjZ4MR0Fiuf6d
+         q9elPIf9/QoKD4BxW10NAB2e6tN7FiGAyXnsLp4/AePRVTyzeLCxG5fSjYP1vnux2RFn
+         CoJvG7KFrGRC7zq4qWaR81ezonCDFg54Liplj3OazAOyxYqny+Wf3LbdCgMLpTqKbEoT
+         tJqoXTQIRPwRxlE1e6d48tp0n9hgfOKe1eSiquBvLDC69OQwUuId+5OVg5sBTsY0LP+n
+         mzZmXCuuzxlL3rSXtyR5lnl4Js0I29ZNa+7TI+QfaeGc/fsvBkp+xk+yIR3126Ytw4xq
+         HstA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Gg/uK4hT6erpZ9y7ys+gWQjOqjeDr2lhneKZX4LpVYQ=;
+        b=ZcSe7YJkrMBrSfpUuGacroble6+yaoo7jxFB8UdZdRjwsGOkd3AFPqR78bqqAeF7JT
+         Xhg5eO8KGuZy+t1iN31UxYLrFAn+XpFmakT/447nVGJ2C4ryIi+K8RJXvUqOUgqf5rEo
+         JU6p4FIbHEEtwte+LdQRYVMxaWzANEu22x73GEJ61ayp2LQhyAiF8v+d/YV0/IjMCq12
+         CTe22Ck5QORF6Lstq15cQpFN5KvyNF3SxCmb8TL+8T4/HVGC/M+3EU1DpPLVzmL69QK4
+         vT8F/scIs5a90yzldONgUiOpbb+rGo0pcMZ0KTNFz0T94V9qRW9sDILq39FiSyqrmdHd
+         QRhA==
+X-Gm-Message-State: APjAAAUmUndwn5/v1MGwFpgy4PzbmYzBtAbSlpXpj8ldPFF7R9d7EGjj
+        LgA9tcEmLLCF/TAFdg2LGfBrS3C2o4E=
+X-Google-Smtp-Source: APXvYqxGDPaNuh/WH0EAveQ3DVS5k/WaByaRL7R6a2rUOB4HfEzSoS5c3KCbecgE8gC5WxypvItjVw==
+X-Received: by 2002:a63:fd58:: with SMTP id m24mr24643145pgj.298.1556356785499;
+        Sat, 27 Apr 2019 02:19:45 -0700 (PDT)
+Received: from haolee.io ([2600:3c01::f03c:91ff:fe77:6cf4])
+        by smtp.gmail.com with ESMTPSA id u6sm39870871pfm.10.2019.04.27.02.19.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Apr 2019 02:19:45 -0700 (PDT)
+Date:   Sat, 27 Apr 2019 17:19:43 +0800
+From:   Hao Lee <haolee.swjtu@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     jslaby@suse.com, haolee.swjtu@gmail.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] tty: serial: 8250: Fix type field in format string
+Message-ID: <20190427091943.GA3810@haolee.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3173726.PU223hZCOI@z50>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 08:42:22PM +0200, Janusz Krzysztofik wrote:
-> Hi Ladislav,
-> 
-> On Thursday, April 25, 2019 12:14:28 AM CEST Ladislav Michl wrote:
-> > Hi Janusz,
-> > 
-> > On Wed, Apr 24, 2019 at 08:02:12PM +0200, Janusz Krzysztofik wrote:
-> > > After recent modifications, only a hardcoded partition info makes
-> > > the driver device specific.  Other than that, the driver uses GPIO
-> > > exclusively and can be used on any hardware.
-> > > 
-> > > Drop the partition info and use MTD partition parser with default list
-> > > of parser names instead.  For the OF parser to work correctly, pass
-> > > device of_node to mtd.
-> > > 
-> > > Amstrad Delta users should append the following partition info to their
-> > > kernel command line, possibly embedding it in CONFIG_CMDLINE:
-> > > 
-> > > mtdparts=ams-delta-nand:3584k(Kernel),256k(u-boot),256k(u-boot_params),\
-> > > 256k(Amstrad_LDR),27m(File_system),768k(PBL_reserved)
-> > 
-> > now, when driver is no longer Amstrad Delta specific, why would you want
-> > to have ams-delta-nand hardcoded on kernel cmdline? I'm assuming at some
-> > point this driver will become gpio-nand [*] or something like that and
-> > asking users to change their kernel cmdline twice is just unwise :)
-> 
-> Hmm, I have no idea of a good name for the driver if not "gpio-nand". Can you 
-> suggest one?
+The dev_dbg statement should print the value of uart.port.mapbase instead
+of its address. Besides that, uart.port.irq and uart.port.iotype are all
+unsigned types, so using %u is more appropriate.
 
-gpio-nand is so good name that it should be worth merging gpio.c and
-ams-delta.c into gpio_nand.c :)
+Signed-off-by: Hao Lee <haolee.swjtu@gmail.com>
+---
+ drivers/tty/serial/8250/8250_pnp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> As a workaround, I can add a platform device id table to the driver with "ams-
-> delta-nand" as a supported device name in hope that survives possible future 
-> driver renaming.
-> 
-> > [*] btw, it is really shame gpio-nand name is already taken by driver
-> > living in drivers/mtd/nand/raw/gpio.c which is more likely gpio-mem-nand
-> > used by at least CompuLab CM-X255 and Picochip picoXcell.
-> 
-> I think the best approach would be to expose NAND data ports of those machines 
-> as GPIO ports, possibly reusing the "gpio-nand" driver code while creating a 
-> new GPIO driver for them if "basic-mmio-gpio" occurs inappropriate, and use 
-> the pure GPIO NAND driver on top.
+diff --git a/drivers/tty/serial/8250/8250_pnp.c b/drivers/tty/serial/8250/8250_pnp.c
+index 431e69a5a6a0..9dea11baf479 100644
+--- a/drivers/tty/serial/8250/8250_pnp.c
++++ b/drivers/tty/serial/8250/8250_pnp.c
+@@ -462,8 +462,8 @@ serial_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
+ 		return -ENODEV;
+ 
+ 	dev_dbg(&dev->dev,
+-		 "Setup PNP port: port %lx, mem %pa, irq %d, type %d\n",
+-		 uart.port.iobase, &uart.port.mapbase,
++		 "Setup PNP port: port %#lx, mem %#lx, irq %u, type %u\n",
++		 uart.port.iobase, uart.port.mapbase,
+ 		 uart.port.irq, uart.port.iotype);
+ 
+ 	if (flags & CIR_PORT) {
+-- 
+2.14.5
 
-What about adding two fields into struct ams_delta_nand holding pointers to
-either ams_delta_{read,write}_buf (renamed to gpio_nand_...) or mmio r/w
-functions depending on driver configuration?
-
-> > Otherwise your work on this driver is so amazing that I just spent
-> > couple of hours finding that phone and compiling some decent userspace
-> > for it :) Thank you!
-> 
-> I'm glad you like it :-)
-> Janusz
-
-Best regards,
-	ladis
