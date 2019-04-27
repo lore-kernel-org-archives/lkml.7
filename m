@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 204C9C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ECDC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71CA208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF12208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329547;
-	bh=VU/Yh5ZNc0pPLZVy1n5KWx70FJtI9nxfOd1sTo87lWM=;
+	s=default; t=1556329550;
+	bh=j3ai+DUF1PARKhW1JlaeUB/05/VbmUmHzu7T18ML3Ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdGPvnFQtbCblY/O6hPNLL1ZQUsK3uhlMmzIruc8eoUy1XFmmeqHJG0p8bC1fW5Vo
-	 0IYc+BPGw5pcFXXlJK2UP/2CqFPruvL4jPyJ4XEk4MiqTJbsFMwgZ+OA/CdS4/epQ0
-	 j+cpy2Zs9nBNxc6lbx0aw0DU/cKBOaDI4vDsAkoY=
+	b=GFVUIlVHHGIIrTn3H8U4AyumHyTAtjy06fgfbhhqsHWp8af+sDWS7N2qjWGfmhav2
+	 EUQgDzCfRehtKoHGKOIWnHIKwVGR8SoDzEhG8MGZZcXnsnOZq9bHMlrFoGY9q33P62
+	 Te68nv9iKHUceTbOCiUxdHaflTjWdNUc9kvTcCx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfD0Bpq (ORCPT
+        id S1728685AbfD0Bpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:45:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48152 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:45:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbfD0Bnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:51 -0400
+        id S1728871AbfD0Bnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2992221707;
-        Sat, 27 Apr 2019 01:43:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC27921537;
+        Sat, 27 Apr 2019 01:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329430;
-        bh=VU/Yh5ZNc0pPLZVy1n5KWx70FJtI9nxfOd1sTo87lWM=;
+        s=default; t=1556329429;
+        bh=j3ai+DUF1PARKhW1JlaeUB/05/VbmUmHzu7T18ML3Ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/Fyqlxd89aeLr91MGBblaN8NazCmx0HjTppKtMcNFeYSb4BjLhFs3FjPRFGiV/5e
-         cOrMnH4t9WeUHfOR4YMo5p3GDy7bjqkC+8POezMmzoKTOLUrxcBufjoyriGAqkf/u3
-         1bCgVJL/xEGl3gpuTNmkwFuuK/Gu3KHSBGfqdJQg=
+        b=dT+UE1+5wgSnsxZ4NXjovRvpGerMurpD0r7gswZOvy5C3HZXi0PjSO66mwpTvueM0
+         knF5MKo2PvQggDMHjIz4pK2K1LTjiqutIHY/g84cizK/l1LZCpSMfQ0icKhueXo80d
+         0W5mac3Yab4rMqJJIXhRc7zVoYCRQ+QnyEMroFFs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/16] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
-Date:   Fri, 26 Apr 2019 21:43:22 -0400
-Message-Id: <20190427014325.8704-14-sashal@kernel.org>
+Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/16] virtio-blk: limit number of hw queues by nr_cpu_ids
+Date:   Fri, 26 Apr 2019 21:43:21 -0400
+Message-Id: <20190427014325.8704-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014325.8704-1-sashal@kernel.org>
 References: <20190427014325.8704-1-sashal@kernel.org>
@@ -59,45 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 ]
+[ Upstream commit bf348f9b78d413e75bb079462751a1d86b6de36c ]
 
-syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
-is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
-(which is embedded into user-visible "struct nfs_mount_data" structure)
-despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
-bytes of AF_INET6 address to rpc_sockaddr2uaddr().
+When tag_set->nr_maps is 1, the block layer limits the number of hw queues
+by nr_cpu_ids. No matter how many hw queues are used by virtio-blk, as it
+has (tag_set->nr_maps == 1), it can use at most nr_cpu_ids hw queues.
 
-Since "struct nfs_mount_data" structure is user-visible, we can't change
-"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
-assuming that everybody is using AF_INET family when passing address via
-"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
+In addition, specifically for pci scenario, when the 'num-queues' specified
+by qemu is more than maxcpus, virtio-blk would not be able to allocate more
+than maxcpus vectors in order to have a vector for each queue. As a result,
+it falls back into MSI-X with one vector for config and one shared for
+queues.
 
-[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
+Considering above reasons, this patch limits the number of hw queues used
+by virtio-blk by nr_cpu_ids.
 
-Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/virtio_blk.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 659ad12e33ba..42c31587a936 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2047,7 +2047,8 @@ static int nfs23_validate_mount_data(void *options,
- 		memcpy(sap, &data->addr, sizeof(data->addr));
- 		args->nfs_server.addrlen = sizeof(data->addr);
- 		args->nfs_server.port = ntohs(data->addr.sin_port);
--		if (!nfs_verify_server_address(sap))
-+		if (sap->sa_family != AF_INET ||
-+		    !nfs_verify_server_address(sap))
- 			goto out_no_address;
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 10332c24f961..44ef1d66caa6 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -392,6 +392,8 @@ static int init_vq(struct virtio_blk *vblk)
+ 	if (err)
+ 		num_vqs = 1;
  
- 		if (!(data->flags & NFS_MOUNT_TCP))
++	num_vqs = min_t(unsigned int, nr_cpu_ids, num_vqs);
++
+ 	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
+ 	if (!vblk->vqs)
+ 		return -ENOMEM;
 -- 
 2.19.1
 
