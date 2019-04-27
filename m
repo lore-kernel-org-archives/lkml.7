@@ -4,47 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BBAC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70802C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABBC21743
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377192166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329381;
-	bh=BkhJK381G4W+Yt1VFrz0O42M2o2R8jbU/gf0FXsy8FM=;
+	s=default; t=1556329387;
+	bh=MRApbEUyyKzYsNfmRuEvWcu8QaiBf4OcoNc9dNCwuco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qPhDIrr9J3fSsHR7s4Ok7VvH5TapRzzzMhScdgjZa4COABbPxFYBldRaqbXfPZrOw
-	 wbr4+H/LhW+tHK4sIs3J1ZFe6NKc0J/vhn5WbmPGKdsdO/h9x1rWcA/VuDPfI6pr/U
-	 ggu0pr6FPYavksXeum8Zucz0jxPnndxWOwJnPgTU=
+	b=lswO84J0mKbw6U4e0r5oPndgfFo+FH73va7uiCUdUx6xxIThcG6fb9P/zNkBfUJm6
+	 NETDDMTVufFuivPGibLrNfAQyYANeUf328oeAfMUQnAZa9uZk6g3+qR9y+yGORe0iy
+	 RdnS7WCLPNbLUPCHU8dzJ5TmAWEUBLhvE+MSqkhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbfD0BnA (ORCPT
+        id S1727330AbfD0BnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47078 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728666AbfD0Bm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:42:57 -0400
+        id S1728680AbfD0Bm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:42:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AE3A2168B;
-        Sat, 27 Apr 2019 01:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588A82168B;
+        Sat, 27 Apr 2019 01:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329376;
-        bh=BkhJK381G4W+Yt1VFrz0O42M2o2R8jbU/gf0FXsy8FM=;
+        s=default; t=1556329379;
+        bh=MRApbEUyyKzYsNfmRuEvWcu8QaiBf4OcoNc9dNCwuco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKPA6ffECbZxzWS1O6bKdo6BzRVFE+gO3JF1NNSsKzFjYyhWc/7d03MncvPYcBgn2
-         0eHF9rSHaSk5NxEHLtGYeCeqw6YSUcCtnwe432INtvwAQ+bFt2xs7PheMfBGPAlX30
-         xnYuFdS6Pwd1+sbN+ajS849z9M0t8v55C1Ut5Nfs=
+        b=kPo00+ESX7zn7u5cfBdUvKdbx+bGxOo9zt27xngR8kG6F8ZZ/IqkLVYFBlh0e8xg1
+         w9ij8g0+P7fKr48LhRquY9cTx9CPqRzgwFuMUB+q1KjxVd2XsdoZXdi2vYXVVWSSND
+         6d9byTk84c0iUe0OZ0gn0mm5/AKNPwxRzyaPQ1ss=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Filippov <jcmvbkbc@gmail.com>, Sasha Levin <sashal@kernel.org>,
-        linux-xtensa@linux-xtensa.org
-Subject: [PATCH AUTOSEL 4.14 16/32] xtensa: fix initialization of pt_regs::syscall in start_thread
-Date:   Fri, 26 Apr 2019 21:42:07 -0400
-Message-Id: <20190427014224.8274-16-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.14 18/32] slab: fix a crash by reading /proc/slab_allocators
+Date:   Fri, 26 Apr 2019 21:42:09 -0400
+Message-Id: <20190427014224.8274-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
 References: <20190427014224.8274-1-sashal@kernel.org>
@@ -57,52 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 2663147dc7465cb29040a05cc4286fdd839978b5 ]
+[ Upstream commit fcf88917dd435c6a4cb2830cb086ee58605a1d85 ]
 
-New pt_regs should indicate that there's no syscall, not that there's
-syscall #0. While at it wrap macro body in do/while and parenthesize
-macro arguments.
+The commit 510ded33e075 ("slab: implement slab_root_caches list")
+changes the name of the list node within "struct kmem_cache" from "list"
+to "root_caches_node", but leaks_show() still use the "list" which
+causes a crash when reading /proc/slab_allocators.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+You need to have CONFIG_SLAB=y and CONFIG_MEMCG=y to see the problem,
+because without MEMCG all slab caches are root caches, and the "list"
+node happens to be the right one.
+
+Fixes: 510ded33e075 ("slab: implement slab_root_caches list")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Tobin C. Harding <tobin@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/include/asm/processor.h | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ mm/slab.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/xtensa/include/asm/processor.h b/arch/xtensa/include/asm/processor.h
-index a39cd81b741a..3a0a8a53f2e7 100644
---- a/arch/xtensa/include/asm/processor.h
-+++ b/arch/xtensa/include/asm/processor.h
-@@ -195,15 +195,18 @@ struct thread_struct {
+diff --git a/mm/slab.c b/mm/slab.c
+index f4658468b23e..843ecea9e336 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -4299,7 +4299,8 @@ static void show_symbol(struct seq_file *m, unsigned long address)
  
- /* Clearing a0 terminates the backtrace. */
- #define start_thread(regs, new_pc, new_sp) \
--	memset(regs, 0, sizeof(*regs)); \
--	regs->pc = new_pc; \
--	regs->ps = USER_PS_VALUE; \
--	regs->areg[1] = new_sp; \
--	regs->areg[0] = 0; \
--	regs->wmask = 1; \
--	regs->depc = 0; \
--	regs->windowbase = 0; \
--	regs->windowstart = 1;
-+	do { \
-+		memset((regs), 0, sizeof(*(regs))); \
-+		(regs)->pc = (new_pc); \
-+		(regs)->ps = USER_PS_VALUE; \
-+		(regs)->areg[1] = (new_sp); \
-+		(regs)->areg[0] = 0; \
-+		(regs)->wmask = 1; \
-+		(regs)->depc = 0; \
-+		(regs)->windowbase = 0; \
-+		(regs)->windowstart = 1; \
-+		(regs)->syscall = NO_SYSCALL; \
-+	} while (0)
- 
- /* Forward declaration */
- struct task_struct;
+ static int leaks_show(struct seq_file *m, void *p)
+ {
+-	struct kmem_cache *cachep = list_entry(p, struct kmem_cache, list);
++	struct kmem_cache *cachep = list_entry(p, struct kmem_cache,
++					       root_caches_node);
+ 	struct page *page;
+ 	struct kmem_cache_node *n;
+ 	const char *name;
 -- 
 2.19.1
 
