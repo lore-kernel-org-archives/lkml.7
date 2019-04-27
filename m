@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647A8C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADD9C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399C1208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE002166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329322;
-	bh=Z+qE7xG4O2eIgxIxJ81f/ln4gW6m6mknpiIlFK6KWrA=;
+	s=default; t=1556329326;
+	bh=Ta34+lRfbxYq0JQE7rMVAMw94fUpxm73YVPlhFH4Zjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1epCwH54hTL0FZOb77t6+h1vQw8jV7CKHnJR/QRoTrCK7kmg37mj6EOBzFFcPBXqc
-	 hprB4O/yXQQ0XQUnnHxCM7SWbSR38NTxoSNymebGXtI1D9e7q2QGco3n91B835a/Ou
-	 tBojAP6lFvVtNlkR51OTwKTpZH0Tnzy3utwtz3UU=
+	b=b5b6/dk5aWdtlqNTeExW2GkIlFTFmg3mzw4LbJ2I7A2HhKjPXnqpMHAK5uvu5l3LU
+	 /1vyzH9Gnpf+7iN3SiCtvG1Z1WwgVpyG/2VdU2qnVH6dG30AWcUCH7E5me8tn4PBc3
+	 XIQBk6EdQbzN70OIXQLp7L0ZOCrSxaLSlJ8KAp54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbfD0BmA (ORCPT
+        id S1728469AbfD0BmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:42:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45998 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727951AbfD0Bl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:56 -0400
+        id S1728451AbfD0BmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:42:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C6712146E;
-        Sat, 27 Apr 2019 01:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 790672146E;
+        Sat, 27 Apr 2019 01:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329315;
-        bh=Z+qE7xG4O2eIgxIxJ81f/ln4gW6m6mknpiIlFK6KWrA=;
+        s=default; t=1556329319;
+        bh=Ta34+lRfbxYq0JQE7rMVAMw94fUpxm73YVPlhFH4Zjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IMnc5osflvrOdvmcv70e+3emckm2lYiBFnzy6TqSft7B5POkIYuIjlwLgIbURwjvm
-         mq7pJk4bj3E2mGyRbx/OvvOI5T0Z3D+eZjdDxknts8ygPHwiAqj3fqqc45bDcBD1In
-         0KlwKUTafcfl35kZYxbGKZePvW1nZoX0tZsKFQwY=
+        b=QbqwddZkepvEFJspXRdCnY+w0OK0vdbSpbuH+CO9xafNgOscTFFJAj+evNSL8G4/M
+         TV6zXiNb8vxKglxvEgBoy2OlSj+gj4bRl89GLtoWqAib8Y+bWPJ3fr5W1nOzVC4zte
+         j/9sZcq4YvG0Sxh1WOwI4WstiO9fFlK1DC+R7y/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lijun Ou <oulijun@huawei.com>, chenglang <chenglang@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 39/53] RDMA/hns: Fix bug that caused srq creation to fail
-Date:   Fri, 26 Apr 2019 21:40:36 -0400
-Message-Id: <20190427014051.7522-39-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>, CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 41/53] drm/mediatek: fix possible object reference leak
+Date:   Fri, 26 Apr 2019 21:40:38 -0400
+Message-Id: <20190427014051.7522-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -59,79 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lijun Ou <oulijun@huawei.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 4772e03d239484f3461e33c79d721c8ea03f7416 ]
+[ Upstream commit 2ae2c3316fb77dcf64275d011596b60104c45426 ]
 
-Due to the incorrect use of the seg and obj information, the position of
-the mtt is calculated incorrectly, and the free space of the page is not
-enough to store the entire mtt, resulting in access to the next page. This
-patch fixes this problem.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
- Unable to handle kernel paging request at virtual address ffff00006e3cd000
- ...
- Call trace:
-  hns_roce_write_mtt+0x154/0x2f0 [hns_roce]
-  hns_roce_buf_write_mtt+0xa8/0xd8 [hns_roce]
-  hns_roce_create_srq+0x74c/0x808 [hns_roce]
-  ib_create_srq+0x28/0xc8
+Detected by coccinelle with the following warnings:
+drivers/gpu/drm/mediatek/mtk_hdmi.c:1521:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
+drivers/gpu/drm/mediatek/mtk_hdmi.c:1524:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
 
-Fixes: 0203b14c4f32 ("RDMA/hns: Unify the calculation for hem index in hip08")
-Signed-off-by: chenglang <chenglang@huawei.com>
-Signed-off-by: Lijun Ou <oulijun@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: CK Hu <ck.hu@mediatek.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hem.c | 6 ++++--
- drivers/infiniband/hw/hns/hns_roce_mr.c  | 4 ++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_hdmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.c b/drivers/infiniband/hw/hns/hns_roce_hem.c
-index f6faefed96e8..a73d388b7093 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hem.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hem.c
-@@ -745,6 +745,8 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
- 		idx_offset = (obj & (table->num_obj - 1)) % obj_per_chunk;
- 		dma_offset = offset = idx_offset * table->obj_size;
- 	} else {
-+		u32 seg_size = 64; /* 8 bytes per BA and 8 BA per segment */
-+
- 		hns_roce_calc_hem_mhop(hr_dev, table, &mhop_obj, &mhop);
- 		/* mtt mhop */
- 		i = mhop.l0_idx;
-@@ -756,8 +758,8 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
- 			hem_idx = i;
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+index c7a77d6f612b..62444a3a5742 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+@@ -1508,6 +1508,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+ 	of_node_put(remote);
  
- 		hem = table->hem[hem_idx];
--		dma_offset = offset = (obj & (table->num_obj - 1)) *
--				       table->obj_size % mhop.bt_chunk_size;
-+		dma_offset = offset = (obj & (table->num_obj - 1)) * seg_size %
-+				       mhop.bt_chunk_size;
- 		if (mhop.hop_num == 2)
- 			dma_offset = offset = 0;
- 	}
-diff --git a/drivers/infiniband/hw/hns/hns_roce_mr.c b/drivers/infiniband/hw/hns/hns_roce_mr.c
-index eb26a5f6fc58..41a538d23b80 100644
---- a/drivers/infiniband/hw/hns/hns_roce_mr.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_mr.c
-@@ -707,7 +707,6 @@ static int hns_roce_write_mtt_chunk(struct hns_roce_dev *hr_dev,
- 	struct hns_roce_hem_table *table;
- 	dma_addr_t dma_handle;
- 	__le64 *mtts;
--	u32 s = start_index * sizeof(u64);
- 	u32 bt_page_size;
- 	u32 i;
- 
-@@ -730,7 +729,8 @@ static int hns_roce_write_mtt_chunk(struct hns_roce_dev *hr_dev,
- 		table = &hr_dev->mr_table.mtt_cqe_table;
- 
- 	mtts = hns_roce_table_find(hr_dev, table,
--				mtt->first_seg + s / hr_dev->caps.mtt_entry_sz,
-+				mtt->first_seg +
-+				start_index / HNS_ROCE_MTT_ENTRY_PER_SEG,
- 				&dma_handle);
- 	if (!mtts)
- 		return -ENOMEM;
+ 	hdmi->ddc_adpt = of_find_i2c_adapter_by_node(i2c_np);
++	of_node_put(i2c_np);
+ 	if (!hdmi->ddc_adpt) {
+ 		dev_err(dev, "Failed to get ddc i2c adapter by node\n");
+ 		return -EINVAL;
 -- 
 2.19.1
 
