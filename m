@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05694C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD0FC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D67F1206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7BD206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfD0PQI (ORCPT
+        id S1727940AbfD0PQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:16:08 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33758 "EHLO
+        Sat, 27 Apr 2019 11:16:07 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33678 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727533AbfD0PPb (ORCPT
+        by vger.kernel.org with ESMTP id S1727518AbfD0PPa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:31 -0400
+        Sat, 27 Apr 2019 11:15:30 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP32-0000zL-Ca; Sat, 27 Apr 2019 16:15:28 +0100
+        id 1hKP31-00014H-9k; Sat, 27 Apr 2019 16:15:27 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2l-0004XF-0q; Sat, 27 Apr 2019 16:15:11 +0100
+        id 1hKP2l-0004YD-Cw; Sat, 27 Apr 2019 16:15:11 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Richard Weinberger" <richard@nod.at>,
-        "Steven Miao" <realmz6@gmail.com>
+        "Helge Deller" <deller@gmx.de>,
+        "Richard Weinberger" <richard@nod.at>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.29456596@decadent.org.uk>
+Message-ID: <lsq.1556377989.162997328@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 110/202] blackfin: Use get_signal() signal_setup_done()
+Subject: [PATCH 3.16 122/202] parisc: Use get_signal() signal_setup_done()
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,114 +57,177 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Richard Weinberger <richard@nod.at>
 
-commit 1270cff147a39f7da5b25225dca6ca3132ca6130 upstream.
+commit e4dc894b61776733629b24507031dd46f5ba5efc upstream.
 
 Use the more generic functions get_signal() signal_setup_done()
 for signal delivery.
 
 Signed-off-by: Richard Weinberger <richard@nod.at>
-Acked-by: Steven Miao <realmz6@gmail.com>
+Acked-by: Helge Deller <deller@gmx.de>
 [bwh: Backported to 3.16 as dependency of commit 35634ffa1751
  "signal: Always notice exiting tasks"]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/blackfin/kernel/signal.c | 39 +++++++++++++++--------------------
- 1 file changed, 17 insertions(+), 22 deletions(-)
+ arch/parisc/kernel/signal.c | 58 +++++++++++++++----------------------
+ 1 file changed, 24 insertions(+), 34 deletions(-)
 
---- a/arch/blackfin/kernel/signal.c
-+++ b/arch/blackfin/kernel/signal.c
-@@ -152,23 +152,22 @@ static inline void *get_sigframe(struct
+--- a/arch/parisc/kernel/signal.c
++++ b/arch/parisc/kernel/signal.c
+@@ -227,8 +227,8 @@ setup_sigcontext(struct sigcontext __use
  }
  
- static int
--setup_rt_frame(int sig, struct k_sigaction *ka, siginfo_t * info,
--	       sigset_t * set, struct pt_regs *regs)
-+setup_rt_frame(struct ksignal *ksig, sigset_t *set, struct pt_regs *regs)
+ static long
+-setup_rt_frame(int sig, struct k_sigaction *ka, siginfo_t *info,
+-	       sigset_t *set, struct pt_regs *regs, int in_syscall)
++setup_rt_frame(struct ksignal *ksig, sigset_t *set, struct pt_regs *regs,
++	       int in_syscall)
  {
- 	struct rt_sigframe *frame;
- 	int err = 0;
+ 	struct rt_sigframe __user *frame;
+ 	unsigned long rp, usp;
+@@ -241,10 +241,10 @@ setup_rt_frame(int sig, struct k_sigacti
+ 	
+ 	usp = (regs->gr[30] & ~(0x01UL));
+ 	/*FIXME: frame_size parameter is unused, remove it. */
+-	frame = get_sigframe(ka, usp, sizeof(*frame));
++	frame = get_sigframe(&ksig->ka, usp, sizeof(*frame));
  
--	frame = get_sigframe(ka, regs, sizeof(*frame));
-+	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame));
+ 	DBG(1,"SETUP_RT_FRAME: START\n");
+-	DBG(1,"setup_rt_frame: frame %p info %p\n", frame, info);
++	DBG(1,"setup_rt_frame: frame %p info %p\n", frame, ksig->info);
  
- 	err |= __put_user((current_thread_info()->exec_domain
- 			   && current_thread_info()->exec_domain->signal_invmap
--			   && sig < 32
-+			   && ksig->sig < 32
- 			   ? current_thread_info()->exec_domain->
--			   signal_invmap[sig] : sig), &frame->sig);
-+			   signal_invmap[ksig->sig] : ksig->sig), &frame->sig);
+ 	
+ #ifdef CONFIG_64BIT
+@@ -253,7 +253,7 @@ setup_rt_frame(int sig, struct k_sigacti
+ 	
+ 	if (is_compat_task()) {
+ 		DBG(1,"setup_rt_frame: frame->info = 0x%p\n", &compat_frame->info);
+-		err |= copy_siginfo_to_user32(&compat_frame->info, info);
++		err |= copy_siginfo_to_user32(&compat_frame->info, &ksig->info);
+ 		err |= __compat_save_altstack( &compat_frame->uc.uc_stack, regs->gr[30]);
+ 		DBG(1,"setup_rt_frame: frame->uc = 0x%p\n", &compat_frame->uc);
+ 		DBG(1,"setup_rt_frame: frame->uc.uc_mcontext = 0x%p\n", &compat_frame->uc.uc_mcontext);
+@@ -265,7 +265,7 @@ setup_rt_frame(int sig, struct k_sigacti
+ #endif
+ 	{	
+ 		DBG(1,"setup_rt_frame: frame->info = 0x%p\n", &frame->info);
+-		err |= copy_siginfo_to_user(&frame->info, info);
++		err |= copy_siginfo_to_user(&frame->info, &ksig->info);
+ 		err |= __save_altstack(&frame->uc.uc_stack, regs->gr[30]);
+ 		DBG(1,"setup_rt_frame: frame->uc = 0x%p\n", &frame->uc);
+ 		DBG(1,"setup_rt_frame: frame->uc.uc_mcontext = 0x%p\n", &frame->uc.uc_mcontext);
+@@ -275,7 +275,7 @@ setup_rt_frame(int sig, struct k_sigacti
+ 	}
+ 	
+ 	if (err)
+-		goto give_sigsegv;
++		return -EFAULT;
  
- 	err |= __put_user(&frame->info, &frame->pinfo);
- 	err |= __put_user(&frame->uc, &frame->puc);
--	err |= copy_siginfo_to_user(&frame->info, info);
-+	err |= copy_siginfo_to_user(&frame->info, &ksig->info);
+ 	/* Set up to return from userspace.  If provided, use a stub
+ 	   already in userspace. The first words of tramp are used to
+@@ -312,9 +312,9 @@ setup_rt_frame(int sig, struct k_sigacti
+ 	rp = (unsigned long) &frame->tramp[SIGRESTARTBLOCK_TRAMP];
  
- 	/* Create the ucontext.  */
- 	err |= __put_user(0, &frame->uc.uc_flags);
-@@ -183,7 +182,7 @@ setup_rt_frame(int sig, struct k_sigacti
- 	/* Set up registers for signal handler */
- 	if (current->personality & FDPIC_FUNCPTRS) {
- 		struct fdpic_func_descriptor __user *funcptr =
--			(struct fdpic_func_descriptor *) ka->sa.sa_handler;
-+			(struct fdpic_func_descriptor *) ksig->ka.sa.sa_handler;
- 		u32 pc, p3;
- 		err |= __get_user(pc, &funcptr->text);
- 		err |= __get_user(p3, &funcptr->GOT);
-@@ -192,7 +191,7 @@ setup_rt_frame(int sig, struct k_sigacti
- 		regs->pc = pc;
- 		regs->p3 = p3;
- 	} else
--		regs->pc = (unsigned long)ka->sa.sa_handler;
-+		regs->pc = (unsigned long)ksig->ka.sa.sa_handler;
- 	wrusp((unsigned long)frame);
- 	regs->rets = SIGRETURN_STUB;
+ 	if (err)
+-		goto give_sigsegv;
++		return -EFAULT;
  
-@@ -237,20 +236,19 @@ handle_restart(struct pt_regs *regs, str
-  * OK, we're invoking a handler
-  */
+-	haddr = A(ka->sa.sa_handler);
++	haddr = A(ksig->ka.sa.sa_handler);
+ 	/* The sa_handler may be a pointer to a function descriptor */
+ #ifdef CONFIG_64BIT
+ 	if (is_compat_task()) {
+@@ -326,7 +326,7 @@ setup_rt_frame(int sig, struct k_sigacti
+ 			err = __copy_from_user(&fdesc, ufdesc, sizeof(fdesc));
+ 
+ 			if (err)
+-				goto give_sigsegv;
++				return -EFAULT;
+ 
+ 			haddr = fdesc.addr;
+ 			regs->gr[19] = fdesc.gp;
+@@ -339,7 +339,7 @@ setup_rt_frame(int sig, struct k_sigacti
+ 		err = __copy_from_user(&fdesc, ufdesc, sizeof(fdesc));
+ 		
+ 		if (err)
+-			goto give_sigsegv;
++			return -EFAULT;
+ 		
+ 		haddr = fdesc.addr;
+ 		regs->gr[19] = fdesc.gp;
+@@ -386,7 +386,7 @@ setup_rt_frame(int sig, struct k_sigacti
+ 	}
+ 
+ 	regs->gr[2]  = rp;                /* userland return pointer */
+-	regs->gr[26] = sig;               /* signal number */
++	regs->gr[26] = ksig->sig;               /* signal number */
+ 	
+ #ifdef CONFIG_64BIT
+ 	if (is_compat_task()) {
+@@ -410,11 +410,6 @@ setup_rt_frame(int sig, struct k_sigacti
+ 	       current->comm, current->pid, frame, regs->gr[30],
+ 	       regs->iaoq[0], regs->iaoq[1], rp);
+ 
+-	return 1;
+-
+-give_sigsegv:
+-	DBG(1,"setup_rt_frame: sending SIGSEGV\n");
+-	force_sigsegv(sig, current);
+ 	return 0;
+ }
+ 
+@@ -423,20 +418,19 @@ give_sigsegv:
+  */	
+ 
  static void
--handle_signal(int sig, siginfo_t *info, struct k_sigaction *ka,
--	      struct pt_regs *regs)
-+handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+-handle_signal(unsigned long sig, siginfo_t *info, struct k_sigaction *ka,
+-		struct pt_regs *regs, int in_syscall)
++handle_signal(struct ksignal *ksig, struct pt_regs *regs, int in_syscall)
  {
 +	int ret;
+ 	sigset_t *oldset = sigmask_to_save();
 +
- 	/* are we from a system call? to see pt_regs->orig_p0 */
- 	if (regs->orig_p0 >= 0)
- 		/* If so, check system call restarting.. */
--		handle_restart(regs, ka, 1);
-+		handle_restart(regs, &ksig->ka, 1);
+ 	DBG(1,"handle_signal: sig=%ld, ka=%p, info=%p, oldset=%p, regs=%p\n",
+-	       sig, ka, info, oldset, regs);
++	       ksig->sig, ksig->ka, ksig->info, oldset, regs);
+ 	
+ 	/* Set up the stack frame */
+-	if (!setup_rt_frame(sig, ka, info, oldset, regs, in_syscall))
+-		return;
++	ret = setup_rt_frame(ksig, oldset, regs, in_syscall);
  
- 	/* set up the stack frame */
--	if (setup_rt_frame(sig, ka, info, sigmask_to_save(), regs) < 0)
--		force_sigsegv(sig, current);
--	else 
--		signal_delivered(sig, info, ka, regs,
--				test_thread_flag(TIF_SINGLESTEP));
-+	ret = setup_rt_frame(ksig, sigmask_to_save(), regs);
-+
-+	signal_setup_done(ret, ksig, test_thread_flag(TIF_SINGLESTEP));
- }
+-	signal_delivered(sig, info, ka, regs, 
+-		test_thread_flag(TIF_SINGLESTEP) ||
+-		test_thread_flag(TIF_BLOCKSTEP));
++	signal_setup_done(ret, ksig, test_thread_flag(TIF_SINGLESTEP) ||
++			  test_thread_flag(TIF_BLOCKSTEP));
  
- /*
-@@ -264,16 +262,13 @@ handle_signal(int sig, siginfo_t *info,
-  */
- asmlinkage void do_signal(struct pt_regs *regs)
+ 	DBG(1,KERN_DEBUG "do_signal: Exit (success), regs->gr[28] = %ld\n",
+ 		regs->gr[28]);
+@@ -584,22 +578,18 @@ insert_restart_trampoline(struct pt_regs
+ asmlinkage void
+ do_signal(struct pt_regs *regs, long in_syscall)
  {
 -	siginfo_t info;
--	int signr;
 -	struct k_sigaction ka;
+-	int signr;
 +	struct ksignal ksig;
  
- 	current->thread.esp0 = (unsigned long)regs;
+ 	DBG(1,"\ndo_signal: regs=0x%p, sr7 %#lx, in_syscall=%d\n",
+ 	       regs, regs->sr[7], in_syscall);
  
 -	signr = get_signal_to_deliver(&info, &ka, regs, NULL);
+-	DBG(3,"do_signal: signr = %d, regs->gr[28] = %ld\n", signr, regs->gr[28]); 
+-	
 -	if (signr > 0) {
 +	if (get_signal(&ksig)) {
- 		/* Whee!  Actually deliver the signal.  */
--		handle_signal(signr, &info, &ka, regs);
-+		handle_signal(&ksig, regs);
++		DBG(3,"do_signal: signr = %d, regs->gr[28] = %ld\n", signr, regs->gr[28]);
+ 		/* Restart a system call if necessary. */
+ 		if (in_syscall)
+-			syscall_restart(regs, &ka);
++			syscall_restart(regs, &ksig.ka);
+ 
+-		handle_signal(signr, &info, &ka, regs, in_syscall);
++		handle_signal(&ksig, regs, in_syscall);
  		return;
  	}
  
