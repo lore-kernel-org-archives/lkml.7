@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19C9C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647A8C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8441221655
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399C1208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329319;
-	bh=hlO/GXsybl7k9J/hNNdGMo5nfKDrfpPMdqy5bkh5csc=;
+	s=default; t=1556329322;
+	bh=Z+qE7xG4O2eIgxIxJ81f/ln4gW6m6mknpiIlFK6KWrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p7xW2p87K8mttxpzB7feS0fZJWUT0zK+EhvqnOjV0bR29mz2NcWCEL3skfKathwCT
-	 P6B6H/Qkt2PCVGNfzUE0Y1H1CcIajIqG/Sj4lD9e5TpItbKL0n+Nag0FcZshi56E2A
-	 xDz2XA/inWrFgJr+X/nAbqXzD+MfYK/ctUrLGCH0=
+	b=1epCwH54hTL0FZOb77t6+h1vQw8jV7CKHnJR/QRoTrCK7kmg37mj6EOBzFFcPBXqc
+	 hprB4O/yXQQ0XQUnnHxCM7SWbSR38NTxoSNymebGXtI1D9e7q2QGco3n91B835a/Ou
+	 tBojAP6lFvVtNlkR51OTwKTpZH0Tnzy3utwtz3UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfD0Bl6 (ORCPT
+        id S1728454AbfD0BmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:41:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45926 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:42:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727869AbfD0Blx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:53 -0400
+        id S1727951AbfD0Bl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D51F216FD;
-        Sat, 27 Apr 2019 01:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C6712146E;
+        Sat, 27 Apr 2019 01:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329313;
-        bh=hlO/GXsybl7k9J/hNNdGMo5nfKDrfpPMdqy5bkh5csc=;
+        s=default; t=1556329315;
+        bh=Z+qE7xG4O2eIgxIxJ81f/ln4gW6m6mknpiIlFK6KWrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cjT+qTszMVH9RZveW6tuT5NZxUyMLm4FSO80rISpz9J7JJsjoj9MQAJK7sOJbj8Rl
-         vP46F0PVM8zxLhwauGRHEI6ylNOt2ym8aeJrA1CTfzdE55ppNvG8Hq3d7zVK+e+KJE
-         qFUcK6Lk8iP1a539auGHBGZ6Pz5ZY+9nBBOoy0vU=
+        b=IMnc5osflvrOdvmcv70e+3emckm2lYiBFnzy6TqSft7B5POkIYuIjlwLgIbURwjvm
+         mq7pJk4bj3E2mGyRbx/OvvOI5T0Z3D+eZjdDxknts8ygPHwiAqj3fqqc45bDcBD1In
+         0KlwKUTafcfl35kZYxbGKZePvW1nZoX0tZsKFQwY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Longpeng <longpeng2@huawei.com>, Gonglei <arei.gonglei@huawei.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 37/53] virtio_pci: fix a NULL pointer reference in vp_del_vqs
-Date:   Fri, 26 Apr 2019 21:40:34 -0400
-Message-Id: <20190427014051.7522-37-sashal@kernel.org>
+Cc:     Lijun Ou <oulijun@huawei.com>, chenglang <chenglang@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 39/53] RDMA/hns: Fix bug that caused srq creation to fail
+Date:   Fri, 26 Apr 2019 21:40:36 -0400
+Message-Id: <20190427014051.7522-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -59,68 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng <longpeng2@huawei.com>
+From: Lijun Ou <oulijun@huawei.com>
 
-[ Upstream commit 6a8aae68c87349dbbcd46eac380bc43cdb98a13b ]
+[ Upstream commit 4772e03d239484f3461e33c79d721c8ea03f7416 ]
 
-If the msix_affinity_masks is alloced failed, then we'll
-try to free some resources in vp_free_vectors() that may
-access it directly.
+Due to the incorrect use of the seg and obj information, the position of
+the mtt is calculated incorrectly, and the free space of the page is not
+enough to store the entire mtt, resulting in access to the next page. This
+patch fixes this problem.
 
-We met the following stack in our production:
-[   29.296767] BUG: unable to handle kernel NULL pointer dereference at  (null)
-[   29.311151] IP: [<ffffffffc04fe35a>] vp_free_vectors+0x6a/0x150 [virtio_pci]
-[   29.324787] PGD 0
-[   29.333224] Oops: 0000 [#1] SMP
-[...]
-[   29.425175] RIP: 0010:[<ffffffffc04fe35a>]  [<ffffffffc04fe35a>] vp_free_vectors+0x6a/0x150 [virtio_pci]
-[   29.441405] RSP: 0018:ffff9a55c2dcfa10  EFLAGS: 00010206
-[   29.453491] RAX: 0000000000000000 RBX: ffff9a55c322c400 RCX: 0000000000000000
-[   29.467488] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9a55c322c400
-[   29.481461] RBP: ffff9a55c2dcfa20 R08: 0000000000000000 R09: ffffc1b6806ff020
-[   29.495427] R10: 0000000000000e95 R11: 0000000000aaaaaa R12: 0000000000000000
-[   29.509414] R13: 0000000000010000 R14: ffff9a55bd2d9e98 R15: ffff9a55c322c400
-[   29.523407] FS:  00007fdcba69f8c0(0000) GS:ffff9a55c2840000(0000) knlGS:0000000000000000
-[   29.538472] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   29.551621] CR2: 0000000000000000 CR3: 000000003ce52000 CR4: 00000000003607a0
-[   29.565886] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   29.580055] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   29.594122] Call Trace:
-[   29.603446]  [<ffffffffc04fe8a2>] vp_request_msix_vectors+0xe2/0x260 [virtio_pci]
-[   29.618017]  [<ffffffffc04fedc5>] vp_try_to_find_vqs+0x95/0x3b0 [virtio_pci]
-[   29.632152]  [<ffffffffc04ff117>] vp_find_vqs+0x37/0xb0 [virtio_pci]
-[   29.645582]  [<ffffffffc057bf63>] init_vq+0x153/0x260 [virtio_blk]
-[   29.658831]  [<ffffffffc057c1e8>] virtblk_probe+0xe8/0x87f [virtio_blk]
-[...]
+ Unable to handle kernel paging request at virtual address ffff00006e3cd000
+ ...
+ Call trace:
+  hns_roce_write_mtt+0x154/0x2f0 [hns_roce]
+  hns_roce_buf_write_mtt+0xa8/0xd8 [hns_roce]
+  hns_roce_create_srq+0x74c/0x808 [hns_roce]
+  ib_create_srq+0x28/0xc8
 
-Cc: Gonglei <arei.gonglei@huawei.com>
-Signed-off-by: Longpeng <longpeng2@huawei.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Gonglei <arei.gonglei@huawei.com>
+Fixes: 0203b14c4f32 ("RDMA/hns: Unify the calculation for hem index in hip08")
+Signed-off-by: chenglang <chenglang@huawei.com>
+Signed-off-by: Lijun Ou <oulijun@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_pci_common.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hem.c | 6 ++++--
+ drivers/infiniband/hw/hns/hns_roce_mr.c  | 4 ++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
-index 465a6f5142cc..45b04bc91f24 100644
---- a/drivers/virtio/virtio_pci_common.c
-+++ b/drivers/virtio/virtio_pci_common.c
-@@ -255,9 +255,11 @@ void vp_del_vqs(struct virtio_device *vdev)
- 	for (i = 0; i < vp_dev->msix_used_vectors; ++i)
- 		free_irq(pci_irq_vector(vp_dev->pci_dev, i), vp_dev);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.c b/drivers/infiniband/hw/hns/hns_roce_hem.c
+index f6faefed96e8..a73d388b7093 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hem.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hem.c
+@@ -745,6 +745,8 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
+ 		idx_offset = (obj & (table->num_obj - 1)) % obj_per_chunk;
+ 		dma_offset = offset = idx_offset * table->obj_size;
+ 	} else {
++		u32 seg_size = 64; /* 8 bytes per BA and 8 BA per segment */
++
+ 		hns_roce_calc_hem_mhop(hr_dev, table, &mhop_obj, &mhop);
+ 		/* mtt mhop */
+ 		i = mhop.l0_idx;
+@@ -756,8 +758,8 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
+ 			hem_idx = i;
  
--	for (i = 0; i < vp_dev->msix_vectors; i++)
--		if (vp_dev->msix_affinity_masks[i])
--			free_cpumask_var(vp_dev->msix_affinity_masks[i]);
-+	if (vp_dev->msix_affinity_masks) {
-+		for (i = 0; i < vp_dev->msix_vectors; i++)
-+			if (vp_dev->msix_affinity_masks[i])
-+				free_cpumask_var(vp_dev->msix_affinity_masks[i]);
-+	}
+ 		hem = table->hem[hem_idx];
+-		dma_offset = offset = (obj & (table->num_obj - 1)) *
+-				       table->obj_size % mhop.bt_chunk_size;
++		dma_offset = offset = (obj & (table->num_obj - 1)) * seg_size %
++				       mhop.bt_chunk_size;
+ 		if (mhop.hop_num == 2)
+ 			dma_offset = offset = 0;
+ 	}
+diff --git a/drivers/infiniband/hw/hns/hns_roce_mr.c b/drivers/infiniband/hw/hns/hns_roce_mr.c
+index eb26a5f6fc58..41a538d23b80 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_mr.c
++++ b/drivers/infiniband/hw/hns/hns_roce_mr.c
+@@ -707,7 +707,6 @@ static int hns_roce_write_mtt_chunk(struct hns_roce_dev *hr_dev,
+ 	struct hns_roce_hem_table *table;
+ 	dma_addr_t dma_handle;
+ 	__le64 *mtts;
+-	u32 s = start_index * sizeof(u64);
+ 	u32 bt_page_size;
+ 	u32 i;
  
- 	if (vp_dev->msix_enabled) {
- 		/* Disable the vector used for configuration */
+@@ -730,7 +729,8 @@ static int hns_roce_write_mtt_chunk(struct hns_roce_dev *hr_dev,
+ 		table = &hr_dev->mr_table.mtt_cqe_table;
+ 
+ 	mtts = hns_roce_table_find(hr_dev, table,
+-				mtt->first_seg + s / hr_dev->caps.mtt_entry_sz,
++				mtt->first_seg +
++				start_index / HNS_ROCE_MTT_ENTRY_PER_SEG,
+ 				&dma_handle);
+ 	if (!mtts)
+ 		return -ENOMEM;
 -- 
 2.19.1
 
