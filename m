@@ -2,81 +2,135 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A60AC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 20:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3CEC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 20:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D6C2067C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 20:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8502E2067C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 20:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="sb8gi04u"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="G6ptwH5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfD0U3d (ORCPT
+        id S1726427AbfD0Ub7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 16:29:33 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34152 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfD0U3d (ORCPT
+        Sat, 27 Apr 2019 16:31:59 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37443 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfD0Ub7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 16:29:33 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n13so2164237otk.1;
-        Sat, 27 Apr 2019 13:29:33 -0700 (PDT)
+        Sat, 27 Apr 2019 16:31:59 -0400
+Received: by mail-lj1-f195.google.com with SMTP id b12so4750225lji.4
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 13:31:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r+u1Uc4MpTFdNT8VK8aH808CBTf1BtkCYQRBGkAzTTY=;
-        b=sb8gi04uP2A7Hfb/6So0ySjafBDIIFKDXroacQDp23Vn5PiHFtIn2MMEMF6GHONT9j
-         jt/rYD/pDq+ZMecfDFF+b6wsfC4DAZ+zgTSAPxgmU099C5QKWaBb3NqMGdor2l9KApDa
-         oboT/QVqH0Ey/vLTm90zd3LYU/HCe4eQMlM9761oFZUC4M2BZHEtldjbMcKpTs5PL8fG
-         9uvPKqnwvYbUc7D569vKwBfxA+9LFqkeLI0iVsY2VyAMhyAtOoiibJvnNCljBFMY3ljc
-         H2EQvrN/N2UEWqO4U0XMqPVcNNtxzeodImbEfaQ8QSoPo3babvW1KcsI0teX289hstzE
-         96qg==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O8Yn7rSqSWzJGEK90Lsepo7xnz0psLgDKoYMEPt0f+I=;
+        b=G6ptwH5cQK8gyQQBjLAO0A6t3tRHNZHtJBq+mPC2leXHWTWzfGvtomGLjo9OtR1gc5
+         HPYHPaXTkXSvthv9H3mdSFhLI8CJV0iyu3nxYn89okYEcynAqAEDx1Qfyi0mgEIFS3cB
+         dklbElANUeUmlyNoyU/yLxIkreWZnvPkwOC3/lw7YHdYgDhNihRmjxAHlYaUWuR975dj
+         3IF5XMjXqAcshY+h+fGHisvx6GHk5xtzqyvmNXM3uJ9iTXk8KzNv2sdzECymZBxlC8hD
+         mSERJt6kTdFr9KXkpn0IIZcTW8G7y489yZETvy6py90/C9wQXf/lxdYMbZU0WB6Z9KkG
+         V/kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r+u1Uc4MpTFdNT8VK8aH808CBTf1BtkCYQRBGkAzTTY=;
-        b=Ki8A3udCucSd6Bmu7fqnyx9TQvO3DpE6XrLPdfalElnnduZEgrWlvGEhGz3HliXiS4
-         c2OWpZTR7KdnwJ4cIeoYMGUlXGAlxRDeflhQ8z70wzv5oygKXHrO8S/yyVLOTOvary99
-         6bR7OpLCNnoEyoJioD6kyBSawYh9LD/8+sQHoNhxNRuWY/R+jgUrcTjvdPP9r5+xkEIx
-         uMF0otiJmQJCCwHfJxMOye8JHg0dbPofL8rS/pXT96S0MSqy7ZNmHgeOnupN4M/0uaYv
-         N+p0GCe9317i5fuy2OhC1EI7tXLLRDcK9zMT7aQbKCV4tOCoCOQWEUTBi/tjtiPKri/D
-         kR8A==
-X-Gm-Message-State: APjAAAVZVrPjHZg9zS3fDVAmcJ3N2m5vHyem6fBEDdTScCrMQAtCjYy2
-        8+LODt4JYYJ4C+oyqiJSlRVqc68bB0IypOkZE94=
-X-Google-Smtp-Source: APXvYqw5UxrFzLXn58WC+X6RPPz/t2StYMN+4m/MLVUAkSj0fMjagguxFrik34N/KANpNKFzVvAQAdQJ/qKByAyRehk=
-X-Received: by 2002:a9d:5e90:: with SMTP id f16mr31089817otl.86.1556396972638;
- Sat, 27 Apr 2019 13:29:32 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=O8Yn7rSqSWzJGEK90Lsepo7xnz0psLgDKoYMEPt0f+I=;
+        b=aKCzpQyqjluj66C28zTu/QKWl0s69SY8dQoOq9ikOi3AiodnG/ixER0qyOd3dE1OZ4
+         CGCr1nb0wFZxoJ2d7kEjbraBZhawscNgK4GMlk00pL5jOER/5VGrTj1r8eHvaPPdhgUt
+         BSbuAVsETr/Y4i+i9IlWenmKzE5nWM9dGTqQT+2qDwpqSrcnP2+EiJ6AHOaAb7vXNXAH
+         fAceP67r5HU5CHx3VpP0h48V7B4XhxjWvfHS8JKDwsqV4jyfP9M2sXwo+xU5UpHOQL+y
+         +bN7Wfm8k0rQ/fd4jm+25krSIiVTHRLQPhoIOHHgqJ3K7UEAx44KUXDZbp74nrsRLyIm
+         FABw==
+X-Gm-Message-State: APjAAAUfGlfDfOiDUlGhJ1wSMYVpJe76llpRSQQPVk6ezTVmWfywyzzD
+        pE2RZRvf4jIsHyB5HxwvciTuKw==
+X-Google-Smtp-Source: APXvYqzh1bdAD38MjP/J5rMLGVKNYbnVhRbsJX0POxHShzdSlQUCNYildYReq2IzntSwcVh964tq3w==
+X-Received: by 2002:a2e:99d2:: with SMTP id l18mr14141923ljj.27.1556397117063;
+        Sat, 27 Apr 2019 13:31:57 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.81.185])
+        by smtp.gmail.com with ESMTPSA id o3sm6498817lfn.41.2019.04.27.13.31.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Apr 2019 13:31:56 -0700 (PDT)
+Subject: Re: [PATCH v4 5/5] mtd: hyperbus: Add driver for TI's HyperBus memory
+ controller
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-mtd@lists.infradead.org,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
+        devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
+        linux-arm-kernel@lists.infradead.org, nsekhar@ti.com,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+References: <20190423104814.5762-1-vigneshr@ti.com>
+ <20190423104814.5762-6-vigneshr@ti.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <281a479d-3cfb-b9e1-23ee-c8e3acc37abe@cogentembedded.com>
+Date:   Sat, 27 Apr 2019 23:31:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-References: <20190423133646.5705-1-narmstrong@baylibre.com> <20190423133646.5705-3-narmstrong@baylibre.com>
-In-Reply-To: <20190423133646.5705-3-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 27 Apr 2019 22:29:21 +0200
-Message-ID: <CAFBinCB9WS650JpuyGyjjOE=LNbChOdhAyb+qJMYWGosyMUa=w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] pwm: meson: Add clock source configuration for
- Meson G12A
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        baylibre-upstreaming@groups.io, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190423104814.5762-6-vigneshr@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 3:37 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> For the PWM controller in the Meson G12A SoC, the EE domain and AO domain
-> have different clock sources. This patch tries to describe them in the
-> DT compatible data. The two AO PWM controller has different clock source,
-> but the first AO controller (A & B) can reuse the AXG parents name.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On 04/23/2019 01:48 PM, Vignesh Raghavendra wrote:
+
+> Add driver for HyperBus memory controller on TI's AM654 SoC. Programming
+> IP is pretty simple and provides direct memory mapped access to
+> connected Flash devices.
+> 
+> Add basic support for the IP without DMA. Second chipSelect is not
+> supported for now.
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+[...]
+> diff --git a/drivers/mtd/hyperbus/hbmc-am654.c b/drivers/mtd/hyperbus/hbmc-am654.c
+> new file mode 100644
+> index 000000000000..f458d7226df9
+> --- /dev/null
+> +++ b/drivers/mtd/hyperbus/hbmc-am654.c
+> @@ -0,0 +1,115 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
+> +
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mtd/hyperbus.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/mux/consumer.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/types.h>
+> +
+> +struct am654_hbmc_priv {
+> +	struct hyperbus_ctlr ctlr;
+> +	struct hyperbus_device hbdev;
+> +	void __iomem	*regbase;
+
+   You don't seem to use this field.
+
+[...]
+
+MBR, Sergei
