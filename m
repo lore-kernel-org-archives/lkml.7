@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79759C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45846C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0E4208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6FD208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfD0PP7 (ORCPT
+        id S1727897AbfD0PQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:15:59 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33534 "EHLO
+        Sat, 27 Apr 2019 11:16:03 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33558 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727488AbfD0PP2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727492AbfD0PP2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:28 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2z-000144-0q; Sat, 27 Apr 2019 16:15:25 +0100
+        id 1hKP2z-0000zO-9x; Sat, 27 Apr 2019 16:15:25 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2l-0004ZM-V1; Sat, 27 Apr 2019 16:15:11 +0100
+        id 1hKP2l-0004Yc-Gz; Sat, 27 Apr 2019 16:15:11 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,12 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Richard Weinberger" <richard@nod.at>
+        "Richard Weinberger" <richard@nod.at>,
+        "Lennox Wu" <lennox.wu@gmail.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.281994154@decadent.org.uk>
+Message-ID: <lsq.1556377989.968323605@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 136/202] Rip out get_signal_to_deliver()
+Subject: [PATCH 3.16 127/202] score: Use get_signal() signal_setup_done()
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,132 +57,126 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Richard Weinberger <richard@nod.at>
 
-commit 828b1f65d23cf8a68795739f6dd08fc8abd9ee64 upstream.
+commit 2bb12b773feb3e792145961e57ab356e6134d4a5 upstream.
 
-Now we can turn get_signal() to the main function.
+Use the more generic functions get_signal() signal_setup_done()
+for signal delivery.
 
+Acked-by: Lennox Wu <lennox.wu@gmail.com>
 Signed-off-by: Richard Weinberger <richard@nod.at>
 [bwh: Backported to 3.16 as dependency of commit 35634ffa1751
  "signal: Always notice exiting tasks"]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/signal.h | 14 +-------------
- kernel/signal.c        | 23 ++++++++++++-----------
- 2 files changed, 13 insertions(+), 24 deletions(-)
+ arch/score/kernel/signal.c | 43 ++++++++++++++++----------------------
+ 1 file changed, 18 insertions(+), 25 deletions(-)
 
---- a/include/linux/signal.h
-+++ b/include/linux/signal.h
-@@ -279,7 +279,7 @@ struct ksignal {
- 	int sig;
- };
- 
--extern int get_signal_to_deliver(siginfo_t *info, struct k_sigaction *return_ka, struct pt_regs *regs, void *cookie);
-+extern int get_signal(struct ksignal *ksig);
- extern void signal_setup_done(int failed, struct ksignal *ksig, int stepping);
- extern void exit_signals(struct task_struct *tsk);
- extern void kernel_sigaction(int, __sighandler_t);
-@@ -299,18 +299,6 @@ static inline void disallow_signal(int s
- 	kernel_sigaction(sig, SIG_IGN);
+--- a/arch/score/kernel/signal.c
++++ b/arch/score/kernel/signal.c
+@@ -173,15 +173,15 @@ badframe:
+ 	return 0;
  }
  
--/*
-- * Eventually that'll replace get_signal_to_deliver(); macro for now,
-- * to avoid nastiness with include order.
-- */
--#define get_signal(ksig)					\
--({								\
--	struct ksignal *p = (ksig);				\
--	p->sig = get_signal_to_deliver(&p->info, &p->ka,	\
--					signal_pt_regs(), NULL);\
--	p->sig > 0;						\
--})
--
- extern struct kmem_cache *sighand_cachep;
- 
- int unhandled_signal(struct task_struct *tsk, int sig);
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2174,8 +2174,7 @@ static int ptrace_signal(int signr, sigi
- 	return signr;
- }
- 
--int get_signal_to_deliver(siginfo_t *info, struct k_sigaction *return_ka,
--			  struct pt_regs *regs, void *cookie)
-+int get_signal(struct ksignal *ksig)
+-static int setup_rt_frame(struct k_sigaction *ka, struct pt_regs *regs,
+-		int signr, sigset_t *set, siginfo_t *info)
++static int setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs,
++			  sigset_t *set)
  {
- 	struct sighand_struct *sighand = current->sighand;
- 	struct signal_struct *signal = current->signal;
-@@ -2245,13 +2244,13 @@ relock:
- 			goto relock;
- 		}
+ 	struct rt_sigframe __user *frame;
+ 	int err = 0;
  
--		signr = dequeue_signal(current, &current->blocked, info);
-+		signr = dequeue_signal(current, &current->blocked, &ksig->info);
+-	frame = get_sigframe(ka, regs, sizeof(*frame));
++	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame));
+ 	if (!access_ok(VERIFY_WRITE, frame, sizeof(*frame)))
+-		goto give_sigsegv;
++		return -EFAULT;
  
- 		if (!signr)
- 			break; /* will return 0 */
+ 	/*
+ 	 * Set up the return code ...
+@@ -194,7 +194,7 @@ static int setup_rt_frame(struct k_sigac
+ 	err |= __put_user(0x80008002, frame->rs_code + 1);
+ 	flush_cache_sigtramp((unsigned long) frame->rs_code);
  
- 		if (unlikely(current->ptrace) && signr != SIGKILL) {
--			signr = ptrace_signal(signr, info);
-+			signr = ptrace_signal(signr, &ksig->info);
- 			if (!signr)
- 				continue;
- 		}
-@@ -2259,13 +2258,13 @@ relock:
- 		ka = &sighand->action[signr-1];
+-	err |= copy_siginfo_to_user(&frame->rs_info, info);
++	err |= copy_siginfo_to_user(&frame->rs_info, &ksig->info);
+ 	err |= __put_user(0, &frame->rs_uc.uc_flags);
+ 	err |= __put_user(NULL, &frame->rs_uc.uc_link);
+ 	err |= __save_altstack(&frame->rs_uc.uc_stack, regs->regs[0]);
+@@ -202,26 +202,23 @@ static int setup_rt_frame(struct k_sigac
+ 	err |= __copy_to_user(&frame->rs_uc.uc_sigmask, set, sizeof(*set));
  
- 		/* Trace actually delivered signals. */
--		trace_signal_deliver(signr, info, ka);
-+		trace_signal_deliver(signr, &ksig->info, ka);
+ 	if (err)
+-		goto give_sigsegv;
++		return -EFAULT;
  
- 		if (ka->sa.sa_handler == SIG_IGN) /* Do nothing.  */
- 			continue;
- 		if (ka->sa.sa_handler != SIG_DFL) {
- 			/* Run the handler.  */
--			*return_ka = *ka;
-+			ksig->ka = *ka;
+ 	regs->regs[0] = (unsigned long) frame;
+ 	regs->regs[3] = (unsigned long) frame->rs_code;
+-	regs->regs[4] = signr;
++	regs->regs[4] = ksig->sig;
+ 	regs->regs[5] = (unsigned long) &frame->rs_info;
+ 	regs->regs[6] = (unsigned long) &frame->rs_uc;
+-	regs->regs[29] = (unsigned long) ka->sa.sa_handler;
+-	regs->cp0_epc = (unsigned long) ka->sa.sa_handler;
++	regs->regs[29] = (unsigned long) ksig->ka.sa.sa_handler;
++	regs->cp0_epc = (unsigned long) ksig->ka.sa.sa_handler;
  
- 			if (ka->sa.sa_flags & SA_ONESHOT)
- 				ka->sa.sa_handler = SIG_DFL;
-@@ -2315,7 +2314,7 @@ relock:
- 				spin_lock_irq(&sighand->siglock);
- 			}
- 
--			if (likely(do_signal_stop(info->si_signo))) {
-+			if (likely(do_signal_stop(ksig->info.si_signo))) {
- 				/* It released the siglock.  */
- 				goto relock;
- 			}
-@@ -2336,7 +2335,7 @@ relock:
- 
- 		if (sig_kernel_coredump(signr)) {
- 			if (print_fatal_signals)
--				print_fatal_signal(info->si_signo);
-+				print_fatal_signal(ksig->info.si_signo);
- 			proc_coredump_connector(current);
- 			/*
- 			 * If it was able to dump core, this kills all
-@@ -2346,17 +2345,19 @@ relock:
- 			 * first and our do_group_exit call below will use
- 			 * that value and ignore the one we pass it.
- 			 */
--			do_coredump(info);
-+			do_coredump(&ksig->info);
- 		}
- 
- 		/*
- 		 * Death signals, no core dump.
- 		 */
--		do_group_exit(info->si_signo);
-+		do_group_exit(ksig->info.si_signo);
- 		/* NOTREACHED */
- 	}
- 	spin_unlock_irq(&sighand->siglock);
--	return signr;
-+
-+	ksig->sig = signr;
-+	return ksig->sig > 0;
+ 	return 0;
+-
+-give_sigsegv:
+-	force_sigsegv(signr, current);
+-	return -EFAULT;
  }
  
- /**
+-static void handle_signal(unsigned long sig, siginfo_t *info,
+-	struct k_sigaction *ka, struct pt_regs *regs)
++static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+ {
++	int ret;
++
+ 	if (regs->is_syscall) {
+ 		switch (regs->regs[4]) {
+ 		case ERESTART_RESTARTBLOCK:
+@@ -229,7 +226,7 @@ static void handle_signal(unsigned long
+ 			regs->regs[4] = EINTR;
+ 			break;
+ 		case ERESTARTSYS:
+-			if (!(ka->sa.sa_flags & SA_RESTART)) {
++			if (!(ksig->ka.sa.sa_flags & SA_RESTART)) {
+ 				regs->regs[4] = EINTR;
+ 				break;
+ 			}
+@@ -245,17 +242,14 @@ static void handle_signal(unsigned long
+ 	/*
+ 	 * Set up the stack frame
+ 	 */
+-	if (setup_rt_frame(ka, regs, sig, sigmask_to_save(), info) < 0)
+-		return;
++	ret = setup_rt_frame(ksig, regs, sigmask_to_save());
+ 
+-	signal_delivered(sig, info, ka, regs, 0);
++	signal_setup_done(ret, ksig, 0);
+ }
+ 
+ static void do_signal(struct pt_regs *regs)
+ {
+-	struct k_sigaction ka;
+-	siginfo_t info;
+-	int signr;
++	struct ksignal ksig;
+ 
+ 	/*
+ 	 * We want the common case to go fast, which is why we may in certain
+@@ -265,10 +259,9 @@ static void do_signal(struct pt_regs *re
+ 	if (!user_mode(regs))
+ 		return;
+ 
+-	signr = get_signal_to_deliver(&info, &ka, regs, NULL);
+-	if (signr > 0) {
++	if (get_signal(&ksig)) {
+ 		/* Actually deliver the signal.  */
+-		handle_signal(signr, &info, &ka, regs);
++		handle_signal(&ksig, regs);
+ 		return;
+ 	}
+ 
 
