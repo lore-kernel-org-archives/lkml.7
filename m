@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11D2C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED983C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89DCA208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C6121537
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329598;
-	bh=A+7EVeSHcLg7JD438yl89GerQ3uZicddaXRsWTqPvyw=;
+	s=default; t=1556329601;
+	bh=UbU0W5REMsR23LNOykfGmpOPpJJneDMOJFFazNyD0Dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dXeyMjOiOBchtBZBU0kMcOwDp3v3nCi6CTTTfcKPV/3WR7ExWw4y02f9xc4PNsrIB
-	 bKbdB5WL9gZn0HjPik16mFV2lybq2opHLej2g8kQKFuophh5hTjhtsVhXSyLLOT0ZE
-	 abVQcmfH619rPkFqX9EZfMWOhZckTgJ0jRR8ZwUA=
+	b=sBpX92kVJLx0VDIaaorYfvcrcANscbTIkk1KH4m0pj+AbEepbeWQmKB/AB3/ie9dk
+	 FVBPElLa0c83mlOmhq5z7z2q6yzOiwRSGOati+IY9F+O91sNCEzaUBtWJVBlJwz/xr
+	 U2KAX3RMDA5f8VvvvuA4knd4MqvFGFNN0xyFwkqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbfD0BnV (ORCPT
+        id S1728804AbfD0Bqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:43:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47370 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:46:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728726AbfD0BnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:11 -0400
+        id S1728179AbfD0BnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6464B215EA;
-        Sat, 27 Apr 2019 01:43:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AF2A208CB;
+        Sat, 27 Apr 2019 01:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329391;
-        bh=A+7EVeSHcLg7JD438yl89GerQ3uZicddaXRsWTqPvyw=;
+        s=default; t=1556329401;
+        bh=UbU0W5REMsR23LNOykfGmpOPpJJneDMOJFFazNyD0Dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+TvrQ84rZ7as6KH3Ht/zvMyUBJnmWRLu1llz5v2tMNkanX40H4fAlq372wslJXb+
-         nGDL2odpblANFiZLMyCgls/bqTan/Cehfb+aHRjbkwzoP2gtH/m+eUIKsRiDnMwrb0
-         MFGhJtq4yijhmeB+oj7mlfEnJUIe+eeUpsT0OM6w=
+        b=1xkUzQmT6fzoHGuRrBln475FTqThW2TZGKz7PJ1lwHFmk5CJPQZh0ehrL2AmY+N2E
+         tD8NfW4S9kqSH05PuoQz0ND9BlmbSWkMnvEsLFlLYkIgtRzNxEbDC/sQ9ShVMWN7PR
+         +6IiZsJCXPZHw/oIgdS2hl3PJgucRBA2aT73/gLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 26/32] virtio-blk: limit number of hw queues by nr_cpu_ids
-Date:   Fri, 26 Apr 2019 21:42:17 -0400
-Message-Id: <20190427014224.8274-26-sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>, stable@kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.14 31/32] mm: make page ref count overflow check tighter and more explicit
+Date:   Fri, 26 Apr 2019 21:42:22 -0400
+Message-Id: <20190427014224.8274-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
 References: <20190427014224.8274-1-sashal@kernel.org>
@@ -60,44 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit bf348f9b78d413e75bb079462751a1d86b6de36c ]
+[ Upstream commit f958d7b528b1b40c44cfda5eabe2d82760d868c3 ]
 
-When tag_set->nr_maps is 1, the block layer limits the number of hw queues
-by nr_cpu_ids. No matter how many hw queues are used by virtio-blk, as it
-has (tag_set->nr_maps == 1), it can use at most nr_cpu_ids hw queues.
+We have a VM_BUG_ON() to check that the page reference count doesn't
+underflow (or get close to overflow) by checking the sign of the count.
 
-In addition, specifically for pci scenario, when the 'num-queues' specified
-by qemu is more than maxcpus, virtio-blk would not be able to allocate more
-than maxcpus vectors in order to have a vector for each queue. As a result,
-it falls back into MSI-X with one vector for config and one shared for
-queues.
+That's all fine, but we actually want to allow people to use a "get page
+ref unless it's already very high" helper function, and we want that one
+to use the sign of the page ref (without triggering this VM_BUG_ON).
 
-Considering above reasons, this patch limits the number of hw queues used
-by virtio-blk by nr_cpu_ids.
+Change the VM_BUG_ON to only check for small underflows (or _very_ close
+to overflowing), and ignore overflows which have strayed into negative
+territory.
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Acked-by: Matthew Wilcox <willy@infradead.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: stable@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/virtio_blk.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/mm.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 68846897d213..8767401f75e0 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -437,6 +437,8 @@ static int init_vq(struct virtio_blk *vblk)
- 	if (err)
- 		num_vqs = 1;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 58f2263de4de..4023819837a6 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -824,6 +824,10 @@ static inline bool is_device_public_page(const struct page *page)
+ #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
  
-+	num_vqs = min_t(unsigned int, nr_cpu_ids, num_vqs);
+ 
++/* 127: arbitrary random number, small enough to assemble well */
++#define page_ref_zero_or_close_to_overflow(page) \
++	((unsigned int) page_ref_count(page) + 127u <= 127u)
 +
- 	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
- 	if (!vblk->vqs)
- 		return -ENOMEM;
+ static inline void get_page(struct page *page)
+ {
+ 	page = compound_head(page);
+@@ -831,7 +835,7 @@ static inline void get_page(struct page *page)
+ 	 * Getting a normal page or the head of a compound page
+ 	 * requires to already have an elevated page->_refcount.
+ 	 */
+-	VM_BUG_ON_PAGE(page_ref_count(page) <= 0, page);
++	VM_BUG_ON_PAGE(page_ref_zero_or_close_to_overflow(page), page);
+ 	page_ref_inc(page);
+ }
+ 
 -- 
 2.19.1
 
