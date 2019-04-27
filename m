@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AF6C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A794EC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617EF206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77784206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfD0PTW (ORCPT
+        id S1728135AbfD0PTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:19:22 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34148 "EHLO
+        Sat, 27 Apr 2019 11:19:25 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34128 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727665AbfD0PPh (ORCPT
+        by vger.kernel.org with ESMTP id S1727661AbfD0PPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:37 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP38-0000zH-Eg; Sat, 27 Apr 2019 16:15:34 +0100
+        id 1hKP38-0000z8-35; Sat, 27 Apr 2019 16:15:34 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2j-0004Sq-A7; Sat, 27 Apr 2019 16:15:09 +0100
+        id 1hKP2j-0004T5-Ez; Sat, 27 Apr 2019 16:15:09 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Tariq Toukan" <tariqt@mellanox.com>,
-        "Aya Levin" <ayal@mellanox.com>
+        "Leon Romanovsky" <leonro@mellanox.com>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        "Erez Shitrit" <erezsh@mellanox.com>,
+        "Feras Daoud" <ferasda@mellanox.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.347183706@decadent.org.uk>
+Message-ID: <lsq.1556377989.472733141@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 065/202] net/mlx4_core: Add masking for a few queries
- on HCA caps
+Subject: [PATCH 3.16 068/202] IB/ipoib: Fix for use-after-free in
+ ipoib_cm_tx_start
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,132 +58,141 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aya Levin <ayal@mellanox.com>
+From: Feras Daoud <ferasda@mellanox.com>
 
-commit a40ded6043658444ee4dd6ee374119e4e98b33fc upstream.
+commit 6ab4aba00f811a5265acc4d3eb1863bb3ca60562 upstream.
 
-Driver reads the query HCA capabilities without the corresponding masks.
-Without the correct masks, the base addresses of the queues are
-unaligned.  In addition some reserved bits were wrongly read.  Using the
-correct masks, ensures alignment of the base addresses and allows future
-firmware versions safe use of the reserved bits.
+The following BUG was reported by kasan:
 
-Fixes: ab9c17a009ee ("mlx4_core: Modify driver initialization flow to accommodate SRIOV for Ethernet")
-Fixes: 0ff1fb654bec ("{NET, IB}/mlx4: Add device managed flow steering firmware API")
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16:
- - There are no num_sys_eqs or dmfs_high_steer_mode parameters
- - Adjust context]
+ BUG: KASAN: use-after-free in ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
+ Read of size 80 at addr ffff88034c30bcd0 by task kworker/u16:1/24020
+
+ Workqueue: ipoib_wq ipoib_cm_tx_start [ib_ipoib]
+ Call Trace:
+  dump_stack+0x9a/0xeb
+  print_address_description+0xe3/0x2e0
+  kasan_report+0x18a/0x2e0
+  ? ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
+  memcpy+0x1f/0x50
+  ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
+  ? kvm_clock_read+0x1f/0x30
+  ? ipoib_cm_skb_reap+0x610/0x610 [ib_ipoib]
+  ? __lock_is_held+0xc2/0x170
+  ? process_one_work+0x880/0x1960
+  ? process_one_work+0x912/0x1960
+  process_one_work+0x912/0x1960
+  ? wq_pool_ids_show+0x310/0x310
+  ? lock_acquire+0x145/0x440
+  worker_thread+0x87/0xbb0
+  ? process_one_work+0x1960/0x1960
+  kthread+0x314/0x3d0
+  ? kthread_create_worker_on_cpu+0xc0/0xc0
+  ret_from_fork+0x3a/0x50
+
+ Allocated by task 0:
+  kasan_kmalloc+0xa0/0xd0
+  kmem_cache_alloc_trace+0x168/0x3e0
+  path_rec_create+0xa2/0x1f0 [ib_ipoib]
+  ipoib_start_xmit+0xa98/0x19e0 [ib_ipoib]
+  dev_hard_start_xmit+0x159/0x8d0
+  sch_direct_xmit+0x226/0xb40
+  __dev_queue_xmit+0x1d63/0x2950
+  neigh_update+0x889/0x1770
+  arp_process+0xc47/0x21f0
+  arp_rcv+0x462/0x760
+  __netif_receive_skb_core+0x1546/0x2da0
+  netif_receive_skb_internal+0xf2/0x590
+  napi_gro_receive+0x28e/0x390
+  ipoib_ib_handle_rx_wc_rss+0x873/0x1b60 [ib_ipoib]
+  ipoib_rx_poll_rss+0x17d/0x320 [ib_ipoib]
+  net_rx_action+0x427/0xe30
+  __do_softirq+0x28e/0xc42
+
+ Freed by task 26680:
+  __kasan_slab_free+0x11d/0x160
+  kfree+0xf5/0x360
+  ipoib_flush_paths+0x532/0x9d0 [ib_ipoib]
+  ipoib_set_mode_rss+0x1ad/0x560 [ib_ipoib]
+  set_mode+0xc8/0x150 [ib_ipoib]
+  kernfs_fop_write+0x279/0x440
+  __vfs_write+0xd8/0x5c0
+  vfs_write+0x15e/0x470
+  ksys_write+0xb8/0x180
+  do_syscall_64+0x9b/0x420
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ The buggy address belongs to the object at ffff88034c30bcc8
+                which belongs to the cache kmalloc-512 of size 512
+ The buggy address is located 8 bytes inside of
+                512-byte region [ffff88034c30bcc8, ffff88034c30bec8)
+ The buggy address belongs to the page:
+
+The following race between change mode and xmit flow is the reason for
+this use-after-free:
+
+Change mode     Send packet 1 to GID XX      Send packet 2 to GID XX
+     |                    |                             |
+   start                  |                             |
+     |                    |                             |
+     |                    |                             |
+     |         Create new path for GID XX               |
+     |           and update neigh path                  |
+     |                    |                             |
+     |                    |                             |
+     |                    |                             |
+ flush_paths              |                             |
+                          |                             |
+               queue_work(cm.start_task)                |
+                          |                 Path for GID XX not found
+                          |                      create new path
+                          |
+                          |
+               start_task runs with old
+                    released path
+
+There is no locking to protect the lifetime of the path through the
+ipoib_cm_tx struct, so delete it entirely and always use the newly looked
+up path under the priv->lock.
+
+Fixes: 546481c2816e ("IB/ipoib: Fix memory corruption in ipoib cm mode connect flow")
+Signed-off-by: Feras Daoud <ferasda@mellanox.com>
+Reviewed-by: Erez Shitrit <erezsh@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/net/ethernet/mellanox/mlx4/fw.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/fw.c
-@@ -1542,9 +1542,10 @@ int mlx4_QUERY_HCA(struct mlx4_dev *dev,
- {
- 	struct mlx4_cmd_mailbox *mailbox;
- 	__be32 *outbox;
-+	u64 qword_field;
- 	u32 dword_field;
--	int err;
- 	u8 byte_field;
-+	int err;
+ drivers/infiniband/ulp/ipoib/ipoib.h    | 1 -
+ drivers/infiniband/ulp/ipoib/ipoib_cm.c | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+--- a/drivers/infiniband/ulp/ipoib/ipoib.h
++++ b/drivers/infiniband/ulp/ipoib/ipoib.h
+@@ -228,7 +228,6 @@ struct ipoib_cm_tx {
+ 	struct list_head     list;
+ 	struct net_device   *dev;
+ 	struct ipoib_neigh  *neigh;
+-	struct ipoib_path   *path;
+ 	struct ipoib_cm_tx_buf *tx_ring;
+ 	unsigned	     tx_head;
+ 	unsigned	     tx_tail;
+--- a/drivers/infiniband/ulp/ipoib/ipoib_cm.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_cm.c
+@@ -1279,7 +1279,6 @@ struct ipoib_cm_tx *ipoib_cm_create_tx(s
  
- #define QUERY_HCA_GLOBAL_CAPS_OFFSET	0x04
- #define QUERY_HCA_CORE_CLOCK_OFFSET	0x0c
-@@ -1566,18 +1567,30 @@ int mlx4_QUERY_HCA(struct mlx4_dev *dev,
+ 	neigh->cm = tx;
+ 	tx->neigh = neigh;
+-	tx->path = path;
+ 	tx->dev = dev;
+ 	list_add(&tx->list, &priv->cm.start_list);
+ 	set_bit(IPOIB_FLAG_INITIALIZED, &tx->flags);
+@@ -1338,7 +1337,7 @@ static void ipoib_cm_tx_start(struct wor
+ 				neigh->daddr + QPN_AND_OPTIONS_OFFSET);
+ 			goto free_neigh;
+ 		}
+-		memcpy(&pathrec, &p->path->pathrec, sizeof pathrec);
++		memcpy(&pathrec, &path->pathrec, sizeof(pathrec));
  
- 	/* QPC/EEC/CQC/EQC/RDMARC attributes */
- 
--	MLX4_GET(param->qpc_base,      outbox, INIT_HCA_QPC_BASE_OFFSET);
--	MLX4_GET(param->log_num_qps,   outbox, INIT_HCA_LOG_QP_OFFSET);
--	MLX4_GET(param->srqc_base,     outbox, INIT_HCA_SRQC_BASE_OFFSET);
--	MLX4_GET(param->log_num_srqs,  outbox, INIT_HCA_LOG_SRQ_OFFSET);
--	MLX4_GET(param->cqc_base,      outbox, INIT_HCA_CQC_BASE_OFFSET);
--	MLX4_GET(param->log_num_cqs,   outbox, INIT_HCA_LOG_CQ_OFFSET);
--	MLX4_GET(param->altc_base,     outbox, INIT_HCA_ALTC_BASE_OFFSET);
--	MLX4_GET(param->auxc_base,     outbox, INIT_HCA_AUXC_BASE_OFFSET);
--	MLX4_GET(param->eqc_base,      outbox, INIT_HCA_EQC_BASE_OFFSET);
--	MLX4_GET(param->log_num_eqs,   outbox, INIT_HCA_LOG_EQ_OFFSET);
--	MLX4_GET(param->rdmarc_base,   outbox, INIT_HCA_RDMARC_BASE_OFFSET);
--	MLX4_GET(param->log_rd_per_qp, outbox, INIT_HCA_LOG_RD_OFFSET);
-+	MLX4_GET(qword_field, outbox, INIT_HCA_QPC_BASE_OFFSET);
-+	param->qpc_base = qword_field & ~((u64)0x1f);
-+	MLX4_GET(byte_field, outbox, INIT_HCA_LOG_QP_OFFSET);
-+	param->log_num_qps = byte_field & 0x1f;
-+	MLX4_GET(qword_field, outbox, INIT_HCA_SRQC_BASE_OFFSET);
-+	param->srqc_base = qword_field & ~((u64)0x1f);
-+	MLX4_GET(byte_field, outbox, INIT_HCA_LOG_SRQ_OFFSET);
-+	param->log_num_srqs = byte_field & 0x1f;
-+	MLX4_GET(qword_field, outbox, INIT_HCA_CQC_BASE_OFFSET);
-+	param->cqc_base = qword_field & ~((u64)0x1f);
-+	MLX4_GET(byte_field, outbox, INIT_HCA_LOG_CQ_OFFSET);
-+	param->log_num_cqs = byte_field & 0x1f;
-+	MLX4_GET(qword_field, outbox, INIT_HCA_ALTC_BASE_OFFSET);
-+	param->altc_base = qword_field;
-+	MLX4_GET(qword_field, outbox, INIT_HCA_AUXC_BASE_OFFSET);
-+	param->auxc_base = qword_field;
-+	MLX4_GET(qword_field, outbox, INIT_HCA_EQC_BASE_OFFSET);
-+	param->eqc_base = qword_field & ~((u64)0x1f);
-+	MLX4_GET(byte_field, outbox, INIT_HCA_LOG_EQ_OFFSET);
-+	param->log_num_eqs = byte_field & 0x1f;
-+	MLX4_GET(qword_field, outbox, INIT_HCA_RDMARC_BASE_OFFSET);
-+	param->rdmarc_base = qword_field & ~((u64)0x1f);
-+	MLX4_GET(byte_field, outbox, INIT_HCA_LOG_RD_OFFSET);
-+	param->log_rd_per_qp = byte_field & 0x7;
- 
- 	MLX4_GET(dword_field, outbox, INIT_HCA_FLAGS_OFFSET);
- 	if (dword_field & (1 << INIT_HCA_DEVICE_MANAGED_FLOW_STEERING_EN)) {
-@@ -1592,18 +1605,18 @@ int mlx4_QUERY_HCA(struct mlx4_dev *dev,
- 	/* steering attributes */
- 	if (param->steering_mode == MLX4_STEERING_MODE_DEVICE_MANAGED) {
- 		MLX4_GET(param->mc_base, outbox, INIT_HCA_FS_BASE_OFFSET);
--		MLX4_GET(param->log_mc_entry_sz, outbox,
--			 INIT_HCA_FS_LOG_ENTRY_SZ_OFFSET);
--		MLX4_GET(param->log_mc_table_sz, outbox,
--			 INIT_HCA_FS_LOG_TABLE_SZ_OFFSET);
-+		MLX4_GET(byte_field, outbox, INIT_HCA_FS_LOG_ENTRY_SZ_OFFSET);
-+		param->log_mc_entry_sz = byte_field & 0x1f;
-+		MLX4_GET(byte_field, outbox, INIT_HCA_FS_LOG_TABLE_SZ_OFFSET);
-+		param->log_mc_table_sz = byte_field & 0x1f;
- 	} else {
- 		MLX4_GET(param->mc_base, outbox, INIT_HCA_MC_BASE_OFFSET);
--		MLX4_GET(param->log_mc_entry_sz, outbox,
--			 INIT_HCA_LOG_MC_ENTRY_SZ_OFFSET);
--		MLX4_GET(param->log_mc_hash_sz,  outbox,
--			 INIT_HCA_LOG_MC_HASH_SZ_OFFSET);
--		MLX4_GET(param->log_mc_table_sz, outbox,
--			 INIT_HCA_LOG_MC_TABLE_SZ_OFFSET);
-+		MLX4_GET(byte_field, outbox, INIT_HCA_LOG_MC_ENTRY_SZ_OFFSET);
-+		param->log_mc_entry_sz = byte_field & 0x1f;
-+		MLX4_GET(byte_field,  outbox, INIT_HCA_LOG_MC_HASH_SZ_OFFSET);
-+		param->log_mc_hash_sz = byte_field & 0x1f;
-+		MLX4_GET(byte_field, outbox, INIT_HCA_LOG_MC_TABLE_SZ_OFFSET);
-+		param->log_mc_table_sz = byte_field & 0x1f;
- 	}
- 
- 	/* CX3 is capable of extending CQEs/EQEs from 32 to 64 bytes */
-@@ -1616,15 +1629,18 @@ int mlx4_QUERY_HCA(struct mlx4_dev *dev,
- 	/* TPT attributes */
- 
- 	MLX4_GET(param->dmpt_base,  outbox, INIT_HCA_DMPT_BASE_OFFSET);
--	MLX4_GET(param->mw_enabled, outbox, INIT_HCA_TPT_MW_OFFSET);
--	MLX4_GET(param->log_mpt_sz, outbox, INIT_HCA_LOG_MPT_SZ_OFFSET);
-+	MLX4_GET(byte_field, outbox, INIT_HCA_TPT_MW_OFFSET);
-+	param->mw_enabled = byte_field >> 7;
-+	MLX4_GET(byte_field, outbox, INIT_HCA_LOG_MPT_SZ_OFFSET);
-+	param->log_mpt_sz = byte_field & 0x3f;
- 	MLX4_GET(param->mtt_base,   outbox, INIT_HCA_MTT_BASE_OFFSET);
- 	MLX4_GET(param->cmpt_base,  outbox, INIT_HCA_CMPT_BASE_OFFSET);
- 
- 	/* UAR attributes */
- 
- 	MLX4_GET(param->uar_page_sz, outbox, INIT_HCA_UAR_PAGE_SZ_OFFSET);
--	MLX4_GET(param->log_uar_sz, outbox, INIT_HCA_LOG_UAR_SZ_OFFSET);
-+	MLX4_GET(byte_field, outbox, INIT_HCA_LOG_UAR_SZ_OFFSET);
-+	param->log_uar_sz = byte_field & 0xf;
- 
- out:
- 	mlx4_free_cmd_mailbox(dev, mailbox);
+ 		spin_unlock_irqrestore(&priv->lock, flags);
+ 		netif_tx_unlock_bh(dev);
 
