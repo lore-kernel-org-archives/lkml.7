@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27F2C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB5FC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB2221707
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B420421743
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329438;
-	bh=HB86TdKubOitt8MMA3LIoAod3tgHlFxwZHUSCaArdFo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kEX3C2gYhaWjreqAbT0pupq3+A/Jzuhk8FzXWVE8C3kI7rL//SkpTt6xRhJFLt60h
-	 Xo5tyme7+0iUYs/zpDTuekXjciVAFPYYgqOPWEduSsMIgmIjC+t1OeckICLEfva26g
-	 eA9hXjkRbi7U91HKfD+BbhO1hc3wwgXpxjCk71Mg=
+	s=default; t=1556329442;
+	bh=3sdwNzJsC9f6ImC/sEBBg6F6e4kEaYBDGkJvo9pg3gs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HTTOhhQLn/AmQXob1yZ4X+Gp81wvThFGpiHKvYRUPRT9m9O0qlDvGKGEpI1PbMKyQ
+	 pzB33ndb+48FZqW5Mmhayxc8/80A+eqobhIFeRVpa7tHccCfv93AGNG+FluoQbvooB
+	 8rHMA1ZadVSgHLtFS5AI5qGHo3adjEr7K8dfCmP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfD0Bn5 (ORCPT
+        id S1728915AbfD0BoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:43:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48216 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:44:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728874AbfD0Bnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:55 -0400
+        id S1728874AbfD0Bn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A76A0215EA;
-        Sat, 27 Apr 2019 01:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BC3C21537;
+        Sat, 27 Apr 2019 01:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329434;
-        bh=HB86TdKubOitt8MMA3LIoAod3tgHlFxwZHUSCaArdFo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVMKiUDvl5OH5gWiLrtx1OkqvcgRfFFjm6HMQouc8UHw5ZXOMrsCEHcB0cKCojL7y
-         xGQeKTPuO3tu7r4UHZbAIP/ElUOeJLs66S6BonpZOtHySNLmLHlMoO+i0+K+uRf12c
-         2sBLqc5MOJyPLoYe8L+ouW0SocaIwcPQN7qZO0Es=
+        s=default; t=1556329437;
+        bh=3sdwNzJsC9f6ImC/sEBBg6F6e4kEaYBDGkJvo9pg3gs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XuVTaoMhbtN/qaTgUcU5oZi9rP3Ndry1yPQ7+5Rr+FQ6wj/+GFM8GSONIK0rllPiF
+         2HmN1NDBkX79c+oROIbF7jVm8D+5qPeOAZXx7edqNSA9zsEfYXm2DQRpUbDcbaeYkJ
+         knTicNrLPV0+7g1fJFQnP5tfDN0tO9nSdOk7kh3Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>, stable@kernel.org,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.9 16/16] mm: add 'try_get_page()' helper function
-Date:   Fri, 26 Apr 2019 21:43:24 -0400
-Message-Id: <20190427014325.8704-16-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 1/9] ASoC: ab8500: Mark expected switch fall-through
+Date:   Fri, 26 Apr 2019 21:43:46 -0400
+Message-Id: <20190427014356.8940-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190427014325.8704-1-sashal@kernel.org>
-References: <20190427014325.8704-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,58 +57,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 88b1a17dfc3ed7728316478fae0f5ad508f50397 ]
+[ Upstream commit 102cefc8e879b707be0024fdc7bce1deeb359a5f ]
 
-This is the same as the traditional 'get_page()' function, but instead
-of unconditionally incrementing the reference count of the page, it only
-does so if the count was "safe".  It returns whether the reference count
-was incremented (and is marked __must_check, since the caller obviously
-has to be aware of it).
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-Also like 'get_page()', you can't use this function unless you already
-had a reference to the page.  The intent is that you can use this
-exactly like get_page(), but in situations where you want to limit the
-maximum reference count.
+This patch fixes the following warning:
 
-The code currently does an unconditional WARN_ON_ONCE() if we ever hit
-the reference count issues (either zero or negative), as a notification
-that the conditional non-increment actually happened.
+In file included from sound/soc/codecs/ab8500-codec.c:24:
+sound/soc/codecs/ab8500-codec.c: In function ‘ab8500_codec_set_dai_fmt’:
+./include/linux/device.h:1485:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sound/soc/codecs/ab8500-codec.c:2129:3: note: in expansion of macro ‘dev_err’
+   dev_err(dai->component->dev,
+   ^~~~~~~
+sound/soc/codecs/ab8500-codec.c:2132:2: note: here
+  default:
+  ^~~~~~~
 
-NOTE! The count access for the "safety" check is inherently racy, but
-that doesn't matter since the buffer we use is basically half the range
-of the reference count (ie we look at the sign of the count).
+Warning level 3 was used: -Wimplicit-fallthrough=3
 
-Acked-by: Matthew Wilcox <willy@infradead.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: stable@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ sound/soc/codecs/ab8500-codec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 11a5a46ce72b..e3c8d40a18b5 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -777,6 +777,15 @@ static inline void get_page(struct page *page)
- 		get_zone_device_page(page);
- }
- 
-+static inline __must_check bool try_get_page(struct page *page)
-+{
-+	page = compound_head(page);
-+	if (WARN_ON_ONCE(page_ref_count(page) <= 0))
-+		return false;
-+	page_ref_inc(page);
-+	return true;
-+}
-+
- static inline void put_page(struct page *page)
- {
- 	page = compound_head(page);
+diff --git a/sound/soc/codecs/ab8500-codec.c b/sound/soc/codecs/ab8500-codec.c
+index affb192238a4..2affc278ffbd 100644
+--- a/sound/soc/codecs/ab8500-codec.c
++++ b/sound/soc/codecs/ab8500-codec.c
+@@ -2129,6 +2129,7 @@ static int ab8500_codec_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 		dev_err(dai->codec->dev,
+ 			"%s: ERROR: The device is either a master or a slave.\n",
+ 			__func__);
++		/* fall through */
+ 	default:
+ 		dev_err(dai->codec->dev,
+ 			"%s: ERROR: Unsupporter master mask 0x%x\n",
 -- 
 2.19.1
 
