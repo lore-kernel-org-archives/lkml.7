@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F160BC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F480C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45532086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A773206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329846;
-	bh=RT1urP/88y7K3ZauNC04ROPpUGNM+ze/iP/gbBL0fMI=;
+	s=default; t=1556329854;
+	bh=Vjb5DB4eL9LF5XxxPfHZjsMAugU5tNqJgdfcKbIGs2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OPE5qA50+O1hXH/UzOcV+TSqMol6n4Xsc2HTMD3tQZnc0SBTMvV68xYXdzojC8q1o
-	 dINVQDy1jINLtkae6KXFwwt3/d4dndMEqfxGXddI2ycCQnkIVVQHl6KP4nGpcKTIcD
-	 jej7SP0YTQjhIuX6BKV1laeZJWr1tmrBYoFI7KXE=
+	b=OwsDDxOq8PBJXUwZ/f2vu+fnpxpSdgqp4AqnrDx4COBPawO95XpUZYbItPjZDD+jx
+	 x8jWuLNEYhUuSInyhzJBXh8b/gxS/FoaxcDDcqPwa5eEfYFdaqMsmLhiBXxBjXY1oD
+	 nMRpROBena0UeXtUdJaPk8KgrvswRn94u3K82diI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbfD0Bup (ORCPT
+        id S1728568AbfD0Bux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:50:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:50:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727610AbfD0BlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:22 -0400
+        id S1728230AbfD0BlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A740B21537;
-        Sat, 27 Apr 2019 01:41:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D5352168B;
+        Sat, 27 Apr 2019 01:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329281;
-        bh=RT1urP/88y7K3ZauNC04ROPpUGNM+ze/iP/gbBL0fMI=;
+        s=default; t=1556329276;
+        bh=Vjb5DB4eL9LF5XxxPfHZjsMAugU5tNqJgdfcKbIGs2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C/Npamymgq0+My0rKuSuBSpscBABQy0dGhYUwKspSmHml2XJI/jjJ6jAfsMnsw+F7
-         ZttcsimijBsoKWrz4mjpHFNaEfpnSBqJh+Fmyk3QHu+I003FeIJ+l/zH5pubXzAJEy
-         13P8njEMgM1Vho6x8ZHpLbVQfRqeNWwEOmPSMxzU=
+        b=kPcTycNzgGCUyyIdXQHGsFJPzGry5EViG/MHNRgyi4DNAJ4W/oXUlXC8iRZ+hr3c0
+         RbKZR0DXz8tUCtlmtl3XyXaN7tDqImxdlRMj9rsvXJu0yL7RLUGeA66a2CbQENz/Xi
+         JOyEl7XbzjvFV8z9mRnswuGmVCVyjQr/YO2J+Tn4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/53] IB/hfi1: Fix the allocation of RSM table
-Date:   Fri, 26 Apr 2019 21:40:17 -0400
-Message-Id: <20190427014051.7522-20-sashal@kernel.org>
+Cc:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 17/53] ASoC: dapm: Fix NULL pointer dereference in snd_soc_dapm_free_kcontrol
+Date:   Fri, 26 Apr 2019 21:40:14 -0400
+Message-Id: <20190427014051.7522-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -60,101 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
 
-[ Upstream commit d0294344470e6b52d097aa7369173f32d11f2f52 ]
+[ Upstream commit cacea3a90e211f0c111975535508d446a4a928d2 ]
 
-The receive side mapping (RSM) on hfi1 hardware is a special
-matching mechanism to direct an incoming packet to a given
-hardware receive context. It has 4 instances of matching capabilities
-(RSM0 - RSM3) that share the same RSM table (RMT). The RMT has a total of
-256 entries, each of which points to a receive context.
+w_text_param can be NULL and it is being dereferenced without checking.
+Add the missing sanity check to prevent  NULL pointer dereference.
 
-Currently, three instances of RSM have been used:
-1. RSM0 by QOS;
-2. RSM1 by PSM FECN;
-3. RSM2 by VNIC.
-
-Each RSM instance should reserve enough entries in RMT to function
-properly. Since both PSM and VNIC could allocate any receive context
-between dd->first_dyn_alloc_ctxt and dd->num_rcv_contexts, PSM FECN must
-reserve enough RMT entries to cover the entire receive context index
-range (dd->num_rcv_contexts - dd->first_dyn_alloc_ctxt) instead of only
-the user receive contexts allocated for PSM
-(dd->num_user_contexts). Consequently, the sizing of
-dd->num_user_contexts in set_up_context_variables is incorrect.
-
-Fixes: 2280740f01ae ("IB/hfi1: Virtual Network Interface Controller (VNIC) HW support")
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/chip.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ sound/soc/soc-dapm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-index 902d12d6d88b..b12c8ff8ed66 100644
---- a/drivers/infiniband/hw/hfi1/chip.c
-+++ b/drivers/infiniband/hw/hfi1/chip.c
-@@ -13388,7 +13388,7 @@ static int set_up_context_variables(struct hfi1_devdata *dd)
- 	int total_contexts;
- 	int ret;
- 	unsigned ngroups;
--	int qos_rmt_count;
-+	int rmt_count;
- 	int user_rmt_reduced;
- 	u32 n_usr_ctxts;
- 	u32 send_contexts = chip_send_contexts(dd);
-@@ -13450,10 +13450,20 @@ static int set_up_context_variables(struct hfi1_devdata *dd)
- 		n_usr_ctxts = rcv_contexts - total_contexts;
- 	}
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index 9b78fb3daa7b..2257b1b0151c 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -3847,6 +3847,10 @@ snd_soc_dapm_free_kcontrol(struct snd_soc_card *card,
+ 	int count;
  
--	/* each user context requires an entry in the RMT */
--	qos_rmt_count = qos_rmt_entries(dd, NULL, NULL);
--	if (qos_rmt_count + n_usr_ctxts > NUM_MAP_ENTRIES) {
--		user_rmt_reduced = NUM_MAP_ENTRIES - qos_rmt_count;
-+	/*
-+	 * The RMT entries are currently allocated as shown below:
-+	 * 1. QOS (0 to 128 entries);
-+	 * 2. FECN for PSM (num_user_contexts + num_vnic_contexts);
-+	 * 3. VNIC (num_vnic_contexts).
-+	 * It should be noted that PSM FECN oversubscribe num_vnic_contexts
-+	 * entries of RMT because both VNIC and PSM could allocate any receive
-+	 * context between dd->first_dyn_alloc_text and dd->num_rcv_contexts,
-+	 * and PSM FECN must reserve an RMT entry for each possible PSM receive
-+	 * context.
-+	 */
-+	rmt_count = qos_rmt_entries(dd, NULL, NULL) + (num_vnic_contexts * 2);
-+	if (rmt_count + n_usr_ctxts > NUM_MAP_ENTRIES) {
-+		user_rmt_reduced = NUM_MAP_ENTRIES - rmt_count;
- 		dd_dev_err(dd,
- 			   "RMT size is reducing the number of user receive contexts from %u to %d\n",
- 			   n_usr_ctxts,
-@@ -14441,9 +14451,11 @@ static void init_user_fecn_handling(struct hfi1_devdata *dd,
- 	u64 reg;
- 	int i, idx, regoff, regidx;
- 	u8 offset;
-+	u32 total_cnt;
- 
- 	/* there needs to be enough room in the map table */
--	if (rmt->used + dd->num_user_contexts >= NUM_MAP_ENTRIES) {
-+	total_cnt = dd->num_rcv_contexts - dd->first_dyn_alloc_ctxt;
-+	if (rmt->used + total_cnt >= NUM_MAP_ENTRIES) {
- 		dd_dev_err(dd, "User FECN handling disabled - too many user contexts allocated\n");
- 		return;
- 	}
-@@ -14497,7 +14509,7 @@ static void init_user_fecn_handling(struct hfi1_devdata *dd,
- 	/* add rule 1 */
- 	add_rsm_rule(dd, RSM_INS_FECN, &rrd);
- 
--	rmt->used += dd->num_user_contexts;
-+	rmt->used += total_cnt;
- }
- 
- /* Initialize RSM for VNIC */
+ 	devm_kfree(card->dev, (void *)*private_value);
++
++	if (!w_param_text)
++		return;
++
+ 	for (count = 0 ; count < num_params; count++)
+ 		devm_kfree(card->dev, (void *)w_param_text[count]);
+ 	devm_kfree(card->dev, w_param_text);
 -- 
 2.19.1
 
