@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A18C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAFDC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B362087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8FE2087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfD0M5H (ORCPT
+        id S1727717AbfD0M5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:57:07 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:39929 "EHLO
+        Sat, 27 Apr 2019 08:57:05 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:55791 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbfD0MxH (ORCPT
+        with ESMTP id S1726487AbfD0MxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 08:53:07 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mzz6s-1gXTgh3Td8-00x1Ur; Sat, 27 Apr 2019 14:52:37 +0200
+ 1MBltM-1hUJWA0Zhs-00CCVD; Sat, 27 Apr 2019 14:52:42 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,57 +34,57 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 05/41] drivers: tty: serial: dz: use pr_info() instead of incomplete printk()
-Date:   Sat, 27 Apr 2019 14:51:46 +0200
-Message-Id: <1556369542-13247-6-git-send-email-info@metux.net>
+Subject: [PATCH 10/41] drivers: tty: serial: sb1250-duart: fix missing parentheses
+Date:   Sat, 27 Apr 2019 14:51:51 +0200
+Message-Id: <1556369542-13247-11-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:0divRPlMaEn/Gqkn0bF/qffr0mtJMzUIhhcgUCpKp3L8QfEx3BT
- Sct6DXQKPsKml0HbjLEbqZ0BVdAAcNgJ6gXOI6JC8K/1+PAe8EFl5Aq1lbdbexf9MvYSvJI
- wDh21F+qIQxeFuU3Myc3hkjl/lhNuC86c6zCO8DZIQRpkFEogbQN+oxEVR+QjYaXv/F2Er3
- D3Hg7fjgdOldNL+SYlAwQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+RM97HlEygc=:XCYgbldeM4fHTujSYLo9ci
- ZNeOghoSWPCt1C8c6NBMLSfGNddK58lmCDc3rlfBH3ynfXNXoutb/zjRBWM8D3BIY49a4i4UE
- w61HuHHGGrE/nW055rXaTuGx9TatMuVoyD47DJXczfb3oO2GbP0EmAQmzpC+6kDBZdseEXdDC
- Q/7Dzh91Dv5viwhjSOg8QB3blGvc6npMCA3+LRAVdg7cmGKN+31NplbmdslmfdvUCt7Zt8txu
- wu1qVJ20ms6soMtiV40LnA1aD9QGbuHc7kSx8ChK0JcxawU9TBzFvD7nHcdQCkga/Pam6wIlh
- SozaRebsNHrmz6K0Nxx5GSTQPTFKcxIbQTjsZTv+UXWB6g6MdVA8xNYDMcxFB3I9a/OOa1+q6
- SDNeRbSCUbiTqPPGCr4Wlwd5pr0t1wGkI38yOimXepPKVf4067XO8agDegepX6eMqr1dnbVEl
- 7E6hKunNpdkhyB0sNKvUPq+uvwV2l/VdX95oOhRD4521oJmMRY3DJ+fuI9JwMF0+0d43RkioS
- NAq5fkYK+cja/PvgpcgRoKs9fOqvE/DvkG7oyD8aLe7kzR0MXQDK6+nm2GtMVAfo9rLlZIslt
- eYSqlXLx6iAbP5p7IGgKyS6G3mEq0IT3MizlVzwRrPBrTI6P7aSZVck/9N5HOec9ocrRvZ2zy
- eP3CmOH7ndIUhAxgSzvJujudRMq1laldwLQ9qL1Fz34ZpgICHygnXc7BQ2s/IBPS3Nvdokjth
- xKIhRxBJYIbWNhrxBOQ1AQzGdb2SfJPFzpfkeQ==
+X-Provags-ID: V03:K1:Q5d+R5/xof5LSpkM+m/1QK4rIat5cet+2kq+5TbMlzlAg7YOwcq
+ yY6SxH8FWCXU0xZpYSh06YbjnruYS3jvbIaTQGqHoabIXLaqLV16hsMLD2TgWS4RStegv55
+ BXylfzMhBa4VLDqOgexGnNJRWU6fc3oOK3V503qwx9kOQsSqkjZe8MoxRvmw7LEmLadmc7U
+ bud6UfVRg0CpivgeZa72w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vacU+lH9z3Y=:pyr1jcpDGvApaYEzFf7e+R
+ TMve7dv5wGRdKDhjI8oStSB5dn5DoxuIjQtwxI7jTd4ue0WswnmOCAVKClxkf4W5Y+po1lpzp
+ uy6mxTJAhaqkZ+uGwup3aHiE2yXSyK5Dtp59G6H8wjH1xJxWJJe3rh1QuItg4GGwqOxe7ZvlT
+ bCfCaP+FUICSNHAr7GAy80cRej9Mbw8LQ/CAIWpG2FHp/HNBuaCWY5bg6pgzDY6U4+Mpk3zpX
+ NFS1TFEHN4C1TorFOl1ieIq8+33dawCeqWbRy63450HHNBOxnTXMXgXVZ2dGvHt/MaKHK5QHX
+ znNS5++8zZ+FgewRGYerTgJaPvxtSpjOrO+jaVu3eScKrVacwFh6aPYL9Tg1gWYFFwQsJ6CzA
+ iKmAZSq55bvXg+JjYDMB6zLZ4DgKDCfJKq+793jpqfro5b1srUPD1zx3NgseUD9Kp6w3sqboX
+ Jvu9ZKFLbaF+cSRGF+A7QScl6NPRPACxYAB2L6P0+kWLYwR7X+40GC4Dw4eh8YRnCKclBPBig
+ 8U4uiH49D8vlepRn823eKH2LdKEGXzfXXG8QTIyXa/vacZIxHEo6Wg3QFLTaPFTQxybxeHFMN
+ sVhpJgAzc594zwa50x10eL253pPhsMkF5H509I0vK9nGkC85rsoXTRr/Co6LoNNGj9pnxWgK9
+ yOIYFsO9w0GUdP/baMxqZ6uqvZ4AtEaJLlWSshjX/lDO4KbZaj05oKWIdPmB24fo9yrxwcOFJ
+ I5chlHAJ/2z+EvXqOzAr/sxxn02wqDKKYoAVwA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the checkpatch warning:
+Fix checkpatch warning:
 
-    WARNING: printk() should include KERN_<LEVEL> facility level
-    #934: FILE: dz.c:934:
-    +	printk("%s%s\n", dz_name, dz_version);
+    ERROR: Macros with complex values should be enclosed in parentheses
+    #911: FILE: drivers/tty/serial/sb1250-duart.c:911:
+    +#define SERIAL_SB1250_DUART_CONSOLE	&sbd_console
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/dz.c | 2 +-
+ drivers/tty/serial/sb1250-duart.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/dz.c b/drivers/tty/serial/dz.c
-index 559d076..e2670c4 100644
---- a/drivers/tty/serial/dz.c
-+++ b/drivers/tty/serial/dz.c
-@@ -931,7 +931,7 @@ static int __init dz_init(void)
- 	if (IOASIC)
- 		return -ENXIO;
+diff --git a/drivers/tty/serial/sb1250-duart.c b/drivers/tty/serial/sb1250-duart.c
+index 1184226..ec74f09 100644
+--- a/drivers/tty/serial/sb1250-duart.c
++++ b/drivers/tty/serial/sb1250-duart.c
+@@ -908,7 +908,7 @@ static int __init sbd_serial_console_init(void)
  
--	printk("%s%s\n", dz_name, dz_version);
-+	pr_info("%s%s\n", dz_name, dz_version);
+ console_initcall(sbd_serial_console_init);
  
- 	dz_init_ports();
- 
+-#define SERIAL_SB1250_DUART_CONSOLE	&sbd_console
++#define SERIAL_SB1250_DUART_CONSOLE	(&sbd_console)
+ #else
+ #define SERIAL_SB1250_DUART_CONSOLE	NULL
+ #endif /* CONFIG_SERIAL_SB1250_DUART_CONSOLE */
 -- 
 1.9.1
 
