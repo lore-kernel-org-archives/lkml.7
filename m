@@ -2,308 +2,126 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FECEC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 05:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4540AC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 05:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5213D208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 05:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174F7208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 05:30:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="aqhQg/RF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L6Bzg5HD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbfD0FBW (ORCPT
+        id S1726123AbfD0Fal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 01:01:22 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38761 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfD0FBW (ORCPT
+        Sat, 27 Apr 2019 01:30:41 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44268 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfD0Fak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 01:01:22 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v1so3993243lfg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 22:01:20 -0700 (PDT)
+        Sat, 27 Apr 2019 01:30:40 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y13so2678264pfm.11
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 22:30:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=norrbonn-se.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AgjFQPs5u9IsR2iBdxUrrYVCcaQgzHfcLFwaMw57Ggk=;
-        b=aqhQg/RFxzurhFWl+BnUZG64haHbbAvTdtg641yO8pSZAOLjdb8LZr/xsB5Rr/sXPy
-         WVvmKLXftpvjSJFtImqeLE1Umf6/QgWV5oFlqeukUslwEmTyxFic28Gl7pujR3/1VaJ7
-         yYvzqACdj6QZnRjVlCgCLSx03r9hWrd/iWacGFE+RgP9BluMXR+54H3KRvRjTR88kYR0
-         KKLqrV29aoDv4+6/P1vy0pbw8igmyVKyx2auwlxnXIULNvR7HrrSj5n/jGgsfBGwvbsn
-         W+CbMftQ+16NFqe294X9Hs75B7D8ctvBlfNeUKPCH7y1HFuUvckS3j1mLei4C9Q/lvkb
-         K9Yw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2qL5B06HjymnEWWYGbhy/VMVmTSM7/NjYOxgcZyd8/0=;
+        b=L6Bzg5HD2MrWFuJnJLTLzyrw5u47dAPSFdzixPqgS3fAOsiSfv3JqINBHReze91Pz+
+         tnKfYVDuV3hUGPWNO8Gzk2CRbJVNqFKU8fFwReuCG8fMw8SzoF/6RGJhrk2q1Ivk7NLx
+         ozUhz8rTxDP5Xa2+qMOQ4l4HSec3brYApYECjkRzrZLit5U4O+qL17qYj5u1OwyE89v5
+         BSnKNu+Q/C0VX1KBM3ophjK4RXWHPgt7URGnAaCWhb/CcDHjshsMfrYB5mTKOVb9PkNr
+         aFzadaFlZOc1vHPiGOuHXSDrhmxVdoAWPF0L/TdrEpzyOCtKIjXnrD6lRmPHH2DKe0sC
+         k+Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AgjFQPs5u9IsR2iBdxUrrYVCcaQgzHfcLFwaMw57Ggk=;
-        b=Ok4Awkn3GSn9EcWL7M9+b2th0pCCLN8JtrdSpTW2ovKJpmUqUhq6S9gxXjg9oczE5g
-         UoQQsC726k+01dS8SC5lL0I3cx+1N8lJgTpap4fuqNLBoBedP9Yd/zWquIg1UHUS6fuu
-         TMMgbTM0nlZCZPLLE4oky8sEaAK2qhvG9tjiP10LZZ2P+hwPBvoV/SeLlcE6FfPBrOwe
-         hcgufHI/s9e0Sb6G3/p56JdIPUADmfQQ+PFlM44eqCz9Od56XDWC1VSu4JqKwCIxKpoJ
-         qRhPBfzu1R5WPwqhiE3rC9Q9Z0Ad4ZbB7nDuQgxXi0n6cA1JG/wxBeSF8UHqbrKR/bv5
-         1+LQ==
-X-Gm-Message-State: APjAAAVZ4uJd5JQNVFWV+7AzbGIOTgCV+Dz0QJpjeQYXvTlE2JbG/+IO
-        uxmNsFJJ56CdFrqwU5WiveyAKg==
-X-Google-Smtp-Source: APXvYqz4xcQjYJmnlp9aZ25tICFVQmRafYeLGm13afQnwS9fYppsYQa5gD4CchWD7Zggs/wXv4Tpuw==
-X-Received: by 2002:a19:6619:: with SMTP id a25mr393108lfc.21.1556341279524;
-        Fri, 26 Apr 2019 22:01:19 -0700 (PDT)
-Received: from [192.168.1.169] (h-29-16.A159.priv.bahnhof.se. [79.136.29.16])
-        by smtp.gmail.com with ESMTPSA id o3sm6061022lfn.41.2019.04.26.22.01.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 22:01:18 -0700 (PDT)
-Subject: Re: [PATCH 2/3] usb: gadget: atmel: support USB suspend
-To:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190220122001.5713-1-jonas@norrbonn.se>
- <20190220122001.5713-3-jonas@norrbonn.se>
-From:   Jonas Bonn <jonas@norrbonn.se>
-Message-ID: <eb302fcf-83b1-bed9-f2d3-201dc767a30b@norrbonn.se>
-Date:   Sat, 27 Apr 2019 07:01:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2qL5B06HjymnEWWYGbhy/VMVmTSM7/NjYOxgcZyd8/0=;
+        b=O+7BEdJHCdrbtlh9YVGSMZYIPZUINztlFiwSGEKthRvqH/Q+cfcEbEJJoCo2jZjgB/
+         Xvs32EzXL2VW/ysXCzmtL+yE8HJOKFnbVEoqc7PoFSWExUq23pKqpHZX6CENAbMwcKy4
+         ju65lLL1RHRQXs0SFuOgUaeI6AMVJvnk3+oUJR0X7wjNf1cJb0e6PsHOipu6iGcg6R8q
+         Lkoz1Lmnq6UCXE9YdFIWfndwqxryxNnyIRnrWY3cHWFVIE3LMuyUWVC1YKyR7Xo0BlAW
+         pbI1cHBwgF5rLl8pzaJf7DxVyOwqTvgPaHKSnxpyKLccJs2vh1ubDYcgxTer700tMS5G
+         rBmQ==
+X-Gm-Message-State: APjAAAV39agLIN4QZwFpbMLF0vVw/k367hUyLGnc1zjdwqpzRKjvOqOy
+        RCDeLjZlu17VufugJ7+n0iHSpQ==
+X-Google-Smtp-Source: APXvYqxR8XQXIopEaVFWb9cnTmFS2/jy88FlGMrxfbCaDhNZHW9ndl9SyGWHoSXQLAEm0dqV5GIApQ==
+X-Received: by 2002:a63:ff18:: with SMTP id k24mr48700330pgi.140.1556343039370;
+        Fri, 26 Apr 2019 22:30:39 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x24sm35920062pfn.128.2019.04.26.22.30.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 22:30:37 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 22:30:34 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 0/8] qcom: spmi/ssbi gpio: correct gpio hogging
+Message-ID: <20190427053034.GH3137@builder>
+References: <20190306005316.12232-1-masneyb@onstation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190220122001.5713-3-jonas@norrbonn.se>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190306005316.12232-1-masneyb@onstation.org>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping.  Any feedback on this at all?  It's been over two months without a 
-single comment.
+On Tue 05 Mar 16:53 PST 2019, Brian Masney wrote:
+
+> Here are some patches that fix gpio hogging for all boards that use
+> spmi-gpio and ssbi-gpio. These depend on the following two patches
+> that were merged in 4.20-rc1:
+> 
+> commit 149a96047237 ("pinctrl: qcom: spmi-gpio: fix gpio-hog related
+> boot issues")
+> 
+> commit 7ed078557738 ("pinctrl: qcom: ssbi-gpio: fix gpio-hog related
+> boot issues")
+> 
+> I've already fixed pm8941 for the Nexus 5 and that fix is queued to go
+> into v5.1 during this merge window:
+> 
+> https://lore.kernel.org/lkml/20181101001149.13453-7-masneyb@onstation.org/
+> 
+> Andy: You may want to consider submitting these post rc1 as a fix for
+> v5.1 and possibly marking these for stable.
+> 
+> Brian Masney (8):
+>   ARM: dts: qcom: apq8064: add gpio-ranges
+>   ARM: dts: qcom: mdm9615: add gpio-ranges
+>   ARM: dts: qcom: msm8660: add gpio-ranges
+>   ARM: dts: qcom: pma8084: add gpio-ranges
+
+Looks like I missed the ARM patches before. All 8 picked up now, with
+Linus' r-b.
 
 Thanks,
-Jonas
+Bjorn
 
-On 20/02/2019 13:20, Jonas Bonn wrote:
-> This patch adds support for USB suspend to the Atmel UDC.
+>   arm64: dts: qcom: pm8005: add gpio-ranges
+>   arm64: dts: qcom: pm8998: add gpio-ranges
+>   arm64: dts: qcom: pmi8994: add gpio-ranges
+>   arm64: dts: qcom: pmi8998: add gpio-ranges
 > 
-> When suspended, the UDC clock can be stopped, resulting in some power
-> savings.  The "wake up" interrupt will fire irregardless of whether the
-> clock is running or not, allowing the UDC clock to be restarted when the
-> USB master wants to wake the device again.
+>  arch/arm/boot/dts/qcom-apq8064.dtsi   | 1 +
+>  arch/arm/boot/dts/qcom-mdm9615.dtsi   | 1 +
+>  arch/arm/boot/dts/qcom-msm8660.dtsi   | 1 +
+>  arch/arm/boot/dts/qcom-pma8084.dtsi   | 1 +
+>  arch/arm64/boot/dts/qcom/pm8005.dtsi  | 1 +
+>  arch/arm64/boot/dts/qcom/pm8998.dtsi  | 1 +
+>  arch/arm64/boot/dts/qcom/pmi8994.dtsi | 1 +
+>  arch/arm64/boot/dts/qcom/pmi8998.dtsi | 1 +
+>  8 files changed, 8 insertions(+)
 > 
-> The IRQ state of this device is somewhat fiddly.  The "wake up" IRQ
-> seems to actually be a "bus activity" indicator; the IRQ is almost
-> continuously asserted so enabling this IRQ should only be done after a
-> suspend when the wake IRQ becomes relevant.  Similarly, the "suspend"
-> IRQ detects "bus inactivity" and may therefore fire together with a
-> "wake" if the two types of activity coincide during the period between
-> two IRQ handler invocations; therefore, it's important to ignore the
-> "suspend" IRQ while waiting for a wake-up.
-> 
-> This has been tested on a SAMA5D2 board.
-> 
-> Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
-> CC: Cristian Birsan <cristian.birsan@microchip.com>
-> CC: Felipe Balbi <balbi@kernel.org>
-> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> CC: Nicolas Ferre <nicolas.ferre@microchip.com>
-> CC: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> CC: Ludovic Desroches <ludovic.desroches@microchip.com>
-> CC: linux-arm-kernel@lists.infradead.org
-> CC: linux-usb@vger.kernel.org
-> ---
->   drivers/usb/gadget/udc/atmel_usba_udc.c | 55 ++++++++++++++++++++++---
->   drivers/usb/gadget/udc/atmel_usba_udc.h |  1 +
->   2 files changed, 50 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-> index 9d18fdddd9b2..740cb9308a86 100644
-> --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-> +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-> @@ -1703,6 +1703,9 @@ static void usba_dma_irq(struct usba_udc *udc, struct usba_ep *ep)
->   	}
->   }
->   
-> +static int start_clock(struct usba_udc *udc);
-> +static void stop_clock(struct usba_udc *udc);
-> +
->   static irqreturn_t usba_udc_irq(int irq, void *devid)
->   {
->   	struct usba_udc *udc = devid;
-> @@ -1720,10 +1723,13 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->   	DBG(DBG_INT, "irq, status=%#08x\n", status);
->   
->   	if (status & USBA_DET_SUSPEND) {
-> -		toggle_bias(udc, 0);
-> -		usba_writel(udc, INT_CLR, USBA_DET_SUSPEND);
-> +		usba_writel(udc, INT_CLR, USBA_DET_SUSPEND|USBA_WAKE_UP);
->   		usba_int_enb_set(udc, USBA_WAKE_UP);
-> +		usba_int_enb_clear(udc, USBA_DET_SUSPEND);
-> +		udc->suspended = true;
-> +		toggle_bias(udc, 0);
->   		udc->bias_pulse_needed = true;
-> +		stop_clock(udc);
->   		DBG(DBG_BUS, "Suspend detected\n");
->   		if (udc->gadget.speed != USB_SPEED_UNKNOWN
->   				&& udc->driver && udc->driver->suspend) {
-> @@ -1734,14 +1740,17 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->   	}
->   
->   	if (status & USBA_WAKE_UP) {
-> +		start_clock(udc);
->   		toggle_bias(udc, 1);
->   		usba_writel(udc, INT_CLR, USBA_WAKE_UP);
-> -		usba_int_enb_clear(udc, USBA_WAKE_UP);
->   		DBG(DBG_BUS, "Wake Up CPU detected\n");
->   	}
->   
->   	if (status & USBA_END_OF_RESUME) {
-> +		udc->suspended = false;
->   		usba_writel(udc, INT_CLR, USBA_END_OF_RESUME);
-> +		usba_int_enb_clear(udc, USBA_WAKE_UP);
-> +		usba_int_enb_set(udc, USBA_DET_SUSPEND);
->   		generate_bias_pulse(udc);
->   		DBG(DBG_BUS, "Resume detected\n");
->   		if (udc->gadget.speed != USB_SPEED_UNKNOWN
-> @@ -1756,6 +1765,8 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->   	if (dma_status) {
->   		int i;
->   
-> +		usba_int_enb_set(udc, USBA_DET_SUSPEND);
-> +
->   		for (i = 1; i <= USBA_NR_DMAS; i++)
->   			if (dma_status & (1 << i))
->   				usba_dma_irq(udc, &udc->usba_ep[i]);
-> @@ -1765,6 +1776,8 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->   	if (ep_status) {
->   		int i;
->   
-> +		usba_int_enb_set(udc, USBA_DET_SUSPEND);
-> +
->   		for (i = 0; i < udc->num_ep; i++)
->   			if (ep_status & (1 << i)) {
->   				if (ep_is_control(&udc->usba_ep[i]))
-> @@ -1778,7 +1791,9 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->   		struct usba_ep *ep0, *ep;
->   		int i, n;
->   
-> -		usba_writel(udc, INT_CLR, USBA_END_OF_RESET);
-> +		usba_writel(udc, INT_CLR,
-> +			USBA_END_OF_RESET|USBA_END_OF_RESUME
-> +			|USBA_DET_SUSPEND|USBA_WAKE_UP);
->   		generate_bias_pulse(udc);
->   		reset_all_endpoints(udc);
->   
-> @@ -1805,6 +1820,11 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->   				| USBA_BF(BK_NUMBER, USBA_BK_NUMBER_ONE)));
->   		usba_ep_writel(ep0, CTL_ENB,
->   				USBA_EPT_ENABLE | USBA_RX_SETUP);
-> +
-> +		/* If we get reset while suspended... */
-> +		udc->suspended = false;
-> +		usba_int_enb_clear(udc, USBA_WAKE_UP);
-> +
->   		usba_int_enb_set(udc, USBA_BF(EPT_INT, 1) |
->   				      USBA_DET_SUSPEND | USBA_END_OF_RESUME);
->   
-> @@ -1872,9 +1892,19 @@ static int usba_start(struct usba_udc *udc)
->   	if (ret)
->   		return ret;
->   
-> +	if (udc->suspended)
-> +		return 0;
-> +
->   	spin_lock_irqsave(&udc->lock, flags);
->   	toggle_bias(udc, 1);
->   	usba_writel(udc, CTRL, USBA_ENABLE_MASK);
-> +	/* Clear all requested and pending interrupts... */
-> +	usba_writel(udc, INT_ENB, 0);
-> +	udc->int_enb_cache = 0;
-> +	usba_writel(udc, INT_CLR,
-> +		USBA_END_OF_RESET|USBA_END_OF_RESUME
-> +		|USBA_DET_SUSPEND|USBA_WAKE_UP);
-> +	/* ...and enable just 'reset' IRQ to get us started */
->   	usba_int_enb_set(udc, USBA_END_OF_RESET);
->   	spin_unlock_irqrestore(&udc->lock, flags);
->   
-> @@ -1885,6 +1915,9 @@ static void usba_stop(struct usba_udc *udc)
->   {
->   	unsigned long flags;
->   
-> +	if (udc->suspended)
-> +		return;
-> +
->   	spin_lock_irqsave(&udc->lock, flags);
->   	udc->gadget.speed = USB_SPEED_UNKNOWN;
->   	reset_all_endpoints(udc);
-> @@ -1912,6 +1945,7 @@ static irqreturn_t usba_vbus_irq_thread(int irq, void *devid)
->   		if (vbus) {
->   			usba_start(udc);
->   		} else {
-> +			udc->suspended = false;
->   			usba_stop(udc);
->   
->   			if (udc->driver->disconnect)
-> @@ -1975,6 +2009,7 @@ static int atmel_usba_stop(struct usb_gadget *gadget)
->   	if (fifo_mode == 0)
->   		udc->configured_ep = 1;
->   
-> +	udc->suspended = false;
->   	usba_stop(udc);
->   
->   	udc->driver = NULL;
-> @@ -2288,6 +2323,7 @@ static int usba_udc_suspend(struct device *dev)
->   	mutex_lock(&udc->vbus_mutex);
->   
->   	if (!device_may_wakeup(dev)) {
-> +		udc->suspended = false;
->   		usba_stop(udc);
->   		goto out;
->   	}
-> @@ -2297,10 +2333,13 @@ static int usba_udc_suspend(struct device *dev)
->   	 * to request vbus irq, assuming always on.
->   	 */
->   	if (udc->vbus_pin) {
-> +		/* FIXME: right to stop here...??? */
->   		usba_stop(udc);
->   		enable_irq_wake(gpiod_to_irq(udc->vbus_pin));
->   	}
->   
-> +	enable_irq_wake(udc->irq);
-> +
->   out:
->   	mutex_unlock(&udc->vbus_mutex);
->   	return 0;
-> @@ -2314,8 +2353,12 @@ static int usba_udc_resume(struct device *dev)
->   	if (!udc->driver)
->   		return 0;
->   
-> -	if (device_may_wakeup(dev) && udc->vbus_pin)
-> -		disable_irq_wake(gpiod_to_irq(udc->vbus_pin));
-> +	if (device_may_wakeup(dev)) {
-> +		if (udc->vbus_pin)
-> +			disable_irq_wake(gpiod_to_irq(udc->vbus_pin));
-> +
-> +		disable_irq_wake(udc->irq);
-> +	}
->   
->   	/* If Vbus is present, enable the controller and wait for reset */
->   	mutex_lock(&udc->vbus_mutex);
-> diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.h b/drivers/usb/gadget/udc/atmel_usba_udc.h
-> index 58c96730e32e..24e6fbd3bb99 100644
-> --- a/drivers/usb/gadget/udc/atmel_usba_udc.h
-> +++ b/drivers/usb/gadget/udc/atmel_usba_udc.h
-> @@ -331,6 +331,7 @@ struct usba_udc {
->   	struct usba_ep *usba_ep;
->   	bool bias_pulse_needed;
->   	bool clocked;
-> +	bool suspended;
->   
->   	u16 devstatus;
->   
+> -- 
+> 2.20.1
 > 
