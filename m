@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A314C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032AAC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85342168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6646216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329408;
-	bh=csu3/yVdw+AXRydbiwpoo18j8p8IZhtRNOJJ4Sc1mbk=;
+	s=default; t=1556329414;
+	bh=TlundiJ+K37Febj/r5CXkbNkBbkslX8A3+yao6rZf20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E1h0f5ZHFG8sjf4+Rb0rNTIxV3AzpNryBYbGI/srkc4ZfI/TmAe2oG+ZdZy/j1mcJ
-	 RglPl9t+rPkg8GfremMyC9eux5xZ0Xeqi3E1cHt3gvvdwDw4U8G3Nxf8MIjD/V7v3G
-	 NSD9AOuBLMfx1XAmMiQxjAdhRmtU4K0mFmKQEpxU=
+	b=pmAQAU4hFrcUPhgkD15GLhfdkm1FH0WA0r5QqXHPbMu+AhuORhMbX6uqOyhmJXb2Z
+	 +HKAwG4w04pHyCJezbTJ/wP+bLzG0GOFUSJgXusE+oLjPxPgp5bGTsSDfpxyBO0J25
+	 396fAVYYpro1vSpfoxsijzTgOJpoelHuHaaP8VVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfD0Bn1 (ORCPT
+        id S1728816AbfD0Bne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:43:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47554 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:43:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728744AbfD0BnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:24 -0400
+        id S1727983AbfD0Bn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE86C215EA;
-        Sat, 27 Apr 2019 01:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91DC521655;
+        Sat, 27 Apr 2019 01:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329403;
-        bh=csu3/yVdw+AXRydbiwpoo18j8p8IZhtRNOJJ4Sc1mbk=;
+        s=default; t=1556329408;
+        bh=TlundiJ+K37Febj/r5CXkbNkBbkslX8A3+yao6rZf20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yOKebXeVtzG7CzQVJU5T0nIWJ3eBTM3hYl7wbLJZUivvsyUbIGe1ACzsBwWzTwpUE
-         STILYbSo/t/sO7VwtY0kJfyJOjHmXJKHXkZmOqHU3Oo7NdaUMBQ5gRUiQ5udKw2A9i
-         eRhGl4QvSc7JhcNQv7oKCozPtB/jGD5ep0djYMXs=
+        b=UzfbMQS/qwwPZ+TIMtGQCiIFfY2D0vDPvG6E8AzHs2yOAFSDWwfvvBxB09WQzvtTV
+         OXaPY1n7ES3T5r0caJfmthV0iP/ouaZnthvMiAn9UZXXVQkLaQ58AceChrwi5MK+Ql
+         vjSbFq0v0ti8l2NMZ7c4cFRBMGCKsaw7sxeTgulM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>, stable@kernel.org,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 32/32] mm: add 'try_get_page()' helper function
-Date:   Fri, 26 Apr 2019 21:42:23 -0400
-Message-Id: <20190427014224.8274-32-sashal@kernel.org>
+Cc:     Rander Wang <rander.wang@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 02/16] ASoC:soc-pcm:fix a codec fixup issue in TDM case
+Date:   Fri, 26 Apr 2019 21:43:10 -0400
+Message-Id: <20190427014325.8704-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
-References: <20190427014224.8274-1-sashal@kernel.org>
+In-Reply-To: <20190427014325.8704-1-sashal@kernel.org>
+References: <20190427014325.8704-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,58 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Rander Wang <rander.wang@linux.intel.com>
 
-[ Upstream commit 88b1a17dfc3ed7728316478fae0f5ad508f50397 ]
+[ Upstream commit 570f18b6a8d1f0e60e8caf30e66161b6438dcc91 ]
 
-This is the same as the traditional 'get_page()' function, but instead
-of unconditionally incrementing the reference count of the page, it only
-does so if the count was "safe".  It returns whether the reference count
-was incremented (and is marked __must_check, since the caller obviously
-has to be aware of it).
+On HDaudio platforms, if playback is started when capture is working,
+there is no audible output.
 
-Also like 'get_page()', you can't use this function unless you already
-had a reference to the page.  The intent is that you can use this
-exactly like get_page(), but in situations where you want to limit the
-maximum reference count.
+This can be root-caused to the use of the rx|tx_mask to store an HDaudio
+stream tag.
 
-The code currently does an unconditional WARN_ON_ONCE() if we ever hit
-the reference count issues (either zero or negative), as a notification
-that the conditional non-increment actually happened.
+If capture is stared before playback, rx_mask would be non-zero on HDaudio
+platform, then the channel number of playback, which is in the same codec
+dai with the capture, would be changed by soc_pcm_codec_params_fixup based
+on the tx_mask at first, then overwritten by this function based on rx_mask
+at last.
 
-NOTE! The count access for the "safety" check is inherently racy, but
-that doesn't matter since the buffer we use is basically half the range
-of the reference count (ie we look at the sign of the count).
+According to the author of tx|rx_mask, tx_mask is for playback and rx_mask
+is for capture. And stream direction is checked at all other references of
+tx|rx_mask in ASoC, so here should be an error. This patch checks stream
+direction for tx|rx_mask for fixup function.
 
-Acked-by: Matthew Wilcox <willy@infradead.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: stable@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This issue would affect not only HDaudio+ASoC, but also I2S codecs if the
+channel number based on rx_mask is not equal to the one for tx_mask. It could
+be rarely reproduecd because most drivers in kernel set the same channel number
+to tx|rx_mask or rx_mask is zero.
+
+Tested on all platforms using stream_tag & HDaudio and intel I2S platforms.
+
+Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ sound/soc/soc-pcm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 4023819837a6..ee0eae215210 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -839,6 +839,15 @@ static inline void get_page(struct page *page)
- 	page_ref_inc(page);
- }
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index b111ecda6439..1dbcdc99dbe3 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -894,10 +894,13 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
+ 		codec_params = *params;
  
-+static inline __must_check bool try_get_page(struct page *page)
-+{
-+	page = compound_head(page);
-+	if (WARN_ON_ONCE(page_ref_count(page) <= 0))
-+		return false;
-+	page_ref_inc(page);
-+	return true;
-+}
+ 		/* fixup params based on TDM slot masks */
+-		if (codec_dai->tx_mask)
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK &&
++		    codec_dai->tx_mask)
+ 			soc_pcm_codec_params_fixup(&codec_params,
+ 						   codec_dai->tx_mask);
+-		if (codec_dai->rx_mask)
 +
- static inline void put_page(struct page *page)
- {
- 	page = compound_head(page);
++		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE &&
++		    codec_dai->rx_mask)
+ 			soc_pcm_codec_params_fixup(&codec_params,
+ 						   codec_dai->rx_mask);
+ 
 -- 
 2.19.1
 
