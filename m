@@ -2,165 +2,108 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10191C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 00:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DAFC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 00:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE31F2077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 00:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA94B206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 00:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DbKkzylQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfD0AUy (ORCPT
+        id S1727194AbfD0A0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 20:20:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44916 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726807AbfD0AUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 20:20:54 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D060030A996E;
-        Sat, 27 Apr 2019 00:20:53 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 22D4B26197;
-        Sat, 27 Apr 2019 00:20:53 +0000 (UTC)
-Subject: Re: [-next] system hangs likely due to "modules: Only return -EEXIST
- for modules that have finished loading"
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     Jessica Yu <jeyu@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Cathy Avery <cavery@redhat.com>
-References: <20190426130736.GB8646@osiris>
- <d4d75ad1-e193-c230-1edc-a93db2b068d7@redhat.com>
- <20190426150741.GD8646@osiris> <20190426160956.GA3827@linux-8ccs>
- <2e047a7e-bf08-be8c-bdd0-429464fa133d@redhat.com>
- <52c293e9-ddfa-426a-a8f1-2106e250e78d@redhat.com>
-Message-ID: <f74996cb-3e0a-ab23-00b9-85ac782583d1@redhat.com>
-Date:   Fri, 26 Apr 2019 20:20:52 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 26 Apr 2019 20:26:22 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45435 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbfD0A0W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 20:26:22 -0400
+Received: by mail-pl1-f193.google.com with SMTP id o5so2277371pls.12;
+        Fri, 26 Apr 2019 17:26:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3Ha6IGzUAbNJa8v4foUXIvt0exapbiOIVu6T2E/z1rU=;
+        b=DbKkzylQpmCTdBWcg3f1rxEP5G+fsER02UTw8CIvwTQ2FV8V9tkc5TlF5rN4ZXlDT3
+         giRdb4ZsdYbHSxG/J4KpjU4PG7QC7RliYGSAsbWWkwlCZEr+hfmD6GdRLEfIPPpnHlI2
+         RCtnBHVCRK7FKTRvK6wErbd7zzipfr900pv/w1ZYMbZse3GJ/swDkY6p9958P5AxdXzJ
+         3rXyh6mrIAnphCofhD96Sd7kqTdf/Ez7zt+qgApCXTlseC68BNZ0P3hvjmibSo9zWYdy
+         n5inO53BRPz/l0HQrWXbnY2X8T8ZauhKNKcsuG00+OB4c1TVNp9OycE+405kALWH08Jx
+         zUsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3Ha6IGzUAbNJa8v4foUXIvt0exapbiOIVu6T2E/z1rU=;
+        b=XT5+HSxdKOt1LM7xiIFdT1+CR4hyCfhKCkdYPo2KgTbvJSQIsr+KQu2Yztkn85wl3M
+         wzHZUt/ekdo3uDRzpUEFvhOvlM+f4PxkZ4zKkUV+C3WQzFrTXK8OcifkV2CsJZKmNAUP
+         1U8L5etWPdNZbKGQGQesqz4f2fofbHOBqCqm0h2rA8pwhHM1P5eZcsUw9qwieJgCcmKD
+         0g5EBKHCdKQC6Zvt0fAFZEb9W40u5hP1OsnGKOJh84cWJzKQOSoBiNYEkwGFeae2HOJ1
+         BRSQBQel/pHJP0eqYVLI4covjVWXsE+S7AecN55AJ1yCTtLbyxTNXQYzCoizwrPF9fF6
+         4C9g==
+X-Gm-Message-State: APjAAAUuU8+z5oyKnQQZxsiT5sZaedMGrGyF6EIWg5nJ9wgoh4L6ZQx5
+        FyDpq6OcAcsubH+H8hoCGgw6D84j1nk=
+X-Google-Smtp-Source: APXvYqyN0pIEwPAqbb5WTVvBiA5y0eEIwoEItQQ8pwJcx+/nuSCOH+e08Al7NPDyF+V5/kmj2pcMpw==
+X-Received: by 2002:a17:902:bc83:: with SMTP id bb3mr4029886plb.303.1556324781442;
+        Fri, 26 Apr 2019 17:26:21 -0700 (PDT)
+Received: from icarus ([2001:268:c1c1:24b4:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id o81sm47848184pfa.156.2019.04.26.17.26.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 17:26:20 -0700 (PDT)
+Date:   Sat, 27 Apr 2019 09:27:20 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH -next] counter: 104-quad-8: Make quad8_ops static
+Message-ID: <20190427002720.GA26000@icarus>
+References: <20190426164816.37032-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <52c293e9-ddfa-426a-a8f1-2106e250e78d@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sat, 27 Apr 2019 00:20:53 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <20190426164816.37032-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/26/19 3:45 PM, Prarit Bhargava wrote:
+On Sat, Apr 27, 2019 at 12:48:16AM +0800, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
 > 
+> Fix sparse warning:
 > 
-> On 4/26/19 2:10 PM, Prarit Bhargava wrote:
->>
->>
->> On 4/26/19 12:09 PM, Jessica Yu wrote:
->>> +++ Heiko Carstens [26/04/19 17:07 +0200]:
->>>> On Fri, Apr 26, 2019 at 09:22:34AM -0400, Prarit Bhargava wrote:
->>>>> On 4/26/19 9:07 AM, Heiko Carstens wrote:
->>>>>> Hello Prarit,
->>>>>>
->>>>>> it looks like your commit f9a75c1d717f ("modules: Only return -EEXIST
->>>>>> for modules that have finished loading") _sometimes_ causes hangs on
->>>>>> s390. This is unfortunately not 100% reproducible, however the
->>>>>> mentioned commit seems to be the only relevant one in modules.c.
->>>>>>
->>>>>> What I see is a hanging system with messages like this on the console:
->>>>>>
->>>>>> [   65.876040] rcu: INFO: rcu_sched self-detected stall on CPU
->>>>>> [   65.876049] rcu:     7-....: (5999 ticks this GP)
->>>>> idle=eae/1/0x4000000000000002 softirq=1181/1181 fqs=2729
->>>>>> [   65.876078]  (t=6000 jiffies g=-471 q=17196)
->>>>>> [   65.876084] Task dump for CPU 7:
->>>>>> [   65.876088] systemd-udevd   R  running task        0   731    721
->>>>> 0x06000004
->>>>>> [   65.876097] Call Trace:
->>>>>> [   65.876113] ([<0000000000abb264>] __schedule+0x2e4/0x6e0)
->>>>>> [   65.876122]  [<00000000001ee486>] finished_loading+0x4e/0xb0
->>>>>> [   65.876128]  [<00000000001f1ed6>] load_module+0xcce/0x27a0
->>>>>> [   65.876134]  [<00000000001f3af0>] __s390x_sys_init_module+0x148/0x178
->>>>>> [   65.876142]  [<0000000000ac0766>] system_call+0x2aa/0x2c8
->>>>>> I did not look any further into the dump, however since the commit
->>>>>> touches exactly the code path which seems to be looping... ;)
->>>>>>
->>>>>
->>>>> Ouch :(  I wonder if I exposed a further race or another bug.  Heiko, can you
->>>>> determine which module is stuck?  Warning: I have not compiled this code.
->>>>
->>>> Here we go:
->>>>
->>>> [   11.716866] PRARIT: waiting for module s390_trng to load.
->>>> [   11.716867] PRARIT: waiting for module s390_trng to load.
->>>> [   11.716868] PRARIT: waiting for module s390_trng to load.
->>>> [   11.716870] PRARIT: waiting for module s390_trng to load.
->>>> [   11.716871] PRARIT: waiting for module s390_trng to load.
->>>> [   11.716872] PRARIT: waiting for module s390_trng to load.
->>>> [   11.716874] PRARIT: waiting for module s390_trng to load.
->>>> [   11.716875] PRARIT: waiting for module s390_trng to load.
->>>> [   11.716876] PRARIT: waiting for module s390_trng to load.
->>>> [   16.726850] add_unformed_module: 31403529 callbacks suppressed
->>>> [   16.726853] PRARIT: waiting for module s390_trng to load.
->>>> [   16.726862] PRARIT: waiting for module s390_trng to load.
->>>> [   16.726865] PRARIT: waiting for module s390_trng to load.
->>>> [   16.726867] PRARIT: waiting for module s390_trng to load.
->>>> [   16.726869] PRARIT: waiting for module s390_trng to load.
->>>>
->>>> If I'm not mistaken then there was _no_ corresponding message on the
->>>> console stating that the module already exists.
->>
->> Heiko,
->>
->> Where is the s390_trng module?  I can't seem to find it in the tree.
->>
->> [02:06 PM root@ibm-z-108 linux-next]# find ./ -name *s390_trng*
->> [02:06 PM root@ibm-z-108 linux-next]# git grep s390_trng
->> [02:07 PM root@ibm-z-108 linux-next]#
->>
+> drivers/counter/104-quad-8.c:836:26: warning:
+>  symbol 'quad8_ops' was not declared. Should it be static?
 > 
-> Never mind, I found it: s390-trng.c
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/counter/104-quad-8.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> P.
-> 
->> P.
->>
+> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+> index 4fa2931..00b113f 100644
+> --- a/drivers/counter/104-quad-8.c
+> +++ b/drivers/counter/104-quad-8.c
+> @@ -833,7 +833,7 @@ static int quad8_action_get(struct counter_device *counter,
+>  	return 0;
+>  }
+>  
+> -const struct counter_ops quad8_ops = {
+> +static const struct counter_ops quad8_ops = {
+>  	.signal_read = quad8_signal_read,
+>  	.count_read = quad8_count_read,
+>  	.count_write = quad8_count_write,
+> -- 
+> 2.7.4
 
+Yes, thank you, this should be static.
 
-Heiko and Jessica,
-
-The issue doesn't appear to be with my patch AFAICT.  The s390_trng fails to
-load and then the kernel occasionally hangs (as Heiko mentioned) calling
-synchronize_rcu().
-
-The call sequence is
-
-module_load()
-	do_init_module()
-		do_one_initcall(mod->init)
-
-which fails.
-
-The failure path in do_one_initcall() is entered and we start executing code at
-kernel/module.c:3541
-
-fail_free_freeinit:
-        kfree(freeinit);
-fail:
-        /* Try to protect us from buggy refcounters. */
-        mod->state = MODULE_STATE_GOING;
-        synchronize_rcu();
-
-^^^ the kernel hangs here.  Sometimes it's very short and other times it seems
-to hang.   I've left systems that appear to be hung and come back after 10
-minutes to find that they've somehow made it through this call.
-
-Is there a known issue with RCU on s390 that is making this occur?
-
-P.
+Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
