@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A1FC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FACC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B748F20679
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D90205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329976;
-	bh=SAK8AjKhssV3cKF8uOF9xbfuqTwdQ0pPCkmp1iUJC3c=;
+	s=default; t=1556329980;
+	bh=DsvPdOMAzKjupnYq4zXpYj+K7ENBXskU/lYRIAdIyx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SN+jS/pHkC47Q1HtHcSuh4FP9bRDTbq8adakEfFYGMbyx+i0ZP3416epqwi4u4ODG
-	 csmiM6LftlkpUy6qPEfzMZVNqgD3uITOosnrxKcwpYl27CiwOuWWWcvtekrtYRRnPc
-	 rfYC575MzbpZRsx7MNmVprX7DVZr8Pf/JbCqEHZ4=
+	b=1HUxx7EPeWrRgiKeh+uUWxlSzKNfO2JGtT4k8mfS829dsRcW4bXljkUfjcgJ7XNqI
+	 dt6oQ9tJ/8CuPhRty8uvHc8N5GtMUhv5endy/gRbjaVVQBR1P34wbfrhx8xAw2Jxl/
+	 YVsFF7QtfvwBS9Ff1ZqqQGOlppG/5D75rVOS0sx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfD0BkY (ORCPT
+        id S1728406AbfD0Bw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43870 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:52:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727378AbfD0BkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:40:20 -0400
+        id S1727956AbfD0BkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:40:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 260EE20B7C;
-        Sat, 27 Apr 2019 01:40:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AF8A215EA;
+        Sat, 27 Apr 2019 01:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329219;
-        bh=SAK8AjKhssV3cKF8uOF9xbfuqTwdQ0pPCkmp1iUJC3c=;
+        s=default; t=1556329222;
+        bh=DsvPdOMAzKjupnYq4zXpYj+K7ENBXskU/lYRIAdIyx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wV6vPCNFWGMP+s8Nv9pJJHN51wE1cJjbKRscnKN6oRKpLsesFL87UAJBNkT6DVVEw
-         rXk5apxfndDdyRqGZKRT4rPu9R2LENkp+aqTPeNzXKcFQ2fDQ7G+vpWCQCGrpblD9E
-         aSEoiV3p4mTX55WrBw+cUojIG2vbgzwQPxaaiU9Y=
+        b=CaG600cbwQ7GVKyY40H/ZRkw3Kf5YDSC9kN5eew8BWYZwtlUvXkNaA19V97jtq+pG
+         Q5Gpgg5R1Hlc2N0YJvOZuOGF2zLNTgj8TLRMxNrg+dWktffYEInuXjbbr0ckdU/vQN
+         umzhcBzi0ZXfD7tDJEqTQwyrmO9zWIuRPRE/NFFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Imre Deak <imre.deak@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 63/79] ALSA: hda: Fix racy display power access
-Date:   Fri, 26 Apr 2019 21:38:22 -0400
-Message-Id: <20190427013838.6596-63-sashal@kernel.org>
+Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 65/79] virtio-blk: limit number of hw queues by nr_cpu_ids
+Date:   Fri, 26 Apr 2019 21:38:24 -0400
+Message-Id: <20190427013838.6596-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -58,86 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit d7a181da2dfa3190487c446042ba01e07d851c74 ]
+[ Upstream commit bf348f9b78d413e75bb079462751a1d86b6de36c ]
 
-snd_hdac_display_power() doesn't handle the concurrent calls carefully
-enough, and it may lead to the doubly get_power or put_power calls,
-when a runtime PM and an async work get called in racy way.
+When tag_set->nr_maps is 1, the block layer limits the number of hw queues
+by nr_cpu_ids. No matter how many hw queues are used by virtio-blk, as it
+has (tag_set->nr_maps == 1), it can use at most nr_cpu_ids hw queues.
 
-This patch addresses it by reusing the bus->lock mutex that has been
-used for protecting the link state change in ext bus code, so that it
-can protect against racy display state changes.  The initialization of
-bus->lock was moved from snd_hdac_ext_bus_init() to
-snd_hdac_bus_init() as well accordingly.
+In addition, specifically for pci scenario, when the 'num-queues' specified
+by qemu is more than maxcpus, virtio-blk would not be able to allocate more
+than maxcpus vectors in order to have a vector for each queue. As a result,
+it falls back into MSI-X with one vector for config and one shared for
+queues.
 
-Testcase: igt/i915_pm_rpm/module-reload #glk-dsi
-Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Imre Deak <imre.deak@intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Considering above reasons, this patch limits the number of hw queues used
+by virtio-blk by nr_cpu_ids.
+
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/ext/hdac_ext_bus.c | 1 -
- sound/hda/hdac_bus.c         | 1 +
- sound/hda/hdac_component.c   | 6 +++++-
- 3 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/block/virtio_blk.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/hda/ext/hdac_ext_bus.c b/sound/hda/ext/hdac_ext_bus.c
-index 9c37d9af3023..ec7715c6b0c0 100644
---- a/sound/hda/ext/hdac_ext_bus.c
-+++ b/sound/hda/ext/hdac_ext_bus.c
-@@ -107,7 +107,6 @@ int snd_hdac_ext_bus_init(struct hdac_bus *bus, struct device *dev,
- 	INIT_LIST_HEAD(&bus->hlink_list);
- 	bus->idx = idx++;
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index b16a887bbd02..29bede887237 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -513,6 +513,8 @@ static int init_vq(struct virtio_blk *vblk)
+ 	if (err)
+ 		num_vqs = 1;
  
--	mutex_init(&bus->lock);
- 	bus->cmd_dma_state = true;
- 
- 	return 0;
-diff --git a/sound/hda/hdac_bus.c b/sound/hda/hdac_bus.c
-index 012305177f68..ad8eee08013f 100644
---- a/sound/hda/hdac_bus.c
-+++ b/sound/hda/hdac_bus.c
-@@ -38,6 +38,7 @@ int snd_hdac_bus_init(struct hdac_bus *bus, struct device *dev,
- 	INIT_WORK(&bus->unsol_work, snd_hdac_bus_process_unsol_events);
- 	spin_lock_init(&bus->reg_lock);
- 	mutex_init(&bus->cmd_mutex);
-+	mutex_init(&bus->lock);
- 	bus->irq = -1;
- 	return 0;
- }
-diff --git a/sound/hda/hdac_component.c b/sound/hda/hdac_component.c
-index a6d37b9d6413..6b5caee61c6e 100644
---- a/sound/hda/hdac_component.c
-+++ b/sound/hda/hdac_component.c
-@@ -69,13 +69,15 @@ void snd_hdac_display_power(struct hdac_bus *bus, unsigned int idx, bool enable)
- 
- 	dev_dbg(bus->dev, "display power %s\n",
- 		enable ? "enable" : "disable");
++	num_vqs = min_t(unsigned int, nr_cpu_ids, num_vqs);
 +
-+	mutex_lock(&bus->lock);
- 	if (enable)
- 		set_bit(idx, &bus->display_power_status);
- 	else
- 		clear_bit(idx, &bus->display_power_status);
- 
- 	if (!acomp || !acomp->ops)
--		return;
-+		goto unlock;
- 
- 	if (bus->display_power_status) {
- 		if (!bus->display_power_active) {
-@@ -92,6 +94,8 @@ void snd_hdac_display_power(struct hdac_bus *bus, unsigned int idx, bool enable)
- 			bus->display_power_active = false;
- 		}
- 	}
-+ unlock:
-+	mutex_unlock(&bus->lock);
- }
- EXPORT_SYMBOL_GPL(snd_hdac_display_power);
- 
+ 	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
+ 	if (!vblk->vqs)
+ 		return -ENOMEM;
 -- 
 2.19.1
 
