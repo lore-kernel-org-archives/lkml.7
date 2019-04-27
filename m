@@ -2,51 +2,51 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A729C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6055DC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A92F206E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E8B206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556330145;
-	bh=EORgHn6y+LW9CqXjwjHIfkrGzyJd3plfgq1dgFU7hb8=;
+	s=default; t=1556330151;
+	bh=GROyF/lq+5IDeNEOW6pAINFQZfxolgvGfSZ0E8R0nlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fxkWwnvYEtywWU70RM6EL9YCwPXH+UddgoTbOEVqNrKnHiTkMlJSH+s557dYffwEu
-	 aQ6xjsgzixrVw2N3VqmSQbctKJfeHaUQ6MA0qlH+KQbbCU+WMesXKeXevUK3FBdB1+
-	 ROkGw8ROznB53wwrxk+k6QTmpGviVCbYt6D39tJE=
+	b=IgW56AW1PukbB4FdTdbyqx7pEbpjM4fpjUTJHlHzu4WopiLWjF0fSZlVf7Xot4OOW
+	 4FOeZqoFyeq6NoYSyRiZ3+lO6V2EmVevk2TNWxa7iAqnoRu2gMTXL1THVzwJhFwwz3
+	 l6xP7oxDoWukWaRlCPI7Ox5dEbu7OWEYimBU2NVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfD0BjF (ORCPT
+        id S1727478AbfD0BjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 26 Apr 2019 21:39:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42104 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:42092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727461AbfD0BjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:39:03 -0400
+        id S1727454AbfD0BjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:39:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07C5220C01;
-        Sat, 27 Apr 2019 01:39:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E907720B7C;
+        Sat, 27 Apr 2019 01:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329142;
-        bh=EORgHn6y+LW9CqXjwjHIfkrGzyJd3plfgq1dgFU7hb8=;
+        s=default; t=1556329141;
+        bh=GROyF/lq+5IDeNEOW6pAINFQZfxolgvGfSZ0E8R0nlU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qDKJ1OaIRqvSNf110xJpSZMjNvb4YZKq43HiJUfv3Zfo6v4tgmJVo7CMnwHjs8Q0t
-         423YaQ1cb0q39ocKXUCw27rK54lJLEE+6nl9hNF/NoNxmJjxysqbPhnCSJSoPbl2dG
-         A5oQyFAeaI8tOQXKK2LwvrZvJ53cePVfXr0Zzczo=
+        b=cEYOtZmrn5po1WrnfUWzND7XE71LUVu8faagzKcpV8E3KoHe+zauAlW4EYsprYY4D
+         V3JxX1J8h85ewRzBHEmIZ39BdPSvMZlEbAElJoWft9Q7nTRYYhiqb+OKoX+aNV3AbO
+         nqvzCt7Wv+Z7uPoTnADQF1xt+dBAxFVz05clYbEs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Olivier Moysan <olivier.moysan@st.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 20/79] ASoC: stm32: dfsdm: fix debugfs warnings on entry creation
-Date:   Fri, 26 Apr 2019 21:37:39 -0400
-Message-Id: <20190427013838.6596-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 19/79] ASoC: stm32: dfsdm: manage multiple prepare
+Date:   Fri, 26 Apr 2019 21:37:38 -0400
+Message-Id: <20190427013838.6596-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -61,71 +61,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Olivier Moysan <olivier.moysan@st.com>
 
-[ Upstream commit c47255b61129857b74b0d86eaf59335348be05e0 ]
+[ Upstream commit 19441e35a43b616ea6afad91ed0d9e77268d8f6a ]
 
-Register platform component with a prefix, to avoid warnings
-on debugfs entries creation, due to component name
-redundancy.
+The DFSDM must be stopped when a new setting is applied.
+restart systematically DFSDM on multiple prepare calls,
+to apply changes.
 
 Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/stm/stm32_adfsdm.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ sound/soc/stm/stm32_adfsdm.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/sound/soc/stm/stm32_adfsdm.c b/sound/soc/stm/stm32_adfsdm.c
-index 71d341b732a4..24948b95eb19 100644
+index 706ff005234f..71d341b732a4 100644
 --- a/sound/soc/stm/stm32_adfsdm.c
 +++ b/sound/soc/stm/stm32_adfsdm.c
-@@ -304,6 +304,7 @@ MODULE_DEVICE_TABLE(of, stm32_adfsdm_of_match);
- static int stm32_adfsdm_probe(struct platform_device *pdev)
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ 
+@@ -37,6 +38,8 @@ struct stm32_adfsdm_priv {
+ 	/* PCM buffer */
+ 	unsigned char *pcm_buff;
+ 	unsigned int pos;
++
++	struct mutex lock; /* protect against race condition on iio state */
+ };
+ 
+ static const struct snd_pcm_hardware stm32_adfsdm_pcm_hw = {
+@@ -62,10 +65,12 @@ static void stm32_adfsdm_shutdown(struct snd_pcm_substream *substream,
  {
- 	struct stm32_adfsdm_priv *priv;
-+	struct snd_soc_component *component;
+ 	struct stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(dai);
+ 
++	mutex_lock(&priv->lock);
+ 	if (priv->iio_active) {
+ 		iio_channel_stop_all_cb(priv->iio_cb);
+ 		priv->iio_active = false;
+ 	}
++	mutex_unlock(&priv->lock);
+ }
+ 
+ static int stm32_adfsdm_dai_prepare(struct snd_pcm_substream *substream,
+@@ -74,13 +79,19 @@ static int stm32_adfsdm_dai_prepare(struct snd_pcm_substream *substream,
+ 	struct stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(dai);
  	int ret;
  
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-@@ -331,9 +332,15 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->iio_cb))
- 		return PTR_ERR(priv->iio_cb);
- 
--	ret = devm_snd_soc_register_component(&pdev->dev,
--					      &stm32_adfsdm_soc_platform,
--					      NULL, 0);
-+	component = devm_kzalloc(&pdev->dev, sizeof(*component), GFP_KERNEL);
-+	if (!component)
-+		return -ENOMEM;
-+#ifdef CONFIG_DEBUG_FS
-+	component->debugfs_prefix = "pcm";
-+#endif
++	mutex_lock(&priv->lock);
++	if (priv->iio_active) {
++		iio_channel_stop_all_cb(priv->iio_cb);
++		priv->iio_active = false;
++	}
 +
-+	ret = snd_soc_add_component(&pdev->dev, component,
-+				    &stm32_adfsdm_soc_platform, NULL, 0);
- 	if (ret < 0)
- 		dev_err(&pdev->dev, "%s: Failed to register PCM platform\n",
- 			__func__);
-@@ -341,12 +348,20 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ 	ret = iio_write_channel_attribute(priv->iio_ch,
+ 					  substream->runtime->rate, 0,
+ 					  IIO_CHAN_INFO_SAMP_FREQ);
+ 	if (ret < 0) {
+ 		dev_err(dai->dev, "%s: Failed to set %d sampling rate\n",
+ 			__func__, substream->runtime->rate);
+-		return ret;
++		goto out;
+ 	}
+ 
+ 	if (!priv->iio_active) {
+@@ -92,6 +103,9 @@ static int stm32_adfsdm_dai_prepare(struct snd_pcm_substream *substream,
+ 				__func__, ret);
+ 	}
+ 
++out:
++	mutex_unlock(&priv->lock);
++
  	return ret;
  }
  
-+static int stm32_adfsdm_remove(struct platform_device *pdev)
-+{
-+	snd_soc_unregister_component(&pdev->dev);
-+
-+	return 0;
-+}
-+
- static struct platform_driver stm32_adfsdm_driver = {
- 	.driver = {
- 		   .name = STM32_ADFSDM_DRV_NAME,
- 		   .of_match_table = stm32_adfsdm_of_match,
- 		   },
- 	.probe = stm32_adfsdm_probe,
-+	.remove = stm32_adfsdm_remove,
- };
+@@ -298,6 +312,7 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
  
- module_platform_driver(stm32_adfsdm_driver);
+ 	priv->dev = &pdev->dev;
+ 	priv->dai_drv = stm32_adfsdm_dai;
++	mutex_init(&priv->lock);
+ 
+ 	dev_set_drvdata(&pdev->dev, priv);
+ 
 -- 
 2.19.1
 
