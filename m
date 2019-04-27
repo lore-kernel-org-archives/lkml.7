@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A15DC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E322EC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23AE120673
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6B6206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfD0P1R (ORCPT
+        id S1728358AbfD0P1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:27:17 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33216 "EHLO
+        Sat, 27 Apr 2019 11:27:14 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33212 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727398AbfD0PPY (ORCPT
+        by vger.kernel.org with ESMTP id S1727394AbfD0PPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:24 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2v-00014G-4n; Sat, 27 Apr 2019 16:15:21 +0100
+        id 1hKP2v-00014C-54; Sat, 27 Apr 2019 16:15:21 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2n-0004dv-Rd; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2n-0004e0-SS; Sat, 27 Apr 2019 16:15:13 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Qin Ji" <jiqin.ji@huawei.com>, "Sheng Lan" <lansheng@huawei.com>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <eric.dumazet@gmail.com>
+        "Nagarathnam Muthusamy" <nagarathnam.muthusamy@oracle.com>,
+        "kernel test robot" <fengguang.wu@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.362875821@decadent.org.uk>
+Message-ID: <lsq.1556377989.969394570@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 183/202] net: netem: fix skb length BUG_ON in
- __skb_to_sgvec
+Subject: [PATCH 3.16 184/202] ipc/shm: Fix pid freeing.
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,106 +56,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sheng Lan <lansheng@huawei.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-commit 5845f706388a4cde0f6b80f9e5d33527e942b7d9 upstream.
+commit 2236d4d39035b9839944603ec4b65ce71180a9ea upstream.
 
-It can be reproduced by following steps:
-1. virtio_net NIC is configured with gso/tso on
-2. configure nginx as http server with an index file bigger than 1M bytes
-3. use tc netem to produce duplicate packets and delay:
-   tc qdisc add dev eth0 root netem delay 100ms 10ms 30% duplicate 90%
-4. continually curl the nginx http server to get index file on client
-5. BUG_ON is seen quickly
+The 0day kernel test build report reported an oops:
+>
+>  IP: put_pid+0x22/0x5c
+>  PGD 19efa067 P4D 19efa067 PUD 0
+>  Oops: 0000 [#1]
+>  CPU: 0 PID: 727 Comm: trinity Not tainted 4.16.0-rc2-00010-g98f929b #1
+>  RIP: 0010:put_pid+0x22/0x5c
+>  RSP: 0018:ffff986719f73e48 EFLAGS: 00010202
+>  RAX: 00000006d765f710 RBX: ffff98671a4fa4d0 RCX: ffff986719f73d40
+>  RDX: 000000006f6e6125 RSI: 0000000000000000 RDI: ffffffffa01e6d21
+>  RBP: ffffffffa0955fe0 R08: 0000000000000020 R09: 0000000000000000
+>  R10: 0000000000000078 R11: ffff986719f73e76 R12: 0000000000001000
+>  R13: 00000000ffffffea R14: 0000000054000fb0 R15: 0000000000000000
+>  FS:  00000000028c2880(0000) GS:ffffffffa06ad000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 0000000677846439 CR3: 0000000019fc1005 CR4: 00000000000606b0
+>  Call Trace:
+>   ? ipc_update_pid+0x36/0x3e
+>   ? newseg+0x34c/0x3a6
+>   ? ipcget+0x5d/0x528
+>   ? entry_SYSCALL_64_after_hwframe+0x52/0xb7
+>   ? SyS_shmget+0x5a/0x84
+>   ? do_syscall_64+0x194/0x1b3
+>   ? entry_SYSCALL_64_after_hwframe+0x42/0xb7
+>  Code: ff 05 e7 20 9b 03 58 c9 c3 48 ff 05 85 21 9b 03 48 85 ff 74 4f 8b 47 04 8b 17 48 ff 05 7c 21 9b 03 48 83 c0 03 48 c1 e0 04 ff ca <48> 8b 44 07 08 74 1f 48 ff 05 6c 21 9b 03 ff 0f 0f 94 c2 48 ff
+>  RIP: put_pid+0x22/0x5c RSP: ffff986719f73e48
+>  CR2: 0000000677846439
+>  ---[ end trace ab8c5cb4389d37c5 ]---
+>  Kernel panic - not syncing: Fatal exception
 
-[10258690.371129] kernel BUG at net/core/skbuff.c:4028!
-[10258690.371748] invalid opcode: 0000 [#1] SMP PTI
-[10258690.372094] CPU: 5 PID: 0 Comm: swapper/5 Tainted: G        W         5.0.0-rc6 #2
-[10258690.372094] RSP: 0018:ffffa05797b43da0 EFLAGS: 00010202
-[10258690.372094] RBP: 00000000000005ea R08: 0000000000000000 R09: 00000000000005ea
-[10258690.372094] R10: ffffa0579334d800 R11: 00000000000002c0 R12: 0000000000000002
-[10258690.372094] R13: 0000000000000000 R14: ffffa05793122900 R15: ffffa0578f7cb028
-[10258690.372094] FS:  0000000000000000(0000) GS:ffffa05797b40000(0000) knlGS:0000000000000000
-[10258690.372094] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[10258690.372094] CR2: 00007f1a6dc00868 CR3: 000000001000e000 CR4: 00000000000006e0
-[10258690.372094] Call Trace:
-[10258690.372094]  <IRQ>
-[10258690.372094]  skb_to_sgvec+0x11/0x40
-[10258690.372094]  start_xmit+0x38c/0x520 [virtio_net]
-[10258690.372094]  dev_hard_start_xmit+0x9b/0x200
-[10258690.372094]  sch_direct_xmit+0xff/0x260
-[10258690.372094]  __qdisc_run+0x15e/0x4e0
-[10258690.372094]  net_tx_action+0x137/0x210
-[10258690.372094]  __do_softirq+0xd6/0x2a9
-[10258690.372094]  irq_exit+0xde/0xf0
-[10258690.372094]  smp_apic_timer_interrupt+0x74/0x140
-[10258690.372094]  apic_timer_interrupt+0xf/0x20
-[10258690.372094]  </IRQ>
+In newseg when changing shm_cprid and shm_lprid from pid_t to struct
+pid* I misread the kvmalloc as kvzalloc and thought shp was
+initialized to 0.  As that is not the case it is not safe to for the
+error handling to address shm_cprid and shm_lprid before they are
+initialized.
 
-In __skb_to_sgvec(), the skb->len is not equal to the sum of the skb's
-linear data size and nonlinear data size, thus BUG_ON triggered.
-Because the skb is cloned and a part of nonlinear data is split off.
+Therefore move the cleanup of shm_cprid and shm_lprid from the no_file
+error cleanup path to the no_id error cleanup path.  Ensuring that an
+early error exit won't cause the oops above.
 
-Duplicate packet is cloned in netem_enqueue() and may be delayed
-some time in qdisc. When qdisc len reached the limit and returns
-NET_XMIT_DROP, the skb will be retransmit later in write queue.
-the skb will be fragmented by tso_fragment(), the limit size
-that depends on cwnd and mss decrease, the skb's nonlinear
-data will be split off. The length of the skb cloned by netem
-will not be updated. When we use virtio_net NIC and invoke skb_to_sgvec(),
-the BUG_ON trigger.
-
-To fix it, netem returns NET_XMIT_SUCCESS to upper stack
-when it clones a duplicate packet.
-
-Fixes: 35d889d1 ("sch_netem: fix skb leak in netem_enqueue()")
-Signed-off-by: Sheng Lan <lansheng@huawei.com>
-Reported-by: Qin Ji <jiqin.ji@huawei.com>
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: netem_enqueue() may call qdisc_reshape_fail();
- keep returning NET_XMIT_SUCCESS if that succeeds]
+Reported-by: kernel test robot <fengguang.wu@intel.com>
+Reviewed-by: Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>
+Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -444,6 +444,7 @@ static int netem_enqueue(struct sk_buff
- 	int nb = 0;
- 	int count = 1;
- 	int rc = NET_XMIT_SUCCESS;
-+	int rc_drop = NET_XMIT_DROP;
+ ipc/shm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/ipc/shm.c
++++ b/ipc/shm.c
+@@ -620,12 +620,12 @@ static int newseg(struct ipc_namespace *
+ 	return error;
  
- 	/* Random duplication */
- 	if (q->duplicate && q->duplicate >= get_crandom(&q->dup_cor))
-@@ -480,6 +481,7 @@ static int netem_enqueue(struct sk_buff
- 
- 		qdisc_enqueue_root(skb2, rootq);
- 		q->duplicate = dupsave;
-+		rc_drop = NET_XMIT_SUCCESS;
- 	}
- 
- 	/*
-@@ -492,7 +494,7 @@ static int netem_enqueue(struct sk_buff
- 		if (skb_is_gso(skb)) {
- 			segs = netem_segment(skb, sch);
- 			if (!segs)
--				return NET_XMIT_DROP;
-+				return rc_drop;
- 		} else {
- 			segs = skb;
- 		}
-@@ -514,8 +516,10 @@ static int netem_enqueue(struct sk_buff
- 	if (unlikely(skb_queue_len(&sch->q) >= sch->limit)) {
- 		/* qdisc_reshape_fail() can't handle segmented skb */
- 		if (segs)
--			return qdisc_drop_all(skb, sch);
--		return qdisc_reshape_fail(skb, sch);
-+			qdisc_drop_all(skb, sch);
-+		else if (qdisc_reshape_fail(skb, sch) == NET_XMIT_SUCCESS)
-+			return NET_XMIT_SUCCESS;
-+		return rc_drop;
- 	}
- 
- 	sch->qstats.backlog += qdisc_pkt_len(skb);
+ no_id:
++	ipc_update_pid(&shp->shm_cprid, NULL);
++	ipc_update_pid(&shp->shm_lprid, NULL);
+ 	if (is_file_hugepages(file) && shp->mlock_user)
+ 		user_shm_unlock(size, shp->mlock_user);
+ 	fput(file);
+ no_file:
+-	ipc_update_pid(&shp->shm_cprid, NULL);
+-	ipc_update_pid(&shp->shm_lprid, NULL);
+ 	ipc_rcu_putref(shp, shm_rcu_free);
+ 	return error;
+ }
 
