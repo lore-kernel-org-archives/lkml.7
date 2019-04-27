@@ -2,105 +2,108 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECA1C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 23:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AE9C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 23:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902862087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 23:52:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghyKR+jn"
+	by mail.kernel.org (Postfix) with ESMTP id B034420823
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 23:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556409464;
+	bh=ZCQ1hTox58ut8MRHX7+unOwJW6Fw0bz4fBqk7pBD8r0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KuTLT04EzQXi/QnS01jNQ/vl4JHm82J63fWnC7BAzCfLU0AK8wT18kOh6TlapxBiA
+	 bp0nQcoZzH5Oc9fNiMt//iF/vv7N5zdzjid2VyDvITgN+B+BCU+jFqq3kK94qdaULc
+	 ouJsOO5oJezIyXGquUdbNQChb3mqAu7PD/fDVqd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfD0Xwf (ORCPT
+        id S1726315AbfD0X5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 19:52:35 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36844 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfD0Xwe (ORCPT
+        Sat, 27 Apr 2019 19:57:43 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:47177 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726079AbfD0X5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 19:52:34 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w20so2657148plq.3;
-        Sat, 27 Apr 2019 16:52:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kc5ZOqDYTaWLHCWQm/ywH7ZTUELxqFoRaRpFMKkK8po=;
-        b=ghyKR+jnS7+IWnBGrAW2c/z/NF8WGJ/VgD+oHIKPH7SW6PO1vbc2B+rKFYol+7AIEL
-         0DMZQPuVjbJX72O9AIIHhRLYhtC2sb8GX52RgM0KDE43+MzMn5wN+Z0TjUBt/es48E/L
-         2cVVR4KNtlgoz75kE9ZCSJIOvNahCC6yqSpZPqMXZyoCA6UPc2UajfLClp+QhQGtWGRa
-         PFsLSORaNmjKZoa1TgrtM4qV7W3sr/xAW/SkA0+IMs9RBR0ljFTX5owU4Q4KjOjHNJYz
-         ZDqjp/OexXCCANqLtPfoOu3SB7m5mFHMlH4dOJg4UAEFmZwVtXRYw+7IQGMFLbAYzlY5
-         XgzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kc5ZOqDYTaWLHCWQm/ywH7ZTUELxqFoRaRpFMKkK8po=;
-        b=NybA0mcyclksOFeGJGLtpp83CXllO9zTFPK06KH1ew1xlHXcA0v0babNb9tDJjCyxC
-         PZTimiiYxXCxzZK7KR3JvpUHkRHB46/c+PVAxsugWrAwH91gnU6ELh4Q1xZwB+41BsL6
-         cQGpslRG6OeWJ6/wkDCJpn1R44iyfWI2o654D8pkqfxIkh+fg1dNPuU5SAI0KEJw08sT
-         Jcimgx3g+CVnvahOAbNUYT7iq4PYNaTsOWcH4v4dhjC7hQqFrFqae1kalJ5Ctbb94EzD
-         wval7V/ywNQ5yIlTVWhI2O64x2ljV8L8K2hUdMUm53l0yTgXqfNI875JtjxfTVEf3vBJ
-         C20A==
-X-Gm-Message-State: APjAAAVMbGVe4lrB4f9m9xaMe+QURXdwZFDE/I7A5OhdYugEv3HZkXCs
-        VNaS/wVWBTPjSK4CplB/ROw=
-X-Google-Smtp-Source: APXvYqxvqI6px1PYLTcLpGNbjcWrwhi8rggYKjbd69J+qRrfgNlCoBuzGxJRHLOK5MvU9xrxdrHEWA==
-X-Received: by 2002:a17:902:7d91:: with SMTP id a17mr53997399plm.338.1556409154295;
-        Sat, 27 Apr 2019 16:52:34 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id i15sm43975343pfr.8.2019.04.27.16.52.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Apr 2019 16:52:33 -0700 (PDT)
-Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Julian Anastasov <ja@ssi.bg>, Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
-        ddstreet@ieee.org, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000007d22100573d66078@google.com>
- <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
- <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
- <9d430543-33c3-0d9b-dc77-3a179a8e3919@I-love.SAKURA.ne.jp>
- <920ebaf1-ee87-0dbb-6805-660c1cbce3d0@I-love.SAKURA.ne.jp>
- <cc054b5c-4e95-8d30-d4bf-9c85f7e20092@gmail.com>
- <15b353e9-49a2-f08b-dc45-2e9bad3abfe2@i-love.sakura.ne.jp>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <057735f0-4475-7a7b-815f-034b1095fa6c@gmail.com>
-Date:   Sat, 27 Apr 2019 16:52:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 27 Apr 2019 19:57:43 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1FACF207FD;
+        Sat, 27 Apr 2019 19:57:42 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sat, 27 Apr 2019 19:57:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zF+eIwUTS8rm1zZoX
+        1pBtDSbLkSK93vBu5X3HfByFs0=; b=XUeAqhthJp0Epip6uXpZINIbgy0NRe7ET
+        oJLPUrIs5g7pg/AAMB6rncNqp55sUMv4cLFJztP6kin/MCgpwQd+5uZuTtWwlLrL
+        OK1jvVlY8wQmZbOSW8DeB8PgwWC64/pZB7NKE2elzPQ7Pa8Zgg/MPd6BsrWerlqQ
+        AeTD9F2u39F/FCH2Vdiui77t7vOXdAdYng91lzeEmAWIn84+Yg9ddTE1ciGN6G0T
+        EIBoQRC92XuMW7i2HrKV4TfyKL+Lj2DAdfB2BGykX7jbuDwnlvfxb5YP6q5W3cdw
+        LTDKlXchT8/gHKlFe2Jzp/xwc3Dx5tZb/wgu3ZpEYg2nq7cvrZlug==
+X-ME-Sender: <xms:dezEXFe-Vn7IKjwKsJ6Pn-xZfVprO_ebI4akmyqcJP9UOK-hYYib9A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrheelgdeftdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
+    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
+    dukedrvdduuddrvddttddrudeileenucfrrghrrghmpehmrghilhhfrhhomhepthhosghi
+    nheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:dezEXHcqSkVvYikUgvpx0wOcXkhyYpfbbRMrwo_2y1cBCWySMlcU5Q>
+    <xmx:dezEXJjrGTz24AexPxuq_E5XgUvRCLEbBB51TrBuJDHsgdqHF3oNQw>
+    <xmx:dezEXDTp0u8BK0bqCCxz2y_gm8mjq5I7Yeong5YUnnbvfydGAFhwYA>
+    <xmx:duzEXNUE9YIdausQFT1wDzCw0kSS7w1obqgvOYRhs3Mw0XJuPQ0hCg>
+Received: from eros.localdomain (ppp118-211-200-169.bras1.syd2.internode.on.net [118.211.200.169])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 84B07E4176;
+        Sat, 27 Apr 2019 19:57:39 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] kobject: Improve doc clarity kobject_init_and_add()
+Date:   Sun, 28 Apr 2019 09:56:52 +1000
+Message-Id: <20190427235652.3799-1-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <15b353e9-49a2-f08b-dc45-2e9bad3abfe2@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Function kobject_init_and_add() is currently misused in a number of
+places in the kernel.  On error return kobject_put() must be called but
+is at times not.
 
+Make the function documentation more explicit about calling
+kobject_put() in the error path.
 
-On 4/27/19 3:33 PM, Tetsuo Handa wrote:
-> 
-> I'm waiting for davem why it is safe to move the dst entry from
-> "a device to unregister" to "a loopback device in that namespace".
-> I'm waiting for an explanation how the dst entry which was moved to
-> "a loopback device in that namespace" is released (i.e. what the
-> expected shutdown sequence is).
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+---
+ lib/kobject.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-The most probable explanation is that we make sure the loopback device
-is the last one to be dismantled at netns deletion,
-and this would obviously happen after all dst have been released.
-
-
+diff --git a/lib/kobject.c b/lib/kobject.c
+index aa89edcd2b63..58d1d7a64203 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -437,9 +437,12 @@ EXPORT_SYMBOL(kobject_add);
+  * @parent: pointer to the parent of this kobject.
+  * @fmt: the name of the kobject.
+  *
+- * This function combines the call to kobject_init() and
+- * kobject_add().  The same type of error handling after a call to
+- * kobject_add() and kobject lifetime rules are the same here.
++ * This function combines the call to kobject_init() and kobject_add().
++ *
++ * If this function returns an error, kobject_put() must be called to
++ * properly clean up the memory associated with the object.  This is the
++ * same type of error handling after a call to kobject_add() and kobject
++ * lifetime rules are the same here.
+  */
+ int kobject_init_and_add(struct kobject *kobj, struct kobj_type *ktype,
+ 			 struct kobject *parent, const char *fmt, ...)
+-- 
+2.21.0
 
