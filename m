@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5776C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD71FC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB086208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95621208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329585;
-	bh=EM+7b7k3Em94HPk5gsuzbQhZkPb3gER7uQiHpAIAcd0=;
+	s=default; t=1556329589;
+	bh=bs1jjb41LIAyMyX/KF+eOa0V8Fa85LrWfcCk8kGaSSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Icn6pjdw25H0GPw/c1fLSiqj1FEeBRULoglVb1MTNFoxop6zjFPnNgr7Ask1fO2Ek
-	 sB9Ql86+/QokjfzUtYQwcFnOlcSpk9FhL1tfJHRI9uQCYzNJs9Hp36C0zC5G/+Gu5l
-	 pCpIDLIIrtXbK+b5ZOoJshB1X1vXnWDILogNCTCA=
+	b=drHwUCsmi8Ko6Nlvtbs7yuqmn3t4rV+Fqp1w7tcIatHue36yF9vxmX+z2TRfNqtz7
+	 W+FlgKT804zkFr885h+pIblEm0uV0rOYrHRSmi4NeEu69yovFlrqIcq8Bglnuq+v42
+	 OhJjEMM/pWIQi+j28pyPfKitgCzYrlXYjsDKhKeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfD0BqY (ORCPT
+        id S1728887AbfD0BqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:46:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47700 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:46:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727998AbfD0Bna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:30 -0400
+        id S1728800AbfD0Bnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6F42216C4;
-        Sat, 27 Apr 2019 01:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABF6D21655;
+        Sat, 27 Apr 2019 01:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329410;
-        bh=EM+7b7k3Em94HPk5gsuzbQhZkPb3gER7uQiHpAIAcd0=;
+        s=default; t=1556329411;
+        bh=bs1jjb41LIAyMyX/KF+eOa0V8Fa85LrWfcCk8kGaSSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O68IQJIYaYWVJzV7prnNfts4LdQp6WHdnG7tKJ8DHH+fn1VW/VU8XBDFx4PmYioUq
-         VkVRkJuhftbZ+3Q+pHi8ik+9vOhtL1joQxwCWFbOJ9aRTtTs6AcNFqnzcGuwXCqqIY
-         qRskMZ/peYXlvV55MkyhtYI20T+pT0mop7ujy9Wk=
+        b=FmAqL5zZKteR4GsXb9o1y7y0+WKFlDV8UYY2RE+Xt/2k0OAYvnz4yaH4qKKCuWorp
+         VHkJkN9EkaDhhjYwKB/55XQBu1eKKrkC3sFFOox/ElT0VNtWhj8AV6Y+arN9CwaKJJ
+         D2obXXpUuYNekbizJuTLNyKDjBzae15XJebpqX3M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Hsu <KCHSU0@nuvoton.com>, Mark Brown <broonie@kernel.org>,
+Cc:     Daniel Mack <daniel@zonque.org>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 03/16] ASoC: nau8810: fix the issue of widget with prefixed name
-Date:   Fri, 26 Apr 2019 21:43:11 -0400
-Message-Id: <20190427014325.8704-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 04/16] ASoC: cs4270: Set auto-increment bit for register writes
+Date:   Fri, 26 Apr 2019 21:43:12 -0400
+Message-Id: <20190427014325.8704-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014325.8704-1-sashal@kernel.org>
 References: <20190427014325.8704-1-sashal@kernel.org>
@@ -57,37 +57,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hsu <KCHSU0@nuvoton.com>
+From: Daniel Mack <daniel@zonque.org>
 
-[ Upstream commit 54d1cf78b0f4ba348a7c7fb8b7d0708d71b6cc8a ]
+[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
 
-The driver changes the stream name of DAC and ADC to avoid the issue of
-widget with prefixed name. When the machine adds prefixed name for codec,
-the stream name of DAI may not find the widgets.
+The CS4270 does not by default increment the register address on
+consecutive writes. During normal operation it doesn't matter as all
+register accesses are done individually. At resume time after suspend,
+however, the regcache code gathers the biggest possible block of
+registers to sync and sends them one on one go.
 
-Signed-off-by: John Hsu <KCHSU0@nuvoton.com>
+To fix this, set the INCR bit in all cases.
+
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/nau8810.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/cs4270.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/nau8810.c b/sound/soc/codecs/nau8810.c
-index e45518629968..2234d0c04165 100644
---- a/sound/soc/codecs/nau8810.c
-+++ b/sound/soc/codecs/nau8810.c
-@@ -414,9 +414,9 @@ static const struct snd_soc_dapm_widget nau8810_dapm_widgets[] = {
- 	SND_SOC_DAPM_MIXER("Mono Mixer", NAU8810_REG_POWER3,
- 		NAU8810_MOUTMX_EN_SFT, 0, &nau8810_mono_mixer_controls[0],
- 		ARRAY_SIZE(nau8810_mono_mixer_controls)),
--	SND_SOC_DAPM_DAC("DAC", "HiFi Playback", NAU8810_REG_POWER3,
-+	SND_SOC_DAPM_DAC("DAC", "Playback", NAU8810_REG_POWER3,
- 		NAU8810_DAC_EN_SFT, 0),
--	SND_SOC_DAPM_ADC("ADC", "HiFi Capture", NAU8810_REG_POWER2,
-+	SND_SOC_DAPM_ADC("ADC", "Capture", NAU8810_REG_POWER2,
- 		NAU8810_ADC_EN_SFT, 0),
- 	SND_SOC_DAPM_PGA("SpkN Out", NAU8810_REG_POWER3,
- 		NAU8810_NSPK_EN_SFT, 0, NULL, 0),
+diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
+index 84f86745c30e..828bc615a190 100644
+--- a/sound/soc/codecs/cs4270.c
++++ b/sound/soc/codecs/cs4270.c
+@@ -643,6 +643,7 @@ static const struct regmap_config cs4270_regmap = {
+ 	.reg_defaults =		cs4270_reg_defaults,
+ 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
+ 	.cache_type =		REGCACHE_RBTREE,
++	.write_flag_mask =	CS4270_I2C_INCR,
+ 
+ 	.readable_reg =		cs4270_reg_is_readable,
+ 	.volatile_reg =		cs4270_reg_is_volatile,
 -- 
 2.19.1
 
