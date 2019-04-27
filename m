@@ -2,136 +2,101 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93C5C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E0DC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71FFB212F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556369745;
-	bh=hVmyG+1AvKUQGM0TnO9YzO1iCH5meTQ6M6O8sm/zFp0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PmriuwefY4b2eMvVd1khljqcRQL7J6X2qW4qJJKiI/Nsi1Wph+DAuzEjDWiPg2hI5
-	 zzLS51lrb+FUGyU+5G2dOg66/n7g+YOS9SueKlLg8YAeS+1xUxADtUC+56NLnhrEoZ
-	 0tXcNItCz6wGc8nnaT9gmMbJI+8Ckh0ebD6fs7VM=
+	by mail.kernel.org (Postfix) with ESMTP id 9F53B20C01
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfD0Mzo (ORCPT
+        id S1727637AbfD0Mz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:55:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727620AbfD0Mzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:55:42 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5052F208C2;
-        Sat, 27 Apr 2019 12:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556369741;
-        bh=hVmyG+1AvKUQGM0TnO9YzO1iCH5meTQ6M6O8sm/zFp0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aTHD60nk6dMIesU+YQJFMIsdD2QRFFzm7y3c7Bj9pWeQz0Px/r4kwo0rMrMQhdHDR
-         IO5rzgxNnqdybtmu01nqkf1BJzx9lg+uQ4F+M4uvViHWqYK00hMvdFORuQ5NBAwIVy
-         0Xwpea7BY01DKmdQ3NwbAqEggNV9R/DIxevkCfiI=
-Date:   Sat, 27 Apr 2019 13:55:35 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Matt Ranostay <matt.ranostay@konsulko.com>
-Cc:     Daniel Gomez <dagmcr@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>, javier@dowhile0.org
-Subject: Re: [PATCH v2] iio: temperature: maxim_thermocouple: declare
- missing of table
-Message-ID: <20190427135535.46b3f7e9@archlinux>
-In-Reply-To: <CAJCx=gkykSjn7uf67s2_NqB+-FYWF_oA_PknB7LcX5QRD_mp9Q@mail.gmail.com>
-References: <1556055738-14838-1-git-send-email-dagmcr@gmail.com>
-        <CAJCx=gkykSjn7uf67s2_NqB+-FYWF_oA_PknB7LcX5QRD_mp9Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 27 Apr 2019 08:55:57 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:43467 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfD0MxL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 08:53:11 -0400
+Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mspy4-1gVqbE43aa-00tCHb; Sat, 27 Apr 2019 14:52:37 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
+        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
+        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
+        liviu.dudau@arm.com, sudeep.holla@arm.com,
+        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
+        linux@prisktech.co.nz, matthias.bgg@gmail.com,
+        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
+Subject: [PATCH 04/41] drivers: tty: serial: dz: fix use fix bare 'unsigned'
+Date:   Sat, 27 Apr 2019 14:51:45 +0200
+Message-Id: <1556369542-13247-5-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:CBJBinnswYpZ8Sdk7wFOAsULywVOOhB0O51QI1ZS6aG2XtvP5Ax
+ rUdddfq4rw+u/9EFqOQzXc3/JM5V7fsK23L/z85bPCOANxd2GuzAoLWyurSK9Ii+GNlroRp
+ D+hqD+3RuR/9qgEHat/Ucs2oZfFOYySxVG+wr6Q+wrWn6MY4YELLqYiMi6+Z1GHMHZ9Sbi6
+ A0dnBU9i+mqDN3d/fmLxg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MH/lZafoCx0=:C6VQMV1HsKH9OxnmfiwWwi
+ ls6ASJ0mneciKIXS+1V+wSxBJcpan2IpZ08XLTD6SYv7YXOIMII1L/KWbG0T9oFUOLphs/Fg3
+ l2AlwPRiDgZqonUsBVKpGTsKSv27ETHk1u8CP6XiFhZ9cNW2T3FLm/M/RZiJJEVU+b4hat+oG
+ V/t5hoDjxIiN6XeMIGY3ZKep3tzRsiG+Yf5WrxF7xmHK3ns0GM3BNTiW1nXz2EqwNDtGAyeZq
+ Vvqo3PBXcwPXiB6IUXXnKOdfKgojhgqctY7SufpZAYrm+1D2LBSe3PgUHcGQeS6y3DDBI1EER
+ ik2lMkxjtSrUzyrZhTKgo1kjcSBthFwMG5B29FUWZC9SlsTzEYflKLY1mlrZ/DBKrktMH6+KG
+ e3fXGk80CchhUtjMmL7Eyykp3o924p2zhQIBYAL0puuxE6/cYR/3HyeTlGe42KZuMH9EZn0+g
+ n/3ogS9RFBh7aesoWqrAsTgXRq6ILeiUjg/9gPYWefwJguOeS1NTOW2WOOrphR2Dfrcvy72gC
+ mu2hsdgjoNnA4njyhs3XxuFnlYyWLsuBOT3jqHXTTXDPK9vFMOFSfp50AeuB6lwEo12Rxs0Ip
+ 8eo0NdOrxwE+PMaT+iD6IJzKHMvoTFwflMb6JOcc69Pg8tOMFpOm2QWk0WlCbVyrrlaOAVFD2
+ JxVH/iny2tox/lLVNnjx1smE1j9T7d7BKieB2e6XjF/H3MzZFm2Qw/hD3pnmYq+Kcy8sdTENK
+ uVS7NH13R3Km3ewXsX6v4Ea4yuju79Q+cCDxjQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019 09:35:07 +0800
-Matt Ranostay <matt.ranostay@konsulko.com> wrote:
+Fix checkpatch warnings:
 
-> On Wed, Apr 24, 2019 at 5:42 AM Daniel Gomez <dagmcr@gmail.com> wrote:
-> >
-> > Add missing <of_device_id> table for SPI driver relying on SPI
-> > device match since compatible is in a DT binding or in a DTS.
-> >
-> > Before this patch:
-> > modinfo drivers/iio/temperature/maxim_thermocouple.ko | grep alias
-> > alias:          spi:max31855
-> > alias:          spi:max6675
-> >
-> > After this patch:
-> > modinfo drivers/iio/temperature/maxim_thermocouple.ko | grep alias
-> > alias:          spi:max31855
-> > alias:          spi:max6675
-> > alias:          of:N*T*Cmaxim,max31855C*
-> > alias:          of:N*T*Cmaxim,max31855
-> > alias:          of:N*T*Cmaxim,max6675C*
-> > alias:          of:N*T*Cmaxim,max6675  
-> 
-> Heh oops I missed that somehow in initial development.
-> 
-> Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Applied to the togreg branch of iio.git.  Given timing this may have
-to wait for the next cycle to go upstream.
+    WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
+    #103: FILE: dz.c:103:
+    +static u16 dz_in(struct dz_port *dport, unsigned offset)
 
-Thanks.
-Jonathan
+    WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
+    #110: FILE: dz.c:110:
+    +static void dz_out(struct dz_port *dport, unsigned offset, u16 value)
 
-> 
-> >
-> > Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-> > Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-> > ---
-> >  drivers/iio/temperature/maxim_thermocouple.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/iio/temperature/maxim_thermocouple.c b/drivers/iio/temperature/maxim_thermocouple.c
-> > index c31b963..c613a64 100644
-> > --- a/drivers/iio/temperature/maxim_thermocouple.c
-> > +++ b/drivers/iio/temperature/maxim_thermocouple.c
-> > @@ -10,6 +10,8 @@
-> >  #include <linux/init.h>
-> >  #include <linux/mutex.h>
-> >  #include <linux/err.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> >  #include <linux/spi/spi.h>
-> >  #include <linux/iio/iio.h>
-> >  #include <linux/iio/trigger.h>
-> > @@ -262,9 +264,17 @@ static const struct spi_device_id maxim_thermocouple_id[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(spi, maxim_thermocouple_id);
-> >
-> > +static const struct of_device_id maxim_thermocouple_of_match[] = {
-> > +        { .compatible = "maxim,max6675" },
-> > +        { .compatible = "maxim,max31855" },
-> > +        { },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, maxim_thermocouple_of_match);
-> > +
-> >  static struct spi_driver maxim_thermocouple_driver = {
-> >         .driver = {
-> >                 .name   = MAXIM_THERMOCOUPLE_DRV_NAME,
-> > +               .of_match_table = maxim_thermocouple_of_match,
-> >         },
-> >         .probe          = maxim_thermocouple_probe,
-> >         .remove         = maxim_thermocouple_remove,
-> > --
-> > 2.7.4
-> >  
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ drivers/tty/serial/dz.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/tty/serial/dz.c b/drivers/tty/serial/dz.c
+index b3e9313..559d076 100644
+--- a/drivers/tty/serial/dz.c
++++ b/drivers/tty/serial/dz.c
+@@ -100,14 +100,14 @@ static inline struct dz_port *to_dport(struct uart_port *uport)
+  * ------------------------------------------------------------
+  */
+ 
+-static u16 dz_in(struct dz_port *dport, unsigned offset)
++static u16 dz_in(struct dz_port *dport, unsigned int offset)
+ {
+ 	void __iomem *addr = dport->port.membase + offset;
+ 
+ 	return readw(addr);
+ }
+ 
+-static void dz_out(struct dz_port *dport, unsigned offset, u16 value)
++static void dz_out(struct dz_port *dport, unsigned int offset, u16 value)
+ {
+ 	void __iomem *addr = dport->port.membase + offset;
+ 
+-- 
+1.9.1
 
