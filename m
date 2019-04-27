@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F023AC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8820C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22172087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947B42087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556389857;
-	bh=KgpVDj7RVRCu2YsGIB6tsrWMjVSt/680KIYZCSHK2a4=;
+	s=default; t=1556389910;
+	bh=d3DJjawEwF+6C2mJN9WhXTAhirTuBKrVbPAglHnUhL4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=IzXFtOQxg5hUrJ7KTzqIhk/poua0gIqneNhIsydRdiVjHPIFkDs4wj5c6mcEuOrgb
-	 rweYCF45ovob9VCcS5Bx/7naVoFZeVjQQpcAvtVZU1ERDFAc4VWrMJG/6bUjLEIV98
-	 PFto+v4B5LtSocMSEdbYQym+FCyJWLE7BUJ47rfs=
+	b=vJ2lI0MYLcABWInuDPx+X5GInGnfFciXrUY89MQq2To09OViCQXWK7zII/sICNLWF
+	 WA+bvJSzwU0kP5vD6w3SDtU6aVATNu9YpTqJ3mSQ+VCLMACH2yxJydjJl31c5gW06r
+	 vV3a9U5LNIoLfQfC1pcY755ggBByUAJ4/zNvW6IU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfD0Sap (ORCPT
+        id S1726370AbfD0Sbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 14:30:45 -0400
-Received: from casper.infradead.org ([85.118.1.10]:51972 "EHLO
+        Sat, 27 Apr 2019 14:31:49 -0400
+Received: from casper.infradead.org ([85.118.1.10]:52034 "EHLO
         casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD0Sao (ORCPT
+        with ESMTP id S1725942AbfD0Sbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 14:30:44 -0400
+        Sat, 27 Apr 2019 14:31:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
         MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UuyBRARXFkeWNW/TzT9RyoTVmYr/Qk/3O54Pp6X6tKU=; b=LOGPTBs/tUi43/1yBbHK/O+lor
-        LNHwMyOota26gWTsvjhunoScxLqAG+wMFo/6FlyY6c9CzsEZ/uj4VF4LvP62TNEmeQpFt1vgIEMMb
-        gpTtomOUfwif5041MyGLPhjw3Kw1AnIKmd4ZpT8u59lAbb6RK4r2SO2f0h/nYG5LPoPiwY7Ur8Di7
-        OEy0fvitcHcIUkXiSLe3ZTDAOKqsJCRRqjAVcsoCAET4VuXsNsnM4ROnWKytRC8hKX01kb+ZUVJ7x
-        m6rrDNmzFtUUY4+Whp6K6LHJgoYCmVG10fC5tPWyJhaXiKqblC7M0/v9IVzBwqzsaN08Gx8YjCR0/
-        enYcN5Zw==;
+        bh=1uHpzDXyV3o5TkJ1PZo+a8SqCH8uszKNt3MHK980r4w=; b=V7dv+80si9QpFL29SSpsmFJE0E
+        wngeMOLSTujsEXl348wjFORnba9tQokLgfphsK8qU0MAOonbsOEi3BtnRUw8JhMULI5qCpB0HG58V
+        L2QjbAsQWa1Yer1xJZqyQFHxx2PEBzUqg11PHc/9H+8kq4/oGOtGgI1gM4PjTccPkDim0mIJCZDoo
+        DZztBwTbw3ffl+TxhlHrqmYFR0/AEAkg73ftL7uIDabqiWvX/N9AIpE8YWE/wYuBhVG4yGZ8FgzVI
+        9Mjk/iFEUOwTpo3kT/8PkiFN9+wX3YUOi4rK3AaMcYP6JGIMN211yIlt2+4HrTBAdi6G3XM1lMmGC
+        GSPE4uCQ==;
 Received: from 177.17.250.151.dynamic.adsl.gvt.net.br ([177.17.250.151] helo=coco.lan)
         by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hKS5s-0004pt-Uw; Sat, 27 Apr 2019 18:30:37 +0000
-Date:   Sat, 27 Apr 2019 15:30:31 -0300
+        id 1hKS6w-0004tI-PE; Sat, 27 Apr 2019 18:31:43 +0000
+Date:   Sat, 27 Apr 2019 15:31:37 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Changbin Du <changbin.du@gmail.com>
 Cc:     Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 21/27] Documentation: x86: convert
- x86_64/boot-options.txt to reST
-Message-ID: <20190427153031.08489e65@coco.lan>
-In-Reply-To: <20190426153150.21228-22-changbin.du@gmail.com>
+Subject: Re: [PATCH 22/27] Documentation: x86: convert x86_64/uefi.txt to
+ reST
+Message-ID: <20190427153137.0bab2ab7@coco.lan>
+In-Reply-To: <20190426153150.21228-23-changbin.du@gmail.com>
 References: <20190426153150.21228-1-changbin.du@gmail.com>
-        <20190426153150.21228-22-changbin.du@gmail.com>
+        <20190426153150.21228-23-changbin.du@gmail.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -63,677 +63,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 26 Apr 2019 23:31:44 +0800
+Em Fri, 26 Apr 2019 23:31:45 +0800
 Changbin Du <changbin.du@gmail.com> escreveu:
 
 > This converts the plain text documentation to reStructuredText format and
 > add it to Sphinx TOC tree. No essential content change.
 > 
 > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  Documentation/x86/index.rst               |   1 +
->  Documentation/x86/x86_64/boot-options.rst | 326 ++++++++++++++++++++++
->  Documentation/x86/x86_64/boot-options.txt | 278 ------------------
->  Documentation/x86/x86_64/index.rst        |  10 +
->  4 files changed, 337 insertions(+), 278 deletions(-)
->  create mode 100644 Documentation/x86/x86_64/boot-options.rst
->  delete mode 100644 Documentation/x86/x86_64/boot-options.txt
->  create mode 100644 Documentation/x86/x86_64/index.rst
-> 
-> diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-> index 19323c5b89ce..e7becb146c30 100644
-> --- a/Documentation/x86/index.rst
-> +++ b/Documentation/x86/index.rst
-> @@ -27,3 +27,4 @@ Linux x86 Support
->     resctrl_ui
->     usb-legacy-support
->     i386/index
-> +   x86_64/index
-> diff --git a/Documentation/x86/x86_64/boot-options.rst b/Documentation/x86/x86_64/boot-options.rst
-> new file mode 100644
-> index 000000000000..2378f30c694a
-> --- /dev/null
-> +++ b/Documentation/x86/x86_64/boot-options.rst
-> @@ -0,0 +1,326 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +===========================
-> +AMD64 Specific Boot Options
-> +===========================
-> +
-> +There are many others (usually documented in driver documentation), but
-> +only the AMD64 specific ones are listed here.
-> +
-> +Machine check
-> +=============
-> +Please see Documentation/x86/x86_64/machinecheck for sysfs runtime tunables.
-> +
-> +   mce=off
-> +		Disable machine check
-> +   mce=no_cmci
-> +		Disable CMCI(Corrected Machine Check Interrupt) that
-> +		Intel processor supports.  Usually this disablement is
-> +		not recommended, but it might be handy if your hardware
-> +		is misbehaving.
-> +		Note that you'll get more problems without CMCI than with
-> +		due to the shared banks, i.e. you might get duplicated
-> +		error logs.
-> +   mce=dont_log_ce
-> +		Don't make logs for corrected errors.  All events reported
-> +		as corrected are silently cleared by OS.
-> +		This option will be useful if you have no interest in any
-> +		of corrected errors.
-> +   mce=ignore_ce
-> +		Disable features for corrected errors, e.g. polling timer
-> +		and CMCI.  All events reported as corrected are not cleared
-> +		by OS and remained in its error banks.
-> +		Usually this disablement is not recommended, however if
-> +		there is an agent checking/clearing corrected errors
-> +		(e.g. BIOS or hardware monitoring applications), conflicting
-> +		with OS's error handling, and you cannot deactivate the agent,
-> +		then this option will be a help.
-> +   mce=no_lmce
-> +		Do not opt-in to Local MCE delivery. Use legacy method
-> +		to broadcast MCEs.
-> +   mce=bootlog
-> +		Enable logging of machine checks left over from booting.
-> +		Disabled by default on AMD Fam10h and older because some BIOS
-> +		leave bogus ones.
-> +		If your BIOS doesn't do that it's a good idea to enable though
-> +		to make sure you log even machine check events that result
-> +		in a reboot. On Intel systems it is enabled by default.
-> +   mce=nobootlog
-> +		Disable boot machine check logging.
-> +   mce=tolerancelevel[,monarchtimeout] (number,number)
-> +		tolerance levels:
-> +		0: always panic on uncorrected errors, log corrected errors
-> +		1: panic or SIGBUS on uncorrected errors, log corrected errors
-> +		2: SIGBUS or log uncorrected errors, log corrected errors
-> +		3: never panic or SIGBUS, log all errors (for testing only)
-> +		Default is 1
-> +		Can be also set using sysfs which is preferable.
-> +		monarchtimeout:
-> +		Sets the time in us to wait for other CPUs on machine checks. 0
-> +		to disable.
-> +   mce=bios_cmci_threshold
-> +		Don't overwrite the bios-set CMCI threshold. This boot option
-> +		prevents Linux from overwriting the CMCI threshold set by the
-> +		bios. Without this option, Linux always sets the CMCI
-> +		threshold to 1. Enabling this may make memory predictive failure
-> +		analysis less effective if the bios sets thresholds for memory
-> +		errors since we will not see details for all errors.
-> +   mce=recovery
-> +		Force-enable recoverable machine check code paths
-> +
-> +   nomce (for compatibility with i386)
-> +		same as mce=off
-> +
-> +   Everything else is in sysfs now.
-> +
-> +APICs
-> +=====
-> +
-> +   apic
-> +	Use IO-APIC. Default
-> +
-> +   noapic
-> +	Don't use the IO-APIC.
-> +
-> +   disableapic
-> +	Don't use the local APIC
-> +
-> +   nolapic
-> +     Don't use the local APIC (alias for i386 compatibility)
-> +
-> +   pirq=...
-> +	See Documentation/x86/i386/IO-APIC.txt
-> +
-> +   noapictimer
-> +	Don't set up the APIC timer
-> +
-> +   no_timer_check
-> +	Don't check the IO-APIC timer. This can work around
-> +	problems with incorrect timer initialization on some boards.
-> +
-> +   apicpmtimer
-> +	Do APIC timer calibration using the pmtimer. Implies
-> +	apicmaintimer. Useful when your PIT timer is totally broken.
-> +
-> +Timing
-> +======
-> +
-> +  notsc
-> +    Deprecated, use tsc=unstable instead.
-> +
-> +  nohpet
-> +    Don't use the HPET timer.
-> +
-> +Idle loop
-> +=========
-> +
-> +  idle=poll
-> +    Don't do power saving in the idle loop using HLT, but poll for rescheduling
-> +    event. This will make the CPUs eat a lot more power, but may be useful
-> +    to get slightly better performance in multiprocessor benchmarks. It also
-> +    makes some profiling using performance counters more accurate.
-> +    Please note that on systems with MONITOR/MWAIT support (like Intel EM64T
-> +    CPUs) this option has no performance advantage over the normal idle loop.
-> +    It may also interact badly with hyperthreading.
-> +
-> +Rebooting
-> +=========
-> +
-> +   reboot=b[ios] | t[riple] | k[bd] | a[cpi] | e[fi] [, [w]arm | [c]old]
-> +    * bios - Use the CPU reboot vector for warm reset
-
-Please use the same convention as the one you used before, e. g.: 
-
-	* bios
-		Use the CPU reboot vector for warm reset
-
-and so on.
-
-After such change:
 
 Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-
-> +    * warm - Don't set the cold reboot flag
-> +    * cold - Set the cold reboot flag
-> +    * triple - Force a triple fault (init)
-> +    * kbd  - Use the keyboard controller. cold reset (default)
-> +    * acpi - Use the ACPI RESET_REG in the FADT. If ACPI is not configured or
-> +      the ACPI reset does not work, the reboot path attempts the reset
-> +      using the keyboard controller.
-> +    * efi - Use efi reset_system runtime service. If EFI is not configured or
-> +      the EFI reset does not work, the reboot path attempts the reset using
-> +      the keyboard controller.
-> +
-> +   Using warm reset will be much faster especially on big memory
-> +   systems because the BIOS will not go through the memory check.
-> +   Disadvantage is that not all hardware will be completely reinitialized
-> +   on reboot so there may be boot problems on some systems.
-> +
-> +   reboot=force
-> +     Don't stop other CPUs on reboot. This can make reboot more reliable
-> +     in some cases.
-> +
-> +Non Executable Mappings
-> +=======================
-> +
-> +  noexec=on|off
-> +    * on  - Enable(default)
-> +    * off - Disable
-> +
-> +NUMA
-> +====
-> +
-> +  numa=off
-> +    Only set up a single NUMA node spanning all memory.
-> +
-> +  numa=noacpi
-> +    Don't parse the SRAT table for NUMA setup
-> +
-> +  numa=fake=<size>[MG]
-> +    If given as a memory unit, fills all system RAM with nodes of
-> +    size interleaved over physical nodes.
-> +
-> +  numa=fake=<N>
-> +    If given as an integer, fills all system RAM with N fake nodes
-> +    interleaved over physical nodes.
-> +
-> +  numa=fake=<N>U
-> +    If given as an integer followed by 'U', it will divide each
-> +    physical node into N emulated nodes.
-> +
-> +ACPI
-> +====
-> +
-> +  acpi=off
-> +    Don't enable ACPI
-> +  acpi=ht
-> +    Use ACPI boot table parsing, but don't enable ACPI interpreter
-> +  acpi=force
-> +    Force ACPI on (currently not needed)
-> +  acpi=strict
-> +    Disable out of spec ACPI workarounds.
-> +  acpi_sci={edge,level,high,low}
-> +    Set up ACPI SCI interrupt.
-> +  acpi=noirq
-> +    Don't route interrupts
-> +  acpi=nocmcff
-> +    Disable firmware first mode for corrected errors. This
-> +    disables parsing the HEST CMC error source to check if
-> +    firmware has set the FF flag. This may result in
-> +    duplicate corrected error reports.
-> +
-> +PCI
-> +===
-> +
-> +  pci=off
-> +    Don't use PCI
-> +  pci=conf1
-> +    Use conf1 access.
-> +  pci=conf2
-> +    Use conf2 access.
-> +  pci=rom
-> +    Assign ROMs.
-> +  pci=assign-busses
-> +    Assign busses
-> +  pci=irqmask=MASK
-> +    Set PCI interrupt mask to MASK
-> +  pci=lastbus=NUMBER
-> +    Scan up to NUMBER busses, no matter what the mptable says.
-> +  pci=noacpi
-> +    Don't use ACPI to set up PCI interrupt routing.
-> +
-> +IOMMU (input/output memory management unit)
-> +===========================================
-> +Multiple x86-64 PCI-DMA mapping implementations exist, for example:
-> +
-> +   1. <lib/dma-direct.c>: use no hardware/software IOMMU at all
-> +      (e.g. because you have < 3 GB memory).
-> +      Kernel boot message: "PCI-DMA: Disabling IOMMU"
-> +
-> +   2. <arch/x86/kernel/amd_gart_64.c>: AMD GART based hardware IOMMU.
-> +      Kernel boot message: "PCI-DMA: using GART IOMMU"
-> +
-> +   3. <arch/x86_64/kernel/pci-swiotlb.c> : Software IOMMU implementation. Used
-> +      e.g. if there is no hardware IOMMU in the system and it is need because
-> +      you have >3GB memory or told the kernel to us it (iommu=soft))
-> +      Kernel boot message: "PCI-DMA: Using software bounce buffering
-> +      for IO (SWIOTLB)"
-> +
-> +   4. <arch/x86_64/pci-calgary.c> : IBM Calgary hardware IOMMU. Used in IBM
-> +      pSeries and xSeries servers. This hardware IOMMU supports DMA address
-> +      mapping with memory protection, etc.
-> +      Kernel boot message: "PCI-DMA: Using Calgary IOMMU"
-> +
-> +::
-> +
-> +  iommu=[<size>][,noagp][,off][,force][,noforce]
-> +  [,memaper[=<order>]][,merge][,fullflush][,nomerge]
-> +  [,noaperture][,calgary]
-> +
-> +General iommu options:
-> +
-> +    off
-> +      Don't initialize and use any kind of IOMMU.
-> +    noforce
-> +      Don't force hardware IOMMU usage when it is not needed. (default).
-> +    force
-> +      Force the use of the hardware IOMMU even when it is
-> +      not actually needed (e.g. because < 3 GB memory).
-> +    soft
-> +      Use software bounce buffering (SWIOTLB) (default for
-> +      Intel machines). This can be used to prevent the usage
-> +      of an available hardware IOMMU.
-> +
-> +iommu options only relevant to the AMD GART hardware IOMMU:
-> +
-> +    <size>
-> +      Set the size of the remapping area in bytes.
-> +    allowed
-> +      Overwrite iommu off workarounds for specific chipsets.
-> +    fullflush
-> +      Flush IOMMU on each allocation (default).
-> +    nofullflush
-> +      Don't use IOMMU fullflush.
-> +    memaper[=<order>]
-> +      Allocate an own aperture over RAM with size 32MB<<order.
-> +      (default: order=1, i.e. 64MB)
-> +    merge
-> +      Do scatter-gather (SG) merging. Implies "force" (experimental).
-> +    nomerge
-> +      Don't do scatter-gather (SG) merging.
-> +    noaperture
-> +      Ask the IOMMU not to touch the aperture for AGP.
-> +    noagp
-> +      Don't initialize the AGP driver and use full aperture.
-> +    panic
-> +      Always panic when IOMMU overflows.
-> +    calgary
-> +      Use the Calgary IOMMU if it is available
-> +
-> +iommu options only relevant to the software bounce buffering (SWIOTLB) IOMMU
-> +implementation:
-> +
-> +    swiotlb=<pages>[,force]
-> +      <pages>
-> +        Prereserve that many 128K pages for the software IO bounce buffering.
-> +      force
-> +        Force all IO through the software TLB.
-> +
-> +Settings for the IBM Calgary hardware IOMMU currently found in IBM
-> +pSeries and xSeries machines
-> +
-> +    calgary=[64k,128k,256k,512k,1M,2M,4M,8M]
-> +      Set the size of each PCI slot's translation table when using the
-> +      Calgary IOMMU. This is the size of the translation table itself
-> +      in main memory. The smallest table, 64k, covers an IO space of
-> +      32MB; the largest, 8MB table, can cover an IO space of 4GB.
-> +      Normally the kernel will make the right choice by itself.
-> +    calgary=[translate_empty_slots]
-> +      Enable translation even on slots that have no devices attached to
-> +      them, in case a device will be hotplugged in the future.
-> +    calgary=[disable=<PCI bus number>]
-> +      Disable translation on a given PHB. For
-> +      example, the built-in graphics adapter resides on the first bridge
-> +      (PCI bus number 0); if translation (isolation) is enabled on this
-> +      bridge, X servers that access the hardware directly from user
-> +      space might stop working. Use this option if you have devices that
-> +      are accessed from userspace directly on some PCI host bridge.
-> +    panic
-> +      Always panic when IOMMU overflows
-> +
-> +
-> +Miscellaneous
-> +=============
-> +
-> +  nogbpages
-> +    Do not use GB pages for kernel direct mappings.
-> +  gbpages
-> +    Use GB pages for kernel direct mappings.
-> diff --git a/Documentation/x86/x86_64/boot-options.txt b/Documentation/x86/x86_64/boot-options.txt
-> deleted file mode 100644
-> index abc53886655e..000000000000
-> --- a/Documentation/x86/x86_64/boot-options.txt
-> +++ /dev/null
-> @@ -1,278 +0,0 @@
-> -AMD64 specific boot options
-> -
-> -There are many others (usually documented in driver documentation), but
-> -only the AMD64 specific ones are listed here.
-> -
-> -Machine check
-> -
-> -   Please see Documentation/x86/x86_64/machinecheck for sysfs runtime tunables.
-> -
-> -   mce=off
-> -		Disable machine check
-> -   mce=no_cmci
-> -		Disable CMCI(Corrected Machine Check Interrupt) that
-> -		Intel processor supports.  Usually this disablement is
-> -		not recommended, but it might be handy if your hardware
-> -		is misbehaving.
-> -		Note that you'll get more problems without CMCI than with
-> -		due to the shared banks, i.e. you might get duplicated
-> -		error logs.
-> -   mce=dont_log_ce
-> -		Don't make logs for corrected errors.  All events reported
-> -		as corrected are silently cleared by OS.
-> -		This option will be useful if you have no interest in any
-> -		of corrected errors.
-> -   mce=ignore_ce
-> -		Disable features for corrected errors, e.g. polling timer
-> -		and CMCI.  All events reported as corrected are not cleared
-> -		by OS and remained in its error banks.
-> -		Usually this disablement is not recommended, however if
-> -		there is an agent checking/clearing corrected errors
-> -		(e.g. BIOS or hardware monitoring applications), conflicting
-> -		with OS's error handling, and you cannot deactivate the agent,
-> -		then this option will be a help.
-> -   mce=no_lmce
-> -		Do not opt-in to Local MCE delivery. Use legacy method
-> -		to broadcast MCEs.
-> -   mce=bootlog
-> -		Enable logging of machine checks left over from booting.
-> -		Disabled by default on AMD Fam10h and older because some BIOS
-> -		leave bogus ones.
-> -		If your BIOS doesn't do that it's a good idea to enable though
-> -		to make sure you log even machine check events that result
-> -		in a reboot. On Intel systems it is enabled by default.
-> -   mce=nobootlog
-> -		Disable boot machine check logging.
-> -   mce=tolerancelevel[,monarchtimeout] (number,number)
-> -		tolerance levels:
-> -		0: always panic on uncorrected errors, log corrected errors
-> -		1: panic or SIGBUS on uncorrected errors, log corrected errors
-> -		2: SIGBUS or log uncorrected errors, log corrected errors
-> -		3: never panic or SIGBUS, log all errors (for testing only)
-> -		Default is 1
-> -		Can be also set using sysfs which is preferable.
-> -		monarchtimeout:
-> -		Sets the time in us to wait for other CPUs on machine checks. 0
-> -		to disable.
-> -   mce=bios_cmci_threshold
-> -		Don't overwrite the bios-set CMCI threshold. This boot option
-> -		prevents Linux from overwriting the CMCI threshold set by the
-> -		bios. Without this option, Linux always sets the CMCI
-> -		threshold to 1. Enabling this may make memory predictive failure
-> -		analysis less effective if the bios sets thresholds for memory
-> -		errors since we will not see details for all errors.
-> -   mce=recovery
-> -		Force-enable recoverable machine check code paths
-> -
-> -   nomce (for compatibility with i386): same as mce=off
-> -
-> -   Everything else is in sysfs now.
-> -
-> -APICs
-> -
-> -   apic		 Use IO-APIC. Default
-> -
-> -   noapic	 Don't use the IO-APIC.
-> -
-> -   disableapic	 Don't use the local APIC
-> -
-> -   nolapic	 Don't use the local APIC (alias for i386 compatibility)
-> -
-> -   pirq=...	 See Documentation/x86/i386/IO-APIC.txt
-> -
-> -   noapictimer	 Don't set up the APIC timer
-> -
-> -   no_timer_check Don't check the IO-APIC timer. This can work around
-> -		 problems with incorrect timer initialization on some boards.
-> -   apicpmtimer
-> -		 Do APIC timer calibration using the pmtimer. Implies
-> -		 apicmaintimer. Useful when your PIT timer is totally
-> -		 broken.
-> -
-> -Timing
-> -
-> -  notsc
-> -  Deprecated, use tsc=unstable instead.
-> -
-> -  nohpet
-> -  Don't use the HPET timer.
-> -
-> -Idle loop
-> -
-> -  idle=poll
-> -  Don't do power saving in the idle loop using HLT, but poll for rescheduling
-> -  event. This will make the CPUs eat a lot more power, but may be useful
-> -  to get slightly better performance in multiprocessor benchmarks. It also
-> -  makes some profiling using performance counters more accurate.
-> -  Please note that on systems with MONITOR/MWAIT support (like Intel EM64T
-> -  CPUs) this option has no performance advantage over the normal idle loop.
-> -  It may also interact badly with hyperthreading.
-> -
-> -Rebooting
-> -
-> -   reboot=b[ios] | t[riple] | k[bd] | a[cpi] | e[fi] [, [w]arm | [c]old]
-> -   bios	  Use the CPU reboot vector for warm reset
-> -   warm   Don't set the cold reboot flag
-> -   cold   Set the cold reboot flag
-> -   triple Force a triple fault (init)
-> -   kbd    Use the keyboard controller. cold reset (default)
-> -   acpi   Use the ACPI RESET_REG in the FADT. If ACPI is not configured or the
-> -          ACPI reset does not work, the reboot path attempts the reset using
-> -          the keyboard controller.
-> -   efi    Use efi reset_system runtime service. If EFI is not configured or the
-> -          EFI reset does not work, the reboot path attempts the reset using
-> -          the keyboard controller.
-> -
-> -   Using warm reset will be much faster especially on big memory
-> -   systems because the BIOS will not go through the memory check.
-> -   Disadvantage is that not all hardware will be completely reinitialized
-> -   on reboot so there may be boot problems on some systems.
-> -
-> -   reboot=force
-> -
-> -   Don't stop other CPUs on reboot. This can make reboot more reliable
-> -   in some cases.
-> -
-> -Non Executable Mappings
-> -
-> -  noexec=on|off
-> -
-> -  on      Enable(default)
-> -  off     Disable
-> -
-> -NUMA
-> -
-> -  numa=off	Only set up a single NUMA node spanning all memory.
-> -
-> -  numa=noacpi   Don't parse the SRAT table for NUMA setup
-> -
-> -  numa=fake=<size>[MG]
-> -		If given as a memory unit, fills all system RAM with nodes of
-> -		size interleaved over physical nodes.
-> -
-> -  numa=fake=<N>
-> -		If given as an integer, fills all system RAM with N fake nodes
-> -		interleaved over physical nodes.
-> -
-> -  numa=fake=<N>U
-> -		If given as an integer followed by 'U', it will divide each
-> -		physical node into N emulated nodes.
-> -
-> -ACPI
-> -
-> -  acpi=off	Don't enable ACPI
-> -  acpi=ht	Use ACPI boot table parsing, but don't enable ACPI
-> -		interpreter
-> -  acpi=force	Force ACPI on (currently not needed)
-> -
-> -  acpi=strict   Disable out of spec ACPI workarounds.
-> -
-> -  acpi_sci={edge,level,high,low}  Set up ACPI SCI interrupt.
-> -
-> -  acpi=noirq	Don't route interrupts
-> -
-> -  acpi=nocmcff	Disable firmware first mode for corrected errors. This
-> -		disables parsing the HEST CMC error source to check if
-> -		firmware has set the FF flag. This may result in
-> -		duplicate corrected error reports.
-> -
-> -PCI
-> -
-> -  pci=off		Don't use PCI
-> -  pci=conf1		Use conf1 access.
-> -  pci=conf2		Use conf2 access.
-> -  pci=rom		Assign ROMs.
-> -  pci=assign-busses	Assign busses
-> -  pci=irqmask=MASK	Set PCI interrupt mask to MASK
-> -  pci=lastbus=NUMBER	Scan up to NUMBER busses, no matter what the mptable says.
-> -  pci=noacpi		Don't use ACPI to set up PCI interrupt routing.
-> -
-> -IOMMU (input/output memory management unit)
-> -
-> - Multiple x86-64 PCI-DMA mapping implementations exist, for example:
-> -
-> -   1. <lib/dma-direct.c>: use no hardware/software IOMMU at all
-> -      (e.g. because you have < 3 GB memory).
-> -      Kernel boot message: "PCI-DMA: Disabling IOMMU"
-> -
-> -   2. <arch/x86/kernel/amd_gart_64.c>: AMD GART based hardware IOMMU.
-> -      Kernel boot message: "PCI-DMA: using GART IOMMU"
-> -
-> -   3. <arch/x86_64/kernel/pci-swiotlb.c> : Software IOMMU implementation. Used
-> -      e.g. if there is no hardware IOMMU in the system and it is need because
-> -      you have >3GB memory or told the kernel to us it (iommu=soft))
-> -      Kernel boot message: "PCI-DMA: Using software bounce buffering
-> -      for IO (SWIOTLB)"
-> -
-> -   4. <arch/x86_64/pci-calgary.c> : IBM Calgary hardware IOMMU. Used in IBM
-> -      pSeries and xSeries servers. This hardware IOMMU supports DMA address
-> -      mapping with memory protection, etc.
-> -      Kernel boot message: "PCI-DMA: Using Calgary IOMMU"
-> -
-> - iommu=[<size>][,noagp][,off][,force][,noforce]
-> -	[,memaper[=<order>]][,merge][,fullflush][,nomerge]
-> -	[,noaperture][,calgary]
-> -
-> -  General iommu options:
-> -    off                Don't initialize and use any kind of IOMMU.
-> -    noforce            Don't force hardware IOMMU usage when it is not needed.
-> -                       (default).
-> -    force              Force the use of the hardware IOMMU even when it is
-> -                       not actually needed (e.g. because < 3 GB memory).
-> -    soft               Use software bounce buffering (SWIOTLB) (default for
-> -                       Intel machines). This can be used to prevent the usage
-> -                       of an available hardware IOMMU.
-> -
-> -  iommu options only relevant to the AMD GART hardware IOMMU:
-> -    <size>             Set the size of the remapping area in bytes.
-> -    allowed            Overwrite iommu off workarounds for specific chipsets.
-> -    fullflush          Flush IOMMU on each allocation (default).
-> -    nofullflush        Don't use IOMMU fullflush.
-> -    memaper[=<order>]  Allocate an own aperture over RAM with size 32MB<<order.
-> -                       (default: order=1, i.e. 64MB)
-> -    merge              Do scatter-gather (SG) merging. Implies "force"
-> -                       (experimental).
-> -    nomerge            Don't do scatter-gather (SG) merging.
-> -    noaperture         Ask the IOMMU not to touch the aperture for AGP.
-> -    noagp              Don't initialize the AGP driver and use full aperture.
-> -    panic              Always panic when IOMMU overflows.
-> -    calgary            Use the Calgary IOMMU if it is available
-> -
-> -  iommu options only relevant to the software bounce buffering (SWIOTLB) IOMMU
-> -  implementation:
-> -    swiotlb=<pages>[,force]
-> -    <pages>            Prereserve that many 128K pages for the software IO
-> -                       bounce buffering.
-> -    force              Force all IO through the software TLB.
-> -
-> -  Settings for the IBM Calgary hardware IOMMU currently found in IBM
-> -  pSeries and xSeries machines:
-> -
-> -    calgary=[64k,128k,256k,512k,1M,2M,4M,8M]
-> -    calgary=[translate_empty_slots]
-> -    calgary=[disable=<PCI bus number>]
-> -    panic              Always panic when IOMMU overflows
-> -
-> -    64k,...,8M - Set the size of each PCI slot's translation table
-> -    when using the Calgary IOMMU. This is the size of the translation
-> -    table itself in main memory. The smallest table, 64k, covers an IO
-> -    space of 32MB; the largest, 8MB table, can cover an IO space of
-> -    4GB. Normally the kernel will make the right choice by itself.
-> -
-> -    translate_empty_slots - Enable translation even on slots that have
-> -    no devices attached to them, in case a device will be hotplugged
-> -    in the future.
-> -
-> -    disable=<PCI bus number> - Disable translation on a given PHB. For
-> -    example, the built-in graphics adapter resides on the first bridge
-> -    (PCI bus number 0); if translation (isolation) is enabled on this
-> -    bridge, X servers that access the hardware directly from user
-> -    space might stop working. Use this option if you have devices that
-> -    are accessed from userspace directly on some PCI host bridge.
-> -
-> -Miscellaneous
-> -
-> -	nogbpages
-> -		Do not use GB pages for kernel direct mappings.
-> -	gbpages
-> -		Use GB pages for kernel direct mappings.
+> ---
+>  Documentation/x86/x86_64/index.rst            |  1 +
+>  .../x86/x86_64/{uefi.txt => uefi.rst}         | 30 ++++++++++++++-----
+>  2 files changed, 24 insertions(+), 7 deletions(-)
+>  rename Documentation/x86/x86_64/{uefi.txt => uefi.rst} (79%)
+> 
 > diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
-> new file mode 100644
-> index 000000000000..a8cf7713cac9
-> --- /dev/null
+> index a8cf7713cac9..ddfa1f9d4193 100644
+> --- a/Documentation/x86/x86_64/index.rst
 > +++ b/Documentation/x86/x86_64/index.rst
-> @@ -0,0 +1,10 @@
+> @@ -8,3 +8,4 @@ x86_64 Support
+>     :maxdepth: 2
+>  
+>     boot-options
+> +   uefi
+> diff --git a/Documentation/x86/x86_64/uefi.txt b/Documentation/x86/x86_64/uefi.rst
+> similarity index 79%
+> rename from Documentation/x86/x86_64/uefi.txt
+> rename to Documentation/x86/x86_64/uefi.rst
+> index a5e2b4fdb170..88c3ba32546f 100644
+> --- a/Documentation/x86/x86_64/uefi.txt
+> +++ b/Documentation/x86/x86_64/uefi.rst
+> @@ -1,5 +1,8 @@
 > +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +==============
-> +x86_64 Support
-> +==============
+> +=====================================
+>  General note on [U]EFI x86_64 support
+> --------------------------------------
+> +=====================================
+>  
+>  The nomenclature EFI and UEFI are used interchangeably in this document.
+>  
+> @@ -14,29 +17,42 @@ with EFI firmware and specifications are listed below.
+>  
+>  3. x86_64 platform with EFI/UEFI firmware.
+>  
+> -Mechanics:
+> +Mechanics
+>  ---------
+> -- Build the kernel with the following configuration.
 > +
-> +.. toctree::
-> +   :maxdepth: 2
+> +- Build the kernel with the following configuration::
 > +
-> +   boot-options
+>  	CONFIG_FB_EFI=y
+>  	CONFIG_FRAMEBUFFER_CONSOLE=y
+> +
+>    If EFI runtime services are expected, the following configuration should
+> -  be selected.
+> +  be selected::
+> +
+>  	CONFIG_EFI=y
+>  	CONFIG_EFI_VARS=y or m		# optional
+> +
+>  - Create a VFAT partition on the disk
+>  - Copy the following to the VFAT partition:
+> +
+>  	elilo bootloader with x86_64 support, elilo configuration file,
+>  	kernel image built in first step and corresponding
+>  	initrd. Instructions on building elilo	and its dependencies
+>  	can be found in the elilo sourceforge project.
+> +
+>  - Boot to EFI shell and invoke elilo choosing the kernel image built
+>    in first step.
+>  - If some or all EFI runtime services don't work, you can try following
+>    kernel command line parameters to turn off some or all EFI runtime
+>    services.
+> -	noefi		turn off all EFI runtime services
+> -	reboot_type=k	turn off EFI reboot runtime service
+> +
+> +	noefi
+> +		turn off all EFI runtime services
+> +	reboot_type=k
+> +		turn off EFI reboot runtime service
+> +
+>  - If the EFI memory map has additional entries not in the E820 map,
+>    you can include those entries in the kernels memory map of available
+>    physical RAM by using the following kernel command line parameter.
+> -	add_efi_memmap	include EFI memory map of available physical RAM
+> +
+> +	add_efi_memmap
+> +		include EFI memory map of available physical RAM
 
 
 
