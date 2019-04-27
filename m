@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5C3C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12C2C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942F22087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978E52166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfD0MxJ (ORCPT
+        id S1726836AbfD0MxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:53:09 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:60007 "EHLO
+        Sat, 27 Apr 2019 08:53:10 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:57935 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfD0MxH (ORCPT
+        with ESMTP id S1726488AbfD0MxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 08:53:07 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MWRZr-1hIx843db1-00XpY8; Sat, 27 Apr 2019 14:52:44 +0200
+ 1MNss4-1h9I592Io4-00OFB5; Sat, 27 Apr 2019 14:52:39 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,65 +34,57 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 12/41] drivers: tty: serial: uartlite: use dev_dbg() instead of pr_debug()
-Date:   Sat, 27 Apr 2019 14:51:53 +0200
-Message-Id: <1556369542-13247-13-git-send-email-info@metux.net>
+Subject: [PATCH 07/41] drivers: tty: serial: sb1250-duart: include <linux/io.h> instead of <asm/io.h>
+Date:   Sat, 27 Apr 2019 14:51:48 +0200
+Message-Id: <1556369542-13247-8-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:iKlivJb6BzLykaezfbMDcQZdn+ix2ooVfsC6tW0pEhl98LAPDeE
- JRRVgVcfczmetBZDaIj6bTxrIsuLJZWRq491LJqAx+h9NbgwnoIDbHxcrTYcX/2PcSRokum
- actVckV0OuFGgmAK7gUuP0HXW1/BSfc94DTxmg7pJbcD5SZVKeVCxYgAJklKBryYGvN1CJo
- ibF50Jd1+Py/n87SQbwsQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:u5P2g8JRH2I=:qGaH8ryqR7sUqOGrLtEnq0
- 2WfUNdHCnLg10s1ecEg65pn/njtDsMqOeP8gNEpxCMTzcWsLT9VA4DU3CEBVa3HCzjiKJcfHG
- eTHURytwvHGp7s9jZVE5iai0hKZDLmT9tnCMG0O5bDybrILrbz2OaCok/sor106qS90eCocZA
- WHMkOGw0j1qJeCv0leK1Z4fuVANM96a4sKdqYlnLL2v1g0Yy7Qv2BA/TyHUBS+K7r2RGhcM93
- TQCZfinRHziPPxnqY8q6GJipcuPVsuiLqzJC0H8npIwN2FnPLLAPYV/vgXo00WkXMfxjp7mWe
- s9cDM9K+72I9v9RY2NCSZ4HlPW78uNjLRoKXH9UI6yEUBsHch/+0OxFFZTB2NnEgI5hM4CxaA
- aW2LQCsOERK9kjsOnJFUi/mvk0axc5fq8TDylOAwQOSe0Nkpla45hTAsiHS221ZrBXCbrV5zA
- vp2fnOF01p7Eyj5ee/bkdEt+KrcA0YHPLrsTPFX/ReZeKT0iqAavOA1IICkPrbO/J9OgpkqPM
- +e5kU1Y2uDllo5BJ52L6yldoO9jgsv77olPmdDGKDcAfFx4RUBuMjYer7MOaRBSCwUzPaMwsD
- tgJ7G6LdN06zK0oIyp9V0oKzUCmMe1VTLSZaAIbSfUawtMPghR9Z49rdDsyfAYZ2DohkJIPTF
- xQn1Ht0ha1HyECC5uOoj7J38mbBQIygbj3uOhqVZj78SrVH8ls26OFebX6TDxvvF5GTZrl2n3
- rnTYYYquT1fzWtIJQj/tIvkv4pDPeDZLTev6ZQ==
+X-Provags-ID: V03:K1:rdRXb5foI78ZUKXg0PVAe5Z5nzYlAxuzsWdK2nGI/ZCG+/6jRlM
+ hI3kp/kBUUgLKHfqLAS7fc8k7GQ2ADy4ZKXhqdqZiryVc7Z/Z2r9L5PNnJpvCGJ5Wm3QKlp
+ qfPO4bQ3xuErAjl1GwNDMV08O2NC44IuFF/UesW2Ttt/YM+Ee5ZbuxprWyPUKJV4WjcRcmA
+ KbeNYOb/RogJgZxW+H2Qg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uIkJBFuyWwE=:my0C5wt5HQzdkDWW3sqLjW
+ G57X9rEDzrdejwTIohdfyXbnVkKKkUjsq7O2WO6aaWwA/K7asaaqwwpANJiqlYwmtNzUe3m2F
+ dIy98aX9m8AzimgrUpqTFcjmsVSy5jVNnA897BjXITdiOKUbqhDiJ8SEfxopoVvXA0ci4pE/u
+ sCpkkmo4B6+eALwD3PacR4l75/GBQIcgR/X9YlludU/jwMa2Liob4BAm+iUTx6dTWwQyokWeE
+ 5ueRRrNwERDVxlERN61XurD0oaRK6EZk3C+alaLfFflaumVLpveKjf8NF9QNOKUCoI5MVXyiX
+ HXunQn4iVV9oEPQo+yLEIGF4UfEE0Rsd1GkU6LkB/+Odbn2uQLNNWiC8KWt07Y56oarXOxrDk
+ lA4uTn5RNuonkl8BJC6IAyi1AfCnyQmAgAOJlNSl4m+3PYHPhOrGjM7sgGTlh19tXj+5/CybH
+ AVSJ2WFmYCNhq6mW/70XSDtRxr/UK1p1rzHbSTsjFAmr4I8RVMaqj3ZxfFotbghjdQK1581Pv
+ 69TkpSYev0ozeW+8xQuT5XGyqbrpcxKEzP7NDPBjAjIAKmwxFXVsCjrsmCQi802n4t/j7rgtj
+ p2/1WTI2ZaKz4ftVg0fU4hcU0pFIksjotyumR0cs9ECKOFII7ztSji+wY2fpiuHhZ8jQiu3Va
+ 80px75vPXYZJQn8SviB8k53dJGNllXCrNlg32KHH9lod8kduYDxsK8NA4RIZxyaO3IOTafLNX
+ tjDPR9hNlZyMzNBlAyzerGiY2oMGtk33LyAGRQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using dev_dbg() instead of pr_debg() for more consistent output.
-(prints device name, etc).
+Fix checkpatch warning:
+
+    WARNING: Use #include <linux/io.h> instead of <asm/io.h>
+    #41: FILE: drivers/tty/serial/sb1250-duart.c:41:
+    +#include <asm/io.h>
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/uartlite.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/tty/serial/sb1250-duart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index b8b912b..44d65bd 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -352,7 +352,8 @@ static int ulite_request_port(struct uart_port *port)
- 	struct uartlite_data *pdata = port->private_data;
- 	int ret;
+diff --git a/drivers/tty/serial/sb1250-duart.c b/drivers/tty/serial/sb1250-duart.c
+index 655961c..b4342c8 100644
+--- a/drivers/tty/serial/sb1250-duart.c
++++ b/drivers/tty/serial/sb1250-duart.c
+@@ -38,7 +38,7 @@
+ #include <linux/types.h>
  
--	pr_debug("ulite console: port=%p; port->mapbase=%llx\n",
-+	dev_dbg(port->dev,
-+		"ulite console: port=%p; port->mapbase=%llx\n",
- 		 port, (unsigned long long) port->mapbase);
+ #include <linux/refcount.h>
+-#include <asm/io.h>
++#include <linux/io.h>
+ #include <asm/war.h>
  
- 	if (!request_mem_region(port->mapbase, ULITE_REGION, "uartlite")) {
-@@ -519,7 +520,8 @@ static int ulite_console_setup(struct console *co, char *options)
- 
- 	/* Has the device been initialized yet? */
- 	if (!port->mapbase) {
--		pr_debug("console on ttyUL%i not present\n", co->index);
-+		dev_dbg(port->dev, "console on ttyUL%i not present\n",
-+			co->index);
- 		return -ENODEV;
- 	}
- 
+ #include <asm/sibyte/sb1250.h>
 -- 
 1.9.1
 
