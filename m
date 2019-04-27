@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7959CC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47678C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4744A206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17951206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329871;
-	bh=GROyF/lq+5IDeNEOW6pAINFQZfxolgvGfSZ0E8R0nlU=;
+	s=default; t=1556329877;
+	bh=b6Y+v7GfqHgL1n17+OYWjET6ppeO7s472YVNnOFtXrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=osSiU2T8y9wKAaCdwgqMFosjs8tV8UBClQfA7GciXpZVF3qegry3OH2nk7Pu0LevC
-	 2yRqQy4lHswohbZfDapib5klV25S1wnhkbBqhT51imMo7K6+q2FVRSxF+7tva3VYak
-	 W32VtmUy7Wz6gwrQQdmJGhP7yYm3H9o0f1t8Vbpo=
+	b=wj0pyXlnL6BvR+3pi8iGmVy7PTnMJfIITL9i33DrP3Se6U3b0i1llQ7Cd5T4UY8GW
+	 qXEFGRPs7GXxaucZ2JAILY5RCK2AuUu8icuNKoTajpeZ8yupWSMIx0ITW7zX07JUns
+	 EdcSWS/7EsIKlytx+Xi1ebf5Vq7/DNxGjIZGZY1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfD0BvJ (ORCPT
+        id S1728201AbfD0BlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:51:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44960 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:41:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbfD0BlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:13 -0400
+        id S1728163AbfD0BlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 771C720B7C;
-        Sat, 27 Apr 2019 01:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2A2620873;
+        Sat, 27 Apr 2019 01:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329273;
-        bh=GROyF/lq+5IDeNEOW6pAINFQZfxolgvGfSZ0E8R0nlU=;
+        s=default; t=1556329264;
+        bh=b6Y+v7GfqHgL1n17+OYWjET6ppeO7s472YVNnOFtXrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lrov1/Z76MNProBinmYZff+DQjAaUyUVNicNjyvFiSaZReQkGufOOqCB30iZZUL2f
-         4b8VLUFcjDLrxjejTepPW+PjAh2OjjgZpJ4ftnsaoHeLdgkFHxoUMpJjXFBdkn6ZBh
-         H/4eefRGYbWEAu/cHl9PZb+lrc4z7g2WXCbXk8C4=
+        b=Mv+5IggMi0WCPMBDsqjfgq2n1bfUyOa7ac+LyKTyxem4HKsWUoLSo4QY4JK8ulVug
+         XHvOmtJ0FpahChEWW5tiOBvPZcZTcHxUAdEgG/sJZogvnwNBPkPTxhMy+WfC251+Vw
+         MQ46GRf7Awy4qvIwO9rjGpmXeicUickK1oXY1muI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     John Hsu <KCHSU0@nuvoton.com>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 14/53] ASoC: stm32: dfsdm: manage multiple prepare
-Date:   Fri, 26 Apr 2019 21:40:11 -0400
-Message-Id: <20190427014051.7522-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/53] ASoC: nau8824: fix the issue of the widget with prefix name
+Date:   Fri, 26 Apr 2019 21:40:05 -0400
+Message-Id: <20190427014051.7522-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -59,94 +58,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+From: John Hsu <KCHSU0@nuvoton.com>
 
-[ Upstream commit 19441e35a43b616ea6afad91ed0d9e77268d8f6a ]
+[ Upstream commit 844a4a362dbec166b44d6b9b3dd45b08cb273703 ]
 
-The DFSDM must be stopped when a new setting is applied.
-restart systematically DFSDM on multiple prepare calls,
-to apply changes.
+The driver has two issues when machine add prefix name for codec.
+(1)The stream name of DAI can't find the AIF widgets.
+(2)The drivr can enable/disalbe the MICBIAS and SAR widgets.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+The patch will fix these issues caused by prefixed name added.
+
+Signed-off-by: John Hsu <KCHSU0@nuvoton.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/stm/stm32_adfsdm.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ sound/soc/codecs/nau8824.c | 46 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_adfsdm.c b/sound/soc/stm/stm32_adfsdm.c
-index 706ff005234f..71d341b732a4 100644
---- a/sound/soc/stm/stm32_adfsdm.c
-+++ b/sound/soc/stm/stm32_adfsdm.c
-@@ -9,6 +9,7 @@
+diff --git a/sound/soc/codecs/nau8824.c b/sound/soc/codecs/nau8824.c
+index 468d5143e2c4..663a208c2f78 100644
+--- a/sound/soc/codecs/nau8824.c
++++ b/sound/soc/codecs/nau8824.c
+@@ -681,8 +681,8 @@ static const struct snd_soc_dapm_widget nau8824_dapm_widgets[] = {
+ 	SND_SOC_DAPM_ADC("ADCR", NULL, NAU8824_REG_ANALOG_ADC_2,
+ 		NAU8824_ADCR_EN_SFT, 0),
  
- #include <linux/clk.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
+-	SND_SOC_DAPM_AIF_OUT("AIFTX", "HiFi Capture", 0, SND_SOC_NOPM, 0, 0),
+-	SND_SOC_DAPM_AIF_IN("AIFRX", "HiFi Playback", 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("AIFTX", "Capture", 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("AIFRX", "Playback", 0, SND_SOC_NOPM, 0, 0),
  
-@@ -37,6 +38,8 @@ struct stm32_adfsdm_priv {
- 	/* PCM buffer */
- 	unsigned char *pcm_buff;
- 	unsigned int pos;
-+
-+	struct mutex lock; /* protect against race condition on iio state */
- };
- 
- static const struct snd_pcm_hardware stm32_adfsdm_pcm_hw = {
-@@ -62,10 +65,12 @@ static void stm32_adfsdm_shutdown(struct snd_pcm_substream *substream,
- {
- 	struct stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(dai);
- 
-+	mutex_lock(&priv->lock);
- 	if (priv->iio_active) {
- 		iio_channel_stop_all_cb(priv->iio_cb);
- 		priv->iio_active = false;
+ 	SND_SOC_DAPM_DAC("DACL", NULL, NAU8824_REG_RDAC,
+ 		NAU8824_DACL_EN_SFT, 0),
+@@ -831,6 +831,36 @@ static void nau8824_int_status_clear_all(struct regmap *regmap)
  	}
-+	mutex_unlock(&priv->lock);
  }
  
- static int stm32_adfsdm_dai_prepare(struct snd_pcm_substream *substream,
-@@ -74,13 +79,19 @@ static int stm32_adfsdm_dai_prepare(struct snd_pcm_substream *substream,
- 	struct stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(dai);
- 	int ret;
- 
-+	mutex_lock(&priv->lock);
-+	if (priv->iio_active) {
-+		iio_channel_stop_all_cb(priv->iio_cb);
-+		priv->iio_active = false;
++static void nau8824_dapm_disable_pin(struct nau8824 *nau8824, const char *pin)
++{
++	struct snd_soc_dapm_context *dapm = nau8824->dapm;
++	const char *prefix = dapm->component->name_prefix;
++	char prefixed_pin[80];
++
++	if (prefix) {
++		snprintf(prefixed_pin, sizeof(prefixed_pin), "%s %s",
++			 prefix, pin);
++		snd_soc_dapm_disable_pin(dapm, prefixed_pin);
++	} else {
++		snd_soc_dapm_disable_pin(dapm, pin);
 +	}
++}
 +
- 	ret = iio_write_channel_attribute(priv->iio_ch,
- 					  substream->runtime->rate, 0,
- 					  IIO_CHAN_INFO_SAMP_FREQ);
- 	if (ret < 0) {
- 		dev_err(dai->dev, "%s: Failed to set %d sampling rate\n",
- 			__func__, substream->runtime->rate);
--		return ret;
-+		goto out;
- 	}
- 
- 	if (!priv->iio_active) {
-@@ -92,6 +103,9 @@ static int stm32_adfsdm_dai_prepare(struct snd_pcm_substream *substream,
- 				__func__, ret);
- 	}
- 
-+out:
-+	mutex_unlock(&priv->lock);
++static void nau8824_dapm_enable_pin(struct nau8824 *nau8824, const char *pin)
++{
++	struct snd_soc_dapm_context *dapm = nau8824->dapm;
++	const char *prefix = dapm->component->name_prefix;
++	char prefixed_pin[80];
 +
- 	return ret;
- }
++	if (prefix) {
++		snprintf(prefixed_pin, sizeof(prefixed_pin), "%s %s",
++			 prefix, pin);
++		snd_soc_dapm_force_enable_pin(dapm, prefixed_pin);
++	} else {
++		snd_soc_dapm_force_enable_pin(dapm, pin);
++	}
++}
++
+ static void nau8824_eject_jack(struct nau8824 *nau8824)
+ {
+ 	struct snd_soc_dapm_context *dapm = nau8824->dapm;
+@@ -839,8 +869,8 @@ static void nau8824_eject_jack(struct nau8824 *nau8824)
+ 	/* Clear all interruption status */
+ 	nau8824_int_status_clear_all(regmap);
  
-@@ -298,6 +312,7 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+-	snd_soc_dapm_disable_pin(dapm, "SAR");
+-	snd_soc_dapm_disable_pin(dapm, "MICBIAS");
++	nau8824_dapm_disable_pin(nau8824, "SAR");
++	nau8824_dapm_disable_pin(nau8824, "MICBIAS");
+ 	snd_soc_dapm_sync(dapm);
  
- 	priv->dev = &pdev->dev;
- 	priv->dai_drv = stm32_adfsdm_dai;
-+	mutex_init(&priv->lock);
+ 	/* Enable the insertion interruption, disable the ejection
+@@ -870,8 +900,8 @@ static void nau8824_jdet_work(struct work_struct *work)
+ 	struct regmap *regmap = nau8824->regmap;
+ 	int adc_value, event = 0, event_mask = 0;
  
- 	dev_set_drvdata(&pdev->dev, priv);
+-	snd_soc_dapm_force_enable_pin(dapm, "MICBIAS");
+-	snd_soc_dapm_force_enable_pin(dapm, "SAR");
++	nau8824_dapm_enable_pin(nau8824, "MICBIAS");
++	nau8824_dapm_enable_pin(nau8824, "SAR");
+ 	snd_soc_dapm_sync(dapm);
  
+ 	msleep(100);
+@@ -882,8 +912,8 @@ static void nau8824_jdet_work(struct work_struct *work)
+ 	if (adc_value < HEADSET_SARADC_THD) {
+ 		event |= SND_JACK_HEADPHONE;
+ 
+-		snd_soc_dapm_disable_pin(dapm, "SAR");
+-		snd_soc_dapm_disable_pin(dapm, "MICBIAS");
++		nau8824_dapm_disable_pin(nau8824, "SAR");
++		nau8824_dapm_disable_pin(nau8824, "MICBIAS");
+ 		snd_soc_dapm_sync(dapm);
+ 	} else {
+ 		event |= SND_JACK_HEADSET;
 -- 
 2.19.1
 
