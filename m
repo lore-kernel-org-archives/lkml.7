@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F480C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75482C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A773206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B0F8206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329854;
-	bh=Vjb5DB4eL9LF5XxxPfHZjsMAugU5tNqJgdfcKbIGs2Y=;
+	s=default; t=1556329864;
+	bh=3SuFXNmCt/1K8OZZoRD1Yo9aQdwf75NYDRQgb1QAxyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OwsDDxOq8PBJXUwZ/f2vu+fnpxpSdgqp4AqnrDx4COBPawO95XpUZYbItPjZDD+jx
-	 x8jWuLNEYhUuSInyhzJBXh8b/gxS/FoaxcDDcqPwa5eEfYFdaqMsmLhiBXxBjXY1oD
-	 nMRpROBena0UeXtUdJaPk8KgrvswRn94u3K82diI=
+	b=wZAV7Lf/uc4WwPoBueMktXRfETRCXVMy9chkpm6/WJtzqkiWHyxZp1sknJaTHOGWr
+	 /+vQm3PiY5hgMAyFHQYlegC4jY0QigpZS6LZcwm8aL4AzxUbYWt0cMBLBfVNjJbNai
+	 paAiwsa08hGWkCFV6/mZfJBeGDnA2x48G279FqpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbfD0Bux (ORCPT
+        id S1728570AbfD0BvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:50:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45026 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:51:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbfD0BlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:17 -0400
+        id S1728217AbfD0BlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D5352168B;
-        Sat, 27 Apr 2019 01:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83BCB20873;
+        Sat, 27 Apr 2019 01:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329276;
-        bh=Vjb5DB4eL9LF5XxxPfHZjsMAugU5tNqJgdfcKbIGs2Y=;
+        s=default; t=1556329275;
+        bh=3SuFXNmCt/1K8OZZoRD1Yo9aQdwf75NYDRQgb1QAxyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPcTycNzgGCUyyIdXQHGsFJPzGry5EViG/MHNRgyi4DNAJ4W/oXUlXC8iRZ+hr3c0
-         RbKZR0DXz8tUCtlmtl3XyXaN7tDqImxdlRMj9rsvXJu0yL7RLUGeA66a2CbQENz/Xi
-         JOyEl7XbzjvFV8z9mRnswuGmVCVyjQr/YO2J+Tn4=
+        b=pSw2VBCFxJtcnhC2W2AvkRnyKMy2pOXClvI/lQx6ourXh+vdJTUb7W8EawvJJ6f4v
+         YnI6tQVhIRXSgnz7Wo0UDeRbmylO1qvy9hgKjq8Q/UXR5Y0ljV1rLkEG9CLrvp1POs
+         piyZVS3lXd/qKh/ayEzLlQybN1Q9c1M7qLwlAbeQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Daniel Mack <daniel@zonque.org>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 17/53] ASoC: dapm: Fix NULL pointer dereference in snd_soc_dapm_free_kcontrol
-Date:   Fri, 26 Apr 2019 21:40:14 -0400
-Message-Id: <20190427014051.7522-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 16/53] ASoC: cs4270: Set auto-increment bit for register writes
+Date:   Fri, 26 Apr 2019 21:40:13 -0400
+Message-Id: <20190427014051.7522-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -59,36 +57,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+From: Daniel Mack <daniel@zonque.org>
 
-[ Upstream commit cacea3a90e211f0c111975535508d446a4a928d2 ]
+[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
 
-w_text_param can be NULL and it is being dereferenced without checking.
-Add the missing sanity check to prevent  NULL pointer dereference.
+The CS4270 does not by default increment the register address on
+consecutive writes. During normal operation it doesn't matter as all
+register accesses are done individually. At resume time after suspend,
+however, the regcache code gathers the biggest possible block of
+registers to sync and sends them one on one go.
 
-Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To fix this, set the INCR bit in all cases.
+
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/codecs/cs4270.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 9b78fb3daa7b..2257b1b0151c 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3847,6 +3847,10 @@ snd_soc_dapm_free_kcontrol(struct snd_soc_card *card,
- 	int count;
+diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
+index 3c266eeb89bf..007ce9f48e44 100644
+--- a/sound/soc/codecs/cs4270.c
++++ b/sound/soc/codecs/cs4270.c
+@@ -642,6 +642,7 @@ static const struct regmap_config cs4270_regmap = {
+ 	.reg_defaults =		cs4270_reg_defaults,
+ 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
+ 	.cache_type =		REGCACHE_RBTREE,
++	.write_flag_mask =	CS4270_I2C_INCR,
  
- 	devm_kfree(card->dev, (void *)*private_value);
-+
-+	if (!w_param_text)
-+		return;
-+
- 	for (count = 0 ; count < num_params; count++)
- 		devm_kfree(card->dev, (void *)w_param_text[count]);
- 	devm_kfree(card->dev, w_param_text);
+ 	.readable_reg =		cs4270_reg_is_readable,
+ 	.volatile_reg =		cs4270_reg_is_volatile,
 -- 
 2.19.1
 
