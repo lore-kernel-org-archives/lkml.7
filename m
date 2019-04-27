@@ -2,298 +2,149 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A29C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 14:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47764C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 14:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 001ED2087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 14:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1343F208C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 14:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556376113;
-	bh=iPh/HmZEwEbH92s52aoXT/mortbs5izeBLnaOKHaSSA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mQZ9aJpUKuKANhTFlhwGf3pj7zPxB+fubgUWCwxr/GpN56O44E7d5DKIqS71fvjbw
-	 +ANzsCcD4hNXMITJBY3xuvm1vT1Py0qYwZeIEylMJcqDcfdJTH1owlLEcm4f2wTKhs
-	 SSgQ7tnNcjtv/6AjYY/psvIq0ufJi5jAQanmyBos=
+	s=default; t=1556376183;
+	bh=jNV/e4YhYBinB097bju95I0CnoakFJ7NOkDiSFdkxKM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=QskFG5nDtHOGKuZC7VAZ3ZH21orM0V6tcMmqSVA+qh9CSK7L0SXeLxqdu2duS2Q9X
+	 Gdcs5p2h224bvbX8PxyRlI7Ld7FMxVHIEJQ6EpmZ563PlUZ4zaZMUEEbPAIy70Lez5
+	 sFaMl7ORakhoqr8riSeWfoZ6amVx9n2qGSwe3sTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfD0Olv (ORCPT
+        id S1726501AbfD0OnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 10:41:51 -0400
-Received: from casper.infradead.org ([85.118.1.10]:42152 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD0Olv (ORCPT
+        Sat, 27 Apr 2019 10:43:01 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33537 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbfD0OnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 10:41:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ws+mFvuDPU5R9sCajelbZqczWkg7DqO0k2aub68jS/w=; b=LBheJcgTsVav3/sVVHMZnvwgDS
-        8HuwuyEvGpYwmDagSGn+LC87AVCp8q8N/aV2367cxyEsJaXxy8SHMWCzG1gwek/Ss2+JGKk3VLVd3
-        AIJYf3tYNTsCyyNVc7A8Cxp48OiGgNfAW11n5tD4L6rVuW0oOOMmjcJeQmNlC3nStsBJDCoJNrucb
-        hUAZ/FK36yI7kin6Gm3qA4I04F7nC35t6XX9fMrFPRWnPNVeDQvH9Kv8dkiaPU7aXeXQA/u7FMAqo
-        5oe0zSOR2+gJo35/5qxMGSEiUWFkU1GuLkr5fG7FwvdauZgzdUUpe4H6ENE5rC3oCaKNm5oEFQS3S
-        wTJ9+Qxg==;
-Received: from 177.17.250.151.dynamic.adsl.gvt.net.br ([177.17.250.151] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hKOWO-0007f0-Ft; Sat, 27 Apr 2019 14:41:45 +0000
-Date:   Sat, 27 Apr 2019 11:41:39 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/27] Documentation: x86: convert topology.txt to reST
-Message-ID: <20190427114139.2a6c587c@coco.lan>
-In-Reply-To: <20190426153150.21228-4-changbin.du@gmail.com>
-References: <20190426153150.21228-1-changbin.du@gmail.com>
-        <20190426153150.21228-4-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 27 Apr 2019 10:43:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z6so5925107wmi.0
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 07:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ro9f5UB44L1pIXeRbmUj2sUEKHrY418sXD2wKzNvNuo=;
+        b=fgLwsu2JxY62+KGYv0ns8ENgWzs/GLmTuhthrt4LpPBbEoerBynjJZ3DJd2S+vpgyc
+         9HB1b7hrhK2n7RhdVuB7B3elcSWI/cjfQ3vcHZp34DNDNeK8p5EBcGY4PfB1RZrlNQMr
+         or+vmrcsBpJfNlqWQFx0Pk60rxNeQliwbqDLyqOfwlz2NrvYYK9APOxyRb1L/d74ivb+
+         OTDhPCjOxvnPczh7jZhRI8/aZtiY3uEDsIR+eKH0RUCG+zxzqmsvSVvyNIklR9lu/3Lh
+         uOrzw1UC7pn5wO+6ngbmT0AbRuAYuexLmnnVrU8gs2/h09drbzWD5by9hKSEFCroxZGb
+         m2JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=ro9f5UB44L1pIXeRbmUj2sUEKHrY418sXD2wKzNvNuo=;
+        b=hZ+QYaeEngi0vgXh7fjcvWLzUmTpz2anB595u1AXZJ++JHpZc9C6B6zKg9ygj1TVFD
+         X/RTVt/rAEcO2op5FXuvH766fGSEauaXgxS03WMNbHVkljsCElw7kZ/R4k6vdgMhaTqC
+         IEm+bnEDgpCN+89dNXoN3HnhysuVz8/Ox+mKazjilg0/10Tuzk/hM2soSM3+3C0Xm+Cp
+         R3SO7woz5yS1XbRHj7E093dvlny4y9uneh0Vp/igEp8KnSIyI0lrunj51V3bSETbMwG1
+         em7n1x4j2kp7FViSQ23aluhvQ3hPev23lSkSJWKk2Kky3o+q1uw5SG3t47qyA6kF5WVg
+         k7qg==
+X-Gm-Message-State: APjAAAVU3DfjgQNE9DuzYwO2Y9NdgVMp/ru5xaIPHUjefE7LpXuB+Sdq
+        kCMZhW+7a5qXTV0VJiwarMI=
+X-Google-Smtp-Source: APXvYqyfFPiUgnD+jS+PSWh2E2hu9ZipiiaqdriASKf9b4DEjvguTLsoD1VxrChUdnYzWUOhPZq3/A==
+X-Received: by 2002:a7b:ca50:: with SMTP id m16mr11221983wml.80.1556376179805;
+        Sat, 27 Apr 2019 07:42:59 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id a11sm21523105wmm.35.2019.04.27.07.42.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Apr 2019 07:42:59 -0700 (PDT)
+Date:   Sat, 27 Apr 2019 16:42:56 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86 fixes
+Message-ID: <20190427144256.GA75188@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 26 Apr 2019 23:31:26 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+Linus,
 
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Please pull the latest x86-urgent-for-linus git tree from:
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
 
-> ---
->  Documentation/x86/index.rst                   |  1 +
->  .../x86/{topology.txt => topology.rst}        | 92 ++++++++++---------
->  2 files changed, 49 insertions(+), 44 deletions(-)
->  rename Documentation/x86/{topology.txt => topology.rst} (74%)
-> 
-> diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-> index 8f08caf4fbbb..2033791e53bc 100644
-> --- a/Documentation/x86/index.rst
-> +++ b/Documentation/x86/index.rst
-> @@ -9,3 +9,4 @@ Linux x86 Support
->     :numbered:
->  
->     boot
-> +   topology
-> diff --git a/Documentation/x86/topology.txt b/Documentation/x86/topology.rst
-> similarity index 74%
-> rename from Documentation/x86/topology.txt
-> rename to Documentation/x86/topology.rst
-> index 2953e3ec9a02..5176e5315faa 100644
-> --- a/Documentation/x86/topology.txt
-> +++ b/Documentation/x86/topology.rst
-> @@ -1,3 +1,6 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +============
->  x86 Topology
->  ============
->  
-> @@ -33,14 +36,14 @@ The topology of a system is described in the units of:
->      - cores
->      - threads
->  
-> -* Package:
-> -
-> -  Packages contain a number of cores plus shared resources, e.g. DRAM
-> -  controller, shared caches etc.
-> +Package
-> +=======
-> +Packages contain a number of cores plus shared resources, e.g. DRAM
-> +controller, shared caches etc.
->  
-> -  AMD nomenclature for package is 'Node'.
-> +AMD nomenclature for package is 'Node'.
->  
-> -  Package-related topology information in the kernel:
-> +Package-related topology information in the kernel:
->  
->    - cpuinfo_x86.x86_max_cores:
->  
-> @@ -66,40 +69,41 @@ The topology of a system is described in the units of:
->    - cpu_llc_id:
->  
->      A per-CPU variable containing:
-> -    - On Intel, the first APIC ID of the list of CPUs sharing the Last Level
-> -    Cache
->  
-> -    - On AMD, the Node ID or Core Complex ID containing the Last Level
-> -    Cache. In general, it is a number identifying an LLC uniquely on the
-> -    system.
-> +      - On Intel, the first APIC ID of the list of CPUs sharing the Last Level
-> +        Cache
->  
-> -* Cores:
-> +      - On AMD, the Node ID or Core Complex ID containing the Last Level
-> +        Cache. In general, it is a number identifying an LLC uniquely on the
-> +        system.
->  
-> -  A core consists of 1 or more threads. It does not matter whether the threads
-> -  are SMT- or CMT-type threads.
-> +Cores
-> +=====
-> +A core consists of 1 or more threads. It does not matter whether the threads
-> +are SMT- or CMT-type threads.
->  
-> -  AMDs nomenclature for a CMT core is "Compute Unit". The kernel always uses
-> -  "core".
-> +AMDs nomenclature for a CMT core is "Compute Unit". The kernel always uses
-> +"core".
->  
-> -  Core-related topology information in the kernel:
-> +Core-related topology information in the kernel:
->  
->    - smp_num_siblings:
->  
->      The number of threads in a core. The number of threads in a package can be
-> -    calculated by:
-> +    calculated by::
->  
->  	threads_per_package = cpuinfo_x86.x86_max_cores * smp_num_siblings
->  
->  
-> -* Threads:
-> +Threads
-> +=======
-> +A thread is a single scheduling unit. It's the equivalent to a logical Linux
-> +CPU.
->  
-> -  A thread is a single scheduling unit. It's the equivalent to a logical Linux
-> -  CPU.
-> +AMDs nomenclature for CMT threads is "Compute Unit Core". The kernel always
-> +uses "thread".
->  
-> -  AMDs nomenclature for CMT threads is "Compute Unit Core". The kernel always
-> -  uses "thread".
-> -
-> -  Thread-related topology information in the kernel:
-> +Thread-related topology information in the kernel:
->  
->    - topology_core_cpumask():
->  
-> @@ -113,15 +117,15 @@ The topology of a system is described in the units of:
->      The cpumask contains all online threads in the core to which a thread
->      belongs.
->  
-> -   - topology_logical_package_id():
-> +  - topology_logical_package_id():
->  
->      The logical package ID to which a thread belongs.
->  
-> -   - topology_physical_package_id():
-> +  - topology_physical_package_id():
->  
->      The physical package ID to which a thread belongs.
->  
-> -   - topology_core_id();
-> +  - topology_core_id();
->  
->      The ID of the core to which a thread belongs. It is also printed in /proc/cpuinfo
->      "core_id."
-> @@ -129,41 +133,41 @@ The topology of a system is described in the units of:
->  
->  
->  System topology examples
-> +========================
->  
-> -Note:
-> -
-> -The alternative Linux CPU enumeration depends on how the BIOS enumerates the
-> -threads. Many BIOSes enumerate all threads 0 first and then all threads 1.
-> -That has the "advantage" that the logical Linux CPU numbers of threads 0 stay
-> -the same whether threads are enabled or not. That's merely an implementation
-> -detail and has no practical impact.
-> +.. note::
-> +  The alternative Linux CPU enumeration depends on how the BIOS enumerates the
-> +  threads. Many BIOSes enumerate all threads 0 first and then all threads 1.
-> +  That has the "advantage" that the logical Linux CPU numbers of threads 0 stay
-> +  the same whether threads are enabled or not. That's merely an implementation
-> +  detail and has no practical impact.
->  
-> -1) Single Package, Single Core
-> +1) Single Package, Single Core::
->  
->     [package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
->  
->  2) Single Package, Dual Core
->  
-> -   a) One thread per core
-> +   a) One thread per core::
->  
->  	[package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
->  		    -> [core 1] -> [thread 0] -> Linux CPU 1  
->  
-> -   b) Two threads per core
-> +   b) Two threads per core::
->  
->  	[package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
->  				-> [thread 1] -> Linux CPU 1
->  		    -> [core 1] -> [thread 0] -> Linux CPU 2
->  				-> [thread 1] -> Linux CPU 3  
->  
-> -      Alternative enumeration:
-> +      Alternative enumeration::
->  
->  	[package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
->  				-> [thread 1] -> Linux CPU 2
->  		    -> [core 1] -> [thread 0] -> Linux CPU 1
->  				-> [thread 1] -> Linux CPU 3  
->  
-> -      AMD nomenclature for CMT systems:
-> +      AMD nomenclature for CMT systems::
->  
->  	[node 0] -> [Compute Unit 0] -> [Compute Unit Core 0] -> Linux CPU 0
->  				     -> [Compute Unit Core 1] -> Linux CPU 1  
-> @@ -172,7 +176,7 @@ detail and has no practical impact.
->  
->  4) Dual Package, Dual Core
->  
-> -   a) One thread per core
-> +   a) One thread per core::
->  
->  	[package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
->  		    -> [core 1] -> [thread 0] -> Linux CPU 1  
-> @@ -180,7 +184,7 @@ detail and has no practical impact.
->  	[package 1] -> [core 0] -> [thread 0] -> Linux CPU 2
->  		    -> [core 1] -> [thread 0] -> Linux CPU 3  
->  
-> -   b) Two threads per core
-> +   b) Two threads per core::
->  
->  	[package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
->  				-> [thread 1] -> Linux CPU 1  
-> @@ -192,7 +196,7 @@ detail and has no practical impact.
->  		    -> [core 1] -> [thread 0] -> Linux CPU 6
->  				-> [thread 1] -> Linux CPU 7  
->  
-> -      Alternative enumeration:
-> +      Alternative enumeration::
->  
->  	[package 0] -> [core 0] -> [thread 0] -> Linux CPU 0
->  				-> [thread 1] -> Linux CPU 4  
-> @@ -204,7 +208,7 @@ detail and has no practical impact.
->  		    -> [core 1] -> [thread 0] -> Linux CPU 3
->  				-> [thread 1] -> Linux CPU 7  
->  
-> -      AMD nomenclature for CMT systems:
-> +      AMD nomenclature for CMT systems::
->  
->  	[node 0] -> [Compute Unit 0] -> [Compute Unit Core 0] -> Linux CPU 0
->  				     -> [Compute Unit Core 1] -> Linux CPU 1  
+   # HEAD: 0d02113b31b2017dd349ec9df2314e798a90fa6e x86/mm: Fix a crash with kmemleak_scan()
+
+Two fixes:
+
+ - Fix an early boot crash in the RSDP parsing code by effectively 
+   turning off the parsing call - we ran out of time but want to fix the
+   regression. The more involved fix is being worked on.
+
+ - Fix a crash that can trigger in the kmemlek code.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Borislav Petkov (1):
+      x86/boot: Disable RSDP parsing temporarily
+
+Qian Cai (1):
+      x86/mm: Fix a crash with kmemleak_scan()
 
 
+ arch/x86/boot/compressed/misc.c | 2 +-
+ arch/x86/mm/init.c              | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-Thanks,
-Mauro
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index c0d6c560df69..5a237e8dbf8d 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -352,7 +352,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+ 	boot_params->hdr.loadflags &= ~KASLR_FLAG;
+ 
+ 	/* Save RSDP address for later use. */
+-	boot_params->acpi_rsdp_addr = get_rsdp_addr();
++	/* boot_params->acpi_rsdp_addr = get_rsdp_addr(); */
+ 
+ 	sanitize_boot_params(boot_params);
+ 
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index f905a2371080..8dacdb96899e 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -5,6 +5,7 @@
+ #include <linux/memblock.h>
+ #include <linux/swapfile.h>
+ #include <linux/swapops.h>
++#include <linux/kmemleak.h>
+ 
+ #include <asm/set_memory.h>
+ #include <asm/e820/api.h>
+@@ -766,6 +767,11 @@ void free_init_pages(const char *what, unsigned long begin, unsigned long end)
+ 	if (debug_pagealloc_enabled()) {
+ 		pr_info("debug: unmapping init [mem %#010lx-%#010lx]\n",
+ 			begin, end - 1);
++		/*
++		 * Inform kmemleak about the hole in the memory since the
++		 * corresponding pages will be unmapped.
++		 */
++		kmemleak_free_part((void *)begin, end - begin);
+ 		set_memory_np(begin, (end - begin) >> PAGE_SHIFT);
+ 	} else {
+ 		/*
