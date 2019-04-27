@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70802C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2B0C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 377192166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCCD02166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329387;
-	bh=MRApbEUyyKzYsNfmRuEvWcu8QaiBf4OcoNc9dNCwuco=;
+	s=default; t=1556329390;
+	bh=GeydHFG1eJ5qovFlGzTowDpHkwhZanT6iLB3kIRMeZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lswO84J0mKbw6U4e0r5oPndgfFo+FH73va7uiCUdUx6xxIThcG6fb9P/zNkBfUJm6
-	 NETDDMTVufFuivPGibLrNfAQyYANeUf328oeAfMUQnAZa9uZk6g3+qR9y+yGORe0iy
-	 RdnS7WCLPNbLUPCHU8dzJ5TmAWEUBLhvE+MSqkhw=
+	b=FsvffkvQqfWYm6JdHx4UEcLf/JUH7RLBudqrvstqbgXu9xOyoCPRJ5z+gA5xo3C7/
+	 e7dWzMXlYMyMrH8upbuJmRx6CXQVhfxFsAvU4bMttc6PhNh3VJj3cuTHNOQQ2W+sn7
+	 JUVWCtvdlbewxiaE4JElKGKuzbevZ3r2sfrZbjz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfD0BnG (ORCPT
+        id S1727900AbfD0BnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:43:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47134 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:43:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728680AbfD0Bm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:42:59 -0400
+        id S1728130AbfD0BnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 588A82168B;
-        Sat, 27 Apr 2019 01:42:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1F4B2166E;
+        Sat, 27 Apr 2019 01:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329379;
-        bh=MRApbEUyyKzYsNfmRuEvWcu8QaiBf4OcoNc9dNCwuco=;
+        s=default; t=1556329381;
+        bh=GeydHFG1eJ5qovFlGzTowDpHkwhZanT6iLB3kIRMeZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPo00+ESX7zn7u5cfBdUvKdbx+bGxOo9zt27xngR8kG6F8ZZ/IqkLVYFBlh0e8xg1
-         w9ij8g0+P7fKr48LhRquY9cTx9CPqRzgwFuMUB+q1KjxVd2XsdoZXdi2vYXVVWSSND
-         6d9byTk84c0iUe0OZ0gn0mm5/AKNPwxRzyaPQ1ss=
+        b=ypQKevY0GWHcfJMblhHSk2vz86wbExP1Vc21wppeOKAeBLrKGWw5+JUUHA0XLG3tG
+         nPOY7nmWt0FeScP9nTlCKSD5Y9NMOdVsNAQ8MTEH8e9zewGjHl/tuDqXQzLp+j1eLF
+         bzDIB2+Wd933EvAoQLYPAfw1VHqT63V13EyUtacE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 18/32] slab: fix a crash by reading /proc/slab_allocators
-Date:   Fri, 26 Apr 2019 21:42:09 -0400
-Message-Id: <20190427014224.8274-18-sashal@kernel.org>
+Cc:     Longpeng <longpeng2@huawei.com>, Gonglei <arei.gonglei@huawei.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.14 20/32] virtio_pci: fix a NULL pointer reference in vp_del_vqs
+Date:   Fri, 26 Apr 2019 21:42:11 -0400
+Message-Id: <20190427014224.8274-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
 References: <20190427014224.8274-1-sashal@kernel.org>
@@ -60,44 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Longpeng <longpeng2@huawei.com>
 
-[ Upstream commit fcf88917dd435c6a4cb2830cb086ee58605a1d85 ]
+[ Upstream commit 6a8aae68c87349dbbcd46eac380bc43cdb98a13b ]
 
-The commit 510ded33e075 ("slab: implement slab_root_caches list")
-changes the name of the list node within "struct kmem_cache" from "list"
-to "root_caches_node", but leaks_show() still use the "list" which
-causes a crash when reading /proc/slab_allocators.
+If the msix_affinity_masks is alloced failed, then we'll
+try to free some resources in vp_free_vectors() that may
+access it directly.
 
-You need to have CONFIG_SLAB=y and CONFIG_MEMCG=y to see the problem,
-because without MEMCG all slab caches are root caches, and the "list"
-node happens to be the right one.
+We met the following stack in our production:
+[   29.296767] BUG: unable to handle kernel NULL pointer dereference at  (null)
+[   29.311151] IP: [<ffffffffc04fe35a>] vp_free_vectors+0x6a/0x150 [virtio_pci]
+[   29.324787] PGD 0
+[   29.333224] Oops: 0000 [#1] SMP
+[...]
+[   29.425175] RIP: 0010:[<ffffffffc04fe35a>]  [<ffffffffc04fe35a>] vp_free_vectors+0x6a/0x150 [virtio_pci]
+[   29.441405] RSP: 0018:ffff9a55c2dcfa10  EFLAGS: 00010206
+[   29.453491] RAX: 0000000000000000 RBX: ffff9a55c322c400 RCX: 0000000000000000
+[   29.467488] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9a55c322c400
+[   29.481461] RBP: ffff9a55c2dcfa20 R08: 0000000000000000 R09: ffffc1b6806ff020
+[   29.495427] R10: 0000000000000e95 R11: 0000000000aaaaaa R12: 0000000000000000
+[   29.509414] R13: 0000000000010000 R14: ffff9a55bd2d9e98 R15: ffff9a55c322c400
+[   29.523407] FS:  00007fdcba69f8c0(0000) GS:ffff9a55c2840000(0000) knlGS:0000000000000000
+[   29.538472] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   29.551621] CR2: 0000000000000000 CR3: 000000003ce52000 CR4: 00000000003607a0
+[   29.565886] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   29.580055] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   29.594122] Call Trace:
+[   29.603446]  [<ffffffffc04fe8a2>] vp_request_msix_vectors+0xe2/0x260 [virtio_pci]
+[   29.618017]  [<ffffffffc04fedc5>] vp_try_to_find_vqs+0x95/0x3b0 [virtio_pci]
+[   29.632152]  [<ffffffffc04ff117>] vp_find_vqs+0x37/0xb0 [virtio_pci]
+[   29.645582]  [<ffffffffc057bf63>] init_vq+0x153/0x260 [virtio_blk]
+[   29.658831]  [<ffffffffc057c1e8>] virtblk_probe+0xe8/0x87f [virtio_blk]
+[...]
 
-Fixes: 510ded33e075 ("slab: implement slab_root_caches list")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Tobin C. Harding <tobin@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Longpeng <longpeng2@huawei.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Gonglei <arei.gonglei@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/virtio/virtio_pci_common.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index f4658468b23e..843ecea9e336 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -4299,7 +4299,8 @@ static void show_symbol(struct seq_file *m, unsigned long address)
+diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
+index 1c4797e53f68..80a3704939cd 100644
+--- a/drivers/virtio/virtio_pci_common.c
++++ b/drivers/virtio/virtio_pci_common.c
+@@ -254,9 +254,11 @@ void vp_del_vqs(struct virtio_device *vdev)
+ 	for (i = 0; i < vp_dev->msix_used_vectors; ++i)
+ 		free_irq(pci_irq_vector(vp_dev->pci_dev, i), vp_dev);
  
- static int leaks_show(struct seq_file *m, void *p)
- {
--	struct kmem_cache *cachep = list_entry(p, struct kmem_cache, list);
-+	struct kmem_cache *cachep = list_entry(p, struct kmem_cache,
-+					       root_caches_node);
- 	struct page *page;
- 	struct kmem_cache_node *n;
- 	const char *name;
+-	for (i = 0; i < vp_dev->msix_vectors; i++)
+-		if (vp_dev->msix_affinity_masks[i])
+-			free_cpumask_var(vp_dev->msix_affinity_masks[i]);
++	if (vp_dev->msix_affinity_masks) {
++		for (i = 0; i < vp_dev->msix_vectors; i++)
++			if (vp_dev->msix_affinity_masks[i])
++				free_cpumask_var(vp_dev->msix_affinity_masks[i]);
++	}
+ 
+ 	if (vp_dev->msix_enabled) {
+ 		/* Disable the vector used for configuration */
 -- 
 2.19.1
 
