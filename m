@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDD8C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A05C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55B2208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E7B208C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfD0P3q (ORCPT
+        id S1728499AbfD0PaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:29:46 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32886 "EHLO
+        Sat, 27 Apr 2019 11:30:07 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32858 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727271AbfD0PPS (ORCPT
+        by vger.kernel.org with ESMTP id S1727251AbfD0PPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:18 -0400
+        Sat, 27 Apr 2019 11:15:17 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2p-0000z8-Ui; Sat, 27 Apr 2019 16:15:16 +0100
+        id 1hKP2m-0000z6-JH; Sat, 27 Apr 2019 16:15:12 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2n-0004ci-1X; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2j-0004Um-Vy; Sat, 27 Apr 2019 16:15:09 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,19 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eugeniy Paltsev" <Eugeniy.Paltsev@synopsys.com>,
-        "Vineet Gupta" <vgupta@synopsys.com>,
-        "Corentin LABBE" <clabbe@baylibre.com>
+        "David Rientjes" <rientjes@google.com>,
+        syzbot+7fbbfa368521945f0e3d@syzkaller.appspotmail.com,
+        "Roman Gushchin" <guro@fb.com>,
+        "Shakeel Butt" <shakeelb@google.com>,
+        "Tetsuo Handa" <penguin-kernel@i-love.sakura.ne.jp>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Michal Hocko" <mhocko@suse.com>,
+        "Johannes Weiner" <hannes@cmpxchg.org>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.904845348@decadent.org.uk>
+Message-ID: <lsq.1556377989.291175341@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 168/202] ARC: U-boot: check arguments paranoidly
+Subject: [PATCH 3.16 083/202] mm, oom: fix use-after-free in oom_kill_process
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,155 +61,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-commit a66f2e57bd566240d8b3884eedf503928fbbe557 upstream.
+commit cefc7ef3c87d02fc9307835868ff721ea12cc597 upstream.
 
-Handle U-boot arguments paranoidly:
- * don't allow to pass unknown tag.
- * try to use external device tree blob only if corresponding tag
-   (TAG_DTB) is set.
- * don't check uboot_tag if kernel build with no ARC_UBOOT_SUPPORT.
+Syzbot instance running on upstream kernel found a use-after-free bug in
+oom_kill_process.  On further inspection it seems like the process
+selected to be oom-killed has exited even before reaching
+read_lock(&tasklist_lock) in oom_kill_process().  More specifically the
+tsk->usage is 1 which is due to get_task_struct() in oom_evaluate_task()
+and the put_task_struct within for_each_thread() frees the tsk and
+for_each_thread() tries to access the tsk.  The easiest fix is to do
+get/put across the for_each_thread() on the selected task.
 
-NOTE:
-If U-boot args are invalid we skip them and try to use embedded device
-tree blob. We can't panic on invalid U-boot args as we really pass
-invalid args due to bug in U-boot code.
-This happens if we don't provide external DTB to U-boot and
-don't set 'bootargs' U-boot environment variable (which is default
-case at least for HSDK board) In that case we will pass
-{r0 = 1 (bootargs in r2); r1 = 0; r2 = 0;} to linux which is invalid.
+Now the next question is should we continue with the oom-kill as the
+previously selected task has exited? However before adding more
+complexity and heuristics, let's answer why we even look at the children
+of oom-kill selected task? The select_bad_process() has already selected
+the worst process in the system/memcg.  Due to race, the selected
+process might not be the worst at the kill time but does that matter?
+The userspace can use the oom_score_adj interface to prefer children to
+be killed before the parent.  I looked at the history but it seems like
+this is there before git history.
 
-While I'm at it refactor U-boot arguments handling code.
-
-Tested-by: Corentin LABBE <clabbe@baylibre.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-[bwh: Backported to 3.16: adjust context]
+Link: http://lkml.kernel.org/r/20190121215850.221745-1-shakeelb@google.com
+Reported-by: syzbot+7fbbfa368521945f0e3d@syzkaller.appspotmail.com
+Fixes: 6b0c81b3be11 ("mm, oom: reduce dependency on tasklist_lock")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arc/kernel/head.S  |  4 +-
- arch/arc/kernel/setup.c | 87 +++++++++++++++++++++++++++++------------
- 2 files changed, 64 insertions(+), 27 deletions(-)
+ mm/oom_kill.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/arc/kernel/head.S
-+++ b/arch/arc/kernel/head.S
-@@ -85,9 +85,9 @@ stext:
- 
- 	; Uboot - kernel ABI
- 	;    r0 = [0] No uboot interaction, [1] cmdline in r2, [2] DTB in r2
--	;    r1 = magic number (board identity, unused as of now
-+	;    r1 = magic number (always zero as of now)
- 	;    r2 = pointer to uboot provided cmdline or external DTB in mem
--	; These are handled later in setup_arch()
-+	; These are handled later in handle_uboot_args()
- 	st	r0, [@uboot_tag]
- 	st	r2, [@uboot_arg]
- 
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -314,40 +314,78 @@ void setup_processor(void)
- 	arc_chk_fpu();
- }
- 
--static inline int is_kernel(unsigned long addr)
-+static inline bool uboot_arg_invalid(unsigned long addr)
- {
--	if (addr >= (unsigned long)_stext && addr <= (unsigned long)_end)
--		return 1;
--	return 0;
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -466,6 +466,13 @@ void oom_kill_process(struct task_struct
+ 	 * still freeing memory.
+ 	 */
+ 	read_lock(&tasklist_lock);
++
 +	/*
-+	 * Check that it is a untranslated address (although MMU is not enabled
-+	 * yet, it being a high address ensures this is not by fluke)
++	 * The task 'p' might have already exited before reaching here. The
++	 * put_task_struct() will free task_struct 'p' while the loop still try
++	 * to access the field of 'p', so, get an extra reference.
 +	 */
-+	if (addr < PAGE_OFFSET)
-+		return true;
-+
-+	/* Check that address doesn't clobber resident kernel image */
-+	return addr >= (unsigned long)_stext && addr <= (unsigned long)_end;
- }
- 
--void __init setup_arch(char **cmdline_p)
-+#define IGNORE_ARGS		"Ignore U-boot args: "
-+
-+/* uboot_tag values for U-boot - kernel ABI revision 0; see head.S */
-+#define UBOOT_TAG_NONE		0
-+#define UBOOT_TAG_CMDLINE	1
-+#define UBOOT_TAG_DTB		2
-+
-+void __init handle_uboot_args(void)
- {
--	/* make sure that uboot passed pointer to cmdline/dtb is valid */
--	if (uboot_tag && is_kernel((unsigned long)uboot_arg))
--		panic("Invalid uboot arg\n");
--
--	/* See if u-boot passed an external Device Tree blob */
--	machine_desc = setup_machine_fdt(uboot_arg);	/* uboot_tag == 2 */
--	if (!machine_desc) {
--		/* No, so try the embedded one */
-+	bool use_embedded_dtb = true;
-+	bool append_cmdline = false;
-+
-+	/* check that we know this tag */
-+	if (uboot_tag != UBOOT_TAG_NONE &&
-+	    uboot_tag != UBOOT_TAG_CMDLINE &&
-+	    uboot_tag != UBOOT_TAG_DTB) {
-+		pr_warn(IGNORE_ARGS "invalid uboot tag: '%08x'\n", uboot_tag);
-+		goto ignore_uboot_args;
-+	}
-+
-+	if (uboot_tag != UBOOT_TAG_NONE &&
-+            uboot_arg_invalid((unsigned long)uboot_arg)) {
-+		pr_warn(IGNORE_ARGS "invalid uboot arg: '%px'\n", uboot_arg);
-+		goto ignore_uboot_args;
-+	}
-+
-+	/* see if U-boot passed an external Device Tree blob */
-+	if (uboot_tag == UBOOT_TAG_DTB) {
-+		machine_desc = setup_machine_fdt((void *)uboot_arg);
-+
-+		/* external Device Tree blob is invalid - use embedded one */
-+		use_embedded_dtb = !machine_desc;
-+	}
-+
-+	if (uboot_tag == UBOOT_TAG_CMDLINE)
-+		append_cmdline = true;
-+
-+ignore_uboot_args:
-+
-+	if (use_embedded_dtb) {
- 		machine_desc = setup_machine_fdt(__dtb_start);
- 		if (!machine_desc)
- 			panic("Embedded DT invalid\n");
-+	}
- 
--		/*
--		 * If we are here, it is established that @uboot_arg didn't
--		 * point to DT blob. Instead if u-boot says it is cmdline,
--		 * Appent to embedded DT cmdline.
--		 * setup_machine_fdt() would have populated @boot_command_line
--		 */
--		if (uboot_tag == 1) {
--			/* Ensure a whitespace between the 2 cmdlines */
--			strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
--			strlcat(boot_command_line, uboot_arg,
--				COMMAND_LINE_SIZE);
--		}
-+	/*
-+	 * NOTE: @boot_command_line is populated by setup_machine_fdt() so this
-+	 * append processing can only happen after.
-+	 */
-+	if (append_cmdline) {
-+		/* Ensure a whitespace between the 2 cmdlines */
-+		strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
-+		strlcat(boot_command_line, uboot_arg, COMMAND_LINE_SIZE);
++	get_task_struct(p);
+ 	for_each_thread(p, t) {
+ 		list_for_each_entry(child, &t->children, sibling) {
+ 			unsigned int child_points;
+@@ -485,6 +492,7 @@ void oom_kill_process(struct task_struct
+ 			}
+ 		}
  	}
-+}
-+
-+void __init setup_arch(char **cmdline_p)
-+{
-+	handle_uboot_args();
++	put_task_struct(p);
+ 	read_unlock(&tasklist_lock);
  
- 	/* Save unparsed command line copy for /proc/cmdline */
- 	*cmdline_p = boot_command_line;
+ 	p = find_lock_task_mm(victim);
 
