@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAFDC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B98C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8FE2087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10862087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfD0M5F (ORCPT
+        id S1726575AbfD0MxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:57:05 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:55791 "EHLO
+        Sat, 27 Apr 2019 08:53:06 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:34529 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfD0MxH (ORCPT
+        with ESMTP id S1726470AbfD0MxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:53:07 -0400
+        Sat, 27 Apr 2019 08:53:05 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MBltM-1hUJWA0Zhs-00CCVD; Sat, 27 Apr 2019 14:52:42 +0200
+ 1MVNF1-1hBGZC1Cwp-00SLNE; Sat, 27 Apr 2019 14:52:41 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,57 +34,94 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 10/41] drivers: tty: serial: sb1250-duart: fix missing parentheses
-Date:   Sat, 27 Apr 2019 14:51:51 +0200
-Message-Id: <1556369542-13247-11-git-send-email-info@metux.net>
+Subject: [PATCH 09/41] drivers: tty: serial: sb1250-duart: fill mapsize and use it
+Date:   Sat, 27 Apr 2019 14:51:50 +0200
+Message-Id: <1556369542-13247-10-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:Q5d+R5/xof5LSpkM+m/1QK4rIat5cet+2kq+5TbMlzlAg7YOwcq
- yY6SxH8FWCXU0xZpYSh06YbjnruYS3jvbIaTQGqHoabIXLaqLV16hsMLD2TgWS4RStegv55
- BXylfzMhBa4VLDqOgexGnNJRWU6fc3oOK3V503qwx9kOQsSqkjZe8MoxRvmw7LEmLadmc7U
- bud6UfVRg0CpivgeZa72w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vacU+lH9z3Y=:pyr1jcpDGvApaYEzFf7e+R
- TMve7dv5wGRdKDhjI8oStSB5dn5DoxuIjQtwxI7jTd4ue0WswnmOCAVKClxkf4W5Y+po1lpzp
- uy6mxTJAhaqkZ+uGwup3aHiE2yXSyK5Dtp59G6H8wjH1xJxWJJe3rh1QuItg4GGwqOxe7ZvlT
- bCfCaP+FUICSNHAr7GAy80cRej9Mbw8LQ/CAIWpG2FHp/HNBuaCWY5bg6pgzDY6U4+Mpk3zpX
- NFS1TFEHN4C1TorFOl1ieIq8+33dawCeqWbRy63450HHNBOxnTXMXgXVZ2dGvHt/MaKHK5QHX
- znNS5++8zZ+FgewRGYerTgJaPvxtSpjOrO+jaVu3eScKrVacwFh6aPYL9Tg1gWYFFwQsJ6CzA
- iKmAZSq55bvXg+JjYDMB6zLZ4DgKDCfJKq+793jpqfro5b1srUPD1zx3NgseUD9Kp6w3sqboX
- Jvu9ZKFLbaF+cSRGF+A7QScl6NPRPACxYAB2L6P0+kWLYwR7X+40GC4Dw4eh8YRnCKclBPBig
- 8U4uiH49D8vlepRn823eKH2LdKEGXzfXXG8QTIyXa/vacZIxHEo6Wg3QFLTaPFTQxybxeHFMN
- sVhpJgAzc594zwa50x10eL253pPhsMkF5H509I0vK9nGkC85rsoXTRr/Co6LoNNGj9pnxWgK9
- yOIYFsO9w0GUdP/baMxqZ6uqvZ4AtEaJLlWSshjX/lDO4KbZaj05oKWIdPmB24fo9yrxwcOFJ
- I5chlHAJ/2z+EvXqOzAr/sxxn02wqDKKYoAVwA==
+X-Provags-ID: V03:K1:ZaCk4lb7tsU+VMSXb76laO+FYz7IB7DvruPd8DW8Z5VN86cLAXx
+ XoTjgpy1D4cW0l6Dtk8ovOsbJ8N9Wa/Bbip0AWVSYaXLx73ljAgB+eT7NLTxRv9yXwxk0n6
+ HH2/FDKHKTK7DJe3OrFZeO4xRkkEqT/D7RK5KNlvmu7PNcsk+uX5W9PhxlgNSIsAXElPf5S
+ ey1fWSh+9w6GIdr1VGyZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bMjmK7y/pZk=:+AFfLGXZen+R/LjlG6zSk7
+ L8sUEG8PAms3y8zIqVAQwMY6qAqR82Lr0rV3bmYkKN7tHlDRaITbqgcrePCA9GhxzAAamUqAf
+ YwUlxTo4PLwjN1ylObX8wcBa9n6x6fJFhwBBYNjLMxo2rfYeunsf+B/mSAmul4qeuDFXvTiJR
+ rLJjI4Q5l7VTPJ5zet72iWe0Hlp6PHbzAvsjIEeuOp0SraT4dJbsI7FZwjziDhZxH+ATmIsbb
+ Kql4oUhkX+us1ZmJ42xUQasNo8zIArVrpR8vPsLM2jB/KzVDVkBjOTYmsByxB6ebMmMZFuPQd
+ Q1ynq6X0xmA9TnjqSxTZikf1QA00We/n674kmX1LPWfbLz9t1njHTRpVxCALOyNjl22t9oqC0
+ X5HvRIzJpn99vxUo1kTCGnHvD9Z8ouFu6TplGDfMsbVcUxgipevllxBYDC6h7bNmKhBjqnTMK
+ 06KakDCYlO0MY5EqGM2o5YxobEmB4gMoCiId14JTpNmX/F3DYudyaFLE0P+lWuFO7tUdgIZ/p
+ hgGMynJm3bUU5Gt08dqMxN+WABde7p7fXqouDHErv3RZaOoAz6dcjciU+wuCblZWxT0OC28oP
+ 2u+KrAW0cbW4rM3u3mhzvA4/EA+YrH3HZHdGpWT3e9DlT2ljYYgQBAHO0cTMM/hSp1MuYkjdS
+ 41dTTuSXboMqixDvStEni4kBMKHteWCKINqCGhSJZBVy3lEq2Rb9jsrRZemdRp4Vhj4RMcfhE
+ Fxrt899EKT3VTfQKp4V20bneFn76TA5cuj+Bcg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch warning:
+Fill the struct uart_port->mapsize field and use it, insteaf of
+hardcoded values in many places. This makes the code layout a bit
+more consistent and easily allows using generic helpers for the
+io memory handling.
 
-    ERROR: Macros with complex values should be enclosed in parentheses
-    #911: FILE: drivers/tty/serial/sb1250-duart.c:911:
-    +#define SERIAL_SB1250_DUART_CONSOLE	&sbd_console
+Candidates for such helpers could be eg. the request+ioremap and
+iounmap+release combinations.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/sb1250-duart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/sb1250-duart.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/tty/serial/sb1250-duart.c b/drivers/tty/serial/sb1250-duart.c
-index 1184226..ec74f09 100644
+index 227af87..1184226 100644
 --- a/drivers/tty/serial/sb1250-duart.c
 +++ b/drivers/tty/serial/sb1250-duart.c
-@@ -908,7 +908,7 @@ static int __init sbd_serial_console_init(void)
+@@ -658,7 +658,7 @@ static void sbd_release_port(struct uart_port *uport)
  
- console_initcall(sbd_serial_console_init);
+ 	if(refcount_dec_and_test(&duart->map_guard))
+ 		release_mem_region(duart->mapctrl, DUART_CHANREG_SPACING);
+-	release_mem_region(uport->mapbase, DUART_CHANREG_SPACING);
++	release_mem_region(uport->mapbase, uport->mapsize);
+ }
  
--#define SERIAL_SB1250_DUART_CONSOLE	&sbd_console
-+#define SERIAL_SB1250_DUART_CONSOLE	(&sbd_console)
- #else
- #define SERIAL_SB1250_DUART_CONSOLE	NULL
- #endif /* CONFIG_SERIAL_SB1250_DUART_CONSOLE */
+ static int sbd_map_port(struct uart_port *uport)
+@@ -668,7 +668,7 @@ static int sbd_map_port(struct uart_port *uport)
+ 
+ 	if (!uport->membase)
+ 		uport->membase = ioremap_nocache(uport->mapbase,
+-						 DUART_CHANREG_SPACING);
++						 uport->mapsize);
+ 	if (!uport->membase) {
+ 		dev_err(uport->dev, "Cannot map MMIO (base)\n");
+ 		return -ENOMEM;
+@@ -693,7 +693,7 @@ static int sbd_request_port(struct uart_port *uport)
+ 	struct sbd_duart *duart = to_sport(uport)->duart;
+ 	int ret = 0;
+ 
+-	if (!request_mem_region(uport->mapbase, DUART_CHANREG_SPACING,
++	if (!request_mem_region(uport->mapbase, uport->mapsize,
+ 				"sb1250-duart")) {
+ 		pr_err(err);
+ 		return -EBUSY;
+@@ -716,7 +716,7 @@ static int sbd_request_port(struct uart_port *uport)
+ 		}
+ 	}
+ 	if (ret) {
+-		release_mem_region(uport->mapbase, DUART_CHANREG_SPACING);
++		release_mem_region(uport->mapbase, uport->mapsize);
+ 		return ret;
+ 	}
+ 	return 0;
+@@ -812,6 +812,7 @@ static void __init sbd_probe_duarts(void)
+ 			uport->ops	= &sbd_ops;
+ 			uport->line	= line;
+ 			uport->mapbase	= SBD_CHANREGS(line);
++			uport->mapsize	= DUART_CHANREG_SPACING;
+ 		}
+ 	}
+ }
 -- 
 1.9.1
 
