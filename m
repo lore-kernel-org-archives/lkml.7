@@ -2,120 +2,152 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDDAC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87099C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2908A208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537E020C01
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:14:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556370866;
+	bh=vV+980+kvm2sz+Ua30f5pPfe5BH81qRAUM33WJ54q68=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=q83RZhtlSocHBpXklrvi/8LfifgNEfRILnIC4BuCqKc4kORUWEOGehRqQufFGpxny
+	 tAaSQOIzrMWEciZuhRda7fi0okji7iIG72R+p2STR7tfzpPytAJrnAh1x3MVganV6b
+	 DhDynroiSwsaxQM/cK7n9nWsBMcboPyOOoKHx5hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfD0NLh (ORCPT
+        id S1726563AbfD0NOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 09:11:37 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:45647 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725942AbfD0NLh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 09:11:37 -0400
-X-Greylist: delayed 470 seconds by postgrey-1.27 at vger.kernel.org; Sat, 27 Apr 2019 09:11:35 EDT
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.85)
-          with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id <1hKMzR-003yPd-F9>; Sat, 27 Apr 2019 15:03:37 +0200
-Received: from port-92-193-188-149.dynamic.qsc.de ([92.193.188.149] helo=[192.168.178.89])
-          by inpost2.zedat.fu-berlin.de (Exim 4.85)
-          with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id <1hKMzR-003F9S-5n>; Sat, 27 Apr 2019 15:03:37 +0200
-Subject: Re: [PATCH 37/41] drivers: tty: serial: 8250: simplify io resource
- size computation
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
-        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-38-git-send-email-info@metux.net>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <ba6dd5fa-36f1-902d-1ab4-c99e6a5ea3c2@physik.fu-berlin.de>
-Date:   Sat, 27 Apr 2019 15:03:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 27 Apr 2019 09:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbfD0NOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 09:14:24 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26973208C2;
+        Sat, 27 Apr 2019 13:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556370863;
+        bh=vV+980+kvm2sz+Ua30f5pPfe5BH81qRAUM33WJ54q68=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0tcA2UTEizBEhYtjXgDRxzBgGh2sG2FXaLVtHtH+pcJX+pJXKyPGiwq+8Huy9rM4x
+         a4ngdn4akCGN0nzUCzLxby3Z1MMwo+eKv2Nzej22ALMsaFUqosnwfTm4P/nPFz5qKR
+         hKSOkJcWqRWs+cQfXyVbun4e7g2Fh226OoXjV93M=
+Date:   Sat, 27 Apr 2019 14:14:17 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] iio: cros_ec: add 'id' sysfs entry
+Message-ID: <20190427141351.633ede62@archlinux>
+In-Reply-To: <20190426113917.10282-1-fabien.lahoudere@collabora.com>
+References: <20190426113917.10282-1-fabien.lahoudere@collabora.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1556369542-13247-38-git-send-email-info@metux.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: 92.193.188.149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/27/19 2:52 PM, Enrico Weigelt, metux IT consult wrote:
-> Simpily io resource size computation by setting mapsize field.
-    ^^^^
-Here's a typo
+On Fri, 26 Apr 2019 13:39:16 +0200
+Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
 
-Adrian
+> From: Gwendal Grignou <gwendal@chromium.org>
+> 
+> This new sysfs entry is used to interpret ring buffer information,
+> mainly by Android sensor HAL.
+> It expand to all sensors, the documentation about 'id' we can found
+> in Documentation/ABI/testing/sysfs-bus-iio-cros-ec.
+> 
+> Also fix typo in docs, I replace 'Septembre' by 'September'.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Hmm. I'm not 100% keen on non standard ABI like this, but given
+we already have it for one type of cros_ec, I guess the other one can
+have it as well.
 
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+
+Note this has probably just missed the coming merge window unless that
+is delayed for some reason.
+
+Thanks,
+
+
+Jonathan
+
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio-cros-ec    | 10 +++++-----
+>  .../common/cros_ec_sensors/cros_ec_sensors_core.c  | 14 ++++++++++++++
+>  2 files changed, 19 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-cros-ec b/Documentation/ABI/testing/sysfs-bus-iio-cros-ec
+> index 0e95c2ca105c..6158f831c761 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio-cros-ec
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio-cros-ec
+> @@ -18,11 +18,11 @@ Description:
+>  		values are 'base' and 'lid'.
+>  
+>  What:		/sys/bus/iio/devices/iio:deviceX/id
+> -Date:		Septembre 2017
+> +Date:		September 2017
+>  KernelVersion:	4.14
+>  Contact:	linux-iio@vger.kernel.org
+>  Description:
+> -		This attribute is exposed by the CrOS EC legacy accelerometer
+> -		driver and represents the sensor ID as exposed by the EC. This
+> -		ID is used by the Android sensor service hardware abstraction
+> -		layer (sensor HAL) through the Android container on ChromeOS.
+> +		This attribute is exposed by the CrOS EC sensors driver and
+> +		represents the sensor ID as exposed by the EC. This ID is used
+> +		by the Android sensor service hardware abstraction layer (sensor
+> +		HAL) through the Android container on ChromeOS.
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index 719a0df5aeeb..130362ca421b 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -125,6 +125,15 @@ static ssize_t cros_ec_sensors_calibrate(struct iio_dev *indio_dev,
+>  	return ret ? ret : len;
+>  }
+>  
+> +static ssize_t cros_ec_sensors_id(struct iio_dev *indio_dev,
+> +				  uintptr_t private,
+> +				  const struct iio_chan_spec *chan, char *buf)
+> +{
+> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%d\n", st->param.info.sensor_num);
+> +}
+> +
+>  static ssize_t cros_ec_sensors_loc(struct iio_dev *indio_dev,
+>  		uintptr_t private, const struct iio_chan_spec *chan,
+>  		char *buf)
+> @@ -140,6 +149,11 @@ const struct iio_chan_spec_ext_info cros_ec_sensors_ext_info[] = {
+>  		.shared = IIO_SHARED_BY_ALL,
+>  		.write = cros_ec_sensors_calibrate
+>  	},
+> +	{
+> +		.name = "id",
+> +		.shared = IIO_SHARED_BY_ALL,
+> +		.read = cros_ec_sensors_id
+> +	},
+>  	{
+>  		.name = "location",
+>  		.shared = IIO_SHARED_BY_ALL,
+
