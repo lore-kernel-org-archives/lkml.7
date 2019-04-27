@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BBFC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C4CC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F767206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D416D206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbfD0PXC (ORCPT
+        id S1727522AbfD0PP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:23:02 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33728 "EHLO
+        Sat, 27 Apr 2019 11:15:29 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60764 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727529AbfD0PPa (ORCPT
+        by vger.kernel.org with ESMTP id S1726817AbfD0PPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:30 -0400
+        Sat, 27 Apr 2019 11:15:12 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP31-0000zM-LL; Sat, 27 Apr 2019 16:15:27 +0100
+        id 1hKP2k-0000zM-G3; Sat, 27 Apr 2019 16:15:10 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2l-0004Y3-Ax; Sat, 27 Apr 2019 16:15:11 +0100
+        id 1hKP2h-0004QN-UB; Sat, 27 Apr 2019 16:15:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,12 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Richard Weinberger" <richard@nod.at>
+        "Heiko Carstens" <heiko.carstens@de.ibm.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.192745922@decadent.org.uk>
+Message-ID: <lsq.1556377989.498629332@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 120/202] mips: Use sigsp()
+Subject: [PATCH 3.16 035/202] s390/mm: always force a load of the primary
+ ASCE on context switch
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -54,91 +56,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Richard Weinberger <richard@nod.at>
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-commit 7c4f563507c33ca97dcfbd62dba1e9232575d499 upstream.
+commit a38662084c8bdb829ff486468c7ea801c13fcc34 upstream.
 
-Use sigsp() instead of the open coded variant.
+The ASCE of an mm_struct can be modified after a task has been created,
+e.g. via crst_table_downgrade for a compat process. The active_mm logic
+to avoid the switch_mm call if the next task is a kernel thread can
+lead to a situation where switch_mm is called where 'prev == next' is
+true but 'prev->context.asce == next->context.asce' is not.
 
-Signed-off-by: Richard Weinberger <richard@nod.at>
-[bwh: Backported to 3.16 as dependency of commit 35634ffa1751
- "signal: Always notice exiting tasks"]
+This can lead to a situation where a CPU uses the outdated ASCE to run
+a task. The result can be a crash, endless loops and really subtle
+problem due to TLBs being created with an invalid ASCE.
+
+Fixes: 53e857f30867 ("s390/mm,tlb: race of lazy TLB flush vs. recreation")
+Reported-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+[bwh: Backported to 3.16:
+ - Keep the updates of mm_context_t::attach_count conditional on prev != next
+ - Keep the update of mm_context_t::cpu_attach_mask conditional on both
+   MACHINE_HAS_TLB_LC and prev != next
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/mips/kernel/signal.c     | 10 ++++------
- arch/mips/kernel/signal32.c   |  4 ++--
- arch/mips/kernel/signal_n32.c |  2 +-
- 3 files changed, 7 insertions(+), 9 deletions(-)
-
---- a/arch/mips/kernel/signal.c
-+++ b/arch/mips/kernel/signal.c
-@@ -280,7 +280,7 @@ int restore_sigcontext(struct pt_regs *r
- 	return err;
- }
- 
--void __user *get_sigframe(struct k_sigaction *ka, struct pt_regs *regs,
-+void __user *get_sigframe(struct ksignal *ksig, struct pt_regs *regs,
- 			  size_t frame_size)
+--- a/arch/s390/include/asm/mmu_context.h
++++ b/arch/s390/include/asm/mmu_context.h
+@@ -69,17 +69,17 @@ static inline void switch_mm(struct mm_s
  {
- 	unsigned long sp;
-@@ -295,9 +295,7 @@ void __user *get_sigframe(struct k_sigac
- 	 */
- 	sp -= 32;
+ 	int cpu = smp_processor_id();
  
--	/* This is the X/Open sanctioned signal stack switching.  */
--	if ((ka->sa.sa_flags & SA_ONSTACK) && (sas_ss_flags (sp) == 0))
--		sp = current->sas_ss_sp + current->sas_ss_size;
-+	sp = sigsp(sp, ksig);
- 
- 	return (void __user *)((sp - frame_size) & (ICACHE_REFILLS_WORKAROUND_WAR ? ~(cpu_icache_line_size()-1) : ALMASK));
+-	if (prev == next)
+-		return;
+ 	if (MACHINE_HAS_TLB_LC)
+ 		cpumask_set_cpu(cpu, &next->context.cpu_attach_mask);
+ 	/* Clear old ASCE by loading the kernel ASCE. */
+ 	__ctl_load(S390_lowcore.kernel_asce, 1, 1);
+ 	__ctl_load(S390_lowcore.kernel_asce, 7, 7);
+-	atomic_inc(&next->context.attach_count);
+-	atomic_dec(&prev->context.attach_count);
+-	if (MACHINE_HAS_TLB_LC)
+-		cpumask_clear_cpu(cpu, &prev->context.cpu_attach_mask);
++	if (prev != next) {
++		atomic_inc(&next->context.attach_count);
++		atomic_dec(&prev->context.attach_count);
++		if (MACHINE_HAS_TLB_LC)
++			cpumask_clear_cpu(cpu, &prev->context.cpu_attach_mask);
++	}
+ 	S390_lowcore.user_asce = next->context.asce_bits | __pa(next->pgd);
  }
-@@ -434,7 +432,7 @@ static int setup_frame(void *sig_return,
- 	struct sigframe __user *frame;
- 	int err = 0;
- 
--	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame));
-+	frame = get_sigframe(ksig, regs, sizeof(*frame));
- 	if (!access_ok(VERIFY_WRITE, frame, sizeof (*frame)))
- 		return -EFAULT;
- 
-@@ -473,7 +471,7 @@ static int setup_rt_frame(void *sig_retu
- 	struct rt_sigframe __user *frame;
- 	int err = 0;
- 
--	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame));
-+	frame = get_sigframe(ksig, regs, sizeof(*frame));
- 	if (!access_ok(VERIFY_WRITE, frame, sizeof (*frame)))
- 		return -EFAULT;
- 
---- a/arch/mips/kernel/signal32.c
-+++ b/arch/mips/kernel/signal32.c
-@@ -494,7 +494,7 @@ static int setup_frame_32(void *sig_retu
- 	struct sigframe32 __user *frame;
- 	int err = 0;
- 
--	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame));
-+	frame = get_sigframe(ksig, regs, sizeof(*frame));
- 	if (!access_ok(VERIFY_WRITE, frame, sizeof (*frame)))
- 		return -EFAULT;
- 
-@@ -534,7 +534,7 @@ static int setup_rt_frame_32(void *sig_r
- 	struct rt_sigframe32 __user *frame;
- 	int err = 0;
- 
--	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame));
-+	frame = get_sigframe(ksig, regs, sizeof(*frame));
- 	if (!access_ok(VERIFY_WRITE, frame, sizeof (*frame)))
- 		return -EFAULT;
- 
---- a/arch/mips/kernel/signal_n32.c
-+++ b/arch/mips/kernel/signal_n32.c
-@@ -108,7 +108,7 @@ static int setup_rt_frame_n32(void *sig_
- 	struct rt_sigframe_n32 __user *frame;
- 	int err = 0;
- 
--	frame = get_sigframe(&ksig->ka, regs, sizeof(*frame));
-+	frame = get_sigframe(ksig, regs, sizeof(*frame));
- 	if (!access_ok(VERIFY_WRITE, frame, sizeof (*frame)))
- 		return -EFAULT;
  
 
