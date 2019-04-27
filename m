@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33ED3C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876C1C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5E22146E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584622146E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329278;
-	bh=4I64z/QoDH38doAQd0PCrHDbLM/yKjzvon4cotLSWGg=;
+	s=default; t=1556329280;
+	bh=EORgHn6y+LW9CqXjwjHIfkrGzyJd3plfgq1dgFU7hb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qcgsZ252eeJJKYcXtAZoqL47673kFrEwhhYL4flgSC5JdzICwsHaqi1w3ybXZOaL5
-	 Bm37W7x04HTlCG8vUIvn4r9sbqoWCdLQC0D957vS+XAmg8t1GHVcUCR96U1WqGhCiG
-	 91DXS1mijYMWxEioBH/1TyZHvAg580TzX9+rYUbE=
+	b=1AoQyFhinhKHGlfut++fyzhOyWG81AVwBWmY063pLLQ74elkEJQCM5E0Zqse2z7vQ
+	 xWkofHriUigxeyQM0pLy06s/Z4sUWj2FJ8al/QciIXO+1Qjk4byA7naFFwp/VLoaU0
+	 cKw/5onTvR6WiId1m7Rk+rWS93PHxNnV9FhH01wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbfD0BlR (ORCPT
+        id S1728239AbfD0BlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:41:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44924 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:41:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727594AbfD0BlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:11 -0400
+        id S1728213AbfD0BlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E7C8208CB;
-        Sat, 27 Apr 2019 01:41:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DCB5208CB;
+        Sat, 27 Apr 2019 01:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329270;
-        bh=4I64z/QoDH38doAQd0PCrHDbLM/yKjzvon4cotLSWGg=;
+        s=default; t=1556329274;
+        bh=EORgHn6y+LW9CqXjwjHIfkrGzyJd3plfgq1dgFU7hb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sxWR0R/XVN1NdwBwcCwqitE41zmxrcLYAO8aZru2nmATi+CyitDxqqvtJ1Lcmblfp
-         PuY+1kVU7GMYjANlwbu9CSDEm7RpAGEhq+BBtfDhlMAnSTGeh7RiD5XBQcKBdU6G+m
-         9Z9pzlIuofem4W+X8qT8lLM0IUA+YE2iFuua3IyA=
+        b=j5e73379InF6IEKXgjXVW/V/I/fsdyWZcsSI7tFoYsASCFNQCSCeNEKjIvoClLf62
+         Npad0+NFylpcNARcldDqWtiGyQKe7yf4BJbMrUDBa1+fODKf1pxxLxSOx3KrsrsVZs
+         VGyB7MTB7LTY+/F3UwFNzZSPifs6v1e91z1H+wkk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+Cc:     Olivier Moysan <olivier.moysan@st.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 4.19 12/53] ASoC: wm_adsp: Add locking to wm_adsp2_bus_error
-Date:   Fri, 26 Apr 2019 21:40:09 -0400
-Message-Id: <20190427014051.7522-12-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 15/53] ASoC: stm32: dfsdm: fix debugfs warnings on entry creation
+Date:   Fri, 26 Apr 2019 21:40:12 -0400
+Message-Id: <20190427014051.7522-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -59,67 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-[ Upstream commit a2225a6d155fcb247fe4c6d87f7c91807462966d ]
+[ Upstream commit c47255b61129857b74b0d86eaf59335348be05e0 ]
 
-Best to lock across handling the bus error to ensure the DSP doesn't
-change power state as we are reading the status registers.
+Register platform component with a prefix, to avoid warnings
+on debugfs entries creation, due to component name
+redundancy.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm_adsp.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ sound/soc/stm/stm32_adfsdm.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
-index 4d3ec295679d..2716022c6bc3 100644
---- a/sound/soc/codecs/wm_adsp.c
-+++ b/sound/soc/codecs/wm_adsp.c
-@@ -3819,11 +3819,13 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 	struct regmap *regmap = dsp->regmap;
- 	int ret = 0;
+diff --git a/sound/soc/stm/stm32_adfsdm.c b/sound/soc/stm/stm32_adfsdm.c
+index 71d341b732a4..24948b95eb19 100644
+--- a/sound/soc/stm/stm32_adfsdm.c
++++ b/sound/soc/stm/stm32_adfsdm.c
+@@ -304,6 +304,7 @@ MODULE_DEVICE_TABLE(of, stm32_adfsdm_of_match);
+ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ {
+ 	struct stm32_adfsdm_priv *priv;
++	struct snd_soc_component *component;
+ 	int ret;
  
-+	mutex_lock(&dsp->pwr_lock);
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+@@ -331,9 +332,15 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->iio_cb))
+ 		return PTR_ERR(priv->iio_cb);
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev,
+-					      &stm32_adfsdm_soc_platform,
+-					      NULL, 0);
++	component = devm_kzalloc(&pdev->dev, sizeof(*component), GFP_KERNEL);
++	if (!component)
++		return -ENOMEM;
++#ifdef CONFIG_DEBUG_FS
++	component->debugfs_prefix = "pcm";
++#endif
 +
- 	ret = regmap_read(regmap, dsp->base + ADSP2_LOCK_REGION_CTRL, &val);
- 	if (ret) {
- 		adsp_err(dsp,
- 			"Failed to read Region Lock Ctrl register: %d\n", ret);
--		return IRQ_HANDLED;
-+		goto error;
- 	}
- 
- 	if (val & ADSP2_WDT_TIMEOUT_STS_MASK) {
-@@ -3842,7 +3844,7 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 			adsp_err(dsp,
- 				 "Failed to read Bus Err Addr register: %d\n",
- 				 ret);
--			return IRQ_HANDLED;
-+			goto error;
- 		}
- 
- 		adsp_err(dsp, "bus error address = 0x%x\n",
-@@ -3855,7 +3857,7 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 			adsp_err(dsp,
- 				 "Failed to read Pmem Xmem Err Addr register: %d\n",
- 				 ret);
--			return IRQ_HANDLED;
-+			goto error;
- 		}
- 
- 		adsp_err(dsp, "xmem error address = 0x%x\n",
-@@ -3868,6 +3870,9 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 	regmap_update_bits(regmap, dsp->base + ADSP2_LOCK_REGION_CTRL,
- 			   ADSP2_CTRL_ERR_EINT, ADSP2_CTRL_ERR_EINT);
- 
-+error:
-+	mutex_unlock(&dsp->pwr_lock);
-+
- 	return IRQ_HANDLED;
++	ret = snd_soc_add_component(&pdev->dev, component,
++				    &stm32_adfsdm_soc_platform, NULL, 0);
+ 	if (ret < 0)
+ 		dev_err(&pdev->dev, "%s: Failed to register PCM platform\n",
+ 			__func__);
+@@ -341,12 +348,20 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(wm_adsp2_bus_error);
+ 
++static int stm32_adfsdm_remove(struct platform_device *pdev)
++{
++	snd_soc_unregister_component(&pdev->dev);
++
++	return 0;
++}
++
+ static struct platform_driver stm32_adfsdm_driver = {
+ 	.driver = {
+ 		   .name = STM32_ADFSDM_DRV_NAME,
+ 		   .of_match_table = stm32_adfsdm_of_match,
+ 		   },
+ 	.probe = stm32_adfsdm_probe,
++	.remove = stm32_adfsdm_remove,
+ };
+ 
+ module_platform_driver(stm32_adfsdm_driver);
 -- 
 2.19.1
 
