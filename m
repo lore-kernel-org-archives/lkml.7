@@ -2,100 +2,129 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589A2C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D59DC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B16206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:34:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ocsStDNd"
+	by mail.kernel.org (Postfix) with ESMTP id 064CD2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfD0DeJ (ORCPT
+        id S1727365AbfD0Dgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 23:34:09 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:17156 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727353AbfD0Ddv (ORCPT
+        Fri, 26 Apr 2019 23:36:49 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:27878 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725933AbfD0Dgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 23:33:51 -0400
-Received: from grover.flets-west.jp (softbank126125154137.bbtec.net [126.125.154.137]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x3R3Xie9029345;
-        Sat, 27 Apr 2019 12:33:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x3R3Xie9029345
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556336025;
-        bh=nRN3KbTI71mxDcDVMkE3kPEQDMn9s9dPdxgPtZcV+64=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ocsStDNdXFsaveLs0g/okRTy+I6dxFZi6U0XR/yT/7MmsMPQ9ZYdX26iO9TZJYTln
-         e2azvj3zCE7bhuvKus43WB6GD8EnjlhMpdDpHAJlHzHm0XmsO9ul/Pt/VF220e9K3j
-         Oq4q7IuuUeWPPfLUWjagkprmSIR6XyiofHS7vTF9mN3d4Cmgx428HpOkC9015wbP7G
-         pQHccdOnlcTYk5bgomqJiyFQ45Eq3WWflQwTYm0MFSz91vf+31bkkyfwGOnWUUWcQO
-         gsdIdT5Fvt4mC+IngUVipgGspGy+1h0TzVIsZz/cC8w2YZ+3r2O6eEJqkdY2t8Hols
-         NvBoDjbVra56A==
-X-Nifty-SrcIP: [126.125.154.137]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] samples: guard sub-directories with CONFIG options
-Date:   Sat, 27 Apr 2019 12:33:38 +0900
-Message-Id: <1556336020-15634-3-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556336020-15634-1-git-send-email-yamada.masahiro@socionext.com>
-References: <1556336020-15634-1-git-send-email-yamada.masahiro@socionext.com>
+        Fri, 26 Apr 2019 23:36:48 -0400
+X-UUID: 69dd131840a548239512be439ae1e945-20190427
+X-UUID: 69dd131840a548239512be439ae1e945-20190427
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <long.cheng@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1103383770; Sat, 27 Apr 2019 11:36:42 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 27 Apr 2019 11:36:40 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 27 Apr 2019 11:36:40 +0800
+From:   Long Cheng <long.cheng@mediatek.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Zhenbao Liu <zhenbao.liu@mediatek.com>,
+        Long Cheng <long.cheng@mediatek.com>
+Subject: [PATCH v12 0/4] add uart DMA function 
+Date:   Sat, 27 Apr 2019 11:36:29 +0800
+Message-ID: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 380E7148DB3C720F74ADAE99429A073B5931D5CE5B02F9DD34F8311691EB87102000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not descend to sub-directories when unneeded.
+In Mediatek SOCs, the uart can support DMA function.
+Base on DMA engine formwork, we add the DMA code to support uart. And put the code under drivers/dma/mediatek.
 
-I used subdir-$(CONFIG_...) for hidraw, seccomp, and statx because
-they only contain host programs.
+This series contains document bindings, Kconfig to control the function enable or not,
+device tree including interrupt and dma device node, the code of UART DMA
 
-While we are here, let's add SPDX License tag, and sort the directories
-alphabetically.
+Changes compared to v11
+-modify TX/RX
+-pause function by software
+Changes compared to v10
+-modify DMA tx status function
+-modify 8250_mtk for DMA rx
+-add notes to binding Document.
+Changes compared to v9
+-rename dt-bindings file
+-remove direction from device_config
+-simplified code
+Changes compared to v8
+-revise missing items
+Changes compared to v7:
+-modify apdma uart tx
+Changes compared to v6:
+-Correct spelling
+Changes compared to v5:
+-move 'requst irqs' to alloc channel
+-remove tasklet.
+Changes compared to v4:
+-modify Kconfig depends on.
+Changes compared to v3:
+-fix CONFIG_PM, will cause build fail
+Changes compared to v2:
+-remove unimportant parameters
+-instead of cookie, use APIs of virtual channel.
+-use of_dma_xlate_by_chan_id.
+Changes compared to v1:
+-mian revised file, 8250_mtk_dma.c
+--parameters renamed for standard
+--remove atomic operation
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Long Cheng (4):
+  dmaengine: mediatek: Add MediaTek UART APDMA support
+  arm: dts: mt2712: add uart APDMA to device tree
+  dt-bindings: dma: uart: rename binding
+  serial: 8250-mtk: modify uart DMA rx
 
- samples/Makefile | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/dma/8250_mtk_dma.txt       |   33 -
+ .../devicetree/bindings/dma/mtk-uart-apdma.txt     |   55 ++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |   51 ++
+ drivers/dma/mediatek/Kconfig                       |   11 +
+ drivers/dma/mediatek/Makefile                      |    1 +
+ drivers/dma/mediatek/mtk-uart-apdma.c              |  666 ++++++++++++++++++++
+ drivers/tty/serial/8250/8250_mtk.c                 |   53 +-
+ 7 files changed, 807 insertions(+), 63 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+ create mode 100644 drivers/dma/mediatek/mtk-uart-apdma.c
 
-diff --git a/samples/Makefile b/samples/Makefile
-index 50f8586..0f2d70d 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -1,6 +1,21 @@
-+# SPDX-License-Identifier: GPL-2.0
- # Makefile for Linux samples code
- 
--obj-y			+= kobject/ kprobes/ trace_events/ livepatch/ \
--			   hw_breakpoint/ kfifo/ kdb/ hidraw/ rpmsg/ seccomp/ \
--			   configfs/ connector/ v4l/ trace_printk/ \
--			   vfio-mdev/ statx/ qmi/ binderfs/
-+obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
-+obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
-+obj-$(CONFIG_SAMPLE_CONNECTOR)		+= connector/
-+subdir-y				+= hidraw
-+obj-$(CONFIG_SAMPLE_HW_BREAKPOINT)	+= hw_breakpoint/
-+obj-$(CONFIG_SAMPLE_KDB)		+= kdb/
-+obj-$(CONFIG_SAMPLE_KFIFO)		+= kfifo/
-+obj-$(CONFIG_SAMPLE_KOBJECT)		+= kobject/
-+obj-$(CONFIG_SAMPLE_KPROBES)		+= kprobes/
-+obj-$(CONFIG_SAMPLE_LIVEPATCH)		+= livepatch/
-+obj-$(CONFIG_SAMPLE_QMI_CLIENT)		+= qmi/
-+obj-$(CONFIG_SAMPLE_RPMSG_CLIENT)	+= rpmsg/
-+subdir-$(CONFIG_SAMPLE_SECCOMP)		+= seccomp
-+subdir-$(CONFIG_SAMPLE_STATX)		+= statx
-+obj-$(CONFIG_SAMPLE_TRACE_EVENTS)	+= trace_events/
-+obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
-+obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
-+obj-y					+= vfio-mdev/
 -- 
-2.7.4
+1.7.9.5
+
 
