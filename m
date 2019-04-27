@@ -2,317 +2,102 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02531C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EEAC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA49A2077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8ACB2077B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556328463;
+	bh=M4LQjJEnK+pfuuQyzRrRE3fimTdaI2Ywyh4Hrp/kXjk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=r88Qpxv7Ew54hWw9sIFApJBD/Wc/V1OFIpuDvAysr74oSLzk+kZvQnfcQzumh82K1
+	 U0+vKUFFWu54oeTgcOQZXKV9+Edn02+d1QJ4tm9i5dIbuMD9ffmEu5kKxf8Rb/SuQy
+	 foavyciZYbH/0FIynpf+vxo/v8OI3EimP+NagOJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfD0BZ0 (ORCPT
+        id S1727274AbfD0B1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:25:26 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:46943 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727178AbfD0BZZ (ORCPT
+        Fri, 26 Apr 2019 21:27:41 -0400
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:37957 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfD0B1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:25:25 -0400
-Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D3AB510D444;
-        Sat, 27 Apr 2019 11:25:17 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hKC5c-0004jm-8u; Sat, 27 Apr 2019 11:25:16 +1000
-Date:   Sat, 27 Apr 2019 11:25:16 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM TOPIC] Direct block mapping through fs for device
-Message-ID: <20190427012516.GH1454@dread.disaster.area>
-References: <20190426013814.GB3350@redhat.com>
- <20190426062816.GG1454@dread.disaster.area>
- <20190426152044.GB13360@redhat.com>
+        Fri, 26 Apr 2019 21:27:41 -0400
+Received: by mail-lf1-f49.google.com with SMTP id v1so3788624lfg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 18:27:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2EoQBKCmosLZTV3cUhOnvDE6nYwdNN71gNqlgZ5iWds=;
+        b=G4F4Z9SaE8ui1QUps26GTDI6QwjdnYl94Do4hp09Yh4lJwVx7yr7BJFfMv8qfAmzKH
+         stIhv4zIVbeQoW0OrJgPPW3MJsVNnzRPwMHmqTgWp9j4AUA5K2wNKTRy5v4gTOmECVKc
+         HlWkObrs34pMRsPqba5Jp+5qR4J8qOD+JGMu0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2EoQBKCmosLZTV3cUhOnvDE6nYwdNN71gNqlgZ5iWds=;
+        b=pKyJ6V8zpeJD5JGfDQMaRfsIFP2QFeNN4b3gQ2Q+wYvV8bVmWgJul6/i+N9kmLdFvy
+         pr4WpO5ujpV0N/Ea46y2pR7DsMhZezqLVVkl5jAuBhx//Jjl2PeIXdx1kXUE3kGOBcXT
+         czj7oneBmwsFx45pfzyNRKGnZ00Bb5egvv3Magk5OZ5MD2/i+pZEuFWCs/9zGksjP1ks
+         4X0kkw+p6mz8ZsWuAVe/BEhftVRs5ErXoWEfM4lvsSSEJc2v1Ywjx/JiwX2e1g1lEkcG
+         X0I00LspAcWuHFJETi+FmvyGhK880Rxr61ZzCf+nLdQeTzMRArW5TnZ8YxphljnA6JG2
+         yoHQ==
+X-Gm-Message-State: APjAAAWxAt41Vyy/ld6+YgRDX8iBiu5KB2q88YglBiS+Pklgr+CaTjrX
+        e6DMGQV7P6gOqlQh6KOJaDolwqp3dzQ=
+X-Google-Smtp-Source: APXvYqwt2HHTJ+Faei5gdFOFD6RjvezmWIGSEbvgmtz00QSL6LfPOrrKyO0y60Ta+Xo3/IkJ3pkAvg==
+X-Received: by 2002:a19:2814:: with SMTP id o20mr25860355lfo.117.1556328458807;
+        Fri, 26 Apr 2019 18:27:38 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id d24sm1850296lfj.30.2019.04.26.18.27.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Apr 2019 18:27:37 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id o16so3772882lfl.7
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 18:27:37 -0700 (PDT)
+X-Received: by 2002:a19:48c9:: with SMTP id v192mr25604700lfa.136.1556328456785;
+ Fri, 26 Apr 2019 18:27:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426152044.GB13360@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=oexKYjalfGEA:10
-        a=7-415B0cAAAA:8 a=SilY-4-awVSwrndW5ZYA:9 a=hHpGJbNLqnb1Yhi3:21
-        a=WGQLJQAUvfBwYTRy:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <0000000000000101b30587622a69@google.com> <CAHk-=wjp-R083To=AVbovNJWrskNfYN8rqz=nZZTPRihCohE4g@mail.gmail.com>
+ <0c6ecfca6329f0d11c6962ec5875314414813ac6.camel@decadent.org.uk>
+In-Reply-To: <0c6ecfca6329f0d11c6962ec5875314414813ac6.camel@decadent.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 26 Apr 2019 18:27:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wihu4ju2ARJ4K04nOKZa1Xjdm1_6nxxxcYJ1Jm1JDB=bw@mail.gmail.com>
+Message-ID: <CAHk-=wihu4ju2ARJ4K04nOKZa1Xjdm1_6nxxxcYJ1Jm1JDB=bw@mail.gmail.com>
+Subject: Re: BUG: unable to handle page fault for address = ADDR
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     syzbot <syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Netdev <netdev@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        peter@hurleysoftware.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        vegard.nossum@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 11:20:45AM -0400, Jerome Glisse wrote:
-> On Fri, Apr 26, 2019 at 04:28:16PM +1000, Dave Chinner wrote:
-> > On Thu, Apr 25, 2019 at 09:38:14PM -0400, Jerome Glisse wrote:
-> > > I see that they are still empty spot in LSF/MM schedule so i would like to
-> > > have a discussion on allowing direct block mapping of file for devices (nic,
-> > > gpu, fpga, ...). This is mm, fs and block discussion, thought the mm side
-> > > is pretty light ie only adding 2 callback to vm_operations_struct:
-> > 
-> > The filesystem already has infrastructure for the bits it needs to
-> > provide. They are called file layout leases (how many times do I
-> > have to keep telling people this!), and what you do with the lease
-> > for the LBA range the filesystem maps for you is then something you
-> > can negotiate with the underlying block device.
-> > 
-> > i.e. go look at how xfs_pnfs.c works to hand out block mappings to
-> > remote pNFS clients so they can directly access the underlying
-> > storage. Basically, anyone wanting to map blocks needs a file layout
-> > lease and then to manage the filesystem state over that range via
-> > these methods in the struct export_operations:
-> > 
-> >         int (*get_uuid)(struct super_block *sb, u8 *buf, u32 *len, u64 *offset);
-> >         int (*map_blocks)(struct inode *inode, loff_t offset,
-> >                           u64 len, struct iomap *iomap,
-> >                           bool write, u32 *device_generation);
-> >         int (*commit_blocks)(struct inode *inode, struct iomap *iomaps,
-> >                              int nr_iomaps, struct iattr *iattr);
-> > 
-> > Basically, before you read/write data, you map the blocks. if you've
-> > written data, then you need to commit the blocks (i.e. tell the fs
-> > they've been written to).
-> > 
-> > The iomap will give you a contiguous LBA range and the block device
-> > they belong to, and you can then use that to whatever smart DMA stuff
-> > you need to do through the block device directly.
-> > 
-> > If the filesystem wants the space back (e.g. because truncate) then
-> > the lease will be revoked. The client then must finish off it's
-> > outstanding operations, commit them and release the lease. To access
-> > the file range again, it must renew the lease and remap the file
-> > through ->map_blocks....
-> 
-> Sorry i should have explain why lease do not work. Here are list of
-> lease shortcoming AFAIK:
->     - only one process
-
-Sorry, what? The lease is taken by a application process that then
-hands out the mapping to whatever parts of it - processes, threads,
-remote clients, etc - need access. If your application doesn't
-have an access co-ordination method, then you're already completely
-screwed.
-
->     - program ie userspace is responsible for doing the right thing
->       so heavy burden on userspace program
-
-You're asking for direct access to storage owned by the filesystem.
-The application *must* play by the filesystem rules. Stop trying to
-hack around the fact that the filesystem controls access to the
-block mapping.
-
->     - lease break time induce latency
-
-Lease breaks should never happen in normal workloads, so this isn't
-an issue. IF you have an application that requires exclusive access,
-then ensure that the file can only be accessed by the application
-and the lease should never be broken.
-
-But if you are going to ask for filesystems to hand out block
-mapping for thrid party access, the 3rd parties need to play by the
-filesystem's access rules, and that means they /must/ break access
-if the filesystem asks them to.
-
->     - lease may require privileges for the applications
-
-If you can directly access the underlying block device (which
-requires root/CAP_SYS_ADMIN) then the application has sufficient
-privilege to get a file layout lease.
-
->     - work on file descriptor not virtual addresses
-
-Sorry, what? You want direct access to the underlying storage device
-for direct DMA, not access to the page cache. i.e. you need a
-mapping for a range of a file (from offset X to Y) and you most
-definitely do not need the file to be virtually mapped for that.
-
-If you want to DMA from a userspace or peer device memory to storage
-directly, then you definitely do not want the file to mapped into
-the page cache, and so mmap() is most definitely the wrong interface
-to be using to set up direct storage access to a file.
-
-> While what i am trying to achieve is:
->     - support any number of process
-
-file leases don't prevent that.
-
->     - work on virtual addresses
-
-like direct io, get_user_pages() works just fine for this.
-
->     - is an optimization ie falling back to page cache is _always_
->       acceptable
-
-No, it isn't. Falling back to the page cache will break the layout
-lease because the lock filesystem does IO that breaks existing
-leases. You can't have both a layout lease and page cache access to
-the same file.
-
->     - no changes to userspace program ie existing program can
->       benefit from this by just running on a kernel with the
->       feature on the system with hardware that support this.
-
-That's a pipe dream. Existing direct access applications /don't work/ with
-file-backed mmap() ranges. They will not work with DAX, either, so
-please stop with the "work with unmodified existing applications"
-already.
-
-If you want peer to peer DMA to filesystem managed storage, then you
-*must* use the filesystem to manage access to that storage.
-
->     - allow multiple different devices to map the block (can be
->       read only if the fabric between devices is not cache coherent)
-
-Nothing about a layout lease prevents that. What the application
-does with the layout lease is it's own business.
-
->     - it is an optimization ie avoiding to waste main memory if file
->       is only accessed by device
-
-Layout leases don't prevent this - they are explicitly for allowing
-this sort of access to be made safely.
-
->     - there is _no pin_ and it can be revoke at _any_ time from within
->       the kernel ie there is no need to rely on application to do the
->       right thing
-
-Revoke how, exactly? Are you really proposing sending SEGV to user
-processes as the revoke mechanism?
-
->     - not only support filesystem but also vma that comes from device
->       file
-
-What's a "device file" and how is that any difference from a normal
-kernel file?
-
-> The motivation is coming from new storage technology (NVMe with CMB for
-> instance) where block device can offer byte addressable access to block.
-> It can be read only or read and write. When you couple this with gpu,
-> fgpa, tpu that can crunch massive data set (in the tera bytes ranges)
-> then avoiding going through main memory becomes an appealing prospect.
+On Fri, Apr 26, 2019 at 4:36 AM Ben Hutchings <ben@decadent.org.uk> wrote:
 >
-> If we can achieve that with no disruption to the application programming
-> model the better it is. By allowing to mediate direct block access through
-> vma we can achieve that.
+> This looks sensible to me.
 
-I have a hammer that I can use to mediate direct block access, too.
+I've just applied it directly to my tree. It looks like slip is
+largely a thing of the past, there have been no slip-specific patches
+for the last year (all changes in the last year have been due to
+treewide changes that weren't slip-specific).
 
-That doesn't mean it's the right tool for the job. At it's most
-fundamental level, the block mapping is between an inode, the file
-offset and the LBA range in the block device that the storage device
-presents to users. This is entirely /filesystem information/ and we
-already have interfaces to manage and arbitrate safe direct storage
-access for third parties.
-
-Stop trying to re-invent the wheel and use the one we already have.
-
-> This is why i am believe something at the vma level is better suited to
-> make such thing as easy and transparent as possible. Note that unlike
-> GUP there is _no pinning_ so filesystem is always in total control and
-> can revoke at _any_ time.
-
-Revoke how, exactly? And how do applications pause and restart when
-this undefined revoke mechanism is invoked? What happens to access
-latency when this revoke occurs and why is this any different to
-having a file layout lease revoked?
-
-> Also because it is all kernel side we should
-> achieve much better latency (flushing device page table is usualy faster
-> then switching to userspace and having userspace calling back into the
-> driver).
-> 
-> 
-> > 
-> > > So i would like to gather people feedback on general approach and few things
-> > > like:
-> > >     - Do block device need to be able to invalidate such mapping too ?
-> > > 
-> > >       It is easy for fs the to invalidate as it can walk file mappings
-> > >       but block device do not know about file.
-> > 
-> > If you are needing the block device to invalidate filesystem level
-> > information, then your model is all wrong.
-> 
-> It is _not_ a requirement. It is a feature and it does not need to be
-> implemented right away the motivation comes from block device that can
-> manage their PCIE BAR address space dynamicly and they might want to
-> unmap some block to make room for other block. For this they would need
-> to make sure that they can revoke access from device or CPU they might
-> have mapped the block they want to evict.
-
-This has nothing to do with the /layout lease/. Layout leases are
-for managing direct device access, not how the application interacts
-with the hardware that it has been given a block mapping for.
-
-Jerome, it seems to me like you're conflating hardware management
-issues with block device access and LBA management. These are
-completely separate things that the application has to manage - the
-filesystem and the layout lease doesn't give a shit about whether
-the application has exhausted the hardware PCIE BAR space.  i.e.
-hardware kicking out a user address mapping does not invalidate the
-layout lease in any way - it just requires the application to set up
-that direct access map in the hardware again.  The file offset to
-LBA mapping that the layout lease manages is entirely unaffected by
-this sort of problem.
-
-> > >     - Maybe some share helpers for block devices that could track file
-> > >       corresponding to peer mapping ?
-> > 
-> > If the application hasn't supplied the peer with the file it needs
-> > to access, get a lease from and then map an LBA range out of, then
-> > you are doing it all wrong.
-> 
-> I do not have the same programming model than one you have in mind, i
-> want to allow existing application which mmap files and access that
-> mapping through a device or CPU to directly access those blocks through
-> the virtual address.
-
-Which is the *wrong model*.
-
-mmap() of a file-backed mapping does not provide a sane, workable
-direct storage access management API. It's fundamentally flawed
-because it does not provide any guarantee about the underlying
-filesystem information (e.g. the block mapping) and as such, results
-in a largely unworkable model that we need all sorts of complexity
-to sorta make work.
-
-Layout leases and the export ops provide the application with the
-exact information they need to directly access the storage
-underneath the filesystem in a safe manner. They do not, in any way,
-control how the application then uses that information. If you
-really want to use mmap() to access the storage, then you can mmap()
-the ranges of the block device the ->map_blocks() method tells you
-belong to that file. 
-
-You can do whatever you want with those vmas and the filesystem
-doesn't care - it's not involved in /any way whatsoever/ with the
-data transfer into and out of the storage because ->map_blocks has
-guaranteed that the storage is allocated. All the application needs
-to do is call ->commit_blocks on each range of the mapping it writes
-data into to tell the filesystem it now contains valid data.  It's
-simple, straight forward, and hard to get wrong from both userspace
-and the kernel filesystem side.
-
-Please stop trying to invent new and excitingly complex ways to do
-direct block access because we ialready have infrastructure we know
-works, we already support and is flexible enough to provide exactly
-the sort of direct block device access mechainsms that you are
-asking for.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+                   Linus
