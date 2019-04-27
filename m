@@ -2,114 +2,136 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D6DC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93C5C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30465212F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FFB212F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556369745;
+	bh=hVmyG+1AvKUQGM0TnO9YzO1iCH5meTQ6M6O8sm/zFp0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PmriuwefY4b2eMvVd1khljqcRQL7J6X2qW4qJJKiI/Nsi1Wph+DAuzEjDWiPg2hI5
+	 zzLS51lrb+FUGyU+5G2dOg66/n7g+YOS9SueKlLg8YAeS+1xUxADtUC+56NLnhrEoZ
+	 0tXcNItCz6wGc8nnaT9gmMbJI+8Ckh0ebD6fs7VM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfD0Mzm (ORCPT
+        id S1727629AbfD0Mzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sat, 27 Apr 2019 08:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727620AbfD0Mzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 08:55:42 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:43639 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfD0MxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:53:13 -0400
-Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mspy4-1gVqbT38iO-00tCHb; Sat, 27 Apr 2019 14:52:51 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
-        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 21/41] drivers: tty: serial: cpm_uart: fix includes
-Date:   Sat, 27 Apr 2019 14:52:02 +0200
-Message-Id: <1556369542-13247-22-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
-References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:xQq23jU9i9rUL2fNQuvkwl6eGPDVSQvpkDbQ/zveful4zboC1HW
- oNd3D0zOYk84zfCJ0Xuzpmh6YQ79oPwoYvw/oeAO14yaLEcslLKcMENViWN+rlXtE9vM1qv
- 1jCwWuLOXgdLjw4fxAGT3BB8TcpKk2wNp9jWPWPgaYVVv0WEj/TEQ/U7sklnKXLuZSVuAgG
- ee5Mn3D1VCygJnSepJUyg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xWgBbp/LG7s=:wi8MuLImVy2CGGeEYyoQB2
- KMmBNwIQx4fsztqkOwXtcxcWItI9eedJWvICvmKhOlHgaY8MtQ25FTCVmfHiYt3j9gS36aZaa
- q9Y5EIjEBd+qyl0GLPKh4hpFw2Y9xorJzSRbpppCWg9Lng+zZdTe/MiFG1F7kXNVSzq4lt2hL
- ezKmIOR+0ajJU88S0pj4Kvx7tgnm1+AxaE/XtB3sMY5Kc/X02sDkvp4m476q2eExmeEHf7yl3
- SS9ZDZappKf9esZiUUvzR4FWzO/lGAkyPEM5TbSsWcKPe4Hwz2W19UfQilH2TsF2+lwHqakd/
- 0zYcoNC9JBhT5LyMi+bJ4ixLs9s35MALlLW9l9uhuIfzTde5AJ+qVyxmXzjZs7+sgMLLy16T8
- wQ26qYtWIfsOeVfD03mLnlq295RwRXRcppjT2NdxNgQCjA8w3sUfILoNLj9Dn8itEgJAMtfl7
- V8Cx1WCsQKAgggypWMvmWuYLBZW9OCxv/vxSRFHvIZxRwPaRxNeKsu+/Fbb3nzWRANHyooXV/
- DsfRL+yilOXWQavlpzHDrWwcLFWzf4Q6C/lHFEf1NO221QjdJBnEIHiVYjdfQrgI7DXvLr6y0
- OOEW7gT7Kv/C1gTmxJIHJCzbWkK13YeuK27LFOraKAE3hMCkeL/cdQE0Eb+TGViA6xDeL5nsA
- 9JTsphma2cCsaVd+QVzhXQsK2WCBYwcJMcIA1O1vu+w/HuFJbyuBL4ArPqi6deE6sKSH4G7JK
- UZVfxUQPRjkUPT6CoClRC35MnUhRE+eqWHNnlA==
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5052F208C2;
+        Sat, 27 Apr 2019 12:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556369741;
+        bh=hVmyG+1AvKUQGM0TnO9YzO1iCH5meTQ6M6O8sm/zFp0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aTHD60nk6dMIesU+YQJFMIsdD2QRFFzm7y3c7Bj9pWeQz0Px/r4kwo0rMrMQhdHDR
+         IO5rzgxNnqdybtmu01nqkf1BJzx9lg+uQ4F+M4uvViHWqYK00hMvdFORuQ5NBAwIVy
+         0Xwpea7BY01DKmdQ3NwbAqEggNV9R/DIxevkCfiI=
+Date:   Sat, 27 Apr 2019 13:55:35 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+Cc:     Daniel Gomez <dagmcr@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>, javier@dowhile0.org
+Subject: Re: [PATCH v2] iio: temperature: maxim_thermocouple: declare
+ missing of table
+Message-ID: <20190427135535.46b3f7e9@archlinux>
+In-Reply-To: <CAJCx=gkykSjn7uf67s2_NqB+-FYWF_oA_PknB7LcX5QRD_mp9Q@mail.gmail.com>
+References: <1556055738-14838-1-git-send-email-dagmcr@gmail.com>
+        <CAJCx=gkykSjn7uf67s2_NqB+-FYWF_oA_PknB7LcX5QRD_mp9Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixing checkpatch warning:
+On Thu, 25 Apr 2019 09:35:07 +0800
+Matt Ranostay <matt.ranostay@konsulko.com> wrote:
 
-    WARNING: Use #include <linux/io.h> instead of <asm/io.h>
-    #25: FILE: drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c:25:
-    +#include <asm/io.h>
+> On Wed, Apr 24, 2019 at 5:42 AM Daniel Gomez <dagmcr@gmail.com> wrote:
+> >
+> > Add missing <of_device_id> table for SPI driver relying on SPI
+> > device match since compatible is in a DT binding or in a DTS.
+> >
+> > Before this patch:
+> > modinfo drivers/iio/temperature/maxim_thermocouple.ko | grep alias
+> > alias:          spi:max31855
+> > alias:          spi:max6675
+> >
+> > After this patch:
+> > modinfo drivers/iio/temperature/maxim_thermocouple.ko | grep alias
+> > alias:          spi:max31855
+> > alias:          spi:max6675
+> > alias:          of:N*T*Cmaxim,max31855C*
+> > alias:          of:N*T*Cmaxim,max31855
+> > alias:          of:N*T*Cmaxim,max6675C*
+> > alias:          of:N*T*Cmaxim,max6675  
+> 
+> Heh oops I missed that somehow in initial development.
+> 
+> Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Applied to the togreg branch of iio.git.  Given timing this may have
+to wait for the next cycle to go upstream.
 
-    WARNING: Use #include <linux/io.h> instead of <asm/io.h>
-    +#include <asm/io.h>
+Thanks.
+Jonathan
 
-    WARNING: Use #include <linux/delay.h> instead of <asm/delay.h>
-    +#include <asm/delay.h>
-
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/tty/serial/cpm_uart/cpm_uart_core.c | 4 ++--
- drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-index 374b8bb..c831d31 100644
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -33,10 +33,10 @@
- #include <linux/gpio.h>
- #include <linux/of_gpio.h>
- #include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/delay.h>
- 
--#include <asm/io.h>
- #include <asm/irq.h>
--#include <asm/delay.h>
- #include <asm/fs_pd.h>
- #include <asm/udbg.h>
- 
-diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c b/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c
-index ef1ae08..40cfcf4 100644
---- a/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c
-@@ -21,8 +21,8 @@
- #include <linux/device.h>
- #include <linux/memblock.h>
- #include <linux/dma-mapping.h>
-+#include <linux/io.h>
- 
--#include <asm/io.h>
- #include <asm/irq.h>
- #include <asm/fs_pd.h>
- #include <asm/prom.h>
--- 
-1.9.1
+> 
+> >
+> > Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+> > Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+> > ---
+> >  drivers/iio/temperature/maxim_thermocouple.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/drivers/iio/temperature/maxim_thermocouple.c b/drivers/iio/temperature/maxim_thermocouple.c
+> > index c31b963..c613a64 100644
+> > --- a/drivers/iio/temperature/maxim_thermocouple.c
+> > +++ b/drivers/iio/temperature/maxim_thermocouple.c
+> > @@ -10,6 +10,8 @@
+> >  #include <linux/init.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/err.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> >  #include <linux/spi/spi.h>
+> >  #include <linux/iio/iio.h>
+> >  #include <linux/iio/trigger.h>
+> > @@ -262,9 +264,17 @@ static const struct spi_device_id maxim_thermocouple_id[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(spi, maxim_thermocouple_id);
+> >
+> > +static const struct of_device_id maxim_thermocouple_of_match[] = {
+> > +        { .compatible = "maxim,max6675" },
+> > +        { .compatible = "maxim,max31855" },
+> > +        { },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, maxim_thermocouple_of_match);
+> > +
+> >  static struct spi_driver maxim_thermocouple_driver = {
+> >         .driver = {
+> >                 .name   = MAXIM_THERMOCOUPLE_DRV_NAME,
+> > +               .of_match_table = maxim_thermocouple_of_match,
+> >         },
+> >         .probe          = maxim_thermocouple_probe,
+> >         .remove         = maxim_thermocouple_remove,
+> > --
+> > 2.7.4
+> >  
 
