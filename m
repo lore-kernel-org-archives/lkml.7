@@ -2,107 +2,84 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3717BC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 22:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE71C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 23:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9867206E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 22:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69EAD20881
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 23:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZVxa2ZV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNhoSXJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbfD0Wi6 (ORCPT
+        id S1726242AbfD0Xb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 18:38:58 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43019 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfD0Wi6 (ORCPT
+        Sat, 27 Apr 2019 19:31:58 -0400
+Received: from mail-it1-f178.google.com ([209.85.166.178]:54857 "EHLO
+        mail-it1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfD0Xb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 18:38:58 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t22so287939pgi.10;
-        Sat, 27 Apr 2019 15:38:57 -0700 (PDT)
+        Sat, 27 Apr 2019 19:31:58 -0400
+Received: by mail-it1-f178.google.com with SMTP id a190so11374994ite.4;
+        Sat, 27 Apr 2019 16:31:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=cFZkA5CUkgKwoe6mx3jHj9OoNUtIU52AVqJl0l10p1o=;
-        b=VZVxa2ZVsNmslXFa3MWYrswOBwdr9s6QJMR2+aKDvywFu6Ar/6bQphKjRgDsD+75vs
-         y6QShbWJg124f8+mK8i++/OIAADoRwjLgkyCNhirrBiSxTGAlpG/kAMFUW/7kSjMlHni
-         rPczGR1OPDieo0GIQEQDSWjshuhdAP5VH9v03bFKE4KWtnLva8ZMzEY4FwWy7ry2a1io
-         AdUkvqgU8624CcR3MaVsYIRO+6CyHWS+YWQS1ZzXQ4DztKuZv/wIRmy6BVu14MxLa6ci
-         chtNPNn+CHvsaroiPX5ika04t203+K5iQWkJT93ioxH/ISvBgcndqhlLTW1VQKQdSZTz
-         9mcg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ExXFeWZqr6q0Nj5H2kUVmtpTrOrKnLFcUsIpUqz/LX8=;
+        b=FNhoSXJMubOcR10ZmwciYeQWptA4XxLc+6MUludTMoa5KX/JJZovPo840JBocGjpLX
+         XdmXO7Q+zz+mMNG+89F39yhkfXNUqyCmfowhbLCeTPJrArycBUrYqJxMJFatSHcUr54Q
+         gJEovtIubhJQXYui9TnL8O2/ER6UW1aqkhtZ5eLYdDNyZllQHXirOJun6EIyuD3uE7SY
+         FNHDNIIyDRyyFjQfS0HN/ypKUP+23flUy/izl6/ufSMf7UqA3pA62A0uj6HG5zKbM1oW
+         T6019ZyOUDDbU1FH2dgjAqS0tk+GyUqEwuv4cIizuVERMXoN69D8HammS1MRbIr8My9W
+         f5vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=cFZkA5CUkgKwoe6mx3jHj9OoNUtIU52AVqJl0l10p1o=;
-        b=mVmddXN1BQp3ReP9wMM0sKJ4/exOhrSZkM7t8fAx0OiDKA/r2dY6yLoybuDaCVptjI
-         vyFaEBCOtsqRJqoXKwlno4XftwRrC/Sh3CIK3OxRPMY38OhpWN+BCclTNE9HM24hDYKc
-         oRZEHwyiHOk5JlgbeV5sSx3dEoh8JAohT/FDr5EV0lwO9FkALckDX3S0Sa7cz1siGqpT
-         Jmb3hXNQf/2HF8MAkPeo0baC6scC5KFhbs/Uqlvba/P98oBKmJUNL9BEkQ651xBIrI6e
-         3EBYYg/zAM8SmQ6ie15WE53Vkt8PBjRS8waFgCY1d+80isRlRg0CPMaS31BFWPrOY5rZ
-         OLTw==
-X-Gm-Message-State: APjAAAXKeVrcmgnHS23ia0b7yW2+YL3bwuf0G0MeMxbomInCbrdCjI7J
-        lN0Tf78JV3XaqdsVQjcGpMY=
-X-Google-Smtp-Source: APXvYqwNiWGeB2yro8u83u3Pxq+GHRCMpT7EjKPPWI3u6GGanQGkCJvfCiVQbCxt7E3jYbTzA9IDcg==
-X-Received: by 2002:aa7:8252:: with SMTP id e18mr10359167pfn.105.1556404737087;
-        Sat, 27 Apr 2019 15:38:57 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b144sm208054pfb.68.2019.04.27.15.38.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 27 Apr 2019 15:38:56 -0700 (PDT)
-Date:   Sat, 27 Apr 2019 15:38:54 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v5.1-rc6
-Message-ID: <20190427223854.GA97206@dtor-ws>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ExXFeWZqr6q0Nj5H2kUVmtpTrOrKnLFcUsIpUqz/LX8=;
+        b=f8UBis0mHG4u8rae2rje9jc9Tl0HzjdIPPxTHMep2sI6O0ihoVV8qNpZYQyYoksDdw
+         2SoNJ7U5dvePYyXIb0VNKoYzhrIxKM6I+PwlJE6uEL2BQh0XFdnCCCupnfb/+nHPum1B
+         AmE+ZysFIrFOI0NjIncsktbozc93utXj7wZQKQKVQdMiHzjpTGJZ7m/4gXrJuCMRPPh3
+         GLjTw3D64h2/CVhCFZbc18iuIIwsRmDfsva/graoIKQY9BX16ukIcSqAqiTScNQ8omqX
+         0dWJe22bLIV8VQBIf7jNemCepO06P1ynHvvM2RqH/SdHr6nVXYUk5M1l/9u1aFHbRDfm
+         Drvg==
+X-Gm-Message-State: APjAAAVuyaMYwIaNtWi0NriIKDR77sHksAgLiZcjaGF/G0F01FC0XLkp
+        WkSwOgIanD7eVClqKdBKfBQbXQkOQ36QSOI2k/w=
+X-Google-Smtp-Source: APXvYqwmtZQQ9IkCf8f9naqRr1nT4SpdgpyKNqMH0vasq9b7okFPH/v7JvYjTDOXjw8wzbPC+mvSAhb3a3tgDZGkJO4=
+X-Received: by 2002:a24:7456:: with SMTP id o83mr14196603itc.61.1556407917147;
+ Sat, 27 Apr 2019 16:31:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CA+8F9hicnF=kvjXPZFQy=Pa2HJUS3JS+G9VswFHNQQynPMHGVQ@mail.gmail.com>
+ <20190424193903.swlfmfuo6cqnpkwa@dcvr> <20190427093319.sgicqik2oqkez3wk@dcvr>
+In-Reply-To: <20190427093319.sgicqik2oqkez3wk@dcvr>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Sat, 27 Apr 2019 16:31:44 -0700
+Message-ID: <CABeXuvrY9QdvF1gTfiMt-eVp7VtobwG9xzjQFkErq+3wpW_P3Q@mail.gmail.com>
+Subject: Re: Strange issues with epoll since 5.0
+To:     Eric Wong <e@80x24.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Davidlohr Bueso <dave@stgolabs.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+I tried to replicate the failure on qemu.
+I do not see the failure with N=32.
 
-Please pull from:
+Does it work for N < 32?
+Does any other signal work?
+Are there any other architectures that fail?
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+Could you help me figure out how to run just the one test that is failing?
 
-to receive updates for the input subsystem. Just a couple of fixups for
-Synaptics RMI4 driver and allowing snvs_pwrkey to be selected on more
-boards.
-
-Changelog:
----------
-
-Jacky Bai (1):
-      Input: snvs_pwrkey - make it depend on ARCH_MXC
-
-Lucas Stach (1):
-      Input: synaptics-rmi4 - write config register values to the right offset
-
-Pan Bian (1):
-      Input: synaptics-rmi4 - fix possible double free
-
-Diffstat:
---------
-
- drivers/input/keyboard/Kconfig  | 2 +-
- drivers/input/rmi4/rmi_driver.c | 6 +-----
- drivers/input/rmi4/rmi_f11.c    | 2 +-
- 3 files changed, 3 insertions(+), 7 deletions(-)
-
-Thanks.
-
-
--- 
-Dmitry
+-Deepa
