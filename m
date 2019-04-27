@@ -2,136 +2,248 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAF3C4321A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2EFC43218
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 08:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB38208CA
+	by mail.kernel.org (Postfix) with ESMTP id 81F0B2087F
 	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 08:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbfD0Ihw (ORCPT
+        id S1726005AbfD0Ihl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 04:37:52 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54310 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726019AbfD0Ihv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 04:37:51 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3R8YG0s088963
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 04:37:50 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s4km487k5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 04:37:50 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sat, 27 Apr 2019 09:37:49 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 27 Apr 2019 09:37:45 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3R8aUCw34799754
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 27 Apr 2019 08:36:30 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33855B2064;
-        Sat, 27 Apr 2019 08:36:30 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B67CB205F;
-        Sat, 27 Apr 2019 08:36:30 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.147.138])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat, 27 Apr 2019 08:36:30 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 9963216C1355; Sat, 27 Apr 2019 01:36:29 -0700 (PDT)
-Date:   Sat, 27 Apr 2019 01:36:29 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] Documentation: atomic_t.txt: Explain ordering provided
- by smp_mb__{before,after}_atomic()
-Reply-To: paulmck@linux.ibm.com
-References: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
- <20190419180017.GP4038@hirez.programming.kicks-ass.net>
- <20190419182620.GF14111@linux.ibm.com>
- <1555719429.t9n8gkf70y.astroid@bobo.none>
- <20190420085440.GK14111@linux.ibm.com>
- <20190423123209.GR4038@hirez.programming.kicks-ass.net>
- <20190423133010.GK3923@linux.ibm.com>
- <20190427081738.GA11149@andrea>
+        Sat, 27 Apr 2019 04:37:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54614 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbfD0Ihk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 04:37:40 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0052730BD2A7;
+        Sat, 27 Apr 2019 08:37:40 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8855527C25;
+        Sat, 27 Apr 2019 08:37:34 +0000 (UTC)
+Subject: Re: [PATCH v2 14/19] iommu: Add guest PASID bind function
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556062279-64135-15-git-send-email-jacob.jun.pan@linux.intel.com>
+ <35194a94-ed09-d086-8725-f7e1bdfbb877@redhat.com>
+ <20190426151122.528101b6@jacob-builder>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <cf4ab148-44ba-638e-e531-db0a188ba884@redhat.com>
+Date:   Sat, 27 Apr 2019 10:37:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190427081738.GA11149@andrea>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19042708-0060-0000-0000-000003355F4E
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011003; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01195033; UDB=6.00626597; IPR=6.00975875;
- MB=3.00026620; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-27 08:37:48
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042708-0061-0000-0000-0000491D6C2B
-Message-Id: <20190427083629.GJ3923@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-27_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904270064
+In-Reply-To: <20190426151122.528101b6@jacob-builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Sat, 27 Apr 2019 08:37:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 10:17:38AM +0200, Andrea Parri wrote:
-> On Tue, Apr 23, 2019 at 06:30:10AM -0700, Paul E. McKenney wrote:
-> > On Tue, Apr 23, 2019 at 02:32:09PM +0200, Peter Zijlstra wrote:
-> > > On Sat, Apr 20, 2019 at 01:54:40AM -0700, Paul E. McKenney wrote:
-> > > > 	And atomic_set(): set_preempt_state().	This fails
-> > > > 	on x86, s390, and TSO friends, does it not?  Or is
-> > > > 	this ARM-only?	Still, why not just smp_mb() before and
-> > > > 	after?	Same issue in __kernfs_new_node(), bio_cnt_set(),
-> > > > 	sbitmap_queue_update_wake_batch(), 
-> > > > 
-> > > > 	Ditto for atomic64_set() in __ceph_dir_set_complete().
-> > > > 
-> > > > 	Ditto for atomic_read() in rvt_qp_is_avail().  This function
-> > > > 	has a couple of other oddly placed smp_mb__before_atomic().
-> > > 
-> > > That are just straight up bugs. The atomic_t.txt file clearly specifies
-> > > the barriers only apply to RmW ops and both _set() and _read() are
-> > > specified to not be a RmW.
-> > 
-> > Agreed.  The "Ditto" covers my atomic_set() consternation.  ;-)
-> 
-> I was working on some of these before the Easter break [1, 2]: the plan
-> was to continue next week, but by addressing the remaining cases with a
-> conservative s/that barrier/smp_mb at first; unless you've other plans?
-> 
->   Andrea
-> 
-> [1] http://lkml.kernel.org/r/1555417031-27356-1-git-send-email-andrea.parri@amarulasolutions.com
-> [2] http://lkml.kernel.org/r/1555404968-39927-1-git-send-email-pbonzini@redhat.com
+Hi Jacob,
 
-Sounds good to me!  ;-)
+On 4/27/19 12:11 AM, Jacob Pan wrote:
+> On Fri, 26 Apr 2019 17:53:43 +0200
+> Auger Eric <eric.auger@redhat.com> wrote:
+> 
+>> Hi Jacob,
+>>
+>> On 4/24/19 1:31 AM, Jacob Pan wrote:
+>>> Guest shared virtual address (SVA) may require host to shadow guest
+>>> PASID tables. Guest PASID can also be allocated from the host via
+>>> enlightened interfaces. In this case, guest needs to bind the guest
+>>> mm, i.e. cr3 in guest phisical address to the actual PASID table
+>>> in  
+>> physical
+> got it
+> 
+>>> the host IOMMU. Nesting will be turned on such that guest virtual
+>>> address can go through a two level translation:
+>>> - 1st level translates GVA to GPA
+>>> - 2nd level translates GPA to HPA
+>>> This patch introduces APIs to bind guest PASID data to the assigned
+>>> device entry in the physical IOMMU. See the diagram below for usage
+>>> explaination.
+>>>
+>>>     .-------------.  .---------------------------.
+>>>     |   vIOMMU    |  | Guest process mm, FL only |
+>>>     |             |  '---------------------------'
+>>>     .----------------/
+>>>     | PASID Entry |--- PASID cache flush -
+>>>     '-------------'                       |
+>>>     |             |                       V
+>>>     |             |
+>>>     '-------------'
+>>> Guest
+>>> ------| Shadow |--------------------------|------------
+>>>       v        v                          v
+>>> Host
+>>>     .-------------.  .----------------------.
+>>>     |   pIOMMU    |  | Bind FL for GVA-GPA  |
+>>>     |             |  '----------------------'
+>>>     .----------------/  |
+>>>     | PASID Entry |     V (Nested xlate)
+>>>     '----------------\.---------------------.
+>>>     |             |   |Set SL to GPA-HPA    |
+>>>     |             |   '---------------------'
+>>>     '-------------'
+>>>
+>>> Where:
+>>>  - FL = First level/stage one page tables
+>>>  - SL = Second level/stage two page tables
+>>>
+>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+>>> ---
+>>>  drivers/iommu/iommu.c      | 20 ++++++++++++++++++++
+>>>  include/linux/iommu.h      | 10 ++++++++++
+>>>  include/uapi/linux/iommu.h | 15 ++++++++++++++-
+>>>  3 files changed, 44 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>>> index 498c28a..072f8f3 100644
+>>> --- a/drivers/iommu/iommu.c
+>>> +++ b/drivers/iommu/iommu.c
+>>> @@ -1561,6 +1561,26 @@ int iommu_cache_invalidate(struct
+>>> iommu_domain *domain, struct device *dev, }
+>>>  EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
+>>>  
+>>> +int iommu_sva_bind_gpasid(struct iommu_domain *domain,
+>>> +			struct device *dev, struct
+>>> gpasid_bind_data *data) +{
+>>> +	if (unlikely(!domain->ops->sva_bind_gpasid))
+>>> +		return -ENODEV;
+>>> +
+>>> +	return domain->ops->sva_bind_gpasid(domain, dev, data);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(iommu_sva_bind_gpasid);
+>>> +
+>>> +int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct
+>>> device *dev,
+>>> +			int pasid)
+>>> +{
+>>> +	if (unlikely(!domain->ops->sva_unbind_gpasid))
+>>> +		return -ENODEV;
+>>> +
+>>> +	return domain->ops->sva_unbind_gpasid(dev, pasid);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+>>> +
+>>>  static void __iommu_detach_device(struct iommu_domain *domain,
+>>>  				  struct device *dev)
+>>>  {
+>>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>>> index 4b92e4b..611388e 100644
+>>> --- a/include/linux/iommu.h
+>>> +++ b/include/linux/iommu.h
+>>> @@ -231,6 +231,8 @@ struct iommu_sva_ops {
+>>>   * @detach_pasid_table: detach the pasid table
+>>>   * @cache_invalidate: invalidate translation caches
+>>>   * @pgsize_bitmap: bitmap of all possible supported page sizes
+>>> + * @sva_bind_gpasid: bind guest pasid and mm
+>>> + * @sva_unbind_gpasid: unbind guest pasid and mm
+>>>   */
+>>>  struct iommu_ops {
+>>>  	bool (*capable)(enum iommu_cap);
+>>> @@ -295,6 +297,10 @@ struct iommu_ops {
+>>>  
+>>>  	int (*cache_invalidate)(struct iommu_domain *domain,
+>>> struct device *dev, struct iommu_cache_invalidate_info *inv_info);
+>>> +	int (*sva_bind_gpasid)(struct iommu_domain *domain,
+>>> +			struct device *dev, struct
+>>> gpasid_bind_data *data); +
+>>> +	int (*sva_unbind_gpasid)(struct device *dev, int pasid);  
+>> So I am confused now. As the scalable mode PASID table entry contains
+>> both the FL and SL PT pointers, will you ever use the
+>> attach/detach_pasid_table or are we the only known users on ARM?
+>>
+> In scalable mode, we will not use attach pasid table. So ARM will be
+> the only user for now.
+> Guest PASID table is shadowed, PASID cache flush in the guest will
+> trigger sva_bind_gpasid.
+> I introduced bind PASID table for the previous VT-d spec that has
+> extend context mode (deprecated), where SL is shared by all PASIDs on 
+> the same device.
+OK. Thank you for the confirmation.
 
-								Thanx, Paul
+Thanks
 
+Eric
+
+>>>  
+>>>  	unsigned long pgsize_bitmap;
+>>>  };
+>>> @@ -409,6 +415,10 @@ extern void iommu_detach_pasid_table(struct
+>>> iommu_domain *domain); extern int iommu_cache_invalidate(struct
+>>> iommu_domain *domain, struct device *dev,
+>>>  				  struct
+>>> iommu_cache_invalidate_info *inv_info); +extern int
+>>> iommu_sva_bind_gpasid(struct iommu_domain *domain,
+>>> +		struct device *dev, struct gpasid_bind_data *data);
+>>> +extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+>>> +				struct device *dev, int pasid);  
+>> definition in !CONFIG_IOMMU_API case?
+> right
+> 
+>>>  extern struct iommu_domain *iommu_get_domain_for_dev(struct device
+>>> *dev); extern struct iommu_domain *iommu_get_dma_domain(struct
+>>> device *dev); extern int iommu_map(struct iommu_domain *domain,
+>>> unsigned long iova, diff --git a/include/uapi/linux/iommu.h
+>>> b/include/uapi/linux/iommu.h index 61a3fb7..5c95905 100644
+>>> --- a/include/uapi/linux/iommu.h
+>>> +++ b/include/uapi/linux/iommu.h
+>>> @@ -235,6 +235,19 @@ struct iommu_cache_invalidate_info {
+>>>  		struct iommu_inv_addr_info addr_info;
+>>>  	};
+>>>  };
+>>> -
+>>> +/**
+>>> + * struct gpasid_bind_data - Information about device and guest
+>>> PASID binding
+>>> + * @gcr3:	Guest CR3 value from guest mm
+>>> + * @pasid:	Process address space ID used for the guest mm
+>>> + * @addr_width:	Guest address width. Paging mode can also
+>>> be derived.
+>>> + */
+>>> +struct gpasid_bind_data {
+>>> +	__u64 gcr3;
+>>> +	__u32 pasid;
+>>> +	__u32 addr_width;
+>>> +	__u32 flags;
+>>> +#define	IOMMU_SVA_GPASID_SRE	BIT(0) /* supervisor
+>>> request */
+>>> +	__u8 padding[4];
+>>> +};  
+>>
+>>
+>> Thanks
+>>
+>> Eric
+>>>  
+>>>  #endif /* _UAPI_IOMMU_H */
+>>>   
+> 
+> [Jacob Pan]
+> 
