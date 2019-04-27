@@ -2,101 +2,98 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF04C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2203EC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDE62087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556326917;
-	bh=w7xtzG77bIQLj4EH5p8XHdnkslc2MaHBi4pBdgv/a/8=;
-	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
-	b=z/iP5h4ASpmHSlZr03OfJOIv2SpZ5YNxHl6aBkaB/gDZC8QIzF+QR6ZUFuhlkOK5f
-	 oIctN4mCXIZdZGt4mQrXjuL5GEu78JO6MdcAQWlL6cbw/xxRD7zxCTmDFQgCvjoG2u
-	 RaqBq7yH02wan2IAPc6Jmy9oumzQ/yc1YMe7QzCc=
+	by mail.kernel.org (Postfix) with ESMTP id E9FB2206E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfD0BBx (ORCPT
+        id S1727232AbfD0BPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:01:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36292 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:15:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49824 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbfD0BBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:01:52 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726974AbfD0BPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:15:50 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEEA020873;
-        Sat, 27 Apr 2019 01:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556326912;
-        bh=w7xtzG77bIQLj4EH5p8XHdnkslc2MaHBi4pBdgv/a/8=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=yesemrRi5X8RA3qSogY0wR6IFNjsCuGDf94v+yi87TNw8NANAtH5SyyTyyza35Wci
-         KMu3bYH7HVPRzyCL0CiyD5manlKpF5+mnOZoQkSC5dAkls3RyulJUOnANgv0mbkPsF
-         7PYeN9bu0hlAknmYFA7R2QisNwcHeOH0e7f4VqPQ=
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 0C19D30BCD74
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 01:15:50 +0000 (UTC)
+Received: from x230.aquini.net (ovpn-120-14.rdu2.redhat.com [10.10.120.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A28695C21F;
+        Sat, 27 Apr 2019 01:15:47 +0000 (UTC)
+Date:   Fri, 26 Apr 2019 21:15:45 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Joel Savitz <jsavitz@redhat.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/oom_killer: Add task UID to info message on an oom
+ kill
+Message-ID: <20190427011545.GA10398@x230.aquini.net>
+References: <1556305197-1600-1-git-send-email-jsavitz@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190411082733.3736-2-paul.walmsley@sifive.com>
-References: <20190411082733.3736-2-paul.walmsley@sifive.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Megan Wachs <megan@sifive.com>
-Message-ID: <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Fri, 26 Apr 2019 18:01:51 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556305197-1600-1-git-send-email-jsavitz@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sat, 27 Apr 2019 01:15:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Paul Walmsley (2019-04-11 01:27:32)
-> Add common library code for the Analog Bits Wide-Range PLL (WRPLL) IP
-> block, as implemented in TSMC CLN28HPC.
->=20
-> There is no bus interface or register target associated with this PLL.
-> This library is intended to be used by drivers for IP blocks that
-> expose registers connected to the PLL configuration and status
-> signals.
->=20
-> Based on code originally written by Wesley Terpstra
-> <wesley@sifive.com>:
-> https://github.com/riscv/riscv-linux/commit/999529edf517ed75b56659d456d22=
-1b2ee56bb60
->=20
-> This version incorporates several changes requested by Stephen
-> Boyd <sboyd@kernel.org>.
->=20
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Cc: Wesley Terpstra <wesley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Megan Wachs <megan@sifive.com>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+On Fri, Apr 26, 2019 at 02:59:57PM -0400, Joel Savitz wrote:
+> In the event of an oom kill, useful information about the killed
+> process is printed to dmesg. Users, especially system administrators,
+> will find it useful to immediately see the UID of the process.
+> 
+> In the following example, abuse_the_ram is the name of a program
+> that attempts to iteratively allocate all available memory until it is
+> stopped by force.
+> 
+> Current message:
+> 
+> Out of memory: Killed process 35389 (abuse_the_ram)
+> total-vm:133718232kB, anon-rss:129624980kB, file-rss:0kB,
+> shmem-rss:0kB
+> 
+> Patched message:
+> 
+> Out of memory: Killed process 2739 (abuse_the_ram),
+> total-vm:133880028kB, anon-rss:129754836kB, file-rss:0kB,
+> shmem-rss:0kB, UID 0
+> 
+> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
 > ---
-
-I haven't deeply reviewed at all, but I already get two problems when
-compile testing these patches. I can fix them up if nothing else needs
-fixing.
-
-drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() warn: shoul=
-d 'target_rate << divq' be a 64 bit type?
-drivers/clk/sifive/fu540-prci.c:214:16: error: return expression in void fu=
-nction
-
+>  mm/oom_kill.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> index 3a2484884cfd..af2e3faa72a0 100644
+> --- a/mm/oom_kill.c
+> +++ b/mm/oom_kill.c
+> @@ -874,12 +874,13 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+>  	 */
+>  	do_send_sig_info(SIGKILL, SEND_SIG_PRIV, victim, PIDTYPE_TGID);
+>  	mark_oom_victim(victim);
+> -	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
+> +	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB, UID %d\n",
+>  		message, task_pid_nr(victim), victim->comm,
+>  		K(victim->mm->total_vm),
+>  		K(get_mm_counter(victim->mm, MM_ANONPAGES)),
+>  		K(get_mm_counter(victim->mm, MM_FILEPAGES)),
+> -		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)));
+> +		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)),
+> +		from_kuid(&init_user_ns, task_uid(victim)));
+>  	task_unlock(victim);
+>  
+>  	/*
+> -- 
+> 2.18.1
+> 
+Acked-by: Rafael Aquini <aquini@redhat.com>
