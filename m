@@ -1,119 +1,131 @@
 Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8813AC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FB8C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D0C2087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:12:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPZtb5a1"
+	by mail.kernel.org (Postfix) with ESMTP id 3C14B2087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556356643;
+	bh=RXvCiqxrKsd6av/gPwycKFehtN6eh+6QYsObHNJySyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jWskobA317mNnnuGDK3lrU/hH0vhIWCJP9BeK/wy1MkfxLx7vjc+KuROL4g1ZxIiC
+	 DM+Caqkz7gROj6Qhwx8X2P0HVgxDWtWvo5LxskgASxN/pGJzcdOLqjRmLK5AdUYFmC
+	 lWu+6mLgIcsmfSJyi8WsvepU10E1CInXSjQtkbGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbfD0JMB (ORCPT
+        id S1726335AbfD0JRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 05:12:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36382 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfD0JMB (ORCPT
+        Sat, 27 Apr 2019 05:17:22 -0400
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:38544 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfD0JRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 05:12:01 -0400
-Received: by mail-lj1-f196.google.com with SMTP id l6so5092561ljb.3;
-        Sat, 27 Apr 2019 02:11:59 -0700 (PDT)
+        Sat, 27 Apr 2019 05:17:21 -0400
+Received: by mail-wr1-f42.google.com with SMTP id k16so7855141wrn.5
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 02:17:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9xgHPH09YGJhCPvbuKiscLvKx1wCoR98FI2oDiSX2Ws=;
-        b=GPZtb5a1+GwwjAGS9GaB8QEvI6hF6Bt65vyDloU6bDMGmCnHoNGgR15bK5WFgNfkoS
-         S3g8qP/fSuGfP2wNkWcDJg+adnNQBv7jtMKf3ok5ovH6sxImCQKp422B+DAE3AZqdytr
-         XkeTQbmN1h/FVr+W7w6s0bXZQLLr/ZiupZADGyPjRt3+4ItZrLqUT+9Bd3fouBfTHy7G
-         W3RBwB+gJVkZri7phb5Rbca5lqhEJUFjTFBiKqNxieG18xXdYVtA75n9GkpGee+1Q5oC
-         zKOelxlzW2Sfo8LILpuF2zax/Eb9t9HdceNO2DdlrXURwmjd7drSWsEAxiYSxntwlNFv
-         H85A==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8se/O6KFdh76pDCnsqVEe1RzLyU3I0mTGKKL1WGa/UM=;
+        b=bDVQpYhRLAUg1qHbeiiwtTxqFPIwEw9pO8ROsCsxbrrNNPFar9+uE1zq2embcPEdIB
+         OiKIo55BOKzBYAGzPAHCnHcqYppjThyXBYER8nz+1M2ZqzVqc9LxOb3p7CbFJ2Qif3UB
+         ChsQ8llIji2jOAqfPgWkae01uvjexqOoh/veOTDDhyh9GEz0yUXuICuk3JhFXGw4lyJI
+         WQZtUv7jLyCxNKxOnNQB0H2p+HQoKNP9dB2y+YSxEsE0KmR1wfte0el06F+usrpZ6hrQ
+         63M9pzZ/MKpd0M5NLmnHECU/dQvaTcR4U5621Vb2CYkx8U2h9pAPp3b4zD5QCdEi3Rcy
+         O5Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9xgHPH09YGJhCPvbuKiscLvKx1wCoR98FI2oDiSX2Ws=;
-        b=K3fjSCkfx1Xo2rgI1KJiuLeQ3VFR9TJIsKcL518huKXdkMC9exdP9ceX2tlf4dl0AM
-         RAinokqinNmTd0WBW+fWvsw9PcS7A+Iji4tESTlQST0/jT47aV7toXFmXzy3Rgf/qjte
-         1MjV5q8zPPaLzroXQmW+AS3qA0UxNcKlMfpS6JZpbNGhhNQfrUzeb5iFuguS2XZNpO2Z
-         6EOGEaW3D6rNsm4De+HO2DE3kRt1hrRRY8wLUU/3pum/KOVh3/x5BLXaEPL9YlUlpDFD
-         /YKrtfcpY7uUiqFRARzq33VyL9xdA9BAdG0WEDE0ODSPgQD8/ZT70KnZ4onib4k8AgjC
-         7fLw==
-X-Gm-Message-State: APjAAAXqDHo0Y6FThwLDUwlVpUDfPSnT8pC4e4oo5JIU1sh4j9nYS4oY
-        ks9J7iBbyEa12zqpphlvNpE=
-X-Google-Smtp-Source: APXvYqw18cwZVYJuGF92dcW9cRRa+taT9kDCNYZUbyaGu/ljvbZGakThDVuilREIwDGCs0TEwXF/jA==
-X-Received: by 2002:a2e:894e:: with SMTP id b14mr23758129ljk.158.1556356318675;
-        Sat, 27 Apr 2019 02:11:58 -0700 (PDT)
-Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id y7sm6134228lfg.76.2019.04.27.02.11.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Apr 2019 02:11:57 -0700 (PDT)
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Richard Leitner <richard.leitner@skidata.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
-        kbuild test robot <lkp@intel.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: usb251xb: Add an empty hub' i2c-bus segment checker
-Date:   Sat, 27 Apr 2019 12:06:44 +0300
-Message-Id: <20190427090645.30621-1-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8se/O6KFdh76pDCnsqVEe1RzLyU3I0mTGKKL1WGa/UM=;
+        b=UX/o54O4kiK4iOTE6bne2wOiJBZQu+FOCCB/LmLShdkOzAc6C5evFCGZwezkU8r5Z+
+         CWCJAcoEfJ48/t2kJQCfAUT2JJ8B8wQRiMUJbIYEtT7aXUMTeT8GTV3z0LDAtK/3VPRY
+         5aNM9YZg1qdFuKenxRfzbtmYWyBEimvGZl7qzEiAOD0Z4QKzj3oudjGtlB/w+4iBS588
+         tQOUhKquXetmYl00XePlB7qH04+Jf2QfLK5zdDEGYdPQ8rd1HbizSXEL5SdyOauzGPed
+         GYL1I5iBkuU9//8AlkBy96V888tVFOZrRf9cR6IMnTKAklFGEi8AmiuR3XGNXSxFp79Z
+         +aUQ==
+X-Gm-Message-State: APjAAAUAD1lClPAPYA99W9p6TsQAmctECqrNNl7HMJGGi284PJhM8rx0
+        WsJaW6EYJIk8UwRT0qtDF6mvHTFA
+X-Google-Smtp-Source: APXvYqxi/83f/6D08Nmp+nqxpth2SsTw7eMsB77jVXsZajebc/+b3kQtbXWesw/MOPOzQ5R47ZEWrg==
+X-Received: by 2002:adf:edc8:: with SMTP id v8mr3523266wro.206.1556356640232;
+        Sat, 27 Apr 2019 02:17:20 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id e15sm4615293wrr.69.2019.04.27.02.17.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Apr 2019 02:17:19 -0700 (PDT)
+Date:   Sat, 27 Apr 2019 11:17:16 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190427091716.GC99668@gmail.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+ <20190424140013.GA14594@sinkpad>
+ <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
+ <20190425095508.GA8387@gmail.com>
+ <CAERHkrs0=xcx9UUZbZPYq4QbznUqHAuVbTnafSVpZFKwAEFyMA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAERHkrs0=xcx9UUZbZPYq4QbznUqHAuVbTnafSVpZFKwAEFyMA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's pointless to scan the hub' i2c-bus segment if GPIOs aren't supported
-by the system, since no GPIO-driven reset could be cleared by the driver
-then. Moreover if CONFIG_GPIOLIB is disabled the gpio_chip structure
-definition won't be available, which causes the incomplete type pointer
-dereference compilation error. In order to fix this we need to create an
-empty usb251x_check_gpio_chip() method returning zero, so the driver would
-skip the i2c-bus segment checking and proceed with further probing in this
-case.
 
-Fixes: 6e3c8beb4f92 ("usb: usb251xb: Lock i2c-bus segment the hub resides")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
----
- drivers/usb/misc/usb251xb.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+* Aubrey Li <aubrey.intel@gmail.com> wrote:
 
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index 939b3bedd4c8..cdc80e8c2d8a 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -223,6 +223,7 @@ static const struct usb251xb_data usb2517i_data = {
- 	.product_str = "USB2517i",
- };
- 
-+#ifdef CONFIG_GPIOLIB
- static int usb251xb_check_dev_children(struct device *dev, void *child)
- {
- 	if (dev->type == &i2c_adapter_type) {
-@@ -253,6 +254,12 @@ static int usb251x_check_gpio_chip(struct usb251xb *hub)
- 
- 	return 0;
- }
-+#else
-+static int usb251x_check_gpio_chip(struct usb251xb *hub)
-+{
-+	return 0;
-+}
-+#endif
- 
- static void usb251xb_reset(struct usb251xb *hub, int state)
- {
--- 
-2.21.0
+> I have the same environment setup above, for nosmt cases, I used
+> /sys interface Thomas mentioned, below is the result:
+> 
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 1/1      1.987( 1.97%)   2.043( 1.76%) -2.84% 1.985( 1.70%)  0.12%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 2/2      2.074( 1.16%)   2.057( 2.09%)  0.81% 2.072( 0.77%)  0.10%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 4/4      2.140( 0.00%)   2.138( 0.49%)  0.09% 2.137( 0.89%)  0.12%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 8/8      2.140( 0.00%)   2.144( 0.53%) -0.17% 2.140( 0.00%)  0.00%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 16/16    2.361( 2.99%)   2.369( 2.65%) -0.30% 2.406( 2.53%) -1.87%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 32/32    5.032( 8.68%)   3.485( 0.49%) 30.76% 6.002(27.21%) -19.27%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 64/64    7.577(34.35%)   3.972(23.18%) 47.57% 18.235(14.14%) -140.68%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 128/128 24.639(14.28%)  27.440( 8.24%) -11.37% 34.746( 6.92%) -41.02%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 256/256 38.797( 8.59%)  44.067(16.20%) -13.58% 42.536( 7.57%) -9.64%
 
+What do these numbers mean? Are these latencies, i.e. lower is better?
+
+Thanks,
+
+	Ingo
