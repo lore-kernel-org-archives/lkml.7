@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833C6C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D6DC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565DF212F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30465212F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfD0Mzk (ORCPT
+        id S1727380AbfD0Mzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:55:40 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:60775 "EHLO
+        Sat, 27 Apr 2019 08:55:42 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:43639 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfD0MxN (ORCPT
+        with ESMTP id S1726906AbfD0MxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 08:53:13 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MQ5nE-1h75AP44I4-00M2Ff; Sat, 27 Apr 2019 14:52:50 +0200
+ 1Mspy4-1gVqbT38iO-00tCHb; Sat, 27 Apr 2019 14:52:51 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,168 +34,82 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 19/41] drivers: tty: serial: apbuart: fix code formatting
-Date:   Sat, 27 Apr 2019 14:52:00 +0200
-Message-Id: <1556369542-13247-20-git-send-email-info@metux.net>
+Subject: [PATCH 21/41] drivers: tty: serial: cpm_uart: fix includes
+Date:   Sat, 27 Apr 2019 14:52:02 +0200
+Message-Id: <1556369542-13247-22-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:pjIAjAgne4QqCMX+FIhXRp8twk2qiMY/VorT1FzzAauzfUv0f0K
- SouwmsHqH8JyEbDuRqNFwbEIDs+EyWcnB64N7nh/mWQM9zuPT5456futLRKhnzo2DzzmTAO
- S02Mck6t77pqC6132Z833rEpWkrhCHTZd9aBV6r93jE4Lyyveee4Vx4PENyVvPDGn5fzADC
- T1cnBnEc7a4HKVi45SoRA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hEOSQVkrBtY=:E2i1fxkjmB++cF1pgysgSC
- 8hsAb0Aq860XW0owLqBwUm2y5DJXO+V/Is8mFh4c9ru3QfeD9ojJIKExeE/gQMx2UOQEJgGRb
- nvrMAXOkXd1qYP1gKihMwQy9DHsjWbR3wxj+hp709JVyhiYnLw9UAD3t+5PPNn6ETAr98RQP2
- gHqDm/XUrKMU6kMIkWzlIgqfxdvTEA7d7CYJRA9+zsUFW6w+/kxNsRVEd2YH5fKzEWDZTB6mG
- AA1v18dy6/1w/Ta8+c1Z5r88c2mCOFG/kzIKZoFOpF02Re1cfPJiHtMPLpESpqBGkPJuT0pan
- wj5zbHmx+ec2NOcEAFhVUHZLEz20D89Udi/Cyt1T8qV0CmOeHhNQKA82G64fYOI5+TUIzx7QC
- obIBCK9wl1bRvMCTV4E/U6sBvRSiFWt5BcFHib/PhsHSUGo1Qoyf0VIUK6oReuSkCDZLub+8G
- Ob+eIhsXiwLKrxHAPOJ3mKdJEWu46k9EuJVL6xT+/FJe8XJTXXYFVmn8//sRTXHE9xnvp8m1O
- 1hpfUx4oFrpuxlBsYSu4W9shD60EHF2Zw/7FCtDHNOWT3igcd4Kn+PwMo93U88O8Llhwj4qEi
- 0CfcgMV9NBLuRd7LB5vp6/0Y+IfZe9HXOS6bEacBXOvat8PAAolbzxQuW8puvfRpBKG0XLB8X
- ofUclwTQPMphcmiPqlFXZf2nDhQxa57xuFpm3v4alrdRoOJx+GnGdJbV+E65VwyS+7GmnAy5B
- A0stBq2sqAbOn5qtmttutC8+4NSushVi0gD3aA==
+X-Provags-ID: V03:K1:xQq23jU9i9rUL2fNQuvkwl6eGPDVSQvpkDbQ/zveful4zboC1HW
+ oNd3D0zOYk84zfCJ0Xuzpmh6YQ79oPwoYvw/oeAO14yaLEcslLKcMENViWN+rlXtE9vM1qv
+ 1jCwWuLOXgdLjw4fxAGT3BB8TcpKk2wNp9jWPWPgaYVVv0WEj/TEQ/U7sklnKXLuZSVuAgG
+ ee5Mn3D1VCygJnSepJUyg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xWgBbp/LG7s=:wi8MuLImVy2CGGeEYyoQB2
+ KMmBNwIQx4fsztqkOwXtcxcWItI9eedJWvICvmKhOlHgaY8MtQ25FTCVmfHiYt3j9gS36aZaa
+ q9Y5EIjEBd+qyl0GLPKh4hpFw2Y9xorJzSRbpppCWg9Lng+zZdTe/MiFG1F7kXNVSzq4lt2hL
+ ezKmIOR+0ajJU88S0pj4Kvx7tgnm1+AxaE/XtB3sMY5Kc/X02sDkvp4m476q2eExmeEHf7yl3
+ SS9ZDZappKf9esZiUUvzR4FWzO/lGAkyPEM5TbSsWcKPe4Hwz2W19UfQilH2TsF2+lwHqakd/
+ 0zYcoNC9JBhT5LyMi+bJ4ixLs9s35MALlLW9l9uhuIfzTde5AJ+qVyxmXzjZs7+sgMLLy16T8
+ wQ26qYtWIfsOeVfD03mLnlq295RwRXRcppjT2NdxNgQCjA8w3sUfILoNLj9Dn8itEgJAMtfl7
+ V8Cx1WCsQKAgggypWMvmWuYLBZW9OCxv/vxSRFHvIZxRwPaRxNeKsu+/Fbb3nzWRANHyooXV/
+ DsfRL+yilOXWQavlpzHDrWwcLFWzf4Q6C/lHFEf1NO221QjdJBnEIHiVYjdfQrgI7DXvLr6y0
+ OOEW7gT7Kv/C1gTmxJIHJCzbWkK13YeuK27LFOraKAE3hMCkeL/cdQE0Eb+TGViA6xDeL5nsA
+ 9JTsphma2cCsaVd+QVzhXQsK2WCBYwcJMcIA1O1vu+w/HuFJbyuBL4ArPqi6deE6sKSH4G7JK
+ UZVfxUQPRjkUPT6CoClRC35MnUhRE+eqWHNnlA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch warnings:
+Fixing checkpatch warning:
 
-    WARNING: line over 80 characters
-    #9: FILE: drivers/tty/serial/apbuart.c:9:
-    + *  Copyright (C) 2006 Daniel Hellstrom <daniel@gaisler.com>, Aeroflex Gaisler AB
+    WARNING: Use #include <linux/io.h> instead of <asm/io.h>
+    #25: FILE: drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c:25:
+    +#include <asm/io.h>
 
-    WARNING: line over 80 characters
-    #11: FILE: drivers/tty/serial/apbuart.c:11:
-    + *  Copyright (C) 2009 Kristoffer Glembo <kristoffer@gaisler.com>, Aeroflex Gaisler AB
+    WARNING: Use #include <linux/io.h> instead of <asm/io.h>
+    +#include <asm/io.h>
 
-    WARNING: line over 80 characters
-    #16: FILE: drivers/tty/serial/apbuart.c:16:
-    +#if defined(CONFIG_SERIAL_GRLIB_GAISLER_APBUART_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
-
-    WARNING: labels should not be indented
-    #122: FILE: drivers/tty/serial/apbuart.c:122:
-    +	      ignore_char:
-
-    WARNING: Missing a blank line after declarations
-    #186: FILE: drivers/tty/serial/apbuart.c:186:
-    +	unsigned int status = UART_GET_STATUS(port);
-    +	return status & UART_STATUS_THE ? TIOCSER_TEMT : 0;
-
-    WARNING: Missing a blank line after declarations
-    #322: FILE: drivers/tty/serial/apbuart.c:322:
-    +	int ret = 0;
-    +	if (ser->type != PORT_UNKNOWN && ser->type != PORT_APBUART)
-
-    WARNING: Missing a blank line after declarations
-    #427: FILE: drivers/tty/serial/apbuart.c:427:
-    +	unsigned int status;
-    +	do {
-
-    WARNING: Missing a blank line after declarations
-    #463: FILE: drivers/tty/serial/apbuart.c:463:
-    +		unsigned int quot, status;
-    +		status = UART_GET_STATUS(port);
-
-    WARNING: line over 80 characters
-    #627: FILE: drivers/tty/serial/apbuart.c:627:
-    +		port->membase = ioremap(addr, sizeof(struct grlib_apbuart_regs_map));
-
-    WARNING: line over 80 characters
-    #634: FILE: drivers/tty/serial/apbuart.c:634:
-    +		port->fifosize = apbuart_scan_fifo_size((struct uart_port *) port, line);
+    WARNING: Use #include <linux/delay.h> instead of <asm/delay.h>
+    +#include <asm/delay.h>
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/apbuart.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 4 ++--
+ drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/apbuart.c b/drivers/tty/serial/apbuart.c
-index 89e19b6..515a562 100644
---- a/drivers/tty/serial/apbuart.c
-+++ b/drivers/tty/serial/apbuart.c
-@@ -6,12 +6,15 @@
-  *
-  *  Copyright (C) 2000 Deep Blue Solutions Ltd.
-  *  Copyright (C) 2003 Konrad Eisele <eiselekd@web.de>
-- *  Copyright (C) 2006 Daniel Hellstrom <daniel@gaisler.com>, Aeroflex Gaisler AB
-+ *  Copyright (C) 2006 Daniel Hellstrom <daniel@gaisler.com>,
-+ *                     Aeroflex Gaisler AB
-  *  Copyright (C) 2008 Gilead Kutnick <kutnickg@zin-tech.com>
-- *  Copyright (C) 2009 Kristoffer Glembo <kristoffer@gaisler.com>, Aeroflex Gaisler AB
-+ *  Copyright (C) 2009 Kristoffer Glembo <kristoffer@gaisler.com>,
-+ *                     Aeroflex Gaisler AB
-  */
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+index 374b8bb..c831d31 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -33,10 +33,10 @@
+ #include <linux/gpio.h>
+ #include <linux/of_gpio.h>
+ #include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/delay.h>
  
--#if defined(CONFIG_SERIAL_GRLIB_GAISLER_APBUART_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
-+#if defined(CONFIG_SERIAL_GRLIB_GAISLER_APBUART_CONSOLE) \
-+	&& defined(CONFIG_MAGIC_SYSRQ)
- #define SUPPORT_SYSRQ
- #endif
+-#include <asm/io.h>
+ #include <asm/irq.h>
+-#include <asm/delay.h>
+ #include <asm/fs_pd.h>
+ #include <asm/udbg.h>
  
-@@ -116,8 +119,7 @@ static void apbuart_rx_chars(struct uart_port *port)
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c b/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c
+index ef1ae08..40cfcf4 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c
+@@ -21,8 +21,8 @@
+ #include <linux/device.h>
+ #include <linux/memblock.h>
+ #include <linux/dma-mapping.h>
++#include <linux/io.h>
  
- 		uart_insert_char(port, rsr, UART_STATUS_OE, ch, flag);
- 
--
--	      ignore_char:
-+ignore_char:
- 		status = UART_GET_STATUS(port);
- 	}
- 
-@@ -181,6 +183,7 @@ static irqreturn_t apbuart_int(int irq, void *dev_id)
- static unsigned int apbuart_tx_empty(struct uart_port *port)
- {
- 	unsigned int status = UART_GET_STATUS(port);
-+
- 	return status & UART_STATUS_THE ? TIOCSER_TEMT : 0;
- }
- 
-@@ -317,6 +320,7 @@ static int apbuart_verify_port(struct uart_port *port,
- 			       struct serial_struct *ser)
- {
- 	int ret = 0;
-+
- 	if (ser->type != PORT_UNKNOWN && ser->type != PORT_APBUART)
- 		ret = -EINVAL;
- 	if (ser->irq < 0 || ser->irq >= NR_IRQS)
-@@ -422,6 +426,7 @@ static void apbuart_flush_fifo(struct uart_port *port)
- static void apbuart_console_putchar(struct uart_port *port, int ch)
- {
- 	unsigned int status;
-+
- 	do {
- 		status = UART_GET_STATUS(port);
- 	} while (!UART_TX_READY(status));
-@@ -458,6 +463,7 @@ static void apbuart_console_putchar(struct uart_port *port, int ch)
- 	if (UART_GET_CTRL(port) & (UART_CTRL_RE | UART_CTRL_TE)) {
- 
- 		unsigned int quot, status;
-+
- 		status = UART_GET_STATUS(port);
- 
- 		*parity = 'n';
-@@ -622,14 +628,16 @@ static int __init grlib_apbuart_configure(void)
- 		port = &grlib_apbuart_ports[line];
- 
- 		port->mapbase = addr;
--		port->membase = ioremap(addr, sizeof(struct grlib_apbuart_regs_map));
-+		port->membase = ioremap(addr,
-+			sizeof(struct grlib_apbuart_regs_map));
- 		port->irq = 0;
- 		port->iotype = UPIO_MEM;
- 		port->ops = &grlib_apbuart_ops;
- 		port->flags = UPF_BOOT_AUTOCONF;
- 		port->line = line;
- 		port->uartclk = *freq_hz;
--		port->fifosize = apbuart_scan_fifo_size((struct uart_port *) port, line);
-+		port->fifosize = apbuart_scan_fifo_size(
-+			(struct uart_port *) port, line);
- 		line++;
- 
- 		/* We support maximum UART_NR uarts ... */
+-#include <asm/io.h>
+ #include <asm/irq.h>
+ #include <asm/fs_pd.h>
+ #include <asm/prom.h>
 -- 
 1.9.1
 
