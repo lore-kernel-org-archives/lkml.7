@@ -2,122 +2,128 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF46C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1837DC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1AD208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE792087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556369954;
-	bh=SCMQ+UkQFCeEOlSoiyp8ynwOrB4RzkdmSZX/WHkprsE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PPtqDdmc7UDPwXPlwukMNiQn0K8qoUFdoc445+R7eCcYUS7h7ltiU1nio+oAGhV+z
-	 V/7/r7Ojwkf4+pCEpJhhWFPXii7UmF9yf1vByrjpiEFb9A33+hpW7G3Cje2Q2suE8R
-	 pvWS4NpkgshrG30dAxTaPRVVGUMkiZ53bdnaXiyY=
+	s=default; t=1556370022;
+	bh=iGRFi0Km+sdfY//PO/gcrE6YZGld79ZiIjYE2iI73JE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kHrq0WLNvwkHg1BXWPM6tDUUl0L0Uk7USd41IEBUZSbMrnokjYrzeNbEDBrbHhJw9
+	 VQcsj5MNdW6ZFZ+SyaEXabVro5VTZcSeUvs6GsRA1vBoskp/J7EdltjHhuDWwTExPz
+	 EWuEbGvVsN7cMr3NkPyJ///3u98ntnMB/uDVs3NE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfD0M7N (ORCPT
+        id S1726539AbfD0NAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:59:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58186 "EHLO mail.kernel.org"
+        Sat, 27 Apr 2019 09:00:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726345AbfD0M7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:59:12 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        id S1726004AbfD0NAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 09:00:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 341312087C;
-        Sat, 27 Apr 2019 12:59:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 535BD2087C;
+        Sat, 27 Apr 2019 13:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556369952;
-        bh=SCMQ+UkQFCeEOlSoiyp8ynwOrB4RzkdmSZX/WHkprsE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tOmLf8J/SQRk6PiMizBtZB/sNTgbv5YFKb57LtEtb5UaunXHd73BQ5rN0MiOQaPJX
-         IK6q9Tp7zAtQcwpHQG+iV8PjFmK5YVqUFz2p28IU5LvecuEEpGKgUT9RRb/6ApplQk
-         MPCoj1zr9PEujz58neuBO9V7KKp5l4k9TxH5b3Io=
-Date:   Sat, 27 Apr 2019 13:59:06 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Daniel Gomez <dagmcr@gmail.com>
-Cc:     Stefan Popa <stefan.popa@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org (open list:ANALOG DEVICES INC AD5758 DRIVER),
-        linux-kernel@vger.kernel.org (open list), javier@dowhile0.org
-Subject: Re: [PATCH v2] iio: dac: ad5758: declare missing of table
-Message-ID: <20190427135906.455c468b@archlinux>
-In-Reply-To: <1556055718-14782-1-git-send-email-dagmcr@gmail.com>
-References: <1556055718-14782-1-git-send-email-dagmcr@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1556370019;
+        bh=iGRFi0Km+sdfY//PO/gcrE6YZGld79ZiIjYE2iI73JE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eY1St2jmLd9C/4LAtbgIhozEkq3dDj9XjNLYY9Ma6FuVcoePzZN7v5NK4XbTy+avL
+         xLbpdI8pcWFg/JBJit7GS/I1uvSWXGHq5rGVPpm9fNhXt6gYnxlEX3Sm+s1ro0cNhX
+         z8wIfz457Wf+zGuSvwwQWYChNv1hzOEH4x0H9cGM=
+Date:   Sat, 27 Apr 2019 15:00:17 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ian Abbott <abbotti@mev.co.uk>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: comedi: comedi_isadma: Use a non-NULL device
+ for DMA API
+Message-ID: <20190427130017.GA25587@kroah.com>
+References: <20190425162644.21947-1-abbotti@mev.co.uk>
+ <20190425171351.GB11105@kroah.com>
+ <e1322f35-af8b-8151-b560-0ba76775b237@mev.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e1322f35-af8b-8151-b560-0ba76775b237@mev.co.uk>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019 23:41:58 +0200
-Daniel Gomez <dagmcr@gmail.com> wrote:
-
-> Add missing <of_device_id> table for SPI driver relying on SPI
-> device match since compatible is in a DT binding or in a DTS.
+On Fri, Apr 26, 2019 at 10:41:20AM +0100, Ian Abbott wrote:
+> On 25/04/2019 18:13, Greg Kroah-Hartman wrote:
+> > On Thu, Apr 25, 2019 at 05:26:44PM +0100, Ian Abbott wrote:
+> > > The "comedi_isadma" module calls `dma_alloc_coherent()` and
+> > > `dma_free_coherent()` with a NULL device pointer which is no longer
+> > > allowed.  If the `hw_dev` member of the `struct comedi_device` has been
+> > > set to a valid device, that can be used instead.  Unfortunately, all the
+> > > current users of the "comedi_isadma" module leave the `hw_dev` member
+> > > set to NULL.  In that case, use a static dummy fallback device structure
+> > > with the coherent DMA mask set to the ISA bus limit of 16MB.
+> > > 
+> > > Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+> > > ---
+> > >   drivers/staging/comedi/drivers/comedi_isadma.c | 15 +++++++++++++--
+> > >   drivers/staging/comedi/drivers/comedi_isadma.h |  3 +++
+> > >   2 files changed, 16 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/staging/comedi/drivers/comedi_isadma.c b/drivers/staging/comedi/drivers/comedi_isadma.c
+> > > index b77dc8d5d3ff..8929952516a1 100644
+> > > --- a/drivers/staging/comedi/drivers/comedi_isadma.c
+> > > +++ b/drivers/staging/comedi/drivers/comedi_isadma.c
+> > > @@ -14,6 +14,16 @@
+> > >   #include "comedi_isadma.h"
+> > > +/*
+> > > + * Fallback device used when hardware device is NULL.
+> > > + * This can be removed after drivers have been converted to use isa_driver.
+> > > + */
+> > > +static struct device fallback_dev = {
+> > > +	.init_name = "comedi_isadma fallback device",
+> > > +	.coherent_dma_mask = DMA_BIT_MASK(24),
+> > > +	.dma_mask = &fallback_dev.coherent_dma_mask,
+> > > +};
+> > 
+> > Ick, no, static struct device are a very bad idea as this is a reference
+> > counted structure and making it static can cause odd problems.
 > 
-> Before this patch:
-> modinfo drivers/iio/dac/ad5758.ko | grep alias
-> alias:          spi:ad5758
+> This was based on the use of `struct device x86_dma_fallback_dev` in
+> "arch/x86/kernel/pci-dma.c", and `static struct device isa_dma_dev` in
+> "arch/arm/kernel/dma-isa.c", but perhaps it is not appropriate in non-arch
+> code.
+
+No, those are probably broken as well :)
+
+Ah, I see why, ugh, ISA.
+
+> > Why not just create a "real" one?  Or better yet, use the real device
+> > for the comedi device as all of these drivers should have one now.
 > 
-> After this patch:
-> modinfo drivers/iio/dac/ad5758.ko | grep alias
-> alias:          spi:ad5758
-> alias:          of:N*T*Cadi,ad5758C*
-> alias:          of:N*T*Cadi,ad5758
-> 
-> Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-> Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+> I suppose I could use the comedi class device pointed to by the `class_dev`
+> member of `struct comedi_device` (although that could also be NULL because
+> the comedi core does not currently treat `device_create()` failures as
+> fatal).
 
-Thanks,
+Why would device_create() fail?  If it does, the driver should not have
+been bound to anything.
 
-Jonathan
+And no, this shouldn't be the class device, but the "real" hardware
+device that does dma, which is what is needed anyway here to allow the
+DMA to happen properly.
 
-> ---
->  drivers/iio/dac/ad5758.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/iio/dac/ad5758.c b/drivers/iio/dac/ad5758.c
-> index 2bdf1b0..e8eaa48 100644
-> --- a/drivers/iio/dac/ad5758.c
-> +++ b/drivers/iio/dac/ad5758.c
-> @@ -11,6 +11,8 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/property.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/spi/spi.h>
->  #include <linux/gpio/consumer.h>
->  
-> @@ -904,9 +906,16 @@ static const struct spi_device_id ad5758_id[] = {
->  };
->  MODULE_DEVICE_TABLE(spi, ad5758_id);
->  
-> +static const struct of_device_id ad5758_of_match[] = {
-> +        { .compatible = "adi,ad5758" },
-> +        { },
-> +};
-> +MODULE_DEVICE_TABLE(of, ad5758_of_match);
-> +
->  static struct spi_driver ad5758_driver = {
->  	.driver = {
->  		.name = KBUILD_MODNAME,
-> +		.of_match_table = ad5758_of_match,
->  	},
->  	.probe = ad5758_probe,
->  	.id_table = ad5758_id,
+I guess the problem is with the ISA drivers, right?  And I doubt that is
+ever going to get fixed up, hopefully just deleted :)
 
+Your second patch is "good enough", I'll go queue that up now.
+
+thanks,
+
+greg k-h
