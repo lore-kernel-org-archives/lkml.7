@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8F8C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D151C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8012320679
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5D320679
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556330114;
-	bh=trqzERWZiqNnNYQ1kiHelf5ruzxq8CB73j0pVHYv0ZE=;
+	s=default; t=1556330120;
+	bh=eQtgxEk8ZdhM8eDShishhHdU23vqaimfbLhlo3Ug9Sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yk9F7+ySxOTo0b5ovrbJRyF1kVFZ9O69pLd2uTSaa1Rydt+YfYgrxT0A15tkS0d4s
-	 5yEmYvNhgoOhmMDDEJG7nPmFedDuBKsLpiyyHH1F1fBRvIp8cpkiqINExRV4hxfuoh
-	 BLYqTFC++xl7f5RvrG32TL5HT5u25nUD/K9YYChU=
+	b=Khsaan+q7ABg0lXiF4Ggu8sdrD+UYNijrPMwAxRf5DSbpgvwfXYWvhz28yG3o82p1
+	 66091xgCdl3SWCYLpeiY1z9UpfyEGHKoUhg1b4G/ZIwiGmoqTXFkDUCUyZ1NZftuWq
+	 YKZqWaKEaDs0DHIwfNfQMbySPSlQO26ZJsoSbMhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfD0BzN (ORCPT
+        id S1727590AbfD0BjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42452 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:39:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727600AbfD0BjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:39:22 -0400
+        id S1727558AbfD0BjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:39:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8131B20B7C;
-        Sat, 27 Apr 2019 01:39:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3148A208CB;
+        Sat, 27 Apr 2019 01:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329161;
-        bh=trqzERWZiqNnNYQ1kiHelf5ruzxq8CB73j0pVHYv0ZE=;
+        s=default; t=1556329158;
+        bh=eQtgxEk8ZdhM8eDShishhHdU23vqaimfbLhlo3Ug9Sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rhZ4FYAJewr0LcOGMVi2uoW6ketwpxVCtyzBnuvPguuAt+WAdDr5+D6DN168b0JZu
-         JvcTZzkLmB/esUuii2KH94dm8g3G7gm8Z7iGF5vXIa+M95lcnKk6x0WgIYnG5TxxPa
-         wpGCl3lFjJLdSf0uzK/hxlOvo3a5Drph6S3Otw1E=
+        b=a12iMSBDAjiI0KkZEVNBwA5ug80PeVolA8HB9q7UHVNwm+rvUDxeSC0MJPcgPXD09
+         dOuUF7KwUd6zOewahgZbQJgT/QMLO0pqXKTLUgiV61mOpe2eO2bKTah3OhabJe/2DY
+         nSPYgYQOGIbN2uGRN74+aZDFxkU+YMbPZ2VS5C10=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 31/79] perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
-Date:   Fri, 26 Apr 2019 21:37:50 -0400
-Message-Id: <20190427013838.6596-31-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 29/79] drm/mediatek: Fix an error code in mtk_hdmi_dt_parse_pdata()
+Date:   Fri, 26 Apr 2019 21:37:48 -0400
+Message-Id: <20190427013838.6596-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -65,59 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 583feb08e7f7ac9d533b446882eb3a54737a6dbb ]
+[ Upstream commit 2d85978341e6a32e7443d9f28639da254d53f400 ]
 
-When an event is programmed with attr.wakeup_events=N (N>0), it means
-the caller is interested in getting a user level notification after
-N samples have been recorded in the kernel sampling buffer.
+We don't want to overwrite "ret", it already holds the correct error
+code.  The "regmap" variable might be a valid pointer as this point.
 
-With precise events on Intel processors, the kernel uses PEBS.
-The kernel tries minimize sampling overhead by verifying
-if the event configuration is compatible with multi-entry PEBS mode.
-If so, the kernel is notified only when the buffer has reached its threshold.
-Other PEBS operates in single-entry mode, the kenrel is notified for each
-PEBS sample.
-
-The problem is that the current implementation look at frequency
-mode and event sample_type but ignores the wakeup_events field. Thus,
-it may not be possible to receive a notification after each precise event.
-
-This patch fixes this problem by disabling multi-entry PEBS if wakeup_events
-is non-zero.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: kan.liang@intel.com
-Link: https://lkml.kernel.org/r/20190306195048.189514-1-eranian@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 8f83f26891e1 ("drm/mediatek: Add HDMI support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_hdmi.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 2480feb07df3..c647595666c2 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3184,7 +3184,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		return ret;
- 
- 	if (event->attr.precise_ip) {
--		if (!event->attr.freq) {
-+		if (!(event->attr.freq || event->attr.wakeup_events)) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
- 			if (!(event->attr.sample_type &
- 			      ~intel_pmu_large_pebs_flags(event)))
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+index 862f3ec22131..c910850d2077 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+@@ -1479,7 +1479,6 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+ 	if (IS_ERR(regmap))
+ 		ret = PTR_ERR(regmap);
+ 	if (ret) {
+-		ret = PTR_ERR(regmap);
+ 		dev_err(dev,
+ 			"Failed to get system configuration registers: %d\n",
+ 			ret);
 -- 
 2.19.1
 
