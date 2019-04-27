@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9219DC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B193C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C96D2166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45CA4214AE
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329287;
-	bh=m8Uv4mu0G420dZMTfAaTAzt4QTqiurP9GomMjd4p7P8=;
+	s=default; t=1556329291;
+	bh=h8OPelavcBE4oZDXTaPgCZCU7mi0JlrLwpgj2Egumho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K0mTa1ECAHZEZy6BDLW1MANDAJ/WduYjYBmfoGEzyxaOxbIAjeM+vsyK0ZTHNXKcA
-	 i9LRnK1S9G30F09wHYKPThuCZfkUbeVRc6mTZMe0K7/CnLIBGqBjTeP+KfRVpVAcv9
-	 2RAfH9Uoh1+g7ssMELfc+pR4DUW1JvpCtN9fLKa8=
+	b=S0tVnIRISQMD6Chs+rAuRtHLDu5N+INJhGwwLWWz3+0z10ooirISOazlbrWUtsF8Z
+	 AoF120Fj1wlwZl2dXxBau/M2NMNxeuuZzPWcMPBek6lWNzB51jMwsoJQssLIh170b/
+	 eiJmsru37U8C543zM5xM7SnuoIAgpTQOaT8hvU4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfD0Bl0 (ORCPT
+        id S1727682AbfD0Bl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:41:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45218 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:41:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728264AbfD0BlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:24 -0400
+        id S1728272AbfD0Bl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D692320C01;
-        Sat, 27 Apr 2019 01:41:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F9F0208CB;
+        Sat, 27 Apr 2019 01:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329284;
-        bh=m8Uv4mu0G420dZMTfAaTAzt4QTqiurP9GomMjd4p7P8=;
+        s=default; t=1556329286;
+        bh=h8OPelavcBE4oZDXTaPgCZCU7mi0JlrLwpgj2Egumho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UhsLBDh/sKUeel18zywKqX4u5pVsq0VQ4sG/oIW/6FMyt1x288ZP/9ZeKmDtPCTDv
-         uXHHtN8sf+M+B3pNFIHbEh/9mAq6esllkrMGM/WdlmD+lAbv55dtjUfi6lj8M8dVaI
-         xegMIY+z4ASTaGHtGBFdJ55JAmeqmnU4WWwysZfg=
+        b=eWZCtL+Xcb92yIq9DX8YjqQ5fKKwBfc7YHpTQsbXp8UI7AJ8FSzsjahuaVQt3DqC4
+         EcKMSMv7oOMT2+AL5ftPBWMhuz86qvH9pnbU6JjZnGjkNd1RBD3IRK5TmygsPkNlf1
+         eGi/FONvChaclJRPt3r9T+2wJUhwDc+OX9+Z4Qec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chong Qiao <qiaochong@loongson.cn>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 21/53] MIPS: KGDB: fix kgdb support for SMP platforms.
-Date:   Fri, 26 Apr 2019 21:40:18 -0400
-Message-Id: <20190427014051.7522-21-sashal@kernel.org>
+Cc:     Annaliese McDermond <nh6z@nh6z.net>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 22/53] ASoC: tlv320aic32x4: Fix Common Pins
+Date:   Fri, 26 Apr 2019 21:40:19 -0400
+Message-Id: <20190427014051.7522-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -63,53 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chong Qiao <qiaochong@loongson.cn>
+From: Annaliese McDermond <nh6z@nh6z.net>
 
-[ Upstream commit ab8a6d821179ab9bea1a9179f535ccba6330c1ed ]
+[ Upstream commit c63adb28f6d913310430f14c69f0a2ea55eed0cc ]
 
-KGDB_call_nmi_hook is called by other cpu through smp call.
-MIPS smp call is processed in ipi irq handler and regs is saved in
- handle_int.
-So kgdb_call_nmi_hook get regs by get_irq_regs and regs will be passed
- to kgdb_cpu_enter.
+The common pins were mistakenly not added to the DAPM graph.
+Adding these pins will allow valid graphs to be created.
 
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: QiaoChong <qiaochong@loongson.cn>
+Signed-off-by: Annaliese McDermond <nh6z@nh6z.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/kgdb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/codecs/tlv320aic32x4.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/kernel/kgdb.c b/arch/mips/kernel/kgdb.c
-index eb6c0d582626..2c1e30ca7ee4 100644
---- a/arch/mips/kernel/kgdb.c
-+++ b/arch/mips/kernel/kgdb.c
-@@ -33,6 +33,7 @@
- #include <asm/processor.h>
- #include <asm/sigcontext.h>
- #include <linux/uaccess.h>
-+#include <asm/irq_regs.h>
+diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
+index f03195d2ab2e..45d9f4a09044 100644
+--- a/sound/soc/codecs/tlv320aic32x4.c
++++ b/sound/soc/codecs/tlv320aic32x4.c
+@@ -462,6 +462,8 @@ static const struct snd_soc_dapm_widget aic32x4_dapm_widgets[] = {
+ 	SND_SOC_DAPM_INPUT("IN2_R"),
+ 	SND_SOC_DAPM_INPUT("IN3_L"),
+ 	SND_SOC_DAPM_INPUT("IN3_R"),
++	SND_SOC_DAPM_INPUT("CM_L"),
++	SND_SOC_DAPM_INPUT("CM_R"),
+ };
  
- static struct hard_trap_info {
- 	unsigned char tt;	/* Trap type code for MIPS R3xxx and R4xxx */
-@@ -214,7 +215,7 @@ static void kgdb_call_nmi_hook(void *ignored)
- 	old_fs = get_fs();
- 	set_fs(get_ds());
- 
--	kgdb_nmicallback(raw_smp_processor_id(), NULL);
-+	kgdb_nmicallback(raw_smp_processor_id(), get_irq_regs());
- 
- 	set_fs(old_fs);
- }
+ static const struct snd_soc_dapm_route aic32x4_dapm_routes[] = {
 -- 
 2.19.1
 
