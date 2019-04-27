@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E5EC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EFDC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12946206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41F3206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfD0PVF (ORCPT
+        id S1728186AbfD0PVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:21:05 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33944 "EHLO
+        Sat, 27 Apr 2019 11:21:07 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33898 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727587AbfD0PPe (ORCPT
+        by vger.kernel.org with ESMTP id S1727576AbfD0PPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:34 -0400
+        Sat, 27 Apr 2019 11:15:33 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP35-0000zL-CM; Sat, 27 Apr 2019 16:15:31 +0100
+        id 1hKP34-0000z6-FQ; Sat, 27 Apr 2019 16:15:30 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2k-0004Vd-AE; Sat, 27 Apr 2019 16:15:10 +0100
+        id 1hKP2k-0004W2-ER; Sat, 27 Apr 2019 16:15:10 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,20 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Song Liu" <songliubraving@fb.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Jiri Olsa" <jolsa@redhat.com>,
-        "Kan Liang" <kan.liang@linux.intel.com>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        "Thomas Richter" <tmricht@linux.ibm.com>,
+        "Hendrik Brueckner" <brueckner@linux.vnet.ibm.com>,
         "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
+        "Heiko Carstens" <heiko.carstens@de.ibm.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.940630187@decadent.org.uk>
+Message-ID: <lsq.1556377989.12773567@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 090/202] perf/x86/intel/uncore: Add Node ID mask
+Subject: [PATCH 3.16 095/202] perf test: Fix failure of 'evsel-tp-sched'
+ test on s390
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -62,61 +59,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-commit 9e63a7894fd302082cf3627fe90844421a6cbe7f upstream.
+commit 03d309711d687460d1345de8a0363f45b1c8cd11 upstream.
 
-Some PCI uncore PMUs cannot be registered on an 8-socket system (HPE
-Superdome Flex).
+Commit 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
+causes test case 14 "Parse sched tracepoints fields" to fail on s390.
 
-To understand which Socket the PCI uncore PMUs belongs to, perf retrieves
-the local Node ID of the uncore device from CPUNODEID(0xC0) of the PCI
-configuration space, and the mapping between Socket ID and Node ID from
-GIDNIDMAP(0xD4). The Socket ID can be calculated accordingly.
+This test succeeds on x86.
 
-The local Node ID is only available at bit 2:0, but current code doesn't
-mask it. If a BIOS doesn't clear the rest of the bits, an incorrect Node ID
-will be fetched.
+In fact this test now fails on all architectures with type char treated
+as type unsigned char.
 
-Filter the Node ID by adding a mask.
+The root cause is the signed-ness of character arrays in the tracepoints
+sched_switch for structure members prev_comm and next_comm.
 
-Reported-by: Song Liu <songliubraving@fb.com>
-Tested-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 7c94ee2e0917 ("perf/x86: Add Intel Nehalem and Sandy Bridge-EP uncore support")
-Link: https://lkml.kernel.org/r/1548600794-33162-1-git-send-email-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16: adjust filename]
+On s390 the output of:
+
+ [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
+ name: sched_switch
+ ID: 287
+ format:
+   field:unsigned short common_type; offset:0; size:2;	signed:0;
+   ...
+   field:char prev_comm[16]; offset:8; size:16;	signed:0;
+   ...
+   field:char next_comm[16]; offset:40; size:16; signed:0;
+
+reveals the character arrays prev_comm and next_comm are per
+default unsigned char and have values in the range of 0..255.
+
+On x86 both fields are signed as this output shows:
+ [root@f29]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
+ name: sched_switch
+ ID: 287
+ format:
+   field:unsigned short common_type; offset:0; size:2;	signed:0;
+   ...
+   field:char prev_comm[16]; offset:8; size:16;	signed:1;
+   ...
+   field:char next_comm[16]; offset:40; size:16; signed:1;
+
+and the character arrays prev_comm and next_comm are per default signed
+char and have values in the range of -1..127.  The implementation of
+type char is architecture specific.
+
+Since the character arrays in both tracepoints sched_switch and
+sched_wakeup should contain ascii characters, simply omit the check for
+signedness in the test case.
+
+Output before:
+
+  [root@m35lp76 perf]# ./perf test -F 14
+  14: Parse sched tracepoints fields                        :
+  --- start ---
+  sched:sched_switch: "prev_comm" signedness(0) is wrong, should be 1
+  sched:sched_switch: "next_comm" signedness(0) is wrong, should be 1
+  sched:sched_wakeup: "comm" signedness(0) is wrong, should be 1
+  ---- end ----
+  14: Parse sched tracepoints fields                        : FAILED!
+  [root@m35lp76 perf]#
+
+Output after:
+
+  [root@m35lp76 perf]# ./perf test -Fv 14
+  14: Parse sched tracepoints fields                        :
+  --- start ---
+  ---- end ----
+  Parse sched tracepoints fields: Ok
+  [root@m35lp76 perf]#
+
+Fixes: 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20190219153639.31267-1-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/cpu/perf_event_intel_uncore.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/tests/evsel-tp-sched.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kernel/cpu/perf_event_intel_uncore.c
-+++ b/arch/x86/kernel/cpu/perf_event_intel_uncore.c
-@@ -1004,6 +1004,8 @@ static struct pci_driver snbep_uncore_pc
- 	.id_table	= snbep_uncore_pci_ids,
- };
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -40,7 +40,7 @@ int test__perf_evsel__tp_sched_test(void
+ 		return -1;
+ 	}
  
-+#define NODE_ID_MASK	0x7
-+
- /*
-  * build pci bus to socket mapping
-  */
-@@ -1024,7 +1026,7 @@ static int snbep_pci2phy_map_init(int de
- 		err = pci_read_config_dword(ubox_dev, 0x40, &config);
- 		if (err)
- 			break;
--		nodeid = config;
-+		nodeid = config & NODE_ID_MASK;
- 		/* get the Node ID mapping */
- 		err = pci_read_config_dword(ubox_dev, 0x54, &config);
- 		if (err)
+-	if (perf_evsel__test_field(evsel, "prev_comm", 16, true))
++	if (perf_evsel__test_field(evsel, "prev_comm", 16, false))
+ 		ret = -1;
+ 
+ 	if (perf_evsel__test_field(evsel, "prev_pid", 4, true))
+@@ -52,7 +52,7 @@ int test__perf_evsel__tp_sched_test(void
+ 	if (perf_evsel__test_field(evsel, "prev_state", sizeof(long), true))
+ 		ret = -1;
+ 
+-	if (perf_evsel__test_field(evsel, "next_comm", 16, true))
++	if (perf_evsel__test_field(evsel, "next_comm", 16, false))
+ 		ret = -1;
+ 
+ 	if (perf_evsel__test_field(evsel, "next_pid", 4, true))
+@@ -65,7 +65,7 @@ int test__perf_evsel__tp_sched_test(void
+ 
+ 	evsel = perf_evsel__newtp("sched", "sched_wakeup");
+ 
+-	if (perf_evsel__test_field(evsel, "comm", 16, true))
++	if (perf_evsel__test_field(evsel, "comm", 16, false))
+ 		ret = -1;
+ 
+ 	if (perf_evsel__test_field(evsel, "pid", 4, true))
 
