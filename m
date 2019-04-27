@@ -4,47 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07977C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9882C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3B020873
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E7B206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329685;
-	bh=bs1jjb41LIAyMyX/KF+eOa0V8Fa85LrWfcCk8kGaSSQ=;
+	s=default; t=1556329691;
+	bh=e9IzWOrlZKAQgdH1d0rgPe+9uuD/8k5GSITdo1pX8HU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QUiBpKQjRnWaD7+CXloGq5kbMcw7sK9iEO5ueBs8vyoZb8w/x55tnVBvLptgfe5Gi
-	 vT9WCPSnZYyZ631vSSy3W7F3pRmkigye9GQxVrs+FF3oG/8Q0+CxtvLz+U39v7Y+sS
-	 7mwps0VH62ly+6WEwO7YgA/knYEpoeCDpfVWGAxI=
+	b=p0RC2OCJBecEynwJYRmRi3ykbsPctFTOLTwmhuoP9X6zlbqPwxcIabHrfshRdZyqB
+	 umuFOHMNETqLfvNywaTzRzfT3mgSvyxUvt22klAt+FrXCxi8GW24E7GRv1vemho8Bt
+	 uBOm4AXPp4/lhnksouPijeZrlaYKWqN9P8AKx2v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfD0Bmm (ORCPT
+        id S1728846AbfD0BsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:42:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46758 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727674AbfD0Bmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:42:38 -0400
+        id S1728580AbfD0Bmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:42:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB42220679;
-        Sat, 27 Apr 2019 01:42:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0037208CB;
+        Sat, 27 Apr 2019 01:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329358;
-        bh=bs1jjb41LIAyMyX/KF+eOa0V8Fa85LrWfcCk8kGaSSQ=;
+        s=default; t=1556329359;
+        bh=e9IzWOrlZKAQgdH1d0rgPe+9uuD/8k5GSITdo1pX8HU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x0F2lFwPB0KIHcY1BYSm50D+TCCN3oiZ+99Q7jG9uJBv8Ri+irz9QG/S5loLXJDPm
-         607v85uP/y9uAu8eMdJPDEQOK0CNjFFoyjzrElMBvUyIC+YNbK7h8RQ4HETaGXrNHC
-         9m/W2he0pnwy6PvSR94OJapJ2vPl7lSBVKWLPzRI=
+        b=ewHQWMvOqZF6Ue+XkmUZSwzS7yitX0vek4+eqwdvV1+hIK9psSvr12i06p18ZZLha
+         gudqUMlTey5a9r3WgqcUynUHSbjdeewrd1AUl/3hQl+TJaOreLnihFyZyh0R5TZSg+
+         gIVttU0T0bQa+W3Ne6nYCE6/kU8CRA9NB1E6sqto=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Mack <daniel@zonque.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 08/32] ASoC: cs4270: Set auto-increment bit for register writes
-Date:   Fri, 26 Apr 2019 21:41:59 -0400
-Message-Id: <20190427014224.8274-8-sashal@kernel.org>
+Cc:     Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/32] IB/hfi1: Eliminate opcode tests on mr deref
+Date:   Fri, 26 Apr 2019 21:42:00 -0400
+Message-Id: <20190427014224.8274-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
 References: <20190427014224.8274-1-sashal@kernel.org>
@@ -57,37 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Mack <daniel@zonque.org>
+From: Kaike Wan <kaike.wan@intel.com>
 
-[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
+[ Upstream commit a8639a79e85c18c16c10089edd589c7948f19bbd ]
 
-The CS4270 does not by default increment the register address on
-consecutive writes. During normal operation it doesn't matter as all
-register accesses are done individually. At resume time after suspend,
-however, the regcache code gathers the biggest possible block of
-registers to sync and sends them one on one go.
+When an old ack_queue entry is used to store an incoming request, it may
+need to clean up the old entry if it is still referencing the
+MR. Originally only RDMA READ request needed to reference MR on the
+responder side and therefore the opcode was tested when cleaning up the
+old entry. The introduction of tid rdma specific operations in the
+ack_queue makes the specific opcode tests wrong.  Multiple opcodes (RDMA
+READ, TID RDMA READ, and TID RDMA WRITE) may need MR ref cleanup.
 
-To fix this, set the INCR bit in all cases.
+Remove the opcode specific tests associated with the ack_queue.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: f48ad614c100 ("IB/hfi1: Move driver out of staging")
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/cs4270.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/hfi1/rc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
-index 84f86745c30e..828bc615a190 100644
---- a/sound/soc/codecs/cs4270.c
-+++ b/sound/soc/codecs/cs4270.c
-@@ -643,6 +643,7 @@ static const struct regmap_config cs4270_regmap = {
- 	.reg_defaults =		cs4270_reg_defaults,
- 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
- 	.cache_type =		REGCACHE_RBTREE,
-+	.write_flag_mask =	CS4270_I2C_INCR,
- 
- 	.readable_reg =		cs4270_reg_is_readable,
- 	.volatile_reg =		cs4270_reg_is_volatile,
+diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
+index d3b8cb92fd6d..28eb7003c297 100644
+--- a/drivers/infiniband/hw/hfi1/rc.c
++++ b/drivers/infiniband/hw/hfi1/rc.c
+@@ -2309,7 +2309,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
+ 			update_ack_queue(qp, next);
+ 		}
+ 		e = &qp->s_ack_queue[qp->r_head_ack_queue];
+-		if (e->opcode == OP(RDMA_READ_REQUEST) && e->rdma_sge.mr) {
++		if (e->rdma_sge.mr) {
+ 			rvt_put_mr(e->rdma_sge.mr);
+ 			e->rdma_sge.mr = NULL;
+ 		}
+@@ -2383,7 +2383,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
+ 			update_ack_queue(qp, next);
+ 		}
+ 		e = &qp->s_ack_queue[qp->r_head_ack_queue];
+-		if (e->opcode == OP(RDMA_READ_REQUEST) && e->rdma_sge.mr) {
++		if (e->rdma_sge.mr) {
+ 			rvt_put_mr(e->rdma_sge.mr);
+ 			e->rdma_sge.mr = NULL;
+ 		}
 -- 
 2.19.1
 
