@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21122C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7BBC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E664A206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3086B206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329912;
-	bh=EXGjGJeSu29yqXPI6hz9MnRcY3gvpS4p2pKEiRlIOFo=;
+	s=default; t=1556329917;
+	bh=ESIeS+73kGz7BBy9Zs2ZO1ljxHej8aoZwXgCqdOpvks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CbS1r/Kif8xyNZJXqasDO8cfMgDt6ySUocRaZBG7f9VbCqObsakCIdk5+xn7Gl3Yo
-	 0BXbQ46AxeVEeAojNrQplsuCQ9Qgwd/dgOiYbXZfpZdB1nKoRJgd8x2H2vhr+VV0Ih
-	 SFLLJdCnjki3L+Vcsj/pp9XgsEhhzG7KeHd7vYXo=
+	b=P+xoBH9k+6qUys8RY9AoyV2tihrzuyMrXfyuDrOYIA9cCEJ/o4T6VcAiozXDkvA+H
+	 0tT6Bozzi85BHFheV+dz2LFSfmJYjzK0LgCv4B/8Rnmj7Us3H5ueE0tJWsD1hcjuOW
+	 q1VWrbLxw23sfMJDWkMY+L3IFrcLdojQ/8CaOM0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfD0BlB (ORCPT
+        id S1728628AbfD0Bv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:41:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44724 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:51:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728106AbfD0Bk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:40:57 -0400
+        id S1728115AbfD0Bkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:40:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2687208CB;
-        Sat, 27 Apr 2019 01:40:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 980BD20873;
+        Sat, 27 Apr 2019 01:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329257;
-        bh=EXGjGJeSu29yqXPI6hz9MnRcY3gvpS4p2pKEiRlIOFo=;
+        s=default; t=1556329255;
+        bh=ESIeS+73kGz7BBy9Zs2ZO1ljxHej8aoZwXgCqdOpvks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KTBggKgZ0FNvomtVw7L5ghHholkkNJ+4Rj3jDKVImmV8WHs0XuRDJ/y/Wo9H9nmd3
-         zn8JvKBhCbLBhVEmjLC0/uIBbCQ0h32J2kowGoLQDFD9L7VEBlVkGXOzAixxfNwB/p
-         Sgqwfa8OvYvrEV6cTp9umFgyTI9ZIMxKVerJqqhA=
+        b=x1SQpI7iKCAJRPZe4/fvQLWMi606JwFuDXEtycqYN6lcjU69tqkXrY1Lw1WY1mSd6
+         2vy7+S2LdISY/xq9Y9i2VlK7OcmjjJHLxSbvfZ882Dxk9PWZiKy/VxJXgKUoKqGV8p
+         TFPQBclq5n5NNxoOMBwyKAazcduqe0Jz2t0I063o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 03/53] ASoC: ab8500: Mark expected switch fall-through
-Date:   Fri, 26 Apr 2019 21:40:00 -0400
-Message-Id: <20190427014051.7522-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 02/53] ASoC: hdmi-codec: fix S/PDIF DAI
+Date:   Fri, 26 Apr 2019 21:39:59 -0400
+Message-Id: <20190427014051.7522-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,51 +59,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 102cefc8e879b707be0024fdc7bce1deeb359a5f ]
+[ Upstream commit 2e95f984aae4cf0608d0ba2189c756f2bd50b44a ]
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
+When using the S/PDIF DAI, there is no requirement to call
+snd_soc_dai_set_fmt() as there is no DAI format definition that defines
+S/PDIF.  In any case, S/PDIF does not have separate clocks, this is
+embedded into the data stream.
 
-This patch fixes the following warning:
+Consequently, when attempting to use TDA998x in S/PDIF mode, the attempt
+to configure TDA998x via the hw_params callback fails as the
+hdmi_codec_daifmt is left initialised to zero.
 
-In file included from sound/soc/codecs/ab8500-codec.c:24:
-sound/soc/codecs/ab8500-codec.c: In function ‘ab8500_codec_set_dai_fmt’:
-./include/linux/device.h:1485:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/soc/codecs/ab8500-codec.c:2129:3: note: in expansion of macro ‘dev_err’
-   dev_err(dai->component->dev,
-   ^~~~~~~
-sound/soc/codecs/ab8500-codec.c:2132:2: note: here
-  default:
-  ^~~~~~~
+Since the S/PDIF DAI will only be used by S/PDIF, prepare the
+hdmi_codec_daifmt structure for this format.
 
-Warning level 3 was used: -Wimplicit-fallthrough=3
-
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Jyri Sarha <jsarha@ti.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/ab8500-codec.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/hdmi-codec.c | 118 +++++++++++++++++-----------------
+ 1 file changed, 59 insertions(+), 59 deletions(-)
 
-diff --git a/sound/soc/codecs/ab8500-codec.c b/sound/soc/codecs/ab8500-codec.c
-index 03bbbcd3b6c1..87616b126018 100644
---- a/sound/soc/codecs/ab8500-codec.c
-+++ b/sound/soc/codecs/ab8500-codec.c
-@@ -2129,6 +2129,7 @@ static int ab8500_codec_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 		dev_err(dai->component->dev,
- 			"%s: ERROR: The device is either a master or a slave.\n",
- 			__func__);
-+		/* fall through */
- 	default:
- 		dev_err(dai->component->dev,
- 			"%s: ERROR: Unsupporter master mask 0x%x\n",
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index e5b6769b9797..d5f73c837281 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -529,73 +529,71 @@ static int hdmi_codec_set_fmt(struct snd_soc_dai *dai,
+ {
+ 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+ 	struct hdmi_codec_daifmt cf = { 0 };
+-	int ret = 0;
+ 
+ 	dev_dbg(dai->dev, "%s()\n", __func__);
+ 
+-	if (dai->id == DAI_ID_SPDIF) {
+-		cf.fmt = HDMI_SPDIF;
+-	} else {
+-		switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+-		case SND_SOC_DAIFMT_CBM_CFM:
+-			cf.bit_clk_master = 1;
+-			cf.frame_clk_master = 1;
+-			break;
+-		case SND_SOC_DAIFMT_CBS_CFM:
+-			cf.frame_clk_master = 1;
+-			break;
+-		case SND_SOC_DAIFMT_CBM_CFS:
+-			cf.bit_clk_master = 1;
+-			break;
+-		case SND_SOC_DAIFMT_CBS_CFS:
+-			break;
+-		default:
+-			return -EINVAL;
+-		}
++	if (dai->id == DAI_ID_SPDIF)
++		return 0;
++
++	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
++	case SND_SOC_DAIFMT_CBM_CFM:
++		cf.bit_clk_master = 1;
++		cf.frame_clk_master = 1;
++		break;
++	case SND_SOC_DAIFMT_CBS_CFM:
++		cf.frame_clk_master = 1;
++		break;
++	case SND_SOC_DAIFMT_CBM_CFS:
++		cf.bit_clk_master = 1;
++		break;
++	case SND_SOC_DAIFMT_CBS_CFS:
++		break;
++	default:
++		return -EINVAL;
++	}
+ 
+-		switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
+-		case SND_SOC_DAIFMT_NB_NF:
+-			break;
+-		case SND_SOC_DAIFMT_NB_IF:
+-			cf.frame_clk_inv = 1;
+-			break;
+-		case SND_SOC_DAIFMT_IB_NF:
+-			cf.bit_clk_inv = 1;
+-			break;
+-		case SND_SOC_DAIFMT_IB_IF:
+-			cf.frame_clk_inv = 1;
+-			cf.bit_clk_inv = 1;
+-			break;
+-		}
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_NB_NF:
++		break;
++	case SND_SOC_DAIFMT_NB_IF:
++		cf.frame_clk_inv = 1;
++		break;
++	case SND_SOC_DAIFMT_IB_NF:
++		cf.bit_clk_inv = 1;
++		break;
++	case SND_SOC_DAIFMT_IB_IF:
++		cf.frame_clk_inv = 1;
++		cf.bit_clk_inv = 1;
++		break;
++	}
+ 
+-		switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+-		case SND_SOC_DAIFMT_I2S:
+-			cf.fmt = HDMI_I2S;
+-			break;
+-		case SND_SOC_DAIFMT_DSP_A:
+-			cf.fmt = HDMI_DSP_A;
+-			break;
+-		case SND_SOC_DAIFMT_DSP_B:
+-			cf.fmt = HDMI_DSP_B;
+-			break;
+-		case SND_SOC_DAIFMT_RIGHT_J:
+-			cf.fmt = HDMI_RIGHT_J;
+-			break;
+-		case SND_SOC_DAIFMT_LEFT_J:
+-			cf.fmt = HDMI_LEFT_J;
+-			break;
+-		case SND_SOC_DAIFMT_AC97:
+-			cf.fmt = HDMI_AC97;
+-			break;
+-		default:
+-			dev_err(dai->dev, "Invalid DAI interface format\n");
+-			return -EINVAL;
+-		}
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_I2S:
++		cf.fmt = HDMI_I2S;
++		break;
++	case SND_SOC_DAIFMT_DSP_A:
++		cf.fmt = HDMI_DSP_A;
++		break;
++	case SND_SOC_DAIFMT_DSP_B:
++		cf.fmt = HDMI_DSP_B;
++		break;
++	case SND_SOC_DAIFMT_RIGHT_J:
++		cf.fmt = HDMI_RIGHT_J;
++		break;
++	case SND_SOC_DAIFMT_LEFT_J:
++		cf.fmt = HDMI_LEFT_J;
++		break;
++	case SND_SOC_DAIFMT_AC97:
++		cf.fmt = HDMI_AC97;
++		break;
++	default:
++		dev_err(dai->dev, "Invalid DAI interface format\n");
++		return -EINVAL;
+ 	}
+ 
+ 	hcp->daifmt[dai->id] = cf;
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int hdmi_codec_digital_mute(struct snd_soc_dai *dai, int mute)
+@@ -792,8 +790,10 @@ static int hdmi_codec_probe(struct platform_device *pdev)
+ 		i++;
+ 	}
+ 
+-	if (hcd->spdif)
++	if (hcd->spdif) {
+ 		hcp->daidrv[i] = hdmi_spdif_dai;
++		hcp->daifmt[DAI_ID_SPDIF].fmt = HDMI_SPDIF;
++	}
+ 
+ 	dev_set_drvdata(dev, hcp);
+ 
 -- 
 2.19.1
 
