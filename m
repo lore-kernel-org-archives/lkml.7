@@ -2,104 +2,107 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB338C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 22:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3717BC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 22:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FF82087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 22:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9867206E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 22:39:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZVxa2ZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbfD0Wdl (ORCPT
+        id S1726224AbfD0Wi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 18:33:41 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:57312 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfD0Wdl (ORCPT
+        Sat, 27 Apr 2019 18:38:58 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43019 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfD0Wi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 18:33:41 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x3RMX5IO080649;
-        Sun, 28 Apr 2019 07:33:05 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
- Sun, 28 Apr 2019 07:33:05 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x3RMX0QS080634
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sun, 28 Apr 2019 07:33:05 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
-To:     David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Julian Anastasov <ja@ssi.bg>, Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
-        ddstreet@ieee.org, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000007d22100573d66078@google.com>
- <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
- <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
- <9d430543-33c3-0d9b-dc77-3a179a8e3919@I-love.SAKURA.ne.jp>
- <920ebaf1-ee87-0dbb-6805-660c1cbce3d0@I-love.SAKURA.ne.jp>
- <cc054b5c-4e95-8d30-d4bf-9c85f7e20092@gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <15b353e9-49a2-f08b-dc45-2e9bad3abfe2@i-love.sakura.ne.jp>
-Date:   Sun, 28 Apr 2019 07:33:00 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 27 Apr 2019 18:38:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t22so287939pgi.10;
+        Sat, 27 Apr 2019 15:38:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=cFZkA5CUkgKwoe6mx3jHj9OoNUtIU52AVqJl0l10p1o=;
+        b=VZVxa2ZVsNmslXFa3MWYrswOBwdr9s6QJMR2+aKDvywFu6Ar/6bQphKjRgDsD+75vs
+         y6QShbWJg124f8+mK8i++/OIAADoRwjLgkyCNhirrBiSxTGAlpG/kAMFUW/7kSjMlHni
+         rPczGR1OPDieo0GIQEQDSWjshuhdAP5VH9v03bFKE4KWtnLva8ZMzEY4FwWy7ry2a1io
+         AdUkvqgU8624CcR3MaVsYIRO+6CyHWS+YWQS1ZzXQ4DztKuZv/wIRmy6BVu14MxLa6ci
+         chtNPNn+CHvsaroiPX5ika04t203+K5iQWkJT93ioxH/ISvBgcndqhlLTW1VQKQdSZTz
+         9mcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=cFZkA5CUkgKwoe6mx3jHj9OoNUtIU52AVqJl0l10p1o=;
+        b=mVmddXN1BQp3ReP9wMM0sKJ4/exOhrSZkM7t8fAx0OiDKA/r2dY6yLoybuDaCVptjI
+         vyFaEBCOtsqRJqoXKwlno4XftwRrC/Sh3CIK3OxRPMY38OhpWN+BCclTNE9HM24hDYKc
+         oRZEHwyiHOk5JlgbeV5sSx3dEoh8JAohT/FDr5EV0lwO9FkALckDX3S0Sa7cz1siGqpT
+         Jmb3hXNQf/2HF8MAkPeo0baC6scC5KFhbs/Uqlvba/P98oBKmJUNL9BEkQ651xBIrI6e
+         3EBYYg/zAM8SmQ6ie15WE53Vkt8PBjRS8waFgCY1d+80isRlRg0CPMaS31BFWPrOY5rZ
+         OLTw==
+X-Gm-Message-State: APjAAAXKeVrcmgnHS23ia0b7yW2+YL3bwuf0G0MeMxbomInCbrdCjI7J
+        lN0Tf78JV3XaqdsVQjcGpMY=
+X-Google-Smtp-Source: APXvYqwNiWGeB2yro8u83u3Pxq+GHRCMpT7EjKPPWI3u6GGanQGkCJvfCiVQbCxt7E3jYbTzA9IDcg==
+X-Received: by 2002:aa7:8252:: with SMTP id e18mr10359167pfn.105.1556404737087;
+        Sat, 27 Apr 2019 15:38:57 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id b144sm208054pfb.68.2019.04.27.15.38.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Apr 2019 15:38:56 -0700 (PDT)
+Date:   Sat, 27 Apr 2019 15:38:54 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v5.1-rc6
+Message-ID: <20190427223854.GA97206@dtor-ws>
 MIME-Version: 1.0
-In-Reply-To: <cc054b5c-4e95-8d30-d4bf-9c85f7e20092@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/04/28 2:16, David Ahern wrote:
-> On 4/26/19 7:43 AM, Tetsuo Handa wrote:
->> This bug is the top crasher for syzbot and thus we want to fix. I need your
->> response regarding commit caacf05e5ad1abf0 ("ipv4: Properly purge netdev
->> references on uncached routes.") why you chose "a loopback device in that
->> namespace".
->>
->> On 2019/04/16 23:00, Tetsuo Handa wrote:
->>> Hello, David S. Miller.
->>>
->>> I have a question regarding rt_flush_dev() introduced by commit caacf05e5ad1abf0
->>> ("ipv4: Properly purge netdev references on uncached routes.") which went to
->>> Linux 3.6-rc1. That commit started replacing "a device to unregister" with
->>> "a loopback device in that namespace", but there is no description why that
->>> commit chose "a loopback device in that namespace". If a device to unregister
->>> is "a loopback device in that namespace" itself, rt_flush_dev() becomes a no-op
->>> because dev == net->loopback_dev from the beginning. Apart from a problem that
->>> usage count keeps increasing because dev_put(rt->dst.dev) is not called after
->>> rt->dst.dev was replaced with a loopback device, replacing "a device to unregister"
->>> with "a loopback device in init namespace" (like shown below) avoids this problem.
->>>
-> 
-> Moving resource use to the init namespace is not really solving the core
-> problem. It would be better to understand what changes are needed to the
-> shutdown sequence of a namespace to ensure proper cleanup.
+Hi Linus,
 
-I know.
+Please pull from:
 
-> 
-> In this case why are dst entries not getting cleaned up? This one is
-> referring to entries on the uncached list. What is using the dst entry
-> and why isn't it getting released?
-> 
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
 
-I'm waiting for davem why it is safe to move the dst entry from
-"a device to unregister" to "a loopback device in that namespace".
-I'm waiting for an explanation how the dst entry which was moved to
-"a loopback device in that namespace" is released (i.e. what the
-expected shutdown sequence is).
+to receive updates for the input subsystem. Just a couple of fixups for
+Synaptics RMI4 driver and allowing snvs_pwrkey to be selected on more
+boards.
 
+Changelog:
+---------
+
+Jacky Bai (1):
+      Input: snvs_pwrkey - make it depend on ARCH_MXC
+
+Lucas Stach (1):
+      Input: synaptics-rmi4 - write config register values to the right offset
+
+Pan Bian (1):
+      Input: synaptics-rmi4 - fix possible double free
+
+Diffstat:
+--------
+
+ drivers/input/keyboard/Kconfig  | 2 +-
+ drivers/input/rmi4/rmi_driver.c | 6 +-----
+ drivers/input/rmi4/rmi_f11.c    | 2 +-
+ 3 files changed, 3 insertions(+), 7 deletions(-)
+
+Thanks.
+
+
+-- 
+Dmitry
