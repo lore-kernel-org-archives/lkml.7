@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C1DC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC55C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5AD20C01
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BEE208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329249;
-	bh=R2rpl+9GTkX7UfwhQa+rgLmWIhB1wYRoWJDewNXmuRM=;
+	s=default; t=1556329250;
+	bh=Y0pgp+cW86eu1WvjuOqG11JMB9mYMKFomTMG0EnJlf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Yv5fdOVDMuP988IyV++GKNmMkyAfQHHOOjMLOXHRwpQqP9pICImlPYq5Wic87L+t
-	 DobILe2E3twS01EHe8RfobGqDnsJxlhriYsK8HAH5u8iz7V9q6zIHmNV4wjkOw0CkK
-	 bfjUFbQhEssfx/KzI4oeVZPZJZWjSxCO5hWUBaxk=
+	b=Du1rmIuVj5trOZkvhPBPwewdFKrNI/HBfOSB/9eVLRnANPwnhgadDySTWWNCWb1uP
+	 kTHcEWCi553XNK1NjZSKJZJjFnJ5qxGinkO+tHwIcsmY6hsQDxajUjn8xrE5fhMZAx
+	 ylnCqwdH/kAYz1pAW9WPw/9gmeQYtjOKngEJ6Mk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfD0Bkr (ORCPT
+        id S1728097AbfD0Bkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44460 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:40:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727502AbfD0Bkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:40:45 -0400
+        id S1728080AbfD0Bkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:40:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 936F120873;
-        Sat, 27 Apr 2019 01:40:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBF72208CB;
+        Sat, 27 Apr 2019 01:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329244;
-        bh=R2rpl+9GTkX7UfwhQa+rgLmWIhB1wYRoWJDewNXmuRM=;
+        s=default; t=1556329246;
+        bh=Y0pgp+cW86eu1WvjuOqG11JMB9mYMKFomTMG0EnJlf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1GBxLr6sp6zvcdMMZNKcw8TUcb94l8vShN01ZWKA7w6rjnQsIaXTt/4JrrXkLkiQU
-         nbTT7CXjfxhuUwNM24EraNPovBG4tfH6zvQ6pEy+PgfIw13MoeDdlN7UGBDHAxNL0T
-         o7I4+ENdFjz7VZaveVijLimj8uCsDQBGRAjWdXYs=
+        b=hk0UKNlKlJ9pnpiJRYN8QejQwxlwt3aoU53TNXZkfaxxqpFAM15wU+x11/Ma9h6gN
+         F7tAVPIvSMUt9PS/ze1JQwEga3mQ/9VW2RIAAuviI1pPgqRmtU/a7ukESOv0ANU8jJ
+         jKQn1thb/4U0Ry9ViIjCN8rdf6VuRZpr13/Css8Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>, stable@kernel.org,
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, stable@kernel.org,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.0 77/79] mm: add 'try_get_page()' helper function
-Date:   Fri, 26 Apr 2019 21:38:36 -0400
-Message-Id: <20190427013838.6596-77-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 78/79] mm: prevent get_user_pages() from overflowing page refcount
+Date:   Fri, 26 Apr 2019 21:38:37 -0400
+Message-Id: <20190427013838.6596-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -61,56 +60,158 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 88b1a17dfc3ed7728316478fae0f5ad508f50397 ]
+[ Upstream commit 8fde12ca79aff9b5ba951fce1a2641901b8d8e64 ]
 
-This is the same as the traditional 'get_page()' function, but instead
-of unconditionally incrementing the reference count of the page, it only
-does so if the count was "safe".  It returns whether the reference count
-was incremented (and is marked __must_check, since the caller obviously
-has to be aware of it).
+If the page refcount wraps around past zero, it will be freed while
+there are still four billion references to it.  One of the possible
+avenues for an attacker to try to make this happen is by doing direct IO
+on a page multiple times.  This patch makes get_user_pages() refuse to
+take a new page reference if there are already more than two billion
+references to the page.
 
-Also like 'get_page()', you can't use this function unless you already
-had a reference to the page.  The intent is that you can use this
-exactly like get_page(), but in situations where you want to limit the
-maximum reference count.
-
-The code currently does an unconditional WARN_ON_ONCE() if we ever hit
-the reference count issues (either zero or negative), as a notification
-that the conditional non-increment actually happened.
-
-NOTE! The count access for the "safety" check is inherently racy, but
-that doesn't matter since the buffer we use is basically half the range
-of the reference count (ie we look at the sign of the count).
-
+Reported-by: Jann Horn <jannh@google.com>
 Acked-by: Matthew Wilcox <willy@infradead.org>
-Cc: Jann Horn <jannh@google.com>
 Cc: stable@kernel.org
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ mm/gup.c     | 48 ++++++++++++++++++++++++++++++++++++------------
+ mm/hugetlb.c | 13 +++++++++++++
+ 2 files changed, 49 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 541d99b86aea..7000ddd807e0 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -980,6 +980,15 @@ static inline void get_page(struct page *page)
- 	page_ref_inc(page);
+diff --git a/mm/gup.c b/mm/gup.c
+index 75029649baca..81e0bdefa2cc 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -157,8 +157,12 @@ retry:
+ 		goto retry;
+ 	}
+ 
+-	if (flags & FOLL_GET)
+-		get_page(page);
++	if (flags & FOLL_GET) {
++		if (unlikely(!try_get_page(page))) {
++			page = ERR_PTR(-ENOMEM);
++			goto out;
++		}
++	}
+ 	if (flags & FOLL_TOUCH) {
+ 		if ((flags & FOLL_WRITE) &&
+ 		    !pte_dirty(pte) && !PageDirty(page))
+@@ -295,7 +299,10 @@ retry_locked:
+ 			if (pmd_trans_unstable(pmd))
+ 				ret = -EBUSY;
+ 		} else {
+-			get_page(page);
++			if (unlikely(!try_get_page(page))) {
++				spin_unlock(ptl);
++				return ERR_PTR(-ENOMEM);
++			}
+ 			spin_unlock(ptl);
+ 			lock_page(page);
+ 			ret = split_huge_page(page);
+@@ -497,7 +504,10 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
+ 		if (is_device_public_page(*page))
+ 			goto unmap;
+ 	}
+-	get_page(*page);
++	if (unlikely(!try_get_page(*page))) {
++		ret = -ENOMEM;
++		goto unmap;
++	}
+ out:
+ 	ret = 0;
+ unmap:
+@@ -1393,6 +1403,20 @@ static void undo_dev_pagemap(int *nr, int nr_start, struct page **pages)
+ 	}
  }
  
-+static inline __must_check bool try_get_page(struct page *page)
++/*
++ * Return the compund head page with ref appropriately incremented,
++ * or NULL if that failed.
++ */
++static inline struct page *try_get_compound_head(struct page *page, int refs)
 +{
-+	page = compound_head(page);
-+	if (WARN_ON_ONCE(page_ref_count(page) <= 0))
-+		return false;
-+	page_ref_inc(page);
-+	return true;
++	struct page *head = compound_head(page);
++	if (WARN_ON_ONCE(page_ref_count(head) < 0))
++		return NULL;
++	if (unlikely(!page_cache_add_speculative(head, refs)))
++		return NULL;
++	return head;
 +}
 +
- static inline void put_page(struct page *page)
- {
- 	page = compound_head(page);
+ #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
+ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 			 int write, struct page **pages, int *nr)
+@@ -1427,9 +1451,9 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+-		head = compound_head(page);
+ 
+-		if (!page_cache_get_speculative(head))
++		head = try_get_compound_head(page, 1);
++		if (!head)
+ 			goto pte_unmap;
+ 
+ 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+@@ -1568,8 +1592,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pmd_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pmd_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -1606,8 +1630,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pud_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pud_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -1643,8 +1667,8 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pgd_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pgd_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 8dfdffc34a99..c220315dc533 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4298,6 +4298,19 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
+ 
+ 		pfn_offset = (vaddr & ~huge_page_mask(h)) >> PAGE_SHIFT;
+ 		page = pte_page(huge_ptep_get(pte));
++
++		/*
++		 * Instead of doing 'try_get_page()' below in the same_page
++		 * loop, just check the count once here.
++		 */
++		if (unlikely(page_count(page) <= 0)) {
++			if (pages) {
++				spin_unlock(ptl);
++				remainder = 0;
++				err = -ENOMEM;
++				break;
++			}
++		}
+ same_page:
+ 		if (pages) {
+ 			pages[i] = mem_map_offset(page, pfn_offset);
 -- 
 2.19.1
 
