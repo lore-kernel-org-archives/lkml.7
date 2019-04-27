@@ -2,86 +2,87 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A03C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B51C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F572087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253412087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556369776;
+	bh=VTEMkRxAEwAAhO8YkZ35ckyyOspKUqhkHhSKIJZnN28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=10EB9aKCXc9++lVHRWZmvpCZEkOB4lxfdaHQ8S5+glidpompRWUWMihR/So8p/wYb
+	 XTWUttnlI21rH0jnIVn6+nW38NjEOmeRI1EdR3mX4TQPAuGflScDP/yJtb4G9Ylpkj
+	 CSXSxWlZRbEHmmawU8M3CmIgYxEweJHs/NyV0P0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfD0M4M (ORCPT
+        id S1727367AbfD0M4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:56:12 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:56161 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbfD0MxK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:53:10 -0400
-Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MHoZS-1hX2X90am6-00EvFl; Sat, 27 Apr 2019 14:52:49 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
-        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 18/41] drivers: tty: serial: apbuart: use dev_info() instead of printk()
-Date:   Sat, 27 Apr 2019 14:51:59 +0200
-Message-Id: <1556369542-13247-19-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
-References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:OVKGRVf0aXMWmtc1PHtqfEjiYENJhZU3hpSHmEA0npVSmInw18W
- peVVZAyjlFJAio3YAZ7zsEC8Fe2VQ89wyDlbJaIzUmZGMMp3iII6gzrN822v79B5j0vvLsh
- 71zzSbmGgmkHHfJu8peOu878gwp/4AQZkem15Rl7F+pbbfe+1IRXXc3iTGk/vbwXXy8feJ1
- A4wTh5WhUYxm3/nJIj4hw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kJPYxrqUW4Q=:IX4zfaBz7w6xvHD6+zvUEx
- 9lgTvdeuV59hcukEVZymu+p6tcoSHdR0K1YyNeMpb8uyuppx99cFXsn6a/2c3QwCqdTtaOI7b
- NM555G1mdTA4tx9beSLOpohIzVc1IAh0aF9aqOMLarv10YlFJVBypKsS7eozOr8YjLPwNCA7y
- xLNnSL9nvqoyuR6pmZ9cvRyyyP6/eYw4Fc/aHOZVjluv6XaHH1kDZqcwruoEvA55uYtvnSHac
- 9MjLs8ftcbsYmjTSWf1ukKC9wrnPzPU62l5wd6argIoQ2M9shIoE9+TB45W0N7bfJyq0mDbaX
- TJHKhxyRPW+/7p9yUNV10hZ7DQE+aMsD5fm2A2ANmTrYm1EOuOJrwHBgNOvOC8EJ4+jTkk6/W
- BwDYOySXQ80cH6wqZIg+DXq1/w/mFQHSkmwtbd0oqKoJWF1i+ZJF+Ic9yETZqxb/VKtT1JjId
- aY7KauvC1h+u+2i6Ia65kuNV1gsqfMmGLLZjy0AiXOjEvc13FOU1AbsdYNOJA5WSEPHUqWLHT
- SoAIo9fOAKbG2KsIwCu7Zo2mryl45CvXBMMMbNQ9jt5fV9nD8v7BkFwLkMucoFwqTowZs8u5T
- g8EDSIiimu5RjbwcGKHM6HD5X5/g/5FrZKGvHbfpY29hrmOad8MLWYtKwnASbuVRUr6XWpvrq
- WJJr4n5/Cu72gbTk0oEBe4AhzNbI9tMroHYK2nYqhfZrYtIznaI/92IoE9ZcqFvyCxwmiSEKp
- 6Y0UpIDYj+h2G2Yvy0Vj7nMLmkVAnbhBJyzm0A==
+        Sat, 27 Apr 2019 08:56:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727659AbfD0M4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 08:56:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EEA22087C;
+        Sat, 27 Apr 2019 12:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556369768;
+        bh=VTEMkRxAEwAAhO8YkZ35ckyyOspKUqhkHhSKIJZnN28=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZFP7c9CJLoHipg0tqL/Y/MGUW3F5gGPjJVmDFER45me8zC4U8kDUnPput1M8W/wmX
+         j+uhlrb93vHMCPj4HrQfXusvDtrOiujFcDAR2Roz97eOHIqpdV2vTTHdU5zsM7SIsn
+         rGugvWpi1aSYPkoG+Gi8pLYLz8o9aTABwQu2xtwo=
+Date:   Sat, 27 Apr 2019 14:56:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Simon Horman <horms@verge.net.au>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "mathias.nyman@intel.com" <mathias.nyman@intel.com>
+Subject: Re: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
+Message-ID: <20190427125606.GA25493@kroah.com>
+References: <1544732471-6730-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TYXPR01MB1775A4A3AF86097F284C4A08C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+ <20190301161624.GA19937@kroah.com>
+ <TYXPR01MB17756DBAF2FD7A1F2A9B82B0C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+ <TY1PR01MB1770DB45DCD263C6933B9210C0230@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB1770DB45DCD263C6933B9210C0230@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using dev_err() instead of printk() for more consistent output.
-(prints device name, etc).
+On Tue, Apr 23, 2019 at 03:32:59PM +0000, Fabrizio Castro wrote:
+> Hello Simon,
+> 
+> I know you don't normally take this type of patches, but this one has
+> been around for more than 4 months now, and I am losing hope here...
+> 
+> Do you think you can this patch?
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/tty/serial/apbuart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think this got dropped somehow, sorry about that.
 
-diff --git a/drivers/tty/serial/apbuart.c b/drivers/tty/serial/apbuart.c
-index d2b86f7..89e19b6 100644
---- a/drivers/tty/serial/apbuart.c
-+++ b/drivers/tty/serial/apbuart.c
-@@ -568,7 +568,7 @@ static int apbuart_probe(struct platform_device *op)
- 
- 	apbuart_flush_fifo((struct uart_port *) port);
- 
--	printk(KERN_INFO "grlib-apbuart at 0x%llx, irq %d\n",
-+	dev_info(&pdev->pdev, "grlib-apbuart at 0x%llx, irq %d\n",
- 	       (unsigned long long) port->mapbase, port->irq);
- 	return 0;
- }
--- 
-1.9.1
+Can you resend it, with the acks that have been given to it, and I will
+be glad to queue it up.
 
+thanks,
+
+greg k-h
