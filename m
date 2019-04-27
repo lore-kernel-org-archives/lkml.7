@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF3BC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56613C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34499206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2402A206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfD0P1g (ORCPT
+        id S1728311AbfD0P1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:27:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33154 "EHLO
+        Sat, 27 Apr 2019 11:27:42 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33134 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727369AbfD0PPW (ORCPT
+        by vger.kernel.org with ESMTP id S1727366AbfD0PPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:22 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2t-0000z6-0S; Sat, 27 Apr 2019 16:15:19 +0100
+        id 1hKP2t-0000zQ-BD; Sat, 27 Apr 2019 16:15:19 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2o-0004ex-7R; Sat, 27 Apr 2019 16:15:14 +0100
+        id 1hKP2n-0004e5-TJ; Sat, 27 Apr 2019 16:15:13 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Arend van Spriel" <arend.vanspriel@broadcom.com>,
-        "Gavin Li" <git@thegavinli.com>
+        "Mauro Carvalho Chehab" <m.chehab@samsung.com>,
+        "Shuah Khan" <shuah.kh@samsung.com>,
+        "Antti Palosaari" <crope@iki.fi>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.224704423@decadent.org.uk>
+Message-ID: <lsq.1556377989.101285957@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 196/202] brcmfmac: fix incorrect event channel deduction
+Subject: [PATCH 3.16 185/202] [media] media: em28xx-dvb - fix
+ em28xx_dvb_resume() to not unregister i2c and dvb
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,38 +57,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gavin Li <git@thegavinli.com>
+From: Shuah Khan <shuah.kh@samsung.com>
 
-commit 8e290cecdd0178f3d4cf7d463c51dc7e462843b4 upstream.
+commit 6eb5e3399e8f45aa191ad21c0556bece8ea559f2 upstream.
 
-brcmf_sdio_fromevntchan() was being called on the the data frame
-rather than the software header, causing some frames to be
-mischaracterized as on the event channel rather than the data channel.
+em28xx_dvb_resume() unregisters i2c tuner, i2c demod, and dvb.
+This erroneous cleanup results in i2c tuner, i2c demod, and dvb
+devices unregistered and removed during resume. This error is a
+result of merge conflict between two patches that went into 3.15.
 
-This fixes a major performance regression (due to dropped packets). With
-this patch the download speed jumped from 1Mbit/s back up to 40MBit/s due
-to the sheer amount of packets being incorrectly processed.
-
-Fixes: c56caa9db8ab ("brcmfmac: screening firmware event packet")
-Signed-off-by: Gavin Li <git@thegavinli.com>
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-[kvalo@codeaurora.org: improve commit logs based on email discussion]
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filename]
+Signed-off-by: Shuah Khan <shuah.kh@samsung.com>
+Reviewed-by: Antti Palosaari <crope@iki.fi>
+Signed-off-by: Mauro Carvalho Chehab <m.chehab@samsung.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/usb/em28xx/em28xx-dvb.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
---- a/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
-@@ -1710,7 +1710,7 @@ static u8 brcmf_sdio_rxglom(struct brcmf
- 					   pfirst->len, pfirst->next,
- 					   pfirst->prev);
- 			skb_unlink(pfirst, &bus->glom);
--			if (brcmf_sdio_fromevntchan(pfirst->data))
-+			if (brcmf_sdio_fromevntchan(&dptr[SDPCM_HWHDR_LEN]))
- 				brcmf_rx_event(bus->sdiodev->dev, pfirst);
- 			else
- 				brcmf_rx_frame(bus->sdiodev->dev, pfirst,
+--- a/drivers/media/usb/em28xx/em28xx-dvb.c
++++ b/drivers/media/usb/em28xx/em28xx-dvb.c
+@@ -1712,7 +1712,6 @@ static int em28xx_dvb_resume(struct em28
+ 	em28xx_info("Resuming DVB extension\n");
+ 	if (dev->dvb) {
+ 		struct em28xx_dvb *dvb = dev->dvb;
+-		struct i2c_client *client = dvb->i2c_client_tuner;
+ 
+ 		if (dvb->fe[0]) {
+ 			ret = dvb_frontend_resume(dvb->fe[0]);
+@@ -1723,22 +1722,6 @@ static int em28xx_dvb_resume(struct em28
+ 			ret = dvb_frontend_resume(dvb->fe[1]);
+ 			em28xx_info("fe1 resume %d\n", ret);
+ 		}
+-		/* remove I2C tuner */
+-		if (client) {
+-			module_put(client->dev.driver->owner);
+-			i2c_unregister_device(client);
+-		}
+-
+-		/* remove I2C demod */
+-		client = dvb->i2c_client_demod;
+-		if (client) {
+-			module_put(client->dev.driver->owner);
+-			i2c_unregister_device(client);
+-		}
+-
+-		em28xx_unregister_dvb(dvb);
+-		kfree(dvb);
+-		dev->dvb = NULL;
+ 	}
+ 
+ 	return 0;
 
