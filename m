@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A32C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC421C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE7C206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E229206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfD0PPs (ORCPT
+        id S1727762AbfD0PPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:15:48 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32966 "EHLO
+        Sat, 27 Apr 2019 11:15:46 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33010 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727304AbfD0PPT (ORCPT
+        by vger.kernel.org with ESMTP id S1727309AbfD0PPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:19 -0400
+        Sat, 27 Apr 2019 11:15:20 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2m-0000zO-WD; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2s-00014C-3I; Sat, 27 Apr 2019 16:15:18 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2k-0004WM-HK; Sat, 27 Apr 2019 16:15:10 +0100
+        id 1hKP2o-0004fN-C3; Sat, 27 Apr 2019 16:15:14 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "" <yamada.masahiro@socionext.com>,
-        "" <linux-mips@vger.kernel.org>, "" <peterz@infradead.org>,
-        "" <mingo@kernel.org>, "" <jhogan@kernel.org>,
-        "Paul Burton" <paul.burton@mips.com>,
-        "Tony Wu" <tonywu@realtek.com>, "" <ralf@linux-mips.org>,
-        "" <macro@mips.com>, "Jun-Ru Chang" <jrjang@realtek.com>
+        "John Johansen" <john.johansen@canonical.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.99898756@decadent.org.uk>
+Message-ID: <lsq.1556377989.763289498@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 099/202] MIPS: Remove function size check in
- get_frame_info()
+Subject: [PATCH 3.16 201/202] apparmor: provide userspace flag indicating
+ binfmt_elf_mmap change
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,60 +55,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jun-Ru Chang <jrjang@realtek.com>
+From: John Johansen <john.johansen@canonical.com>
 
-commit 2b424cfc69728224fcb5fad138ea7260728e0901 upstream.
+commit 34c426acb75cc21bdf84685e106db0c1a3565057 upstream.
 
-Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
-microMIPS function size.") introduces additional function size
-check for microMIPS by only checking insn between ip and ip + func_size.
-However, func_size in get_frame_info() is always 0 if KALLSYMS is not
-enabled. This causes get_frame_info() to return immediately without
-calculating correct frame_size, which in turn causes "Can't analyze
-schedule() prologue" warning messages at boot time.
+Commit 9f834ec18def ("binfmt_elf: switch to new creds when switching to new mm")
+changed when the creds are installed by the binfmt_elf handler. This
+affects which creds are used to mmap the executable into the address
+space. Which can have an affect on apparmor policy.
 
-This patch removes func_size check, and let the frame_size check run
-up to 128 insns for both MIPS and microMIPS.
+Add a flag to apparmor at
+/sys/kernel/security/apparmor/features/domain/fix_binfmt_elf_mmap
 
-Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
-Signed-off-by: Tony Wu <tonywu@realtek.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
-Cc: <ralf@linux-mips.org>
-Cc: <jhogan@kernel.org>
-Cc: <macro@mips.com>
-Cc: <yamada.masahiro@socionext.com>
-Cc: <peterz@infradead.org>
-Cc: <mingo@kernel.org>
-Cc: <linux-mips@vger.kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
+to make it possible to detect this semantic change so that the userspace
+tools and the regression test suite can correctly deal with the change.
+
+BugLink: http://bugs.launchpad.net/bugs/1630069
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/mips/kernel/process.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ security/apparmor/apparmorfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/mips/kernel/process.c
-+++ b/arch/mips/kernel/process.c
-@@ -373,7 +373,7 @@ static inline int is_sp_move_ins(union m
- static int get_frame_info(struct mips_frame_info *info)
- {
- 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
--	union mips_instruction insn, *ip, *ip_end;
-+	union mips_instruction insn, *ip;
- 	const unsigned int max_insns = 128;
- 	unsigned int last_insn_size = 0;
- 	unsigned int i;
-@@ -385,10 +385,9 @@ static int get_frame_info(struct mips_fr
- 	if (!ip)
- 		goto err;
+--- a/security/apparmor/apparmorfs.c
++++ b/security/apparmor/apparmorfs.c
+@@ -794,6 +794,7 @@ static struct aa_fs_entry aa_fs_entry_do
+ 	AA_FS_FILE_BOOLEAN("change_hatv",	1),
+ 	AA_FS_FILE_BOOLEAN("change_onexec",	1),
+ 	AA_FS_FILE_BOOLEAN("change_profile",	1),
++	AA_FS_FILE_BOOLEAN("fix_binfmt_elf_mmap",	1),
+ 	{ }
+ };
  
--	ip_end = (void *)ip + info->func_size;
--
--	for (i = 0; i < max_insns && ip < ip_end; i++) {
-+	for (i = 0; i < max_insns; i++) {
- 		ip = (void *)ip + last_insn_size;
-+
- 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
- 			insn.word = ip->halfword[0] << 16;
- 			last_insn_size = 2;
 
