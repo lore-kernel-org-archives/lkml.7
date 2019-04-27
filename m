@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4971DC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F78C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1840C206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5612A208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfD0PQT (ORCPT
+        id S1728049AbfD0PQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:16:19 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34174 "EHLO
+        Sat, 27 Apr 2019 11:16:18 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34188 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727667AbfD0PPi (ORCPT
+        by vger.kernel.org with ESMTP id S1727669AbfD0PPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:38 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP38-0000zB-Mj; Sat, 27 Apr 2019 16:15:34 +0100
+        id 1hKP38-0000zQ-KE; Sat, 27 Apr 2019 16:15:34 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2j-0004Sg-6p; Sat, 27 Apr 2019 16:15:09 +0100
+        id 1hKP2i-0004SM-VA; Sat, 27 Apr 2019 16:15:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Adam Jackson" <ajax@redhat.com>,
-        "Tina Zhang" <tina.zhang@intel.com>,
-        "Daniel Vetter" <daniel.vetter@ffwll.ch>,
-        "Dave Airlie" <airlied@redhat.com>,
-        "Daniel Vetter" <daniel@ffwll.ch>
+        "Marc Kleine-Budde" <mkl@pengutronix.de>,
+        "Manfred Schlaegl" <manfred.schlaegl@ginzinger.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.998268421@decadent.org.uk>
+Message-ID: <lsq.1556377989.980685267@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 063/202] drm/modes: Prevent division by zero htotal
+Subject: [PATCH 3.16 059/202] can: dev: __can_get_echo_skb(): fix bogous
+ check for non-existing skb by removing it
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,99 +56,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tina Zhang <tina.zhang@intel.com>
+From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
 
-commit a2fcd5c84f7a7825e028381b10182439067aa90d upstream.
+commit 7b12c8189a3dc50638e7d53714c88007268d47ef upstream.
 
-This patch prevents division by zero htotal.
+This patch revert commit 7da11ba5c506
+("can: dev: __can_get_echo_skb(): print error message, if trying to echo non existing skb")
 
-In a follow-up mail Tina writes:
+After introduction of this change we encountered following new error
+message on various i.MX plattforms (flexcan):
 
-> > How did you manage to get here with htotal == 0? This needs backtraces (or if
-> > this is just about static checkers, a mention of that).
-> > -Daniel
->
-> In GVT-g, we are trying to enable a virtual display w/o setting timings for a pipe
-> (a.k.a htotal=0), then we met the following kernel panic:
->
-> [   32.832048] divide error: 0000 [#1] SMP PTI
-> [   32.833614] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.18.0-rc4-sriov+ #33
-> [   32.834438] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.10.1-0-g8891697-dirty-20180511_165818-tinazhang-linux-1 04/01/2014
-> [   32.835901] RIP: 0010:drm_mode_hsync+0x1e/0x40
-> [   32.836004] Code: 31 c0 c3 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 8b 87 d8 00 00 00 85 c0 75 22 8b 4f 68 85 c9 78 1b 69 47 58 e8 03 00 00 99 <f7> f9 b9 d3 4d 62 10 05 f4 01 00 00 f7 e1 89 d0 c1 e8 06 f3 c3 66
-> [   32.836004] RSP: 0000:ffffc900000ebb90 EFLAGS: 00010206
-> [   32.836004] RAX: 0000000000000000 RBX: ffff88001c67c8a0 RCX: 0000000000000000
-> [   32.836004] RDX: 0000000000000000 RSI: ffff88001c67c000 RDI: ffff88001c67c8a0
-> [   32.836004] RBP: ffff88001c7d03a0 R08: ffff88001c67c8a0 R09: ffff88001c7d0330
-> [   32.836004] R10: ffffffff822c3a98 R11: 0000000000000001 R12: ffff88001c67c000
-> [   32.836004] R13: ffff88001c7d0370 R14: ffffffff8207eb78 R15: ffff88001c67c800
-> [   32.836004] FS:  0000000000000000(0000) GS:ffff88001da00000(0000) knlGS:0000000000000000
-> [   32.836004] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   32.836004] CR2: 0000000000000000 CR3: 000000000220a000 CR4: 00000000000006f0
-> [   32.836004] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   32.836004] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   32.836004] Call Trace:
-> [   32.836004]  intel_mode_from_pipe_config+0x72/0x90
-> [   32.836004]  intel_modeset_setup_hw_state+0x569/0xf90
-> [   32.836004]  intel_modeset_init+0x905/0x1db0
-> [   32.836004]  i915_driver_load+0xb8c/0x1120
-> [   32.836004]  i915_pci_probe+0x4d/0xb0
-> [   32.836004]  local_pci_probe+0x44/0xa0
-> [   32.836004]  ? pci_assign_irq+0x27/0x130
-> [   32.836004]  pci_device_probe+0x102/0x1c0
-> [   32.836004]  driver_probe_device+0x2b8/0x480
-> [   32.836004]  __driver_attach+0x109/0x110
-> [   32.836004]  ? driver_probe_device+0x480/0x480
-> [   32.836004]  bus_for_each_dev+0x67/0xc0
-> [   32.836004]  ? klist_add_tail+0x3b/0x70
-> [   32.836004]  bus_add_driver+0x1e8/0x260
-> [   32.836004]  driver_register+0x5b/0xe0
-> [   32.836004]  ? mipi_dsi_bus_init+0x11/0x11
-> [   32.836004]  do_one_initcall+0x4d/0x1eb
-> [   32.836004]  kernel_init_freeable+0x197/0x237
-> [   32.836004]  ? rest_init+0xd0/0xd0
-> [   32.836004]  kernel_init+0xa/0x110
-> [   32.836004]  ret_from_fork+0x35/0x40
-> [   32.836004] Modules linked in:
-> [   32.859183] ---[ end trace 525608b0ed0e8665 ]---
-> [   32.859722] RIP: 0010:drm_mode_hsync+0x1e/0x40
-> [   32.860287] Code: 31 c0 c3 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 8b 87 d8 00 00 00 85 c0 75 22 8b 4f 68 85 c9 78 1b 69 47 58 e8 03 00 00 99 <f7> f9 b9 d3 4d 62 10 05 f4 01 00 00 f7 e1 89 d0 c1 e8 06 f3 c3 66
-> [   32.862680] RSP: 0000:ffffc900000ebb90 EFLAGS: 00010206
-> [   32.863309] RAX: 0000000000000000 RBX: ffff88001c67c8a0 RCX: 0000000000000000
-> [   32.864182] RDX: 0000000000000000 RSI: ffff88001c67c000 RDI: ffff88001c67c8a0
-> [   32.865206] RBP: ffff88001c7d03a0 R08: ffff88001c67c8a0 R09: ffff88001c7d0330
-> [   32.866359] R10: ffffffff822c3a98 R11: 0000000000000001 R12: ffff88001c67c000
-> [   32.867213] R13: ffff88001c7d0370 R14: ffffffff8207eb78 R15: ffff88001c67c800
-> [   32.868075] FS:  0000000000000000(0000) GS:ffff88001da00000(0000) knlGS:0000000000000000
-> [   32.868983] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   32.869659] CR2: 0000000000000000 CR3: 000000000220a000 CR4: 00000000000006f0
-> [   32.870599] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   32.871598] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   32.872549] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
->
-> Since drm_mode_hsync() has the logic to check mode->htotal, I just extend it to cover the case htotal==0.
+| flexcan 53fc8000.can can0: __can_get_echo_skb: BUG! Trying to echo non
+| existing skb: can_priv::echo_skb[0]
 
-Signed-off-by: Tina Zhang <tina.zhang@intel.com>
-Cc: Adam Jackson <ajax@redhat.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-[danvet: Add additional explanations + cc: stable.]
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1548228539-3061-1-git-send-email-tina.zhang@intel.com
+The introduction of the message was a mistake because
+priv->echo_skb[idx] = NULL is a perfectly valid in following case: If
+CAN_RAW_LOOPBACK is disabled (setsockopt) in applications, the pkt_type
+of the tx skb's given to can_put_echo_skb is set to PACKET_LOOPBACK. In
+this case can_put_echo_skb will not set priv->echo_skb[idx]. It is
+therefore kept NULL.
+
+As additional argument for revert: The order of check and usage of idx
+was changed. idx is used to access an array element before checking it's
+boundaries.
+
+Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+Fixes: 7da11ba5c506 ("can: dev: __can_get_echo_skb(): print error message, if trying to echo non existing skb")
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/gpu/drm/drm_modes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/can/dev.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
---- a/drivers/gpu/drm/drm_modes.c
-+++ b/drivers/gpu/drm/drm_modes.c
-@@ -682,7 +682,7 @@ int drm_mode_hsync(const struct drm_disp
- 	if (mode->hsync)
- 		return mode->hsync;
+--- a/drivers/net/can/dev.c
++++ b/drivers/net/can/dev.c
+@@ -425,8 +425,6 @@ EXPORT_SYMBOL_GPL(can_put_echo_skb);
+ struct sk_buff *__can_get_echo_skb(struct net_device *dev, unsigned int idx, u8 *len_ptr)
+ {
+ 	struct can_priv *priv = netdev_priv(dev);
+-	struct sk_buff *skb = priv->echo_skb[idx];
+-	struct canfd_frame *cf;
  
--	if (mode->htotal < 0)
-+	if (mode->htotal <= 0)
- 		return 0;
+ 	if (idx >= priv->echo_skb_max) {
+ 		netdev_err(dev, "%s: BUG! Trying to access can_priv::echo_skb out of bounds (%u/max %u)\n",
+@@ -434,20 +432,21 @@ struct sk_buff *__can_get_echo_skb(struc
+ 		return NULL;
+ 	}
  
- 	calc_val = (mode->clock * 1000) / mode->htotal; /* hsync in Hz */
+-	if (!skb) {
+-		netdev_err(dev, "%s: BUG! Trying to echo non existing skb: can_priv::echo_skb[%u]\n",
+-			   __func__, idx);
+-		return NULL;
+-	}
++	if (priv->echo_skb[idx]) {
++		/* Using "struct canfd_frame::len" for the frame
++		 * length is supported on both CAN and CANFD frames.
++		 */
++		struct sk_buff *skb = priv->echo_skb[idx];
++		struct canfd_frame *cf = (struct canfd_frame *)skb->data;
++		u8 len = cf->len;
+ 
+-	/* Using "struct canfd_frame::len" for the frame
+-	 * length is supported on both CAN and CANFD frames.
+-	 */
+-	cf = (struct canfd_frame *)skb->data;
+-	*len_ptr = cf->len;
+-	priv->echo_skb[idx] = NULL;
++		*len_ptr = len;
++		priv->echo_skb[idx] = NULL;
++
++		return skb;
++	}
+ 
+-	return skb;
++	return NULL;
+ }
+ 
+ /*
 
