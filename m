@@ -2,131 +2,169 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3E0C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD84C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505EA206BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FB2206BF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vGROUGop"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="J/U3Jr4X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfD0DLy (ORCPT
+        id S1727286AbfD0DTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 23:11:54 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38740 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfD0DLx (ORCPT
+        Fri, 26 Apr 2019 23:19:50 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46802 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfD0DTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 23:11:53 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f36so2412408plb.5;
-        Fri, 26 Apr 2019 20:11:53 -0700 (PDT)
+        Fri, 26 Apr 2019 23:19:50 -0400
+Received: by mail-qk1-f194.google.com with SMTP id w73so3061525qkb.13
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 20:19:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HC/S00uXLZeOiErWWrUJ4/1fgY2A3pnzkLJSKhInIbc=;
-        b=vGROUGopJoSK4L1YDw3M+Zm5qYsgk+yug/9kBburb7igLGE40BmfUq9dEQ9UhK3n3O
-         4+SI/U9PaUZO9Yz3HXvjqfMG+H2oobL633L5G/+AGui92wqgyBSKVbdomULErqKiZBA0
-         AKPqUko733xMMfY31jQOd2pBrvJUdYwL8nWGQjTi/6O+35ije6DnxwgnZKV1mCCF3Dmc
-         11L0t53K+LmO8isjW3r6LBhVEm+pvY6pbaQWDDdo01MTpsbutUbg1QSb7GhFCnCse0m1
-         qT95zrER2t++MJfPT2iTI5+eWvq/+t/onCe9A8rMyoBE6WY+1hCgjLg1PZAELpYHHEsC
-         AIvA==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OGtSkbrfqyBgtc4rP22xBZIRFEyicKx1tiObNiky77o=;
+        b=J/U3Jr4XTmDoTCfwjj+FuI8FhH3qpuq+DSKEb2NW/Zokzz/0oK76BaLNNr7a49D+Oc
+         zTv9hRlSoJ1nWizLTiPq6QZOgJv0TMTcwzgKiKX09+5vSHSlSDqN0WBlM4I3PVX2/NDq
+         5Ewni8LqnIg4ODj1AjBCRm4+JQXCPhWmwg1gevEXj7K8iwYUn4IT2nj9pQUiuCFPpoa2
+         KqfXwPU2r72Nxl/ySPBOoIRWjF5GFyVCGvnHd90XgB4SQOCkGTJvHWn4fRrAHRcx/Wmw
+         H45JwXpsaQ4nZW5PadgHmOrsYNe5T/cTKYPxaV6iuLAxKhR28RDPwM+ZRyoeGjys1Hl/
+         cO7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HC/S00uXLZeOiErWWrUJ4/1fgY2A3pnzkLJSKhInIbc=;
-        b=JMSEpKkV861H0yO36CKw71CmRDir1AOUIvBQF4vr7mAwlBlTQ/LExD5Lg8/90OWfmY
-         O/BZyhtbD8Y4Yfhbt4qC92Z2SGRSMsMW2hGqOLRZSTWccwwD2ae+vpFmYTRnyoRQeVk/
-         mmxW9C5gBdMxNyYu7/VyLgv2vzcvUfTfqux0QOkI6HEPqAiNhdAEBAppFikcWs2I6lRp
-         TuYTKaWuzhN8ccuxbyd2QWTiF0Nt6sQUKvLav8UW1mddG8xosKak+WyMJcPy8EDk1tDC
-         HadxiYX7fq3lSOnNYMpHftrXnYWMEQzPZdr7Ptl//QW+NBgpvE/9cgyg6GT69/mXzwIJ
-         1e5A==
-X-Gm-Message-State: APjAAAWVb/1Nv+H9HS2xrbh3aUE0s3F2LMsEEgca+SR+HrdKTszzqTMA
-        CWpm3wBGYygfUeZgKRqCB5vD2cJY
-X-Google-Smtp-Source: APXvYqxq52RfcHX6vF+GWgSWA84d9+6hOKbR9Sdp+JeWlOwvrwMVRw53CJzvgXniyPaEE2zqoEjRoQ==
-X-Received: by 2002:a17:902:f20a:: with SMTP id gn10mr2597728plb.90.1556334712766;
-        Fri, 26 Apr 2019 20:11:52 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id g79sm2835535pfd.144.2019.04.26.20.11.51
+        bh=OGtSkbrfqyBgtc4rP22xBZIRFEyicKx1tiObNiky77o=;
+        b=cckKp2i43lFtDDK2bX+hxFhZi87nJkuNuT1JKF8V6/zfBNwFk5dpETgcLz62Bf0tWI
+         R0igt5GJjDBn8VrgnUmEXPyFdeBoIPQmyDZUeyaej7Aii0DIlROyV2p1PNOHPVgGQA7T
+         udae6VCbgJJP1v73WBEMJ30Ihek6ioK4WZjyua+FNfjV4WwCV/Vk/WqEAlujhzBB3R+t
+         o7kohWUqZ/MMPRO31SiSUFOyz9sEhTMFpjElQ0PALdCXiwMtrjv/A0iT3aZElnZiV7ZL
+         KqzYgwouEFVdoBB1vJ5/UE1KCK4ucRKLDFjzWQaMiRkqgAEyD0Js82XXrkwq7BD2Oczr
+         o5hw==
+X-Gm-Message-State: APjAAAXTlzYdkZ+7sl/Eqg8CtlAhlbDDpheqYfRa0Qnw2NEFxrMsUEtt
+        JTaTCCg3KwP2U0P7i7Ekxu2XKtFD1YE=
+X-Google-Smtp-Source: APXvYqxynUMrBPzOVGDq1hikUPyqFmBF4yXkxtPoiNxcYWHUu/4MY+kMUFIf6Qm0G99pR4jVmckSlw==
+X-Received: by 2002:a05:620a:34b:: with SMTP id t11mr26134494qkm.279.1556335189081;
+        Fri, 26 Apr 2019 20:19:49 -0700 (PDT)
+Received: from ovpn-121-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id s55sm16478685qte.17.2019.04.26.20.19.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 20:11:51 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] net: phy: realtek: Add rtl8211e rx/tx delays
- config
-To:     Serge Semin <fancer.lancer@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190426093010.9609-1-fancer.lancer@gmail.com>
- <20190426212112.5624-1-fancer.lancer@gmail.com>
- <20190426214050.GU4041@lunn.ch>
- <20190426234503.y6nm5hekyclmgftc@mobilestation>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <fbf2ff24-a435-fe69-abcc-1f9326e1d61d@gmail.com>
-Date:   Fri, 26 Apr 2019 20:11:50 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 26 Apr 2019 20:19:48 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, keith.busch@intel.com, ira.weiny@intel.com
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] nvdimm: fix some compilation warnings
+Date:   Fri, 26 Apr 2019 23:19:34 -0400
+Message-Id: <20190427031934.94947-1-cai@lca.pw>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-In-Reply-To: <20190426234503.y6nm5hekyclmgftc@mobilestation>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Several places (dimm_devs.c, core.c etc) include label.h but only
+label.c uses NSINDEX_SIGNATURE, so move its definition to label.c
+instead.
+In file included from drivers/nvdimm/dimm_devs.c:23:
+drivers/nvdimm/label.h:41:19: warning: 'NSINDEX_SIGNATURE' defined but
+not used [-Wunused-const-variable=]
 
+The commit d9b83c756953 ("libnvdimm, btt: rework error clearing") left
+an unused variable.
+drivers/nvdimm/btt.c: In function 'btt_read_pg':
+drivers/nvdimm/btt.c:1272:8: warning: variable 'rc' set but not used
+[-Wunused-but-set-variable]
 
-On 4/26/2019 4:45 PM, Serge Semin wrote:
-> On Fri, Apr 26, 2019 at 11:40:50PM +0200, Andrew Lunn wrote:
->> On Sat, Apr 27, 2019 at 12:21:11AM +0300, Serge Semin wrote:
->>> There are two chip pins named TXDLY and RXDLY which actually adds the 2ns
->>> delays to TXC and RXC for TXD/RXD latching. Alas this is the only
->>> documented info regarding the RGMII timing control configurations the PHY
->>> provides. It turns out the same settings can be setup via MDIO registers
->>> hidden in the extension pages layout. Particularly the extension page 0xa4
->>> provides a register 0x1c, which bits 1 and 2 control the described delays.
->>> They are used to implement the "rgmii-{id,rxid,txid}" phy-mode.
->>>
->>> The hidden RGMII configs register utilization was found in the rtl8211e
->>> U-boot driver:
->>> https://elixir.bootlin.com/u-boot/v2019.01/source/drivers/net/phy/realtek.c#L99
->>>
->>> There is also a freebsd-folks discussion regarding this register:
->>> https://reviews.freebsd.org/D13591
->>>
->>> It confirms that the register bits field must control the so called
->>> configuration pins described in the table 12-13 of the official PHY
->>> datasheet:
->>> 8:6 = PHY Address
->>> 5:4 = Auto-Negotiation
->>> 3 = Interface Mode Select
->>> 2 = RX Delay
->>> 1 = TX Delay
->>> 0 = SELRGV
->>>
->>> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
->>
->>
->> Hi Serge
->>
->> Next time please include a patch 0 containing a cover note explaining
->> the who series.
->>
-> 
-> Sure as long as the patchset gets to be much bigger than two small
-> patches with an obvious reason to be merged.
+Last, some places abuse "/**" which is only reserved for the kernel-doc.
+drivers/nvdimm/bus.c:648: warning: cannot understand function prototype:
+'struct attribute_group nd_device_attribute_group = '
+drivers/nvdimm/bus.c:677: warning: cannot understand function prototype:
+'struct attribute_group nd_numa_attribute_group = '
 
-netdev likes to have a cover letter for patch count >= 1, probably
-something to be added to netdev-FAQ.rst.
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/nvdimm/btt.c   | 6 ++----
+ drivers/nvdimm/bus.c   | 4 ++--
+ drivers/nvdimm/label.c | 2 ++
+ drivers/nvdimm/label.h | 2 --
+ 4 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index 4671776f5623..9f02a99cfac0 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -1269,11 +1269,9 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
+ 
+ 		ret = btt_data_read(arena, page, off, postmap, cur_len);
+ 		if (ret) {
+-			int rc;
+-
+ 			/* Media error - set the e_flag */
+-			rc = btt_map_write(arena, premap, postmap, 0, 1,
+-				NVDIMM_IO_ATOMIC);
++			btt_map_write(arena, premap, postmap, 0, 1,
++				      NVDIMM_IO_ATOMIC);
+ 			goto out_rtt;
+ 		}
+ 
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index 7ff684159f29..2eb6a6cfe9e4 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -642,7 +642,7 @@ static struct attribute *nd_device_attributes[] = {
+ 	NULL,
+ };
+ 
+-/**
++/*
+  * nd_device_attribute_group - generic attributes for all devices on an nd bus
+  */
+ struct attribute_group nd_device_attribute_group = {
+@@ -671,7 +671,7 @@ static umode_t nd_numa_attr_visible(struct kobject *kobj, struct attribute *a,
+ 	return a->mode;
+ }
+ 
+-/**
++/*
+  * nd_numa_attribute_group - NUMA attributes for all devices on an nd bus
+  */
+ struct attribute_group nd_numa_attribute_group = {
+diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+index f3d753d3169c..02a51b7775e1 100644
+--- a/drivers/nvdimm/label.c
++++ b/drivers/nvdimm/label.c
+@@ -25,6 +25,8 @@ static guid_t nvdimm_btt2_guid;
+ static guid_t nvdimm_pfn_guid;
+ static guid_t nvdimm_dax_guid;
+ 
++static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
++
+ static u32 best_seq(u32 a, u32 b)
+ {
+ 	a &= NSINDEX_SEQ_MASK;
+diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
+index e9a2ad3c2150..4bb7add39580 100644
+--- a/drivers/nvdimm/label.h
++++ b/drivers/nvdimm/label.h
+@@ -38,8 +38,6 @@ enum {
+ 	ND_NSINDEX_INIT = 0x1,
+ };
+ 
+-static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
+-
+ /**
+  * struct nd_namespace_index - label set superblock
+  * @sig: NAMESPACE_INDEX\0
 -- 
-Florian
+2.20.1 (Apple Git-117)
+
