@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8567EC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E540CC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480C9208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8882087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329147;
-	bh=MOcfdTIdKt3r/THIT3X54QIQga8YcER8cuZphZfvyxE=;
+	s=default; t=1556329153;
+	bh=ZfP2TMa7kvJtTP2fFhbC5LKAcue4ZDyPmf4k3VaIYIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O/g0ui5sODfi9cSv3X9VJWWqujesboIzTj56Qpd4OPVrOuBkSUCnUHbOjRi22jxB2
-	 LBmGEJOlk/dKfgegCarc4sW7Sgh2g7gN81By9ZkBLXF1SPVo/W8gnvNNv7LJEI7AHY
-	 Jkn6zLEG5Ul/8Ad3l6IJ+h26xqu/s53nCxzmM01o=
+	b=ZgnAaP4JsW6sN9mefry/TbJ2+J3WbGczGNnXdXImXoBqXIDxNMSqzEers1lwlHRvp
+	 iw/MRJ4oz7CD/XH4vBg9C2F4ptPvU8uMqFK9gJcpWMzdB7yJxTr7j2kEli29RkSwma
+	 6iJSyh2eG8ttlnB2lidVJxWFg6FRUuZ+LA7nUdpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfD0BjG (ORCPT
+        id S1727555AbfD0BjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:39:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:39:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727480AbfD0BjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:39:05 -0400
+        id S1727531AbfD0BjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:39:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FBF2208CA;
-        Sat, 27 Apr 2019 01:39:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A77AE208CA;
+        Sat, 27 Apr 2019 01:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329144;
-        bh=MOcfdTIdKt3r/THIT3X54QIQga8YcER8cuZphZfvyxE=;
+        s=default; t=1556329150;
+        bh=ZfP2TMa7kvJtTP2fFhbC5LKAcue4ZDyPmf4k3VaIYIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOl+CINEY7rC8OB/Z7e/WATRh3sv9oGEq6Rd38St1batufAZgNctkDWsK19OinY7k
-         Ker/BAUSU9Nhvux2aE5ClqfbeHx0g13YKn40+/TkDAjq9KsKx1JI0UT6J3dnhhAIDc
-         iaIJb5UYQ/v4ncZ6DV+zFnAgSZlHzcR37beDb1l0=
+        b=tdWjhgOL9T1vghitvNqNgKNqi9Quclrnizamc4WGkH6r5xvhNfjtYaWxJKZ3Gpxl7
+         dZ/ad3lVdauH3Cm19W+2ij59KvzRVkqZR07Xw2YqHdg1bi2haf+pE9bwYbu8NwYd9p
+         fvVHK6hP0ZsqTT9/0uRLegVI5TmdIUN97vqXRYx8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 22/79] ASoC: dapm: Fix NULL pointer dereference in snd_soc_dapm_free_kcontrol
-Date:   Fri, 26 Apr 2019 21:37:41 -0400
-Message-Id: <20190427013838.6596-22-sashal@kernel.org>
+Cc:     Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 25/79] IB/hfi1: Eliminate opcode tests on mr deref
+Date:   Fri, 26 Apr 2019 21:37:44 -0400
+Message-Id: <20190427013838.6596-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -59,36 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-[ Upstream commit cacea3a90e211f0c111975535508d446a4a928d2 ]
+[ Upstream commit a8639a79e85c18c16c10089edd589c7948f19bbd ]
 
-w_text_param can be NULL and it is being dereferenced without checking.
-Add the missing sanity check to prevent  NULL pointer dereference.
+When an old ack_queue entry is used to store an incoming request, it may
+need to clean up the old entry if it is still referencing the
+MR. Originally only RDMA READ request needed to reference MR on the
+responder side and therefore the opcode was tested when cleaning up the
+old entry. The introduction of tid rdma specific operations in the
+ack_queue makes the specific opcode tests wrong.  Multiple opcodes (RDMA
+READ, TID RDMA READ, and TID RDMA WRITE) may need MR ref cleanup.
 
-Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Remove the opcode specific tests associated with the ack_queue.
+
+Fixes: f48ad614c100 ("IB/hfi1: Move driver out of staging")
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/infiniband/hw/hfi1/rc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 20bad755888b..08ab5fef75dc 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3840,6 +3840,10 @@ snd_soc_dapm_free_kcontrol(struct snd_soc_card *card,
- 	int count;
- 
- 	devm_kfree(card->dev, (void *)*private_value);
-+
-+	if (!w_param_text)
-+		return;
-+
- 	for (count = 0 ; count < num_params; count++)
- 		devm_kfree(card->dev, (void *)w_param_text[count]);
- 	devm_kfree(card->dev, w_param_text);
+diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
+index be603f35d7e4..cfde43b1df96 100644
+--- a/drivers/infiniband/hw/hfi1/rc.c
++++ b/drivers/infiniband/hw/hfi1/rc.c
+@@ -2302,7 +2302,7 @@ send_last:
+ 			update_ack_queue(qp, next);
+ 		}
+ 		e = &qp->s_ack_queue[qp->r_head_ack_queue];
+-		if (e->opcode == OP(RDMA_READ_REQUEST) && e->rdma_sge.mr) {
++		if (e->rdma_sge.mr) {
+ 			rvt_put_mr(e->rdma_sge.mr);
+ 			e->rdma_sge.mr = NULL;
+ 		}
+@@ -2376,7 +2376,7 @@ send_last:
+ 			update_ack_queue(qp, next);
+ 		}
+ 		e = &qp->s_ack_queue[qp->r_head_ack_queue];
+-		if (e->opcode == OP(RDMA_READ_REQUEST) && e->rdma_sge.mr) {
++		if (e->rdma_sge.mr) {
+ 			rvt_put_mr(e->rdma_sge.mr);
+ 			e->rdma_sge.mr = NULL;
+ 		}
 -- 
 2.19.1
 
