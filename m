@@ -2,102 +2,124 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EEAC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A2BC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8ACB2077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556328463;
-	bh=M4LQjJEnK+pfuuQyzRrRE3fimTdaI2Ywyh4Hrp/kXjk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=r88Qpxv7Ew54hWw9sIFApJBD/Wc/V1OFIpuDvAysr74oSLzk+kZvQnfcQzumh82K1
-	 U0+vKUFFWu54oeTgcOQZXKV9+Edn02+d1QJ4tm9i5dIbuMD9ffmEu5kKxf8Rb/SuQy
-	 foavyciZYbH/0FIynpf+vxo/v8OI3EimP+NagOJ8=
+	by mail.kernel.org (Postfix) with ESMTP id 6AF242077B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:28:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PpwmZjpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfD0B1l (ORCPT
+        id S1727289AbfD0B26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:27:41 -0400
-Received: from mail-lf1-f49.google.com ([209.85.167.49]:37957 "EHLO
-        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfD0B1l (ORCPT
+        Fri, 26 Apr 2019 21:28:58 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43761 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbfD0B25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:27:41 -0400
-Received: by mail-lf1-f49.google.com with SMTP id v1so3788624lfg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 18:27:40 -0700 (PDT)
+        Fri, 26 Apr 2019 21:28:57 -0400
+Received: by mail-qk1-f196.google.com with SMTP id p19so2994941qkm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 18:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2EoQBKCmosLZTV3cUhOnvDE6nYwdNN71gNqlgZ5iWds=;
-        b=G4F4Z9SaE8ui1QUps26GTDI6QwjdnYl94Do4hp09Yh4lJwVx7yr7BJFfMv8qfAmzKH
-         stIhv4zIVbeQoW0OrJgPPW3MJsVNnzRPwMHmqTgWp9j4AUA5K2wNKTRy5v4gTOmECVKc
-         HlWkObrs34pMRsPqba5Jp+5qR4J8qOD+JGMu0=
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oHeHzzA1NET7RP13gd+P20tu4K3AiVm8gbpCJItFTxQ=;
+        b=PpwmZjpqiy7eZyc1O3V0XR2dEP6lpKzTHKB3B2rxoSWupwh8l/oYytCQu+S2iNsJN4
+         2saDt0WgVllLtHQ72JFbfhl3ROUJ+UhHMyGuco/0hP6nshU8e/yP84WrDZzvd6+ZRf4P
+         QyuMdgujPkQef+nxsmkbuGmrGCip1XA62j/I6AtkZBA8e06KmZRElG/rYFOw1ZNTJpjf
+         uPxZkyUhyudoFXqYb5gib/hqD94nGJnPU7oaPruyrod6TNR8pLUvdicA97olrg+ng59O
+         erfwBKu9Fb+P7ycClozdeNKF+n5ozaslTcpt8yM9lH2jqZ3msPkQUJPen4clJiBWwK6O
+         cJhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2EoQBKCmosLZTV3cUhOnvDE6nYwdNN71gNqlgZ5iWds=;
-        b=pKyJ6V8zpeJD5JGfDQMaRfsIFP2QFeNN4b3gQ2Q+wYvV8bVmWgJul6/i+N9kmLdFvy
-         pr4WpO5ujpV0N/Ea46y2pR7DsMhZezqLVVkl5jAuBhx//Jjl2PeIXdx1kXUE3kGOBcXT
-         czj7oneBmwsFx45pfzyNRKGnZ00Bb5egvv3Magk5OZ5MD2/i+pZEuFWCs/9zGksjP1ks
-         4X0kkw+p6mz8ZsWuAVe/BEhftVRs5ErXoWEfM4lvsSSEJc2v1Ywjx/JiwX2e1g1lEkcG
-         X0I00LspAcWuHFJETi+FmvyGhK880Rxr61ZzCf+nLdQeTzMRArW5TnZ8YxphljnA6JG2
-         yoHQ==
-X-Gm-Message-State: APjAAAWxAt41Vyy/ld6+YgRDX8iBiu5KB2q88YglBiS+Pklgr+CaTjrX
-        e6DMGQV7P6gOqlQh6KOJaDolwqp3dzQ=
-X-Google-Smtp-Source: APXvYqwt2HHTJ+Faei5gdFOFD6RjvezmWIGSEbvgmtz00QSL6LfPOrrKyO0y60Ta+Xo3/IkJ3pkAvg==
-X-Received: by 2002:a19:2814:: with SMTP id o20mr25860355lfo.117.1556328458807;
-        Fri, 26 Apr 2019 18:27:38 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id d24sm1850296lfj.30.2019.04.26.18.27.37
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oHeHzzA1NET7RP13gd+P20tu4K3AiVm8gbpCJItFTxQ=;
+        b=o4iu+zuKEE1wtQhuPmT9YF5BPbba9348X/WiYNm32XNuG9V+E3xHYa/Kho+OZfRZaY
+         pgnXtXsZL7RZzKOcgLuJulPphEeNIJmBPfrOm+GWvqdyVdtcf8+n6OKrxYqsYKs2WIfL
+         +hJXromK7IJEe03ICScF7hVorCxR3+WNFywOW2VE5qzXBjDk/g7bArK+K3hM1QVrPNCt
+         zkIYDylb3FB7CyKJX/XmIxbtfh7FAR8Hw8e+ErgxtgPm8XUw3lJ4qOLzFoZrcCAFT2ZT
+         sdlm3xoNWpj44j/RCHLCHim3qu1Fk8CJ7vo3hV8H/77cYlIYXrWo5kJjC7uZyt5RLQd5
+         NwKA==
+X-Gm-Message-State: APjAAAXhsDb3bIWfbSq5ompN8PIG5Bs1PHJJTXIveu/3nJcsVLdBgGUO
+        yBA+bHtYRlmUA/f0NvgfARasZw==
+X-Google-Smtp-Source: APXvYqxnybOblYjuohhgwpoBuKlkjQnRfY3zET98yQwp3XRoPFFMiE8uV3r1H69pDpQl9LbPARlaig==
+X-Received: by 2002:a37:49ce:: with SMTP id w197mr28382910qka.330.1556328536765;
+        Fri, 26 Apr 2019 18:28:56 -0700 (PDT)
+Received: from ovpn-121-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id z8sm17641150qth.62.2019.04.26.18.28.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 18:27:37 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id o16so3772882lfl.7
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 18:27:37 -0700 (PDT)
-X-Received: by 2002:a19:48c9:: with SMTP id v192mr25604700lfa.136.1556328456785;
- Fri, 26 Apr 2019 18:27:36 -0700 (PDT)
+        Fri, 26 Apr 2019 18:28:56 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     catalin.marinas@arm.com, will.deacon@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] arm64: fix pte_unmap() -Wunused-but-set-variable
+Date:   Fri, 26 Apr 2019 21:28:42 -0400
+Message-Id: <20190427012842.93737-1-cai@lca.pw>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-References: <0000000000000101b30587622a69@google.com> <CAHk-=wjp-R083To=AVbovNJWrskNfYN8rqz=nZZTPRihCohE4g@mail.gmail.com>
- <0c6ecfca6329f0d11c6962ec5875314414813ac6.camel@decadent.org.uk>
-In-Reply-To: <0c6ecfca6329f0d11c6962ec5875314414813ac6.camel@decadent.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 26 Apr 2019 18:27:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wihu4ju2ARJ4K04nOKZa1Xjdm1_6nxxxcYJ1Jm1JDB=bw@mail.gmail.com>
-Message-ID: <CAHk-=wihu4ju2ARJ4K04nOKZa1Xjdm1_6nxxxcYJ1Jm1JDB=bw@mail.gmail.com>
-Subject: Re: BUG: unable to handle page fault for address = ADDR
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     syzbot <syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Netdev <netdev@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        peter@hurleysoftware.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        vegard.nossum@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 4:36 AM Ben Hutchings <ben@decadent.org.uk> wrote:
->
-> This looks sensible to me.
+Many compilation warnings due to pte_unmap() compiles away. Fixed it by
+making it an static inline function.
 
-I've just applied it directly to my tree. It looks like slip is
-largely a thing of the past, there have been no slip-specific patches
-for the last year (all changes in the last year have been due to
-treewide changes that weren't slip-specific).
+mm/gup.c: In function 'gup_pte_range':
+mm/gup.c:1727:16: warning: variable 'ptem' set but not used
+[-Wunused-but-set-variable]
+mm/gup.c: At top level:
+mm/memory.c: In function 'copy_pte_range':
+mm/memory.c:821:24: warning: variable 'orig_dst_pte' set but not used
+[-Wunused-but-set-variable]
+mm/memory.c:821:9: warning: variable 'orig_src_pte' set but not used
+[-Wunused-but-set-variable]
+mm/swap_state.c: In function 'swap_ra_info':
+mm/swap_state.c:641:15: warning: variable 'orig_pte' set but not used
+[-Wunused-but-set-variable]
+mm/madvise.c: In function 'madvise_free_pte_range':
+mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
+[-Wunused-but-set-variable]
 
-                   Linus
+Also, remove pte_unmap_nested() as nobody uses it anymore since the
+commit ece0e2b6406a ("mm: remove pte_*map_nested()").
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/arm64/include/asm/pgtable.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index de70c1eabf33..7543e345e078 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -478,6 +478,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+ 	return __pmd_to_phys(pmd);
+ }
+ 
++static inline void pte_unmap(pte_t *pte) { }
++
+ /* Find an entry in the third-level page table. */
+ #define pte_index(addr)		(((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
+ 
+@@ -486,8 +488,6 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+ 
+ #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
+ #define pte_offset_map_nested(dir,addr)	pte_offset_kernel((dir), (addr))
+-#define pte_unmap(pte)			do { } while (0)
+-#define pte_unmap_nested(pte)		do { } while (0)
+ 
+ #define pte_set_fixmap(addr)		((pte_t *)set_fixmap_offset(FIX_PTE, addr))
+ #define pte_set_fixmap_offset(pmd, addr)	pte_set_fixmap(pte_offset_phys(pmd, addr))
+-- 
+2.20.1 (Apple Git-117)
+
