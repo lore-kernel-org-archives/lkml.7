@@ -2,169 +2,96 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD84C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DB1C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FB2206BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF65920693
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:32:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="J/U3Jr4X"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mB2sHGEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfD0DTu (ORCPT
+        id S1727322AbfD0DcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 23:19:50 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46802 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfD0DTu (ORCPT
+        Fri, 26 Apr 2019 23:32:23 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36478 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfD0DcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 23:19:50 -0400
-Received: by mail-qk1-f194.google.com with SMTP id w73so3061525qkb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 20:19:49 -0700 (PDT)
+        Fri, 26 Apr 2019 23:32:22 -0400
+Received: by mail-it1-f196.google.com with SMTP id y10so8826115itc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 20:32:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OGtSkbrfqyBgtc4rP22xBZIRFEyicKx1tiObNiky77o=;
-        b=J/U3Jr4XTmDoTCfwjj+FuI8FhH3qpuq+DSKEb2NW/Zokzz/0oK76BaLNNr7a49D+Oc
-         zTv9hRlSoJ1nWizLTiPq6QZOgJv0TMTcwzgKiKX09+5vSHSlSDqN0WBlM4I3PVX2/NDq
-         5Ewni8LqnIg4ODj1AjBCRm4+JQXCPhWmwg1gevEXj7K8iwYUn4IT2nj9pQUiuCFPpoa2
-         KqfXwPU2r72Nxl/ySPBOoIRWjF5GFyVCGvnHd90XgB4SQOCkGTJvHWn4fRrAHRcx/Wmw
-         H45JwXpsaQ4nZW5PadgHmOrsYNe5T/cTKYPxaV6iuLAxKhR28RDPwM+ZRyoeGjys1Hl/
-         cO7g==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=peuEUDy334xbKJ6inCuEX4kMUbZlT8X6mHTrFHvvEpw=;
+        b=mB2sHGEPUZXOXgBS3XCnV2O2AknvimY8DOXe8ACDOLXwCKkSQ1CXpRS7w15dwlXhQt
+         WF6GKQVvZCaPXUl412S/0YfpkL+qME2qv7RrjqmcJR2IkdNlEy41GFU3lWx4oeuBaSq0
+         joNd1fKd09sdwsZUlAyb3foHXYpHds/rXbkgCScLKa0Cxme+qsZLytqeMCn+siMx0zdu
+         zoRcLCHN8qaXqgefi3U3DYkqGRT8LUyaQxyUueOjyPngFT9kuefvUjs8M0qnq9tqQiDj
+         BBsE9HG8pqhSDOFs6q2JB0E75Sujw7i6Go6oP+MEQXgNV2dpWHwMjkFMCosW7+Cdxa+J
+         yNpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OGtSkbrfqyBgtc4rP22xBZIRFEyicKx1tiObNiky77o=;
-        b=cckKp2i43lFtDDK2bX+hxFhZi87nJkuNuT1JKF8V6/zfBNwFk5dpETgcLz62Bf0tWI
-         R0igt5GJjDBn8VrgnUmEXPyFdeBoIPQmyDZUeyaej7Aii0DIlROyV2p1PNOHPVgGQA7T
-         udae6VCbgJJP1v73WBEMJ30Ihek6ioK4WZjyua+FNfjV4WwCV/Vk/WqEAlujhzBB3R+t
-         o7kohWUqZ/MMPRO31SiSUFOyz9sEhTMFpjElQ0PALdCXiwMtrjv/A0iT3aZElnZiV7ZL
-         KqzYgwouEFVdoBB1vJ5/UE1KCK4ucRKLDFjzWQaMiRkqgAEyD0Js82XXrkwq7BD2Oczr
-         o5hw==
-X-Gm-Message-State: APjAAAXTlzYdkZ+7sl/Eqg8CtlAhlbDDpheqYfRa0Qnw2NEFxrMsUEtt
-        JTaTCCg3KwP2U0P7i7Ekxu2XKtFD1YE=
-X-Google-Smtp-Source: APXvYqxynUMrBPzOVGDq1hikUPyqFmBF4yXkxtPoiNxcYWHUu/4MY+kMUFIf6Qm0G99pR4jVmckSlw==
-X-Received: by 2002:a05:620a:34b:: with SMTP id t11mr26134494qkm.279.1556335189081;
-        Fri, 26 Apr 2019 20:19:49 -0700 (PDT)
-Received: from ovpn-121-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id s55sm16478685qte.17.2019.04.26.20.19.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Apr 2019 20:19:48 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, keith.busch@intel.com, ira.weiny@intel.com
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] nvdimm: fix some compilation warnings
-Date:   Fri, 26 Apr 2019 23:19:34 -0400
-Message-Id: <20190427031934.94947-1-cai@lca.pw>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=peuEUDy334xbKJ6inCuEX4kMUbZlT8X6mHTrFHvvEpw=;
+        b=Dx5GtDIGKcp/QDMrs/ilWgAnlBgtT67d2tM+HPbbDLrdNOoKd2haRB32mQ+18Rx8OQ
+         HB24oJinS8UUcOWA+EPUGoeNbAoBBGpu9zd6NIocnstov/6qZm+r/1c56l7Bckhd5kUU
+         tTqI8IOQCAOiubFPVkaaVd5JjqIHPBpUShes0WNxME4ZPb3fYRSc4lrOnYCT7LG2PEYf
+         YKYC3608CVeczyZH1GpB4eq/hCzNkKmaz0gxUO+N+hDZbKTLOjN90E3wA5K77D1eGf5P
+         0BhNLLYhmu7dkAwVeBEGngpToalRqFwPxhlXWMu0FXkdMLgXKIz0ioOoW3/h6IY8pKSA
+         RYWw==
+X-Gm-Message-State: APjAAAVQUjzWjNxTuZO3o2BTJcT/p4sPFAXaYmvF/bm3p2OGFuFh6lvV
+        E5CXm7GHJ9WiSAxZYUbwKCikoQ==
+X-Google-Smtp-Source: APXvYqz5BHffkPjHHo9K9gSW556UBs5Ka/SnjM6zZHQh0LlH4qehKLLtRv8o9ntt7XZ7dTsIOqpOLw==
+X-Received: by 2002:a02:b819:: with SMTP id o25mr34991411jam.69.1556335942118;
+        Fri, 26 Apr 2019 20:32:22 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id b15sm9788878ios.25.2019.04.26.20.32.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Apr 2019 20:32:21 -0700 (PDT)
+Date:   Fri, 26 Apr 2019 20:32:20 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Stephen Boyd <sboyd@kernel.org>
+cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul@pwsan.com>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Megan Wachs <megan@sifive.com>
+Subject: Re: [PATCH v3 1/3] clk: analogbits: add Wide-Range PLL library
+In-Reply-To: <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com>
+Message-ID: <alpine.DEB.2.21.9999.1904262031510.10713@viisi.sifive.com>
+References: <20190411082733.3736-2-paul.walmsley@sifive.com> <155632691100.168659.14460051101205812433@swboyd.mtv.corp.google.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several places (dimm_devs.c, core.c etc) include label.h but only
-label.c uses NSINDEX_SIGNATURE, so move its definition to label.c
-instead.
-In file included from drivers/nvdimm/dimm_devs.c:23:
-drivers/nvdimm/label.h:41:19: warning: 'NSINDEX_SIGNATURE' defined but
-not used [-Wunused-const-variable=]
+On Fri, 26 Apr 2019, Stephen Boyd wrote:
 
-The commit d9b83c756953 ("libnvdimm, btt: rework error clearing") left
-an unused variable.
-drivers/nvdimm/btt.c: In function 'btt_read_pg':
-drivers/nvdimm/btt.c:1272:8: warning: variable 'rc' set but not used
-[-Wunused-but-set-variable]
+> Quoting Paul Walmsley (2019-04-11 01:27:32)
+> > Add common library code for the Analog Bits Wide-Range PLL (WRPLL) IP
+> > block, as implemented in TSMC CLN28HPC.
+> 
+> I haven't deeply reviewed at all, but I already get two problems when
+> compile testing these patches. I can fix them up if nothing else needs
+> fixing.
+> 
+> drivers/clk/analogbits/wrpll-cln28hpc.c:165 __wrpll_calc_divq() warn: should 'target_rate << divq' be a 64 bit type?
+> drivers/clk/sifive/fu540-prci.c:214:16: error: return expression in void function
 
-Last, some places abuse "/**" which is only reserved for the kernel-doc.
-drivers/nvdimm/bus.c:648: warning: cannot understand function prototype:
-'struct attribute_group nd_device_attribute_group = '
-drivers/nvdimm/bus.c:677: warning: cannot understand function prototype:
-'struct attribute_group nd_numa_attribute_group = '
+Hmm, that's odd.  I will definitely take a look and repost.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/nvdimm/btt.c   | 6 ++----
- drivers/nvdimm/bus.c   | 4 ++--
- drivers/nvdimm/label.c | 2 ++
- drivers/nvdimm/label.h | 2 --
- 4 files changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 4671776f5623..9f02a99cfac0 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -1269,11 +1269,9 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
- 
- 		ret = btt_data_read(arena, page, off, postmap, cur_len);
- 		if (ret) {
--			int rc;
--
- 			/* Media error - set the e_flag */
--			rc = btt_map_write(arena, premap, postmap, 0, 1,
--				NVDIMM_IO_ATOMIC);
-+			btt_map_write(arena, premap, postmap, 0, 1,
-+				      NVDIMM_IO_ATOMIC);
- 			goto out_rtt;
- 		}
- 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index 7ff684159f29..2eb6a6cfe9e4 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -642,7 +642,7 @@ static struct attribute *nd_device_attributes[] = {
- 	NULL,
- };
- 
--/**
-+/*
-  * nd_device_attribute_group - generic attributes for all devices on an nd bus
-  */
- struct attribute_group nd_device_attribute_group = {
-@@ -671,7 +671,7 @@ static umode_t nd_numa_attr_visible(struct kobject *kobj, struct attribute *a,
- 	return a->mode;
- }
- 
--/**
-+/*
-  * nd_numa_attribute_group - NUMA attributes for all devices on an nd bus
-  */
- struct attribute_group nd_numa_attribute_group = {
-diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-index f3d753d3169c..02a51b7775e1 100644
---- a/drivers/nvdimm/label.c
-+++ b/drivers/nvdimm/label.c
-@@ -25,6 +25,8 @@ static guid_t nvdimm_btt2_guid;
- static guid_t nvdimm_pfn_guid;
- static guid_t nvdimm_dax_guid;
- 
-+static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
-+
- static u32 best_seq(u32 a, u32 b)
- {
- 	a &= NSINDEX_SEQ_MASK;
-diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
-index e9a2ad3c2150..4bb7add39580 100644
---- a/drivers/nvdimm/label.h
-+++ b/drivers/nvdimm/label.h
-@@ -38,8 +38,6 @@ enum {
- 	ND_NSINDEX_INIT = 0x1,
- };
- 
--static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
--
- /**
-  * struct nd_namespace_index - label set superblock
-  * @sig: NAMESPACE_INDEX\0
--- 
-2.20.1 (Apple Git-117)
-
+- Paul
