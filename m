@@ -2,296 +2,109 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70412C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E948C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C6020693
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF64D20881
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556385476;
-	bh=RnquHZSvOxDAYjl330pwMESxn/qilHQhKzpxRLn/XOI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lCD2guk5CBs+Uy2FNtBWKRc5fOopn7Xy8ErWIT/Ok7kSOanG4dCOEfr39Ps7uRTmz
-	 FfzQTu1iBEIlVQP5kM35t032qu7is6XpVyrrS/QyufB6C79suIDaJEYj08vDvx3nCz
-	 QCBalL1VxJw3rhR702COh49aXmCc4d7YuvIdi/r4=
+	s=default; t=1556385487;
+	bh=9Ni2YRPbf4GMMunOYWIHYcrCRiFTp5FPuVt13sVOpXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IZ3YPJa347IwFgQgzmb1PIXijezcB+Jhk6K+2TqrC0zPg2BmzqS4arvMe35sUfzpg
+	 oNns7nufyTHjhVk9F3iXUImvpqznEqCimGE02/Iq4218rHusIHNa/9bxNCbwTz/Mdb
+	 rxRHqvgNRkshDA6mDrzpsDv59zmlTeA22mk0cx58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfD0RRz (ORCPT
+        id S1726394AbfD0RSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 13:17:55 -0400
-Received: from casper.infradead.org ([85.118.1.10]:49060 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD0RRz (ORCPT
+        Sat, 27 Apr 2019 13:18:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40378 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfD0RSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 13:17:55 -0400
+        Sat, 27 Apr 2019 13:18:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=N1iFC/g18qJXgObbc+D5kEAwjd33njI5fxm4ar8wMps=; b=IUvb7BjJlsbvwaVjNXp9xze3Eb
-        HcPMPtybO2mkDatBvMZ6R4oyKytdhrm/RPY55a1q89QcJZRqdTD2jINZrj0UhSY/iZkz6E4135/3z
-        nStj0GKYwtVWQn8sO8XW2P9RMby9lyPUkY1i12DAO0PY/oMUNe/JoPR+660qk+MIC0oRksbNPgd7C
-        FLtNyc7GK2JM7qoTEN/n3UUTvkq3jVftZZb92Clpqx2QM0oe1OU7NYDgGtx0v9rm1LlG+EFh8okAQ
-        ulSprHV8g2QHrCyHzyb2W4LLa14tWQNXiswoSny2bQLJvNLcd2LeE+oM8cMGCf5aVcffGp4rgSCQc
-        UwdllKXg==;
-Received: from 177.17.250.151.dynamic.adsl.gvt.net.br ([177.17.250.151] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hKQxM-0001TO-Rk; Sat, 27 Apr 2019 17:17:45 +0000
-Date:   Sat, 27 Apr 2019 14:17:39 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/27] Documentation: x86: convert earlyprintk.txt to
- reST
-Message-ID: <20190427141739.6e18f127@coco.lan>
-In-Reply-To: <20190426153150.21228-8-changbin.du@gmail.com>
-References: <20190426153150.21228-1-changbin.du@gmail.com>
-        <20190426153150.21228-8-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9Ni2YRPbf4GMMunOYWIHYcrCRiFTp5FPuVt13sVOpXA=; b=daPx8YikwrUepaPWMqT4aN8tI
+        SsXhwvgRFVOFZwsMtbroir3Z3uFn2W3wa/io6Npseaelpj5R4Sx10dcqtBSDhLWea/OenRSOJzpt+
+        LmrSZnN7aIPhLKz5XY+Vdel7xQqa5tYtZR53RQatBvM5tjlZURKGKY3nLlR4iVaDcDDZQ=;
+Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hKQxS-0004YI-UN; Sat, 27 Apr 2019 17:17:51 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 1E81C441D3B; Sat, 27 Apr 2019 18:17:46 +0100 (BST)
+Date:   Sat, 27 Apr 2019 18:17:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 2/3 v2] ASoC: fsl_sai: Add support for runtime pm
+Message-ID: <20190427171746.GG14916@sirena.org.uk>
+References: <20190421193853.10188-1-daniel.baluta@nxp.com>
+ <20190421193853.10188-3-daniel.baluta@nxp.com>
+ <20190426100025.GD14916@sirena.org.uk>
+ <CAEnQRZCPPr1iHvKEj=fOsE8A2iW=XZd=CaoFqAoUqJftg4pN9Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="p7qwJlK53pWzbayA"
+Content-Disposition: inline
+In-Reply-To: <CAEnQRZCPPr1iHvKEj=fOsE8A2iW=XZd=CaoFqAoUqJftg4pN9Q@mail.gmail.com>
+X-Cookie: -- I have seen the FUN --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 26 Apr 2019 23:31:30 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
 
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  .../x86/{earlyprintk.txt => earlyprintk.rst}  | 103 ++++++++++--------
->  Documentation/x86/index.rst                   |   1 +
->  2 files changed, 57 insertions(+), 47 deletions(-)
->  rename Documentation/x86/{earlyprintk.txt => earlyprintk.rst} (59%)
-> 
-> diff --git a/Documentation/x86/earlyprintk.txt b/Documentation/x86/earlyprintk.rst
-> similarity index 59%
-> rename from Documentation/x86/earlyprintk.txt
-> rename to Documentation/x86/earlyprintk.rst
-> index 46933e06c972..7714e32501ec 100644
-> --- a/Documentation/x86/earlyprintk.txt
-> +++ b/Documentation/x86/earlyprintk.rst
-> @@ -1,52 +1,58 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +============
-> +Early Printk
-> +============
->  
->  Mini-HOWTO for using the earlyprintk=dbgp boot option with a
->  USB2 Debug port key and a debug cable, on x86 systems.
->  
->  You need two computers, the 'USB debug key' special gadget and
-> -and two USB cables, connected like this:
-> +and two USB cables, connected like this::
->  
->    [host/target] <-------> [USB debug key] <-------> [client/console]
->  
-> -1. There are a number of specific hardware requirements:
-> -
-> - a.) Host/target system needs to have USB debug port capability.
-> -
-> - You can check this capability by looking at a 'Debug port' bit in
-> - the lspci -vvv output:
-> -
-> - # lspci -vvv
-> - ...
-> - 00:1d.7 USB Controller: Intel Corporation 82801H (ICH8 Family) USB2 EHCI Controller #1 (rev 03) (prog-if 20 [EHCI])
-> -         Subsystem: Lenovo ThinkPad T61
-> -         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
-> -         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> -         Latency: 0
-> -         Interrupt: pin D routed to IRQ 19
-> -         Region 0: Memory at fe227000 (32-bit, non-prefetchable) [size=1K]
-> -         Capabilities: [50] Power Management version 2
-> -                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-> -                 Status: D0 PME-Enable- DSel=0 DScale=0 PME+
-> -         Capabilities: [58] Debug port: BAR=1 offset=00a0
-> +Hardware requirements
-> +=====================
-> +
-> +  a) Host/target system needs to have USB debug port capability.
-> +
-> +     You can check this capability by looking at a 'Debug port' bit in
-> +     the lspci -vvv output::
-> +
-> +       # lspci -vvv
-> +       ...
-> +       00:1d.7 USB Controller: Intel Corporation 82801H (ICH8 Family) USB2 EHCI Controller #1 (rev 03) (prog-if 20 [EHCI])
-> +               Subsystem: Lenovo ThinkPad T61
-> +               Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
-> +               Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> +               Latency: 0
-> +               Interrupt: pin D routed to IRQ 19
-> +               Region 0: Memory at fe227000 (32-bit, non-prefetchable) [size=1K]
-> +               Capabilities: [50] Power Management version 2
-> +                       Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-> +                       Status: D0 PME-Enable- DSel=0 DScale=0 PME+
-> +               Capabilities: [58] Debug port: BAR=1 offset=00a0
->                              ^^^^^^^^^^^ <==================== [ HERE ]
-> -	 Kernel driver in use: ehci_hcd
-> -         Kernel modules: ehci-hcd
-> - ...
-> +               Kernel driver in use: ehci_hcd
-> +               Kernel modules: ehci-hcd
-> +       ...
->  
-> -( If your system does not list a debug port capability then you probably
-> -  won't be able to use the USB debug key. )
-> +     .. note::
-> +       If your system does not list a debug port capability then you probably
-> +       won't be able to use the USB debug key. )
+--p7qwJlK53pWzbayA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-You should remove the close parenthesis on the above line.
+On Fri, Apr 26, 2019 at 03:10:10PM +0300, Daniel Baluta wrote:
 
->  
-> - b.) You also need a NetChip USB debug cable/key:
-> +  b) You also need a NetChip USB debug cable/key:
->  
->          http://www.plxtech.com/products/NET2000/NET20DC/default.asp
->  
->       This is a small blue plastic connector with two USB connections;
->       it draws power from its USB connections.
->  
-> - c.) You need a second client/console system with a high speed USB 2.0
-> -     port.
-> +  c) You need a second client/console system with a high speed USB 2.0 port.
->  
-> - d.) The NetChip device must be plugged directly into the physical
-> -     debug port on the "host/target" system.  You cannot use a USB hub in
-> +  d) The NetChip device must be plugged directly into the physical
-> +     debug port on the "host/target" system. You cannot use a USB hub in
->       between the physical debug port and the "host/target" system.
->  
->       The EHCI debug controller is bound to a specific physical USB
-> @@ -65,24 +71,26 @@ and two USB cables, connected like this:
->       to the hardware vendor, because there is no reason not to wire
->       this port into one of the physically accessible ports.
->  
-> - e.) It is also important to note, that many versions of the NetChip
-> +  e) It is also important to note, that many versions of the NetChip
->       device require the "client/console" system to be plugged into the
->       right hand side of the device (with the product logo facing up and
->       readable left to right).  The reason being is that the 5 volt
->       power supply is taken from only one side of the device and it
->       must be the side that does not get rebooted.
->  
-> -2. Software requirements:
-> +Software requirements
-> +=====================
->  
-> - a.) On the host/target system:
-> +  a) On the host/target system:
->  
-> -    You need to enable the following kernel config option:
-> +    You need to enable the following kernel config option::
->  
->        CONFIG_EARLY_PRINTK_DBGP=y
->  
->      And you need to add the boot command line: "earlyprintk=dbgp".
->  
-> -    (If you are using Grub, append it to the 'kernel' line in
-> +    .. note::
-> +     If you are using Grub, append it to the 'kernel' line in
->      /etc/grub.conf.  If you are using Grub2 on a BIOS firmware system,
->      append it to the 'linux' line in /boot/grub2/grub.cfg. If you are
->      using Grub2 on an EFI firmware system, append it to the 'linux'
->      or 'linuxefi' line in /boot/grub2/grub.cfg or
->      /boot/efi/EFI/<distro>/grub.cfg.)
+> The only patch left in the series that needs to be applied is this:
 
-Same here: You should remove the close parenthesis on the above line.
+> https://www.spinics.net/lists/alsa-devel/msg89733.html
 
+> I will reply also to that email, to be easier for you to find it.
 
->       /etc/grub.conf.  If you are using Grub2 on a BIOS firmware system,
->       append it to the 'linux' line in /boot/grub2/grub.cfg. If you are
->       using Grub2 on an EFI firmware system, append it to the 'linux'
+Content free pings don't help...
 
-Hmm... there is another note here:
+--p7qwJlK53pWzbayA
+Content-Type: application/pgp-signature; name="signature.asc"
 
-     NOTE: normally earlyprintk console gets turned off once the
-     regular console is alive - use "earlyprintk=dbgp,keep" to keep
-     this channel open beyond early bootup. This can be useful for
-     debugging crashes under Xorg, etc.
+-----BEGIN PGP SIGNATURE-----
 
-Why are you keeping it untouched?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzEjrkACgkQJNaLcl1U
+h9AWVwf+KSlrvfBfUuZMLNHSHD7WREpZgHjLFsCPB8QHrdYC2CjypGjl9cjkYFDL
+zvVk9IotX8UodiLJN5KwgU9eO38JRbxXR+oVTN4+HnRIJv690m8LztYI9tAcqGIp
+2BvosaU2xv5RTitkpD8v3rykVDyAvDNvYDWK6gj8/Mz4UHi68onYaKMmoDNTnTKC
+9jAwU6oCeivjDydZIzMbyoQb1lUBpeHXHZrTn4e8iar9AfOEGEoR8QEhD+7D5k01
+y/t2YU6KD1U9YlHUK+FEfUeXLAMslI4284MVKw960xesrxvOcSltnQozVvR/tESL
+a+JaBF7FAsQc29UsdOCjSKKubkfKQw==
+=phjH
+-----END PGP SIGNATURE-----
 
-After fixing the above:
-
-Reviewed-by: 
-
-> @@ -101,9 +109,9 @@ and two USB cables, connected like this:
->      this channel open beyond early bootup. This can be useful for
->      debugging crashes under Xorg, etc.
->  
-> - b.) On the client/console system:
-> +  b) On the client/console system:
->  
-> -    You should enable the following kernel config option:
-> +    You should enable the following kernel config option::
->  
->        CONFIG_USB_SERIAL_DEBUG=y
->  
-> @@ -115,27 +123,28 @@ and two USB cables, connected like this:
->      it up to use /dev/ttyUSB0 - or use a raw 'cat /dev/ttyUSBx' to
->      see the raw output.
->  
-> - c.) On Nvidia Southbridge based systems: the kernel will try to probe
-> +  c) On Nvidia Southbridge based systems: the kernel will try to probe
->       and find out which port has a debug device connected.
->  
-> -3. Testing that it works fine:
-> +Testing
-> +=======
->  
-> -   You can test the output by using earlyprintk=dbgp,keep and provoking
-> -   kernel messages on the host/target system. You can provoke a harmless
-> -   kernel message by for example doing:
-> +You can test the output by using earlyprintk=dbgp,keep and provoking
-> +kernel messages on the host/target system. You can provoke a harmless
-> +kernel message by for example doing::
->  
->       echo h > /proc/sysrq-trigger
->  
-> -   On the host/target system you should see this help line in "dmesg" output:
-> +On the host/target system you should see this help line in "dmesg" output::
->  
->       SysRq : HELP : loglevel(0-9) reBoot Crashdump terminate-all-tasks(E) memory-full-oom-kill(F) kill-all-tasks(I) saK show-backtrace-all-active-cpus(L) show-memory-usage(M) nice-all-RT-tasks(N) powerOff show-registers(P) show-all-timers(Q) unRaw Sync show-task-states(T) Unmount show-blocked-tasks(W) dump-ftrace-buffer(Z)
->  
-> -   On the client/console system do:
-> +On the client/console system do::
->  
->         cat /dev/ttyUSB0
->  
-> -   And you should see the help line above displayed shortly after you've
-> -   provoked it on the host system.
-> +And you should see the help line above displayed shortly after you've
-> +provoked it on the host system.
->  
->  If it does not work then please ask about it on the linux-kernel@vger.kernel.org
->  mailing list or contact the x86 maintainers.
-> diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-> index 8a666c5abc85..7b8388ebd43d 100644
-> --- a/Documentation/x86/index.rst
-> +++ b/Documentation/x86/index.rst
-> @@ -13,3 +13,4 @@ Linux x86 Support
->     exception-tables
->     kernel-stacks
->     entry_64
-> +   earlyprintk
-
-
-
-Thanks,
-Mauro
+--p7qwJlK53pWzbayA--
