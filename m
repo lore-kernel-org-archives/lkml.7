@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF53C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C975C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 076B42087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA3A2087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfD0M4K (ORCPT
+        id S1727553AbfD0M4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:56:10 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:52457 "EHLO
+        Sat, 27 Apr 2019 08:56:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:49175 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbfD0MxK (ORCPT
+        with ESMTP id S1726691AbfD0MxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 08:53:10 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MdeSn-1glaAQ1CHx-00ZjUI; Sat, 27 Apr 2019 14:52:47 +0200
+ 1M72wZ-1hQgsG1F7v-008djg; Sat, 27 Apr 2019 14:52:35 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,92 +34,57 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 16/41] drivers: tty: serial: uartlite: fix overlong lines
-Date:   Sat, 27 Apr 2019 14:51:57 +0200
-Message-Id: <1556369542-13247-17-git-send-email-info@metux.net>
+Subject: [PATCH 02/41] drivers: tty: serial: dz: include <linux/io.h> instead of <asm/io.h>
+Date:   Sat, 27 Apr 2019 14:51:43 +0200
+Message-Id: <1556369542-13247-3-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:Ck93dTfp9+M+xebhyVSLDIJuo4MjSGOjDhbkWBRUIflN7U9qSCe
- pUde8jE0w5A43JR5NuYza+AsYcjHeRQdVwFH5DfzOGQOqRZzgRch+fJcKukuNGfeEOytvZR
- 5/10Xwz0fpHNGToPKDV3mQbY+HwaGvDTud8ym7VEBca8ousV2I6zja+sNCKPIsmKUiAW4+V
- hJqAZT0gvkBV1/kztVb2Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lFLVA5ANqXA=:+nwoqH7LETA5l4ZD6Cy0by
- 9QQxF9w7JwL9dfUQLkTSklNQAm9TDaWBKAb/AK8KrfiMTcGzLt9Ee5RiujQGuJAuFYCa25OaW
- PsRCxkE462T85gSy8Pd/1exhcYQsoX46KyLQ4ZKSeHvVV8tbKS/OwkFfGrRHmBQ8UlBeXLZK5
- ebF4s0a/Z8QgHeSqLp8Mld3p8Su8UoV9Y8qvT6GUpcFbwp930569alSTM8wqnyrp9aFJ3bviY
- wC6Tzx19GZ9/leyIqE3JEmv02FWM4Ec4A6QWgiqsopsuDAzIuR2eWi4DxrYaPHzxccOjVXhW2
- RfH12CPwxeEkAGqjze7Djw/S5IYL86ng+BscK9UV3x0uudrqH2DvL3151YkbTo13FkHwqeNnW
- DIe1MAVVKDPOOe4QN7noYVLhRj71YKuN4gMT/LJ+u880TUoLEHCWMILbm5ZFZyvlzBG6K47hU
- 9N57YDdSPilc+UdCPlSqXcQ4hJByXjZkI6wRREnTfmyit5sfL61G8Cy9lTvJngnoKEflZ/q/D
- +VkFl7qZhum7WEPeks7u2yKFDTGflXCZYn2mA1tQq+cnqN0OJ85RJZpWS9w6/wqjPbVQmeHnX
- K1uOze3TXyWYC56Tqwpenyo+uVz9fCc59R4P6VjWRvoYFvUN2alVsNGhQFk7qhdBWZ+GW9efn
- J+EJarUbpowxoppGXDdCKd50A08hfJxVUT6cLO8NZbGm/sKEm6hc8cXIke/czqdZS6Z34iUaH
- iiO7jtF61oWxoOCw5a6wqJbKewrFO8VHKUZg/A==
+X-Provags-ID: V03:K1:vWpyHvDheL6gbLjo3etBs2JZ/UueJUyOwv5jXuZL9y2wfL1t2Sz
+ Q/+Nt5v3237WzwYwrkHtvh8CdRpqwPqpHpcjERpTIKU+EcAYTF+qBG0cw4jXtPhcJu5L1xP
+ kkBztdWdJQKAWhxdJmybmuQlVUbgmAr1fvOkc6orv3ghX86g6ax2Ao2WppX1ubS4UHmC3BK
+ omfMVJUQwR4EJT11yTj+A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PWTU6h30wog=:g3KXzB9M32PW8Kl8vCIU73
+ qJ8Hw/X5UhMxHr5PXZ5NJLP8zF+n5L1AYhbxdz0HkWq3pRijKJD3ZZgMPMXT5AC0MCjgTwTnG
+ BKB6ehulTwMDvn0rk/0UWp57hVY8n65jpID29G2/RtuijyesvETIRsoOmsEDDklXWWrpv6Hvq
+ J5ApyjRxjwebOu+2DLtzw/iHyVZjoSBSJ3tfl+uRrcbirei0rvO8pIPPAp9hShgt6wvsRCnWy
+ 69Nm4xD9n73QNYwZz1WgLz31zuE/AXQbiEv14NTsptf7xQB3TMb47qEcLeEIXQttLDlssfrUu
+ sUnzAbwiXa9qXMynpyfRG2WmHpKy3Sb57NCyp79kJVZNqzTeWy5rJ580LJtiNOnKV5l0NEl4P
+ ft43B9g3QEw0dE2RA1G9sPuGJvuILiXEPeqUqYjhTT+UmVrLG83+OrotnH1YPjhkzWg9WZGyl
+ ZsMxaVC5zUJY8olqHlPJl3lfAv4fxzGIBE75jKtOJwB61iyMmTGCbLZT9aUnRGj+9CHDKLe70
+ r7+eZMXeXJ9eT1W7HDMQibFCPL6QSTKhCVVawhfq7GZkd2tcZx4GWCO7RGRNgouXD8JVSy7qz
+ m5Wbs2AH+EWnYtwKwE+ERMHMsz/tgMtlUXwgbizNPnSQPzD9LYY+Bqrq0DeP+AXy3VjT0jaZn
+ /zPlxBehxOKrsnCjM3aDW+YERQBO5njRt7YPdL+ImY78ofqqhgs0vMjuBK7/voIREnYQyHmyR
+ QiZRIDUO7YShRpDwljxwkZ//0pWuawyNDeyJ3w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch warnings:
+fixing checkpatch warning:
 
-    WARNING: line over 80 characters
-    #283: FILE: drivers/tty/serial/uartlite.c:283:
-    +	ret = request_irq(port->irq, ulite_isr, IRQF_SHARED | IRQF_TRIGGER_RISING,
-
-    WARNING: Missing a blank line after declarations
-    #577: FILE: drivers/tty/serial/uartlite.c:577:
-    +	struct earlycon_device *device = console->data;
-    +	uart_console_write(&device->port, s, n, early_uartlite_putc);
-
-    WARNING: line over 80 characters
-    #590: FILE: drivers/tty/serial/uartlite.c:590:
-    +OF_EARLYCON_DECLARE(uartlite_b, "xlnx,opb-uartlite-1.00.b", early_uartlite_setup);
-
-    WARNING: line over 80 characters
-    #591: FILE: drivers/tty/serial/uartlite.c:591:
-    +OF_EARLYCON_DECLARE(uartlite_a, "xlnx,xps-uartlite-1.00.a", early_uartlite_setup);
+  WARNING: Use #include <linux/io.h> instead of <asm/io.h>
+  #55: FILE: dz.c:55:
+  +#include <asm/io.h>
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/uartlite.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/tty/serial/dz.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index 6f79353..0140cec 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -280,7 +280,8 @@ static int ulite_startup(struct uart_port *port)
- 		return ret;
- 	}
+diff --git a/drivers/tty/serial/dz.c b/drivers/tty/serial/dz.c
+index 96e35af..fd4f0cc 100644
+--- a/drivers/tty/serial/dz.c
++++ b/drivers/tty/serial/dz.c
+@@ -52,7 +52,7 @@
  
--	ret = request_irq(port->irq, ulite_isr, IRQF_SHARED | IRQF_TRIGGER_RISING,
-+	ret = request_irq(port->irq, ulite_isr,
-+			  IRQF_SHARED | IRQF_TRIGGER_RISING,
- 			  "uartlite", port);
- 	if (ret)
- 		return ret;
-@@ -574,6 +575,7 @@ static void early_uartlite_write(struct console *console,
- 				 const char *s, unsigned int n)
- {
- 	struct earlycon_device *device = console->data;
-+
- 	uart_console_write(&device->port, s, n, early_uartlite_putc);
- }
+ #include <linux/atomic.h>
+ #include <asm/bootinfo.h>
+-#include <asm/io.h>
++#include <linux/io.h>
  
-@@ -587,8 +589,10 @@ static int __init early_uartlite_setup(struct earlycon_device *device,
- 	return 0;
- }
- EARLYCON_DECLARE(uartlite, early_uartlite_setup);
--OF_EARLYCON_DECLARE(uartlite_b, "xlnx,opb-uartlite-1.00.b", early_uartlite_setup);
--OF_EARLYCON_DECLARE(uartlite_a, "xlnx,xps-uartlite-1.00.a", early_uartlite_setup);
-+OF_EARLYCON_DECLARE(uartlite_b, "xlnx,opb-uartlite-1.00.b",
-+		    early_uartlite_setup);
-+OF_EARLYCON_DECLARE(uartlite_a, "xlnx,xps-uartlite-1.00.a",
-+		    early_uartlite_setup);
- 
- #endif /* CONFIG_SERIAL_UARTLITE_CONSOLE */
- 
+ #include <asm/dec/interrupts.h>
+ #include <asm/dec/kn01.h>
 -- 
 1.9.1
 
