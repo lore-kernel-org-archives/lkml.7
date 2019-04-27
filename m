@@ -1,192 +1,119 @@
 Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A101C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8813AC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209222077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:07:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556356025;
-	bh=mwhMiJ3MQ2Nei3wxS8nEK2Qcw/8sWJvdNzTKZ8HUw0o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2BqpTrkvL/SSdqK7AS4fQDAp4b08/LVP6KZum/VTyRzjSE3whDHm6zhiHetqclE0e
-	 Wqh+HAZlCClZGnqnL85+R0vvd/ZkRL0VQsx6gCsvVOt3+h/je7AWma4auh/yOKOC15
-	 Wmcg0QoiQzp4LaD+3Iwxo82QjMF3VSJFR8tcPEA4=
+	by mail.kernel.org (Postfix) with ESMTP id 56D0C2087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:12:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPZtb5a1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfD0JHD (ORCPT
+        id S1726223AbfD0JMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 05:07:03 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39796 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfD0JHD (ORCPT
+        Sat, 27 Apr 2019 05:12:01 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36382 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfD0JMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 05:07:03 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n25so7764120wmk.4
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 02:07:01 -0700 (PDT)
+        Sat, 27 Apr 2019 05:12:01 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l6so5092561ljb.3;
+        Sat, 27 Apr 2019 02:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zvO5tx75mBcwL4BBc74Z0twD+gtLAHXQirkVGs5qmHU=;
-        b=TawwbpFDHBdf7qHKQwanK01akp5UHmfFwWygBiZHzZsXduGGd3h07WJn6bfdBoHST6
-         JtGNK5krSkpbpET+dMkO3T6ollDhJX9z4V5hyNIIZkgPTc5fJMOE/tZvSgZjBviwawQO
-         IXNRYNCTueNd/00Ke+TG5wktiR8TnRi6XbywMUcixLCzLVy2gOJEdFnfvfTXHM0dVs5a
-         aiiBYXlyvfmo4aTpZjztKHcp9TJHkNjJwG249jMwi1c09ZK8xjMOXM+RXWO3EM9II2Mr
-         YXtcIyVscoQEGU4stS7kKKZ5zexyiUAG1pu8rmJLzxGaA3nUn4tB8ER8PEx7RM9mTQW9
-         mvQA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9xgHPH09YGJhCPvbuKiscLvKx1wCoR98FI2oDiSX2Ws=;
+        b=GPZtb5a1+GwwjAGS9GaB8QEvI6hF6Bt65vyDloU6bDMGmCnHoNGgR15bK5WFgNfkoS
+         S3g8qP/fSuGfP2wNkWcDJg+adnNQBv7jtMKf3ok5ovH6sxImCQKp422B+DAE3AZqdytr
+         XkeTQbmN1h/FVr+W7w6s0bXZQLLr/ZiupZADGyPjRt3+4ItZrLqUT+9Bd3fouBfTHy7G
+         W3RBwB+gJVkZri7phb5Rbca5lqhEJUFjTFBiKqNxieG18xXdYVtA75n9GkpGee+1Q5oC
+         zKOelxlzW2Sfo8LILpuF2zax/Eb9t9HdceNO2DdlrXURwmjd7drSWsEAxiYSxntwlNFv
+         H85A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zvO5tx75mBcwL4BBc74Z0twD+gtLAHXQirkVGs5qmHU=;
-        b=pFnD9gBAzUR14gigEz9+55rS1f8vo83mhGXSuNWBPSEozUfMKSN10it1CvdcncnorM
-         9aYI0PQ4X5sfvIUOjPfYY/hZkdENi6bdgkpMMZYxYY1lkJgRxvRxHZIagMYfdE9+hJ+s
-         cTfElH7qtTO3nei3VjxpZ2cA19TItb6qcCqy2SMNq5X3PFm7JuGsOG8K3Hi7+A+a28dz
-         PahHQQKXSFLx1ogXqqT41z2dS/GL495hZZ+5hCGQ96jGftGeysBBqWhcrUaT2Q/1zxlT
-         uA/xtYvcrsXtJgqd4zWZZTFlwKzuhE8AfxwQe4PPP68H10IvCMsO+zQQgdu/1QUuqr9p
-         TCog==
-X-Gm-Message-State: APjAAAVvX14AnPQN1I6iPldsFjw5UU7VqNO4/jt6mlKFaiZi7W+/tutk
-        cQiSk/VNTb6LbBaDdFQ7jzE=
-X-Google-Smtp-Source: APXvYqx6xdnAH4icHxfhQib5/HAGWBEBBQVrS1RphPXUwl40e4PVJyJU12mkFpKMFL8N/6qkpM3rGw==
-X-Received: by 2002:a1c:ca07:: with SMTP id a7mr11423307wmg.104.1556356021027;
-        Sat, 27 Apr 2019 02:07:01 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id 204sm34633192wmc.1.2019.04.27.02.06.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 27 Apr 2019 02:06:59 -0700 (PDT)
-Date:   Sat, 27 Apr 2019 11:06:57 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Aubrey Li <aubrey.intel@gmail.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Fr?d?ric Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-Message-ID: <20190427090657.GB99668@gmail.com>
-References: <cover.1556025155.git.vpillai@digitalocean.com>
- <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
- <20190424140013.GA14594@sinkpad>
- <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
- <20190425095508.GA8387@gmail.com>
- <20190425144619.GX18914@techsingularity.net>
- <20190425185343.GA122353@gmail.com>
- <20190425213145.GY18914@techsingularity.net>
- <20190426094545.GD126896@gmail.com>
- <20190426101947.GZ18914@techsingularity.net>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9xgHPH09YGJhCPvbuKiscLvKx1wCoR98FI2oDiSX2Ws=;
+        b=K3fjSCkfx1Xo2rgI1KJiuLeQ3VFR9TJIsKcL518huKXdkMC9exdP9ceX2tlf4dl0AM
+         RAinokqinNmTd0WBW+fWvsw9PcS7A+Iji4tESTlQST0/jT47aV7toXFmXzy3Rgf/qjte
+         1MjV5q8zPPaLzroXQmW+AS3qA0UxNcKlMfpS6JZpbNGhhNQfrUzeb5iFuguS2XZNpO2Z
+         6EOGEaW3D6rNsm4De+HO2DE3kRt1hrRRY8wLUU/3pum/KOVh3/x5BLXaEPL9YlUlpDFD
+         /YKrtfcpY7uUiqFRARzq33VyL9xdA9BAdG0WEDE0ODSPgQD8/ZT70KnZ4onib4k8AgjC
+         7fLw==
+X-Gm-Message-State: APjAAAXqDHo0Y6FThwLDUwlVpUDfPSnT8pC4e4oo5JIU1sh4j9nYS4oY
+        ks9J7iBbyEa12zqpphlvNpE=
+X-Google-Smtp-Source: APXvYqw18cwZVYJuGF92dcW9cRRa+taT9kDCNYZUbyaGu/ljvbZGakThDVuilREIwDGCs0TEwXF/jA==
+X-Received: by 2002:a2e:894e:: with SMTP id b14mr23758129ljk.158.1556356318675;
+        Sat, 27 Apr 2019 02:11:58 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id y7sm6134228lfg.76.2019.04.27.02.11.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Apr 2019 02:11:57 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Richard Leitner <richard.leitner@skidata.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        kbuild test robot <lkp@intel.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: usb251xb: Add an empty hub' i2c-bus segment checker
+Date:   Sat, 27 Apr 2019 12:06:44 +0300
+Message-Id: <20190427090645.30621-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426101947.GZ18914@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It's pointless to scan the hub' i2c-bus segment if GPIOs aren't supported
+by the system, since no GPIO-driven reset could be cleared by the driver
+then. Moreover if CONFIG_GPIOLIB is disabled the gpio_chip structure
+definition won't be available, which causes the incomplete type pointer
+dereference compilation error. In order to fix this we need to create an
+empty usb251x_check_gpio_chip() method returning zero, so the driver would
+skip the i2c-bus segment checking and proceed with further probing in this
+case.
 
-* Mel Gorman <mgorman@techsingularity.net> wrote:
+Fixes: 6e3c8beb4f92 ("usb: usb251xb: Lock i2c-bus segment the hub resides")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+---
+ drivers/usb/misc/usb251xb.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> On Fri, Apr 26, 2019 at 11:45:45AM +0200, Ingo Molnar wrote:
-> > 
-> > * Mel Gorman <mgorman@techsingularity.net> wrote:
-> > 
-> > > > > I can show a comparison with equal levels of parallelisation but with 
-> > > > > HT off, it is a completely broken configuration and I do not think a 
-> > > > > comparison like that makes any sense.
-> > > > 
-> > > > I would still be interested in that comparison, because I'd like
-> > > > to learn whether there's any true *inherent* performance advantage to 
-> > > > HyperThreading for that particular workload, for exactly tuned 
-> > > > parallelism.
-> > > > 
-> > > 
-> > > It really isn't a fair comparison. MPI seems to behave very differently
-> > > when a machine is saturated. It's documented as changing its behaviour
-> > > as it tries to avoid the worst consequences of saturation.
-> > > 
-> > > Curiously, the results on the 2-socket machine were not as bad as I
-> > > feared when the HT configuration is running with twice the number of
-> > > threads as there are CPUs
-> > > 
-> > > Amean     bt      771.15 (   0.00%)     1086.74 * -40.93%*
-> > > Amean     cg      445.92 (   0.00%)      543.41 * -21.86%*
-> > > Amean     ep       70.01 (   0.00%)       96.29 * -37.53%*
-> > > Amean     is       16.75 (   0.00%)       21.19 * -26.51%*
-> > > Amean     lu      882.84 (   0.00%)      595.14 *  32.59%*
-> > > Amean     mg       84.10 (   0.00%)       80.02 *   4.84%*
-> > > Amean     sp     1353.88 (   0.00%)     1384.10 *  -2.23%*
-> > 
-> > Yeah, so what I wanted to suggest is a parallel numeric throughput test 
-> > with few inter-process data dependencies, and see whether HT actually 
-> > improves total throughput versus the no-HT case.
-> > 
-> > No over-saturation - but exactly as many threads as logical CPUs.
-> > 
-> > I.e. with 20 physical cores and 40 logical CPUs the numbers to compare 
-> > would be a 'nosmt' benchmark running 20 threads, versus a SMT test 
-> > running 40 threads.
-> > 
-> > I.e. how much does SMT improve total throughput when the workload's 
-> > parallelism is tuned to utilize 100% of the available CPUs?
-> > 
-> > Does this make sense?
-> > 
-> 
-> Yes. Here is the comparison.
-> 
-> Amean     bt      678.75 (   0.00%)      789.13 * -16.26%*
-> Amean     cg      261.22 (   0.00%)      428.82 * -64.16%*
-> Amean     ep       55.36 (   0.00%)       84.41 * -52.48%*
-> Amean     is       13.25 (   0.00%)       17.82 * -34.47%*
-> Amean     lu     1065.08 (   0.00%)     1090.44 (  -2.38%)
-> Amean     mg       89.96 (   0.00%)       84.28 *   6.31%*
-> Amean     sp     1579.52 (   0.00%)     1506.16 *   4.64%*
-> Amean     ua      611.87 (   0.00%)      663.26 *  -8.40%*
-> 
-> This is the socket machine and with HT On, there are 80 logical CPUs
-> versus HT Off with 40 logical CPUs.
+diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+index 939b3bedd4c8..cdc80e8c2d8a 100644
+--- a/drivers/usb/misc/usb251xb.c
++++ b/drivers/usb/misc/usb251xb.c
+@@ -223,6 +223,7 @@ static const struct usb251xb_data usb2517i_data = {
+ 	.product_str = "USB2517i",
+ };
+ 
++#ifdef CONFIG_GPIOLIB
+ static int usb251xb_check_dev_children(struct device *dev, void *child)
+ {
+ 	if (dev->type == &i2c_adapter_type) {
+@@ -253,6 +254,12 @@ static int usb251x_check_gpio_chip(struct usb251xb *hub)
+ 
+ 	return 0;
+ }
++#else
++static int usb251x_check_gpio_chip(struct usb251xb *hub)
++{
++	return 0;
++}
++#endif
+ 
+ static void usb251xb_reset(struct usb251xb *hub, int state)
+ {
+-- 
+2.21.0
 
-That's very interesting - so for most workloads HyperThreading is a 
-massive loss, and for 'mg' and 'sp' it's a 5-6% win?
-
-I'm wondering how much of say the 'cg' workload's -64% loss could be task 
-placement inefficiency - or are these all probable effects of 80 threads 
-trying to use too many cache and memory resources and thus utilizing it 
-all way too inefficiently?
-
-Are these relatively simple numeric workloads, with not much scheduling 
-and good overall pinning of tasks, or is it more complex than that?
-
-Also, the takeaway appears to be: by using HT there's a potential 
-advantage of +6% on the benefit side, but a potential -50%+ performance 
-hit on the risk side?
-
-I believe these results also *strongly* support a much stricter task 
-placement policy in up to 50% saturation of SMT systems - it's almost 
-always going to be a win for workloads that are actually trying to fill 
-in some useful role.
-
-Thanks,
-
-	Ingo
