@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226AEC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A531EC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F10206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D10208C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbfD0P0f (ORCPT
+        id S1728497AbfD0P0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:26:35 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34910 "EHLO
+        Sat, 27 Apr 2019 11:26:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34922 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727784AbfD0P0c (ORCPT
+        by vger.kernel.org with ESMTP id S1727937AbfD0P0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:26:32 -0400
+        Sat, 27 Apr 2019 11:26:35 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP3D-0000zM-Rv; Sat, 27 Apr 2019 16:15:39 +0100
+        id 1hKP3B-0000zO-I3; Sat, 27 Apr 2019 16:15:37 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2h-0004Q8-Ry; Sat, 27 Apr 2019 16:15:07 +0100
+        id 1hKP2i-0004R6-8x; Sat, 27 Apr 2019 16:15:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Steve French" <stfrench@microsoft.com>,
-        "Ross Lagerwall" <ross.lagerwall@citrix.com>
+        "Miklos Szeredi" <mszeredi@redhat.com>,
+        "Jann Horn" <jannh@google.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.596434863@decadent.org.uk>
+Message-ID: <lsq.1556377989.28395121@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 032/202] cifs: Fix potential OOB access of lock
- element array
+Subject: [PATCH 3.16 044/202] fuse: call pipe_buf_release() under pipe lock
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,62 +55,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: Jann Horn <jannh@google.com>
 
-commit b9a74cde94957d82003fb9f7ab4777938ca851cd upstream.
+commit 9509941e9c534920ccc4771ae70bd6cbbe79df1c upstream.
 
-If maxBuf is small but non-zero, it could result in a zero sized lock
-element array which we would then try and access OOB.
+Some of the pipe_buf_release() handlers seem to assume that the pipe is
+locked - in particular, anon_pipe_buf_release() accesses pipe->tmp_page
+without taking any extra locks. From a glance through the callers of
+pipe_buf_release(), it looks like FUSE is the only one that calls
+pipe_buf_release() without having the pipe locked.
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+This bug should only lead to a memory leak, nothing terrible.
+
+Fixes: dd3bb14f44a6 ("fuse: support splice() writing to fuse device")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/file.c     | 8 ++++----
- fs/cifs/smb2file.c | 4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ fs/fuse/dev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -1066,10 +1066,10 @@ cifs_push_mandatory_locks(struct cifsFil
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1978,10 +1978,12 @@ static ssize_t fuse_dev_splice_write(str
  
- 	/*
- 	 * Accessing maxBuf is racy with cifs_reconnect - need to store value
--	 * and check it for zero before using.
-+	 * and check it before using.
- 	 */
- 	max_buf = tcon->ses->server->maxBuf;
--	if (!max_buf) {
-+	if (max_buf < (sizeof(struct smb_hdr) + sizeof(LOCKING_ANDX_RANGE))) {
- 		free_xid(xid);
- 		return -EINVAL;
+ 	ret = fuse_dev_do_write(fc, &cs, len);
+ 
++	pipe_lock(pipe);
+ 	for (idx = 0; idx < nbuf; idx++) {
+ 		struct pipe_buffer *buf = &bufs[idx];
+ 		buf->ops->release(pipe, buf);
  	}
-@@ -1403,10 +1403,10 @@ cifs_unlock_range(struct cifsFileInfo *c
- 
- 	/*
- 	 * Accessing maxBuf is racy with cifs_reconnect - need to store value
--	 * and check it for zero before using.
-+	 * and check it before using.
- 	 */
- 	max_buf = tcon->ses->server->maxBuf;
--	if (!max_buf)
-+	if (max_buf < (sizeof(struct smb_hdr) + sizeof(LOCKING_ANDX_RANGE)))
- 		return -EINVAL;
- 
- 	max_num = (max_buf - sizeof(struct smb_hdr)) /
---- a/fs/cifs/smb2file.c
-+++ b/fs/cifs/smb2file.c
-@@ -101,10 +101,10 @@ smb2_unlock_range(struct cifsFileInfo *c
- 
- 	/*
- 	 * Accessing maxBuf is racy with cifs_reconnect - need to store value
--	 * and check it for zero before using.
-+	 * and check it before using.
- 	 */
- 	max_buf = tcon->ses->server->maxBuf;
--	if (!max_buf)
-+	if (max_buf < sizeof(struct smb2_lock_element))
- 		return -EINVAL;
- 
- 	max_num = max_buf / sizeof(struct smb2_lock_element);
++	pipe_unlock(pipe);
+ out:
+ 	kfree(bufs);
+ 	return ret;
 
