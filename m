@@ -2,40 +2,40 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DA4C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C074EC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C80208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1E92087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfD0MH3 (ORCPT
+        id S1726362AbfD0MLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:07:29 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:41852 "EHLO
+        Sat, 27 Apr 2019 08:11:08 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:41888 "EHLO
         saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfD0MH2 (ORCPT
+        with ESMTP id S1726004AbfD0MLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:07:28 -0400
+        Sat, 27 Apr 2019 08:11:08 -0400
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id E00069E82A3;
-        Sat, 27 Apr 2019 13:07:25 +0100 (BST)
-Date:   Sat, 27 Apr 2019 13:07:22 +0100
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 29D079E8528;
+        Sat, 27 Apr 2019 13:11:05 +0100 (BST)
+Date:   Sat, 27 Apr 2019 13:11:03 +0100
 From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH next 08/25] iio: adc: at91: Use dev_get_drvdata()
-Message-ID: <20190427130722.70ec290b@archlinux>
-In-Reply-To: <20190423075020.173734-9-wangkefeng.wang@huawei.com>
-References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
-        <20190423075020.173734-9-wangkefeng.wang@huawei.com>
+To:     Alexandre <amergnat@baylibre.com>
+Cc:     Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        baylibre-upstreaming@groups.io
+Subject: Re: [PATCH v2 3/3] iio: Add PAT9125 optical tracker sensor
+Message-ID: <20190427131103.1ce00b1c@archlinux>
+In-Reply-To: <8abd482d-ae1e-ba86-c050-317fc0208fe6@baylibre.com>
+References: <1556016046-31231-1-git-send-email-amergnat@baylibre.com>
+        <1556016046-31231-4-git-send-email-amergnat@baylibre.com>
+        <alpine.DEB.2.21.1904231302210.24175@vps.pmeerw.net>
+        <8abd482d-ae1e-ba86-c050-317fc0208fe6@baylibre.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,94 +45,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019 15:50:03 +0800
-Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+On Tue, 23 Apr 2019 16:06:56 +0200
+Alexandre <amergnat@baylibre.com> wrote:
 
-> Using dev_get_drvdata directly.
+> Hi Peter,
 > 
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: linux-iio@vger.kernel.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> On 4/23/19 13:33, Peter Meerwald-Stadler wrote:
+> >
+> > how is this thing different from a mouse device?  
+> 
+> I developed this driver to detect the board movement which can't be 
+> detected by accelerometer (very slow motion). I admit this use case can 
+> be handled by an input, and I'm agree with you, PAT9125 driver could be 
+> an input. But this chip is able to track different kind of motion (flat 
+> and rotation), and additionally have an interrupt GPIO, so using it like 
+> input limit the driver potential. This chip is designed to work in 
+> industrial measurement or embedded systems, and the IIO API match with 
+> these environments, so IIO is the best way to exploit the entire 
+> potential of this chip.
+> 
+> As I understand (from 
+> https://www.kernel.org/doc/html/v4.12/input/event-codes.html#mice ), 
+> mouse driver must report values when the device move. This feature 
+> souldn't be mandatory for an optical tracker driver, specially for cases 
+> where user prefers to use buffer or poll only when he need data.
 
-A sensible cleanup, thanks.
+Given the 'placement' of this driver isn't totally obvious, please
+make sure to cc linux-input and Dmitry (maintainer) on V3.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+Probably no one will mind, but the last thing we want is someone
+else to put forward an input driver and we end up with two drivers
+for the same thing.
 
 Thanks,
 
 Jonathan
 
-> ---
->  drivers/iio/adc/at91-sama5d2_adc.c | 12 ++++--------
->  drivers/iio/adc/at91_adc.c         |  4 ++--
->  2 files changed, 6 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-> index d5ea84cf6460..a3a4ca946308 100644
-> --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> @@ -1586,8 +1586,7 @@ static void at91_adc_hw_init(struct at91_adc_state *st)
->  static ssize_t at91_adc_get_fifo_state(struct device *dev,
->  				       struct device_attribute *attr, char *buf)
->  {
-> -	struct iio_dev *indio_dev =
-> -			platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(indio_dev);
->  
->  	return scnprintf(buf, PAGE_SIZE, "%d\n", !!st->dma_st.dma_chan);
-> @@ -1596,8 +1595,7 @@ static ssize_t at91_adc_get_fifo_state(struct device *dev,
->  static ssize_t at91_adc_get_watermark(struct device *dev,
->  				      struct device_attribute *attr, char *buf)
->  {
-> -	struct iio_dev *indio_dev =
-> -			platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(indio_dev);
->  
->  	return scnprintf(buf, PAGE_SIZE, "%d\n", st->dma_st.watermark);
-> @@ -1849,8 +1847,7 @@ static int at91_adc_remove(struct platform_device *pdev)
->  
->  static __maybe_unused int at91_adc_suspend(struct device *dev)
->  {
-> -	struct iio_dev *indio_dev =
-> -			platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(indio_dev);
->  
->  	/*
-> @@ -1870,8 +1867,7 @@ static __maybe_unused int at91_adc_suspend(struct device *dev)
->  
->  static __maybe_unused int at91_adc_resume(struct device *dev)
->  {
-> -	struct iio_dev *indio_dev =
-> -			platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(indio_dev);
->  	int ret;
->  
-> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
-> index 596841a3c4db..1aa8af3491fd 100644
-> --- a/drivers/iio/adc/at91_adc.c
-> +++ b/drivers/iio/adc/at91_adc.c
-> @@ -1360,7 +1360,7 @@ static int at91_adc_remove(struct platform_device *pdev)
->  #ifdef CONFIG_PM_SLEEP
->  static int at91_adc_suspend(struct device *dev)
->  {
-> -	struct iio_dev *idev = platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *idev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(idev);
->  
->  	pinctrl_pm_select_sleep_state(dev);
-> @@ -1371,7 +1371,7 @@ static int at91_adc_suspend(struct device *dev)
->  
->  static int at91_adc_resume(struct device *dev)
->  {
-> -	struct iio_dev *idev = platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *idev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(idev);
->  
->  	clk_prepare_enable(st->clk);
+> All other comments will be fixed in V3.
+> 
+> Regards,
+> 
+> Alexandre
+> 
 
