@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94ACFC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204C9C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6448E208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D71CA208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329540;
-	bh=wjkpr/14v1CkGVKBhiwrjp4lLr83I2wIJtZFg1HOnmY=;
+	s=default; t=1556329547;
+	bh=VU/Yh5ZNc0pPLZVy1n5KWx70FJtI9nxfOd1sTo87lWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2cYNLjcGKQljU/2dSO1LaRV1ipjMThTz6M0oRDM+M8VExiWGz/IZkslZ20t10BB6M
-	 UF/grOCfugHKs+3CrGDYek6KUcsZ2kTg3tjU6j76xoei+jayTIu23P4Ah2RwEo1oKJ
-	 iyppyzNKPT1SEKn324xMHzszvDgvUKP3iXKT8Ov0=
+	b=BdGPvnFQtbCblY/O6hPNLL1ZQUsK3uhlMmzIruc8eoUy1XFmmeqHJG0p8bC1fW5Vo
+	 0IYc+BPGw5pcFXXlJK2UP/2CqFPruvL4jPyJ4XEk4MiqTJbsFMwgZ+OA/CdS4/epQ0
+	 j+cpy2Zs9nBNxc6lbx0aw0DU/cKBOaDI4vDsAkoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbfD0Bnx (ORCPT
+        id S1728764AbfD0Bpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:43:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48074 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:45:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728836AbfD0Bnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:49 -0400
+        id S1728349AbfD0Bnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45447216B7;
-        Sat, 27 Apr 2019 01:43:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2992221707;
+        Sat, 27 Apr 2019 01:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329428;
-        bh=wjkpr/14v1CkGVKBhiwrjp4lLr83I2wIJtZFg1HOnmY=;
+        s=default; t=1556329430;
+        bh=VU/Yh5ZNc0pPLZVy1n5KWx70FJtI9nxfOd1sTo87lWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LV6F/KdyAhIvvyoDctcJuwa9pBndEfoMR6aR+z5pYNWIBWUG8RH4Vu81vt9qFu3VK
-         0/3ZWS+mGYvX9eCLSUlfMx1DiM9nnE9zvDvlbO90mXmeOzaX5939d5SA6U6vdrmIHv
-         wW5sbbtzm5WfJ3Au4P3LMOobD74rQ2AyXr2IZxfo=
+        b=v/Fyqlxd89aeLr91MGBblaN8NazCmx0HjTppKtMcNFeYSb4BjLhFs3FjPRFGiV/5e
+         cOrMnH4t9WeUHfOR4YMo5p3GDy7bjqkC+8POezMmzoKTOLUrxcBufjoyriGAqkf/u3
+         1bCgVJL/xEGl3gpuTNmkwFuuK/Gu3KHSBGfqdJQg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>, CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 12/16] drm/mediatek: fix possible object reference leak
-Date:   Fri, 26 Apr 2019 21:43:20 -0400
-Message-Id: <20190427014325.8704-12-sashal@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 14/16] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
+Date:   Fri, 26 Apr 2019 21:43:22 -0400
+Message-Id: <20190427014325.8704-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014325.8704-1-sashal@kernel.org>
 References: <20190427014325.8704-1-sashal@kernel.org>
@@ -64,46 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 2ae2c3316fb77dcf64275d011596b60104c45426 ]
+[ Upstream commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
+is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
+(which is embedded into user-visible "struct nfs_mount_data" structure)
+despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
+bytes of AF_INET6 address to rpc_sockaddr2uaddr().
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/mediatek/mtk_hdmi.c:1521:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
-drivers/gpu/drm/mediatek/mtk_hdmi.c:1524:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
+Since "struct nfs_mount_data" structure is user-visible, we can't change
+"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
+assuming that everybody is using AF_INET family when passing address via
+"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: CK Hu <ck.hu@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
+
+Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 200f75e1d619..e7a6651ceeab 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1528,6 +1528,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	of_node_put(remote);
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 659ad12e33ba..42c31587a936 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -2047,7 +2047,8 @@ static int nfs23_validate_mount_data(void *options,
+ 		memcpy(sap, &data->addr, sizeof(data->addr));
+ 		args->nfs_server.addrlen = sizeof(data->addr);
+ 		args->nfs_server.port = ntohs(data->addr.sin_port);
+-		if (!nfs_verify_server_address(sap))
++		if (sap->sa_family != AF_INET ||
++		    !nfs_verify_server_address(sap))
+ 			goto out_no_address;
  
- 	hdmi->ddc_adpt = of_find_i2c_adapter_by_node(i2c_np);
-+	of_node_put(i2c_np);
- 	if (!hdmi->ddc_adpt) {
- 		dev_err(dev, "Failed to get ddc i2c adapter by node\n");
- 		return -EINVAL;
+ 		if (!(data->flags & NFS_MOUNT_TCP))
 -- 
 2.19.1
 
