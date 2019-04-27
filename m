@@ -2,154 +2,93 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05988C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7850CC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE472087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450AE208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfD0Kt4 (ORCPT
+        id S1726146AbfD0KyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 06:49:56 -0400
-Received: from [110.188.70.11] ([110.188.70.11]:57681 "EHLO spam1.hygon.cn"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725977AbfD0Kt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 06:49:56 -0400
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam1.hygon.cn with ESMTP id x3RAm1rP075215;
-        Sat, 27 Apr 2019 18:48:01 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id x3RAlrsl010070;
-        Sat, 27 Apr 2019 18:47:53 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from localhost.localdomain (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Sat, 27 Apr
- 2019 18:47:56 +0800
-From:   Pu Wen <puwen@hygon.cn>
-To:     <jdelvare@suse.com>, <bp@alien8.de>
-CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Pu Wen <puwen@hygon.cn>
-Subject: [RFC PATCH v2] i2c-piix4: Add Hygon Dhyana SMBus support
-Date:   Sat, 27 Apr 2019 09:07:44 +0800
-Message-ID: <1556327264-31730-1-git-send-email-puwen@hygon.cn>
-X-Mailer: git-send-email 2.7.4
+        Sat, 27 Apr 2019 06:54:03 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:39281 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725871AbfD0KyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 06:54:02 -0400
+Received: from [192.168.0.2] (ip5f5bf0d8.dynamic.kabel-deutschland.de [95.91.240.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 32804604E3661;
+        Sat, 27 Apr 2019 12:54:00 +0200 (CEST)
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Why is suspend with s2idle available on POWER8 systems?
+Message-ID: <5fdabbb9-0a62-4802-f1ca-f83584f935fa@molgen.mpg.de>
+Date:   Sat, 27 Apr 2019 12:53:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam1.hygon.cn x3RAm1rP075215
-X-DNSRBL: 
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Hygon Dhyana CPU has the SMBus device with PCI device ID 0x790b,
-which is the same as AMD CZ SMBus device. So add Hygon Dhyana support
-to the i2c-piix4 driver by using the code path of AMD.
+Dear Linux folks,
 
-Signed-off-by: Pu Wen <puwen@hygon.cn>
----
-v1->v2:
-  - Remove the revision number checking for Hygon SMBus device.
-  - Document the new supported chipset in drivers/i2c/busses/Kconfig
-    and Documentation/i2c/busses/i2c-piix4 as well as in the header
-	comment of i2c-piix4.c.
 
- Documentation/i2c/busses/i2c-piix4 |  2 ++
- drivers/i2c/busses/Kconfig         |  1 +
- drivers/i2c/busses/i2c-piix4.c     | 15 +++++++++++----
- 3 files changed, 14 insertions(+), 4 deletions(-)
+Updating an IBM S822LC from Ubuntu 18.10 to 19.04 some user space stuff 
+seems to have changed, so that going into sleep/suspend is enabled.
 
-diff --git a/Documentation/i2c/busses/i2c-piix4 b/Documentation/i2c/busses/i2c-piix4
-index aa959fd..2703bc3 100644
---- a/Documentation/i2c/busses/i2c-piix4
-+++ b/Documentation/i2c/busses/i2c-piix4
-@@ -15,6 +15,8 @@ Supported adapters:
-     http://support.amd.com/us/Embedded_TechDocs/44413.pdf
-   * AMD Hudson-2, ML, CZ
-     Datasheet: Not publicly available
-+  * Hygon CZ
-+    Datasheet: Not publicly available
-   * Standard Microsystems (SMSC) SLC90E66 (Victory66) southbridge
-     Datasheet: Publicly available at the SMSC website http://www.smsc.com
- 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index f8979ab..50ec2e4 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -176,6 +176,7 @@ config I2C_PIIX4
- 	    AMD Hudson-2
- 	    AMD ML
- 	    AMD CZ
-+	    Hygon CZ
- 	    Serverworks OSB4
- 	    Serverworks CSB5
- 	    Serverworks CSB6
-diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
-index 90946a8..e9a0514 100644
---- a/drivers/i2c/busses/i2c-piix4.c
-+++ b/drivers/i2c/busses/i2c-piix4.c
-@@ -19,6 +19,7 @@
- 	Serverworks OSB4, CSB5, CSB6, HT-1000, HT-1100
- 	ATI IXP200, IXP300, IXP400, SB600, SB700/SP5100, SB800
- 	AMD Hudson-2, ML, CZ
-+	Hygon CZ
- 	SMSC Victory66
- 
-    Note: we assume there can only be one device, with one or more
-@@ -289,7 +290,9 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
- 	     PIIX4_dev->revision >= 0x41) ||
- 	    (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD &&
- 	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS &&
--	     PIIX4_dev->revision >= 0x49))
-+	     PIIX4_dev->revision >= 0x49) ||
-+	    (PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON &&
-+	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS))
- 		smb_en = 0x00;
- 	else
- 		smb_en = (aux) ? 0x28 : 0x2c;
-@@ -361,7 +364,8 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
- 		 piix4_smba, i2ccfg >> 4);
- 
- 	/* Find which register is used for port selection */
--	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD) {
-+	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD ||
-+	    PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON) {
- 		switch (PIIX4_dev->device) {
- 		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
- 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
-@@ -794,6 +798,7 @@ static const struct pci_device_id piix4_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_SBX00_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_HYGON, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
- 		     PCI_DEVICE_ID_SERVERWORKS_OSB4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
-@@ -904,11 +909,13 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if ((dev->vendor == PCI_VENDOR_ID_ATI &&
- 	     dev->device == PCI_DEVICE_ID_ATI_SBX00_SMBUS &&
- 	     dev->revision >= 0x40) ||
--	    dev->vendor == PCI_VENDOR_ID_AMD) {
-+	    dev->vendor == PCI_VENDOR_ID_AMD ||
-+	    dev->vendor == PCI_VENDOR_ID_HYGON) {
- 		bool notify_imc = false;
- 		is_sb800 = true;
- 
--		if (dev->vendor == PCI_VENDOR_ID_AMD &&
-+		if ((dev->vendor == PCI_VENDOR_ID_AMD ||
-+		     dev->vendor == PCI_VENDOR_ID_HYGON) &&
- 		    dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) {
- 			u8 imc;
- 
--- 
-2.7.4
+That raises two questions.
 
+1.  Is suspend actually supported on a POWER8 processor?
+
+> Apr 27 10:18:13 power NetworkManager[7534]: <info>  [1556353093.7224] manager: sleep: sleep requested (sleeping: no  e
+> Apr 27 10:18:13 power systemd[1]: Reached target Sleep.
+> Apr 27 10:18:13 power systemd[1]: Starting Suspend...
+> Apr 27 10:18:13 power systemd-sleep[82190]: Suspending system...
+> Apr 27 10:18:13 power kernel: PM: suspend entry (s2idle)
+> -- Reboot --
+
+> $ uname -m
+> ppc64le
+> $ more /proc/version
+> Linux version 5.1.0-rc6+ (joey@power) (gcc version 8.3.0 (Ubuntu 8.3.0-6ubuntu1)) #1 SMP Sat Apr 27 10:01:48 CEST 2019
+> $ more /sys/power/mem_sleep
+> [s2idle]
+> $ more /sys/power/state
+> freeze mem
+> $ grep _SUSPEND /boot/config-5.0.0-14-generic # also enabled in Ubuntu’s configuration
+> CONFIG_ARCH_SUSPEND_POSSIBLE=y
+> CONFIG_SUSPEND=y
+> CONFIG_SUSPEND_FREEZER=y
+> # CONFIG_SUSPEND_SKIP_SYNC is not set
+> # CONFIG_PM_TEST_SUSPEND is not set
+
+Should the Kconfig symbol `SUSPEND` be selectable? If yes, should their 
+be some detection during runtime?
+
+2.  If it is supported, what are the ways to getting it to resume? What 
+would the IPMI command be?
+
+For now I disabled the automatic suspend, masking the targets [1].
+
+
+Kind regards,
+
+Paul
+
+
+[1]: https://wiki.debian.org/Suspend#Disable_suspend_and_hibernation
