@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B93C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CD6C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4EB9208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 654C4208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbfD0PQJ (ORCPT
+        id S1728020AbfD0PQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:16:09 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33776 "EHLO
+        Sat, 27 Apr 2019 11:16:15 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33994 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727541AbfD0PPb (ORCPT
+        by vger.kernel.org with ESMTP id S1727602AbfD0PPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:31 -0400
+        Sat, 27 Apr 2019 11:15:35 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP32-0000zB-Dv; Sat, 27 Apr 2019 16:15:28 +0100
+        id 1hKP35-0000zH-Lb; Sat, 27 Apr 2019 16:15:31 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2l-0004XZ-3o; Sat, 27 Apr 2019 16:15:11 +0100
+        id 1hKP2k-0004V0-1P; Sat, 27 Apr 2019 16:15:10 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,25 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Richard Weinberger" <richard@nod.at>,
-        "Richard Kuo" <rkuo@codeaurora.org>
+        "Naoya Horiguchi" <n-horiguchi@ah.jp.nec.com>,
+        "Andrea Arcangeli" <aarcange@redhat.com>,
+        "Matthew Wilcox" <willy@infradead.org>,
+        "David Hildenbrand" <david@redhat.com>,
+        "Mel Gorman" <mgorman@techsingularity.net>,
+        "Dominik Brodowski" <linux@dominikbrodowski.net>,
+        "Vratislav Bendel" <vbendel@redhat.com>,
+        "Konstantin Khlebnikov" <k.khlebnikov@samsung.com>,
+        "Rafael Aquini" <aquini@redhat.com>, "Jan Kara" <jack@suse.cz>,
+        "Michal Hocko" <mhocko@suse.com>,
+        "Minchan Kim" <minchan@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.576552224@decadent.org.uk>
+Message-ID: <lsq.1556377989.794991236@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 114/202] hexagon: Use get_signal() signal_setup_done()
+Subject: [PATCH 3.16 085/202] mm: migrate: don't rely on __PageMovable()
+ of newpage after unlocking it
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,129 +67,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Richard Weinberger <richard@nod.at>
+From: David Hildenbrand <david@redhat.com>
 
-commit ac443624490f7033aefd06713e7761aee5977de3 upstream.
+commit e0a352fabce61f730341d119fbedf71ffdb8663f upstream.
 
-Use the more generic functions get_signal() signal_setup_done()
-for signal delivery.
+We had a race in the old balloon compaction code before b1123ea6d3b3
+("mm: balloon: use general non-lru movable page feature") refactored it
+that became visible after backporting 195a8c43e93d ("virtio-balloon:
+deflate via a page list") without the refactoring.
 
-Acked-by: Richard Kuo <rkuo@codeaurora.org>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-[bwh: Backported to 3.16 as dependency of commit 35634ffa1751
- "signal: Always notice exiting tasks"]
+The bug existed from commit d6d86c0a7f8d ("mm/balloon_compaction:
+redesign ballooned pages management") till b1123ea6d3b3 ("mm: balloon:
+use general non-lru movable page feature").  d6d86c0a7f8d
+("mm/balloon_compaction: redesign ballooned pages management") was
+backported to 3.12, so the broken kernels are stable kernels [3.12 -
+4.7].
+
+There was a subtle race between dropping the page lock of the newpage in
+__unmap_and_move() and checking for __is_movable_balloon_page(newpage).
+
+Just after dropping this page lock, virtio-balloon could go ahead and
+deflate the newpage, effectively dequeueing it and clearing PageBalloon,
+in turn making __is_movable_balloon_page(newpage) fail.
+
+This resulted in dropping the reference of the newpage via
+putback_lru_page(newpage) instead of put_page(newpage), leading to
+page->lru getting modified and a !LRU page ending up in the LRU lists.
+With 195a8c43e93d ("virtio-balloon: deflate via a page list")
+backported, one would suddenly get corrupted lists in
+release_pages_balloon():
+
+- WARNING: CPU: 13 PID: 6586 at lib/list_debug.c:59 __list_del_entry+0xa1/0xd0
+- list_del corruption. prev->next should be ffffe253961090a0, but was dead000000000100
+
+Nowadays this race is no longer possible, but it is hidden behind very
+ugly handling of __ClearPageMovable() and __PageMovable().
+
+__ClearPageMovable() will not make __PageMovable() fail, only
+PageMovable().  So the new check (__PageMovable(newpage)) will still
+hold even after newpage was dequeued by virtio-balloon.
+
+If anybody would ever change that special handling, the BUG would be
+introduced again.  So instead, make it explicit and use the information
+of the original isolated page before migration.
+
+This patch can be backported fairly easy to stable kernels (in contrast
+to the refactoring).
+
+Link: http://lkml.kernel.org/r/20190129233217.10747-1-david@redhat.com
+Fixes: d6d86c0a7f8d ("mm/balloon_compaction: redesign ballooned pages management")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Reported-by: Vratislav Bendel <vbendel@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Rafael Aquini <aquini@redhat.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Vratislav Bendel <vbendel@redhat.com>
+Cc: Rafael Aquini <aquini@redhat.com>
+Cc: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16:
+ - Add the is_lru flag variable to unmap_and_move()
+ - Keep using __is_movable_balloon_page() instead of __PageMovable()
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/hexagon/kernel/signal.c | 45 +++++++++++++++---------------------
- 1 file changed, 18 insertions(+), 27 deletions(-)
-
---- a/arch/hexagon/kernel/signal.c
-+++ b/arch/hexagon/kernel/signal.c
-@@ -112,20 +112,20 @@ static int restore_sigcontext(struct pt_
- /*
-  * Setup signal stack frame with siginfo structure
-  */
--static int setup_rt_frame(int signr, struct k_sigaction *ka, siginfo_t *info,
--			  sigset_t *set,  struct pt_regs *regs)
-+static int setup_rt_frame(struct ksignal *ksig, sigset_t *set,
-+			  struct pt_regs *regs)
- {
- 	int err = 0;
- 	struct rt_sigframe __user *frame;
- 	struct hexagon_vdso *vdso = current->mm->context.vdso;
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -927,6 +927,7 @@ static int unmap_and_move(new_page_t get
+ 	int rc = 0;
+ 	int *result = NULL;
+ 	struct page *newpage = get_new_page(page, private, &result);
++	bool is_lru = !__is_movable_balloon_page(page);
  
--	frame = get_sigframe(ka, regs, sizeof(struct rt_sigframe));
-+	frame = get_sigframe(&ksig->ka, regs, sizeof(struct rt_sigframe));
- 
- 	if (!access_ok(VERIFY_WRITE, frame, sizeof(struct rt_sigframe)))
--		goto	sigsegv;
-+		return -EFAULT;
- 
--	if (copy_siginfo_to_user(&frame->info, info))
--		goto	sigsegv;
-+	if (copy_siginfo_to_user(&frame->info, &ksig->info))
-+		return -EFAULT;
- 
- 	/* The on-stack signal trampoline is no longer executed;
- 	 * however, the libgcc signal frame unwinding code checks for
-@@ -137,29 +137,26 @@ static int setup_rt_frame(int signr, str
- 	err |= __copy_to_user(&frame->uc.uc_sigmask, set, sizeof(*set));
- 	err |= __save_altstack(&frame->uc.uc_stack, user_stack_pointer(regs));
- 	if (err)
--		goto sigsegv;
-+		return -EFAULT;
- 
- 	/* Load r0/r1 pair with signumber/siginfo pointer... */
- 	regs->r0100 = ((unsigned long long)((unsigned long)&frame->info) << 32)
--		| (unsigned long long)signr;
-+		| (unsigned long long)ksig->sig;
- 	regs->r02 = (unsigned long) &frame->uc;
- 	regs->r31 = (unsigned long) vdso->rt_signal_trampoline;
- 	pt_psp(regs) = (unsigned long) frame;
--	pt_set_elr(regs, (unsigned long)ka->sa.sa_handler);
-+	pt_set_elr(regs, (unsigned long)ksig->ka.sa.sa_handler);
- 
- 	return 0;
--
--sigsegv:
--	force_sigsegv(signr, current);
--	return -EFAULT;
- }
- 
- /*
-  * Setup invocation of signal handler
-  */
--static void handle_signal(int sig, siginfo_t *info, struct k_sigaction *ka,
--			 struct pt_regs *regs)
-+static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
- {
-+	int ret;
-+
+ 	if (!newpage)
+ 		return -ENOMEM;
+@@ -959,12 +960,15 @@ out:
  	/*
- 	 * If we're handling a signal that aborted a system call,
- 	 * set up the error return value before adding the signal
-@@ -173,7 +170,7 @@ static void handle_signal(int sig, sigin
- 			regs->r00 = -EINTR;
- 			break;
- 		case -ERESTARTSYS:
--			if (!(ka->sa.sa_flags & SA_RESTART)) {
-+			if (!(ksig->ka.sa.sa_flags & SA_RESTART)) {
- 				regs->r00 = -EINTR;
- 				break;
- 			}
-@@ -193,11 +190,9 @@ static void handle_signal(int sig, sigin
- 	 * only set up the rt_frame flavor.
+ 	 * If migration was not successful and there's a freeing callback, use
+ 	 * it.  Otherwise, putback_lru_page() will drop the reference grabbed
+-	 * during isolation.
++	 * during isolation.  Use the old state of the isolated source page to
++	 * determine if we migrated a LRU page. newpage was already unlocked
++	 * and possibly modified by its owner - don't rely on the page
++	 * state.
  	 */
- 	/* If there was an error on setup, no signal was delivered. */
--	if (setup_rt_frame(sig, ka, info, sigmask_to_save(), regs) < 0)
--		return;
-+	ret = setup_rt_frame(ksig, sigmask_to_save(), regs);
- 
--	signal_delivered(sig, info, ka, regs,
--			test_thread_flag(TIF_SINGLESTEP));
-+	signal_setup_done(ret, ksig, test_thread_flag(TIF_SINGLESTEP));
- }
- 
- /*
-@@ -205,17 +200,13 @@ static void handle_signal(int sig, sigin
-  */
- void do_signal(struct pt_regs *regs)
- {
--	struct k_sigaction sigact;
--	siginfo_t info;
--	int signo;
-+	struct ksignal ksig;
- 
- 	if (!user_mode(regs))
- 		return;
- 
--	signo = get_signal_to_deliver(&info, &sigact, regs, NULL);
--
--	if (signo > 0) {
--		handle_signal(signo, &info, &sigact, regs);
-+	if (get_signal(&ksig)) {
-+		handle_signal(&ksig, regs);
- 		return;
- 	}
- 
+ 	if (rc != MIGRATEPAGE_SUCCESS && put_new_page) {
+ 		ClearPageSwapBacked(newpage);
+ 		put_new_page(newpage, private);
+-	} else if (unlikely(__is_movable_balloon_page(newpage))) {
++	} else if (unlikely(!is_lru)) {
+ 		/* drop our reference, page already in the balloon */
+ 		put_page(newpage);
+ 	} else
 
