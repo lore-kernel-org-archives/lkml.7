@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE90BC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175B1C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C422173E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DAD21537
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329446;
-	bh=zu1e/j7AT7gMaH2r+AfMdLWAk6SxJ9ND54rXvFBiNcs=;
+	s=default; t=1556329452;
+	bh=BLQ/jjyTqTPl2imIHcA6gpnBTxVZrB83El6lab04W2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAAamGLG33munZQ4lBGJVceAPGltbqW3a61Fqp2BXmnoUJOtTHYHGkH+kTuDroTt5
-	 +zs3GL9064lsG9p+qbN35MwP2RA3ulYMeTpfDgjDpeiQ4lidVmBRXciwr6Gv/veTFt
-	 o9fA+o4PPbfXDHh19lqBkLu1b72UWmMs8H7HKVuw=
+	b=KXh7wLhI8U6ulvsd+KA4Ijq2llBjNij8W9TNbmOTor5fF2UsXB2GssessQhczbDej
+	 au6Nrm3hKdsrVCEJBLZPV8tzgZ4+Plv+McCu+QB0B08HHAjqj3nx+eBQ2qVecvI4ei
+	 z905gU2bHcKSdECBzDZtedrcz4CGe+rE+Zjwh6xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfD0BoE (ORCPT
+        id S1728950AbfD0BoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:44:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48342 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728904AbfD0BoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:44:00 -0400
+        id S1728519AbfD0BoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:44:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57CB321707;
-        Sat, 27 Apr 2019 01:43:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40909215EA;
+        Sat, 27 Apr 2019 01:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329440;
-        bh=zu1e/j7AT7gMaH2r+AfMdLWAk6SxJ9ND54rXvFBiNcs=;
+        s=default; t=1556329445;
+        bh=BLQ/jjyTqTPl2imIHcA6gpnBTxVZrB83El6lab04W2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=apnmHxiPhoHSbw0eJrpABMJImftmZQE4Xu2TQ9FNoom5iTv+1ZhNHafvsb0ZGJRp9
-         Qr5nlo0m4/yCCKKwBh2ZZxATSQtHd/T9zV/RLSM2kDnb9sqAVM6fn4ceQ0Iv1chWLr
-         4seDr/KPee9bxj4kB2aUFU5uhbSdZ4+YbQ+4i3Bk=
+        b=oLi+CRgo11B9tqCLhU4xJrQqZITpeUC2tP8HG3+5ZcUMmCWe5ySwVtz2EEsuJkuK0
+         8xgGtJYYRpcwkxaaZMOGzTS7kx1rbiLtlV1UIFCJg7pQwvdkfDNz82v1y6uC8g8dLS
+         AO14lgwO9fLZEJbuVJ7lEUvjNA4fgh6CAJJQqDvU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Mack <daniel@zonque.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 3/9] ASoC: cs4270: Set auto-increment bit for register writes
-Date:   Fri, 26 Apr 2019 21:43:48 -0400
-Message-Id: <20190427014356.8940-3-sashal@kernel.org>
+Cc:     Max Filippov <jcmvbkbc@gmail.com>, Sasha Levin <sashal@kernel.org>,
+        linux-xtensa@linux-xtensa.org
+Subject: [PATCH AUTOSEL 4.4 6/9] xtensa: fix initialization of pt_regs::syscall in start_thread
+Date:   Fri, 26 Apr 2019 21:43:51 -0400
+Message-Id: <20190427014356.8940-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014356.8940-1-sashal@kernel.org>
 References: <20190427014356.8940-1-sashal@kernel.org>
@@ -57,37 +57,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Mack <daniel@zonque.org>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
+[ Upstream commit 2663147dc7465cb29040a05cc4286fdd839978b5 ]
 
-The CS4270 does not by default increment the register address on
-consecutive writes. During normal operation it doesn't matter as all
-register accesses are done individually. At resume time after suspend,
-however, the regcache code gathers the biggest possible block of
-registers to sync and sends them one on one go.
+New pt_regs should indicate that there's no syscall, not that there's
+syscall #0. While at it wrap macro body in do/while and parenthesize
+macro arguments.
 
-To fix this, set the INCR bit in all cases.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/cs4270.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/xtensa/include/asm/processor.h | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
-index 3670086b9227..f273533c6653 100644
---- a/sound/soc/codecs/cs4270.c
-+++ b/sound/soc/codecs/cs4270.c
-@@ -641,6 +641,7 @@ static const struct regmap_config cs4270_regmap = {
- 	.reg_defaults =		cs4270_reg_defaults,
- 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
- 	.cache_type =		REGCACHE_RBTREE,
-+	.write_flag_mask =	CS4270_I2C_INCR,
+diff --git a/arch/xtensa/include/asm/processor.h b/arch/xtensa/include/asm/processor.h
+index d3ac00fcb15c..9e3b4e75094d 100644
+--- a/arch/xtensa/include/asm/processor.h
++++ b/arch/xtensa/include/asm/processor.h
+@@ -183,15 +183,18 @@ struct thread_struct {
  
- 	.readable_reg =		cs4270_reg_is_readable,
- 	.volatile_reg =		cs4270_reg_is_volatile,
+ /* Clearing a0 terminates the backtrace. */
+ #define start_thread(regs, new_pc, new_sp) \
+-	memset(regs, 0, sizeof(*regs)); \
+-	regs->pc = new_pc; \
+-	regs->ps = USER_PS_VALUE; \
+-	regs->areg[1] = new_sp; \
+-	regs->areg[0] = 0; \
+-	regs->wmask = 1; \
+-	regs->depc = 0; \
+-	regs->windowbase = 0; \
+-	regs->windowstart = 1;
++	do { \
++		memset((regs), 0, sizeof(*(regs))); \
++		(regs)->pc = (new_pc); \
++		(regs)->ps = USER_PS_VALUE; \
++		(regs)->areg[1] = (new_sp); \
++		(regs)->areg[0] = 0; \
++		(regs)->wmask = 1; \
++		(regs)->depc = 0; \
++		(regs)->windowbase = 0; \
++		(regs)->windowstart = 1; \
++		(regs)->syscall = NO_SYSCALL; \
++	} while (0)
+ 
+ /* Forward declaration */
+ struct task_struct;
 -- 
 2.19.1
 
