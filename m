@@ -2,152 +2,92 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E7CC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FB6C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EFD208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8127B2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:22:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="G5vTyYid"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfD0KH5 (ORCPT
+        id S1726417AbfD0KWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 06:07:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51468 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726503AbfD0KHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 06:07:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D3645ADF2;
-        Sat, 27 Apr 2019 10:07:51 +0000 (UTC)
-From:   Nicolai Stange <nstange@suse.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Nicolai Stange <nstange@suse.de>
-Subject: [PATCH 4/4] selftests/livepatch: add "ftrace a live patched function" test
-Date:   Sat, 27 Apr 2019 12:06:39 +0200
-Message-Id: <20190427100639.15074-5-nstange@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190427100639.15074-1-nstange@suse.de>
-References: <20190427100639.15074-1-nstange@suse.de>
+        Sat, 27 Apr 2019 06:22:08 -0400
+Received: from onstation.org ([52.200.56.107]:52326 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725871AbfD0KWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 06:22:07 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id D55B63E93E;
+        Sat, 27 Apr 2019 10:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1556360527;
+        bh=wr+RyPvYNqIRm6tunmtg3868yYxfiG8UhCrxuizzydY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G5vTyYidclsI7YEfnuTRkHsJdeReakcnhtoqfB9SBEj+m7vg20mLLTqkSwl40wx0l
+         xsJGhRs6ik3AZvlfR6ceLDJSWtIKH4526Uwdz4azyYiHvFYaxyHMFJker+Q3HW+jEB
+         mNhOZlepj8B+xhnBxuhxO4LczdRovsLttmm4E0yw=
+Date:   Sat, 27 Apr 2019 06:22:06 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 0/8] qcom: spmi/ssbi gpio: correct gpio hogging
+Message-ID: <20190427102206.GA296@basecamp>
+References: <20190306005316.12232-1-masneyb@onstation.org>
+ <20190427053034.GH3137@builder>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190427053034.GH3137@builder>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There had been an issue with interactions between tracing and live patching
-due to how x86' CONFIG_DYNAMIC_FTRACE used to handle the breakpoints at the
-updated instructions from its ftrace_int3_handler().
+Hi Bjorn,
 
-More specifically, starting to trace a live patched function caused a short
-period in time where the live patching redirection became ineffective. In
-particular, the guarantees from the consistency model couldn't be held up
-in this situation.
+On Fri, Apr 26, 2019 at 10:30:34PM -0700, Bjorn Andersson wrote:
+> On Tue 05 Mar 16:53 PST 2019, Brian Masney wrote:
+> 
+> > Here are some patches that fix gpio hogging for all boards that use
+> > spmi-gpio and ssbi-gpio. These depend on the following two patches
+> > that were merged in 4.20-rc1:
+> > 
+> > commit 149a96047237 ("pinctrl: qcom: spmi-gpio: fix gpio-hog related
+> > boot issues")
+> > 
+> > commit 7ed078557738 ("pinctrl: qcom: ssbi-gpio: fix gpio-hog related
+> > boot issues")
+> > 
+> > I've already fixed pm8941 for the Nexus 5 and that fix is queued to go
+> > into v5.1 during this merge window:
+> > 
+> > https://lore.kernel.org/lkml/20181101001149.13453-7-masneyb@onstation.org/
+> > 
+> > Andy: You may want to consider submitting these post rc1 as a fix for
+> > v5.1 and possibly marking these for stable.
+> > 
+> > Brian Masney (8):
+> >   ARM: dts: qcom: apq8064: add gpio-ranges
+> >   ARM: dts: qcom: mdm9615: add gpio-ranges
+> >   ARM: dts: qcom: msm8660: add gpio-ranges
+> >   ARM: dts: qcom: pma8084: add gpio-ranges
+> 
+> Looks like I missed the ARM patches before. All 8 picked up now, with
+> Linus' r-b.
 
-Implement a testcase for verifying that a function's live patch replacement
-is kept effective when enabling tracing on it.
+Andy already picked these 8 patches up in his tree.
 
-Reuse the existing 'test_klp_livepatch' live patch module which patches
-cmdline_proc_show(), the handler for /proc/cmdline.
+https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=for-next
 
-Let the testcase in a loop
-- apply this live patch,
-- launch a background shell job enabling tracing on that function
-- while continuously verifying that the contents of /proc/cmdline still
-  match what would be expected when the live patch is applied.
-
-Signed-off-by: Nicolai Stange <nstange@suse.de>
----
- tools/testing/selftests/livepatch/Makefile         |  3 +-
- .../livepatch/test-livepatch-vs-ftrace.sh          | 44 ++++++++++++++++++++++
- 2 files changed, 46 insertions(+), 1 deletion(-)
- create mode 100755 tools/testing/selftests/livepatch/test-livepatch-vs-ftrace.sh
-
-diff --git a/tools/testing/selftests/livepatch/Makefile b/tools/testing/selftests/livepatch/Makefile
-index af4aee79bebb..bfa5353f6d17 100644
---- a/tools/testing/selftests/livepatch/Makefile
-+++ b/tools/testing/selftests/livepatch/Makefile
-@@ -3,6 +3,7 @@
- TEST_GEN_PROGS := \
- 	test-livepatch.sh \
- 	test-callbacks.sh \
--	test-shadow-vars.sh
-+	test-shadow-vars.sh \
-+	test-livepatch-vs-ftrace.sh
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/livepatch/test-livepatch-vs-ftrace.sh b/tools/testing/selftests/livepatch/test-livepatch-vs-ftrace.sh
-new file mode 100755
-index 000000000000..5c982ec56373
---- /dev/null
-+++ b/tools/testing/selftests/livepatch/test-livepatch-vs-ftrace.sh
-@@ -0,0 +1,44 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2019 SUSE Linux GmbH
-+
-+. $(dirname $0)/functions.sh
-+
-+set -e
-+
-+MOD_LIVEPATCH=test_klp_livepatch
-+
-+# TEST: ftrace a live patched function
-+# - load a livepatch that modifies the output from /proc/cmdline
-+# - install a function tracer at the live patched function
-+# - verify that the function is still patched by reading /proc/cmdline
-+# - unload the livepatch and make sure the patch was removed
-+
-+echo -n "TEST: ftrace a live patched function ... "
-+dmesg -C
-+
-+for i in $(seq 1 3); do
-+	load_lp $MOD_LIVEPATCH
-+
-+	( echo cmdline_proc_show > /sys/kernel/debug/tracing/set_ftrace_filter;
-+	  echo function > /sys/kernel/debug/tracing/current_tracer ) &
-+
-+	for j in $(seq 1 200); do
-+		if [[ "$(cat /proc/cmdline)" !=				\
-+			"$MOD_LIVEPATCH: this has been live patched" ]] ; then
-+			echo -e "FAIL\n\n"
-+			die "livepatch kselftest(s) failed"
-+		fi
-+	done
-+
-+	wait %1
-+
-+	echo nop > /sys/kernel/debug/tracing/current_tracer
-+	echo > /sys/kernel/debug/tracing/set_ftrace_filter
-+
-+	disable_lp $MOD_LIVEPATCH
-+	unload_lp $MOD_LIVEPATCH
-+done
-+
-+echo "ok"
-+exit 0
--- 
-2.13.7
-
+Brian
