@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8228C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A15DC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC23208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23AE120673
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbfD0P1P (ORCPT
+        id S1728534AbfD0P1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:27:15 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33206 "EHLO
+        Sat, 27 Apr 2019 11:27:17 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33216 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727391AbfD0PPY (ORCPT
+        by vger.kernel.org with ESMTP id S1727398AbfD0PPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:24 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2t-0000zO-BW; Sat, 27 Apr 2019 16:15:19 +0100
+        id 1hKP2v-00014G-4n; Sat, 27 Apr 2019 16:15:21 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2n-0004e9-U2; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2n-0004dv-Rd; Sat, 27 Apr 2019 16:15:13 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mauro Carvalho Chehab" <mchehab@s-opensource.com>,
-        "Matthias Schwarzott" <zzam@gentoo.org>
+        "Qin Ji" <jiqin.ji@huawei.com>, "Sheng Lan" <lansheng@huawei.com>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric Dumazet" <eric.dumazet@gmail.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.574446912@decadent.org.uk>
+Message-ID: <lsq.1556377989.362875821@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 186/202] media: em28xx: Fix use-after-free when
- disconnecting
+Subject: [PATCH 3.16 183/202] net: netem: fix skb length BUG_ON in
+ __skb_to_sgvec
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,88 +58,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Matthias Schwarzott <zzam@gentoo.org>
+From: Sheng Lan <lansheng@huawei.com>
 
-commit 910b0797fa9e8af09c44a3fa36cb310ba7a7218d upstream.
+commit 5845f706388a4cde0f6b80f9e5d33527e942b7d9 upstream.
 
-Fix bug by moving the i2c_unregister_device calls after deregistration
-of dvb frontend.
+It can be reproduced by following steps:
+1. virtio_net NIC is configured with gso/tso on
+2. configure nginx as http server with an index file bigger than 1M bytes
+3. use tc netem to produce duplicate packets and delay:
+   tc qdisc add dev eth0 root netem delay 100ms 10ms 30% duplicate 90%
+4. continually curl the nginx http server to get index file on client
+5. BUG_ON is seen quickly
 
-The new style i2c drivers already destroys the frontend object at
-i2c_unregister_device time.
-When the dvb frontend is unregistered afterwards it leads to this oops:
+[10258690.371129] kernel BUG at net/core/skbuff.c:4028!
+[10258690.371748] invalid opcode: 0000 [#1] SMP PTI
+[10258690.372094] CPU: 5 PID: 0 Comm: swapper/5 Tainted: G        W         5.0.0-rc6 #2
+[10258690.372094] RSP: 0018:ffffa05797b43da0 EFLAGS: 00010202
+[10258690.372094] RBP: 00000000000005ea R08: 0000000000000000 R09: 00000000000005ea
+[10258690.372094] R10: ffffa0579334d800 R11: 00000000000002c0 R12: 0000000000000002
+[10258690.372094] R13: 0000000000000000 R14: ffffa05793122900 R15: ffffa0578f7cb028
+[10258690.372094] FS:  0000000000000000(0000) GS:ffffa05797b40000(0000) knlGS:0000000000000000
+[10258690.372094] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[10258690.372094] CR2: 00007f1a6dc00868 CR3: 000000001000e000 CR4: 00000000000006e0
+[10258690.372094] Call Trace:
+[10258690.372094]  <IRQ>
+[10258690.372094]  skb_to_sgvec+0x11/0x40
+[10258690.372094]  start_xmit+0x38c/0x520 [virtio_net]
+[10258690.372094]  dev_hard_start_xmit+0x9b/0x200
+[10258690.372094]  sch_direct_xmit+0xff/0x260
+[10258690.372094]  __qdisc_run+0x15e/0x4e0
+[10258690.372094]  net_tx_action+0x137/0x210
+[10258690.372094]  __do_softirq+0xd6/0x2a9
+[10258690.372094]  irq_exit+0xde/0xf0
+[10258690.372094]  smp_apic_timer_interrupt+0x74/0x140
+[10258690.372094]  apic_timer_interrupt+0xf/0x20
+[10258690.372094]  </IRQ>
 
-  [ 6058.866459] BUG: unable to handle kernel NULL pointer dereference at 00000000000001f8
-  [ 6058.866578] IP: dvb_frontend_stop+0x30/0xd0 [dvb_core]
-  [ 6058.866644] PGD 0
-  [ 6058.866646] P4D 0
+In __skb_to_sgvec(), the skb->len is not equal to the sum of the skb's
+linear data size and nonlinear data size, thus BUG_ON triggered.
+Because the skb is cloned and a part of nonlinear data is split off.
 
-  [ 6058.866726] Oops: 0000 [#1] SMP
-  [ 6058.866768] Modules linked in: rc_pinnacle_pctv_hd(O) em28xx_rc(O) si2157(O) si2168(O) em28xx_dvb(O) em28xx(O) si2165(O) a8293(O) tda10071(O) tea5767(O) tuner(O) cx23885(O) tda18271(O) videobuf2_dvb(O) videobuf2_dma_sg(O) m88ds3103(O) tveeprom(O) cx2341x(O) v4l2_common(O) dvb_core(O) rc_core(O) videobuf2_memops(O) videobuf2_v4l2(O) videobuf2_core(O) videodev(O) media(O) bluetooth ecdh_generic ums_realtek uas rtl8192cu rtl_usb rtl8192c_common rtlwifi usb_storage snd_hda_codec_realtek snd_hda_codec_hdmi snd_hda_codec_generic i2c_mux snd_hda_intel snd_hda_codec snd_hwdep x86_pkg_temp_thermal snd_hda_core kvm_intel kvm irqbypass [last unloaded: videobuf2_memops]
-  [ 6058.867497] CPU: 2 PID: 7349 Comm: kworker/2:0 Tainted: G        W  O    4.13.9-gentoo #1
-  [ 6058.867595] Hardware name: MEDION E2050 2391/H81H3-EM2, BIOS H81EM2W08.308 08/25/2014
-  [ 6058.867692] Workqueue: usb_hub_wq hub_event
-  [ 6058.867746] task: ffff88011a15e040 task.stack: ffffc90003074000
-  [ 6058.867825] RIP: 0010:dvb_frontend_stop+0x30/0xd0 [dvb_core]
-  [ 6058.867896] RSP: 0018:ffffc90003077b58 EFLAGS: 00010293
-  [ 6058.867964] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000010040001f
-  [ 6058.868056] RDX: ffff88011a15e040 RSI: ffffea000464e400 RDI: ffff88001cbe3028
-  [ 6058.868150] RBP: ffffc90003077b68 R08: ffff880119390380 R09: 000000010040001f
-  [ 6058.868241] R10: ffffc90003077b18 R11: 000000000001e200 R12: ffff88001cbe3028
-  [ 6058.868330] R13: ffff88001cbe68d0 R14: ffff8800cf734000 R15: ffff8800cf734098
-  [ 6058.868419] FS:  0000000000000000(0000) GS:ffff88011fb00000(0000) knlGS:0000000000000000
-  [ 6058.868511] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [ 6058.868578] CR2: 00000000000001f8 CR3: 00000001113c5000 CR4: 00000000001406e0
-  [ 6058.868662] Call Trace:
-  [ 6058.868705]  dvb_unregister_frontend+0x2a/0x80 [dvb_core]
-  [ 6058.868774]  em28xx_dvb_fini+0x132/0x220 [em28xx_dvb]
-  [ 6058.868840]  em28xx_close_extension+0x34/0x90 [em28xx]
-  [ 6058.868902]  em28xx_usb_disconnect+0x4e/0x70 [em28xx]
-  [ 6058.868968]  usb_unbind_interface+0x6d/0x260
-  [ 6058.869025]  device_release_driver_internal+0x150/0x210
-  [ 6058.869094]  device_release_driver+0xd/0x10
-  [ 6058.869150]  bus_remove_device+0xe4/0x160
-  [ 6058.869204]  device_del+0x1ce/0x2f0
-  [ 6058.869253]  usb_disable_device+0x99/0x270
-  [ 6058.869306]  usb_disconnect+0x8d/0x260
-  [ 6058.869359]  hub_event+0x93d/0x1520
-  [ 6058.869408]  ? dequeue_task_fair+0xae5/0xd20
-  [ 6058.869467]  process_one_work+0x1d9/0x3e0
-  [ 6058.869522]  worker_thread+0x43/0x3e0
-  [ 6058.869576]  kthread+0x104/0x140
-  [ 6058.869602]  ? trace_event_raw_event_workqueue_work+0x80/0x80
-  [ 6058.869640]  ? kthread_create_on_node+0x40/0x40
-  [ 6058.869673]  ret_from_fork+0x22/0x30
-  [ 6058.869698] Code: 54 49 89 fc 53 48 8b 9f 18 03 00 00 0f 1f 44 00 00 41 83 bc 24 04 05 00 00 02 74 0c 41 c7 84 24 04 05 00 00 01 00 00 00 0f ae f0 <48> 8b bb f8 01 00 00 48 85 ff 74 5c e8 df 40 f0 e0 48 8b 93 f8
-  [ 6058.869850] RIP: dvb_frontend_stop+0x30/0xd0 [dvb_core] RSP: ffffc90003077b58
-  [ 6058.869894] CR2: 00000000000001f8
-  [ 6058.875880] ---[ end trace 717eecf7193b3fc6 ]---
+Duplicate packet is cloned in netem_enqueue() and may be delayed
+some time in qdisc. When qdisc len reached the limit and returns
+NET_XMIT_DROP, the skb will be retransmit later in write queue.
+the skb will be fragmented by tso_fragment(), the limit size
+that depends on cwnd and mss decrease, the skb's nonlinear
+data will be split off. The length of the skb cloned by netem
+will not be updated. When we use virtio_net NIC and invoke skb_to_sgvec(),
+the BUG_ON trigger.
 
-Signed-off-by: Matthias Schwarzott <zzam@gentoo.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-[bwh: Backported to 3.16: adjust context]
+To fix it, netem returns NET_XMIT_SUCCESS to upper stack
+when it clones a duplicate packet.
+
+Fixes: 35d889d1 ("sch_netem: fix skb leak in netem_enqueue()")
+Signed-off-by: Sheng Lan <lansheng@huawei.com>
+Reported-by: Qin Ji <jiqin.ji@huawei.com>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: netem_enqueue() may call qdisc_reshape_fail();
+ keep returning NET_XMIT_SUCCESS if that succeeds]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/usb/em28xx/em28xx-dvb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/drivers/media/usb/em28xx/em28xx-dvb.c
-+++ b/drivers/media/usb/em28xx/em28xx-dvb.c
-@@ -1651,6 +1651,8 @@ static int em28xx_dvb_fini(struct em28xx
- 			prevent_sleep(&dvb->fe[1]->ops);
+--- a/net/sched/sch_netem.c
++++ b/net/sched/sch_netem.c
+@@ -444,6 +444,7 @@ static int netem_enqueue(struct sk_buff
+ 	int nb = 0;
+ 	int count = 1;
+ 	int rc = NET_XMIT_SUCCESS;
++	int rc_drop = NET_XMIT_DROP;
+ 
+ 	/* Random duplication */
+ 	if (q->duplicate && q->duplicate >= get_crandom(&q->dup_cor))
+@@ -480,6 +481,7 @@ static int netem_enqueue(struct sk_buff
+ 
+ 		qdisc_enqueue_root(skb2, rootq);
+ 		q->duplicate = dupsave;
++		rc_drop = NET_XMIT_SUCCESS;
  	}
  
-+	em28xx_unregister_dvb(dvb);
-+
- 	/* remove I2C tuner */
- 	if (client) {
- 		module_put(client->dev.driver->owner);
-@@ -1664,7 +1666,6 @@ static int em28xx_dvb_fini(struct em28xx
- 		i2c_unregister_device(client);
+ 	/*
+@@ -492,7 +494,7 @@ static int netem_enqueue(struct sk_buff
+ 		if (skb_is_gso(skb)) {
+ 			segs = netem_segment(skb, sch);
+ 			if (!segs)
+-				return NET_XMIT_DROP;
++				return rc_drop;
+ 		} else {
+ 			segs = skb;
+ 		}
+@@ -514,8 +516,10 @@ static int netem_enqueue(struct sk_buff
+ 	if (unlikely(skb_queue_len(&sch->q) >= sch->limit)) {
+ 		/* qdisc_reshape_fail() can't handle segmented skb */
+ 		if (segs)
+-			return qdisc_drop_all(skb, sch);
+-		return qdisc_reshape_fail(skb, sch);
++			qdisc_drop_all(skb, sch);
++		else if (qdisc_reshape_fail(skb, sch) == NET_XMIT_SUCCESS)
++			return NET_XMIT_SUCCESS;
++		return rc_drop;
  	}
  
--	em28xx_unregister_dvb(dvb);
- 	kfree(dvb);
- 	dev->dvb = NULL;
- 	kref_put(&dev->ref, em28xx_free_device);
+ 	sch->qstats.backlog += qdisc_pkt_len(skb);
 
