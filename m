@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE75C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC19C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355F521537
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15DF208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329611;
-	bh=PK+mpmAm7MUkBeFcoMfzY206FIHmnQKT5jAUS2yrLkI=;
+	s=default; t=1556329617;
+	bh=WimkGzH+1AhxknuuK3k4QLKtJ3Bk+SAe68Ufp4Rr2R8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=flsvOfrEXeICEfPWiktfu1lL0XNsgMGoX5gurwOCpUSP8+PWoKSLrxkvCPZhbmG+Y
-	 n+p6XSJVHqfKkBtVZggvjvLlt3zjYbFjDm2pXmobm7rm5b0YoFga9Ua/GDfAUv6ajM
-	 VA3mJbODWu5g06nSD90M8Si0f49wkB6Gg6QYzctY=
+	b=1apWcnHzy2L+BHZtbQBpxPWuMKBT14n30YTDR/+3h1x9tuXqkhQDodgxSZCB69yD5
+	 lnZbtX5YPPwLoBJm9aY08rxBz4U0kgQDCO0wncCn1sRxHFuQXqZ1643rH6rf8wRiRg
+	 zKw/PRsj4kuec1/E+pIb0GJvPcPQspI3bZNQCdWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfD0Bqt (ORCPT
+        id S1728862AbfD0Bq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47494 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728749AbfD0BnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:19 -0400
+        id S1728160AbfD0BnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D90912168B;
-        Sat, 27 Apr 2019 01:43:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75EFC216C4;
+        Sat, 27 Apr 2019 01:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329398;
-        bh=PK+mpmAm7MUkBeFcoMfzY206FIHmnQKT5jAUS2yrLkI=;
+        s=default; t=1556329396;
+        bh=WimkGzH+1AhxknuuK3k4QLKtJ3Bk+SAe68Ufp4Rr2R8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cnp4kITlg75W5ifoCgKzSY4YjP4ampfIGxKYeC7MB7arWFtqE0LxOl6mFOluDnilg
-         IUxBo3Z8cg+S9/NvbK1u1lHt/ln3uFVWlGYRNqnYrAeRnEE1FpBcMlkwM0IJr4FSgb
-         bo6WLW3a6RFPfQ3vZAWoCOwbuXbBXawxE+Dm3b3Y=
+        b=tRVJJbLCCpkHhI9mbP931v/BME+/pa7Xr0u3EAJ3nf4pKjNvmjAzl3+Lt3/PGtYm5
+         bsHtC6y6ft47DJ363j1gUW2YXp2HCzhwqaHfRQYWvh/hzFXyxonzgZDWuZPY+RdhXL
+         xektkLFulM4dbmoXzGfPgQj5jEIAMQh+PxhMe3nc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.14 30/32] iommu/amd: Set exclusion range correctly
-Date:   Fri, 26 Apr 2019 21:42:21 -0400
-Message-Id: <20190427014224.8274-30-sashal@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?David=20M=C3=BCller?= <dave.mueller@gmx.ch>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 28/32] platform/x86: pmc_atom: Drop __initconst on dmi table
+Date:   Fri, 26 Apr 2019 21:42:19 -0400
+Message-Id: <20190427014224.8274-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
 References: <20190427014224.8274-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,38 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit 3c677d206210f53a4be972211066c0f1cd47fe12 ]
+[ Upstream commit b995dcca7cf12f208cfd95fd9d5768dca7cccec7 ]
 
-The exlcusion range limit register needs to contain the
-base-address of the last page that is part of the range, as
-bits 0-11 of this register are treated as 0xfff by the
-hardware for comparisons.
+It's used by probe and that isn't an init function. Drop this so that we
+don't get a section mismatch.
 
-So correctly set the exclusion range in the hardware to the
-last page which is _in_ the range.
-
-Fixes: b2026aa2dce44 ('x86, AMD IOMMU: add functions for programming IOMMU MMIO space')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: David Müller <dave.mueller@gmx.ch>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Fixes: 7c2e07130090 ("clk: x86: Add system specific quirk to mark clocks as critical")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 2 +-
+ drivers/platform/x86/pmc_atom.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index b97984a5ddad..9b3d8fd5f7c1 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -355,7 +355,7 @@ static void iommu_write_l2(struct amd_iommu *iommu, u8 address, u32 val)
- static void iommu_set_exclusion_range(struct amd_iommu *iommu)
- {
- 	u64 start = iommu->exclusion_start & PAGE_MASK;
--	u64 limit = (start + iommu->exclusion_length) & PAGE_MASK;
-+	u64 limit = (start + iommu->exclusion_length - 1) & PAGE_MASK;
- 	u64 entry;
- 
- 	if (!iommu->exclusion_start)
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index 75f69cf0d45f..50f2a125cd2c 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -426,7 +426,7 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+  * Some systems need one or more of their pmc_plt_clks to be
+  * marked as critical.
+  */
+-static const struct dmi_system_id critclk_systems[] __initconst = {
++static const struct dmi_system_id critclk_systems[] = {
+ 	{
+ 		.ident = "MPL CEC1x",
+ 		.matches = {
 -- 
 2.19.1
 
