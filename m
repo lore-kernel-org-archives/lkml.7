@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE67C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B8BC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC4E206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E813C206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbfD0P32 (ORCPT
+        id S1728605AbfD0P31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:29:28 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32892 "EHLO
+        Sat, 27 Apr 2019 11:29:27 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32940 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727273AbfD0PPS (ORCPT
+        by vger.kernel.org with ESMTP id S1726530AbfD0PPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:18 -0400
+        Sat, 27 Apr 2019 11:15:19 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2p-000144-Vx; Sat, 27 Apr 2019 16:15:16 +0100
+        id 1hKP2p-00014H-Mg; Sat, 27 Apr 2019 16:15:15 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2n-0004cx-5Y; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2n-0004d2-73; Sat, 27 Apr 2019 16:15:13 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "James Morris" <james.morris@microsoft.com>,
-        "David Howells" <dhowells@redhat.com>,
-        "Eric Biggers" <ebiggers@google.com>,
-        syzbot+ec24e95ea483de0a24da@syzkaller.appspotmail.com
+        "David S. Miller" <davem@davemloft.net>,
+        "YueHaibing" <yuehaibing@huawei.com>,
+        "Andrew Lunn" <andrew@lunn.ch>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.671177784@decadent.org.uk>
+Message-ID: <lsq.1556377989.472088206@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 171/202] KEYS: always initialize keyring_index_key::desc_len
+Subject: [PATCH 3.16 172/202] mdio_bus: Fix use-after-free on
+ device_register fails
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,102 +57,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit ede0fa98a900e657d1fcd80b50920efc896c1a4c upstream.
+commit 6ff7b060535e87c2ae14dd8548512abfdda528fb upstream.
 
-syzbot hit the 'BUG_ON(index_key->desc_len == 0);' in __key_link_begin()
-called from construct_alloc_key() during sys_request_key(), because the
-length of the key description was never calculated.
+KASAN has found use-after-free in fixed_mdio_bus_init,
+commit 0c692d07842a ("drivers/net/phy/mdio_bus.c: call
+put_device on device_register() failure") call put_device()
+while device_register() fails,give up the last reference
+to the device and allow mdiobus_release to be executed
+,kfreeing the bus. However in most drives, mdiobus_free
+be called to free the bus while mdiobus_register fails.
+use-after-free occurs when access bus again, this patch
+revert it to let mdiobus_free free the bus.
 
-The problem is that we rely on ->desc_len being initialized by
-search_process_keyrings(), specifically by search_nested_keyrings().
-But, if the process isn't subscribed to any keyrings that never happens.
+KASAN report details as below:
 
-Fix it by always initializing keyring_index_key::desc_len as soon as the
-description is set, like we already do in some places.
+BUG: KASAN: use-after-free in mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
+Read of size 4 at addr ffff8881dc824d78 by task syz-executor.0/3524
 
-The following program reproduces the BUG_ON() when it's run as root and
-no session keyring has been installed.  If it doesn't work, try removing
-pam_keyinit.so from /etc/pam.d/login and rebooting.
+CPU: 1 PID: 3524 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
+ fixed_mdio_bus_init+0x283/0x1000 [fixed_phy]
+ ? 0xffffffffc0e40000
+ ? 0xffffffffc0e40000
+ ? 0xffffffffc0e40000
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6215c19c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
+RBP: 00007f6215c19c70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6215c1a6bc
+R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
 
-    #include <stdlib.h>
-    #include <unistd.h>
-    #include <keyutils.h>
+Allocated by task 3524:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ mdiobus_alloc_size+0x54/0x1b0 drivers/net/phy/mdio_bus.c:143
+ fixed_mdio_bus_init+0x163/0x1000 [fixed_phy]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-    int main(void)
-    {
-            int id = add_key("keyring", "syz", NULL, 0, KEY_SPEC_USER_KEYRING);
+Freed by task 3524:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
+ slab_free_hook mm/slub.c:1409 [inline]
+ slab_free_freelist_hook mm/slub.c:1436 [inline]
+ slab_free mm/slub.c:2986 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3938
+ device_release+0x78/0x200 drivers/base/core.c:919
+ kobject_cleanup lib/kobject.c:662 [inline]
+ kobject_release lib/kobject.c:691 [inline]
+ kref_put include/linux/kref.h:67 [inline]
+ kobject_put+0x146/0x240 lib/kobject.c:708
+ put_device+0x1c/0x30 drivers/base/core.c:2060
+ __mdiobus_register+0x483/0x560 drivers/net/phy/mdio_bus.c:382
+ fixed_mdio_bus_init+0x26b/0x1000 [fixed_phy]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-            keyctl_setperm(id, KEY_OTH_WRITE);
-            setreuid(5000, 5000);
-            request_key("user", "desc", "", id);
-    }
+The buggy address belongs to the object at ffff8881dc824c80
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 248 bytes inside of
+ 2048-byte region [ffff8881dc824c80, ffff8881dc825480)
+The buggy address belongs to the page:
+page:ffffea0007720800 count:1 mapcount:0 mapping:ffff8881f6c02800 index:0x0 compound_mapcount: 0
+flags: 0x2fffc0000010200(slab|head)
+raw: 02fffc0000010200 0000000000000000 0000000500000001 ffff8881f6c02800
+raw: 0000000000000000 00000000800f000f 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
-Reported-by: syzbot+ec24e95ea483de0a24da@syzkaller.appspotmail.com
-Fixes: b2a4df200d57 ("KEYS: Expand the capacity of a keyring")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: James Morris <james.morris@microsoft.com>
+Memory state around the buggy address:
+ ffff8881dc824c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881dc824c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881dc824d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                                ^
+ ffff8881dc824d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881dc824e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+Fixes: 0c692d07842a ("drivers/net/phy/mdio_bus.c: call put_device on device_register() failure")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- security/keys/keyring.c          | 4 +---
- security/keys/proc.c             | 3 +--
- security/keys/request_key.c      | 1 +
- security/keys/request_key_auth.c | 2 +-
- 4 files changed, 4 insertions(+), 6 deletions(-)
+ drivers/net/phy/mdio_bus.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/security/keys/keyring.c
-+++ b/security/keys/keyring.c
-@@ -604,9 +604,6 @@ static bool search_nested_keyrings(struc
- 	       ctx->index_key.type->name,
- 	       ctx->index_key.description);
- 
--	if (ctx->index_key.description)
--		ctx->index_key.desc_len = strlen(ctx->index_key.description);
--
- 	/* Check to see if this top-level keyring is what we are looking for
- 	 * and whether it is valid or not.
- 	 */
-@@ -870,6 +867,7 @@ key_ref_t keyring_search(key_ref_t keyri
- 	struct keyring_search_context ctx = {
- 		.index_key.type		= type,
- 		.index_key.description	= description,
-+		.index_key.desc_len	= strlen(description),
- 		.cred			= current_cred(),
- 		.match			= type->match,
- 		.match_data		= description,
---- a/security/keys/proc.c
-+++ b/security/keys/proc.c
-@@ -191,8 +191,7 @@ static int proc_keys_show(struct seq_fil
- 	int rc;
- 
- 	struct keyring_search_context ctx = {
--		.index_key.type		= key->type,
--		.index_key.description	= key->description,
-+		.index_key		= key->index_key,
- 		.cred			= m->file->f_cred,
- 		.match			= lookup_user_key_possessed,
- 		.match_data		= key,
---- a/security/keys/request_key.c
-+++ b/security/keys/request_key.c
-@@ -561,6 +561,7 @@ struct key *request_key_and_link(struct
- 	struct keyring_search_context ctx = {
- 		.index_key.type		= type,
- 		.index_key.description	= description,
-+		.index_key.desc_len	= strlen(description),
- 		.cred			= current_cred(),
- 		.match			= type->match,
- 		.match_data		= description,
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -233,7 +233,7 @@ struct key *key_get_instantiation_authke
- 	struct key *authkey;
- 	key_ref_t authkey_ref;
- 
--	sprintf(description, "%x", target_id);
-+	ctx.index_key.desc_len = sprintf(description, "%x", target_id);
- 
- 	authkey_ref = search_process_keyrings(&ctx);
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -261,7 +261,6 @@ int mdiobus_register(struct mii_bus *bus
+ 	err = device_register(&bus->dev);
+ 	if (err) {
+ 		pr_err("mii_bus %s failed to register\n", bus->id);
+-		put_device(&bus->dev);
+ 		return -EINVAL;
+ 	}
  
 
