@@ -2,102 +2,115 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763B5C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59A7C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2902053B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5AA208C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556371939;
-	bh=F/Ri3rbRNbdBS8CeJ3YkqZ5ALE9RaYzYV4i/TX+VbhY=;
+	s=default; t=1556372329;
+	bh=CQcLLq5g0BGJbtU32SVU6f5FrjJ1oFNOfzb5TjWhoQw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sH/LqrSXNZIEdaGStlx1hyrs0tHsftJE/gA5UdmEUqyp0oqjrOW2NQKqBvaX6gExM
-	 b2DdqC2RTDGcb7dB7HY5oSpTPJUf8emEsuJX3fFbfzG/xOtyAz88touUASYhB2GOuZ
-	 x0zzcsJdAEEWqtvxw73ueHG5crMJZaWKqNGCAri8=
+	b=qaujOp7xGp8AEGHXi5jF8CW7z+ikGbheAeY2MpMG22LSD+iAobkZyQ8nFyRH8JA2O
+	 wor+CIC94hQgTlsuQ2oFQpvG/mxltkzdPYFYnWI0ASTPCb3rDf1/HdmiqUDsQeNYDP
+	 4Ebfovp7C3HnxLMjqD5rIaNvsH46ro5Eof0YST/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfD0NcS (ORCPT
+        id S1726377AbfD0Nis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 09:32:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36986 "EHLO mail.kernel.org"
+        Sat, 27 Apr 2019 09:38:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725902AbfD0NcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 09:32:18 -0400
+        id S1725902AbfD0Nir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 09:38:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E433F2087F;
-        Sat, 27 Apr 2019 13:32:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 690622087C;
+        Sat, 27 Apr 2019 13:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556371937;
-        bh=F/Ri3rbRNbdBS8CeJ3YkqZ5ALE9RaYzYV4i/TX+VbhY=;
+        s=default; t=1556372326;
+        bh=CQcLLq5g0BGJbtU32SVU6f5FrjJ1oFNOfzb5TjWhoQw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nexBWa1sKOnsIU/+eE/Arr0X7crav6ldqrhFgjM7W8ztYCtpv+iiTXftfvQTPlJG3
-         Z8PjosvAL9baHK8g4HVoOep4odQGPEL6uE1Db+W4FngO8Erm7fuwx70sU6Qt1CWHRh
-         QbmdhCLabzZBpyFVy53w/oRoRA4SbXzVCZ0vDS90=
-Date:   Sat, 27 Apr 2019 15:32:15 +0200
+        b=VrSZOaxD3J8Y9bd0i/Ao20cxuGAUkc5xtteQQaQTLR0SqpT+eBj9scMUlWJ7z30Fd
+         Cr6LcQyukHusNdWX794WdFdVxxZ/ehgIxOqu8Qt63U4KpulEeRq6zOSISMhciNF/g6
+         kJScp46Ejq962tIRsV7hJzVQJWveers8pjTvNflI=
+Date:   Sat, 27 Apr 2019 15:38:44 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, andrew@aj.id.au,
-        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH 10/41] drivers: tty: serial: sb1250-duart: fix missing
- parentheses
-Message-ID: <20190427133215.GD11368@kroah.com>
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-11-git-send-email-info@metux.net>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        dietmar.eggemann@arm.com, Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>, mhiramat@kernel.org,
+        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>, yhs@fb.com
+Subject: Re: [PATCH v7 resend 1/2] Provide in-kernel headers to make
+ extending kernel easier
+Message-ID: <20190427133844.GA29366@kroah.com>
+References: <20190426190430.172543-1-joel@joelfernandes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556369542-13247-11-git-send-email-info@metux.net>
+In-Reply-To: <20190426190430.172543-1-joel@joelfernandes.org>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 02:51:51PM +0200, Enrico Weigelt, metux IT consult wrote:
-> Fix checkpatch warning:
+On Fri, Apr 26, 2019 at 03:04:29PM -0400, Joel Fernandes (Google) wrote:
+> Introduce in-kernel headers which are made available as an archive
+> through proc (/proc/kheaders.tar.xz file). This archive makes it
+> possible to run eBPF and other tracing programs that need to extend the
+> kernel for tracing purposes without any dependency on the file system
+> having headers.
 > 
->     ERROR: Macros with complex values should be enclosed in parentheses
->     #911: FILE: drivers/tty/serial/sb1250-duart.c:911:
->     +#define SERIAL_SB1250_DUART_CONSOLE	&sbd_console
+> A github PR is sent for the corresponding BCC patch at:
+> https://github.com/iovisor/bcc/pull/2312
 > 
-> Signed-off-by: Enrico Weigelt <info@metux.net>
-> ---
->  drivers/tty/serial/sb1250-duart.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Android and embedded systems, it is common to switch kernels but not
+> have kernel headers available on the file system. Further once a
+> different kernel is booted, any headers stored on the file system will
+> no longer be useful. This is an issue even well known to distros.
+> By storing the headers as a compressed archive within the kernel, we can
+> avoid these issues that have been a hindrance for a long time.
 > 
-> diff --git a/drivers/tty/serial/sb1250-duart.c b/drivers/tty/serial/sb1250-duart.c
-> index 1184226..ec74f09 100644
-> --- a/drivers/tty/serial/sb1250-duart.c
-> +++ b/drivers/tty/serial/sb1250-duart.c
-> @@ -908,7 +908,7 @@ static int __init sbd_serial_console_init(void)
->  
->  console_initcall(sbd_serial_console_init);
->  
-> -#define SERIAL_SB1250_DUART_CONSOLE	&sbd_console
-> +#define SERIAL_SB1250_DUART_CONSOLE	(&sbd_console)
+> The best way to use this feature is by building it in. Several users
+> have a need for this, when they switch debug kernels, they do not want to
+> update the filesystem or worry about it where to store the headers on
+> it. However, the feature is also buildable as a module in case the user
+> desires it not being part of the kernel image. This makes it possible to
+> load and unload the headers from memory on demand. A tracing program can
+> load the module, do its operations, and then unload the module to save
+> kernel memory. The total memory needed is 3.3MB.
+> 
+> By having the archive available at a fixed location independent of
+> filesystem dependencies and conventions, all debugging tools can
+> directly refer to the fixed location for the archive, without concerning
+> with where the headers on a typical filesystem which significantly
+> simplifies tooling that needs kernel headers.
+> 
+> The code to read the headers is based on /proc/config.gz code and uses
+> the same technique to embed the headers.
+> 
+> Other approaches were discussed such as having an in-memory mountable
+> filesystem, but that has drawbacks such as requiring an in-kernel xz
+> decompressor which we don't have today, and requiring usage of 42 MB of
+> kernel memory to host the decompressed headers at anytime. Also this
+> approach is simpler than such approaches.
+> 
+> Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-No, that's foolish.
-
-checkpatch is a hint, it's not always right.
-
-Also, checkpatch cleanups for really old drivers is not generally a good
-idea, especially if you do not have the hardware for them.  Please don't
-cause unneeded churn for this type of thing in this subsystem, unless
-you have the hardware.
-
-thanks,
-
-greg k-h
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
