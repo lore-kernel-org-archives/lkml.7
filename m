@@ -2,717 +2,140 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2584FC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4C5C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C30E42087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556387513;
-	bh=FqyjHNvTTjZOwNck0fo487P92rezcgzLdjCOT/kwrVE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oIB/HcVACxWkLeRmYBNC+MJo5wfM5hnO1gWbg/mNXVbSEGZpOKVlbOjQnbPjLvbGf
-	 t7EdlKjSfoxAFe9qITtnQLICFdVUGdXsdtfxVSu12EpF+rA1UWpQP+ZN7Qyt3OnQNh
-	 FaKQTT4nNMSt/8OrlxOQ6C4Aq6FRo2ihu74fzHlc=
+	by mail.kernel.org (Postfix) with ESMTP id ECABE2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfD0RvY (ORCPT
+        id S1726377AbfD0RyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 13:51:24 -0400
-Received: from casper.infradead.org ([85.118.1.10]:50012 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD0RvY (ORCPT
+        Sat, 27 Apr 2019 13:54:14 -0400
+Received: from gateway30.websitewelcome.com ([192.185.196.18]:46303 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725942AbfD0RyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 13:51:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4izOtUzDFCqNwjzrPQy2eYKLSD5UiegFTem9ck1fyxs=; b=qxFPKQ0jwVk9wmCF/PuanPAf9n
-        s+84rR84f9IQ2YlmynBkC0Hpsvvw7/vyPGG7OMya+ogzVh/u2XTfASIrBqjEro5xggE2u6hyudiMH
-        kx05qCR7h6jP1Gfatok/5OiYZg7rYmZ32RCKGYzzrCJLe21jGhjElHsbnDJFfl7XQ5Hs6LX/I4Uxl
-        YQP9R1OgXA1Wap03bV5GsSLAZjIlXUuOggnz5kD6bG5x6xiZI/4EsHA50yNXWgn9pWTlK1ObJeE15
-        RfntONSZjHdAUuGQY3m3gkb2V/W5YvKG4DRUWNfx7K5bhp4V+DF0mwdhkyWTaHRdjWLsBdTM9i6/R
-        D6qm/QCg==;
-Received: from 177.17.250.151.dynamic.adsl.gvt.net.br ([177.17.250.151] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hKRTm-0002ud-3k; Sat, 27 Apr 2019 17:51:15 +0000
-Date:   Sat, 27 Apr 2019 14:51:09 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/27] Documentation: x86: convert pat.txt to reST
-Message-ID: <20190427145109.1b2f93d9@coco.lan>
-In-Reply-To: <20190426153150.21228-12-changbin.du@gmail.com>
-References: <20190426153150.21228-1-changbin.du@gmail.com>
-        <20190426153150.21228-12-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 27 Apr 2019 13:54:14 -0400
+X-Greylist: delayed 1363 seconds by postgrey-1.27 at vger.kernel.org; Sat, 27 Apr 2019 13:54:13 EDT
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 6A2687647
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 12:31:29 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id KRAfhCDiS2qH7KRAfhW3pm; Sat, 27 Apr 2019 12:31:29 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.54.97] (port=57058 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hKRAf-000mmk-2E; Sat, 27 Apr 2019 12:31:29 -0500
+Subject: Re: [PATCH AUTOSEL 5.0 03/79] ASoC: ab8500: Mark expected switch
+ fall-through
+To:     Mark Brown <broonie@kernel.org>, Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20190427013838.6596-1-sashal@kernel.org>
+ <20190427013838.6596-3-sashal@kernel.org>
+ <20190427171410.GE14916@sirena.org.uk>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <90e92595-1609-6c3b-b1d7-ca6a20a81f79@embeddedor.com>
+Date:   Sat, 27 Apr 2019 12:31:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190427171410.GE14916@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.54.97
+X-Source-L: No
+X-Exim-ID: 1hKRAf-000mmk-2E
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.54.97]:57058
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 26 Apr 2019 23:31:34 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
 
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
+
+On 4/27/19 12:14 PM, Mark Brown wrote:
+> On Fri, Apr 26, 2019 at 09:37:22PM -0400, Sasha Levin wrote:
+>> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+>>
+>> [ Upstream commit 102cefc8e879b707be0024fdc7bce1deeb359a5f ]
+>>
+>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>> cases where we are expecting to fall through.
 > 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  Documentation/x86/index.rst |   1 +
->  Documentation/x86/pat.rst   | 235 ++++++++++++++++++++++++++++++++++++
->  Documentation/x86/pat.txt   | 230 -----------------------------------
->  3 files changed, 236 insertions(+), 230 deletions(-)
->  create mode 100644 Documentation/x86/pat.rst
->  delete mode 100644 Documentation/x86/pat.txt
+> Are we *realy* going to enable -Wimplicit-fallthrough in stable kernels
+> and both backport all the fixes and add new fixes for the issues which
+> don't have backportable fixes?
 > 
-> diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-> index d805962a7238..e06b5c0ea883 100644
-> --- a/Documentation/x86/index.rst
-> +++ b/Documentation/x86/index.rst
-> @@ -17,3 +17,4 @@ Linux x86 Support
->     zero-page
->     tlb
->     mtrr
-> +   pat
-> diff --git a/Documentation/x86/pat.rst b/Documentation/x86/pat.rst
-> new file mode 100644
-> index 000000000000..bf09cab2e0bf
-> --- /dev/null
-> +++ b/Documentation/x86/pat.rst
-> @@ -0,0 +1,235 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +==========================
-> +PAT (Page Attribute Table)
-> +==========================
-> +
-> +x86 Page Attribute Table (PAT) allows for setting the memory attribute at the
-> +page level granularity. PAT is complementary to the MTRR settings which allows
-> +for setting of memory types over physical address ranges. However, PAT is
-> +more flexible than MTRR due to its capability to set attributes at page level
-> +and also due to the fact that there are no hardware limitations on number of
-> +such attribute settings allowed. Added flexibility comes with guidelines for
-> +not having memory type aliasing for the same physical memory with multiple
-> +virtual addresses.
-> +
-> +PAT allows for different types of memory attributes. The most commonly used
-> +ones that will be supported at this time are Write-back, Uncached,
-> +Write-combined, Write-through and Uncached Minus.
 
-I would rewrite the above to:
+I don't think so.
 
-PAT allows for different types of memory attributes. The most commonly used
-ones that will be supported at this time are:
+There are hundreds of these patches in mainline, and I think this is
+the first time I see one of them being backported.
 
-===  ==============
-WB   Write-back
-UC   Uncached
-WC   Write-combined
-WT   Write-through
-UC-  Uncached Minus
-===  ==============
-
-As, at the table below, it uses WB, UC, WC, ... instead the full name. By
-doing this, it makes easier for readers when looking at the next table.
-
-> +
-> +
-> +PAT APIs
-> +========
-> +
-> +There are many different APIs in the kernel that allows setting of memory
-> +attributes at the page level. In order to avoid aliasing, these interfaces
-> +should be used thoughtfully. Below is a table of interfaces available,
-> +their intended usage and their memory attribute relationships. Internally,
-> +these APIs use a reserve_memtype()/free_memtype() interface on the physical
-> +address range to avoid any aliasing.
-> +::
-> +
-> +  -------------------------------------------------------------------
-> +  API                    |    RAM   |  ACPI,...  |  Reserved/Holes  |
-> +  -----------------------|----------|------------|------------------|
-> +                         |          |            |                  |
-> +  ioremap                |    --    |    UC-     |       UC-        |
-> +                         |          |            |                  |
-> +  ioremap_cache          |    --    |    WB      |       WB         |
-> +                         |          |            |                  |
-> +  ioremap_uc             |    --    |    UC      |       UC         |
-> +                         |          |            |                  |
-> +  ioremap_nocache        |    --    |    UC-     |       UC-        |
-> +                         |          |            |                  |
-> +  ioremap_wc             |    --    |    --      |       WC         |
-> +                         |          |            |                  |
-> +  ioremap_wt             |    --    |    --      |       WT         |
-> +                         |          |            |                  |
-> +  set_memory_uc          |    UC-   |    --      |       --         |
-> +  set_memory_wb          |          |            |                  |
-> +                         |          |            |                  |
-> +  set_memory_wc          |    WC    |    --      |       --         |
-> +  set_memory_wb          |          |            |                  |
-> +                         |          |            |                  |
-> +  set_memory_wt          |    WT    |    --      |       --         |
-> +  set_memory_wb          |          |            |                  |
-> +                         |          |            |                  |
-> +  pci sysfs resource     |    --    |    --      |       UC-        |
-> +                         |          |            |                  |
-> +  pci sysfs resource_wc  |    --    |    --      |       WC         |
-> +  is IORESOURCE_PREFETCH |          |            |                  |
-> +                         |          |            |                  |
-> +  pci proc               |    --    |    --      |       UC-        |
-> +  !PCIIOC_WRITE_COMBINE  |          |            |                  |
-> +                         |          |            |                  |
-> +  pci proc               |    --    |    --      |       WC         |
-> +  PCIIOC_WRITE_COMBINE   |          |            |                  |
-> +                         |          |            |                  |
-> +  /dev/mem               |    --    |  WB/WC/UC- |    WB/WC/UC-     |
-> +  read-write             |          |            |                  |
-> +                         |          |            |                  |
-> +  /dev/mem               |    --    |    UC-     |       UC-        |
-> +  mmap SYNC flag         |          |            |                  |
-> +                         |          |            |                  |
-> +  /dev/mem               |    --    |  WB/WC/UC- |    WB/WC/UC-     |
-> +  mmap !SYNC flag        |          |(from exist-|  (from exist-    |
-> +  and                    |          |  ing alias)|    ing alias)    |
-> +  any alias to this area |          |            |                  |
-> +                         |          |            |                  |
-> +  /dev/mem               |    --    |    WB      |       WB         |
-> +  mmap !SYNC flag        |          |            |                  |
-> +  no alias to this area  |          |            |                  |
-> +  and                    |          |            |                  |
-> +  MTRR says WB           |          |            |                  |
-> +                         |          |            |                  |
-> +  /dev/mem               |    --    |    --      |       UC-        |
-> +  mmap !SYNC flag        |          |            |                  |
-> +  no alias to this area  |          |            |                  |
-> +  and                    |          |            |                  |
-> +  MTRR says !WB          |          |            |                  |
-> +                         |          |            |                  |
-> +  -------------------------------------------------------------------
-
-This is already a table. I would keep it like that, just replacing it to
-the proper ReST markups, e. g.:
-
-+------------------------+----------+--------------+------------------+
-| API                    |    RAM   |  ACPI,...    |  Reserved/Holes  |
-+------------------------+----------+--------------+------------------+
-| ioremap                |    --    |    UC-       |       UC-        |
-+------------------------+----------+--------------+------------------+
-| ioremap_cache          |    --    |    WB        |       WB         |
-+------------------------+----------+--------------+------------------+
-| ioremap_uc             |    --    |    UC        |       UC         |
-+------------------------+----------+--------------+------------------+
-| ioremap_nocache        |    --    |    UC-       |       UC-        |
-+------------------------+----------+--------------+------------------+
-| ioremap_wc             |    --    |    --        |       WC         |
-+------------------------+----------+--------------+------------------+
-| ioremap_wt             |    --    |    --        |       WT         |
-+------------------------+----------+--------------+------------------+
-| set_memory_uc,         |    UC-   |    --        |       --         |
-| set_memory_wb          |          |              |                  |
-+------------------------+----------+--------------+------------------+
-| set_memory_wc,         |    WC    |    --        |       --         |
-| set_memory_wb          |          |              |                  |
-+------------------------+----------+--------------+------------------+
-| set_memory_wt,         |    WT    |    --        |       --         |
-| set_memory_wb          |          |              |                  |
-+------------------------+----------+--------------+------------------+
-| pci sysfs resource     |    --    |    --        |       UC-        |
-+------------------------+----------+--------------+------------------+
-| pci sysfs resource_wc  |    --    |    --        |       WC         |
-| is IORESOURCE_PREFETCH |          |              |                  |
-+------------------------+----------+--------------+------------------+
-| pci proc               |    --    |    --        |       UC-        |
-| !PCIIOC_WRITE_COMBINE  |          |              |                  |
-+------------------------+----------+--------------+------------------+
-| pci proc               |    --    |    --        |       WC         |
-| PCIIOC_WRITE_COMBINE   |          |              |                  |
-+------------------------+----------+--------------+------------------+
-| /dev/mem               |    --    |   WB/WC/UC-  |    WB/WC/UC-     |
-| read-write             |          |              |                  |
-+------------------------+----------+--------------+------------------+
-| /dev/mem               |    --    |    UC-       |       UC-        |
-| mmap SYNC flag         |          |              |                  |
-+------------------------+----------+--------------+------------------+
-| /dev/mem               |    --    |   WB/WC/UC-  |  WB/WC/UC-       |
-| mmap !SYNC flag        |          |              |                  |
-| and                    |          |(from existing|  (from existing  |
-| any alias to this area |          |alias)        |  alias)          |
-+------------------------+----------+--------------+------------------+
-| /dev/mem               |    --    |    WB        |       WB         |
-| mmap !SYNC flag        |          |              |                  |
-| no alias to this area  |          |              |                  |
-| and                    |          |              |                  |
-| MTRR says WB           |          |              |                  |
-+------------------------+----------+--------------+------------------+
-| /dev/mem               |    --    |    --        |       UC-        |
-| mmap !SYNC flag        |          |              |                  |
-| no alias to this area  |          |              |                  |
-| and                    |          |              |                  |
-| MTRR says !WB          |          |              |                  |
-+------------------------+----------+--------------+------------------+
-
-
-> +
-> +Advanced APIs for drivers
-> +=========================
-> +
-> +A. Exporting pages to users with remap_pfn_range, io_remap_pfn_range,
-> +vmf_insert_pfn.
-> +
-> +Drivers wanting to export some pages to userspace do it by using mmap
-> +interface and a combination of:
-> +
-> +  1) pgprot_noncached()
-> +  2) io_remap_pfn_range() or remap_pfn_range() or vmf_insert_pfn()
-> +
-> +With PAT support, a new API pgprot_writecombine is being added. So, drivers can
-> +continue to use the above sequence, with either pgprot_noncached() or
-> +pgprot_writecombine() in step 1, followed by step 2.
-> +
-> +In addition, step 2 internally tracks the region as UC or WC in memtype
-> +list in order to ensure no conflicting mapping.
-> +
-> +Note that this set of APIs only works with IO (non RAM) regions. If driver
-> +wants to export a RAM region, it has to do set_memory_uc() or set_memory_wc()
-> +as step 0 above and also track the usage of those pages and use set_memory_wb()
-> +before the page is freed to free pool.
-> +
-> +MTRR effects on PAT / non-PAT systems
-> +=====================================
-> +
-> +The following table provides the effects of using write-combining MTRRs when
-> +using ioremap*() calls on x86 for both non-PAT and PAT systems. Ideally
-> +mtrr_add() usage will be phased out in favor of arch_phys_wc_add() which will
-> +be a no-op on PAT enabled systems. The region over which a arch_phys_wc_add()
-> +is made, should already have been ioremapped with WC attributes or PAT entries,
-> +this can be done by using ioremap_wc() / set_memory_wc().  Devices which
-> +combine areas of IO memory desired to remain uncacheable with areas where
-> +write-combining is desirable should consider use of ioremap_uc() followed by
-> +set_memory_wc() to white-list effective write-combined areas.  Such use is
-> +nevertheless discouraged as the effective memory type is considered
-> +implementation defined, yet this strategy can be used as last resort on devices
-> +with size-constrained regions where otherwise MTRR write-combining would
-> +otherwise not be effective.
-> +::
-> +
-> +  ----------------------------------------------------------------------
-> +  MTRR Non-PAT   PAT    Linux ioremap value        Effective memory type
-> +  ----------------------------------------------------------------------
-> +                                                    Non-PAT |  PAT
-> +       PAT
-> +       |PCD
-> +       ||PWT
-> +       |||
-> +  WC   000      WB      _PAGE_CACHE_MODE_WB            WC   |   WC
-> +  WC   001      WC      _PAGE_CACHE_MODE_WC            WC*  |   WC
-> +  WC   010      UC-     _PAGE_CACHE_MODE_UC_MINUS      WC*  |   UC
-> +  WC   011      UC      _PAGE_CACHE_MODE_UC            UC   |   UC
-> +  ----------------------------------------------------------------------
-> +
-> +(*) denotes implementation defined and is discouraged
-
-The (*) here is part of the artwork. So, it should be indented, in order to
-make easier for someone reading this on html mode.
-
-As you know, before noticing your conversion, I made my own changes to
-x86. There, for this particular artwork, I did some cosmetic changes,
-to make it look more similar to other tables, as, IMHO, having a similar
-visual makes easier for one reading this in text format:
-
-  ====  =======  ===  =========================  =====================
-  MTRR  Non-PAT  PAT  Linux ioremap value        Effective memory type
-  ====  =======  ===  =========================  =====================
-        PAT                                        Non-PAT |  PAT
-        |PCD                                               |
-        ||PWT                                              |
-        |||                                                |
-  WC    000      WB   _PAGE_CACHE_MODE_WB             WC   |   WC
-  WC    001      WC   _PAGE_CACHE_MODE_WC             WC*  |   WC
-  WC    010      UC-  _PAGE_CACHE_MODE_UC_MINUS       WC*  |   UC
-  WC    011      UC   _PAGE_CACHE_MODE_UC             UC   |   UC
-  ====  =======  ===  =========================  =====================
-
-  (*) denotes implementation defined and is discouraged
-
-(unfortunately, even looking like a table, Sphinx won't parse it fine,
-so, even if you opt to use the above, we still need to mark it as
-a literal block)
-
-It is up to you (and x86 maintainers) to choose between the
-versions. Of course, I prefer the one I did, as it is visually
-closer to what we're doing on most tables, so my brain can parse
-it faster.
-
-> +
-> +.. note:: -- in the above table mean "Not suggested usage for the API". Some
-> +  of the --'s are strictly enforced by the kernel. Some others are not really
-> +  enforced today, but may be enforced in future.
-> +
-> +For ioremap and pci access through /sys or /proc - The actual type returned
-> +can be more restrictive, in case of any existing aliasing for that address.
-> +For example: If there is an existing uncached mapping, a new ioremap_wc can
-> +return uncached mapping in place of write-combine requested.
-> +
-> +set_memory_[uc|wc|wt] and set_memory_wb should be used in pairs, where driver
-> +will first make a region uc, wc or wt and switch it back to wb after use.
-> +
-> +Over time writes to /proc/mtrr will be deprecated in favor of using PAT based
-> +interfaces. Users writing to /proc/mtrr are suggested to use above interfaces.
-> +
-> +Drivers should use ioremap_[uc|wc] to access PCI BARs with [uc|wc] access
-> +types.
-> +
-> +Drivers should use set_memory_[uc|wc|wt] to set access type for RAM ranges.
-> +
-> +
-> +PAT debugging
-> +=============
-> +
-> +With CONFIG_DEBUG_FS enabled, PAT memtype list can be examined by::
-> +
-> +  # mount -t debugfs debugfs /sys/kernel/debug
-> +  # cat /sys/kernel/debug/x86/pat_memtype_list
-> +  PAT memtype list:
-> +  uncached-minus @ 0x7fadf000-0x7fae0000
-> +  uncached-minus @ 0x7fb19000-0x7fb1a000
-> +  uncached-minus @ 0x7fb1a000-0x7fb1b000
-> +  uncached-minus @ 0x7fb1b000-0x7fb1c000
-> +  uncached-minus @ 0x7fb1c000-0x7fb1d000
-> +  uncached-minus @ 0x7fb1d000-0x7fb1e000
-> +  uncached-minus @ 0x7fb1e000-0x7fb25000
-> +  uncached-minus @ 0x7fb25000-0x7fb26000
-> +  uncached-minus @ 0x7fb26000-0x7fb27000
-> +  uncached-minus @ 0x7fb27000-0x7fb28000
-> +  uncached-minus @ 0x7fb28000-0x7fb2e000
-> +  uncached-minus @ 0x7fb2e000-0x7fb2f000
-> +  uncached-minus @ 0x7fb2f000-0x7fb30000
-> +  uncached-minus @ 0x7fb31000-0x7fb32000
-> +  uncached-minus @ 0x80000000-0x90000000
-> +
-> +This list shows physical address ranges and various PAT settings used to
-> +access those physical address ranges.
-> +
-> +Another, more verbose way of getting PAT related debug messages is with
-> +"debugpat" boot parameter. With this parameter, various debug messages are
-> +printed to dmesg log.
-> +
-> +PAT Initialization
-> +==================
-> +
-> +The following table describes how PAT is initialized under various
-> +configurations. The PAT MSR must be updated by Linux in order to support WC
-> +and WT attributes. Otherwise, the PAT MSR has the value programmed in it
-> +by the firmware. Note, Xen enables WC attribute in the PAT MSR for guests.
-> +::
-> +
-> +  MTRR PAT   Call Sequence               PAT State  PAT MSR
-> +  =========================================================
-> +  E    E     MTRR -> PAT init            Enabled    OS
-> +  E    D     MTRR -> PAT init            Disabled    -
-> +  D    E     MTRR -> PAT disable         Disabled   BIOS
-> +  D    D     MTRR -> PAT disable         Disabled    -
-> +  -    np/E  PAT  -> PAT disable         Disabled   BIOS
-> +  -    np/D  PAT  -> PAT disable         Disabled    -
-> +  E    !P/E  MTRR -> PAT init            Disabled   BIOS
-> +  D    !P/E  MTRR -> PAT disable         Disabled   BIOS
-> +  !M   !P/E  MTRR stub -> PAT disable    Disabled   BIOS
-> +
-> +  Legend
-> +  ------------------------------------------------
-> +  E         Feature enabled in CPU
-> +  D	   Feature disabled/unsupported in CPU
-> +  np	   "nopat" boot option specified
-> +  !P	   CONFIG_X86_PAT option unset
-> +  !M	   CONFIG_MTRR option unset
-> +  Enabled   PAT state set to enabled
-> +  Disabled  PAT state set to disabled
-> +  OS        PAT initializes PAT MSR with OS setting
-> +  BIOS      PAT keeps PAT MSR with BIOS setting
-> +
-
-Those are actually two tables. Please mark them as such, e. g.:
-
- ==== ===== ==========================  =========  =======
- MTRR PAT   Call Sequence               PAT State  PAT MSR
- ==== ===== ==========================  =========  =======
- E    E     MTRR -> PAT init            Enabled    OS
- E    D     MTRR -> PAT init            Disabled    -
- D    E     MTRR -> PAT disable         Disabled   BIOS
- D    D     MTRR -> PAT disable         Disabled    -
- -    np/E  PAT  -> PAT disable         Disabled   BIOS
- -    np/D  PAT  -> PAT disable         Disabled    -
- E    !P/E  MTRR -> PAT init            Disabled   BIOS
- D    !P/E  MTRR -> PAT disable         Disabled   BIOS
- !M   !P/E  MTRR stub -> PAT disable    Disabled   BIOS
- ==== ===== ==========================  =========  =======
-
- Legend
-
- ========= =======================================
- E         Feature enabled in CPU
- D	   Feature disabled/unsupported in CPU
- np	   "nopat" boot option specified
- !P	   CONFIG_X86_PAT option unset
- !M	   CONFIG_MTRR option unset
- Enabled   PAT state set to enabled
- Disabled  PAT state set to disabled
- OS        PAT initializes PAT MSR with OS setting
- BIOS      PAT keeps PAT MSR with BIOS setting
- ========= =======================================
-
-
-
-
-> diff --git a/Documentation/x86/pat.txt b/Documentation/x86/pat.txt
-> deleted file mode 100644
-> index 481d8d8536ac..000000000000
-> --- a/Documentation/x86/pat.txt
-> +++ /dev/null
-> @@ -1,230 +0,0 @@
-> -
-> -PAT (Page Attribute Table)
-> -
-> -x86 Page Attribute Table (PAT) allows for setting the memory attribute at the
-> -page level granularity. PAT is complementary to the MTRR settings which allows
-> -for setting of memory types over physical address ranges. However, PAT is
-> -more flexible than MTRR due to its capability to set attributes at page level
-> -and also due to the fact that there are no hardware limitations on number of
-> -such attribute settings allowed. Added flexibility comes with guidelines for
-> -not having memory type aliasing for the same physical memory with multiple
-> -virtual addresses.
-> -
-> -PAT allows for different types of memory attributes. The most commonly used
-> -ones that will be supported at this time are Write-back, Uncached,
-> -Write-combined, Write-through and Uncached Minus.
-> -
-> -
-> -PAT APIs
-> ---------
-> -
-> -There are many different APIs in the kernel that allows setting of memory
-> -attributes at the page level. In order to avoid aliasing, these interfaces
-> -should be used thoughtfully. Below is a table of interfaces available,
-> -their intended usage and their memory attribute relationships. Internally,
-> -these APIs use a reserve_memtype()/free_memtype() interface on the physical
-> -address range to avoid any aliasing.
-> -
-> -
-> --------------------------------------------------------------------
-> -API                    |    RAM   |  ACPI,...  |  Reserved/Holes  |
-> ------------------------|----------|------------|------------------|
-> -                       |          |            |                  |
-> -ioremap                |    --    |    UC-     |       UC-        |
-> -                       |          |            |                  |
-> -ioremap_cache          |    --    |    WB      |       WB         |
-> -                       |          |            |                  |
-> -ioremap_uc             |    --    |    UC      |       UC         |
-> -                       |          |            |                  |
-> -ioremap_nocache        |    --    |    UC-     |       UC-        |
-> -                       |          |            |                  |
-> -ioremap_wc             |    --    |    --      |       WC         |
-> -                       |          |            |                  |
-> -ioremap_wt             |    --    |    --      |       WT         |
-> -                       |          |            |                  |
-> -set_memory_uc          |    UC-   |    --      |       --         |
-> - set_memory_wb         |          |            |                  |
-> -                       |          |            |                  |
-> -set_memory_wc          |    WC    |    --      |       --         |
-> - set_memory_wb         |          |            |                  |
-> -                       |          |            |                  |
-> -set_memory_wt          |    WT    |    --      |       --         |
-> - set_memory_wb         |          |            |                  |
-> -                       |          |            |                  |
-> -pci sysfs resource     |    --    |    --      |       UC-        |
-> -                       |          |            |                  |
-> -pci sysfs resource_wc  |    --    |    --      |       WC         |
-> - is IORESOURCE_PREFETCH|          |            |                  |
-> -                       |          |            |                  |
-> -pci proc               |    --    |    --      |       UC-        |
-> - !PCIIOC_WRITE_COMBINE |          |            |                  |
-> -                       |          |            |                  |
-> -pci proc               |    --    |    --      |       WC         |
-> - PCIIOC_WRITE_COMBINE  |          |            |                  |
-> -                       |          |            |                  |
-> -/dev/mem               |    --    |  WB/WC/UC- |    WB/WC/UC-     |
-> - read-write            |          |            |                  |
-> -                       |          |            |                  |
-> -/dev/mem               |    --    |    UC-     |       UC-        |
-> - mmap SYNC flag        |          |            |                  |
-> -                       |          |            |                  |
-> -/dev/mem               |    --    |  WB/WC/UC- |    WB/WC/UC-     |
-> - mmap !SYNC flag       |          |(from exist-|  (from exist-    |
-> - and                   |          |  ing alias)|    ing alias)    |
-> - any alias to this area|          |            |                  |
-> -                       |          |            |                  |
-> -/dev/mem               |    --    |    WB      |       WB         |
-> - mmap !SYNC flag       |          |            |                  |
-> - no alias to this area |          |            |                  |
-> - and                   |          |            |                  |
-> - MTRR says WB          |          |            |                  |
-> -                       |          |            |                  |
-> -/dev/mem               |    --    |    --      |       UC-        |
-> - mmap !SYNC flag       |          |            |                  |
-> - no alias to this area |          |            |                  |
-> - and                   |          |            |                  |
-> - MTRR says !WB         |          |            |                  |
-> -                       |          |            |                  |
-> --------------------------------------------------------------------
-> -
-> -Advanced APIs for drivers
-> --------------------------
-> -A. Exporting pages to users with remap_pfn_range, io_remap_pfn_range,
-> -vmf_insert_pfn
-> -
-> -Drivers wanting to export some pages to userspace do it by using mmap
-> -interface and a combination of
-> -1) pgprot_noncached()
-> -2) io_remap_pfn_range() or remap_pfn_range() or vmf_insert_pfn()
-> -
-> -With PAT support, a new API pgprot_writecombine is being added. So, drivers can
-> -continue to use the above sequence, with either pgprot_noncached() or
-> -pgprot_writecombine() in step 1, followed by step 2.
-> -
-> -In addition, step 2 internally tracks the region as UC or WC in memtype
-> -list in order to ensure no conflicting mapping.
-> -
-> -Note that this set of APIs only works with IO (non RAM) regions. If driver
-> -wants to export a RAM region, it has to do set_memory_uc() or set_memory_wc()
-> -as step 0 above and also track the usage of those pages and use set_memory_wb()
-> -before the page is freed to free pool.
-> -
-> -MTRR effects on PAT / non-PAT systems
-> --------------------------------------
-> -
-> -The following table provides the effects of using write-combining MTRRs when
-> -using ioremap*() calls on x86 for both non-PAT and PAT systems. Ideally
-> -mtrr_add() usage will be phased out in favor of arch_phys_wc_add() which will
-> -be a no-op on PAT enabled systems. The region over which a arch_phys_wc_add()
-> -is made, should already have been ioremapped with WC attributes or PAT entries,
-> -this can be done by using ioremap_wc() / set_memory_wc().  Devices which
-> -combine areas of IO memory desired to remain uncacheable with areas where
-> -write-combining is desirable should consider use of ioremap_uc() followed by
-> -set_memory_wc() to white-list effective write-combined areas.  Such use is
-> -nevertheless discouraged as the effective memory type is considered
-> -implementation defined, yet this strategy can be used as last resort on devices
-> -with size-constrained regions where otherwise MTRR write-combining would
-> -otherwise not be effective.
-> -
-> -----------------------------------------------------------------------
-> -MTRR Non-PAT   PAT    Linux ioremap value        Effective memory type
-> -----------------------------------------------------------------------
-> -                                                  Non-PAT |  PAT
-> -     PAT
-> -     |PCD
-> -     ||PWT
-> -     |||
-> -WC   000      WB      _PAGE_CACHE_MODE_WB            WC   |   WC
-> -WC   001      WC      _PAGE_CACHE_MODE_WC            WC*  |   WC
-> -WC   010      UC-     _PAGE_CACHE_MODE_UC_MINUS      WC*  |   UC
-> -WC   011      UC      _PAGE_CACHE_MODE_UC            UC   |   UC
-> -----------------------------------------------------------------------
-> -
-> -(*) denotes implementation defined and is discouraged
-> -
-> -Notes:
-> -
-> --- in the above table mean "Not suggested usage for the API". Some of the --'s
-> -are strictly enforced by the kernel. Some others are not really enforced
-> -today, but may be enforced in future.
-> -
-> -For ioremap and pci access through /sys or /proc - The actual type returned
-> -can be more restrictive, in case of any existing aliasing for that address.
-> -For example: If there is an existing uncached mapping, a new ioremap_wc can
-> -return uncached mapping in place of write-combine requested.
-> -
-> -set_memory_[uc|wc|wt] and set_memory_wb should be used in pairs, where driver
-> -will first make a region uc, wc or wt and switch it back to wb after use.
-> -
-> -Over time writes to /proc/mtrr will be deprecated in favor of using PAT based
-> -interfaces. Users writing to /proc/mtrr are suggested to use above interfaces.
-> -
-> -Drivers should use ioremap_[uc|wc] to access PCI BARs with [uc|wc] access
-> -types.
-> -
-> -Drivers should use set_memory_[uc|wc|wt] to set access type for RAM ranges.
-> -
-> -
-> -PAT debugging
-> --------------
-> -
-> -With CONFIG_DEBUG_FS enabled, PAT memtype list can be examined by
-> -
-> -# mount -t debugfs debugfs /sys/kernel/debug
-> -# cat /sys/kernel/debug/x86/pat_memtype_list
-> -PAT memtype list:
-> -uncached-minus @ 0x7fadf000-0x7fae0000
-> -uncached-minus @ 0x7fb19000-0x7fb1a000
-> -uncached-minus @ 0x7fb1a000-0x7fb1b000
-> -uncached-minus @ 0x7fb1b000-0x7fb1c000
-> -uncached-minus @ 0x7fb1c000-0x7fb1d000
-> -uncached-minus @ 0x7fb1d000-0x7fb1e000
-> -uncached-minus @ 0x7fb1e000-0x7fb25000
-> -uncached-minus @ 0x7fb25000-0x7fb26000
-> -uncached-minus @ 0x7fb26000-0x7fb27000
-> -uncached-minus @ 0x7fb27000-0x7fb28000
-> -uncached-minus @ 0x7fb28000-0x7fb2e000
-> -uncached-minus @ 0x7fb2e000-0x7fb2f000
-> -uncached-minus @ 0x7fb2f000-0x7fb30000
-> -uncached-minus @ 0x7fb31000-0x7fb32000
-> -uncached-minus @ 0x80000000-0x90000000
-> -
-> -This list shows physical address ranges and various PAT settings used to
-> -access those physical address ranges.
-> -
-> -Another, more verbose way of getting PAT related debug messages is with
-> -"debugpat" boot parameter. With this parameter, various debug messages are
-> -printed to dmesg log.
-> -
-> -PAT Initialization
-> -------------------
-> -
-> -The following table describes how PAT is initialized under various
-> -configurations. The PAT MSR must be updated by Linux in order to support WC
-> -and WT attributes. Otherwise, the PAT MSR has the value programmed in it
-> -by the firmware. Note, Xen enables WC attribute in the PAT MSR for guests.
-> -
-> - MTRR PAT   Call Sequence               PAT State  PAT MSR
-> - =========================================================
-> - E    E     MTRR -> PAT init            Enabled    OS
-> - E    D     MTRR -> PAT init            Disabled    -
-> - D    E     MTRR -> PAT disable         Disabled   BIOS
-> - D    D     MTRR -> PAT disable         Disabled    -
-> - -    np/E  PAT  -> PAT disable         Disabled   BIOS
-> - -    np/D  PAT  -> PAT disable         Disabled    -
-> - E    !P/E  MTRR -> PAT init            Disabled   BIOS
-> - D    !P/E  MTRR -> PAT disable         Disabled   BIOS
-> - !M   !P/E  MTRR stub -> PAT disable    Disabled   BIOS
-> -
-> - Legend
-> - ------------------------------------------------
-> - E         Feature enabled in CPU
-> - D	   Feature disabled/unsupported in CPU
-> - np	   "nopat" boot option specified
-> - !P	   CONFIG_X86_PAT option unset
-> - !M	   CONFIG_MTRR option unset
-> - Enabled   PAT state set to enabled
-> - Disabled  PAT state set to disabled
-> - OS        PAT initializes PAT MSR with OS setting
-> - BIOS      PAT keeps PAT MSR with BIOS setting
-> -
-
-
-
-Thanks,
-Mauro
+--
+Gustavo
