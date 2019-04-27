@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9EBC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A340C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9AF0206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF82206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfD0PPk (ORCPT
+        id S1727887AbfD0PSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:15:40 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32868 "EHLO
+        Sat, 27 Apr 2019 11:18:18 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34296 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727254AbfD0PPS (ORCPT
+        by vger.kernel.org with ESMTP id S1727692AbfD0PPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:18 -0400
+        Sat, 27 Apr 2019 11:15:39 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2p-00014G-Cp; Sat, 27 Apr 2019 16:15:15 +0100
+        id 1hKP3B-00014L-NQ; Sat, 27 Apr 2019 16:15:37 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2n-0004cY-01; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2i-0004RB-Ab; Sat, 27 Apr 2019 16:15:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jose Abreu" <joabreu@synopsys.com>,
-        "Alexandre Torgue" <alexandre.torgue@st.com>,
-        "Joao Pinto" <jpinto@synopsys.com>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jose Abreu" <jose.abreu@synopsys.com>
+        "Miklos Szeredi" <mszeredi@redhat.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.387211181@decadent.org.uk>
+Message-ID: <lsq.1556377989.976426308@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 166/202] net: stmmac: Fix a race in EEE enable callback
+Subject: [PATCH 3.16 045/202] fuse: decrement NR_WRITEBACK_TEMP on the
+ right page
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,68 +55,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jose Abreu <jose.abreu@synopsys.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit 8a7493e58ad688eb23b81e45461c5d314f4402f1 upstream.
+commit a2ebba824106dabe79937a9f29a875f837e1b6d4 upstream.
 
-We are saving the status of EEE even before we try to enable it. This
-leads to a race with XMIT function that tries to arm EEE timer before we
-set it up.
+NR_WRITEBACK_TEMP is accounted on the temporary page in the request, not
+the page cache page.
 
-Fix this by only saving the EEE parameters after all operations are
-performed with success.
-
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Fixes: d765955d2ae0 ("stmmac: add the Energy Efficient Ethernet support")
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 8b284dc47291 ("fuse: writepages: handle same page rewrites")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- .../ethernet/stmicro/stmmac/stmmac_ethtool.c  | 22 ++++++++++---------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ fs/fuse/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -616,25 +616,27 @@ static int stmmac_ethtool_op_set_eee(str
- 				     struct ethtool_eee *edata)
- {
- 	struct stmmac_priv *priv = netdev_priv(dev);
-+	int ret;
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -1846,7 +1846,7 @@ static bool fuse_writepage_in_flight(str
+ 		spin_unlock(&fc->lock);
  
--	priv->eee_enabled = edata->eee_enabled;
--
--	if (!priv->eee_enabled)
-+	if (!edata->eee_enabled) {
- 		stmmac_disable_eee_mode(priv);
--	else {
-+	} else {
- 		/* We are asking for enabling the EEE but it is safe
- 		 * to verify all by invoking the eee_init function.
- 		 * In case of failure it will return an error.
- 		 */
--		priv->eee_enabled = stmmac_eee_init(priv);
--		if (!priv->eee_enabled)
-+		edata->eee_enabled = stmmac_eee_init(priv);
-+		if (!edata->eee_enabled)
- 			return -EOPNOTSUPP;
--
--		/* Do not change tx_lpi_timer in case of failure */
--		priv->tx_lpi_timer = edata->tx_lpi_timer;
- 	}
- 
--	return phy_ethtool_set_eee(priv->phydev, edata);
-+	ret = phy_ethtool_set_eee(priv->phydev, edata);
-+	if (ret)
-+		return ret;
-+
-+	priv->eee_enabled = edata->eee_enabled;
-+	priv->tx_lpi_timer = edata->tx_lpi_timer;
-+	return 0;
- }
- 
- static u32 stmmac_usec2riwt(u32 usec, struct stmmac_priv *priv)
+ 		dec_bdi_stat(bdi, BDI_WRITEBACK);
+-		dec_zone_page_state(page, NR_WRITEBACK_TEMP);
++		dec_zone_page_state(new_req->pages[0], NR_WRITEBACK_TEMP);
+ 		bdi_writeout_inc(bdi);
+ 		fuse_writepage_free(fc, new_req);
+ 		fuse_request_free(new_req);
 
