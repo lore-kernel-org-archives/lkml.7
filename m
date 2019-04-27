@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00FAC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79950C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1C9215EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49547214AE
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329234;
-	bh=V4fwlGWCxOK+NeGDC85FykK3c4VuiYL3SSt+nrRudZc=;
+	s=default; t=1556329236;
+	bh=p+aXHuwqfHDP4jNwEfxEX6x821K7Z+8P5fw+XIIOcLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aab9cEIERLrfmfdl9PQ2FcL3sep74QDkNvvr5mOBeE7iUhcB5mGv/lfzCD70qKWOG
-	 0pZ2r1bgKzbEBnM09EjGCuQteSt+/LUUBwY9HaSI44p34tLSN2lMsNWhinC8NTkuC3
-	 HKJnx5WfRVffDNqhFk+bnnmuUaC1F7DHX6dUa4aY=
+	b=MdFYzFpV3gTqAIhmSv2x5gMf5vPc3QbGj67vXX/ve8RWwKvcxsH2sy4rbTAfayDd4
+	 koWhRoC1VywZtoUPQBt3Tv2Eh3QB0uKYQlcAQZVV9RRFQN5o6/aAZmdce18sbKqnQ9
+	 qYa6MUBd8rcLEdGCbj6h9ypWpgKzI+iw9sjpZMEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbfD0Bkd (ORCPT
+        id S1728018AbfD0Bkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:40:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44102 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727975AbfD0Bkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:40:31 -0400
+        id S1727990AbfD0Bkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:40:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FF4A214AE;
-        Sat, 27 Apr 2019 01:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3F9C214C6;
+        Sat, 27 Apr 2019 01:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329230;
-        bh=V4fwlGWCxOK+NeGDC85FykK3c4VuiYL3SSt+nrRudZc=;
+        s=default; t=1556329231;
+        bh=p+aXHuwqfHDP4jNwEfxEX6x821K7Z+8P5fw+XIIOcLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C/saxLTdMk7J3+77nDatujraM9SzPFhHJzTCKEGz5rSWZ3AT2Y0kugfTrHjxrHcTB
-         vNPoBNJSeyege2a3Qx72uBnry8dgetjMVnwJT3O6PHPt+xvcUalNqJuWiH00utF6Ze
-         sxhOIEv/zujoiu4t0d5JDP3bnDcJNwBHpVcj2KW0=
+        b=HWD1Zu/L/VSbUiizXxgSjHOhHOY/nd4g5dbIEmiy9FqnrnoVnJbslGZpdBhLSDg8E
+         A/nILIY9s0NFlCSbF2RAXMP6JBbqwWDBcQerg/PCArJ/cSzORuYG7DTfFdkmU+CsAj
+         RLxn7D4/2eyeDLPhb76FZVz5N38KUalOebPIKa4Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?David=20M=C3=BCller?= <dave.mueller@gmx.ch>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 68/79] clk: x86: Add system specific quirk to mark clocks as critical
-Date:   Fri, 26 Apr 2019 21:38:27 -0400
-Message-Id: <20190427013838.6596-68-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.0 69/79] nvme-fc: correct csn initialization and increments on error
+Date:   Fri, 26 Apr 2019 21:38:28 -0400
+Message-Id: <20190427013838.6596-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,139 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Müller <dave.mueller@gmx.ch>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 7c2e07130090ae001a97a6b65597830d6815e93e ]
+[ Upstream commit 67f471b6ed3b09033c4ac77ea03f92afdb1989fe ]
 
-Since commit 648e921888ad ("clk: x86: Stop marking clocks as
-CLK_IS_CRITICAL"), the pmc_plt_clocks of the Bay Trail SoC are
-unconditionally gated off. Unfortunately this will break systems where these
-clocks are used for external purposes beyond the kernel's knowledge. Fix it
-by implementing a system specific quirk to mark the necessary pmc_plt_clks as
-critical.
+This patch fixes a long-standing bug that initialized the FC-NVME
+cmnd iu CSN value to 1. Early FC-NVME specs had the connection starting
+with CSN=1. By the time the spec reached approval, the language had
+changed to state a connection should start with CSN=0.  This patch
+corrects the initialization value for FC-NVME connections.
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Signed-off-by: David Müller <dave.mueller@gmx.ch>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Additionally, in reviewing the transport, the CSN value is assigned to
+the new IU early in the start routine. It's possible that a later dma
+map request may fail, causing the command to never be sent to the
+controller.  Change the location of the assignment so that it is
+immediately prior to calling the lldd. Add a comment block to explain
+the impacts if the lldd were to additionally fail sending the command.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/x86/clk-pmc-atom.c                | 14 ++++++++++---
- drivers/platform/x86/pmc_atom.c               | 21 +++++++++++++++++++
- .../linux/platform_data/x86/clk-pmc-atom.h    |  3 +++
- 3 files changed, 35 insertions(+), 3 deletions(-)
+ drivers/nvme/host/fc.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/x86/clk-pmc-atom.c b/drivers/clk/x86/clk-pmc-atom.c
-index d977193842df..19174835693b 100644
---- a/drivers/clk/x86/clk-pmc-atom.c
-+++ b/drivers/clk/x86/clk-pmc-atom.c
-@@ -165,7 +165,7 @@ static const struct clk_ops plt_clk_ops = {
- };
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index c37d5bbd72ab..8625b73d94bf 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -1857,7 +1857,7 @@ nvme_fc_init_queue(struct nvme_fc_ctrl *ctrl, int idx)
+ 	memset(queue, 0, sizeof(*queue));
+ 	queue->ctrl = ctrl;
+ 	queue->qnum = idx;
+-	atomic_set(&queue->csn, 1);
++	atomic_set(&queue->csn, 0);
+ 	queue->dev = ctrl->dev;
  
- static struct clk_plt *plt_clk_register(struct platform_device *pdev, int id,
--					void __iomem *base,
-+					const struct pmc_clk_data *pmc_data,
- 					const char **parent_names,
- 					int num_parents)
- {
-@@ -184,9 +184,17 @@ static struct clk_plt *plt_clk_register(struct platform_device *pdev, int id,
- 	init.num_parents = num_parents;
+ 	if (idx > 0)
+@@ -1899,7 +1899,7 @@ nvme_fc_free_queue(struct nvme_fc_queue *queue)
+ 	 */
  
- 	pclk->hw.init = &init;
--	pclk->reg = base + PMC_CLK_CTL_OFFSET + id * PMC_CLK_CTL_SIZE;
-+	pclk->reg = pmc_data->base + PMC_CLK_CTL_OFFSET + id * PMC_CLK_CTL_SIZE;
- 	spin_lock_init(&pclk->lock);
- 
-+	/*
-+	 * On some systems, the pmc_plt_clocks already enabled by the
-+	 * firmware are being marked as critical to avoid them being
-+	 * gated by the clock framework.
-+	 */
-+	if (pmc_data->critical && plt_clk_is_enabled(&pclk->hw))
-+		init.flags |= CLK_IS_CRITICAL;
-+
- 	ret = devm_clk_hw_register(&pdev->dev, &pclk->hw);
- 	if (ret) {
- 		pclk = ERR_PTR(ret);
-@@ -332,7 +340,7 @@ static int plt_clk_probe(struct platform_device *pdev)
- 		return PTR_ERR(parent_names);
- 
- 	for (i = 0; i < PMC_CLK_NUM; i++) {
--		data->clks[i] = plt_clk_register(pdev, i, pmc_data->base,
-+		data->clks[i] = plt_clk_register(pdev, i, pmc_data,
- 						 parent_names, data->nparents);
- 		if (IS_ERR(data->clks[i])) {
- 			err = PTR_ERR(data->clks[i]);
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index 8f018b3f3cd4..eaec2d306481 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -17,6 +17,7 @@
- 
- #include <linux/debugfs.h>
- #include <linux/device.h>
-+#include <linux/dmi.h>
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/platform_data/x86/clk-pmc-atom.h>
-@@ -391,11 +392,27 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+ 	queue->connection_id = 0;
+-	atomic_set(&queue->csn, 1);
++	atomic_set(&queue->csn, 0);
  }
- #endif /* CONFIG_DEBUG_FS */
  
-+/*
-+ * Some systems need one or more of their pmc_plt_clks to be
-+ * marked as critical.
-+ */
-+static const struct dmi_system_id critclk_systems[] __initconst = {
-+	{
-+		.ident = "MPL CEC1x",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MPL AG"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "CEC10 Family"),
-+		},
-+	},
-+	{ /*sentinel*/ }
-+};
-+
- static int pmc_setup_clks(struct pci_dev *pdev, void __iomem *pmc_regmap,
- 			  const struct pmc_data *pmc_data)
+ static void
+@@ -2195,7 +2195,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
  {
- 	struct platform_device *clkdev;
- 	struct pmc_clk_data *clk_data;
-+	const struct dmi_system_id *d = dmi_first_match(critclk_systems);
+ 	struct nvme_fc_cmd_iu *cmdiu = &op->cmd_iu;
+ 	struct nvme_command *sqe = &cmdiu->sqe;
+-	u32 csn;
+ 	int ret, opstate;
  
- 	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
- 	if (!clk_data)
-@@ -403,6 +420,10 @@ static int pmc_setup_clks(struct pci_dev *pdev, void __iomem *pmc_regmap,
+ 	/*
+@@ -2210,8 +2209,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
  
- 	clk_data->base = pmc_regmap; /* offset is added by client */
- 	clk_data->clks = pmc_data->clks;
-+	if (d) {
-+		clk_data->critical = true;
-+		pr_info("%s critclks quirk enabled\n", d->ident);
-+	}
+ 	/* format the FC-NVME CMD IU and fcp_req */
+ 	cmdiu->connection_id = cpu_to_be64(queue->connection_id);
+-	csn = atomic_inc_return(&queue->csn);
+-	cmdiu->csn = cpu_to_be32(csn);
+ 	cmdiu->data_len = cpu_to_be32(data_len);
+ 	switch (io_dir) {
+ 	case NVMEFC_FCP_WRITE:
+@@ -2269,11 +2266,24 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
+ 	if (!(op->flags & FCOP_FLAGS_AEN))
+ 		blk_mq_start_request(op->rq);
  
- 	clkdev = platform_device_register_data(&pdev->dev, "clk-pmc-atom",
- 					       PLATFORM_DEVID_NONE,
-diff --git a/include/linux/platform_data/x86/clk-pmc-atom.h b/include/linux/platform_data/x86/clk-pmc-atom.h
-index 3ab892208343..7a37ac27d0fb 100644
---- a/include/linux/platform_data/x86/clk-pmc-atom.h
-+++ b/include/linux/platform_data/x86/clk-pmc-atom.h
-@@ -35,10 +35,13 @@ struct pmc_clk {
-  *
-  * @base:	PMC clock register base offset
-  * @clks:	pointer to set of registered clocks, typically 0..5
-+ * @critical:	flag to indicate if firmware enabled pmc_plt_clks
-+ *		should be marked as critial or not
-  */
- struct pmc_clk_data {
- 	void __iomem *base;
- 	const struct pmc_clk *clks;
-+	bool critical;
- };
++	cmdiu->csn = cpu_to_be32(atomic_inc_return(&queue->csn));
+ 	ret = ctrl->lport->ops->fcp_io(&ctrl->lport->localport,
+ 					&ctrl->rport->remoteport,
+ 					queue->lldd_handle, &op->fcp_req);
  
- #endif /* __PLATFORM_DATA_X86_CLK_PMC_ATOM_H */
+ 	if (ret) {
++		/*
++		 * If the lld fails to send the command is there an issue with
++		 * the csn value?  If the command that fails is the Connect,
++		 * no - as the connection won't be live.  If it is a command
++		 * post-connect, it's possible a gap in csn may be created.
++		 * Does this matter?  As Linux initiators don't send fused
++		 * commands, no.  The gap would exist, but as there's nothing
++		 * that depends on csn order to be delivered on the target
++		 * side, it shouldn't hurt.  It would be difficult for a
++		 * target to even detect the csn gap as it has no idea when the
++		 * cmd with the csn was supposed to arrive.
++		 */
+ 		opstate = atomic_xchg(&op->state, FCPOP_STATE_COMPLETE);
+ 		__nvme_fc_fcpop_chk_teardowns(ctrl, op, opstate);
+ 
 -- 
 2.19.1
 
