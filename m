@@ -2,118 +2,100 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E931C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA862C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072B820693
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:10:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="TCzeSQ/v"
+	by mail.kernel.org (Postfix) with ESMTP id A660E20693
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556385260;
+	bh=JMwrocMwjO0EmW7TGauD0P1+sGvC2hVvXERtCgOBNzA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QTnGnqSuDp+NDTPt/QYazFik9i2kkWePSy4VEZJB8IpsvPUt4dTSNNiEPOD7CQrmc
+	 bAVLXkrNwIi0sfcADzWhtuPfXh5kmLGjXikov+J27s+0GQvd7yh0mXVe+tylE4PEZj
+	 dZhPyNc5qroComz+TX6ZOnXbB/IbGvzA2apxLdkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfD0RK5 (ORCPT
+        id S1726295AbfD0ROT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 13:10:57 -0400
-Received: from mail-eopbgr800058.outbound.protection.outlook.com ([40.107.80.58]:37604
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725942AbfD0RK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 13:10:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FQtJl4bY1DuoaHrUkMBL7N6xDJZq7S7FIB5cMjqNewg=;
- b=TCzeSQ/vHhbIDdZwDmat/CNk2Nks6JGOkm4QXPM87FOppZvRCHQjbYBMhIoga/95SmoZZe3o+XIWSWjHb2csURwpMV7Ophuzvy0KG8330XDsPJfORWGB2YXkfHEz0uGGb+ydgnHuCdarrxrH6YORUBT3MNQ9VUxdSlkxVZBpATA=
-Received: from BN8PR10MB3540.namprd10.prod.outlook.com (20.179.78.205) by
- BN8PR10MB3490.namprd10.prod.outlook.com (20.179.78.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Sat, 27 Apr 2019 17:10:53 +0000
-Received: from BN8PR10MB3540.namprd10.prod.outlook.com
- ([fe80::51e7:a757:afa8:f4cf]) by BN8PR10MB3540.namprd10.prod.outlook.com
- ([fe80::51e7:a757:afa8:f4cf%7]) with mapi id 15.20.1835.010; Sat, 27 Apr 2019
- 17:10:53 +0000
-From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "madalin.bucur@nxp.com" <madalin.bucur@nxp.com>,
-        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "laurentiu.tudor@nxp.com" <laurentiu.tudor@nxp.com>,
-        "roy.pledge@nxp.com" <roy.pledge@nxp.com>,
-        "camelia.groza@nxp.com" <camelia.groza@nxp.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH v2 9/9] dpaa_eth: fix SG frame cleanup
-Thread-Topic: [PATCH v2 9/9] dpaa_eth: fix SG frame cleanup
-Thread-Index: AQHU/MpTw42IuR0fykCaI1+07jqDiqZQPr+A
-Date:   Sat, 27 Apr 2019 17:10:53 +0000
-Message-ID: <2c6f5d170edab346e0a87b1dfeb12e2f65801685.camel@infinera.com>
-References: <20190427071031.6563-1-laurentiu.tudor@nxp.com>
-         <20190427071031.6563-10-laurentiu.tudor@nxp.com>
-In-Reply-To: <20190427071031.6563-10-laurentiu.tudor@nxp.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Joakim.Tjernlund@infinera.com; 
-x-originating-ip: [88.131.87.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9a2bf90b-4bf3-4692-cb14-08d6cb334df7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BN8PR10MB3490;
-x-ms-traffictypediagnostic: BN8PR10MB3490:
-x-microsoft-antispam-prvs: <BN8PR10MB34905036363513E5A4F02C68F43F0@BN8PR10MB3490.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0020414413
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(396003)(346002)(376002)(366004)(189003)(199004)(3846002)(6116002)(2201001)(68736007)(256004)(81166006)(6512007)(54906003)(8676002)(2906002)(8936002)(110136005)(81156014)(36756003)(6246003)(66476007)(64756008)(66556008)(66446008)(316002)(86362001)(229853002)(102836004)(66066001)(53936002)(6486002)(2501003)(14444005)(91956017)(66946007)(73956011)(76116006)(6436002)(2616005)(305945005)(486006)(6506007)(97736004)(71190400001)(478600001)(4326008)(7736002)(5660300002)(476003)(76176011)(14454004)(118296001)(72206003)(99286004)(7416002)(186003)(26005)(25786009)(446003)(11346002)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR10MB3490;H:BN8PR10MB3540.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: infinera.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: h1A6YhzC8ddJWf79OUo4YI/37lwKzz8kkCAzI+Wvbmn5Qx4PsFp4nPg9K3eOvMV+EDsPamR4VQJR1EOLDeiY9zZhWvyGuaFoosGt3gwvF6z+mrcgvbEAv7j2fhNpdEAzxvlACB47/r5G3aLx5Tmd2ojN4flnheSHbj6XMYpfXs0X30YArUPatOeeApeZ/ubrqp1Z2tFm/eXA6VEHTKq0mBvGV/M2fzdrUK3D0FFK3GG/fPoflzEEM3j2KR/C1zlboXh33rBFaBbUtYurndgwBd8/0ALu2EkTZUve+x7T05sYy0WXkBqzoMX0aKm/0jXsuXcyJhucTTKg3CdzN0718JJb0p8zuVJ3mfIi/Q4wg2VON6ws+1QgQ/nUBeIYRChn8NNw2h3pZtKqS8lcTv7Hb7M/6Z4FmqcBqMFuYkwNRnE=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4A981E3F453F6540BDBD9A24364D128E@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sat, 27 Apr 2019 13:14:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33992 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfD0ROT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 13:14:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JMwrocMwjO0EmW7TGauD0P1+sGvC2hVvXERtCgOBNzA=; b=Ilhhtg4UI2hLrnFIVllE55a+8
+        HOipMnHa6YV/J16WL4ZMPxkrgGY/t3TXinAdbLSULY9dcOfouvSFQroe2+oPdLnhta7/wXq7NiSlO
+        4Mek5hptKM9rO29qkRjokngyFbz5K1myhpQhTdtKzVn2kRU+w6cLtb33UlG4qZ+zkEhPI=;
+Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hKQty-0004Tm-NJ; Sat, 27 Apr 2019 17:14:14 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 94B85441D3B; Sat, 27 Apr 2019 18:14:10 +0100 (BST)
+Date:   Sat, 27 Apr 2019 18:14:10 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH AUTOSEL 5.0 03/79] ASoC: ab8500: Mark expected switch
+ fall-through
+Message-ID: <20190427171410.GE14916@sirena.org.uk>
+References: <20190427013838.6596-1-sashal@kernel.org>
+ <20190427013838.6596-3-sashal@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: infinera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a2bf90b-4bf3-4692-cb14-08d6cb334df7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2019 17:10:53.0418
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3490
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="maH1Gajj2nflutpK"
+Content-Disposition: inline
+In-Reply-To: <20190427013838.6596-3-sashal@kernel.org>
+X-Cookie: -- I have seen the FUN --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDE5LTA0LTI3IGF0IDEwOjEwICswMzAwLCBsYXVyZW50aXUudHVkb3JAbnhwLmNv
-bSB3cm90ZToNCj4gRnJvbTogTGF1cmVudGl1IFR1ZG9yIDxsYXVyZW50aXUudHVkb3JAbnhwLmNv
-bT4NCj4gDQo+IEZpeCBpc3N1ZSB3aXRoIHRoZSBlbnRyeSBpbmRleGluZyBpbiB0aGUgc2cgZnJh
-bWUgY2xlYW51cCBjb2RlIGJlaW5nDQo+IG9mZi1ieS0xLiBUaGlzIHByb2JsZW0gc2hvd2VkIHVw
-IHdoZW4gZG9pbmcgc29tZSBiYXNpYyBpcGVyZiB0ZXN0cyBhbmQNCj4gbWFuaWZlc3RlZCBpbiB0
-cmFmZmljIGNvbWluZyB0byBhIGhhbHQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50aXUg
-VHVkb3IgPGxhdXJlbnRpdS50dWRvckBueHAuY29tPg0KPiBBY2tlZC1ieTogTWFkYWxpbiBCdWN1
-ciA8bWFkYWxpbi5idWN1ckBueHAuY29tPg0KDQpXYXNuJ3QgdGhpcyBhIHN0YWJsZSBjYW5kaWRh
-dGUgdG9vPw0KDQo+IC0tLQ0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2RwYWEv
-ZHBhYV9ldGguYyB8IDIgKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBk
-ZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVz
-Y2FsZS9kcGFhL2RwYWFfZXRoLmMgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZHBh
-YS9kcGFhX2V0aC5jDQo+IGluZGV4IGRhZWRlNzI3Mjc2OC4uNDA0MjBlZGM5Y2U2IDEwMDY0NA0K
-PiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZHBhYS9kcGFhX2V0aC5jDQo+
-ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9kcGFhL2RwYWFfZXRoLmMNCj4g
-QEAgLTE2NjMsNyArMTY2Myw3IEBAIHN0YXRpYyBzdHJ1Y3Qgc2tfYnVmZiAqZHBhYV9jbGVhbnVw
-X3R4X2ZkKGNvbnN0IHN0cnVjdCBkcGFhX3ByaXYgKnByaXYsDQo+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHFtX3NnX2VudHJ5X2dldF9sZW4oJnNndFswXSksIGRtYV9kaXIpOw0K
-PiANCj4gICAgICAgICAgICAgICAgIC8qIHJlbWFpbmluZyBwYWdlcyB3ZXJlIG1hcHBlZCB3aXRo
-IHNrYl9mcmFnX2RtYV9tYXAoKSAqLw0KPiAtICAgICAgICAgICAgICAgZm9yIChpID0gMTsgaSA8
-IG5yX2ZyYWdzOyBpKyspIHsNCj4gKyAgICAgICAgICAgICAgIGZvciAoaSA9IDE7IGkgPD0gbnJf
-ZnJhZ3M7IGkrKykgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICBXQVJOX09OKHFtX3NnX2Vu
-dHJ5X2lzX2V4dCgmc2d0W2ldKSk7DQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBkbWFf
-dW5tYXBfcGFnZShkZXYsIHFtX3NnX2FkZHIoJnNndFtpXSksDQo+IC0tDQo+IDIuMTcuMQ0KPiAN
-Cg0K
+
+--maH1Gajj2nflutpK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Apr 26, 2019 at 09:37:22PM -0400, Sasha Levin wrote:
+> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+>=20
+> [ Upstream commit 102cefc8e879b707be0024fdc7bce1deeb359a5f ]
+>=20
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+
+Are we *realy* going to enable -Wimplicit-fallthrough in stable kernels
+and both backport all the fixes and add new fixes for the issues which
+don't have backportable fixes?
+
+--maH1Gajj2nflutpK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzEjd4ACgkQJNaLcl1U
+h9DSgAf/XU7GUyQulo2xAYUjpLLCpFQfd/FUdBJTSiGIXU+VXQ4Glf4E/iUj3kr7
+lD92Jmalb5e5ZgE3t6+d0NCofGg04+x2N4D2JVWhfknzGR9fUg+tH+lMqbwmRWoz
+wdWsF1TbKKGtvpjFLa+xDdxRj98ZgT30NDmSB60hph/DvBX+SLeRkVnPQAMT/TZB
+B1aSA0nYuXCxGqgQDshdH2OxFhaJJ/fXlxyWzr3EedVCv5HJEe1Y1Lab8bPKx4BD
+37O2PlUMIyxO2O2w0cX6hpLxD9+H0GeYscDWfuR9iyLgnZ/gHp7hziSbMfpHYqbE
+4pe4hY4PQ0aj01iRqNuwrPlTmx/ejg==
+=iTRd
+-----END PGP SIGNATURE-----
+
+--maH1Gajj2nflutpK--
