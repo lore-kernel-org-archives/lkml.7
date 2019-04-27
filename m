@@ -4,55 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D742BC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0494C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB18216C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98552216C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329423;
-	bh=J8vC0Lmws0rOVsDQHj+4NlZYsvk5fAlA6JXOh9D+obI=;
+	s=default; t=1556329427;
+	bh=GfVGltHsuRGwLDCG05ZdifajtPUEqqEoa4VQkaf0hNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BpeFL+StTebibXOfhhHz2dJiaLvcRV1iB/j90N+jJPQOGpq3dM8LGShmA0xpnLw4Y
-	 lHEFXNH/yGSfGnjL9UoaaiWwK/VzAzYuFZiTO5c3gbzJH7DmypSRJS1IEPtKcuQVHO
-	 SBWfKxF9A9UU1QffXP5S85M0ns8ZI5gsQ26ymb34=
+	b=Pwd6SIfm/BRbjmgoNxXjOImXgLnLvp3W5fEU2ovu6uY8uVyGTXD+YjEbzdh7Q6N7q
+	 v4GEeUkrHDg+0XQNM7m4GCXnaJRMedqCG8kP8XQUftf0OXlEBjlYJvxMZAUa86aRfl
+	 nQ7ciiDCeYyWW3O3XfttoVTz2bS6x57JGV8Q8BXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfD0Bnm (ORCPT
+        id S1728853AbfD0Bnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:43:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47848 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:43:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727609AbfD0Bnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:39 -0400
+        id S1728272AbfD0Bno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56381208CB;
-        Sat, 27 Apr 2019 01:43:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8F4A21707;
+        Sat, 27 Apr 2019 01:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329418;
-        bh=J8vC0Lmws0rOVsDQHj+4NlZYsvk5fAlA6JXOh9D+obI=;
+        s=default; t=1556329424;
+        bh=GfVGltHsuRGwLDCG05ZdifajtPUEqqEoa4VQkaf0hNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cm3u5l4JXB1xUEn3Uqnc4Ut6Wmiat6Ji3rNQZVA7IiEW9r67pt0bmxwenYc8S6cyF
-         2aFLxVQV4a54ZgwZjltlgl43xMZLRuBvHtJHXR5qj8uGMItgle2nduFzFMqYmmWVEc
-         Jwsc8vmxvcJ/3tLF8aS9eNBjLLzGFS6xNBOa3Zn8=
+        b=hwmvOI/FXY8ZFenwqCM61nrrBB1eGA12g1oaDJZzYVmLwPE5wP8VGm0ZXswTkHHif
+         CUpaijjKJ2gU3AS1PuJwPA/nGKiI/McgyemCJwh2KHqrS04HCuGZJIP4Bs2IFqDXby
+         Otr/aQxSvgPyQwcvLgvoAsqdkWZbhRoXdixvTs2w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 08/16] perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
-Date:   Fri, 26 Apr 2019 21:43:16 -0400
-Message-Id: <20190427014325.8704-8-sashal@kernel.org>
+Cc:     Max Filippov <jcmvbkbc@gmail.com>, Sasha Levin <sashal@kernel.org>,
+        linux-xtensa@linux-xtensa.org
+Subject: [PATCH AUTOSEL 4.9 10/16] xtensa: fix initialization of pt_regs::syscall in start_thread
+Date:   Fri, 26 Apr 2019 21:43:18 -0400
+Message-Id: <20190427014325.8704-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014325.8704-1-sashal@kernel.org>
 References: <20190427014325.8704-1-sashal@kernel.org>
@@ -65,59 +57,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-[ Upstream commit 583feb08e7f7ac9d533b446882eb3a54737a6dbb ]
+[ Upstream commit 2663147dc7465cb29040a05cc4286fdd839978b5 ]
 
-When an event is programmed with attr.wakeup_events=N (N>0), it means
-the caller is interested in getting a user level notification after
-N samples have been recorded in the kernel sampling buffer.
+New pt_regs should indicate that there's no syscall, not that there's
+syscall #0. While at it wrap macro body in do/while and parenthesize
+macro arguments.
 
-With precise events on Intel processors, the kernel uses PEBS.
-The kernel tries minimize sampling overhead by verifying
-if the event configuration is compatible with multi-entry PEBS mode.
-If so, the kernel is notified only when the buffer has reached its threshold.
-Other PEBS operates in single-entry mode, the kenrel is notified for each
-PEBS sample.
-
-The problem is that the current implementation look at frequency
-mode and event sample_type but ignores the wakeup_events field. Thus,
-it may not be possible to receive a notification after each precise event.
-
-This patch fixes this problem by disabling multi-entry PEBS if wakeup_events
-is non-zero.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: kan.liang@intel.com
-Link: https://lkml.kernel.org/r/20190306195048.189514-1-eranian@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/include/asm/processor.h | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 098ab775135f..a30829052a00 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2867,7 +2867,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		return ret;
+diff --git a/arch/xtensa/include/asm/processor.h b/arch/xtensa/include/asm/processor.h
+index 521c1e789e6e..1fc015459755 100644
+--- a/arch/xtensa/include/asm/processor.h
++++ b/arch/xtensa/include/asm/processor.h
+@@ -180,15 +180,18 @@ struct thread_struct {
  
- 	if (event->attr.precise_ip) {
--		if (!event->attr.freq) {
-+		if (!(event->attr.freq || event->attr.wakeup_events)) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
- 			if (!(event->attr.sample_type &
- 			      ~intel_pmu_free_running_flags(event)))
+ /* Clearing a0 terminates the backtrace. */
+ #define start_thread(regs, new_pc, new_sp) \
+-	memset(regs, 0, sizeof(*regs)); \
+-	regs->pc = new_pc; \
+-	regs->ps = USER_PS_VALUE; \
+-	regs->areg[1] = new_sp; \
+-	regs->areg[0] = 0; \
+-	regs->wmask = 1; \
+-	regs->depc = 0; \
+-	regs->windowbase = 0; \
+-	regs->windowstart = 1;
++	do { \
++		memset((regs), 0, sizeof(*(regs))); \
++		(regs)->pc = (new_pc); \
++		(regs)->ps = USER_PS_VALUE; \
++		(regs)->areg[1] = (new_sp); \
++		(regs)->areg[0] = 0; \
++		(regs)->wmask = 1; \
++		(regs)->depc = 0; \
++		(regs)->windowbase = 0; \
++		(regs)->windowstart = 1; \
++		(regs)->syscall = NO_SYSCALL; \
++	} while (0)
+ 
+ /* Forward declaration */
+ struct task_struct;
 -- 
 2.19.1
 
