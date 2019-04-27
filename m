@@ -2,110 +2,208 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5AFC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B99C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CE42087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E050206BF
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556358910;
+	bh=b0Nqrj9uhw7kYTrDjU6h5/dTRLaQJAuHHLuWpgKKkH4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=grOgtxkLS2dYfUNyaGSA3WktZ/2x6vXZyasfcD0Mi89B0hdReRS9Kx73p4xDXRkUD
+	 7m+RBC5c4WKcnT0V33gc19cVLcqy/WnU+yKjeiUUMIBcPWyi+nuCCDdUoHqtHNI+MB
+	 GIJDqHV1/FLf4u1yLyG9dCtCgFe4D4ZU7onglv+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfD0Jyb (ORCPT
+        id S1726438AbfD0JzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 05:54:31 -0400
-Received: from relay13.nicmail.ru ([195.208.6.7]:39062 "EHLO
-        relay13.nicmail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfD0Jyb (ORCPT
+        Sat, 27 Apr 2019 05:55:09 -0400
+Received: from casper.infradead.org ([85.118.1.10]:34286 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfD0JzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 05:54:31 -0400
-Received: from [109.70.25.215] (port=49504 helo=sghpc.hn.golosunov.pp.ru)
-        by f17.mail.nic.ru with esmtp (Exim 5.55)
-        (envelope-from <stepan@golosunov.pp.ru>)
-        id 1hKK2K-000JR2-6A; Sat, 27 Apr 2019 12:54:24 +0300
-Received: from [5.164.181.148] (account sghpc@golosunov.pp.ru HELO sghpc.hn.golosunov.pp.ru)
-        by proxy02.mail.nic.ru (Exim 5.55)
-        with id 1hKK2K-0006Oi-0o; Sat, 27 Apr 2019 12:54:24 +0300
-Received: from stepan by sghpc.hn.golosunov.pp.ru with local (Exim 4.89)
-        (envelope-from <stepan@golosunov.pp.ru>)
-        id 1hKK2E-0007po-UT; Sat, 27 Apr 2019 13:54:19 +0400
-Date:   Sat, 27 Apr 2019 13:54:18 +0400
-From:   Stepan Golosunov <stepan@golosunov.pp.ru>
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joseph Myers <joseph@codesourcery.com>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Deepa Dinamani <deepa.kernel@gmail.com>
-Subject: Re: [PATCH 1/2] y2038: make CONFIG_64BIT_TIME unconditional
-Message-ID: <20190427095418.344yoomf5nwznatd@sghpc.golosunov.pp.ru>
-References: <20190426142531.1378357-1-arnd@arndb.de>
- <20190427004653.3cecd1cb@jawa>
+        Sat, 27 Apr 2019 05:55:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=TX5MgcqQkk3zac0vfZJisWBjIybTtuyDWso/ooWAlhM=; b=wKz0SqOi1x9gT7QAvl3b8BGLxp
+        iUuH4RxiieEZWoeNBtqjvRk2cZhXxqTnsWoq/DcWYjp95vM9+x7wdWUdNhnzlstAq/Txb95X5RYqZ
+        01bKIZ4vXuR3OgIltyOGhBJzCsgijbq7T4fA4GzWASgirQtgjKymtm+xYt9is2tQLEO2oa2erVTva
+        TSAOLBgRxP2HDI7n8H3YHp5AqQLcVM3KA4eCLxbaNiXUNMc+pLhe/xphxnVh6ACW4M4MB76B1ej+E
+        jr0I2YWwKKUEkgHH6GQldJOC2+U5lc5LRm9+1uTHV3GWgNYS1B0MjmpGB8PoWcEoZtptdFhaxdk2X
+        wSBaWD/Q==;
+Received: from 177.17.250.151.dynamic.adsl.gvt.net.br ([177.17.250.151] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hKK2s-0005mQ-Jz; Sat, 27 Apr 2019 09:54:59 +0000
+Date:   Sat, 27 Apr 2019 06:54:52 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/27] Include linux x86 docs into Sphinx TOC tree
+Message-ID: <20190427065452.183f60a3@coco.lan>
+In-Reply-To: <20190427024659.iav7ajabw7cljrxw@mail.google.com>
+References: <20190426153150.21228-1-changbin.du@gmail.com>
+        <20190426123946.554730b8@coco.lan>
+        <20190427024659.iav7ajabw7cljrxw@mail.google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190427004653.3cecd1cb@jawa>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-27.04.2019 в 00:46:53 +0200 Lukasz Majewski написал:
-> Hi Arnd,
-> 
-> > As Stepan Golosunov points out, we made a small mistake in the
-> > get_timespec64() function in the kernel. It was originally added under
-> > the assumption that CONFIG_64BIT_TIME would get enabled on all 32-bit
-> > and 64-bit architectures, but when I did the conversion, I only turned
-> > it on for 32-bit ones.
+Em Sat, 27 Apr 2019 10:47:00 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
+
+> On Fri, Apr 26, 2019 at 12:39:46PM -0300, Mauro Carvalho Chehab wrote:
+> > Em Fri, 26 Apr 2019 23:31:23 +0800
+> > Changbin Du <changbin.du@gmail.com> escreveu:
+> >   
+> > > Hi all,
+> > > 
+> > > The kernel now uses Sphinx to generate intelligent and beautiful documentation
+> > > from reStructuredText files. I converted most of the Linux x86 docs to rst
+> > > format in this serias.
+> > > 
+> > > For you to preview, please visit below url:
+> > > http://www.bytemem.com:8080/kernel-doc/index.html  
 > > 
-> > The effect is that the get_timespec64() function never clears the
-> > upper half of the tv_nsec field for 32-bit tasks in compat mode.
-> > Clearing this is required for POSIX compliant behavior of functions
-> > that pass a 'timespec' structure with a 64-bit tv_sec and a 32-bit
-> > tv_nsec, plus uninitialized padding.
-
-> At least for my setup (32bit ARM with 64 bit time support) this patch is
-> not fixing anything.
-
-The patch is not supposed to fix anything on 32-bit architectures as
-in-kernel struct timespec64 has 32-bit tv_nsec there.  Thus truncation
-should happen automatically.  I also missed that fact when I was
-reading get_timespec64 code.
-
-(I am wondering whether such trucation is undefined behaviour in C and
-whether there should be sign-extension instead of zeroing-out for the
-in_compat_syscall() case though.)
-
-> > The easiest fix for linux-5.1 is to just make the Kconfig symbol
-> > unconditional, as it was originally intended. As a follow-up,
-> > we should remove any #ifdef CONFIG_64BIT_TIME completely.
-> > 
-> > Link:
-> > https://lore.kernel.org/lkml/20190422090710.bmxdhhankurhafxq@sghpc.golosunov.pp.ru/
-> > Cc: Lukasz Majewski <lukma@denx.de> Cc: Stepan Golosunov
-> > <stepan@golosunov.pp.ru> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> > Please apply this one as a bugfix for 5.1
-> > ---
-> >  arch/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/Kconfig b/arch/Kconfig
-> > index 33687dddd86a..9092e0ffe4d3 100644
-> > --- a/arch/Kconfig
-> > +++ b/arch/Kconfig
-> > @@ -764,7 +764,7 @@ config COMPAT_OLD_SIGACTION
-> >  	bool
+> > Do you have a URL for the git tree? It is probably easier to merge from
+> > it on a tem branch locally, specially for some patches like 02/27, were 
+> > git didn't understand the conversion as a rename.
 > >  
-> >  config 64BIT_TIME
-> > -	def_bool ARCH_HAS_64BIT_TIME
-> > +	def_bool y
-> >  	help
-> >  	  This should be selected by all architectures that need to
-> > support new system calls with a 64-bit time_t. This is relevant on
-> > all 32-bit
+> yeah, I can send a pull request if @maintainer prefers.
+
+No need for a pull request. I just want an URL so I can pull and be
+able to review the patches twitching the similarity detection of git
+(for example running git show -M10) in order to force git to consider
+patches like 02/27 as a renames.
+
+> 
+> > > 
+> > > Thank you!
+> > > 
+> > > Changbin Du (27):
+> > >   Documentation: add Linux x86 docs to Sphinx TOC tree
+> > >   Documentation: x86: convert boot.txt to reST
+> > >   Documentation: x86: convert topology.txt to reST
+> > >   Documentation: x86: convert exception-tables.txt to reST
+> > >   Documentation: x86: convert kernel-stacks to reST
+> > >   Documentation: x86: convert entry_64.txt to reST
+> > >   Documentation: x86: convert earlyprintk.txt to reST
+> > >   Documentation: x86: convert zero-page.txt to reST
+> > >   Documentation: x86: convert tlb.txt to reST
+> > >   Documentation: x86: convert mtrr.txt to reST
+> > >   Documentation: x86: convert pat.txt to reST
+> > >   Documentation: x86: convert protection-keys.txt to reST
+> > >   Documentation: x86: convert intel_mpx.txt to reST
+> > >   Documentation: x86: convert amd-memory-encryption.txt to reST
+> > >   Documentation: x86: convert pti.txt to reST
+> > >   Documentation: x86: convert microcode.txt to reST
+> > >   Documentation: x86: convert resctrl_ui.txt to reST
+> > >   Documentation: x86: convert orc-unwinder.txt to reST
+> > >   Documentation: x86: convert usb-legacy-support.txt to reST
+> > >   Documentation: x86: convert i386/IO-APIC.txt to reST
+> > >   Documentation: x86: convert x86_64/boot-options.txt to reST
+> > >   Documentation: x86: convert x86_64/uefi.txt to reST
+> > >   Documentation: x86: convert x86_64/mm.txt to reST
+> > >   Documentation: x86: convert x86_64/5level-paging.txt to reST
+> > >   Documentation: x86: convert x86_64/fake-numa-for-cpusets to reST
+> > >   Documentation: x86: convert x86_64/cpu-hotplug-spec to reST
+> > >   Documentation: x86: convert x86_64/machinecheck to reST
+> > > 
+> > >  Documentation/index.rst                       |    1 +
+> > >  ...cryption.txt => amd-memory-encryption.rst} |   13 +-
+> > >  Documentation/x86/boot.rst                    | 1238 +++++++++++++++++
+> > >  Documentation/x86/boot.txt                    | 1130 ---------------
+> > >  .../x86/{earlyprintk.txt => earlyprintk.rst}  |  103 +-
+> > >  .../x86/{entry_64.txt => entry_64.rst}        |   12 +-
+> > >  ...eption-tables.txt => exception-tables.rst} |  231 +--
+> > >  .../x86/i386/{IO-APIC.txt => IO-APIC.rst}     |   26 +-
+> > >  Documentation/x86/i386/index.rst              |   10 +
+> > >  Documentation/x86/index.rst                   |   30 +
+> > >  .../x86/{intel_mpx.txt => intel_mpx.rst}      |  120 +-
+> > >  .../x86/{kernel-stacks => kernel-stacks.rst}  |   20 +-
+> > >  .../x86/{microcode.txt => microcode.rst}      |   62 +-
+> > >  Documentation/x86/mtrr.rst                    |  350 +++++
+> > >  Documentation/x86/mtrr.txt                    |  329 -----
+> > >  .../{orc-unwinder.txt => orc-unwinder.rst}    |   27 +-
+> > >  Documentation/x86/pat.rst                     |  235 ++++
+> > >  Documentation/x86/pat.txt                     |  230 ---
+> > >  ...rotection-keys.txt => protection-keys.rst} |   33 +-
+> > >  Documentation/x86/{pti.txt => pti.rst}        |   17 +-
+> > >  .../x86/{resctrl_ui.txt => resctrl_ui.rst}    |  913 ++++++------
+> > >  Documentation/x86/{tlb.txt => tlb.rst}        |   30 +-
+> > >  .../x86/{topology.txt => topology.rst}        |   92 +-
+> > >  ...acy-support.txt => usb-legacy-support.rst} |    8 +-
+> > >  .../{5level-paging.txt => 5level-paging.rst}  |   16 +-
+> > >  Documentation/x86/x86_64/boot-options.rst     |  326 +++++
+> > >  Documentation/x86/x86_64/boot-options.txt     |  278 ----
+> > >  ...{cpu-hotplug-spec => cpu-hotplug-spec.rst} |    5 +-
+> > >  ...-for-cpusets => fake-numa-for-cpusets.rst} |   25 +-
+> > >  Documentation/x86/x86_64/index.rst            |   16 +
+> > >  .../x86_64/{machinecheck => machinecheck.rst} |   11 +-
+> > >  Documentation/x86/x86_64/mm.rst               |  161 +++
+> > >  Documentation/x86/x86_64/mm.txt               |  153 --
+> > >  .../x86/x86_64/{uefi.txt => uefi.rst}         |   30 +-
+> > >  Documentation/x86/zero-page.rst               |   45 +
+> > >  Documentation/x86/zero-page.txt               |   40 -
+> > >  36 files changed, 3412 insertions(+), 2954 deletions(-)
+> > >  rename Documentation/x86/{amd-memory-encryption.txt => amd-memory-encryption.rst} (94%)
+> > >  create mode 100644 Documentation/x86/boot.rst
+> > >  delete mode 100644 Documentation/x86/boot.txt
+> > >  rename Documentation/x86/{earlyprintk.txt => earlyprintk.rst} (59%)
+> > >  rename Documentation/x86/{entry_64.txt => entry_64.rst} (95%)
+> > >  rename Documentation/x86/{exception-tables.txt => exception-tables.rst} (67%)
+> > >  rename Documentation/x86/i386/{IO-APIC.txt => IO-APIC.rst} (93%)
+> > >  create mode 100644 Documentation/x86/i386/index.rst
+> > >  create mode 100644 Documentation/x86/index.rst
+> > >  rename Documentation/x86/{intel_mpx.txt => intel_mpx.rst} (75%)
+> > >  rename Documentation/x86/{kernel-stacks => kernel-stacks.rst} (92%)
+> > >  rename Documentation/x86/{microcode.txt => microcode.rst} (81%)
+> > >  create mode 100644 Documentation/x86/mtrr.rst
+> > >  delete mode 100644 Documentation/x86/mtrr.txt
+> > >  rename Documentation/x86/{orc-unwinder.txt => orc-unwinder.rst} (93%)
+> > >  create mode 100644 Documentation/x86/pat.rst
+> > >  delete mode 100644 Documentation/x86/pat.txt
+> > >  rename Documentation/x86/{protection-keys.txt => protection-keys.rst} (83%)
+> > >  rename Documentation/x86/{pti.txt => pti.rst} (96%)
+> > >  rename Documentation/x86/{resctrl_ui.txt => resctrl_ui.rst} (68%)
+> > >  rename Documentation/x86/{tlb.txt => tlb.rst} (81%)
+> > >  rename Documentation/x86/{topology.txt => topology.rst} (74%)
+> > >  rename Documentation/x86/{usb-legacy-support.txt => usb-legacy-support.rst} (92%)
+> > >  rename Documentation/x86/x86_64/{5level-paging.txt => 5level-paging.rst} (91%)
+> > >  create mode 100644 Documentation/x86/x86_64/boot-options.rst
+> > >  delete mode 100644 Documentation/x86/x86_64/boot-options.txt
+> > >  rename Documentation/x86/x86_64/{cpu-hotplug-spec => cpu-hotplug-spec.rst} (88%)
+> > >  rename Documentation/x86/x86_64/{fake-numa-for-cpusets => fake-numa-for-cpusets.rst} (85%)
+> > >  create mode 100644 Documentation/x86/x86_64/index.rst
+> > >  rename Documentation/x86/x86_64/{machinecheck => machinecheck.rst} (92%)
+> > >  create mode 100644 Documentation/x86/x86_64/mm.rst
+> > >  delete mode 100644 Documentation/x86/x86_64/mm.txt
+> > >  rename Documentation/x86/x86_64/{uefi.txt => uefi.rst} (79%)
+> > >  create mode 100644 Documentation/x86/zero-page.rst
+> > >  delete mode 100644 Documentation/x86/zero-page.txt
+> > >   
+> > 
+> > 
+> > 
+> > Thanks,
+> > Mauro  
+> 
+
+
+
+Thanks,
+Mauro
