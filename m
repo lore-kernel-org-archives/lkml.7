@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6EAC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 053DCC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B77CC206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB02206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329758;
-	bh=u/7X6bPTk7eTj2MDE1+JTRr1atlYAerRaffnxKFQpUA=;
+	s=default; t=1556329767;
+	bh=evJDpNFgWitice73TZUOiOrdM8KKYqPwGX8ucIHotyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rfvElQ+15ItOCr7rQjQYbv4ep8IJlfHWOntj8B440ikhU8aacyCjz0g/C1waB8y2/
-	 BuYFP6LXl0j8/2f7Yg/XxHDSOJfBXbmQBRdeIZVEu3uVZ/Mey2qoTd1wLY9G4C0xbY
-	 LCIsqMUZZ5mWtniqJ+QhoS7i0iYBfQXhOC76dBdw=
+	b=fPXEvbD23xN6jMyHCqBi9MUyLUPRsusz1/JVyIYxp8+UguCpPCrttsLPPBx5pNhJH
+	 0e4VCAS0SJiRooVAgwh18Qs4+mxdGxc9s6l6hZBmZDBYRf+kCIf/x4dp5E0T+F9Xb/
+	 UzA/C30GVETeXS+UYp42wX5Vp5cKgXdRL8NTO1PE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbfD0BtR (ORCPT
+        id S1727258AbfD0Bt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:49:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46078 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:49:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728456AbfD0BmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:42:01 -0400
+        id S1728440AbfD0Bl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34114208CB;
-        Sat, 27 Apr 2019 01:42:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A86321537;
+        Sat, 27 Apr 2019 01:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329320;
-        bh=u/7X6bPTk7eTj2MDE1+JTRr1atlYAerRaffnxKFQpUA=;
+        s=default; t=1556329318;
+        bh=evJDpNFgWitice73TZUOiOrdM8KKYqPwGX8ucIHotyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mr5rmSNw3N5XCfA/r3yxZRDs6iwSP1+/Z/gIxvfA1+ZjOl03MpaPNdpV156xqkwZv
-         gy5DBA5tzbRd+ngmpp5/fPdrz9VTxadGIvP95nDr3PSzwiOdk89fbmcrhHMUTDNaoA
-         7ynrwIgQd+cFIXISO4smz00fTiioilKYrciP6v4w=
+        b=TmAsT4xeFr71qRytrV3heLnnnVbehyRkAgvkU67dxus5vunP5yXN/fzCtjThrGMJ/
+         c53zw1/Llwlk5gx3RD9RvaB7MzE03sWDvzzb1014KtZxw15oJIHbTGOSQERWulpOdM
+         QUIIc9CIyRrkxfe1P0jodeI/esOMLyr1Vlc/xGCA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 42/53] Bluetooth: btusb: request wake pin with NOAUTOEN
-Date:   Fri, 26 Apr 2019 21:40:39 -0400
-Message-Id: <20190427014051.7522-42-sashal@kernel.org>
+Cc:     Varun Prakash <varun@chelsio.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 40/53] scsi: csiostor: fix missing data copy in csio_scsi_err_handler()
+Date:   Fri, 26 Apr 2019 21:40:37 -0400
+Message-Id: <20190427014051.7522-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -60,48 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Varun Prakash <varun@chelsio.com>
 
-[ Upstream commit 771acc7e4a6e5dba779cb1a7fd851a164bc81033 ]
+[ Upstream commit 5c2442fd78998af60e13aba506d103f7f43f8701 ]
 
-Badly-designed systems might have (for example) active-high wake pins
-that default to high (e.g., because of external pull ups) until they
-have an active firmware which starts driving it low.  This can cause an
-interrupt storm in the time between request_irq() and disable_irq().
+If scsi cmd sglist is not suitable for DDP then csiostor driver uses
+preallocated buffers for DDP, because of this data copy is required from
+DDP buffer to scsi cmd sglist before calling ->scsi_done().
 
-We don't support shared interrupts here, so let's just pre-configure the
-interrupt to avoid auto-enabling it.
-
-Fixes: fd913ef7ce61 ("Bluetooth: btusb: Add out-of-band wakeup support")
-Fixes: 5364a0b4f4be ("arm64: dts: rockchip: move QCA6174A wakeup pin into its USB node")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/csiostor/csio_scsi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 77b67a5f21ee..40a4f95f6178 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -2888,6 +2888,7 @@ static int btusb_config_oob_wake(struct hci_dev *hdev)
- 		return 0;
+diff --git a/drivers/scsi/csiostor/csio_scsi.c b/drivers/scsi/csiostor/csio_scsi.c
+index dab0d3f9bee1..e09c7f360dbd 100644
+--- a/drivers/scsi/csiostor/csio_scsi.c
++++ b/drivers/scsi/csiostor/csio_scsi.c
+@@ -1713,8 +1713,11 @@ csio_scsi_err_handler(struct csio_hw *hw, struct csio_ioreq *req)
  	}
  
-+	irq_set_status_flags(irq, IRQ_NOAUTOEN);
- 	ret = devm_request_irq(&hdev->dev, irq, btusb_oob_wake_handler,
- 			       0, "OOB Wake-on-BT", data);
- 	if (ret) {
-@@ -2902,7 +2903,6 @@ static int btusb_config_oob_wake(struct hci_dev *hdev)
- 	}
+ out:
+-	if (req->nsge > 0)
++	if (req->nsge > 0) {
+ 		scsi_dma_unmap(cmnd);
++		if (req->dcopy && (host_status == DID_OK))
++			host_status = csio_scsi_copy_to_sgl(hw, req);
++	}
  
- 	data->oob_wake_irq = irq;
--	disable_irq(irq);
- 	bt_dev_info(hdev, "OOB Wake-on-BT configured at IRQ %u", irq);
- 	return 0;
- }
+ 	cmnd->result = (((host_status) << 16) | scsi_status);
+ 	cmnd->scsi_done(cmnd);
 -- 
 2.19.1
 
