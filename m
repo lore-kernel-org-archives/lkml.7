@@ -2,113 +2,125 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE186C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D544EC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 14:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5F82087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6EB208C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 14:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="u9yTIjKT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBCvnOjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfD0N7j (ORCPT
+        id S1726222AbfD0OFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 09:59:39 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42406 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD0N7j (ORCPT
+        Sat, 27 Apr 2019 10:05:13 -0400
+Received: from mail-lj1-f179.google.com ([209.85.208.179]:34957 "EHLO
+        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfD0OFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 09:59:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w25so3083119pfi.9
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 06:59:39 -0700 (PDT)
+        Sat, 27 Apr 2019 10:05:13 -0400
+Received: by mail-lj1-f179.google.com with SMTP id z26so5482124ljj.2
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 07:05:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=PI6q5rNMQB3L3EbNYvJfYnJlLDtk6q+SVS2IDRk0Rp8=;
-        b=u9yTIjKTT3SKeKWRO6iD3c6cD2C1LEI4Jkds0FliUgZbI0fQg69UAzwQF6W0ngyP4E
-         fQ+QzhFFQUJ/HCXEspgIwVeNd3wvVBbn6Hof8ui8IuzFMnPn85k62lKi+s8+Qmd55YMI
-         eFVKSs/3AdKtV1HpWGfBDUB6da2dvBlZia7nbXgbGVA+oMjf87SCKgIkwTHQTukSReCM
-         BsTZ8AUdyDTRY9cMcGRljcXH1RRaeuklljR0JioD4Iyeot7bIq7LwJH5G2n2MqHjaMkh
-         yOjissV8Ge8mDPj9GUPtc3FvqmqHp/9yXAxLqSO4353jJkkYPyoA6NEieGtZ8MoPtxO/
-         lUxg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D5JBJtaA8+xU/ta8vSAI+EZKEYF6gg1DC6VLGtaKsrU=;
+        b=bBCvnOjceZyWqo2j9QVR9UZnuJz5RXf4yYvhal6JIK5vTbSR7dTeEeA1i/biXWnkhG
+         NaPWVrPTWFdtlHI748HIIQfPSp6RaSd3rc1L4WvN/VLDjAYvyuiIeSu3OIAgMhlCMY/t
+         hcuyaBDGMz4YIpppAsZuyd2/JJSBE7cuEk1of67rMa5P7HrGL+6h/l/BbaarzEeYZlGB
+         43kbVfhjTHOarh6ODxQvLcaRsqRbue3uNwaHaokvGv+1G62NXA50LTIoJzUkZQkS5HVY
+         s1jkwkxIIo1Qjb8KDXVSvFA04VrekpMvGyGhqJkq/1Qh+GoROuE7+IOpgdUvPgDyS0w3
+         kxHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=PI6q5rNMQB3L3EbNYvJfYnJlLDtk6q+SVS2IDRk0Rp8=;
-        b=kcF9aR8ECAqRxgEK6QvaBQc5vggrXkfpq5zzH9BLLx61Intv5IaVx8kXYHYjkGlpBF
-         6ay5P7BpMoA890o9giQVh/P/qMrzU9w2ITjOEnnZbDx3c2eIXfdOw+t2JH7IDlRcdcNl
-         pt5oRuIodmCorHz1kBjyk96hh6oDT8tVvex3KjCFzQJY2kD8o20J6LZou0HRydIoB+NM
-         UewfnFO/pOvBp5wFs9MUOQXB1QnzwUYjvbho6iI4Z2yzdcLP0uEfJVSb+0FCw8IZb2p4
-         Z8Sg6GzsmaEbcClNIkK8nVGVZtMpKvT2wSREBGGTyiV52GPCbC9wNLNuMmKFriKmOo1E
-         x/wA==
-X-Gm-Message-State: APjAAAU1lh0d/oSUm6TZJvHI7bkzFGYIMiS+G6bLvQ4Cw7UdboROD5+q
-        +8fKNjX+dtDpahGDqEIpOa3Epw==
-X-Google-Smtp-Source: APXvYqyuDIoj/chuwVRIRvlZjuFvmtYd//KFgWHU4jKdUnphydGG6nGZjhT7DUgrzjKjXnZgFs3TcQ==
-X-Received: by 2002:a63:5c56:: with SMTP id n22mr50298258pgm.108.1556373578626;
-        Sat, 27 Apr 2019 06:59:38 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:a08d:668a:535c:86e9? ([2601:646:c200:1ef2:a08d:668a:535c:86e9])
-        by smtp.gmail.com with ESMTPSA id g63sm43128219pfc.127.2019.04.27.06.59.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Apr 2019 06:59:37 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <20190426180235.GC9835@mit.edu>
-Date:   Sat, 27 Apr 2019 06:59:36 -0700
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        David Laight <David.Laight@aculab.com>,
-        Ingo Molnar <mingo@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D5JBJtaA8+xU/ta8vSAI+EZKEYF6gg1DC6VLGtaKsrU=;
+        b=QOPET+cIPmY/HmnOyBTR8Xr4Fl6xfPtbc2weXSImI//zNlazR0QTbsIPANN4UM3Brx
+         qFguOBeDqQZBEvkuphsvL+IhzoYPLi8sT5GbJP1wgcVeQpZJg+Q2opGMinFdlXF1zft3
+         8f1BIfvFydqaulPPMMlSeQ8G1+326WsfbucSqA8LpRmBJNhgSrbviLjSrCMekVi5f0iU
+         BHvKcP6UU2x+Qw3on4v2QMqKBP8QHbB/QB+MPqEMNI7gJu312hSS5Qw/ZXdsXZgRjykT
+         0GcP4d5LS8i/KH38j1BoFy4ZLCi/cmTHdB+tHK24325zxZQEA+omfsQ5b1af28qUObb6
+         D5eA==
+X-Gm-Message-State: APjAAAWtINWD2kPkI//NPrvjqkpkwuCt8/TgDFCHmJfrF2QhTDcWyaTq
+        moyOpEfRmpmjBmjE1BdUn5w32eJH1YYh2jO1HJ8=
+X-Google-Smtp-Source: APXvYqxiFZQ9foKQ6fslbmxkGdkfQQWbcjv1U+5/EuxVGrfQm+4e4iUVUVg9qCIrPcD7T693eP3KhXr9V8y10/VGB0Q=
+X-Received: by 2002:a2e:984d:: with SMTP id e13mr5502187ljj.61.1556373910808;
+ Sat, 27 Apr 2019 07:05:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+ <20190424140013.GA14594@sinkpad> <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
+ <20190425095508.GA8387@gmail.com> <CAERHkrs0=xcx9UUZbZPYq4QbznUqHAuVbTnafSVpZFKwAEFyMA@mail.gmail.com>
+ <20190427091716.GC99668@gmail.com>
+In-Reply-To: <20190427091716.GC99668@gmail.com>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Sat, 27 Apr 2019 22:04:59 +0800
+Message-ID: <CAERHkruEAVBsh6FphMKqgR2+HjsVVegxjnpOFRNfbrfZDNpc9w@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1EB25EC8-28A4-46C6-84E9-14858B68C815@amacapital.net>
-References: <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com> <20190416154348.GB3004@mit.edu> <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com> <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com> <20190417151555.GG4686@mit.edu> <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com> <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com> <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com> <20190426140102.GA4922@mit.edu> <20190426174419.GB691@sol.localdomain> <20190426180235.GC9835@mit.edu>
-To:     Theodore Ts'o <tytso@mit.edu>
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Apr 27, 2019 at 5:17 PM Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Aubrey Li <aubrey.intel@gmail.com> wrote:
+>
+> > I have the same environment setup above, for nosmt cases, I used
+> > /sys interface Thomas mentioned, below is the result:
+> >
+> > NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> > 1/1      1.987( 1.97%)   2.043( 1.76%) -2.84% 1.985( 1.70%)  0.12%
+> > NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> > 2/2      2.074( 1.16%)   2.057( 2.09%)  0.81% 2.072( 0.77%)  0.10%
+> > NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> > 4/4      2.140( 0.00%)   2.138( 0.49%)  0.09% 2.137( 0.89%)  0.12%
+> > NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> > 8/8      2.140( 0.00%)   2.144( 0.53%) -0.17% 2.140( 0.00%)  0.00%
+> > NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> > 16/16    2.361( 2.99%)   2.369( 2.65%) -0.30% 2.406( 2.53%) -1.87%
+> > NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> > 32/32    5.032( 8.68%)   3.485( 0.49%) 30.76% 6.002(27.21%) -19.27%
+> > NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> > 64/64    7.577(34.35%)   3.972(23.18%) 47.57% 18.235(14.14%) -140.68%
+> > NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> > 128/128 24.639(14.28%)  27.440( 8.24%) -11.37% 34.746( 6.92%) -41.02%
+> > NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> > 256/256 38.797( 8.59%)  44.067(16.20%) -13.58% 42.536( 7.57%) -9.64%
+>
+> What do these numbers mean? Are these latencies, i.e. lower is better?
 
+Yeah, like above setup, I run sysbench(Non-AVX task, NA) and gemmbench
+(AVX512 task, AVX) in different level utilizatoin. The machine has 104 CPUs, so
+nosmt has 52 CPUs.  These numbers are 95th percentile latency of sysbench,
+lower is better.
 
-> On Apr 26, 2019, at 11:02 AM, Theodore Ts'o <tytso@mit.edu> wrote:
->=20
->> On Fri, Apr 26, 2019 at 10:44:20AM -0700, Eric Biggers wrote:
->> Would it be possibly to call ChaCha20 through the actual crypto API so th=
-at SIMD
->> instructions (e.g. AVX-2) could be used?  That would make it *much* faste=
-r.
->> Also consider AES-CTR with AES-NI instructions.
->=20
-> It's not obvious SIMD instructions will be faster in practice, since
-> it requires saving and restoring the vector/FPU registers.  If you're
-> going to be doing a *lot* of vector processing (for example when doing
-> block-level RAID-5 / RAID-6 computations), it might be worth it.  But
-> if you're only going to be turning the crank for 12 or 20 rounds, the
-> overhead of calling kernel_fpu_begin() and kernel_fpu_end() is
-> probably going to make this worth it.
->=20
-
-So generate a whole page or more of random bytes at a time and save them up f=
-or when they=E2=80=99re needed.=
+Thanks,
+-Aubrey
