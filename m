@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CD1C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF11C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B64206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB392206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbfD0PUv (ORCPT
+        id S1728173AbfD0PUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:20:51 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33958 "EHLO
+        Sat, 27 Apr 2019 11:20:53 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33962 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727588AbfD0PPe (ORCPT
+        by vger.kernel.org with ESMTP id S1727591AbfD0PPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:34 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP35-0000zG-Dk; Sat, 27 Apr 2019 16:15:31 +0100
+        id 1hKP35-0000zO-Ka; Sat, 27 Apr 2019 16:15:31 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2k-0004Vm-CQ; Sat, 27 Apr 2019 16:15:10 +0100
+        id 1hKP2j-0004UJ-RU; Sat, 27 Apr 2019 16:15:09 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Vinod Koul" <vkoul@kernel.org>,
-        "Alexandru Ardelean" <alexandru.ardelean@analog.com>
+        "Jacob Wen" <jian.w.wen@oracle.com>,
+        "Guillaume Nault" <gnault@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.474763181@decadent.org.uk>
+Message-ID: <lsq.1556377989.545615296@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 092/202] dmaengine: dmatest: unmap data on a single
- code-path when xfer done
+Subject: [PATCH 3.16 080/202] l2tp: copy 4 more bytes to linear part if
+ necessary
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,48 +57,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Jacob Wen <jian.w.wen@oracle.com>
 
-commit 0255200bd29afc320c6ea4c1adf8bdc13a9b3c15 upstream.
+commit 91c524708de6207f59dd3512518d8a1c7b434ee3 upstream.
 
-After the DMA transfer is done, we don't need to call the un-mapping code
-in 3 places. One is enough.
+The size of L2TPv2 header with all optional fields is 14 bytes.
+l2tp_udp_recv_core only moves 10 bytes to the linear part of a
+skb. This may lead to l2tp_recv_common read data outside of a skb.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-[bwh: Backported to 3.16 as dependency of commit 6454368a804c
- "dmaengine: dmatest: Abort test in case of mapping error"]
+This patch make sure that there is at least 14 bytes in the linear
+part of a skb to meet the maximum need of l2tp_udp_recv_core and
+l2tp_recv_common. The minimum size of both PPP HDLC-like frame and
+Ethernet frame is larger than 14 bytes, so we are safe to do so.
+
+Also remove L2TP_HDR_SIZE_NOSEQ, it is unused now.
+
+Fixes: fd558d186df2 ("l2tp: Split pppol2tp patch into separate l2tp and ppp parts")
+Suggested-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Jacob Wen <jian.w.wen@oracle.com>
+Acked-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/dma/dmatest.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/l2tp/l2tp_core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -638,14 +638,14 @@ static int dmatest_func(void *data)
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -82,8 +82,7 @@
+ #define L2TP_SLFLAG_S	   0x40000000
+ #define L2TP_SL_SEQ_MASK   0x00ffffff
  
- 		status = dma_async_is_tx_complete(chan, cookie, NULL, NULL);
+-#define L2TP_HDR_SIZE_SEQ		10
+-#define L2TP_HDR_SIZE_NOSEQ		6
++#define L2TP_HDR_SIZE_MAX		14
  
-+		dmaengine_unmap_put(um);
-+
- 		if (!done->done) {
--			dmaengine_unmap_put(um);
- 			result("test timed out", total_tests, src_off, dst_off,
- 			       len, 0);
- 			failed_tests++;
- 			continue;
- 		} else if (status != DMA_COMPLETE) {
--			dmaengine_unmap_put(um);
- 			result(status == DMA_ERROR ?
- 			       "completion error status" :
- 			       "completion busy status", total_tests, src_off,
-@@ -654,8 +654,6 @@ static int dmatest_func(void *data)
- 			continue;
- 		}
+ /* Default trace flags */
+ #define L2TP_DEFAULT_DEBUG_FLAGS	0
+@@ -897,7 +896,7 @@ static int l2tp_udp_recv_core(struct l2t
+ 	__skb_pull(skb, sizeof(struct udphdr));
  
--		dmaengine_unmap_put(um);
--
- 		if (params->noverify) {
- 			verbose_result("test passed", total_tests, src_off,
- 				       dst_off, len, 0);
+ 	/* Short packet? */
+-	if (!pskb_may_pull(skb, L2TP_HDR_SIZE_SEQ)) {
++	if (!pskb_may_pull(skb, L2TP_HDR_SIZE_MAX)) {
+ 		l2tp_info(tunnel, L2TP_MSG_DATA,
+ 			  "%s: recv short packet (len=%d)\n",
+ 			  tunnel->name, skb->len);
 
