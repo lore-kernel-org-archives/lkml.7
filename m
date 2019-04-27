@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D00EC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A314C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C02208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E85342168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329404;
-	bh=///dZjT54zwiOyXToeS1aK7+O5zTcc6Kr8S21+1ePjU=;
+	s=default; t=1556329408;
+	bh=csu3/yVdw+AXRydbiwpoo18j8p8IZhtRNOJJ4Sc1mbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xdItjOWjQPFpNPnGo+Ze5OqE9ZhfisQ2KXf8tNL8YdH7hUyOWSUJ24dDc90Hlh1yy
-	 b8STp8q3TjWdhb4lx5npmTT+FIjIn4yUsMshbHnTbBzQK2acyeGxTkVkuwThfpjCsv
-	 pZr1ZiopPUK3z2rUT8L0SSRq/wHEU/FX7MdmLfbo=
+	b=E1h0f5ZHFG8sjf4+Rb0rNTIxV3AzpNryBYbGI/srkc4ZfI/TmAe2oG+ZdZy/j1mcJ
+	 RglPl9t+rPkg8GfremMyC9eux5xZ0Xeqi3E1cHt3gvvdwDw4U8G3Nxf8MIjD/V7v3G
+	 NSD9AOuBLMfx1XAmMiQxjAdhRmtU4K0mFmKQEpxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbfD0BnX (ORCPT
+        id S1728795AbfD0Bn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47464 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:43:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728744AbfD0BnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:18 -0400
+        id S1728744AbfD0BnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:43:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD38B215EA;
-        Sat, 27 Apr 2019 01:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE86C215EA;
+        Sat, 27 Apr 2019 01:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329397;
-        bh=///dZjT54zwiOyXToeS1aK7+O5zTcc6Kr8S21+1ePjU=;
+        s=default; t=1556329403;
+        bh=csu3/yVdw+AXRydbiwpoo18j8p8IZhtRNOJJ4Sc1mbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sWR8LzzdjLSEjQL86xLLGN4hgePmy88SxKao0BWqPZnB1upEN28tIyemh/qevLrkQ
-         8H0WkyrDXV8bNmPOFgydwZvJ1BkwumNZRd+PSzFirqJ9WDq5ibgCtCDjjVXKCNlFlH
-         HMLFMiojODGZ6MERmYSozUVYGgl8cFcQltLdqI2s=
+        b=yOKebXeVtzG7CzQVJU5T0nIWJ3eBTM3hYl7wbLJZUivvsyUbIGe1ACzsBwWzTwpUE
+         STILYbSo/t/sO7VwtY0kJfyJOjHmXJKHXkZmOqHU3Oo7NdaUMBQ5gRUiQ5udKw2A9i
+         eRhGl4QvSc7JhcNQv7oKCozPtB/jGD5ep0djYMXs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 29/32] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
-Date:   Fri, 26 Apr 2019 21:42:20 -0400
-Message-Id: <20190427014224.8274-29-sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>, stable@kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.14 32/32] mm: add 'try_get_page()' helper function
+Date:   Fri, 26 Apr 2019 21:42:23 -0400
+Message-Id: <20190427014224.8274-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
 References: <20190427014224.8274-1-sashal@kernel.org>
@@ -59,45 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 ]
+[ Upstream commit 88b1a17dfc3ed7728316478fae0f5ad508f50397 ]
 
-syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
-is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
-(which is embedded into user-visible "struct nfs_mount_data" structure)
-despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
-bytes of AF_INET6 address to rpc_sockaddr2uaddr().
+This is the same as the traditional 'get_page()' function, but instead
+of unconditionally incrementing the reference count of the page, it only
+does so if the count was "safe".  It returns whether the reference count
+was incremented (and is marked __must_check, since the caller obviously
+has to be aware of it).
 
-Since "struct nfs_mount_data" structure is user-visible, we can't change
-"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
-assuming that everybody is using AF_INET family when passing address via
-"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
+Also like 'get_page()', you can't use this function unless you already
+had a reference to the page.  The intent is that you can use this
+exactly like get_page(), but in situations where you want to limit the
+maximum reference count.
 
-[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
+The code currently does an unconditional WARN_ON_ONCE() if we ever hit
+the reference count issues (either zero or negative), as a notification
+that the conditional non-increment actually happened.
 
-Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+NOTE! The count access for the "safety" check is inherently racy, but
+that doesn't matter since the buffer we use is basically half the range
+of the reference count (ie we look at the sign of the count).
+
+Acked-by: Matthew Wilcox <willy@infradead.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: stable@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/mm.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 77d8d03344c8..f464f8d9060c 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2044,7 +2044,8 @@ static int nfs23_validate_mount_data(void *options,
- 		memcpy(sap, &data->addr, sizeof(data->addr));
- 		args->nfs_server.addrlen = sizeof(data->addr);
- 		args->nfs_server.port = ntohs(data->addr.sin_port);
--		if (!nfs_verify_server_address(sap))
-+		if (sap->sa_family != AF_INET ||
-+		    !nfs_verify_server_address(sap))
- 			goto out_no_address;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 4023819837a6..ee0eae215210 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -839,6 +839,15 @@ static inline void get_page(struct page *page)
+ 	page_ref_inc(page);
+ }
  
- 		if (!(data->flags & NFS_MOUNT_TCP))
++static inline __must_check bool try_get_page(struct page *page)
++{
++	page = compound_head(page);
++	if (WARN_ON_ONCE(page_ref_count(page) <= 0))
++		return false;
++	page_ref_inc(page);
++	return true;
++}
++
+ static inline void put_page(struct page *page)
+ {
+ 	page = compound_head(page);
 -- 
 2.19.1
 
