@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9CFC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D816CC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8B62086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D33206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 03:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfD0DhD (ORCPT
+        id S1727422AbfD0Dgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 23:37:03 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:54909 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727387AbfD0Dgy (ORCPT
+        Fri, 26 Apr 2019 23:36:53 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:46531 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726294AbfD0Dgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 23:36:54 -0400
-X-UUID: 763cdf3e02464a9e9ba52c367cfb86b9-20190427
-X-UUID: 763cdf3e02464a9e9ba52c367cfb86b9-20190427
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        Fri, 26 Apr 2019 23:36:50 -0400
+X-UUID: 29baef2a9c1d4b20ba9a6cb17b7d620e-20190427
+X-UUID: 29baef2a9c1d4b20ba9a6cb17b7d620e-20190427
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
         (envelope-from <long.cheng@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 504444854; Sat, 27 Apr 2019 11:36:44 +0800
+        with ESMTP id 2024520194; Sat, 27 Apr 2019 11:36:47 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 27 Apr 2019 11:36:43 +0800
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 27 Apr 2019 11:36:45 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 27 Apr 2019 11:36:42 +0800
+ Transport; Sat, 27 Apr 2019 11:36:44 +0800
 From:   Long Cheng <long.cheng@mediatek.com>
 To:     Vinod Koul <vkoul@kernel.org>,
         Randy Dunlap <rdunlap@infradead.org>,
@@ -54,9 +54,9 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         YT Shen <yt.shen@mediatek.com>,
         Zhenbao Liu <zhenbao.liu@mediatek.com>,
         Long Cheng <long.cheng@mediatek.com>
-Subject: [PATCH 2/4] arm: dts: mt2712: add uart APDMA to device tree
-Date:   Sat, 27 Apr 2019 11:36:31 +0800
-Message-ID: <1556336193-15198-3-git-send-email-long.cheng@mediatek.com>
+Subject: [PATCH 4/4] serial: 8250-mtk: modify uart DMA rx
+Date:   Sat, 27 Apr 2019 11:36:33 +0800
+Message-ID: <1556336193-15198-5-git-send-email-long.cheng@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
 References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
@@ -68,118 +68,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. add uart APDMA controller device node
-2. add uart 0/1/2/3/4/5 DMA function
+Modify uart rx and complete for DMA.
 
 Signed-off-by: Long Cheng <long.cheng@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi |   51 +++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ drivers/tty/serial/8250/8250_mtk.c |   53 ++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 30 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-index 976d92a..f1e419e 100644
---- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-@@ -300,6 +300,9 @@
- 		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&baud_clk>, <&sys_clk>;
- 		clock-names = "baud", "bus";
-+		dmas = <&apdma 10
-+			&apdma 11>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
+diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+index c1fdbc0..04081a6 100644
+--- a/drivers/tty/serial/8250/8250_mtk.c
++++ b/drivers/tty/serial/8250/8250_mtk.c
+@@ -30,7 +30,6 @@
+ #define MTK_UART_DMA_EN_TX	0x2
+ #define MTK_UART_DMA_EN_RX	0x5
  
-@@ -369,6 +372,39 @@
- 			 (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_HIGH)>;
- 	};
+-#define MTK_UART_TX_SIZE	UART_XMIT_SIZE
+ #define MTK_UART_RX_SIZE	0x8000
+ #define MTK_UART_TX_TRIGGER	1
+ #define MTK_UART_RX_TRIGGER	MTK_UART_RX_SIZE
+@@ -64,28 +63,30 @@ static void mtk8250_dma_rx_complete(void *param)
+ 	struct mtk8250_data *data = up->port.private_data;
+ 	struct tty_port *tty_port = &up->port.state->port;
+ 	struct dma_tx_state state;
++	int copied, cnt, tmp;
+ 	unsigned char *ptr;
+-	int copied;
  
-+	apdma: dma-controller@11000400 {
-+		compatible = "mediatek,mt2712-uart-dma",
-+			     "mediatek,mt6577-uart-dma";
-+		reg = <0 0x11000400 0 0x80>,
-+		      <0 0x11000480 0 0x80>,
-+		      <0 0x11000500 0 0x80>,
-+		      <0 0x11000580 0 0x80>,
-+		      <0 0x11000600 0 0x80>,
-+		      <0 0x11000680 0 0x80>,
-+		      <0 0x11000700 0 0x80>,
-+		      <0 0x11000780 0 0x80>,
-+		      <0 0x11000800 0 0x80>,
-+		      <0 0x11000880 0 0x80>,
-+		      <0 0x11000900 0 0x80>,
-+		      <0 0x11000980 0 0x80>;
-+		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 105 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 107 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 108 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 109 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 111 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 114 IRQ_TYPE_LEVEL_LOW>;
-+		dma-requests = <12>;
-+		clocks = <&pericfg CLK_PERI_AP_DMA>;
-+		clock-names = "apdma";
-+		#dma-cells = <1>;
-+	};
+-	dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
+-				dma->rx_size, DMA_FROM_DEVICE);
++	if (data->rx_status == DMA_RX_SHUTDOWN)
++		return;
+ 
+ 	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
++	cnt = dma->rx_size - state.residue;
++	tmp = cnt;
+ 
+-	if (data->rx_status == DMA_RX_SHUTDOWN)
+-		return;
++	if ((data->rx_pos + cnt) > dma->rx_size)
++		tmp = dma->rx_size - data->rx_pos;
+ 
+-	if ((data->rx_pos + state.residue) <= dma->rx_size) {
+-		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+-		copied = tty_insert_flip_string(tty_port, ptr, state.residue);
+-	} else {
+-		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+-		copied = tty_insert_flip_string(tty_port, ptr,
+-						dma->rx_size - data->rx_pos);
++	ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
++	copied = tty_insert_flip_string(tty_port, ptr, tmp);
++	data->rx_pos += tmp;
 +
- 	auxadc: adc@11001000 {
- 		compatible = "mediatek,mt2712-auxadc";
- 		reg = <0 0x11001000 0 0x1000>;
-@@ -385,6 +421,9 @@
- 		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&baud_clk>, <&sys_clk>;
- 		clock-names = "baud", "bus";
-+		dmas = <&apdma 0
-+			&apdma 1>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
++	if (cnt > tmp) {
+ 		ptr = (unsigned char *)(dma->rx_buf);
+-		copied += tty_insert_flip_string(tty_port, ptr,
+-				data->rx_pos + state.residue - dma->rx_size);
++		tmp = cnt - tmp;
++		copied += tty_insert_flip_string(tty_port, ptr, tmp);
++		data->rx_pos = tmp;
+ 	}
++
+ 	up->port.icount.rx += copied;
  
-@@ -395,6 +434,9 @@
- 		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&baud_clk>, <&sys_clk>;
- 		clock-names = "baud", "bus";
-+		dmas = <&apdma 2
-+			&apdma 3>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
+ 	tty_flip_buffer_push(tty_port);
+@@ -96,9 +97,7 @@ static void mtk8250_dma_rx_complete(void *param)
+ static void mtk8250_rx_dma(struct uart_8250_port *up)
+ {
+ 	struct uart_8250_dma *dma = up->dma;
+-	struct mtk8250_data *data = up->port.private_data;
+ 	struct dma_async_tx_descriptor	*desc;
+-	struct dma_tx_state	 state;
  
-@@ -405,6 +447,9 @@
- 		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&baud_clk>, <&sys_clk>;
- 		clock-names = "baud", "bus";
-+		dmas = <&apdma 4
-+			&apdma 5>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
+ 	desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
+ 					   dma->rx_size, DMA_DEV_TO_MEM,
+@@ -113,12 +112,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
  
-@@ -415,6 +460,9 @@
- 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&baud_clk>, <&sys_clk>;
- 		clock-names = "baud", "bus";
-+		dmas = <&apdma 6
-+			&apdma 7>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
+ 	dma->rx_cookie = dmaengine_submit(desc);
  
-@@ -629,6 +677,9 @@
- 		interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&baud_clk>, <&sys_clk>;
- 		clock-names = "baud", "bus";
-+		dmas = <&apdma 8
-+			&apdma 9>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
+-	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+-	data->rx_pos = state.residue;
+-
+-	dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
+-				   dma->rx_size, DMA_FROM_DEVICE);
+-
+ 	dma_async_issue_pending(dma->rxchan);
+ }
  
+@@ -131,13 +124,13 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
+ 	if (data->rx_status != DMA_RX_START)
+ 		return;
+ 
+-	dma->rxconf.direction		= DMA_DEV_TO_MEM;
+-	dma->rxconf.src_addr_width	= dma->rx_size / 1024;
+-	dma->rxconf.src_addr		= dma->rx_addr;
++	dma->rxconf.direction				= DMA_DEV_TO_MEM;
++	dma->rxconf.src_port_window_size	= dma->rx_size;
++	dma->rxconf.src_addr				= dma->rx_addr;
+ 
+-	dma->txconf.direction		= DMA_MEM_TO_DEV;
+-	dma->txconf.dst_addr_width	= MTK_UART_TX_SIZE / 1024;
+-	dma->txconf.dst_addr		= dma->tx_addr;
++	dma->txconf.direction				= DMA_MEM_TO_DEV;
++	dma->txconf.dst_port_window_size	= UART_XMIT_SIZE;
++	dma->txconf.dst_addr				= dma->tx_addr;
+ 
+ 	serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
+ 		UART_FCR_CLEAR_XMIT);
+@@ -217,7 +210,7 @@ static void mtk8250_shutdown(struct uart_port *port)
+ 	 * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
+ 	 *
+ 	 * We need to recalcualte the quot register, as the claculation depends
+-	 * on the vaule in the highspeed register.
++	 * on the value in the highspeed register.
+ 	 *
+ 	 * Some baudrates are not supported by the chip, so we use the next
+ 	 * lower rate supported and update termios c_flag.
 -- 
 1.7.9.5
 
