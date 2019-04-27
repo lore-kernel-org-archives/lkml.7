@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9047C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A4FC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED03208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6CC6208C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfD0P3H (ORCPT
+        id S1728424AbfD0P3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:29:07 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32922 "EHLO
+        Sat, 27 Apr 2019 11:29:19 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32980 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727284AbfD0PPT (ORCPT
+        by vger.kernel.org with ESMTP id S1727306AbfD0PPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:19 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2p-0000z6-UQ; Sat, 27 Apr 2019 16:15:16 +0100
+        id 1hKP2q-0000zP-2J; Sat, 27 Apr 2019 16:15:16 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2n-0004cn-2A; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2m-0004c4-Ps; Sat, 27 Apr 2019 16:15:12 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "James Morris" <james.morris@microsoft.com>,
-        "Eric Biggers" <ebiggers@google.com>,
-        "David Howells" <dhowells@redhat.com>,
-        "Aaro Koskinen" <aaro.koskinen@iki.fi>
+        "Michal Simek" <michal.simek@xilinx.com>,
+        "Wolfram Sang" <wsa@the-dreams.de>,
+        "Kyle Roeschley" <kyle.roeschley@ni.com>,
+        "Shubhrajyoti Datta" <shubhrajyoti.datta@xilinx.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.249665964@decadent.org.uk>
+Message-ID: <lsq.1556377989.422165519@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 169/202] KEYS: user: Align the payload buffer
+Subject: [PATCH 3.16 160/202] i2c: cadence: Fix the hold bit setting
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,40 +57,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-commit cc1780fc42c76c705dd07ea123f1143dc5057630 upstream.
+commit d358def706880defa4c9e87381c5bf086a97d5f9 upstream.
 
-Align the payload of "user" and "logon" keys so that users of the
-keyrings service can access it as a struct that requires more than
-2-byte alignment.  fscrypt currently does this which results in the read
-of fscrypt_key::size being misaligned as it needs 4-byte alignment.
+In case the hold bit is not needed we are carrying the old values.
+Fix the same by resetting the bit when not needed.
 
-Align to __alignof__(u64) rather than __alignof__(long) since in the
-future it's conceivable that people would use structs beginning with
-u64, which on some platforms would require more than 'long' alignment.
+Fixes the sporadic i2c bus lockups on National Instruments
+Zynq-based devices.
 
-Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Fixes: 2aa349f6e37c ("[PATCH] Keys: Export user-defined keyring operations")
-Fixes: 88bd6ccdcdd6 ("ext4 crypto: add encryption key management facilities")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: James Morris <james.morris@microsoft.com>
+Fixes: df8eb5691c48 ("i2c: Add driver for Cadence I2C controller")
+Reported-by: Kyle Roeschley <kyle.roeschley@ni.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Tested-by: Kyle Roeschley <kyle.roeschley@ni.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/keys/user-type.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-cadence.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/include/keys/user-type.h
-+++ b/include/keys/user-type.h
-@@ -29,7 +29,7 @@
- struct user_key_payload {
- 	struct rcu_head	rcu;		/* RCU destructor */
- 	unsigned short	datalen;	/* length of this data */
--	char		data[0];	/* actual data */
-+	char		data[0] __aligned(__alignof__(u64)); /* actual data */
- };
+--- a/drivers/i2c/busses/i2c-cadence.c
++++ b/drivers/i2c/busses/i2c-cadence.c
+@@ -320,8 +320,10 @@ static void cdns_i2c_mrecv(struct cdns_i
+ 	 * Check for the message size against FIFO depth and set the
+ 	 * 'hold bus' bit if it is greater than FIFO depth.
+ 	 */
+-	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
++	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
+ 		ctrl_reg |= CDNS_I2C_CR_HOLD;
++	else
++		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
  
- extern struct key_type key_type_user;
+ 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 
+@@ -375,8 +377,11 @@ static void cdns_i2c_msend(struct cdns_i
+ 	 * Check for the message size against FIFO depth and set the
+ 	 * 'hold bus' bit if it is greater than FIFO depth.
+ 	 */
+-	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
++	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
+ 		ctrl_reg |= CDNS_I2C_CR_HOLD;
++	else
++		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
++
+ 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 
+ 	/* Clear the interrupts in interrupt status register. */
 
