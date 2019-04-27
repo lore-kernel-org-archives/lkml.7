@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1451AC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C00C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27BB206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB27206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfD0PRv (ORCPT
+        id S1727819AbfD0PSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:17:51 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34386 "EHLO
+        Sat, 27 Apr 2019 11:18:02 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34334 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727718AbfD0PPl (ORCPT
+        by vger.kernel.org with ESMTP id S1727700AbfD0PPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:41 -0400
+        Sat, 27 Apr 2019 11:15:40 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP3D-00014I-SG; Sat, 27 Apr 2019 16:15:39 +0100
+        id 1hKP3A-00014I-MO; Sat, 27 Apr 2019 16:15:36 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2h-0004QI-Tb; Sat, 27 Apr 2019 16:15:07 +0100
+        id 1hKP2i-0004Rq-KP; Sat, 27 Apr 2019 16:15:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        "Heiko Carstens" <heiko.carstens@de.ibm.com>,
-        "Christian Borntraeger" <borntraeger@de.ibm.com>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Samir Virmani" <samir@embedur.com>,
+        "Tycho Andersen" <tycho@tycho.ws>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.725527461@decadent.org.uk>
+Message-ID: <lsq.1556377989.891094013@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 034/202] s390/early: improve machine detection
+Subject: [PATCH 3.16 053/202] uart: Fix crash in uart_write and uart_put_char
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,51 +56,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Samir Virmani <samir@embedur.com>
 
-commit 03aa047ef2db4985e444af6ee1c1dd084ad9fb4c upstream.
+commit aff9cf5955185d1f183227e46c5f8673fa483813 upstream.
 
-Right now the early machine detection code check stsi 3.2.2 for "KVM"
-and set MACHINE_IS_VM if this is different. As the console detection
-uses diagnose 8 if MACHINE_IS_VM returns true this will crash Linux
-early for any non z/VM system that sets a different value than KVM.
-So instead of assuming z/VM, do not set any of MACHINE_IS_LPAR,
-MACHINE_IS_VM, or MACHINE_IS_KVM.
+We were experiencing a crash similar to the one reported as part of
+commit:a5ba1d95e46e ("uart: fix race between uart_put_char() and
+uart_shutdown()") in our testbed as well. We continue to observe the same
+crash after integrating the commit a5ba1d95e46e ("uart: fix race between
+uart_put_char() and uart_shutdown()")
 
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-[bwh: Backported to 3.16: adjust context]
+On reviewing the change, the port lock should be taken prior to checking for
+if (!circ->buf) in fn. __uart_put_char and other fns. that update the buffer
+uart_state->xmit.
+
+Traceback:
+
+[11/27/2018 06:24:32.4870] Unable to handle kernel NULL pointer dereference
+                           at virtual address 0000003b
+
+[11/27/2018 06:24:32.4950] PC is at memcpy+0x48/0x180
+[11/27/2018 06:24:32.4950] LR is at uart_write+0x74/0x120
+[11/27/2018 06:24:32.4950] pc : [<ffffffc0002e6808>]
+                           lr : [<ffffffc0003747cc>] pstate: 000001c5
+[11/27/2018 06:24:32.4950] sp : ffffffc076433d30
+[11/27/2018 06:24:32.4950] x29: ffffffc076433d30 x28: 0000000000000140
+[11/27/2018 06:24:32.4950] x27: ffffffc0009b9d5e x26: ffffffc07ce36580
+[11/27/2018 06:24:32.4950] x25: 0000000000000000 x24: 0000000000000140
+[11/27/2018 06:24:32.4950] x23: ffffffc000891200 x22: ffffffc01fc34000
+[11/27/2018 06:24:32.4950] x21: 0000000000000fff x20: 0000000000000076
+[11/27/2018 06:24:32.4950] x19: 0000000000000076 x18: 0000000000000000
+[11/27/2018 06:24:32.4950] x17: 000000000047cf08 x16: ffffffc000099e68
+[11/27/2018 06:24:32.4950] x15: 0000000000000018 x14: 776d726966205948
+[11/27/2018 06:24:32.4950] x13: 50203a6c6974755f x12: 74647075205d3333
+[11/27/2018 06:24:32.4950] x11: 3a35323a36203831 x10: 30322f37322f3131
+[11/27/2018 06:24:32.4950] x9 : 5b205d303638342e x8 : 746164206f742070
+[11/27/2018 06:24:32.4950] x7 : 7520736920657261 x6 : 000000000000003b
+[11/27/2018 06:24:32.4950] x5 : 000000000000817a x4 : 0000000000000008
+[11/27/2018 06:24:32.4950] x3 : 2f37322f31312a5b x2 : 000000000000006e
+[11/27/2018 06:24:32.4950] x1 : ffffffc0009b9cf0 x0 : 000000000000003b
+
+[11/27/2018 06:24:32.4950] CPU2: stopping
+[11/27/2018 06:24:32.4950] CPU: 2 PID: 0 Comm: swapper/2 Tainted: P      D    O    4.1.51 #3
+[11/27/2018 06:24:32.4950] Hardware name: Broadcom-v8A (DT)
+[11/27/2018 06:24:32.4950] Call trace:
+[11/27/2018 06:24:32.4950] [<ffffffc0000883b8>] dump_backtrace+0x0/0x150
+[11/27/2018 06:24:32.4950] [<ffffffc00008851c>] show_stack+0x14/0x20
+[11/27/2018 06:24:32.4950] [<ffffffc0005ee810>] dump_stack+0x90/0xb0
+[11/27/2018 06:24:32.4950] [<ffffffc00008e844>] handle_IPI+0x18c/0x1a0
+[11/27/2018 06:24:32.4950] [<ffffffc000080c68>] gic_handle_irq+0x88/0x90
+
+Fixes: a5ba1d95e46e ("uart: fix race between uart_put_char() and uart_shutdown()")
+Signed-off-by: Samir Virmani <samir@embedur.com>
+Acked-by: Tycho Andersen <tycho@tycho.ws>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16:
+ - Keep open-coding uart_port_lock()
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/s390/kernel/early.c | 4 ++--
- arch/s390/kernel/setup.c | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/tty/serial/serial_core.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/arch/s390/kernel/early.c
-+++ b/arch/s390/kernel/early.c
-@@ -232,10 +232,10 @@ static noinline __init void detect_machi
- 	if (stsi(vmms, 3, 2, 2) || !vmms->count)
- 		return;
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -480,10 +480,12 @@ static inline int __uart_put_char(struct
+ 	unsigned long flags;
+ 	int ret = 0;
  
--	/* Running under KVM? If not we assume z/VM */
-+	/* Detect known hypervisors */
- 	if (!memcmp(vmms->vm[0].cpi, "\xd2\xe5\xd4", 3))
- 		S390_lowcore.machine_flags |= MACHINE_FLAG_KVM;
--	else
-+	else if (!memcmp(vmms->vm[0].cpi, "\xa9\x61\xe5\xd4", 4))
- 		S390_lowcore.machine_flags |= MACHINE_FLAG_VM;
- }
+-	if (!circ->buf)
++	spin_lock_irqsave(&port->lock, flags);
++	if (!circ->buf) {
++		spin_unlock_irqrestore(&port->lock, flags);
+ 		return 0;
++	}
  
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -831,6 +831,8 @@ void __init setup_arch(char **cmdline_p)
- 		pr_info("Linux is running under KVM in 64-bit mode\n");
- 	else if (MACHINE_IS_LPAR)
- 		pr_info("Linux is running natively in 64-bit mode\n");
-+	else
-+		pr_info("Linux is running as a guest in 64-bit mode\n");
- #endif /* CONFIG_64BIT */
+-	spin_lock_irqsave(&port->lock, flags);
+ 	if (uart_circ_chars_free(circ) != 0) {
+ 		circ->buf[circ->head] = c;
+ 		circ->head = (circ->head + 1) & (UART_XMIT_SIZE - 1);
+@@ -524,12 +526,14 @@ static int uart_write(struct tty_struct
+ 	}
  
- 	/* Have one command line that is parsed and saved in /proc/cmdline */
+ 	port = state->uart_port;
++	spin_lock_irqsave(&port->lock, flags);
+ 	circ = &state->xmit;
+ 
+-	if (!circ->buf)
++	if (!circ->buf) {
++		spin_unlock_irqrestore(&port->lock, flags);
+ 		return 0;
++	}
+ 
+-	spin_lock_irqsave(&port->lock, flags);
+ 	while (1) {
+ 		c = CIRC_SPACE_TO_END(circ->head, circ->tail, UART_XMIT_SIZE);
+ 		if (count < c)
 
