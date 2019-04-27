@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ABCC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F396C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15C0206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44265206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbfD0PXs (ORCPT
+        id S1728297AbfD0PX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:23:48 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34704 "EHLO
+        Sat, 27 Apr 2019 11:23:56 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33590 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728179AbfD0PXa (ORCPT
+        by vger.kernel.org with ESMTP id S1727500AbfD0PP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:23:30 -0400
+        Sat, 27 Apr 2019 11:15:29 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP3B-0000zQ-NR; Sat, 27 Apr 2019 16:15:37 +0100
+        id 1hKP2z-0000zK-6D; Sat, 27 Apr 2019 16:15:25 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2i-0004RG-C8; Sat, 27 Apr 2019 16:15:08 +0100
+        id 1hKP2l-0004ZG-Sq; Sat, 27 Apr 2019 16:15:11 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Thierry Reding" <treding@nvidia.com>,
-        "Sakari Ailus" <sakari.ailus@linux.intel.com>
+        "Richard Weinberger" <richard@nod.at>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.874292778@decadent.org.uk>
+Message-ID: <lsq.1556377989.599178696@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 046/202] media: v4l: ioctl: Validate num_planes for
- debug messages
+Subject: [PATCH 3.16 135/202] Clean up signal_delivered()
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,42 +54,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Richard Weinberger <richard@nod.at>
 
-commit 7fe9f01c04c2673bd6662c35b664f0f91888b96f upstream.
+commit 10b1c7ac8bfed429cf3dcb0225482c8dc1485d8e upstream.
 
-The num_planes field in struct v4l2_pix_format_mplane is used in a loop
-before validating it. As the use is printing a debug message in this case,
-just cap the value to the maximum allowed.
+ - Pass a ksignal struct to it
+ - Remove unused regs parameter
+ - Make it private as it's nowhere outside of kernel/signal.c is used
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Richard Weinberger <richard@nod.at>
+[bwh: Backported to 3.16 as dependency of commit 35634ffa1751
+ "signal: Always notice exiting tasks"]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/linux/signal.h |  1 -
+ kernel/signal.c        | 21 ++++++++-------------
+ 2 files changed, 8 insertions(+), 14 deletions(-)
 
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -247,6 +247,7 @@ static void v4l_print_format(const void
- 	const struct v4l2_sliced_vbi_format *sliced;
- 	const struct v4l2_window *win;
- 	const struct v4l2_sdr_format *sdr;
-+	u32 planes;
- 	unsigned i;
+--- a/include/linux/signal.h
++++ b/include/linux/signal.h
+@@ -281,7 +281,6 @@ struct ksignal {
  
- 	pr_cont("type=%s", prt_names(p->type, v4l2_type_names));
-@@ -279,7 +280,8 @@ static void v4l_print_format(const void
- 			(mp->pixelformat >> 24) & 0xff,
- 			prt_names(mp->field, v4l2_field_names),
- 			mp->colorspace, mp->num_planes);
--		for (i = 0; i < mp->num_planes; i++)
-+		planes = min_t(u32, mp->num_planes, VIDEO_MAX_PLANES);
-+		for (i = 0; i < planes; i++)
- 			printk(KERN_DEBUG "plane %u: bytesperline=%u sizeimage=%u\n", i,
- 					mp->plane_fmt[i].bytesperline,
- 					mp->plane_fmt[i].sizeimage);
+ extern int get_signal_to_deliver(siginfo_t *info, struct k_sigaction *return_ka, struct pt_regs *regs, void *cookie);
+ extern void signal_setup_done(int failed, struct ksignal *ksig, int stepping);
+-extern void signal_delivered(int sig, siginfo_t *info, struct k_sigaction *ka, struct pt_regs *regs, int stepping);
+ extern void exit_signals(struct task_struct *tsk);
+ extern void kernel_sigaction(int, __sighandler_t);
+ 
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2361,19 +2361,15 @@ relock:
+ 
+ /**
+  * signal_delivered - 
+- * @sig:		number of signal being delivered
+- * @info:		siginfo_t of signal being delivered
+- * @ka:			sigaction setting that chose the handler
+- * @regs:		user register state
++ * @ksig:		kernel signal struct
+  * @stepping:		nonzero if debugger single-step or block-step in use
+  *
+  * This function should be called when a signal has successfully been
+- * delivered. It updates the blocked signals accordingly (@ka->sa.sa_mask
++ * delivered. It updates the blocked signals accordingly (@ksig->ka.sa.sa_mask
+  * is always blocked, and the signal itself is blocked unless %SA_NODEFER
+- * is set in @ka->sa.sa_flags.  Tracing is notified.
++ * is set in @ksig->ka.sa.sa_flags.  Tracing is notified.
+  */
+-void signal_delivered(int sig, siginfo_t *info, struct k_sigaction *ka,
+-			struct pt_regs *regs, int stepping)
++static void signal_delivered(struct ksignal *ksig, int stepping)
+ {
+ 	sigset_t blocked;
+ 
+@@ -2383,9 +2379,9 @@ void signal_delivered(int sig, siginfo_t
+ 	   simply clear the restore sigmask flag.  */
+ 	clear_restore_sigmask();
+ 
+-	sigorsets(&blocked, &current->blocked, &ka->sa.sa_mask);
+-	if (!(ka->sa.sa_flags & SA_NODEFER))
+-		sigaddset(&blocked, sig);
++	sigorsets(&blocked, &current->blocked, &ksig->ka.sa.sa_mask);
++	if (!(ksig->ka.sa.sa_flags & SA_NODEFER))
++		sigaddset(&blocked, ksig->sig);
+ 	set_current_blocked(&blocked);
+ 	tracehook_signal_handler(stepping);
+ }
+@@ -2395,8 +2391,7 @@ void signal_setup_done(int failed, struc
+ 	if (failed)
+ 		force_sigsegv(ksig->sig, current);
+ 	else
+-		signal_delivered(ksig->sig, &ksig->info, &ksig->ka,
+-			signal_pt_regs(), stepping);
++		signal_delivered(ksig, stepping);
+ }
+ 
+ /*
 
