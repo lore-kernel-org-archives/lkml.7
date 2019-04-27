@@ -2,312 +2,200 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10DDC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E5CC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C676208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556366713;
-	bh=oAHaAhoZlU7Ls7SSxem4adPJlZlmqEkOxmiIQLImcjg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MZ5b3T4D/CD5/Ss+IDpOW5VDKYH0p95UhLJLR2hmanKpGJMc/QVx3mTqp5o0qfu3g
-	 JTRy7AJgKCJ4lj/hwXcEWwnVW5s9PZFgVAWlNi4rkdXD3J1SbDQtWIzA0Il6Hhijli
-	 71PqAFNyV+K1G8OYI0d5aEp8oU5WnatODnVpmTuI=
+	by mail.kernel.org (Postfix) with ESMTP id F01C92087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:06:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="Aup88Ctp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfD0MFM (ORCPT
+        id S1726402AbfD0MGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:05:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfD0MFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:05:11 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DDC42087F;
-        Sat, 27 Apr 2019 12:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556366709;
-        bh=oAHaAhoZlU7Ls7SSxem4adPJlZlmqEkOxmiIQLImcjg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Y/Em9WZzL5XOBdZ33LTaddLnTc0PFizG4InZtdAogsU8TrpSXhiqCLGIs82PgU21j
-         POsIyN9eXyCNZvqeFN4w5yfMpjTftanqwO8trC9OQ7qWWi9wNUdzaAWF1+GQ+EoUNF
-         zzWFSgkQessxYM7tGpF4Cix3SdxNojN+jvmzc8Dg=
-Date:   Sat, 27 Apr 2019 13:05:00 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Manish Narani <manish.narani@xilinx.com>, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com,
-        michal.simek@xilinx.com, Jisheng.Zhang@synaptics.com,
-        olof@lixom.net, dinguyen@kernel.org, amit.kucheria@linaro.org,
-        stefan.popa@analog.com, dmurphy@ti.com, marcus.folkesson@gmail.com,
-        tmaimon77@gmail.com, ricardo@ribalda.com, xc-racer2@live.ca,
-        contact@artur-rojek.eu, geert@linux-m68k.org,
-        smohanad@codeaurora.org, charles-antoine.couret@essensium.com,
-        stefan@agner.ch, max.krummenacher@toradex.com,
-        lee.jones@linaro.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] dt-bindings: iio: adc: Add Xilinx AMS binding
- documentation
-Message-ID: <20190427130500.7b695b33@archlinux>
-In-Reply-To: <20190426193309.GA9084@bogus>
-References: <1555943870-15353-1-git-send-email-manish.narani@xilinx.com>
-        <1555943870-15353-2-git-send-email-manish.narani@xilinx.com>
-        <20190426193309.GA9084@bogus>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 27 Apr 2019 08:06:47 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40088 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfD0MGr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 08:06:47 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w20so3461643qka.7
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 05:06:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=Jn0DNRgrGIDnMhpxnffP8fyZ53Hd1ACFJP7RRjDJyik=;
+        b=Aup88CtppE4N15ORZkQw7DnhRQiVPZeo4XRg1At0TYSMQ1RgxF9p50dEEGWOLACLpN
+         TceW+H1jArUoSFQpxlC4StIJUEBBjazPqNaQVL12UeK8ol5jkXMPpBrHdp8FEJ8rs9ye
+         jOMJKGP3oNUTtZZjwUjIkSltZbPGs3bTh/elTXyDDGYa2PJFGt+QPQN1/cuwaKCuEFnp
+         ORVIFcxdZTeVKa39mV4znh8zT4OsbTxEZPd2ACkwTjU3IED7UWTB29nRbCQz5PX9iKLI
+         gSZ5jgWQetDB0BQcHGISlaZfCXETpOFjt5ajxUT/tbB4ZsnQUi7b3IwDDi31k7KNEevg
+         YXoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=Jn0DNRgrGIDnMhpxnffP8fyZ53Hd1ACFJP7RRjDJyik=;
+        b=o8LnSfDrIvgUVR//okAMHOnHI427PSDeS08g3YflKAe1OSEC5NTYxYvUmJhINA/ye+
+         JLDouI+eFm6f3rEISN48lQgGDgQUalmJ6XoedIxIrAiUJIWdcpxv9C47WYCKMd2C2vRk
+         ZIhPLI29wYNld7Hq/E2v54en9B/Azz7m3PK59BEiI46UHbER1aYxeILqmTGpevXfAvrK
+         DnUrqQtvjEWHuyfTpqBJmFVyEDurChiiKT+IFqaPFnMHWSRCiAyPLfD+q6VkPGWYWBs+
+         5QIyezlOhSWoiQSiJ33gjZuYfqO/wjfHOxeHJjm4iG5rL6pJdiWQ7t29/WgbOj0c7egj
+         3zmg==
+X-Gm-Message-State: APjAAAV9Io/YA4a9zYwh0q8hQduP3rVwevECrg/8OQJaVRHKXG9HwyG3
+        wikwP5ROW9XMIpzJqvMWvD+wSA==
+X-Google-Smtp-Source: APXvYqySRM4qurhCBJaPz1gGEkIIrZ8MohzCNs/u6W4LZB21E7Pz0vJQyaCVn0LxqzM1dqUjqpyTqw==
+X-Received: by 2002:a37:bca:: with SMTP id 193mr24969039qkl.17.1556366805766;
+        Sat, 27 Apr 2019 05:06:45 -0700 (PDT)
+Received: from skullcanyon ([2002:c0de:c115:0:481e:e17e:2f68:43f8])
+        by smtp.gmail.com with ESMTPSA id j5sm14802257qtb.30.2019.04.27.05.06.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Apr 2019 05:06:44 -0700 (PDT)
+Message-ID: <f30f69af184cc80d5c56853b517943f45c90d9d9.camel@ndufresne.ca>
+Subject: Re: [PATCH v4] media: docs-rst: Document m2m stateless video
+ decoder interface
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Dafna Hirschfeld <dafna3@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Sat, 27 Apr 2019 08:06:42 -0400
+In-Reply-To: <793af82c-6b37-6f69-648e-2cd2a2e87645@xs4all.nl>
+References: <20190306080019.159676-1-acourbot@chromium.org>
+         <371df0e4ec9e38d83d11171cbd98f19954cbf787.camel@ndufresne.ca>
+         <da5aa9ab957923a72e30b169a3c242c4fe6260f1.camel@bootlin.com>
+         <c07703459c7e48904bd7fd83be1e675c70eee83c.camel@ndufresne.ca>
+         <d81d0112b99feba0a1899f3722077a4aeec9860c.camel@bootlin.com>
+         <439b7f57aa3ba2b2ed5b043f961ef87cb83912af.camel@ndufresne.ca>
+         <59e23c5ca5bfbadf9441ea06da2e9b9b5898c6d7.camel@bootlin.com>
+         <0b495143bb260cf9f8927ee541e7f001842ac5c3.camel@ndufresne.ca>
+         <CAPBb6MVG+3jQcw3AuhYDYCZ0YJ0aX=TmEuM5izh12GLw9V6B8Q@mail.gmail.com>
+         <793af82c-6b37-6f69-648e-2cd2a2e87645@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 (3.32.1-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019 14:33:09 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> On Mon, Apr 22, 2019 at 08:07:48PM +0530, Manish Narani wrote:
-> > Xilinx AMS have several ADC channels that can be used for measurement of
-> > different voltages and temperatures. Document the same in the bindings.
+Le vendredi 26 avril 2019 à 16:18 +0200, Hans Verkuil a écrit :
+> On 4/16/19 9:22 AM, Alexandre Courbot wrote:
+> 
+> <snip>
+> 
+> > Thanks for this great discussion. Let me try to summarize the status
+> > of this thread + the IRC discussion and add my own thoughts:
 > > 
-> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/iio/adc/xilinx-ams.txt     | 183 +++++++++++++++++++++
-> >  1 file changed, 183 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> > Proper support for multiple decoding units (e.g. H.264 slices) per
+> > frame should not be an afterthought ; compliance to encoded formats
+> > depend on it, and the benefit of lower latency is a significant
+> > consideration for vendors.
 > > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
-> > new file mode 100644
-> > index 0000000..cacb6d4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
-> > @@ -0,0 +1,183 @@
-> > +Xilinx AMS controller
-> > +`````````````````````
-> > +The AMS (Analog Monitoring System) includes an ADC as well as on-chip sensors
-> > +that can be used to sample external voltages and monitor on-die operating
-> > +conditions, such as temperature and supply voltage levels.
-> > +The AMS has two SYSMON blocks which are PL (Programmable Logic) SYSMON and
-> > +PS (Processing System) SYSMON.
-> > +All designs should have AMS registers, but PS and PL are optional. The
-> > +AMS controller can work with only PS, only PL and both PS and PL
-> > +configurations. Please specify registers according to your design. Devicetree
-> > +should always have AMS module property. Providing PS & PL module is optional.
-> > +
-> > +Required properties:
-> > +	- compatible: Should be "xlnx,zynqmp-ams"
-> > +	- reg: Should specify AMS register space
-> > +	- interrupts: Interrupt number for the AMS control interface
-> > +	- interrupt-names: Interrupt name, must be "ams-irq"
-> > +	- clocks: Should contain a clock specifier for the device
-> > +	- ranges: keep the property empty to map child address space
-> > +	          (for PS and/or PL) nodes 1:1 onto the parent address
-> > +	          space  
+> > m2m, which we use for all stateless codecs, has a strong assumption
+> > that one OUTPUT buffer consumed results in one CAPTURE buffer being
+> > produced. This assumption can however be overruled: at least the venus
+> > driver does it to implement the stateful specification.
+> > 
+> > So we need a way to specify frame boundaries when submitting encoded
+> > content to the driver. One request should contain a single OUTPUT
+> > buffer, containing a single decoding unit, but we need a way to
+> > specify whether the driver should directly produce a CAPTURE buffer
+> > from this request, or keep using the same CAPTURE buffer with
+> > subsequent requests.
+> > 
+> > I can think of 2 ways this can be expressed:
+> > 1) We keep the current m2m behavior as the default (a CAPTURE buffer
+> > is produced), and add a flag to ask the driver to change that behavior
+> > and hold on the CAPTURE buffer and reuse it with the next request(s) ;
+> > 2) We specify that no CAPTURE buffer is produced by default, unless a
+> > flag asking so is specified.
+> > 
+> > The flag could be specified in one of two ways:
+> > a) As a new v4l2_buffer.flag for the OUTPUT buffer ;
+> > b) As a dedicated control, either format-specific or more common to all codecs.
+> > 
+> > I tend to favor 2) and b) for this, for the reason that with H.264 at
+> > least, user-space does not know whether a slice is the last slice of a
+> > frame until it starts parsing the next one, and we don't know when we
+> > will receive it. If we use a control to ask that a CAPTURE buffer be
+> > produced, we can always submit another request with only that control
+> > set once it is clear that the frame is complete (and not delay
+> > decoding meanwhile). In practice I am not that familiar with
+> > latency-sensitive streaming ; maybe a smart streamer would just append
+> > an AUD NAL unit at the end of every frame and we can thus submit the
+> > flag it with the last slice without further delay?
+> > 
+> > An extra constraint to enforce would be that each decoding unit
+> > belonging to the same frame must be submitted with the same timestamp,
+> > otherwise the request submission would fail. We really need a
+> > framework to enforce all this at a higher level than individual
+> > drivers, once we reach an agreement I will start working on this.
+> > 
+> > Formats that do not support multiple decoding units per frame would
+> > reject any request that does not carry the end-of-frame information.
+> > 
+> > Anything missing / any further comment?
+> > 
 > 
-> empty is not what you've done in the example. Non-empty is preferred.
+> After reading through this thread and a further irc discussion I now
+> understand the problem. I think there are several ways this can be
+> solved, but I think this is the easiest:
 > 
-> > +
-> > +	AMS sub-nodes:
-> > +		- ams-ps : Used as PS-SYSMON node
-> > +		- ams-pl : Used as PL-SYSMON node
-> > +
-> > +
-> > +
-> > +AMS PS-SYSMON
-> > +`````````````
-> > +PS (Processing System) SYSMON is memory mapped to PS. This block has built-in
-> > +alarm generation logic that is used to interrupt the processor based on
-> > +condition set.
-> > +
-> > +Required properties:
-> > +	- compatible: Should be "xlnx,zynqmp-ams-ps"
-> > +	- reg: Register space for PS-SYSMON
-> > +
-> > +
-> > +
-> > +AMS PL-SYSMON
-> > +`````````````
-> > +PL-SYSMON is capable of monitoring off chip voltage and temperature. PL-SYSMON
-> > +block has DRP, JTAG and I2C interface to enable monitoring from external master.
-> > +Out of this interface currently only DRP is supported. This block has alarm
-> > +generation logic that is used to interrupt the processor based on condition set.
-> > +
-> > +Required properties:
-> > +	- compatible: Should be "xlnx,zynqmp-ams-pl"
-> > +	- reg: Register space for PL-SYSMON
-> > +
-> > +PL-SYSMON optional sub-nodes:
-> > +	- xlnx,ext-channels: List of external channels that are connected to the
-> > +	                     AMS PL module.  
+> Introduce a new V4L2_BUF_FLAG_HOLD_CAPTURE_BUFFER flag.
 > 
-> Why not just get rid of this and move 'channel' nodes up a level?
+> If set in the OUTPUT buffer, then don't mark the CAPTURE buffer as
+> done after processing the OUTPUT buffer.
 > 
-> > +
-> > +	  The child nodes of PL-SYSMON represent the external channels which are
-> > +	  connected to this Module. If the property is not present
-> > +	  no external channels will be assumed to be connected.
-> > +
-> > +	  Each child node represents one channel and has the following
-> > +	  properties:
-> > +
-> > +	Required properties:
-> > +		* reg: Pair of pins the channel is connected to. This value is
-> > +		       same as Channel Number for particular channel.
-> > +
-> > +		    'reg' value		Channel Name
-> > +		    -----------		------------
-> > +			30		VP/VN
-> > +			31		VUSER0
-> > +			32		VUSER1
-> > +			33		VUSER3
-> > +			34		VUSER4
-> > +			35		VAUXP[0]/VAUXN[0]
-> > +			36		VAUXP[1]/VAUXN[1]
-> > +			...
-> > +			50		VAUXP[15]/VAUXN[15]
-> > +
-> > +		Each channel number should only be used at most once. For
-> > +		more details on channels, refer to the table given at the end.
-> > +
-> > +	Optional properties:
-> > +		* xlnx,bipolar: If set the channel is used in bipolar
-> > +		  mode.  
-> 
-> I think we have a standard property for this now.
-Yes, in the meantime we introduced a standard binding for
-child channels, including bipolar.
+> If an OUTPUT buffer was queued with a different timestamp than was
+> used for the currently held CAPTURE buffer, then mark that CAPTURE
+> buffer as done before starting processing this OUTPUT buffer.
 
-Documentation/devicetree/bindings/iio/adc/adc.txt
-
-I haven't totally thought through how it maps to this particular device
-but from a quick glance, it should be possible.
-
-You will need to be more explicit with the pair of channels, rather
-than basically using an enum though.
-Have a go and let's see how it looks before concluding if that
-binding perhaps needs further extension.
-
-Thanks,
-
-Jonathan
-
+Just a curiosity, can you extend on how this would be handled. If there
+is a number of capture buffer, these should have "no-timestamp". So I
+suspect we need the condition to differentiate no-timestamp from
+previous timestamp. What I'm unclear is to what does it mean "no-
+timestamp". We already stated the timestamp 0 cannot be reserved as
+being an unset timestamp.
 
 > 
-> > +
-> > +
-> > +Example:
-> > +	xilinx_ams: ams@ffa50000 {
-> > +		compatible = "xlnx,zynqmp-ams";
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 56 4>;
-> > +		interrupt-names = "ams-irq";
-> > +		reg = <0x0 0xffa50000 0x0 0x800>;
-> > +		reg-names = "ams-base";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		#io-channel-cells = <1>;
-> > +		ranges = <0 0 0xffa50800 0x800>;
-> > +
-> > +		ams_ps: ams-ps@0,0 {  
+> In other words, for slicing you can just always set this flag and
+> group the slices by the OUTPUT timestamp. If you know that you
+> reached the last slice of a frame, then you can optionally clear the
+> flag to ensure the CAPTURE buffer is marked done without having to wait
+> for the first slice of the next frame to arrive.
 > 
-> unit address should be '0'
+> Potential disadvantage of this approach is that this relies on the
+> OUTPUT timestamp to be the same for all slices of the same frame.
 > 
-> > +			compatible = "xlnx,zynqmp-ams-ps";
-> > +			reg = <0 0x400>;
-> > +		};
-> > +
-> > +		ams_pl: ams-pl@1,0 {  
+> Which sounds reasonable to me.
 > 
-> unit address should be '400'
+> In addition add a V4L2_BUF_CAP_SUPPORTS_HOLD_CAPTURE_BUFFER
+> capability to signal support for this flag.
 > 
-> > +			compatible = "xlnx,zynqmp-ams-pl";
-> > +			reg = <0x400 0x400>;
-> > +			xlnx,ext-channels {  
+> I think this can be fairly easily implemented in v4l2-mem2mem.c.
 > 
-> Needs #address-cells and #size-cells. dtc should complain here.
+> In addition, this approach is not specific to codecs, it can be
+> used elsewhere as well (composing multiple output buffers into one
+> capture buffer is one use-case that comes to mind).
 > 
-> > +				channel@30 {
-> > +					reg = <30>;
-> > +					xlnx,bipolar;
-> > +				};
-> > +				channel@31 {
-> > +					reg = <31>;
-> > +				};
-> > +				channel@38 {
-> > +					reg = <38>;
-> > +					xlnx,bipolar;
-> > +				};
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > +
-> > +AMS Channel Details
-> > +```````````````````
-> > +Sysmon Block	|Channel|			Details					|Measurement
-> > +		|Number	|							 	|Type
-> > +---------------------------------------------------------------------------------------------------------
-> > +AMS CTRL	|0	|System PLLs voltage measurement, VCC_PSPLL.			|Voltage
-> > +		|1	|Battery voltage measurement, VCC_PSBATT.			|Voltage
-> > +		|2	|PL Internal voltage measurement, VCCINT.			|Voltage
-> > +		|3	|Block RAM voltage measurement, VCCBRAM.			|Voltage
-> > +		|4	|PL Aux voltage measurement, VCCAUX.				|Voltage
-> > +		|5	|Voltage measurement for six DDR I/O PLLs, VCC_PSDDR_PLL.	|Voltage
-> > +		|6	|VCC_PSINTFP_DDR voltage measurement.				|Voltage
-> > +---------------------------------------------------------------------------------------------------------
-> > +PS Sysmon	|7	|LPD temperature measurement.					|Temperature
-> > +		|8	|FPD temperature measurement (REMOTE).				|Temperature
-> > +		|9	|VCC PS LPD voltage measurement (supply1).			|Voltage
-> > +		|10	|VCC PS FPD voltage measurement (supply2).			|Voltage
-> > +		|11	|PS Aux voltage reference (supply3).				|Voltage
-> > +		|12	|DDR I/O VCC voltage measurement.				|Voltage
-> > +		|13	|PS IO Bank 503 voltage measurement (supply5).			|Voltage
-> > +		|14	|PS IO Bank 500 voltage measurement (supply6).			|Voltage
-> > +		|15	|VCCO_PSIO1 voltage measurement.				|Voltage
-> > +		|16	|VCCO_PSIO2 voltage measurement.				|Voltage
-> > +		|17	|VCC_PS_GTR voltage measurement (VPS_MGTRAVCC).			|Voltage
-> > +		|18	|VTT_PS_GTR voltage measurement (VPS_MGTRAVTT).			|Voltage
-> > +		|19	|VCC_PSADC voltage measurement.					|Voltage
-> > +---------------------------------------------------------------------------------------------------------
-> > +PL Sysmon	|20	|PL temperature measurement.					|Temperature
-> > +		|21	|PL Internal voltage measurement, VCCINT.			|Voltage
-> > +		|22	|PL Auxiliary voltage measurement, VCCAUX.			|Voltage
-> > +		|23	|ADC Reference P+ voltage measurement.				|Voltage
-> > +		|24	|ADC Reference N- voltage measurement.				|Voltage
-> > +		|25	|PL Block RAM voltage measurement, VCCBRAM.			|Voltage
-> > +		|26	|LPD Internal voltage measurement, VCC_PSINTLP (supply4).	|Voltage
-> > +		|27	|FPD Internal voltage measurement, VCC_PSINTFP (supply5).	|Voltage
-> > +		|28	|PS Auxiliary voltage measurement (supply6).			|Voltage
-> > +		|29	|PL VCCADC voltage measurement (vccams).			|Voltage
-> > +		|30	|Differential analog input signal voltage measurment.		|Voltage
-> > +		|31	|VUser0 voltage measurement (supply7).				|Voltage
-> > +		|32	|VUser1 voltage measurement (supply8).				|Voltage
-> > +		|33	|VUser2 voltage measurement (supply9).				|Voltage
-> > +		|34	|VUser3 voltage measurement (supply10).				|Voltage
-> > +		|35	|Auxiliary ch 0 voltage measurement (VAux0).			|Voltage
-> > +		|36	|Auxiliary ch 1 voltage measurement (VAux1).			|Voltage
-> > +		|37	|Auxiliary ch 2 voltage measurement (VAux2).			|Voltage
-> > +		|38	|Auxiliary ch 3 voltage measurement (VAux3).			|Voltage
-> > +		|39	|Auxiliary ch 4 voltage measurement (VAux4).			|Voltage
-> > +		|40	|Auxiliary ch 5 voltage measurement (VAux5).			|Voltage
-> > +		|41	|Auxiliary ch 6 voltage measurement (VAux6).			|Voltage
-> > +		|42	|Auxiliary ch 7 voltage measurement (VAux7).			|Voltage
-> > +		|43	|Auxiliary ch 8 voltage measurement (VAux8).			|Voltage
-> > +		|44	|Auxiliary ch 9 voltage measurement (VAux9).			|Voltage
-> > +		|45	|Auxiliary ch 10 voltage measurement (VAux10).			|Voltage
-> > +		|46	|Auxiliary ch 11 voltage measurement (VAux11).			|Voltage
-> > +		|47	|Auxiliary ch 12 voltage measurement (VAux12).			|Voltage
-> > +		|48	|Auxiliary ch 13 voltage measurement (VAux13).			|Voltage
-> > +		|49	|Auxiliary ch 14 voltage measurement (VAux14).			|Voltage
-> > +		|50	|Auxiliary ch 15 voltage measurement (VAux15).			|Voltage
-> > +---------------------------------------------------------------------------------------------------------
-> > -- 
-> > 2.1.1
-> >   
+> Comments? Other ideas?
+
+Sounds reasonable to me. I'll read through Paul's comment now and
+comment if needed.
+
+> 
+> Regards,
+> 
+> 	Hans
 
