@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFEFC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 07:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B6FC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 07:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCD32087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 07:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 099D92087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 07:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfD0HLZ (ORCPT
+        id S1727014AbfD0HLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 03:11:25 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:35526 "EHLO inva021.nxp.com"
+        Sat, 27 Apr 2019 03:11:39 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:35202 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726409AbfD0HKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 03:10:40 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 487232000B2;
-        Sat, 27 Apr 2019 09:10:38 +0200 (CEST)
+        id S1726223AbfD0HKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 03:10:38 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DFA2A1A002F;
+        Sat, 27 Apr 2019 09:10:35 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3B5662000AB;
-        Sat, 27 Apr 2019 09:10:38 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D20831A000B;
+        Sat, 27 Apr 2019 09:10:35 +0200 (CEST)
 Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id A985E205ED;
-        Sat, 27 Apr 2019 09:10:37 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 51C2C205ED;
+        Sat, 27 Apr 2019 09:10:35 +0200 (CEST)
 From:   laurentiu.tudor@nxp.com
 To:     netdev@vger.kernel.org, madalin.bucur@nxp.com, roy.pledge@nxp.com,
         camelia.groza@nxp.com, leoyang.li@nxp.com
@@ -35,9 +35,9 @@ Cc:     davem@davemloft.net, iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH v2 5/9] dpaa_eth: defer probing after qbman
-Date:   Sat, 27 Apr 2019 10:10:27 +0300
-Message-Id: <20190427071031.6563-6-laurentiu.tudor@nxp.com>
+Subject: [PATCH v2 1/9] soc/fsl/qman: fixup liodns only on ppc targets
+Date:   Sat, 27 Apr 2019 10:10:23 +0300
+Message-Id: <20190427071031.6563-2-laurentiu.tudor@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190427071031.6563-1-laurentiu.tudor@nxp.com>
 References: <20190427071031.6563-1-laurentiu.tudor@nxp.com>
@@ -49,60 +49,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Enabling SMMU altered the order of device probing causing the dpaa1
-ethernet driver to get probed before qbman and causing a boot crash.
-Add predictability in the probing order by deferring the ethernet
-driver probe after qbman and portals by using the recently introduced
-qbman APIs.
+ARM SoCs use SMMU so the liodn fixup done in the qman driver is no
+longer making sense and it also breaks the ICID settings inherited
+from u-boot. Do the fixups only for PPC targets.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
 ---
- .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/soc/fsl/qbman/qman_ccsr.c | 2 +-
+ drivers/soc/fsl/qbman/qman_priv.h | 9 ++++++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index dfebc30c4841..647e90e7434f 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2774,6 +2774,37 @@ static int dpaa_eth_probe(struct platform_device *pdev)
- 	int err = 0, i, channel;
- 	struct device *dev;
+diff --git a/drivers/soc/fsl/qbman/qman_ccsr.c b/drivers/soc/fsl/qbman/qman_ccsr.c
+index 109b38de3176..a6bb43007d03 100644
+--- a/drivers/soc/fsl/qbman/qman_ccsr.c
++++ b/drivers/soc/fsl/qbman/qman_ccsr.c
+@@ -596,7 +596,7 @@ static int qman_init_ccsr(struct device *dev)
+ }
  
-+	err = bman_is_probed();
-+	if (!err)
-+		return -EPROBE_DEFER;
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failing probe due to bman probe error\n");
-+		return -ENODEV;
-+	}
-+	err = qman_is_probed();
-+	if (!err)
-+		return -EPROBE_DEFER;
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failing probe due to qman probe error\n");
-+		return -ENODEV;
-+	}
-+	err = bman_portals_probed();
-+	if (!err)
-+		return -EPROBE_DEFER;
-+	if (err < 0) {
-+		dev_err(&pdev->dev,
-+			"failing probe due to bman portals probe error\n");
-+		return -ENODEV;
-+	}
-+	err = qman_portals_probed();
-+	if (!err)
-+		return -EPROBE_DEFER;
-+	if (err < 0) {
-+		dev_err(&pdev->dev,
-+			"failing probe due to qman portals probe error\n");
-+		return -ENODEV;
-+	}
-+
- 	/* device used for DMA mapping */
- 	dev = pdev->dev.parent;
- 	err = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(40));
+ #define LIO_CFG_LIODN_MASK 0x0fff0000
+-void qman_liodn_fixup(u16 channel)
++void __qman_liodn_fixup(u16 channel)
+ {
+ 	static int done;
+ 	static u32 liodn_offset;
+diff --git a/drivers/soc/fsl/qbman/qman_priv.h b/drivers/soc/fsl/qbman/qman_priv.h
+index 75a8f905f8f7..04515718cfd9 100644
+--- a/drivers/soc/fsl/qbman/qman_priv.h
++++ b/drivers/soc/fsl/qbman/qman_priv.h
+@@ -193,7 +193,14 @@ extern struct gen_pool *qm_cgralloc; /* CGR ID allocator */
+ u32 qm_get_pools_sdqcr(void);
+ 
+ int qman_wq_alloc(void);
+-void qman_liodn_fixup(u16 channel);
++#ifdef CONFIG_FSL_PAMU
++#define qman_liodn_fixup __qman_liodn_fixup
++#else
++static inline void qman_liodn_fixup(u16 channel)
++{
++}
++#endif
++void __qman_liodn_fixup(u16 channel);
+ void qman_set_sdest(u16 channel, unsigned int cpu_idx);
+ 
+ struct qman_portal *qman_create_affine_portal(
 -- 
 2.17.1
 
