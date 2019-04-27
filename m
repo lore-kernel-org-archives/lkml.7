@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5E4C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0B2C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF392086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F38206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329780;
-	bh=9cAu0lTOA3D5hrz8x3AppwOe81JG3yuveIU9kTzTI50=;
+	s=default; t=1556329789;
+	bh=8AgzaH6M226APsNZiWmQf5E8EhUV1ApwFuYJyhlrJC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CHtvsFvyRCIdiqCimY2K+W00NXg7JWD3QjDx2RkHKenbt6NB7E2d3c+Lpx+qlV1fk
-	 RHSbmWJSL/tM5K56bE5cpbmgt5hXyfILXX3w65bLX8EY4F1GercdI7pfMOcHERJHJx
-	 r4u2tgVrZSszKT93z6wCA8/omm/msbaTLFkNYq3g=
+	b=z/aGgmeVL/QAh973Hqi78V6vPrPI8tiw7WJGfWE797WoMgDSG9HsQQt4F1tlNSsvv
+	 ma0egQ55EVFIduai6hR9WLA2xU+W9TcvgLP/Lzpe7HjIVQEYhQsQevW+ZKnqzG7/Md
+	 RSE4g/cPuz2MDaeuqQnTud5C3XVQwa8RiyESX6lY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfD0Btj (ORCPT
+        id S1728121AbfD0Bts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:49:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45980 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:49:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbfD0Bly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:54 -0400
+        id S1728396AbfD0Blw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C5CD21655;
-        Sat, 27 Apr 2019 01:41:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05561216B7;
+        Sat, 27 Apr 2019 01:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329314;
-        bh=9cAu0lTOA3D5hrz8x3AppwOe81JG3yuveIU9kTzTI50=;
+        s=default; t=1556329311;
+        bh=8AgzaH6M226APsNZiWmQf5E8EhUV1ApwFuYJyhlrJC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cNSr+oiyY9iOCs8iR+ZLXbIyNR+oaJg/evk139HlRAEo8mdPyn8COoNUkDPlN/byF
-         ddtlv7t6WkZEzDG+niS5O1PcX7Cbl56VXS7CmjYDqQ65ognyp51s+y9XJ1fD/tIH75
-         DzCmA5oVPqne3e1+Y1S11xyFOATZ40i2jvqovjm4=
+        b=Y4WRDWPBwAY+e5zl1AE3KlY1clcOuaPBhf3Aa4+nmQDECcWXG2lMUVdRDlR/RbXa1
+         YUj21iCoAYJixgOzupoCw/RWDrrS6ZpssnvALe5ODbg7pcg6rqEkW4hcONYilQ9bP8
+         cTIXKUyT8kIg7+cbhJ+C6zrIXCV+22h5iZYtV5s0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kamal Heib <kamalheib1@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 38/53] RDMA/vmw_pvrdma: Fix memory leak on pvrdma_pci_remove
-Date:   Fri, 26 Apr 2019 21:40:35 -0400
-Message-Id: <20190427014051.7522-38-sashal@kernel.org>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 36/53] drm/sun4i: tcon top: Fix NULL/invalid pointer dereference in sun8i_tcon_top_un/bind
+Date:   Fri, 26 Apr 2019 21:40:33 -0400
+Message-Id: <20190427014051.7522-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -59,34 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamal Heib <kamalheib1@gmail.com>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit ea7a5c706fa49273cf6d1d9def053ecb50db2076 ]
+[ Upstream commit 1a07a94b47b1f528f39c3e6187b5eaf02efe44ea ]
 
-Make sure to free the DSR on pvrdma_pci_remove() to avoid the memory leak.
+There are two problems here:
 
-Fixes: 29c8d9eba550 ("IB: Add vmw_pvrdma driver")
-Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
-Acked-by: Adit Ranadive <aditr@vmware.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+1. Not all clk_data->hws[] need to be initialized, depending on various
+   configured quirks. This leads to NULL ptr deref in
+   clk_hw_unregister_gate() in sun8i_tcon_top_unbind()
+2. If there is error when registering the clk_data->hws[],
+   err_unregister_gates error path will try to unregister
+   IS_ERR()=true (invalid) pointer.
+
+For problem (1) I have this stack trace:
+
+Unable to handle kernel NULL pointer dereference at virtual
+  address 0000000000000008
+Call trace:
+ clk_hw_unregister+0x8/0x18
+ clk_hw_unregister_gate+0x14/0x28
+ sun8i_tcon_top_unbind+0x2c/0x60
+ component_unbind.isra.4+0x2c/0x50
+ component_bind_all+0x1d4/0x230
+ sun4i_drv_bind+0xc4/0x1a0
+ try_to_bring_up_master+0x164/0x1c0
+ __component_add+0xa0/0x168
+ component_add+0x10/0x18
+ sun8i_dw_hdmi_probe+0x18/0x20
+ platform_drv_probe+0x3c/0x70
+ really_probe+0xcc/0x278
+ driver_probe_device+0x34/0xa8
+
+Problem (2) was identified by head scratching.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190405233048.3823-1-megous@megous.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-index a5719899f49a..ed99f0a08dc4 100644
---- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-+++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-@@ -1123,6 +1123,8 @@ static void pvrdma_pci_remove(struct pci_dev *pdev)
- 	pvrdma_page_dir_cleanup(dev, &dev->cq_pdir);
- 	pvrdma_page_dir_cleanup(dev, &dev->async_pdir);
- 	pvrdma_free_slots(dev);
-+	dma_free_coherent(&pdev->dev, sizeof(*dev->dsr), dev->dsr,
-+			  dev->dsrbase);
+diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+index adcdf946c365..dfbcd1ad81a5 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
++++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+@@ -217,7 +217,7 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
  
- 	iounmap(dev->regs);
- 	kfree(dev->sgid_tbl);
+ err_unregister_gates:
+ 	for (i = 0; i < CLK_NUM; i++)
+-		if (clk_data->hws[i])
++		if (!IS_ERR_OR_NULL(clk_data->hws[i]))
+ 			clk_hw_unregister_gate(clk_data->hws[i]);
+ 	clk_disable_unprepare(tcon_top->bus);
+ err_assert_reset:
+@@ -235,7 +235,8 @@ static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
+ 
+ 	of_clk_del_provider(dev->of_node);
+ 	for (i = 0; i < CLK_NUM; i++)
+-		clk_hw_unregister_gate(clk_data->hws[i]);
++		if (clk_data->hws[i])
++			clk_hw_unregister_gate(clk_data->hws[i]);
+ 
+ 	clk_disable_unprepare(tcon_top->bus);
+ 	reset_control_assert(tcon_top->rst);
 -- 
 2.19.1
 
