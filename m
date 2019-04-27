@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064E8C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC2EC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6DE4206A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E9C206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:16:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbfD0PQO (ORCPT
+        id S1727994AbfD0PQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:16:14 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33938 "EHLO
+        Sat, 27 Apr 2019 11:16:12 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33928 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727586AbfD0PPe (ORCPT
+        by vger.kernel.org with ESMTP id S1727581AbfD0PPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 11:15:34 -0400
+        Sat, 27 Apr 2019 11:15:33 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP35-0000z8-CE; Sat, 27 Apr 2019 16:15:31 +0100
+        id 1hKP35-000144-26; Sat, 27 Apr 2019 16:15:31 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2k-0004Vh-BE; Sat, 27 Apr 2019 16:15:10 +0100
+        id 1hKP2k-0004Vs-D6; Sat, 27 Apr 2019 16:15:10 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,22 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Julien Thierry" <julien.thierry@arm.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Jiri Olsa" <jolsa@redhat.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>
+        "Vinod Koul" <vkoul@kernel.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.324569248@decadent.org.uk>
+Message-ID: <lsq.1556377989.766138104@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 091/202] perf/core: Don't WARN() for impossible
- ring-buffer sizes
+Subject: [PATCH 3.16 093/202] dmaengine: dmatest: Abort test in case of
+ mapping error
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -64,52 +57,125 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 9dff0aa95a324e262ffb03f425d00e4751f3294e upstream.
+commit 6454368a804c4955ccd116236037536f81e5b1f1 upstream.
 
-The perf tool uses /proc/sys/kernel/perf_event_mlock_kb to determine how
-large its ringbuffer mmap should be. This can be configured to arbitrary
-values, which can be larger than the maximum possible allocation from
-kmalloc.
+In case of mapping error the DMA addresses are invalid and continuing
+will screw system memory or potentially something else.
 
-When this is configured to a suitably large value (e.g. thanks to the
-perf fuzzer), attempting to use perf record triggers a WARN_ON_ONCE() in
-__alloc_pages_nodemask():
+[  222.480310] dmatest: dma0chan7-copy0: summary 1 tests, 3 failures 6 iops 349 KB/s (0)
+...
+[  240.912725] check: Corrupted low memory at 00000000c7c75ac9 (2940 phys) = 5656000000000000
+[  240.921998] check: Corrupted low memory at 000000005715a1cd (2948 phys) = 279f2aca5595ab2b
+[  240.931280] check: Corrupted low memory at 000000002f4024c0 (2950 phys) = 5e5624f349e793cf
+...
 
-   WARNING: CPU: 2 PID: 5666 at mm/page_alloc.c:4511 __alloc_pages_nodemask+0x3f8/0xbc8
+Abort any test if mapping failed.
 
-Let's avoid this by checking that the requested allocation is possible
-before calling kzalloc.
-
-Reported-by: Julien Thierry <julien.thierry@arm.com>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Julien Thierry <julien.thierry@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190110142745.25495-1-mark.rutland@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 4076e755dbec ("dmatest: convert to dmaengine_unmap_data")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/events/ring_buffer.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/dmatest.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
 
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -282,6 +282,9 @@ struct ring_buffer *rb_alloc(int nr_page
- 	size = sizeof(struct ring_buffer);
- 	size += nr_pages * sizeof(void *);
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -562,11 +562,9 @@ static int dmatest_func(void *data)
+ 			srcs[i] = um->addr[i] + src_off;
+ 			ret = dma_mapping_error(dev->dev, um->addr[i]);
+ 			if (ret) {
+-				dmaengine_unmap_put(um);
+ 				result("src mapping error", total_tests,
+ 				       src_off, dst_off, len, ret);
+-				failed_tests++;
+-				continue;
++				goto error_unmap_continue;
+ 			}
+ 			um->to_cnt++;
+ 		}
+@@ -581,11 +579,9 @@ static int dmatest_func(void *data)
+ 					       DMA_BIDIRECTIONAL);
+ 			ret = dma_mapping_error(dev->dev, dsts[i]);
+ 			if (ret) {
+-				dmaengine_unmap_put(um);
+ 				result("dst mapping error", total_tests,
+ 				       src_off, dst_off, len, ret);
+-				failed_tests++;
+-				continue;
++				goto error_unmap_continue;
+ 			}
+ 			um->bidi_cnt++;
+ 		}
+@@ -610,12 +606,10 @@ static int dmatest_func(void *data)
+ 		}
  
-+	if (order_base_2(size) >= MAX_ORDER)
-+		goto fail;
+ 		if (!tx) {
+-			dmaengine_unmap_put(um);
+ 			result("prep error", total_tests, src_off,
+ 			       dst_off, len, ret);
+ 			msleep(100);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 
+ 		done->done = false;
+@@ -624,12 +618,10 @@ static int dmatest_func(void *data)
+ 		cookie = tx->tx_submit(tx);
+ 
+ 		if (dma_submit_error(cookie)) {
+-			dmaengine_unmap_put(um);
+ 			result("submit error", total_tests, src_off,
+ 			       dst_off, len, ret);
+ 			msleep(100);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 		dma_async_issue_pending(chan);
+ 
+@@ -638,22 +630,20 @@ static int dmatest_func(void *data)
+ 
+ 		status = dma_async_is_tx_complete(chan, cookie, NULL, NULL);
+ 
+-		dmaengine_unmap_put(um);
+-
+ 		if (!done->done) {
+ 			result("test timed out", total_tests, src_off, dst_off,
+ 			       len, 0);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		} else if (status != DMA_COMPLETE) {
+ 			result(status == DMA_ERROR ?
+ 			       "completion error status" :
+ 			       "completion busy status", total_tests, src_off,
+ 			       dst_off, len, ret);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 
++		dmaengine_unmap_put(um);
 +
- 	rb = kzalloc(size, GFP_KERNEL);
- 	if (!rb)
- 		goto fail;
+ 		if (params->noverify) {
+ 			verbose_result("test passed", total_tests, src_off,
+ 				       dst_off, len, 0);
+@@ -688,6 +678,12 @@ static int dmatest_func(void *data)
+ 			verbose_result("test passed", total_tests, src_off,
+ 				       dst_off, len, 0);
+ 		}
++
++		continue;
++
++error_unmap_continue:
++		dmaengine_unmap_put(um);
++		failed_tests++;
+ 	}
+ 	runtime = ktime_us_delta(ktime_get(), ktime);
+ 
 
