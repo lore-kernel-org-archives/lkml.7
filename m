@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695EDC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A03C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C5A208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F572087C
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 12:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfD0Mz7 (ORCPT
+        id S1727436AbfD0M4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 08:55:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:43095 "EHLO
+        Sat, 27 Apr 2019 08:56:12 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:56161 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbfD0MxL (ORCPT
+        with ESMTP id S1726688AbfD0MxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 08:53:11 -0400
+        Sat, 27 Apr 2019 08:53:10 -0400
 Received: from orion.localdomain ([77.2.90.210]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M3UhO-1hKv3E1nDW-000feT; Sat, 27 Apr 2019 14:52:46 +0200
+ 1MHoZS-1hX2X90am6-00EvFl; Sat, 27 Apr 2019 14:52:49 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
@@ -34,70 +34,54 @@ Cc:     gregkh@linuxfoundation.org, andrew@aj.id.au,
         linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 15/41] drivers: tty: serial: uartlite: fix use fix bare 'unsigned'
-Date:   Sat, 27 Apr 2019 14:51:56 +0200
-Message-Id: <1556369542-13247-16-git-send-email-info@metux.net>
+Subject: [PATCH 18/41] drivers: tty: serial: apbuart: use dev_info() instead of printk()
+Date:   Sat, 27 Apr 2019 14:51:59 +0200
+Message-Id: <1556369542-13247-19-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556369542-13247-1-git-send-email-info@metux.net>
 References: <1556369542-13247-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:H9Hq+xMuwfZXnigABXZrW477+wXowxTgyBBLY0HAV0mnCDYh/e0
- TH2w4PbDOyXyM86Lq7DloZ+B8ibFAqHgCXXMWMGOq9YWJ3Y3vlKsyrAZnSi1E5Li5qxc0Ar
- AY0Hr5JlBrCnebDS4GMDfCcj7dIYVLdfUOg6Bcei5qLQJLaC/QfWMzWDYdXhqXpmqWR3y/g
- yAdYT/Wa4x9gI+B2VhpoQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:R72cmKom1+A=:uOo1mvuTVbiHsgBqriCUht
- 6dY33ALRFs0OZberAHetXVBGAXNDyVP94BPwKbiwUt//WjlmiXpuYjDhj83S+8UluwqNM4viT
- EUygzqv1xc+QMQRr3xF+lNxXktgoicejoz188iDU6b6S4cPL882d2sf9ZdLlnzup2HcwAI7JS
- 6x49799SF3XTPO+XuJ0llY00fkPDfn4uA39oeLLrbuv3geAjo9xAyCJmxDBfbAu0sxbsCH3zP
- YNow0lDzCPTXwDoEpirK5YCyPkKdesbKHHbH5k0F2gyAIqhE3ImwDRUs+f+pU5My8q2yh31GI
- 76c1xKk0HKz7/oSjRMjQTgKb4j5f+Jg0YiHuRH591ObYF8o5/GcnSx9sK1sbrQ3bGRiwU/kJb
- zM4Rb2dpvvIIG5jmO7pDHpI4gtoSrFsbFUAdOkM+tlLe/t3+7X8YK2TGEB77CAte7MikaF2uS
- gX6vi6fZ3vRVEjT7A9bPa9w62Saicp1FrW829mcM16x64QqxG9d1O83+q8mdDGQRRdsksYT/K
- MuelCOp8/rAk/NmhauN9e9GIj7IDtMZONoxnPaO/FgcnC/m+/cQJnC90G6xL8KVH95EwkVKpg
- zS6EfdvWLefNplLeaVuRERQ6ZDLRf4dB2a36zkSg7R+K8VXdOIW155UoxoAEyz6BEetZx2KxO
- e2TjiagXV1RqHzcUn1fCiSg8mcHyfwlToF2LzzqlKHyMA1yBhxDcPoc54bcXj0+qVTC64YpJw
- rptbxTx0/wkORs6LFbtJRaPqlLPPbs2Kr5hC3w==
+X-Provags-ID: V03:K1:OVKGRVf0aXMWmtc1PHtqfEjiYENJhZU3hpSHmEA0npVSmInw18W
+ peVVZAyjlFJAio3YAZ7zsEC8Fe2VQ89wyDlbJaIzUmZGMMp3iII6gzrN822v79B5j0vvLsh
+ 71zzSbmGgmkHHfJu8peOu878gwp/4AQZkem15Rl7F+pbbfe+1IRXXc3iTGk/vbwXXy8feJ1
+ A4wTh5WhUYxm3/nJIj4hw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kJPYxrqUW4Q=:IX4zfaBz7w6xvHD6+zvUEx
+ 9lgTvdeuV59hcukEVZymu+p6tcoSHdR0K1YyNeMpb8uyuppx99cFXsn6a/2c3QwCqdTtaOI7b
+ NM555G1mdTA4tx9beSLOpohIzVc1IAh0aF9aqOMLarv10YlFJVBypKsS7eozOr8YjLPwNCA7y
+ xLNnSL9nvqoyuR6pmZ9cvRyyyP6/eYw4Fc/aHOZVjluv6XaHH1kDZqcwruoEvA55uYtvnSHac
+ 9MjLs8ftcbsYmjTSWf1ukKC9wrnPzPU62l5wd6argIoQ2M9shIoE9+TB45W0N7bfJyq0mDbaX
+ TJHKhxyRPW+/7p9yUNV10hZ7DQE+aMsD5fm2A2ANmTrYm1EOuOJrwHBgNOvOC8EJ4+jTkk6/W
+ BwDYOySXQ80cH6wqZIg+DXq1/w/mFQHSkmwtbd0oqKoJWF1i+ZJF+Ic9yETZqxb/VKtT1JjId
+ aY7KauvC1h+u+2i6Ia65kuNV1gsqfMmGLLZjy0AiXOjEvc13FOU1AbsdYNOJA5WSEPHUqWLHT
+ SoAIo9fOAKbG2KsIwCu7Zo2mryl45CvXBMMMbNQ9jt5fV9nD8v7BkFwLkMucoFwqTowZs8u5T
+ g8EDSIiimu5RjbwcGKHM6HD5X5/g/5FrZKGvHbfpY29hrmOad8MLWYtKwnASbuVRUr6XWpvrq
+ WJJr4n5/Cu72gbTk0oEBe4AhzNbI9tMroHYK2nYqhfZrYtIznaI/92IoE9ZcqFvyCxwmiSEKp
+ 6Y0UpIDYj+h2G2Yvy0Vj7nMLmkVAnbhBJyzm0A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch warnings:
-
-    WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-    #562: FILE: drivers/tty/serial/uartlite.c:562:
-    +	unsigned retries = 1000000;
-
-    WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-    #574: FILE: drivers/tty/serial/uartlite.c:574:
-    +				 const char *s, unsigned n)
+Using dev_err() instead of printk() for more consistent output.
+(prints device name, etc).
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/tty/serial/uartlite.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/apbuart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index 4c28600..6f79353 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -559,7 +559,7 @@ static void early_uartlite_putc(struct uart_port *port, int c)
- 	 * we'll never timeout on a working UART.
- 	 */
+diff --git a/drivers/tty/serial/apbuart.c b/drivers/tty/serial/apbuart.c
+index d2b86f7..89e19b6 100644
+--- a/drivers/tty/serial/apbuart.c
++++ b/drivers/tty/serial/apbuart.c
+@@ -568,7 +568,7 @@ static int apbuart_probe(struct platform_device *op)
  
--	unsigned retries = 1000000;
-+	unsigned int retries = 1000000;
- 	/* read status bit - 0x8 offset */
- 	while (--retries && (readl(port->membase + 8) & (1 << 3)))
- 		;
-@@ -571,7 +571,7 @@ static void early_uartlite_putc(struct uart_port *port, int c)
+ 	apbuart_flush_fifo((struct uart_port *) port);
+ 
+-	printk(KERN_INFO "grlib-apbuart at 0x%llx, irq %d\n",
++	dev_info(&pdev->pdev, "grlib-apbuart at 0x%llx, irq %d\n",
+ 	       (unsigned long long) port->mapbase, port->irq);
+ 	return 0;
  }
- 
- static void early_uartlite_write(struct console *console,
--				 const char *s, unsigned n)
-+				 const char *s, unsigned int n)
- {
- 	struct earlycon_device *device = console->data;
- 	uart_console_write(&device->port, s, n, early_uartlite_putc);
 -- 
 1.9.1
 
