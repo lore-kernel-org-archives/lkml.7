@@ -2,99 +2,165 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCCAC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 00:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10191C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 00:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766C52077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 00:20:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t/WZD0xW"
+	by mail.kernel.org (Postfix) with ESMTP id DE31F2077B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 00:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfD0AUn (ORCPT
+        id S1727243AbfD0AUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 20:20:43 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38734 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbfD0AUn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 20:20:43 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 10so2463172pfo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2019 17:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=T0jupFcF9hnJ5smEbqb8Uiz7NwwaG9r63Ny4hvX0g9A=;
-        b=t/WZD0xWD4+qUwydinbxwpGTTZYKtmcQXMy+jVmll8VF7BiQzgxJipQJ+lgTVFVTZM
-         QkIsgxanZ3IHVmprDg/XSLSPKJdXk/qm4l/MC7JDlj4GmYhliUuYibtHVLYYuKz+JKwm
-         t3SZN0gEXwCh3wsqSS28M5OlAT+ui45cscRRAxQX50eFamkLbY7A45IpWJTtH9/4L8uZ
-         HanjK8g0pfk2CR0vw6y5Bs/9kTM2M7siGv47V89UoG3QpIqfbtof0/QuA/pIgsIIEvEu
-         M/UZF1NmYHxgD0M7u4ontGMDZ6lh6PLk4xV465NRajJEIw21S4dNDSLsu4nuPX7LjKMg
-         cDlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T0jupFcF9hnJ5smEbqb8Uiz7NwwaG9r63Ny4hvX0g9A=;
-        b=Vpt0j6MyF7duzVoY42mhw6qXKA7yNDF1mVdzhE5TVg1zHxilLbGbshnMXy6n2lrRfv
-         Wl612MmUNWweI2Ct3/EdHbLzTrbPGb+HnU2Vyv6wC/FpRESk6Y3K7tJH3u84Iinypgok
-         mAIyfHsp4FYsaBxXqd++7d9VXzE0IoJoZZiAG7qy2bCw8dBjXLg8ZoCl05QZowES8luU
-         Bp0nI5rqxBbPMlCOJOLBm1he8z8X8zb8USp/8aHCkjv9t7VY35+nc629i4jfRcR39Ce6
-         tYfVJ9PZUuv2BRNKJ6OIXkJ0m+q/5eQEfxyzonj05HVbgOvBZNQUVGHSGnxJQmw7VpAE
-         oGxg==
-X-Gm-Message-State: APjAAAU6VajGRm90T/v+3G8ICYHsH6QRa3eE7jzHpviBYNaSWQ4J4Xv9
-        Sk1NdJT4FHh7C5DE0u/ZYJwBow==
-X-Google-Smtp-Source: APXvYqw2gLFtFNX39U/qRmokrO6vKW8rT5xiEM3Tlhb6+pACWd/nZ65bcBAT8wEHIpzApDIShepOaQ==
-X-Received: by 2002:aa7:8083:: with SMTP id v3mr51379417pff.135.1556324442308;
-        Fri, 26 Apr 2019 17:20:42 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li990-117.members.linode.com. [45.33.40.117])
-        by smtp.gmail.com with ESMTPSA id n3sm39239298pfa.99.2019.04.26.17.20.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Apr 2019 17:20:40 -0700 (PDT)
-Date:   Sat, 27 Apr 2019 08:20:34 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/4] CoreSight: Support static funnel with DT binding
- consolidation
-Message-ID: <20190427002034.GA6454@leoy-ThinkPad-X240s>
-References: <20190412102738.12679-1-leo.yan@linaro.org>
- <CANLsYkyFXEiYh78uhhQRiqAOvv_u+oq5GS3z3-Lbj6RHm7x+sQ@mail.gmail.com>
+        Fri, 26 Apr 2019 20:20:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44916 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726807AbfD0AUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 20:20:54 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D060030A996E;
+        Sat, 27 Apr 2019 00:20:53 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 22D4B26197;
+        Sat, 27 Apr 2019 00:20:53 +0000 (UTC)
+Subject: Re: [-next] system hangs likely due to "modules: Only return -EEXIST
+ for modules that have finished loading"
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     Jessica Yu <jeyu@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Cathy Avery <cavery@redhat.com>
+References: <20190426130736.GB8646@osiris>
+ <d4d75ad1-e193-c230-1edc-a93db2b068d7@redhat.com>
+ <20190426150741.GD8646@osiris> <20190426160956.GA3827@linux-8ccs>
+ <2e047a7e-bf08-be8c-bdd0-429464fa133d@redhat.com>
+ <52c293e9-ddfa-426a-a8f1-2106e250e78d@redhat.com>
+Message-ID: <f74996cb-3e0a-ab23-00b9-85ac782583d1@redhat.com>
+Date:   Fri, 26 Apr 2019 20:20:52 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANLsYkyFXEiYh78uhhQRiqAOvv_u+oq5GS3z3-Lbj6RHm7x+sQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <52c293e9-ddfa-426a-a8f1-2106e250e78d@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sat, 27 Apr 2019 00:20:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 10:26:24AM -0600, Mathieu Poirier wrote:
 
-[...]
 
-> > Leo Yan (4):
-> >   dt-bindings: arm: coresight: Add new compatible for static replicator
-> >   coresight: replicator: Add new device id for static replicator
-> >   dt-bindings: arm: coresight: Unify funnel DT binding
-> >   coresight: funnel: Support static funnel
-> >
-> >  .../devicetree/bindings/arm/coresight.txt     |  60 +++++++--
-> >  .../hwtracing/coresight/coresight-funnel.c    | 116 ++++++++++++++----
-> >  .../coresight/coresight-replicator.c          |   6 +-
-> >  3 files changed, 147 insertions(+), 35 deletions(-)
+On 4/26/19 3:45 PM, Prarit Bhargava wrote:
 > 
-> I have applied this set.
+> 
+> On 4/26/19 2:10 PM, Prarit Bhargava wrote:
+>>
+>>
+>> On 4/26/19 12:09 PM, Jessica Yu wrote:
+>>> +++ Heiko Carstens [26/04/19 17:07 +0200]:
+>>>> On Fri, Apr 26, 2019 at 09:22:34AM -0400, Prarit Bhargava wrote:
+>>>>> On 4/26/19 9:07 AM, Heiko Carstens wrote:
+>>>>>> Hello Prarit,
+>>>>>>
+>>>>>> it looks like your commit f9a75c1d717f ("modules: Only return -EEXIST
+>>>>>> for modules that have finished loading") _sometimes_ causes hangs on
+>>>>>> s390. This is unfortunately not 100% reproducible, however the
+>>>>>> mentioned commit seems to be the only relevant one in modules.c.
+>>>>>>
+>>>>>> What I see is a hanging system with messages like this on the console:
+>>>>>>
+>>>>>> [   65.876040] rcu: INFO: rcu_sched self-detected stall on CPU
+>>>>>> [   65.876049] rcu:     7-....: (5999 ticks this GP)
+>>>>> idle=eae/1/0x4000000000000002 softirq=1181/1181 fqs=2729
+>>>>>> [   65.876078]  (t=6000 jiffies g=-471 q=17196)
+>>>>>> [   65.876084] Task dump for CPU 7:
+>>>>>> [   65.876088] systemd-udevd   R  running task        0   731    721
+>>>>> 0x06000004
+>>>>>> [   65.876097] Call Trace:
+>>>>>> [   65.876113] ([<0000000000abb264>] __schedule+0x2e4/0x6e0)
+>>>>>> [   65.876122]  [<00000000001ee486>] finished_loading+0x4e/0xb0
+>>>>>> [   65.876128]  [<00000000001f1ed6>] load_module+0xcce/0x27a0
+>>>>>> [   65.876134]  [<00000000001f3af0>] __s390x_sys_init_module+0x148/0x178
+>>>>>> [   65.876142]  [<0000000000ac0766>] system_call+0x2aa/0x2c8
+>>>>>> I did not look any further into the dump, however since the commit
+>>>>>> touches exactly the code path which seems to be looping... ;)
+>>>>>>
+>>>>>
+>>>>> Ouch :(  I wonder if I exposed a further race or another bug.  Heiko, can you
+>>>>> determine which module is stuck?  Warning: I have not compiled this code.
+>>>>
+>>>> Here we go:
+>>>>
+>>>> [   11.716866] PRARIT: waiting for module s390_trng to load.
+>>>> [   11.716867] PRARIT: waiting for module s390_trng to load.
+>>>> [   11.716868] PRARIT: waiting for module s390_trng to load.
+>>>> [   11.716870] PRARIT: waiting for module s390_trng to load.
+>>>> [   11.716871] PRARIT: waiting for module s390_trng to load.
+>>>> [   11.716872] PRARIT: waiting for module s390_trng to load.
+>>>> [   11.716874] PRARIT: waiting for module s390_trng to load.
+>>>> [   11.716875] PRARIT: waiting for module s390_trng to load.
+>>>> [   11.716876] PRARIT: waiting for module s390_trng to load.
+>>>> [   16.726850] add_unformed_module: 31403529 callbacks suppressed
+>>>> [   16.726853] PRARIT: waiting for module s390_trng to load.
+>>>> [   16.726862] PRARIT: waiting for module s390_trng to load.
+>>>> [   16.726865] PRARIT: waiting for module s390_trng to load.
+>>>> [   16.726867] PRARIT: waiting for module s390_trng to load.
+>>>> [   16.726869] PRARIT: waiting for module s390_trng to load.
+>>>>
+>>>> If I'm not mistaken then there was _no_ corresponding message on the
+>>>> console stating that the module already exists.
+>>
+>> Heiko,
+>>
+>> Where is the s390_trng module?  I can't seem to find it in the tree.
+>>
+>> [02:06 PM root@ibm-z-108 linux-next]# find ./ -name *s390_trng*
+>> [02:06 PM root@ibm-z-108 linux-next]# git grep s390_trng
+>> [02:07 PM root@ibm-z-108 linux-next]#
+>>
+> 
+> Never mind, I found it: s390-trng.c
+> 
+> P.
+> 
+>> P.
+>>
 
-Thanks, Mathieu.  Also thanks Rob and you for clarification DT binding.
+
+Heiko and Jessica,
+
+The issue doesn't appear to be with my patch AFAICT.  The s390_trng fails to
+load and then the kernel occasionally hangs (as Heiko mentioned) calling
+synchronize_rcu().
+
+The call sequence is
+
+module_load()
+	do_init_module()
+		do_one_initcall(mod->init)
+
+which fails.
+
+The failure path in do_one_initcall() is entered and we start executing code at
+kernel/module.c:3541
+
+fail_free_freeinit:
+        kfree(freeinit);
+fail:
+        /* Try to protect us from buggy refcounters. */
+        mod->state = MODULE_STATE_GOING;
+        synchronize_rcu();
+
+^^^ the kernel hangs here.  Sometimes it's very short and other times it seems
+to hang.   I've left systems that appear to be hung and come back after 10
+minutes to find that they've somehow made it through this call.
+
+Is there a known issue with RCU on s390 that is making this occur?
+
+P.
