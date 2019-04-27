@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C638C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08379C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E76208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60B9208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329472;
-	bh=XmJH09lHPhKIZUPzsrOyQxM9VpDipqpwthfMdlBewEs=;
+	s=default; t=1556329473;
+	bh=3YuD6cEFA2Y8RbHmmkAe6NdAipGDVMoYYZ3PddjOa+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VsagkKCzheQuqTOKPjPz7IsXmtzidB9Kdjt7fVKMYdU2I04NsbQ3anums6uaMTS75
-	 WorWP1XXRhgC5Qm+UKa5g825d7T7bfmlyUCoBOVVqSuVvd2xUsM1la8SR2Bk582b9G
-	 mDdgvxiBfuzGHgSxvA+Dg58e2sJoM9YRY/dxPDLU=
+	b=clx2pUMDPBPHFMFtSJv9+owksd01ilztnjykkOtr3v66ImG8pkV/EbHYZOyN9v+Lx
+	 YJGSXm2RUEmquS/s1gJs6ruqh6E/8LfmX1Qb8AT2ksgqAwDgY3ctue0C6Ew8CM+o4C
+	 LoO/0cWopP/xwPAdCWLB9B5NUW8ifTE9OAaXvBXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfD0Bob (ORCPT
+        id S1729038AbfD0Bod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48810 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:44:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728109AbfD0BoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728643AbfD0BoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 26 Apr 2019 21:44:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A212C216B7;
-        Sat, 27 Apr 2019 01:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C06E215EA;
+        Sat, 27 Apr 2019 01:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329465;
-        bh=XmJH09lHPhKIZUPzsrOyQxM9VpDipqpwthfMdlBewEs=;
+        s=default; t=1556329464;
+        bh=3YuD6cEFA2Y8RbHmmkAe6NdAipGDVMoYYZ3PddjOa+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jr+1+SWhMru9v16U3Dr++EWXPQmowuL3HHAmrsb/as/X5bQqTOJ2yXLIrwlv8+ros
-         4YKqf42tJxMiRF9WjQ2GswAKWsqz+8aear3ZEl4WJDQk1nfSImWA1D2iL3l/jcDWjf
-         REL9uqYZaA63PhG4K/dvmpbUdA3J2k9TzPCMGUT8=
+        b=K81gwLSutldKOzRXuDqzMDTUH7jjapC+29NhCyPW0Gn4mPowiIVM5rRNHRfSryxiB
+         5Dcx+IVLpNApvG9FHg6AdHGOREsWGkzvr6d5nX9/IquaJE2pqBsFDsAzbj15QzVjLs
+         XW3BW+1fPjEUsWCYe1X915UMWPhlm3UqqAi3o1Jc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 3.18 8/8] iommu/amd: Set exclusion range correctly
-Date:   Fri, 26 Apr 2019 21:44:11 -0400
-Message-Id: <20190427014412.9091-8-sashal@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 7/8] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
+Date:   Fri, 26 Apr 2019 21:44:10 -0400
+Message-Id: <20190427014412.9091-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014412.9091-1-sashal@kernel.org>
 References: <20190427014412.9091-1-sashal@kernel.org>
@@ -58,38 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 3c677d206210f53a4be972211066c0f1cd47fe12 ]
+[ Upstream commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 ]
 
-The exlcusion range limit register needs to contain the
-base-address of the last page that is part of the range, as
-bits 0-11 of this register are treated as 0xfff by the
-hardware for comparisons.
+syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
+is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
+(which is embedded into user-visible "struct nfs_mount_data" structure)
+despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
+bytes of AF_INET6 address to rpc_sockaddr2uaddr().
 
-So correctly set the exclusion range in the hardware to the
-last page which is _in_ the range.
+Since "struct nfs_mount_data" structure is user-visible, we can't change
+"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
+assuming that everybody is using AF_INET family when passing address via
+"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
 
-Fixes: b2026aa2dce44 ('x86, AMD IOMMU: add functions for programming IOMMU MMIO space')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
+
+Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 2f3475247f0f..127f9cc563e9 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -294,7 +294,7 @@ static void iommu_write_l2(struct amd_iommu *iommu, u8 address, u32 val)
- static void iommu_set_exclusion_range(struct amd_iommu *iommu)
- {
- 	u64 start = iommu->exclusion_start & PAGE_MASK;
--	u64 limit = (start + iommu->exclusion_length) & PAGE_MASK;
-+	u64 limit = (start + iommu->exclusion_length - 1) & PAGE_MASK;
- 	u64 entry;
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index d2fcd6e9d675..d70b4ed1b936 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -2019,7 +2019,8 @@ static int nfs23_validate_mount_data(void *options,
+ 		memcpy(sap, &data->addr, sizeof(data->addr));
+ 		args->nfs_server.addrlen = sizeof(data->addr);
+ 		args->nfs_server.port = ntohs(data->addr.sin_port);
+-		if (!nfs_verify_server_address(sap))
++		if (sap->sa_family != AF_INET ||
++		    !nfs_verify_server_address(sap))
+ 			goto out_no_address;
  
- 	if (!iommu->exclusion_start)
+ 		if (!(data->flags & NFS_MOUNT_TCP))
 -- 
 2.19.1
 
