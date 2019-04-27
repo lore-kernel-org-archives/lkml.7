@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74BCC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424E4C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADD77208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE49208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbfD0PaY (ORCPT
+        id S1728555AbfD0PaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:30:24 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60976 "EHLO
+        Sat, 27 Apr 2019 11:30:19 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60984 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727179AbfD0PPQ (ORCPT
+        by vger.kernel.org with ESMTP id S1727193AbfD0PPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2m-0000zH-Up; Sat, 27 Apr 2019 16:15:13 +0100
+        id 1hKP2m-0000zB-J5; Sat, 27 Apr 2019 16:15:12 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2k-0004WW-Ih; Sat, 27 Apr 2019 16:15:10 +0100
+        id 1hKP2j-0004UU-Tw; Sat, 27 Apr 2019 16:15:09 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Deepak Rawat" <drawat@vmware.com>,
-        "Thomas Hellstrom" <thellstrom@vmware.com>
+        "Felix Fietkau" <nbd@nbd.name>,
+        "Johannes Berg" <johannes.berg@intel.com>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.984297081@decadent.org.uk>
+Message-ID: <lsq.1556377989.440938187@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 101/202] drm/vmwgfx: Return error code from
- vmw_execbuf_copy_fence_user
+Subject: [PATCH 3.16 081/202] mac80211: ensure that mgmt tx skbs have
+ tailroom for encryption
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,35 +56,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-commit 728354c005c36eaf44b6e5552372b67e60d17f56 upstream.
+commit 9d0f50b80222dc273e67e4e14410fcfa4130a90c upstream.
 
-The function was unconditionally returning 0, and a caller would have to
-rely on the returned fence pointer being NULL to detect errors. However,
-the function vmw_execbuf_copy_fence_user() would expect a non-zero error
-code in that case and would BUG otherwise.
+Some drivers use IEEE80211_KEY_FLAG_SW_MGMT_TX to indicate that management
+frames need to be software encrypted. Since normal data packets are still
+encrypted by the hardware, crypto_tx_tailroom_needed_cnt gets decremented
+after key upload to hw. This can lead to passing skbs to ccmp_encrypt_skb,
+which don't have the necessary tailroom for software encryption.
 
-So make sure we return a proper non-zero error code if the fence pointer
-returned is NULL.
+Change the code to add tailroom for encrypted management packets, even if
+crypto_tx_tailroom_needed_cnt is 0.
 
-Fixes: ae2a104058e2: ("vmwgfx: Implement fence objects")
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+[bwh: Backported to 3.16: we always expand cloned skbs here; don't change that]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-@@ -2326,7 +2326,7 @@ int vmw_execbuf_fence_commands(struct dr
- 		*p_fence = NULL;
- 	}
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -1465,9 +1465,16 @@ static int ieee80211_skb_resize(struct i
+ 				int head_need, bool may_encrypt)
+ {
+ 	struct ieee80211_local *local = sdata->local;
++	struct ieee80211_hdr *hdr;
++	bool enc_tailroom;
+ 	int tail_need = 0;
  
--	return 0;
-+	return ret;
- }
- 
- /**
+-	if (may_encrypt && sdata->crypto_tx_tailroom_needed_cnt) {
++	hdr = (struct ieee80211_hdr *) skb->data;
++	enc_tailroom = may_encrypt &&
++		       (sdata->crypto_tx_tailroom_needed_cnt ||
++			ieee80211_is_mgmt(hdr->frame_control));
++
++	if (enc_tailroom) {
+ 		tail_need = IEEE80211_ENCRYPT_TAILROOM;
+ 		tail_need -= skb_tailroom(skb);
+ 		tail_need = max_t(int, tail_need, 0);
 
