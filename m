@@ -2,108 +2,125 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1D6C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7FDC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E700205ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F78205ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 06:36:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="E2eCgiTv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rRiwhF29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbfD0GcU (ORCPT
+        id S1726213AbfD0Ggw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 02:32:20 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:56125 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfD0GcU (ORCPT
+        Sat, 27 Apr 2019 02:36:52 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:51181 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726001AbfD0Ggv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 02:32:20 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 109D120025;
-        Sat, 27 Apr 2019 08:32:15 +0200 (CEST)
-Date:   Sat, 27 Apr 2019 08:32:14 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] drm: Add bus flag for Sharp-specific signals
-Message-ID: <20190427063214.GA13123@ravnborg.org>
-References: <20190425231854.24479-1-paul@crapouillou.net>
- <20190425231854.24479-2-paul@crapouillou.net>
+        Sat, 27 Apr 2019 02:36:51 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 152DF7CDB;
+        Sat, 27 Apr 2019 02:36:50 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sat, 27 Apr 2019 02:36:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=DKAjq/gGrlYprf/NV0stO8d1N6u
+        LGlAbOoomccpBBdM=; b=E2eCgiTvjiOnkPckMXIUfYmctojTnPJuZlGqH1XdnbR
+        wn/CEWyNf6ns8ChtGUXlqtaws1t2oi21G3o1p8NlDAswyf2lE25EqdLJATZQf7o3
+        ngNP4jKvyVL5yzTXEmpteGi6z1KF7BksHFayRuYoq93pNEVyGhOmeuk19nUNWERA
+        pNkH2Mj5X66aY0HNZM1eU8geNS6Xq2IdOs5eO+CEX29TRKR2ARp3bP22TRvch8z0
+        7H3I7IliAD6Lc+ql2fZmerQ+Fu4aYAdn/gM/Z3ULkZ9fXcWOW7zyDjnKA7JzwTaz
+        sMzYuuWJO2tpdEB4HsvKOL282Nlb3gkF+sMzROu4wUw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DKAjq/
+        gGrlYprf/NV0stO8d1N6uLGlAbOoomccpBBdM=; b=rRiwhF29YA0foUJ5Td+ROq
+        G7J27nEMxDblwwc7LdbcMNkspsoJluyacsN7U2GruHuDKj9672d9QJIj9J1FNr5P
+        xcX1qr7xrq30b6KjATfWZ7qWdl5fSEwZ/g8hTstR3lp44mqq/u//T7pluUCrNxkE
+        ZL64k56XGd9jvv0OwOOIl/To0kpz/BsiQislYai4TNIhUAB8TSCamvvSZlWZV/L3
+        iRfyEOhFBg04RPT97gOUvsjK70+86OPXEfLbAukg0kvFp2YjKqm8FaVmiwfBPfLc
+        v9xA5e28YYFq490n71WazA8Qhx5bjnqWPpVx3IDaj6YwUJuFaPTQ+CWzSnrNpkAA
+        ==
+X-ME-Sender: <xms:gfjDXDwZsQ_-WUSptZDFndxKkkOwcwY5YHlCEXXNxYTmUbzTcUMuaA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrheejgdduudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:gfjDXM3jEUlfji_eNDdT-p3gDaFx2hD_apUjmrIS33K9ta_xnNQwhA>
+    <xmx:gfjDXMnCzjwEWGrV3KWt5Mi_IcC2fS1qRHhJUb26B4Uh3fUfcRhjVA>
+    <xmx:gfjDXD9XVLFAU_iT9AXqKmNNOieybgPpDkm8sK2gZQoyBSgmUQhZOA>
+    <xmx:gvjDXC9VVBBX-XLg5kpCG_kkVLIo906x2ssrYAT8wofs_ERg7N3zXA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9FFE310319;
+        Sat, 27 Apr 2019 02:36:48 -0400 (EDT)
+Date:   Sat, 27 Apr 2019 08:36:46 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Cristiano Borges Cardoso <cristianoborgescardoso@gmail.com>,
+        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
+        Sanjana Sanikommu <sanjana99reddy99@gmail.com>,
+        Vatsala Narang <vatsalanarang@gmail.com>,
+        Bhanusree Pola <bhanusreemahesh@gmail.com>,
+        Himadri Pandya <himadri18.07@gmail.com>,
+        Jules Irenge <jbi.octave@gmail.com>
+Subject: Re: linux-next: manual merge of the staging tree with the v4l-dvb
+ tree
+Message-ID: <20190427063646.GE15324@kroah.com>
+References: <20190426160658.4929d1ad@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425231854.24479-2-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
-        a=7gkXJVJtAAAA:8 a=o6lnpZa0LUvyYah9iqMA:9 a=CjuIK1q_8ugA:10
-        a=9LHmKk7ezEChjTCyhBa9:22 a=E9Po1WZjFZOl8hwRPBS3:22
+In-Reply-To: <20190426160658.4929d1ad@canb.auug.org.au>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul
-
-On Fri, Apr 26, 2019 at 01:18:53AM +0200, Paul Cercueil wrote:
-> Add the DRM_BUS_FLAG_SHARP_SIGNALS to the drm_bus_flags enum.
+On Fri, Apr 26, 2019 at 04:06:58PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> This flags can be used when the display must be driven with the
-> Sharp-specific signals SPL, CLS, REV, PS.
+> Today's linux-next merge of the staging tree got conflicts in:
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
+>   drivers/staging/media/zoran/Kconfig
+>   drivers/staging/media/zoran/videocodec.c
+>   drivers/staging/media/zoran/videocodec.h
+>   drivers/staging/media/zoran/zoran.h
+>   drivers/staging/media/zoran/zoran_card.c
+>   drivers/staging/media/zoran/zoran_card.h
+>   drivers/staging/media/zoran/zoran_device.c
+>   drivers/staging/media/zoran/zoran_device.h
+>   drivers/staging/media/zoran/zoran_driver.c
+>   drivers/staging/media/zoran/zoran_procfs.c
+>   drivers/staging/media/zoran/zoran_procfs.h
+>   drivers/staging/media/zoran/zr36016.c
+>   drivers/staging/media/zoran/zr36016.h
+>   drivers/staging/media/zoran/zr36050.c
+>   drivers/staging/media/zoran/zr36050.h
+>   drivers/staging/media/zoran/zr36057.h
+>   drivers/staging/media/zoran/zr36060.c
+>   drivers/staging/media/zoran/zr36060.h
 > 
-> Notes:
->     v3: New patch
+> between commit:
 > 
->  include/drm/drm_connector.h | 3 +++
->  1 file changed, 3 insertions(+)
+>   8dce4b265a53 ("media: zoran: remove deprecated driver")
 > 
-> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> index 02a131202add..ac7d58fd1e03 100644
-> --- a/include/drm/drm_connector.h
-> +++ b/include/drm/drm_connector.h
-> @@ -323,6 +323,8 @@ enum drm_panel_orientation {
->   *					edge of the pixel clock
->   * @DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE:	Sync signals are sampled on the falling
->   *					edge of the pixel clock
-> + * @DRM_BUS_FLAG_SHARP_SIGNALS:		Set if the Sharp-specific signals
-> + *					(SPL, CLS, PS, REV) must be used
->   */
->  enum drm_bus_flags {
->  	DRM_BUS_FLAG_DE_LOW = BIT(0),
-> @@ -341,6 +343,7 @@ enum drm_bus_flags {
->  	DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE = DRM_BUS_FLAG_SYNC_NEGEDGE,
->  	DRM_BUS_FLAG_SYNC_SAMPLE_POSEDGE = DRM_BUS_FLAG_SYNC_NEGEDGE,
->  	DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE = DRM_BUS_FLAG_SYNC_POSEDGE,
-> +	DRM_BUS_FLAG_SHARP_SIGNALS = BIT(8),
->  };
+> from the v4l-dvb tree and various commits from the staging tree.
 
-This solutions looks very good to me.
-Now the panel can report to the display driver that is needs the
-DRM_BUS_FLAG_SHARP_SIGNALS, so the display driver can adapt to the
-connected display.
-Obviously not many display drivers will support DRM_BUS_FLAG_SHARP_SIGNALS
-but the one that does now no longer need to include panel configuration.
+Yeah! glad the driver is now gone, sorry for the merge issues.
 
-You can add:
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-
-But we need Thierry or someone else with more knowledge in this
-area to comment on this before we can apply it.
-drm_bus_flag is today only timing related config, and there be a better
-way to do this.
-
-Thierry?
-
-	Sam
+greg k-h
