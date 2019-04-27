@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEBBC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4982C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077C4216B7
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB6921537
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329307;
-	bh=P0SYwHsozH/6iagqvsGNIJFk3gv2btfITSQrcBJvrNE=;
+	s=default; t=1556329308;
+	bh=JxVyDbs1KQjFjI/HpepkRNJOAcXAFR42+Pf2RJTh3wM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rY6PoZfXt4O9Ze02w1bI5ETsxs32+sLXNnr1Dk6AR6NOdqf8rNgSrHal7ITE/uXck
-	 SIAXTrv2zwXAze1cEjOx3ZpgNOIULyy2rsn64G6n6sOnPbyfITwSMlGJIpS6T5UCfq
-	 tbhYzEXnbFreedLZEaPqraGToIOhVcuuOKpxtrPQ=
+	b=JBbpkOdkCXjVY0sSyGKVbrUpjpY1dTowQcymVkbxY6WW/DcmNaC3/4qFN9U3oRjT6
+	 R4F549I7B4jDVxqtEB61TxPQstkXt6weYe2/xBY9p5D0uTHnIBY3zT10yKn85TZ6Hs
+	 3/jO41wbZI/+9502p7n4IesMKKyeQy3CPRYXoCRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbfD0Blp (ORCPT
+        id S1728372AbfD0Blr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:41:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45600 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728335AbfD0Blk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:41:40 -0400
+        id S1728341AbfD0Bll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:41:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C826021655;
-        Sat, 27 Apr 2019 01:41:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E00B9216F4;
+        Sat, 27 Apr 2019 01:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329299;
-        bh=P0SYwHsozH/6iagqvsGNIJFk3gv2btfITSQrcBJvrNE=;
+        s=default; t=1556329300;
+        bh=JxVyDbs1KQjFjI/HpepkRNJOAcXAFR42+Pf2RJTh3wM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=18nMojSp70uFkFSFbm308ucfFhHB12lwSJUhG7QAampvZH5tagNDp7ierRBQwJihS
-         bCfti+wLKv71D/EbDveWpENBqhp5nYG/71EY9Juzyid/6rZGc5Wg0x9n8jtPykU+9S
-         nPdh1hjn2JVH90YFuIP51Xdfnh+V/xh/d/NqNHi8=
+        b=GAQCahoS7MGCLmORWYdk7tazb4wS344q1IElF+em1SsBU+jLnurWkPxY1W3sWCZSE
+         OBrbn0bvF/ZyFz8ArRFBxDsa+iCgkye6AQ1Vk5HJcwnWYO5M4anzzhf9G5aE0EPAEf
+         L+mhWt5t7nRFOHsLwtJ6O02HZgbKcghPDXMIv0x4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 28/53] ASoC: rockchip: pdm: fix regmap_ops hang issue
-Date:   Fri, 26 Apr 2019 21:40:25 -0400
-Message-Id: <20190427014051.7522-28-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 29/53] drm/amdkfd: Add picasso pci id
+Date:   Fri, 26 Apr 2019 21:40:26 -0400
+Message-Id: <20190427014051.7522-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -60,35 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit c85064435fe7a216ec0f0238ef2b8f7cd850a450 ]
+[ Upstream commit e7ad88553aa1d48e950ca9a4934d246c1bee4be4 ]
 
-This is because set_fmt ops maybe called when PD is off,
-and in such case, regmap_ops will lead system hang.
-enale PD before doing regmap_ops.
+Picasso is a new raven variant.
 
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Kent Russell <kent.russell@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/rockchip/rockchip_pdm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/amdkfd/kfd_device.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
-index 400e29edb1c9..8a2e3bbce3a1 100644
---- a/sound/soc/rockchip/rockchip_pdm.c
-+++ b/sound/soc/rockchip/rockchip_pdm.c
-@@ -208,7 +208,9 @@ static int rockchip_pdm_set_fmt(struct snd_soc_dai *cpu_dai,
- 		return -EINVAL;
- 	}
- 
-+	pm_runtime_get_sync(cpu_dai->dev);
- 	regmap_update_bits(pdm->regmap, PDM_CLK_CTRL, mask, val);
-+	pm_runtime_put(cpu_dai->dev);
- 
- 	return 0;
- }
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+index 5aba50f63ac6..06d19bb89cfc 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+@@ -275,6 +275,7 @@ static const struct kfd_deviceid supported_devices[] = {
+ 	{ 0x9876, &carrizo_device_info },	/* Carrizo */
+ 	{ 0x9877, &carrizo_device_info },	/* Carrizo */
+ 	{ 0x15DD, &raven_device_info },		/* Raven */
++	{ 0x15D8, &raven_device_info },		/* Raven */
+ #endif
+ 	{ 0x67A0, &hawaii_device_info },	/* Hawaii */
+ 	{ 0x67A1, &hawaii_device_info },	/* Hawaii */
 -- 
 2.19.1
 
