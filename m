@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AEEC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C638C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE89208CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E76208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329468;
-	bh=3fLqq164CDK6svTzsAMlRv0UIUiCywoc7a3q20ijcu8=;
+	s=default; t=1556329472;
+	bh=XmJH09lHPhKIZUPzsrOyQxM9VpDipqpwthfMdlBewEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I6nLrHGzETcJBae6Ea1I8qMfw7yUv7ZJSeKJg2do3lzAhtCO1d0SIrm40F3d6GlWD
-	 EAFnmy4PwOyIHKUagmos1ckbirQCXcYKUe7AW4SM8o4P7QoLrKhoaZcXpMJuhmHiOo
-	 wlnge/BhOro2oskNSpF/boT+5ho8Kqs/Qsqz7GeU=
+	b=VsagkKCzheQuqTOKPjPz7IsXmtzidB9Kdjt7fVKMYdU2I04NsbQ3anums6uaMTS75
+	 WorWP1XXRhgC5Qm+UKa5g825d7T7bfmlyUCoBOVVqSuVvd2xUsM1la8SR2Bk582b9G
+	 mDdgvxiBfuzGHgSxvA+Dg58e2sJoM9YRY/dxPDLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbfD0Bo0 (ORCPT
+        id S1728566AbfD0Bob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:44:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48762 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:44:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728958AbfD0BoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:44:23 -0400
+        id S1728109AbfD0BoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:44:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B9F421537;
-        Sat, 27 Apr 2019 01:44:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A212C216B7;
+        Sat, 27 Apr 2019 01:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329463;
-        bh=3fLqq164CDK6svTzsAMlRv0UIUiCywoc7a3q20ijcu8=;
+        s=default; t=1556329465;
+        bh=XmJH09lHPhKIZUPzsrOyQxM9VpDipqpwthfMdlBewEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SqLmFQ4gpA90VrwNnAHoUBxI7RFh6wY+RMvWZjLiA4q7SRbrA3xNm0CyWhh1d/nLx
-         sAeqKFwLYMpxSV4lQdGPny14FL3hTz8bTNgmlZRBtdJZj/lF00eAHpG1h4yaHv8Z+h
-         tdfD7j2QAKKLtMeDieEDz7PQkjl/aXdB4qmCtbR8=
+        b=jr+1+SWhMru9v16U3Dr++EWXPQmowuL3HHAmrsb/as/X5bQqTOJ2yXLIrwlv8+ros
+         4YKqf42tJxMiRF9WjQ2GswAKWsqz+8aear3ZEl4WJDQk1nfSImWA1D2iL3l/jcDWjf
+         REL9uqYZaA63PhG4K/dvmpbUdA3J2k9TzPCMGUT8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Varun Prakash <varun@chelsio.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 6/8] scsi: csiostor: fix missing data copy in csio_scsi_err_handler()
-Date:   Fri, 26 Apr 2019 21:44:09 -0400
-Message-Id: <20190427014412.9091-6-sashal@kernel.org>
+Cc:     Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 3.18 8/8] iommu/amd: Set exclusion range correctly
+Date:   Fri, 26 Apr 2019 21:44:11 -0400
+Message-Id: <20190427014412.9091-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014412.9091-1-sashal@kernel.org>
 References: <20190427014412.9091-1-sashal@kernel.org>
@@ -59,38 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Varun Prakash <varun@chelsio.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 5c2442fd78998af60e13aba506d103f7f43f8701 ]
+[ Upstream commit 3c677d206210f53a4be972211066c0f1cd47fe12 ]
 
-If scsi cmd sglist is not suitable for DDP then csiostor driver uses
-preallocated buffers for DDP, because of this data copy is required from
-DDP buffer to scsi cmd sglist before calling ->scsi_done().
+The exlcusion range limit register needs to contain the
+base-address of the last page that is part of the range, as
+bits 0-11 of this register are treated as 0xfff by the
+hardware for comparisons.
 
-Signed-off-by: Varun Prakash <varun@chelsio.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+So correctly set the exclusion range in the hardware to the
+last page which is _in_ the range.
+
+Fixes: b2026aa2dce44 ('x86, AMD IOMMU: add functions for programming IOMMU MMIO space')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/csiostor/csio_scsi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/iommu/amd_iommu_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/csiostor/csio_scsi.c b/drivers/scsi/csiostor/csio_scsi.c
-index 86103c8475d8..fbb2052bc412 100644
---- a/drivers/scsi/csiostor/csio_scsi.c
-+++ b/drivers/scsi/csiostor/csio_scsi.c
-@@ -1737,8 +1737,11 @@ csio_scsi_err_handler(struct csio_hw *hw, struct csio_ioreq *req)
- 	}
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 2f3475247f0f..127f9cc563e9 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -294,7 +294,7 @@ static void iommu_write_l2(struct amd_iommu *iommu, u8 address, u32 val)
+ static void iommu_set_exclusion_range(struct amd_iommu *iommu)
+ {
+ 	u64 start = iommu->exclusion_start & PAGE_MASK;
+-	u64 limit = (start + iommu->exclusion_length) & PAGE_MASK;
++	u64 limit = (start + iommu->exclusion_length - 1) & PAGE_MASK;
+ 	u64 entry;
  
- out:
--	if (req->nsge > 0)
-+	if (req->nsge > 0) {
- 		scsi_dma_unmap(cmnd);
-+		if (req->dcopy && (host_status == DID_OK))
-+			host_status = csio_scsi_copy_to_sgl(hw, req);
-+	}
- 
- 	cmnd->result = (((host_status) << 16) | scsi_status);
- 	cmnd->scsi_done(cmnd);
+ 	if (!iommu->exclusion_start)
 -- 
 2.19.1
 
