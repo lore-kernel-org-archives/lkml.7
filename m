@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304C6C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85561C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED21E205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56060205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556330067;
-	bh=DDpCkessD1dH3aLZ3m3+GnJ5ar8B5dcualD5Zvo0mos=;
+	s=default; t=1556330071;
+	bh=dYOStLGNgxw+C8nTvKJr0GmoThFgHBIN2xwY/JkDaW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E659umaAPLqxRA4k3mC1rH/w+bE8JDjtkBKPrXoXc1dUOwoJwAHWU8ir4RFwCNDZI
-	 hNUOUbrbj68UDRONgid7Z+AUaRyF/FlNVYCTWkFr6LcHXBZXo14gMI5Ob9uOz5fcNO
-	 z7SEQPj950rpfhQ3utaaJ2lJRGX2zGYg+VksANv8=
+	b=zkBrNbJfQOQZY+610pcFSQZlXX4uTWCpm/XZ4AaAa0LkL70pl7LxXdW2SzPq1RQvl
+	 ykN6Vucyn1KWZQJfGHu0X1h75J2RhfYRrs1vREo9ndyr/Scb4TT+ZvR6jL0kFDvqhp
+	 3Px876iARdYL4klc4E8UeWVf1M6BJRmvztzahEj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfD0Bjt (ORCPT
+        id S1728142AbfD0By3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42980 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:54:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727736AbfD0Bjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:39:46 -0400
+        id S1727757AbfD0Bjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:39:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB904208CB;
-        Sat, 27 Apr 2019 01:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 123B9208CB;
+        Sat, 27 Apr 2019 01:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329185;
-        bh=DDpCkessD1dH3aLZ3m3+GnJ5ar8B5dcualD5Zvo0mos=;
+        s=default; t=1556329188;
+        bh=dYOStLGNgxw+C8nTvKJr0GmoThFgHBIN2xwY/JkDaW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HoeKEi7pNIC+15XtlVJPKhiMijoklz268nzUY9Zj3/+zCm7IKl8a4tsJfh6qEekvq
-         LQI7bBPtxlXdJdwupbahZH2CMNBjzoRYFAnueE0TzGRuKSE7svwtMvR1wXH4xWq7dv
-         skIgZqxXQhbFczsh+w+oxPe/6C812bYaBZo9sY4k=
+        b=qzeupJCXoFE7N0vY4Q7FqgbIz+LME4HKW0n7+kPZjbYABAEa5eZVXzsOScNneCxOM
+         s0L5Fs98+CYVN4SF/VeDMWWbuC9mNLLFj16PS7LvOF6GwgExYKT7vka2COmOUtQDZ/
+         twckOkkuwj89yuUTbXgqPVsZ3UB0rmy2UqkuyDCE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 42/79] ASoC: cs35l35: Disable regulators on driver removal
-Date:   Fri, 26 Apr 2019 21:38:01 -0400
-Message-Id: <20190427013838.6596-42-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.0 44/79] powerpc/vdso32: fix CLOCK_MONOTONIC on PPC64
+Date:   Fri, 26 Apr 2019 21:38:03 -0400
+Message-Id: <20190427013838.6596-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -59,52 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 47c4cc08cb5b34e93ab337b924c5ede77ca3c936 ]
+[ Upstream commit dd9a994fc68d196a052b73747e3366c57d14a09e ]
 
-The chips main power supplies VA and VP are enabled during probe but
-then never disabled, this will cause warnings from the regulator
-framework on driver removal. Fix this by adding a remove callback and
-disabling the supplies, whilst doing so follow best practice and put the
-chip back into reset as well.
+Commit b5b4453e7912 ("powerpc/vdso64: Fix CLOCK_MONOTONIC
+inconsistencies across Y2038") changed the type of wtom_clock_sec
+to s64 on PPC64. Therefore, VDSO32 needs to read it with a 4 bytes
+shift in order to retrieve the lower part of it.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: b5b4453e7912 ("powerpc/vdso64: Fix CLOCK_MONOTONIC inconsistencies across Y2038")
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/cs35l35.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/powerpc/kernel/vdso32/gettimeofday.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/cs35l35.c b/sound/soc/codecs/cs35l35.c
-index 9f4a59871cee..c71696146c5e 100644
---- a/sound/soc/codecs/cs35l35.c
-+++ b/sound/soc/codecs/cs35l35.c
-@@ -1635,6 +1635,16 @@ err:
- 	return ret;
- }
+diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+index 1e0bc5955a40..afd516b572f8 100644
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -98,7 +98,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	 * can be used, r7 contains NSEC_PER_SEC.
+ 	 */
  
-+static int cs35l35_i2c_remove(struct i2c_client *i2c_client)
-+{
-+	struct cs35l35_private *cs35l35 = i2c_get_clientdata(i2c_client);
-+
-+	regulator_bulk_disable(cs35l35->num_supplies, cs35l35->supplies);
-+	gpiod_set_value_cansleep(cs35l35->reset_gpio, 0);
-+
-+	return 0;
-+}
-+
- static const struct of_device_id cs35l35_of_match[] = {
- 	{.compatible = "cirrus,cs35l35"},
- 	{},
-@@ -1655,6 +1665,7 @@ static struct i2c_driver cs35l35_i2c_driver = {
- 	},
- 	.id_table = cs35l35_id,
- 	.probe = cs35l35_i2c_probe,
-+	.remove = cs35l35_i2c_remove,
- };
+-	lwz	r5,WTOM_CLOCK_SEC(r9)
++	lwz	r5,(WTOM_CLOCK_SEC+LOPART)(r9)
+ 	lwz	r6,WTOM_CLOCK_NSEC(r9)
  
- module_i2c_driver(cs35l35_i2c_driver);
+ 	/* We now have our offset in r5,r6. We create a fake dependency
 -- 
 2.19.1
 
