@@ -2,83 +2,150 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC26EC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34F1C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFEB2087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90167208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 10:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556361906;
+	bh=flwco3je1Q/uKS+Nq99CsLoSDI9a68ilfeV6XvEgXDY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=heo/Xj/tcwlhkWxoLhbVnLZZok4xM3k10u6uocFqxRt704NgUNbrpH2qNOZvyrl5L
+	 ih76kBZy1y9PNAsKTfMfhCsBU2HzjsibVmeiCcm7F8vhg44nVrUKR71Mx3d6aujZUj
+	 WFORDy391jUh3gSOaBQgnIW6FqJ0ziUZNeMAcTkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbfD0Kmw (ORCPT
+        id S1726196AbfD0KpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 06:42:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48804 "EHLO mx1.redhat.com"
+        Sat, 27 Apr 2019 06:45:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfD0Kmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 06:42:52 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725912AbfD0KpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 06:45:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2CF29368B1;
-        Sat, 27 Apr 2019 10:42:52 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D44D60C82;
-        Sat, 27 Apr 2019 10:42:51 +0000 (UTC)
-Subject: Re: [-next] system hangs likely due to "modules: Only return -EEXIST
- for modules that have finished loading"
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Jessica Yu <jeyu@kernel.org>, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Cathy Avery <cavery@redhat.com>
-References: <20190426130736.GB8646@osiris>
- <d4d75ad1-e193-c230-1edc-a93db2b068d7@redhat.com>
- <20190426150741.GD8646@osiris> <20190426160956.GA3827@linux-8ccs>
- <2e047a7e-bf08-be8c-bdd0-429464fa133d@redhat.com>
- <52c293e9-ddfa-426a-a8f1-2106e250e78d@redhat.com>
- <f74996cb-3e0a-ab23-00b9-85ac782583d1@redhat.com>
- <20190427102440.GA28889@osiris>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <6a69074a-e913-3b67-feef-9b62a7400f8a@redhat.com>
-Date:   Sat, 27 Apr 2019 06:42:51 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E46B2087C;
+        Sat, 27 Apr 2019 10:45:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556361903;
+        bh=flwco3je1Q/uKS+Nq99CsLoSDI9a68ilfeV6XvEgXDY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ET+o2mRrk7w2HBVR1EVzWcjZyA8pi6hkypugsCtgm50yGKrmpeCCpZbWeXloZzieU
+         RpG8ueOgAKOSY39GdswtldQ3NlpfZB4J4ezCYNe7iINVPoJE8ke73LCLvlEk/buc+A
+         ecNL36YBKTPEUY+Fk2tFGgycvK4jMhsVogIlEUTc=
+Date:   Sat, 27 Apr 2019 12:45:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Richard Leitner <richard.leitner@skidata.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: usb251xb: Lock i2c-bus segment the hub resides
+Message-ID: <20190427104500.GA26765@kroah.com>
+References: <20190424144914.10580-1-fancer.lancer@gmail.com>
+ <20190426104650.30240-1-fancer.lancer@gmail.com>
+ <20190427070042.GD28250@kroah.com>
+ <20190427071025.hdrm3e5abnl4yock@mobilestation>
+ <20190427073200.GB30973@kroah.com>
+ <20190427073940.6yzhklfus4qd6ver@mobilestation>
+ <20190427075323.GA31478@kroah.com>
+ <20190427093110.3rx42ucv2zqjjnrp@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <20190427102440.GA28889@osiris>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sat, 27 Apr 2019 10:42:52 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190427093110.3rx42ucv2zqjjnrp@mobilestation>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/27/19 6:24 AM, Heiko Carstens wrote:
-
+On Sat, Apr 27, 2019 at 12:31:11PM +0300, Serge Semin wrote:
+> On Sat, Apr 27, 2019 at 09:53:23AM +0200, Greg Kroah-Hartman wrote:
+> > On Sat, Apr 27, 2019 at 10:39:41AM +0300, Serge Semin wrote:
+> > > On Sat, Apr 27, 2019 at 09:32:00AM +0200, Greg Kroah-Hartman wrote:
+> > > > On Sat, Apr 27, 2019 at 10:10:27AM +0300, Serge Semin wrote:
+> > > > > On Sat, Apr 27, 2019 at 09:00:42AM +0200, Greg Kroah-Hartman wrote:
+> > > > > > On Fri, Apr 26, 2019 at 01:46:50PM +0300, Serge Semin wrote:
+> > > > > > > SMBus slave configuration is activated by CFG_SEL[1:0]=0x1 pins
+> > > > > > > state. This is the mode the hub is supposed to be to let this driver
+> > > > > > > work correctly. But a race condition might happen right after reset
+> > > > > > > is cleared due to CFG_SEL[0] pin being multiplexed with SMBus SCL
+> > > > > > > function. In case if the reset pin is handled by a i2c GPIO expander,
+> > > > > > > which is also placed at the same i2c-bus segment as the usb251x
+> > > > > > > SMB-interface connected to, then the hub reset clearance might
+> > > > > > > cause the CFG_SEL[0] being latched in unpredictable state. So
+> > > > > > > sometimes the hub configuration mode might be 0x1 (as expected),
+> > > > > > > but sometimes being 0x0, which doesn't imply to have the hub SMBus-slave
+> > > > > > > interface activated and consequently causes this driver failure.
+> > > > > > > 
+> > > > > > > In order to fix the problem we must make sure the GPIO-reset chip doesn't
+> > > > > > > reside the same i2c-bus segment as the SMBus-interface of the hub. If
+> > > > > > > it doesn't, we can safely block the segment for the time the reset is
+> > > > > > > cleared to prevent anyone generating a traffic at the i2c-bus SCL lane
+> > > > > > > connected to the CFG_SEL[0] pin. But if it does, nothing we can do, so
+> > > > > > > just return an error. If we locked the i2c-bus segment and tried to
+> > > > > > > communicate with the GPIO-expander, it would cause a deadlock. If we didn't
+> > > > > > > lock the i2c-bus segment, it would randomly cause the CFG_SEL[0] bit flip.
+> > > > > > > 
+> > > > > > > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> > > > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > > 
+> > > > > > I signed off on this?  Where?  When?
+> > > > > > 
+> > > > > > never add a s-o-b line that you did not create, that implies a legal
+> > > > > > agreement.
+> > > > > > 
+> > > > > 
+> > > > > Ah, shit. Sorry. I should have added Acked-by. That's what I was going to do,
+> > > > > since you already added the first version of this into linux-next tree. But
+> > > > > apparently copy-pasted and left as is...
+> > > > 
+> > > > If I have already applied a patch, I can't apply it again (or a
+> > > > different version.)  You need to send a fix-up patch for the reported
+> > > > issue, not a whole new one as I can not go back in time and rewrite
+> > > > history.
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > 
+> > > Ok. Should I send it in reply to this patch or as a completely separate one?
+> > 
+> > A separate one.
 > 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 410eeb7e4f1d..48748cfec991 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3585,6 +3585,7 @@ again:
->  					       finished_loading(mod->name));
->  			if (err)
->  				goto out_unlocked;
-> +			cond_resched();
->  			goto again;
->  		}
->  		err = -EEXIST;
+> Just did this.
 > 
+> Two more questions.
+> 
+> Is there any online service or ready-to-use configs-gen-script to build
+> patchsets locally with various kernel configs before sending them for review?
+> By using this I'd most likely prevent such unfortunate mistakes in future
+> patches.
 
-Heiko, I'm testing on 2-cpu systems which appear to show the problem ~10% of the
-time.  On another system I backed out my original patch to set a baseline, and
-noticed that occasionally the time to boot the system doubles from ~4 seconds to
-9 seconds.  Is this something you're also concerned with?
+'make allmodconfig' works for me.  Also, the 0-day bot sometimes will
+test patches sent to the mailing list before they are applied, but that
+doesn't always work.
 
-P.
+> I suppose the situation like this isn't unique, and there are other patches
+> submitted with possible compilation problems. In this case seeing the linux-next
+> will be eventually integrated into the linux-stable, then at the point of those
+> patches the kernel source code will be build-broken corresponding config.
+> In this case wouldn't it be better to have some rebasable branch with build
+> robot service and fix the problematic patches in-place instead of
+> apply an incrementing commits? This also would keep the source code cleaner
+> at that particular commits.
+
+As this passed the first round of 0-day testing in my rebasable branch,
+I assumed it was good enough.  But later testing found that not to be
+the case, which is pretty rare.  And I can't have public trees that are
+rebasable as people work off of them, so we can just live with fixing
+this up.
+
+thanks,
+
+greg k-h
