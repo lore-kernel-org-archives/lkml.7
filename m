@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB5FC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE90BC43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B420421743
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C422173E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329442;
-	bh=3sdwNzJsC9f6ImC/sEBBg6F6e4kEaYBDGkJvo9pg3gs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HTTOhhQLn/AmQXob1yZ4X+Gp81wvThFGpiHKvYRUPRT9m9O0qlDvGKGEpI1PbMKyQ
-	 pzB33ndb+48FZqW5Mmhayxc8/80A+eqobhIFeRVpa7tHccCfv93AGNG+FluoQbvooB
-	 8rHMA1ZadVSgHLtFS5AI5qGHo3adjEr7K8dfCmP8=
+	s=default; t=1556329446;
+	bh=zu1e/j7AT7gMaH2r+AfMdLWAk6SxJ9ND54rXvFBiNcs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vAAamGLG33munZQ4lBGJVceAPGltbqW3a61Fqp2BXmnoUJOtTHYHGkH+kTuDroTt5
+	 +zs3GL9064lsG9p+qbN35MwP2RA3ulYMeTpfDgjDpeiQ4lidVmBRXciwr6Gv/veTFt
+	 o9fA+o4PPbfXDHh19lqBkLu1b72UWmMs8H7HKVuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbfD0BoB (ORCPT
+        id S1728924AbfD0BoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:44:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48288 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728874AbfD0Bn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:43:58 -0400
+        id S1728904AbfD0BoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:44:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BC3C21537;
-        Sat, 27 Apr 2019 01:43:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57CB321707;
+        Sat, 27 Apr 2019 01:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329437;
-        bh=3sdwNzJsC9f6ImC/sEBBg6F6e4kEaYBDGkJvo9pg3gs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XuVTaoMhbtN/qaTgUcU5oZi9rP3Ndry1yPQ7+5Rr+FQ6wj/+GFM8GSONIK0rllPiF
-         2HmN1NDBkX79c+oROIbF7jVm8D+5qPeOAZXx7edqNSA9zsEfYXm2DQRpUbDcbaeYkJ
-         knTicNrLPV0+7g1fJFQnP5tfDN0tO9nSdOk7kh3Y=
+        s=default; t=1556329440;
+        bh=zu1e/j7AT7gMaH2r+AfMdLWAk6SxJ9ND54rXvFBiNcs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=apnmHxiPhoHSbw0eJrpABMJImftmZQE4Xu2TQ9FNoom5iTv+1ZhNHafvsb0ZGJRp9
+         Qr5nlo0m4/yCCKKwBh2ZZxATSQtHd/T9zV/RLSM2kDnb9sqAVM6fn4ceQ0Iv1chWLr
+         4seDr/KPee9bxj4kB2aUFU5uhbSdZ4+YbQ+4i3Bk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Daniel Mack <daniel@zonque.org>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 1/9] ASoC: ab8500: Mark expected switch fall-through
-Date:   Fri, 26 Apr 2019 21:43:46 -0400
-Message-Id: <20190427014356.8940-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 3/9] ASoC: cs4270: Set auto-increment bit for register writes
+Date:   Fri, 26 Apr 2019 21:43:48 -0400
+Message-Id: <20190427014356.8940-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190427014356.8940-1-sashal@kernel.org>
+References: <20190427014356.8940-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,51 +57,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Daniel Mack <daniel@zonque.org>
 
-[ Upstream commit 102cefc8e879b707be0024fdc7bce1deeb359a5f ]
+[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
+The CS4270 does not by default increment the register address on
+consecutive writes. During normal operation it doesn't matter as all
+register accesses are done individually. At resume time after suspend,
+however, the regcache code gathers the biggest possible block of
+registers to sync and sends them one on one go.
 
-This patch fixes the following warning:
+To fix this, set the INCR bit in all cases.
 
-In file included from sound/soc/codecs/ab8500-codec.c:24:
-sound/soc/codecs/ab8500-codec.c: In function ‘ab8500_codec_set_dai_fmt’:
-./include/linux/device.h:1485:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/soc/codecs/ab8500-codec.c:2129:3: note: in expansion of macro ‘dev_err’
-   dev_err(dai->component->dev,
-   ^~~~~~~
-sound/soc/codecs/ab8500-codec.c:2132:2: note: here
-  default:
-  ^~~~~~~
-
-Warning level 3 was used: -Wimplicit-fallthrough=3
-
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/ab8500-codec.c | 1 +
+ sound/soc/codecs/cs4270.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/ab8500-codec.c b/sound/soc/codecs/ab8500-codec.c
-index affb192238a4..2affc278ffbd 100644
---- a/sound/soc/codecs/ab8500-codec.c
-+++ b/sound/soc/codecs/ab8500-codec.c
-@@ -2129,6 +2129,7 @@ static int ab8500_codec_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 		dev_err(dai->codec->dev,
- 			"%s: ERROR: The device is either a master or a slave.\n",
- 			__func__);
-+		/* fall through */
- 	default:
- 		dev_err(dai->codec->dev,
- 			"%s: ERROR: Unsupporter master mask 0x%x\n",
+diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
+index 3670086b9227..f273533c6653 100644
+--- a/sound/soc/codecs/cs4270.c
++++ b/sound/soc/codecs/cs4270.c
+@@ -641,6 +641,7 @@ static const struct regmap_config cs4270_regmap = {
+ 	.reg_defaults =		cs4270_reg_defaults,
+ 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
+ 	.cache_type =		REGCACHE_RBTREE,
++	.write_flag_mask =	CS4270_I2C_INCR,
+ 
+ 	.readable_reg =		cs4270_reg_is_readable,
+ 	.volatile_reg =		cs4270_reg_is_volatile,
 -- 
 2.19.1
 
