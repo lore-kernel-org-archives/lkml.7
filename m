@@ -2,132 +2,114 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C003FC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19139C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE8520693
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CB120693
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 17:16:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ChyBFdyS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3ufbsrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfD0RPL (ORCPT
+        id S1726357AbfD0RQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 13:15:11 -0400
-Received: from mail-eopbgr00085.outbound.protection.outlook.com ([40.107.0.85]:38658
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725942AbfD0RPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 13:15:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FyxFaF53jMJjJShLW2ps8KIbbZ482FRAZMNxH65by0g=;
- b=ChyBFdySC4MnrgUDKNImBXUctSfTAvasBO6vmSfK6AQMDMWMeTAVqoZ5ym9iELLP0m/To5fB/Fkj136/51J51T+Q/s+Lwhbm133eIS3fQ57BvE1IFdKt+H1EPNx5T1yyDoFQbsPQW/4t2NfXHsO5M4MYPX17o+mzhu/PUn2WRcE=
-Received: from AM5PR0501MB2546.eurprd05.prod.outlook.com (10.169.150.142) by
- AM5PR0501MB2516.eurprd05.prod.outlook.com (10.169.153.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Sat, 27 Apr 2019 17:15:07 +0000
-Received: from AM5PR0501MB2546.eurprd05.prod.outlook.com
- ([fe80::7492:a69b:3c2:8d2a]) by AM5PR0501MB2546.eurprd05.prod.outlook.com
- ([fe80::7492:a69b:3c2:8d2a%2]) with mapi id 15.20.1835.015; Sat, 27 Apr 2019
- 17:15:07 +0000
-From:   Moshe Shemesh <moshe@mellanox.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     Saeed Mahameed <saeedm@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] devlink: Execute devlink health recover as a
- work
-Thread-Topic: [PATCH net-next] devlink: Execute devlink health recover as a
- work
-Thread-Index: AQHU+1XYqC6+wlZl5E+t2wQM3bIiOqZNZ9uAgABEHACAAA9igIAA4WuAgAAEQYCAAaHMAA==
-Date:   Sat, 27 Apr 2019 17:15:06 +0000
-Message-ID: <43faf9b6-9202-9f4e-18b4-64c195c02b1a@mellanox.com>
-References: <1556189823-5368-1-git-send-email-moshe@mellanox.com>
- <20190425143847.417033ab@cakuba.netronome.com>
- <e540b1c192632dfcf4c0367be133c9ca51f33b43.camel@mellanox.com>
- <20190425193737.131be39f@cakuba.netronome.com>
- <8bb8a789-c189-df07-5d90-fd8f2fa172ca@mellanox.com>
- <CAJpBn1wN67rTM2Gn-nsh0hTjq6OM2m6DS+BGU-HhSQ5ehn95Cw@mail.gmail.com>
-In-Reply-To: <CAJpBn1wN67rTM2Gn-nsh0hTjq6OM2m6DS+BGU-HhSQ5ehn95Cw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-originating-ip: [84.109.177.105]
-x-clientproxiedby: AM0PR0102CA0072.eurprd01.prod.exchangelabs.com
- (2603:10a6:208::49) To AM5PR0501MB2546.eurprd05.prod.outlook.com
- (2603:10a6:203:c::14)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=moshe@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 64b4f688-0993-4c2a-e830-08d6cb33e3a3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR0501MB2516;
-x-ms-traffictypediagnostic: AM5PR0501MB2516:
-x-microsoft-antispam-prvs: <AM5PR0501MB2516F93985C34194D66993AED93F0@AM5PR0501MB2516.eurprd05.prod.outlook.com>
-x-forefront-prvs: 0020414413
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(366004)(39850400004)(136003)(199004)(189003)(3846002)(58126008)(6116002)(66066001)(65956001)(36756003)(316002)(65806001)(2906002)(54906003)(93886005)(14444005)(66476007)(66556008)(64756008)(66446008)(256004)(66946007)(64126003)(31686004)(53936002)(6916009)(73956011)(6246003)(6512007)(68736007)(8676002)(31696002)(81156014)(81166006)(6506007)(86362001)(4326008)(229853002)(25786009)(65826007)(6436002)(486006)(2616005)(71190400001)(71200400001)(53546011)(102836004)(7736002)(26005)(99286004)(305945005)(5660300002)(478600001)(14454004)(76176011)(97736004)(386003)(52116002)(6486002)(186003)(11346002)(446003)(8936002)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0501MB2516;H:AM5PR0501MB2546.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Mot+Z/HXnwXLjvL38MwRY9RaNALuDzU4YZc/wPuQlZ8Utmc9LT6M0VQ/6hEyrNYP3si4I12mJ2rjfi6zDCNAjyKjkC6QNKsUUOi+P4Fq+HFhLLgDivtxxMzG2PDCR/B0/+KjQgUXvcTMFj8jGEN4Gp8LtPjo77C2/2+AVCCqCQcciTbffbr1YOYGBHScn3fsntnHo007EKaZ+4hrn3sWLljmQYS2z0MMxNlQk9e1zbI13i7lkDm+IeMmhOowGLTYZ1tpPvD5+vLsdW+3Cd7lqeCTTadWfZqC4YVBJVcnSOAYKV4ydEPZNy94ZI8rMNP328BXuCkAoG5ddEZSkmxAREHhvpog3L2Z/izvc2lB+KziBlN+IDYYtjvG42hhNgpvWbMCgMjTIGPx/yGo9tFn7VruUnbJw1BpWtrtoYE2dUI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5653C37F2C17364284437706E3E2E3BA@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sat, 27 Apr 2019 13:16:45 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36230 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfD0RQp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 13:16:45 -0400
+Received: by mail-io1-f65.google.com with SMTP id d19so5565762ioc.3;
+        Sat, 27 Apr 2019 10:16:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0NFNfTlqzrEILRdFrwDZ3rrY4cqvZ4bmpdMMmnpH0oE=;
+        b=M3ufbsrUFN+2LK/I+4v+jPtf3xAJmKfYcDv1Zgw5ZfysAg1GgAFcU7WARA+bTpBwXb
+         cw040N575uffPSZbjIWRXik5KxWU5W5lJf8DuoNw0ycbQDzheY8zAca9J455aBDNfHEV
+         8jAagNz61Vuz0rkNvo5adUxi+uBOa1Xdk9q/8EWYP0K//ZSzQHqpByCbsx4VGsf68K0+
+         O053baWJwpVkFRA63DK95DQ1lZmIvkP9caSboks6+Nc6+UO9hMHlAm50kcH8Xw/97hfM
+         NJux4pYveRzLVMeaTCNYuNbJ7i1WQ3kgrbAUrkI3T52Sgf0SqpblVsdBicWkoA8FyhG3
+         hvHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0NFNfTlqzrEILRdFrwDZ3rrY4cqvZ4bmpdMMmnpH0oE=;
+        b=IV9v5TJJ/PU90sik51TnDoolpF4VwYYJE8hnJvtyFh9pJ6N5tp3kqqg9ID0EnJqmi2
+         LhUanRc2GcNOE/5rMsCCgze6Cp5AAl36r839SkdeOD6WaLyqu9C8sbYs/XPbBwxc/qlT
+         TI1VeHzs1Eon98BHiTS+BlstrTVhkWLoUX6XjOpM9caewR9P0H7ulWCEAXbDkGGKtVAa
+         8h196BNu3oO54IsddxWYnIvpyRFMpgvtCMe1tgICDXb5G90WF+DmWImXXzxHGU5qOHje
+         SNd1T0TyW8D7jUz09wuh1Iky2EtGH5xwVVwBV9c6nYhbywP3iROvmq0j50o2KKL8RZEh
+         S8Kg==
+X-Gm-Message-State: APjAAAU5YbFhJjE5CdX4JSa3b7J9Es5qARTbXZuQ59mYDsccPwIYcSJe
+        dSGL4BuXnky7PlyxRDVaYqw=
+X-Google-Smtp-Source: APXvYqyqFArI13YubcCmeTJeOKOJu5TqD/clpZj+DiONKXJRKkMix68t6lU/J2W2sgfv0hEV16VmhA==
+X-Received: by 2002:a6b:ca87:: with SMTP id a129mr4808954iog.187.1556385403948;
+        Sat, 27 Apr 2019 10:16:43 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:7dcd:8cf4:8ba5:a6c? ([2601:282:800:fd80:7dcd:8cf4:8ba5:a6c])
+        by smtp.googlemail.com with ESMTPSA id q141sm5609723itc.2.2019.04.27.10.16.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Apr 2019 10:16:42 -0700 (PDT)
+Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Julian Anastasov <ja@ssi.bg>, Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        ddstreet@ieee.org, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000007d22100573d66078@google.com>
+ <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
+ <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
+ <9d430543-33c3-0d9b-dc77-3a179a8e3919@I-love.SAKURA.ne.jp>
+ <920ebaf1-ee87-0dbb-6805-660c1cbce3d0@I-love.SAKURA.ne.jp>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <cc054b5c-4e95-8d30-d4bf-9c85f7e20092@gmail.com>
+Date:   Sat, 27 Apr 2019 11:16:41 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64b4f688-0993-4c2a-e830-08d6cb33e3a3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2019 17:15:07.3229
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0501MB2516
+In-Reply-To: <920ebaf1-ee87-0dbb-6805-660c1cbce3d0@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDQvMjYvMjAxOSA3OjE5IFBNLCBKYWt1YiBLaWNpbnNraSB3cm90ZToNCj4gT24gRnJp
-LCBBcHIgMjYsIDIwMTkgYXQgNjowNCBBTSBNb3NoZSBTaGVtZXNoIDxtb3NoZUBtZWxsYW5veC5j
-b20+IHdyb3RlOg0KPj4gT24gNC8yNi8yMDE5IDU6MzcgQU0sIEpha3ViIEtpY2luc2tpIHdyb3Rl
-Og0KPj4+IE9uIEZyaSwgMjYgQXByIDIwMTkgMDE6NDI6MzQgKzAwMDAsIFNhZWVkIE1haGFtZWVk
-IHdyb3RlOg0KPj4+Pj4+IEBAIC00ODEzLDcgKzQ4MzEsMTEgQEAgc3RhdGljIGludA0KPj4+Pj4+
-IGRldmxpbmtfbmxfY21kX2hlYWx0aF9yZXBvcnRlcl9yZWNvdmVyX2RvaXQoc3RydWN0IHNrX2J1
-ZmYgKnNrYiwNCj4+Pj4+PiAgICAgaWYgKCFyZXBvcnRlcikNCj4+Pj4+PiAgICAgICAgICAgICBy
-ZXR1cm4gLUVJTlZBTDsNCj4+Pj4+Pg0KPj4+Pj4+IC0gIHJldHVybiBkZXZsaW5rX2hlYWx0aF9y
-ZXBvcnRlcl9yZWNvdmVyKHJlcG9ydGVyLCBOVUxMKTsNCj4+Pj4+PiArICBpZiAoIXJlcG9ydGVy
-LT5vcHMtPnJlY292ZXIpDQo+Pj4+Pj4gKyAgICAgICAgICByZXR1cm4gLUVPUE5PVFNVUFA7DQo+
-Pj4+Pj4gKw0KPj4+Pj4+ICsgIHF1ZXVlX3dvcmsoZGV2bGluay0+cmVwb3J0ZXJzX3dxLCAmcmVw
-b3J0ZXItPnJlY292ZXJfd29yayk7DQo+Pj4+Pj4gKyAgcmV0dXJuIDA7DQo+Pj4+Pj4gICAgfQ0K
-Pj4+Pj4NCj4+Pj4+IFNvIHRoZSByZWNvdmVyIHVzZXIgc3BhY2UgcmVxdWVzdCB3aWxsIG5vIGxv
-bmdlciByZXR1cm4gdGhlIHN0YXR1cywNCj4+Pj4+IGFuZA0KPj4+Pj4gaXQgd2lsbCBub3QgYWN0
-dWFsbHkgd2FpdCBmb3IgdGhlIHJlY292ZXIgdG8gaGFwcGVuLiAgTGVhdmluZyB1c2VyDQo+Pj4+
-PiBwb25kZXJpbmcgLSBkaWQgdGhlIHJlY292ZXIgcnVuIGFuZCBmYWlsLCBvciBkaWQgaXQgbm9y
-IGdldCBydW4NCj4+Pj4+IHlldC4uLg0KPj4+Pj4NCj4+Pj4NCj4+Pj4gd2FpdF9mb3JfY29tcGxl
-dGlvbl9pbnRlcnJ1cHRpYmxlX3RpbWVvdXQgaXMgbWlzc2luZyBmcm9tIHRoZSBkZXNpZ24gPw0K
-Pj4+DQo+Pj4gUGVyaGFwcywgYnV0IEkgdGhpbmsgaXRzIGJldHRlciB0byBhdm9pZCB0aGUgYXN5
-bmMgZXhlY3V0aW9uIG9mDQo+Pj4gdGhlIHJlY292ZXIgYWxsIHRvZ2V0aGVyLiAgUGVyaGFwcyBp
-dHMgYmV0dGVyIHRvIHJlZmNvdW50IHRoZQ0KPj4+IHJlcG9ydGVycyBvbiB0aGUgY2FsbCB0byBy
-ZWNvdmVyX2RvaXQ/ICBPciBzb21lIHN1Y2guLiA6KQ0KPj4+DQo+Pg0KPj4gSSB0cmllZCB1c2lu
-ZyByZWZjb3VudCBpbnN0ZWFkIG9mIGRldmxpbmsgbG9jayBoZXJlLiBCdXQgb25jZSBJIGdldCB0
-bw0KPj4gcmVwb3J0ZXIgZGVzdHJveSBJIHdhaXQgZm9yIHRoZSByZWZjb3VudCBhbmQgbm90IHN1
-cmUgaWYgSSBzaG91bGQNCj4+IHJlbGVhc2UgdGhlIHJlcG9ydGVyIGFmdGVyIHNvbWUgdGltZW91
-dCBvciBoYXZlIGVuZGxlc3Mgd2FpdCBmb3INCj4+IHJlZmNvdW50LiBCb3RoIG9wdGlvbnMgc2Vl
-bSBub3QgZ29vZC4NCj4gDQo+IFdlbGwgeW91IHNob3VsZCAiZW5kbGVzc2x5IiB3YWl0LiAgV2h5
-IHdvdWxkIHRoZSByZWZjb3VudCBub3QgZHJvcCwNCj4geW91IGhhdmUgdG8gcmVtb3ZlIGl0IGZy
-b20gdGhlIGxpc3QgZmlyc3QsIHNvIG5vIG5ldyBvcGVyYXRpb25zIGNhbg0KPiBzdGFydCwgcmln
-aHQ/DQo+IEluIHByaW5jaXBsZSB0aGVyZSBpcyBubyBkaWZmZXJlbmNlIGJldHdlZW4gd2FpdGlu
-ZyBmb3IgcmVmY291bnQgdG8NCj4gZHJvcCwgZmx1c2hpbmcgdGhlIHdvcmssIG9yIHdhaXRpbmcg
-Zm9yIHRoZSBkZXZsaW5rIGxvY2sgaWYgcmVwb3J0ZXINCj4gaG9sZHMgaXQ/DQo+IA0KTWFrZXMg
-c2Vuc2UsIEkgd2lsbCByZXdyaXRlIHRoaXMgcGF0Y2gsIHRoYW5rcy4NCg==
+On 4/26/19 7:43 AM, Tetsuo Handa wrote:
+> This bug is the top crasher for syzbot and thus we want to fix. I need your
+> response regarding commit caacf05e5ad1abf0 ("ipv4: Properly purge netdev
+> references on uncached routes.") why you chose "a loopback device in that
+> namespace".
+> 
+> On 2019/04/16 23:00, Tetsuo Handa wrote:
+>> Hello, David S. Miller.
+>>
+>> I have a question regarding rt_flush_dev() introduced by commit caacf05e5ad1abf0
+>> ("ipv4: Properly purge netdev references on uncached routes.") which went to
+>> Linux 3.6-rc1. That commit started replacing "a device to unregister" with
+>> "a loopback device in that namespace", but there is no description why that
+>> commit chose "a loopback device in that namespace". If a device to unregister
+>> is "a loopback device in that namespace" itself, rt_flush_dev() becomes a no-op
+>> because dev == net->loopback_dev from the beginning. Apart from a problem that
+>> usage count keeps increasing because dev_put(rt->dst.dev) is not called after
+>> rt->dst.dev was replaced with a loopback device, replacing "a device to unregister"
+>> with "a loopback device in init namespace" (like shown below) avoids this problem.
+>>
+
+Moving resource use to the init namespace is not really solving the core
+problem. It would be better to understand what changes are needed to the
+shutdown sequence of a namespace to ensure proper cleanup.
+
+In this case why are dst entries not getting cleaned up? This one is
+referring to entries on the uncached list. What is using the dst entry
+and why isn't it getting released?
