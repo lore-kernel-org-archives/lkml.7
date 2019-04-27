@@ -2,79 +2,101 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27D7C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 16:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE277C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 16:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80259208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 16:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67EF2077B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 16:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JFslVtbq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3eXqdP76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfD0QqO (ORCPT
+        id S1726184AbfD0Qyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 12:46:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33668 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD0QqO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 12:46:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3A4MMVFyJaHzHHkM6gHiD57x9smeH3QHU7KPXmbZSDw=; b=JFslVtbqb8Xk7UezEFwCOzsYq
-        Z5Aq2Y8zTTk/51MJN1Ed1yMVT19PprZKmDEFj46MAfuXJV5chkPuzPZqP0Lplm7tgTy+m9hW1IPMI
-        Dlvjg0nWkgVsCdsVf0JGrGxcrLXnafW00jFTiJxun/0fMpr10ILMzOjXnhdKzwuNpGy6Xzh4kw8Hi
-        fa/PPcK89psBW4qLC510FYerG4xn0hYW8TuaG+SnKEdUvdEnIc47HCZGllN6BlIFHTrxiuQnVgilo
-        vSqlQ/Ov084psRj/0LeF7fevR94oXo07muDL90zv2NWuemOC+yjiDtNedJg0sR/cw8Or3XA1cLRa7
-        WErQZxx0Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hKQSr-0004Wb-09; Sat, 27 Apr 2019 16:46:13 +0000
-Date:   Sat, 27 Apr 2019 09:46:12 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     laurentiu.tudor@nxp.com
-Cc:     netdev@vger.kernel.org, madalin.bucur@nxp.com, roy.pledge@nxp.com,
-        camelia.groza@nxp.com, leoyang.li@nxp.com,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, davem@davemloft.net,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 7/9] dpaa_eth: fix iova handling for contiguous frames
-Message-ID: <20190427164612.GA12450@infradead.org>
-References: <20190427071031.6563-1-laurentiu.tudor@nxp.com>
- <20190427071031.6563-8-laurentiu.tudor@nxp.com>
+        Sat, 27 Apr 2019 12:54:33 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46709 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbfD0Qyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 12:54:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Jc/W3C1gc1usstdsD3X0g0GI2F2TrJO7kcdb6baDsAY=; b=3eXqdP76iQ2WpTDUvS5itLdgxp
+        fyavnj0QnIqJxqpn+TxSEi+N7+t4Np1TSm7q2lXZheAs6qjKBKuaCi2oYDbnamooZzYHAjvU4vo2J
+        LpbkhABcKfV4cnfMiOgtJPIcEeysT5bFuBMvd2aSrjAL6RQVzanY/GFO1S/nBPvNVAYc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hKQal-0002ql-Qm; Sat, 27 Apr 2019 18:54:23 +0200
+Date:   Sat, 27 Apr 2019 18:54:23 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Alban Bedel <albeu@free.fr>, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 4/4] net: davinci_emac: Drop nvmem_get_mac_address usage
+Message-ID: <20190427165423.GE9816@lunn.ch>
+References: <1556320002-26213-1-git-send-email-ynezz@true.cz>
+ <1556320002-26213-5-git-send-email-ynezz@true.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190427071031.6563-8-laurentiu.tudor@nxp.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1556320002-26213-5-git-send-email-ynezz@true.cz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 10:10:29AM +0300, laurentiu.tudor@nxp.com wrote:
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+On Sat, Apr 27, 2019 at 01:06:42AM +0200, Petr Štetiar wrote:
+> of_get_mac_address now uses NVMEM under the hood, so it's not necessary
+> to call it manually anymore.
 > 
-> The driver relies on the no longer valid assumption that dma addresses
-> (iovas) are identical to physical addressees and uses phys_to_virt() to
-> make iova -> vaddr conversions. Fix this by adding a function that does
-> proper iova -> phys conversions using the iommu api and update the code
-> to use it.
-> Also, a dma_unmap_single() call had to be moved further down the code
-> because iova -> vaddr conversions were required before the unmap.
-> For now only the contiguous frame case is handled and the SG case is
-> split in a following patch.
-> While at it, clean-up a redundant dpaa_bpid2pool() and pass the bp
-> as parameter.
+> Signed-off-by: Petr Štetiar <ynezz@true.cz>
+> ---
+>  drivers/net/ethernet/ti/davinci_emac.c | 14 +++++---------
+>  1 file changed, 5 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
+> index 57450b1..c1a5526 100644
+> --- a/drivers/net/ethernet/ti/davinci_emac.c
+> +++ b/drivers/net/ethernet/ti/davinci_emac.c
+> @@ -1912,15 +1912,11 @@ static int davinci_emac_probe(struct platform_device *pdev)
+>  		ether_addr_copy(ndev->dev_addr, priv->mac_addr);
+>  
+>  	if (!is_valid_ether_addr(priv->mac_addr)) {
+> -		/* Try nvmem if MAC wasn't passed over pdata or DT. */
+> -		rc = nvmem_get_mac_address(&pdev->dev, priv->mac_addr);
+> -		if (rc) {
+> -			/* Use random MAC if still none obtained. */
+> -			eth_hw_addr_random(ndev);
+> -			memcpy(priv->mac_addr, ndev->dev_addr, ndev->addr_len);
+> -			dev_warn(&pdev->dev, "using random MAC addr: %pM\n",
+> -				 priv->mac_addr);
+> -		}
+> +		/* Use random MAC if still none obtained. */
+> +		eth_hw_addr_random(ndev);
+> +		memcpy(priv->mac_addr, ndev->dev_addr, ndev->addr_len);
+> +		dev_warn(&pdev->dev, "using random MAC addr: %pM\n",
+> +			 priv->mac_addr);
 
-Err, this is broken.  A driver using the DMA API has no business
-call IOMMU APIs.  Just save the _virtual_ address used for the mapping
-away and use that again.  We should not go through crazy gymnastics
-like this.
+Hi Petr
+
+There is the same ordering issue here as with the previous patch.
+
+      Andrew
