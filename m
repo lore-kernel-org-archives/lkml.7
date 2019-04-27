@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF07C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80C8C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B35214AE
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7171820873
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329164;
-	bh=yLydhsBpfmEzTUr/+hOGnIw4nvHw3oyal+y1wotLDs4=;
+	s=default; t=1556329168;
+	bh=NVpKaKnm78hkqrAGg9/aD1rrBLyCOt6ViNMnVqaxVU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imHx79ADVX9mtE17TN9QjkYTXRNxU9TtGe/CHx6+3I66CJx9avcthnSiYNHvK04NJ
-	 9rmC5L4j97+To0nlEbjPXSDARGlyyN+zCxzxzkVKbPcapsmv90JK4GAz6bATYo3zyT
-	 3SBsbQAOrFz2bcSH2pzXI3pos+pyeAOaZf8hkINo=
+	b=B1aOIwhX8cHB8xCKlsMtWBF4fpzOVaSbeHW+GmsHnfgxSxycFTDGDFt8kk+jmw3cp
+	 PN2kuo+XgB7C6LATj2U9+cJRt2ebbMNndfA1ImeZfUV+7RO5kgAa2Ky6GqiSzXIeg4
+	 027X6JcgGUthBszOT/sEzpOOhDqmq7wjUZTzGOWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfD0BjX (ORCPT
+        id S1727630AbfD0Bj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:39:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42318 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:39:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727562AbfD0BjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:39:15 -0400
+        id S1727562AbfD0BjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:39:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84ACF2084F;
-        Sat, 27 Apr 2019 01:39:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7634E208CB;
+        Sat, 27 Apr 2019 01:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329154;
-        bh=yLydhsBpfmEzTUr/+hOGnIw4nvHw3oyal+y1wotLDs4=;
+        s=default; t=1556329164;
+        bh=NVpKaKnm78hkqrAGg9/aD1rrBLyCOt6ViNMnVqaxVU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Df36bUnTeA+gnSMgQvzurS74IgdmYx5j70Bo75lLtv18ajAYWe2f3KLI+6BPtb0y4
-         300h7KAHjPoSTwuNPZN409EBiU/PmRwXd+DvuzqixKnUWacKMgImeNnGbLTkZomGle
-         fBoLL8IfZwYrqukPUR+vtzd3uCTHOrSEBxXQZEcg=
+        b=I73wr20+UA4vEfDexvwyEpEKkF8lmsBDWAgkVTVMZhGFOgJT3Pl7nZ/RjdGyv9J3j
+         kgVkWtLZyQ48PjMc3pEsAM47f7iAC4dJVstKRmlTcTuhNK6FOuNmwhxxroE4+EC14I
+         YmUVuOzqZwZIcOWBLsg0EBRbMBh7Zfwj6u/xS8fw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chong Qiao <qiaochong@loongson.cn>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 27/79] MIPS: KGDB: fix kgdb support for SMP platforms.
-Date:   Fri, 26 Apr 2019 21:37:46 -0400
-Message-Id: <20190427013838.6596-27-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, tonyj@suse.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 32/79] perf/x86/intel: Initialize TFA MSR
+Date:   Fri, 26 Apr 2019 21:37:51 -0400
+Message-Id: <20190427013838.6596-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -63,53 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chong Qiao <qiaochong@loongson.cn>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit ab8a6d821179ab9bea1a9179f535ccba6330c1ed ]
+[ Upstream commit d7262457e35dbe239659e62654e56f8ddb814bed ]
 
-KGDB_call_nmi_hook is called by other cpu through smp call.
-MIPS smp call is processed in ipi irq handler and regs is saved in
- handle_int.
-So kgdb_call_nmi_hook get regs by get_irq_regs and regs will be passed
- to kgdb_cpu_enter.
+Stephane reported that the TFA MSR is not initialized by the kernel,
+but the TFA bit could set by firmware or as a leftover from a kexec,
+which makes the state inconsistent.
 
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: QiaoChong <qiaochong@loongson.cn>
+Reported-by: Stephane Eranian <eranian@google.com>
+Tested-by: Nelson DSouza <nelson.dsouza@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: tonyj@suse.com
+Link: https://lkml.kernel.org/r/20190321123849.GN6521@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/kgdb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/mips/kernel/kgdb.c b/arch/mips/kernel/kgdb.c
-index 149100e1bc7c..90f37626100f 100644
---- a/arch/mips/kernel/kgdb.c
-+++ b/arch/mips/kernel/kgdb.c
-@@ -33,6 +33,7 @@
- #include <asm/processor.h>
- #include <asm/sigcontext.h>
- #include <linux/uaccess.h>
-+#include <asm/irq_regs.h>
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index c647595666c2..4c74c0a61020 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3563,6 +3563,12 @@ static void intel_pmu_cpu_starting(int cpu)
  
- static struct hard_trap_info {
- 	unsigned char tt;	/* Trap type code for MIPS R3xxx and R4xxx */
-@@ -214,7 +215,7 @@ void kgdb_call_nmi_hook(void *ignored)
- 	old_fs = get_fs();
- 	set_fs(get_ds());
+ 	cpuc->lbr_sel = NULL;
  
--	kgdb_nmicallback(raw_smp_processor_id(), NULL);
-+	kgdb_nmicallback(raw_smp_processor_id(), get_irq_regs());
++	if (x86_pmu.flags & PMU_FL_TFA) {
++		WARN_ON_ONCE(cpuc->tfa_shadow);
++		cpuc->tfa_shadow = ~0ULL;
++		intel_set_tfa(cpuc, false);
++	}
++
+ 	if (x86_pmu.version > 1)
+ 		flip_smm_bit(&x86_pmu.attr_freeze_on_smi);
  
- 	set_fs(old_fs);
- }
 -- 
 2.19.1
 
