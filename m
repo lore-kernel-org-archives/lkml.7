@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B247C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593E7C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21272214AE
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A355215EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329368;
-	bh=m8Uv4mu0G420dZMTfAaTAzt4QTqiurP9GomMjd4p7P8=;
+	s=default; t=1556329372;
+	bh=APGVOXUyJGrqnZdSAe74CBWtADraiB5AYURtzmnBU8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A2fk5Pg10zuNUvtxdXm5Un5b2nYVbxgj6+qrXgez0ojvYKeNPwKGqfRvGsoYATUHx
-	 0jXJqPvcaW73fryMivrDe7kYT2GzLG7TBlqP5O20dc9W10HAKkp7AWxGVxcDDXPus0
-	 bAmNxebzl+NfSsDlVIfqzm934jSfjDZ0vOcnOpwQ=
+	b=10U1mY8nu9yJPDf0hLJOvjqMbhAU/nor/qQhm0wTFMeUmz6Obj61ArxjmI4ib1F+1
+	 FHfUS++S/k5tjM4HsZ7Zjpeou5QUbf9/Df1TbmdauNSbSSdyxHfh0hDlk1NwljW4A8
+	 danE+LlI0FPVq8QL60RZO6OtiCg7kGce08/3QBiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfD0Bmr (ORCPT
+        id S1727704AbfD0Bmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:42:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46826 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:42:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727674AbfD0Bmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:42:42 -0400
+        id S1727674AbfD0Bmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:42:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C7BC20675;
-        Sat, 27 Apr 2019 01:42:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5A8F208CB;
+        Sat, 27 Apr 2019 01:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329362;
-        bh=m8Uv4mu0G420dZMTfAaTAzt4QTqiurP9GomMjd4p7P8=;
+        s=default; t=1556329368;
+        bh=APGVOXUyJGrqnZdSAe74CBWtADraiB5AYURtzmnBU8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hWROIURlp+tsxaUfEC9Mo8goW3hJ8db/zR7uH3DhJxgi4Wy3yK8YVgeGeyE5MHl1J
-         lNiWcfw8aObWT/bI3xG2+t5tmaYINZHktIKj/4nuLq1atfIEG0ZJlEYmEb1cJWleAK
-         Nk6WxD61KfXP+MkESuFAyQYEW9DQ4Byv84YSeXZs=
+        b=ZOwH+6Mx1Zyei0FdUSCb5ico6jRPGavDVjQhiODtVLfieMVvYd3Rt36gHCeZrDWj8
+         zZ0wqm+BmaekLGQZgIl771gLVLJSfOzs60NkfZ9RQOrU60b4uDF4RPPFufstwzIBGP
+         eeyK0+FtEkiLwpOth1fhgx6p1vMZ6r/eMOWtLzIs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chong Qiao <qiaochong@loongson.cn>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 10/32] MIPS: KGDB: fix kgdb support for SMP platforms.
-Date:   Fri, 26 Apr 2019 21:42:01 -0400
-Message-Id: <20190427014224.8274-10-sashal@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/32] perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
+Date:   Fri, 26 Apr 2019 21:42:04 -0400
+Message-Id: <20190427014224.8274-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014224.8274-1-sashal@kernel.org>
 References: <20190427014224.8274-1-sashal@kernel.org>
@@ -63,53 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chong Qiao <qiaochong@loongson.cn>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit ab8a6d821179ab9bea1a9179f535ccba6330c1ed ]
+[ Upstream commit 583feb08e7f7ac9d533b446882eb3a54737a6dbb ]
 
-KGDB_call_nmi_hook is called by other cpu through smp call.
-MIPS smp call is processed in ipi irq handler and regs is saved in
- handle_int.
-So kgdb_call_nmi_hook get regs by get_irq_regs and regs will be passed
- to kgdb_cpu_enter.
+When an event is programmed with attr.wakeup_events=N (N>0), it means
+the caller is interested in getting a user level notification after
+N samples have been recorded in the kernel sampling buffer.
 
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: QiaoChong <qiaochong@loongson.cn>
+With precise events on Intel processors, the kernel uses PEBS.
+The kernel tries minimize sampling overhead by verifying
+if the event configuration is compatible with multi-entry PEBS mode.
+If so, the kernel is notified only when the buffer has reached its threshold.
+Other PEBS operates in single-entry mode, the kenrel is notified for each
+PEBS sample.
+
+The problem is that the current implementation look at frequency
+mode and event sample_type but ignores the wakeup_events field. Thus,
+it may not be possible to receive a notification after each precise event.
+
+This patch fixes this problem by disabling multi-entry PEBS if wakeup_events
+is non-zero.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: kan.liang@intel.com
+Link: https://lkml.kernel.org/r/20190306195048.189514-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/kgdb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/kgdb.c b/arch/mips/kernel/kgdb.c
-index eb6c0d582626..2c1e30ca7ee4 100644
---- a/arch/mips/kernel/kgdb.c
-+++ b/arch/mips/kernel/kgdb.c
-@@ -33,6 +33,7 @@
- #include <asm/processor.h>
- #include <asm/sigcontext.h>
- #include <linux/uaccess.h>
-+#include <asm/irq_regs.h>
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index dc8f8b3e6cec..6e1a1ceeed51 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3051,7 +3051,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
  
- static struct hard_trap_info {
- 	unsigned char tt;	/* Trap type code for MIPS R3xxx and R4xxx */
-@@ -214,7 +215,7 @@ static void kgdb_call_nmi_hook(void *ignored)
- 	old_fs = get_fs();
- 	set_fs(get_ds());
- 
--	kgdb_nmicallback(raw_smp_processor_id(), NULL);
-+	kgdb_nmicallback(raw_smp_processor_id(), get_irq_regs());
- 
- 	set_fs(old_fs);
- }
+ 	if (event->attr.precise_ip) {
+-		if (!event->attr.freq) {
++		if (!(event->attr.freq || event->attr.wakeup_events)) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_free_running_flags(event)))
 -- 
 2.19.1
 
