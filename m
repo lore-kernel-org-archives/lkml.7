@@ -1,211 +1,192 @@
 Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE9AC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A101C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28CB82077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209222077B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556356025;
+	bh=mwhMiJ3MQ2Nei3wxS8nEK2Qcw/8sWJvdNzTKZ8HUw0o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2BqpTrkvL/SSdqK7AS4fQDAp4b08/LVP6KZum/VTyRzjSE3whDHm6zhiHetqclE0e
+	 Wqh+HAZlCClZGnqnL85+R0vvd/ZkRL0VQsx6gCsvVOt3+h/je7AWma4auh/yOKOC15
+	 Wmcg0QoiQzp4LaD+3Iwxo82QjMF3VSJFR8tcPEA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbfD0JEM (ORCPT
+        id S1726242AbfD0JHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 05:04:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35756 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbfD0JEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 05:04:12 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 079798535C;
-        Sat, 27 Apr 2019 09:04:11 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DBAC617D64;
-        Sat, 27 Apr 2019 09:04:05 +0000 (UTC)
-Subject: Re: [PATCH v2 18/19] iommu/vt-d: Support flushing more translation
- cache types
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556062279-64135-19-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <5ad35536-4993-13f1-5199-ddd99f7009e5@redhat.com>
-Date:   Sat, 27 Apr 2019 11:04:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Sat, 27 Apr 2019 05:07:03 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39796 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfD0JHD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 05:07:03 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n25so7764120wmk.4
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 02:07:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zvO5tx75mBcwL4BBc74Z0twD+gtLAHXQirkVGs5qmHU=;
+        b=TawwbpFDHBdf7qHKQwanK01akp5UHmfFwWygBiZHzZsXduGGd3h07WJn6bfdBoHST6
+         JtGNK5krSkpbpET+dMkO3T6ollDhJX9z4V5hyNIIZkgPTc5fJMOE/tZvSgZjBviwawQO
+         IXNRYNCTueNd/00Ke+TG5wktiR8TnRi6XbywMUcixLCzLVy2gOJEdFnfvfTXHM0dVs5a
+         aiiBYXlyvfmo4aTpZjztKHcp9TJHkNjJwG249jMwi1c09ZK8xjMOXM+RXWO3EM9II2Mr
+         YXtcIyVscoQEGU4stS7kKKZ5zexyiUAG1pu8rmJLzxGaA3nUn4tB8ER8PEx7RM9mTQW9
+         mvQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zvO5tx75mBcwL4BBc74Z0twD+gtLAHXQirkVGs5qmHU=;
+        b=pFnD9gBAzUR14gigEz9+55rS1f8vo83mhGXSuNWBPSEozUfMKSN10it1CvdcncnorM
+         9aYI0PQ4X5sfvIUOjPfYY/hZkdENi6bdgkpMMZYxYY1lkJgRxvRxHZIagMYfdE9+hJ+s
+         cTfElH7qtTO3nei3VjxpZ2cA19TItb6qcCqy2SMNq5X3PFm7JuGsOG8K3Hi7+A+a28dz
+         PahHQQKXSFLx1ogXqqT41z2dS/GL495hZZ+5hCGQ96jGftGeysBBqWhcrUaT2Q/1zxlT
+         uA/xtYvcrsXtJgqd4zWZZTFlwKzuhE8AfxwQe4PPP68H10IvCMsO+zQQgdu/1QUuqr9p
+         TCog==
+X-Gm-Message-State: APjAAAVvX14AnPQN1I6iPldsFjw5UU7VqNO4/jt6mlKFaiZi7W+/tutk
+        cQiSk/VNTb6LbBaDdFQ7jzE=
+X-Google-Smtp-Source: APXvYqx6xdnAH4icHxfhQib5/HAGWBEBBQVrS1RphPXUwl40e4PVJyJU12mkFpKMFL8N/6qkpM3rGw==
+X-Received: by 2002:a1c:ca07:: with SMTP id a7mr11423307wmg.104.1556356021027;
+        Sat, 27 Apr 2019 02:07:01 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id 204sm34633192wmc.1.2019.04.27.02.06.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Apr 2019 02:06:59 -0700 (PDT)
+Date:   Sat, 27 Apr 2019 11:06:57 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Fr?d?ric Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190427090657.GB99668@gmail.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+ <20190424140013.GA14594@sinkpad>
+ <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
+ <20190425095508.GA8387@gmail.com>
+ <20190425144619.GX18914@techsingularity.net>
+ <20190425185343.GA122353@gmail.com>
+ <20190425213145.GY18914@techsingularity.net>
+ <20190426094545.GD126896@gmail.com>
+ <20190426101947.GZ18914@techsingularity.net>
 MIME-Version: 1.0
-In-Reply-To: <1556062279-64135-19-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Sat, 27 Apr 2019 09:04:11 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426101947.GZ18914@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
 
-On 4/24/19 1:31 AM, Jacob Pan wrote:
-> When Shared Virtual Memory is exposed to a guest via vIOMMU, extended
-> IOTLB invalidation may be passed down from outside IOMMU subsystems.
-> This patch adds invalidation functions that can be used for additional
-> translation cache types.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/dmar.c        | 48 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/intel-iommu.h | 21 ++++++++++++++++----
->  2 files changed, 65 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> index 9c49300..680894e 100644
-> --- a/drivers/iommu/dmar.c
-> +++ b/drivers/iommu/dmar.c
-> @@ -1357,6 +1357,20 @@ void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
->  	qi_submit_sync(&desc, iommu);
->  }
->  
-/* PASID-based IOTLB Invalidate */
-> +void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr, u32 pasid,
-> +		unsigned int size_order, u64 granu)
-> +{
-> +	struct qi_desc desc;
-> +
-> +	desc.qw0 = QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
-> +		QI_EIOTLB_GRAN(granu) | QI_EIOTLB_TYPE;
-> +	desc.qw1 = QI_EIOTLB_ADDR(addr) | QI_EIOTLB_IH(0) |
-> +		QI_EIOTLB_AM(size_order);
-I see IH it hardcoded to 0. Don't you envision to cascade the IH. On ARM
-this was needed for perf sake.
-> +	desc.qw2 = 0;
-> +	desc.qw3 = 0;
-> +	qi_submit_sync(&desc, iommu);
-> +}
-> +
->  void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
->  			u16 qdep, u64 addr, unsigned mask)
->  {
-> @@ -1380,6 +1394,40 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
->  	qi_submit_sync(&desc, iommu);
->  }
->  
-/* Pasid-based Device-TLB Invalidation */
-> +void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
-> +		u32 pasid,  u16 qdep, u64 addr, unsigned size, u64 granu)
-> +{
-> +	struct qi_desc desc;
-> +
-> +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) | QI_DEV_EIOTLB_SID(sid) |
-> +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
-> +		QI_DEV_IOTLB_PFSID(pfsid);
-> +	desc.qw1 |= QI_DEV_EIOTLB_GLOB(granu);
-> +
-> +	/* If S bit is 0, we only flush a single page. If S bit is set,
-> +	 * The least significant zero bit indicates the size. VT-d spec
-> +	 * 6.5.2.6
-> +	 */
-> +	if (!size)
-> +		desc.qw0 = QI_DEV_EIOTLB_ADDR(addr) & ~QI_DEV_EIOTLB_SIZE;
-desc.q1 |= ?
-> +	else {
-> +		unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size);
-> +
-> +		desc.qw1 = QI_DEV_EIOTLB_ADDR(addr & ~mask) | QI_DEV_EIOTLB_SIZE;
-desc.q1 |=
-> +	}
-> +	qi_submit_sync(&desc, iommu);
-> +}
-> +
-/* PASID-cache invalidation */
-> +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu, int pasid)
-> +{
-> +	struct qi_desc desc;
-> +
-> +	desc.qw0 = QI_PC_TYPE | QI_PC_DID(did) | QI_PC_GRAN(granu) | QI_PC_PASID(pasid);
-> +	desc.qw1 = 0;
-> +	desc.qw2 = 0;
-> +	desc.qw3 = 0;
-> +	qi_submit_sync(&desc, iommu);
-> +}
->  /*
->   * Disable Queued Invalidation interface.
->   */
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index 5d67d0d4..38e5efb 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -339,7 +339,7 @@ enum {
->  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >> (DMA_TLB_FLUSH_GRANU_OFFSET-4))
->  #define QI_IOTLB_ADDR(addr)	(((u64)addr) & VTD_PAGE_MASK)
->  #define QI_IOTLB_IH(ih)		(((u64)ih) << 6)
-> -#define QI_IOTLB_AM(am)		(((u8)am))
-> +#define QI_IOTLB_AM(am)		(((u8)am) & 0x3f)
->  
->  #define QI_CC_FM(fm)		(((u64)fm) << 48)
->  #define QI_CC_SID(sid)		(((u64)sid) << 32)
-> @@ -357,17 +357,22 @@ enum {
->  #define QI_PC_DID(did)		(((u64)did) << 16)
->  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
->  
-> -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
-> -#define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
-> +/* PASID cache invalidation granu */
-> +#define QI_PC_ALL_PASIDS	0
-> +#define QI_PC_PASID_SEL		1
->  
->  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
->  #define QI_EIOTLB_GL(gl)	(((u64)gl) << 7)
->  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
-> -#define QI_EIOTLB_AM(am)	(((u64)am))
-> +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
->  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
->  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
->  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
->  
-> +/* QI Dev-IOTLB inv granu */
-> +#define QI_DEV_IOTLB_GRAN_ALL		1
-> +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0
-> +
->  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
->  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
->  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
-> @@ -658,8 +663,16 @@ extern void qi_flush_context(struct intel_iommu *iommu, u16 did, u16 sid,
->  			     u8 fm, u64 type);
->  extern void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
->  			  unsigned int size_order, u64 type);
-> +extern void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr,
-> +			u32 pasid, unsigned int size_order, u64 type);
->  extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
->  			u16 qdep, u64 addr, unsigned mask);
-> +
-> +extern void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
-> +			u32 pasid, u16 qdep, u64 addr, unsigned size, u64 granu);
-> +
-> +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu, int pasid);
-> +
->  extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu *iommu);
->  
->  extern int dmar_ir_support(void);
-> 
+* Mel Gorman <mgorman@techsingularity.net> wrote:
 
-Thanks
+> On Fri, Apr 26, 2019 at 11:45:45AM +0200, Ingo Molnar wrote:
+> > 
+> > * Mel Gorman <mgorman@techsingularity.net> wrote:
+> > 
+> > > > > I can show a comparison with equal levels of parallelisation but with 
+> > > > > HT off, it is a completely broken configuration and I do not think a 
+> > > > > comparison like that makes any sense.
+> > > > 
+> > > > I would still be interested in that comparison, because I'd like
+> > > > to learn whether there's any true *inherent* performance advantage to 
+> > > > HyperThreading for that particular workload, for exactly tuned 
+> > > > parallelism.
+> > > > 
+> > > 
+> > > It really isn't a fair comparison. MPI seems to behave very differently
+> > > when a machine is saturated. It's documented as changing its behaviour
+> > > as it tries to avoid the worst consequences of saturation.
+> > > 
+> > > Curiously, the results on the 2-socket machine were not as bad as I
+> > > feared when the HT configuration is running with twice the number of
+> > > threads as there are CPUs
+> > > 
+> > > Amean     bt      771.15 (   0.00%)     1086.74 * -40.93%*
+> > > Amean     cg      445.92 (   0.00%)      543.41 * -21.86%*
+> > > Amean     ep       70.01 (   0.00%)       96.29 * -37.53%*
+> > > Amean     is       16.75 (   0.00%)       21.19 * -26.51%*
+> > > Amean     lu      882.84 (   0.00%)      595.14 *  32.59%*
+> > > Amean     mg       84.10 (   0.00%)       80.02 *   4.84%*
+> > > Amean     sp     1353.88 (   0.00%)     1384.10 *  -2.23%*
+> > 
+> > Yeah, so what I wanted to suggest is a parallel numeric throughput test 
+> > with few inter-process data dependencies, and see whether HT actually 
+> > improves total throughput versus the no-HT case.
+> > 
+> > No over-saturation - but exactly as many threads as logical CPUs.
+> > 
+> > I.e. with 20 physical cores and 40 logical CPUs the numbers to compare 
+> > would be a 'nosmt' benchmark running 20 threads, versus a SMT test 
+> > running 40 threads.
+> > 
+> > I.e. how much does SMT improve total throughput when the workload's 
+> > parallelism is tuned to utilize 100% of the available CPUs?
+> > 
+> > Does this make sense?
+> > 
+> 
+> Yes. Here is the comparison.
+> 
+> Amean     bt      678.75 (   0.00%)      789.13 * -16.26%*
+> Amean     cg      261.22 (   0.00%)      428.82 * -64.16%*
+> Amean     ep       55.36 (   0.00%)       84.41 * -52.48%*
+> Amean     is       13.25 (   0.00%)       17.82 * -34.47%*
+> Amean     lu     1065.08 (   0.00%)     1090.44 (  -2.38%)
+> Amean     mg       89.96 (   0.00%)       84.28 *   6.31%*
+> Amean     sp     1579.52 (   0.00%)     1506.16 *   4.64%*
+> Amean     ua      611.87 (   0.00%)      663.26 *  -8.40%*
+> 
+> This is the socket machine and with HT On, there are 80 logical CPUs
+> versus HT Off with 40 logical CPUs.
 
-Eric
+That's very interesting - so for most workloads HyperThreading is a 
+massive loss, and for 'mg' and 'sp' it's a 5-6% win?
+
+I'm wondering how much of say the 'cg' workload's -64% loss could be task 
+placement inefficiency - or are these all probable effects of 80 threads 
+trying to use too many cache and memory resources and thus utilizing it 
+all way too inefficiently?
+
+Are these relatively simple numeric workloads, with not much scheduling 
+and good overall pinning of tasks, or is it more complex than that?
+
+Also, the takeaway appears to be: by using HT there's a potential 
+advantage of +6% on the benefit side, but a potential -50%+ performance 
+hit on the risk side?
+
+I believe these results also *strongly* support a much stricter task 
+placement policy in up to 50% saturation of SMT systems - it's almost 
+always going to be a win for workloads that are actually trying to fill 
+in some useful role.
+
+Thanks,
+
+	Ingo
