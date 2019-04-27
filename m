@@ -4,60 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B453C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78B2C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D432086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A53020873
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329733;
-	bh=eOsDFlZoCQYVI31KLyLixFl52iW/MgZG0lf5Hv9SBFc=;
+	s=default; t=1556329738;
+	bh=V4fwlGWCxOK+NeGDC85FykK3c4VuiYL3SSt+nrRudZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pJI3EEKTPmEOfbGIPxBFN6AX5I1in+dD01q3TFcaTcTquaHbQNMkUdzzwZ4fMoc3P
-	 q8H8nn0JF77fAThwwYTN5dIGjwsyclSVEDY7NP0EQEuQBdRhiNG7l0W33ENF/ffnPU
-	 ybT9LgoyAJsGbY4F70AtfSMRLYMGGhGr6pS8IJcw=
+	b=aarSCUpa5GLrjf69ZOpJGL+tVWHubpa4jxKbGsaCC9BjLXXbcHOiBGQgqn3UYx1qr
+	 XC4khk8WIOHX2c90X76iPL5KsOsrmG5ovtT5oPN+k1ve32Fzu5KFLGpQtjiYpYJCm/
+	 1XOyOyLl+qQOIOKAl0xAoJcIKjSPAzZo4Yyzh4q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbfD0Bsw (ORCPT
+        id S1728511AbfD0BmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:48:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46342 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:42:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728517AbfD0BmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:42:14 -0400
+        id S1728482AbfD0BmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:42:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 277B7214AE;
-        Sat, 27 Apr 2019 01:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40625208CB;
+        Sat, 27 Apr 2019 01:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329333;
-        bh=eOsDFlZoCQYVI31KLyLixFl52iW/MgZG0lf5Hv9SBFc=;
+        s=default; t=1556329328;
+        bh=V4fwlGWCxOK+NeGDC85FykK3c4VuiYL3SSt+nrRudZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2SB9KRbFIyvgrQvwj8tsVzZ/6n34DfMS/lWMlXfz7a981VAPzwHHyLNoymteRVC+P
-         oSgQq3VY6F6DN7npL8pqET0XHCZ2wODTcdEdV62Ksd3S3F35LfKjCoQw2Ofti/mPEu
-         TRPHw7ui81OJO4jfgJkGj4DxNzr1HBNgEkdjoREY=
+        b=ixZj9NPuq44S5SSVUuooo5Pyiq0L+EQCkVolS0uxnS0hZF7LPca0T2ThcC1TuLyVl
+         426jX4NeeX6xZ4rv2+463jDsCsDePYuNALF+0bhQlgSfbguwfpcBuU9t4z/OJsV28a
+         eKroVlNKXpxNXt+KfyrFrijzddbiV8o21eITGY2Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 49/53] perf/core: Fix perf_event_disable_inatomic() race
-Date:   Fri, 26 Apr 2019 21:40:46 -0400
-Message-Id: <20190427014051.7522-49-sashal@kernel.org>
+Cc:     =?UTF-8?q?David=20M=C3=BCller?= <dave.mueller@gmx.ch>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 45/53] clk: x86: Add system specific quirk to mark clocks as critical
+Date:   Fri, 26 Apr 2019 21:40:42 -0400
+Message-Id: <20190427014051.7522-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,187 +62,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: David Müller <dave.mueller@gmx.ch>
 
-[ Upstream commit 1d54ad944074010609562da5c89e4f5df2f4e5db ]
+[ Upstream commit 7c2e07130090ae001a97a6b65597830d6815e93e ]
 
-Thomas-Mich Richter reported he triggered a WARN()ing from event_function_local()
-on his s390. The problem boils down to:
+Since commit 648e921888ad ("clk: x86: Stop marking clocks as
+CLK_IS_CRITICAL"), the pmc_plt_clocks of the Bay Trail SoC are
+unconditionally gated off. Unfortunately this will break systems where these
+clocks are used for external purposes beyond the kernel's knowledge. Fix it
+by implementing a system specific quirk to mark the necessary pmc_plt_clks as
+critical.
 
-	CPU-A				CPU-B
-
-	perf_event_overflow()
-	  perf_event_disable_inatomic()
-	    @pending_disable = 1
-	    irq_work_queue();
-
-	sched-out
-	  event_sched_out()
-	    @pending_disable = 0
-
-					sched-in
-					perf_event_overflow()
-					  perf_event_disable_inatomic()
-					    @pending_disable = 1;
-					    irq_work_queue(); // FAILS
-
-	irq_work_run()
-	  perf_pending_event()
-	    if (@pending_disable)
-	      perf_event_disable_local(); // WHOOPS
-
-The problem exists in generic, but s390 is particularly sensitive
-because it doesn't implement arch_irq_work_raise(), nor does it call
-irq_work_run() from it's PMU interrupt handler (nor would that be
-sufficient in this case, because s390 also generates
-perf_event_overflow() from pmu::stop). Add to that the fact that s390
-is a virtual architecture and (virtual) CPU-A can stall long enough
-for the above race to happen, even if it would self-IPI.
-
-Adding a irq_work_sync() to event_sched_in() would work for all hardare
-PMUs that properly use irq_work_run() but fails for software PMUs.
-
-Instead encode the CPU number in @pending_disable, such that we can
-tell which CPU requested the disable. This then allows us to detect
-the above scenario and even redirect the IPI to make up for the failed
-queue.
-
-Reported-by: Thomas-Mich Richter <tmricht@linux.ibm.com>
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Signed-off-by: David Müller <dave.mueller@gmx.ch>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c        | 52 ++++++++++++++++++++++++++++++-------
- kernel/events/ring_buffer.c |  4 +--
- 2 files changed, 45 insertions(+), 11 deletions(-)
+ drivers/clk/x86/clk-pmc-atom.c                | 14 ++++++++++---
+ drivers/platform/x86/pmc_atom.c               | 21 +++++++++++++++++++
+ .../linux/platform_data/x86/clk-pmc-atom.h    |  3 +++
+ 3 files changed, 35 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 87bd96399d1c..171b83ebed4a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2007,8 +2007,8 @@ event_sched_out(struct perf_event *event,
- 	event->pmu->del(event, 0);
- 	event->oncpu = -1;
+diff --git a/drivers/clk/x86/clk-pmc-atom.c b/drivers/clk/x86/clk-pmc-atom.c
+index d977193842df..19174835693b 100644
+--- a/drivers/clk/x86/clk-pmc-atom.c
++++ b/drivers/clk/x86/clk-pmc-atom.c
+@@ -165,7 +165,7 @@ static const struct clk_ops plt_clk_ops = {
+ };
  
--	if (event->pending_disable) {
--		event->pending_disable = 0;
-+	if (READ_ONCE(event->pending_disable) >= 0) {
-+		WRITE_ONCE(event->pending_disable, -1);
- 		state = PERF_EVENT_STATE_OFF;
- 	}
- 	perf_event_set_state(event, state);
-@@ -2196,7 +2196,8 @@ EXPORT_SYMBOL_GPL(perf_event_disable);
- 
- void perf_event_disable_inatomic(struct perf_event *event)
+ static struct clk_plt *plt_clk_register(struct platform_device *pdev, int id,
+-					void __iomem *base,
++					const struct pmc_clk_data *pmc_data,
+ 					const char **parent_names,
+ 					int num_parents)
  {
--	event->pending_disable = 1;
-+	WRITE_ONCE(event->pending_disable, smp_processor_id());
-+	/* can fail, see perf_pending_event_disable() */
- 	irq_work_queue(&event->pending);
- }
+@@ -184,9 +184,17 @@ static struct clk_plt *plt_clk_register(struct platform_device *pdev, int id,
+ 	init.num_parents = num_parents;
  
-@@ -5803,10 +5804,45 @@ void perf_event_wakeup(struct perf_event *event)
- 	}
- }
+ 	pclk->hw.init = &init;
+-	pclk->reg = base + PMC_CLK_CTL_OFFSET + id * PMC_CLK_CTL_SIZE;
++	pclk->reg = pmc_data->base + PMC_CLK_CTL_OFFSET + id * PMC_CLK_CTL_SIZE;
+ 	spin_lock_init(&pclk->lock);
  
-+static void perf_pending_event_disable(struct perf_event *event)
-+{
-+	int cpu = READ_ONCE(event->pending_disable);
-+
-+	if (cpu < 0)
-+		return;
-+
-+	if (cpu == smp_processor_id()) {
-+		WRITE_ONCE(event->pending_disable, -1);
-+		perf_event_disable_local(event);
-+		return;
-+	}
-+
 +	/*
-+	 *  CPU-A			CPU-B
-+	 *
-+	 *  perf_event_disable_inatomic()
-+	 *    @pending_disable = CPU-A;
-+	 *    irq_work_queue();
-+	 *
-+	 *  sched-out
-+	 *    @pending_disable = -1;
-+	 *
-+	 *				sched-in
-+	 *				perf_event_disable_inatomic()
-+	 *				  @pending_disable = CPU-B;
-+	 *				  irq_work_queue(); // FAILS
-+	 *
-+	 *  irq_work_run()
-+	 *    perf_pending_event()
-+	 *
-+	 * But the event runs on CPU-B and wants disabling there.
++	 * On some systems, the pmc_plt_clocks already enabled by the
++	 * firmware are being marked as critical to avoid them being
++	 * gated by the clock framework.
 +	 */
-+	irq_work_queue_on(&event->pending, cpu);
-+}
++	if (pmc_data->critical && plt_clk_is_enabled(&pclk->hw))
++		init.flags |= CLK_IS_CRITICAL;
 +
- static void perf_pending_event(struct irq_work *entry)
+ 	ret = devm_clk_hw_register(&pdev->dev, &pclk->hw);
+ 	if (ret) {
+ 		pclk = ERR_PTR(ret);
+@@ -332,7 +340,7 @@ static int plt_clk_probe(struct platform_device *pdev)
+ 		return PTR_ERR(parent_names);
+ 
+ 	for (i = 0; i < PMC_CLK_NUM; i++) {
+-		data->clks[i] = plt_clk_register(pdev, i, pmc_data->base,
++		data->clks[i] = plt_clk_register(pdev, i, pmc_data,
+ 						 parent_names, data->nparents);
+ 		if (IS_ERR(data->clks[i])) {
+ 			err = PTR_ERR(data->clks[i]);
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index 8f018b3f3cd4..eaec2d306481 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -17,6 +17,7 @@
+ 
+ #include <linux/debugfs.h>
+ #include <linux/device.h>
++#include <linux/dmi.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/platform_data/x86/clk-pmc-atom.h>
+@@ -391,11 +392,27 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+ }
+ #endif /* CONFIG_DEBUG_FS */
+ 
++/*
++ * Some systems need one or more of their pmc_plt_clks to be
++ * marked as critical.
++ */
++static const struct dmi_system_id critclk_systems[] __initconst = {
++	{
++		.ident = "MPL CEC1x",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MPL AG"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CEC10 Family"),
++		},
++	},
++	{ /*sentinel*/ }
++};
++
+ static int pmc_setup_clks(struct pci_dev *pdev, void __iomem *pmc_regmap,
+ 			  const struct pmc_data *pmc_data)
  {
--	struct perf_event *event = container_of(entry,
--			struct perf_event, pending);
-+	struct perf_event *event = container_of(entry, struct perf_event, pending);
- 	int rctx;
+ 	struct platform_device *clkdev;
+ 	struct pmc_clk_data *clk_data;
++	const struct dmi_system_id *d = dmi_first_match(critclk_systems);
  
- 	rctx = perf_swevent_get_recursion_context();
-@@ -5815,10 +5851,7 @@ static void perf_pending_event(struct irq_work *entry)
- 	 * and we won't recurse 'further'.
- 	 */
+ 	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+ 	if (!clk_data)
+@@ -403,6 +420,10 @@ static int pmc_setup_clks(struct pci_dev *pdev, void __iomem *pmc_regmap,
  
--	if (event->pending_disable) {
--		event->pending_disable = 0;
--		perf_event_disable_local(event);
--	}
-+	perf_pending_event_disable(event);
+ 	clk_data->base = pmc_regmap; /* offset is added by client */
+ 	clk_data->clks = pmc_data->clks;
++	if (d) {
++		clk_data->critical = true;
++		pr_info("%s critclks quirk enabled\n", d->ident);
++	}
  
- 	if (event->pending_wakeup) {
- 		event->pending_wakeup = 0;
-@@ -9969,6 +10002,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	clkdev = platform_device_register_data(&pdev->dev, "clk-pmc-atom",
+ 					       PLATFORM_DEVID_NONE,
+diff --git a/include/linux/platform_data/x86/clk-pmc-atom.h b/include/linux/platform_data/x86/clk-pmc-atom.h
+index 3ab892208343..7a37ac27d0fb 100644
+--- a/include/linux/platform_data/x86/clk-pmc-atom.h
++++ b/include/linux/platform_data/x86/clk-pmc-atom.h
+@@ -35,10 +35,13 @@ struct pmc_clk {
+  *
+  * @base:	PMC clock register base offset
+  * @clks:	pointer to set of registered clocks, typically 0..5
++ * @critical:	flag to indicate if firmware enabled pmc_plt_clks
++ *		should be marked as critial or not
+  */
+ struct pmc_clk_data {
+ 	void __iomem *base;
+ 	const struct pmc_clk *clks;
++	bool critical;
+ };
  
- 
- 	init_waitqueue_head(&event->waitq);
-+	event->pending_disable = -1;
- 	init_irq_work(&event->pending, perf_pending_event);
- 
- 	mutex_init(&event->mmap_mutex);
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 474b2ccdbe69..99c7f199f2d4 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -393,7 +393,7 @@ void *perf_aux_output_begin(struct perf_output_handle *handle,
- 		 * store that will be enabled on successful return
- 		 */
- 		if (!handle->size) { /* A, matches D */
--			event->pending_disable = 1;
-+			event->pending_disable = smp_processor_id();
- 			perf_output_wakeup(handle);
- 			local_set(&rb->aux_nest, 0);
- 			goto err_put;
-@@ -471,7 +471,7 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
- 
- 	if (wakeup) {
- 		if (handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)
--			handle->event->pending_disable = 1;
-+			handle->event->pending_disable = smp_processor_id();
- 		perf_output_wakeup(handle);
- 	}
- 
+ #endif /* __PLATFORM_DATA_X86_CLK_PMC_ATOM_H */
 -- 
 2.19.1
 
