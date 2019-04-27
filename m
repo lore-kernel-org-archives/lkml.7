@@ -2,212 +2,170 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6624BC43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0692EC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF052087C
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556389503;
-	bh=kh8D00/7ITgVGh0adID3knm2y1Cr8/pPhKFd7SLKMis=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LzCDk97PGJEfvjxg23vQMxWUuYylogPjUZ9Zft5rOyuP2VJKnOUTeqlR4VvkKTB9U
-	 yy+TPeoqxYP0F5XtV0/HIxnpSrY5WSGEpc1zRFK2BJZ0yICZMfvtLg6ttDrhoF81bl
-	 lPk+iU5fo6JQTiC6fu4tVen9iDLyFLmvUXohaS9o=
+	by mail.kernel.org (Postfix) with ESMTP id C835D2087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 18:25:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="fgoWSiWR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfD0SZC (ORCPT
+        id S1726357AbfD0SZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 14:25:02 -0400
-Received: from casper.infradead.org ([85.118.1.10]:51848 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfD0SZB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 14:25:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wHts1d8Y6raq/bP++PtZKHYJGsQDFiyOnVnNB6iR6ug=; b=nWALiyYG9qmb9AK7Q+fRl4393o
-        IYRO8bNjqx0dSc8OxqaEnZDy8Pw5YP840GG5uUwzL3K8X/Z3vNWDmoEtwlQ33Dg+04V+y4jTUUnVe
-        iY+fz2lnrjaSFP9v8OMFojzyHyMSbKdKKKgw6NON+gKIHGi6FNVC60/J0USwwCE3LnzxAQAZZ/0gg
-        yrDbuJr0Ptm1fVpUDeRbTqZa1i+n6uqilu8KJlUg3TkyJVIB+QB6fgAzP9LD3W7b6VWd+HS4LHVW1
-        Yn2ysb11ICX7kN5Za39ksce6Ss38l9r2k8bY1kLSewvKdDfUlpcGWRDMzQ11KPp3svxcrIbz28+Ml
-        PTVmm9mg==;
-Received: from 177.17.250.151.dynamic.adsl.gvt.net.br ([177.17.250.151] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hKS0M-0004bX-Dh; Sat, 27 Apr 2019 18:24:55 +0000
-Date:   Sat, 27 Apr 2019 15:24:49 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 20/27] Documentation: x86: convert i386/IO-APIC.txt to
- reST
-Message-ID: <20190427152449.19df3fcb@coco.lan>
-In-Reply-To: <20190426153150.21228-21-changbin.du@gmail.com>
-References: <20190426153150.21228-1-changbin.du@gmail.com>
-        <20190426153150.21228-21-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 27 Apr 2019 14:25:24 -0400
+Received: from onstation.org ([52.200.56.107]:53464 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbfD0SZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 14:25:24 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 4CCA03E93F;
+        Sat, 27 Apr 2019 18:25:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1556389523;
+        bh=BWIBvQzUZK2Ol1QHN0Z+llq/hFlZfM3/sDYxGcaanFY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fgoWSiWRg1oBcJ76/WV6s9Sl+L9YI4QZvkZHlYOIbddJ9DwW+SG4GJkP2DzqxB+Hk
+         SdYXGmBUdkLPPsOG5ucJhxBJqyHMor8liu1fKs967tXDPeS3SYcct9i2eqb1187buN
+         apgQKdSiWeH+f5OUoOpQcMyVPoFVlBTM+QheLwEA=
+From:   Brian Masney <masneyb@onstation.org>
+To:     jic23@kernel.org, robh+dt@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        mark.rutland@arm.com, anson.huang@nxp.com,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, ldewangan@nvidia.com, rklein@nvidia.com
+Subject: [PATCH] dt-bindings: iio: isl29018: convert bindings to YAML format
+Date:   Sat, 27 Apr 2019 14:23:59 -0400
+Message-Id: <20190427182359.27254-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 26 Apr 2019 23:31:43 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+Convert the isl29018 device tree bindings to the new YAML format.
 
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  .../x86/i386/{IO-APIC.txt => IO-APIC.rst}     | 26 ++++++++++++-------
->  Documentation/x86/i386/index.rst              | 10 +++++++
->  Documentation/x86/index.rst                   |  1 +
->  3 files changed, 27 insertions(+), 10 deletions(-)
->  rename Documentation/x86/i386/{IO-APIC.txt => IO-APIC.rst} (93%)
->  create mode 100644 Documentation/x86/i386/index.rst
-> 
-> diff --git a/Documentation/x86/i386/IO-APIC.txt b/Documentation/x86/i386/IO-APIC.rst
-> similarity index 93%
-> rename from Documentation/x86/i386/IO-APIC.txt
-> rename to Documentation/x86/i386/IO-APIC.rst
-> index 15f5baf7e1b6..aec98f742763 100644
-> --- a/Documentation/x86/i386/IO-APIC.txt
-> +++ b/Documentation/x86/i386/IO-APIC.rst
-> @@ -1,3 +1,11 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=======
-> +IO-APIC
-> +=======
-> +
-> +:Author: Ingo Molnar <mingo@kernel.org>
-> +
->  Most (all) Intel-MP compliant SMP boards have the so-called 'IO-APIC',
->  which is an enhanced interrupt controller. It enables us to route
->  hardware interrupts to multiple CPUs, or to CPU groups. Without an
-> @@ -13,7 +21,7 @@ usually worked around by the kernel. If your MP-compliant SMP board does
->  not boot Linux, then consult the linux-smp mailing list archives first.
->  
->  If your box boots fine with enabled IO-APIC IRQs, then your
-> -/proc/interrupts will look like this one:
-> +/proc/interrupts will look like this one::
->  
->     ---------------------------->
-...
-     <----------------------------
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+I'm willing to be listed as the maintainer since this is one of the
+drivers that I moved out out of staging unless one of the original
+authors wants to be listed instead.
 
-I would remove those lines, as they sounds like a way used by the
-doc author to "escape" a literal block.
+I added the BSD-2-Clause to the new binding document. I wrote the
+original document and the only commit since then was from Rob in
+commit 791d3ef2e111 ("dt-bindings: remove 'interrupt-parent' from
+bindings")
 
-Either way:
+ .../bindings/iio/light/isl29018.txt           | 27 ---------
+ .../bindings/iio/light/isl29018.yaml          | 56 +++++++++++++++++++
+ 2 files changed, 56 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/light/isl29018.yaml
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt b/Documentation/devicetree/bindings/iio/light/isl29018.txt
+deleted file mode 100644
+index b9bbde3e13ed..000000000000
+--- a/Documentation/devicetree/bindings/iio/light/isl29018.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-* ISL 29018/29023/29035 I2C ALS, Proximity, and Infrared sensor
+-
+-Required properties:
+-
+-  - compatible: Should be one of
+-		"isil,isl29018"
+-		"isil,isl29023"
+-		"isil,isl29035"
+-  - reg: the I2C address of the device
+-
+-Optional properties:
+-
+-  - interrupts: the sole interrupt generated by the device
+-
+-  Refer to interrupt-controller/interrupts.txt for generic interrupt client
+-  node bindings.
+-
+-  - vcc-supply: phandle to the regulator that provides power to the sensor.
+-
+-Example:
+-
+-isl29018@44 {
+-	compatible = "isil,isl29018";
+-	reg = <0x44>;
+-	interrupt-parent = <&gpio>;
+-	interrupts = <TEGRA_GPIO(Z, 2) IRQ_TYPE_LEVEL_HIGH>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.yaml b/Documentation/devicetree/bindings/iio/light/isl29018.yaml
+new file mode 100644
+index 000000000000..cbb00be8f359
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/isl29018.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/isl29018.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: |
++  Intersil 29018/29023/29035 Ambient Light, Infrared Light, and Proximity Sensor
++
++maintainers:
++  - Brian Masney <masneyb@onstation.org>
++
++description: |
++  Ambient and infrared light sensing with proximity detection over an i2c
++  interface.
++
++  https://www.renesas.com/us/en/www/doc/datasheet/isl29018.pdf
++  https://www.renesas.com/us/en/www/doc/datasheet/isl29023.pdf
++  https://www.renesas.com/us/en/www/doc/datasheet/isl29035.pdf
++
++properties:
++  compatible:
++    enum:
++      - isil,isl29018
++      - isil,isl29023
++      - isil,isl29035
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vcc-supply:
++    description: Regulator that provides power to the sensor
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        sensor@44 {
++                compatible = "isil,isl29018";
++                reg = <0x44>;
++                interrupts-extended = <&msmgpio 61 IRQ_TYPE_LEVEL_HIGH>;
++        };
++    };
++...
+-- 
+2.20.1
 
-
->    hell:~> cat /proc/interrupts  
-> @@ -37,14 +45,14 @@ none of those IRQ sources is performance-critical.
->  In the unlikely case that your board does not create a working mp-table,
->  you can use the pirq= boot parameter to 'hand-construct' IRQ entries. This
->  is non-trivial though and cannot be automated. One sample /etc/lilo.conf
-> -entry:
-> +entry::
->  
->  	append="pirq=15,11,10"
->  
->  The actual numbers depend on your system, on your PCI cards and on their
->  PCI slot position. Usually PCI slots are 'daisy chained' before they are
->  connected to the PCI chipset IRQ routing facility (the incoming PIRQ1-4
-> -lines):
-> +lines)::
->  
->                 ,-.        ,-.        ,-.        ,-.        ,-.
->       PIRQ4 ----| |-.    ,-| |-.    ,-| |-.    ,-| |--------| |
-> @@ -56,7 +64,7 @@ lines):
->       PIRQ1 ----| |-  `----| |-  `----| |-  `----| |--------| |
->                 `-'        `-'        `-'        `-'        `-'
->  
-> -Every PCI card emits a PCI IRQ, which can be INTA, INTB, INTC or INTD:
-> +Every PCI card emits a PCI IRQ, which can be INTA, INTB, INTC or INTD::
->  
->                                 ,-.
->                           INTD--| |
-> @@ -78,19 +86,19 @@ to have non shared interrupts). Slot5 should be used for videocards, they
->  do not use interrupts normally, thus they are not daisy chained either.
->  
->  so if you have your SCSI card (IRQ11) in Slot1, Tulip card (IRQ9) in
-> -Slot2, then you'll have to specify this pirq= line:
-> +Slot2, then you'll have to specify this pirq= line::
->  
->  	append="pirq=11,9"
->  
->  the following script tries to figure out such a default pirq= line from
-> -your PCI configuration:
-> +your PCI configuration::
->  
->  	echo -n pirq=; echo `scanpci | grep T_L | cut -c56-` | sed 's/ /,/g'
->  
->  note that this script won't work if you have skipped a few slots or if your
->  board does not do default daisy-chaining. (or the IO-APIC has the PIRQ pins
->  connected in some strange way). E.g. if in the above case you have your SCSI
-> -card (IRQ11) in Slot3, and have Slot1 empty:
-> +card (IRQ11) in Slot3, and have Slot1 empty::
->  
->  	append="pirq=0,9,11"
->  
-> @@ -105,7 +113,7 @@ won't function properly (e.g. if it's inserted as a module).
->  If you have 2 PCI buses, then you can use up to 8 pirq values, although such
->  boards tend to have a good configuration.
->  
-> -Be prepared that it might happen that you need some strange pirq line:
-> +Be prepared that it might happen that you need some strange pirq line::
->  
->  	append="pirq=0,0,0,0,0,0,9,11"
->  
-> @@ -115,5 +123,3 @@ Good luck and mail to linux-smp@vger.kernel.org or
->  linux-kernel@vger.kernel.org if you have any problems that are not covered
->  by this document.
->  
-> --- mingo
-> -
-> diff --git a/Documentation/x86/i386/index.rst b/Documentation/x86/i386/index.rst
-> new file mode 100644
-> index 000000000000..8747cf5bbd49
-> --- /dev/null
-> +++ b/Documentation/x86/i386/index.rst
-> @@ -0,0 +1,10 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +============
-> +i386 Support
-> +============
-> +
-> +.. toctree::
-> +   :maxdepth: 2
-> +
-> +   IO-APIC
-> diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-> index 526f7a008b8e..19323c5b89ce 100644
-> --- a/Documentation/x86/index.rst
-> +++ b/Documentation/x86/index.rst
-> @@ -26,3 +26,4 @@ Linux x86 Support
->     microcode
->     resctrl_ui
->     usb-legacy-support
-> +   i386/index
-
-
-
-Thanks,
-Mauro
