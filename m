@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79459C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E24CBC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383E6208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD756208CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 15:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbfD0PSn (ORCPT
+        id S1727974AbfD0PSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 11:18:43 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34218 "EHLO
+        Sat, 27 Apr 2019 11:18:41 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34228 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727678AbfD0PPi (ORCPT
+        by vger.kernel.org with ESMTP id S1727679AbfD0PPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 27 Apr 2019 11:15:38 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP38-0000zG-3y; Sat, 27 Apr 2019 16:15:34 +0100
+        id 1hKP38-0000zO-Mi; Sat, 27 Apr 2019 16:15:34 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hKP2j-0004T0-Cr; Sat, 27 Apr 2019 16:15:09 +0100
+        id 1hKP2j-0004Sv-BG; Sat, 27 Apr 2019 16:15:09 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Alexander Popov" <alex.popov@linux.com>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Date:   Sat, 27 Apr 2019 16:13:09 +0100
-Message-ID: <lsq.1556377989.442050192@decadent.org.uk>
+Message-ID: <lsq.1556377989.849983988@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 067/202] KVM: x86: Fix single-step debugging
+Subject: [PATCH 3.16 066/202] debugfs: fix debugfs_rename parameter checking
 In-Reply-To: <lsq.1556377988.384060557@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,40 +54,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexander Popov <alex.popov@linux.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 5cc244a20b86090c087073c124284381cdf47234 upstream.
+commit d88c93f090f708c18195553b352b9f205e65418f upstream.
 
-The single-step debugging of KVM guests on x86 is broken: if we run
-gdb 'stepi' command at the breakpoint when the guest interrupts are
-enabled, RIP always jumps to native_apic_mem_write(). Then other
-nasty effects follow.
+debugfs_rename() needs to check that the dentries passed into it really
+are valid, as sometimes they are not (i.e. if the return value of
+another debugfs call is passed into this one.)  So fix this up by
+properly checking if the two parent directories are errors (they are
+allowed to be NULL), and if the dentry to rename is not NULL or an
+error.
 
-Long investigation showed that on Jun 7, 2017 the
-commit c8401dda2f0a00cd25c0 ("KVM: x86: fix singlestepping over syscall")
-introduced the kvm_run.debug corruption: kvm_vcpu_do_singlestep() can
-be called without X86_EFLAGS_TF set.
-
-Let's fix it. Please consider that for -stable.
-
-Signed-off-by: Alexander Popov <alex.popov@linux.com>
-Fixes: c8401dda2f0a00cd25c0 ("KVM: x86: fix singlestepping over syscall")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kvm/x86.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/debugfs/inode.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -5400,8 +5400,7 @@ restart:
- 		kvm_make_request(KVM_REQ_EVENT, vcpu);
- 		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
- 		kvm_rip_write(vcpu, ctxt->eip);
--		if (r == EMULATE_DONE &&
--		    (ctxt->tf || (vcpu->guest_debug & KVM_GUESTDBG_SINGLESTEP)))
-+		if (r == EMULATE_DONE && ctxt->tf)
- 			kvm_vcpu_do_singlestep(vcpu, &r);
- 		kvm_set_rflags(vcpu, ctxt->eflags);
- 	} else
+--- a/fs/debugfs/inode.c
++++ b/fs/debugfs/inode.c
+@@ -622,6 +622,13 @@ struct dentry *debugfs_rename(struct den
+ 	struct dentry *dentry = NULL, *trap;
+ 	struct name_snapshot old_name;
+ 
++	if (IS_ERR(old_dir))
++		return old_dir;
++	if (IS_ERR(new_dir))
++		return new_dir;
++	if (IS_ERR_OR_NULL(old_dentry))
++		return old_dentry;
++
+ 	trap = lock_rename(new_dir, old_dir);
+ 	/* Source or destination directories don't exist? */
+ 	if (!old_dir->d_inode || !new_dir->d_inode)
 
