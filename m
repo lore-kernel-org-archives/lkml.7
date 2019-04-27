@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD68C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD117C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308E5206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998A0205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556330010;
-	bh=K0N/wqNGqNSj1CSBOukRHdib+0bWn4i1Hm+Z9cWCBPw=;
+	s=default; t=1556330017;
+	bh=NCwoF7RpMP3K9FDSLeQAjDNsqLvFiV9zOfLGm7HZl1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4XCdTEngyIPu24DWuz1yR+PPZs8FAGm7nDzj9KmBdDcfUdD5iNQV1xmbVa6tay1a
-	 ftmXh+zR96AJ+eSSniZicqexZozX2PVQ56NbSBGift8WJY+cThGb5fLIn9/2Gx6z+8
-	 ZBLjRCWSi1bdgYyB51NoXqxG6Ohz/yRNOopzkobg=
+	b=AShB/9565whXLWNXqI2wF/Va+G6NU0baw0zaoQ7C6RIZipZLqKuI3u+PbW9Yc7yj0
+	 Bm8m1MlKzxinPKi/30GpjXpdrP8gyNoPj/WAdoDdiMVfGJ1OKt07DD4z01+7GRKCnT
+	 NgXYuOSFZD3drQSpnSbhTDc+iz4RHzYNrS6FVZyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfD0Bx3 (ORCPT
+        id S1728445AbfD0Bxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:53:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43540 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:53:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727873AbfD0BkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:40:07 -0400
+        id S1727881AbfD0BkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:40:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77D25214AE;
-        Sat, 27 Apr 2019 01:40:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1297B20C01;
+        Sat, 27 Apr 2019 01:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329206;
-        bh=K0N/wqNGqNSj1CSBOukRHdib+0bWn4i1Hm+Z9cWCBPw=;
+        s=default; t=1556329203;
+        bh=NCwoF7RpMP3K9FDSLeQAjDNsqLvFiV9zOfLGm7HZl1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XBSox7rG3K7+mqfjgmKziL1VKPJDDim80AG0B5I5dlUzXDEClDFlQBt3zq887HRIm
-         /7vkdZJAN3VPkJhWHrTGpWaM954rWvnK52owdJKvvKO7mavuPnKB16xMh8EfnpxBug
-         2u8S9uTqG0MZ+GZkFMBfHPgqg3OfQhZrFYh94RIg=
+        b=XA2bgg3GR/C0/1nAAhwp2rsgwwFP75wnCwM+OzqEB80NctcdR5qg/D3vEiUK04s3J
+         yCke2SicXkXX5GfB7hgbFPL9cVCCUsUC1TtTnfhmX576fixh/2WZayZO0D7Q4dn8nd
+         7RlHK5uPLBAMvVS55TCSq2gr0C31jQJ1frCcHMOo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Wangyan Wang <wangyan.wang@mediatek.com>,
         CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 57/79] drm/mediatek: remove flag CLK_SET_RATE_PARENT for MT2701 hdmi phy
-Date:   Fri, 26 Apr 2019 21:38:16 -0400
-Message-Id: <20190427013838.6596-57-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 55/79] drm/mediatek: fix the rate and divder of hdmi phy for MT2701
+Date:   Fri, 26 Apr 2019 21:38:14 -0400
+Message-Id: <20190427013838.6596-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -61,99 +60,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wangyan Wang <wangyan.wang@mediatek.com>
 
-[ Upstream commit 827abdd024207146822f66ba3ba74867135866b9 ]
+[ Upstream commit 0c24613cda163dedfa229afc8eff6072e57fac8d ]
 
-This is the first step to make MT2701 hdmi stable.
-The parent rate of hdmi phy had set by DPI driver.
-We should not set or change the parent rate of MT2701 hdmi phy,
-as a result we should remove the flags of "CLK_SET_RATE_PARENT"
-from the clock of MT2701 hdmi phy.
+Due to a clerical error,there is one zero less for 12800000.
+Fix it for 128000000
+Fixes: 0fc721b2968e ("drm/mediatek: add hdmi driver for MT2701 and MT7623")
 
 Signed-off-by: Wangyan Wang <wangyan.wang@mediatek.com>
 Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 13 +++++--------
- drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        |  1 +
- drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c |  1 +
- drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c |  1 +
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-index efc400ebbb90..08b029772c5a 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-@@ -102,13 +102,11 @@ mtk_hdmi_phy_dev_get_ops(const struct mtk_hdmi_phy *hdmi_phy)
- 		return NULL;
- }
- 
--static void mtk_hdmi_phy_clk_get_ops(struct mtk_hdmi_phy *hdmi_phy,
--				     const struct clk_ops **ops)
-+static void mtk_hdmi_phy_clk_get_data(struct mtk_hdmi_phy *hdmi_phy,
-+				      struct clk_init_data *clk_init)
- {
--	if (hdmi_phy && hdmi_phy->conf && hdmi_phy->conf->hdmi_phy_clk_ops)
--		*ops = hdmi_phy->conf->hdmi_phy_clk_ops;
--	else
--		dev_err(hdmi_phy->dev, "Failed to get clk ops of phy\n");
-+	clk_init->flags = hdmi_phy->conf->flags;
-+	clk_init->ops = hdmi_phy->conf->hdmi_phy_clk_ops;
- }
- 
- static int mtk_hdmi_phy_probe(struct platform_device *pdev)
-@@ -121,7 +119,6 @@ static int mtk_hdmi_phy_probe(struct platform_device *pdev)
- 	struct clk_init_data clk_init = {
- 		.num_parents = 1,
- 		.parent_names = (const char * const *)&ref_clk_name,
--		.flags = CLK_SET_RATE_PARENT | CLK_SET_RATE_GATE,
- 	};
- 
- 	struct phy *phy;
-@@ -159,7 +156,7 @@ static int mtk_hdmi_phy_probe(struct platform_device *pdev)
- 	hdmi_phy->dev = dev;
- 	hdmi_phy->conf =
- 		(struct mtk_hdmi_phy_conf *)of_device_get_match_data(dev);
--	mtk_hdmi_phy_clk_get_ops(hdmi_phy, &clk_init.ops);
-+	mtk_hdmi_phy_clk_get_data(hdmi_phy, &clk_init);
- 	hdmi_phy->pll_hw.init = &clk_init;
- 	hdmi_phy->pll = devm_clk_register(dev, &hdmi_phy->pll_hw);
- 	if (IS_ERR(hdmi_phy->pll)) {
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-index 71430691ffe4..d28b8d5ed2b4 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-@@ -21,6 +21,7 @@ struct mtk_hdmi_phy;
- 
- struct mtk_hdmi_phy_conf {
- 	bool tz_disabled;
-+	unsigned long flags;
- 	const struct clk_ops *hdmi_phy_clk_ops;
- 	void (*hdmi_phy_enable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
- 	void (*hdmi_phy_disable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
 diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-index feb6a7ed63d1..31f3175f032b 100644
+index fcc42dc6ea7f..0746fc887706 100644
 --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
 +++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-@@ -232,6 +232,7 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
+@@ -116,8 +116,8 @@ static int mtk_hdmi_pll_set_rate(struct clk_hw *hw, unsigned long rate,
  
- struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf = {
- 	.tz_disabled = true,
-+	.flags = CLK_SET_RATE_GATE,
- 	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
- 	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
- 	.hdmi_phy_disable_tmds = mtk_hdmi_phy_disable_tmds,
-diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-index 83662a208491..37f9503d7643 100644
---- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-+++ b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-@@ -317,6 +317,7 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
- }
+ 	if (rate <= 64000000)
+ 		pos_div = 3;
+-	else if (rate <= 12800000)
+-		pos_div = 1;
++	else if (rate <= 128000000)
++		pos_div = 2;
+ 	else
+ 		pos_div = 1;
  
- struct mtk_hdmi_phy_conf mtk_hdmi_phy_8173_conf = {
-+	.flags = CLK_SET_RATE_PARENT | CLK_SET_RATE_GATE,
- 	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
- 	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
- 	.hdmi_phy_disable_tmds = mtk_hdmi_phy_disable_tmds,
 -- 
 2.19.1
 
