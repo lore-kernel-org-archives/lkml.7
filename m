@@ -2,55 +2,58 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79EBC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA40C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C8B208C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169EB2146E
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 13:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556370227;
-	bh=fdvNXF+mbSukBjCcHZUOhaoYLDsFYgos9tSZnL69ZG0=;
+	s=default; t=1556370309;
+	bh=G9GihYyPlWfSV3q9+hbppzaYaJqdcPysBlWJcOlntGs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LVV2gqR0D+zkxe0doY2CYRAaAyoyZy6USIxo4jauQdFPVyD9QQ+eVZlJAD3t37vAM
-	 mCN/47pO7Ffc4nZyw+CME2qK6jiy5NCs39E703FDZkK/sLtoCw26goKTY3eZbIadMz
-	 ev1IMRzxIy7pKamzG9Vl9DAWaccCGFFm0QrqHWWs=
+	b=FGVxgDp75ck7HecKEGYoHqDZnSaKsjLFMZVmC8RZy+1nItvxupejlFQzTKzl6XWAB
+	 yA9LIEiTr6//bK6/dG1EH1GAEYsEier59LChi5A4Bs6vJ0Q1XQ8EMw6Rp6VIZ974TD
+	 QtaOQqAGBolr/KZCNFvurQVGlf2X+C1ySzSwO9ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbfD0NDq (ORCPT
+        id S1726586AbfD0NFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 09:03:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59334 "EHLO mail.kernel.org"
+        Sat, 27 Apr 2019 09:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbfD0NDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 09:03:45 -0400
+        id S1726345AbfD0NFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 09:05:07 -0400
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A23A2087C;
-        Sat, 27 Apr 2019 13:03:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20D372087C;
+        Sat, 27 Apr 2019 13:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556370225;
-        bh=fdvNXF+mbSukBjCcHZUOhaoYLDsFYgos9tSZnL69ZG0=;
+        s=default; t=1556370307;
+        bh=G9GihYyPlWfSV3q9+hbppzaYaJqdcPysBlWJcOlntGs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HPIZzh1t24BlFFQWBl9qIsbNFlCtxyyg8aNoOSTpSGay/TyUPcUgmk5UMeVmJauaK
-         9IfGicosdelTf2BQwk53OMvet5cnLzQWYSn1mnpuJo5PMMDwfM7CRINu5td/6m3XJ0
-         +jYJz/xRVJ/hQ8PvDfvLEAh2c4h1KHnJwBWZpExU=
-Date:   Sat, 27 Apr 2019 14:03:39 +0100
+        b=g4BdpAb6uTuKWBzdTHy8Fhg0zZlm1nC4kns6XIVS3SLrA3g7bfMZ0f3RnTxpBJ+/u
+         B0jbnDYIg6iVz0IDOTWTZ0W6pK1SheiddnelEyPHd+4++7Ip/G/HjJ1kNk4ZXFHGgO
+         PC+nXAYZfcfALYVMp5wz3T+7/0WBEOBgetB99Jwk=
+Date:   Sat, 27 Apr 2019 14:05:01 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     robh+dt@kernel.org, lars@metafoo.de, pmeerw@pmeerw.net,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: iio: tsl2583: convert bindings to
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: tsl2772: convert bindings to
  YAML format
-Message-ID: <20190427140339.7fbfa1e9@archlinux>
-In-Reply-To: <20190425230314.26000-2-masneyb@onstation.org>
+Message-ID: <20190427140501.430cfc0c@archlinux>
+In-Reply-To: <CAL_JsqL0SQZSs8MmF6j1B_qfvCOcg9XMjUBUHFL+mnCk7xNB1A@mail.gmail.com>
 References: <20190425230314.26000-1-masneyb@onstation.org>
-        <20190425230314.26000-2-masneyb@onstation.org>
+        <CAL_JsqL0SQZSs8MmF6j1B_qfvCOcg9XMjUBUHFL+mnCk7xNB1A@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -60,116 +63,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019 19:03:14 -0400
-Brian Masney <masneyb@onstation.org> wrote:
+On Fri, 26 Apr 2019 08:20:34 -0500
+Rob Herring <robh+dt@kernel.org> wrote:
 
-> Convert the tsl2583 device tree bindings to the new YAML format.
+> On Thu, Apr 25, 2019 at 6:03 PM Brian Masney <masneyb@onstation.org> wrote:
+> >
+> > Convert the tsl2772 device tree bindings to the new YAML format.
+> >
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > ---
+> > Changes since v2:
+> > - Remove allof from led-max-microamp. Split out enum list from [] to
+> >   individual lines for consistency with the compatible attribute.
+> > - Change 'proximity-sensor@39' in example to 'sensor@39'.
+> >
+> > Changes since v1:
+> > - Dropped description from reg and interrupts properties.
+> > - Dropped $ref from led-max-microamp, vdd-supply, and vddio-supply.
+> > - Changed 'tsl2772@39' in example to 'proximity-sensor@39'
+> >
+> >  .../devicetree/bindings/iio/light/tsl2772.txt | 42 ----------
+> >  .../bindings/iio/light/tsl2772.yaml           | 83 +++++++++++++++++++
+> >  2 files changed, 83 insertions(+), 42 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.yaml  
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
 > Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as
-testing for the autobuilders to play with it.
-
-Thanks,
+Applied.  Thanks,
 
 Jonathan
 
-> ---
-> Changes since v2:
-> - Changed 'als-sensor@29' in example to 'light-sensor@29'
-> 
-> Changes since v1:
-> - Dropped description from reg and interrupts properties.
-> - Dropped $ref from vcc-supply property.
-> - Changed 'tsl2581@29' in example to 'als-sensor@29'
-> 
->  .../devicetree/bindings/iio/light/tsl2583.txt | 25 ----------
->  .../bindings/iio/light/tsl2583.yaml           | 46 +++++++++++++++++++
->  2 files changed, 46 insertions(+), 25 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2583.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2583.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2583.txt b/Documentation/devicetree/bindings/iio/light/tsl2583.txt
-> deleted file mode 100644
-> index 059dffa1829a..000000000000
-> --- a/Documentation/devicetree/bindings/iio/light/tsl2583.txt
-> +++ /dev/null
-> @@ -1,25 +0,0 @@
-> -* TAOS TSL 2580/2581/2583 ALS sensor
-> -
-> -Required properties:
-> -
-> -  - compatible: Should be one of
-> -		"amstaos,tsl2580"
-> -		"amstaos,tsl2581"
-> -		"amstaos,tsl2583"
-> -  - reg: the I2C address of the device
-> -
-> -Optional properties:
-> -
-> -  - interrupts: the sole interrupt generated by the device
-> -
-> -  Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> -  node bindings.
-> -
-> -  - vcc-supply: phandle to the regulator that provides power to the sensor.
-> -
-> -Example:
-> -
-> -tsl2581@29 {
-> -	compatible = "amstaos,tsl2581";
-> -	reg = <0x29>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2583.yaml b/Documentation/devicetree/bindings/iio/light/tsl2583.yaml
-> new file mode 100644
-> index 000000000000..e86ef64ecf03
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/tsl2583.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/light/tsl2583.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AMS/TAOS Ambient Light Sensor (ALS)
-> +
-> +maintainers:
-> +  - Brian Masney <masneyb@onstation.org>
-> +
-> +description: |
-> +  Ambient light sensing with an i2c interface.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amstaos,tsl2580
-> +      - amstaos,tsl2581
-> +      - amstaos,tsl2583
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  vcc-supply:
-> +    description: Regulator that provides power to the sensor
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        light-sensor@29 {
-> +                compatible = "amstaos,tsl2581";
-> +                reg = <0x29>;
-> +        };
-> +    };
-> +...
 
