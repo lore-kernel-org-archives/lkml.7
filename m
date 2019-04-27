@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADD9C43219
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE64C43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE002166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E81215EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329326;
-	bh=Ta34+lRfbxYq0JQE7rMVAMw94fUpxm73YVPlhFH4Zjs=;
+	s=default; t=1556329328;
+	bh=BhAzKIB/5euZTrSWHh2f9jhLII6yp9+l9Z85gXJefzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b5b6/dk5aWdtlqNTeExW2GkIlFTFmg3mzw4LbJ2I7A2HhKjPXnqpMHAK5uvu5l3LU
-	 /1vyzH9Gnpf+7iN3SiCtvG1Z1WwgVpyG/2VdU2qnVH6dG30AWcUCH7E5me8tn4PBc3
-	 XIQBk6EdQbzN70OIXQLp7L0ZOCrSxaLSlJ8KAp54=
+	b=q/cd/FJYmPSBnTkp6KWDZpWcrRIL1EYu6YLREW2VqpkH4p+et5ncOxbCU56eP62nx
+	 lXnDaDFgF5etmPxgb2F9w50jcw41mdUGN/dZkVkpn2dklfxeXWK5oJNK3iVOGhKxAA
+	 MD8zFpsOoQv1sYATLqcIPcP/0YjTrACP3wbIldgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfD0BmF (ORCPT
+        id S1726266AbfD0BmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:42:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46056 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:42:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbfD0BmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:42:00 -0400
+        id S1728466AbfD0BmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:42:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 790672146E;
-        Sat, 27 Apr 2019 01:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CCF1208CB;
+        Sat, 27 Apr 2019 01:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329319;
-        bh=Ta34+lRfbxYq0JQE7rMVAMw94fUpxm73YVPlhFH4Zjs=;
+        s=default; t=1556329324;
+        bh=BhAzKIB/5euZTrSWHh2f9jhLII6yp9+l9Z85gXJefzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QbqwddZkepvEFJspXRdCnY+w0OK0vdbSpbuH+CO9xafNgOscTFFJAj+evNSL8G4/M
-         TV6zXiNb8vxKglxvEgBoy2OlSj+gj4bRl89GLtoWqAib8Y+bWPJ3fr5W1nOzVC4zte
-         j/9sZcq4YvG0Sxh1WOwI4WstiO9fFlK1DC+R7y/o=
+        b=DTblNjkt7hNUNFErikJG4y5pT00prJefDW4OYBaR2vzeRe6W5odGI9vekiZKgI3z6
+         slKVRCEMaAiMjS7J+Nhj/N0cFSLu/4V0c6t72qE/QpB3mlCFXENd+EA2BwYhWTyGwh
+         6g4ln6Qrm5PJ162wDrM0ejEpqiIQ7kSvlpTy3e6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>, CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 41/53] drm/mediatek: fix possible object reference leak
-Date:   Fri, 26 Apr 2019 21:40:38 -0400
-Message-Id: <20190427014051.7522-41-sashal@kernel.org>
+Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 44/53] virtio-blk: limit number of hw queues by nr_cpu_ids
+Date:   Fri, 26 Apr 2019 21:40:41 -0400
+Message-Id: <20190427014051.7522-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427014051.7522-1-sashal@kernel.org>
 References: <20190427014051.7522-1-sashal@kernel.org>
@@ -64,46 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit 2ae2c3316fb77dcf64275d011596b60104c45426 ]
+[ Upstream commit bf348f9b78d413e75bb079462751a1d86b6de36c ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+When tag_set->nr_maps is 1, the block layer limits the number of hw queues
+by nr_cpu_ids. No matter how many hw queues are used by virtio-blk, as it
+has (tag_set->nr_maps == 1), it can use at most nr_cpu_ids hw queues.
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/mediatek/mtk_hdmi.c:1521:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
-drivers/gpu/drm/mediatek/mtk_hdmi.c:1524:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
+In addition, specifically for pci scenario, when the 'num-queues' specified
+by qemu is more than maxcpus, virtio-blk would not be able to allocate more
+than maxcpus vectors in order to have a vector for each queue. As a result,
+it falls back into MSI-X with one vector for config and one shared for
+queues.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: CK Hu <ck.hu@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Considering above reasons, this patch limits the number of hw queues used
+by virtio-blk by nr_cpu_ids.
+
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/block/virtio_blk.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index c7a77d6f612b..62444a3a5742 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1508,6 +1508,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	of_node_put(remote);
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 23752dc99b00..dd64f586679e 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -446,6 +446,8 @@ static int init_vq(struct virtio_blk *vblk)
+ 	if (err)
+ 		num_vqs = 1;
  
- 	hdmi->ddc_adpt = of_find_i2c_adapter_by_node(i2c_np);
-+	of_node_put(i2c_np);
- 	if (!hdmi->ddc_adpt) {
- 		dev_err(dev, "Failed to get ddc i2c adapter by node\n");
- 		return -EINVAL;
++	num_vqs = min_t(unsigned int, nr_cpu_ids, num_vqs);
++
+ 	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
+ 	if (!vblk->vqs)
+ 		return -ENOMEM;
 -- 
 2.19.1
 
