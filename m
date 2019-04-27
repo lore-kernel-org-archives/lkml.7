@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6A9C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2D7C43218
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209DB2146E
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31AD21537
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556329255;
-	bh=vBEqo01wcaRuNShuqD75v8O9XcN47tncKxVYJjYrAIg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u/XGqZRKVEKSeFt6I8W2uH9rfBsyG6ayNSTnUhRxL6dFVmFGi1KtMf1PkeFbmPQ6S
-	 ASpbmjM0TOcH0HF0hE2pgs03q+6I+who4p5twbH5MhvvXT5W4l8dF5qqxYDmXF1tpy
-	 vxrAGr2H/9XkxAOnAaFc/j7TVd7EEOQZaAXQqLvQ=
+	s=default; t=1556329258;
+	bh=2uVFUXWqcVtmdaSEQd7PH6cLrQjK0II3c/XbQwSg9hw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=wDJ8knDB2mPeW0bSVfq1js1031DexIJbe98ItjFtSCAn8e5OPad9TBfPeb31zQLV+
+	 gRHHQC8utXWWJHbgrQdzdrvHtnFk27O0jZAyJjlO3yyUrI8leCx4eXW0PnikVa/VqR
+	 rWzRE2VJQHkGz2Bpja3vNs78ekWjtWAhgVYT9zRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbfD0Bkx (ORCPT
+        id S1728127AbfD0Bk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:40:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbfD0Bku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:40:50 -0400
+        id S1728106AbfD0Bkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:40:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78FE420873;
-        Sat, 27 Apr 2019 01:40:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83C73208CB;
+        Sat, 27 Apr 2019 01:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329249;
-        bh=vBEqo01wcaRuNShuqD75v8O9XcN47tncKxVYJjYrAIg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qjbu2/YUls/mxx3PyQp5WofNhY8djFpyj5TyNq3/cPnS0s0wFTQ5/l31R9BvdVnwh
-         kah7A18wyZHz/b8ifjkIjXvNICsMmJhA9gXuhaWsNslkawMGKnUF8Z4+XLvOY9f2XX
-         I3V2qTIP56shWxt9A0zR5SE4BiU0UxsJu4rgXEOA=
+        s=default; t=1556329253;
+        bh=2uVFUXWqcVtmdaSEQd7PH6cLrQjK0II3c/XbQwSg9hw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=O0FiFQnOSuInyx0J+yd9knTfqIrnq4iGjaHRxrGEQVVTDDagBCHQud/ETsOofKAvw
+         m5AuZnQ9rRcsQ7hXf9NMgZ3mcW0ge8/QyGsj63hwoYUQFwHFiSvrTigCAR8koiQmYP
+         L/9Tmcpx4QtubTuTHFEOcfuSi6VEFEZFhOhqCX6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Wilcox <willy@infradead.org>, stable@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 79/79] fs: prevent page refcount overflow in pipe_buf_get
-Date:   Fri, 26 Apr 2019 21:38:38 -0400
-Message-Id: <20190427013838.6596-79-sashal@kernel.org>
+Cc:     Philipp Puschmann <philipp.puschmann@emlix.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 01/53] ASoC: tlv320aic3x: fix reset gpio reference counting
+Date:   Fri, 26 Apr 2019 21:39:58 -0400
+Message-Id: <20190427014051.7522-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
-References: <20190427013838.6596-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,174 +57,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Wilcox <willy@infradead.org>
+From: Philipp Puschmann <philipp.puschmann@emlix.com>
 
-[ Upstream commit 15fab63e1e57be9fdb5eec1bbc5916e9825e9acb ]
+[ Upstream commit 82ad759143ed77673db0d93d53c1cde7b99917ee ]
 
-Change pipe_buf_get() to return a bool indicating whether it succeeded
-in raising the refcount of the page (if the thing in the pipe is a page).
-This removes another mechanism for overflowing the page refcount.  All
-callers converted to handle a failure.
+This patch fixes a bug that prevents freeing the reset gpio on unloading
+the module.
 
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Matthew Wilcox <willy@infradead.org>
-Cc: stable@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+aic3x_i2c_probe is called when loading the module and it calls list_add
+with a probably uninitialized list entry aic3x->list (next = prev = NULL)).
+So even if list_del is called it does nothing and in the end the gpio_reset
+is not freed. Then a repeated module probing fails silently because
+gpio_request fails.
+
+When moving INIT_LIST_HEAD to aic3x_i2c_probe we also have to move
+list_del to aic3x_i2c_remove because aic3x_remove may be called
+multiple times without aic3x_i2c_remove being called which leads to
+a NULL pointer dereference.
+
+Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/dev.c             | 12 ++++++------
- fs/pipe.c                 |  4 ++--
- fs/splice.c               | 12 ++++++++++--
- include/linux/pipe_fs_i.h | 10 ++++++----
- kernel/trace/trace.c      |  6 +++++-
- 5 files changed, 29 insertions(+), 15 deletions(-)
+ sound/soc/codecs/tlv320aic3x.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 809c0f2f9942..64f4de983468 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -2034,10 +2034,8 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
- 		rem += pipe->bufs[(pipe->curbuf + idx) & (pipe->buffers - 1)].len;
+diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
+index 6a271e6e6b8f..6c0a3dad44b8 100644
+--- a/sound/soc/codecs/tlv320aic3x.c
++++ b/sound/soc/codecs/tlv320aic3x.c
+@@ -1599,7 +1599,6 @@ static int aic3x_probe(struct snd_soc_component *component)
+ 	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
+ 	int ret, i;
  
- 	ret = -EINVAL;
--	if (rem < len) {
--		pipe_unlock(pipe);
--		goto out;
--	}
-+	if (rem < len)
-+		goto out_free;
+-	INIT_LIST_HEAD(&aic3x->list);
+ 	aic3x->component = component;
  
- 	rem = len;
- 	while (rem) {
-@@ -2055,7 +2053,9 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
- 			pipe->curbuf = (pipe->curbuf + 1) & (pipe->buffers - 1);
- 			pipe->nrbufs--;
- 		} else {
--			pipe_buf_get(pipe, ibuf);
-+			if (!pipe_buf_get(pipe, ibuf))
-+				goto out_free;
+ 	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++) {
+@@ -1682,7 +1681,6 @@ static void aic3x_remove(struct snd_soc_component *component)
+ 	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
+ 	int i;
+ 
+-	list_del(&aic3x->list);
+ 	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++)
+ 		regulator_unregister_notifier(aic3x->supplies[i].consumer,
+ 					      &aic3x->disable_nb[i].nb);
+@@ -1880,6 +1878,7 @@ static int aic3x_i2c_probe(struct i2c_client *i2c,
+ 	if (ret != 0)
+ 		goto err_gpio;
+ 
++	INIT_LIST_HEAD(&aic3x->list);
+ 	list_add(&aic3x->list, &reset_list);
+ 
+ 	return 0;
+@@ -1896,6 +1895,8 @@ static int aic3x_i2c_remove(struct i2c_client *client)
+ {
+ 	struct aic3x_priv *aic3x = i2c_get_clientdata(client);
+ 
++	list_del(&aic3x->list);
 +
- 			*obuf = *ibuf;
- 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
- 			obuf->len = rem;
-@@ -2078,11 +2078,11 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
- 	ret = fuse_dev_do_write(fud, &cs, len);
- 
- 	pipe_lock(pipe);
-+out_free:
- 	for (idx = 0; idx < nbuf; idx++)
- 		pipe_buf_release(pipe, &bufs[idx]);
- 	pipe_unlock(pipe);
- 
--out:
- 	kvfree(bufs);
- 	return ret;
- }
-diff --git a/fs/pipe.c b/fs/pipe.c
-index c51750ed4011..2a297bce381f 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -189,9 +189,9 @@ EXPORT_SYMBOL(generic_pipe_buf_steal);
-  *	in the tee() system call, when we duplicate the buffers in one
-  *	pipe into another.
-  */
--void generic_pipe_buf_get(struct pipe_inode_info *pipe, struct pipe_buffer *buf)
-+bool generic_pipe_buf_get(struct pipe_inode_info *pipe, struct pipe_buffer *buf)
- {
--	get_page(buf->page);
-+	return try_get_page(buf->page);
- }
- EXPORT_SYMBOL(generic_pipe_buf_get);
- 
-diff --git a/fs/splice.c b/fs/splice.c
-index 90c29675d573..386a5cc74f1e 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1588,7 +1588,11 @@ retry:
- 			 * Get a reference to this pipe buffer,
- 			 * so we can copy the contents over.
- 			 */
--			pipe_buf_get(ipipe, ibuf);
-+			if (!pipe_buf_get(ipipe, ibuf)) {
-+				if (ret == 0)
-+					ret = -EFAULT;
-+				break;
-+			}
- 			*obuf = *ibuf;
- 
- 			/*
-@@ -1662,7 +1666,11 @@ static int link_pipe(struct pipe_inode_info *ipipe,
- 		 * Get a reference to this pipe buffer,
- 		 * so we can copy the contents over.
- 		 */
--		pipe_buf_get(ipipe, ibuf);
-+		if (!pipe_buf_get(ipipe, ibuf)) {
-+			if (ret == 0)
-+				ret = -EFAULT;
-+			break;
-+		}
- 
- 		obuf = opipe->bufs + nbuf;
- 		*obuf = *ibuf;
-diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
-index 3ecd7ea212ae..bbee2caf5837 100644
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -108,18 +108,20 @@ struct pipe_buf_operations {
- 	/*
- 	 * Get a reference to the pipe buffer.
- 	 */
--	void (*get)(struct pipe_inode_info *, struct pipe_buffer *);
-+	bool (*get)(struct pipe_inode_info *, struct pipe_buffer *);
- };
- 
- /**
-  * pipe_buf_get - get a reference to a pipe_buffer
-  * @pipe:	the pipe that the buffer belongs to
-  * @buf:	the buffer to get a reference to
-+ *
-+ * Return: %true if the reference was successfully obtained.
-  */
--static inline void pipe_buf_get(struct pipe_inode_info *pipe,
-+static inline __must_check bool pipe_buf_get(struct pipe_inode_info *pipe,
- 				struct pipe_buffer *buf)
- {
--	buf->ops->get(pipe, buf);
-+	return buf->ops->get(pipe, buf);
- }
- 
- /**
-@@ -178,7 +180,7 @@ struct pipe_inode_info *alloc_pipe_info(void);
- void free_pipe_info(struct pipe_inode_info *);
- 
- /* Generic pipe buffer ops functions */
--void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
-+bool generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
- void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 89158aa93fa6..de77420f83f8 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6836,12 +6836,16 @@ static void buffer_pipe_buf_release(struct pipe_inode_info *pipe,
- 	buf->private = 0;
- }
- 
--static void buffer_pipe_buf_get(struct pipe_inode_info *pipe,
-+static bool buffer_pipe_buf_get(struct pipe_inode_info *pipe,
- 				struct pipe_buffer *buf)
- {
- 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
- 
-+	if (ref->ref > INT_MAX/2)
-+		return false;
-+
- 	ref->ref++;
-+	return true;
- }
- 
- /* Pipe buffer operations for a buffer. */
+ 	if (gpio_is_valid(aic3x->gpio_reset) &&
+ 	    !aic3x_is_shared_reset(aic3x)) {
+ 		gpio_set_value(aic3x->gpio_reset, 0);
 -- 
 2.19.1
 
