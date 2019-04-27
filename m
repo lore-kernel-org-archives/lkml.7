@@ -6,46 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D16CC43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FEDC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE7A20679
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89DC7206BA
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 01:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556330217;
-	bh=YoEhNjoWZOm6r6wDwUuPvc4qJ6jHzYtOkY3Q25Ml4GQ=;
+	s=default; t=1556330221;
+	bh=E51X6eil6Xtqv1np506tq/3RmXj1mMeledSFAE0E0K4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2BCD2p7UV8GU/FDff+5JIVXEcN//qThQXWQDE599GPaV/QsIn6G2OZXmKa9SDLcRk
-	 FnZxlgXxhIf/rWm6GHQ1U7Y7eH08HU+TM2qUKDig+7F12n/j4pA5coZvCs0/18E5gs
-	 d4J5lr1edmWlAlAOuNeA/1TSOgHJWO6TDZmsoYL4=
+	b=zzaPn7LUJA7PzRXlqSTgtP/AlhbW62JF+8tHjqz4SMM3mFAXlkKmkOsMiffnuTUYU
+	 6q0zr3S7Awr/2lt6jx6LgrgMKa5KWuC+Abs0Sac2fKk5McZz75KsPOnmxFmzmmycwO
+	 cy8mtSeUDJ/mRoh2ngRVwtHf4kYzKQDNdvGBT0p4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfD0Biw (ORCPT
+        id S1727901AbfD0B5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 26 Apr 2019 21:38:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41734 "EHLO mail.kernel.org"
+        Fri, 26 Apr 2019 21:57:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727189AbfD0Bir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 26 Apr 2019 21:38:47 -0400
+        id S1727367AbfD0Biv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 26 Apr 2019 21:38:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08FFE214AE;
-        Sat, 27 Apr 2019 01:38:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEF752146E;
+        Sat, 27 Apr 2019 01:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556329126;
-        bh=YoEhNjoWZOm6r6wDwUuPvc4qJ6jHzYtOkY3Q25Ml4GQ=;
+        s=default; t=1556329131;
+        bh=E51X6eil6Xtqv1np506tq/3RmXj1mMeledSFAE0E0K4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1u0LtC5EMGz9mW+gx9/v+Zu5nCCMZo7J5BLrd7Q/I/VseXxv/JAQsxjlOyp35w9K
-         BS4xMh8UwNCkQbDlStnWcw9hQUvEjTN+3bnqVcQrU8WHcd0ruDINFMxxrw77h5/HFI
-         W38FgBMm2UMwdxlD+ZyAVucoqS4BSiDPw8VV0PAE=
+        b=OUoBj4zIC1wYyJUf+Av39x8xWAhDGtVMCRqKeR9keTgYyxRQcLTjAhfu5XTmt5UCR
+         1J/GOhnJmyCZ2AyR22B/A0RS5Hi1dN92CtXKamnL5bTufTLAdKMDJl8Ro0EIbX6Yw9
+         uaVcinA9q43O5sTX3fs/4xlrHfbtwfvovK83M7A8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rander Wang <rander.wang@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     John Hsu <KCHSU0@nuvoton.com>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 07/79] ASoC:soc-pcm:fix a codec fixup issue in TDM case
-Date:   Fri, 26 Apr 2019 21:37:26 -0400
-Message-Id: <20190427013838.6596-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 12/79] ASoC: nau8810: fix the issue of widget with prefixed name
+Date:   Fri, 26 Apr 2019 21:37:31 -0400
+Message-Id: <20190427013838.6596-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
 References: <20190427013838.6596-1-sashal@kernel.org>
@@ -58,62 +57,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@linux.intel.com>
+From: John Hsu <KCHSU0@nuvoton.com>
 
-[ Upstream commit 570f18b6a8d1f0e60e8caf30e66161b6438dcc91 ]
+[ Upstream commit 54d1cf78b0f4ba348a7c7fb8b7d0708d71b6cc8a ]
 
-On HDaudio platforms, if playback is started when capture is working,
-there is no audible output.
+The driver changes the stream name of DAC and ADC to avoid the issue of
+widget with prefixed name. When the machine adds prefixed name for codec,
+the stream name of DAI may not find the widgets.
 
-This can be root-caused to the use of the rx|tx_mask to store an HDaudio
-stream tag.
-
-If capture is stared before playback, rx_mask would be non-zero on HDaudio
-platform, then the channel number of playback, which is in the same codec
-dai with the capture, would be changed by soc_pcm_codec_params_fixup based
-on the tx_mask at first, then overwritten by this function based on rx_mask
-at last.
-
-According to the author of tx|rx_mask, tx_mask is for playback and rx_mask
-is for capture. And stream direction is checked at all other references of
-tx|rx_mask in ASoC, so here should be an error. This patch checks stream
-direction for tx|rx_mask for fixup function.
-
-This issue would affect not only HDaudio+ASoC, but also I2S codecs if the
-channel number based on rx_mask is not equal to the one for tx_mask. It could
-be rarely reproduecd because most drivers in kernel set the same channel number
-to tx|rx_mask or rx_mask is zero.
-
-Tested on all platforms using stream_tag & HDaudio and intel I2S platforms.
-
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: John Hsu <KCHSU0@nuvoton.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/soc/codecs/nau8810.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 03f36e534050..0b6ade426516 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -954,10 +954,13 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
- 		codec_params = *params;
- 
- 		/* fixup params based on TDM slot masks */
--		if (codec_dai->tx_mask)
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK &&
-+		    codec_dai->tx_mask)
- 			soc_pcm_codec_params_fixup(&codec_params,
- 						   codec_dai->tx_mask);
--		if (codec_dai->rx_mask)
-+
-+		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE &&
-+		    codec_dai->rx_mask)
- 			soc_pcm_codec_params_fixup(&codec_params,
- 						   codec_dai->rx_mask);
- 
+diff --git a/sound/soc/codecs/nau8810.c b/sound/soc/codecs/nau8810.c
+index bfd74b86c9d2..645aa0794123 100644
+--- a/sound/soc/codecs/nau8810.c
++++ b/sound/soc/codecs/nau8810.c
+@@ -411,9 +411,9 @@ static const struct snd_soc_dapm_widget nau8810_dapm_widgets[] = {
+ 	SND_SOC_DAPM_MIXER("Mono Mixer", NAU8810_REG_POWER3,
+ 		NAU8810_MOUTMX_EN_SFT, 0, &nau8810_mono_mixer_controls[0],
+ 		ARRAY_SIZE(nau8810_mono_mixer_controls)),
+-	SND_SOC_DAPM_DAC("DAC", "HiFi Playback", NAU8810_REG_POWER3,
++	SND_SOC_DAPM_DAC("DAC", "Playback", NAU8810_REG_POWER3,
+ 		NAU8810_DAC_EN_SFT, 0),
+-	SND_SOC_DAPM_ADC("ADC", "HiFi Capture", NAU8810_REG_POWER2,
++	SND_SOC_DAPM_ADC("ADC", "Capture", NAU8810_REG_POWER2,
+ 		NAU8810_ADC_EN_SFT, 0),
+ 	SND_SOC_DAPM_PGA("SpkN Out", NAU8810_REG_POWER3,
+ 		NAU8810_NSPK_EN_SFT, 0, NULL, 0),
 -- 
 2.19.1
 
