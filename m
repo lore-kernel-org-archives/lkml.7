@@ -2,416 +2,210 @@ Return-Path: <SRS0=SjSX=S5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF07C43218
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE9AC43219
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190062077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:01:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpDAj0fY"
+	by mail.kernel.org (Postfix) with ESMTP id 28CB82077B
+	for <linux-kernel@archiver.kernel.org>; Sat, 27 Apr 2019 09:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbfD0JBv (ORCPT
+        id S1726344AbfD0JEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 05:01:51 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45640 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfD0JBv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 05:01:51 -0400
-Received: by mail-pf1-f193.google.com with SMTP id e24so2854495pfi.12;
-        Sat, 27 Apr 2019 02:01:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
-         :content-disposition:user-agent;
-        bh=yD4rnFx/DMOtG8xe7uwsgLBbomvRuA3zyALnwPA7AMY=;
-        b=gpDAj0fYqwHnN5f3ZSMhq3UyjDwWzD9MKgCG7MFBS5s5kZKssLhq4wLZA4A/hzatin
-         fS8MB7/npk24DgB+g0miUfRFvWXaU9AKFQA8GHblNT64hNVJya/8p2q63MRdLAw22YGC
-         6T05b0ax79gDR46i+K8+Of8ZV7MlfGhzASkh2ge0XKHHrSxxN+zVjmfyCyBQAQQhwtN+
-         OIi+kTm0DNTd1DJZJ0oTpaDg5GU1/xwyZdDU48mPiLdtQpjfYZTxoqHS4rURw7L5uS8Q
-         5QMlymWPIPERcieFmyDFyABzdsv/7M5l4K34IB2N6AEvo2GhiiXjnMK5qnrmfb+TbzNR
-         9lVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:mime-version:content-disposition:user-agent;
-        bh=yD4rnFx/DMOtG8xe7uwsgLBbomvRuA3zyALnwPA7AMY=;
-        b=NfIhUb/m7Nt9srbVJDKt+F8gmE2csTDhIrNjODiN23KwCf9RMKAbA/lZ8grpIa7gwn
-         XkGXT7sf4G48iad7XilmRYOyagOFtUOLYjDp4oY9R1s7UTie3WvERYsTm7l/vEDEy6mV
-         oY+cxe0rXGSrbUkaIUwJ1oz65ddyNLGeiCeX0Qn145UyFBHf5tMo2gcaIlcSQEMovDdb
-         TndySxLYcUn99g8OYf2KRSotaz+nr/beOZb69a9c1ZE/1Xnie7ZrwONlhL+zumgFKGfU
-         T5dG+aa8TB75O6lmvr+wvMmDZaH4I/UJh2nnDj0QxUZsUaiQcbWkqIAhOYT8RKvL0cnF
-         Wx9w==
-X-Gm-Message-State: APjAAAU1gJVPuFTtmtukQiWsJc6lqFE8xh57MNsK4/0Zab6Pl4bIaeMr
-        zW26dJyXbbF0WYd9zUZNmlc=
-X-Google-Smtp-Source: APXvYqxv8O3AXZKWtJm4EPBUEjeFk2PBon5dYpq8jq0B6zXHjXUwgeVSB4yT8HuY18DjMG8ypV4Ldg==
-X-Received: by 2002:a63:6604:: with SMTP id a4mr16036662pgc.104.1556355709744;
-        Sat, 27 Apr 2019 02:01:49 -0700 (PDT)
-Received: from udknight.localhost ([59.57.230.163])
-        by smtp.gmail.com with ESMTPSA id k5sm24674216pgi.58.2019.04.27.02.01.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 27 Apr 2019 02:01:48 -0700 (PDT)
-Received: from udknight.localhost (localhost [127.0.0.1])
-        by udknight.localhost (8.14.9/8.14.4) with ESMTP id x3R8Sb5h016438;
-        Sat, 27 Apr 2019 16:28:37 +0800
-Received: (from root@localhost)
-        by udknight.localhost (8.14.9/8.14.9/Submit) id x3R8SQxv016424;
-        Sat, 27 Apr 2019 16:28:26 +0800
-Date:   Sat, 27 Apr 2019 16:28:26 +0800
-From:   Wang YanQing <udknight@gmail.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     ast@kernel.org, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        tglx@linutronix.de, netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] bpf, x32: Fix bug for BPF_JMP | {BPF_JSGT, BPF_JSLE,
- BPF_JSLT, BPF_JSGE}
-Message-ID: <20190427082826.GA16311@udknight>
-Mail-Followup-To: Wang YanQing <udknight@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>, ast@kernel.org,
-        davem@davemloft.net, kuznet@ms2.inr.ac.ru, tglx@linutronix.de,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Sat, 27 Apr 2019 05:04:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35756 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbfD0JEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 05:04:12 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 079798535C;
+        Sat, 27 Apr 2019 09:04:11 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DBAC617D64;
+        Sat, 27 Apr 2019 09:04:05 +0000 (UTC)
+Subject: Re: [PATCH v2 18/19] iommu/vt-d: Support flushing more translation
+ cache types
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556062279-64135-19-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <5ad35536-4993-13f1-5199-ddd99f7009e5@redhat.com>
+Date:   Sat, 27 Apr 2019 11:04:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.7.1 (2016-10-04)
+In-Reply-To: <1556062279-64135-19-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Sat, 27 Apr 2019 09:04:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current method to compare 64-bit numbers for conditional jump is:
+Hi Jacob,
 
-1) Compare the high 32-bit first.
+On 4/24/19 1:31 AM, Jacob Pan wrote:
+> When Shared Virtual Memory is exposed to a guest via vIOMMU, extended
+> IOTLB invalidation may be passed down from outside IOMMU subsystems.
+> This patch adds invalidation functions that can be used for additional
+> translation cache types.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/dmar.c        | 48 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/intel-iommu.h | 21 ++++++++++++++++----
+>  2 files changed, 65 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+> index 9c49300..680894e 100644
+> --- a/drivers/iommu/dmar.c
+> +++ b/drivers/iommu/dmar.c
+> @@ -1357,6 +1357,20 @@ void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
+>  	qi_submit_sync(&desc, iommu);
+>  }
+>  
+/* PASID-based IOTLB Invalidate */
+> +void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr, u32 pasid,
+> +		unsigned int size_order, u64 granu)
+> +{
+> +	struct qi_desc desc;
+> +
+> +	desc.qw0 = QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
+> +		QI_EIOTLB_GRAN(granu) | QI_EIOTLB_TYPE;
+> +	desc.qw1 = QI_EIOTLB_ADDR(addr) | QI_EIOTLB_IH(0) |
+> +		QI_EIOTLB_AM(size_order);
+I see IH it hardcoded to 0. Don't you envision to cascade the IH. On ARM
+this was needed for perf sake.
+> +	desc.qw2 = 0;
+> +	desc.qw3 = 0;
+> +	qi_submit_sync(&desc, iommu);
+> +}
+> +
+>  void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+>  			u16 qdep, u64 addr, unsigned mask)
+>  {
+> @@ -1380,6 +1394,40 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+>  	qi_submit_sync(&desc, iommu);
+>  }
+>  
+/* Pasid-based Device-TLB Invalidation */
+> +void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+> +		u32 pasid,  u16 qdep, u64 addr, unsigned size, u64 granu)
+> +{
+> +	struct qi_desc desc;
+> +
+> +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) | QI_DEV_EIOTLB_SID(sid) |
+> +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
+> +		QI_DEV_IOTLB_PFSID(pfsid);
+> +	desc.qw1 |= QI_DEV_EIOTLB_GLOB(granu);
+> +
+> +	/* If S bit is 0, we only flush a single page. If S bit is set,
+> +	 * The least significant zero bit indicates the size. VT-d spec
+> +	 * 6.5.2.6
+> +	 */
+> +	if (!size)
+> +		desc.qw0 = QI_DEV_EIOTLB_ADDR(addr) & ~QI_DEV_EIOTLB_SIZE;
+desc.q1 |= ?
+> +	else {
+> +		unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size);
+> +
+> +		desc.qw1 = QI_DEV_EIOTLB_ADDR(addr & ~mask) | QI_DEV_EIOTLB_SIZE;
+desc.q1 |=
+> +	}
+> +	qi_submit_sync(&desc, iommu);
+> +}
+> +
+/* PASID-cache invalidation */
+> +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu, int pasid)
+> +{
+> +	struct qi_desc desc;
+> +
+> +	desc.qw0 = QI_PC_TYPE | QI_PC_DID(did) | QI_PC_GRAN(granu) | QI_PC_PASID(pasid);
+> +	desc.qw1 = 0;
+> +	desc.qw2 = 0;
+> +	desc.qw3 = 0;
+> +	qi_submit_sync(&desc, iommu);
+> +}
+>  /*
+>   * Disable Queued Invalidation interface.
+>   */
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index 5d67d0d4..38e5efb 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -339,7 +339,7 @@ enum {
+>  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >> (DMA_TLB_FLUSH_GRANU_OFFSET-4))
+>  #define QI_IOTLB_ADDR(addr)	(((u64)addr) & VTD_PAGE_MASK)
+>  #define QI_IOTLB_IH(ih)		(((u64)ih) << 6)
+> -#define QI_IOTLB_AM(am)		(((u8)am))
+> +#define QI_IOTLB_AM(am)		(((u8)am) & 0x3f)
+>  
+>  #define QI_CC_FM(fm)		(((u64)fm) << 48)
+>  #define QI_CC_SID(sid)		(((u64)sid) << 32)
+> @@ -357,17 +357,22 @@ enum {
+>  #define QI_PC_DID(did)		(((u64)did) << 16)
+>  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
+>  
+> -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
+> -#define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
+> +/* PASID cache invalidation granu */
+> +#define QI_PC_ALL_PASIDS	0
+> +#define QI_PC_PASID_SEL		1
+>  
+>  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
+>  #define QI_EIOTLB_GL(gl)	(((u64)gl) << 7)
+>  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
+> -#define QI_EIOTLB_AM(am)	(((u64)am))
+> +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
+>  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
+>  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
+>  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
+>  
+> +/* QI Dev-IOTLB inv granu */
+> +#define QI_DEV_IOTLB_GRAN_ALL		1
+> +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0
+> +
+>  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
+>  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
+>  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
+> @@ -658,8 +663,16 @@ extern void qi_flush_context(struct intel_iommu *iommu, u16 did, u16 sid,
+>  			     u8 fm, u64 type);
+>  extern void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
+>  			  unsigned int size_order, u64 type);
+> +extern void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr,
+> +			u32 pasid, unsigned int size_order, u64 type);
+>  extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+>  			u16 qdep, u64 addr, unsigned mask);
+> +
+> +extern void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+> +			u32 pasid, u16 qdep, u64 addr, unsigned size, u64 granu);
+> +
+> +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu, int pasid);
+> +
+>  extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu *iommu);
+>  
+>  extern int dmar_ir_support(void);
+> 
 
-2) If the high 32-bit isn't the same, then goto step 4.
+Thanks
 
-3) Compare the low 32-bit.
-
-4) Check the desired condition.
-
-This method is right for unsigned comparison, but it is buggy for signed
-comparison, because it does signed comparison for low 32-bit too.
-
-There is only one sign bit in 64-bit number, that is the MSB in the 64-bit
-number, it is wrong to treat low 32-bit as signed number and do the signed
-comparison for it.
-
-This patch fixes the bug and adds a testcase in selftests/bpf for such bug.
-
-Signed-off-by: Wang YanQing <udknight@gmail.com>
----
- Changes v1-v2:
- 1: Add a testcase in selftests/bpf for such bug.
-
- arch/x86/net/bpf_jit_comp32.c              | 217 ++++++++++++++++++++++-------
- tools/testing/selftests/bpf/verifier/jit.c |  19 +++
- 2 files changed, 185 insertions(+), 51 deletions(-)
-
-diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
-index 0d9cdff..8097b88 100644
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -117,6 +117,8 @@ static bool is_simm32(s64 value)
- #define IA32_JLE 0x7E
- #define IA32_JG  0x7F
- 
-+#define COND_JMP_OPCODE_INVALID	(0xFF)
-+
- /*
-  * Map eBPF registers to IA32 32bit registers or stack scratch space.
-  *
-@@ -1613,6 +1615,75 @@ static inline void emit_push_r64(const u8 src[], u8 **pprog)
- 	*pprog = prog;
- }
- 
-+static u8 get_cond_jmp_opcode(const u8 op, bool is_cmp_lo)
-+{
-+	u8 jmp_cond;
-+
-+	/* Convert BPF opcode to x86 */
-+	switch (op) {
-+	case BPF_JEQ:
-+		jmp_cond = IA32_JE;
-+		break;
-+	case BPF_JSET:
-+	case BPF_JNE:
-+		jmp_cond = IA32_JNE;
-+		break;
-+	case BPF_JGT:
-+		/* GT is unsigned '>', JA in x86 */
-+		jmp_cond = IA32_JA;
-+		break;
-+	case BPF_JLT:
-+		/* LT is unsigned '<', JB in x86 */
-+		jmp_cond = IA32_JB;
-+		break;
-+	case BPF_JGE:
-+		/* GE is unsigned '>=', JAE in x86 */
-+		jmp_cond = IA32_JAE;
-+		break;
-+	case BPF_JLE:
-+		/* LE is unsigned '<=', JBE in x86 */
-+		jmp_cond = IA32_JBE;
-+		break;
-+	case BPF_JSGT:
-+		if (!is_cmp_lo)
-+			/* Signed '>', GT in x86 */
-+			jmp_cond = IA32_JG;
-+		else
-+			/* GT is unsigned '>', JA in x86 */
-+			jmp_cond = IA32_JA;
-+		break;
-+	case BPF_JSLT:
-+		if (!is_cmp_lo)
-+			/* Signed '<', LT in x86 */
-+			jmp_cond = IA32_JL;
-+		else
-+			/* LT is unsigned '<', JB in x86 */
-+			jmp_cond = IA32_JB;
-+		break;
-+	case BPF_JSGE:
-+		if (!is_cmp_lo)
-+			/* Signed '>=', GE in x86 */
-+			jmp_cond = IA32_JGE;
-+		else
-+			/* GE is unsigned '>=', JAE in x86 */
-+			jmp_cond = IA32_JAE;
-+		break;
-+	case BPF_JSLE:
-+		if (!is_cmp_lo)
-+			/* Signed '<=', LE in x86 */
-+			jmp_cond = IA32_JLE;
-+		else
-+			/* LE is unsigned '<=', JBE in x86 */
-+			jmp_cond = IA32_JBE;
-+		break;
-+	default: /* to silence GCC warning */
-+		jmp_cond = COND_JMP_OPCODE_INVALID;
-+		break;
-+	}
-+
-+	return jmp_cond;
-+}
-+
- static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 		  int oldproglen, struct jit_context *ctx)
- {
-@@ -2069,10 +2140,6 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 		case BPF_JMP | BPF_JLT | BPF_X:
- 		case BPF_JMP | BPF_JGE | BPF_X:
- 		case BPF_JMP | BPF_JLE | BPF_X:
--		case BPF_JMP | BPF_JSGT | BPF_X:
--		case BPF_JMP | BPF_JSLE | BPF_X:
--		case BPF_JMP | BPF_JSLT | BPF_X:
--		case BPF_JMP | BPF_JSGE | BPF_X:
- 		case BPF_JMP32 | BPF_JEQ | BPF_X:
- 		case BPF_JMP32 | BPF_JNE | BPF_X:
- 		case BPF_JMP32 | BPF_JGT | BPF_X:
-@@ -2118,6 +2185,40 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 			EMIT2(0x39, add_2reg(0xC0, dreg_lo, sreg_lo));
- 			goto emit_cond_jmp;
- 		}
-+		case BPF_JMP | BPF_JSGT | BPF_X:
-+		case BPF_JMP | BPF_JSLE | BPF_X:
-+		case BPF_JMP | BPF_JSLT | BPF_X:
-+		case BPF_JMP | BPF_JSGE | BPF_X: {
-+			u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
-+			u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
-+			u8 sreg_lo = sstk ? IA32_ECX : src_lo;
-+			u8 sreg_hi = sstk ? IA32_EBX : src_hi;
-+
-+			if (dstk) {
-+				EMIT3(0x8B, add_2reg(0x40, IA32_EBP, IA32_EAX),
-+				      STACK_VAR(dst_lo));
-+				EMIT3(0x8B,
-+				      add_2reg(0x40, IA32_EBP,
-+					       IA32_EDX),
-+				      STACK_VAR(dst_hi));
-+			}
-+
-+			if (sstk) {
-+				EMIT3(0x8B, add_2reg(0x40, IA32_EBP, IA32_ECX),
-+				      STACK_VAR(src_lo));
-+				EMIT3(0x8B,
-+				      add_2reg(0x40, IA32_EBP,
-+					       IA32_EBX),
-+				      STACK_VAR(src_hi));
-+			}
-+
-+			/* cmp dreg_hi,sreg_hi */
-+			EMIT2(0x39, add_2reg(0xC0, dreg_hi, sreg_hi));
-+			EMIT2(IA32_JNE, 10);
-+			/* cmp dreg_lo,sreg_lo */
-+			EMIT2(0x39, add_2reg(0xC0, dreg_lo, sreg_lo));
-+			goto emit_cond_jmp_signed;
-+		}
- 		case BPF_JMP | BPF_JSET | BPF_X:
- 		case BPF_JMP32 | BPF_JSET | BPF_X: {
- 			bool is_jmp64 = BPF_CLASS(insn->code) == BPF_JMP;
-@@ -2194,10 +2295,6 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 		case BPF_JMP | BPF_JLT | BPF_K:
- 		case BPF_JMP | BPF_JGE | BPF_K:
- 		case BPF_JMP | BPF_JLE | BPF_K:
--		case BPF_JMP | BPF_JSGT | BPF_K:
--		case BPF_JMP | BPF_JSLE | BPF_K:
--		case BPF_JMP | BPF_JSLT | BPF_K:
--		case BPF_JMP | BPF_JSGE | BPF_K:
- 		case BPF_JMP32 | BPF_JEQ | BPF_K:
- 		case BPF_JMP32 | BPF_JNE | BPF_K:
- 		case BPF_JMP32 | BPF_JGT | BPF_K:
-@@ -2238,50 +2335,9 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 			/* cmp dreg_lo,sreg_lo */
- 			EMIT2(0x39, add_2reg(0xC0, dreg_lo, sreg_lo));
- 
--emit_cond_jmp:		/* Convert BPF opcode to x86 */
--			switch (BPF_OP(code)) {
--			case BPF_JEQ:
--				jmp_cond = IA32_JE;
--				break;
--			case BPF_JSET:
--			case BPF_JNE:
--				jmp_cond = IA32_JNE;
--				break;
--			case BPF_JGT:
--				/* GT is unsigned '>', JA in x86 */
--				jmp_cond = IA32_JA;
--				break;
--			case BPF_JLT:
--				/* LT is unsigned '<', JB in x86 */
--				jmp_cond = IA32_JB;
--				break;
--			case BPF_JGE:
--				/* GE is unsigned '>=', JAE in x86 */
--				jmp_cond = IA32_JAE;
--				break;
--			case BPF_JLE:
--				/* LE is unsigned '<=', JBE in x86 */
--				jmp_cond = IA32_JBE;
--				break;
--			case BPF_JSGT:
--				/* Signed '>', GT in x86 */
--				jmp_cond = IA32_JG;
--				break;
--			case BPF_JSLT:
--				/* Signed '<', LT in x86 */
--				jmp_cond = IA32_JL;
--				break;
--			case BPF_JSGE:
--				/* Signed '>=', GE in x86 */
--				jmp_cond = IA32_JGE;
--				break;
--			case BPF_JSLE:
--				/* Signed '<=', LE in x86 */
--				jmp_cond = IA32_JLE;
--				break;
--			default: /* to silence GCC warning */
-+emit_cond_jmp:		jmp_cond = get_cond_jmp_opcode(BPF_OP(code), false);
-+			if (jmp_cond == COND_JMP_OPCODE_INVALID)
- 				return -EFAULT;
--			}
- 			jmp_offset = addrs[i + insn->off] - addrs[i];
- 			if (is_imm8(jmp_offset)) {
- 				EMIT2(jmp_cond, jmp_offset);
-@@ -2291,7 +2347,66 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 				pr_err("cond_jmp gen bug %llx\n", jmp_offset);
- 				return -EFAULT;
- 			}
-+			break;
-+		}
-+		case BPF_JMP | BPF_JSGT | BPF_K:
-+		case BPF_JMP | BPF_JSLE | BPF_K:
-+		case BPF_JMP | BPF_JSLT | BPF_K:
-+		case BPF_JMP | BPF_JSGE | BPF_K: {
-+			u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
-+			u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
-+			u8 sreg_lo = IA32_ECX;
-+			u8 sreg_hi = IA32_EBX;
-+			u32 hi;
-+
-+			if (dstk) {
-+				EMIT3(0x8B, add_2reg(0x40, IA32_EBP, IA32_EAX),
-+				      STACK_VAR(dst_lo));
-+				EMIT3(0x8B,
-+				      add_2reg(0x40, IA32_EBP,
-+					       IA32_EDX),
-+				      STACK_VAR(dst_hi));
-+			}
-+
-+			/* mov ecx,imm32 */
-+			EMIT2_off32(0xC7, add_1reg(0xC0, IA32_ECX), imm32);
-+			hi = imm32 & (1 << 31) ? (u32)~0 : 0;
-+			/* mov ebx,imm32 */
-+			EMIT2_off32(0xC7, add_1reg(0xC0, IA32_EBX), hi);
-+			/* cmp dreg_hi,sreg_hi */
-+			EMIT2(0x39, add_2reg(0xC0, dreg_hi, sreg_hi));
-+			EMIT2(IA32_JNE, 10);
-+			/* cmp dreg_lo,sreg_lo */
-+			EMIT2(0x39, add_2reg(0xC0, dreg_lo, sreg_lo));
-+
-+			/*
-+			 * For simplicity of branch offset computation,
-+			 * let's use fixed jump coding here.
-+			 */
-+emit_cond_jmp_signed:	/* Check the condition for low 32-bit comparison */
-+			jmp_cond = get_cond_jmp_opcode(BPF_OP(code), true);
-+			if (jmp_cond == COND_JMP_OPCODE_INVALID)
-+				return -EFAULT;
-+			jmp_offset = addrs[i + insn->off] - addrs[i] + 8;
-+			if (is_simm32(jmp_offset)) {
-+				EMIT2_off32(0x0F, jmp_cond + 0x10, jmp_offset);
-+			} else {
-+				pr_err("cond_jmp gen bug %llx\n", jmp_offset);
-+				return -EFAULT;
-+			}
-+			EMIT2(0xEB, 6);
- 
-+			/* Check the condition for high 32-bit comparison */
-+			jmp_cond = get_cond_jmp_opcode(BPF_OP(code), false);
-+			if (jmp_cond == COND_JMP_OPCODE_INVALID)
-+				return -EFAULT;
-+			jmp_offset = addrs[i + insn->off] - addrs[i];
-+			if (is_simm32(jmp_offset)) {
-+				EMIT2_off32(0x0F, jmp_cond + 0x10, jmp_offset);
-+			} else {
-+				pr_err("cond_jmp gen bug %llx\n", jmp_offset);
-+				return -EFAULT;
-+			}
- 			break;
- 		}
- 		case BPF_JMP | BPF_JA:
-diff --git a/tools/testing/selftests/bpf/verifier/jit.c b/tools/testing/selftests/bpf/verifier/jit.c
-index be488b4..c33adf3 100644
---- a/tools/testing/selftests/bpf/verifier/jit.c
-+++ b/tools/testing/selftests/bpf/verifier/jit.c
-@@ -86,3 +86,22 @@
- 	.result = ACCEPT,
- 	.retval = 2,
- },
-+{
-+	"jit: jsgt, jslt",
-+	.insns = {
-+	BPF_LD_IMM64(BPF_REG_1, 0x80000000ULL),
-+	BPF_LD_IMM64(BPF_REG_2, 0x0ULL),
-+	BPF_JMP_REG(BPF_JSGT, BPF_REG_1, BPF_REG_2, 2),
-+	BPF_MOV64_IMM(BPF_REG_0, 1),
-+	BPF_EXIT_INSN(),
-+
-+	BPF_JMP_REG(BPF_JSLT, BPF_REG_2, BPF_REG_1, 2),
-+	BPF_MOV64_IMM(BPF_REG_0, 1),
-+	BPF_EXIT_INSN(),
-+
-+	BPF_MOV64_IMM(BPF_REG_0, 2),
-+	BPF_EXIT_INSN(),
-+	},
-+	.result = ACCEPT,
-+	.retval = 2,
-+},
--- 
-1.8.5.6.2.g3d8a54e.dirty
+Eric
