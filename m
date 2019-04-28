@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7A7C4321A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615ECC43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A934620679
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3640720679
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfD1V1N (ORCPT
+        id S1727235AbfD1V1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 17:27:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57124 "EHLO mx1.redhat.com"
+        Sun, 28 Apr 2019 17:27:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49122 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726975AbfD1V1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 17:27:11 -0400
+        id S1727148AbfD1V1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 17:27:14 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4B7B83086258;
-        Sun, 28 Apr 2019 21:27:10 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id DBFF4C057F40;
+        Sun, 28 Apr 2019 21:27:13 +0000 (UTC)
 Received: from llong.com (ovpn-120-22.rdu2.redhat.com [10.10.120.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E054217989;
-        Sun, 28 Apr 2019 21:27:08 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7653417989;
+        Sun, 28 Apr 2019 21:27:12 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -40,204 +40,121 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Tim Chen <tim.c.chen@linux.intel.com>,
         huang ying <huang.ying.caritas@gmail.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH-tip v7 17/20] locking/rwsem: Guard against making count negative
-Date:   Sun, 28 Apr 2019 17:25:54 -0400
-Message-Id: <20190428212557.13482-18-longman@redhat.com>
+Subject: [PATCH-tip v7 19/20] locking/rwsem: Remove redundant computation of writer lock word
+Date:   Sun, 28 Apr 2019 17:25:56 -0400
+Message-Id: <20190428212557.13482-20-longman@redhat.com>
 In-Reply-To: <20190428212557.13482-1-longman@redhat.com>
 References: <20190428212557.13482-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Sun, 28 Apr 2019 21:27:10 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Sun, 28 Apr 2019 21:27:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The upper bits of the count field is used as reader count. When
-sufficient number of active readers are present, the most significant
-bit will be set and the count becomes negative. If the number of active
-readers keep on piling up, we may eventually overflow the reader counts.
-This is not likely to happen unless the number of bits reserved for
-reader count is reduced because those bits are need for other purpose.
+On 64-bit architectures, each rwsem writer will have its unique lock
+word for acquiring the lock. Right now, the writer code recomputes the
+lock word every time it tries to acquire the lock. This is a waste of
+time. The lock word is now cached and reused when it is needed.
 
-To prevent this count overflow from happening, the most significant
-bit is now treated as a guard bit (RWSEM_FLAG_READFAIL). Read-lock
-attempts will now fail for both the fast and slow paths whenever this
-bit is set. So all those extra readers will be put to sleep in the wait
-list. Wakeup will not happen until the reader count reaches 0.
+When CONFIG_RWSEM_OWNER_COUNT isn't defined, the extra constant argument
+to rwsem_try_write_lock() and rwsem_try_write_lock_unqueued() should
+be optimized out by the compiler.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/rwsem.c | 95 +++++++++++++++++++++++++++++++++++-------
- 1 file changed, 80 insertions(+), 15 deletions(-)
+ kernel/locking/rwsem.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 1a4f2c1c27c4..1ab1762e9988 100644
+index 9120fde02e0d..cd7fdb8b02ed 100644
 --- a/kernel/locking/rwsem.c
 +++ b/kernel/locking/rwsem.c
-@@ -116,13 +116,28 @@
- #endif
+@@ -700,6 +700,7 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+  * bit is set or the lock is acquired with handoff bit cleared.
+  */
+ static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem,
++					const long wlock,
+ 					enum writer_wait_state wstate)
+ {
+ 	long new;
+@@ -716,8 +717,7 @@ static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem,
+ 				return false;
+ 			new = count | RWSEM_FLAG_HANDOFF;
+ 		} else {
+-			new = (count | RWSEM_WRITER_LOCKED) &
+-				~RWSEM_FLAG_HANDOFF;
++			new = (count | wlock) & ~RWSEM_FLAG_HANDOFF;
  
+ 			if (list_is_singular(&sem->wait_list))
+ 				new &= ~RWSEM_FLAG_WAITERS;
+@@ -763,13 +763,14 @@ static inline bool rwsem_try_read_lock_unqueued(struct rw_semaphore *sem)
  /*
-- * The definition of the atomic counter in the semaphore:
-+ * On 64-bit architectures, the bit definitions of the count are:
-  *
-- * Bit  0   - writer locked bit
-- * Bit  1   - waiters present bit
-- * Bit  2   - lock handoff bit
-- * Bits 3-7 - reserved
-- * Bits 8-X - 24-bit (32-bit) or 56-bit reader count
-+ * Bit  0    - writer locked bit
-+ * Bit  1    - waiters present bit
-+ * Bit  2    - lock handoff bit
-+ * Bits 3-7  - reserved
-+ * Bits 8-62 - 55-bit reader count
-+ * Bit  63   - read fail bit
-+ *
-+ * On 32-bit architectures, the bit definitions of the count are:
-+ *
-+ * Bit  0    - writer locked bit
-+ * Bit  1    - waiters present bit
-+ * Bit  2    - lock handoff bit
-+ * Bits 3-7  - reserved
-+ * Bits 8-30 - 23-bit reader count
-+ * Bit  31   - read fail bit
-+ *
-+ * It is not likely that the most significant bit (read fail bit) will ever
-+ * be set. This guard bit is still checked anyway in the down_read() fastpath
-+ * just in case we need to use up more of the reader bits for other purpose
-+ * in the future.
-  *
-  * atomic_long_fetch_add() is used to obtain reader lock, whereas
-  * atomic_long_cmpxchg() will be used to obtain writer lock.
-@@ -139,6 +154,7 @@
- #define RWSEM_WRITER_LOCKED	(1UL << 0)
- #define RWSEM_FLAG_WAITERS	(1UL << 1)
- #define RWSEM_FLAG_HANDOFF	(1UL << 2)
-+#define RWSEM_FLAG_READFAIL	(1UL << (BITS_PER_LONG - 1))
+  * Try to acquire write lock before the writer has been put on wait queue.
+  */
+-static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem)
++static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem,
++						 const long wlock)
+ {
+ 	long count = atomic_long_read(&sem->count);
  
- #define RWSEM_READER_SHIFT	8
- #define RWSEM_READER_BIAS	(1UL << RWSEM_READER_SHIFT)
-@@ -146,7 +162,7 @@
- #define RWSEM_WRITER_MASK	RWSEM_WRITER_LOCKED
- #define RWSEM_LOCK_MASK		(RWSEM_WRITER_MASK|RWSEM_READER_MASK)
- #define RWSEM_READ_FAILED_MASK	(RWSEM_WRITER_MASK|RWSEM_FLAG_WAITERS|\
--				 RWSEM_FLAG_HANDOFF)
-+				 RWSEM_FLAG_HANDOFF|RWSEM_FLAG_READFAIL)
- 
- /*
-  * All writes to owner are protected by WRITE_ONCE() to make sure that
-@@ -277,6 +293,28 @@ static inline void rwsem_set_nonspinnable(struct rw_semaphore *sem)
- 	}
+ 	while (!(count & (RWSEM_LOCK_MASK|RWSEM_FLAG_HANDOFF))) {
+ 		if (atomic_long_try_cmpxchg_acquire(&sem->count, &count,
+-					count | RWSEM_WRITER_LOCKED)) {
++					count | wlock)) {
+ 			rwsem_set_owner(sem);
+ 			lockevent_inc(rwsem_opt_wlock);
+ 			return true;
+@@ -937,7 +938,7 @@ static inline u64 rwsem_rspin_threshold(struct rw_semaphore *sem)
+ 	return sched_clock() + delta;
  }
  
-+/*
-+ * This function does a read trylock by incrementing the reader count
-+ * and then decrementing it immediately if too many readers are present
-+ * (count becomes negative) in order to prevent the remote possibility
-+ * of overflowing the count with minimal delay between the increment
-+ * and decrement.
-+ *
-+ * It returns the adjustment that should be added back to the count
-+ * in the slowpath.
-+ */
-+static inline long rwsem_read_trylock(struct rw_semaphore *sem, long *cnt)
-+{
-+	long adjustment = -RWSEM_READER_BIAS;
-+
-+	*cnt = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS, &sem->count);
-+	if (unlikely(*cnt < 0)) {
-+		atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
-+		adjustment = 0;
-+	}
-+	return adjustment;
-+}
-+
- /*
-  * Guide to the rw_semaphore's count field.
-  *
-@@ -403,6 +441,12 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- 		return;
- 	}
- 
-+	/*
-+	 * No reader wakeup if there are too many of them already.
-+	 */
-+	if (unlikely(atomic_long_read(&sem->count) < 0))
-+		return;
-+
- 	/*
- 	 * Writers might steal the lock before we grant it to the next reader.
- 	 * We prefer to do the first reader grant before counting readers
-@@ -964,13 +1008,30 @@ static inline bool rwsem_reader_phase_trylock(struct rw_semaphore *sem,
-  * Wait for the read lock to be granted
-  */
- static struct rw_semaphore __sched *
--rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
-+rwsem_down_read_slowpath(struct rw_semaphore *sem, int state, long adjustment)
+-static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
++static bool rwsem_optimistic_spin(struct rw_semaphore *sem, const long wlock)
  {
--	long count, adjustment = -RWSEM_READER_BIAS;
-+	long count;
- 	bool wake = false;
+ 	bool taken = false;
+ 	int prev_owner_state = OWNER_NULL;
+@@ -965,7 +966,7 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
+ 		/*
+ 		 * Try to acquire the lock
+ 		 */
+-		taken = wlock ? rwsem_try_write_lock_unqueued(sem)
++		taken = wlock ? rwsem_try_write_lock_unqueued(sem, wlock)
+ 			      : rwsem_try_read_lock_unqueued(sem);
+ 
+ 		if (taken)
+@@ -1118,7 +1119,8 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem, bool wr)
+ 	return false;
+ }
+ 
+-static inline bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
++static inline bool rwsem_optimistic_spin(struct rw_semaphore *sem,
++					 const long wlock)
+ {
+ 	return false;
+ }
+@@ -1293,10 +1295,11 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
  	struct rwsem_waiter waiter;
+ 	struct rw_semaphore *ret = sem;
  	DEFINE_WAKE_Q(wake_q);
++	const long wlock = RWSEM_WRITER_LOCKED;
  
-+	if (unlikely(!adjustment)) {
-+		/*
-+		 * This shouldn't happen. If it does, there is probably
-+		 * something wrong in the system.
-+		 */
-+		WARN_ON_ONCE(1);
-+
-+		/*
-+		 * An adjustment of 0 means that there are too many readers
-+		 * holding or trying to acquire the lock. So disable
-+		 * optimistic spinning and go directly into the wait list.
-+		 */
-+		if (is_rwsem_spinnable(sem, false))
-+			rwsem_set_nonspinnable(sem);
-+		goto queue;
-+	}
-+
+ 	/* do optimistic spinning and steal lock if possible */
+ 	if (rwsem_can_spin_on_owner(sem, true) &&
+-	    rwsem_optimistic_spin(sem, true))
++	    rwsem_optimistic_spin(sem, wlock))
+ 		return sem;
+ 
  	/*
- 	 * Save the current read-owner of rwsem, if available, and the
- 	 * reader nonspinnable bit.
-@@ -1294,9 +1355,10 @@ static struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem)
-  */
- inline void __down_read(struct rw_semaphore *sem)
- {
--	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
--			&sem->count) & RWSEM_READ_FAILED_MASK)) {
--		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE);
-+	long tmp, adjustment = rwsem_read_trylock(sem, &tmp);
-+
-+	if (unlikely(tmp & RWSEM_READ_FAILED_MASK)) {
-+		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE, adjustment);
- 		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
- 	} else {
- 		rwsem_set_reader_owned(sem);
-@@ -1305,9 +1367,11 @@ inline void __down_read(struct rw_semaphore *sem)
+@@ -1367,7 +1370,7 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+ 	/* wait until we successfully acquire the lock */
+ 	set_current_state(state);
+ 	while (true) {
+-		if (rwsem_try_write_lock(count, sem, wstate))
++		if (rwsem_try_write_lock(count, sem, wlock, wstate))
+ 			break;
  
- static inline int __down_read_killable(struct rw_semaphore *sem)
- {
--	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
--			&sem->count) & RWSEM_READ_FAILED_MASK)) {
--		if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE)))
-+	long tmp, adjustment = rwsem_read_trylock(sem, &tmp);
-+
-+	if (unlikely(tmp & RWSEM_READ_FAILED_MASK)) {
-+		if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE,
-+						    adjustment)))
- 			return -EINTR;
- 		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
- 	} else {
-@@ -1383,6 +1447,7 @@ inline void __up_read(struct rw_semaphore *sem)
- 	DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
- 	rwsem_clear_reader_owned(sem);
- 	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
-+	DEBUG_RWSEMS_WARN_ON(tmp < 0, sem);
- 	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS)) ==
- 		      RWSEM_FLAG_WAITERS)) {
- 		clear_wr_nonspinnable(sem);
+ 		raw_spin_unlock_irq(&sem->wait_lock);
 -- 
 2.18.1
 
