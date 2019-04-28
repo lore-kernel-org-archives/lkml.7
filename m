@@ -2,86 +2,148 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D8EC4321B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E71C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421962067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117CA2067C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:27:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="DmRdpcQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfD1XTL (ORCPT
+        id S1726728AbfD1X1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 19:19:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35178 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbfD1XTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 19:19:10 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 624123082B21;
-        Sun, 28 Apr 2019 23:19:10 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-120-22.rdu2.redhat.com [10.10.120.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E49C5D9CA;
-        Sun, 28 Apr 2019 23:19:08 +0000 (UTC)
-Subject: Re: [PATCH-tip v7 00/20] locking/rwsem: Rwsem rearchitecture part 2
-From:   Waiman Long <longman@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
+        Sun, 28 Apr 2019 19:27:25 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45891 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfD1X1Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 19:27:24 -0400
+Received: by mail-pl1-f195.google.com with SMTP id o5so4181126pls.12
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 16:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=LYH/XS8nnf6efHlZx0B2St65dcm+60nIA8GvtyVKA2g=;
+        b=DmRdpcQePn9pu6FxDsh1mK99BocSEh/feEMjXNQT5ibFOMXKxk7jGGikNVgPkQ/pOI
+         UGmJYe/+bLddvlC3J8DvQsu56bjSCusqMfu8ME8NvlSzxN714OngT/6dh+33YkAcZv8i
+         iM0dTbQx4WNLm2r5XvkUR/9p+AGYVJWQd1S1XltOigmfclHaDVEekiM8glCNctsFjsqe
+         EjtGySHRM/yMeakMd4wY4/K6M7MwH6uRGoUakpsQfA1l/NMDHEwrki80UgpRapYjx/2A
+         8wv773Mjddy3w1YG0r8YpnUtenCQDHKuuF0sSQvKZb4Ba5u8UD1UTfrCsbCTdunO3Zef
+         bgsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=LYH/XS8nnf6efHlZx0B2St65dcm+60nIA8GvtyVKA2g=;
+        b=Kv17hE0pvLSnA/ZXPkc74jsUXWIBW4njKoBj+8beqbAFhPMU2IY5VzeXhTFHcs2VNF
+         ZcKGNH//RFWpE0xzgWVsYEU4KwUWHw03yfMhJJzbIr0DD3pjoKYG1BxjpZ/MnHilBlpt
+         12cumndl15R6CzrwuDV/xuXFHC1iI8avZuMQpPkzlp9IfzrH2ePcqZLREEQuWRk9DyWS
+         e6VJTVyWFVmrWFe9eT1/aDJYNthWEzeDB8NVbt0e4egfVboVGjUMDJhBnVlXPrCWZhvr
+         CkKDciR+n1kl0fr5kM+r7LFnKgf1vV2Eyq3FUKImSot/EOAGFHRzHREkLhrHF9TsCJ6d
+         5fOg==
+X-Gm-Message-State: APjAAAW3w/J5yOCF78hex6dNHEzwdKIX1Y4MoPDISTECyGUx9JuVm8S3
+        TT9doH2pq+4DKTeGJ/EY1PsX8A==
+X-Google-Smtp-Source: APXvYqx9Yjda2C1O0PTiHPRxwDgIBXUPJI1Ken8qeQkI2h0Dmc7D+Nw/tJ+dGR8X07wI+YtMGa9FdA==
+X-Received: by 2002:a17:902:2862:: with SMTP id e89mr60249446plb.203.1556494043721;
+        Sun, 28 Apr 2019 16:27:23 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:68a6:ac0c:7713:add7? ([2601:646:c200:1ef2:68a6:ac0c:7713:add7])
+        by smtp.gmail.com with ESMTPSA id s21sm41771309pfm.3.2019.04.28.16.27.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Apr 2019 16:27:22 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 1/4] x86/thread_info: introduce ->ftrace_int3_stack member
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <87k1fdygcx.fsf@suse.de>
+Date:   Sun, 28 Apr 2019 16:27:21 -0700
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190428212557.13482-1-longman@redhat.com>
- <CAHk-=whU83HbayBmOS-jbK7bQJUp87mvAYxhL=vz5wC_ARQCWA@mail.gmail.com>
- <3f8fd44d-1962-e309-49b5-bb16fd662312@redhat.com>
-Organization: Red Hat
-Message-ID: <553acf73-e2c4-b094-e088-d53cc7ab9239@redhat.com>
-Date:   Sun, 28 Apr 2019 19:19:08 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <3f8fd44d-1962-e309-49b5-bb16fd662312@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Sun, 28 Apr 2019 23:19:10 +0000 (UTC)
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C55DED25-C60D-4731-9A6B-92BDA8771766@amacapital.net>
+References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-2-nstange@suse.de> <F6268634-96D3-4267-B739-6D375FAB26A8@amacapital.net> <20190428135143.09d35bb6@oasis.local.home> <87k1fdygcx.fsf@suse.de>
+To:     Nicolai Stange <nstange@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/28/19 7:12 PM, Waiman Long wrote:
-> On 4/28/19 6:46 PM, Linus Torvalds wrote:
->> This doesn't seem to be the full diff - looking at that patch 1 you
->> seem to have taken my suggested list_cut_before() change too.
->>
->> I'm not against it (it does seem to be simpler and better), I just
->> hope you double-checked it, since I kind of hand-waved it.
->>
->>                     Linus
-> I implemented your suggestion in patch 1 as it will produce simpler and
-> faster code. However, one of the changes in my patchset is to wake up
-> all the readers in the wait list. This means I have to jump over the
-> writers and wake up the readers behind them as well. See patch 11 for
-> details. As a result, I have to revert back to use list_add_tail() and
-> list_for_each_entry_safe() for the first pass. That is why the diff for
-> the whole patchset is just the below change. It is done on purpose, not
-> an omission.
 
-That is also the reason why it was implemented this way in my v6
-patchset. I implemented the fix on top of the rwsem patchset first and
-then move it backward to the beginning of the patchset for easier backport.
+> On Apr 28, 2019, at 2:22 PM, Nicolai Stange <nstange@suse.de> wrote:
+>=20
+> Steven Rostedt <rostedt@goodmis.org> writes:
+>=20
+>> On Sun, 28 Apr 2019 10:41:10 -0700
+>> Andy Lutomirski <luto@amacapital.net> wrote:
+>>=20
+>>=20
+>>>> Note that at any given point
+>>>> in time, there can be at most four such call insn emulations pending:
+>>>> namely at most one per "process", "irq", "softirq" and "nmi" context.
+>>>>=20
+>>>=20
+>>> That=E2=80=99s quite an assumption. I think your list should also contai=
+n
+>>> exception, exceptions nested inside that exception, and machine
+>>> check, at the very least.  I=E2=80=99m also wondering why irq and softir=
+q are
+>>> treated separately.
+>=20
+> You're right, I missed the machine check case.
+>=20
+>=20
+>> 4 has usually been the context count we choose. But I guess in theory,
+>> if we get exceptions then I could potentially be more.
+>=20
+> After having seen the static_call discussion, I'm in no way defending
+> this limited approach here, but out of curiosity: can the code between
+> the push onto the stack from ftrace_int3_handler() and the subsequent
+> pop from the stub actually trigger an (non-#MC) exception? There's an
+> iret inbetween, but that can fault only when returning to user space,
+> correct?
 
-Cheers,
-Longman
+IRET doesn=E2=80=99t do any fancy masking, so #DB, NMI and regular IRQs shou=
+ld all be possible.
 
+>=20
+>=20
+>> As for irq vs softirq, an interrupt can preempt a softirq. Interrupts
+>> are enabled while softirqs are running. When sofirqs run, softirqs are
+>> disabled to prevent nested softirqs. But interrupts are enabled again,
+>> and another interrupt may come in while a softirq is executing.
+>>=20
+>=20
+> Thanks,
+>=20
+> Nicolai
+>=20
+>=20
+> --=20
+> SUSE Linux GmbH, GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton,=
+
+> HRB 21284 (AG N=C3=BCrnberg)
