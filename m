@@ -2,260 +2,69 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C899C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 04:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3471C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 04:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238B721473
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 04:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F68206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 04:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfD1E1T (ORCPT
+        id S1726359AbfD1Ei0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 00:27:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53112 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfD1E1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 00:27:18 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7E47530BE493;
-        Sun, 28 Apr 2019 04:27:07 +0000 (UTC)
-Received: from [10.72.12.56] (ovpn-12-56.pek2.redhat.com [10.72.12.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A3C556B8D6;
-        Sun, 28 Apr 2019 04:26:58 +0000 (UTC)
-Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
-From:   Jason Wang <jasowang@redhat.com>
-To:     Yue Haibing <yuehaibing@huawei.com>, davem@davemloft.net,
-        edumazet@google.com, brouer@redhat.com, mst@redhat.com,
-        lirongqing@baidu.com, xiyou.wangcong@gmail.com,
-        nicolas.dichtel@6wind.com, 3chas3@gmail.com, wangli39@baidu.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
- <20190428030539.17776-1-yuehaibing@huawei.com>
- <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
-Message-ID: <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com>
-Date:   Sun, 28 Apr 2019 12:26:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 28 Apr 2019 00:38:26 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:33944 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfD1Ei0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 00:38:26 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hKbZs-0007cv-JT; Sun, 28 Apr 2019 04:38:13 +0000
+Date:   Sun, 28 Apr 2019 05:38:12 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Ceph fixes for 5.1-rc7
+Message-ID: <20190428043801.GE2217@ZenIV.linux.org.uk>
+References: <20190425174739.27604-1-idryomov@gmail.com>
+ <CAHk-=wgPBx9xPWY7obK60=RTnOF3Ln0j9XkhYbekML=Fi3bFXg@mail.gmail.com>
+ <342ef35feb1110197108068d10e518742823a210.camel@kernel.org>
+ <20190425200941.GW2217@ZenIV.linux.org.uk>
+ <86674e79e9f24e81feda75bc3c0dd4215604ffa5.camel@kernel.org>
+ <20190426165055.GY2217@ZenIV.linux.org.uk>
+ <b175faae4bb98d3379a8642fe5f4e00587c3a734.camel@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Sun, 28 Apr 2019 04:27:07 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b175faae4bb98d3379a8642fe5f4e00587c3a734.camel@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 26, 2019 at 01:30:53PM -0400, Jeff Layton wrote:
 
-On 2019/4/28 上午11:24, Jason Wang wrote:
->
-> On 2019/4/28 上午11:05, Yue Haibing wrote:
->> From: YueHaibing <yuehaibing@huawei.com>
->>
->> KASAN report this:
->>
->> BUG: KASAN: use-after-free in tun_net_xmit+0x1670/0x1750 
->> drivers/net/tun.c:1104
->> Read of size 8 at addr ffff88836cc26a70 by task swapper/3/0
->>
->> CPU: 3 PID: 0 Comm: swapper/3 Not tainted 4.19.32 #6
->> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 
->> 1.10.2-1ubuntu1 04/01/2014
->> Call Trace:
->>   <IRQ>
->>   __dump_stack lib/dump_stack.c:77 [inline]
->>   dump_stack+0xca/0x13e lib/dump_stack.c:113
->>   print_address_description+0x79/0x330 mm/kasan/report.c:253
->>   kasan_report_error mm/kasan/report.c:351 [inline]
->>   kasan_report+0x18a/0x2d0 mm/kasan/report.c:409
->>   tun_net_xmit+0x1670/0x1750 drivers/net/tun.c:1104
->>   __netdev_start_xmit include/linux/netdevice.h:4300 [inline]
->>   netdev_start_xmit include/linux/netdevice.h:4309 [inline]
->>   xmit_one net/core/dev.c:3243 [inline]
->>   dev_hard_start_xmit+0x17c/0x780 net/core/dev.c:3259
->>   sch_direct_xmit+0x24f/0x8a0 net/sched/sch_generic.c:327
->>   qdisc_restart net/sched/sch_generic.c:390 [inline]
->>   __qdisc_run+0x45b/0x1590 net/sched/sch_generic.c:398
->>   qdisc_run include/net/pkt_sched.h:120 [inline]
->>   __dev_xmit_skb net/core/dev.c:3438 [inline]
->>   __dev_queue_xmit+0xa6b/0x2500 net/core/dev.c:3797
->>   neigh_output include/net/neighbour.h:501 [inline]
->>   ip6_finish_output2+0xa36/0x2290 net/ipv6/ip6_output.c:120
->>   ip6_finish_output+0x3e7/0xa20 net/ipv6/ip6_output.c:154
->>   NF_HOOK_COND include/linux/netfilter.h:278 [inline]
->>   ip6_output+0x1e2/0x720 net/ipv6/ip6_output.c:171
->>   dst_output include/net/dst.h:444 [inline]
->>   NF_HOOK include/linux/netfilter.h:289 [inline]
->>   mld_sendpack+0x740/0xf20 net/ipv6/mcast.c:1683
->>   mld_send_cr net/ipv6/mcast.c:1979 [inline]
->>   mld_ifc_timer_expire+0x3cc/0x7f0 net/ipv6/mcast.c:2478
->>   call_timer_fn+0x1ea/0x6a0 kernel/time/timer.c:1326
->>   expire_timers kernel/time/timer.c:1363 [inline]
->>   __run_timers kernel/time/timer.c:1682 [inline]
->>   run_timer_softirq+0x637/0x1070 kernel/time/timer.c:1695
->>   __do_softirq+0x26d/0xabd kernel/softirq.c:292
->>   invoke_softirq kernel/softirq.c:372 [inline]
->>   irq_exit+0x209/0x290 kernel/softirq.c:412
->>   exiting_irq arch/x86/include/asm/apic.h:536 [inline]
->>   smp_apic_timer_interrupt+0xf6/0x480 arch/x86/kernel/apic/apic.c:1056
->>   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:864
->>   </IRQ>
->> RIP: 0010:native_safe_halt+0x2/0x10 arch/x86/include/asm/irqflags.h:58
->> Code: 01 f0 0f 82 bc fd ff ff 48 c7 c7 40 25 b1 83 e8 a1 72 03 ff e9 
->> ab fd ff ff 4c 89 e7 e8 37 f5 a7 fe e9 6a ff ff ff 90 90 fb f4 <c3> 
->> 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 f4 c3 90 90 90 90 90 90
->> RSP: 0018:ffff8883e0f2fd20 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
->> RAX: 0000000000000007 RBX: dffffc0000000000 RCX: 0000000000000000
->> RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8883e0f04f1c
->> RBP: 0000000000000003 R08: ffffed107c5dc77b R09: 0000000000000000
->> R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff848b96e0
->> R13: 0000000000000003 R14: 1ffff1107c1e5fae R15: 0000000000000000
->>   arch_safe_halt arch/x86/include/asm/paravirt.h:94 [inline]
->>   default_idle+0x24/0x2b0 arch/x86/kernel/process.c:561
->>   cpuidle_idle_call kernel/sched/idle.c:153 [inline]
->>   do_idle+0x2ca/0x420 kernel/sched/idle.c:262
->>   cpu_startup_entry+0xcb/0xe0 kernel/sched/idle.c:368
->>   start_secondary+0x421/0x570 arch/x86/kernel/smpboot.c:271
->>   secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
->>
->> Allocated by task 19764:
->>   set_track mm/kasan/kasan.c:460 [inline]
->>   kasan_kmalloc+0xa0/0xd0 mm/kasan/kasan.c:553
->>   __kmalloc+0x11b/0x2d0 mm/slub.c:3750
->>   kmalloc include/linux/slab.h:518 [inline]
->>   sk_prot_alloc+0xf6/0x290 net/core/sock.c:1469
->>   sk_alloc+0x3d/0xc00 net/core/sock.c:1523
->>   tun_chr_open+0x80/0x560 drivers/net/tun.c:3204
->>   misc_open+0x367/0x4e0 drivers/char/misc.c:141
->>   chrdev_open+0x212/0x580 fs/char_dev.c:417
->>   do_dentry_open+0x704/0x1050 fs/open.c:777
->>   do_last fs/namei.c:3418 [inline]
->>   path_openat+0x7ed/0x2ae0 fs/namei.c:3533
->>   do_filp_open+0x1aa/0x2b0 fs/namei.c:3564
->>   do_sys_open+0x307/0x430 fs/open.c:1069
->>   do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>
->> Freed by task 19764:
->>   set_track mm/kasan/kasan.c:460 [inline]
->>   __kasan_slab_free+0x12e/0x180 mm/kasan/kasan.c:521
->>   slab_free_hook mm/slub.c:1370 [inline]
->>   slab_free_freelist_hook mm/slub.c:1397 [inline]
->>   slab_free mm/slub.c:2952 [inline]
->>   kfree+0xeb/0x2f0 mm/slub.c:3905
->>   sk_prot_free net/core/sock.c:1506 [inline]
->>   __sk_destruct+0x4e6/0x6a0 net/core/sock.c:1588
->>   sk_destruct+0x48/0x70 net/core/sock.c:1596
->>   __sk_free+0xa9/0x270 net/core/sock.c:1607
->>   sk_free+0x2a/0x30 net/core/sock.c:1618
->>   sock_put include/net/sock.h:1696 [inline]
->>   __tun_detach+0x464/0xf70 drivers/net/tun.c:735
->>   tun_detach drivers/net/tun.c:747 [inline]
->>   tun_chr_close+0xd8/0x190 drivers/net/tun.c:3241
->>   __fput+0x27f/0x7f0 fs/file_table.c:278
->>   task_work_run+0x136/0x1b0 kernel/task_work.c:113
->>   tracehook_notify_resume include/linux/tracehook.h:193 [inline]
->>   exit_to_usermode_loop+0x1a7/0x1d0 arch/x86/entry/common.c:166
->>   prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
->>   syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
->>   do_syscall_64+0x461/0x580 arch/x86/entry/common.c:293
->>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>
->> The buggy address belongs to the object at ffff88836cc26600
->>   which belongs to the cache kmalloc-4096 of size 4096
->> The buggy address is located 1136 bytes inside of
->>   4096-byte region [ffff88836cc26600, ffff88836cc27600)
->> The buggy address belongs to the page:
->> page:ffffea000db30800 count:1 mapcount:0 mapping:ffff8883e280e600 
->> index:0x0 compound_mapcount: 0
->> flags: 0x2fffff80008100(slab|head)
->> raw: 002fffff80008100 dead000000000100 dead000000000200 ffff8883e280e600
->> raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
->> page dumped because: kasan: bad access detected
->>
->> Memory state around the buggy address:
->>   ffff88836cc26900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>   ffff88836cc26980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>> ffff88836cc26a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>                                                               ^
->>   ffff88836cc26a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>   ffff88836cc26b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>
->> If tun driver have multiqueues, user close the last queue by
->> tun_detach, then tun->tfiles[index] is not cleared. Then a new
->> queue may add to the tun, which using rcu_assign_pointer
->> tun->tfiles[index] to the new tfile and increase the numqueues.
->> However if there send a packet during this time, which picking the last
->> queue, it may uses the old tun->tfiles[index], beacause there no
->> RCU grace period.
->>
->> 1) tun_chr_close //close the last queue
->>      --> __tun_detach  //close the last queue, but tun->tfiles[index] 
->> still exist
->>
->> 2) tun_chr_open  //attach a new queue
->>      --> tun_attach
->> -->rcu_assign_pointer(tun->tfiles[tun->numqueues], tfile);
->>       //there need a RCU grace period
->>
->>      -->tun->numqueues++;
->>
->> 3) tun_net_xmit //a new packet is sending, which pick the last queue
->>       -->if (txq >= tun->numqueues)
->>        //above check passed, but tfile still not renew
->>       -->if (tfile->socket.sk->sk_filter ...
->>        //use the old tfile,trigger use-after-free
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: c8d68e6be1c3 ("tuntap: multiqueue support")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>   drivers/net/tun.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
->> index e9ca1c0..3770aba 100644
->> --- a/drivers/net/tun.c
->> +++ b/drivers/net/tun.c
->> @@ -876,6 +876,7 @@ static int tun_attach(struct tun_struct *tun, 
->> struct file *file,
->>        */
->>       rcu_assign_pointer(tfile->tun, tun);
->>       rcu_assign_pointer(tun->tfiles[tun->numqueues], tfile);
->> +    synchronize_net();
->>       tun->numqueues++;
->>       tun_set_real_num_queues(tun);
->>   out:
->
->
-> Good catch, that's one of my suspicion as well. Assume that this has 
-> been tested.
->
-> Acked-by: Jason Wang <jasowang@redhat.com>
->
-> This patch is needed for -stable.
->
-> I will post another theoretical issue similar to this soon.
->
-> Thanks
->
+> > I _probably_ would take allocation out of the loop (e.g. make it
+> > __getname(), called unconditionally) and turned it into the
+> > d_path.c-style read_seqbegin_or_lock()/need_seqretry()/done_seqretry()
+> > loop, so that the first pass would go under rcu_read_lock(), while
+> > the second (if needed) would just hold rename_lock exclusive (without
+> > bumping the refcount).  But that's a matter of (theoretical) livelock
+> > avoidance, not the locking correctness for ->d_name accesses.
+> > 
+> 
+> Yeah, that does sound better. I want to think about this code a bit
 
-Ok, a second thought. All evil come from the access of tun->numqueues 
-without sufficient synchronization. This is a partial fix, another 
-possible case is __tun_detach(), we need either
+FWIW, is there any reason to insist that the pathname is put into the
+beginning of the buffer?  I mean, instead of path + pathlen we might
+return path + offset, with the pathname going from path + offset to
+path + PATH_MAX - 1 inclusive, with path being the thing eventually
+freed.
 
-1) synchronize through pointers in tfiles
-
-2) or smp_load_acquire()/smp_store_release() to solve it completely.
-
-Let me post a complete fix.
-
-Thanks
-
+It's easier to build the string backwards, seeing that we are walking
+from leaf to root...
