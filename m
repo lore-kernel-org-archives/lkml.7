@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ADDC4321A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5728C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B21952067C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00D920675
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfD1V1P (ORCPT
+        id S1727312AbfD1V1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 17:27:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45590 "EHLO mx1.redhat.com"
+        Sun, 28 Apr 2019 17:27:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46514 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbfD1V1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 17:27:09 -0400
+        id S1726853AbfD1V0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 17:26:53 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BBDF281DE6;
-        Sun, 28 Apr 2019 21:27:08 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1EF4AC049E20;
+        Sun, 28 Apr 2019 21:26:53 +0000 (UTC)
 Received: from llong.com (ovpn-120-22.rdu2.redhat.com [10.10.120.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5ACE2646A5;
-        Sun, 28 Apr 2019 21:27:07 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A0A87646A5;
+        Sun, 28 Apr 2019 21:26:51 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -40,144 +40,133 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Tim Chen <tim.c.chen@linux.intel.com>,
         huang ying <huang.ying.caritas@gmail.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH-tip v7 16/20] locking/rwsem: Add more rwsem owner access helpers
-Date:   Sun, 28 Apr 2019 17:25:53 -0400
-Message-Id: <20190428212557.13482-17-longman@redhat.com>
+Subject: [PATCH-tip v7 10/20] locking/rwsem: More optimal RT task handling of null owner
+Date:   Sun, 28 Apr 2019 17:25:47 -0400
+Message-Id: <20190428212557.13482-11-longman@redhat.com>
 In-Reply-To: <20190428212557.13482-1-longman@redhat.com>
 References: <20190428212557.13482-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Sun, 28 Apr 2019 21:27:08 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Sun, 28 Apr 2019 21:26:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before combining owner and count, we are adding two new helpers for
-accessing the owner value in the rwsem.
+An RT task can do optimistic spinning only if the lock holder is
+actually running. If the state of the lock holder isn't known, there
+is a possibility that high priority of the RT task may block forward
+progress of the lock holder if it happens to reside on the same CPU.
+This will lead to deadlock. So we have to make sure that an RT task
+will not spin on a reader-owned rwsem.
 
- 1) struct task_struct *rwsem_get_owner(struct rw_semaphore *sem)
- 2) bool is_rwsem_reader_owned(struct rw_semaphore *sem)
+When the owner is temporarily set to NULL, there are two cases
+where we may want to continue spinning:
+
+ 1) The lock owner is in the process of releasing the lock, sem->owner
+    is cleared but the lock has not been released yet.
+
+ 2) The lock was free and owner cleared, but another task just comes
+    in and acquire the lock before we try to get it. The new owner may
+    be a spinnable writer.
+
+So an RT task is now made to retry one more time to see if it can
+acquire the lock or continue spinning on the new owning writer.
+
+When testing on a 8-socket IvyBridge-EX system, the one additional retry
+seems to improve locking performance of RT write locking threads under
+heavy contentions. The table below shows the locking rates (in kops/s)
+with various write locking threads before and after the patch.
+
+    Locking threads     Pre-patch     Post-patch
+    ---------------     ---------     -----------
+            4             2,753          2,608
+            8             2,529          2,520
+           16             1,727          1,918
+           32             1,263          1,956
+           64               889          1,343
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/rwsem.c | 41 ++++++++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 11 deletions(-)
+ kernel/locking/rwsem.c | 51 ++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 44 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index a5025a63b7c3..1a4f2c1c27c4 100644
+index 750f407b83cf..62ca834d59d0 100644
 --- a/kernel/locking/rwsem.c
 +++ b/kernel/locking/rwsem.c
-@@ -165,6 +165,11 @@ static inline void rwsem_clear_owner(struct rw_semaphore *sem)
- 	WRITE_ONCE(sem->owner, NULL);
- }
- 
-+static inline struct task_struct *rwsem_get_owner(struct rw_semaphore *sem)
-+{
-+	return READ_ONCE(sem->owner);
-+}
-+
- /*
-  * The task_struct pointer of the last owning reader will be left in
-  * the owner field.
-@@ -218,6 +223,23 @@ static inline struct task_struct *owner_without_flags(struct task_struct *owner)
- 	return (struct task_struct *)((long)owner & ~RWSEM_OWNER_FLAGS_MASK);
- }
- 
-+/*
-+ * Return true if the rwsem is owned by a reader.
-+ */
-+static inline bool is_rwsem_reader_owned(struct rw_semaphore *sem)
-+{
-+#ifdef CONFIG_DEBUG_RWSEMS
-+	/*
-+	 * Check the count to see if it is write-locked.
-+	 */
-+	long count = atomic_long_read(&sem->count);
-+
-+	if (count & RWSEM_WRITER_MASK)
-+		return false;
-+#endif
-+	return (unsigned long)sem->owner & RWSEM_READER_OWNED;
-+}
-+
- #ifdef CONFIG_DEBUG_RWSEMS
- /*
-  * With CONFIG_DEBUG_RWSEMS configured, it will make sure that if there
-@@ -230,7 +252,7 @@ static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
- 	unsigned long owner = (unsigned long)READ_ONCE(sem->owner);
- 
- 	if ((owner & ~RWSEM_OWNER_FLAGS_MASK) == (unsigned long)current)
--		cmpxchg_relaxed((unsigned long *)&sem->owner, val,
-+		cmpxchg_relaxed((unsigned long *)&sem->owner, owner,
- 				owner & RWSEM_OWNER_FLAGS_MASK);
- }
- #else
-@@ -613,7 +635,7 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem, bool wr)
- 	preempt_disable();
- 	rcu_read_lock();
- 
--	owner = READ_ONCE(sem->owner);
-+	owner = rwsem_get_owner(sem);
- 	if (!is_rwsem_owner_spinnable(owner, wr))
- 		ret = false;
- 	else if ((unsigned long)owner & RWSEM_READER_OWNED)
-@@ -663,7 +685,7 @@ static inline enum owner_state rwsem_owner_state(unsigned long owner, bool wr)
- static noinline enum owner_state
- rwsem_spin_on_owner(struct rw_semaphore *sem, bool wr)
+@@ -561,6 +561,7 @@ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
+ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
  {
--	struct task_struct *tmp, *owner = READ_ONCE(sem->owner);
-+	struct task_struct *tmp, *owner = rwsem_get_owner(sem);
- 	enum owner_state state = rwsem_owner_state((unsigned long)owner, wr);
+ 	bool taken = false;
++	int prev_owner_state = OWNER_NULL;
  
- 	if (state != OWNER_WRITER)
-@@ -676,7 +698,7 @@ rwsem_spin_on_owner(struct rw_semaphore *sem, bool wr)
- 			break;
+ 	preempt_disable();
+ 
+@@ -578,7 +579,12 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+ 	 *  2) readers own the lock as we can't determine if they are
+ 	 *     actively running or not.
+ 	 */
+-	while (rwsem_spin_on_owner(sem) & OWNER_SPINNABLE) {
++	for (;;) {
++		enum owner_state owner_state = rwsem_spin_on_owner(sem);
++
++		if (!(owner_state & OWNER_SPINNABLE))
++			break;
++
+ 		/*
+ 		 * Try to acquire the lock
+ 		 */
+@@ -588,13 +594,44 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
  		}
  
--		tmp = READ_ONCE(sem->owner);
-+		tmp = rwsem_get_owner(sem);
- 		if (tmp != owner) {
- 			state = rwsem_owner_state((unsigned long)tmp, wr);
- 			break;
-@@ -1275,8 +1297,7 @@ inline void __down_read(struct rw_semaphore *sem)
- 	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
- 			&sem->count) & RWSEM_READ_FAILED_MASK)) {
- 		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE);
--		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
--					RWSEM_READER_OWNED), sem);
-+		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
- 	} else {
- 		rwsem_set_reader_owned(sem);
- 	}
-@@ -1288,8 +1309,7 @@ static inline int __down_read_killable(struct rw_semaphore *sem)
- 			&sem->count) & RWSEM_READ_FAILED_MASK)) {
- 		if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE)))
- 			return -EINTR;
--		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
--					RWSEM_READER_OWNED), sem);
-+		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
- 	} else {
- 		rwsem_set_reader_owned(sem);
- 	}
-@@ -1360,7 +1380,7 @@ inline void __up_read(struct rw_semaphore *sem)
- {
- 	long tmp;
+ 		/*
+-		 * When there's no owner, we might have preempted between the
+-		 * owner acquiring the lock and setting the owner field. If
+-		 * we're an RT task that will live-lock because we won't let
+-		 * the owner complete.
++		 * An RT task cannot do optimistic spinning if it cannot
++		 * be sure the lock holder is running or live-lock may
++		 * happen if the current task and the lock holder happen
++		 * to run in the same CPU. However, aborting optimistic
++		 * spinning while a NULL owner is detected may miss some
++		 * opportunity where spinning can continue without causing
++		 * problem.
++		 *
++		 * There are 2 possible cases where an RT task may be able
++		 * to continue spinning.
++		 *
++		 * 1) The lock owner is in the process of releasing the
++		 *    lock, sem->owner is cleared but the lock has not
++		 *    been released yet.
++		 * 2) The lock was free and owner cleared, but another
++		 *    task just comes in and acquire the lock before
++		 *    we try to get it. The new owner may be a spinnable
++		 *    writer.
++		 *
++		 * To take advantage of two scenarios listed agove, the RT
++		 * task is made to retry one more time to see if it can
++		 * acquire the lock or continue spinning on the new owning
++		 * writer. Of course, if the time lag is long enough or the
++		 * new owner is not a writer or spinnable, the RT task will
++		 * quit spinning.
++		 *
++		 * If the owner is a writer, the need_resched() check is
++		 * done inside rwsem_spin_on_owner(). If the owner is not
++		 * a writer, need_resched() check needs to be done here.
+ 		 */
+-		if (!sem->owner && (need_resched() || rt_task(current)))
+-			break;
++		if (owner_state != OWNER_WRITER) {
++			if (need_resched())
++				break;
++			if (rt_task(current) &&
++			   (prev_owner_state != OWNER_WRITER))
++				break;
++		}
++		prev_owner_state = owner_state;
  
--	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED), sem);
-+	DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
- 	rwsem_clear_reader_owned(sem);
- 	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
- 	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS)) ==
-@@ -1574,8 +1594,7 @@ EXPORT_SYMBOL(down_write_killable_nested);
- 
- void up_read_non_owner(struct rw_semaphore *sem)
- {
--	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED),
--				sem);
-+	DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
- 	__up_read(sem);
- }
- EXPORT_SYMBOL(up_read_non_owner);
+ 		/*
+ 		 * The cpu_relax() call is a compiler barrier which forces
 -- 
 2.18.1
 
