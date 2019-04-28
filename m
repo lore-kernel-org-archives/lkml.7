@@ -2,131 +2,176 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0DAC43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116FBC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F054D206A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16002067C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="onuZy9b/"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="NX4ksi/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfD1PEV (ORCPT
+        id S1726845AbfD1PIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 11:04:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46036 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbfD1PEV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 11:04:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i21so487971pgi.12;
-        Sun, 28 Apr 2019 08:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=effzDhT9KotxM2aIfIg+6LAFXv5mBZkrBnrUxjq/X8s=;
-        b=onuZy9b/LE/6p2T99yzSAs0uRHqeejcfL8YEzTq2RTGYNkKWFjN6EiCmfEo+8T6Z+Y
-         18DUKLdJzTQw/DcoNPoWApCw3FzNiZqmteoVPq6cQVPpWtoJMxzO/WEmXdUatlLlruXS
-         GOReOFYY7BYieH4BMkFE6M9RHl4rEYz09UQ6yERnlnEMYsoxprAqUYBinOAHat6LNjJt
-         458LBLicij9sipvvsedZI+Vukwrk8Q4t+3jty2yIuYCXFJQ1EZAXVEldUPofb/KLCwut
-         2Mvstjq+d7QA5m57LDovQhtpr+oNE0LbXLiiL0oe7q/SBSKHzJ//g5fX4qkYkq0oc6tv
-         XIOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=effzDhT9KotxM2aIfIg+6LAFXv5mBZkrBnrUxjq/X8s=;
-        b=CMpfntSDvR9gQY+kBCnLBtxhrU80L2uwoPDizqjeVh2/nEJ28TJWo/6fdkdfucnSUI
-         He5DBT+jUtB0LOBToeO8IiOcQzwbKLtpync0L+jGE3sBeKN/mekrtAeEKPkkmDHvQIZJ
-         BnY3tH0PFduzhiumSDEC4ymi9yHYMwKLAGAYP0/Xzjnyio9HlLRb8/OQ0HSn/OIKiJPN
-         qlz78Gluk56H+bpL8AMAUiUKNxsIe8zg7ZCv1DVLjRZu9AwVVmdpU6RBMK2e1ZZjIZ9K
-         5NDT1UjUbSAlE5Oskt8eVILdMrUu6Q4itXYUISE3r0jIPOMu7DDz7B4M3WqfqCDYv+W3
-         Ys7Q==
-X-Gm-Message-State: APjAAAVYDirPqMQ/ogRtm8K/UPH7T6wxmV9G6DO5Y3x3X3LhbtXJnw1u
-        be3Vdpz7J8NIXOufSCm+AsQ=
-X-Google-Smtp-Source: APXvYqwpNP9YTBRD+Pr6xxuYuporsLVL4c2BPriFMG01YdxnQ71PpjAwXRTmNi8Ndd1qvXhBN5ezuw==
-X-Received: by 2002:aa7:86ce:: with SMTP id h14mr11140193pfo.84.1556463860780;
-        Sun, 28 Apr 2019 08:04:20 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id n22sm42246930pfa.51.2019.04.28.08.04.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Apr 2019 08:04:19 -0700 (PDT)
-Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Julian Anastasov <ja@ssi.bg>, Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
-        ddstreet@ieee.org, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000007d22100573d66078@google.com>
- <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
- <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
- <9d430543-33c3-0d9b-dc77-3a179a8e3919@I-love.SAKURA.ne.jp>
- <920ebaf1-ee87-0dbb-6805-660c1cbce3d0@I-love.SAKURA.ne.jp>
- <cc054b5c-4e95-8d30-d4bf-9c85f7e20092@gmail.com>
- <15b353e9-49a2-f08b-dc45-2e9bad3abfe2@i-love.sakura.ne.jp>
- <057735f0-4475-7a7b-815f-034b1095fa6c@gmail.com>
- <6e57bc11-1603-0898-dfd4-0f091901b422@i-love.sakura.ne.jp>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <a9075b87-4f02-fe78-e86d-34f67bdf8b2a@gmail.com>
-Date:   Sun, 28 Apr 2019 08:04:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 28 Apr 2019 11:08:52 -0400
+Received: from mout.gmx.net ([212.227.15.18]:55945 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726637AbfD1PIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 11:08:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1556464124;
+        bh=gUWVEoixsLG8fS5GtjGTq/DKZWb25b3GZCWgkNzyOxM=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=NX4ksi/BP3OLFp+NJijtQGAkdmCx57/pXfVCK/GxY0ymkxeoav8+Knlwrdknlcpba
+         KiznCxh6iC9dY1zk+50oGnKKBure7OV3dii8HvWrBHZmjLo6Kca0rzZhA7lLjwunnT
+         fg0WYwIECTal2hvXqeoQapES+HhhNdYZVvq9b9cE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mj8mV-1goTOr1jvR-00f9U7; Sun, 28
+ Apr 2019 17:08:44 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
+Date:   Sun, 28 Apr 2019 17:08:22 +0200
+Message-Id: <20190428150822.13935-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <6e57bc11-1603-0898-dfd4-0f091901b422@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:om3F4mQ3swbdGmbNVM6rDweA4Mh+8ytRKWzoxYr4kjQ4IVbBw1Z
+ /JoFOAS3mJYTW7Zq3IRV7wWqlZv0Vu9FoUqSZPP2YlT5wtv3vi5zcMzKmsmE092StJtfk4/
+ do7lst5om/igGDCwMF+OmXMzGx7aYDqSuxC1vgMO4u+gHh0TQWBgSpbxAPAhgs/XFnxLmSV
+ 7i9DlD+00nzdu74ypPXdQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vP8F8EZIwnM=:5qVSy49xY+1/UHCTLzZhon
+ qSjliePUP+MaUojzqRV6glkmWyVW6W7Wdi6QJ4MWTTTJI7n/pCvSq5JAjNBNVmTcytX8RwKzn
+ IxNMkHB6VsVmquwFpAU4kDUD4DX3bqoq0B5xDlRkGvHe7CexmtMtqyg0H6SDSvxIDo9nBDt8Z
+ Q32Nl8VNs+N41RSwTEpOGdYNtoRJ5V73DuX9qImRODfeUJkuKEvrvcGy8VxlJt0x/LFzWd1d8
+ pFIAZDGX4zcir9AFuQgl64MrmXKApzzSPfEXvD5YNwhZaWMXgazFTgpgZjnNuSUgAXYOF9aNF
+ bNMB3VTYtsqb64i0p2wZTR//lidSmPJ6+flfTkl9ar5ibb+WBdQUJ8jun2e0FklYRA3Eib5Uv
+ fixKW4NscuLsQMuDus6JwGRTw1IHRJ4mXqVKHcD2X0Wyr7BwAOOisflt/mfdSt40XKCK6Mk4S
+ 4++6kYJOkChujIJj6ogd8vrxpfNdXVOr4jIBs436wQ7q9RMb0OEH15Q7mbKLuIfVE+uOE91/F
+ FS28Z9gPmcLYzz61KRsE91K2xgtCBxHWayLVd6q7HBClPZ6WJt6jRTPIyf3wVnCNiSoXTR1/X
+ m1DqGO6IUCavpEJikSxO9qmcNvunAwCGdQhmecAIaa7rWAanx4VxeNcb8PoFOcEW6K6wwdrIO
+ RovrYZVxGT6yPZAMUAYMQphrQg9zGBibnzik1mnE0Cntd9PrGS+QFcyELGNe03uujW1wEk66o
+ mPdBQhbyFNK80nJZ519S4S0Z+hWm0G9TIOUdGmJE+5BN9AHAfIT+aVMq80MCA9qPtN/5GbC6Y
+ tJpKC82nbW+oM0y+YC8Raa64CTucmVWhyMYF//0kaHzhL/+lXYhVv5GbLNLpTfvxc4HPLpfYN
+ xV8K6T7ccGwZSQDYI0K7BciWiJAIpnBFAP9mq8G75Zz/JfabPpDxFnx/7EUNoTB3aVzqyuQ0Q
+ Tt2izX6VwlQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The property is spelled 'bias-pull-up', as documented in
+pinctrl-bindings.txt.
 
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ .../devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt        | 2 +-
+ .../devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt        | 2 +-
+ .../devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt        | 2 +-
+ .../devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt        | 2 +-
+ .../devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt        | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-On 4/27/19 9:22 PM, Tetsuo Handa wrote:
-> On 2019/04/28 8:52, Eric Dumazet wrote:
->> On 4/27/19 3:33 PM, Tetsuo Handa wrote:
->>>
->>> I'm waiting for davem why it is safe to move the dst entry from
->>> "a device to unregister" to "a loopback device in that namespace".
->>> I'm waiting for an explanation how the dst entry which was moved to
->>> "a loopback device in that namespace" is released (i.e. what the
->>> expected shutdown sequence is).
->>
->> The most probable explanation is that we make sure the loopback device
->> is the last one to be dismantled at netns deletion,
->> and this would obviously happen after all dst have been released.
->>
-> 
-> rt_flush_dev() becomes a no-op if "dev" == "a loopback device in that
-> namespace". And according to debug printk(), rt_flush_dev() is called
-> on "a loopback device in that namespace" itself.
-> 
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+index c2dbb3e8d840..4e90ddd77784 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+@@ -42,7 +42,7 @@ information about e.g. the mux function.
+ The following generic properties as defined in pinctrl-bindings.txt are v=
+alid
+ to specify in a pin configuration subnode:
 
-This is the design yes. We can not let a dst having a pointer to some garbage memory.
-(since we are going to free it very soon)
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
+th,
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
+th,
+  output-low, output-high.
 
-dst can be long lived objects. netdev (but loopback) are not.
+ Non-empty subnodes must specify the 'pins' property.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+index 991be0cd0948..84be0f2c6f3b 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+@@ -44,7 +44,7 @@ information about e.g. the mux function.
 
-> If "a loopback device in that namespace" is the last "one" (== "a network
-> device in that namespace" ?), which shutdown sequence should have called
-> dev_put("a loopback device in that namespace") before unregistration of
-> "a loopback device in that namespace" starts?
+ The following generic properties as defined in pinctrl-bindings.txt are v=
+alid
+ to specify in a pin configuration subnode:
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
+th.
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
+th.
 
-You'll have to study all the netdev notifiers to answer this question.
-They are many of them, and they have a priority to let them run in a given order.
+ Non-empty subnodes must specify the 'pins' property.
+ Note that not all properties are valid for all pins.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+index 7ed56a1b70fc..a7aaaa7db83b 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+@@ -42,7 +42,7 @@ information about e.g. the mux function.
+ The following generic properties as defined in pinctrl-bindings.txt are v=
+alid
+ to specify in a pin configuration subnode:
 
-> 
-> Since I'm not a netdev person, I appreciate if you can explain
-> that shutdown sequence using a flow chart.
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
+th,
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
+th,
+  output-low, output-high.
 
-I am a netdev person, but I have no time to explain this at this moment.
+ Non-empty subnodes must specify the 'pins' property.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
+index cdc4787e59d2..f095209848c8 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
+@@ -42,7 +42,7 @@ information about e.g. the mux function.
+ The following generic properties as defined in pinctrl-bindings.txt are v=
+alid
+ to specify in a pin configuration subnode:
+
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
+th,
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
+th,
+  output-low, output-high.
+
+ Non-empty subnodes must specify the 'pins' property.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
+index c22e6c425d0b..004056506679 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
+@@ -41,7 +41,7 @@ information about e.g. the mux function.
+
+ The following generic properties as defined in pinctrl-bindings.txt are v=
+alid
+ to specify in a pin configuration subnode:
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
+th.
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
+th.
+
+ Non-empty subnodes must specify the 'pins' property.
+ Note that not all properties are valid for all pins.
+=2D-
+2.20.1
+
