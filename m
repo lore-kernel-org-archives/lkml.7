@@ -2,126 +2,109 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA7DC43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2201C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6DEC2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E6EB2064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:19:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="c7WKFpCJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfD1UNj (ORCPT
+        id S1726554AbfD1UTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 16:13:39 -0400
-Received: from mailoutvs44.siol.net ([185.57.226.235]:41770 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726399AbfD1UNj (ORCPT
+        Sun, 28 Apr 2019 16:19:25 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40236 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfD1UTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 16:13:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 97A98520C22;
-        Sun, 28 Apr 2019 22:13:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 6vuNExv9i3Mx; Sun, 28 Apr 2019 22:13:35 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 4221B520C36;
-        Sun, 28 Apr 2019 22:13:35 +0200 (CEST)
-Received: from localhost.localdomain (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 810DD520C22;
-        Sun, 28 Apr 2019 22:13:34 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     maxime.ripard@bootlin.com, wens@csie.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: allwinner: a64: orangepi-win: Add wifi and bluetooth nodes
-Date:   Sun, 28 Apr 2019 22:13:26 +0200
-Message-Id: <20190428201326.27767-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.21.0
+        Sun, 28 Apr 2019 16:19:25 -0400
+Received: by mail-lf1-f66.google.com with SMTP id o16so6338661lfl.7
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 13:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CTKqHAreMncZ1h7jPsWtfNHB4etyOtY+dEoamFuIONY=;
+        b=c7WKFpCJKWKACqQjuN6+QisDaRfN+IhstozIANrOLGKSX9t088Pd+TJ0TYSEQEUBy4
+         9S0QUaM1sh+ydbjwwTTGA2+uSZ8hfN02UN4Q+DUMe588EixH55YWZuDwkvlB5AAvpO9p
+         u92Z3P24mMpodmk+mfALJQvxc/SMyGAmZj32lSHufdV+OlBqO9ikPZXO9EaMS5QS7JZH
+         qcDuUYEYbIrY94ozz42Oe5j/TU0rjkKDIv+/313hLkPQcLGbPemdP88b4jd1liJb3ndf
+         ybbZbPL5qleI6UvLg3ET28KtBqJkZvCggP0d34eegklnHUvJ7O7+qll1m6QAahwX7jsH
+         WJMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CTKqHAreMncZ1h7jPsWtfNHB4etyOtY+dEoamFuIONY=;
+        b=BoTNaQrBiJFyP+96oB4O0Tsf5LT4Y2yNAFn9kmHxubhzBJe/krWm8cxhgt/WIIF/df
+         mpQnZd8pubjyJsAYTBuAoqzi8Ij30uE21u+G9p3qQaKelsz5a/C5qqENY3LdbGkag9T0
+         1KLD/TpE1Y94jimlxRL9aRAdAQLXMBYFqDHP6Vy5hRibGTKcybpChlNH2jL+kcl96FYG
+         AxRt+Wgs1BNn7TWeKOGnOiAv91R+dlaGEOQ04ItV1ENqFVNiwdeVOCilyJECFBHtBFrI
+         gHpFb3NCxEpdv0L9xw2h9KIHh5zXEovKTeJ6hOOaSTA5KQ05f3V3oejkCOT4qYFdCeGl
+         qqSg==
+X-Gm-Message-State: APjAAAX84WYlf3jjSdF1inlA0xMaP+EjiTJsJ6prG17rDeJIe3wnjAQT
+        2Kgi0MhvMSSe1+996AbWtodn2Q==
+X-Google-Smtp-Source: APXvYqzb+UuqHeoCVQGdxxsf48KDNCdx59QYYBrzj/0hrbNxadzY6bfAuPdIbvgkgs1n9/fqqUe+fg==
+X-Received: by 2002:a19:428c:: with SMTP id p134mr31867733lfa.108.1556482763081;
+        Sun, 28 Apr 2019 13:19:23 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id t9sm4108314lfk.20.2019.04.28.13.19.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 28 Apr 2019 13:19:21 -0700 (PDT)
+Date:   Sun, 28 Apr 2019 12:29:36 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, arm@kernel.org,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL 1/3] ARM: dts: exynos: Changes for v5.2
+Message-ID: <20190428192936.ybxa437r3jznxgbv@localhost>
+References: <20190414154805.10188-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190414154805.10188-1-krzk@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
-identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
+On Sun, Apr 14, 2019 at 05:48:03PM +0200, Krzysztof Kozlowski wrote:
+> 
+> The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+> 
+>   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-5.2
+> 
+> for you to fetch changes up to 8cc76b1c75722196fb3d7ffe67cbfeb721a7b0e3:
+> 
+>   ARM: dts: exynos: Remove console argument from bootargs (2019-04-10 18:13:31 +0200)
+> 
+> ----------------------------------------------------------------
+> Samsung DTS ARM changes for v5.2
+> 
+> 1. Use proper ADC on Exynos4412.
+> 2. Extend the Exynos5420 Arndale Octa board with: CPU cooling maps,
+>    unused regulators, ADC and UHS-I SD card support.  Beside that adjust
+>    regulators to proper level and add always-on when needed.
+> 3. Extend the Exynos5260: high speed I2C and proper external interrupts.
+>    Also fix shared external interrupt line and use better PLL for MMC
+>    clocks.
+> 4. Fix audio recording (broken around v5.1) and microphone recording
+>    (since v4.14) on Exynos5422 Odroid XU3 boards.
+> 5. Minor cleanups (stdout-path and bootargs).
 
-WiFi is connected to mmc1 and the Bluetooth side is connected to UART1
-in a 4 wire configuration. Same as the WiFi side, due to being the same
-chip and package, DLDO2 provides overall power via VBAT, and DLDO4
-provides I/O power via VDDIO. The RTC clock output provides the LPO low
-power clock at 32.768 kHz.
+Merged, thanks!
 
-This patch enables WiFi and Bluetooth on OrangePi Win boards and adds
-missing LPO clock on the WiFi side. PCM connection also exists for
-Bluetooth audio, but it's not used here.
 
-Bluetooth UART speed is set to 1.5 MBaud in order to be able transmit
-audio. While module supports even higher speeds, currently sunxi UART
-driver doesn't support higher speed.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- .../dts/allwinner/sun50i-a64-orangepi-win.dts | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/=
-arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 510f661229dc..5ef3c62c765e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -109,6 +109,8 @@
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible =3D "mmc-pwrseq-simple";
- 		reset-gpios =3D <&r_pio 0 8 GPIO_ACTIVE_LOW>; /* PL8 */
-+		clocks =3D <&rtc 1>;
-+		clock-names =3D "ext_clock";
- 	};
- };
-=20
-@@ -170,6 +172,14 @@
- 	bus-width =3D <4>;
- 	non-removable;
- 	status =3D "okay";
-+
-+	brcmf: wifi@1 {
-+		reg =3D <1>;
-+		compatible =3D "brcm,bcm4329-fmac";
-+		interrupt-parent =3D <&r_pio>;
-+		interrupts =3D <0 7 IRQ_TYPE_LEVEL_LOW>; /* PL7 */
-+		interrupt-names =3D "host-wake";
-+	};
- };
-=20
- &ohci0 {
-@@ -342,7 +352,20 @@
- &uart1 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts;
- 	status =3D "okay";
-+
-+	bluetooth {
-+		compatible =3D "brcm,bcm43438-bt";
-+		max-speed =3D <1500000>;
-+		clocks =3D <&rtc 1>;
-+		clock-names =3D "lpo";
-+		vbat-supply =3D <&reg_dldo2>;
-+		vddio-supply =3D <&reg_dldo4>;
-+		device-wakeup-gpios =3D <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+		host-wakeup-gpios =3D <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-+		shutdown-gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
-+	};
- };
-=20
- /* On Pi-2 connector, RTS/CTS optional */
---=20
-2.21.0
-
+-Olof
