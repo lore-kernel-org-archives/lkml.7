@@ -2,126 +2,127 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1D5C4321A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 14:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854A5C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 14:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B07206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 14:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488D72067C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 14:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5Jkzhto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfD1O2C (ORCPT
+        id S1726781AbfD1Ocb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 10:28:02 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:48145 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbfD1O2B (ORCPT
+        Sun, 28 Apr 2019 10:32:31 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40410 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfD1Ocb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 10:28:01 -0400
-X-Originating-IP: 79.86.19.127
-Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 381E61C0005;
-        Sun, 28 Apr 2019 14:27:53 +0000 (UTC)
-Subject: Re: [PATCH v3 04/11] arm64, mm: Move generic mmap layout functions to
- mm
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Paul Burton <paul.burton@mips.com>,
-        linux-riscv@lists.infradead.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Hogan <jhogan@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mips@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>
-References: <20190417052247.17809-1-alex@ghiti.fr>
- <20190417052247.17809-5-alex@ghiti.fr>
- <CAGXu5j+NV7nfQ044kvsqqSrWpuXH5J6aZEbvg7YpxyBFjdAHyw@mail.gmail.com>
- <fd2b02b3-5872-ccf6-9f52-53f692fba02d@ghiti.fr>
- <CAGXu5j+NkQ+nwRShuKeHMwuy6++3x0QMS9djE=wUzUUtAkVf3g@mail.gmail.com>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <cf4073ed-098f-779e-32e1-f3273622b115@ghiti.fr>
-Date:   Sun, 28 Apr 2019 10:27:52 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Sun, 28 Apr 2019 10:32:31 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y64so917009oia.7
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 07:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w+QLN0lhWS0TTAMCusecl/8H1fccZ10EVVpd07BbNgc=;
+        b=P5JkzhtowAoVzgf4mWexhRA/N0+kMAM2EpslYR/Sy9HgyShJdJEFuFkueoKwLz1rwM
+         fj1FiZaJqAxwqKUFdOs5onU5l/ICPOrRdoonoVU0ipUXJQ/mHi+86S67QZWqCoM63RrU
+         bm+JRV/xaMmSIDTjdp4bEDBcGN1lAmstSPfcwCbkK+UNwxAHK3ZFRHpv+bKmBqUEp5hL
+         au6WraHET8uU89ZzNXbmzmZ/U65oQbA6DiBmNTAHQZN85fwNNF1yQvyK9tHcxtYPzX5M
+         kL1pdaAuJYJ2LjbfeEedv7ppykTPJ2fhJL0VvyRrfj7NQi4ADGjcvEDqjY0eM4bi16Mw
+         3Vew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w+QLN0lhWS0TTAMCusecl/8H1fccZ10EVVpd07BbNgc=;
+        b=uEEdP6j4zdeUomFe5Qf1tXrGhveJqzVSRnhqINsZ9OSeVz5mFSsYSRLgnw29WTHYt1
+         +zasZ9DnE22A1Z1Fex3AaCcNxeEX/JcvSnxLdfGfJ9pTB8+N9mxY5If7CH6n9AyY1JTX
+         VGZec+00Ld3hEMXAGxVXBS0Rcw6MM37/N5frExwXFtMahQEJRVzvPws7Q1YtezfWXKhc
+         q0xKir2xgtsASApzPeqZ23hfcqm2WlQd1JRxckfJolD2voePKZiPmiUfE998aKr9IE+t
+         k9osiXPMB7ysy47F/7RV8C2NCnxJufyoFjnUdJVXc8R6Mc1QyWNWY6SF2PURAJ8hOTnk
+         Pfqw==
+X-Gm-Message-State: APjAAAUyKAESfauzomU6avR9MzhVFWtcvch6EgHYddI5N+/HiA0hC4mA
+        KQBP1Pa0On6oy6QmWVdbYuG2deTX42AVOjhPzz8=
+X-Google-Smtp-Source: APXvYqxuMJagp05qspO9G7+jFNbo87VF4TjqCNNKuU53Fk/6rzjEptsUWgrMdLXYGvP32BVD4U+74A8E+5QNz3yPP0M=
+X-Received: by 2002:aca:ecc8:: with SMTP id k191mr12544298oih.103.1556461950564;
+ Sun, 28 Apr 2019 07:32:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAGXu5j+NkQ+nwRShuKeHMwuy6++3x0QMS9djE=wUzUUtAkVf3g@mail.gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: sv-FI
+References: <1556418804-10266-1-git-send-email-hofrat@osadl.org> <1556418804-10266-2-git-send-email-hofrat@osadl.org>
+In-Reply-To: <1556418804-10266-2-git-send-email-hofrat@osadl.org>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Sun, 28 Apr 2019 10:32:19 -0400
+Message-ID: <CAGngYiV6ykYFuq458tWaLqDGLOo41aL5JE2OZ7uFTp3T4KOYkw@mail.gmail.com>
+Subject: Re: [PATCH] staging: fieldbus: anybus-s: force endiannes annotation
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/18/19 10:19 AM, Kees Cook wrote:
-> On Thu, Apr 18, 2019 at 12:55 AM Alex Ghiti <alex@ghiti.fr> wrote:
->> Regarding the help text, I agree that it does not seem to be frequent to
->> place
->> comment above config like that, I'll let Christoph and you decide what's
->> best. And I'll
->> add the possibility for the arch to define its own STACK_RND_MASK.
-> Yeah, I think it's very helpful to spell out the requirements for new
-> architectures with these kinds of features in the help text (see
-> SECCOMP_FILTER for example).
+Thanks for the contibution! See inline.
+
+On Sat, Apr 27, 2019 at 10:39 PM Nicholas Mc Guire <hofrat@osadl.org> wrote:
 >
->>> I think CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT should select
->>> CONFIG_ARCH_HAS_ELF_RANDOMIZE. It would mean moving
->>
->> I don't think we should link those 2 features together: an architecture
->> may want
->> topdown mmap and don't care about randomization right ?
-> Given that the mmap randomization and stack randomization are already
-> coming along for the ride, it seems weird to make brk randomization an
-> optional feature (especially since all the of the architectures you're
-> converting include it). I'd also like these kinds of security features
-> to be available by default. So, I think one patch to adjust the MIPS
-> brk randomization entropy and then you can just include it in this
-> move.
+> While the endiannes is being handled correctly sparse was unhappy with
+> the missing annotation as be16_to_cpu() expects a __be16.
+
+Your commit message has room for improvement here. See my remarks
+on your other patch:
+https://lkml.org/lkml/2019/4/28/95
+
 >
->> Actually, I had to add those ifdefs for mmap_rnd_compat_bits, not
->> is_compat_task.
-> Oh! In that case, use CONFIG_HAVE_ARCH_MMAP_RND_BITS. :) Actually,
-> what would be maybe cleaner would be to add mmap_rnd_bits_min/max
-> consts set to 0 for the non-CONFIG_HAVE_ARCH_MMAP_RND_BITS case at the
-> top of mm/mmap.c.
+> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+> ---
 >
-> I really like this clean-up! I think we can move x86 to it too without
-> too much pain. :)
+> Problem reported by sparse
 >
-Hi,
+> As far as I understand sparse here the __force is actually the only
+> solution possible to inform sparse that the endiannes handling is ok
+>
+> Patch was compile-tested with. x86_64_defconfig + FIELDBUS_DEV=m,
+> HMS_ANYBUSS_BUS=m
+>
+> Patch is against 5.1-rc6 (localversion-next is next-20190426)
+>
+>  drivers/staging/fieldbus/anybuss/host.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/fieldbus/anybuss/host.c b/drivers/staging/fieldbus/anybuss/host.c
+> index 6227daf..278acac 100644
+> --- a/drivers/staging/fieldbus/anybuss/host.c
+> +++ b/drivers/staging/fieldbus/anybuss/host.c
+> @@ -1348,7 +1348,7 @@ anybuss_host_common_probe(struct device *dev,
+>         add_device_randomness(&val, 4);
+>         regmap_bulk_read(cd->regmap, REG_FIELDBUS_TYPE, &fieldbus_type,
+>                          sizeof(fieldbus_type));
+> -       fieldbus_type = be16_to_cpu(fieldbus_type);
+> +       fieldbus_type = be16_to_cpu((__force __be16)fieldbus_type);
 
-Just a short note to indicate that while working on v4, I realized this 
-series had a some issues:
+Hmm... that would be cheating :)
+what if you create a new local variable of type __be16?
+Like so:
 
-- I broke the case ARCH_HAS_ELF_RANDOMIZE selected but not
-   ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT (which can happen on arm 
-without MMU for example)
-- I use mmap_rnd_bits unconditionnally whereas it might not be defined 
-(it works for all arches I moved though)
+__be16 fieldbus_type_be;
+<...>
+regmap_bulk_read(cd->regmap, REG_FIELDBUS_TYPE, &fieldbus_type_be,
+                          sizeof(fieldbus_type_be));
+fieldbus_type = be16_to_cpu(fieldbus_type_be);
 
-The only clean solution I found for the first problem is to propose a 
-common implementation for arch_randomize_brk
-and arch_mmap_rnd, which is another series on its own and another good 
-cleanup since every architecture uses
-the same functions (except ppc, but that can be workarounded easily).
-Just like moving x86 deserves its own series since it adds up 8/9 commits.
-I am on vacations for 2 weeks, so I won't have time to submit another 
-patchset before, sorry about that.
+would that get sparse to shut up?
 
-Thanks,
-
-Alex
-
+>         dev_info(dev, "Fieldbus type: %04X", fieldbus_type);
+>         regmap_bulk_read(cd->regmap, REG_MODULE_SW_V, val, 2);
+>         dev_info(dev, "Module SW version: %02X%02X",
+> --
+> 2.1.4
+>
