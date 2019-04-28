@@ -2,176 +2,111 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116FBC43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0EAC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D16002067C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="NX4ksi/B"
+	by mail.kernel.org (Postfix) with ESMTP id AD8DE204FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:18:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfD1PIw (ORCPT
+        id S1726821AbfD1PS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 11:08:52 -0400
-Received: from mout.gmx.net ([212.227.15.18]:55945 "EHLO mout.gmx.net"
+        Sun, 28 Apr 2019 11:18:57 -0400
+Received: from mga03.intel.com ([134.134.136.65]:34018 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbfD1PIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 11:08:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1556464124;
-        bh=gUWVEoixsLG8fS5GtjGTq/DKZWb25b3GZCWgkNzyOxM=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=NX4ksi/BP3OLFp+NJijtQGAkdmCx57/pXfVCK/GxY0ymkxeoav8+Knlwrdknlcpba
-         KiznCxh6iC9dY1zk+50oGnKKBure7OV3dii8HvWrBHZmjLo6Kca0rzZhA7lLjwunnT
-         fg0WYwIECTal2hvXqeoQapES+HhhNdYZVvq9b9cE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mj8mV-1goTOr1jvR-00f9U7; Sun, 28
- Apr 2019 17:08:44 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
-Date:   Sun, 28 Apr 2019 17:08:22 +0200
-Message-Id: <20190428150822.13935-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        id S1726741AbfD1PS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 11:18:57 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Apr 2019 08:18:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,406,1549958400"; 
+   d="scan'208";a="341531946"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga005.fm.intel.com with ESMTP; 28 Apr 2019 08:18:51 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hKlZo-0005Ys-RD; Sun, 28 Apr 2019 18:18:48 +0300
+Date:   Sun, 28 Apr 2019 18:18:48 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        andrew@aj.id.au, macro@linux-mips.org, vz@mleia.com,
+        slemieux.tyco@gmail.com, khilman@baylibre.com, liviu.dudau@arm.com,
+        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
+        davem@davemloft.net, jacmet@sunsite.dk, linux@prisktech.co.nz,
+        matthias.bgg@gmail.com, linux-mips@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org
+Subject: Re: [PATCH 36/41] drivers: tty: serial: 8250: store mmio resource
+ size in port struct
+Message-ID: <20190428151848.GO9224@smile.fi.intel.com>
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+ <1556369542-13247-37-git-send-email-info@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:om3F4mQ3swbdGmbNVM6rDweA4Mh+8ytRKWzoxYr4kjQ4IVbBw1Z
- /JoFOAS3mJYTW7Zq3IRV7wWqlZv0Vu9FoUqSZPP2YlT5wtv3vi5zcMzKmsmE092StJtfk4/
- do7lst5om/igGDCwMF+OmXMzGx7aYDqSuxC1vgMO4u+gHh0TQWBgSpbxAPAhgs/XFnxLmSV
- 7i9DlD+00nzdu74ypPXdQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vP8F8EZIwnM=:5qVSy49xY+1/UHCTLzZhon
- qSjliePUP+MaUojzqRV6glkmWyVW6W7Wdi6QJ4MWTTTJI7n/pCvSq5JAjNBNVmTcytX8RwKzn
- IxNMkHB6VsVmquwFpAU4kDUD4DX3bqoq0B5xDlRkGvHe7CexmtMtqyg0H6SDSvxIDo9nBDt8Z
- Q32Nl8VNs+N41RSwTEpOGdYNtoRJ5V73DuX9qImRODfeUJkuKEvrvcGy8VxlJt0x/LFzWd1d8
- pFIAZDGX4zcir9AFuQgl64MrmXKApzzSPfEXvD5YNwhZaWMXgazFTgpgZjnNuSUgAXYOF9aNF
- bNMB3VTYtsqb64i0p2wZTR//lidSmPJ6+flfTkl9ar5ibb+WBdQUJ8jun2e0FklYRA3Eib5Uv
- fixKW4NscuLsQMuDus6JwGRTw1IHRJ4mXqVKHcD2X0Wyr7BwAOOisflt/mfdSt40XKCK6Mk4S
- 4++6kYJOkChujIJj6ogd8vrxpfNdXVOr4jIBs436wQ7q9RMb0OEH15Q7mbKLuIfVE+uOE91/F
- FS28Z9gPmcLYzz61KRsE91K2xgtCBxHWayLVd6q7HBClPZ6WJt6jRTPIyf3wVnCNiSoXTR1/X
- m1DqGO6IUCavpEJikSxO9qmcNvunAwCGdQhmecAIaa7rWAanx4VxeNcb8PoFOcEW6K6wwdrIO
- RovrYZVxGT6yPZAMUAYMQphrQg9zGBibnzik1mnE0Cntd9PrGS+QFcyELGNe03uujW1wEk66o
- mPdBQhbyFNK80nJZ519S4S0Z+hWm0G9TIOUdGmJE+5BN9AHAfIT+aVMq80MCA9qPtN/5GbC6Y
- tJpKC82nbW+oM0y+YC8Raa64CTucmVWhyMYF//0kaHzhL/+lXYhVv5GbLNLpTfvxc4HPLpfYN
- xV8K6T7ccGwZSQDYI0K7BciWiJAIpnBFAP9mq8G75Zz/JfabPpDxFnx/7EUNoTB3aVzqyuQ0Q
- Tt2izX6VwlQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556369542-13247-37-git-send-email-info@metux.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The property is spelled 'bias-pull-up', as documented in
-pinctrl-bindings.txt.
+On Sat, Apr 27, 2019 at 02:52:17PM +0200, Enrico Weigelt, metux IT consult wrote:
+> The io resource size is currently recomputed when it's needed but this
+> actually needs to be done once (or drivers could specify fixed values)
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- .../devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt        | 2 +-
- .../devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt        | 2 +-
- .../devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt        | 2 +-
- .../devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt        | 2 +-
- .../devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt        | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+io -> IO
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctr=
-l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-index c2dbb3e8d840..4e90ddd77784 100644
-=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-@@ -42,7 +42,7 @@ information about e.g. the mux function.
- The following generic properties as defined in pinctrl-bindings.txt are v=
-alid
- to specify in a pin configuration subnode:
+> 
+> Simplify that by doing this computation only once and storing the result
+> into the mapsize field. serial8250_register_8250_port() is now called
+> only once on driver init, the previous call sites now just fetch the
+> value from the mapsize field.
 
-- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
-th,
-+ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
-th,
-  output-low, output-high.
+Do I understand correctly that this has no side effects?
 
- Non-empty subnodes must specify the 'pins' property.
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctr=
-l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
-index 991be0cd0948..84be0f2c6f3b 100644
-=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
-@@ -44,7 +44,7 @@ information about e.g. the mux function.
+Which hardware did you test this on?
 
- The following generic properties as defined in pinctrl-bindings.txt are v=
-alid
- to specify in a pin configuration subnode:
-- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
-th.
-+ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
-th.
+> @@ -979,6 +979,9 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+>  	if (up->port.uartclk == 0)
+>  		return -EINVAL;
+>  
+> +	/* compute the mapsize in case the driver didn't specify one */
+> +	up->mapsize = serial8250_port_size(up);
 
- Non-empty subnodes must specify the 'pins' property.
- Note that not all properties are valid for all pins.
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctr=
-l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
-index 7ed56a1b70fc..a7aaaa7db83b 100644
-=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
-@@ -42,7 +42,7 @@ information about e.g. the mux function.
- The following generic properties as defined in pinctrl-bindings.txt are v=
-alid
- to specify in a pin configuration subnode:
+I don't know all quirks in 8250 drivers by heart, though can you guarantee that
+at this point the device reports correct IO resource size? (If I'm not mistaken
+some broken hardware needs some magic to be done before card can be properly
+handled)
 
-- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
-th,
-+ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
-th,
-  output-low, output-high.
+> -	unsigned int size = serial8250_port_size(up);
+>  	struct uart_port *port = &up->port;
 
- Non-empty subnodes must specify the 'pins' property.
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctr=
-l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
-index cdc4787e59d2..f095209848c8 100644
-=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
-@@ -42,7 +42,7 @@ information about e.g. the mux function.
- The following generic properties as defined in pinctrl-bindings.txt are v=
-alid
- to specify in a pin configuration subnode:
+> -	int ret = 0;
 
-- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
-th,
-+ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
-th,
-  output-low, output-high.
+This and Co is a separate change that can be done in its own patch.
 
- Non-empty subnodes must specify the 'pins' property.
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctr=
-l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
-index c22e6c425d0b..004056506679 100644
-=2D-- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
-@@ -41,7 +41,7 @@ information about e.g. the mux function.
+> +			port->membase = ioremap_nocache(port->mapbase,
+> +							port->mapsize);
 
- The following generic properties as defined in pinctrl-bindings.txt are v=
-alid
- to specify in a pin configuration subnode:
-- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-streng=
-th.
-+ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-streng=
-th.
+You may increase readability by introducing temporary variables
 
- Non-empty subnodes must specify the 'pins' property.
- Note that not all properties are valid for all pins.
-=2D-
-2.20.1
+	... mapbase = port->mapbase;
+	... mapsize = port->mapsize;
+	...
+	port->membase = ioremap_nocache(mapbase, mapsize);
+	...
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
