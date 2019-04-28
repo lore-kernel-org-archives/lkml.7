@@ -2,314 +2,144 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3F4C4321A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 19:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBECC43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 19:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD52206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 19:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CXK3r2ZY"
+	by mail.kernel.org (Postfix) with ESMTP id 31AC3206C1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 19:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfD1TKE (ORCPT
+        id S1727178AbfD1TNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 15:10:04 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37813 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727208AbfD1TJe (ORCPT
+        Sun, 28 Apr 2019 15:13:20 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:37564 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726418AbfD1TNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 15:09:34 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so4108969pgc.4;
-        Sun, 28 Apr 2019 12:09:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Bs9QmySNy6EI2QvZ7E+BvIo9VVaHRvBdmmCGKxCyH9s=;
-        b=CXK3r2ZYtyYFjgRKCPNu7kzrO/kK2u0Pw82MH/sHSUM+VmeveZTq7mOQKkSHmJBBcm
-         jwxPrKSVknf7p0E4mz+6/5idVUisCmGVxuXh6++zRGA8RQSDEWdkoaPC5iBVYiYv+rC6
-         az3zhrzV/E+vA130dTFOL4WK1+SDzyiwA0XgvJYwebbRCQ5dOQBAXjDZiBgO8s/wY5Zh
-         EeiiyX1/Ci89DdbvRN9VvwxFjzc+7+i7FfLhagATVBb7UiVPJdEXeZVA7FnDOk3bVXVK
-         MWa/aiPLhzmmPW+5F2DM9L2PcT1RZ4QfYsAoyGdNtIDNzz6NBYlzY38hRDpbi3aJU+WB
-         /4kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Bs9QmySNy6EI2QvZ7E+BvIo9VVaHRvBdmmCGKxCyH9s=;
-        b=knJ5Hq/QNFvD/rrv7LCHq27ucbwCo37GPBLVNxPn2MqBCbeLbsp5rmz0daiBZMR16h
-         h0kbE4Imu6M2CphXGt9nZQmDi+9dzgQfs3/V29lkr889OKnYvi6lhbphpU7o/UKLCBP0
-         S4Sxjc6/gtCC5rn6bmtQDT0s75Fczuh8L4xqCxt5D1eW80gAs2iIy0n+sRvWDtrGIwnG
-         iF1oijtkpn9PfK1KUw9303+2ElBo3XiA2kcACijeBx0DOBwH6GBRyXGRv5eHaD0ddQLA
-         xQzpWhFoCcGYI2p2XcEk7ltoUhfSUhMAvUN9EbBF/+QVuK9js5qFjqyxk8ldNw8zbRJl
-         2DCg==
-X-Gm-Message-State: APjAAAXa1TyzH3rMLHrdK5+IkEB/2sFnLrEGkuev0sTA94dGPD8Sw9pN
-        iX9dc0qeu1LI26P993O/A24svam6
-X-Google-Smtp-Source: APXvYqwNvdlbfwCk+yeHjRdwca0hxd82YnMWdp+uJmcZH9ADBbPC9fyTD8hshAw5Q8iNWpGFo/bDBw==
-X-Received: by 2002:a65:4342:: with SMTP id k2mr19088280pgq.178.1556478573319;
-        Sun, 28 Apr 2019 12:09:33 -0700 (PDT)
-Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id o14sm34204712pgn.4.2019.04.28.12.09.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Apr 2019 12:09:32 -0700 (PDT)
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
-        / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 4/8] Revert "media: imx: Set capture compose rectangle in capture_device_set_format"
-Date:   Sun, 28 Apr 2019 12:09:12 -0700
-Message-Id: <20190428190916.26567-5-slongerbeam@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190428190916.26567-1-slongerbeam@gmail.com>
-References: <20190428190916.26567-1-slongerbeam@gmail.com>
+        Sun, 28 Apr 2019 15:13:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TQSMxWA_1556478793;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TQSMxWA_1556478793)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 29 Apr 2019 03:13:15 +0800
+Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+To:     Michal Hocko <mhocko@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190423175252.GP25106@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <5a571d64-bfce-aa04-312a-8e3547e0459a@linux.alibaba.com>
+Date:   Sun, 28 Apr 2019 12:13:07 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190423175252.GP25106@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rvert this commit, as imx_media_capture_device_set_format() will be
-removed.
 
-This reverts commit 5964cbd8692252615370b77eb96764dd70c2f837.
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
----
- drivers/staging/media/imx/imx-ic-prpencvf.c   |  5 ++--
- drivers/staging/media/imx/imx-media-capture.c | 24 +++++++++----------
- drivers/staging/media/imx/imx-media-csi.c     |  5 ++--
- drivers/staging/media/imx/imx-media-utils.c   | 20 ++++------------
- drivers/staging/media/imx/imx-media.h         |  6 ++---
- 5 files changed, 23 insertions(+), 37 deletions(-)
+On 4/23/19 10:52 AM, Michal Hocko wrote:
+> On Wed 24-04-19 00:43:01, Yang Shi wrote:
+>> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
+>> vma") introduced THPeligible bit for processes' smaps. But, when checking
+>> the eligibility for shmem vma, __transparent_hugepage_enabled() is
+>> called to override the result from shmem_huge_enabled().  It may result
+>> in the anonymous vma's THP flag override shmem's.  For example, running a
+>> simple test which create THP for shmem, but with anonymous THP disabled,
+>> when reading the process's smaps, it may show:
+>>
+>> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+>> Size:               4096 kB
+>> ...
+>> [snip]
+>> ...
+>> ShmemPmdMapped:     4096 kB
+>> ...
+>> [snip]
+>> ...
+>> THPeligible:    0
+>>
+>> And, /proc/meminfo does show THP allocated and PMD mapped too:
+>>
+>> ShmemHugePages:     4096 kB
+>> ShmemPmdMapped:     4096 kB
+>>
+>> This doesn't make too much sense.  The anonymous THP flag should not
+>> intervene shmem THP.  Calling shmem_huge_enabled() with checking
+>> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+>> dax vma check since we already checked if the vma is shmem already.
+> Kirill, can we get a confirmation that this is really intended behavior
+> rather than an omission please? Is this documented? What is a global
+> knob to simply disable THP system wise?
 
-diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
-index 8242d88dfb82..afaa3a8b15e9 100644
---- a/drivers/staging/media/imx/imx-ic-prpencvf.c
-+++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
-@@ -910,7 +910,6 @@ static int prp_set_fmt(struct v4l2_subdev *sd,
- 	const struct imx_media_pixfmt *cc;
- 	struct v4l2_pix_format vdev_fmt;
- 	struct v4l2_mbus_framefmt *fmt;
--	struct v4l2_rect vdev_compose;
- 	int ret = 0;
- 
- 	if (sdformat->pad >= PRPENCVF_NUM_PADS)
-@@ -952,11 +951,11 @@ static int prp_set_fmt(struct v4l2_subdev *sd,
- 	priv->cc[sdformat->pad] = cc;
- 
- 	/* propagate output pad format to capture device */
--	imx_media_mbus_fmt_to_pix_fmt(&vdev_fmt, &vdev_compose,
-+	imx_media_mbus_fmt_to_pix_fmt(&vdev_fmt,
- 				      &priv->format_mbus[PRPENCVF_SRC_PAD],
- 				      priv->cc[PRPENCVF_SRC_PAD]);
- 	mutex_unlock(&priv->lock);
--	imx_media_capture_device_set_format(vdev, &vdev_fmt, &vdev_compose);
-+	imx_media_capture_device_set_format(vdev, &vdev_fmt);
- 
- 	return 0;
- out:
-diff --git a/drivers/staging/media/imx/imx-media-capture.c b/drivers/staging/media/imx/imx-media-capture.c
-index 335084a6b0cd..555f6204660b 100644
---- a/drivers/staging/media/imx/imx-media-capture.c
-+++ b/drivers/staging/media/imx/imx-media-capture.c
-@@ -205,8 +205,7 @@ static int capture_g_fmt_vid_cap(struct file *file, void *fh,
- 
- static int __capture_try_fmt_vid_cap(struct capture_priv *priv,
- 				     struct v4l2_subdev_format *fmt_src,
--				     struct v4l2_format *f,
--				     struct v4l2_rect *compose)
-+				     struct v4l2_format *f)
- {
- 	const struct imx_media_pixfmt *cc, *cc_src;
- 
-@@ -246,8 +245,7 @@ static int __capture_try_fmt_vid_cap(struct capture_priv *priv,
- 		}
- 	}
- 
--	imx_media_mbus_fmt_to_pix_fmt(&f->fmt.pix, compose,
--				      &fmt_src->format, cc);
-+	imx_media_mbus_fmt_to_pix_fmt(&f->fmt.pix, &fmt_src->format, cc);
- 
- 	return 0;
- }
-@@ -265,7 +263,7 @@ static int capture_try_fmt_vid_cap(struct file *file, void *fh,
- 	if (ret)
- 		return ret;
- 
--	return __capture_try_fmt_vid_cap(priv, &fmt_src, f, NULL);
-+	return __capture_try_fmt_vid_cap(priv, &fmt_src, f);
- }
- 
- static int capture_s_fmt_vid_cap(struct file *file, void *fh,
-@@ -273,7 +271,6 @@ static int capture_s_fmt_vid_cap(struct file *file, void *fh,
- {
- 	struct capture_priv *priv = video_drvdata(file);
- 	struct v4l2_subdev_format fmt_src;
--	struct v4l2_rect compose;
- 	int ret;
- 
- 	if (vb2_is_busy(&priv->q)) {
-@@ -287,14 +284,17 @@ static int capture_s_fmt_vid_cap(struct file *file, void *fh,
- 	if (ret)
- 		return ret;
- 
--	ret = __capture_try_fmt_vid_cap(priv, &fmt_src, f, &compose);
-+	ret = __capture_try_fmt_vid_cap(priv, &fmt_src, f);
- 	if (ret)
- 		return ret;
- 
- 	priv->vdev.fmt.fmt.pix = f->fmt.pix;
- 	priv->vdev.cc = imx_media_find_format(f->fmt.pix.pixelformat,
- 					      CS_SEL_ANY, true);
--	priv->vdev.compose = compose;
-+	priv->vdev.compose.left = 0;
-+	priv->vdev.compose.top = 0;
-+	priv->vdev.compose.width = fmt_src.format.width;
-+	priv->vdev.compose.height = fmt_src.format.height;
- 
- 	return 0;
- }
-@@ -655,8 +655,7 @@ static struct video_device capture_videodev = {
- };
- 
- void imx_media_capture_device_set_format(struct imx_media_video_dev *vdev,
--					 const struct v4l2_pix_format *pix,
--					 const struct v4l2_rect *compose)
-+					 struct v4l2_pix_format *pix)
- {
- 	struct capture_priv *priv = to_capture_priv(vdev);
- 
-@@ -664,7 +663,6 @@ void imx_media_capture_device_set_format(struct imx_media_video_dev *vdev,
- 	priv->vdev.fmt.fmt.pix = *pix;
- 	priv->vdev.cc = imx_media_find_format(pix->pixelformat, CS_SEL_ANY,
- 					      true);
--	priv->vdev.compose = *compose;
- 	mutex_unlock(&priv->mutex);
- }
- EXPORT_SYMBOL_GPL(imx_media_capture_device_set_format);
-@@ -770,8 +768,10 @@ int imx_media_capture_device_register(struct imx_media_video_dev *vdev)
- 	}
- 
- 	vdev->fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
--	imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix, &vdev->compose,
-+	imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix,
- 				      &fmt_src.format, NULL);
-+	vdev->compose.width = fmt_src.format.width;
-+	vdev->compose.height = fmt_src.format.height;
- 	vdev->cc = imx_media_find_format(vdev->fmt.fmt.pix.pixelformat,
- 					 CS_SEL_ANY, false);
- 
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index c70fa6b509ae..09b89a72eaa2 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -1512,7 +1512,6 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
- 	struct v4l2_pix_format vdev_fmt;
- 	struct v4l2_mbus_framefmt *fmt;
- 	struct v4l2_rect *crop, *compose;
--	struct v4l2_rect vdev_compose;
- 	int ret;
- 
- 	if (sdformat->pad >= CSI_NUM_PADS)
-@@ -1568,11 +1567,11 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
- 	priv->cc[sdformat->pad] = cc;
- 
- 	/* propagate IDMAC output pad format to capture device */
--	imx_media_mbus_fmt_to_pix_fmt(&vdev_fmt, &vdev_compose,
-+	imx_media_mbus_fmt_to_pix_fmt(&vdev_fmt,
- 				      &priv->format_mbus[CSI_SRC_PAD_IDMAC],
- 				      priv->cc[CSI_SRC_PAD_IDMAC]);
- 	mutex_unlock(&priv->lock);
--	imx_media_capture_device_set_format(vdev, &vdev_fmt, &vdev_compose);
-+	imx_media_capture_device_set_format(vdev, &vdev_fmt);
- 
- 	return 0;
- out:
-diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
-index 8a6e57652402..a80ef0b087ad 100644
---- a/drivers/staging/media/imx/imx-media-utils.c
-+++ b/drivers/staging/media/imx/imx-media-utils.c
-@@ -577,8 +577,7 @@ void imx_media_fill_default_mbus_fields(struct v4l2_mbus_framefmt *tryfmt,
- EXPORT_SYMBOL_GPL(imx_media_fill_default_mbus_fields);
- 
- int imx_media_mbus_fmt_to_pix_fmt(struct v4l2_pix_format *pix,
--				  struct v4l2_rect *compose,
--				  const struct v4l2_mbus_framefmt *mbus,
-+				  struct v4l2_mbus_framefmt *mbus,
- 				  const struct imx_media_pixfmt *cc)
- {
- 	u32 width;
-@@ -625,17 +624,6 @@ int imx_media_mbus_fmt_to_pix_fmt(struct v4l2_pix_format *pix,
- 	pix->sizeimage = cc->planar ? ((stride * pix->height * cc->bpp) >> 3) :
- 			 stride * pix->height;
- 
--	/*
--	 * set capture compose rectangle, which is fixed to the
--	 * source subdevice mbus format.
--	 */
--	if (compose) {
--		compose->left = 0;
--		compose->top = 0;
--		compose->width = mbus->width;
--		compose->height = mbus->height;
--	}
--
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(imx_media_mbus_fmt_to_pix_fmt);
-@@ -647,11 +635,13 @@ int imx_media_mbus_fmt_to_ipu_image(struct ipu_image *image,
- 
- 	memset(image, 0, sizeof(*image));
- 
--	ret = imx_media_mbus_fmt_to_pix_fmt(&image->pix, &image->rect,
--					    mbus, NULL);
-+	ret = imx_media_mbus_fmt_to_pix_fmt(&image->pix, mbus, NULL);
- 	if (ret)
- 		return ret;
- 
-+	image->rect.width = mbus->width;
-+	image->rect.height = mbus->height;
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(imx_media_mbus_fmt_to_ipu_image);
-diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
-index 71e20f53ed7b..ddea972b7bc4 100644
---- a/drivers/staging/media/imx/imx-media.h
-+++ b/drivers/staging/media/imx/imx-media.h
-@@ -174,8 +174,7 @@ void imx_media_fill_default_mbus_fields(struct v4l2_mbus_framefmt *tryfmt,
- 					struct v4l2_mbus_framefmt *fmt,
- 					bool ic_route);
- int imx_media_mbus_fmt_to_pix_fmt(struct v4l2_pix_format *pix,
--				  struct v4l2_rect *compose,
--				  const struct v4l2_mbus_framefmt *mbus,
-+				  struct v4l2_mbus_framefmt *mbus,
- 				  const struct imx_media_pixfmt *cc);
- int imx_media_mbus_fmt_to_ipu_image(struct ipu_image *image,
- 				    struct v4l2_mbus_framefmt *mbus);
-@@ -280,8 +279,7 @@ void imx_media_capture_device_unregister(struct imx_media_video_dev *vdev);
- struct imx_media_buffer *
- imx_media_capture_device_next_buf(struct imx_media_video_dev *vdev);
- void imx_media_capture_device_set_format(struct imx_media_video_dev *vdev,
--					 const struct v4l2_pix_format *pix,
--					 const struct v4l2_rect *compose);
-+					 struct v4l2_pix_format *pix);
- void imx_media_capture_device_error(struct imx_media_video_dev *vdev);
- 
- /* subdev group ids */
--- 
-2.17.1
+Hi Kirill,
+
+Ping. Any comment?
+
+Thanks,
+Yang
+
+>
+> I have to say that the THP tuning API is one giant mess :/
+>
+> Btw. this patch also seem to fix khugepaged behavior because it previously
+> ignored both VM_NOHUGEPAGE and MMF_DISABLE_THP.
+>
+>> Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: David Rientjes <rientjes@google.com>
+>> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>> v2: Check VM_NOHUGEPAGE per Michal Hocko
+>>
+>>   mm/huge_memory.c | 4 ++--
+>>   mm/shmem.c       | 3 +++
+>>   2 files changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 165ea46..5881e82 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -67,8 +67,8 @@ bool transparent_hugepage_enabled(struct vm_area_struct *vma)
+>>   {
+>>   	if (vma_is_anonymous(vma))
+>>   		return __transparent_hugepage_enabled(vma);
+>> -	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
+>> -		return __transparent_hugepage_enabled(vma);
+>> +	if (vma_is_shmem(vma))
+>> +		return shmem_huge_enabled(vma);
+>>   
+>>   	return false;
+>>   }
+>> diff --git a/mm/shmem.c b/mm/shmem.c
+>> index 2275a0f..6f09a31 100644
+>> --- a/mm/shmem.c
+>> +++ b/mm/shmem.c
+>> @@ -3873,6 +3873,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
+>>   	loff_t i_size;
+>>   	pgoff_t off;
+>>   
+>> +	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
+>> +	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
+>> +		return false;
+>>   	if (shmem_huge == SHMEM_HUGE_FORCE)
+>>   		return true;
+>>   	if (shmem_huge == SHMEM_HUGE_DENY)
+>> -- 
+>> 1.8.3.1
+>>
 
