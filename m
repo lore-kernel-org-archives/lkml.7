@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52D2C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA55C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68498205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4D1205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oo2yyUUl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RM4z/Nb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbfD1D34 (ORCPT
+        id S1726569AbfD1D3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 23:29:56 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46310 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfD1D3w (ORCPT
+        Sat, 27 Apr 2019 23:29:53 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35780 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfD1D3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 23:29:52 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n2so3463446pgg.13
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 20:29:52 -0700 (PDT)
+        Sat, 27 Apr 2019 23:29:48 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t21so3622988pfh.2
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 20:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4q793i6aZE+zmH20haomDaX4hoSOaAOG8z4b96MR9Uw=;
-        b=oo2yyUUl91EHFCPkkhC9D67bIwoWySubW5n49B1mfSNV6a2iu0mYzihg636cwCOubV
-         8/BgQxOjv6L8aiC3xwN2RiJwtHi7GB7fYMKFViC/5qCmXd4PEmcv9LhbprtZUlCLgDZM
-         6EV94N1AGpHp0D/+9ZpvvRmzZecRRbm1oXFsnLHKbbudbMjEvFWV56E4h6/kutwPEdsW
-         w2B7FcxP1BMK8m/QETSYtgCeRjLvf6U2luKoD52OB2bOPv1ctw0VzziCWZITU94QKLSt
-         yGtuw9p7rNQW/5/ViKiFgEvWBV98LGX95KHNXzdE8lwcAbwPllbE0TiH54Rf1/sBGW8L
-         3gnQ==
+        bh=yW25BIpw+3OdLrz2ZA6bQCaxdj/ZNzRUZJYjM1RP07U=;
+        b=RM4z/Nb05WzDoLahxMBCYF4Q8IllpFaEJDf8a6fQ0p9uWyGtVrTJT1rupLk56+zjil
+         s7rTbFmE4KrEkdKyNLqiVI5hDhahUWMYZby30123iIwAa3DGCILLC98kyBVnmGiMgRyA
+         sCOn4gviOIAJmM0O7QcwX1UHQMxTNRZQRH9mSXgAwNmOcpImfft1F7o2S0IxZRHw4Cui
+         i1OHt+BoX10nosrFuto8+0oitm4f71aRkacQwD0l5dbTc2tMfKQQ3gY36RB3NP1rsgCu
+         ppX7CXRn5+/hek9j7d40xLzfTQvenzaZN4BPJXl6d7Mt6lLdvvE2xcTPDswE/eKGJGrQ
+         daBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4q793i6aZE+zmH20haomDaX4hoSOaAOG8z4b96MR9Uw=;
-        b=BWx9HXwNaqcK5ycexNmoNvSyVkHO+x5E1cKQ+bXUMnHj/+mVWVinHWgpS1AnoCEOSW
-         z92NwDv4kH//FZdX9QF7EH41dkLo6OYswEsplSrgfB79uwN9ZmDB4ukTuuB5DyC2Olyv
-         h9ZH0fI4m4RjYsy4LtrBPv1mDELOOEUvTi20jsHrQhfOr1u4/AEOAvMuVmOraOhbQCYD
-         zF+8zRd9lh45M+bk3/GAHDIDImG21mArZ5D4z2xr7LLjWnE8cvk7StUTLra0CL6AuxPG
-         x/sXoIN3dEDWKJvqZumFMATdXjiCbmAZS4zgs4dvKbhHj4z3vWSbJ95SRogS3+DYnkAS
-         i/YQ==
-X-Gm-Message-State: APjAAAV4O+8U08X4Rkajnzb9hrfYDjk0r3leWORDMoaZ3ic5AwMJOlXJ
-        uYe2OuEGkU3JQA9RtbufeG4=
-X-Google-Smtp-Source: APXvYqyowUtLop7tzGxXhSPUs/i/KaSSh7Z6s+q8eQ3xUh7LoCxPzgqzbFMtcHKPcND/9RsPzV5Jow==
-X-Received: by 2002:a65:6546:: with SMTP id a6mr7662169pgw.5.1556422191555;
-        Sat, 27 Apr 2019 20:29:51 -0700 (PDT)
+        bh=yW25BIpw+3OdLrz2ZA6bQCaxdj/ZNzRUZJYjM1RP07U=;
+        b=uLn+YGw8P2qljV/giajmFgC4no8GSpjCOFxbS1Odu3HuSFQUCKY2buxMLVDYMp2caX
+         8qNO1H/YplQNb8xdjpKwu5wfCmeP+cU8NwnuCGN0bXph8YuOsFyGojTpWYXrRG0pJxAp
+         6bTIu4sYSSwH19uusrHwVs5SuhSThy9uQDSTR/3ASYKywJDi7tdRD8QOxcY+iEJs9tuH
+         scAFDSuVX3s2+avESuNLGxJepLV3TnL10G7XQM8rh7W8ZmYivCaoTtg9fFUsiOdv+192
+         nesHJITGP5ho6xv+7BfioxapDNa6OmhOeUUtH5UOV7tUGvmgL7bkJo/UMKnH3IwwIaP6
+         lhxw==
+X-Gm-Message-State: APjAAAVkTm3SSKcdl2shudfPMENR+72vvSHXUM9p+eI/LrOMauU6gFBi
+        B+8Wvxi8DQAI0HWEi7Q+6iw=
+X-Google-Smtp-Source: APXvYqwntT4VxgilEGo0GTeJ7I5DTmDtSzMB9cKie0r6ZFjIY4MddobH8Q74W1UjHCKYFnMIUJj0/A==
+X-Received: by 2002:a63:5466:: with SMTP id e38mr52979594pgm.340.1556422188183;
+        Sat, 27 Apr 2019 20:29:48 -0700 (PDT)
 Received: from localhost ([2601:640:6:3484:bc53:6e04:b584:e900])
-        by smtp.gmail.com with ESMTPSA id 128sm34969497pgb.47.2019.04.27.20.29.50
+        by smtp.gmail.com with ESMTPSA id o9sm22758505pgh.68.2019.04.27.20.29.47
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 27 Apr 2019 20:29:51 -0700 (PDT)
+        Sat, 27 Apr 2019 20:29:47 -0700 (PDT)
 From:   Yury Norov <yury.norov@gmail.com>
 X-Google-Original-From: Yury Norov <ynorov@marvell.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -78,9 +78,9 @@ Cc:     Yury Norov <ynorov@marvell.com>, linux-kernel@vger.kernel.org,
         Yury Norov <yury.norov@gmail.com>,
         Jens Axboe <axboe@kernel.dk>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5/6] lib: add test for bitmap_parse()
-Date:   Sat, 27 Apr 2019 20:29:35 -0700
-Message-Id: <20190428032936.1317-6-ynorov@marvell.com>
+Subject: [PATCH 3/6] lib/bitmap: make bitmap_parse_user a wrapper on bitmap_parse
+Date:   Sat, 27 Apr 2019 20:29:33 -0700
+Message-Id: <20190428032936.1317-4-ynorov@marvell.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190428032936.1317-1-ynorov@marvell.com>
 References: <20190428032936.1317-1-ynorov@marvell.com>
@@ -89,147 +89,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test is derived from bitmap_parselist()
+Currently we parse user data byte after byte which leads to
+overcomplicating of parsing algorithm. There are no performance
+critical users of bitmap_parse_user(), and so we can duplicate
+user data to kernel buffer and simply call bitmap_parselist().
+This rework lets us unify and simplify bitmap_parse() and
+bitmap_parse_user(), which is done in the following patch.
 
 Signed-off-by: Yury Norov <ynorov@marvell.com>
 ---
- lib/test_bitmap.c | 102 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 101 insertions(+), 1 deletion(-)
+ lib/bitmap.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-index d3a501f2a81a..99ad6c35d038 100644
---- a/lib/test_bitmap.c
-+++ b/lib/test_bitmap.c
-@@ -205,7 +205,8 @@ static void __init test_copy(void)
- 	expect_eq_pbl("0-108,128-1023", bmap2, 1024);
- }
- 
--#define PARSE_TIME 0x1
-+#define PARSE_TIME	0x1
-+#define NO_LEN		0x2
- 
- struct test_bitmap_parselist{
- 	const int errno;
-@@ -328,6 +329,93 @@ static void __init __test_bitmap_parselist(int is_user)
- 	}
- }
- 
-+static const unsigned long parse_test[] __initconst = {
-+	BITMAP_FROM_U64(0),
-+	BITMAP_FROM_U64(1),
-+	BITMAP_FROM_U64(0xdeadbeef),
-+	BITMAP_FROM_U64(0x100000000ULL),
-+};
-+
-+static const unsigned long parse_test2[] __initconst = {
-+	BITMAP_FROM_U64(0x100000000ULL), BITMAP_FROM_U64(0xdeadbeef),
-+	BITMAP_FROM_U64(0x100000000ULL), BITMAP_FROM_U64(0xbaadf00ddeadbeef),
-+	BITMAP_FROM_U64(0x100000000ULL), BITMAP_FROM_U64(0x0badf00ddeadbeef),
-+};
-+
-+static const struct test_bitmap_parselist parse_tests[] __initconst = {
-+	{0, "",				&parse_test[0 * step], 32, 0},
-+	{0, " ",			&parse_test[0 * step], 32, 0},
-+	{0, "0",			&parse_test[0 * step], 32, 0},
-+	{0, "0\n",			&parse_test[0 * step], 32, 0},
-+	{0, "1",			&parse_test[1 * step], 32, 0},
-+	{0, "deadbeef",			&parse_test[2 * step], 32, 0},
-+	{0, "1,0",			&parse_test[3 * step], 33, 0},
-+	{0, "deadbeef,\n,0,1",		&parse_test[2 * step], 96, 0},
-+
-+	{0, "deadbeef,1,0",		&parse_test2[0 * 2 * step], 96, 0},
-+	{0, "baadf00d,deadbeef,1,0",	&parse_test2[1 * 2 * step], 128, 0},
-+	{0, "badf00d,deadbeef,1,0",	&parse_test2[2 * 2 * step], 124, 0},
-+	{0, "badf00d,deadbeef,1,0",	&parse_test2[2 * 2 * step], 124, NO_LEN},
-+	{0, "  badf00d,deadbeef,1,0  ",	&parse_test2[2 * 2 * step], 124, 0},
-+	{0, " , badf00d,deadbeef,1,0 , ",	&parse_test2[2 * 2 * step], 124, 0},
-+	{0, " , badf00d, ,, ,,deadbeef,1,0 , ",	&parse_test2[2 * 2 * step], 124, 0},
-+
-+	{-EINVAL,    "goodfood,deadbeef,1,0",	NULL, 128, 0},
-+	{-EOVERFLOW, "3,0",			NULL, 33, 0},
-+	{-EOVERFLOW, "123badf00d,deadbeef,1,0",	NULL, 128, 0},
-+	{-EOVERFLOW, "badf00d,deadbeef,1,0",	NULL, 90, 0},
-+	{-EOVERFLOW, "fbadf00d,deadbeef,1,0",	NULL, 95, 0},
-+	{-EOVERFLOW, "badf00d,deadbeef,1,0",	NULL, 100, 0},
-+};
-+
-+static void __init __test_bitmap_parse(int is_user)
-+{
-+	int i;
-+	int err;
-+	ktime_t time;
-+	DECLARE_BITMAP(bmap, 2048);
-+	char *mode = is_user ? "_user"  : "";
-+
-+	for (i = 0; i < ARRAY_SIZE(parse_tests); i++) {
-+		struct test_bitmap_parselist test = parse_tests[i];
-+
-+		if (is_user) {
-+			size_t len = strlen(test.in);
-+			mm_segment_t orig_fs = get_fs();
-+
-+			set_fs(KERNEL_DS);
-+			time = ktime_get();
-+			err = bitmap_parse_user(test.in, len, bmap, test.nbits);
-+			time = ktime_get() - time;
-+			set_fs(orig_fs);
-+		} else {
-+			size_t len = test.flags & NO_LEN ?
-+				UINT_MAX : strlen(test.in);
-+			time = ktime_get();
-+			err = bitmap_parse(test.in, len, bmap, test.nbits);
-+			time = ktime_get() - time;
-+		}
-+
-+		if (err != test.errno) {
-+			pr_err("parse%s: %d: input is %s, errno is %d, expected %d\n",
-+					mode, i, test.in, err, test.errno);
-+			continue;
-+		}
-+
-+		if (!err && test.expected
-+			 && !__bitmap_equal(bmap, test.expected, test.nbits)) {
-+			pr_err("parse%s: %d: input is %s, result is 0x%lx, expected 0x%lx\n",
-+					mode, i, test.in, bmap[0],
-+					*test.expected);
-+			continue;
-+		}
-+
-+		if (test.flags & PARSE_TIME)
-+			pr_err("parse%s: %d: input is '%s' OK, Time: %llu\n",
-+					mode, i, test.in, time);
-+	}
-+}
-+
- static void __init test_bitmap_parselist(void)
+diff --git a/lib/bitmap.c b/lib/bitmap.c
+index f235434df87b..300732031fad 100644
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -434,22 +434,22 @@ EXPORT_SYMBOL(__bitmap_parse);
+  *    then it must be terminated with a \0.
+  * @maskp: pointer to bitmap array that will contain result.
+  * @nmaskbits: size of bitmap, in bits.
+- *
+- * Wrapper for __bitmap_parse(), providing it with user buffer.
+- *
+- * We cannot have this as an inline function in bitmap.h because it needs
+- * linux/uaccess.h to get the access_ok() declaration and this causes
+- * cyclic dependencies.
+  */
+ int bitmap_parse_user(const char __user *ubuf,
+ 			unsigned int ulen, unsigned long *maskp,
+ 			int nmaskbits)
  {
- 	__test_bitmap_parselist(0);
-@@ -338,6 +426,16 @@ static void __init test_bitmap_parselist_user(void)
- 	__test_bitmap_parselist(1);
+-	if (!access_ok(ubuf, ulen))
+-		return -EFAULT;
+-	return __bitmap_parse((const char __force *)ubuf,
+-				ulen, 1, maskp, nmaskbits);
++	char *buf;
++	int ret;
+ 
++	buf = memdup_user_nul(ubuf, ulen);
++	if (IS_ERR(buf))
++		return PTR_ERR(buf);
++
++	ret = bitmap_parse(buf, ulen, maskp, nmaskbits);
++
++	kfree(buf);
++	return ret;
  }
+ EXPORT_SYMBOL(bitmap_parse_user);
  
-+static void __init test_bitmap_parse(void)
-+{
-+	__test_bitmap_parse(0);
-+}
-+
-+static void __init test_bitmap_parse_user(void)
-+{
-+	__test_bitmap_parse(1);
-+}
-+
- #define EXP_BYTES	(sizeof(exp) * 8)
- 
- static void __init test_bitmap_arr32(void)
-@@ -409,6 +507,8 @@ static void __init selftest(void)
- 	test_fill_set();
- 	test_copy();
- 	test_bitmap_arr32();
-+	test_bitmap_parse();
-+	test_bitmap_parse_user();
- 	test_bitmap_parselist();
- 	test_bitmap_parselist_user();
- 	test_mem_optimisations();
 -- 
 2.17.1
 
