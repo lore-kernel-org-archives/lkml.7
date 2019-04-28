@@ -2,93 +2,66 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BBFC43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C27C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED93A20881
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:11:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="JZ7uyOa7"
+	by mail.kernel.org (Postfix) with ESMTP id 6DD2220881
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:12:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfD1HL5 (ORCPT
+        id S1726580AbfD1HMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 03:11:57 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:40222 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfD1HL5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 03:11:57 -0400
-Received: by mail-vs1-f68.google.com with SMTP id r12so3310234vsp.7
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 00:11:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0/S6B6NWgBdbisjBXWpRt6zfXJMqlxYauy0OrhI+WGI=;
-        b=JZ7uyOa7qj8XncuBu2COdGhfC4Yv3Mnc3/GPLsqtGxe1PdKdB4wRy8YLQdvN1V1SRM
-         88l/dqEearUqRDRfsN4c2z7uR9wwhlgGzssINQSME7c0ZhDm9khr/gSKNDnU3llmGZCK
-         Q7vBHD/VBO5vq4IXDnPCtlOYuGuVmGqZhXCrGgIpc9l6ov/r9ztZrziXyKcUEoejao21
-         eC3QS5zgykOPh7UcmFw3imiHWW7qXfnhbgZYxMCiHx+oHIVKQ9cyA1iHLyBpBsoKoRLZ
-         tsaojAzUozJ4FugbHm8/X1uqyS8vPxR5EATRsYdvLg9hoUuC9O6m14FKBwCDtLh5rZEH
-         FWEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0/S6B6NWgBdbisjBXWpRt6zfXJMqlxYauy0OrhI+WGI=;
-        b=Kjy6F8wzcGgSQlgt/UnqOeZ1yWBUP9PMEuiTKJTKzUA84SOoXy96TRas6kBMRKrm+F
-         ztHrUkyrFeAPEPLcIgxNVnr68zLxchPPjq9hCZHJ72hWz2UA/ZNTlZuqYxq7bA4w5tCY
-         w3qZQYqd0JrBey942R+Wx42229EkoN9CfqQQon8d+PNVCb9Ccc+fwwuNgp5VLe9QL0NC
-         pXCUqS+3ClwWQ+3IyJ+zAWNhQzS4Z5Eibm+MGrjOk4tsPlqEP9zVZJWc3tTME+lzfDhh
-         Hb4HpMI48NVlK8a/OyE/yI8+DvzVNSG76OTKI2LsOg1B7rIWxR47P1Nh5yJ4E1MqKn+t
-         YCFw==
-X-Gm-Message-State: APjAAAXCmFPsLEEExj/nSMVfNQ7e0623ggR9X0TObBgKG6FeFyP/Lb7f
-        XNemVV3uhIX//mzoYBew9yMqNQO/XYONLYgEpz49/A==
-X-Google-Smtp-Source: APXvYqzO1gESEeXWppboA4chvYTcglgRF5LNuAbKekOMh6nWsT4upCekcBujfd2WDRfxftVcxeeW73pXSGj66el3zns=
-X-Received: by 2002:a67:6f07:: with SMTP id k7mr3886602vsc.117.1556435516192;
- Sun, 28 Apr 2019 00:11:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190426131835.27258-1-colin.king@canonical.com>
-In-Reply-To: <20190426131835.27258-1-colin.king@canonical.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sun, 28 Apr 2019 10:11:44 +0300
-Message-ID: <CAOtvUMdHx4SK6CceCxfHOXic=bymA13HZMviuto98GysDwasMw@mail.gmail.com>
-Subject: Re: [PATCH] crypto: ccree: fix spelling mistake "protedcted" -> "protected"
-To:     Colin King <colin.king@canonical.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 28 Apr 2019 03:12:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37132 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726133AbfD1HMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 03:12:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 94436AD63;
+        Sun, 28 Apr 2019 07:12:15 +0000 (UTC)
+Date:   Sun, 28 Apr 2019 09:12:15 +0200
+Message-ID: <s5hef5mmwmo.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Wenwen Wang" <wang6495@umn.edu>
+Cc:     "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        "Jorge Sanjuan" <jorge.sanjuan@codethink.co.uk>,
+        "Ruslan Bilovol" <ruslan.bilovol@gmail.com>,
+        "Jaroslav Kysela" <perex@perex.cz>,
+        "open list" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: usb-audio: Fix a memory leak bug
+In-Reply-To: <1556345208-1210-1-git-send-email-wang6495@umn.edu>
+References: <1556345208-1210-1-git-send-email-wang6495@umn.edu>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 4:18 PM Colin King <colin.king@canonical.com> wrote=
-:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is a spelling mistake in a dev_dbg message, fix it.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Sat, 27 Apr 2019 08:06:46 +0200,
+Wenwen Wang wrote:
+> 
+> In parse_audio_selector_unit(), the string array 'namelist' is allocated
+> through kmalloc_array(), and each string pointer in this array, i.e.,
+> 'namelist[]', is allocated through kmalloc() in the following for loop.
+> Then, a control instance 'kctl' is created by invoking snd_ctl_new1(). If
+> an error occurs during the creation process, the string array 'namelist',
+> including all string pointers in the array 'namelist[]', should be freed,
+> before the error code ENOMEM is returned. However, the current code does
+> not free 'namelist[]', resulting in memory leaks.
+> 
+> To fix the above issue, free all string pointers 'namelist[]' in a loop.
+> 
+> Signed-off-by: Wenwen Wang <wang6495@umn.edu>
 
-Acked-By: Gilad Ben-Yossef <gilad@benyossef.com>
-
-Thanks!
-
-Gilad
+Applied now, thanks.
 
 
---
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-values of =CE=B2 will give rise to dom!
+Takashi
