@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA321C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 06:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E815C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 06:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FA220881
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 06:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26FA720881
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 06:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfD1Gai (ORCPT
+        id S1726598AbfD1Gan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 02:30:38 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:65443 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726452AbfD1Gah (ORCPT
+        Sun, 28 Apr 2019 02:30:43 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:58095 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726488AbfD1Gaj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 02:30:37 -0400
-X-UUID: 59c4f64293ce4b1ca41c8a0d04487832-20190428
-X-UUID: 59c4f64293ce4b1ca41c8a0d04487832-20190428
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        Sun, 28 Apr 2019 02:30:39 -0400
+X-UUID: 2405f04490dd4f998ad1f91febcb0757-20190428
+X-UUID: 2405f04490dd4f998ad1f91febcb0757-20190428
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
         (envelope-from <biao.huang@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 989699388; Sun, 28 Apr 2019 14:30:31 +0800
+        with ESMTP id 375670593; Sun, 28 Apr 2019 14:30:33 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 28 Apr 2019 14:30:29 +0800
+ 15.0.1395.4; Sun, 28 Apr 2019 14:30:32 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 28 Apr 2019 14:30:29 +0800
+ Transport; Sun, 28 Apr 2019 14:30:31 +0800
 From:   Biao Huang <biao.huang@mediatek.com>
 To:     Jose Abreu <joabreu@synopsys.com>, <davem@davemloft.net>
 CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -44,9 +44,9 @@ CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
         <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>
-Subject: [PATCH 3/6] net: stmmac: write the modified value back to MTL_OPERATION_MODE
-Date:   Sun, 28 Apr 2019 14:30:06 +0800
-Message-ID: <1556433009-25759-4-git-send-email-biao.huang@mediatek.com>
+Subject: [PATCH 6/6] stmmac: dwmac-mediatek: modify csr_clk value to fix mdio read/write fail
+Date:   Sun, 28 Apr 2019 14:30:09 +0800
+Message-ID: <1556433009-25759-7-git-send-email-biao.huang@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1556433009-25759-1-git-send-email-biao.huang@mediatek.com>
 References: <1556433009-25759-1-git-send-email-biao.huang@mediatek.com>
@@ -58,27 +58,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value of MTL_OPERATION_MODE is modified, and should
-be write back to the register.
+The frequency of  csr clock is 66.5MHz, so the csr_clk value should
+be 0. Modify the csr_clk value to fix mdio read/write fail issue.
 
 Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |    2 ++
- 1 file changed, 2 insertions(+)
+ .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 7e5d5db..b4bb562 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -192,6 +192,8 @@ static void dwmac4_prog_mtl_tx_algorithms(struct mac_device_info *hw,
- 	default:
- 		break;
- 	}
-+
-+	writel(value, ioaddr + MTL_OPERATION_MODE);
- }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+index bf25629..6b12d0f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+@@ -346,8 +346,8 @@ static int mediatek_dwmac_probe(struct platform_device *pdev)
+ 		return PTR_ERR(plat_dat);
  
- static void dwmac4_set_mtl_tx_queue_weight(struct mac_device_info *hw,
+ 	plat_dat->interface = priv_plat->phy_mode;
+-	/* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
+-	plat_dat->clk_csr = 5;
++	/* clk_csr_i = 60-100MHz & MDC = clk_csr_i/42 */
++	plat_dat->clk_csr = 0;
+ 	plat_dat->has_gmac4 = 1;
+ 	plat_dat->has_gmac = 0;
+ 	plat_dat->pmt = 0;
 -- 
 1.7.9.5
 
