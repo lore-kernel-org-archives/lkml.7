@@ -2,123 +2,111 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55F8C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C52C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC1E2054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556474369;
-	bh=JNUjRdh880vN7p/G1PgxVQ6Y4hHPeo8k4TC+EN1AVSU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O955MPiiB0hXz1MzQnqe0JYgaPPXpIaEucU0hPfVR+fin289D6FU1t5eZ3ssFQKge
-	 QMOQCKO13kThZ9auVFci726qlNkCSqyVhXk5aEXBwgJUHeE8lFfXAURVDgf61zB/Ou
-	 A9AHw/dn6bprtv+sV/BJyM61R6gPuoC2gvhdXWVg=
+	by mail.kernel.org (Postfix) with ESMTP id 8ECE52054F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:59:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7uhXqUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfD1R72 (ORCPT
+        id S1727110AbfD1R7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 13:59:28 -0400
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:34996 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfD1R71 (ORCPT
+        Sun, 28 Apr 2019 13:59:48 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42703 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfD1R7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 13:59:27 -0400
-Received: by mail-lj1-f180.google.com with SMTP id z26so7327944ljj.2
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 10:59:26 -0700 (PDT)
+        Sun, 28 Apr 2019 13:59:48 -0400
+Received: by mail-pl1-f194.google.com with SMTP id x15so3984900pln.9;
+        Sun, 28 Apr 2019 10:59:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=N4e0yPH0Vgnf1AYEoix3pVha6totByaAuqubrLlTrYo=;
-        b=CxCo+64mtOlFPXZ6njuM9Nw/uILb41oA0aj0ZF5IX4XwOfE0l6S/MdlJnUjWD9FrYz
-         oGk4osW2Qv2m/NsQ05JBrthfsd5+T11tG62SdQFHSs8ORkFtKFbN5b54Bt+u8yqZywQ4
-         H61gtF3uK3ZuSYEIw/VzZ9ArJmTj1wmuhh+LA=
+        bh=cigPqpv3EbqRHveB6bMukXbNAdYdoNI2R+pRgqg/pak=;
+        b=V7uhXqUEI2VtmyWshqsswwdT4xcBODxImnK+G5AEQU2F8Xo5/AeJJ04NbdpSF3+ETf
+         zFEAiQEg0eWaNharc3qkRz4syjtRsyC82yilvcvKzcGLpRm2FcoKG3j74KVtxj7yR1s0
+         Xo9E8dhnwqeeiZswzro3T1juoqzIrzlD1K1JXEaP2vP5Cp6nD08BMJgaT8KJ2Q5sXu7c
+         ncXVgqYHbKKjTA4qVgYqqSduDqk1kt2Mko9pmpDW8oy/J1KhvaoQP3jMAKStOlibpDFN
+         KO0bJsWTQ4IhFslJ6G/0nx2nO0meAbt3cVoOCv/XIBdFRgJHvW+7z5qDaDoxkasBNpDw
+         ZxMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=N4e0yPH0Vgnf1AYEoix3pVha6totByaAuqubrLlTrYo=;
-        b=taiJUKIgO6LKBbY9aK5XGXATuLIGR4ZtajxjBWelRoDijKTHHETvV3k10d27246k6R
-         Nxo+bZbjyU94IinIYKWrmSHyULjyp+96BZbP7S1lqnqZGIzzUmEXI/HQrGXAZIf2iQn6
-         b/11wjWBSvR/fSk+IcanydjORXVKyeYtFSOVTNZux6uNPTVvk2C7QpEFCE8u0tFALOTZ
-         Kgz+ifoi7y2XKeXCot/Ai36ErjN9OsSJOD1l8Z3UGU3F/uTRv9brbZanPB4ircxmXXxe
-         3/njFfQ4WZa6ToQ9ivUGQR8/4lTaHgbLMhlm0xGJAFJ4cjMGRddH0NxycSZFU8bjm8lt
-         UwlQ==
-X-Gm-Message-State: APjAAAUgRf9SmUdnS0vsZ2jGF/34iQLp4BV6BnTb06ow8B/rna4oenNP
-        VOHPo8cq+4s3KSqyHllGVSkMTYuKNS4=
-X-Google-Smtp-Source: APXvYqzyakl6/88dAy9sT5DJAYxYCceYQCySX9GHoOizcpuhwU7v8AUFM5hYYxpJ8l65h3fXFUhu3Q==
-X-Received: by 2002:a2e:968c:: with SMTP id q12mr18696499lji.36.1556474364871;
-        Sun, 28 Apr 2019 10:59:24 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id h29sm2467540ljb.49.2019.04.28.10.59.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Apr 2019 10:59:23 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id h21so7258687ljk.13
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 10:59:22 -0700 (PDT)
-X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr31231427lje.22.1556474362610;
- Sun, 28 Apr 2019 10:59:22 -0700 (PDT)
+        bh=cigPqpv3EbqRHveB6bMukXbNAdYdoNI2R+pRgqg/pak=;
+        b=ezr1JRg5cqiGCm70udyLo8LnoYcK5qRWKNcEXeBudPX2wbflw23DR15QHIdr0urVkg
+         BoHGb3nE+8JkBAuyhbfOnEt0MApfrgebKCgeIjTSyWHwiZ//nfomGbqtx1gqsmAU9Oxr
+         GMPurnG/qxG0rY+361/h0E243SvIFNhidKtMjvGqlKnlcfaRBhEazcbU/2+UhLfRRdfS
+         JRqKxfFPYNYJNFqLS8PKbrwcF6ofc/FBh4yaRi9MGb7XihndjWvRlYgA7YX2RrwfsVpH
+         60ZavyHJL9MneQQSu2oK8bAoLdeiL2TU+FxFwexRvKpjJk1yd4O83dw1qFGWRuMmKPxV
+         GV2w==
+X-Gm-Message-State: APjAAAWTlq+/ycd74QKbo/j6oOlfEMe0Bz4eOQ7FoyN+wZA7Ua5O2m5N
+        5qBQ1/VTYkB/FIcv1nrDS0GNyGTRkFcvYGpGsQbsZ73H
+X-Google-Smtp-Source: APXvYqxSnfcqMHGbUgq9eeNwxyyP0WpeR9+ljgpYdmRsTp8BAxBVA27MwZfOjadrgpKr6Tukjxq6NfXSGTqnMK6T7sM=
+X-Received: by 2002:a17:902:9b8d:: with SMTP id y13mr3478970plp.70.1556474387663;
+ Sun, 28 Apr 2019 10:59:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190428155755.14267-1-longman@redhat.com> <20190428155755.14267-2-longman@redhat.com>
- <CAHk-=wgCrtM7fPd=qmmg6UUDRcw9iq7a7_ypOHH3740xgv6wkQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgCrtM7fPd=qmmg6UUDRcw9iq7a7_ypOHH3740xgv6wkQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 28 Apr 2019 10:59:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgGN9KKCW8dii=nXwKQdu2N5AOMrVdS5qJvZAPOTvwHjA@mail.gmail.com>
-Message-ID: <CAHk-=wgGN9KKCW8dii=nXwKQdu2N5AOMrVdS5qJvZAPOTvwHjA@mail.gmail.com>
-Subject: Re: [PATCH-tip v6 01/20] locking/rwsem: Prevent decrement of reader
- count before increment
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        stable <stable@vger.kernel.org>
+References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
+ <20190428030539.17776-1-yuehaibing@huawei.com> <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
+ <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com> <6AADFAC011213A4C87B956458587ADB4021F7531@dggeml532-mbs.china.huawei.com>
+ <b33ce1f9-3d65-2d05-648b-f5a6cfbd59ab@redhat.com>
+In-Reply-To: <b33ce1f9-3d65-2d05-648b-f5a6cfbd59ab@redhat.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sun, 28 Apr 2019 10:59:36 -0700
+Message-ID: <CAM_iQpUfpruaFowbiTOY7aH4Ts-xcY4JACGLOT3CUjLqpg_zXw@mail.gmail.com>
+Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "weiyongjun (A)" <weiyongjun1@huawei.com>,
+        yuehaibing <yuehaibing@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "lirongqing@baidu.com" <lirongqing@baidu.com>,
+        "nicolas.dichtel@6wind.com" <nicolas.dichtel@6wind.com>,
+        "3chas3@gmail.com" <3chas3@gmail.com>,
+        "wangli39@baidu.com" <wangli39@baidu.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Peter Xu <peterx@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 10:41 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Sun, Apr 28, 2019 at 12:51 AM Jason Wang <jasowang@redhat.com> wrote:
+> > tun_net_xmit() doesn't have the chance to
+> > access the change because it holding the rcu_read_lock().
 >
-> It's the *first* loop that you could play games with, because you hold
-> the lock, and the list is stable during that loop. So the *first* loop
-> could just walk the list, and then do one list splitting operation
-> instead of doing that "list_move_tail()" thing for each entry.
+>
+> The problem is the following codes:
+>
+>
+>          --tun->numqueues;
+>
+>          ...
+>
+>          synchronize_net();
+>
+> We need make sure the decrement of tun->numqueues be visible to readers
+> after synchronize_net(). And in tun_net_xmit():
 
-.. having looked at that, I would suggest against it.
+It doesn't matter at all. Readers are okay to read it even they still use the
+stale tun->numqueues, as long as the tfile is not freed readers can read
+whatever they want...
 
-I _think_ this short and sweet code snippet might just work fine for
-the first loop:
+The decrement of tun->numqueues is just how we unpublish the old
+tfile, it is still valid for readers to read it _after_ unpublish, we only need
+to worry about free, not about unpublish. This is the whole spirit of RCU.
 
-        list_for_each_entry(waiter, &sem->wait_list, list) {
-                if (waiter->type == RWSEM_WAITING_FOR_WRITE)
-                        break;
-                woken++;
-        }
-        list_cut_before(&wlist, &sem->wait_list, waiter);
+You need to rethink about my SOCK_RCU_FREE patch.
 
-and if it *does* work it would be both smaller and more efficient. But
-it looks a bit too subtle to my taste. Somebody would need to go
-through that with a fine comb, and double-check that it gets the
-"whole list" case right, for example.
-
-So the "phase 1" loop could be perhaps simplified to the above cute things.
-
-But the "phase 2" loop absolutely has to be changed to use
-list_for_each_entry_safe().
-
-               Linus
+Thanks.
