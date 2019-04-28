@@ -2,131 +2,97 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FED8C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC27C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F7E206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:56:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="bX8NzEIt"
+	by mail.kernel.org (Postfix) with ESMTP id 530DD20843
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbfD1U4e (ORCPT
+        id S1726511AbfD1VIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 16:56:34 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46956 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfD1U4e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 16:56:34 -0400
-Received: by mail-pl1-f193.google.com with SMTP id o7so4080336pll.13
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 13:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=PMSrmlfvNPSDiUeJDXR9q1eCVxoxW5mdLWF/ia7lsmo=;
-        b=bX8NzEItRUJcNX4IEaO92aGZxzA30k0Cjey8QZMwYTNntpn6Jlk4zVsKp3WP/MmkYU
-         K0khKZ4h23Y3mEWI18gykXFuiPYWX6wRxAxbi5rNuYiXHWvvFjk0Ee+uIDYXGdgY24u1
-         uu0Je+tuLRIzW8l5DQHM3lL6bZivg7c7W0KZhWFhI/X08fzTGmc0KCGFkPf9K5EvEWYA
-         fNgyNIY7G78xr6JAW8M+w6H2WcqfaH4S9OPmyPUQD9mJRg4HuxfEFS94KcbIrRNyzMQ9
-         QS3wI7CPueMd5ksDLDX1Z+4Xb2HPRyT1KyVB517WedzUUGNGLkovD0ujdr5JGgzmtBa7
-         0WjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=PMSrmlfvNPSDiUeJDXR9q1eCVxoxW5mdLWF/ia7lsmo=;
-        b=EU4h5KrxiC/dBwcFhHXZo8GOaP8dnSOnW7dUHgFR30ILJuEMxbzqyPt7Dr07AeBpVm
-         yT9ibsvyducozgcofoFIiJzIu4A4ngizcGlShJ/cp6E49qvY/FNGxxDtjr+GVxO9VbVG
-         JAIfRltSYHf0LRuXcC40Y+Ewbu6z8XaoL0GGFq1z8dh9N2zHFBe0rvrsNLro2gklAs6B
-         chjJ7LiXjT8xQr3JNRY7YeyKecQQUnI6c+Dm74u/IE6hALNGNahRzUhC5IfBzPIMo8Sg
-         3FWbMqz0h4hGPi8ImKi4/iPdS+s7BgjJJaOGx8pMz0Fry0RAf9l6mCWYPs0XCcB1uxzD
-         bF1A==
-X-Gm-Message-State: APjAAAXLBNsMmwiQYqsWu70pfNB0oLsjraDu8AOw7dap7rEnKla/6w23
-        buUYy8jHr48Xb/lOLJLY1NvKEA==
-X-Google-Smtp-Source: APXvYqzdjuejzRMRDDBOeS+MzW068kwST63q5A5Q5pLQhcdP4++zAdcxzk0RDl8evG7cCpmts3B0qw==
-X-Received: by 2002:a17:902:4a0c:: with SMTP id w12mr41852080pld.52.1556484993871;
-        Sun, 28 Apr 2019 13:56:33 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:68a6:ac0c:7713:add7? ([2601:646:c200:1ef2:68a6:ac0c:7713:add7])
-        by smtp.gmail.com with ESMTPSA id r138sm13730618pfr.2.2019.04.28.13.56.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Apr 2019 13:56:32 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 1/4] x86/thread_info: introduce ->ftrace_int3_stack member
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <20190428154345.789635b3@oasis.local.home>
-Date:   Sun, 28 Apr 2019 13:56:31 -0700
-Cc:     Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <249CA966-9EFF-4687-8BC9-9364EDD51388@amacapital.net>
-References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-2-nstange@suse.de> <F6268634-96D3-4267-B739-6D375FAB26A8@amacapital.net> <20190428135143.09d35bb6@oasis.local.home> <D5735AF7-D603-4B20-A3EE-B519044D1E5D@amacapital.net> <20190428154345.789635b3@oasis.local.home>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Sun, 28 Apr 2019 17:08:20 -0400
+Received: from smtp-out.xnet.cz ([178.217.244.18]:37603 "EHLO smtp-out.xnet.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725982AbfD1VIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 17:08:20 -0400
+Received: from meh.true.cz (meh.true.cz [108.61.167.218])
+        (Authenticated sender: petr@true.cz)
+        by smtp-out.xnet.cz (Postfix) with ESMTPSA id A0BEE3417;
+        Sun, 28 Apr 2019 23:08:16 +0200 (CEST)
+Received: from localhost (meh.true.cz [local])
+        by meh.true.cz (OpenSMTPD) with ESMTPA id 818325c1;
+        Sun, 28 Apr 2019 23:08:15 +0200 (CEST)
+Date:   Sun, 28 Apr 2019 23:08:14 +0200
+From:   Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Alban Bedel <albeu@free.fr>
+Subject: Re: [PATCH v2 3/4] net: macb: Drop nvmem_get_mac_address usage
+Message-ID: <20190428210814.GA346@meh.true.cz>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
+ <1556456002-13430-4-git-send-email-ynezz@true.cz>
+ <20190428165637.GJ23059@lunn.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190428165637.GJ23059@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Andrew Lunn <andrew@lunn.ch> [2019-04-28 18:56:37]:
 
-> On Apr 28, 2019, at 12:43 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
->=20
-> On Sun, 28 Apr 2019 11:08:34 -0700
-> Andy Lutomirski <luto@amacapital.net> wrote:
->=20
->>>=20
->>> Perhaps adding another slot into pt_regs that gets used by int3 to
->>> store a slot to emulate a call on return?
->>>=20
->>>=20
->>=20
->> That=E2=80=99s not totally nuts, although finding pt_regs isn=E2=80=99t e=
-ntirely trivial.
->=20
-> I meant on the int3 handler (which stores the pt_regs).
+Hi Andrew,
 
-But that=E2=80=99s below the stub=E2=80=99s RSP, so it=E2=80=99s toast if an=
-other interrupt happens. Or am I misunderstanding you?
+> On Sun, Apr 28, 2019 at 02:53:21PM +0200, Petr Štetiar wrote:
+> > of_get_mac_address now uses NVMEM under the hood, so it's not necessary
+> > to call it manually anymore.
+> > 
+> > Signed-off-by: Petr Štetiar <ynezz@true.cz>
+> > ---
+> >  drivers/net/ethernet/cadence/macb_main.c | 12 +++---------
+> >  1 file changed, 3 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> > index 3da2795..1b98bc8 100644
+> > --- a/drivers/net/ethernet/cadence/macb_main.c
+> > +++ b/drivers/net/ethernet/cadence/macb_main.c
+> > @@ -4172,16 +4172,10 @@ static int macb_probe(struct platform_device *pdev)
+> >  		bp->rx_intr_mask |= MACB_BIT(RXUBR);
+> >  
+> >  	mac = of_get_mac_address(np);
+> > -	if (mac) {
+> > +	if (mac)
+> >  		ether_addr_copy(bp->dev->dev_addr, mac);
+> > -	} else {
+> > -		err = nvmem_get_mac_address(&pdev->dev, bp->dev->dev_addr);
+> > -		if (err) {
+> > -			if (err == -EPROBE_DEFER)
+>
+> The EPRODE_DEFER is interesting here. your change to
+> of_get_mac_address() does not seem to handle that case. It probably
+> should. We don't want it to fail and end up with a random MAC
+> addresses etc, because the NVMEM has not probed yet.
 
->=20
->>=20
->> I still think I prefer an approach where we just emulate the call directl=
-y.
->=20
-> Then, on the return of int3, if there's anything in that slot, then we
-> could possibly shift the exception handler frame (that was added by the
-> hardware), insert the slot data into the top of the stack, and then
-> call iret (which the int3 handler, would add the return ip to be the
-> function being called), which would in essence emulate the call directly.
+so if I understand this correctly, it probably means, that this approach with
+modified of_get_mac_address is dead end as current of_get_mac_address users
+don't expect and handle possible -EPROBE_DEFER error, so I would need to
+change all the current users, which is nonsense.
 
-Oh, I get it.
-
-I liked Josh=E2=80=99s old proposal of unconditionally shifting the #BP fram=
-e 8 bytes better. It will be interesting when kernel shadow stacks are throw=
-n in the mix, but that=E2=80=99s a problem for another day.
-
+-- ynezz
