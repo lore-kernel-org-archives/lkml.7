@@ -2,87 +2,100 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE98C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 08:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859E3C4321A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 08:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF082075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 08:14:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eDzzAt6J"
+	by mail.kernel.org (Postfix) with ESMTP id 614972075D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 08:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfD1IOB (ORCPT
+        id S1726612AbfD1IQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 04:14:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54526 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfD1IOA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 04:14:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=H7pSF8CSi3Mqest59wbgaWW0VcSYcjBW94HJQdX6LtQ=; b=eDzzAt6Jd4hljvq3l+ATNeBe+
-        qpl0rfWEg5FVpeoaZDWvRC/hp+cIzXIHkW/+gK4+ZTECZUpwoOdHVdWoVy61+cZPde0uTLt5MD26Q
-        4+WAFs1pMnH2K2L93uAhBHF2T3CTL8KPCewNrSaE+G7PhP8SGWuK9rD7thPYwFKZRECdivq1SLlb/
-        9UCtNCQex5pXRPwOJZ5Me6Kksb1HFeZfMgirxHYgH/kJfiHy821EK+CeZq0NLkipSnCsLWfPZ91jx
-        tVLB2jnoZHjXPknEjE0AMLDfomVTv/9r6DBGjOawGM1NpR2q7lQA2O1IAGaN6oQEoFRpZPLdIzPNe
-        0dzcD+bsw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hKewb-00016d-NE; Sun, 28 Apr 2019 08:13:53 +0000
-Date:   Sun, 28 Apr 2019 01:13:53 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Meelis Roos <mroos@linux.ee>
-Cc:     Christopher Lameter <cl@linux.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org
-Subject: Re: DISCONTIGMEM is deprecated
-Message-ID: <20190428081353.GB30901@infradead.org>
-References: <20190419094335.GJ18914@techsingularity.net>
- <20190419140521.GI7751@bombadil.infradead.org>
- <0100016a461809ed-be5bd8fc-9925-424d-9624-4a325a7a8860-000000@email.amazonses.com>
- <25cabb7c-9602-2e09-2fe0-cad3e54595fa@linux.ee>
+        Sun, 28 Apr 2019 04:16:21 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44898 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726369AbfD1IQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 04:16:20 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 26C2E8F0C0F182CB1608;
+        Sun, 28 Apr 2019 16:16:17 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sun, 28 Apr 2019
+ 16:16:02 +0800
+Subject: Re: [PATCH -next] crypto: ccree - remove set but not used variable
+ 'du_size'
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+References: <20190426151821.36944-1-yuehaibing@huawei.com>
+ <CAOtvUMesBDrnMd=d5S50xj0W2PyYbb9E9SeYvaev4Dw7Uu_tHg@mail.gmail.com>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <7ecc05f9-952f-e036-7d85-6c651bf2a888@huawei.com>
+Date:   Sun, 28 Apr 2019 16:16:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25cabb7c-9602-2e09-2fe0-cad3e54595fa@linux.ee>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CAOtvUMesBDrnMd=d5S50xj0W2PyYbb9E9SeYvaev4Dw7Uu_tHg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 07:49:57PM +0300, Meelis Roos wrote:
-> > > ia64 (looks complicated ...)
-> > 
-> > Well as far as I can tell it was not even used 12 or so years ago on
-> > Itanium when I worked on that stuff.
+On 2019/4/28 15:58, Gilad Ben-Yossef wrote:
+> On Fri, Apr 26, 2019 at 7:38 PM Yue Haibing <yuehaibing@huawei.com> wrote:
+>>
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> Fixes gcc '-Wunused-but-set-variable' warning:
+>>
+>> drivers/crypto/ccree/cc_cipher.c: In function cc_setup_key_desc:
+>> drivers/crypto/ccree/cc_cipher.c:645:15: warning: variable du_size set but not used [-Wunused-but-set-variable]
+>>
+>> It is never used since introduction in
+>> commit dd8486c75085 ("crypto: ccree - move key load desc. before flow desc.")
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/crypto/ccree/cc_cipher.c | 4 ----
+>>  1 file changed, 4 deletions(-)
+>>
+>> diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
+>> index d9f8cd5..6bd3791 100644
+>> --- a/drivers/crypto/ccree/cc_cipher.c
+>> +++ b/drivers/crypto/ccree/cc_cipher.c
+>> @@ -642,16 +642,12 @@ static void cc_setup_key_desc(struct crypto_tfm *tfm,
+>>         int direction = req_ctx->gen_ctx.op_type;
+>>         dma_addr_t key_dma_addr = ctx_p->user.key_dma_addr;
+>>         unsigned int key_len = ctx_p->keylen;
+>> -       unsigned int du_size = nbytes;
+>>         unsigned int din_size;
+>>
+>>         struct cc_crypto_alg *cc_alg =
+>>                 container_of(tfm->__crt_alg, struct cc_crypto_alg,
+>>                              skcipher_alg.base);
+>>
+>> -       if (cc_alg->data_unit)
+>> -               du_size = cc_alg->data_unit;
 > 
-> My notes tell that on UP ia64 (RX2620), !NUMA was broken with both
-> SPARSEMEM and DISCONTIGMEM. NUMA+SPARSEMEM or !NUMA worked. Even
-> NUMA+DISCONTIGMEM worked, that was my config on 2-CPU RX2660.
+> Thanks!
+> This is a good catch. It seems we can also drop the whole cc_alg var
+> as well in this case,
+> since it is only used by the code setting du_size....
+> 
+> Do you want to send a patch doing both or shall I ?
 
-ia64 has a such a huge number of memory model choices.  Maybe we
-need to cut it down to a small set that actually work.
+Yes, will send v2, thanks!
+> 
+> Cheers,
+> Gilad
+> 
 
-That includes fund bits like the 'VIRTUAL_MEM_MAP' option where the
-comment claims:
-
-# VIRTUAL_MEM_MAP and FLAT_NODE_MEM_MAP are functionally equivalent.
-# VIRTUAL_MEM_MAP has been retained for historical reasons.
-
-but it still is selected as the default if sparsemem is not enabled..
