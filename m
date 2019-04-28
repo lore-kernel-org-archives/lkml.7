@@ -2,129 +2,184 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CBBC43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 19:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFB8C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82BA2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 19:53:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZP7OsTV7"
+	by mail.kernel.org (Postfix) with ESMTP id 181E22064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfD1TxX (ORCPT
+        id S1727180AbfD1UHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 15:53:23 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45464 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfD1TxW (ORCPT
+        Sun, 28 Apr 2019 16:07:01 -0400
+Received: from hosting.gsystem.sk ([212.5.213.30]:36432 "EHLO
+        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfD1UHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 15:53:22 -0400
-Received: by mail-qt1-f193.google.com with SMTP id b3so9722725qtc.12;
-        Sun, 28 Apr 2019 12:53:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ow0hOBCWNf9L4Sr2+kvBTmny91Rm+CzMXx0+dpHwDRU=;
-        b=ZP7OsTV7OnO15ur8/sU+Vk4YTNDhi/gFAmnK2tuUeF9s+hZY9txYbrw5JydmT9L471
-         ByHrvrG/OcyFjzqkFEiM0kcRuC0bEcdpb8hCYSc2lLPbyNiMem69tgyY5XHlYHwWw9tz
-         ehzRrfKtU51Mna/DuGIie3Ora8+3utNt+BaTuJ6IjuV2Egv0tme9zPjWlXXYTtNypTQ1
-         63H4dT2aaOySOywLwePW5IhvrqI02Gn5I0LReUYhXKB6JuWyhP1Zys5YFsv1sRMNrKrT
-         K48z1BER14z1kkolRo6vK+yIxbmz/GorjCXF5LMhJ2Iv+ur7kQuSOIphH5NrbiMdMy1c
-         r9Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ow0hOBCWNf9L4Sr2+kvBTmny91Rm+CzMXx0+dpHwDRU=;
-        b=isFtPsjfWYSnrHNj58XIey63tYfF18ys0pEL9TxPMzdOF1BYcZ+0CTyQ8OL5FKc+kC
-         fNJjtVT/WebcG1oqJViEwVq9V9c+E/JTdv4NOsiRdpAcqX6VJOivGpoBDaOwkSx+UJVs
-         QQW53STSG3xbTdE7mXhemhGT82P+lDdLM0/dNU6OJAgECIYgGnea32Lur2heJTTp5t9o
-         oiGHLqvTWQRRL0uuJx1GKq4SPtikcs2LF8c3hcWuPNSVgFxw/Nk73G12C5/vZap30oDU
-         ruCqPtu5zr2PrLIlJpv1e8OVqXVjXgx3kxTGdD2KqXDTePLfOqLeKyVXn8y31f0rVCZz
-         vk/Q==
-X-Gm-Message-State: APjAAAXk3k+kyQ6DK/Fj4skhTICYyM/lwyes6pcm2Q6Vd0LFUFL39vf9
-        +MVMPnmk+rzlX49yJkVrSFlGDAHOtpAkQ9yh8QM=
-X-Google-Smtp-Source: APXvYqxJr720rnkWKPkc5JGyrhBMI5hcbhWPbKEDFJnpuIfvysAHkAX22RM2cYKDtlTZpdNgzbezwC8Coh9r7/tQyxU=
-X-Received: by 2002:ac8:25b8:: with SMTP id e53mr10755423qte.194.1556481201803;
- Sun, 28 Apr 2019 12:53:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190428104041.11262-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20190428104041.11262-1-lukas.bulwahn@gmail.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Sun, 28 Apr 2019 12:53:10 -0700
-Message-ID: <CAPhsuW575DC_ME2nEHmQtGo11ksVQGzZzN3Awm9xXT9ho37Ggg@mail.gmail.com>
-Subject: Re: [PATCH] md: properly lock and unlock in rdev_attr_store()
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Shaohua Li <shli@kernel.org>, Neil Brown <neilb@suse.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Himanshu Jha <himanshujha199639@gmail.com>,
-        clang-built-linux@googlegroups.com,
-        linux-raid <linux-raid@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 28 Apr 2019 16:07:00 -0400
+Received: from gsql.ggedos.sk (off-20.infotel.telecom.sk [212.5.213.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by hosting.gsystem.sk (Postfix) with ESMTPSA id 7A6737A0355;
+        Sun, 28 Apr 2019 22:06:59 +0200 (CEST)
+From:   Ondrej Zary <linux@zary.sk>
+To:     Rik Faith <faith@cs.unc.edu>,
+        "David A . Hinds" <dahinds@users.sourceforge.net>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] fdomain: Resurrect driver (PCMCIA support)
+Date:   Sun, 28 Apr 2019 22:06:26 +0200
+Message-Id: <20190428200626.28092-5-linux@zary.sk>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190428200626.28092-1-linux@zary.sk>
+References: <20190428200626.28092-1-linux@zary.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 3:41 AM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
->
-> rdev_attr_store() should lock and unlock mddev->reconfig_mutex in a
-> balanced way with mddev_lock() and mddev_unlock().
->
-> But when rdev->mddev is NULL, rdev_attr_store() would try to unlock
-> without locking before. Resolve this locking issue..
->
-> This locking issue was detected with Clang Thread Safety Analyser:
->
-> drivers/md/md.c:3393:3: warning: releasing mutex 'mddev->reconfig_mutex' that was not held [-Wthread-safety-analysis]
->                 mddev_unlock(mddev);
->                 ^
->
-> This warning was reported after annotating mutex functions and
-> mddev_lock() and mddev_unlock().
->
-> Fixes: 27c529bb8e90 ("md: lock access to rdev attributes properly")
-> Link: https://groups.google.com/d/topic/clang-built-linux/CvBiiQLB0H4/discussion
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Arnd, Neil, here a proposal to fix lock and unlocking asymmetry.
->
-> I quite sure that if mddev is NULL, it should just return.
+Future Domain PCMCIA SCSI support card support.
 
-I think current code will just return -EBUSY when mddev is NULL, right?
+Currently untested.
 
-Song
+Signed-off-by: Ondrej Zary <linux@zary.sk>
+---
+ drivers/scsi/pcmcia/Kconfig      | 10 +++++
+ drivers/scsi/pcmcia/Makefile     |  1 +
+ drivers/scsi/pcmcia/fdomain_cs.c | 89 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 100 insertions(+)
+ create mode 100644 drivers/scsi/pcmcia/fdomain_cs.c
 
+diff --git a/drivers/scsi/pcmcia/Kconfig b/drivers/scsi/pcmcia/Kconfig
+index 2d435f105b16..169d93f90a30 100644
+--- a/drivers/scsi/pcmcia/Kconfig
++++ b/drivers/scsi/pcmcia/Kconfig
+@@ -19,6 +19,16 @@ config PCMCIA_AHA152X
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called aha152x_cs.
+ 
++config PCMCIA_FDOMAIN
++	tristate "Future Domain PCMCIA support"
++	select SCSI_FDOMAIN
++	help
++	  Say Y here if you intend to attach this type of PCMCIA SCSI host
++	  adapter to your computer.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called fdomain_cs.
++
+ config PCMCIA_NINJA_SCSI
+ 	tristate "NinjaSCSI-3 / NinjaSCSI-32Bi (16bit) PCMCIA support"
+ 	depends on !64BIT
+diff --git a/drivers/scsi/pcmcia/Makefile b/drivers/scsi/pcmcia/Makefile
+index a5a24dd44e7e..02f5b44a2685 100644
+--- a/drivers/scsi/pcmcia/Makefile
++++ b/drivers/scsi/pcmcia/Makefile
+@@ -4,6 +4,7 @@ ccflags-y		:= -I $(srctree)/drivers/scsi
+ 
+ # 16-bit client drivers
+ obj-$(CONFIG_PCMCIA_QLOGIC)	+= qlogic_cs.o
++obj-$(CONFIG_PCMCIA_FDOMAIN)	+= fdomain_cs.o
+ obj-$(CONFIG_PCMCIA_AHA152X)	+= aha152x_cs.o
+ obj-$(CONFIG_PCMCIA_NINJA_SCSI)	+= nsp_cs.o
+ obj-$(CONFIG_PCMCIA_SYM53C500)	+= sym53c500_cs.o
+diff --git a/drivers/scsi/pcmcia/fdomain_cs.c b/drivers/scsi/pcmcia/fdomain_cs.c
+new file mode 100644
+index 000000000000..eee1379ad67b
+--- /dev/null
++++ b/drivers/scsi/pcmcia/fdomain_cs.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MPL-1.1)
++/*
++ * Driver for Future Domain-compatible PCMCIA SCSI cards
++ * Copyright 2019 Ondrej Zary
++ *
++ * The initial developer of the original code is David A. Hinds
++ * <dahinds@users.sourceforge.net>.  Portions created by David A. Hinds
++ * are Copyright (C) 1999 David A. Hinds.  All Rights Reserved.
++ */
++
++#include <linux/module.h>
++#include <linux/init.h>
++#include <scsi/scsi_host.h>
++#include <pcmcia/cistpl.h>
++#include <pcmcia/ds.h>
++#include "fdomain.h"
++
++MODULE_AUTHOR("Ondrej Zary, David Hinds");
++MODULE_DESCRIPTION("Future Domain PCMCIA SCSI driver");
++MODULE_LICENSE("Dual MPL/GPL");
++
++static int fdomain_config_check(struct pcmcia_device *p_dev, void *priv_data)
++{
++	p_dev->io_lines = 10;
++	p_dev->resource[0]->end = 0x10;
++	p_dev->resource[0]->flags &= ~IO_DATA_PATH_WIDTH;
++	p_dev->resource[0]->flags |= IO_DATA_PATH_WIDTH_AUTO;
++	return pcmcia_request_io(p_dev);
++}
++
++static int fdomain_probe(struct pcmcia_device *link)
++{
++	int ret;
++	struct Scsi_Host *sh;
++
++	link->config_flags |= CONF_ENABLE_IRQ | CONF_AUTO_SET_IO;
++	link->config_regs = PRESENT_OPTION;
++
++	ret = pcmcia_loop_config(link, fdomain_config_check, NULL);
++	if (ret)
++		return ret;
++
++	ret = pcmcia_enable_device(link);
++	if (ret)
++		goto fail;
++
++	sh = fdomain_create(link->resource[0]->start, link->irq, 7, 0, NULL,
++			    &link->dev);
++	if (!sh) {
++		dev_err(&link->dev, "Controller initialization failed");
++		ret = -ENODEV;
++		goto fail;
++	}
++
++	link->priv = sh;
++
++	return 0;
++
++fail:
++	pcmcia_disable_device(link);
++	return ret;
++}
++
++static void fdomain_remove(struct pcmcia_device *link)
++{
++	fdomain_destroy(link->priv);
++	pcmcia_disable_device(link);
++}
++
++static const struct pcmcia_device_id fdomain_ids[] = {
++	PCMCIA_DEVICE_PROD_ID12("IBM Corp.", "SCSI PCMCIA Card", 0xe3736c88,
++				0x859cad20),
++	PCMCIA_DEVICE_PROD_ID1("SCSI PCMCIA Adapter Card", 0x8dacb57e),
++	PCMCIA_DEVICE_PROD_ID12(" SIMPLE TECHNOLOGY Corporation",
++				"SCSI PCMCIA Credit Card Controller",
++				0x182bdafe, 0xc80d106f),
++	PCMCIA_DEVICE_NULL,
++};
++MODULE_DEVICE_TABLE(pcmcia, fdomain_ids);
++
++static struct pcmcia_driver fdomain_cs_driver = {
++	.owner		= THIS_MODULE,
++	.name		= "fdomain_cs",
++	.probe		= fdomain_probe,
++	.remove		= fdomain_remove,
++	.id_table       = fdomain_ids,
++};
++
++module_pcmcia_driver(fdomain_cs_driver);
+-- 
+Ondrej Zary
 
->
-> I am still puzzled if the return value from mddev_lock() should be really
-> return by rdev_attr_store() when it is not 0. But that was the behaviour
-> before, so I will keep it that way.
->
->  drivers/md/md.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 05ffffb8b769..a9735d8f1e70 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -3384,7 +3384,9 @@ rdev_attr_store(struct kobject *kobj, struct attribute *attr,
->                 return -EIO;
->         if (!capable(CAP_SYS_ADMIN))
->                 return -EACCES;
-> -       rv = mddev ? mddev_lock(mddev): -EBUSY;
-> +       if (!mddev)
-> +               return -EBUSY;
-> +       rv = mddev_lock(mddev);
->         if (!rv) {
->                 if (rdev->mddev == NULL)
->                         rv = -EBUSY;
-> --
-> 2.17.1
->
