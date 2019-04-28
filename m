@@ -2,269 +2,120 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF37C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 05:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38ABC43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 05:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C09220881
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 05:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98AC20881
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 05:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfD1FlV (ORCPT
+        id S1726416AbfD1FpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 01:41:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58252 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbfD1FlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 01:41:21 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 175CC30BC650;
-        Sun, 28 Apr 2019 05:41:20 +0000 (UTC)
-Received: from localhost (ovpn-12-135.pek2.redhat.com [10.72.12.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D2AFB620C3;
-        Sun, 28 Apr 2019 05:41:16 +0000 (UTC)
-Date:   Sun, 28 Apr 2019 13:41:14 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     j-nomura@ce.jp.nec.com, kasong@redhat.com, dyoung@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
-        kexec@lists.infradead.org, hpa@zytor.com
-Subject: Re: [PATCH v5 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190428054114.GS3584@localhost.localdomain>
-References: <20190424092944.30481-1-bhe@redhat.com>
- <20190424092944.30481-2-bhe@redhat.com>
- <20190427161121.GC12360@zn.tnic>
+        Sun, 28 Apr 2019 01:45:18 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57144 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725999AbfD1FpS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 01:45:18 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3S5ckGP108960
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 01:45:16 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s54cfamhm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 01:45:16 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Sun, 28 Apr 2019 06:45:14 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 28 Apr 2019 06:45:09 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3S5j8gi45023464
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 28 Apr 2019 05:45:08 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9A88AE055;
+        Sun, 28 Apr 2019 05:45:08 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F4C9AE056;
+        Sun, 28 Apr 2019 05:45:07 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sun, 28 Apr 2019 05:45:07 +0000 (GMT)
+Date:   Sun, 28 Apr 2019 08:45:05 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Subject: Re: [RFC PATCH 2/7] x86/sci: add core implementation for system call
+ isolation
+References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com>
+ <1556228754-12996-3-git-send-email-rppt@linux.ibm.com>
+ <20190426074956.GZ4038@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190427161121.GC12360@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sun, 28 Apr 2019 05:41:20 +0000 (UTC)
+In-Reply-To: <20190426074956.GZ4038@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19042805-0016-0000-0000-00000276086A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042805-0017-0000-0000-000032D28A42
+Message-Id: <20190428054505.GC14896@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-28_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=518 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904280040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/27/19 at 06:11pm, Borislav Petkov wrote:
-> On Wed, Apr 24, 2019 at 05:29:43PM +0800, Baoquan He wrote:
-> > From: Kairui Song <kasong@redhat.com>
-> > 
-> > The current code only builds identity mapping for physical memory during
-> > kexec-type loading. The regions reserved by firmware are not covered.
-> > In the next patch, the boot decompressing code of kexec-ed kernel tries
+On Fri, Apr 26, 2019 at 09:49:56AM +0200, Peter Zijlstra wrote:
+> On Fri, Apr 26, 2019 at 12:45:49AM +0300, Mike Rapoport wrote:
+> > The initial SCI implementation allows access to any kernel data, but it
+> > limits access to the code in the following way:
+> > * calls and jumps to known code symbols without offset are allowed
+> > * calls and jumps into a known symbol with offset are allowed only if that
+> > symbol was already accessed and the offset is in the next page
+> > * all other code access are blocked
 > 
-> There's no guarantee that when this patch gets applied, the next patch
-> will be the one you mean. So explain what you mean here instead.
+> So if you have a large function and an in-function jump skips a page
+> you're toast.
 
-All agreed, will update all of them, thanks.
+Right :(
+ 
+> Why not employ the instruction decoder we have and unconditionally allow
+> all direct JMP/CALL but verify indirect JMP/CALL and RET ?
 
-About this place, do you think below change is OK to you?
+Apparently I didn't dig deep enough to find the instruction decoder :)
+Surely I can use it.
 
-~~~
-The current code only builds identity mapping for physical memory during
-kexec-type loading. The regions reserved by firmware are not covered.
-In the later code change, the boot decompressing code of kexec-ed kernel
-will try to access EFI systab and ACPI tables, lacking identity mapping for
-them will cause error and reset system to firmware.
+> Anyway, I'm fearing the overhead of this one, this cannot be fast.
 
-Thanks
-Baoquan
+Well, I think that the verification itself is not what will slow things
+down the most. IMHO, the major overhead is coming from cr3 switch.
 
-> > 
-> > This error doesn't happen on all systems. Because kexec enables gbpages
-> > to build identity mapping, the EFI systab and ACPI tables could have been
-> > covered if they share the same 1 GB area with physical memory. To make
-> > sure, we should map them always.
-> > 
-> > So here add mapping for them.
-> > 
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> 
-> When you send someone else's patch, you need to add your SOB. Lemme
-> point you to
-> 
->   Documentation/process/submitting-patches.rst
-> 
-> again. Please have a deeper look.
-> 
-> > ---
-> >  arch/x86/kernel/machine_kexec_64.c | 86 ++++++++++++++++++++++++++++++
-> >  1 file changed, 86 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> > index ceba408ea982..77b40c3e28d7 100644
-> > --- a/arch/x86/kernel/machine_kexec_64.c
-> > +++ b/arch/x86/kernel/machine_kexec_64.c
-> > @@ -18,6 +18,7 @@
-> >  #include <linux/io.h>
-> >  #include <linux/suspend.h>
-> >  #include <linux/vmalloc.h>
-> > +#include <linux/efi.h>
-> >  
-> >  #include <asm/init.h>
-> >  #include <asm/pgtable.h>
-> > @@ -29,6 +30,48 @@
-> >  #include <asm/setup.h>
-> >  #include <asm/set_memory.h>
-> >  
-> > +#ifdef CONFIG_ACPI
-> > +/**
-> 
-> Two stars '**' are kernel-doc style but this comment is implementation
-> detail and is irrelevant for kernel-doc ouput.
-> 
-> > + * Used while adding mapping for ACPI tables.
-> > + * Can be reused when other iomem regions need be mapped
-> > + */
-> > +struct init_pgtable_data {
-> > +	struct x86_mapping_info *info;
-> > +	pgd_t *level4p;
-> > +};
-> > +
-> > +static int mem_region_callback(struct resource *res, void *arg)
-> > +{
-> > +	struct init_pgtable_data *data = arg;
-> > +	unsigned long mstart, mend;
-> > +
-> > +	mstart = res->start;
-> > +	mend = mstart + resource_size(res) - 1;
-> > +
-> > +	return kernel_ident_mapping_init(data->info,
-> > +			data->level4p, mstart, mend);
-> 
-> Do not break that line.
-> 
-> > +}
-> > +
-> > +static int init_acpi_pgtable(struct x86_mapping_info *info,
-> > +				   pgd_t *level4p)
-> 
-> static int
-> map_acpi_tables(...)
-> 
-> > +{
-> > +	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> > +	struct init_pgtable_data data;
-> > +
-> > +	data.info = info;
-> > +	data.level4p = level4p;
-> > +	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> > +	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
-> > +				   &data, mem_region_callback);
-> > +}
-> > +#else
-> > +static int init_acpi_pgtable(struct x86_mapping_info *info,
-> > +				   pgd_t *level4p)
-> > +{
-> > +	return 0;
-> > +}
-> > +#endif
-> > +
-> >  #ifdef CONFIG_KEXEC_FILE
-> >  const struct kexec_file_ops * const kexec_file_loaders[] = {
-> >  		&kexec_bzImage64_ops,
-> > @@ -36,6 +79,37 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
-> >  };
-> >  #endif
-> >  
-> > +#ifdef CONFIG_EFI
-> > +static int init_efi_systab_pgtable(struct x86_mapping_info *info,
-> > +				   pgd_t *level4p)
-> 
-> This function's name is wrong. Make it like this:
-> 
-> static int
-> map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
-> {
-> #ifdef CONFIG_EFI
-> 
-> 	...
-> 
-> #endif
-> 
-> 	return 0;
-> }
-> 
-> and drop the #else ifdeffery.
-> 
-> 
-> > +{
-> > +	unsigned long mstart, mend;
-> > +
-> > +	if (!efi_enabled(EFI_BOOT))
-> > +		return 0;
-> > +
-> > +	mstart = (boot_params.efi_info.efi_systab |
-> > +			((u64)boot_params.efi_info.efi_systab_hi<<32));
-> > +
-> > +	if (efi_enabled(EFI_64BIT))
-> > +		mend = mstart + sizeof(efi_system_table_64_t);
-> > +	else
-> > +		mend = mstart + sizeof(efi_system_table_32_t);
-> > +
-> > +	if (mstart)
-> > +		return kernel_ident_mapping_init(info,
-> > +				level4p, mstart, mend);
-> 
-> Flip that logic:
-> 
-> 	if (!mstart)
-> 		return 0;
-> 
-> 	return kernel_ident_mapping_init(info, level4p, mstart, mend);
-> 
-> and let the function stick out.
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +#else
-> > +static inline int init_efi_systab_pgtable(struct x86_mapping_info *info,
-> > +					  pgd_t *level4p)
-> > +{
-> > +	return 0;
-> > +}
-> > +#endif
-> > +
-> >  static void free_transition_pgtable(struct kimage *image)
-> >  {
-> >  	free_page((unsigned long)image->arch.p4d);
-> > @@ -159,6 +233,18 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
-> >  			return result;
-> >  	}
-> >  
-> > +	/**
-> 
-> Two stars '**' are kernel-doc style comments above function names but
-> not here.
-> 
-> > +	 * Prepare EFI systab and ACPI table mapping for kexec kernel,
-> > +	 * since they are not covered by pfn_mapped.
-> > +	 */
-> > +	result = init_efi_systab_pgtable(&info, level4p);
-> > +	if (result)
-> > +		return result;
-> > +
-> > +	result = init_acpi_pgtable(&info, level4p);
-> > +	if (result)
-> > +		return result;
-> > +
-> >  	return init_transition_pgtable(image, level4p);
-> >  }
-> >  
-> > -- 
-> > 2.17.2
-> > 
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+-- 
+Sincerely yours,
+Mike.
+
