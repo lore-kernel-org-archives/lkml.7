@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E75C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342A4C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7B720679
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0191A214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:27:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfD1V06 (ORCPT
+        id S1726990AbfD1V1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 17:26:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56636 "EHLO mx1.redhat.com"
+        Sun, 28 Apr 2019 17:27:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59728 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfD1V0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 17:26:55 -0400
+        id S1726927AbfD1V07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 17:26:59 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 19E6C30842AC;
-        Sun, 28 Apr 2019 21:26:55 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3722330917EF;
+        Sun, 28 Apr 2019 21:26:58 +0000 (UTC)
 Received: from llong.com (ovpn-120-22.rdu2.redhat.com [10.10.120.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45234646A5;
-        Sun, 28 Apr 2019 21:26:53 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C55911824E;
+        Sun, 28 Apr 2019 21:26:56 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -40,120 +40,230 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Tim Chen <tim.c.chen@linux.intel.com>,
         huang ying <huang.ying.caritas@gmail.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH-tip v7 11/20] locking/rwsem: Wake up almost all readers in wait queue
-Date:   Sun, 28 Apr 2019 17:25:48 -0400
-Message-Id: <20190428212557.13482-12-longman@redhat.com>
+Subject: [PATCH-tip v7 13/20] locking/rwsem: Enable readers spinning on writer
+Date:   Sun, 28 Apr 2019 17:25:50 -0400
+Message-Id: <20190428212557.13482-14-longman@redhat.com>
 In-Reply-To: <20190428212557.13482-1-longman@redhat.com>
 References: <20190428212557.13482-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Sun, 28 Apr 2019 21:26:55 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Sun, 28 Apr 2019 21:26:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the front of the wait queue is a reader, other readers
-immediately following the first reader will also be woken up at the
-same time. However, if there is a writer in between. Those readers
-behind the writer will not be woken up.
-
-Because of optimistic spinning, the lock acquisition order is not FIFO
-anyway. The lock handoff mechanism will ensure that lock starvation
-will not happen.
-
-Assuming that the lock hold times of the other readers still in the
-queue will be about the same as the readers that are being woken up,
-there is really not much additional cost other than the additional
-latency due to the wakeup of additional tasks by the waker. Therefore
-all the readers up to a maximum of 256 in the queue are woken up when
-the first waiter is a reader to improve reader throughput. This is
-somewhat similar in concept to a phase-fair R/W lock.
+This patch enables readers to optimistically spin on a
+rwsem when it is owned by a writer instead of going to sleep
+directly.  The rwsem_can_spin_on_owner() function is extracted
+out of rwsem_optimistic_spin() and is called directly by
+__rwsem_down_read_failed_common() and __rwsem_down_write_failed_common().
 
 With a locking microbenchmark running on 5.1 based kernel, the total
-locking rates (in kops/s) on a 8-socket IvyBridge-EX system with
-equal numbers of readers and writers before and after this patch were
-as follows:
+locking rates (in kops/s) on a 8-socket IvyBrige-EX system with equal
+numbers of readers and writers before and after the patch were as
+follows:
 
-   # of Threads  Pre-Patch   Post-patch
-   ------------  ---------   ----------
-        4          1,641        1,674
-        8            731        1,062
-       16            564          924
-       32             78          300
-       64             38          195
-      240             50          149
+   # of Threads  Pre-patch    Post-patch
+   ------------  ---------    ----------
+        4          1,674        1,684
+        8          1,062        1,074
+       16            924          900
+       32            300          458
+       64            195          208
+      128            164          168
+      240            149          143
 
-There is no performance gain at low contention level. At high contention
-level, however, this patch gives a pretty decent performance boost.
+The performance change wasn't significant in this case, but this change
+is required by a follow-on patch.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/rwsem.c | 31 ++++++++++++++++++++++++++-----
- 1 file changed, 26 insertions(+), 5 deletions(-)
+ kernel/locking/lock_events_list.h |  1 +
+ kernel/locking/rwsem.c            | 86 ++++++++++++++++++++++++++-----
+ 2 files changed, 75 insertions(+), 12 deletions(-)
 
+diff --git a/kernel/locking/lock_events_list.h b/kernel/locking/lock_events_list.h
+index 634b47fd8b5e..ca954e4e00e4 100644
+--- a/kernel/locking/lock_events_list.h
++++ b/kernel/locking/lock_events_list.h
+@@ -56,6 +56,7 @@ LOCK_EVENT(rwsem_sleep_reader)	/* # of reader sleeps			*/
+ LOCK_EVENT(rwsem_sleep_writer)	/* # of writer sleeps			*/
+ LOCK_EVENT(rwsem_wake_reader)	/* # of reader wakeups			*/
+ LOCK_EVENT(rwsem_wake_writer)	/* # of writer wakeups			*/
++LOCK_EVENT(rwsem_opt_rlock)	/* # of read locks opt-spin acquired	*/
+ LOCK_EVENT(rwsem_opt_wlock)	/* # of write locks opt-spin acquired	*/
+ LOCK_EVENT(rwsem_opt_fail)	/* # of failed opt-spinnings		*/
+ LOCK_EVENT(rwsem_rlock)		/* # of read locks acquired		*/
 diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 62ca834d59d0..8c212b658854 100644
+index a12a1676e905..6b11dce3139d 100644
 --- a/kernel/locking/rwsem.c
 +++ b/kernel/locking/rwsem.c
-@@ -254,6 +254,14 @@ enum writer_wait_state {
-  */
- #define RWSEM_WAIT_TIMEOUT	DIV_ROUND_UP(HZ, 250)
+@@ -452,6 +452,30 @@ static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem,
+ }
  
+ #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
 +/*
-+ * Magic number to batch-wakeup waiting readers, even when writers are
-+ * also present in the queue. This both limits the amount of work the
-+ * waking thread must do and also prevents any potential counter overflow,
-+ * however unlikely.
++ * Try to acquire read lock before the reader is put on wait queue.
++ * Lock acquisition isn't allowed if the rwsem is locked or a writer handoff
++ * is ongoing.
 + */
-+#define MAX_READERS_WAKEUP	0x100
++static inline bool rwsem_try_read_lock_unqueued(struct rw_semaphore *sem)
++{
++	long count = atomic_long_read(&sem->count);
++
++	if (count & (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))
++		return false;
++
++	count = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS, &sem->count);
++	if (!(count & (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
++		rwsem_set_reader_owned(sem);
++		lockevent_inc(rwsem_opt_rlock);
++		return true;
++	}
++
++	/* Back out the change */
++	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
++	return false;
++}
 +
  /*
-  * handle the lock release when processes blocked on it that can now run
-  * - if we come here from up_xxxx(), then the RWSEM_FLAG_WAITERS bit must
-@@ -329,11 +337,17 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+  * Try to acquire write lock before the writer has been put on wait queue.
+  */
+@@ -486,9 +510,12 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem)
+ 
+ 	BUILD_BUG_ON(is_rwsem_owner_spinnable(RWSEM_OWNER_UNKNOWN));
+ 
+-	if (need_resched())
++	if (need_resched()) {
++		lockevent_inc(rwsem_opt_fail);
+ 		return false;
++	}
+ 
++	preempt_disable();
+ 	rcu_read_lock();
+ 	owner = READ_ONCE(sem->owner);
+ 	if (owner) {
+@@ -496,6 +523,9 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem)
+ 		      owner_on_cpu(owner);
  	}
+ 	rcu_read_unlock();
++	preempt_enable();
++
++	lockevent_cond_inc(rwsem_opt_fail, !ret);
+ 	return ret;
+ }
+ 
+@@ -573,7 +603,7 @@ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
+ 	return state;
+ }
+ 
+-static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
++static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
+ {
+ 	bool taken = false;
+ 	int prev_owner_state = OWNER_NULL;
+@@ -581,9 +611,6 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+ 	preempt_disable();
+ 
+ 	/* sem->wait_lock should not be held when doing optimistic spinning */
+-	if (!rwsem_can_spin_on_owner(sem))
+-		goto done;
+-
+ 	if (!osq_lock(&sem->osq))
+ 		goto done;
+ 
+@@ -603,10 +630,11 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+ 		/*
+ 		 * Try to acquire the lock
+ 		 */
+-		if (rwsem_try_write_lock_unqueued(sem)) {
+-			taken = true;
++		taken = wlock ? rwsem_try_write_lock_unqueued(sem)
++			      : rwsem_try_read_lock_unqueued(sem);
++
++		if (taken)
+ 			break;
+-		}
+ 
+ 		/*
+ 		 * An RT task cannot do optimistic spinning if it cannot
+@@ -663,7 +691,12 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+ 	return taken;
+ }
+ #else
+-static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
++static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem)
++{
++	return false;
++}
++
++static inline bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
+ {
+ 	return false;
+ }
+@@ -679,6 +712,31 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
+ 	struct rwsem_waiter waiter;
+ 	DEFINE_WAKE_Q(wake_q);
+ 
++	if (!rwsem_can_spin_on_owner(sem))
++		goto queue;
++
++	/*
++	 * Undo read bias from down_read() and do optimistic spinning.
++	 */
++	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
++	adjustment = 0;
++	if (rwsem_optimistic_spin(sem, false)) {
++		/*
++		 * Wake up other readers in the wait list if the front
++		 * waiter is a reader.
++		 */
++		if ((atomic_long_read(&sem->count) & RWSEM_FLAG_WAITERS)) {
++			raw_spin_lock_irq(&sem->wait_lock);
++			if (!list_empty(&sem->wait_list))
++				__rwsem_mark_wake(sem, RWSEM_WAKE_READ_OWNED,
++						  &wake_q);
++			raw_spin_unlock_irq(&sem->wait_lock);
++			wake_up_q(&wake_q);
++		}
++		return sem;
++	}
++
++queue:
+ 	waiter.task = current;
+ 	waiter.type = RWSEM_WAITING_FOR_READ;
+ 	waiter.timeout = jiffies + RWSEM_WAIT_TIMEOUT;
+@@ -691,7 +749,7 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
+ 		 * exit the slowpath and return immediately as its
+ 		 * RWSEM_READER_BIAS has already been set in the count.
+ 		 */
+-		if (!(atomic_long_read(&sem->count) &
++		if (adjustment && !(atomic_long_read(&sem->count) &
+ 		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
+ 			raw_spin_unlock_irq(&sem->wait_lock);
+ 			rwsem_set_reader_owned(sem);
+@@ -703,7 +761,10 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
+ 	list_add_tail(&waiter.list, &sem->wait_list);
+ 
+ 	/* we're now waiting on the lock, but no longer actively locking */
+-	count = atomic_long_add_return(adjustment, &sem->count);
++	if (adjustment)
++		count = atomic_long_add_return(adjustment, &sem->count);
++	else
++		count = atomic_long_read(&sem->count);
  
  	/*
--	 * Grant an infinite number of read locks to the readers at the front
--	 * of the queue. We know that woken will be at least 1 as we accounted
-+	 * Grant up to MAX_READERS_WAKEUP read locks to all the readers in the
-+	 * queue. We know that the woken will be at least 1 as we accounted
- 	 * for above. Note we increment the 'active part' of the count by the
- 	 * number of readers before waking any processes up.
- 	 *
-+	 * This is an adaptation of the phase-fair R/W locks where at the
-+	 * reader phase (first waiter is a reader), all readers are eligible
-+	 * to acquire the lock at the same time irrespective of their order
-+	 * in the queue. The writers acquire the lock according to their
-+	 * order in the queue.
-+	 *
- 	 * We have to do wakeup in 2 passes to prevent the possibility that
- 	 * the reader count may be decremented before it is incremented. It
- 	 * is because the to-be-woken waiter may not have slept yet. So it
-@@ -345,13 +359,20 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- 	 * 2) For each waiters in the new list, clear waiter->task and
- 	 *    put them into wake_q to be woken up later.
- 	 */
--	list_for_each_entry(waiter, &sem->wait_list, list) {
-+	INIT_LIST_HEAD(&wlist);
-+	list_for_each_entry_safe(waiter, tmp, &sem->wait_list, list) {
- 		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
--			break;
-+			continue;
+ 	 * If there are no active locks, wake the front queued process(es).
+@@ -762,7 +823,8 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+ 	DEFINE_WAKE_Q(wake_q);
  
- 		woken++;
-+		list_move_tail(&waiter->list, &wlist);
-+
-+		/*
-+		 * Limit # of readers that can be woken up per wakeup call.
-+		 */
-+		if (woken >= MAX_READERS_WAKEUP)
-+			break;
- 	}
--	list_cut_before(&wlist, &sem->wait_list, &waiter->list);
+ 	/* do optimistic spinning and steal lock if possible */
+-	if (rwsem_optimistic_spin(sem))
++	if (rwsem_can_spin_on_owner(sem) &&
++	    rwsem_optimistic_spin(sem, true))
+ 		return sem;
  
- 	adjustment = woken * RWSEM_READER_BIAS - adjustment;
- 	lockevent_cond_inc(rwsem_wake_reader, woken);
+ 	/*
 -- 
 2.18.1
 
