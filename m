@@ -2,115 +2,117 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EA9C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 09:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3A8C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 09:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F4C206C1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 09:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB45206C1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 09:53:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="t8f5bxDn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zl8SyZ3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfD1Jwz (ORCPT
+        id S1726740AbfD1JxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 05:52:55 -0400
-Received: from mail-eopbgr30083.outbound.protection.outlook.com ([40.107.3.83]:49793
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726252AbfD1Jwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 05:52:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GH/3FWEXzmXk6SRD8UQBZdibKbpa0jZEZRwSldsIEdw=;
- b=t8f5bxDnVwuk1+OHy2RvAuYdarIH4nS3fMiupJSWg1eXsF/Cq0Yh6zZim4u68XrEg0iXDqrMv3r7z/75P6qUCymYXD1pTFrLApw5P0DbbbLxkjMtzFawN/H7sl/YPN2JnrAQsqKafWHjTT1BNhWRdwBdH2e13NsqLDpJGwQs0Sc=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6350.eurprd04.prod.outlook.com (10.255.118.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Sun, 28 Apr 2019 09:52:49 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::6c03:86ad:729d:e311]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::6c03:86ad:729d:e311%7]) with mapi id 15.20.1835.016; Sun, 28 Apr 2019
- 09:52:49 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] mfd: imx6sx: add MQS register definition for iomuxc gpr
-Thread-Topic: [PATCH] mfd: imx6sx: add MQS register definition for iomuxc gpr
-Thread-Index: AQHU/agjfPz5ks/OzEakw7KYMflrHQ==
-Date:   Sun, 28 Apr 2019 09:52:48 +0000
-Message-ID: <1556445161-29477-1-git-send-email-shengjiu.wang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 1.9.1
-x-clientproxiedby: HK2PR0401CA0011.apcprd04.prod.outlook.com
- (2603:1096:202:2::21) To VE1PR04MB6479.eurprd04.prod.outlook.com
- (2603:10a6:803:11e::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 95739329-d3ea-4b7e-9f3b-08d6cbbf456f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6350;
-x-ms-traffictypediagnostic: VE1PR04MB6350:
-x-microsoft-antispam-prvs: <VE1PR04MB635094D55453A52860F7F9ECE3380@VE1PR04MB6350.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0021920B5A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(136003)(39860400002)(346002)(396003)(189003)(199004)(6116002)(81166006)(2201001)(86362001)(68736007)(256004)(8676002)(2501003)(3846002)(99286004)(305945005)(7736002)(81156014)(8936002)(50226002)(71190400001)(71200400001)(476003)(486006)(2616005)(26005)(4326008)(6512007)(102836004)(6436002)(386003)(25786009)(6506007)(2906002)(186003)(6486002)(66066001)(5660300002)(316002)(53936002)(73956011)(52116002)(36756003)(97736004)(66476007)(66556008)(64756008)(66446008)(66946007)(110136005)(14454004)(478600001)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6350;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zTSsNZ0jfOmgDnz97nDkAn8DxHeXNQOsWUtC2fz8XhhEzBLwvTarxJNK0VLuO87y07VwLjzDL3yUprSFbeoR3dZXoByVC3JfjwYAgPgiUt99/oxauSEnPE8m6Y3Thg6lkm1wyf2AtqEWdy7w5c1J0QUJQG7/biu87cVW0WTyHw2eHc5nRehFkC1KuxcoEacM7x+9KgWxVMqSvwE/sMf8DFvhslt5Q1TUuB3G6khM1YY0CDsyzi1vwWAry/heeNGDrgM2WQAyuk6T8/Bca0ncruyNoFbAEclrxIoji8896go9L2uB7RsJxOqhTC/4gfQieYonarinB+X1AJcoGfWoopMA0o9sRlLU2napsJi/mwqQ5JN2JneUcv8dBP+3b+DtHRHtZEtST5KSMJvIelDe3Kc3SGDhyFTLjTP0XtXOV2Y=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 28 Apr 2019 05:53:11 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33593 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfD1JxL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 05:53:11 -0400
+Received: by mail-io1-f65.google.com with SMTP id u12so6557895iop.0;
+        Sun, 28 Apr 2019 02:53:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mrjoLB3/jtI5jqEi/ydYyCCjyNdzpn6OvBS3steifLY=;
+        b=Zl8SyZ3FZJQcjJnYc4f8rStzNJwBUNjZgSSMmAZRQ5lhl0+5dw610ANYnvX+MqTATw
+         Umky+zr7OfDRa+7dmuUNsXg9ZQ14c4b0FUfMPULL/J3htxxESfOneYtQdzzkBIFznkUE
+         Kh3sBe8+Abo543yYtKEDVKi5rJoLjktDkR0mvAFFUBUiyLaXol8OW2i4CbKoOONRi7V4
+         Yya0ZXv0OKPYWBtSpu41tEgYnCxR9ypKV7+m4IicNa6VXcQwuWB0bnPOuBx0ChtFg5iu
+         fmYbbu8MvzEPi4MRSKnS0Nvzx79dH4byrjzKvd1VctJYpIziDko8ttaiudwSnZbIZ1yW
+         gvcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mrjoLB3/jtI5jqEi/ydYyCCjyNdzpn6OvBS3steifLY=;
+        b=kOR1P4PuxaWGXDpyMrg0tG5aCK11HZBwP7AH8qJA2VbT2arecUhkB8ohdCsdCa+qrm
+         aAMT7V+fuC2jIDjg0bIGUiBn8jZjWXRSlUp7k0W7nPuw5Z+Pz6wHhxHY9UB1AHpDMPzw
+         ArdX9Ona9UyUMbIPkJNfqnX9D6xc41gjt4+xy90wVsfxO14bPK5DIdcU4lQsmQHQVG3a
+         e/CKXOYjZaEgr/OiGPsWOYBLarvef8n2+sU6EEg2n1YtKobsI6Aa2u9Idq5kPcNCRGpy
+         eI7GvgNaA2k4oU9YIs5J7HHn1Vqc7mp11Yw1xkWK19AmWvzaO+82Q1ktjqjZy9UDdl7V
+         9iaQ==
+X-Gm-Message-State: APjAAAWKnFtMsfHs5NMjkhzom1TooYtHuai+DtlDlVpehflb7lM/fyuT
+        UCGzhoXDmYVZpker4aQSCZ6CO2/xBgtwwPEiY/8=
+X-Google-Smtp-Source: APXvYqyb4275QBINybmElDXHkdyvUfwyJnFJPm/jb+IRVjHSMuHo1H8b8RFIg2M23blRxG9GuqZz/LU9PEuEMR2XlFA=
+X-Received: by 2002:a6b:c8d1:: with SMTP id y200mr3349440iof.225.1556445190264;
+ Sun, 28 Apr 2019 02:53:10 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95739329-d3ea-4b7e-9f3b-08d6cbbf456f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2019 09:52:49.1204
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6350
+References: <20190410174139.20012-1-tiny.windzz@gmail.com> <20190410174139.20012-3-tiny.windzz@gmail.com>
+ <20190426211540.GA890@bogus>
+In-Reply-To: <20190426211540.GA890@bogus>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Sun, 28 Apr 2019 17:53:05 +0800
+Message-ID: <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document allwinner,cpu-operating-points-v2
+To:     Rob Herring <robh@kernel.org>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        mark.rutland@arm.com, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net,
+        davem@davemloft.net, mchehab+samsung@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIG1hY3JvcyB0byBkZWZpbmUgbWFza3MgYW5kIGJpdHMgZm9yIGlteDZzeCBNUVMgcmVnaXN0
-ZXJzDQoNClNpZ25lZC1vZmYtYnk6IFNoZW5naml1IFdhbmcgPHNoZW5naml1LndhbmdAbnhwLmNv
-bT4NCi0tLQ0KIGluY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9pbXg2cS1pb211eGMtZ3ByLmggfCA5
-ICsrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdp
-dCBhL2luY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9pbXg2cS1pb211eGMtZ3ByLmggYi9pbmNsdWRl
-L2xpbnV4L21mZC9zeXNjb24vaW14NnEtaW9tdXhjLWdwci5oDQppbmRleCBjMWIyNWY1ZTM4NmQu
-LmYyMzJjODEzMGQwMCAxMDA2NDQNCi0tLSBhL2luY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9pbXg2
-cS1pb211eGMtZ3ByLmgNCisrKyBiL2luY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9pbXg2cS1pb211
-eGMtZ3ByLmgNCkBAIC00MTAsNiArNDEwLDE1IEBADQogI2RlZmluZSBJTVg2U1hfR1BSMV9GRUNf
-Q0xPQ0tfUEFEX0RJUl9NQVNLCQkoMHgzIDw8IDE3KQ0KICNkZWZpbmUgSU1YNlNYX0dQUjFfRkVD
-X0NMT0NLX01VWF9TRUxfRVhUCQkoMHgzIDw8IDEzKQ0KIA0KKyNkZWZpbmUgSU1YNlNYX0dQUjJf
-TVFTX09WRVJTQU1QTEVfTUFTSwkJCSgweDEgPDwgMjYpDQorI2RlZmluZSBJTVg2U1hfR1BSMl9N
-UVNfT1ZFUlNBTVBMRV9TSElGVAkJKDI2KQ0KKyNkZWZpbmUgSU1YNlNYX0dQUjJfTVFTX0VOX01B
-U0sJCQkJKDB4MSA8PCAyNSkNCisjZGVmaW5lIElNWDZTWF9HUFIyX01RU19FTl9TSElGVAkJCSgy
-NSkNCisjZGVmaW5lIElNWDZTWF9HUFIyX01RU19TV19SU1RfTUFTSwkJCSgweDEgPDwgMjQpDQor
-I2RlZmluZSBJTVg2U1hfR1BSMl9NUVNfU1dfUlNUX1NISUZUCQkJKDI0KQ0KKyNkZWZpbmUgSU1Y
-NlNYX0dQUjJfTVFTX0NMS19ESVZfTUFTSwkJCSgweEZGIDw8IDE2KQ0KKyNkZWZpbmUgSU1YNlNY
-X0dQUjJfTVFTX0NMS19ESVZfU0hJRlQJCQkoMTYpDQorDQogI2RlZmluZSBJTVg2U1hfR1BSNF9G
-RUNfRU5FVDFfU1RPUF9SRVEJCQkoMHgxIDw8IDMpDQogI2RlZmluZSBJTVg2U1hfR1BSNF9GRUNf
-RU5FVDJfU1RPUF9SRVEJCQkoMHgxIDw8IDQpDQogDQotLSANCjEuOS4xDQoNCg==
+On Sat, Apr 27, 2019 at 5:15 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Apr 10, 2019 at 01:41:39PM -0400, Yangtao Li wrote:
+> > Allwinner Process Voltage Scaling Tables defines the voltage and
+> > frequency value based on the speedbin blown in the efuse combination.
+> > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> > provide the OPP framework with required information.
+> > This is used to determine the voltage and frequency value for each
+> > OPP of operating-points-v2 table when it is parsed by the OPP framework.
+> >
+> > The "allwinner,cpu-operating-points-v2" DT extends the "operating-points-v2"
+> > with following parameters:
+> > - nvmem-cells (NVMEM area containig the speedbin information)
+> > - opp-microvolt-<name>: voltage in micro Volts.
+> >   At runtime, the platform can pick a <name> and matching
+> >   opp-microvolt-<name> property.
+> >                       HW:             <name>:
+> >                       sun50iw-h6      speed0 speed1 speed2
+>
+> We already have at least one way to support speed bins with QC kryo
+> binding. Why do we need a different way?
+
+For some SOCs, for some reason (making the CPU have approximate performance),
+they use the same frequency but different voltage. In the case where
+this speed bin
+is not a lot and opp uses the same frequency, too many repeated opp
+nodes are a bit
+redundant and not intuitive enough.
+
+So, I think it's worth the new method.
+
+Yangtao
+
+>
+> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > ---
+> >  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 168 ++++++++++++++++++
+> >  1 file changed, 168 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
