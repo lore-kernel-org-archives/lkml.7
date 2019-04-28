@@ -2,83 +2,111 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43183C4321A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 01:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310B8C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 01:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF21208CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 01:06:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556413583;
-	bh=eUI68AveqtP4MfBKAUnTJhOGaoGLejMNyQf70X98KNY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yK/Vm4UpgMOcxl5YKrHBei6AtuyUfz7UdvWKQjmQ1D9OpN4eG0h7w8yoHeOB1teuJ
-	 OtFESrI8+NhrE7JTm9Cj/qTdN0KXcHRzy3kWbkct/YsWR2VZFDO/ppRZfalR2zjbbC
-	 HbHfi9pIeScmNlp4aJNoe/seeonsxL71KpA8FNWo=
+	by mail.kernel.org (Postfix) with ESMTP id E9AC520881
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 01:25:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="leYrYXLv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MMzWaB3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfD1BGV (ORCPT
+        id S1726271AbfD1BUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 21:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbfD1BGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 21:06:21 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4886B206E0;
-        Sun, 28 Apr 2019 01:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556413580;
-        bh=eUI68AveqtP4MfBKAUnTJhOGaoGLejMNyQf70X98KNY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LKeLeFpLpe2uV48NcP22R8Ee7kEztKIZZEdktlZQAYXWd0Lo8hcuv8Vm62BS+MRpk
-         lRcpuZLWI7HQdJEQojZYcloiKJlCYC9w1d/6XZObT6mOjEzuW+9VNtUeJsRgAgWt/Z
-         YkI5dVV6s2s7Ld3tzailoagUvfyhDkMEKNplHf7Y=
-Date:   Sat, 27 Apr 2019 21:06:19 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.0 03/79] ASoC: ab8500: Mark expected switch
- fall-through
-Message-ID: <20190428010618.GG17719@sasha-vm>
-References: <20190427013838.6596-1-sashal@kernel.org>
- <20190427013838.6596-3-sashal@kernel.org>
- <20190427171410.GE14916@sirena.org.uk>
- <90e92595-1609-6c3b-b1d7-ca6a20a81f79@embeddedor.com>
- <20190427180029.GK14916@sirena.org.uk>
+        Sat, 27 Apr 2019 21:20:36 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:46967 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726079AbfD1BUf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 21:20:35 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id D442021E92;
+        Sat, 27 Apr 2019 21:20:34 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sat, 27 Apr 2019 21:20:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=CaIRzs2uedsPMNBCe341n5M6L2A
+        osQXLoInsrDXBVN4=; b=leYrYXLvCvxxjXsEvTYcOtAvGf7PeY3CZe1AJ+JrpFQ
+        OFfkfXhhnV8noqrqdXLhh8KV2223K8dsBYuoXSuiY228TGVdD/cXQqCXQ1dhSrkr
+        HlgC+Tt8hL/lpVUjv7OeKXYoTGuVrQZs6K2M9hoFoqIQ4tpwCkCvaOXzmDTO33Ec
+        P/h1ndkjJFcCqBuq5i8oGmNM+qZLZkeVJeZ7iFOdnbVqpGHZ4GgN1E5G1LDpy1z2
+        Tcdtf8zu6FkgC82U2KxjSkdqcJXRU0SE2GGIiQer3z6ZfYa0Ac9py1l+/cjDRc9p
+        82VoujDQVoL80c7PC4mhx2a8jOtAK5R0zWtXRr5jAKg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=CaIRzs
+        2uedsPMNBCe341n5M6L2AosQXLoInsrDXBVN4=; b=MMzWaB3qAZI80xtwqm6oID
+        SiJ89dl+AcNVPWCCrzKah9PSyS5qz4kVfBJgBUJk+YVBTljL+ic204PTBMFefbh1
+        3t4Uk0pRpyjrRxxkjwTDP0/3lZb48FWOxh/W15sChh2TLL/KxlXVXaKMpbXLIGhG
+        oklIwBC71+ks4hY9NaRkgku75WNDfmX6jrj58SBfoKQN3v50+g3yDJM1AbWHBd60
+        1uccquwEPbePE9YOZdwccy+DUxhtB4TAH+ksN+8mGWXVA8ApjsvqjC5Wmk+HbQ0+
+        f3x50yflIPvdb6r/fqjFV3jSy1cisdfBXKqvC3iIR+KzqmebMVji4fQQtZVZL56w
+        ==
+X-ME-Sender: <xms:4P_EXEaf-FAC5Z1MbnjDj57wZUzhyJxT7MquSgg2NdD3gV7CwhClzQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrheelgdegiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdeftddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
+    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfkphepuddukedrvdduuddrvddttddrudeileenucfrrghrrghmpehm
+    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:4f_EXKG6KUBojJVkxYQ9ZuybO6rVlvbS94OCJJohOrP5TsGNBtPdsg>
+    <xmx:4f_EXHrmXifHcEVV0qq5FCBtDx8h_W7mlf4KQvBcmu4lszxEtjNO-Q>
+    <xmx:4f_EXFxg5wRGRWfDNn-MD07N_nASf0C1IakTXyBNqNKv6Yk5qHB4ig>
+    <xmx:4v_EXANqdBF1zn53hp4fIKcB1IJoltjLhcvEgyMXXoDoK7pZ-qqBHQ>
+Received: from localhost (ppp118-211-200-169.bras1.syd2.internode.on.net [118.211.200.169])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B25DAE474A;
+        Sat, 27 Apr 2019 21:20:31 -0400 (EDT)
+Date:   Sun, 28 Apr 2019 11:19:57 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, cl@linux.com,
+        tycho@tycho.ws, willy@infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: memleak around kobject_init_and_add()
+Message-ID: <20190428011957.GA18843@eros.localdomain>
+References: <20190427081330.GA26788@eros.localdomain>
+ <20190427192809.GA8454@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190427180029.GK14916@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190427192809.GA8454@kroah.com>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 03:00:29AM +0900, Mark Brown wrote:
->On Sat, Apr 27, 2019 at 12:31:22PM -0500, Gustavo A. R. Silva wrote:
->> On 4/27/19 12:14 PM, Mark Brown wrote:
->
->> > Are we *realy* going to enable -Wimplicit-fallthrough in stable kernels
->> > and both backport all the fixes and add new fixes for the issues which
->> > don't have backportable fixes?
->
->> I don't think so.
->
->> There are hundreds of these patches in mainline, and I think this is
->> the first time I see one of them being backported.
->
->Right, this looked like a super weird thing to backport.
+On Sat, Apr 27, 2019 at 09:28:09PM +0200, Greg Kroah-Hartman wrote:
+> On Sat, Apr 27, 2019 at 06:13:30PM +1000, Tobin C. Harding wrote:
+> > (Note at bottom on reasons for 'To' list 'Cc' list)
+> > 
+> > Hi,
+> > 
+> > kobject_init_and_add() seems to be routinely misused.  A failed call to this
+> > function requires a call to kobject_put() otherwise we leak memory.
+> > 
+> > Examples memleaks can be seen in:
+> > 
+> > 	mm/slub.c
+> > 	fs/btrfs/sysfs.c
+> > 	fs/xfs/xfs_sysfs.h: xfs_sysfs_init()
+> > 
+> >  Question: Do we fix the misuse or fix the API?
+> 
+> Fix the misuse.
 
-I agree, it's part of my scripts to drop them but somehow this one snuck
-through. I'll drop it. Thanks for pointing it out!
+Following on from this.  It seems we often also forget to call
+kobject_uevent() after calls to kobject_init_and_add().  Before I make a
+goose of myself patching the whole tree is there ever any reason why we
+would _not_ want to call kobject_uevent() after successfully calling
+kobject_add() (or kobject_init_and_add())?
 
---
-Thanks,
-Sasha
+Cheers,
+Tobin.
