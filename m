@@ -2,167 +2,262 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1856EC43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7379FC4321A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3592067C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:10:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MDXXcj5m"
+	by mail.kernel.org (Postfix) with ESMTP id 4232020679
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfD1SKA (ORCPT
+        id S1727130AbfD1SOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 14:10:00 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39234 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfD1SKA (ORCPT
+        Sun, 28 Apr 2019 14:14:08 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:54919 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726999AbfD1SOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 14:10:00 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z26so325258pfg.6
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 11:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ohuUhz4x6Zl7HFy2hPxACEBNrjELYOPEczRq/3tltOQ=;
-        b=MDXXcj5mz3+eAxqbaDVzpkVfcgJmHrCr8AtD5PVH1KAtWp0FrHIsBcm4Uz1Cdt+s4k
-         3to7Sl9MRMa0jhkyLEK/xTeakw5Cd4sWtPHuw6p1ejVGzDChlw0BH5mXenX8dBRqCBZx
-         h2cadE9uPrBsicmPSIBbCtkMy0ZAvTT/DhuLDkS1HjM2WvFwllL637GAtXi7MjBq/Q+t
-         FM1YQZ9p5OZyRmvZXSBC83V0SxlbXRsLBBNdqNALePeP7KYtRvZf5V/ifaROowGYqqlL
-         zOSFEUM4k4tbtPLQyTINrBRxmh18eMFshNBx61WKDPU8dKcKnvxdD+gHezXzUy2R9YMZ
-         mN8Q==
+        Sun, 28 Apr 2019 14:14:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id c17so7182643iom.21
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 11:14:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ohuUhz4x6Zl7HFy2hPxACEBNrjELYOPEczRq/3tltOQ=;
-        b=IhXzlV9HQVBf6SN8UkvpKVQPG37tlf11GgkPbCMdeQYY8b0Q04Cy2PdKGQxyV1AeWt
-         rLTmjTdGO/Ku2pLE69ZpO17gjnvKeECb8cVYC19Feo3P9pLa/YUNO3CsWdZTHrgoE3tX
-         tHVJozXNBXXOZh+lBePlke7Pf8Vnkzrecwfvrh6hdJG2XI4PCyqVLwlgD9edGWz4Ku1k
-         zrUDfisf8jX5AORMCm1yw0XUlnkWTGNbp+ENpT1MXRlDQlq6YrmTI6kErQZdAHg6Aj+u
-         M82XdSqkrCie0iGz4R8j/07E+u4wFc0XVnghvIeM0xzWWexSklAy/8ur74sPMA3UEK0W
-         uWVA==
-X-Gm-Message-State: APjAAAU8//ZWfBn592dxbcTa+xnNK1RHSbZ4YXDo5UHYEGW/t1TM/eNw
-        Q+K4XL+gbeVPploSLTxIBwhKkg==
-X-Google-Smtp-Source: APXvYqyq0E1OO/NnqwXgZaHv0s0uS3p5TaTatpJ9CmBFjEw+fj7Fo0DXSUyTxVQBiRirvIcR+F9TBA==
-X-Received: by 2002:a65:60ca:: with SMTP id r10mr4401741pgv.64.1556474999956;
-        Sun, 28 Apr 2019 11:09:59 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id l2sm36177136pgl.2.2019.04.28.11.09.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 28 Apr 2019 11:09:59 -0700 (PDT)
-From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-To:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        bbrezillon@kernel.org, richard@nod.at
-Cc:     palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Subject: [PATCH v2 3/3] mtd: spi-nor: add locking support for is25xxxxx device
-Date:   Sun, 28 Apr 2019 23:39:16 +0530
-Message-Id: <1556474956-27786-4-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556474956-27786-1-git-send-email-sagar.kadam@sifive.com>
-References: <1556474956-27786-1-git-send-email-sagar.kadam@sifive.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=2djQxR0Pmm/Dma5dasUwGKjuaJruPxPF0g/tYd5DCVw=;
+        b=Z/VMwtL19HaKTJqeHJpslEoADjJjJ+EsiV1oNGRYI2F5OXvXHDHcCuYsvrtWXDOSXu
+         KYOx3andpBVurNfSe+La4mI4npY3yq4J/RDFM32CYeUfBIFBZY1J7Rk1sPOdxOXTLmf4
+         ckOmWyqSL86x6fPhdEQptaYSdxI82rp3D2tPahgaVKjzJlRGVNaNewkB11n4CjAe5LVt
+         /VTDzBjnsvOc2aJaQw5qhyzxzZ/KaFa8l1quDjO0P1rjIfJcZctNkmU4F0VwuJ06N9kM
+         w81+qml4LTI7Da4KbcwkIlGxbF6bYi8drVhKL6NXK6/JIZ/Up9nqG+5zgNKYYRkxqTAj
+         NQ5g==
+X-Gm-Message-State: APjAAAW5lZmNI/uqRyl85e4u9F9Ta6OY4ANxOJV94Ra6KxfzAwa26rCp
+        H6q9HmQRj98PS/WjCPZJB4HdqRx4CQY+gKOrMZB2RkUp5V5Y
+X-Google-Smtp-Source: APXvYqyUNImUi4bZYKTPXLruu31pr12MtImbQeiPnmmCKBTFsDTE6aysY6zZBiuKpG1aGdDeiU7NXrLuQoLr0YlkJ3tRgwivVO2c
+MIME-Version: 1.0
+X-Received: by 2002:a02:a1d6:: with SMTP id o22mr17605551jah.102.1556475246593;
+ Sun, 28 Apr 2019 11:14:06 -0700 (PDT)
+Date:   Sun, 28 Apr 2019 11:14:06 -0700
+In-Reply-To: <001a113ed5540f411c0568cc8418@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002cd22305879b22c4@google.com>
+Subject: Re: INFO: task hung in __get_super
+From:   syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, dvyukov@google.com, jack@suse.cz,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        penguin-kernel@I-love.SAKURA.ne.jp,
+        penguin-kernel@i-love.sakura.ne.jp,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The locking scheme for ISSI devices is based on stm_lock mechanism.
-The is25xxxxx  devices have 4 bits for selecting the range of blocks to
-be locked for write.
+syzbot has found a reproducer for the following crash on:
 
-The current implementation, blocks entire 512 blocks of flash memory.
+HEAD commit:    037904a2 Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=135ff034a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a42d110b47dd6b36
+dashboard link: https://syzkaller.appspot.com/bug?extid=10007d66ca02b08f0e60
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1291b1f4a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=135385a8a00000
 
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 60 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 81c7b3e..2dba7e9 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -1459,6 +1459,65 @@ static int macronix_quad_enable(struct spi_nor *nor)
- 
- 	return 0;
- }
-+/**
-+ * Lock a region of the flash.Implementation is based on stm_lock
-+ * Supports the block protection bits BP{0,1,2,3} in the status register
-+ * Returns negative on errors, 0 on success.
-+ */
-+static int issi_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-+{
-+	struct mtd_info *mtd = &nor->mtd;
-+	int status_old, status_new;
-+	u8 mask = SR_BP3 | SR_BP2 | SR_BP1 | SR_BP0;
-+	u8 shift = ffs(mask) - 1, pow, val = 0;
-+	loff_t lock_len;
-+	bool use_top = true;
-+
-+	status_old = read_sr(nor);
-+
-+	if (status_old < 0)
-+		return status_old;
-+
-+	/* lock_len: length of region that should end up locked */
-+	if (use_top)
-+		lock_len = mtd->size - ofs;
-+	else
-+		lock_len = ofs + len;
-+
-+	/*
-+	 * Need smallest pow such that:
-+	 *
-+	 *   1 / (2^pow) <= (len / size)
-+	 *
-+	 * so (assuming power-of-2 size) we do:
-+	 *
-+	 *   pow = ceil(log2(size / len)) = log2(size) - floor(log2(len))
-+	 */
-+	pow = ilog2(mtd->size) - ilog2(lock_len);
-+	val = mask - (pow << shift);
-+
-+	if (val & ~mask)
-+		return -EINVAL;
-+
-+	/* Don't "lock" with no region! */
-+	if (!(val & mask))
-+		return -EINVAL;
-+
-+	status_new = (status_old & ~mask & ~SR_TB) | val;
-+
-+	/* Disallow further writes if WP pin is asserted */
-+	status_new |= SR_SRWD;
-+
-+	/* Don't bother if they're the same */
-+	if (status_new == status_old)
-+		return 0;
-+
-+	/* Only modify protection if it will not unlock other areas */
-+	if ((status_new & mask) < (status_old & mask))
-+		return -EINVAL;
-+
-+	return write_sr_and_check(nor, status_new, mask);
-+}
- 
- /**
-  * issi_unlock() - clear BP[0123] write-protection.
-@@ -4121,6 +4180,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
- 	/* NOR protection support for ISSI chips */
- 	if (JEDEC_MFR(info) == SNOR_MFR_ISSI ||
- 	    info->flags & SPI_NOR_HAS_LOCK) {
-+		nor->flash_lock = issi_lock;
- 		nor->flash_unlock = issi_unlock;
- 
- 	}
--- 
-1.9.1
+INFO: task syz-executor274:8097 blocked for more than 143 seconds.
+       Not tainted 5.1.0-rc6+ #89
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor274 D28008  8097   8041 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  __rwsem_down_read_failed_common kernel/locking/rwsem-xadd.c:285 [inline]
+  rwsem_down_read_failed+0x213/0x420 kernel/locking/rwsem-xadd.c:302
+  call_rwsem_down_read_failed+0x18/0x30 arch/x86/lib/rwsem.S:94
+  __down_read arch/x86/include/asm/rwsem.h:83 [inline]
+  down_read+0x49/0x90 kernel/locking/rwsem.c:26
+  __get_super.part.0+0x203/0x2e0 fs/super.c:788
+  __get_super include/linux/spinlock.h:329 [inline]
+  get_super+0x2e/0x50 fs/super.c:817
+  fsync_bdev+0x19/0xd0 fs/block_dev.c:525
+  invalidate_partition+0x36/0x60 block/genhd.c:1581
+  drop_partitions block/partition-generic.c:443 [inline]
+  rescan_partitions+0xef/0xa20 block/partition-generic.c:516
+  __blkdev_reread_part+0x1a2/0x230 block/ioctl.c:173
+  blkdev_reread_part+0x27/0x40 block/ioctl.c:193
+  loop_reread_partitions+0x1c/0x40 drivers/block/loop.c:633
+  loop_set_status+0xe57/0x1380 drivers/block/loop.c:1296
+  loop_set_status64+0xc2/0x120 drivers/block/loop.c:1416
+  lo_ioctl+0x8fc/0x2150 drivers/block/loop.c:1559
+  __blkdev_driver_ioctl block/ioctl.c:303 [inline]
+  blkdev_ioctl+0x6f2/0x1d10 block/ioctl.c:605
+  block_ioctl+0xee/0x130 fs/block_dev.c:1933
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441937
+Code: 48 83 c4 08 48 89 d8 5b 5d c3 66 0f 1f 84 00 00 00 00 00 48 89 e8 48  
+f7 d8 48 39 c3 0f 92 c0 eb 92 66 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 8d 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffcabed4e08 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441937
+RDX: 00007ffcabed4ea0 RSI: 0000000000004c04 RDI: 0000000000000004
+RBP: 0000000000000003 R08: 0000000000000000 R09: 000000000000000a
+R10: 0000000000000075 R11: 0000000000000202 R12: 0000000000000001
+R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
+INFO: task blkid:8099 blocked for more than 143 seconds.
+       Not tainted 5.1.0-rc6+ #89
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+blkid           D27504  8099   8021 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
+  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
+  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+  blkdev_put+0x34/0x560 fs/block_dev.c:1866
+  blkdev_close+0x8b/0xb0 fs/block_dev.c:1915
+  __fput+0x2e5/0x8d0 fs/file_table.c:278
+  ____fput+0x16/0x20 fs/file_table.c:309
+  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:166
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f1ae9c432b0
+Code: Bad RIP value.
+RSP: 002b:00007ffc29ff6028 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007f1ae9c432b0
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000028 R09: 0000000001680000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000b9d030
+R13: 0000000000000000 R14: 0000000000000003 R15: 0000000000000005
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1041:
+  #0: 0000000027887009 (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5057
+1 lock held by rs:main Q:Reg/7921:
+  #0: 00000000e00580d7 (&rq->lock){-.-.}, at: rq_lock  
+kernel/sched/sched.h:1168 [inline]
+  #0: 00000000e00580d7 (&rq->lock){-.-.}, at: __schedule+0x1f8/0x1cc0  
+kernel/sched/core.c:3456
+1 lock held by rsyslogd/7923:
+  #0: 00000000488dcec4 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+2 locks held by getty/8014:
+  #0: 000000001b56f3c3 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000da9faa8c (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8015:
+  #0: 00000000e00c81bb (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000008d689a2e (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8016:
+  #0: 00000000177f6359 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 0000000096437898 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8017:
+  #0: 000000002db00e12 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 0000000071f2d88e (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8018:
+  #0: 00000000a41b6290 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000c340e26f (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8019:
+  #0: 00000000bca104ce (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000007e045212 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8020:
+  #0: 0000000070fdafae (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000b4e26fa9 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+1 lock held by syz-executor274/8083:
+2 locks held by syz-executor274/8097:
+  #0: 000000007a5ed526 (&bdev->bd_mutex){+.+.}, at:  
+blkdev_reread_part+0x1f/0x40 block/ioctl.c:192
+  #1: 0000000067606e21 (&type->s_umount_key#39){.+.+}, at:  
+__get_super.part.0+0x203/0x2e0 fs/super.c:788
+1 lock held by blkid/8099:
+  #0: 000000007a5ed526 (&bdev->bd_mutex){+.+.}, at: blkdev_put+0x34/0x560  
+fs/block_dev.c:1866
+2 locks held by syz-executor274/11705:
+  #0: 000000002b6bbb34 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0xbb/0x810  
+fs/block_dev.c:1833
+  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_release+0x1f/0x200  
+drivers/block/loop.c:1755
+2 locks held by syz-executor274/11709:
+  #0: 00000000a45cb906 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0xbb/0x810  
+fs/block_dev.c:1833
+  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_release+0x1f/0x200  
+drivers/block/loop.c:1755
+2 locks held by syz-executor274/11716:
+  #0: 00000000a19e2025 (&type->s_umount_key#38/1){+.+.}, at:  
+alloc_super+0x158/0x890 fs/super.c:228
+  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl  
+drivers/block/loop.c:1514 [inline]
+  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150  
+drivers/block/loop.c:1572
+2 locks held by syz-executor274/11717:
+  #0: 00000000e185c083 (&type->s_umount_key#38/1){+.+.}, at:  
+alloc_super+0x158/0x890 fs/super.c:228
+  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl  
+drivers/block/loop.c:1514 [inline]
+  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150  
+drivers/block/loop.c:1572
+2 locks held by blkid/11718:
+  #0: 000000003d9e77b2 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0xbb/0x810  
+fs/block_dev.c:1833
+  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: __loop_clr_fd+0x88/0xd60  
+drivers/block/loop.c:1046
+2 locks held by blkid/11720:
+  #0: 000000000c0297bc (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0xbb/0x810  
+fs/block_dev.c:1833
+  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_release+0x1f/0x200  
+drivers/block/loop.c:1755
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 PID: 1041 Comm: khungtaskd Not tainted 5.1.0-rc6+ #89
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:204 [inline]
+  watchdog+0x9b7/0xec0 kernel/hung_task.c:288
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 0 to CPUs 1:
 
