@@ -2,237 +2,127 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94491C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A33C4321A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620AF2077B
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF41206C1
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:27:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="G6mu/xsj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfD1DYf (ORCPT
+        id S1726497AbfD1D1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 23:24:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46026 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbfD1DYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 23:24:35 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A24F0859FC;
-        Sun, 28 Apr 2019 03:24:34 +0000 (UTC)
-Received: from [10.72.12.56] (ovpn-12-56.pek2.redhat.com [10.72.12.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D5406BF7A;
-        Sun, 28 Apr 2019 03:24:24 +0000 (UTC)
-Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
-To:     Yue Haibing <yuehaibing@huawei.com>, davem@davemloft.net,
-        edumazet@google.com, brouer@redhat.com, mst@redhat.com,
-        lirongqing@baidu.com, xiyou.wangcong@gmail.com,
-        nicolas.dichtel@6wind.com, 3chas3@gmail.com, wangli39@baidu.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
- <20190428030539.17776-1-yuehaibing@huawei.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
-Date:   Sun, 28 Apr 2019 11:24:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190428030539.17776-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Sat, 27 Apr 2019 23:27:07 -0400
+Received: from mail-eopbgr130048.outbound.protection.outlook.com ([40.107.13.48]:46407
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726112AbfD1D1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 23:27:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BhB3A2JNndJKgMCUoZRHe2FQQQ26UAAz7zxR3MobPtU=;
+ b=G6mu/xsjT4unCXeOQ32ptVIE8iTjjVh+McyKca3KXkqkRMQy5SD6eOLtZT/4KzDB0dFm4+2k0IGI/KtSl8aJOzIi5s6uKnJIaorExzI0txTaUY+9TRSSN0JBWVOiNv72houxHlUbG2ECOklAI2Yvks4163yciRH25XO6U0biy6Y=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3897.eurprd04.prod.outlook.com (52.134.73.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.12; Sun, 28 Apr 2019 03:27:00 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.015; Sun, 28 Apr 2019
+ 03:27:00 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Thread-Topic: [PATCH V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+Thread-Index: AQHU/XI9f9LbYLWILEa/3i56q8YtDQ==
+Date:   Sun, 28 Apr 2019 03:27:00 +0000
+Message-ID: <1556421727-7401-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sun, 28 Apr 2019 03:24:34 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2P15301CA0012.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:202:1::22) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e03741d5-612e-4dc8-6d8f-08d6cb896048
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3897;
+x-ms-traffictypediagnostic: DB3PR0402MB3897:
+x-microsoft-antispam-prvs: <DB3PR0402MB38978FBB11BBA76EEDD60F3EF5380@DB3PR0402MB3897.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 0021920B5A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(396003)(366004)(346002)(39860400002)(189003)(199004)(256004)(71190400001)(71200400001)(97736004)(6116002)(186003)(66066001)(86362001)(2201001)(476003)(2616005)(8936002)(36756003)(486006)(81156014)(81166006)(25786009)(53936002)(50226002)(3846002)(2906002)(2501003)(386003)(6506007)(68736007)(4326008)(102836004)(64756008)(52116002)(66946007)(66476007)(66556008)(8676002)(66446008)(6486002)(6436002)(7416002)(14454004)(73956011)(7736002)(99286004)(478600001)(316002)(110136005)(305945005)(26005)(6512007)(5660300002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3897;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UAMloTgBjtNW0EnPP2Xcg/ybXgFsspQdeZWoE8W67RA05O4nWLaC4feQo9fsAFfTGpxZxf0cJ3bbiynHMW7OR7wWrBvQiQFlyOw5SGtFeJ86EjyP/85Jm3pPtNJrM4476Xcc3n3cEaYEi3XUwiic9RrL2+KGmznialgwvMEGGXi2d/hK/DPiYcMGG6QnboeLbNsz5iiRSwSGPnIEDnx/tFkzN178scdNqiCQPafiszxWt60ytP1ZQuJJG7LEJgSqDHmpx04zEtqVJ+qMKK6kIzTvSniDLlkSQQ23b5z59f5HIezmzLzsBRe7HOiRPFe9f6Wo+eNr0C5CMXNBuxrILDMkkTRgnhYmruEgfSUlNpuXrsdHqm3VHpTkKrseUN3D65Js2BO1vJnvqZPiSXWjn2w8E9xeqOl7iqKFHrKtgXA=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e03741d5-612e-4dc8-6d8f-08d6cb896048
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2019 03:27:00.8513
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3897
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/4/28 上午11:05, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
->
-> KASAN report this:
->
-> BUG: KASAN: use-after-free in tun_net_xmit+0x1670/0x1750 drivers/net/tun.c:1104
-> Read of size 8 at addr ffff88836cc26a70 by task swapper/3/0
->
-> CPU: 3 PID: 0 Comm: swapper/3 Not tainted 4.19.32 #6
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> Call Trace:
->   <IRQ>
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x79/0x330 mm/kasan/report.c:253
->   kasan_report_error mm/kasan/report.c:351 [inline]
->   kasan_report+0x18a/0x2d0 mm/kasan/report.c:409
->   tun_net_xmit+0x1670/0x1750 drivers/net/tun.c:1104
->   __netdev_start_xmit include/linux/netdevice.h:4300 [inline]
->   netdev_start_xmit include/linux/netdevice.h:4309 [inline]
->   xmit_one net/core/dev.c:3243 [inline]
->   dev_hard_start_xmit+0x17c/0x780 net/core/dev.c:3259
->   sch_direct_xmit+0x24f/0x8a0 net/sched/sch_generic.c:327
->   qdisc_restart net/sched/sch_generic.c:390 [inline]
->   __qdisc_run+0x45b/0x1590 net/sched/sch_generic.c:398
->   qdisc_run include/net/pkt_sched.h:120 [inline]
->   __dev_xmit_skb net/core/dev.c:3438 [inline]
->   __dev_queue_xmit+0xa6b/0x2500 net/core/dev.c:3797
->   neigh_output include/net/neighbour.h:501 [inline]
->   ip6_finish_output2+0xa36/0x2290 net/ipv6/ip6_output.c:120
->   ip6_finish_output+0x3e7/0xa20 net/ipv6/ip6_output.c:154
->   NF_HOOK_COND include/linux/netfilter.h:278 [inline]
->   ip6_output+0x1e2/0x720 net/ipv6/ip6_output.c:171
->   dst_output include/net/dst.h:444 [inline]
->   NF_HOOK include/linux/netfilter.h:289 [inline]
->   mld_sendpack+0x740/0xf20 net/ipv6/mcast.c:1683
->   mld_send_cr net/ipv6/mcast.c:1979 [inline]
->   mld_ifc_timer_expire+0x3cc/0x7f0 net/ipv6/mcast.c:2478
->   call_timer_fn+0x1ea/0x6a0 kernel/time/timer.c:1326
->   expire_timers kernel/time/timer.c:1363 [inline]
->   __run_timers kernel/time/timer.c:1682 [inline]
->   run_timer_softirq+0x637/0x1070 kernel/time/timer.c:1695
->   __do_softirq+0x26d/0xabd kernel/softirq.c:292
->   invoke_softirq kernel/softirq.c:372 [inline]
->   irq_exit+0x209/0x290 kernel/softirq.c:412
->   exiting_irq arch/x86/include/asm/apic.h:536 [inline]
->   smp_apic_timer_interrupt+0xf6/0x480 arch/x86/kernel/apic/apic.c:1056
->   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:864
->   </IRQ>
-> RIP: 0010:native_safe_halt+0x2/0x10 arch/x86/include/asm/irqflags.h:58
-> Code: 01 f0 0f 82 bc fd ff ff 48 c7 c7 40 25 b1 83 e8 a1 72 03 ff e9 ab fd ff ff 4c 89 e7 e8 37 f5 a7 fe e9 6a ff ff ff 90 90 fb f4 <c3> 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 f4 c3 90 90 90 90 90 90
-> RSP: 0018:ffff8883e0f2fd20 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-> RAX: 0000000000000007 RBX: dffffc0000000000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8883e0f04f1c
-> RBP: 0000000000000003 R08: ffffed107c5dc77b R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff848b96e0
-> R13: 0000000000000003 R14: 1ffff1107c1e5fae R15: 0000000000000000
->   arch_safe_halt arch/x86/include/asm/paravirt.h:94 [inline]
->   default_idle+0x24/0x2b0 arch/x86/kernel/process.c:561
->   cpuidle_idle_call kernel/sched/idle.c:153 [inline]
->   do_idle+0x2ca/0x420 kernel/sched/idle.c:262
->   cpu_startup_entry+0xcb/0xe0 kernel/sched/idle.c:368
->   start_secondary+0x421/0x570 arch/x86/kernel/smpboot.c:271
->   secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
->
-> Allocated by task 19764:
->   set_track mm/kasan/kasan.c:460 [inline]
->   kasan_kmalloc+0xa0/0xd0 mm/kasan/kasan.c:553
->   __kmalloc+0x11b/0x2d0 mm/slub.c:3750
->   kmalloc include/linux/slab.h:518 [inline]
->   sk_prot_alloc+0xf6/0x290 net/core/sock.c:1469
->   sk_alloc+0x3d/0xc00 net/core/sock.c:1523
->   tun_chr_open+0x80/0x560 drivers/net/tun.c:3204
->   misc_open+0x367/0x4e0 drivers/char/misc.c:141
->   chrdev_open+0x212/0x580 fs/char_dev.c:417
->   do_dentry_open+0x704/0x1050 fs/open.c:777
->   do_last fs/namei.c:3418 [inline]
->   path_openat+0x7ed/0x2ae0 fs/namei.c:3533
->   do_filp_open+0x1aa/0x2b0 fs/namei.c:3564
->   do_sys_open+0x307/0x430 fs/open.c:1069
->   do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> Freed by task 19764:
->   set_track mm/kasan/kasan.c:460 [inline]
->   __kasan_slab_free+0x12e/0x180 mm/kasan/kasan.c:521
->   slab_free_hook mm/slub.c:1370 [inline]
->   slab_free_freelist_hook mm/slub.c:1397 [inline]
->   slab_free mm/slub.c:2952 [inline]
->   kfree+0xeb/0x2f0 mm/slub.c:3905
->   sk_prot_free net/core/sock.c:1506 [inline]
->   __sk_destruct+0x4e6/0x6a0 net/core/sock.c:1588
->   sk_destruct+0x48/0x70 net/core/sock.c:1596
->   __sk_free+0xa9/0x270 net/core/sock.c:1607
->   sk_free+0x2a/0x30 net/core/sock.c:1618
->   sock_put include/net/sock.h:1696 [inline]
->   __tun_detach+0x464/0xf70 drivers/net/tun.c:735
->   tun_detach drivers/net/tun.c:747 [inline]
->   tun_chr_close+0xd8/0x190 drivers/net/tun.c:3241
->   __fput+0x27f/0x7f0 fs/file_table.c:278
->   task_work_run+0x136/0x1b0 kernel/task_work.c:113
->   tracehook_notify_resume include/linux/tracehook.h:193 [inline]
->   exit_to_usermode_loop+0x1a7/0x1d0 arch/x86/entry/common.c:166
->   prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
->   syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
->   do_syscall_64+0x461/0x580 arch/x86/entry/common.c:293
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> The buggy address belongs to the object at ffff88836cc26600
->   which belongs to the cache kmalloc-4096 of size 4096
-> The buggy address is located 1136 bytes inside of
->   4096-byte region [ffff88836cc26600, ffff88836cc27600)
-> The buggy address belongs to the page:
-> page:ffffea000db30800 count:1 mapcount:0 mapping:ffff8883e280e600 index:0x0 compound_mapcount: 0
-> flags: 0x2fffff80008100(slab|head)
-> raw: 002fffff80008100 dead000000000100 dead000000000200 ffff8883e280e600
-> raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff88836cc26900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff88836cc26980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> ffff88836cc26a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                                                               ^
->   ffff88836cc26a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff88836cc26b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->
-> If tun driver have multiqueues, user close the last queue by
-> tun_detach, then tun->tfiles[index] is not cleared. Then a new
-> queue may add to the tun, which using rcu_assign_pointer
-> tun->tfiles[index] to the new tfile and increase the numqueues.
-> However if there send a packet during this time, which picking the last
-> queue, it may uses the old tun->tfiles[index], beacause there no
-> RCU grace period.
->
-> 1) tun_chr_close //close the last queue
->      --> __tun_detach  //close the last queue, but tun->tfiles[index] still exist
->
-> 2) tun_chr_open  //attach a new queue
->      --> tun_attach
->        -->rcu_assign_pointer(tun->tfiles[tun->numqueues], tfile);
-> 	  //there need a RCU grace period
->
->      -->tun->numqueues++;
-> 			
-> 3) tun_net_xmit //a new packet is sending, which pick the last queue
->       -->if (txq >= tun->numqueues)
-> 	   //above check passed, but tfile still not renew
->       -->if (tfile->socket.sk->sk_filter ...
-> 	   //use the old tfile,trigger use-after-free
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: c8d68e6be1c3 ("tuntap: multiqueue support")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->   drivers/net/tun.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> index e9ca1c0..3770aba 100644
-> --- a/drivers/net/tun.c
-> +++ b/drivers/net/tun.c
-> @@ -876,6 +876,7 @@ static int tun_attach(struct tun_struct *tun, struct file *file,
->   	 */
->   	rcu_assign_pointer(tfile->tun, tun);
->   	rcu_assign_pointer(tun->tfiles[tun->numqueues], tfile);
-> +	synchronize_net();
->   	tun->numqueues++;
->   	tun_set_real_num_queues(tun);
->   out:
-
-
-Good catch, that's one of my suspicion as well. Assume that this has 
-been tested.
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
-This patch is needed for -stable.
-
-I will post another theoretical issue similar to this soon.
-
-Thanks
-
+aS5NWCBzeXN0ZW0gY29udHJvbGxlciB3YXRjaGRvZyBoYXMgcHJldGltZW91dCBmdW5jdGlvbiB3
+aGljaA0KZGVwZW5kcyBvbiBpLk1YIFNDVSBkcml2ZXIsIHNvIHdhdGNoZG9nIERUIG5vZGUgbmVl
+ZHMgdG8gYmUNCnN1Ym5vZGUgb2YgU0NVLCB0aGlzIHBhdGNoIGFkZHMgaS5NWCBzeXN0ZW0gY29u
+dHJvbGxlciB3YXRjaGRvZw0KYmluZGluZyB0byBTQ1UgYmluZGluZyBkb2MuDQoNClNpZ25lZC1v
+ZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KLS0tDQpOZXcgcGF0Y2gu
+DQotLS0NCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0
+ICAgICAgICAgfCAxNSArKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0
+aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KaW5kZXggNWQ3ZGJhYi4uMWI1NjU1NyAx
+MDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNj
+YWxlL2ZzbCxzY3UudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KQEAgLTEzMyw2ICsxMzMsMTYgQEAgUlRDIGJpbmRp
+bmdzIGJhc2VkIG9uIFNDVSBNZXNzYWdlIFByb3RvY29sDQogUmVxdWlyZWQgcHJvcGVydGllczoN
+CiAtIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiZnNsLGlteDhxeHAtc2MtcnRjIjsNCiANCitXYXRj
+aGRvZyBiaW5kaW5ncyBiYXNlZCBvbiBTQ1UgTWVzc2FnZSBQcm90b2NvbA0KKy0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KKw0KK1Jl
+cXVpcmVkIHByb3BlcnRpZXM6DQorLSBjb21wYXRpYmxlOiBzaG91bGQgYmU6DQorICAgICAgICAg
+ICAgICAiZnNsLGlteDhxeHAtc2Mtd2R0Ig0KKyAgICAgICAgICAgICAgZm9sbG93ZWQgYnkgImZz
+bCxpbXgtc2Mtd2R0IjsNCitPcHRpb25hbCBwcm9wZXJ0aWVzOg0KKy0gdGltZW91dC1zZWM6IGNv
+bnRhaW5zIHRoZSB3YXRjaGRvZyB0aW1lb3V0IGluIHNlY29uZHMuDQorDQogRXhhbXBsZSAoaW14
+OHF4cCk6DQogLS0tLS0tLS0tLS0tLQ0KIGFsaWFzZXMgew0KQEAgLTE4NSw2ICsxOTUsMTEgQEAg
+ZmlybXdhcmUgew0KIAkJcnRjOiBydGMgew0KIAkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhxeHAt
+c2MtcnRjIjsNCiAJCX07DQorDQorCQl3YXRjaGRvZyB7DQorCQkJY29tcGF0aWJsZSA9ICJmc2ws
+aW14OHF4cC1zYy13ZHQiLCAiZnNsLGlteC1zYy13ZHQiOw0KKwkJCXRpbWVvdXQtc2VjID0gPDYw
+PjsNCisJCX07DQogCX07DQogfTsNCiANCi0tIA0KMi43LjQNCg0K
