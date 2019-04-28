@@ -2,95 +2,132 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84627C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC5FC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46C23206BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="00m/+zxj"
+	by mail.kernel.org (Postfix) with ESMTP id 633B820693
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfD1Q4k (ORCPT
+        id S1727032AbfD1Q5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 12:56:40 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:47391 "EHLO vps0.lunn.ch"
+        Sun, 28 Apr 2019 12:57:54 -0400
+Received: from mga14.intel.com ([192.55.52.115]:30306 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbfD1Q4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 12:56:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Eur4MdCzKORc+1WMkF8IVNyhBHWvA4WHKALxwGbm9Yc=; b=00m/+zxjdq3Lp5U/b6UuJgpMP2
-        ELBRaPLmtQEC2wA81NiqOb3mFWu/UWKfPXnZm7yJA+ZxO3LZlQtlyaOqEk27b/9xwbxWZkUPJ/b6b
-        rBHzQ6JLYUqnmUFJxfEQPLofmDhuCHvFzwKolEw3dxr8FqjmGLWFML5VTv/RLibxaf9k=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hKn6T-0000xo-Fb; Sun, 28 Apr 2019 18:56:37 +0200
-Date:   Sun, 28 Apr 2019 18:56:37 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Alban Bedel <albeu@free.fr>
-Subject: Re: [PATCH v2 3/4] net: macb: Drop nvmem_get_mac_address usage
-Message-ID: <20190428165637.GJ23059@lunn.ch>
-References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
- <1556456002-13430-4-git-send-email-ynezz@true.cz>
+        id S1726847AbfD1Q5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 12:57:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Apr 2019 09:57:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,406,1549958400"; 
+   d="scan'208";a="319749754"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga005.jf.intel.com with ESMTP; 28 Apr 2019 09:57:48 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hKn7Z-0006IZ-N6; Sun, 28 Apr 2019 19:57:45 +0300
+Date:   Sun, 28 Apr 2019 19:57:45 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Yury Norov <ynorov@marvell.com>, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: Re: [PATCH 4/6] lib: rework bitmap_parse()
+Message-ID: <20190428165745.GX9224@smile.fi.intel.com>
+References: <20190428032936.1317-1-ynorov@marvell.com>
+ <20190428032936.1317-5-ynorov@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556456002-13430-4-git-send-email-ynezz@true.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190428032936.1317-5-ynorov@marvell.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 02:53:21PM +0200, Petr Štetiar wrote:
-> of_get_mac_address now uses NVMEM under the hood, so it's not necessary
-> to call it manually anymore.
-> 
-> Signed-off-by: Petr Štetiar <ynezz@true.cz>
-> ---
->  drivers/net/ethernet/cadence/macb_main.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index 3da2795..1b98bc8 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -4172,16 +4172,10 @@ static int macb_probe(struct platform_device *pdev)
->  		bp->rx_intr_mask |= MACB_BIT(RXUBR);
->  
->  	mac = of_get_mac_address(np);
-> -	if (mac) {
-> +	if (mac)
->  		ether_addr_copy(bp->dev->dev_addr, mac);
-> -	} else {
-> -		err = nvmem_get_mac_address(&pdev->dev, bp->dev->dev_addr);
-> -		if (err) {
-> -			if (err == -EPROBE_DEFER)
+On Sat, Apr 27, 2019 at 08:29:34PM -0700, Yury Norov wrote:
+> bitmap_parse() is ineffective and full of opaque variables and opencoded
+> parts. It leads to hard understanding of it. This rework includes:
+>  - remove bitmap_shift_left() call from the cycle. Now it makes the
+>    complexity of the algorithm as O(nbits^2). In the suggested approach
+>    the input string is parsed in reverse direction, so no shifts needed;
+>  - relax requirement on a single comma and no white spaces between chunks.
+>    It is considered useful in scripting, and it aligns with
+>    bitmap_parselist();
+>  - split bitmap_parse() to small readable helpers;
+>  - make an explicit calculation of the end of input line at the
+>    beginning, so users of the bitmap_parse() won't bother doing this.
 
-The EPRODE_DEFER is interesting here. your change to
-of_get_mac_address() does not seem to handle that case. It probably
-should. We don't want it to fail and end up with a random MAC
-addresses etc, because the NVMEM has not probed yet.
+> +static inline bool in_str(const char *start, const char *ptr)
+> +{
+> +	return start <= ptr;
+> +}
+> +
 
-	  Andrew
+I don't see how it's better than explicit use. Moreover, explicit use shows the
+exact condition in-line. Even by used characters it's longer.
+
+> +static const char *bitmap_get_hex32_rev(const char *start,
+> +					const char *end, u32 *num)
+
+In kernel few functions to work with hex u32 named foo_x32(). I would rather
+use that. Besides, we spell "reverse" in full.
+
+> +{
+> +	u32 ret = 0;
+> +	int c, i;
+> +
+> +	if (hex_to_bin(*end) < 0)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	for (i = 0; i < 32; i += 4) {
+> +		c = hex_to_bin(*end--);
+> +		if (c < 0)
+
+Perhaps we may need similar patch for hex_to_bin() as in the commit
+9888a588ea96 ("lib/hexdump.c: return -EINVAL in case of error in hex2bin()")
+
+> +			return ERR_PTR(-EINVAL);
+
+> +
+> +		ret |= c << i;
+> +
+> +		if (!in_str(start, end) || __end_of_region(*end))
+> +			goto out;
+> +	}
+> +
+> +	if (hex_to_bin(*end) >= 0)
+> +		return ERR_PTR(-EOVERFLOW);
+> +out:
+> +	*num = ret;
+> +	return end;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
