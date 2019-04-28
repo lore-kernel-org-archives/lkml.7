@@ -2,99 +2,141 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE81C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861CDC43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73E9204FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:07:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T2XRQITE"
+	by mail.kernel.org (Postfix) with ESMTP id 576CA2147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfD1HHS (ORCPT
+        id S1726565AbfD1HJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 03:07:18 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46721 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfD1HHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 03:07:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44sJkq3Vp6z9s7T;
-        Sun, 28 Apr 2019 17:07:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556435235;
-        bh=48LKTtK+e30HGxn2cN204m1w9/dkP/GkIu3RuJug4OM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=T2XRQITEY8W5EhGWu/DGH3wex/oPQq6znvdiB4Mb0prrZGv/SSPN8kVn1bI76iucX
-         T7n65+7GjZRgoOfG6ZYbsbH7ls7rdSENC3lWYgKA1DwRqIseCfs+q1a51tURSshrhU
-         jnc+EXPGib2KxmWcRmziHcGBu6TXpYfoHVxy5rz7IwhEUI4Yhh7DhLWPUPonkhNLes
-         u7MzP8Nb7dKGyPu21+vckBIuQnTfZyfwiYrHUJ/oI2C1kdbHtuopjdtWyNdqe+s4EC
-         54Hzi6JrjG0HAcDi7l4zLMl/gAaBdvjKcQUYQZdhpj1VU1w0Bt9KtPOxdqJz3hZ0W5
-         CG3N8ncyQjXuA==
-Date:   Sun, 28 Apr 2019 17:07:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Philipp Rudo <prudo@linux.ibm.com>
-Subject: linux-next: Fixes tag needs some work in the s390 tree
-Message-ID: <20190428170713.770e1bfc@canb.auug.org.au>
+        Sun, 28 Apr 2019 03:09:54 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:38543 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfD1HJx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 03:09:53 -0400
+Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hKdwK-0006lx-VI; Sun, 28 Apr 2019 09:09:33 +0200
+Date:   Sun, 28 Apr 2019 09:09:24 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
+cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v8 12/15] kvm/vmx: Emulate MSR TEST_CTL
+In-Reply-To: <7395908840acfbf806146f5f20d3509342771a19.camel@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1904280903520.1757@nanos.tec.linutronix.de>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>  <1556134382-58814-13-git-send-email-fenghua.yu@intel.com>  <alpine.DEB.2.21.1904250931020.1762@nanos.tec.linutronix.de> <7395908840acfbf806146f5f20d3509342771a19.camel@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/0kVjR4O274LwqJPu/Jm+bpT"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0kVjR4O274LwqJPu/Jm+bpT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, 27 Apr 2019, Xiaoyao Li wrote:
+> On Thu, 2019-04-25 at 09:42 +0200, Thomas Gleixner wrote:
+> > On Wed, 24 Apr 2019, Fenghua Yu wrote:
+> > >  
+> > > +static void atomic_switch_msr_test_ctl(struct vcpu_vmx *vmx)
+> > > +{
+> > > +	u64 host_msr_test_ctl;
+> > > +
+> > > +	if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
+> > > +		return;
+> > 
+> > Again: MSR_TST_CTL is not only about LOCK_DETECT. Check the control mask.
+> > 
+> > > +	host_msr_test_ctl = this_cpu_read(msr_test_ctl_cache);
+> > > +
+> > > +	if (host_msr_test_ctl == vmx->msr_test_ctl) {
+> > 
+> > This still assumes that the only bit which can be set in the MSR is that
+> > lock detect bit.
+> > 
+> > > +		clear_atomic_switch_msr(vmx, MSR_TEST_CTL);
+> > > +	} else {
+> > > +		add_atomic_switch_msr(vmx, MSR_TEST_CTL, vmx->msr_test_ctl,
+> > > +				      host_msr_test_ctl, false);
+> > 
+> > So what happens here is that if any other bit is set on the host, VMENTER
+> > will happily clear it.
+> 
+> There are two bits of MSR TEST_CTL defined in Intel SDM now, which is bit
+> 29 and bit 31. Bit 31 is not used in kernel, and here we only need to
+> switch bit 29 between host and guest.  So should I also change the name
+> to atomic_switch_split_lock_detect() to indicate that we only switch bit
+> 29?
 
-Hi all,
+No. Just because we ony use the split lock bit now, there is no
+jusification to name everything splitlock. This is going to have renamed
+when yet another bit is added in the future. The MSR is exposed to the
+guest and the restriction of bits happens to be splitlock today.
 
-In commit
+> >      guest = (host & ~vmx->test_ctl_mask) | vmx->test_ctl;
+> > 
+> > That preserves any bits which are not exposed to the guest.
+> > 
+> > But the way more interesting question is why are you exposing the MSR and
+> > the bit to the guest at all if the host has split lock detection enabled?
+> > 
+> > That does not make any sense as you basically allow the guest to switch it
+> > off and then launch a slowdown attack. If the host has it enabled, then a
+> > guest has to be treated like any other process and the #AC trap has to be
+> > caught by the hypervisor which then kills the guest.
+> > 
+> > Only if the host has split lock detection disabled, then you can expose it
+> > and allow the guest to turn it on and handle it on its own.
+> 
+> Indeed, if we use split lock detection for protection purpose, when host
+> has it enabled we should directly pass it to guest and forbid guest from
+> disabling it.  And only when host disables split lock detection, we can
+> expose it and allow the guest to turn it on.
+?
+> If it is used for protection purpose, then it should follow what you said and
+> this feature needs to be disabled by default. Because there are split lock
+> issues in old/current kernels and BIOS. That will cause the existing guest
+> booting failure and killed due to those split lock.
 
-  2875248b5e1a ("s390/kexec_file: Fix potential segment overlap in ELF load=
-er")
+Rightfully so.
 
-Fixes tag
+> If it is only used for debug purpose, I think it might be OK to enable this
+> feature by default and make it indepedent between host and guest?
 
-  Fixes: 91a05d9e1d6b ("s390/kexec_file: Add ELF loader")
+No. It does not make sense.
 
-has these problem(s):
+> So I think how to handle this feature between host and guest depends on how we
+> use it? Once you give me a decision, I will follow it in next version.
 
-  - Target SHA1 does not exist
+As I said: The host kernel makes the decision.
 
-Did you mean
+If the host kernel has it enabled then the guest is not allowed to change
+it. If the guest triggers an #AC it will be killed.
 
-Fixes: 8be018827154 ("s390/kexec_file: Add ELF loader")
+If the host kernel has it disabled then the guest can enable it for it's
+own purposes.
 
---=20
-Cheers,
-Stephen Rothwell
+Thanks,
 
---Sig_/0kVjR4O274LwqJPu/Jm+bpT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzFUSEACgkQAVBC80lX
-0GxQoQf/W8KM8sclN38B6l1gUVTRGhez6cbWfWWFqF/YVVoThbRFE/9LLBz4g9LO
-enAgykYBtM6hhipGzYZr52Rt4Z1HK73eHbmBLincOb8KZK/YUf6IuVbKdIF6vSjb
-X5BHIltPp0g9u/LTptv1ApItLU1uNQgW1Z1ItqpXytkwtw2SSgv7Yv5EEBGL67Gc
-fwzEzNOy+st2rU1UaCF9dlzCMFWMDoF5V6dQweEORarFQp+RPQkXva21iv9s+1o+
-pgQKFhahGLcpLWVSQTdj1QgO9FZgRv5lc6rygk8MM78lvZG5bMarD/H2f3VGm0os
-WYzeVEhwbboKrmY3cU4+O8W8lCrA2g==
-=SyRY
------END PGP SIGNATURE-----
-
---Sig_/0kVjR4O274LwqJPu/Jm+bpT--
+	tglx
