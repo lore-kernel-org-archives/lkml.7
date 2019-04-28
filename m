@@ -6,55 +6,80 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FA4C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFDEC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6E4205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BEA82067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfD1PwW (ORCPT
+        id S1726896AbfD1Pzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 11:52:22 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41120 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfD1PwW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 11:52:22 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hKm6C-0003LZ-QR; Sun, 28 Apr 2019 15:52:16 +0000
-Date:   Sun, 28 Apr 2019 16:52:16 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-cifs <linux-cifs@vger.kernel.org>
-Subject: Re: [GIT PULL] Ceph fixes for 5.1-rc7
-Message-ID: <20190428155216.GB23075@ZenIV.linux.org.uk>
-References: <CAHk-=wgPBx9xPWY7obK60=RTnOF3Ln0j9XkhYbekML=Fi3bFXg@mail.gmail.com>
- <342ef35feb1110197108068d10e518742823a210.camel@kernel.org>
- <20190425200941.GW2217@ZenIV.linux.org.uk>
- <86674e79e9f24e81feda75bc3c0dd4215604ffa5.camel@kernel.org>
- <20190426165055.GY2217@ZenIV.linux.org.uk>
- <b175faae4bb98d3379a8642fe5f4e00587c3a734.camel@kernel.org>
- <20190428043801.GE2217@ZenIV.linux.org.uk>
- <7bac7ba5655a8e783a70f915853a0846e7ff143b.camel@kernel.org>
- <20190428144850.GA23075@ZenIV.linux.org.uk>
- <b875fdb47e17ab68d18c5e5e5cbd0ec70fec7ce9.camel@kernel.org>
+        Sun, 28 Apr 2019 11:55:42 -0400
+Received: from mga01.intel.com ([192.55.52.88]:18403 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726744AbfD1Pzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 11:55:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Apr 2019 08:55:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,406,1549958400"; 
+   d="scan'208";a="138184027"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga008.jf.intel.com with ESMTP; 28 Apr 2019 08:55:38 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hKm9Q-0005qR-JM; Sun, 28 Apr 2019 18:55:36 +0300
+Date:   Sun, 28 Apr 2019 18:55:36 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     fred@fredlawl.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com,
+        lukas@wunner.de, keith.busch@intel.com, mr.nuke.me@gmail.com,
+        liudongdong3@huawei.com, thesven73@gmail.com
+Subject: Re: [PATCH 3/4] PCI: pciehp: Remove unused macro definitions
+Message-ID: <20190428155536.GU9224@smile.fi.intel.com>
+References: <20190427191304.32502-1-fred@fredlawl.com>
+ <20190427191304.32502-4-fred@fredlawl.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b875fdb47e17ab68d18c5e5e5cbd0ec70fec7ce9.camel@kernel.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190427191304.32502-4-fred@fredlawl.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 11:47:58AM -0400, Jeff Layton wrote:
+On Sat, Apr 27, 2019 at 02:13:03PM -0500, fred@fredlawl.com wrote:
+> Now that all uses for the ctrl_*() printk wrappers are removed from
+> files and replaces with pci_*() or pr_*() printk wrappers, remove the
+> unused macro definitions. In addition to that, remove the MY_NAME macro.
 
-> We could stick that in ceph_dentry_info (->d_fsdata). We have a flags
-> field in there already.
+>  extern bool pciehp_debug;
 
-Yes, but...  You have it freed in ->d_release(), AFAICS, and without
-any delays.  So lockless accesses will be trouble.
+How it's used after all?
+
+> -#define dbg(format, arg...)						\
+> -do {									\
+> -	if (pciehp_debug)						\
+> -		printk(KERN_DEBUG "%s: " format, MY_NAME, ## arg);	\
+> -} while (0)
+
+> -#define ctrl_dbg(ctrl, format, arg...)					\
+> -	do {								\
+> -		if (pciehp_debug)					\
+> -			dev_printk(KERN_DEBUG, &ctrl->pcie->device,	\
+> -					format, ## arg);		\
+> -	} while (0)
+
+Besides ruining the pciehp_debug support this will make unequivalent behaviour.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
