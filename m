@@ -2,112 +2,194 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB723C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9A1C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82EA520652
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB4D206A3
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfD1SoV (ORCPT
+        id S1727141AbfD1SvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 14:44:21 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41246 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfD1SoV (ORCPT
+        Sun, 28 Apr 2019 14:51:19 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:43236 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbfD1SvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 14:44:21 -0400
-Received: by mail-qt1-f196.google.com with SMTP id f25so9643968qtc.8;
-        Sun, 28 Apr 2019 11:44:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2qIZb4MEtnuaQO412PRiKeuotlIUz5RFI6XjQg/gCwk=;
-        b=rt1upsKIz0+BHjI1Uv5p9nPm8EY14iETDOi0HgPreITuBSyRxhgFkzzeDqxYz05iAE
-         Tf/pbl9qjQXK9iM6TyFuH15KgDc5o6rEP7edXdJ/DuPs1G1APDeLxPl9q4DOxhQTRxOl
-         0sNApjegfxiHeHVtyrDmPLuFT+wCGCrD/tXl/FgmuDExVxvxsRqnWBrzeubY1YRQH0yr
-         UewER1zN4vzrYQ4BjWo2f30+ZZTc+NGUnKZUZu74x70NoAU3wgLNz1Q1+6wFKG1FuP4U
-         NL3spbhiY7Dl/97Ko+Bi7HUCPF63UftzTZTom7J8S/ktV+vVRcEjNonR+Vs8lGQuRLW/
-         Ni2g==
-X-Gm-Message-State: APjAAAWpGkkhef/BIR/6B9u68SZPc/U+ImMQPVHUknmWPlp6LlT4GRmO
-        nX+QjjHbhqAN13zRUNUXkk/Ioaj9Jqqu1QRgIBHD88KfOw4=
-X-Google-Smtp-Source: APXvYqzfBhMtdl9iZ7Wk1alB8NzTqYuSpJSOwJUnFpeHo0+iuoXPvMXxQKouEL5GMmGOibA+gMMyrBSnirusDmej/ok=
-X-Received: by 2002:ac8:2924:: with SMTP id y33mr44874396qty.212.1556477060147;
- Sun, 28 Apr 2019 11:44:20 -0700 (PDT)
+        Sun, 28 Apr 2019 14:51:19 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hKotJ-0007FA-Uh; Sun, 28 Apr 2019 18:51:10 +0000
+Date:   Sun, 28 Apr 2019 19:51:09 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>
+Cc:     axboe@kernel.dk, dvyukov@google.com, jack@suse.cz,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        penguin-kernel@i-love.sakura.ne.jp, syzkaller-bugs@googlegroups.com
+Subject: Re: INFO: task hung in __get_super
+Message-ID: <20190428185109.GD23075@ZenIV.linux.org.uk>
+References: <001a113ed5540f411c0568cc8418@google.com>
+ <0000000000002cd22305879b22c4@google.com>
 MIME-Version: 1.0
-References: <20190427153222.GA9613@jerusalem> <20190427202150.GB9613@jerusalem>
- <CAMuHMdXNCxHP=BWPOy70LjNJoMH+zy7yYOHj29gYt79_5=4ffg@mail.gmail.com>
- <CAK8P3a2F6KW3M7ZaK=WL8429j_z=y_wXrx6rthxni8vBmsMPyg@mail.gmail.com> <c75092d5-0bbf-cd8e-d0a2-ff1384ac5a48@linux-m68k.org>
-In-Reply-To: <c75092d5-0bbf-cd8e-d0a2-ff1384ac5a48@linux-m68k.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 28 Apr 2019 20:44:03 +0200
-Message-ID: <CAK8P3a16O57dvUYUPVZJpvZ7Hm6WA-jc_svQHTAEdDpbyLRv7w@mail.gmail.com>
-Subject: Re: endianness swapped
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Angelo Dureghello <angelo@sysam.it>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000002cd22305879b22c4@google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 3:59 PM Greg Ungerer <gerg@linux-m68k.org> wrote:
-> On 28/4/19 7:21 pm, Arnd Bergmann wrote:
-> > On Sun, Apr 28, 2019 at 10:46 AM Geert Uytterhoeven
-> > <geert@linux-m68k.org> wrote:
-> >> On Sat, Apr 27, 2019 at 10:22 PM Angelo Dureghello <angelo@sysam.it> wrote:
-> >>> On Sat, Apr 27, 2019 at 05:32:22PM +0200, Angelo Dureghello wrote:
-> >
-> > Coldfire makes the behavior of readw()/readl() depend on the
-> > MMIO address, presumably since that was the easiest way to
-> > get drivers working originally, but it breaks the assumption
-> > in the asm-generic code.
->
-> Yes, that is right.
->
-> There is a number of common hardware modules that Freescale have
-> used in the ColdFire SoC parts and in their ARM based parts (iMX
-> families). The ARM parts are pretty much always little endian, and
-> the ColdFire is always big endian. The hardware registers in those
-> hardware blocks are always accessed in native endian of the processor.
+On Sun, Apr 28, 2019 at 11:14:06AM -0700, syzbot wrote:
+>  down_read+0x49/0x90 kernel/locking/rwsem.c:26
+>  __get_super.part.0+0x203/0x2e0 fs/super.c:788
+>  __get_super include/linux/spinlock.h:329 [inline]
+>  get_super+0x2e/0x50 fs/super.c:817
+>  fsync_bdev+0x19/0xd0 fs/block_dev.c:525
+>  invalidate_partition+0x36/0x60 block/genhd.c:1581
+>  drop_partitions block/partition-generic.c:443 [inline]
+>  rescan_partitions+0xef/0xa20 block/partition-generic.c:516
+>  __blkdev_reread_part+0x1a2/0x230 block/ioctl.c:173
+>  blkdev_reread_part+0x27/0x40 block/ioctl.c:193
+>  loop_reread_partitions+0x1c/0x40 drivers/block/loop.c:633
+>  loop_set_status+0xe57/0x1380 drivers/block/loop.c:1296
+>  loop_set_status64+0xc2/0x120 drivers/block/loop.c:1416
+>  lo_ioctl+0x8fc/0x2150 drivers/block/loop.c:1559
+>  __blkdev_driver_ioctl block/ioctl.c:303 [inline]
+>  blkdev_ioctl+0x6f2/0x1d10 block/ioctl.c:605
+>  block_ioctl+0xee/0x130 fs/block_dev.c:1933
+>  vfs_ioctl fs/ioctl.c:46 [inline]
+>  file_ioctl fs/ioctl.c:509 [inline]
+>  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
+>  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+>  __do_sys_ioctl fs/ioctl.c:720 [inline]
+>  __se_sys_ioctl fs/ioctl.c:718 [inline]
+>  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+>  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-In later Freescale/NXP ARM SoCs (i.MX and Layerscape), we
-also get a lot of devices pulled over from PowerPC, with random
-endianess. In some cases, the same device that had big-endian
-registers originally ends up in two different ARM products and one of
-them uses big-endian while the other one uses little-endian registers.
+ioctl(..., BLKRRPART) blocked on ->s_umount in __get_super().
+The trouble is, the only things holding ->s_umount appears to be
+these:
 
-> So the address range checks are to deal with those internal
-> hardware blocks (i2c, spi, dma, etc), since we know those are
-> at fixed addresses. That leaves the usual endian swapping in place for
-> other general (ie external) devices (PCI devices, network chips, etc).
+> 2 locks held by syz-executor274/11716:
+>  #0: 00000000a19e2025 (&type->s_umount_key#38/1){+.+.}, at:
+> alloc_super+0x158/0x890 fs/super.c:228
+>  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl
+> drivers/block/loop.c:1514 [inline]
+>  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150
+> drivers/block/loop.c:1572
 
-Is there a complete list of coldfire on-chip device drivers?
+> 2 locks held by syz-executor274/11717:
+>  #0: 00000000e185c083 (&type->s_umount_key#38/1){+.+.}, at:
+> alloc_super+0x158/0x890 fs/super.c:228
+>  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl
+> drivers/block/loop.c:1514 [inline]
+>  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150
+> drivers/block/loop.c:1572
 
-Looking at some of the drivers:
+... and that's bollocks.  ->s_umount held there is that on freshly allocated
+superblock.  It *MUST* be in mount(2); no other syscall should be able to
+call alloc_super() in the first place.  So what the hell is that doing
+trying to call lo_ioctl() inside mount(2)?  Something like isofs attempting
+cdrom ioctls on the underlying device?
 
-- drivers/i2c/busses/i2c-imx.c uses only 8-bit accesses and works either way,
-  same for drivers/tty/serial/mcf.c
-- drivers/spi/spi-coldfire-qspi.c is apparently coldfire-only and could use
-  ioread32be for a portable to do big-endian register access.
-- edma-common has a wrapper to support both big-endian and little-endian
-  configurations in the same kernel image, but the mcf interrupt handler
-  is hardcoded to the (normally) little-endian ioread32 function.
-- drivers/net/ethernet/freescale/fec_main.c is shared between coldfire
-  and i.MX (but not mpc52xx), and is hardcoded to readl/writel, and
-  would need the same trick as edma to make it portable.
+Why do we have loop_func_table->ioctl(), BTW?  All in-tree instances are
+either NULL or return -EINVAL unconditionally.  Considering that the
+caller is
+                err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
+we could bloody well just get rid of cryptoloop_ioctl() (the only
+non-NULL instance) and get rid of calling lo_simple_ioctl() in
+lo_ioctl() switch's default.
 
-      Arnd
+Something like this:
+
+diff --git a/drivers/block/cryptoloop.c b/drivers/block/cryptoloop.c
+index 254ee7d54e91..f16468a562f5 100644
+--- a/drivers/block/cryptoloop.c
++++ b/drivers/block/cryptoloop.c
+@@ -167,12 +167,6 @@ cryptoloop_transfer(struct loop_device *lo, int cmd,
+ }
+ 
+ static int
+-cryptoloop_ioctl(struct loop_device *lo, int cmd, unsigned long arg)
+-{
+-	return -EINVAL;
+-}
+-
+-static int
+ cryptoloop_release(struct loop_device *lo)
+ {
+ 	struct crypto_sync_skcipher *tfm = lo->key_data;
+@@ -188,7 +182,6 @@ cryptoloop_release(struct loop_device *lo)
+ static struct loop_func_table cryptoloop_funcs = {
+ 	.number = LO_CRYPT_CRYPTOAPI,
+ 	.init = cryptoloop_init,
+-	.ioctl = cryptoloop_ioctl,
+ 	.transfer = cryptoloop_transfer,
+ 	.release = cryptoloop_release,
+ 	.owner = THIS_MODULE
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index bf1c61cab8eb..2ec162b80562 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -955,7 +955,6 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+ 	lo->lo_flags = lo_flags;
+ 	lo->lo_backing_file = file;
+ 	lo->transfer = NULL;
+-	lo->ioctl = NULL;
+ 	lo->lo_sizelimit = 0;
+ 	lo->old_gfp_mask = mapping_gfp_mask(mapping);
+ 	mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
+@@ -1064,7 +1063,6 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+ 
+ 	loop_release_xfer(lo);
+ 	lo->transfer = NULL;
+-	lo->ioctl = NULL;
+ 	lo->lo_device = NULL;
+ 	lo->lo_encryption = NULL;
+ 	lo->lo_offset = 0;
+@@ -1262,7 +1260,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 	if (!xfer)
+ 		xfer = &none_funcs;
+ 	lo->transfer = xfer->transfer;
+-	lo->ioctl = xfer->ioctl;
+ 
+ 	if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
+ 	     (info->lo_flags & LO_FLAGS_AUTOCLEAR))
+@@ -1525,7 +1522,7 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
+ 		err = loop_set_block_size(lo, arg);
+ 		break;
+ 	default:
+-		err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
++		err = -EINVAL;
+ 	}
+ 	mutex_unlock(&loop_ctl_mutex);
+ 	return err;
+@@ -1567,10 +1564,9 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
+ 	case LOOP_SET_BLOCK_SIZE:
+ 		if (!(mode & FMODE_WRITE) && !capable(CAP_SYS_ADMIN))
+ 			return -EPERM;
+-		/* Fall through */
++		return lo_simple_ioctl(lo, cmd, arg);
+ 	default:
+-		err = lo_simple_ioctl(lo, cmd, arg);
+-		break;
++		return -EINVAL;
+ 	}
+ 
+ 	return err;
+diff --git a/drivers/block/loop.h b/drivers/block/loop.h
+index af75a5ee4094..56a9a0c161d7 100644
+--- a/drivers/block/loop.h
++++ b/drivers/block/loop.h
+@@ -84,7 +84,6 @@ struct loop_func_table {
+ 	int (*init)(struct loop_device *, const struct loop_info64 *); 
+ 	/* release is called from loop_unregister_transfer or clr_fd */
+ 	int (*release)(struct loop_device *); 
+-	int (*ioctl)(struct loop_device *, int cmd, unsigned long arg);
+ 	struct module *owner;
+ }; 
+ 
