@@ -2,262 +2,84 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7379FC4321A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5BFC43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4232020679
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BC020679
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:17:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUgjGjqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfD1SOI (ORCPT
+        id S1727148AbfD1SRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 14:14:08 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:54919 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbfD1SOH (ORCPT
+        Sun, 28 Apr 2019 14:17:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37329 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbfD1SRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 14:14:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id c17so7182643iom.21
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 11:14:07 -0700 (PDT)
+        Sun, 28 Apr 2019 14:17:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e6so4076634pgc.4;
+        Sun, 28 Apr 2019 11:17:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d3T/SikFXr5qYm6w3sKrS+bzQuqkPNS0J8Ac7y9zSLA=;
+        b=CUgjGjqRTqeu4iWrrWwJ5DD2ABCTtylN41Pem4Fzr5TrdBovXJWXuAa9zUblcBBUVO
+         jgPNmlyvvX7aoCxccwLqJ/w3uy10qgVGXsfJ4IHb0+M4QBFuCMXLCC6+KtWGcncn+FGI
+         72SYI+HPQhyc2L4bKWPxyenVnDR2v7FuQBndu2xFfxdfF3muu0JsfIYF2i7XUqf3kPtp
+         HnG4Q4EeLqraHzekP6cvsw9+FnDHzqFz8F5aweBv0lV2zRZxFI6zFB0Vmu0FKqJLBzWK
+         ocNurBTiLnIt2MjD9SH6QlSxVR4QP1Pu30coL1+wvR8bMK7NvUjkp7oFh4cPxqDwUdpr
+         Gf3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=2djQxR0Pmm/Dma5dasUwGKjuaJruPxPF0g/tYd5DCVw=;
-        b=Z/VMwtL19HaKTJqeHJpslEoADjJjJ+EsiV1oNGRYI2F5OXvXHDHcCuYsvrtWXDOSXu
-         KYOx3andpBVurNfSe+La4mI4npY3yq4J/RDFM32CYeUfBIFBZY1J7Rk1sPOdxOXTLmf4
-         ckOmWyqSL86x6fPhdEQptaYSdxI82rp3D2tPahgaVKjzJlRGVNaNewkB11n4CjAe5LVt
-         /VTDzBjnsvOc2aJaQw5qhyzxzZ/KaFa8l1quDjO0P1rjIfJcZctNkmU4F0VwuJ06N9kM
-         w81+qml4LTI7Da4KbcwkIlGxbF6bYi8drVhKL6NXK6/JIZ/Up9nqG+5zgNKYYRkxqTAj
-         NQ5g==
-X-Gm-Message-State: APjAAAW5lZmNI/uqRyl85e4u9F9Ta6OY4ANxOJV94Ra6KxfzAwa26rCp
-        H6q9HmQRj98PS/WjCPZJB4HdqRx4CQY+gKOrMZB2RkUp5V5Y
-X-Google-Smtp-Source: APXvYqyUNImUi4bZYKTPXLruu31pr12MtImbQeiPnmmCKBTFsDTE6aysY6zZBiuKpG1aGdDeiU7NXrLuQoLr0YlkJ3tRgwivVO2c
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d3T/SikFXr5qYm6w3sKrS+bzQuqkPNS0J8Ac7y9zSLA=;
+        b=VjJz3pvy0+fDXqsk6zyvfssTFQNccBLXcKPl5q3TmpsTjcPZFc01NILMjU+WGTcfIt
+         5dRPaDIrLbm7VnQwa0Hxd1OWVh0Thj2yAEiYfs6qhB7UkhZgt2Y2/k4yL55Qu4mJ8Cso
+         pggUbuCzC5bD0NFz69b4RtoKv74oDm/QIsp9lOEd6MXMT1Bmr63ouc/u0z1zhkaIC2vj
+         39CXVzXKEzmReOyZ8YHmnXzWYAflDE4x7Xa0AYjg2TRH4ndl0Vq0lIgYEQLrZQKVlWzw
+         4D5B9A5cRDAyou/qkISu/sZ5btO2IksFcbjepk6waHihZJiCvVEXEV7bbqhDB1nhd5L+
+         +lJA==
+X-Gm-Message-State: APjAAAWf0RuKX0OCS8v+rDtYkjTJ6gg6GIHMOali3pcHyxeNDzquF3tJ
+        LITA4mXoU4b+MGjwKyoqpAWOKe4+jGkB61PyMep9dg==
+X-Google-Smtp-Source: APXvYqyKjhIViSH/oimdWnq8czYKZr9DrZtFcbbhIrCiD/I1VbZA3fsCurYmtaVkE4Jny6yHDbQrg0LXetxxOvtcU3w=
+X-Received: by 2002:a63:1301:: with SMTP id i1mr9572892pgl.226.1556475436633;
+ Sun, 28 Apr 2019 11:17:16 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:a1d6:: with SMTP id o22mr17605551jah.102.1556475246593;
- Sun, 28 Apr 2019 11:14:06 -0700 (PDT)
-Date:   Sun, 28 Apr 2019 11:14:06 -0700
-In-Reply-To: <001a113ed5540f411c0568cc8418@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002cd22305879b22c4@google.com>
-Subject: Re: INFO: task hung in __get_super
-From:   syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, dvyukov@google.com, jack@suse.cz,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        penguin-kernel@I-love.SAKURA.ne.jp,
-        penguin-kernel@i-love.sakura.ne.jp,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <1556430899-11018-1-git-send-email-hofrat@osadl.org>
+In-Reply-To: <1556430899-11018-1-git-send-email-hofrat@osadl.org>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sun, 28 Apr 2019 11:17:05 -0700
+Message-ID: <CAM_iQpXVv7THx7T+M=nvOt7y6D31=O4CS4s=2JS4yqfbTkqoyA@mail.gmail.com>
+Subject: Re: [PATCH] net_sched: force endianness annotation
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Sat, Apr 27, 2019 at 11:00 PM Nicholas Mc Guire <hofrat@osadl.org> wrote:
+>
+> While the endiannes is being handled correctly sparse was unhappy with
+> the missing annotation as be16_to_cpu()/be32_to_cpu() expects a __be16
+> respectively __be32. To mitigate this annotation issue forced annotation
+> is introduced. Note that this patch has no impact on the generated binary.
+>
+> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
 
-HEAD commit:    037904a2 Merge branch 'x86-urgent-for-linus' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=135ff034a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a42d110b47dd6b36
-dashboard link: https://syzkaller.appspot.com/bug?extid=10007d66ca02b08f0e60
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1291b1f4a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=135385a8a00000
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com
 
-INFO: task syz-executor274:8097 blocked for more than 143 seconds.
-       Not tainted 5.1.0-rc6+ #89
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor274 D28008  8097   8041 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2877 [inline]
-  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
-  schedule+0x92/0x180 kernel/sched/core.c:3562
-  __rwsem_down_read_failed_common kernel/locking/rwsem-xadd.c:285 [inline]
-  rwsem_down_read_failed+0x213/0x420 kernel/locking/rwsem-xadd.c:302
-  call_rwsem_down_read_failed+0x18/0x30 arch/x86/lib/rwsem.S:94
-  __down_read arch/x86/include/asm/rwsem.h:83 [inline]
-  down_read+0x49/0x90 kernel/locking/rwsem.c:26
-  __get_super.part.0+0x203/0x2e0 fs/super.c:788
-  __get_super include/linux/spinlock.h:329 [inline]
-  get_super+0x2e/0x50 fs/super.c:817
-  fsync_bdev+0x19/0xd0 fs/block_dev.c:525
-  invalidate_partition+0x36/0x60 block/genhd.c:1581
-  drop_partitions block/partition-generic.c:443 [inline]
-  rescan_partitions+0xef/0xa20 block/partition-generic.c:516
-  __blkdev_reread_part+0x1a2/0x230 block/ioctl.c:173
-  blkdev_reread_part+0x27/0x40 block/ioctl.c:193
-  loop_reread_partitions+0x1c/0x40 drivers/block/loop.c:633
-  loop_set_status+0xe57/0x1380 drivers/block/loop.c:1296
-  loop_set_status64+0xc2/0x120 drivers/block/loop.c:1416
-  lo_ioctl+0x8fc/0x2150 drivers/block/loop.c:1559
-  __blkdev_driver_ioctl block/ioctl.c:303 [inline]
-  blkdev_ioctl+0x6f2/0x1d10 block/ioctl.c:605
-  block_ioctl+0xee/0x130 fs/block_dev.c:1933
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441937
-Code: 48 83 c4 08 48 89 d8 5b 5d c3 66 0f 1f 84 00 00 00 00 00 48 89 e8 48  
-f7 d8 48 39 c3 0f 92 c0 eb 92 66 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 8d 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffcabed4e08 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441937
-RDX: 00007ffcabed4ea0 RSI: 0000000000004c04 RDI: 0000000000000004
-RBP: 0000000000000003 R08: 0000000000000000 R09: 000000000000000a
-R10: 0000000000000075 R11: 0000000000000202 R12: 0000000000000001
-R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
-INFO: task blkid:8099 blocked for more than 143 seconds.
-       Not tainted 5.1.0-rc6+ #89
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-blkid           D27504  8099   8021 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2877 [inline]
-  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
-  schedule+0x92/0x180 kernel/sched/core.c:3562
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
-  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
-  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
-  blkdev_put+0x34/0x560 fs/block_dev.c:1866
-  blkdev_close+0x8b/0xb0 fs/block_dev.c:1915
-  __fput+0x2e5/0x8d0 fs/file_table.c:278
-  ____fput+0x16/0x20 fs/file_table.c:309
-  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:166
-  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
-  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f1ae9c432b0
-Code: Bad RIP value.
-RSP: 002b:00007ffc29ff6028 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007f1ae9c432b0
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000028 R09: 0000000001680000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000b9d030
-R13: 0000000000000000 R14: 0000000000000003 R15: 0000000000000005
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1041:
-  #0: 0000000027887009 (rcu_read_lock){....}, at:  
-debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5057
-1 lock held by rs:main Q:Reg/7921:
-  #0: 00000000e00580d7 (&rq->lock){-.-.}, at: rq_lock  
-kernel/sched/sched.h:1168 [inline]
-  #0: 00000000e00580d7 (&rq->lock){-.-.}, at: __schedule+0x1f8/0x1cc0  
-kernel/sched/core.c:3456
-1 lock held by rsyslogd/7923:
-  #0: 00000000488dcec4 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
-fs/file.c:801
-2 locks held by getty/8014:
-  #0: 000000001b56f3c3 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000da9faa8c (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8015:
-  #0: 00000000e00c81bb (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 000000008d689a2e (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8016:
-  #0: 00000000177f6359 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 0000000096437898 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8017:
-  #0: 000000002db00e12 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 0000000071f2d88e (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8018:
-  #0: 00000000a41b6290 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000c340e26f (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8019:
-  #0: 00000000bca104ce (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 000000007e045212 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8020:
-  #0: 0000000070fdafae (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000b4e26fa9 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-1 lock held by syz-executor274/8083:
-2 locks held by syz-executor274/8097:
-  #0: 000000007a5ed526 (&bdev->bd_mutex){+.+.}, at:  
-blkdev_reread_part+0x1f/0x40 block/ioctl.c:192
-  #1: 0000000067606e21 (&type->s_umount_key#39){.+.+}, at:  
-__get_super.part.0+0x203/0x2e0 fs/super.c:788
-1 lock held by blkid/8099:
-  #0: 000000007a5ed526 (&bdev->bd_mutex){+.+.}, at: blkdev_put+0x34/0x560  
-fs/block_dev.c:1866
-2 locks held by syz-executor274/11705:
-  #0: 000000002b6bbb34 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0xbb/0x810  
-fs/block_dev.c:1833
-  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_release+0x1f/0x200  
-drivers/block/loop.c:1755
-2 locks held by syz-executor274/11709:
-  #0: 00000000a45cb906 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0xbb/0x810  
-fs/block_dev.c:1833
-  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_release+0x1f/0x200  
-drivers/block/loop.c:1755
-2 locks held by syz-executor274/11716:
-  #0: 00000000a19e2025 (&type->s_umount_key#38/1){+.+.}, at:  
-alloc_super+0x158/0x890 fs/super.c:228
-  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl  
-drivers/block/loop.c:1514 [inline]
-  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150  
-drivers/block/loop.c:1572
-2 locks held by syz-executor274/11717:
-  #0: 00000000e185c083 (&type->s_umount_key#38/1){+.+.}, at:  
-alloc_super+0x158/0x890 fs/super.c:228
-  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl  
-drivers/block/loop.c:1514 [inline]
-  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150  
-drivers/block/loop.c:1572
-2 locks held by blkid/11718:
-  #0: 000000003d9e77b2 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0xbb/0x810  
-fs/block_dev.c:1833
-  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: __loop_clr_fd+0x88/0xd60  
-drivers/block/loop.c:1046
-2 locks held by blkid/11720:
-  #0: 000000000c0297bc (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0xbb/0x810  
-fs/block_dev.c:1833
-  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_release+0x1f/0x200  
-drivers/block/loop.c:1755
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 PID: 1041 Comm: khungtaskd Not tainted 5.1.0-rc6+ #89
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:204 [inline]
-  watchdog+0x9b7/0xec0 kernel/hung_task.c:288
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 0 to CPUs 1:
-
+Thanks.
