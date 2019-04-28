@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5644C4321A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994B4C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A6720675
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620F120675
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfD1V0b (ORCPT
+        id S1726602AbfD1V0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 17:26:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55984 "EHLO mx1.redhat.com"
+        Sun, 28 Apr 2019 17:26:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46444 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbfD1V0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 17:26:30 -0400
+        id S1726393AbfD1V0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 17:26:35 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7885F308339D;
-        Sun, 28 Apr 2019 21:26:29 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3BC3AC04B93D;
+        Sun, 28 Apr 2019 21:26:34 +0000 (UTC)
 Received: from llong.com (ovpn-120-22.rdu2.redhat.com [10.10.120.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E345517F42;
-        Sun, 28 Apr 2019 21:26:27 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1747717989;
+        Sun, 28 Apr 2019 21:26:29 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -39,128 +39,162 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Tim Chen <tim.c.chen@linux.intel.com>,
         huang ying <huang.ying.caritas@gmail.com>,
-        Waiman Long <longman@redhat.com>, stable@vger.kernel.org
-Subject: [PATCH-tip v7 01/20] locking/rwsem: Prevent decrement of reader count before increment
-Date:   Sun, 28 Apr 2019 17:25:38 -0400
-Message-Id: <20190428212557.13482-2-longman@redhat.com>
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH-tip v7 02/20] locking/rwsem: Make owner available even if !CONFIG_RWSEM_SPIN_ON_OWNER
+Date:   Sun, 28 Apr 2019 17:25:39 -0400
+Message-Id: <20190428212557.13482-3-longman@redhat.com>
 In-Reply-To: <20190428212557.13482-1-longman@redhat.com>
 References: <20190428212557.13482-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sun, 28 Apr 2019 21:26:29 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Sun, 28 Apr 2019 21:26:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During my rwsem testing, it was found that after a down_read(), the
-reader count may occasionally become 0 or even negative. Consequently,
-a writer may steal the lock at that time and execute with the reader
-in parallel thus breaking the mutual exclusion guarantee of the write
-lock. In other words, both readers and writer can become rwsem owners
-simultaneously.
+The owner field in the rw_semaphore structure is used primarily for
+optimistic spinning. However, identifying the rwsem owner can also be
+helpful in debugging as well as tracing locking related issues when
+analyzing crash dump. The owner field may also store state information
+that can be important to the operation of the rwsem.
 
-The current reader wakeup code does it in one pass to clear waiter->task
-and put them into wake_q before fully incrementing the reader count.
-Once waiter->task is cleared, the corresponding reader may see it,
-finish the critical section and do unlock to decrement the count before
-the count is incremented. This is not a problem if there is only one
-reader to wake up as the count has been pre-incremented by 1.  It is
-a problem if there are more than one readers to be woken up and writer
-can steal the lock.
+So the owner field is now made a permanent member of the rw_semaphore
+structure irrespective of CONFIG_RWSEM_SPIN_ON_OWNER.
 
-The wakeup was actually done in 2 passes before the v4.9 commit
-70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only
-once"). To fix this problem, the wakeup is now done in two passes
-again. In the first pass, we collect the readers and count them. The
-reader count is then fully incremented. In the second pass, the
-waiter->task is then cleared and they are put into wake_q to be woken
-up later.
-
-Fixes: 70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
-Cc: <stable@vger.kernel.org>
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/rwsem-xadd.c | 46 +++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 15 deletions(-)
+ include/linux/rwsem.h       |  9 +++++----
+ kernel/locking/rwsem-xadd.c |  2 +-
+ kernel/locking/rwsem.h      | 23 -----------------------
+ lib/Kconfig.debug           |  8 ++++----
+ 4 files changed, 10 insertions(+), 32 deletions(-)
 
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index 2ea18a3def04..148983e21d47 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -34,12 +34,12 @@
+  */
+ struct rw_semaphore {
+ 	atomic_long_t count;
+-#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+ 	/*
+-	 * Write owner. Used as a speculative check to see
+-	 * if the owner is running on the cpu.
++	 * Write owner or one of the read owners. Can be used as a
++	 * speculative check to see if the owner is running on the cpu.
+ 	 */
+ 	struct task_struct *owner;
++#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+ 	struct optimistic_spin_queue osq; /* spinner MCS lock */
+ #endif
+ 	raw_spinlock_t wait_lock;
+@@ -73,13 +73,14 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
+ #endif
+ 
+ #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+-#define __RWSEM_OPT_INIT(lockname) , .osq = OSQ_LOCK_UNLOCKED, .owner = NULL
++#define __RWSEM_OPT_INIT(lockname) , .osq = OSQ_LOCK_UNLOCKED
+ #else
+ #define __RWSEM_OPT_INIT(lockname)
+ #endif
+ 
+ #define __RWSEM_INITIALIZER(name)				\
+ 	{ __RWSEM_INIT_COUNT(name),				\
++	  .owner = NULL,					\
+ 	  .wait_list = LIST_HEAD_INIT((name).wait_list),	\
+ 	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock)	\
+ 	  __RWSEM_OPT_INIT(name)				\
 diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
-index 6b3ee9948bf1..0b1f77957240 100644
+index 0b1f77957240..c0500679fd2f 100644
 --- a/kernel/locking/rwsem-xadd.c
 +++ b/kernel/locking/rwsem-xadd.c
-@@ -130,6 +130,7 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- {
- 	struct rwsem_waiter *waiter, *tmp;
- 	long oldcount, woken = 0, adjustment = 0;
-+	struct list_head wlist;
- 
- 	/*
- 	 * Take a peek at the queue head waiter such that we can determine
-@@ -188,18 +189,43 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- 	 * of the queue. We know that woken will be at least 1 as we accounted
- 	 * for above. Note we increment the 'active part' of the count by the
- 	 * number of readers before waking any processes up.
-+	 *
-+	 * We have to do wakeup in 2 passes to prevent the possibility that
-+	 * the reader count may be decremented before it is incremented. It
-+	 * is because the to-be-woken waiter may not have slept yet. So it
-+	 * may see waiter->task got cleared, finish its critical section and
-+	 * do an unlock before the reader count increment.
-+	 *
-+	 * 1) Collect the read-waiters in a separate list, count them and
-+	 *    fully increment the reader count in rwsem.
-+	 * 2) For each waiters in the new list, clear waiter->task and
-+	 *    put them into wake_q to be woken up later.
- 	 */
--	list_for_each_entry_safe(waiter, tmp, &sem->wait_list, list) {
--		struct task_struct *tsk;
--
-+	list_for_each_entry(waiter, &sem->wait_list, list) {
- 		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
- 			break;
- 
- 		woken++;
--		tsk = waiter->task;
-+	}
-+	list_cut_before(&wlist, &sem->wait_list, &waiter->list);
-+
-+	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
-+	lockevent_cond_inc(rwsem_wake_reader, woken);
-+	if (list_empty(&sem->wait_list)) {
-+		/* hit end of list above */
-+		adjustment -= RWSEM_WAITING_BIAS;
-+	}
-+
-+	if (adjustment)
-+		atomic_long_add(adjustment, &sem->count);
-+
-+	/* 2nd pass */
-+	list_for_each_entry_safe(waiter, tmp, &wlist, list) {
-+		struct task_struct *tsk;
- 
-+		tsk = waiter->task;
- 		get_task_struct(tsk);
--		list_del(&waiter->list);
-+
- 		/*
- 		 * Ensure calling get_task_struct() before setting the reader
- 		 * waiter to nil such that rwsem_down_read_failed() cannot
-@@ -213,16 +239,6 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- 		 */
- 		wake_q_add_safe(wake_q, tsk);
- 	}
--
--	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
--	lockevent_cond_inc(rwsem_wake_reader, woken);
--	if (list_empty(&sem->wait_list)) {
--		/* hit end of list above */
--		adjustment -= RWSEM_WAITING_BIAS;
--	}
--
--	if (adjustment)
--		atomic_long_add(adjustment, &sem->count);
+@@ -86,8 +86,8 @@ void __init_rwsem(struct rw_semaphore *sem, const char *name,
+ 	atomic_long_set(&sem->count, RWSEM_UNLOCKED_VALUE);
+ 	raw_spin_lock_init(&sem->wait_lock);
+ 	INIT_LIST_HEAD(&sem->wait_list);
+-#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+ 	sem->owner = NULL;
++#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+ 	osq_lock_init(&sem->osq);
+ #endif
  }
+diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
+index 64877f5294e3..eb9c8534299b 100644
+--- a/kernel/locking/rwsem.h
++++ b/kernel/locking/rwsem.h
+@@ -61,7 +61,6 @@
+ #define RWSEM_ACTIVE_READ_BIAS		RWSEM_ACTIVE_BIAS
+ #define RWSEM_ACTIVE_WRITE_BIAS		(RWSEM_WAITING_BIAS + RWSEM_ACTIVE_BIAS)
  
+-#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
  /*
+  * All writes to owner are protected by WRITE_ONCE() to make sure that
+  * store tearing can't happen as optimistic spinners may read and use
+@@ -126,7 +125,6 @@ static inline bool rwsem_has_anonymous_owner(struct task_struct *owner)
+  * real owner or one of the real owners. The only exception is when the
+  * unlock is done by up_read_non_owner().
+  */
+-#define rwsem_clear_reader_owned rwsem_clear_reader_owned
+ static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
+ {
+ 	unsigned long val = (unsigned long)current | RWSEM_READER_OWNED
+@@ -135,28 +133,7 @@ static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
+ 		cmpxchg_relaxed((unsigned long *)&sem->owner, val,
+ 				RWSEM_READER_OWNED | RWSEM_ANONYMOUSLY_OWNED);
+ }
+-#endif
+-
+ #else
+-static inline void rwsem_set_owner(struct rw_semaphore *sem)
+-{
+-}
+-
+-static inline void rwsem_clear_owner(struct rw_semaphore *sem)
+-{
+-}
+-
+-static inline void __rwsem_set_reader_owned(struct rw_semaphore *sem,
+-					   struct task_struct *owner)
+-{
+-}
+-
+-static inline void rwsem_set_reader_owned(struct rw_semaphore *sem)
+-{
+-}
+-#endif
+-
+-#ifndef rwsem_clear_reader_owned
+ static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
+ {
+ }
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 0d9e81779e37..2047f3884540 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1067,7 +1067,7 @@ config PROVE_LOCKING
+ 	select DEBUG_SPINLOCK
+ 	select DEBUG_MUTEXES
+ 	select DEBUG_RT_MUTEXES if RT_MUTEXES
+-	select DEBUG_RWSEMS if RWSEM_SPIN_ON_OWNER
++	select DEBUG_RWSEMS
+ 	select DEBUG_WW_MUTEX_SLOWPATH
+ 	select DEBUG_LOCK_ALLOC
+ 	select TRACE_IRQFLAGS
+@@ -1171,10 +1171,10 @@ config DEBUG_WW_MUTEX_SLOWPATH
+ 
+ config DEBUG_RWSEMS
+ 	bool "RW Semaphore debugging: basic checks"
+-	depends on DEBUG_KERNEL && RWSEM_SPIN_ON_OWNER
++	depends on DEBUG_KERNEL
+ 	help
+-	  This debugging feature allows mismatched rw semaphore locks and unlocks
+-	  to be detected and reported.
++	  This debugging feature allows mismatched rw semaphore locks
++	  and unlocks to be detected and reported.
+ 
+ config DEBUG_LOCK_ALLOC
+ 	bool "Lock debugging: detect incorrect freeing of live locks"
 -- 
 2.18.1
 
