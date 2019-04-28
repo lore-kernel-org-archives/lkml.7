@@ -2,110 +2,157 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4053C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 02:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BC4C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 02:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A5C20874
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 02:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9344B20881
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 02:33:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="awpz3dwy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBSt/SG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfD1C2E (ORCPT
+        id S1726396AbfD1Cdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 22:28:04 -0400
-Received: from mail-eopbgr140053.outbound.protection.outlook.com ([40.107.14.53]:64398
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725953AbfD1C2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 22:28:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1aTFaAAN2IrpZHFQHhTi4WKi5LAEpnD5hXmtniBa5Kk=;
- b=awpz3dwy5JZj4XSNPtUICGFjmx3TcEQPq2o+KEizyCgQaD5FzVDeFUlLJ5p0WYK03L5j9npfp1Dy5CtVPzozJ4+DbWjuXQ3cc7eaRaph54QdbKx2Sgv7eqVQ3vdMmiNKTNbWL+YYXiWwSEQjXLG6DyNFAGSt00MignbH4stssio=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6527.eurprd04.prod.outlook.com (20.179.233.224) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.15; Sun, 28 Apr 2019 02:28:01 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::6c03:86ad:729d:e311]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::6c03:86ad:729d:e311%7]) with mapi id 15.20.1835.016; Sun, 28 Apr 2019
- 02:28:01 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V3] ASoC: fsl_esai: Add pm runtime function
-Thread-Topic: [PATCH V3] ASoC: fsl_esai: Add pm runtime function
-Thread-Index: AdT9aZTTCBvxnqcnTlSWnl4/zJWE3g==
-Date:   Sun, 28 Apr 2019 02:28:00 +0000
-Message-ID: <VE1PR04MB647954050987E2A44F459752E3380@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2103ab35-c8b2-483b-4372-08d6cb812294
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6527;
-x-ms-traffictypediagnostic: VE1PR04MB6527:
-x-microsoft-antispam-prvs: <VE1PR04MB6527A58376FCB48B0B8A9EB7E3380@VE1PR04MB6527.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0021920B5A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(136003)(366004)(376002)(39860400002)(189003)(199004)(7736002)(99286004)(71190400001)(86362001)(4744005)(14454004)(68736007)(229853002)(478600001)(486006)(81166006)(54906003)(8676002)(71200400001)(476003)(3846002)(6116002)(8936002)(81156014)(5660300002)(25786009)(4326008)(102836004)(33656002)(64756008)(186003)(14444005)(256004)(66476007)(6506007)(7696005)(66446008)(73956011)(9686003)(66066001)(74316002)(66556008)(66946007)(26005)(305945005)(2906002)(76116006)(53936002)(6246003)(6916009)(97736004)(52536014)(6436002)(55016002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6527;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FuDYIm6ISgNZSdKbs3rRbBHJs62eMmzyhIEoHrTLtf2CnLm0QnHpGyZKMqgrPPSGP3engutJhcyF+uhQbOxVdI35oKPKqcMO9UZtXjGHDNPg5aYfYAWZwqGEML9h8uuE0ebj2fKiYElaDr3LC1Ql4wpgbehl+EF7IyTrkcw+pyx5G2UKNtMGanNyof120rfQGgFpbnH672QXyUUwOM/UTHIOrxOp4hMi8LFg5fvuI4MHyccJGpuJXNKsSSWZNhdLwyndZMRLduyGfvg1wY+0qG3/RNV6mcuuY9n+5mVOTYJmmbb2XbWn9DqtF+6CwumuiKc9f+PXQOLT2TwTwR3+bMLfhYRkpQru/fq1whQGAaar4hVrmCt/egvDsn1A296vQTGFjS8FN0ZMI7IsLQYTmiSqKabBTXkbR3/RwPGq8Zk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 27 Apr 2019 22:33:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35628 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfD1Cdt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 22:33:49 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h1so3455536pgs.2;
+        Sat, 27 Apr 2019 19:33:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
+         :content-disposition:user-agent;
+        bh=8pdP/pIbSMTEUfQnT+0vcRdQjYsBt7dW9GatpOSe0b0=;
+        b=ZBSt/SG+mbZSNJMGMysW1W8y1DcfuWBMt+y1GCEjXy45Ycibqoks6g1MWKq1/HxzMP
+         bSlln+KNPYYYwpZv7PvIRsaW1DmrTKl7wOG2dRigldgxY0d5jg/rMNUa8Fttst7kmURM
+         CgUVb7R6OqNx2s/1InmJ10P36fc9r5L1v0fh8M7V8kJYQWLtsIE2hWF/bfchdJBbJkSz
+         2exaE1RAInpyMPe89byC/3o45z3ldMmNJDU4APVDKtcq7R9B33YH6Q3om2WeIawN9AeS
+         wdn5FTbGhmPb5FbTpL2arESdEiGE5ja9ngXB/3d3oPy3E4NmVNqoDVPgclnYTf+7THQ2
+         YnHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:mime-version:content-disposition:user-agent;
+        bh=8pdP/pIbSMTEUfQnT+0vcRdQjYsBt7dW9GatpOSe0b0=;
+        b=oHQqRSrreZ6ZdUk/2md3Qm7KUyTjOfZgxh9ZU9M6VDVeV1kuJSSnikQ0onKgVLMjHE
+         NZZ4qJaW6Z4P6szvuqwVz7ruLLGBoQjog5UhL093gPuJqkQMxBBTpVLT5RJakYI/VzxE
+         WSSPo1m4lvmm/fBkH8FAOWEKRwqZNa4j59zBEB/07Y0DKeGVfYv1lb1gDksRm1WtrVjU
+         59A888kY0QRcQe2ympT9svfPDS5wlBeOel/bilk3s70bJEtqv3vDHb/PzIG6gOEBNHuo
+         n1C4lUxaFg1g3+4yluf+cujC0B33HPWb5eyBeLyzxY5fJIGyvJmEP/8znw8ntM7ldy1P
+         XshQ==
+X-Gm-Message-State: APjAAAU3oYfCdyIkUtT88v53XutPQEb7/mIf0dBVi+bC1arAIKUFGbye
+        FK8oqBewfPP9FT7YZI0ZxJg=
+X-Google-Smtp-Source: APXvYqxZvLvOc3rGYU2DbViR+D8bUUYIlr9cbTBVek3/r2LkNuOFbboTkGmUNKlIo85ASnXVLCgCbQ==
+X-Received: by 2002:a63:d512:: with SMTP id c18mr11227831pgg.252.1556418828679;
+        Sat, 27 Apr 2019 19:33:48 -0700 (PDT)
+Received: from udknight.localhost ([183.250.89.86])
+        by smtp.gmail.com with ESMTPSA id l19sm39348312pff.1.2019.04.27.19.33.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 27 Apr 2019 19:33:48 -0700 (PDT)
+Received: from udknight.localhost (localhost [127.0.0.1])
+        by udknight.localhost (8.14.9/8.14.4) with ESMTP id x3S2XLSf029356;
+        Sun, 28 Apr 2019 10:33:23 +0800
+Received: (from root@localhost)
+        by udknight.localhost (8.14.9/8.14.9/Submit) id x3S2X293029347;
+        Sun, 28 Apr 2019 10:33:02 +0800
+Date:   Sun, 28 Apr 2019 10:33:02 +0800
+From:   Wang YanQing <udknight@gmail.com>
+To:     daniel@iogearbox.net
+Cc:     ast@kernel.org, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        tglx@linutronix.de, netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] bpf, x32: Fix bug for BPF_ALU64 | BPF_NEG
+Message-ID: <20190428023302.GA29326@udknight>
+Mail-Followup-To: Wang YanQing <udknight@gmail.com>, daniel@iogearbox.net,
+        ast@kernel.org, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        tglx@linutronix.de, netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2103ab35-c8b2-483b-4372-08d6cb812294
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2019 02:28:00.9874
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6527
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.7.1 (2016-10-04)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi  Mark
+The current implementation has two errors:
+1: The second xor instruction will clear carry flag which
+   is necessary for following sbb instruction.
+2: The select coding for sbb instruction is wrong, the coding
+   is "sbb dreg_hi,ecx", but what we need is "sbb ecx,dreg_hi".
 
-> On Fri, Apr 26, 2019 at 10:51:15AM +0000, S.j. Wang wrote:
-> > > On Mon, Apr 22, 2019 at 02:31:55AM +0000, S.j. Wang wrote:
-> > > > Add pm runtime support and move clock handling there.
-> > > > Close the clocks at suspend to reduce the power consumption.
->=20
-> > > > fsl_esai_suspend is replaced by pm_runtime_force_suspend.
-> > > > fsl_esai_resume is replaced by pm_runtime_force_resume.
->=20
-> > > This doesn't apply against current code, please check and resend.
->=20
-> > Which branch are you using?  I tried for-next and for-linus, both Are
-> > successful applied.
->=20
-> I'm applying against for-5.2, though if it depends on a patch queued for
-> 5.1 that's fine, I can just merge that up - please just resend.  I think =
-I did try
-> merging 5.1 though...
+This patch rewrites the implementation and fixes the errors.
 
-I think may be caused by the patch " ASoC: fsl_esai: Fix missing break
-in switch statement", so I resend them both base on for-5.2.
+This patch fixes below errors reported by bpf/test_verifier in x32
+platform when the jit is enabled:
+"
+0: (b4) w1 = 4
+1: (b4) w2 = 4
+2: (1f) r2 -= r1
+3: (4f) r2 |= r1
+4: (87) r2 = -r2
+5: (c7) r2 s>>= 63
+6: (5f) r1 &= r2
+7: (bf) r0 = r1
+8: (95) exit
+processed 9 insns (limit 131072), stack depth 0
+0: (b4) w1 = 4
+1: (b4) w2 = 4
+2: (1f) r2 -= r1
+3: (4f) r2 |= r1
+4: (87) r2 = -r2
+5: (c7) r2 s>>= 63
+6: (5f) r1 &= r2
+7: (bf) r0 = r1
+8: (95) exit
+processed 9 insns (limit 131072), stack depth 0
+......
+Summary: 1189 PASSED, 125 SKIPPED, 15 FAILED
+"
 
-best regards
-wang shengjiu
+Signed-off-by: Wang YanQing <udknight@gmail.com>
+---
+ arch/x86/net/bpf_jit_comp32.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
+index 8097b88..b29e82f 100644
+--- a/arch/x86/net/bpf_jit_comp32.c
++++ b/arch/x86/net/bpf_jit_comp32.c
+@@ -700,19 +700,12 @@ static inline void emit_ia32_neg64(const u8 dst[], bool dstk, u8 **pprog)
+ 		      STACK_VAR(dst_hi));
+ 	}
+ 
+-	/* xor ecx,ecx */
+-	EMIT2(0x31, add_2reg(0xC0, IA32_ECX, IA32_ECX));
+-	/* sub dreg_lo,ecx */
+-	EMIT2(0x2B, add_2reg(0xC0, dreg_lo, IA32_ECX));
+-	/* mov dreg_lo,ecx */
+-	EMIT2(0x89, add_2reg(0xC0, dreg_lo, IA32_ECX));
+-
+-	/* xor ecx,ecx */
+-	EMIT2(0x31, add_2reg(0xC0, IA32_ECX, IA32_ECX));
+-	/* sbb dreg_hi,ecx */
+-	EMIT2(0x19, add_2reg(0xC0, dreg_hi, IA32_ECX));
+-	/* mov dreg_hi,ecx */
+-	EMIT2(0x89, add_2reg(0xC0, dreg_hi, IA32_ECX));
++	/* neg dreg_lo */
++	EMIT2(0xF7, add_1reg(0xD8, dreg_lo));
++	/* adc dreg_hi,0x0 */
++	EMIT3(0x83, add_1reg(0xD0, dreg_hi), 0x00);
++	/* neg dreg_hi */
++	EMIT2(0xF7, add_1reg(0xD8, dreg_hi));
+ 
+ 	if (dstk) {
+ 		/* mov dword ptr [ebp+off],dreg_lo */
+-- 
+1.8.5.6.2.g3d8a54e.dirty
