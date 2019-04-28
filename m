@@ -1,465 +1,166 @@
 Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4EEC43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 09:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A57C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 09:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07EE2075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 09:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81FAD2075D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 09:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556443993;
+	bh=Vb1JJQ9xvxumQkdu6cvGNnE2WEZBrX1ZNzqx2/9QEpU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gPo7x7HugLT5+pf/z6fkvj4Hfp9pxYtmSVm13UazoYqhy8Q1W2/zrU9+B6GKUD5Q2
+	 S35mN9PFHhfIYWHhBLv/hzAjoEY6bJ4OQpZdoGQUSg02I0fHoXKvLM0dj6fjMvHRn3
+	 UGU0SIwhWgL++pAEFt/Df5ef7o2zo9qYEf0Y7Frw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfD1J0t (ORCPT
+        id S1726404AbfD1JdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 05:26:49 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:50637 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726247AbfD1J0s (ORCPT
+        Sun, 28 Apr 2019 05:33:11 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:54144 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfD1JdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 05:26:48 -0400
-X-UUID: 114a31504742434d8047bf9c84466861-20190428
-X-UUID: 114a31504742434d8047bf9c84466861-20190428
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 777227468; Sun, 28 Apr 2019 17:26:39 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 28 Apr
- 2019 17:26:37 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 28 Apr 2019 17:26:37 +0800
-Message-ID: <1556443596.10179.212.camel@mhfsdcap03>
-Subject: RE: [PATCH v4 5/6] usb: roles: add USB Type-B GPIO connector driver
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Biju Das <biju.das@bp.renesas.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        "Badhri Jagan Sridharan" <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>
-Date:   Sun, 28 Apr 2019 17:26:36 +0800
-In-Reply-To: <OSBPR01MB210367FCF0BCDF4D9BB7B32CB83E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1556261237-13823-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1556261237-13823-6-git-send-email-chunfeng.yun@mediatek.com>
-         <OSBPR01MB210367FCF0BCDF4D9BB7B32CB83E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Sun, 28 Apr 2019 05:33:11 -0400
+Received: by mail-wm1-f54.google.com with SMTP id 26so9731938wmj.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 02:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jhpxb0r0e1gp4SSO4x9DgfEoKeCHE8A72qe/Aukkisg=;
+        b=iVENs9lDMYE+QsydqIXAYd6UC0gt7/Qt28dzyrHXL/V9psvFfeur1My0HJrJA+Mmn2
+         3Cm1roptNReDlBDM/JJArG23PtMSRIm+OT5TJchT2E9dgmoycN5L0lwCLcdCfGk/L3ct
+         DME8hNj9+2vWSPOg6Flf5VfgY1RYGQdryoO2Gd4PU/RdlJru1l10m41pNR5K7Rf6+lR1
+         2TkSeb233dCD/G1jdcccn0y8SyXVpE7Fd5hD2/pwqfip5qAg7Ab6rRh05iA//QYA+Fqz
+         1fg7rPbcu4g0CU4nyAdl/q7gzSydbIV60uko6+3OiFRzIzO+ZZ3JI2hoXyDHMSJm/8EB
+         Z6tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jhpxb0r0e1gp4SSO4x9DgfEoKeCHE8A72qe/Aukkisg=;
+        b=Jb365tmPSrO1m7QhSpPxT5UX0JhCz+m3NBObCUc0vcNLsvTBCcpH41T51rqS6lPAvf
+         cSMcfHCGwjz+RHZnKfuyfGdpgxl2GR5AKf6kdIqBxTS3e8zbJtde+7ZsQD5aiOLftNjO
+         4JnYJCgP4h3WlR8gqwTeCWu4GtAtL6fxhOx0yEq439PFjYqz0eXBFO/KqiJihpmSwLMG
+         /t8A7sUr1sjWGNDEGKif4NISM6AVUIW7QrASZyIgDdLdSEK4vyzBL9XLQkiNleR9ulWV
+         9wqGLbZNLXBXAuAo8SWXwujCTxr8EhStyAXNryV9j4B4hh4n8fW4ORAFjBVMk3hDwZz6
+         KjZA==
+X-Gm-Message-State: APjAAAVnjOOyPOqWtxdc1Wcnx4Bfm/F93OmCBNnG9qSmHdVjdj8iuLLr
+        mjZmaNU6hL/ntzbwplb1cu8=
+X-Google-Smtp-Source: APXvYqx2GW2VWDzFOgtUCOP62qnL1IxUPUnvz51Xaf8IjHkhtF8qRZpxub+0eIitidRQGsekiUpqfw==
+X-Received: by 2002:a7b:c00e:: with SMTP id c14mr13480208wmb.110.1556443988974;
+        Sun, 28 Apr 2019 02:33:08 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id e3sm14053600wro.35.2019.04.28.02.33.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 28 Apr 2019 02:33:07 -0700 (PDT)
+Date:   Sun, 28 Apr 2019 11:33:04 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190428093304.GA7393@gmail.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+ <20190424140013.GA14594@sinkpad>
+ <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
+ <20190425095508.GA8387@gmail.com>
+ <CAERHkrs0=xcx9UUZbZPYq4QbznUqHAuVbTnafSVpZFKwAEFyMA@mail.gmail.com>
+ <20190427091716.GC99668@gmail.com>
+ <CAERHkruEAVBsh6FphMKqgR2+HjsVVegxjnpOFRNfbrfZDNpc9w@mail.gmail.com>
+ <20190427142137.GA72051@gmail.com>
+ <CAERHkrtaU=Y-Lxypu_7uBbe-mJtG-3friz=ZLhV53X4FXHcEyA@mail.gmail.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAERHkrtaU=Y-Lxypu_7uBbe-mJtG-3friz=ZLhV53X4FXHcEyA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Biju,
-On Fri, 2019-04-26 at 09:22 +0000, Biju Das wrote:
-> Hi Chunfeng Yun,
-> 
-> Thanks for the patch.
-> 
-> > Subject: [PATCH v4 5/6] usb: roles: add USB Type-B GPIO connector driver
-> > 
-> > Due to the requirement of usb-connector.txt binding, the old way using
-> > extcon to support USB Dual-Role switch is now deprecated when use Type-B
-> > connector.
-> > This patch introduces a driver of Type-B connector which typically uses an
-> > input GPIO to detect USB ID pin, and try to replace the function provided by
-> > extcon-usb-gpio driver
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> > v4 changes:
-> >   1. remove linux/gpio.h suggested by Linus
-> >   2. put node when error happens
-> > 
-> > v3 changes:
-> >   1. treat bype-B connector as a virtual device;
-> >   2. change file name again
-> > 
-> > v2 changes:
-> >   1. file name is changed
-> >   2. use new compatible
-> > ---
-> >  drivers/usb/roles/Kconfig           |  11 +
-> >  drivers/usb/roles/Makefile          |   1 +
-> >  drivers/usb/roles/typeb-conn-gpio.c | 305
-> > ++++++++++++++++++++++++++++
-> >  3 files changed, 317 insertions(+)
-> >  create mode 100644 drivers/usb/roles/typeb-conn-gpio.c
-> > 
-> > diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig index
-> > f8b31aa67526..d1156e18a81a 100644
-> > --- a/drivers/usb/roles/Kconfig
-> > +++ b/drivers/usb/roles/Kconfig
-> > @@ -26,4 +26,15 @@ config USB_ROLES_INTEL_XHCI
-> >  	  To compile the driver as a module, choose M here: the module will
-> >  	  be called intel-xhci-usb-role-switch.
-> > 
-> > +config TYPEB_CONN_GPIO
-> > +	tristate "USB Type-B GPIO Connector"
-> > +	depends on GPIOLIB
-> > +	help
-> > +	  The driver supports USB role switch between host and device via
-> > GPIO
-> > +	  based USB cable detection, used typically if an input GPIO is used
-> > +	  to detect USB ID pin.
-> > +
-> > +	  To compile the driver as a module, choose M here: the module will
-> > +	  be called typeb-conn-gpio.ko
-> > +
-> >  endif # USB_ROLE_SWITCH
-> > diff --git a/drivers/usb/roles/Makefile b/drivers/usb/roles/Makefile index
-> > 757a7d2797eb..5d5620d9d113 100644
-> > --- a/drivers/usb/roles/Makefile
-> > +++ b/drivers/usb/roles/Makefile
-> > @@ -3,3 +3,4 @@
-> >  obj-$(CONFIG_USB_ROLE_SWITCH)		+= roles.o
-> >  roles-y					:= class.o
-> >  obj-$(CONFIG_USB_ROLES_INTEL_XHCI)	+= intel-xhci-usb-role-
-> > switch.o
-> > +obj-$(CONFIG_TYPEB_CONN_GPIO)		+= typeb-conn-gpio.o
-> > diff --git a/drivers/usb/roles/typeb-conn-gpio.c b/drivers/usb/roles/typeb-
-> > conn-gpio.c
-> > new file mode 100644
-> > index 000000000000..097d2ca12a12
-> > --- /dev/null
-> > +++ b/drivers/usb/roles/typeb-conn-gpio.c
-> > @@ -0,0 +1,305 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * USB Type-B GPIO Connector Driver
-> > + *
-> > + * Copyright (C) 2019 MediaTek Inc.
-> > + *
-> > + * Author: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > + *
-> > + * Some code borrowed from drivers/extcon/extcon-usb-gpio.c  */
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_graph.h>
-> > +#include <linux/pinctrl/consumer.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regulator/consumer.h>
-> > +#include <linux/usb/role.h>
-> > +
-> > +#define USB_GPIO_DEB_MS		20	/* ms */
-> > +#define USB_GPIO_DEB_US		((USB_GPIO_DEB_MS) * 1000)	/* us
-> > */
-> > +
-> > +#define USB_CONN_IRQF	\
-> > +	(IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
-> > IRQF_ONESHOT)
-> > +
-> > +struct usb_conn_info {
-> > +	struct device *dev;
-> > +	struct usb_role_switch *role_sw;
-> > +	enum usb_role last_role;
-> > +	struct regulator *vbus;
-> > +	struct delayed_work dw_det;
-> > +	unsigned long debounce_jiffies;
-> > +
-> > +	struct gpio_desc *id_gpiod;
-> > +	struct gpio_desc *vbus_gpiod;
-> > +	int id_irq;
-> > +	int vbus_irq;
-> > +};
-> > +
-> > +/**
-> > + * "DEVICE" = VBUS and "HOST" = !ID, so we have:
-> > + * Both "DEVICE" and "HOST" can't be set as active at the same time
-> > + * so if "HOST" is active (i.e. ID is 0)  we keep "DEVICE" inactive
-> > + * even if VBUS is on.
-> > + *
-> > + *  Role          |   ID  |  VBUS
-> > + * ------------------------------------
-> > + *  [1] DEVICE    |   H   |   H
-> > + *  [2] NONE      |   H   |   L
-> > + *  [3] HOST      |   L   |   H
-> > + *  [4] HOST      |   L   |   L
-> > + *
-> > + * In case we have only one of these signals:
-> > + * - VBUS only - we want to distinguish between [1] and [2], so ID is
-> > +always 1
-> > + * - ID only - we want to distinguish between [1] and [4], so VBUS = ID
-> > +*/ static void usb_conn_detect_cable(struct work_struct *work) {
-> > +	struct usb_conn_info *info;
-> > +	enum usb_role role;
-> > +	int id, vbus, ret;
-> > +
-> > +	info = container_of(to_delayed_work(work),
-> > +			    struct usb_conn_info, dw_det);
-> > +
-> > +	/* check ID and VBUS */
-> > +	id = info->id_gpiod ?
-> > +		gpiod_get_value_cansleep(info->id_gpiod) : 1;
-> > +	vbus = info->vbus_gpiod ?
-> > +		gpiod_get_value_cansleep(info->vbus_gpiod) : id;
-> > +
-> > +	if (!id)
-> > +		role = USB_ROLE_HOST;
-> > +	else if (vbus)
-> > +		role = USB_ROLE_DEVICE;
-> > +	else
-> > +		role = USB_ROLE_NONE;
-> > +
-> > +	dev_dbg(info->dev, "role %d/%d, gpios: id %d, vbus %d\n",
-> > +		info->last_role, role, id, vbus);
-> > +
-> > +	if (info->last_role == role) {
-> > +		dev_warn(info->dev, "repeated role: %d\n", role);
-> > +		return;
-> > +	}
-> > +
-> > +	if (info->last_role == USB_ROLE_HOST)
-> > +		regulator_disable(info->vbus);
-> > +
-> > +	ret = usb_role_switch_set_role(info->role_sw, role);
-> > +	if (ret)
-> > +		dev_err(info->dev, "failed to set role: %d\n", ret);
-> > +
-> > +	if (role == USB_ROLE_HOST) {
-> > +		ret = regulator_enable(info->vbus);
-> > +		if (ret)
-> > +			dev_err(info->dev, "enable vbus regulator failed\n");
-> > +	}
-> > +
-> > +	info->last_role = role;
-> > +
-> > +	dev_dbg(info->dev, "vbus regulator is %s\n",
-> > +		regulator_is_enabled(info->vbus) ? "enabled" : "disabled"); }
-> > +
-> > +static void usb_conn_queue_dwork(struct usb_conn_info *info,
-> > +				 unsigned long delay)
-> > +{
-> > +	queue_delayed_work(system_power_efficient_wq, &info-
-> > >dw_det, delay); }
-> > +
-> > +static irqreturn_t usb_conn_isr(int irq, void *dev_id) {
-> > +	struct usb_conn_info *info = dev_id;
-> > +
-> > +	usb_conn_queue_dwork(info, info->debounce_jiffies);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int usb_conn_probe(struct platform_device *pdev) {
-> > +	struct device *dev = &pdev->dev;
-> > +	struct device_node *np = dev->of_node;
-> > +	struct device_node *parent;
-> > +	struct device_node *child;
-> > +	struct usb_conn_info *info;
-> > +	int ret = 0;
-> > +
-> > +	if (!np)
-> > +		return -EINVAL;
-> > +
-> > +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-> > +	if (!info)
-> > +		return -ENOMEM;
-> > +
-> > +	info->dev = dev;
-> > +
-> > +	child = of_get_child_by_name(np, "connector");
-> > +	if (!child) {
-> > +		dev_err(dev, "failed to find connector node\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	info->id_gpiod = devm_gpiod_get_from_of_node(
-> > +				dev, child, "id-gpios", 0, GPIOD_IN, "idpin");
-> > +	if (IS_ERR(info->id_gpiod)) {
-> > +		of_node_put(child);
-> > +		return PTR_ERR(info->id_gpiod);
-> > +	}
-> > +
-> > +	info->vbus_gpiod = devm_gpiod_get_from_of_node(
-> > +				dev, child, "vbus-gpios", 0, GPIOD_IN,
-> > +				"vbuspin");
-> > +	if (IS_ERR(info->vbus_gpiod)) {
-> > +		of_node_put(child);
-> > +		return PTR_ERR(info->vbus_gpiod);
-> > +	}
-> > +
-> > +	if (!info->id_gpiod && !info->vbus_gpiod) {
-> > +		dev_err(dev, "failed to get gpios\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	of_node_put(child);
-> > +
-> > +	if (info->id_gpiod)
-> > +		ret = gpiod_set_debounce(info->id_gpiod,
-> > USB_GPIO_DEB_US);
-> > +	if (!ret && info->vbus_gpiod)
-> > +		ret = gpiod_set_debounce(info->vbus_gpiod,
-> > USB_GPIO_DEB_US);
-> > +	if (ret < 0)
-> > +		info->debounce_jiffies =
-> > msecs_to_jiffies(USB_GPIO_DEB_MS);
-> > +
-> > +	INIT_DELAYED_WORK(&info->dw_det, usb_conn_detect_cable);
-> > +
-> > +	info->vbus = devm_regulator_get(dev, "vbus");
-> > +	if (IS_ERR(info->vbus)) {
-> > +		dev_err(dev, "failed to get vbus\n");
-> > +		return PTR_ERR(info->vbus);
-> > +	}
-> > +
-> > +	child = of_graph_get_endpoint_by_regs(np, -1, 0);
-> > +	parent = of_graph_get_remote_port_parent(child);
-> > +	info->role_sw =
-> > fwnode_usb_role_switch_get(of_fwnode_handle(parent));
-> > +	of_node_put(child);
-> > +	of_node_put(parent);
-> > +	if (IS_ERR(info->role_sw)) {
-> > +		dev_err(dev, "failed to get role switch\n");
-> > +		return PTR_ERR(info->role_sw);
-> > +	}
-> > +
-> > +	if (info->id_gpiod) {
-> > +		info->id_irq = gpiod_to_irq(info->id_gpiod);
-> > +		if (info->id_irq < 0) {
-> > +			dev_err(dev, "failed to get ID IRQ\n");
-> May be usb_role_switch_put(info->role_sw); ??
-Good catch, will fix it.
 
-Thanks
-> > +			return info->id_irq;
-> > +		}
-> > +
-> > +		ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
-> > +						usb_conn_isr,
-> > USB_CONN_IRQF,
-> > +						pdev->name, info);
-> > +		if (ret < 0) {
-> > +			dev_err(dev, "failed to request ID IRQ\n");
-> May be usb_role_switch_put(info->role_sw); ??
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	if (info->vbus_gpiod) {
-> > +		info->vbus_irq = gpiod_to_irq(info->vbus_gpiod);
-> > +		if (info->vbus_irq < 0) {
-> > +			dev_err(dev, "failed to get VBUS IRQ\n");
-> May be usb_role_switch_put(info->role_sw);
-> > +			return info->vbus_irq;
-> > +		}
-> > +
-> > +		ret = devm_request_threaded_irq(dev, info->vbus_irq,
-> > NULL,
-> > +						usb_conn_isr,
-> > USB_CONN_IRQF,
-> > +						pdev->name, info);
-> > +		if (ret < 0) {
-> > +			dev_err(dev, "failed to request VBUS IRQ\n");
-> May be usb_role_switch_put(info->role_sw); ??
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	platform_set_drvdata(pdev, info);
-> > +
-> > +	/* Perform initial detection */
-> > +	usb_conn_queue_dwork(info, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int usb_conn_remove(struct platform_device *pdev) {
-> > +	struct usb_conn_info *info = platform_get_drvdata(pdev);
-> > +
-> > +	cancel_delayed_work_sync(&info->dw_det);
-> > +
-> > +	if (info->last_role == USB_ROLE_HOST)
-> > +		regulator_disable(info->vbus);
-> > +
-> > +	usb_role_switch_put(info->role_sw);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int __maybe_unused usb_conn_suspend(struct device *dev) {
-> > +	struct usb_conn_info *info = dev_get_drvdata(dev);
-> > +
-> > +	if (info->id_gpiod)
-> > +		disable_irq(info->id_irq);
-> > +	if (info->vbus_gpiod)
-> > +		disable_irq(info->vbus_irq);
-> > +
-> > +	pinctrl_pm_select_sleep_state(dev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int __maybe_unused usb_conn_resume(struct device *dev) {
-> > +	struct usb_conn_info *info = dev_get_drvdata(dev);
-> > +
-> > +	pinctrl_pm_select_default_state(dev);
-> > +
-> > +	if (info->id_gpiod)
-> > +		enable_irq(info->id_irq);
-> > +	if (info->vbus_gpiod)
-> > +		enable_irq(info->vbus_irq);
-> > +
-> > +	usb_conn_queue_dwork(info, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static SIMPLE_DEV_PM_OPS(usb_conn_pm_ops,
-> > +			 usb_conn_suspend, usb_conn_resume);
-> > +
-> > +#define DEV_PMS_OPS (IS_ENABLED(CONFIG_PM_SLEEP) ?
-> > &usb_conn_pm_ops :
-> > +NULL)
-> > +
-> > +static const struct of_device_id usb_conn_dt_match[] = {
-> > +	{ .compatible = "linux,typeb-conn-gpio", },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, usb_conn_dt_match);
-> > +
-> > +static struct platform_driver usb_conn_driver = {
-> > +	.probe		= usb_conn_probe,
-> > +	.remove		= usb_conn_remove,
-> > +	.driver		= {
-> > +		.name	= "typeb-conn-gpio",
-> > +		.pm	= DEV_PMS_OPS,
-> > +		.of_match_table = usb_conn_dt_match,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver(usb_conn_driver);
-> > +
-> > +MODULE_AUTHOR("Chunfeng Yun <chunfeng.yun@mediatek.com>");
-> > +MODULE_DESCRIPTION("USB Type-B GPIO connector driver");
-> > +MODULE_LICENSE("GPL v2");
-> > --
-> > 2.21.0
+* Aubrey Li <aubrey.intel@gmail.com> wrote:
+
+> > But what we are really interested in are throughput numbers under 
+> > these three kernel variants, right?
 > 
+> These are sysbench events per second number, higher is better.
+> 
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 1/1       508.5( 0.2%)    504.7( 1.1%) -0.8%     509.0( 0.2%)  0.1%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 2/2      1000.2( 1.4%)   1004.1( 1.6%)  0.4%     997.6( 1.2%) -0.3%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 4/4      1912.1( 1.0%)   1904.2( 1.1%) -0.4%    1914.9( 1.3%)  0.1%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 8/8      3753.5( 0.3%)   3748.2( 0.3%) -0.1%    3751.3( 0.4%) -0.1%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 16/16    7139.3( 2.4%)   7137.9( 1.8%) -0.0%    7049.2( 2.4%) -1.3%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 32/32   10899.0( 4.2%)  10780.3( 4.4%) -1.1%    10339.2( 9.6%) -5.1%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 64/64   15086.1(11.5%)  14262.0( 8.2%) -5.5%    11168.7(22.2%) -26.0%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 128/128 15371.9(22.0%)  14675.8(14.4%) -4.5%    10963.9(18.5%) -28.7%
+> NA/AVX  baseline(std%)  coresched(std%) +/-     nosmt(std%) +/-
+> 256/256 15990.8(22.0%)  12227.9(10.3%) -23.5%   10469.9(19.6%) -34.5%
 
+So because I'm a big fan of presenting data in a readable fashion, here 
+are your results, tabulated:
 
+ #
+ # Sysbench throughput comparison of 3 different kernels at different 
+ # load levels, higher numbers are better:
+ #
+
+ .--------------------------------------|----------------------------------------------------------------.
+ |  NA/AVX     vanilla-SMT    [stddev%] |coresched-SMT   [stddev%]   +/-  |   no-SMT    [stddev%]   +/-  |
+ |--------------------------------------|----------------------------------------------------------------|
+ |   1/1             508.5    [  0.2% ] |        504.7   [  1.1% ]   0.8% |    509.0    [  0.2% ]   0.1% |
+ |   2/2            1000.2    [  1.4% ] |       1004.1   [  1.6% ]   0.4% |    997.6    [  1.2% ]   0.3% |
+ |   4/4            1912.1    [  1.0% ] |       1904.2   [  1.1% ]   0.4% |   1914.9    [  1.3% ]   0.1% |
+ |   8/8            3753.5    [  0.3% ] |       3748.2   [  0.3% ]   0.1% |   3751.3    [  0.4% ]   0.1% |
+ |  16/16           7139.3    [  2.4% ] |       7137.9   [  1.8% ]   0.0% |   7049.2    [  2.4% ]   1.3% |
+ |  32/32          10899.0    [  4.2% ] |      10780.3   [  4.4% ]  -1.1% |  10339.2    [  9.6% ]  -5.1% |
+ |  64/64          15086.1    [ 11.5% ] |      14262.0   [  8.2% ]  -5.5% |  11168.7    [ 22.2% ] -26.0% |
+ | 128/128         15371.9    [ 22.0% ] |      14675.8   [ 14.4% ]  -4.5% |  10963.9    [ 18.5% ] -28.7% |
+ | 256/256         15990.8    [ 22.0% ] |      12227.9   [ 10.3% ] -23.5% |  10469.9    [ 19.6% ] -34.5% |
+ '--------------------------------------|----------------------------------------------------------------'
+
+One major thing that sticks out is that if we compare the stddev numbers 
+to the +/- comparisons then it's pretty clear that the benchmarks are 
+very noisy: in all but the last row stddev is actually higher than the 
+measured effect.
+
+So what does 'stddev' mean here, exactly? The stddev of multipe runs, 
+i.e. measured run-to-run variance? Or is it some internal metric of the 
+benchmark?
+
+Thanks,
+
+	Ingo
