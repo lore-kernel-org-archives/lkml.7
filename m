@@ -2,148 +2,129 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E71C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03054C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 117CA2067C
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B5E20675
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:48:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="DmRdpcQe"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="D9YnoNnd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfD1X1Z (ORCPT
+        id S1726654AbfD1Xrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 19:27:25 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45891 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfD1X1Y (ORCPT
+        Sun, 28 Apr 2019 19:47:47 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43285 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfD1Xrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 19:27:24 -0400
-Received: by mail-pl1-f195.google.com with SMTP id o5so4181126pls.12
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 16:27:24 -0700 (PDT)
+        Sun, 28 Apr 2019 19:47:46 -0400
+Received: by mail-ed1-f66.google.com with SMTP id j20so7595285edq.10
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 16:47:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=LYH/XS8nnf6efHlZx0B2St65dcm+60nIA8GvtyVKA2g=;
-        b=DmRdpcQePn9pu6FxDsh1mK99BocSEh/feEMjXNQT5ibFOMXKxk7jGGikNVgPkQ/pOI
-         UGmJYe/+bLddvlC3J8DvQsu56bjSCusqMfu8ME8NvlSzxN714OngT/6dh+33YkAcZv8i
-         iM0dTbQx4WNLm2r5XvkUR/9p+AGYVJWQd1S1XltOigmfclHaDVEekiM8glCNctsFjsqe
-         EjtGySHRM/yMeakMd4wY4/K6M7MwH6uRGoUakpsQfA1l/NMDHEwrki80UgpRapYjx/2A
-         8wv773Mjddy3w1YG0r8YpnUtenCQDHKuuF0sSQvKZb4Ba5u8UD1UTfrCsbCTdunO3Zef
-         bgsQ==
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id;
+        bh=bXeviVN/ZLMlwpdgsgv+FliQqyuSE4iSxUS5o6dbCfo=;
+        b=D9YnoNndfaQcnsCQdsyY3nJ6b8HcYhha7zzeQlvqDnrDQo+0v61hKiHYppvNtj38D9
+         Se/83ut/iOtHQXlukQZdR/26XukjBlApoF8Akjh5aJP6Qj6NJXqD9WrYqvoyxIJVGk0/
+         HwgHzJ4KEtGIdUvYgNGQRgeOcyTqf9dTSc/Aqd8es1dv8BZ7Ayknegb135B7Uun+bcVJ
+         IB6Q2XLNYUJsODpHOU7l+uPiMMo1L5P7MMgDdxm98UO8r65/aXNW3NLP8dQyPPQQAbCF
+         EAn2pqqkTpewU4/07j5fRPAJfJjt7PifUGQlRqKIl9gEQ0iGEfr51iW0guu1e7znLoDP
+         lx7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=LYH/XS8nnf6efHlZx0B2St65dcm+60nIA8GvtyVKA2g=;
-        b=Kv17hE0pvLSnA/ZXPkc74jsUXWIBW4njKoBj+8beqbAFhPMU2IY5VzeXhTFHcs2VNF
-         ZcKGNH//RFWpE0xzgWVsYEU4KwUWHw03yfMhJJzbIr0DD3pjoKYG1BxjpZ/MnHilBlpt
-         12cumndl15R6CzrwuDV/xuXFHC1iI8avZuMQpPkzlp9IfzrH2ePcqZLREEQuWRk9DyWS
-         e6VJTVyWFVmrWFe9eT1/aDJYNthWEzeDB8NVbt0e4egfVboVGjUMDJhBnVlXPrCWZhvr
-         CkKDciR+n1kl0fr5kM+r7LFnKgf1vV2Eyq3FUKImSot/EOAGFHRzHREkLhrHF9TsCJ6d
-         5fOg==
-X-Gm-Message-State: APjAAAW3w/J5yOCF78hex6dNHEzwdKIX1Y4MoPDISTECyGUx9JuVm8S3
-        TT9doH2pq+4DKTeGJ/EY1PsX8A==
-X-Google-Smtp-Source: APXvYqx9Yjda2C1O0PTiHPRxwDgIBXUPJI1Ken8qeQkI2h0Dmc7D+Nw/tJ+dGR8X07wI+YtMGa9FdA==
-X-Received: by 2002:a17:902:2862:: with SMTP id e89mr60249446plb.203.1556494043721;
-        Sun, 28 Apr 2019 16:27:23 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:68a6:ac0c:7713:add7? ([2601:646:c200:1ef2:68a6:ac0c:7713:add7])
-        by smtp.gmail.com with ESMTPSA id s21sm41771309pfm.3.2019.04.28.16.27.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bXeviVN/ZLMlwpdgsgv+FliQqyuSE4iSxUS5o6dbCfo=;
+        b=k5ZTBwE4dm2AG+wsHc9z3/2syac3GgDmccKcd+TX3RTtHwkMmy3I7IUOj1dOEVrW0S
+         zkiBPGfKny24LwgYWca3uw0YKvxTnPNrBLDqVV2iZtJoT1DYFexQUyH6h8F4OA812yLL
+         IUtJJ/kV7qkhTEPaRMOcuj4RrZHLxFep4rAfrFbMs+2boMlspZWuUKZOQoQxl89+48Y2
+         4xq5/NNerXVLzM0u5ygK9rZAgexkEggHw+Z5Ts8MGcoR5jphosYUytwoy6wFkIuw+g0h
+         A76F75XWj9AqP62b7zm09hLtXh3/5ixcKrJ3Vrt5f5HOn+549t+xAnxvNaoNTLLIMCWe
+         kLBQ==
+X-Gm-Message-State: APjAAAV3N1Z4+cntg2VTczn5ESiRQT86ElmLLUqd9Uwy08+I+Xc0EyS+
+        LQFDBc2EgK9BI6QQbFaqGzSWAg==
+X-Google-Smtp-Source: APXvYqyCVyX7ZF3yL+6Y/e7edBMF4Ntj2BSdISS4KMOP0HAb7eCMCQ94iY/HEDZuwaY39z8KvKj6iQ==
+X-Received: by 2002:a50:8a8b:: with SMTP id j11mr21628737edj.212.1556495264804;
+        Sun, 28 Apr 2019 16:47:44 -0700 (PDT)
+Received: from localhost.localdomain ([37.228.251.87])
+        by smtp.gmail.com with ESMTPSA id p18sm5513219ejm.4.2019.04.28.16.47.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Apr 2019 16:27:22 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 1/4] x86/thread_info: introduce ->ftrace_int3_stack member
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <87k1fdygcx.fsf@suse.de>
-Date:   Sun, 28 Apr 2019 16:27:21 -0700
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C55DED25-C60D-4731-9A6B-92BDA8771766@amacapital.net>
-References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-2-nstange@suse.de> <F6268634-96D3-4267-B739-6D375FAB26A8@amacapital.net> <20190428135143.09d35bb6@oasis.local.home> <87k1fdygcx.fsf@suse.de>
-To:     Nicolai Stange <nstange@suse.de>
+        Sun, 28 Apr 2019 16:47:44 -0700 (PDT)
+From:   Tom Murphy <tmurphy@arista.com>
+To:     iommu@lists.linux-foundation.org
+Cc:     murphyt7@tcd.ie, Tom Murphy <tmurphy@arista.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iommu/amd: flush not present cache in iommu_map_page
+Date:   Mon, 29 Apr 2019 00:47:02 +0100
+Message-Id: <20190428234703.13697-1-tmurphy@arista.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+check if there is a not-present cache present and flush it if there is.
 
-> On Apr 28, 2019, at 2:22 PM, Nicolai Stange <nstange@suse.de> wrote:
->=20
-> Steven Rostedt <rostedt@goodmis.org> writes:
->=20
->> On Sun, 28 Apr 2019 10:41:10 -0700
->> Andy Lutomirski <luto@amacapital.net> wrote:
->>=20
->>=20
->>>> Note that at any given point
->>>> in time, there can be at most four such call insn emulations pending:
->>>> namely at most one per "process", "irq", "softirq" and "nmi" context.
->>>>=20
->>>=20
->>> That=E2=80=99s quite an assumption. I think your list should also contai=
-n
->>> exception, exceptions nested inside that exception, and machine
->>> check, at the very least.  I=E2=80=99m also wondering why irq and softir=
-q are
->>> treated separately.
->=20
-> You're right, I missed the machine check case.
->=20
->=20
->> 4 has usually been the context count we choose. But I guess in theory,
->> if we get exceptions then I could potentially be more.
->=20
-> After having seen the static_call discussion, I'm in no way defending
-> this limited approach here, but out of curiosity: can the code between
-> the push onto the stack from ftrace_int3_handler() and the subsequent
-> pop from the stub actually trigger an (non-#MC) exception? There's an
-> iret inbetween, but that can fault only when returning to user space,
-> correct?
+Signed-off-by: Tom Murphy <tmurphy@arista.com>
+---
+ drivers/iommu/amd_iommu.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-IRET doesn=E2=80=99t do any fancy masking, so #DB, NMI and regular IRQs shou=
-ld all be possible.
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index f7cdd2ab7f11..ebd062522cf5 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1307,6 +1307,16 @@ static void domain_flush_complete(struct protection_domain *domain)
+ 	}
+ }
+ 
++/* Flush the not present cache if it exists */
++static void domain_flush_np_cache(struct protection_domain *domain,
++		dma_addr_t iova, size_t size)
++{
++	if (unlikely(amd_iommu_np_cache)) {
++		domain_flush_pages(domain, iova, size);
++		domain_flush_complete(domain);
++	}
++}
++
+ 
+ /*
+  * This function flushes the DTEs for all devices in domain
+@@ -2435,10 +2445,7 @@ static dma_addr_t __map_single(struct device *dev,
+ 	}
+ 	address += offset;
+ 
+-	if (unlikely(amd_iommu_np_cache)) {
+-		domain_flush_pages(&dma_dom->domain, address, size);
+-		domain_flush_complete(&dma_dom->domain);
+-	}
++	domain_flush_np_cache(&dma_dom->domain, address, size);
+ 
+ out:
+ 	return address;
+@@ -2617,6 +2624,8 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+ 		s->dma_length   = s->length;
+ 	}
+ 
++	domain_flush_np_cache(domain, s->dma_address, s->dma_length);
++
+ 	return nelems;
+ 
+ out_unmap:
+@@ -3101,6 +3110,8 @@ static int amd_iommu_map(struct iommu_domain *dom, unsigned long iova,
+ 	ret = iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNEL);
+ 	mutex_unlock(&domain->api_lock);
+ 
++	domain_flush_np_cache(domain, iova, page_size);
++
+ 	return ret;
+ }
+ 
+-- 
+2.17.1
 
->=20
->=20
->> As for irq vs softirq, an interrupt can preempt a softirq. Interrupts
->> are enabled while softirqs are running. When sofirqs run, softirqs are
->> disabled to prevent nested softirqs. But interrupts are enabled again,
->> and another interrupt may come in while a softirq is executing.
->>=20
->=20
-> Thanks,
->=20
-> Nicolai
->=20
->=20
-> --=20
-> SUSE Linux GmbH, GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton,=
-
-> HRB 21284 (AG N=C3=BCrnberg)
