@@ -4,115 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0D0C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 13:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F53CC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 13:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F7D20843
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 13:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAF320881
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 13:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556458685;
-	bh=QuDBWSOMxeWxn8rm9QLXVNTmqvyLc+6Vw04OqkVXSTM=;
+	s=default; t=1556459245;
+	bh=wHRWVkog4zflnnw0t5JuuQTtmUoa5msQ3jIsMaiS1v0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kDLPE7PnAIdFjflWbg+EWQ1Lr7N5YpS+R2McUNjvaRu9L1DMESkfEE9R7C4esw0c+
-	 VuGP3SxbCTdsUVmFjszUxFsYyWL+a6M5B56EEk5QmIjI7+Aq9Rcos/whAAh7HaChVl
-	 Sk35c53LPHeHoGEPv+U/81wz9+Pygvtroy76nLCI=
+	b=BO9cH0fyzD+AmneHtFwXsmRr3MsDQ2Od7S0vouKn0t5qoNcTUMklfFHVNP/Pc2Aky
+	 GwF6E8a6T51TeHZyQm+LcsV+lS7TdJzv42FKLEQGR2E9tqP58Kb0Ud92oS+Pxu+Dlp
+	 o25u7vRkAaMTG87vygnIuNtF0RfH+u4RHtKlx0Q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfD1NiD (ORCPT
+        id S1726766AbfD1NrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 09:38:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33094 "EHLO mail.kernel.org"
+        Sun, 28 Apr 2019 09:47:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbfD1NiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 09:38:03 -0400
+        id S1726606AbfD1NrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 09:47:23 -0400
 Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B55FE2075D;
-        Sun, 28 Apr 2019 13:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BF032075D;
+        Sun, 28 Apr 2019 13:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556458682;
-        bh=QuDBWSOMxeWxn8rm9QLXVNTmqvyLc+6Vw04OqkVXSTM=;
+        s=default; t=1556459243;
+        bh=wHRWVkog4zflnnw0t5JuuQTtmUoa5msQ3jIsMaiS1v0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EFzaStJsh/d6K4YIMFF/XXWluWylVxWpCBUGd9AjZBJenMYywvVYMc/dKqR/mqRM+
-         c+v3dF+KonZwRaAM0md88W9LSIhbz0W0rICFme8v7YmsF2hzvtNOJi6e8K/gPwMaDw
-         CXFu3vbRCLkI6zTgmWeMmW9lCvQXyqO4wDZ7KcDE=
-Date:   Sun, 28 Apr 2019 06:38:02 -0700
+        b=kUklfwF0o1dCpfy9Erdz6AYCdn3uTTfEXPVmo1vzuzpW+paq7AFZ7XS3xkTxSOJuK
+         icWkfoXoY0Zq63Gk0JereoHnlsou9llJBOcw8tQPjVxYwyxfjO97apwRXuXYQVEb6q
+         Eo4O/I8Du81RocdN5cXyWD0JjTRYpif+lOeBwEMs=
+Date:   Sun, 28 Apr 2019 06:47:22 -0700
 From:   Jaegeuk Kim <jaegeuk@kernel.org>
 To:     Chao Yu <yuchao0@huawei.com>
 Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH] f2fs: fix to do sanity with enabled features in image
-Message-ID: <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190424094850.118323-1-yuchao0@huawei.com>
+        linux-kernel@vger.kernel.org, chao@kernel.org, drosen@google.com
+Subject: Re: [PATCH 1/2] f2fs: fix to avoid potential negative .f_bfree
+Message-ID: <20190428134722.GC37346@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190426095754.85784-1-yuchao0@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190424094850.118323-1-yuchao0@huawei.com>
+In-Reply-To: <20190426095754.85784-1-yuchao0@huawei.com>
 User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/24, Chao Yu wrote:
-> This patch fixes to do sanity with enabled features in image, if
-> there are features kernel can not recognize, just fail the mount.
+On 04/26, Chao Yu wrote:
+> When calculating .f_bfree value in f2fs_statfs(), sbi->unusable_block_count
+> can be increased after the judgment condition, result in overflow of
+> .f_bfree in later calculation. This patch fixes to use a temporary signed
+> variable to save the calculation result of .f_bfree.
+> 
+> 	if (unlikely(buf->f_bfree <= sbi->unusable_block_count))
+>  		buf->f_bfree = 0;
+>  	else
+> 		buf->f_bfree -= sbi->unusable_block_count;
 
-We need to figure out per-feature-based rejection, since some of them can
-be set without layout change.
+Do we just need stat_lock for this?
 
 > 
 > Signed-off-by: Chao Yu <yuchao0@huawei.com>
 > ---
->  fs/f2fs/f2fs.h  | 13 +++++++++++++
->  fs/f2fs/super.c |  9 +++++++++
->  2 files changed, 22 insertions(+)
+>  fs/f2fs/super.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index f5ffc09705eb..15b640967e12 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
->  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
->  #define F2FS_FEATURE_SB_CHKSUM		0x0800
->  
-> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
-> +				F2FS_FEATURE_BLKZONED |			\
-> +				F2FS_FEATURE_ATOMIC_WRITE |		\
-> +				F2FS_FEATURE_EXTRA_ATTR |		\
-> +				F2FS_FEATURE_PRJQUOTA |			\
-> +				F2FS_FEATURE_INODE_CHKSUM |		\
-> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
-> +				F2FS_FEATURE_QUOTA_INO |		\
-> +				F2FS_FEATURE_INODE_CRTIME |		\
-> +				F2FS_FEATURE_LOST_FOUND |		\
-> +				F2FS_FEATURE_VERITY |			\
-> +				F2FS_FEATURE_SB_CHKSUM)
-> +
->  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
->  	((raw_super->feature & cpu_to_le32(mask)) != 0)
->  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
 > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 4f8e9ab48b26..57f2fc6d14ba 100644
+> index 2376bb01b5c4..fcc9793dbc2c 100644
 > --- a/fs/f2fs/super.c
 > +++ b/fs/f2fs/super.c
-> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
->  		return 1;
->  	}
+> @@ -1216,6 +1216,7 @@ static int f2fs_statfs(struct dentry *dentry, struct kstatfs *buf)
+>  	u64 id = huge_encode_dev(sb->s_bdev->bd_dev);
+>  	block_t total_count, user_block_count, start_count;
+>  	u64 avail_node_count;
+> +	long long bfree;
 >  
-> +	/* check whether kernel supports all features */
-> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
-> +		f2fs_msg(sb, KERN_INFO,
-> +			"Unsupported feature:%u: supported:%u",
-> +			le32_to_cpu(raw_super->feature),
-> +			F2FS_ALL_FEATURES);
-> +		return 1;
-> +	}
+>  	total_count = le64_to_cpu(sbi->raw_super->block_count);
+>  	user_block_count = sbi->user_block_count;
+> @@ -1226,10 +1227,12 @@ static int f2fs_statfs(struct dentry *dentry, struct kstatfs *buf)
+>  	buf->f_blocks = total_count - start_count;
+>  	buf->f_bfree = user_block_count - valid_user_blocks(sbi) -
+>  						sbi->current_reserved_blocks;
+> -	if (unlikely(buf->f_bfree <= sbi->unusable_block_count))
 > +
->  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
->  	if (sanity_check_area_boundary(sbi, bh))
->  		return 1;
+> +	bfree = buf->f_bfree - sbi->unusable_block_count;
+> +	if (unlikely(bfree < 0))
+>  		buf->f_bfree = 0;
+>  	else
+> -		buf->f_bfree -= sbi->unusable_block_count;
+> +		buf->f_bfree = bfree;
+>  
+>  	if (buf->f_bfree > F2FS_OPTION(sbi).root_reserved_blocks)
+>  		buf->f_bavail = buf->f_bfree -
 > -- 
 > 2.18.0.rc1
