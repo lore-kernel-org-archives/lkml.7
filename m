@@ -2,128 +2,105 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F22FC43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998B4C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B4D20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611E420679
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Old51Yfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfD1W2I (ORCPT
+        id S1726758AbfD1W2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 18:28:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52234 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726393AbfD1W2I (ORCPT
+        Sun, 28 Apr 2019 18:28:20 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:58385 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfD1W2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 18:28:08 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3SMJCSr058643
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 18:28:06 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s5dr5v1uj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 18:28:06 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sun, 28 Apr 2019 23:28:06 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 28 Apr 2019 23:28:02 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3SMS1Ur31457436
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 28 Apr 2019 22:28:01 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B1273B205F;
-        Sun, 28 Apr 2019 22:28:01 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93DBAB2065;
-        Sun, 28 Apr 2019 22:28:01 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.201.36])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sun, 28 Apr 2019 22:28:01 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 3FB1816C093C; Sun, 28 Apr 2019 15:28:01 -0700 (PDT)
-Date:   Sun, 28 Apr 2019 15:28:01 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH 3/3] tools: memory-model: Add data-race detection
-Reply-To: paulmck@linux.ibm.com
-References: <Pine.LNX.4.44L0.1904221214370.1384-100000@iolanthe.rowland.org>
- <20190426144108.GA6235@andrea>
+        Sun, 28 Apr 2019 18:28:19 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 29C09886BF;
+        Mon, 29 Apr 2019 10:28:17 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1556490497;
+        bh=4iokib0fRDF2m/1Fgu1A0tChgO+NPNw/3qRG80iWq+s=;
+        h=From:To:CC:Subject:Date:References;
+        b=Old51YfaBnDb/nulFECSf+8tOhUc0z8UKq8LBWdX4n3muwCF9zc4Wm4zO++DZveHm
+         izNYHvPjsA9LQXpXgxmgoVtEhlE4b70R83Ji8aEQffA3BzNAj6zdSajay7xs1qOeXy
+         VVANesRjVp7BQSJ0gUVPos499Sax5G7zl9onNISXcTwC2ojWBCzOQqYEnDJ+/9ziMj
+         4LPMATCfTK8h/r6OVfQNKCeVy3QHCQNQqBW46xC8GNZcBgBHRLmU2ZGnfOkcHFDVYb
+         jz9YunKIXzE0L7+Ltny4StYygazp25nR1Y96RIDwfEsX/6drUPa+r/82XPYuLsyBNH
+         CFf5FGKP2cJiQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5cc629000001>; Mon, 29 Apr 2019 10:28:16 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Mon, 29 Apr 2019 10:28:16 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Mon, 29 Apr 2019 10:28:16 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Mark Brown <broonie@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tthayer@opensource.altera.com" <tthayer@opensource.altera.com>
+Subject: Re: [PATCH 0/3] spi: SPI bus multiplexer
+Thread-Topic: [PATCH 0/3] spi: SPI bus multiplexer
+Thread-Index: AQHU8Ozv195ROsCjnk63k3UuR7SGLg==
+Date:   Sun, 28 Apr 2019 22:28:16 +0000
+Message-ID: <d91ab2261a1f4069bc48e090bd4ec702@svr-chch-ex1.atlnz.lc>
+References: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
+ <20190412082913.GA6909@sirena.org.uk>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426144108.GA6235@andrea>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19042822-2213-0000-0000-00000383940C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011013; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01195785; UDB=6.00627051; IPR=6.00976632;
- MB=3.00026638; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-28 22:28:05
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042822-2214-0000-0000-00005E372C84
-Message-Id: <20190428222801.GL3923@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-28_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=747 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904280163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 04:41:08PM +0200, Andrea Parri wrote:
-> On Mon, Apr 22, 2019 at 12:18:09PM -0400, Alan Stern wrote:
-> > This patch adds data-race detection to the Linux-Kernel Memory Model.
-> > As part of this effort, support is added for:
-> > 
-> > 	compiler barriers (the barrier() function), and
-> > 
-> > 	a new Preserved Program Order term: (addr ; [Plain] ; wmb)
-> > 
-> > Data races are marked with a special Flag warning in herd.  It is
-> > not guaranteed that the model will provide accurate predictions when a
-> > data race is present.
-> > 
-> > The patch does not include documentation for the data-race detection
-> > facility.  The basic design has been explained in various emails, and
-> > a separate documentation patch will be submitted later.
-> > 
-> > This work is based on an earlier formulation of data races for the
-> > LKMM by Andrea Parri.
-> > 
-> > Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> 
-> For the entire series,
-> 
-> Reviewed-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-
-Applied and pushed, thank you both!
-
-But I forgot to remove my old x86 adaption patch.  Next rebase!  ;-/
-
-							Thanx, Paul
-
+On 12/04/19 8:29 PM, Mark Brown wrote:=0A=
+> On Fri, Apr 12, 2019 at 05:02:10PM +1200, Chris Packham wrote:=0A=
+> =0A=
+>> Unfortunately recent changes have stopped my hacks from working. I've=0A=
+>> tried adapting cs-gpios to work with my particular hardware but I came=
+=0A=
+>> to the realisation that the current cs-gpios support assumes a 1:1=0A=
+>> mapping of gpio to SPI device whereas my hardware used the state of the=
+=0A=
+>> gpio selecting the device i.e. a 1:2 mapping.=0A=
+> =0A=
+>> This is my attempt to implement a driver to deal with this. One nice=0A=
+>> property is that it is pretty much self contained. The only change to=0A=
+>> the core SPI infrastructure is exposing a function I needed to lookup=0A=
+>> the spi_controller instance.=0A=
+> =0A=
+> Why not implement the device that demuxes the GPIOs you're using for=0A=
+> chip select as a GPIO controller?  Presumably it might get used for=0A=
+> things other than chip selects.=0A=
+> =0A=
+=0A=
+Hmm a gpio-gpio driver. Interesting.=0A=
+=0A=
+One other problem that I encounter is the interaction between cs-gpio =0A=
+and SPI_MASTER_GPIO_SS. Having cs-gpio automatically sets SPI_CS_HIGH =0A=
+which has the undesired side-effect that now my real chip select is =0A=
+inverted. I actually wonder if this change breaks commit 8eee6b9dd30d =0A=
+("spi: Add Flag to Enable Slave Select with GPIO Chip Select.") since =0A=
+now there is an extra inversion on the CS enable.=0A=
