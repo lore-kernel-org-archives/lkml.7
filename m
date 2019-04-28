@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2382C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3BDC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD78205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC57A205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:29:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vetf1E5J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2oBGk1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfD1D3q (ORCPT
+        id S1726545AbfD1D3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 23:29:46 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38400 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfD1D3p (ORCPT
+        Sat, 27 Apr 2019 23:29:48 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33016 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfD1D3r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 23:29:45 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f36so3414804plb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 20:29:45 -0700 (PDT)
+        Sat, 27 Apr 2019 23:29:47 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y3so2575719plp.0
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 20:29:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=t0fbPBc8WL/45aaOebc5T9OubIEUSHJaCFoFZIq2imw=;
-        b=Vetf1E5Jemf5j3XxsXjHL59pOCEy1qCn1xcw4FKwuKNsbyIGMtIVQQD+IQq+cVdHtl
-         QJvxKY6RWVf2xElLg0f3HvwkXoeY7B2SQPiT1Uxuwxz2Dyt5/bqiwFIUjihHTOG/E6Zr
-         haWcK1L3HRLDED4eeh3pGjrWbIU+QkRhmO33YXxL/PdW83eNTSQ1RY6vaeV4om7b/jYj
-         pHf4on5kMSDlluROKFnBHc9KIhHwRpbQLQ9xxDNrIDo9XfnHfOKuhXN5bLIPi9b2qvP3
-         87ySdcscBmgOedWkPw8t06736nH/3ui6GqMWYbWpVReSk1ne/en8GGaxNm5uwkLj0+1J
-         xF3Q==
+        bh=Lf7Pn102VRECpBWkPWLUC4FT7Hq7UjO+2Zgtn7zYt9U=;
+        b=L2oBGk1iDlIwfk6YbG/L9fLG0xK9O6g/Py4aizbhGLYrUl/mMq/+btyr/WE8Fyiq85
+         OVZ8fBmaHGRwaVWc5+XFvccR6J8FFkS6nvZsO8zrWbSygk7CBIJGXYgiYlMucC0oyRVp
+         B5lnFT1es4CFZJvRb297nM5ajS/9/yGGx6Jwc3Js8Iu9l/4AcsrF0llbMVRRKnwMejTu
+         kqEaGBvchsfGm3gSLkYym1gDKp6f2U1TmqKiQbGJCb39a2VCPy5fu1WuYFJDdBSQwBai
+         XKoaavLswR2ACnng0kkBniGJUVTUUoSYNonKgC0zGr58m/qh6RINX3dJvMHlUlZ5jSFz
+         FtHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=t0fbPBc8WL/45aaOebc5T9OubIEUSHJaCFoFZIq2imw=;
-        b=WDwzvoeAVa1jkl2/SeK+cSVkSx10fIfCyX6GGP8ytNug+iFJOIqGqUetfTLkx7O0oF
-         /+iiMmrzoaY5lRqH1vurmdD+mnQRqlyI9djWCu9OSQkqXM6gayu6WOnVNgK2iFuVnIvt
-         bYW0C1WGPbFSlwuQWov+CMZhfNUYgrAGjTasKhJ9c9cGaZSvcIvJE1iCFM437Zrpoxgf
-         N92zp+Wpu67GUYZqsZci3KgXFe2bQiEk2u3SjLPBWbaKANK6wP/tP/X4f8/gDrs6nHb7
-         Bp1EGX/f7Z0V/9hfHuv6NKJWdL9faOJ7DFY10ua8beSDqhwtuue5ET3GeTt/hd3vgHVR
-         Rs2g==
-X-Gm-Message-State: APjAAAWmeFFjOZzhElVd1NMvZ7UHhnX73imUHc+nxIzK3zCraZ2osJ6l
-        euj8EP3iI6sQ3fu7XLr5nsE=
-X-Google-Smtp-Source: APXvYqyASYuLtn3qCp5Kx0NraY38EXzHP+NOSYUTMBqSRtYUayC1U+hdFc9+PcFU2AexY9KuYSP5tg==
-X-Received: by 2002:a17:902:43a4:: with SMTP id j33mr55223245pld.307.1556422184450;
-        Sat, 27 Apr 2019 20:29:44 -0700 (PDT)
+        bh=Lf7Pn102VRECpBWkPWLUC4FT7Hq7UjO+2Zgtn7zYt9U=;
+        b=W8xgXGzMU1qYr0AAY0JLdqCYU/Rlua8RW7XJBc25zc85cF9mHA7ydxXsdycTnK5dIt
+         T6ftq6veJPhkNaaa6wMa/aU3YlejXQDRBObb38uOLpaCtkRxwQZpgtqe9z40DFldirHi
+         uy7x49t/jQcsYTwXbC0SUItnZ5WI2aSEaxw6dBiEP/wL0M3aWtK/GXuW3BmwokTg3bB2
+         ywcPa57Z6p6ALIsFDogVKLmpnT8Hp7u6ew68u4PSfgWJBidpMwPi30YzC7NH/vqHl/UT
+         4sPc/Kugm++7yHTQyHiJNp36ypNx0+FTf2yyJtQqAQTgdWmWubvgQ7yrSHAhoHr7WnV0
+         1BNQ==
+X-Gm-Message-State: APjAAAUTodVUwlRNj6woT8OKuxTijQC6osXLjM8ausTWgdDBXSdJjZ87
+        ueDsWv8NkblA0/eZx/Y9yNs=
+X-Google-Smtp-Source: APXvYqyEkzGVRTyBS9u2/HAaxQqZHTUZpuzaP/0B1enpx2h+VfZRjB+K7J4WrXdjJkoRjF4OGyoDGw==
+X-Received: by 2002:a17:902:f209:: with SMTP id gn9mr55442585plb.109.1556422186244;
+        Sat, 27 Apr 2019 20:29:46 -0700 (PDT)
 Received: from localhost ([2601:640:6:3484:bc53:6e04:b584:e900])
-        by smtp.gmail.com with ESMTPSA id d187sm32989201pgc.43.2019.04.27.20.29.43
+        by smtp.gmail.com with ESMTPSA id c28sm19513732pgm.42.2019.04.27.20.29.45
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 27 Apr 2019 20:29:43 -0700 (PDT)
+        Sat, 27 Apr 2019 20:29:45 -0700 (PDT)
 From:   Yury Norov <yury.norov@gmail.com>
 X-Google-Original-From: Yury Norov <ynorov@marvell.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -77,9 +77,9 @@ Cc:     Yury Norov <ynorov@marvell.com>, linux-kernel@vger.kernel.org,
         Yury Norov <yury.norov@gmail.com>,
         Jens Axboe <axboe@kernel.dk>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 1/6] lib/string: add strnchrnul()
-Date:   Sat, 27 Apr 2019 20:29:31 -0700
-Message-Id: <20190428032936.1317-2-ynorov@marvell.com>
+Subject: [PATCH 2/6] bitops: more BITS_TO_* macros
+Date:   Sat, 27 Apr 2019 20:29:32 -0700
+Message-Id: <20190428032936.1317-3-ynorov@marvell.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190428032936.1317-1-ynorov@marvell.com>
 References: <20190428032936.1317-1-ynorov@marvell.com>
@@ -88,59 +88,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New function works like strchrnul() with a length limited strings.
+Introduce BITS_TO_U64, BITS_TO_U32 and BITS_TO_BYTES as they are handy
+in the following changes (BITS_TO_U32 specifically). Sync tools/
+version of the macros with the kernel implementation.
 
 Signed-off-by: Yury Norov <ynorov@marvell.com>
 ---
- include/linux/string.h |  3 +++
- lib/string.c           | 20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+ include/linux/bitops.h       | 3 +++
+ tools/include/linux/bitops.h | 9 +++++----
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 4deb11f7976b..69e8df51b630 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -62,6 +62,9 @@ extern char * strchr(const char *,int);
- #ifndef __HAVE_ARCH_STRCHRNUL
- extern char * strchrnul(const char *,int);
- #endif
-+#ifndef __HAVE_ARCH_STRNCHRNUL
-+extern char * strnchrnul(const char *, int, int);
-+#endif
- #ifndef __HAVE_ARCH_STRNCHR
- extern char * strnchr(const char *, size_t, int);
- #endif
-diff --git a/lib/string.c b/lib/string.c
-index 6016eb3ac73d..dd99e6ac517a 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -429,6 +429,26 @@ char *strchrnul(const char *s, int c)
- EXPORT_SYMBOL(strchrnul);
- #endif
+diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+index cf074bce3eb3..3477e179dca7 100644
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -6,6 +6,9 @@
  
-+#ifndef __HAVE_ARCH_STRNCHRNUL
-+/**
-+ * strnchrnul - Find and return a character in a length limited string,
-+ * or end of string
-+ * @s: The string to be searched
-+ * @count: The number of characters to be searched
-+ * @c: The character to search for
-+ *
-+ * Returns pointer to first occurrence of 'c' in s. If c is not found,
-+ * then return a pointer to the null byte at the end of s.
-+ */
-+char *strnchrnul(const char *s, int count, int c)
-+{
-+	while (count-- && *s && *s != (char)c)
-+		s++;
-+	return (char *)s;
-+}
-+EXPORT_SYMBOL(strnchrnul);
-+#endif
-+
- #ifndef __HAVE_ARCH_STRRCHR
- /**
-  * strrchr - Find the last occurrence of a character in a string
+ #define BITS_PER_TYPE(type) (sizeof(type) * BITS_PER_BYTE)
+ #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
++#define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_TYPE(u64))
++#define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_TYPE(u32))
++#define BITS_TO_BYTES(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(char))
+ 
+ extern unsigned int __sw_hweight8(unsigned int w);
+ extern unsigned int __sw_hweight16(unsigned int w);
+diff --git a/tools/include/linux/bitops.h b/tools/include/linux/bitops.h
+index 0b0ef3abc966..959dcb8214ba 100644
+--- a/tools/include/linux/bitops.h
++++ b/tools/include/linux/bitops.h
+@@ -13,10 +13,11 @@
+ #include <linux/bits.h>
+ #include <linux/compiler.h>
+ 
+-#define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(long))
+-#define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u64))
+-#define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u32))
+-#define BITS_TO_BYTES(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE)
++#define BITS_PER_TYPE(type)	(sizeof(type) * BITS_PER_BYTE)
++#define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
++#define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_TYPE(u64))
++#define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_TYPE(u32))
++#define BITS_TO_BYTES(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(char))
+ 
+ extern unsigned int __sw_hweight8(unsigned int w);
+ extern unsigned int __sw_hweight16(unsigned int w);
 -- 
 2.17.1
 
