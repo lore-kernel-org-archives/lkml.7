@@ -2,246 +2,269 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5460C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 05:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF37C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 05:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670C921473
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 05:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C09220881
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 05:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfD1FlF (ORCPT
+        id S1726479AbfD1FlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 01:41:05 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2944 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725909AbfD1FlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 01:41:04 -0400
-Received: from DGGEML404-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 57190E9CDFAFEBA3BBD2;
-        Sun, 28 Apr 2019 13:41:02 +0800 (CST)
-Received: from DGGEML423-HUB.china.huawei.com (10.1.199.40) by
- DGGEML404-HUB.china.huawei.com (10.3.17.39) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 28 Apr 2019 13:41:02 +0800
-Received: from DGGEML532-MBS.china.huawei.com ([169.254.7.161]) by
- dggeml423-hub.china.huawei.com ([10.1.199.40]) with mapi id 14.03.0439.000;
- Sun, 28 Apr 2019 13:40:56 +0800
-From:   "weiyongjun (A)" <weiyongjun1@huawei.com>
-To:     Jason Wang <jasowang@redhat.com>,
-        yuehaibing <yuehaibing@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "brouer@redhat.com" <brouer@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "lirongqing@baidu.com" <lirongqing@baidu.com>,
-        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
-        "nicolas.dichtel@6wind.com" <nicolas.dichtel@6wind.com>,
-        "3chas3@gmail.com" <3chas3@gmail.com>,
-        "wangli39@baidu.com" <wangli39@baidu.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH] tun: Fix use-after-free in tun_net_xmit
-Thread-Topic: [PATCH] tun: Fix use-after-free in tun_net_xmit
-Thread-Index: AQHU/W9g3sfuWPKNdEe3Jj6+nCJHZaZQYsSAgAARegCAAJO30A==
-Date:   Sun, 28 Apr 2019 05:40:55 +0000
-Message-ID: <6AADFAC011213A4C87B956458587ADB4021F7531@dggeml532-mbs.china.huawei.com>
-References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
- <20190428030539.17776-1-yuehaibing@huawei.com>
- <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
- <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com>
-In-Reply-To: <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.177.30.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 28 Apr 2019 01:41:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58252 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbfD1FlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 01:41:21 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 175CC30BC650;
+        Sun, 28 Apr 2019 05:41:20 +0000 (UTC)
+Received: from localhost (ovpn-12-135.pek2.redhat.com [10.72.12.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D2AFB620C3;
+        Sun, 28 Apr 2019 05:41:16 +0000 (UTC)
+Date:   Sun, 28 Apr 2019 13:41:14 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     j-nomura@ce.jp.nec.com, kasong@redhat.com, dyoung@redhat.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
+        kexec@lists.infradead.org, hpa@zytor.com
+Subject: Re: [PATCH v5 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Message-ID: <20190428054114.GS3584@localhost.localdomain>
+References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424092944.30481-2-bhe@redhat.com>
+ <20190427161121.GC12360@zn.tnic>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190427161121.GC12360@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sun, 28 Apr 2019 05:41:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFzb24sDQoNCj4gT24gMjAxOS80LzI4IOS4iuWNiDExOjI0LCBKYXNvbiBXYW5nIHdyb3Rl
-Og0KPiA+DQo+ID4gT24gMjAxOS80LzI4IOS4iuWNiDExOjA1LCBZdWUgSGFpYmluZyB3cm90ZToN
-Cj4gPj4gRnJvbTogWXVlSGFpYmluZyA8eXVlaGFpYmluZ0BodWF3ZWkuY29tPg0KPiA+Pg0KPiA+
-PiBLQVNBTiByZXBvcnQgdGhpczoNCj4gPj4NCj4gPj4gQlVHOiBLQVNBTjogdXNlLWFmdGVyLWZy
-ZWUgaW4gdHVuX25ldF94bWl0KzB4MTY3MC8weDE3NTANCj4gPj4gZHJpdmVycy9uZXQvdHVuLmM6
-MTEwNA0KPiA+PiBSZWFkIG9mIHNpemUgOCBhdCBhZGRyIGZmZmY4ODgzNmNjMjZhNzAgYnkgdGFz
-ayBzd2FwcGVyLzMvMA0KPiA+Pg0KPiA+PiBDUFU6IDMgUElEOiAwIENvbW06IHN3YXBwZXIvMyBO
-b3QgdGFpbnRlZCA0LjE5LjMyICM2DQo+ID4+IEhhcmR3YXJlIG5hbWU6IFFFTVUgU3RhbmRhcmQg
-UEMgKGk0NDBGWCArIFBJSVgsIDE5OTYpLCBCSU9TDQo+ID4+IDEuMTAuMi0xdWJ1bnR1MSAwNC8w
-MS8yMDE0DQo+ID4+IENhbGwgVHJhY2U6DQo+ID4+IMKgIDxJUlE+DQo+ID4+IMKgIF9fZHVtcF9z
-dGFjayBsaWIvZHVtcF9zdGFjay5jOjc3IFtpbmxpbmVdDQo+ID4+IMKgIGR1bXBfc3RhY2srMHhj
-YS8weDEzZSBsaWIvZHVtcF9zdGFjay5jOjExMw0KPiA+PiDCoCBwcmludF9hZGRyZXNzX2Rlc2Ny
-aXB0aW9uKzB4NzkvMHgzMzAgbW0va2FzYW4vcmVwb3J0LmM6MjUzDQo+ID4+IMKgIGthc2FuX3Jl
-cG9ydF9lcnJvciBtbS9rYXNhbi9yZXBvcnQuYzozNTEgW2lubGluZV0NCj4gPj4gwqAga2FzYW5f
-cmVwb3J0KzB4MThhLzB4MmQwIG1tL2thc2FuL3JlcG9ydC5jOjQwOQ0KPiA+PiDCoCB0dW5fbmV0
-X3htaXQrMHgxNjcwLzB4MTc1MCBkcml2ZXJzL25ldC90dW4uYzoxMTA0DQo+ID4+IMKgIF9fbmV0
-ZGV2X3N0YXJ0X3htaXQgaW5jbHVkZS9saW51eC9uZXRkZXZpY2UuaDo0MzAwIFtpbmxpbmVdDQo+
-ID4+IMKgIG5ldGRldl9zdGFydF94bWl0IGluY2x1ZGUvbGludXgvbmV0ZGV2aWNlLmg6NDMwOSBb
-aW5saW5lXQ0KPiA+PiDCoCB4bWl0X29uZSBuZXQvY29yZS9kZXYuYzozMjQzIFtpbmxpbmVdDQo+
-ID4+IMKgIGRldl9oYXJkX3N0YXJ0X3htaXQrMHgxN2MvMHg3ODAgbmV0L2NvcmUvZGV2LmM6MzI1
-OQ0KPiA+PiDCoCBzY2hfZGlyZWN0X3htaXQrMHgyNGYvMHg4YTAgbmV0L3NjaGVkL3NjaF9nZW5l
-cmljLmM6MzI3DQo+ID4+IMKgIHFkaXNjX3Jlc3RhcnQgbmV0L3NjaGVkL3NjaF9nZW5lcmljLmM6
-MzkwIFtpbmxpbmVdDQo+ID4+IMKgIF9fcWRpc2NfcnVuKzB4NDViLzB4MTU5MCBuZXQvc2NoZWQv
-c2NoX2dlbmVyaWMuYzozOTgNCj4gPj4gwqAgcWRpc2NfcnVuIGluY2x1ZGUvbmV0L3BrdF9zY2hl
-ZC5oOjEyMCBbaW5saW5lXQ0KPiA+PiDCoCBfX2Rldl94bWl0X3NrYiBuZXQvY29yZS9kZXYuYzoz
-NDM4IFtpbmxpbmVdDQo+ID4+IMKgIF9fZGV2X3F1ZXVlX3htaXQrMHhhNmIvMHgyNTAwIG5ldC9j
-b3JlL2Rldi5jOjM3OTcNCj4gPj4gwqAgbmVpZ2hfb3V0cHV0IGluY2x1ZGUvbmV0L25laWdoYm91
-ci5oOjUwMSBbaW5saW5lXQ0KPiA+PiDCoCBpcDZfZmluaXNoX291dHB1dDIrMHhhMzYvMHgyMjkw
-IG5ldC9pcHY2L2lwNl9vdXRwdXQuYzoxMjANCj4gPj4gwqAgaXA2X2ZpbmlzaF9vdXRwdXQrMHgz
-ZTcvMHhhMjAgbmV0L2lwdjYvaXA2X291dHB1dC5jOjE1NA0KPiA+PiDCoCBORl9IT09LX0NPTkQg
-aW5jbHVkZS9saW51eC9uZXRmaWx0ZXIuaDoyNzggW2lubGluZV0NCj4gPj4gwqAgaXA2X291dHB1
-dCsweDFlMi8weDcyMCBuZXQvaXB2Ni9pcDZfb3V0cHV0LmM6MTcxDQo+ID4+IMKgIGRzdF9vdXRw
-dXQgaW5jbHVkZS9uZXQvZHN0Lmg6NDQ0IFtpbmxpbmVdDQo+ID4+IMKgIE5GX0hPT0sgaW5jbHVk
-ZS9saW51eC9uZXRmaWx0ZXIuaDoyODkgW2lubGluZV0NCj4gPj4gwqAgbWxkX3NlbmRwYWNrKzB4
-NzQwLzB4ZjIwIG5ldC9pcHY2L21jYXN0LmM6MTY4Mw0KPiA+PiDCoCBtbGRfc2VuZF9jciBuZXQv
-aXB2Ni9tY2FzdC5jOjE5NzkgW2lubGluZV0NCj4gPj4gwqAgbWxkX2lmY190aW1lcl9leHBpcmUr
-MHgzY2MvMHg3ZjAgbmV0L2lwdjYvbWNhc3QuYzoyNDc4DQo+ID4+IMKgIGNhbGxfdGltZXJfZm4r
-MHgxZWEvMHg2YTAga2VybmVsL3RpbWUvdGltZXIuYzoxMzI2DQo+ID4+IMKgIGV4cGlyZV90aW1l
-cnMga2VybmVsL3RpbWUvdGltZXIuYzoxMzYzIFtpbmxpbmVdDQo+ID4+IMKgIF9fcnVuX3RpbWVy
-cyBrZXJuZWwvdGltZS90aW1lci5jOjE2ODIgW2lubGluZV0NCj4gPj4gwqAgcnVuX3RpbWVyX3Nv
-ZnRpcnErMHg2MzcvMHgxMDcwIGtlcm5lbC90aW1lL3RpbWVyLmM6MTY5NQ0KPiA+PiDCoCBfX2Rv
-X3NvZnRpcnErMHgyNmQvMHhhYmQga2VybmVsL3NvZnRpcnEuYzoyOTINCj4gPj4gwqAgaW52b2tl
-X3NvZnRpcnEga2VybmVsL3NvZnRpcnEuYzozNzIgW2lubGluZV0NCj4gPj4gwqAgaXJxX2V4aXQr
-MHgyMDkvMHgyOTAga2VybmVsL3NvZnRpcnEuYzo0MTINCj4gPj4gwqAgZXhpdGluZ19pcnEgYXJj
-aC94ODYvaW5jbHVkZS9hc20vYXBpYy5oOjUzNiBbaW5saW5lXQ0KPiA+PiDCoCBzbXBfYXBpY190
-aW1lcl9pbnRlcnJ1cHQrMHhmNi8weDQ4MCBhcmNoL3g4Ni9rZXJuZWwvYXBpYy9hcGljLmM6MTA1
-Ng0KPiA+PiDCoCBhcGljX3RpbWVyX2ludGVycnVwdCsweGYvMHgyMCBhcmNoL3g4Ni9lbnRyeS9l
-bnRyeV82NC5TOjg2NA0KPiA+PiDCoCA8L0lSUT4NCj4gPj4gUklQOiAwMDEwOm5hdGl2ZV9zYWZl
-X2hhbHQrMHgyLzB4MTAgYXJjaC94ODYvaW5jbHVkZS9hc20vaXJxZmxhZ3MuaDo1OA0KPiA+PiBD
-b2RlOiAwMSBmMCAwZiA4MiBiYyBmZCBmZiBmZiA0OCBjNyBjNyA0MCAyNSBiMSA4MyBlOCBhMSA3
-MiAwMyBmZiBlOQ0KPiA+PiBhYiBmZCBmZiBmZiA0YyA4OSBlNyBlOCAzNyBmNSBhNyBmZSBlOSA2
-YSBmZiBmZiBmZiA5MCA5MCBmYiBmNCA8YzM+DQo+ID4+IDBmIDFmIDAwIDY2IDJlIDBmIDFmIDg0
-IDAwIDAwIDAwIDAwIDAwIGY0IGMzIDkwIDkwIDkwIDkwIDkwIDkwDQo+ID4+IFJTUDogMDAxODpm
-ZmZmODg4M2UwZjJmZDIwIEVGTEFHUzogMDAwMDAyNDYgT1JJR19SQVg6IGZmZmZmZmZmZmZmZmZm
-MTMNCj4gPj4gUkFYOiAwMDAwMDAwMDAwMDAwMDA3IFJCWDogZGZmZmZjMDAwMDAwMDAwMCBSQ1g6
-IDAwMDAwMDAwMDAwMDAwMDANCj4gPj4gUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogMDAwMDAw
-MDAwMDAwMDAwMSBSREk6IGZmZmY4ODgzZTBmMDRmMWMNCj4gPj4gUkJQOiAwMDAwMDAwMDAwMDAw
-MDAzIFIwODogZmZmZmVkMTA3YzVkYzc3YiBSMDk6IDAwMDAwMDAwMDAwMDAwMDANCj4gPj4gUjEw
-OiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAwMDAwMCBSMTI6IGZmZmZmZmZmODQ4
-Yjk2ZTANCj4gPj4gUjEzOiAwMDAwMDAwMDAwMDAwMDAzIFIxNDogMWZmZmYxMTA3YzFlNWZhZSBS
-MTU6IDAwMDAwMDAwMDAwMDAwMDANCj4gPj4gwqAgYXJjaF9zYWZlX2hhbHQgYXJjaC94ODYvaW5j
-bHVkZS9hc20vcGFyYXZpcnQuaDo5NCBbaW5saW5lXQ0KPiA+PiDCoCBkZWZhdWx0X2lkbGUrMHgy
-NC8weDJiMCBhcmNoL3g4Ni9rZXJuZWwvcHJvY2Vzcy5jOjU2MQ0KPiA+PiDCoCBjcHVpZGxlX2lk
-bGVfY2FsbCBrZXJuZWwvc2NoZWQvaWRsZS5jOjE1MyBbaW5saW5lXQ0KPiA+PiDCoCBkb19pZGxl
-KzB4MmNhLzB4NDIwIGtlcm5lbC9zY2hlZC9pZGxlLmM6MjYyDQo+ID4+IMKgIGNwdV9zdGFydHVw
-X2VudHJ5KzB4Y2IvMHhlMCBrZXJuZWwvc2NoZWQvaWRsZS5jOjM2OA0KPiA+PiDCoCBzdGFydF9z
-ZWNvbmRhcnkrMHg0MjEvMHg1NzAgYXJjaC94ODYva2VybmVsL3NtcGJvb3QuYzoyNzENCj4gPj4g
-wqAgc2Vjb25kYXJ5X3N0YXJ0dXBfNjQrMHhhNC8weGIwIGFyY2gveDg2L2tlcm5lbC9oZWFkXzY0
-LlM6MjQzDQo+ID4+DQo+ID4+IEFsbG9jYXRlZCBieSB0YXNrIDE5NzY0Og0KPiA+PiDCoCBzZXRf
-dHJhY2sgbW0va2FzYW4va2FzYW4uYzo0NjAgW2lubGluZV0NCj4gPj4gwqAga2FzYW5fa21hbGxv
-YysweGEwLzB4ZDAgbW0va2FzYW4va2FzYW4uYzo1NTMNCj4gPj4gwqAgX19rbWFsbG9jKzB4MTFi
-LzB4MmQwIG1tL3NsdWIuYzozNzUwDQo+ID4+IMKgIGttYWxsb2MgaW5jbHVkZS9saW51eC9zbGFi
-Lmg6NTE4IFtpbmxpbmVdDQo+ID4+IMKgIHNrX3Byb3RfYWxsb2MrMHhmNi8weDI5MCBuZXQvY29y
-ZS9zb2NrLmM6MTQ2OQ0KPiA+PiDCoCBza19hbGxvYysweDNkLzB4YzAwIG5ldC9jb3JlL3NvY2su
-YzoxNTIzDQo+ID4+IMKgIHR1bl9jaHJfb3BlbisweDgwLzB4NTYwIGRyaXZlcnMvbmV0L3R1bi5j
-OjMyMDQNCj4gPj4gwqAgbWlzY19vcGVuKzB4MzY3LzB4NGUwIGRyaXZlcnMvY2hhci9taXNjLmM6
-MTQxDQo+ID4+IMKgIGNocmRldl9vcGVuKzB4MjEyLzB4NTgwIGZzL2NoYXJfZGV2LmM6NDE3DQo+
-ID4+IMKgIGRvX2RlbnRyeV9vcGVuKzB4NzA0LzB4MTA1MCBmcy9vcGVuLmM6Nzc3DQo+ID4+IMKg
-IGRvX2xhc3QgZnMvbmFtZWkuYzozNDE4IFtpbmxpbmVdDQo+ID4+IMKgIHBhdGhfb3BlbmF0KzB4
-N2VkLzB4MmFlMCBmcy9uYW1laS5jOjM1MzMNCj4gPj4gwqAgZG9fZmlscF9vcGVuKzB4MWFhLzB4
-MmIwIGZzL25hbWVpLmM6MzU2NA0KPiA+PiDCoCBkb19zeXNfb3BlbisweDMwNy8weDQzMCBmcy9v
-cGVuLmM6MTA2OQ0KPiA+PiDCoCBkb19zeXNjYWxsXzY0KzB4YzgvMHg1ODAgYXJjaC94ODYvZW50
-cnkvY29tbW9uLmM6MjkwDQo+ID4+IMKgIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsw
-eDQ5LzB4YmUNCj4gPj4NCj4gPj4gRnJlZWQgYnkgdGFzayAxOTc2NDoNCj4gPj4gwqAgc2V0X3Ry
-YWNrIG1tL2thc2FuL2thc2FuLmM6NDYwIFtpbmxpbmVdDQo+ID4+IMKgIF9fa2FzYW5fc2xhYl9m
-cmVlKzB4MTJlLzB4MTgwIG1tL2thc2FuL2thc2FuLmM6NTIxDQo+ID4+IMKgIHNsYWJfZnJlZV9o
-b29rIG1tL3NsdWIuYzoxMzcwIFtpbmxpbmVdDQo+ID4+IMKgIHNsYWJfZnJlZV9mcmVlbGlzdF9o
-b29rIG1tL3NsdWIuYzoxMzk3IFtpbmxpbmVdDQo+ID4+IMKgIHNsYWJfZnJlZSBtbS9zbHViLmM6
-Mjk1MiBbaW5saW5lXQ0KPiA+PiDCoCBrZnJlZSsweGViLzB4MmYwIG1tL3NsdWIuYzozOTA1DQo+
-ID4+IMKgIHNrX3Byb3RfZnJlZSBuZXQvY29yZS9zb2NrLmM6MTUwNiBbaW5saW5lXQ0KPiA+PiDC
-oCBfX3NrX2Rlc3RydWN0KzB4NGU2LzB4NmEwIG5ldC9jb3JlL3NvY2suYzoxNTg4DQo+ID4+IMKg
-IHNrX2Rlc3RydWN0KzB4NDgvMHg3MCBuZXQvY29yZS9zb2NrLmM6MTU5Ng0KPiA+PiDCoCBfX3Nr
-X2ZyZWUrMHhhOS8weDI3MCBuZXQvY29yZS9zb2NrLmM6MTYwNw0KPiA+PiDCoCBza19mcmVlKzB4
-MmEvMHgzMCBuZXQvY29yZS9zb2NrLmM6MTYxOA0KPiA+PiDCoCBzb2NrX3B1dCBpbmNsdWRlL25l
-dC9zb2NrLmg6MTY5NiBbaW5saW5lXQ0KPiA+PiDCoCBfX3R1bl9kZXRhY2grMHg0NjQvMHhmNzAg
-ZHJpdmVycy9uZXQvdHVuLmM6NzM1DQo+ID4+IMKgIHR1bl9kZXRhY2ggZHJpdmVycy9uZXQvdHVu
-LmM6NzQ3IFtpbmxpbmVdDQo+ID4+IMKgIHR1bl9jaHJfY2xvc2UrMHhkOC8weDE5MCBkcml2ZXJz
-L25ldC90dW4uYzozMjQxDQo+ID4+IMKgIF9fZnB1dCsweDI3Zi8weDdmMCBmcy9maWxlX3RhYmxl
-LmM6Mjc4DQo+ID4+IMKgIHRhc2tfd29ya19ydW4rMHgxMzYvMHgxYjAga2VybmVsL3Rhc2tfd29y
-ay5jOjExMw0KPiA+PiDCoCB0cmFjZWhvb2tfbm90aWZ5X3Jlc3VtZSBpbmNsdWRlL2xpbnV4L3Ry
-YWNlaG9vay5oOjE5MyBbaW5saW5lXQ0KPiA+PiDCoCBleGl0X3RvX3VzZXJtb2RlX2xvb3ArMHgx
-YTcvMHgxZDAgYXJjaC94ODYvZW50cnkvY29tbW9uLmM6MTY2DQo+ID4+IMKgIHByZXBhcmVfZXhp
-dF90b191c2VybW9kZSBhcmNoL3g4Ni9lbnRyeS9jb21tb24uYzoxOTcgW2lubGluZV0NCj4gPj4g
-wqAgc3lzY2FsbF9yZXR1cm5fc2xvd3BhdGggYXJjaC94ODYvZW50cnkvY29tbW9uLmM6MjY4IFtp
-bmxpbmVdDQo+ID4+IMKgIGRvX3N5c2NhbGxfNjQrMHg0NjEvMHg1ODAgYXJjaC94ODYvZW50cnkv
-Y29tbW9uLmM6MjkzDQo+ID4+IMKgIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsweDQ5
-LzB4YmUNCj4gPj4NCj4gPj4gVGhlIGJ1Z2d5IGFkZHJlc3MgYmVsb25ncyB0byB0aGUgb2JqZWN0
-IGF0IGZmZmY4ODgzNmNjMjY2MDANCj4gPj4gwqAgd2hpY2ggYmVsb25ncyB0byB0aGUgY2FjaGUg
-a21hbGxvYy00MDk2IG9mIHNpemUgNDA5Ng0KPiA+PiBUaGUgYnVnZ3kgYWRkcmVzcyBpcyBsb2Nh
-dGVkIDExMzYgYnl0ZXMgaW5zaWRlIG9mDQo+ID4+IMKgIDQwOTYtYnl0ZSByZWdpb24gW2ZmZmY4
-ODgzNmNjMjY2MDAsIGZmZmY4ODgzNmNjMjc2MDApDQo+ID4+IFRoZSBidWdneSBhZGRyZXNzIGJl
-bG9uZ3MgdG8gdGhlIHBhZ2U6DQo+ID4+IHBhZ2U6ZmZmZmVhMDAwZGIzMDgwMCBjb3VudDoxIG1h
-cGNvdW50OjAgbWFwcGluZzpmZmZmODg4M2UyODBlNjAwDQo+ID4+IGluZGV4OjB4MCBjb21wb3Vu
-ZF9tYXBjb3VudDogMA0KPiA+PiBmbGFnczogMHgyZmZmZmY4MDAwODEwMChzbGFifGhlYWQpDQo+
-ID4+IHJhdzogMDAyZmZmZmY4MDAwODEwMCBkZWFkMDAwMDAwMDAwMTAwIGRlYWQwMDAwMDAwMDAy
-MDANCj4gZmZmZjg4ODNlMjgwZTYwMA0KPiA+PiByYXc6IDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAw
-MDAwMDA3MDAwNyAwMDAwMDAwMWZmZmZmZmZmDQo+IDAwMDAwMDAwMDAwMDAwMDANCj4gPj4gcGFn
-ZSBkdW1wZWQgYmVjYXVzZToga2FzYW46IGJhZCBhY2Nlc3MgZGV0ZWN0ZWQNCj4gPj4NCj4gPj4g
-TWVtb3J5IHN0YXRlIGFyb3VuZCB0aGUgYnVnZ3kgYWRkcmVzczoNCj4gPj4gwqAgZmZmZjg4ODM2
-Y2MyNjkwMDogZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIN
-Cj4gPj4gwqAgZmZmZjg4ODM2Y2MyNjk4MDogZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIg
-ZmIgZmIgZmIgZmIgZmIgZmINCj4gPj4+IGZmZmY4ODgzNmNjMjZhMDA6IGZiIGZiIGZiIGZiIGZi
-IGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiDQo+ID4+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIF4NCj4gPj4g
-wqAgZmZmZjg4ODM2Y2MyNmE4MDogZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIg
-ZmIgZmIgZmIgZmINCj4gPj4gwqAgZmZmZjg4ODM2Y2MyNmIwMDogZmIgZmIgZmIgZmIgZmIgZmIg
-ZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmINCj4gPj4NCj4gPj4gSWYgdHVuIGRyaXZlciBo
-YXZlIG11bHRpcXVldWVzLCB1c2VyIGNsb3NlIHRoZSBsYXN0IHF1ZXVlIGJ5DQo+ID4+IHR1bl9k
-ZXRhY2gsIHRoZW4gdHVuLT50ZmlsZXNbaW5kZXhdIGlzIG5vdCBjbGVhcmVkLiBUaGVuIGEgbmV3
-DQo+ID4+IHF1ZXVlIG1heSBhZGQgdG8gdGhlIHR1biwgd2hpY2ggdXNpbmcgcmN1X2Fzc2lnbl9w
-b2ludGVyDQo+ID4+IHR1bi0+dGZpbGVzW2luZGV4XSB0byB0aGUgbmV3IHRmaWxlIGFuZCBpbmNy
-ZWFzZSB0aGUgbnVtcXVldWVzLg0KPiA+PiBIb3dldmVyIGlmIHRoZXJlIHNlbmQgYSBwYWNrZXQg
-ZHVyaW5nIHRoaXMgdGltZSwgd2hpY2ggcGlja2luZyB0aGUgbGFzdA0KPiA+PiBxdWV1ZSwgaXQg
-bWF5IHVzZXMgdGhlIG9sZCB0dW4tPnRmaWxlc1tpbmRleF0sIGJlYWNhdXNlIHRoZXJlIG5vDQo+
-ID4+IFJDVSBncmFjZSBwZXJpb2QuDQo+ID4+DQo+ID4+IDEpIHR1bl9jaHJfY2xvc2UgLy9jbG9z
-ZSB0aGUgbGFzdCBxdWV1ZQ0KPiA+PiDCoMKgwqDCoCAtLT4gX190dW5fZGV0YWNowqAgLy9jbG9z
-ZSB0aGUgbGFzdCBxdWV1ZSwgYnV0IHR1bi0+dGZpbGVzW2luZGV4XQ0KPiA+PiBzdGlsbCBleGlz
-dA0KPiA+Pg0KPiA+PiAyKSB0dW5fY2hyX29wZW7CoCAvL2F0dGFjaCBhIG5ldyBxdWV1ZQ0KPiA+
-PiDCoMKgwqDCoCAtLT4gdHVuX2F0dGFjaA0KPiA+PiAtLT5yY3VfYXNzaWduX3BvaW50ZXIodHVu
-LT50ZmlsZXNbdHVuLT5udW1xdWV1ZXNdLCB0ZmlsZSk7DQo+ID4+IMKgwqDCoMKgwqAgLy90aGVy
-ZSBuZWVkIGEgUkNVIGdyYWNlIHBlcmlvZA0KPiA+Pg0KPiA+PiDCoMKgwqDCoCAtLT50dW4tPm51
-bXF1ZXVlcysrOw0KPiA+Pg0KPiA+PiAzKSB0dW5fbmV0X3htaXQgLy9hIG5ldyBwYWNrZXQgaXMg
-c2VuZGluZywgd2hpY2ggcGljayB0aGUgbGFzdCBxdWV1ZQ0KPiA+PiDCoMKgwqDCoMKgIC0tPmlm
-ICh0eHEgPj0gdHVuLT5udW1xdWV1ZXMpDQo+ID4+IMKgwqDCoMKgwqDCoCAvL2Fib3ZlIGNoZWNr
-IHBhc3NlZCwgYnV0IHRmaWxlIHN0aWxsIG5vdCByZW5ldw0KPiA+PiDCoMKgwqDCoMKgIC0tPmlm
-ICh0ZmlsZS0+c29ja2V0LnNrLT5za19maWx0ZXIgLi4uDQo+ID4+IMKgwqDCoMKgwqDCoCAvL3Vz
-ZSB0aGUgb2xkIHRmaWxlLHRyaWdnZXIgdXNlLWFmdGVyLWZyZWUNCj4gPj4NCj4gPj4gUmVwb3J0
-ZWQtYnk6IEh1bGsgUm9ib3QgPGh1bGtjaUBodWF3ZWkuY29tPg0KPiA+PiBGaXhlczogYzhkNjhl
-NmJlMWMzICgidHVudGFwOiBtdWx0aXF1ZXVlIHN1cHBvcnQiKQ0KPiA+PiBTaWduZWQtb2ZmLWJ5
-OiBZdWVIYWliaW5nIDx5dWVoYWliaW5nQGh1YXdlaS5jb20+DQo+ID4+IC0tLQ0KPiA+PiDCoCBk
-cml2ZXJzL25ldC90dW4uYyB8IDEgKw0KPiA+PiDCoCAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
-b24oKykNCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3R1bi5jIGIvZHJpdmVy
-cy9uZXQvdHVuLmMNCj4gPj4gaW5kZXggZTljYTFjMC4uMzc3MGFiYSAxMDA2NDQNCj4gPj4gLS0t
-IGEvZHJpdmVycy9uZXQvdHVuLmMNCj4gPj4gKysrIGIvZHJpdmVycy9uZXQvdHVuLmMNCj4gPj4g
-QEAgLTg3Niw2ICs4NzYsNyBAQCBzdGF0aWMgaW50IHR1bl9hdHRhY2goc3RydWN0IHR1bl9zdHJ1
-Y3QgKnR1biwNCj4gPj4gc3RydWN0IGZpbGUgKmZpbGUsDQo+ID4+IMKgwqDCoMKgwqDCoCAqLw0K
-PiA+PiDCoMKgwqDCoMKgIHJjdV9hc3NpZ25fcG9pbnRlcih0ZmlsZS0+dHVuLCB0dW4pOw0KPiA+
-PiDCoMKgwqDCoMKgIHJjdV9hc3NpZ25fcG9pbnRlcih0dW4tPnRmaWxlc1t0dW4tPm51bXF1ZXVl
-c10sIHRmaWxlKTsNCj4gPj4gK8KgwqDCoCBzeW5jaHJvbml6ZV9uZXQoKTsNCj4gPj4gwqDCoMKg
-wqDCoCB0dW4tPm51bXF1ZXVlcysrOw0KPiA+PiDCoMKgwqDCoMKgIHR1bl9zZXRfcmVhbF9udW1f
-cXVldWVzKHR1bik7DQo+ID4+IMKgIG91dDoNCj4gPg0KPiA+DQo+ID4gR29vZCBjYXRjaCwgdGhh
-dCdzIG9uZSBvZiBteSBzdXNwaWNpb24gYXMgd2VsbC4gQXNzdW1lIHRoYXQgdGhpcyBoYXMNCj4g
-PiBiZWVuIHRlc3RlZC4NCj4gPg0KPiA+IEFja2VkLWJ5OiBKYXNvbiBXYW5nIDxqYXNvd2FuZ0By
-ZWRoYXQuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBpcyBuZWVkZWQgZm9yIC1zdGFibGUuDQo+
-ID4NCj4gPiBJIHdpbGwgcG9zdCBhbm90aGVyIHRoZW9yZXRpY2FsIGlzc3VlIHNpbWlsYXIgdG8g
-dGhpcyBzb29uLg0KPiA+DQo+ID4gVGhhbmtzDQo+ID4NCj4gDQo+IE9rLCBhIHNlY29uZCB0aG91
-Z2h0LiBBbGwgZXZpbCBjb21lIGZyb20gdGhlIGFjY2VzcyBvZiB0dW4tPm51bXF1ZXVlcw0KPiB3
-aXRob3V0IHN1ZmZpY2llbnQgc3luY2hyb25pemF0aW9uLiBUaGlzIGlzIGEgcGFydGlhbCBmaXgs
-IGFub3RoZXINCj4gcG9zc2libGUgY2FzZSBpcyBfX3R1bl9kZXRhY2goKSwgd2UgbmVlZCBlaXRo
-ZXINCg0KSW4gX190dW5fZGV0YWNoKCksdHVuLT50ZmlsZXMgY2hhbmdlcyBzaG91bGQgYWx3YXlz
-IGNhbGwgc3luY2hyb25pemVfbmV0KCksDQphbmQgZnJlZSB0ZmlsZSBhZnRlciBSQ1UgZ3JhY2Ug
-cGVyaW9kLiB0dW5fbmV0X3htaXQoKSBkb2Vzbid0IGhhdmUgdGhlIGNoYW5jZSB0bw0KYWNjZXNz
-IHRoZSBjaGFuZ2UgYmVjYXVzZSBpdCBob2xkaW5nIHRoZSByY3VfcmVhZF9sb2NrKCkuDQoNClNv
-IF9fdHVuX2RldGFjaCgpIHBhdGggY2Fubm90IGNhdXNlIHRoZSB1c2UgYWZ0ZXIgZnJlZSwgaXNu
-J3QgaXQ/DQoNClJlZ2FyZHMNCg0KPiANCj4gMSkgc3luY2hyb25pemUgdGhyb3VnaCBwb2ludGVy
-cyBpbiB0ZmlsZXMNCj4gDQo+IDIpIG9yIHNtcF9sb2FkX2FjcXVpcmUoKS9zbXBfc3RvcmVfcmVs
-ZWFzZSgpIHRvIHNvbHZlIGl0IGNvbXBsZXRlbHkuDQo+IA0KPiBMZXQgbWUgcG9zdCBhIGNvbXBs
-ZXRlIGZpeC4NCj4gDQo+IFRoYW5rcw0KDQo=
+On 04/27/19 at 06:11pm, Borislav Petkov wrote:
+> On Wed, Apr 24, 2019 at 05:29:43PM +0800, Baoquan He wrote:
+> > From: Kairui Song <kasong@redhat.com>
+> > 
+> > The current code only builds identity mapping for physical memory during
+> > kexec-type loading. The regions reserved by firmware are not covered.
+> > In the next patch, the boot decompressing code of kexec-ed kernel tries
+> 
+> There's no guarantee that when this patch gets applied, the next patch
+> will be the one you mean. So explain what you mean here instead.
+
+All agreed, will update all of them, thanks.
+
+About this place, do you think below change is OK to you?
+
+~~~
+The current code only builds identity mapping for physical memory during
+kexec-type loading. The regions reserved by firmware are not covered.
+In the later code change, the boot decompressing code of kexec-ed kernel
+will try to access EFI systab and ACPI tables, lacking identity mapping for
+them will cause error and reset system to firmware.
+
+Thanks
+Baoquan
+
+> > 
+> > This error doesn't happen on all systems. Because kexec enables gbpages
+> > to build identity mapping, the EFI systab and ACPI tables could have been
+> > covered if they share the same 1 GB area with physical memory. To make
+> > sure, we should map them always.
+> > 
+> > So here add mapping for them.
+> > 
+> > Signed-off-by: Kairui Song <kasong@redhat.com>
+> 
+> When you send someone else's patch, you need to add your SOB. Lemme
+> point you to
+> 
+>   Documentation/process/submitting-patches.rst
+> 
+> again. Please have a deeper look.
+> 
+> > ---
+> >  arch/x86/kernel/machine_kexec_64.c | 86 ++++++++++++++++++++++++++++++
+> >  1 file changed, 86 insertions(+)
+> > 
+> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> > index ceba408ea982..77b40c3e28d7 100644
+> > --- a/arch/x86/kernel/machine_kexec_64.c
+> > +++ b/arch/x86/kernel/machine_kexec_64.c
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/io.h>
+> >  #include <linux/suspend.h>
+> >  #include <linux/vmalloc.h>
+> > +#include <linux/efi.h>
+> >  
+> >  #include <asm/init.h>
+> >  #include <asm/pgtable.h>
+> > @@ -29,6 +30,48 @@
+> >  #include <asm/setup.h>
+> >  #include <asm/set_memory.h>
+> >  
+> > +#ifdef CONFIG_ACPI
+> > +/**
+> 
+> Two stars '**' are kernel-doc style but this comment is implementation
+> detail and is irrelevant for kernel-doc ouput.
+> 
+> > + * Used while adding mapping for ACPI tables.
+> > + * Can be reused when other iomem regions need be mapped
+> > + */
+> > +struct init_pgtable_data {
+> > +	struct x86_mapping_info *info;
+> > +	pgd_t *level4p;
+> > +};
+> > +
+> > +static int mem_region_callback(struct resource *res, void *arg)
+> > +{
+> > +	struct init_pgtable_data *data = arg;
+> > +	unsigned long mstart, mend;
+> > +
+> > +	mstart = res->start;
+> > +	mend = mstart + resource_size(res) - 1;
+> > +
+> > +	return kernel_ident_mapping_init(data->info,
+> > +			data->level4p, mstart, mend);
+> 
+> Do not break that line.
+> 
+> > +}
+> > +
+> > +static int init_acpi_pgtable(struct x86_mapping_info *info,
+> > +				   pgd_t *level4p)
+> 
+> static int
+> map_acpi_tables(...)
+> 
+> > +{
+> > +	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+> > +	struct init_pgtable_data data;
+> > +
+> > +	data.info = info;
+> > +	data.level4p = level4p;
+> > +	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+> > +	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
+> > +				   &data, mem_region_callback);
+> > +}
+> > +#else
+> > +static int init_acpi_pgtable(struct x86_mapping_info *info,
+> > +				   pgd_t *level4p)
+> > +{
+> > +	return 0;
+> > +}
+> > +#endif
+> > +
+> >  #ifdef CONFIG_KEXEC_FILE
+> >  const struct kexec_file_ops * const kexec_file_loaders[] = {
+> >  		&kexec_bzImage64_ops,
+> > @@ -36,6 +79,37 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
+> >  };
+> >  #endif
+> >  
+> > +#ifdef CONFIG_EFI
+> > +static int init_efi_systab_pgtable(struct x86_mapping_info *info,
+> > +				   pgd_t *level4p)
+> 
+> This function's name is wrong. Make it like this:
+> 
+> static int
+> map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
+> {
+> #ifdef CONFIG_EFI
+> 
+> 	...
+> 
+> #endif
+> 
+> 	return 0;
+> }
+> 
+> and drop the #else ifdeffery.
+> 
+> 
+> > +{
+> > +	unsigned long mstart, mend;
+> > +
+> > +	if (!efi_enabled(EFI_BOOT))
+> > +		return 0;
+> > +
+> > +	mstart = (boot_params.efi_info.efi_systab |
+> > +			((u64)boot_params.efi_info.efi_systab_hi<<32));
+> > +
+> > +	if (efi_enabled(EFI_64BIT))
+> > +		mend = mstart + sizeof(efi_system_table_64_t);
+> > +	else
+> > +		mend = mstart + sizeof(efi_system_table_32_t);
+> > +
+> > +	if (mstart)
+> > +		return kernel_ident_mapping_init(info,
+> > +				level4p, mstart, mend);
+> 
+> Flip that logic:
+> 
+> 	if (!mstart)
+> 		return 0;
+> 
+> 	return kernel_ident_mapping_init(info, level4p, mstart, mend);
+> 
+> and let the function stick out.
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +#else
+> > +static inline int init_efi_systab_pgtable(struct x86_mapping_info *info,
+> > +					  pgd_t *level4p)
+> > +{
+> > +	return 0;
+> > +}
+> > +#endif
+> > +
+> >  static void free_transition_pgtable(struct kimage *image)
+> >  {
+> >  	free_page((unsigned long)image->arch.p4d);
+> > @@ -159,6 +233,18 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+> >  			return result;
+> >  	}
+> >  
+> > +	/**
+> 
+> Two stars '**' are kernel-doc style comments above function names but
+> not here.
+> 
+> > +	 * Prepare EFI systab and ACPI table mapping for kexec kernel,
+> > +	 * since they are not covered by pfn_mapped.
+> > +	 */
+> > +	result = init_efi_systab_pgtable(&info, level4p);
+> > +	if (result)
+> > +		return result;
+> > +
+> > +	result = init_acpi_pgtable(&info, level4p);
+> > +	if (result)
+> > +		return result;
+> > +
+> >  	return init_transition_pgtable(image, level4p);
+> >  }
+> >  
+> > -- 
+> > 2.17.2
+> > 
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> Good mailing practices for 400: avoid top-posting and trim the reply.
