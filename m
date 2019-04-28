@@ -2,128 +2,222 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3287C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476A1C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7775C206BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C08206BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfD1DEZ (ORCPT
+        id S1726479AbfD1DGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 23:04:25 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55008 "EHLO huawei.com"
+        Sat, 27 Apr 2019 23:06:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7699 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726460AbfD1DEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 23:04:25 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 53D6ECFF0376589402A0;
-        Sun, 28 Apr 2019 11:04:22 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.20) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Sun, 28 Apr 2019
- 11:04:13 +0800
-Subject: Re: [PATCH v2] ipvs:set sock send/receive buffer correctly
-To:     Julian Anastasov <ja@ssi.bg>
-CC:     <wensong@linux-vs.org>, <horms@verge.net.au>,
-        <pablo@netfilter.org>, <kadlec@blackhole.kfki.hu>, <fw@strlen.de>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <lvs-devel@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
-        <coreteam@netfilter.org>, <linux-kernel@vger.kernel.org>,
-        <eric.dumazet@gmail.com>, Mingfangsen <mingfangsen@huawei.com>,
-        <liujie165@huawei.com>
-References: <7d0dbb46-09aa-0163-bfd9-169594489584@huawei.com>
- <alpine.LFD.2.21.1904212142540.2345@ja.home.ssi.bg>
-From:   linmiaohe <linmiaohe@huawei.com>
-Message-ID: <a4a786c0-85f5-a134-bcd0-ace8edf7762a@huawei.com>
-Date:   Sun, 28 Apr 2019 11:03:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1726112AbfD1DGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 23:06:12 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BF0F49C58D0D2727042C;
+        Sun, 28 Apr 2019 11:06:09 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Sun, 28 Apr 2019
+ 11:06:02 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <jasowang@redhat.com>,
+        <edumazet@google.com>, <brouer@redhat.com>, <mst@redhat.com>,
+        <lirongqing@baidu.com>, <xiyou.wangcong@gmail.com>,
+        <nicolas.dichtel@6wind.com>, <3chas3@gmail.com>,
+        <wangli39@baidu.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] tun: Fix use-after-free in tun_net_xmit
+Date:   Sun, 28 Apr 2019 11:05:39 +0800
+Message-ID: <20190428030539.17776-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
+References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LFD.2.21.1904212142540.2345@ja.home.ssi.bg>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.20]
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: YueHaibing <yuehaibing@huawei.com>
 
+KASAN report this:
 
-On 2019/4/22 2:48, Julian Anastasov wrote:
-> 
-> 	Hello,
-> 
-> On Thu, 18 Apr 2019, linmiaohe wrote:
-> 
->> From: Jie Liu <liujie165@huawei.com>
->>
->> If we set sysctl_wmem_max or sysctl_rmem_max larger than INT_MAX, the
->> send/receive buffer of sock will be an negative value. Same as when
->> the val is larger than INT_MAX/2.
->>
->> Fixes: 1c003b1580e2 ("ipvs: wakeup master thread")
->> Reported-by: Qiang Ning <ningqiang1@huawei.com>
->> Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
->> Signed-off-by: Jie Liu <liujie165@huawei.com>
-> 
-> 	Looks good to me, thanks!
-> 
-> Acked-by: Julian Anastasov <ja@ssi.bg>
-> 
->> ---
->>  net/netfilter/ipvs/ip_vs_sync.c | 20 ++++++++++++++------
->>  1 file changed, 14 insertions(+), 6 deletions(-)
->>
->> diff --git a/net/netfilter/ipvs/ip_vs_sync.c b/net/netfilter/ipvs/ip_vs_sync.c
->> index 2526be6b3d90..760f3364d4a2 100644
->> --- a/net/netfilter/ipvs/ip_vs_sync.c
->> +++ b/net/netfilter/ipvs/ip_vs_sync.c
->> @@ -1278,14 +1278,22 @@ static void set_sock_size(struct sock *sk, int mode, int val)
->>  	/* setsockopt(sock, SOL_SOCKET, SO_RCVBUF, &val, sizeof(val)); */
->>  	lock_sock(sk);
->>  	if (mode) {
->> -		val = clamp_t(int, val, (SOCK_MIN_SNDBUF + 1) / 2,
->> -			      sysctl_wmem_max);
->> -		sk->sk_sndbuf = val * 2;
->> +		val = min_t(u32, val, sysctl_wmem_max);
->> +
->> +		/* Ensure val * 2 fits into an int, to prevent max_t()
->> +		 * from treating it as a negative value.
->> +		 */
->> +		val = min_t(int, val, INT_MAX / 2);
->> +		sk->sk_sndbuf = max_t(int, val * 2, SOCK_MIN_SNDBUF);
->>  		sk->sk_userlocks |= SOCK_SNDBUF_LOCK;
->>  	} else {
->> -		val = clamp_t(int, val, (SOCK_MIN_RCVBUF + 1) / 2,
->> -			      sysctl_rmem_max);
->> -		sk->sk_rcvbuf = val * 2;
->> +		val = min_t(u32, val, sysctl_rmem_max);
->> +
->> +		/* Ensure val * 2 fits into an int, to prevent max_t()
->> +		 * from treating it as a negative value.
->> +		 */
->> +		val = min_t(int, val, INT_MAX / 2);
->> +		sk->sk_rcvbuf = max_t(int, val * 2, SOCK_MIN_RCVBUF);
->>  		sk->sk_userlocks |= SOCK_RCVBUF_LOCK;
->>  	}
->>  	release_sock(sk);
->> -- 
-> 
-> Regards
-> 
-> --
-> Julian Anastasov <ja@ssi.bg>
-> 
-> .
-> 
+BUG: KASAN: use-after-free in tun_net_xmit+0x1670/0x1750 drivers/net/tun.c:1104
+Read of size 8 at addr ffff88836cc26a70 by task swapper/3/0
 
-Hi all,
-    Could you please tell me if there is still any problem?
-Many thanks.
+CPU: 3 PID: 0 Comm: swapper/3 Not tainted 4.19.32 #6
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xca/0x13e lib/dump_stack.c:113
+ print_address_description+0x79/0x330 mm/kasan/report.c:253
+ kasan_report_error mm/kasan/report.c:351 [inline]
+ kasan_report+0x18a/0x2d0 mm/kasan/report.c:409
+ tun_net_xmit+0x1670/0x1750 drivers/net/tun.c:1104
+ __netdev_start_xmit include/linux/netdevice.h:4300 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4309 [inline]
+ xmit_one net/core/dev.c:3243 [inline]
+ dev_hard_start_xmit+0x17c/0x780 net/core/dev.c:3259
+ sch_direct_xmit+0x24f/0x8a0 net/sched/sch_generic.c:327
+ qdisc_restart net/sched/sch_generic.c:390 [inline]
+ __qdisc_run+0x45b/0x1590 net/sched/sch_generic.c:398
+ qdisc_run include/net/pkt_sched.h:120 [inline]
+ __dev_xmit_skb net/core/dev.c:3438 [inline]
+ __dev_queue_xmit+0xa6b/0x2500 net/core/dev.c:3797
+ neigh_output include/net/neighbour.h:501 [inline]
+ ip6_finish_output2+0xa36/0x2290 net/ipv6/ip6_output.c:120
+ ip6_finish_output+0x3e7/0xa20 net/ipv6/ip6_output.c:154
+ NF_HOOK_COND include/linux/netfilter.h:278 [inline]
+ ip6_output+0x1e2/0x720 net/ipv6/ip6_output.c:171
+ dst_output include/net/dst.h:444 [inline]
+ NF_HOOK include/linux/netfilter.h:289 [inline]
+ mld_sendpack+0x740/0xf20 net/ipv6/mcast.c:1683
+ mld_send_cr net/ipv6/mcast.c:1979 [inline]
+ mld_ifc_timer_expire+0x3cc/0x7f0 net/ipv6/mcast.c:2478
+ call_timer_fn+0x1ea/0x6a0 kernel/time/timer.c:1326
+ expire_timers kernel/time/timer.c:1363 [inline]
+ __run_timers kernel/time/timer.c:1682 [inline]
+ run_timer_softirq+0x637/0x1070 kernel/time/timer.c:1695
+ __do_softirq+0x26d/0xabd kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:372 [inline]
+ irq_exit+0x209/0x290 kernel/softirq.c:412
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xf6/0x480 arch/x86/kernel/apic/apic.c:1056
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:864
+ </IRQ>
+RIP: 0010:native_safe_halt+0x2/0x10 arch/x86/include/asm/irqflags.h:58
+Code: 01 f0 0f 82 bc fd ff ff 48 c7 c7 40 25 b1 83 e8 a1 72 03 ff e9 ab fd ff ff 4c 89 e7 e8 37 f5 a7 fe e9 6a ff ff ff 90 90 fb f4 <c3> 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 f4 c3 90 90 90 90 90 90
+RSP: 0018:ffff8883e0f2fd20 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: dffffc0000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8883e0f04f1c
+RBP: 0000000000000003 R08: ffffed107c5dc77b R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff848b96e0
+R13: 0000000000000003 R14: 1ffff1107c1e5fae R15: 0000000000000000
+ arch_safe_halt arch/x86/include/asm/paravirt.h:94 [inline]
+ default_idle+0x24/0x2b0 arch/x86/kernel/process.c:561
+ cpuidle_idle_call kernel/sched/idle.c:153 [inline]
+ do_idle+0x2ca/0x420 kernel/sched/idle.c:262
+ cpu_startup_entry+0xcb/0xe0 kernel/sched/idle.c:368
+ start_secondary+0x421/0x570 arch/x86/kernel/smpboot.c:271
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
+
+Allocated by task 19764:
+ set_track mm/kasan/kasan.c:460 [inline]
+ kasan_kmalloc+0xa0/0xd0 mm/kasan/kasan.c:553
+ __kmalloc+0x11b/0x2d0 mm/slub.c:3750
+ kmalloc include/linux/slab.h:518 [inline]
+ sk_prot_alloc+0xf6/0x290 net/core/sock.c:1469
+ sk_alloc+0x3d/0xc00 net/core/sock.c:1523
+ tun_chr_open+0x80/0x560 drivers/net/tun.c:3204
+ misc_open+0x367/0x4e0 drivers/char/misc.c:141
+ chrdev_open+0x212/0x580 fs/char_dev.c:417
+ do_dentry_open+0x704/0x1050 fs/open.c:777
+ do_last fs/namei.c:3418 [inline]
+ path_openat+0x7ed/0x2ae0 fs/namei.c:3533
+ do_filp_open+0x1aa/0x2b0 fs/namei.c:3564
+ do_sys_open+0x307/0x430 fs/open.c:1069
+ do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 19764:
+ set_track mm/kasan/kasan.c:460 [inline]
+ __kasan_slab_free+0x12e/0x180 mm/kasan/kasan.c:521
+ slab_free_hook mm/slub.c:1370 [inline]
+ slab_free_freelist_hook mm/slub.c:1397 [inline]
+ slab_free mm/slub.c:2952 [inline]
+ kfree+0xeb/0x2f0 mm/slub.c:3905
+ sk_prot_free net/core/sock.c:1506 [inline]
+ __sk_destruct+0x4e6/0x6a0 net/core/sock.c:1588
+ sk_destruct+0x48/0x70 net/core/sock.c:1596
+ __sk_free+0xa9/0x270 net/core/sock.c:1607
+ sk_free+0x2a/0x30 net/core/sock.c:1618
+ sock_put include/net/sock.h:1696 [inline]
+ __tun_detach+0x464/0xf70 drivers/net/tun.c:735
+ tun_detach drivers/net/tun.c:747 [inline]
+ tun_chr_close+0xd8/0x190 drivers/net/tun.c:3241
+ __fput+0x27f/0x7f0 fs/file_table.c:278
+ task_work_run+0x136/0x1b0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:193 [inline]
+ exit_to_usermode_loop+0x1a7/0x1d0 arch/x86/entry/common.c:166
+ prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+ do_syscall_64+0x461/0x580 arch/x86/entry/common.c:293
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88836cc26600
+ which belongs to the cache kmalloc-4096 of size 4096
+The buggy address is located 1136 bytes inside of
+ 4096-byte region [ffff88836cc26600, ffff88836cc27600)
+The buggy address belongs to the page:
+page:ffffea000db30800 count:1 mapcount:0 mapping:ffff8883e280e600 index:0x0 compound_mapcount: 0
+flags: 0x2fffff80008100(slab|head)
+raw: 002fffff80008100 dead000000000100 dead000000000200 ffff8883e280e600
+raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88836cc26900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88836cc26980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88836cc26a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                             ^
+ ffff88836cc26a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88836cc26b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+If tun driver have multiqueues, user close the last queue by
+tun_detach, then tun->tfiles[index] is not cleared. Then a new
+queue may add to the tun, which using rcu_assign_pointer
+tun->tfiles[index] to the new tfile and increase the numqueues.
+However if there send a packet during this time, which picking the last
+queue, it may uses the old tun->tfiles[index], beacause there no
+RCU grace period.
+
+1) tun_chr_close //close the last queue
+    --> __tun_detach  //close the last queue, but tun->tfiles[index] still exist
+
+2) tun_chr_open  //attach a new queue
+    --> tun_attach
+      -->rcu_assign_pointer(tun->tfiles[tun->numqueues], tfile);
+	  //there need a RCU grace period
+
+    -->tun->numqueues++;
+			
+3) tun_net_xmit //a new packet is sending, which pick the last queue
+     -->if (txq >= tun->numqueues)
+	   //above check passed, but tfile still not renew
+     -->if (tfile->socket.sk->sk_filter ...
+	   //use the old tfile,trigger use-after-free
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: c8d68e6be1c3 ("tuntap: multiqueue support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/tun.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index e9ca1c0..3770aba 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -876,6 +876,7 @@ static int tun_attach(struct tun_struct *tun, struct file *file,
+ 	 */
+ 	rcu_assign_pointer(tfile->tun, tun);
+ 	rcu_assign_pointer(tun->tfiles[tun->numqueues], tfile);
++	synchronize_net();
+ 	tun->numqueues++;
+ 	tun_set_real_num_queues(tun);
+ out:
+-- 
+2.7.0
+
 
