@@ -2,69 +2,102 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3471C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 04:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB05C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 05:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F68206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 04:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A51820881
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 05:41:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="InzGZlCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfD1Ei0 (ORCPT
+        id S1726359AbfD1Fkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 00:38:26 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:33944 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfD1Ei0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 00:38:26 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hKbZs-0007cv-JT; Sun, 28 Apr 2019 04:38:13 +0000
-Date:   Sun, 28 Apr 2019 05:38:12 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Ceph fixes for 5.1-rc7
-Message-ID: <20190428043801.GE2217@ZenIV.linux.org.uk>
-References: <20190425174739.27604-1-idryomov@gmail.com>
- <CAHk-=wgPBx9xPWY7obK60=RTnOF3Ln0j9XkhYbekML=Fi3bFXg@mail.gmail.com>
- <342ef35feb1110197108068d10e518742823a210.camel@kernel.org>
- <20190425200941.GW2217@ZenIV.linux.org.uk>
- <86674e79e9f24e81feda75bc3c0dd4215604ffa5.camel@kernel.org>
- <20190426165055.GY2217@ZenIV.linux.org.uk>
- <b175faae4bb98d3379a8642fe5f4e00587c3a734.camel@kernel.org>
+        Sun, 28 Apr 2019 01:40:35 -0400
+Received: from mout.gmx.net ([212.227.15.15]:55599 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbfD1Fke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 01:40:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1556430027;
+        bh=4FSSdG3cyGfUZVzuzJNxiy6EqzS1aYi1gLl02cn+fqI=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=InzGZlCkYrG2YPgikkY9cSoLPCufsc+C0VjMzqTDdTpHKfW2QlXVj+4Czj2SxGkw4
+         0fhOUr8rzKlkYbVgmT57PLodRur5bzOLbi7pnGNm3rqmsQpE1FbznU3aGITqWTivVF
+         kU5ZtyoPg/lgEVsH8iHxooNAb4C0D+z2Y6qcuXeU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([218.18.229.179]) by mail.gmx.com
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MybKp-1gZE1v0mL7-00z0N8; Sun, 28 Apr 2019 07:40:27 +0200
+From:   Chengguang Xu <cgxu519@gmx.com>
+To:     jack@suse.com
+Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@gmx.com>
+Subject: [PATCH] quota: set init_needed flag only when successfully getting dquot
+Date:   Sun, 28 Apr 2019 13:39:21 +0800
+Message-Id: <20190428053921.5984-1-cgxu519@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b175faae4bb98d3379a8642fe5f4e00587c3a734.camel@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:aZAQw7+Ys3uhB5VZD8rZHieigWmpjXU3oczqm8MUmTFRt8BIR+T
+ l0DKFPG+GQ048dBtYqQjU/7NtUlAuGrcTrRNTqKBcSRq0eyLSWPCEJiyEOKvawF0GUXpTdq
+ eSukeYssfa8hWQMsfOuahiFoBTtJ2x4bIm3zJsbfL0d3GumvBy+U+w24+fe4bgtvETgGM2X
+ Z1hgvXu9Hdtc2/mPkugQw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tklfBWhAadg=:MBCb7WtjmvC5EP46i5K0kR
+ Tl88imlRh/TeCoRw0Fk19e/Y2pJRjOWvhLAflcgIqcp3Erst/EcS628qMs0a5FsVgNlFGItoJ
+ ZxFeTTkNWZK3QLXwaeyBYRga2cgQM/rlN65Oa4Jp+mMJhgcwjfqPxqq5HIsiZWAb8kJyCZy3a
+ 6Or1aECRTZpOZZJXWq67PEMnpTOyVZRoerKDtFhEy+VNobKix1rDqUKpXtbrkNjKwR2ml0ixM
+ kSXn5Sg3TzrxNoNcl6uGZm8SF9eNRKewbNpHNEq4mhiidbhmD88a0k2WhJhzAcc4nh9Rp651P
+ s+UxF0Sb63OY0SHKsrjUCKrSPjoe0CbcgO8FyLVqllyxCl/x/WDe0SRM4nF2EzarXCDIsZUPJ
+ roVEc9mXpCnRDIyjsf/sDqH1tPL4blvsAtUoL5kCSZY6GQMqtBc7dRQQv6k2n3uHXhyCdKXDA
+ xabzaY5pcV0FseKkneWDJQb+EXHcBHKx7QhsPwfnZN8QBwUumi4o8yPR9Zz4DGqCuhlNQ1hKP
+ 311z0HgzOYpMLx1ZgJAHwu+5cVpSD53n76ueu5leVeOGJRDjIHqCcRgDxmoUJeB1ZKiIVdy2T
+ pRpd7N1hpLXaXG+Iqkvw+jJwubXm6JDtv7NC9BBRRr/knSLj7xBcn93RHybSGRwn0dMzaQbA0
+ QRiLxVVxcHLtvFvo5amfjY7GrHHuCSgaGkllCr6m5cjgHjesfoJSmCzQFf8Bov/xmYA0PB7XE
+ Q7Zxd4yXsMO+DXmshSDt+pveGrtbVBtwwIq5ZH1csarOYHvVs7Ptc72znjEr9LjpC7yIo+Dpj
+ EmKkdEsY6aBVDDYBCDd8sJ7gDdpgnPXBE8ny5qZ4nWjsqNbNgG83gLdoGGeC+5WEnZGyZaFfg
+ HC+qYp8ZfpUUEhvaIWBAVtuTskGIZ8ChwYTlLYDDKNSYLIoXVaGaGkzxhoqwHI
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 01:30:53PM -0400, Jeff Layton wrote:
+Set init_needed flag only when successfully getting dquot,
+so that we can skip unnecessary subsequent operation.
 
-> > I _probably_ would take allocation out of the loop (e.g. make it
-> > __getname(), called unconditionally) and turned it into the
-> > d_path.c-style read_seqbegin_or_lock()/need_seqretry()/done_seqretry()
-> > loop, so that the first pass would go under rcu_read_lock(), while
-> > the second (if needed) would just hold rename_lock exclusive (without
-> > bumping the refcount).  But that's a matter of (theoretical) livelock
-> > avoidance, not the locking correctness for ->d_name accesses.
-> > 
-> 
-> Yeah, that does sound better. I want to think about this code a bit
+Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
+=2D--
+ fs/quota/dquot.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-FWIW, is there any reason to insist that the pathname is put into the
-beginning of the buffer?  I mean, instead of path + pathlen we might
-return path + offset, with the pathname going from path + offset to
-path + PATH_MAX - 1 inclusive, with path being the thing eventually
-freed.
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index fc20e06c56ba..8d4ce2a2b5c8 100644
+=2D-- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -1449,8 +1449,6 @@ static int __dquot_initialize(struct inode *inode, i=
+nt type)
+ 		if (!sb_has_quota_active(sb, cnt))
+ 			continue;
 
-It's easier to build the string backwards, seeing that we are walking
-from leaf to root...
+-		init_needed =3D 1;
+-
+ 		switch (cnt) {
+ 		case USRQUOTA:
+ 			qid =3D make_kqid_uid(inode->i_uid);
+@@ -1475,6 +1473,9 @@ static int __dquot_initialize(struct inode *inode, i=
+nt type)
+ 			dquot =3D NULL;
+ 		}
+ 		got[cnt] =3D dquot;
++
++		if (got[cnt])
++			init_needed =3D 1;
+ 	}
+
+ 	/* All required i_dquot has been initialized */
+=2D-
+2.20.1
+
