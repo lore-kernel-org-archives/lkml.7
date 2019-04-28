@@ -2,97 +2,109 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC27C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D698AC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530DD20843
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E5020675
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 21:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfD1VIU (ORCPT
+        id S1726521AbfD1VW7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 17:08:20 -0400
-Received: from smtp-out.xnet.cz ([178.217.244.18]:37603 "EHLO smtp-out.xnet.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725982AbfD1VIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 17:08:20 -0400
-Received: from meh.true.cz (meh.true.cz [108.61.167.218])
-        (Authenticated sender: petr@true.cz)
-        by smtp-out.xnet.cz (Postfix) with ESMTPSA id A0BEE3417;
-        Sun, 28 Apr 2019 23:08:16 +0200 (CEST)
-Received: from localhost (meh.true.cz [local])
-        by meh.true.cz (OpenSMTPD) with ESMTPA id 818325c1;
-        Sun, 28 Apr 2019 23:08:15 +0200 (CEST)
-Date:   Sun, 28 Apr 2019 23:08:14 +0200
-From:   Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Alban Bedel <albeu@free.fr>
-Subject: Re: [PATCH v2 3/4] net: macb: Drop nvmem_get_mac_address usage
-Message-ID: <20190428210814.GA346@meh.true.cz>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
- <1556456002-13430-4-git-send-email-ynezz@true.cz>
- <20190428165637.GJ23059@lunn.ch>
+        Sun, 28 Apr 2019 17:22:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46358 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725982AbfD1VW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 17:22:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B2C0EADF7;
+        Sun, 28 Apr 2019 21:22:56 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/4] x86/thread_info: introduce ->ftrace_int3_stack member
+References: <20190427100639.15074-1-nstange@suse.de>
+        <20190427100639.15074-2-nstange@suse.de>
+        <F6268634-96D3-4267-B739-6D375FAB26A8@amacapital.net>
+        <20190428135143.09d35bb6@oasis.local.home>
+Date:   Sun, 28 Apr 2019 23:22:54 +0200
+In-Reply-To: <20190428135143.09d35bb6@oasis.local.home> (Steven Rostedt's
+        message of "Sun, 28 Apr 2019 13:51:43 -0400")
+Message-ID: <87k1fdygcx.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190428165637.GJ23059@lunn.ch>
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew Lunn <andrew@lunn.ch> [2019-04-28 18:56:37]:
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-Hi Andrew,
-
-> On Sun, Apr 28, 2019 at 02:53:21PM +0200, Petr Štetiar wrote:
-> > of_get_mac_address now uses NVMEM under the hood, so it's not necessary
-> > to call it manually anymore.
-> > 
-> > Signed-off-by: Petr Štetiar <ynezz@true.cz>
-> > ---
-> >  drivers/net/ethernet/cadence/macb_main.c | 12 +++---------
-> >  1 file changed, 3 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> > index 3da2795..1b98bc8 100644
-> > --- a/drivers/net/ethernet/cadence/macb_main.c
-> > +++ b/drivers/net/ethernet/cadence/macb_main.c
-> > @@ -4172,16 +4172,10 @@ static int macb_probe(struct platform_device *pdev)
-> >  		bp->rx_intr_mask |= MACB_BIT(RXUBR);
-> >  
-> >  	mac = of_get_mac_address(np);
-> > -	if (mac) {
-> > +	if (mac)
-> >  		ether_addr_copy(bp->dev->dev_addr, mac);
-> > -	} else {
-> > -		err = nvmem_get_mac_address(&pdev->dev, bp->dev->dev_addr);
-> > -		if (err) {
-> > -			if (err == -EPROBE_DEFER)
+> On Sun, 28 Apr 2019 10:41:10 -0700
+> Andy Lutomirski <luto@amacapital.net> wrote:
 >
-> The EPRODE_DEFER is interesting here. your change to
-> of_get_mac_address() does not seem to handle that case. It probably
-> should. We don't want it to fail and end up with a random MAC
-> addresses etc, because the NVMEM has not probed yet.
+>
+>> > Note that at any given point
+>> > in time, there can be at most four such call insn emulations pending:
+>> > namely at most one per "process", "irq", "softirq" and "nmi" context.
+>> >   
+>> 
+>> That’s quite an assumption. I think your list should also contain
+>> exception, exceptions nested inside that exception, and machine
+>> check, at the very least.  I’m also wondering why irq and softirq are
+>> treated separately.
 
-so if I understand this correctly, it probably means, that this approach with
-modified of_get_mac_address is dead end as current of_get_mac_address users
-don't expect and handle possible -EPROBE_DEFER error, so I would need to
-change all the current users, which is nonsense.
+You're right, I missed the machine check case.
 
--- ynezz
+
+> 4 has usually been the context count we choose. But I guess in theory,
+> if we get exceptions then I could potentially be more.
+
+After having seen the static_call discussion, I'm in no way defending
+this limited approach here, but out of curiosity: can the code between
+the push onto the stack from ftrace_int3_handler() and the subsequent
+pop from the stub actually trigger an (non-#MC) exception? There's an
+iret inbetween, but that can fault only when returning to user space,
+correct?
+
+
+> As for irq vs softirq, an interrupt can preempt a softirq. Interrupts
+> are enabled while softirqs are running. When sofirqs run, softirqs are
+> disabled to prevent nested softirqs. But interrupts are enabled again,
+> and another interrupt may come in while a softirq is executing.
+>
+
+Thanks,
+
+Nicolai
+
+
+-- 
+SUSE Linux GmbH, GF: Felix Imendörffer, Jane Smithard, Graham Norton,
+HRB 21284 (AG Nürnberg)
