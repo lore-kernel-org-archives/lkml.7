@@ -2,141 +2,93 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861CDC43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BBFC43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576CA2147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED93A20881
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:11:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="JZ7uyOa7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfD1HJy (ORCPT
+        id S1726558AbfD1HL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 03:09:54 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:38543 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfD1HJx (ORCPT
+        Sun, 28 Apr 2019 03:11:57 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:40222 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfD1HL5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 03:09:53 -0400
-Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hKdwK-0006lx-VI; Sun, 28 Apr 2019 09:09:33 +0200
-Date:   Sun, 28 Apr 2019 09:09:24 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
-cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v8 12/15] kvm/vmx: Emulate MSR TEST_CTL
-In-Reply-To: <7395908840acfbf806146f5f20d3509342771a19.camel@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1904280903520.1757@nanos.tec.linutronix.de>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>  <1556134382-58814-13-git-send-email-fenghua.yu@intel.com>  <alpine.DEB.2.21.1904250931020.1762@nanos.tec.linutronix.de> <7395908840acfbf806146f5f20d3509342771a19.camel@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 28 Apr 2019 03:11:57 -0400
+Received: by mail-vs1-f68.google.com with SMTP id r12so3310234vsp.7
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 00:11:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0/S6B6NWgBdbisjBXWpRt6zfXJMqlxYauy0OrhI+WGI=;
+        b=JZ7uyOa7qj8XncuBu2COdGhfC4Yv3Mnc3/GPLsqtGxe1PdKdB4wRy8YLQdvN1V1SRM
+         88l/dqEearUqRDRfsN4c2z7uR9wwhlgGzssINQSME7c0ZhDm9khr/gSKNDnU3llmGZCK
+         Q7vBHD/VBO5vq4IXDnPCtlOYuGuVmGqZhXCrGgIpc9l6ov/r9ztZrziXyKcUEoejao21
+         eC3QS5zgykOPh7UcmFw3imiHWW7qXfnhbgZYxMCiHx+oHIVKQ9cyA1iHLyBpBsoKoRLZ
+         tsaojAzUozJ4FugbHm8/X1uqyS8vPxR5EATRsYdvLg9hoUuC9O6m14FKBwCDtLh5rZEH
+         FWEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0/S6B6NWgBdbisjBXWpRt6zfXJMqlxYauy0OrhI+WGI=;
+        b=Kjy6F8wzcGgSQlgt/UnqOeZ1yWBUP9PMEuiTKJTKzUA84SOoXy96TRas6kBMRKrm+F
+         ztHrUkyrFeAPEPLcIgxNVnr68zLxchPPjq9hCZHJ72hWz2UA/ZNTlZuqYxq7bA4w5tCY
+         w3qZQYqd0JrBey942R+Wx42229EkoN9CfqQQon8d+PNVCb9Ccc+fwwuNgp5VLe9QL0NC
+         pXCUqS+3ClwWQ+3IyJ+zAWNhQzS4Z5Eibm+MGrjOk4tsPlqEP9zVZJWc3tTME+lzfDhh
+         Hb4HpMI48NVlK8a/OyE/yI8+DvzVNSG76OTKI2LsOg1B7rIWxR47P1Nh5yJ4E1MqKn+t
+         YCFw==
+X-Gm-Message-State: APjAAAXCmFPsLEEExj/nSMVfNQ7e0623ggR9X0TObBgKG6FeFyP/Lb7f
+        XNemVV3uhIX//mzoYBew9yMqNQO/XYONLYgEpz49/A==
+X-Google-Smtp-Source: APXvYqzO1gESEeXWppboA4chvYTcglgRF5LNuAbKekOMh6nWsT4upCekcBujfd2WDRfxftVcxeeW73pXSGj66el3zns=
+X-Received: by 2002:a67:6f07:: with SMTP id k7mr3886602vsc.117.1556435516192;
+ Sun, 28 Apr 2019 00:11:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190426131835.27258-1-colin.king@canonical.com>
+In-Reply-To: <20190426131835.27258-1-colin.king@canonical.com>
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+Date:   Sun, 28 Apr 2019 10:11:44 +0300
+Message-ID: <CAOtvUMdHx4SK6CceCxfHOXic=bymA13HZMviuto98GysDwasMw@mail.gmail.com>
+Subject: Re: [PATCH] crypto: ccree: fix spelling mistake "protedcted" -> "protected"
+To:     Colin King <colin.king@canonical.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 27 Apr 2019, Xiaoyao Li wrote:
-> On Thu, 2019-04-25 at 09:42 +0200, Thomas Gleixner wrote:
-> > On Wed, 24 Apr 2019, Fenghua Yu wrote:
-> > >  
-> > > +static void atomic_switch_msr_test_ctl(struct vcpu_vmx *vmx)
-> > > +{
-> > > +	u64 host_msr_test_ctl;
-> > > +
-> > > +	if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
-> > > +		return;
-> > 
-> > Again: MSR_TST_CTL is not only about LOCK_DETECT. Check the control mask.
-> > 
-> > > +	host_msr_test_ctl = this_cpu_read(msr_test_ctl_cache);
-> > > +
-> > > +	if (host_msr_test_ctl == vmx->msr_test_ctl) {
-> > 
-> > This still assumes that the only bit which can be set in the MSR is that
-> > lock detect bit.
-> > 
-> > > +		clear_atomic_switch_msr(vmx, MSR_TEST_CTL);
-> > > +	} else {
-> > > +		add_atomic_switch_msr(vmx, MSR_TEST_CTL, vmx->msr_test_ctl,
-> > > +				      host_msr_test_ctl, false);
-> > 
-> > So what happens here is that if any other bit is set on the host, VMENTER
-> > will happily clear it.
-> 
-> There are two bits of MSR TEST_CTL defined in Intel SDM now, which is bit
-> 29 and bit 31. Bit 31 is not used in kernel, and here we only need to
-> switch bit 29 between host and guest.  So should I also change the name
-> to atomic_switch_split_lock_detect() to indicate that we only switch bit
-> 29?
+On Fri, Apr 26, 2019 at 4:18 PM Colin King <colin.king@canonical.com> wrote=
+:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> There is a spelling mistake in a dev_dbg message, fix it.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-No. Just because we ony use the split lock bit now, there is no
-jusification to name everything splitlock. This is going to have renamed
-when yet another bit is added in the future. The MSR is exposed to the
-guest and the restriction of bits happens to be splitlock today.
+Acked-By: Gilad Ben-Yossef <gilad@benyossef.com>
 
-> >      guest = (host & ~vmx->test_ctl_mask) | vmx->test_ctl;
-> > 
-> > That preserves any bits which are not exposed to the guest.
-> > 
-> > But the way more interesting question is why are you exposing the MSR and
-> > the bit to the guest at all if the host has split lock detection enabled?
-> > 
-> > That does not make any sense as you basically allow the guest to switch it
-> > off and then launch a slowdown attack. If the host has it enabled, then a
-> > guest has to be treated like any other process and the #AC trap has to be
-> > caught by the hypervisor which then kills the guest.
-> > 
-> > Only if the host has split lock detection disabled, then you can expose it
-> > and allow the guest to turn it on and handle it on its own.
-> 
-> Indeed, if we use split lock detection for protection purpose, when host
-> has it enabled we should directly pass it to guest and forbid guest from
-> disabling it.  And only when host disables split lock detection, we can
-> expose it and allow the guest to turn it on.
-?
-> If it is used for protection purpose, then it should follow what you said and
-> this feature needs to be disabled by default. Because there are split lock
-> issues in old/current kernels and BIOS. That will cause the existing guest
-> booting failure and killed due to those split lock.
+Thanks!
 
-Rightfully so.
+Gilad
 
-> If it is only used for debug purpose, I think it might be OK to enable this
-> feature by default and make it indepedent between host and guest?
 
-No. It does not make sense.
+--
+Gilad Ben-Yossef
+Chief Coffee Drinker
 
-> So I think how to handle this feature between host and guest depends on how we
-> use it? Once you give me a decision, I will follow it in next version.
-
-As I said: The host kernel makes the decision.
-
-If the host kernel has it enabled then the guest is not allowed to change
-it. If the guest triggers an #AC it will be killed.
-
-If the host kernel has it disabled then the guest can enable it for it's
-own purposes.
-
-Thanks,
-
-	tglx
+values of =CE=B2 will give rise to dom!
