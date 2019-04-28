@@ -2,90 +2,136 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BF0C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 06:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C42DC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 06:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AA62147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 06:09:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gPOXauLn"
+	by mail.kernel.org (Postfix) with ESMTP id 1FFEB206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 06:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfD1GJH (ORCPT
+        id S1726479AbfD1GJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 02:09:07 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:50905 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726023AbfD1GJG (ORCPT
+        Sun, 28 Apr 2019 02:09:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59054 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726023AbfD1GJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 02:09:06 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 753A621FF3;
-        Sun, 28 Apr 2019 02:09:03 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Sun, 28 Apr 2019 02:09:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=6wTH00IEcec2nG40s34dkAdJONtpHNStLOW3P3TBn
-        8g=; b=gPOXauLn3oavCa/+fi1mRLO3lBkOSJOxjAIjBVPq1SXu4Ma/pqCufZ0Yh
-        lkD6VrSfaL+8phzGc/KpgoZ2c4fmukeJT3f2gE2hoAgraB69ky3vF3z00dsTgRsv
-        EYqNp2nYv3yorE1n4FXWr7x4CX9lYIzG+kHpRa8E2WHYgq4cJj+SkJTGsoYxemVp
-        ZMLjSuAaHhHLjJ0+DaHgQdQwEbnNJILvSUsnqPoHiHAYdX6RYy7NOe8EewPF+5e+
-        025PXeYmwnUlx+84e7Q6RrNL+OBYA2qg2S39uMMBlvaO9CWpmRUIzigH6oH2xuqO
-        UUcHwtqMMKZlYzVQlDV4UVw8uYLkg==
-X-ME-Sender: <xms:fkPFXIx7NW-XzKazSd1QLI64oaA1yjeaxy9BlGm0WBA4e_7C8Fa4GQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrheelgddutdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomheprfgvkhhk
-    rgcugfhnsggvrhhguceophgvnhgsvghrghesihhkihdrfhhiqeenucfkphepkeelrddvje
-    drfeefrddujeefnecurfgrrhgrmhepmhgrihhlfhhrohhmpehpvghnsggvrhhgsehikhhi
-    rdhfihenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:fkPFXCQCaYwTgbW5nvDmuzfzyW6zd0XMhFeVbsdEwdZYZX0yQ1HqTg>
-    <xmx:fkPFXH83G4alTfK5pCpAxFrD6JAv9fQsalCluIoc2NPE7ZsZtK-1ew>
-    <xmx:fkPFXBoEYQACrpvjPcmdhNirX7B10AaxCymvGBVyRUaoAmuLeTai0Q>
-    <xmx:f0PFXL71nyLUzjHpQdx5tv-cvxZYOnUeac5Sp7Qpi8K8pFr2Z0ZJXQ>
-Received: from Pekka-MacBook.local (89-27-33-173.bb.dnainternet.fi [89.27.33.173])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B477C103DC;
-        Sun, 28 Apr 2019 02:08:59 -0400 (EDT)
-Subject: Re: [PATCH] mm: Fix kobject memleak in SLUB
-To:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190427234000.32749-1-tobin@kernel.org>
-From:   Pekka Enberg <penberg@iki.fi>
-Message-ID: <82b2272a-1d42-81e4-f033-8483d47bde22@iki.fi>
-Date:   Sun, 28 Apr 2019 09:08:56 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Sun, 28 Apr 2019 02:09:39 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3S69aVC109215
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 02:09:38 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s54mrtqrd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 02:09:37 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Sun, 28 Apr 2019 07:08:36 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 28 Apr 2019 07:08:31 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3S68UHQ51380324
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 28 Apr 2019 06:08:30 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A195AE053;
+        Sun, 28 Apr 2019 06:08:30 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D3BBDAE045;
+        Sun, 28 Apr 2019 06:08:28 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sun, 28 Apr 2019 06:08:28 +0000 (GMT)
+Date:   Sun, 28 Apr 2019 09:08:27 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Subject: Re: [RFC PATCH 0/7] x86: introduce system calls addess space
+ isolation
+References: <1556228754-12996-1-git-send-email-rppt@linux.ibm.com>
+ <1c12e195-1286-0136-eae5-4b392d9fe4c0@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190427234000.32749-1-tobin@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c12e195-1286-0136-eae5-4b392d9fe4c0@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19042806-0012-0000-0000-000003160643
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042806-0013-0000-0000-0000214E67F8
+Message-Id: <20190428060826.GF14896@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-28_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=676 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904280044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 28/04/2019 2.40, Tobin C. Harding wrote:
-> Currently error return from kobject_init_and_add() is not followed by a
-> call to kobject_put().  This means there is a memory leak.
+On Fri, Apr 26, 2019 at 07:41:09AM -0700, Dave Hansen wrote:
+> On 4/25/19 2:45 PM, Mike Rapoport wrote:
+> > The idea behind the prevention is that if we fault in pages in the
+> > execution path, we can compare target address against the kernel symbol
+> > table.  So if we're in a function, we allow local jumps (and simply falling
+> > of the end of a page) but if we're jumping to a new function it must be to
+> > an external label in the symbol table.  Since ROP attacks are all about
+> > jumping to gadget code which is effectively in the middle of real
+> > functions, the jumps they induce are to code that doesn't have an external
+> > symbol, so it should mostly detect when they happen.
 > 
-> Add call to kobject_put() in error path of kobject_init_and_add().
+> This turns the problem from: "attackers can leverage any data/code that
+> the kernel has mapped (anything)" to "attackers can leverage any
+> code/data that the current syscall has faulted in".
 > 
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> That seems like a pretty restrictive change.
+> 
+> > At this time we are not suggesting any API that will enable the system
+> > calls isolation. Because of the overhead required for this, it should only
+> > be activated for processes or containers we know should be untrusted. We
+> > still have no actual numbers, but surely forcing page faults during system
+> > call execution will not come for free.
+> 
+> What's the minimum number of faults that have to occur to handle the
+> simplest dummy fault?
+ 
+For the current implementation it's 3.
 
-Reviewed-by: Pekka Enberg <penberg@kernel.org>
+Here is the example trace of #PF's produced by a dummy get_answer
+system call from patch 7:
+
+[   12.012906] #PF: DATA: do_syscall_64+0x26b/0x4c0 fault at 0xffffffff82000bb8
+[   12.012918] #PF: INSN: __x86_indirect_thunk_rax+0x0/0x20 fault at __x86_indirect_thunk_rax+0x0/0x20
+[   12.012929] #PF: INSN: __x64_sys_get_answer+0x0/0x10 fault at__x64_sys_get_answer+0x0/0x10
+
+For the sci_write_dmesg syscall that does copy_from_user() and printk() its
+between 35 and 60 depending on console and /proc/sys/kernel/printk values.
+
+This includes both code and data accesses. The data page faults can be
+avoided if we pre-populate SCI page tables with data.
+
+-- 
+Sincerely yours,
+Mike.
+
