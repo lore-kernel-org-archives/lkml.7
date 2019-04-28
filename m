@@ -2,43 +2,46 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B75C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 08:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A02EC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 08:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFA22075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 08:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F762075D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 08:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfD1IRN (ORCPT
+        id S1726617AbfD1ISq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 04:17:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7700 "EHLO huawei.com"
+        Sun, 28 Apr 2019 04:18:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7701 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726369AbfD1IRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 04:17:12 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0811F4D38392B69CEF56;
-        Sun, 28 Apr 2019 16:17:11 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sun, 28 Apr 2019
- 16:17:06 +0800
-Subject: Re: [PATCH] configfs: Fix possible use-after-free in
- configfs_register_group
-To:     <hch@lst.de>, <jlbec@evilplan.org>, <daniel.baluta@intel.com>
-References: <20190416064408.34512-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <mchristi@redhat.com>
+        id S1726369AbfD1ISp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 04:18:45 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E687BA3A4E4A8FE444F7;
+        Sun, 28 Apr 2019 16:18:43 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sun, 28 Apr 2019
+ 16:18:39 +0800
+Subject: Re: [PATCH -next] crypto: ccree - Make cc_sec_disable static
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+References: <20190426164313.32308-1-yuehaibing@huawei.com>
+ <CAOtvUMfO1jvU6_Y7=otKQt0t9o_At0QBg7eqwV4SbeD9srbAqg@mail.gmail.com>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
 From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <95b5b784-4397-8737-b904-05042c1c5d46@huawei.com>
-Date:   Sun, 28 Apr 2019 16:17:06 +0800
+Message-ID: <5802f801-2817-5964-1657-7e1bb70cb4fa@huawei.com>
+Date:   Sun, 28 Apr 2019 16:18:38 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
  Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190416064408.34512-1-yuehaibing@huawei.com>
+In-Reply-To: <CAOtvUMfO1jvU6_Y7=otKQt0t9o_At0QBg7eqwV4SbeD9srbAqg@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.177.31.96]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,135 +49,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Friendly ping...
+On 2019/4/28 15:56, Gilad Ben-Yossef wrote:
+> On Fri, Apr 26, 2019 at 7:43 PM Yue Haibing <yuehaibing@huawei.com> wrote:
+>>
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> Fix sparse warning:
+>>
+>> drivers/crypto/ccree/cc_driver.c:37:6: warning:
+>>  symbol 'cc_sec_disable' was not declared. Should it be static?
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> Thank you!
+> 
+> The kbuit test robot already sent the same fix, which I acked.
+> It's hard competing with the bots... :-)
 
-On 2019/4/16 14:44, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
+Indeed, I did not find a fix before sending this.
+
 > 
-> Syzkaller report this:
+> Gilad
 > 
-> BUG: KASAN: use-after-free in __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
-> Read of size 8 at addr ffff8881ef61ae20 by task syz-executor.0/5996
 > 
-> CPU: 1 PID: 5996 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0xa9/0x10e lib/dump_stack.c:113
->  print_address_description+0x65/0x270 mm/kasan/report.c:187
->  kasan_report+0x149/0x18d mm/kasan/report.c:317
->  __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
->  __list_add include/linux/list.h:60 [inline]
->  list_add_tail include/linux/list.h:93 [inline]
->  link_obj+0xb0/0x190 fs/configfs/dir.c:759
->  link_group+0x1c/0x130 fs/configfs/dir.c:784
->  configfs_register_group+0x56/0x1e0 fs/configfs/dir.c:1751
->  configfs_register_default_group+0x72/0xc0 fs/configfs/dir.c:1834
->  ? 0xffffffffc1be0000
->  iio_sw_trigger_init+0x23/0x1000 [industrialio_sw_trigger]
->  do_one_initcall+0xbc/0x47d init/main.c:887
->  do_init_module+0x1b5/0x547 kernel/module.c:3456
->  load_module+0x6405/0x8c10 kernel/module.c:3804
->  __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
->  do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x462e99
-> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f494ecbcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-> RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-> RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-> RBP: 00007f494ecbcc70 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f494ecbd6bc
-> R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
 > 
-> Allocated by task 5987:
->  set_track mm/kasan/common.c:87 [inline]
->  __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
->  kmalloc include/linux/slab.h:545 [inline]
->  kzalloc include/linux/slab.h:740 [inline]
->  configfs_register_default_group+0x4c/0xc0 fs/configfs/dir.c:1829
->  0xffffffffc1bd0023
->  do_one_initcall+0xbc/0x47d init/main.c:887
->  do_init_module+0x1b5/0x547 kernel/module.c:3456
->  load_module+0x6405/0x8c10 kernel/module.c:3804
->  __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
->  do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> --
+> Gilad Ben-Yossef
+> Chief Coffee Drinker
 > 
-> Freed by task 5987:
->  set_track mm/kasan/common.c:87 [inline]
->  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
->  slab_free_hook mm/slub.c:1429 [inline]
->  slab_free_freelist_hook mm/slub.c:1456 [inline]
->  slab_free mm/slub.c:3003 [inline]
->  kfree+0xe1/0x270 mm/slub.c:3955
->  configfs_register_default_group+0x9a/0xc0 fs/configfs/dir.c:1836
->  0xffffffffc1bd0023
->  do_one_initcall+0xbc/0x47d init/main.c:887
->  do_init_module+0x1b5/0x547 kernel/module.c:3456
->  load_module+0x6405/0x8c10 kernel/module.c:3804
->  __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
->  do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> values of β will give rise to dom!
 > 
-> The buggy address belongs to the object at ffff8881ef61ae00
->  which belongs to the cache kmalloc-192 of size 192
-> The buggy address is located 32 bytes inside of
->  192-byte region [ffff8881ef61ae00, ffff8881ef61aec0)
-> The buggy address belongs to the page:
-> page:ffffea0007bd8680 count:1 mapcount:0 mapping:ffff8881f6c03000 index:0xffff8881ef61a700
-> flags: 0x2fffc0000000200(slab)
-> raw: 02fffc0000000200 ffffea0007ca4740 0000000500000005 ffff8881f6c03000
-> raw: ffff8881ef61a700 000000008010000c 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
-> 
-> Memory state around the buggy address:
->  ffff8881ef61ad00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->  ffff8881ef61ad80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
->> ffff8881ef61ae00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                                ^
->  ffff8881ef61ae80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->  ffff8881ef61af00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> 
-> In configfs_register_group(), if create_default_group() failed, we
-> forgot to unlink group. It will left a invalid item in parent list,
-> which may trigger a use-after-free issue.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 5cf6a51e6062 ("configfs: allow dynamic group creation")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  fs/configfs/dir.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-> index 591e82b..5e7932d 100644
-> --- a/fs/configfs/dir.c
-> +++ b/fs/configfs/dir.c
-> @@ -1757,12 +1757,19 @@ int configfs_register_group(struct config_group *parent_group,
->  
->  	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
->  	ret = create_default_group(parent_group, group);
-> -	if (!ret) {
-> -		spin_lock(&configfs_dirent_lock);
-> -		configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
-> -		spin_unlock(&configfs_dirent_lock);
-> -	}
-> +	if (ret)
-> +		goto err_out;
-> +
-> +	spin_lock(&configfs_dirent_lock);
-> +	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
-> +	spin_unlock(&configfs_dirent_lock);
-> +	inode_unlock(d_inode(parent));
-> +	return 0;
-> +err_out:
->  	inode_unlock(d_inode(parent));
-> +	mutex_lock(&subsys->su_mutex);
-> +	unlink_group(group);
-> +	mutex_unlock(&subsys->su_mutex);
->  	return ret;
->  }
->  EXPORT_SYMBOL(configfs_register_group);
 > 
 
