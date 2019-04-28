@@ -2,73 +2,100 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEFDC43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3E1C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7C9206BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="da824IGS"
+	by mail.kernel.org (Postfix) with ESMTP id 23C1120693
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:00:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556470817;
+	bh=HAEghlCzUCCIZHy1LEKj6xAj/6M1XR1i1cZSzi2ej/I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Mfj++qKqOrynnpk930osqL6fbaA27aYMdUaIujoyCJlDCVJC7JwtF4SVeKWFAS9+i
+	 00md0VFl0AP78K0Tz9YbNcy553gSelh14djOJjV+toACq274y17a9iVSU/nhaC6wBk
+	 HdunLhCDpdwvju7uqS+K6N7AdtkxJfTsE6AJUTuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfD1Q60 (ORCPT
+        id S1727003AbfD1RAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 12:58:26 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:47409 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfD1Q60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 12:58:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=+6VlPhDXiQ2BtKm+0gnC1AK3tV9c7Vb/BErSy8nZf3U=; b=da824IGScCTMFudM8YyPl97TD0
-        cva8ZhvC+3mqkVdd0cmjIIAs1vGqbdzFpwET6BnGd3eOFyJEXWdT86jWD5mR40WxwL7s0GpO2mWlw
-        dkGGFf5u4qm7eM0PMSdkZlzUFzfPtBxAySfFLa7EHbO/y7oivmsI7Czr71Gn8MGRzd3E=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hKn83-00010T-61; Sun, 28 Apr 2019 18:58:15 +0200
-Date:   Sun, 28 Apr 2019 18:58:15 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Alban Bedel <albeu@free.fr>, linux-omap@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] net: davinci_emac: Drop nvmem_get_mac_address
- usage
-Message-ID: <20190428165815.GK23059@lunn.ch>
-References: <1556456002-13430-1-git-send-email-ynezz@true.cz>
- <1556456002-13430-5-git-send-email-ynezz@true.cz>
+        Sun, 28 Apr 2019 13:00:15 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46226 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfD1RAP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 13:00:15 -0400
+Received: by mail-lf1-f65.google.com with SMTP id k18so5984271lfj.13
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 10:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v9n7p8AKaL1Ow84inuud1G/Lxyp2SJrfAsXQfEX1Lsc=;
+        b=J1onYtxnImkD1yCPEBS9gRLDZmeabFG1KQ2zd//GuygjdySPtdijgil8yhuvmqIlBz
+         vhB00quVwkLwhxbBRedTIz1L2NtTHT2V0SppiKXa/7ZkwlU43rJfzA+Rf1pRriD/B8lt
+         D9OMVrZFGZiWAvrgv2Lt6616X3D9jvjZDhuZU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v9n7p8AKaL1Ow84inuud1G/Lxyp2SJrfAsXQfEX1Lsc=;
+        b=LfJOyD2aa1okgcFYrraLIfwbskWCZ5TjdvahNXmRHqEixL7TpnrwfxhKhOv1v+xZZV
+         m8zWtoY+uDvoNIpPMlp/I6RUF/HUwFOw4diMSyh7h4sMAvTIf3r7erNNulsGx6UywZs3
+         yHYfDBCFNzrtNtvVCMV55idD/EUKuNcZZZ/HNTzLsuFRCBZehmDiTp8j0BCm5krrRiKX
+         T8M1I5i2FHhypYdM96Nkx0ZmIo1N58BSFvhbJJSkYqgT0K2U5DVkvn/xaf7SslKqV9Bj
+         6Vt/jTiL+S3EPl5S/PwBDZUWPOfMdw2M8nzlybu6XuEduRwxNZER4rn/mxJwOkD7cyyk
+         92RA==
+X-Gm-Message-State: APjAAAVJtcgORcGzEQWhhkCpZvNprZm/TJzdN5/K4tMOufP40xxRgsWP
+        fY+O1a4N1rF8Ak0c0jKzoy1nbTPd+hE=
+X-Google-Smtp-Source: APXvYqzNnS58pXG3Y1BI1eHy1VrWnZUbfsdRTnru4yul2x4eyXU2jqCmJATOD1lNmX2itms83iKIaA==
+X-Received: by 2002:a19:1949:: with SMTP id 70mr22020469lfz.103.1556470813235;
+        Sun, 28 Apr 2019 10:00:13 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id g6sm6432343lja.64.2019.04.28.10.00.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Apr 2019 10:00:12 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id s7so4517717ljh.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 10:00:12 -0700 (PDT)
+X-Received: by 2002:a2e:8090:: with SMTP id i16mr4985655ljg.135.1556470811917;
+ Sun, 28 Apr 2019 10:00:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556456002-13430-5-git-send-email-ynezz@true.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190428115207.GA11924@ziepe.ca>
+In-Reply-To: <20190428115207.GA11924@ziepe.ca>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 28 Apr 2019 09:59:56 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj4ay=jy6wuN4d9p9v+O32i0aH9SMfu39VKP-Ai7hKp=g@mail.gmail.com>
+Message-ID: <CAHk-=wj4ay=jy6wuN4d9p9v+O32i0aH9SMfu39VKP-Ai7hKp=g@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 02:53:22PM +0200, Petr Štetiar wrote:
-> of_get_mac_address now uses NVMEM under the hood, so it's not necessary
-> to call it manually anymore.
-> 
-> Signed-off-by: Petr Štetiar <ynezz@true.cz>
+On Sun, Apr 28, 2019 at 4:52 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> Nothing particularly special here. There is a small merge conflict
+> with Adrea's mm_still_valid patches which is resolved as below:
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+I still don't understand *why* you play the crazy VM games to begin with.
 
-    Andrew
+What's wrong with just returning SIGBUS? Why does that
+rdma_umap_fault() not just look like this one-liner:
+
+        return VM_FAULT_SIGBUS;
+
+without the crazy parts? Nobody ever explained why you'd want to have
+that silly "let's turn it into a bogus anonymous mapping".
+
+I've pulled this, but why do the rdma and SCSI people always do these
+strange and pointless things?
+
+                  Linus
