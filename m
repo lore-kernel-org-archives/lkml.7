@@ -2,128 +2,162 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BF7C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7455EC43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC1720656
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:46:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="mH9E85Li";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zpbNGjTU"
+	by mail.kernel.org (Postfix) with ESMTP id 4DB6C2067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfD1Wql (ORCPT
+        id S1726758AbfD1WrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 18:46:41 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:32889 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726393AbfD1Wql (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 18:46:41 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id D96CD278C0;
-        Sun, 28 Apr 2019 18:46:39 -0400 (EDT)
-Received: from imap37 ([10.202.2.87])
-  by compute5.internal (MEProxy); Sun, 28 Apr 2019 18:46:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=jZvoa2zLLEWsbED5dtwYLVLnjZOOrNP
-        58oC6tro8DQo=; b=mH9E85LiD9viB1S5DcGp+vGyOVnI6UAZMYA/x5WKOTHMBFE
-        4HHccvi45dgH7aO0mVmqOLnVQQMuDL0EbVgEX5pcWrrjVNyVJRG86Cx0eL8+dZeW
-        +FCMJT3rhLlxL3mRoND4XK44cz4DmMGW3dw4rd6NrJs5q8VS/sYaUU3JMYntQcBW
-        2rGVVMF8O3knnfDVmSNv1kUpMDuVrj2L2xkOYZ435RL47jvNEQOX82b7NiyINvWL
-        9oB9/C8/OMF0xxyG2NvSdyUkgN9LJXbFAxbkncGj8CPSvN53r7s1snDZ9iTziFcb
-        gUMWKrsvkwh+I+dfdKA+3YbDoJB+z8D5O+md3fw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=jZvoa2
-        zLLEWsbED5dtwYLVLnjZOOrNP58oC6tro8DQo=; b=zpbNGjTUkexEUaWMubC9rw
-        +4e74+l/RW2XA/9a0C+840QFjADHgeqixqF2xrZUKCOc97Ky8DXqr65tSBznHUdA
-        qksko6YzQlV4GIxLFg4JBTfzjgPQRqqi+LWGNbqRmZT8FJxOMJlaQ+Vfv8pgidya
-        lEBXSUN2Vapnxe5+kspxICqbJNQppAml75Fn0hNpLSdM4mG1MVC91Ul3GRrUbrDW
-        7W3CLPXeedpnZyu3WuXxbB1MlgDqrkN8rVgTTbgpyFy8JF67ownDneNjAWIFbd7N
-        +kFffCfffpHG+YlAbLqaBTu1YGjgDptIUvNxwHENextKjDhB0dt7SYV+77IGUtRA
-        ==
-X-ME-Sender: <xms:Ty3GXFVaCirF1QrEvI54Tb627OsapZPJvf-M0w3s4X8i1sQ_BoX1Sg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddriedugddutdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdduhedmnecujfgurhepofgfggfkjghffffhvffutgesthdtredtreer
-    tdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtohgsih
-    hnrdgttgeqnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesthhosghinhdrtggtnecu
-    vehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:Ty3GXDGEvF-veaLNYWKm9QUtfwjI99n4GjER5xG_L-RODqruHBOWxA>
-    <xmx:Ty3GXNdkqYf_EWN2ouI6gtojofWMOO42CNKVOd2GPIEjcqm9cZPtQQ>
-    <xmx:Ty3GXFkBXvoNcPMIK7ng7Px1-TBNTm4eRGXyPtjrLT-eJuqMPy7DDA>
-    <xmx:Ty3GXNTt0436hMMMxA3blBMCWPkmddcBPHeVQrMHWUSxZq3UlOCWKA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id D0CCFDEBE0; Sun, 28 Apr 2019 18:46:38 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-444-g755619f-fmstable-20190423v1
-Mime-Version: 1.0
-Message-Id: <c4caa4e2-fca4-455f-8f2d-308281762acd@www.fastmail.com>
-In-Reply-To: <20190428161458.GB13309@kroah.com>
-References: <20190427081330.GA26788@eros.localdomain>
- <20190427192809.GA8454@kroah.com> <20190428011957.GA18843@eros.localdomain>
- <20190428161458.GB13309@kroah.com>
-Date:   Sun, 28 Apr 2019 18:46:38 -0400
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Christopher Lameter" <cl@linux.com>,
-        "Tycho Andersen" <tycho@tycho.ws>, willy@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: memleak around kobject_init_and_add()
-Content-Type: text/plain
+        Sun, 28 Apr 2019 18:47:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59782 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726393AbfD1WrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 18:47:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AAD92AE16;
+        Sun, 28 Apr 2019 22:47:11 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Shaohua Li <shli@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Himanshu Jha <himanshujha199639@gmail.com>
+Date:   Mon, 29 Apr 2019 08:47:02 +1000
+Cc:     clang-built-linux@googlegroups.com, linux-raid@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: Re: [PATCH] md: properly lock and unlock in rdev_attr_store()
+In-Reply-To: <20190428104041.11262-1-lukas.bulwahn@gmail.com>
+References: <20190428104041.11262-1-lukas.bulwahn@gmail.com>
+Message-ID: <877ebd693t.fsf@notabene.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019, at 02:15, Greg Kroah-Hartman wrote:
-> On Sun, Apr 28, 2019 at 11:19:57AM +1000, Tobin C. Harding wrote:
-> > On Sat, Apr 27, 2019 at 09:28:09PM +0200, Greg Kroah-Hartman wrote:
-> > > On Sat, Apr 27, 2019 at 06:13:30PM +1000, Tobin C. Harding wrote:
-> > > > (Note at bottom on reasons for 'To' list 'Cc' list)
-> > > > 
-> > > > Hi,
-> > > > 
-> > > > kobject_init_and_add() seems to be routinely misused.  A failed call to this
-> > > > function requires a call to kobject_put() otherwise we leak memory.
-> > > > 
-> > > > Examples memleaks can be seen in:
-> > > > 
-> > > > 	mm/slub.c
-> > > > 	fs/btrfs/sysfs.c
-> > > > 	fs/xfs/xfs_sysfs.h: xfs_sysfs_init()
-> > > > 
-> > > >  Question: Do we fix the misuse or fix the API?
-> > > 
-> > > Fix the misuse.
-> > 
-> > Following on from this.  It seems we often also forget to call
-> > kobject_uevent() after calls to kobject_init_and_add().
-> 
-> Are you sure?  Usually if you don't call it right away, it happens much
-> later when you have everything "ready to go" to tell userspace that it
-> then can access that kobject successfully.
-> 
-> Any specific places you feel is not correct?
-> 
-> > Before I make a goose of myself patching the whole tree is there ever
-> > any reason why we would _not_ want to call kobject_uevent() after
-> > successfully calling kobject_add() (or kobject_init_and_add())?
-> 
-> You should always do so, but again, sometimes it can be much "later"
-> after everything is properly set up.
-> 
-> Ok, at quick glance I see some places that do not properly call this.
-> But, those places should not even be using a "raw" kobject in the first
-> place, they should be using 'struct device'.  If code using a kobject,
-> that should be very "rare", and not normal behavior in the first place.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Cool, thanks.
+On Sun, Apr 28 2019, Lukas Bulwahn wrote:
+
+> rdev_attr_store() should lock and unlock mddev->reconfig_mutex in a
+> balanced way with mddev_lock() and mddev_unlock().
+
+It does.
+
+>
+> But when rdev->mddev is NULL, rdev_attr_store() would try to unlock
+> without locking before. Resolve this locking issue..
+
+This is incorrect.
+
+>
+> This locking issue was detected with Clang Thread Safety Analyser:
+
+Either the Clang Thread Safety Analyser is broken, or you used it
+incorrectly.
+
+>
+> drivers/md/md.c:3393:3: warning: releasing mutex 'mddev->reconfig_mutex' =
+that was not held [-Wthread-safety-analysis]
+>                 mddev_unlock(mddev);
+>                 ^
+>
+> This warning was reported after annotating mutex functions and
+> mddev_lock() and mddev_unlock().
+>
+> Fixes: 27c529bb8e90 ("md: lock access to rdev attributes properly")
+> Link: https://groups.google.com/d/topic/clang-built-linux/CvBiiQLB0H4/dis=
+cussion
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> Arnd, Neil, here a proposal to fix lock and unlocking asymmetry.
+>
+> I quite sure that if mddev is NULL, it should just return.
+
+If mddev is NULL, the code does return (with -EBUSY).  All you've done
+is change things so it returns from a different part of the code.  You
+haven't changed the behaviour at all.
+
+>
+> I am still puzzled if the return value from mddev_lock() should be really
+> return by rdev_attr_store() when it is not 0. But that was the behaviour
+> before, so I will keep it that way.
+
+Certainly it should. mddev_lock() either returns 0 to indicate success
+or -EINTR if it received a signal.
+If it was interrupted by a signal, then rdev_attr_store() should return
+=2DEINTR as well.
+
+As Arnd tried to explain, the only possible problem here is that the C
+compiler is allowed to assume that rdev->mddev never changes value, so
+in
+   rv =3D mddev ? mddev_lock(mddev) : =3DEBUSY
+
+it could load rdev->mddev, test if it is NULL, then load it again and
+pass that value to mddev_lock() - the new value might be NULL which
+would cause problems.
+
+This could be fixed by changing
+
+	struct mddev *mddev =3D rdev->mddev;
+to
+	struct mddev *mddev =3D READ_ONCE(rdev->mddev);
+
+That is the only change that might be useful here.
+
+NeilBrown
+
+
+>
+>  drivers/md/md.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 05ffffb8b769..a9735d8f1e70 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -3384,7 +3384,9 @@ rdev_attr_store(struct kobject *kobj, struct attrib=
+ute *attr,
+>  		return -EIO;
+>  	if (!capable(CAP_SYS_ADMIN))
+>  		return -EACCES;
+> -	rv =3D mddev ? mddev_lock(mddev): -EBUSY;
+> +	if (!mddev)
+> +		return -EBUSY;
+> +	rv =3D mddev_lock(mddev);
+>  	if (!rv) {
+>  		if (rdev->mddev =3D=3D NULL)
+>  			rv =3D -EBUSY;
+> --=20
+> 2.17.1
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzGLWYACgkQOeye3VZi
+gbkBWw//VvIj0hYlq+pmpcJXle/rFe9qJHKo9IgWyI3BO8tZ/T4qaUQN3YFBvXtd
+OxduNlDF3F+T3o/0GzQXPHCHxq/WHHR9Ju/m9DpZoa7jFAGzdSaZYoJENM4dkZhj
+4CBqZ87ZDw3zU2YNrOYSMioU9W1yTKuVO3GNR917sMNDxJZyN/0gRh/as7UckBgz
+M/Ki41vyLUDdJKS4wx2nJKl9A1nULqknO4dfQlxIybSj68LtGHeTpJzn6bAKFTWa
+YKI9AcsBz0fonw/I6MRunP3yXy4DI7IqW7jY0ZY+5hyETw4knmlQl+vqa6Sh9AIC
+UPTkypaeWWTJ1jN/mFPR8gWv78dUUrIpDLGDghYWwLIivHC0Q9qCvk75KqkPF1Ii
+fQg/GGNAtdp0cAhWGiPc0o3XC7Q1+gkPsdDdxHKMq2L0HxKLWEKPFwV6D2w8CTTB
+HIgXFbfcb7uQGfByjLQfBT/O90D5v7qDrlRlNcw0sF6nFzBaAJJCSX86fWIPrSo2
+OQ37gahhy9Af1oC19hXeM37sny7WMRsFTfM4AJ8rNuXQBdjKAcrM9RO0WSFeeheR
+ZQoK4SooN6pBits+PxKB1QDc/xCC+AiV64TQ5tqCiKPJ7uw1Uuz8kmpsdPVZ0H0E
+G8XdolzszybZ3AoQ6yai0ls0eHeCC/R7rbpfhhg3D/BVJCZaIZU=
+=tVLb
+-----END PGP SIGNATURE-----
+--=-=-=--
