@@ -2,115 +2,128 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13B5C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BF7C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F5120656
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556491592;
-	bh=e7BFQHKHDCRY4ywasnYlNUEPpVRN6QFaTwlQQ5k/QWo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=i9nsPLOoUft3RTOA2oeBBm5T6qH1XTIrFBjVsx6Bl3roRQvM6gci9C3uqLscvD8Xh
-	 H2yQCh0T6KzALTa+p3NtRjl51nvy0PusPVkSmrJof4K70qdmJqt9nNid2TE692QAtE
-	 +PEovhCYl4uiuXfNJQPVh3ycIK9lnPkJKE6WtMm0=
+	by mail.kernel.org (Postfix) with ESMTP id 8EC1720656
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 22:46:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="mH9E85Li";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zpbNGjTU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfD1Wq3 (ORCPT
+        id S1726663AbfD1Wql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 18:46:29 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44598 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfD1Wq2 (ORCPT
+        Sun, 28 Apr 2019 18:46:41 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:32889 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726393AbfD1Wql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 18:46:28 -0400
-Received: by mail-lj1-f194.google.com with SMTP id c6so1114625lji.11
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 15:46:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RlPUF5DPppO5kJlvz7okPOHN8kYgd85Whqp1ZnjpbGg=;
-        b=X54SyTSrXpMJr7fhaCEVGQXPaJpi2jGYrp6wQZsyxKPZq9GjmPOnCspoDeVCe8HdZJ
-         wGiCCjkToJczyhU8SvVZ6jUusmdHPYkQlEALtK2jq5+wZPHp90BZ82jW9ckmFZQEaoRn
-         OQwEhoJSv3A+lxxWTfl28HefOOGdAR/AFfUGA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RlPUF5DPppO5kJlvz7okPOHN8kYgd85Whqp1ZnjpbGg=;
-        b=Ujg/9tOM05+VrXzHpT5kk5/ZDfi+qrVpMswC7kVKGKbzpMiDKxafB/C7lNydVNkq9m
-         MfnZOOhuvmTLtbpbBEZK4kBvWJAanpTM1KWB05568CpbxTjWlJgeBRxJsvDSd2nEtnNd
-         bw8U4xUGfPAsz8ql01EeI06KfmwY3EfhYHOWqwbEqluJcacxYD5MVN0ZWGsXYTwGs7qN
-         PqDFcdzlOj2luUg0Xh7s6pL3I8v3epEqACSN84/KUPmEXA3UFMN9hmMKwCFrAZfm/GXI
-         BC/bMiSGQr094oS+Gfbn8dIP2FCxpPFavGyhevFbi94p2rLV4dPVnNJNaAEybGHkjzpL
-         zseg==
-X-Gm-Message-State: APjAAAXZWrJTNTpHlMXWHQcl8WqGwYJJe04xzCjmQh+EZfH87jdvHbx/
-        b5BQqxqVlETDxm1EizdfCEGvLmPje+w=
-X-Google-Smtp-Source: APXvYqxvz+QpcenBlLnl3pk17w80Q8ktJ9ulpepBay9rKulI2CaEpFvYSPgN1HSusXD4TcL2Raw85Q==
-X-Received: by 2002:a2e:884a:: with SMTP id z10mr21092288ljj.21.1556491586435;
-        Sun, 28 Apr 2019 15:46:26 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id w19sm7067398lfe.23.2019.04.28.15.46.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Apr 2019 15:46:24 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id z26so7656801ljj.2
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 15:46:23 -0700 (PDT)
-X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr3956870lje.2.1556491583114;
- Sun, 28 Apr 2019 15:46:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190428212557.13482-1-longman@redhat.com>
-In-Reply-To: <20190428212557.13482-1-longman@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 28 Apr 2019 15:46:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whU83HbayBmOS-jbK7bQJUp87mvAYxhL=vz5wC_ARQCWA@mail.gmail.com>
-Message-ID: <CAHk-=whU83HbayBmOS-jbK7bQJUp87mvAYxhL=vz5wC_ARQCWA@mail.gmail.com>
-Subject: Re: [PATCH-tip v7 00/20] locking/rwsem: Rwsem rearchitecture part 2
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 28 Apr 2019 18:46:41 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id D96CD278C0;
+        Sun, 28 Apr 2019 18:46:39 -0400 (EDT)
+Received: from imap37 ([10.202.2.87])
+  by compute5.internal (MEProxy); Sun, 28 Apr 2019 18:46:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=jZvoa2zLLEWsbED5dtwYLVLnjZOOrNP
+        58oC6tro8DQo=; b=mH9E85LiD9viB1S5DcGp+vGyOVnI6UAZMYA/x5WKOTHMBFE
+        4HHccvi45dgH7aO0mVmqOLnVQQMuDL0EbVgEX5pcWrrjVNyVJRG86Cx0eL8+dZeW
+        +FCMJT3rhLlxL3mRoND4XK44cz4DmMGW3dw4rd6NrJs5q8VS/sYaUU3JMYntQcBW
+        2rGVVMF8O3knnfDVmSNv1kUpMDuVrj2L2xkOYZ435RL47jvNEQOX82b7NiyINvWL
+        9oB9/C8/OMF0xxyG2NvSdyUkgN9LJXbFAxbkncGj8CPSvN53r7s1snDZ9iTziFcb
+        gUMWKrsvkwh+I+dfdKA+3YbDoJB+z8D5O+md3fw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=jZvoa2
+        zLLEWsbED5dtwYLVLnjZOOrNP58oC6tro8DQo=; b=zpbNGjTUkexEUaWMubC9rw
+        +4e74+l/RW2XA/9a0C+840QFjADHgeqixqF2xrZUKCOc97Ky8DXqr65tSBznHUdA
+        qksko6YzQlV4GIxLFg4JBTfzjgPQRqqi+LWGNbqRmZT8FJxOMJlaQ+Vfv8pgidya
+        lEBXSUN2Vapnxe5+kspxICqbJNQppAml75Fn0hNpLSdM4mG1MVC91Ul3GRrUbrDW
+        7W3CLPXeedpnZyu3WuXxbB1MlgDqrkN8rVgTTbgpyFy8JF67ownDneNjAWIFbd7N
+        +kFffCfffpHG+YlAbLqaBTu1YGjgDptIUvNxwHENextKjDhB0dt7SYV+77IGUtRA
+        ==
+X-ME-Sender: <xms:Ty3GXFVaCirF1QrEvI54Tb627OsapZPJvf-M0w3s4X8i1sQ_BoX1Sg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddriedugddutdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdduhedmnecujfgurhepofgfggfkjghffffhvffutgesthdtredtreer
+    tdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtohgsih
+    hnrdgttgeqnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesthhosghinhdrtggtnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:Ty3GXDGEvF-veaLNYWKm9QUtfwjI99n4GjER5xG_L-RODqruHBOWxA>
+    <xmx:Ty3GXNdkqYf_EWN2ouI6gtojofWMOO42CNKVOd2GPIEjcqm9cZPtQQ>
+    <xmx:Ty3GXFkBXvoNcPMIK7ng7Px1-TBNTm4eRGXyPtjrLT-eJuqMPy7DDA>
+    <xmx:Ty3GXNTt0436hMMMxA3blBMCWPkmddcBPHeVQrMHWUSxZq3UlOCWKA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id D0CCFDEBE0; Sun, 28 Apr 2019 18:46:38 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-444-g755619f-fmstable-20190423v1
+Mime-Version: 1.0
+Message-Id: <c4caa4e2-fca4-455f-8f2d-308281762acd@www.fastmail.com>
+In-Reply-To: <20190428161458.GB13309@kroah.com>
+References: <20190427081330.GA26788@eros.localdomain>
+ <20190427192809.GA8454@kroah.com> <20190428011957.GA18843@eros.localdomain>
+ <20190428161458.GB13309@kroah.com>
+Date:   Sun, 28 Apr 2019 18:46:38 -0400
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Christopher Lameter" <cl@linux.com>,
+        "Tycho Andersen" <tycho@tycho.ws>, willy@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: memleak around kobject_init_and_add()
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This doesn't seem to be the full diff - looking at that patch 1 you
-seem to have taken my suggested list_cut_before() change too.
+On Mon, Apr 29, 2019, at 02:15, Greg Kroah-Hartman wrote:
+> On Sun, Apr 28, 2019 at 11:19:57AM +1000, Tobin C. Harding wrote:
+> > On Sat, Apr 27, 2019 at 09:28:09PM +0200, Greg Kroah-Hartman wrote:
+> > > On Sat, Apr 27, 2019 at 06:13:30PM +1000, Tobin C. Harding wrote:
+> > > > (Note at bottom on reasons for 'To' list 'Cc' list)
+> > > > 
+> > > > Hi,
+> > > > 
+> > > > kobject_init_and_add() seems to be routinely misused.  A failed call to this
+> > > > function requires a call to kobject_put() otherwise we leak memory.
+> > > > 
+> > > > Examples memleaks can be seen in:
+> > > > 
+> > > > 	mm/slub.c
+> > > > 	fs/btrfs/sysfs.c
+> > > > 	fs/xfs/xfs_sysfs.h: xfs_sysfs_init()
+> > > > 
+> > > >  Question: Do we fix the misuse or fix the API?
+> > > 
+> > > Fix the misuse.
+> > 
+> > Following on from this.  It seems we often also forget to call
+> > kobject_uevent() after calls to kobject_init_and_add().
+> 
+> Are you sure?  Usually if you don't call it right away, it happens much
+> later when you have everything "ready to go" to tell userspace that it
+> then can access that kobject successfully.
+> 
+> Any specific places you feel is not correct?
+> 
+> > Before I make a goose of myself patching the whole tree is there ever
+> > any reason why we would _not_ want to call kobject_uevent() after
+> > successfully calling kobject_add() (or kobject_init_and_add())?
+> 
+> You should always do so, but again, sometimes it can be much "later"
+> after everything is properly set up.
+> 
+> Ok, at quick glance I see some places that do not properly call this.
+> But, those places should not even be using a "raw" kobject in the first
+> place, they should be using 'struct device'.  If code using a kobject,
+> that should be very "rare", and not normal behavior in the first place.
 
-I'm not against it (it does seem to be simpler and better), I just
-hope you double-checked it, since I kind of hand-waved it.
-
-                    Linus
-
-On Sun, Apr 28, 2019 at 2:26 PM Waiman Long <longman@redhat.com> wrote:
->
->  v6=>v7 diff
->  -----------
-> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-> index 97a2334d9cd3..60783267b50d 100644
-> --- a/kernel/locking/rwsem.c
-> +++ b/kernel/locking/rwsem.c
-> @@ -693,7 +693,7 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
->                 atomic_long_add(adjustment, &sem->count);
->
->         /* 2nd pass */
-> -       list_for_each_entry(waiter, &wlist, list) {
-> +       list_for_each_entry_safe(waiter, tmp, &wlist, list) {
->                 struct task_struct *tsk;
->
->                 tsk = waiter->task;
->
+Cool, thanks.
