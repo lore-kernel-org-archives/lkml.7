@@ -2,106 +2,176 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F53CC43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 13:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F86C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 14:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAF320881
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 13:47:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556459245;
-	bh=wHRWVkog4zflnnw0t5JuuQTtmUoa5msQ3jIsMaiS1v0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BO9cH0fyzD+AmneHtFwXsmRr3MsDQ2Od7S0vouKn0t5qoNcTUMklfFHVNP/Pc2Aky
-	 GwF6E8a6T51TeHZyQm+LcsV+lS7TdJzv42FKLEQGR2E9tqP58Kb0Ud92oS+Pxu+Dlp
-	 o25u7vRkAaMTG87vygnIuNtF0RfH+u4RHtKlx0Q0=
+	by mail.kernel.org (Postfix) with ESMTP id 8C60C206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 14:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfD1NrY (ORCPT
+        id S1726759AbfD1OJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 09:47:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726606AbfD1NrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 09:47:23 -0400
-Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BF032075D;
-        Sun, 28 Apr 2019 13:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556459243;
-        bh=wHRWVkog4zflnnw0t5JuuQTtmUoa5msQ3jIsMaiS1v0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kUklfwF0o1dCpfy9Erdz6AYCdn3uTTfEXPVmo1vzuzpW+paq7AFZ7XS3xkTxSOJuK
-         icWkfoXoY0Zq63Gk0JereoHnlsou9llJBOcw8tQPjVxYwyxfjO97apwRXuXYQVEb6q
-         Eo4O/I8Du81RocdN5cXyWD0JjTRYpif+lOeBwEMs=
-Date:   Sun, 28 Apr 2019 06:47:22 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org, drosen@google.com
-Subject: Re: [PATCH 1/2] f2fs: fix to avoid potential negative .f_bfree
-Message-ID: <20190428134722.GC37346@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190426095754.85784-1-yuchao0@huawei.com>
+        Sun, 28 Apr 2019 10:09:07 -0400
+Received: from icp-osb-irony-out1.external.iinet.net.au ([203.59.1.210]:18867
+        "EHLO icp-osb-irony-out1.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726637AbfD1OJH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 10:09:07 -0400
+X-Greylist: delayed 561 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Apr 2019 10:09:05 EDT
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AoAACKsMVc/6CMBjoNWRoBAQEBAQI?=
+ =?us-ascii?q?BAQEBBwIBAQEBgWWCeYEshBCTbQEBAQEBAQaBCC2JTIE8j0MzgVWCdQKGVTg?=
+ =?us-ascii?q?TAQMBAQEEAQEBAQKBCYVWAQEBAQIBIxVBEAsSBgICJgICSQ4GAQwGAgEBgx4?=
+ =?us-ascii?q?BgXQFHqszcYEvhDIBgRSDHYE/BoELJ4theIEHgREngms+hB2DMYJYBIpdgi+?=
+ =?us-ascii?q?FXocJjQQIAYILhhGELIdwIYINihyIfokCgwuGQZAagXczGggoCIMnghgDF4h?=
+ =?us-ascii?q?ghVFgkQ6CUgEB?=
+X-IPAS-Result: =?us-ascii?q?A2AoAACKsMVc/6CMBjoNWRoBAQEBAQIBAQEBBwIBAQEBg?=
+ =?us-ascii?q?WWCeYEshBCTbQEBAQEBAQaBCC2JTIE8j0MzgVWCdQKGVTgTAQMBAQEEAQEBA?=
+ =?us-ascii?q?QKBCYVWAQEBAQIBIxVBEAsSBgICJgICSQ4GAQwGAgEBgx4BgXQFHqszcYEvh?=
+ =?us-ascii?q?DIBgRSDHYE/BoELJ4theIEHgREngms+hB2DMYJYBIpdgi+FXocJjQQIAYILh?=
+ =?us-ascii?q?hGELIdwIYINihyIfokCgwuGQZAagXczGggoCIMnghgDF4hghVFgkQ6CUgEB?=
+X-IronPort-AV: E=Sophos;i="5.60,406,1549900800"; 
+   d="scan'208";a="186111761"
+Received: from 58-6-140-160.dyn.iinet.net.au (HELO [192.168.0.106]) ([58.6.140.160])
+  by icp-osb-irony-out1.iinet.net.au with ESMTP; 28 Apr 2019 21:59:40 +0800
+Subject: Re: endianness swapped
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Angelo Dureghello <angelo@sysam.it>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux/m68k <linux-m68k@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190427153222.GA9613@jerusalem>
+ <20190427202150.GB9613@jerusalem>
+ <CAMuHMdXNCxHP=BWPOy70LjNJoMH+zy7yYOHj29gYt79_5=4ffg@mail.gmail.com>
+ <CAK8P3a2F6KW3M7ZaK=WL8429j_z=y_wXrx6rthxni8vBmsMPyg@mail.gmail.com>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <c75092d5-0bbf-cd8e-d0a2-ff1384ac5a48@linux-m68k.org>
+Date:   Sun, 28 Apr 2019 23:59:39 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190426095754.85784-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <CAK8P3a2F6KW3M7ZaK=WL8429j_z=y_wXrx6rthxni8vBmsMPyg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/26, Chao Yu wrote:
-> When calculating .f_bfree value in f2fs_statfs(), sbi->unusable_block_count
-> can be increased after the judgment condition, result in overflow of
-> .f_bfree in later calculation. This patch fixes to use a temporary signed
-> variable to save the calculation result of .f_bfree.
-> 
-> 	if (unlikely(buf->f_bfree <= sbi->unusable_block_count))
->  		buf->f_bfree = 0;
->  	else
-> 		buf->f_bfree -= sbi->unusable_block_count;
 
-Do we just need stat_lock for this?
+On 28/4/19 7:21 pm, Arnd Bergmann wrote:
+> On Sun, Apr 28, 2019 at 10:46 AM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> On Sat, Apr 27, 2019 at 10:22 PM Angelo Dureghello <angelo@sysam.it> wrote:
+>>> On Sat, Apr 27, 2019 at 05:32:22PM +0200, Angelo Dureghello wrote:
+>>>> as you may know, i am working on mcf5441x.
+>>>> Sorry for not following carefully all the threads, but from a certain
+>>>> kernel version (likely 4.19 or near there), seems ioread32be
+>>>> reads the bytes swapped in endianness (mcf-edma dma driver not working
+>>>> anymore).
+>>>>
+>>>> Has there been a change about this in the architecture I/O access ?
+>>>> How should i proceed now ? Fixing the DMA driver read/write, or what ?
+>>
+>>> looks like the reason of my ioread32be now swapped is:
+>>>
+>>> https://patchwork.kernel.org/patch/10766673/
+>>>
+>>> Trying to figure out what to do now.
+>>
+>> This is commit aecc787c06f4300f ("iomap: Use non-raw io functions for
+>> io{read|write}XXbe"):
+>>
+>> --- a/lib/iomap.c
+>> +++ b/lib/iomap.c
+>> @@ -65,8 +65,8 @@ static void bad_io_access(unsigned long port, const
+>> char *access)
+>>   #endif
+>>
+>>   #ifndef mmio_read16be
+>> -#define mmio_read16be(addr) be16_to_cpu(__raw_readw(addr))
+>> -#define mmio_read32be(addr) be32_to_cpu(__raw_readl(addr))
+>> +#define mmio_read16be(addr) swab16(readw(addr))
+>> +#define mmio_read32be(addr) swab32(readl(addr))
+>>   #endif
+>>
+>>   unsigned int ioread8(void __iomem *addr)
+>> @@ -106,8 +106,8 @@ EXPORT_SYMBOL(ioread32be);
+>>   #endif
+>>
+>>   #ifndef mmio_write16be
+>> -#define mmio_write16be(val,port) __raw_writew(be16_to_cpu(val),port)
+>> -#define mmio_write32be(val,port) __raw_writel(be32_to_cpu(val),port)
+>> +#define mmio_write16be(val,port) writew(swab16(val),port)
+>> +#define mmio_write32be(val,port) writel(swab32(val),port)
+>>
+>> On big endian, the raw accessors are assumed to be non-swapping,
+>> while non-raw accessors are assumed to be swapping.
+>> The latter is not true for Coldfire internal registers, cfr.
+>> arch/m68k/include/asm/io_no.h:
+> 
+> The raw accessors are always assumed to be non-swapping
+> in the asm-generic code, while the non-raw ones are assumed to
+> be little-endian in order for them to work with portable drivers.
+> 
+> We have some other cases of big-endian machines that use
+> a hardware byteswap on their MMIO buses (iirc some mips
+> and superh parts), but they then need to swap the __raw_*
+> accessor data words in software to get back to the normal
+> behavior, as well as swizzle the address for accesses that are
+> less than 32 bit wide.
+> 
+> Coldfire makes the behavior of readw()/readl() depend on the
+> MMIO address, presumably since that was the easiest way to
+> get drivers working originally, but it breaks the assumption
+> in the asm-generic code.
 
+Yes, that is right.
+
+There is a number of common hardware modules that Freescale have
+used in the ColdFire SoC parts and in their ARM based parts (iMX
+families). The ARM parts are pretty much always little endian, and
+the ColdFire is always big endian. The hardware registers in those
+hardware blocks are always accessed in native endian of the processor.
+
+So the address range checks are to deal with those internal
+hardware blocks (i2c, spi, dma, etc), since we know those are
+at fixed addresses. That leaves the usual endian swapping in place for
+other general (ie external) devices (PCI devices, network chips, etc).
+
+
+>> static inline u16 readw(const volatile void __iomem *addr)
+>> {
+>>          if (cf_internalio(addr))
+>>                  return __raw_readw(addr);
+>>          return __le16_to_cpu(__raw_readw(addr));
+>> }
+>>
+>> Orthogonal to how Coldfire's read[wl]() should be fixed, I find it a bit
+>> questionable to swap data twice on big endian architectures.
 > 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/super.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> I would expect that the compiler is capable of detecting a double
+> swap and optimize it out. Even if it can't, there are not that many
+> instances of io{read,write}{16,32}be in the kernel, so the increase
+> in kernel image size from a double swap should be limited to a
+> few extra instructions, and the runtime overhead should be
+> negligible compared to the bus access.
 > 
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 2376bb01b5c4..fcc9793dbc2c 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -1216,6 +1216,7 @@ static int f2fs_statfs(struct dentry *dentry, struct kstatfs *buf)
->  	u64 id = huge_encode_dev(sb->s_bdev->bd_dev);
->  	block_t total_count, user_block_count, start_count;
->  	u64 avail_node_count;
-> +	long long bfree;
->  
->  	total_count = le64_to_cpu(sbi->raw_super->block_count);
->  	user_block_count = sbi->user_block_count;
-> @@ -1226,10 +1227,12 @@ static int f2fs_statfs(struct dentry *dentry, struct kstatfs *buf)
->  	buf->f_blocks = total_count - start_count;
->  	buf->f_bfree = user_block_count - valid_user_blocks(sbi) -
->  						sbi->current_reserved_blocks;
-> -	if (unlikely(buf->f_bfree <= sbi->unusable_block_count))
-> +
-> +	bfree = buf->f_bfree - sbi->unusable_block_count;
-> +	if (unlikely(bfree < 0))
->  		buf->f_bfree = 0;
->  	else
-> -		buf->f_bfree -= sbi->unusable_block_count;
-> +		buf->f_bfree = bfree;
->  
->  	if (buf->f_bfree > F2FS_OPTION(sbi).root_reserved_blocks)
->  		buf->f_bavail = buf->f_bfree -
-> -- 
-> 2.18.0.rc1
+>> Fortunately we can avoid that by defining our own
+>> mmio_{read,write}{16,32}be()...
+
+Makes sense.
+
+Regards
+Greg
+
+
