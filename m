@@ -2,329 +2,324 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A798C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD17C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC841206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQFAEkIA"
+	by mail.kernel.org (Postfix) with ESMTP id B75F6206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:51:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfD1Hop (ORCPT
+        id S1726569AbfD1Hvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 03:44:45 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41762 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfD1Hop (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 03:44:45 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 188so3782593pfd.8
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 00:44:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=fmgS9UlbGCt7CJa9UBIEeXfiTJfawV94ps930rxsGJA=;
-        b=bQFAEkIAn7RfcwYpP7GXaWoO/I4KWf9s6Ja9uV1M4EnR9cazL+mC+G+JLNTwNkCn7l
-         c4Zsv2QskDH/5nn9C0dMwhxhLQThWIfkTdhsP4ChH4DJhoECQjsxsNny42YqONzjsFV8
-         bFrLFR7KGUvgmMkeCBEIB2aaIXFaAlwi8Z7hUL4p1UxL9KETnUkvFzI9HsIngCYmHt+j
-         5hNmJKIj83O9YPS9PCe8H0c3ZQGkYOZlKHyuhhAiBoyVYYgaQjqDWyEuYIZ4Li5cS59C
-         XQ7u1L1MEqvkL0ij7RXpMg5SQtfz6JYSPz8hPbK8MG7Utye1HUnuqJ1BkfGOuLjvdrFa
-         RRDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=fmgS9UlbGCt7CJa9UBIEeXfiTJfawV94ps930rxsGJA=;
-        b=P9K0ABQqiVLKK8n/ERDu0HRjxEI7spqiuJe2Z8bVJNN3d6xxKXbDfs0pUlfts+XJxt
-         1iZ+vxcSCa8BjRz16zMTzMGs8GehwWBkSX0T4+KfkZGIzDMceVc/eIMFwbOBJwxTlBru
-         TQ/YoxH8DGwOPF3wifxtDwLZAv9noFbYxy9pmBcZRLQBXH5Hs4wX+mgeQUSNsMvnof/x
-         5UdGGFJz4qGkPrGtzn+yXgyUKtg8eKNVNxBBNmwsd/yWZGZq6e6v8fTo/gTizLnM/tR4
-         6BALyt1S6a0EG2nD352YlfMtt9pf5NTDLuNQ1xY7KC/qVYpZ1Gb0RdxN4/CWOIu5hwN9
-         EXaw==
-X-Gm-Message-State: APjAAAXsHnzt/NPWQhhv1laIwPFmKOs/1Q5J2iZ0NgKcLjFx+hCkh+/H
-        Itel9KZ8IT7rx93U7J/u4CI=
-X-Google-Smtp-Source: APXvYqyVtufEHqFxbpe36g/d2fILEga/g2ilO1Ubg27A4UogCBgerj5qN/6U5VPIF5fFV2rkJWAN+A==
-X-Received: by 2002:a65:524a:: with SMTP id q10mr51067765pgp.224.1556437484396;
-        Sun, 28 Apr 2019 00:44:44 -0700 (PDT)
-Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id z27sm1520081pfi.42.2019.04.28.00.44.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 28 Apr 2019 00:44:43 -0700 (PDT)
-From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
-        Matthew Wilcox <mawilcox@microsoft.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [[repost]RFC PATCH] mm/workingset : judge file page activity via timestamp
-Date:   Sun, 28 Apr 2019 15:44:34 +0800
-Message-Id: <1556437474-25319-1-git-send-email-huangzhaoyang@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
+        Sun, 28 Apr 2019 03:51:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38098 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726133AbfD1Hvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 03:51:55 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D0FF981F35;
+        Sun, 28 Apr 2019 07:51:53 +0000 (UTC)
+Received: from [10.72.12.56] (ovpn-12-56.pek2.redhat.com [10.72.12.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 32EA96841F;
+        Sun, 28 Apr 2019 07:51:41 +0000 (UTC)
+Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
+To:     "weiyongjun (A)" <weiyongjun1@huawei.com>,
+        yuehaibing <yuehaibing@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "lirongqing@baidu.com" <lirongqing@baidu.com>,
+        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
+        "nicolas.dichtel@6wind.com" <nicolas.dichtel@6wind.com>,
+        "3chas3@gmail.com" <3chas3@gmail.com>,
+        "wangli39@baidu.com" <wangli39@baidu.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Peter Xu <peterx@redhat.com>
+References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
+ <20190428030539.17776-1-yuehaibing@huawei.com>
+ <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
+ <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com>
+ <6AADFAC011213A4C87B956458587ADB4021F7531@dggeml532-mbs.china.huawei.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b33ce1f9-3d65-2d05-648b-f5a6cfbd59ab@redhat.com>
+Date:   Sun, 28 Apr 2019 15:51:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <6AADFAC011213A4C87B956458587ADB4021F7531@dggeml532-mbs.china.huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Sun, 28 Apr 2019 07:51:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-this patch introduce timestamp into workingset's entry and judge if the page is
-active or inactive via active_file/refault_ratio instead of refault distance.
+On 2019/4/28 下午1:40, weiyongjun (A) wrote:
+> Hi Jason,
+>
+>> On 2019/4/28 上午11:24, Jason Wang wrote:
+>>> On 2019/4/28 上午11:05, Yue Haibing wrote:
+>>>> From: YueHaibing <yuehaibing@huawei.com>
+>>>>
+>>>> KASAN report this:
+>>>>
+>>>> BUG: KASAN: use-after-free in tun_net_xmit+0x1670/0x1750
+>>>> drivers/net/tun.c:1104
+>>>> Read of size 8 at addr ffff88836cc26a70 by task swapper/3/0
+>>>>
+>>>> CPU: 3 PID: 0 Comm: swapper/3 Not tainted 4.19.32 #6
+>>>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+>>>> 1.10.2-1ubuntu1 04/01/2014
+>>>> Call Trace:
+>>>>    <IRQ>
+>>>>    __dump_stack lib/dump_stack.c:77 [inline]
+>>>>    dump_stack+0xca/0x13e lib/dump_stack.c:113
+>>>>    print_address_description+0x79/0x330 mm/kasan/report.c:253
+>>>>    kasan_report_error mm/kasan/report.c:351 [inline]
+>>>>    kasan_report+0x18a/0x2d0 mm/kasan/report.c:409
+>>>>    tun_net_xmit+0x1670/0x1750 drivers/net/tun.c:1104
+>>>>    __netdev_start_xmit include/linux/netdevice.h:4300 [inline]
+>>>>    netdev_start_xmit include/linux/netdevice.h:4309 [inline]
+>>>>    xmit_one net/core/dev.c:3243 [inline]
+>>>>    dev_hard_start_xmit+0x17c/0x780 net/core/dev.c:3259
+>>>>    sch_direct_xmit+0x24f/0x8a0 net/sched/sch_generic.c:327
+>>>>    qdisc_restart net/sched/sch_generic.c:390 [inline]
+>>>>    __qdisc_run+0x45b/0x1590 net/sched/sch_generic.c:398
+>>>>    qdisc_run include/net/pkt_sched.h:120 [inline]
+>>>>    __dev_xmit_skb net/core/dev.c:3438 [inline]
+>>>>    __dev_queue_xmit+0xa6b/0x2500 net/core/dev.c:3797
+>>>>    neigh_output include/net/neighbour.h:501 [inline]
+>>>>    ip6_finish_output2+0xa36/0x2290 net/ipv6/ip6_output.c:120
+>>>>    ip6_finish_output+0x3e7/0xa20 net/ipv6/ip6_output.c:154
+>>>>    NF_HOOK_COND include/linux/netfilter.h:278 [inline]
+>>>>    ip6_output+0x1e2/0x720 net/ipv6/ip6_output.c:171
+>>>>    dst_output include/net/dst.h:444 [inline]
+>>>>    NF_HOOK include/linux/netfilter.h:289 [inline]
+>>>>    mld_sendpack+0x740/0xf20 net/ipv6/mcast.c:1683
+>>>>    mld_send_cr net/ipv6/mcast.c:1979 [inline]
+>>>>    mld_ifc_timer_expire+0x3cc/0x7f0 net/ipv6/mcast.c:2478
+>>>>    call_timer_fn+0x1ea/0x6a0 kernel/time/timer.c:1326
+>>>>    expire_timers kernel/time/timer.c:1363 [inline]
+>>>>    __run_timers kernel/time/timer.c:1682 [inline]
+>>>>    run_timer_softirq+0x637/0x1070 kernel/time/timer.c:1695
+>>>>    __do_softirq+0x26d/0xabd kernel/softirq.c:292
+>>>>    invoke_softirq kernel/softirq.c:372 [inline]
+>>>>    irq_exit+0x209/0x290 kernel/softirq.c:412
+>>>>    exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+>>>>    smp_apic_timer_interrupt+0xf6/0x480 arch/x86/kernel/apic/apic.c:1056
+>>>>    apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:864
+>>>>    </IRQ>
+>>>> RIP: 0010:native_safe_halt+0x2/0x10 arch/x86/include/asm/irqflags.h:58
+>>>> Code: 01 f0 0f 82 bc fd ff ff 48 c7 c7 40 25 b1 83 e8 a1 72 03 ff e9
+>>>> ab fd ff ff 4c 89 e7 e8 37 f5 a7 fe e9 6a ff ff ff 90 90 fb f4 <c3>
+>>>> 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 f4 c3 90 90 90 90 90 90
+>>>> RSP: 0018:ffff8883e0f2fd20 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+>>>> RAX: 0000000000000007 RBX: dffffc0000000000 RCX: 0000000000000000
+>>>> RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8883e0f04f1c
+>>>> RBP: 0000000000000003 R08: ffffed107c5dc77b R09: 0000000000000000
+>>>> R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff848b96e0
+>>>> R13: 0000000000000003 R14: 1ffff1107c1e5fae R15: 0000000000000000
+>>>>    arch_safe_halt arch/x86/include/asm/paravirt.h:94 [inline]
+>>>>    default_idle+0x24/0x2b0 arch/x86/kernel/process.c:561
+>>>>    cpuidle_idle_call kernel/sched/idle.c:153 [inline]
+>>>>    do_idle+0x2ca/0x420 kernel/sched/idle.c:262
+>>>>    cpu_startup_entry+0xcb/0xe0 kernel/sched/idle.c:368
+>>>>    start_secondary+0x421/0x570 arch/x86/kernel/smpboot.c:271
+>>>>    secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
+>>>>
+>>>> Allocated by task 19764:
+>>>>    set_track mm/kasan/kasan.c:460 [inline]
+>>>>    kasan_kmalloc+0xa0/0xd0 mm/kasan/kasan.c:553
+>>>>    __kmalloc+0x11b/0x2d0 mm/slub.c:3750
+>>>>    kmalloc include/linux/slab.h:518 [inline]
+>>>>    sk_prot_alloc+0xf6/0x290 net/core/sock.c:1469
+>>>>    sk_alloc+0x3d/0xc00 net/core/sock.c:1523
+>>>>    tun_chr_open+0x80/0x560 drivers/net/tun.c:3204
+>>>>    misc_open+0x367/0x4e0 drivers/char/misc.c:141
+>>>>    chrdev_open+0x212/0x580 fs/char_dev.c:417
+>>>>    do_dentry_open+0x704/0x1050 fs/open.c:777
+>>>>    do_last fs/namei.c:3418 [inline]
+>>>>    path_openat+0x7ed/0x2ae0 fs/namei.c:3533
+>>>>    do_filp_open+0x1aa/0x2b0 fs/namei.c:3564
+>>>>    do_sys_open+0x307/0x430 fs/open.c:1069
+>>>>    do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+>>>>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>>>
+>>>> Freed by task 19764:
+>>>>    set_track mm/kasan/kasan.c:460 [inline]
+>>>>    __kasan_slab_free+0x12e/0x180 mm/kasan/kasan.c:521
+>>>>    slab_free_hook mm/slub.c:1370 [inline]
+>>>>    slab_free_freelist_hook mm/slub.c:1397 [inline]
+>>>>    slab_free mm/slub.c:2952 [inline]
+>>>>    kfree+0xeb/0x2f0 mm/slub.c:3905
+>>>>    sk_prot_free net/core/sock.c:1506 [inline]
+>>>>    __sk_destruct+0x4e6/0x6a0 net/core/sock.c:1588
+>>>>    sk_destruct+0x48/0x70 net/core/sock.c:1596
+>>>>    __sk_free+0xa9/0x270 net/core/sock.c:1607
+>>>>    sk_free+0x2a/0x30 net/core/sock.c:1618
+>>>>    sock_put include/net/sock.h:1696 [inline]
+>>>>    __tun_detach+0x464/0xf70 drivers/net/tun.c:735
+>>>>    tun_detach drivers/net/tun.c:747 [inline]
+>>>>    tun_chr_close+0xd8/0x190 drivers/net/tun.c:3241
+>>>>    __fput+0x27f/0x7f0 fs/file_table.c:278
+>>>>    task_work_run+0x136/0x1b0 kernel/task_work.c:113
+>>>>    tracehook_notify_resume include/linux/tracehook.h:193 [inline]
+>>>>    exit_to_usermode_loop+0x1a7/0x1d0 arch/x86/entry/common.c:166
+>>>>    prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+>>>>    syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+>>>>    do_syscall_64+0x461/0x580 arch/x86/entry/common.c:293
+>>>>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>>>
+>>>> The buggy address belongs to the object at ffff88836cc26600
+>>>>    which belongs to the cache kmalloc-4096 of size 4096
+>>>> The buggy address is located 1136 bytes inside of
+>>>>    4096-byte region [ffff88836cc26600, ffff88836cc27600)
+>>>> The buggy address belongs to the page:
+>>>> page:ffffea000db30800 count:1 mapcount:0 mapping:ffff8883e280e600
+>>>> index:0x0 compound_mapcount: 0
+>>>> flags: 0x2fffff80008100(slab|head)
+>>>> raw: 002fffff80008100 dead000000000100 dead000000000200
+>> ffff8883e280e600
+>>>> raw: 0000000000000000 0000000000070007 00000001ffffffff
+>> 0000000000000000
+>>>> page dumped because: kasan: bad access detected
+>>>>
+>>>> Memory state around the buggy address:
+>>>>    ffff88836cc26900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>>>    ffff88836cc26980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>>>> ffff88836cc26a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>>>                                                                ^
+>>>>    ffff88836cc26a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>>>    ffff88836cc26b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>>>
+>>>> If tun driver have multiqueues, user close the last queue by
+>>>> tun_detach, then tun->tfiles[index] is not cleared. Then a new
+>>>> queue may add to the tun, which using rcu_assign_pointer
+>>>> tun->tfiles[index] to the new tfile and increase the numqueues.
+>>>> However if there send a packet during this time, which picking the last
+>>>> queue, it may uses the old tun->tfiles[index], beacause there no
+>>>> RCU grace period.
+>>>>
+>>>> 1) tun_chr_close //close the last queue
+>>>>       --> __tun_detach  //close the last queue, but tun->tfiles[index]
+>>>> still exist
+>>>>
+>>>> 2) tun_chr_open  //attach a new queue
+>>>>       --> tun_attach
+>>>> -->rcu_assign_pointer(tun->tfiles[tun->numqueues], tfile);
+>>>>        //there need a RCU grace period
+>>>>
+>>>>       -->tun->numqueues++;
+>>>>
+>>>> 3) tun_net_xmit //a new packet is sending, which pick the last queue
+>>>>        -->if (txq >= tun->numqueues)
+>>>>         //above check passed, but tfile still not renew
+>>>>        -->if (tfile->socket.sk->sk_filter ...
+>>>>         //use the old tfile,trigger use-after-free
+>>>>
+>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>> Fixes: c8d68e6be1c3 ("tuntap: multiqueue support")
+>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>> ---
+>>>>    drivers/net/tun.c | 1 +
+>>>>    1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+>>>> index e9ca1c0..3770aba 100644
+>>>> --- a/drivers/net/tun.c
+>>>> +++ b/drivers/net/tun.c
+>>>> @@ -876,6 +876,7 @@ static int tun_attach(struct tun_struct *tun,
+>>>> struct file *file,
+>>>>         */
+>>>>        rcu_assign_pointer(tfile->tun, tun);
+>>>>        rcu_assign_pointer(tun->tfiles[tun->numqueues], tfile);
+>>>> +    synchronize_net();
+>>>>        tun->numqueues++;
+>>>>        tun_set_real_num_queues(tun);
+>>>>    out:
+>>>
+>>> Good catch, that's one of my suspicion as well. Assume that this has
+>>> been tested.
+>>>
+>>> Acked-by: Jason Wang <jasowang@redhat.com>
+>>>
+>>> This patch is needed for -stable.
+>>>
+>>> I will post another theoretical issue similar to this soon.
+>>>
+>>> Thanks
+>>>
+>> Ok, a second thought. All evil come from the access of tun->numqueues
+>> without sufficient synchronization. This is a partial fix, another
+>> possible case is __tun_detach(), we need either
+> In __tun_detach(),tun->tfiles changes should always call synchronize_net(),
+> and free tfile after RCU grace period.
 
-The original thought is coming from the logs we got from trace_printk in this
-patch, we can find about 1/5 of the file pages' refault are under the
-scenario[1],which will be counted as inactive as they have a long refault distance
-in between access. However, we can also know from the time information that the
-page refault quickly as comparing to the average refault time which is calculated
-by the number of active file and refault ratio. We want to save these kinds of
-pages from evicted earlier as it used to be via setting it to ACTIVE instead.
-The refault ratio is the value which can reflect lru's average file access
-frequency in the past and provide the judge criteria for page's activation.
 
-The patch is tested on an android system and reduce 30% of page faults, while
-60% of the pages remain the original status as (refault_distance < active_file)
-indicates. Pages status got from ftrace during the test can refer to [2].
+Exactly, and that's why I suggest to check pointers in tfiles against 
+NULL for method 1) I mentioned below.
 
-[1]
-system_server workingset_refault: WKST_ACT[0]:rft_dis 265976, act_file 34268 rft_ratio 3047 rft_time 0 avg_rft_time 11 refault 295592 eviction 29616 secs 97 pre_secs 97
-HwBinder:922  workingset_refault: WKST_ACT[0]:rft_dis 264478, act_file 35037 rft_ratio 3070 rft_time 2 avg_rft_time 11 refault 310078 eviction 45600 secs 101 pre_secs 99
 
-[2]
-WKST_ACT[0]:   original--INACTIVE  commit--ACTIVE
-WKST_ACT[1]:   original--ACTIVE    commit--ACTIVE
-WKST_INACT[0]: original--INACTIVE  commit--INACTIVE
-WKST_INACT[1]: original--ACTIVE    commit--INACTIVE
+> tun_net_xmit() doesn't have the chance to
+> access the change because it holding the rcu_read_lock().
 
-Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
----
- include/linux/mmzone.h |   1 +
- mm/workingset.c        | 129 ++++++++++++++++++++++++++++++++++++++++++-------
- 2 files changed, 113 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index fba7741..ca4ced6 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -242,6 +242,7 @@ struct lruvec {
- 	atomic_long_t			inactive_age;
- 	/* Refaults at the time of last reclaim cycle */
- 	unsigned long			refaults;
-+	atomic_long_t			refaults_ratio;
- #ifdef CONFIG_MEMCG
- 	struct pglist_data *pgdat;
- #endif
-diff --git a/mm/workingset.c b/mm/workingset.c
-index 0bedf67..fd2e5af 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -167,10 +167,19 @@
-  * refault distance will immediately activate the refaulting page.
-  */
- 
-+#ifdef CONFIG_64BIT
-+#define EVICTION_SECS_POS_SHIFT 18
-+#define EVICTION_SECS_SHRINK_SHIFT 4
-+#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
-+#else
-+#define EVICTION_SECS_POS_SHIFT 0
-+#define EVICTION_SECS_SHRINK_SHIFT 0
-+#define NO_SECS_IN_WORKINGSET
-+#endif
- #define EVICTION_SHIFT	((BITS_PER_LONG - BITS_PER_XA_VALUE) +	\
--			 1 + NODES_SHIFT + MEM_CGROUP_ID_SHIFT)
-+			 1 + NODES_SHIFT + MEM_CGROUP_ID_SHIFT + \
-+			 EVICTION_SECS_POS_SHIFT + EVICTION_SECS_SHRINK_SHIFT)
- #define EVICTION_MASK	(~0UL >> EVICTION_SHIFT)
--
- /*
-  * Eviction timestamps need to be able to cover the full range of
-  * actionable refaults. However, bits are tight in the xarray
-@@ -180,12 +189,48 @@
-  * evictions into coarser buckets by shaving off lower timestamp bits.
-  */
- static unsigned int bucket_order __read_mostly;
--
-+#ifdef NO_SECS_IN_WORKINGSET
-+static void pack_secs(unsigned long *peviction) { }
-+static unsigned int unpack_secs(unsigned long entry) {return 0; }
-+#else
-+static void pack_secs(unsigned long *peviction)
-+{
-+	unsigned int secs;
-+	unsigned long eviction;
-+	int order;
-+	int secs_shrink_size;
-+	struct timespec64 ts;
-+
-+	ktime_get_boottime_ts64(&ts);
-+	secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
-+	order = get_count_order(secs);
-+	secs_shrink_size = (order <= EVICTION_SECS_POS_SHIFT)
-+		? 0 : (order - EVICTION_SECS_POS_SHIFT);
-+
-+	eviction = *peviction;
-+	eviction = (eviction << EVICTION_SECS_POS_SHIFT)
-+		| ((secs >> secs_shrink_size) & EVICTION_SECS_POS_MASK);
-+	eviction = (eviction << EVICTION_SECS_SHRINK_SHIFT) | (secs_shrink_size & 0xf);
-+	*peviction = eviction;
-+}
-+static unsigned int unpack_secs(unsigned long entry)
-+{
-+	unsigned int secs;
-+	int secs_shrink_size;
-+
-+	secs_shrink_size = entry & ((1 << EVICTION_SECS_SHRINK_SHIFT) - 1);
-+	entry >>= EVICTION_SECS_SHRINK_SHIFT;
-+	secs = entry & EVICTION_SECS_POS_MASK;
-+	secs = secs << secs_shrink_size;
-+	return secs;
-+}
-+#endif
- static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction,
- 			 bool workingset)
- {
- 	eviction >>= bucket_order;
- 	eviction &= EVICTION_MASK;
-+	pack_secs(&eviction);
- 	eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
- 	eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
- 	eviction = (eviction << 1) | workingset;
-@@ -194,11 +239,12 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction,
- }
- 
- static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
--			  unsigned long *evictionp, bool *workingsetp)
-+		unsigned long *evictionp, bool *workingsetp, unsigned int *prev_secs)
- {
- 	unsigned long entry = xa_to_value(shadow);
- 	int memcgid, nid;
- 	bool workingset;
-+	unsigned int secs;
- 
- 	workingset = entry & 1;
- 	entry >>= 1;
-@@ -206,11 +252,14 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
- 	entry >>= NODES_SHIFT;
- 	memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
- 	entry >>= MEM_CGROUP_ID_SHIFT;
-+	secs = unpack_secs(entry);
-+	entry >>= (EVICTION_SECS_POS_SHIFT + EVICTION_SECS_SHRINK_SHIFT);
- 
- 	*memcgidp = memcgid;
- 	*pgdat = NODE_DATA(nid);
- 	*evictionp = entry << bucket_order;
- 	*workingsetp = workingset;
-+	*prev_secs = secs;
- }
- 
- /**
-@@ -257,8 +306,19 @@ void workingset_refault(struct page *page, void *shadow)
- 	unsigned long refault;
- 	bool workingset;
- 	int memcgid;
-+#ifndef NO_SECS_IN_WORKINGSET
-+	unsigned long avg_refault_time;
-+	unsigned long refaults_ratio;
-+	unsigned long refault_time;
-+	int tradition;
-+	unsigned int prev_secs;
-+	unsigned int secs;
-+#endif
-+	struct timespec64 ts;
-+	ktime_get_boottime_ts64(&ts);
-+	secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
- 
--	unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &workingset);
-+	unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &workingset, &prev_secs);
- 
- 	rcu_read_lock();
- 	/*
-@@ -303,23 +363,57 @@ void workingset_refault(struct page *page, void *shadow)
- 	refault_distance = (refault - eviction) & EVICTION_MASK;
- 
- 	inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
--
-+#ifndef NO_SECS_IN_WORKINGSET
-+	refaults_ratio = (atomic_long_read(&lruvec->inactive_age) + 1) / secs;
-+	atomic_long_set(&lruvec->refaults_ratio, refaults_ratio);
-+	refault_time = secs - prev_secs;
-+	avg_refault_time = active_file / refaults_ratio;
-+	tradition = !!(refault_distance < active_file);
- 	/*
--	 * Compare the distance to the existing workingset size. We
--	 * don't act on pages that couldn't stay resident even if all
--	 * the memory was available to the page cache.
-+	 * What we are trying to solve here is
-+	 * 1. extremely fast refault as refault_time == 0.
-+	 * 2. quick file drop scenario, which has a big refault_distance but
-+	 *    small refault_time comparing with the past refault ratio, which
-+	 *    will be deemed as inactive in previous implementation.
- 	 */
--	if (refault_distance > active_file)
-+	if (refault_time && (((refault_time < avg_refault_time)
-+		&& (avg_refault_time < 2 * refault_time))
-+		|| (refault_time >= avg_refault_time))) {
-+		trace_printk("WKST_INACT[%d]:rft_dis %ld, act %ld\
-+				rft_ratio %ld rft_time %ld avg_rft_time %ld\
-+				refault %ld eviction %ld secs %d pre_secs %d page %p\n",
-+				tradition, refault_distance, active_file,
-+				refaults_ratio, refault_time, avg_refault_time,
-+				refault, eviction, secs, prev_secs, page);
- 		goto out;
-+	} else {
-+#else
-+	if (refault_distance < active_file) {
-+#endif
- 
--	SetPageActive(page);
--	atomic_long_inc(&lruvec->inactive_age);
--	inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
-+		/*
-+		 * Compare the distance to the existing workingset size. We
-+		 * don't act on pages that couldn't stay resident even if all
-+		 * the memory was available to the page cache.
-+		 */
- 
--	/* Page was active prior to eviction */
--	if (workingset) {
--		SetPageWorkingset(page);
--		inc_lruvec_state(lruvec, WORKINGSET_RESTORE);
-+		SetPageActive(page);
-+		atomic_long_inc(&lruvec->inactive_age);
-+		inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
-+
-+		/* Page was active prior to eviction */
-+		if (workingset) {
-+			SetPageWorkingset(page);
-+			inc_lruvec_state(lruvec, WORKINGSET_RESTORE);
-+		}
-+#ifndef NO_SECS_IN_WORKINGSET
-+		trace_printk("WKST_ACT[%d]:rft_dis %ld, act %ld\
-+				rft_ratio %ld rft_time %ld avg_rft_time %ld\
-+				refault %ld eviction %ld secs %d pre_secs %d page %p\n",
-+				tradition, refault_distance, active_file,
-+				refaults_ratio, refault_time, avg_refault_time,
-+				refault, eviction, secs, prev_secs, page);
-+#endif
- 	}
- out:
- 	rcu_read_unlock();
-@@ -548,6 +642,7 @@ static int __init workingset_init(void)
- 	 * double the initial memory by using totalram_pages as-is.
- 	 */
- 	timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
-+
- 	max_order = fls_long(totalram_pages() - 1);
- 	if (max_order > timestamp_bits)
- 		bucket_order = max_order - timestamp_bits;
--- 
-1.9.1
+The problem is the following codes:
 
+
+         --tun->numqueues;
+
+         ...
+
+         synchronize_net();
+
+We need make sure the decrement of tun->numqueues be visible to readers 
+after synchronize_net(). And in tun_net_xmit():
+
+
+     rcu_read_lock();
+     tfile = rcu_dereference(tun->tfiles[txq]);
+
+     /* Drop packet if interface is not attached */
+     if (txq >= tun->numqueues)
+         goto drop;
+
+
+We should make sure tun->numqueues were read after tfiles array dereference.
+
+Unfortunately, we don't have such guarantee even with this patch. So we 
+should change to use smp_load_acquire()/smp_store_release() for those 
+cases (method 2).
+
+It looks to me checking file against NULL (and NULL out 
+tfiles[tun->numqueues] in __tun_detach) is much more easier to be 
+understand.
+
+What do you think?
+
+Thanks
+
+
+>
+> So __tun_detach() path cannot cause the use after free, isn't it?
+>
+> Regards
+>
+>> 1) synchronize through pointers in tfiles
+>>
+>> 2) or smp_load_acquire()/smp_store_release() to solve it completely.
+>>
+>> Let me post a complete fix.
+>>
+>> Thanks
