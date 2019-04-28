@@ -2,134 +2,140 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31F9C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AD0C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621992087E
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68579205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 03:29:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CvDwWER9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r3zV2GeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfD1D1X (ORCPT
+        id S1726472AbfD1D3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 27 Apr 2019 23:27:23 -0400
-Received: from mail-eopbgr130043.outbound.protection.outlook.com ([40.107.13.43]:64350
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726526AbfD1D1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 27 Apr 2019 23:27:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ylxzJ6jku5D9eXVqOkKVH7cFogpW9wMbR6ybfEQQKlU=;
- b=CvDwWER9Qw8vVtTjQsi9qnO2CeB5b/4XMVFxF1SM5fpfsWAgWSxczmeK6Ldg0NLJibkgNawd56BAtdU2TZAHXYv3nnXoaXxV/rMUpMUHOYwXIaW2OQmaBFRGFMdxxo7dlOHVp9xkxhy8uBHUnUy+wMFH/E+354ey4KA+2kFngUQ=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3897.eurprd04.prod.outlook.com (52.134.73.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Sun, 28 Apr 2019 03:27:17 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1835.015; Sun, 28 Apr 2019
- 03:27:17 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH V2 4/4] dt-bindings: watchdog: remove i.MX system controller
- watchdog
-Thread-Topic: [PATCH V2 4/4] dt-bindings: watchdog: remove i.MX system
- controller watchdog
-Thread-Index: AQHU/XJHVvpWJzeSMUO3ikfCWcHdPQ==
-Date:   Sun, 28 Apr 2019 03:27:17 +0000
-Message-ID: <1556421727-7401-4-git-send-email-Anson.Huang@nxp.com>
-References: <1556421727-7401-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1556421727-7401-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2P15301CA0012.APCP153.PROD.OUTLOOK.COM
- (2603:1096:202:1::22) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 98477339-1cea-4184-6b02-08d6cb8969f2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3897;
-x-ms-traffictypediagnostic: DB3PR0402MB3897:
-x-microsoft-antispam-prvs: <DB3PR0402MB3897D26184DBAFE21577291AF5380@DB3PR0402MB3897.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0021920B5A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(396003)(366004)(346002)(39860400002)(189003)(199004)(256004)(71190400001)(14444005)(71200400001)(97736004)(6116002)(186003)(66066001)(86362001)(2201001)(476003)(2616005)(8936002)(36756003)(486006)(11346002)(81156014)(81166006)(25786009)(53936002)(50226002)(3846002)(446003)(2906002)(2501003)(386003)(6506007)(76176011)(68736007)(4326008)(102836004)(64756008)(52116002)(66946007)(66476007)(66556008)(8676002)(66446008)(6486002)(6436002)(7416002)(14454004)(73956011)(7736002)(99286004)(478600001)(316002)(110136005)(305945005)(26005)(6512007)(5660300002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3897;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7/KpAzxugEy/SpBUv8hvUX8ozwE1tRLXlMy+PA8G4GN42+DdDLSzlVUbkBRKXsQmub1VV8R/8hflRSzuUymaRS5Kz2B9+/trafDoRsT9EwsThL61BYYN5dQ9whCNYwDETfZNxXbhXu8Xl3MqYEM2iBuZ4J4QowVBSwvVYIpnixLb5ldltrSzrt+OhAuBlZJtvH1inbgE6gvXpXKhLmDwQwoVqe48z7QfqSk+DzCVy6eOgkqyMPmsd+okYaRv0UPObUMlbX4vDsQTOqNZXYr+wK8idfZoYa/mbe5wekw9Q8srG4HquqvXcWRNR5r/yXlO3aF1J5cNK9Fxnn5+7nRZwObY4nBs/1MHvxDzBnCjQGOUZeKG3fUoeU/fBR/qTm0Ztqk1a2btQVWm39SmBiyUTUUT/lcp85pwlJkXEmOdK3g=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98477339-1cea-4184-6b02-08d6cb8969f2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2019 03:27:17.0418
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3897
+        Sat, 27 Apr 2019 23:29:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39573 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfD1D3l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 27 Apr 2019 23:29:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i17so3614791pfo.6
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2019 20:29:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=maFyUzj6q8GecybXdbTd3FqRj6RpEwVek/VVf1HuhJI=;
+        b=r3zV2GeT+/d4y367o25f+1YUPK2ESOr7zHWIQMY87rEScFIvRVVxte1nYu10zP6iNi
+         Mu1qgLoZEIE0I06SIMDQzeHoSClrpK/Bgv2zTNfk63uf1f0d2+apH1I7qcRm07SWGe3+
+         iO7XWaZzNFiCqIDpyrrCMC7IDgWId8HkL++kM6WbavwKvU8IamcG1aNYNVoe9fAiooj0
+         yOSjjb7U/8MwpRwlEviSfNvfZmgSnRb0jsIxiFBSdGgq3sunOrAazcBwXdruLQZw/uOI
+         V6MTuxAdUMflJKvrnZ1HXVPP/CZDuAo2XPM4vqCNGhrVMHqJH+SyZSU+KA+8X6pTpwxC
+         D7vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=maFyUzj6q8GecybXdbTd3FqRj6RpEwVek/VVf1HuhJI=;
+        b=XArRgWzORsgfxtKlmLstDBWtbPqPRUc82LB8Stt22nf3d0HpIN/UqQHSxf2ysfAbgI
+         qcCErRrtu0tqpRq8b2zgINPu8uM00LBiP0mFboa3VKmnb+3Y94VmrMrSAeBRf4EA9ZZG
+         y13Utdwn4abOjU9KsgmAoZxa4YEjKOTo1dOlCs6dTwIrGiOMb6iKu9pBfb2yPXM611iJ
+         i7QPgtXkDd5602aWrRThR5TjioMaJ15nxGpi0tQ7EPn2HRsNt21u68D2XiYb/54ngnKH
+         DLiIA3imucfoQwkMH/Cv4SuhCwzBv23ma+MsQPviC7uoH3Y6AeDDovLsDOrMjuK+MT1+
+         bVPw==
+X-Gm-Message-State: APjAAAXnXEVgMur5uLdGKFV0p4G+0FR9R177MZq9eXxSPiLY2ekILAE5
+        Sw0qsMwXNndUJGfmzkIA8kc=
+X-Google-Smtp-Source: APXvYqx3Lgpu6cw25xVX7o20IJjCEI8FcMpPWVwM9PNZeJyzImpyN4HPDReYe0R833co7k5S0lQ4Ow==
+X-Received: by 2002:a65:64c9:: with SMTP id t9mr51520043pgv.221.1556422180614;
+        Sat, 27 Apr 2019 20:29:40 -0700 (PDT)
+Received: from localhost ([2601:640:6:3484:bc53:6e04:b584:e900])
+        by smtp.gmail.com with ESMTPSA id j67sm66005272pfc.72.2019.04.27.20.29.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Apr 2019 20:29:39 -0700 (PDT)
+From:   Yury Norov <yury.norov@gmail.com>
+X-Google-Original-From: Yury Norov <ynorov@marvell.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Yury Norov <ynorov@marvell.com>, linux-kernel@vger.kernel.org,
+        Yury Norov <yury.norov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 0/4] lib: rework bitmap_parse
+Date:   Sat, 27 Apr 2019 20:29:30 -0700
+Message-Id: <20190428032936.1317-1-ynorov@marvell.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-aS5NWCBzeXN0ZW0gY29udHJvbGxlciB3YXRjaGRvZyBub3cgZGVwZW5kcyBvbiBTQ1UgZHJpdmVy
-LCBzbyBpdA0KbmVlZHMgdG8gYmUgc3Vibm9kZSBvZiBTQ1Ugbm9kZSBpbiBEVCwgYmluZGluZyBk
-b2MgaXMgbW92ZWQgdG8NCmZzbCxzY3UudHh0IGFzIHdlbGwuDQoNClNpZ25lZC1vZmYtYnk6IEFu
-c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KLS0tDQpOZXcgcGF0Y2guDQotLS0NCiAu
-Li4vYmluZGluZ3Mvd2F0Y2hkb2cvZnNsLWlteC1zYy13ZHQudHh0ICAgICAgICAgICB8IDI0IC0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMjQgZGVsZXRpb25zKC0pDQog
-ZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRj
-aGRvZy9mc2wtaW14LXNjLXdkdC50eHQNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9mc2wtaW14LXNjLXdkdC50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvZnNsLWlteC1zYy13ZHQudHh0DQpkZWxl
-dGVkIGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAyYjg3ZTkuLjAwMDAwMDANCi0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9mc2wtaW14LXNjLXdkdC50eHQN
-CisrKyAvZGV2L251bGwNCkBAIC0xLDI0ICswLDAgQEANCi0qIEZyZWVzY2FsZSBpLk1YIFN5c3Rl
-bSBDb250cm9sbGVyIFdhdGNoZG9nDQotDQotaS5NWCBzeXN0ZW0gY29udHJvbGxlciB3YXRjaGRv
-ZyBpcyBmb3IgaS5NWCBTb0NzIHdpdGggc3lzdGVtIGNvbnRyb2xsZXIgaW5zaWRlLA0KLXRoZSB3
-YXRjaGRvZyBpcyBtYW5hZ2VkIGJ5IHN5c3RlbSBjb250cm9sbGVyLCB1c2VycyBjYW4gT05MWSBj
-b21tdW5pY2F0ZSB3aXRoDQotc3lzdGVtIGNvbnRyb2xsZXIgZnJvbSBzZWN1cmUgbW9kZSBmb3Ig
-d2F0Y2hkb2cgb3BlcmF0aW9ucywgc28gTGludXggaS5NWCBzeXN0ZW0NCi1jb250cm9sbGVyIHdh
-dGNoZG9nIGRyaXZlciB3aWxsIGNhbGwgQVJNIFNNQyBBUEkgYW5kIHRyYXAgaW50byBBUk0tVHJ1
-c3RlZC1GaXJtd2FyZQ0KLWZvciB3YXRjaGRvZyBvcGVyYXRpb25zLCBBUk0tVHJ1c3RlZC1GaXJt
-d2FyZSBpcyBydW5uaW5nIGF0IHNlY3VyZSBFTDMgbW9kZSBhbmQNCi1pdCB3aWxsIHJlcXVlc3Qg
-c3lzdGVtIGNvbnRyb2xsZXIgdG8gZXhlY3V0ZSB0aGUgd2F0Y2hkb2cgb3BlcmF0aW9uIHBhc3Nl
-ZCBmcm9tDQotTGludXgga2VybmVsLg0KLQ0KLVJlcXVpcmVkIHByb3BlcnRpZXM6DQotLSBjb21w
-YXRpYmxlOglTaG91bGQgYmUgOg0KLQkJImZzbCxpbXg4cXhwLXNjLXdkdCINCi0JCWZvbGxvd2Vk
-IGJ5ICJmc2wsaW14LXNjLXdkdCI7DQotDQotT3B0aW9uYWwgcHJvcGVydGllczoNCi0tIHRpbWVv
-dXQtc2VjIDogQ29udGFpbnMgdGhlIHdhdGNoZG9nIHRpbWVvdXQgaW4gc2Vjb25kcy4NCi0NCi1F
-eGFtcGxlczoNCi0NCi13YXRjaGRvZyB7DQotCWNvbXBhdGlibGUgPSAiZnNsLGlteDhxeHAtc2Mt
-d2R0IiwgImZzbCxpbXgtc2Mtd2R0IjsNCi0JdGltZW91dC1zZWMgPSA8NjA+Ow0KLX07DQotLSAN
-CjIuNy40DQoNCg==
+On top of next-20190418.
+
+Similarly to recently revisited bitmap_parselist() [1],
+bitmap_parse() is ineffective and overcomplicated.  This
+series reworks it, aligns its interface with bitmap_parselist()
+and makes usage simpler.
+
+The series also adds a test for the function and fixes usage of it
+in cpumask_parse() according to new design - drops the calculating
+of length of an input string.
+
+The following users would also consider to drop the length argument,
+if possible:
+drivers/block/drbd/drbd_main.c:2608
+kernel/padata.c:924
+net/core/net-sysfs.c:726
+net/core/net-sysfs.c:1309
+net/core/net-sysfs.c:1391
+
+bitmap_parse() takes the array of numbers to be put into the map in
+the BE order which is reversed to the natural LE order for bitmaps.
+For example, to construct bitmap containing a bit on the position 42,
+we have to put a line '400,0'. Current implementation reads chunk
+one by one from the beginning ('400' before '0') and makes bitmap
+shift after each successful parse. It makes the complexity of the
+whole process as O(n^2). We can do it in reverse direction ('0'
+before '400') and avoid shifting, but it requires reverse parsing
+helpers.
+
+Tested on arm64 and BE mips.
+
+[1] https://lkml.org/lkml/2019/4/16/66
+
+Yury Norov (6):
+  lib/string: add strnchrnul()
+  bitops: more BITS_TO_* macros
+  lib/bitmap: make bitmap_parse_user a wrapper on bitmap_parse
+  lib: rework bitmap_parse()
+  lib: add test for bitmap_parse()
+  cpumask: don't calculate length of the input string
+
+ include/linux/bitmap.h       |   8 +-
+ include/linux/bitops.h       |   3 +
+ include/linux/cpumask.h      |   4 +-
+ include/linux/string.h       |   3 +
+ lib/bitmap.c                 | 197 +++++++++++++++++------------------
+ lib/string.c                 |  20 ++++
+ lib/test_bitmap.c            | 102 +++++++++++++++++-
+ tools/include/linux/bitops.h |   9 +-
+ 8 files changed, 230 insertions(+), 116 deletions(-)
+
+-- 
+2.17.1
+
