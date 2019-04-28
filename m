@@ -2,111 +2,137 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32A8C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 06:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB364C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB87206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 06:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE9D206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:01:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tezBQwkG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfD1Gzt (ORCPT
+        id S1726512AbfD1HBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 02:55:49 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46861 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfD1Gzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 02:55:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44sJTZ5Lqqz9s7T;
-        Sun, 28 Apr 2019 16:55:46 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     aik@ozlabs.ru, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.1-6 tag
-Date:   Sun, 28 Apr 2019 16:55:57 +1000
-Message-ID: <87ftq2aa9u.fsf@concordia.ellerman.id.au>
+        Sun, 28 Apr 2019 03:01:04 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41899 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfD1HBD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 03:01:03 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v23so5901029oif.8
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 00:01:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jmImGZtkfnl+9FwSUFUpPhx23vdpYvm27KSz2RV8xh8=;
+        b=tezBQwkG958wl9qV6VPis1TYiM1DCy5YhiJ78oksmp6EcTCzjlIIozspHQfXkW3tLj
+         ObDJREHDH9G4c8naro80jAFDRqfE+KVBOjsnhc+h1tJsiNtueCJY6Mc/akTKHjH//FsS
+         EqWn+fPp/31zRP8+1Hy3Y0NAm9HNL/C9+EGl1OuHTcLkzFASbxwbRGy9u1WXA36Dv55t
+         6wikCf+mmzH1msOGZay5D6ksJKucOxJ04GfwHrts9n26yuAeDtoQY6czS1ZsupZgS6fZ
+         1mPeJ0fsf/DkO9SaE6YvYdHpumCLUqlsCpo30+lz9iwlLyWaGgbPeh8tdNLFvC07onmv
+         /HNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jmImGZtkfnl+9FwSUFUpPhx23vdpYvm27KSz2RV8xh8=;
+        b=q8oK9bYmhLUK9jDTmpIqGCe/0Q4MgV96miSr8VYWci2qD/3M/JsfdZgUkrXajkzo1M
+         2JbGqKueGyE6J3v6JgmZvbUSmt8iX77bPb1mA49WajX7+Ed1wmIqAzchdvrgS4dBUBNa
+         j9VqNnIYRfl5ihh/8zMc4/325fILCXBrObZEnzkPXHA0h8SEzYsZHaL0sulMlBOBgAUB
+         o124b47RjK1sMt5p4O5I3SzBVvsmR27VpP+0/EYD0Q7s4ZCIQA4ae+8AJps2Md6RglZV
+         ++fZJIP5RBF9K4IQ9I6O++xq3w8yUtx65oiPdYwicrkX3RxZUwmoaVP8MsPKwgMQHvdy
+         xaZA==
+X-Gm-Message-State: APjAAAXGJUHSxorsf0IB8K4GAn6muDtri03+mXCVXOMY+T7KiTziL3UI
+        1f73uYeZ/fT3bn3mtweajAGdFfZEbGPAuqx01Zw=
+X-Google-Smtp-Source: APXvYqw6wsknBjFHO+Owb98M7yeKcbW6R+41VawMZpdLBmatFZcBfJ3gpNDFu65RM1LXC4hKoo/l/ZK3RXVckn+xMj0=
+X-Received: by 2002:aca:4942:: with SMTP id w63mr3208606oia.33.1556434863080;
+ Sun, 28 Apr 2019 00:01:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190412042613.28930-1-npiggin@gmail.com>
+In-Reply-To: <20190412042613.28930-1-npiggin@gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Sun, 28 Apr 2019 15:01:18 +0800
+Message-ID: <CANRm+CzLmRHtpAawBSknXyznw25ym_otnYJYYxAho-E46K3BZg@mail.gmail.com>
+Subject: Re: [PATCH] kernel/sched: run nohz idle load balancer on HK_FLAG_MISC CPUs
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On Fri, 12 Apr 2019 at 12:27, Nicholas Piggin <npiggin@gmail.com> wrote:
+>
+> The nohz idle balancer runs on the lowest idle CPU. This can
+> interfere with isolated CPUs, so confine it to HK_FLAG_MISC
+> housekeeping CPUs.
+>
+> HK_FLAG_SCHED is not used for this because it is not set anywhere
+> at the moment. This could be folded into HK_FLAG_SCHED once that
+> option is fixed.
+>
+> The problem was observed with increased jitter on an application
+> running on CPU0, caused by nohz idle load balancing being run on
+> CPU1 (an SMT sibling).
+>
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> ---
+>  kernel/sched/fair.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index fdab7eb6f351..d29ca323214d 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -9522,22 +9522,26 @@ static inline int on_null_domain(struct rq *rq)
+>   * - When one of the busy CPUs notice that there may be an idle rebalancing
+>   *   needed, they will kick the idle load balancer, which then does idle
+>   *   load balancing for all the idle CPUs.
+> + * - HK_FLAG_MISC CPUs are used for this task, because HK_FLAG_SCHED not set
+> + *   anywhere yet.
+>   */
+>
+>  static inline int find_new_ilb(void)
+>  {
+> -       int ilb = cpumask_first(nohz.idle_cpus_mask);
+> +       int ilb;
+>
+> -       if (ilb < nr_cpu_ids && idle_cpu(ilb))
+> -               return ilb;
+> +       for_each_cpu_and(ilb, nohz.idle_cpus_mask,
+> +                             housekeeping_cpumask(HK_FLAG_MISC)) {
+> +               if (idle_cpu(ilb))
+> +                       return ilb;
+> +       }
 
-Hi Linus,
+What will happen if cpu1 is still idle currently && housekeeping?
 
-Please pull some more powerpc fixes for 5.1.
+Regards,
+Wanpeng Li
 
-I was 50/50 on whether these were worthy of sending at rc6, but decided I would
-send them as they're in obscure areas of the code and they do fix user-visible
-bugs.
-
-cheers
-
-
-The following changes since commit cf7cf6977f531acd5dfe55250d0ee8cbbb6f1ae8:
-
-  powerpc/mm: Define MAX_PHYSMEM_BITS for all 64-bit configs (2019-04-10 14:45:57 +1000)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.1-6
-
-for you to fetch changes up to 7a3a4d763837d3aa654cd1059030950410c04d77:
-
-  powerpc/mm_iommu: Allow pinning large regions (2019-04-17 21:36:51 +1000)
-
-- ------------------------------------------------------------------
-powerpc fixes for 5.1 #6
-
-A one-liner to make our Radix MMU support depend on HUGETLB_PAGE. We use some of
-the hugetlb inlines (eg. pud_huge()) when operating on the linear mapping and if
-they're compiled into empty wrappers we can corrupt memory.
-
-Then two fixes to our VFIO IOMMU code. The first is not a regression but fixes
-the locking to avoid a user-triggerable deadlock.
-
-The second does fix a regression since rc1, and depends on the first fix. It
-makes it possible to run guests with large amounts of memory again (~256GB).
-
-Thanks to:
-  Alexey Kardashevskiy.
-
-- ------------------------------------------------------------------
-Alexey Kardashevskiy (2):
-      powerpc/mm_iommu: Fix potential deadlock
-      powerpc/mm_iommu: Allow pinning large regions
-
-Michael Ellerman (1):
-      powerpc/mm/radix: Make Radix require HUGETLB_PAGE
-
-
- arch/powerpc/configs/skiroot_defconfig |  1 +
- arch/powerpc/mm/mmu_context_iommu.c    | 97 ++++++++++++++++++++--------------
- arch/powerpc/platforms/Kconfig.cputype |  2 +-
- 3 files changed, 60 insertions(+), 40 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcxU1hAAoJEFHr6jzI4aWAafIP/2Bg4WFdvVfmfMFSxZPP/5Rg
-haS/4x6A6JJCVnxn0czaIUzY01s2Bgex4xAexoP1GtFTnNqXpWaxoPLveQQp0n4s
-lrRC2e5R2O5d9CHVC+qzkUk16Cd6RjrXLzz1YhJo2kQrERJ/CcPQPF2SNkg08kyz
-PtqrQVz2KMQsKiV/wPILwmOGLrxcJfH+01Z4/hbmJzveb9l4/SRN4aVZC12Wv7jQ
-HDszTeDTNpFpTysA+cqC95t0ZQRK+Hb0c23zsDqVVFZxAwf083ZcU9IXwVdhoSsp
-yXaoN/EFdTeVt8A4OL0/ER4wwyx1ShahvR1LuPDZ1x5/rzV0msExsNfRUOqeGUww
-K9KnYEi5wWes/o+aLgf4adG96swmTvVChOSe7OUpod1hPO3UZ8vMpeAt0XB527TY
-ptAcq7d6kpimd84A7qWM4lmC2QT9K5TqE9NoVpeCDgHbDqZZlWG2oMiXQXk/Thu2
-OvpQwrbvX+vYgPgwuQbdyGnlNoxiTVT4oorsMo4YNIUi8OJB3Gu8ROL59tBjY/L+
-jZFTNvj3fv/XYGy9mBBJhTpCG4SDz0D593iomrui+oAYczUkuNvlUv6lf9DCbXlU
-mVbuqMbFin1JUtPngXROQbKkaQ8pf0QgGBS3y7ipPrV/3vAyJ66SqIcrm8XsXyzl
-kAP6787TNrq3fosnfgBb
-=EDog
------END PGP SIGNATURE-----
+>
+>         return nr_cpu_ids;
+>  }
+>
+>  /*
+> - * Kick a CPU to do the nohz balancing, if it is time for it. We pick the
+> - * nohz_load_balancer CPU (if there is one) otherwise fallback to any idle
+> - * CPU (if there is one).
+> + * Kick a CPU to do the nohz balancing, if it is time for it. We pick any
+> + * idle CPU in the HK_FLAG_MISC housekeeping set (if there is one).
+>   */
+>  static void kick_ilb(unsigned int flags)
+>  {
+> --
+> 2.20.1
+>
