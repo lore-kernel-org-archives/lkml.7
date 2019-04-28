@@ -7,76 +7,77 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2201C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDF6C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6EB2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6C82064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 20:19:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="c7WKFpCJ"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="Ex/mj8Zl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfD1UTZ (ORCPT
+        id S1726586AbfD1UTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 16:19:25 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40236 "EHLO
+        Sun, 28 Apr 2019 16:19:30 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37732 "EHLO
         mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfD1UTZ (ORCPT
+        with ESMTP id S1726354AbfD1UT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 16:19:25 -0400
-Received: by mail-lf1-f66.google.com with SMTP id o16so6338661lfl.7
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 13:19:23 -0700 (PDT)
+        Sun, 28 Apr 2019 16:19:27 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h126so6352923lfh.4
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 13:19:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=CTKqHAreMncZ1h7jPsWtfNHB4etyOtY+dEoamFuIONY=;
-        b=c7WKFpCJKWKACqQjuN6+QisDaRfN+IhstozIANrOLGKSX9t088Pd+TJ0TYSEQEUBy4
-         9S0QUaM1sh+ydbjwwTTGA2+uSZ8hfN02UN4Q+DUMe588EixH55YWZuDwkvlB5AAvpO9p
-         u92Z3P24mMpodmk+mfALJQvxc/SMyGAmZj32lSHufdV+OlBqO9ikPZXO9EaMS5QS7JZH
-         qcDuUYEYbIrY94ozz42Oe5j/TU0rjkKDIv+/313hLkPQcLGbPemdP88b4jd1liJb3ndf
-         ybbZbPL5qleI6UvLg3ET28KtBqJkZvCggP0d34eegklnHUvJ7O7+qll1m6QAahwX7jsH
-         WJMQ==
+        bh=m5G0ZYcf9IjrWASeBFD7kWmvvr5oebcAUaFd3mv0bR8=;
+        b=Ex/mj8ZlmBpG6HbMNicv95+YaDtmf0+vnZd9mFB+6bVnElAj1v+XkOFTBl9+soVSwl
+         S44ciWDlnZKyd1rEwsxcmAJ3RtVJoyaCVM8mFU2vgu/H3U/lctjSttJ4nwKYtPzjgzMe
+         0FBRweWMYyhNT557qd+8mV/FjxucSyxYNGmt5niVvroJkYmp6hFSNIkbKKhi56GI/RRm
+         aaBMxaS/rc9nBSqThaeCqFN7xGFi++kVxLtzx6ReMp/mnTAXDM9WTLPFyqZQlk5ZnMup
+         j8fY6f73OSeaaljHgBwfeCQxHYPAe44m/FNRM431FGzRACt+ig4nTf42qsbrXCUG5Vuu
+         ojjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CTKqHAreMncZ1h7jPsWtfNHB4etyOtY+dEoamFuIONY=;
-        b=BoTNaQrBiJFyP+96oB4O0Tsf5LT4Y2yNAFn9kmHxubhzBJe/krWm8cxhgt/WIIF/df
-         mpQnZd8pubjyJsAYTBuAoqzi8Ij30uE21u+G9p3qQaKelsz5a/C5qqENY3LdbGkag9T0
-         1KLD/TpE1Y94jimlxRL9aRAdAQLXMBYFqDHP6Vy5hRibGTKcybpChlNH2jL+kcl96FYG
-         AxRt+Wgs1BNn7TWeKOGnOiAv91R+dlaGEOQ04ItV1ENqFVNiwdeVOCilyJECFBHtBFrI
-         gHpFb3NCxEpdv0L9xw2h9KIHh5zXEovKTeJ6hOOaSTA5KQ05f3V3oejkCOT4qYFdCeGl
-         qqSg==
-X-Gm-Message-State: APjAAAX84WYlf3jjSdF1inlA0xMaP+EjiTJsJ6prG17rDeJIe3wnjAQT
-        2Kgi0MhvMSSe1+996AbWtodn2Q==
-X-Google-Smtp-Source: APXvYqzb+UuqHeoCVQGdxxsf48KDNCdx59QYYBrzj/0hrbNxadzY6bfAuPdIbvgkgs1n9/fqqUe+fg==
-X-Received: by 2002:a19:428c:: with SMTP id p134mr31867733lfa.108.1556482763081;
-        Sun, 28 Apr 2019 13:19:23 -0700 (PDT)
+        bh=m5G0ZYcf9IjrWASeBFD7kWmvvr5oebcAUaFd3mv0bR8=;
+        b=SXTdej1vnGCkGTZ3EOPKDDp+GlP+eGnTUXPua/b6jPZ/r7D8Ft0BvBTpEmQiBvUnkl
+         YXeJWYCPO+1HunEuF7uupFczSRtsilTohY56HoUU3t0BFMQYA3nnYHZt0yHMNyebgjjG
+         pnMhO8TBTkBMXBWLkY/xQr5239To/a4M2Ufx+s2hAqgOdpUSyHSp+MQkWKC1qeHxQ//V
+         +iGKubVzBKyMhStfbeOtT9OxLte4QmgLbW3Y+Izlhqed+mXwL6bBiveJDKr8PC/+6E4+
+         /b0Xxh2lHH5gvWqXJy8gQ8y8q+m8HtQmauZk+hatykaPRjI9EG+kYBxd5QKwJhsKDIqo
+         OWFg==
+X-Gm-Message-State: APjAAAWi5YWhqq2iLVomvpk0G99wQUC0bjcmiOjU1WwVWYXs1XS/rqdN
+        v0OPkyRzX5ecJNfUfpJwuKyZgw==
+X-Google-Smtp-Source: APXvYqw9LWXgAKTsHMfjUlepncCzZNfZNIiDe+WUFHS4Xt04W2kPLw5qw1f0/WSJF7vzc64N1kQ1rA==
+X-Received: by 2002:ac2:54a9:: with SMTP id w9mr30316294lfk.125.1556482765511;
+        Sun, 28 Apr 2019 13:19:25 -0700 (PDT)
 Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id t9sm4108314lfk.20.2019.04.28.13.19.21
+        by smtp.gmail.com with ESMTPSA id i12sm1616629ljg.47.2019.04.28.13.19.23
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 28 Apr 2019 13:19:21 -0700 (PDT)
-Date:   Sun, 28 Apr 2019 12:29:36 -0700
+        Sun, 28 Apr 2019 13:19:24 -0700 (PDT)
+Date:   Sun, 28 Apr 2019 12:30:09 -0700
 From:   Olof Johansson <olof@lixom.net>
 To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>, arm@kernel.org,
         Kukjin Kim <kgene@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL 1/3] ARM: dts: exynos: Changes for v5.2
-Message-ID: <20190428192936.ybxa437r3jznxgbv@localhost>
+Subject: Re: [GIT PULL 2/3] arm64: dts: exynos: Changes for v5.2
+Message-ID: <20190428193009.qfpczki7eyhj4cvu@localhost>
 References: <20190414154805.10188-1-krzk@kernel.org>
+ <20190414154805.10188-2-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190414154805.10188-1-krzk@kernel.org>
+In-Reply-To: <20190414154805.10188-2-krzk@kernel.org>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 05:48:03PM +0200, Krzysztof Kozlowski wrote:
+On Sun, Apr 14, 2019 at 05:48:04PM +0200, Krzysztof Kozlowski wrote:
 > 
 > The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 > 
@@ -84,25 +85,19 @@ On Sun, Apr 14, 2019 at 05:48:03PM +0200, Krzysztof Kozlowski wrote:
 > 
 > are available in the Git repository at:
 > 
->   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-5.2
+>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt64-5.2
 > 
-> for you to fetch changes up to 8cc76b1c75722196fb3d7ffe67cbfeb721a7b0e3:
+> for you to fetch changes up to 77fc46976e0bfcd78d30fb4c9f0169752b4339c9:
 > 
->   ARM: dts: exynos: Remove console argument from bootargs (2019-04-10 18:13:31 +0200)
+>   arm64: dts: exynos: Add SlimSSS to Exynos5433 (2019-03-20 19:29:57 +0100)
 > 
 > ----------------------------------------------------------------
-> Samsung DTS ARM changes for v5.2
+> Samsung DTS ARM64 changes for v5.2
 > 
-> 1. Use proper ADC on Exynos4412.
-> 2. Extend the Exynos5420 Arndale Octa board with: CPU cooling maps,
->    unused regulators, ADC and UHS-I SD card support.  Beside that adjust
->    regulators to proper level and add always-on when needed.
-> 3. Extend the Exynos5260: high speed I2C and proper external interrupts.
->    Also fix shared external interrupt line and use better PLL for MMC
->    clocks.
-> 4. Fix audio recording (broken around v5.1) and microphone recording
->    (since v4.14) on Exynos5422 Odroid XU3 boards.
-> 5. Minor cleanups (stdout-path and bootargs).
+> 1. Use proper clock rates for GSCALER module on TM2 boards.
+> 2. Add clocks for local paths on DECON and GSCALER modules of
+>    Exynos5433.
+> 3. Add Slim SecuritySubSystem to Exynos5433.
 
 Merged, thanks!
 
