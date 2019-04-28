@@ -2,125 +2,89 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F8CC43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F9AC4321A
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 08:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B3C20881
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 07:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCF5A21473
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 08:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="duA59wo5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TFCG+qkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfD1H64 (ORCPT
+        id S1726571AbfD1ILS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 03:58:56 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:42303 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfD1H6z (ORCPT
+        Sun, 28 Apr 2019 04:11:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54486 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfD1ILR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 03:58:55 -0400
-Received: by mail-vk1-f196.google.com with SMTP id u131so63696vke.9
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 00:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yadCq+3TFtjJOWElejuaUSgw6RJEnKLjvwR5ZDLWJ3E=;
-        b=duA59wo5lnfQDeEFZYdACgMLLfO4I0sGb/82yCn57UdR51AXVJ92nw62UKMYtLIG2H
-         6BS7UYy+R3DUo6YMZjIYB/63h6Bpxpf8Nf7LIZkdDfOxgjdNCl1R0RQYsrQZq39FRz9S
-         w//4imMTO+iySHATUxg/goM4kz7hfmQJ2qqBH6H4z1AWYDu2j2bPSn6Zz2VQuNY297EB
-         D17csPJuiy9WUmRFf504gmFclTW1Rd6AGj7JaN5lqYoWktnE68pFCIlOzrKaqGXDAC/2
-         otD1OtkJoGiVGvWyNtshbRwUh30W8gLXEP6hj06SZpJ0Sv742Sr85e9GItedNOIP/6vC
-         dzOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yadCq+3TFtjJOWElejuaUSgw6RJEnKLjvwR5ZDLWJ3E=;
-        b=UzoMF2CDDtguPGe3hYyxOKJA9nZZZkRygci5+B0MrZZxAahu3EahsVAk/ZEud4Hg1x
-         a4eBJ0WjwbPoxa90llLtPshwP086vlFpWuKehNRJDo/UuG2/vCDUujTi2rGDwng3FK7n
-         2j5HYrkLSA6C94QkJrfE/GbKQyAeGIZP4laiFF9tkOED6OdzGZrwSXsHL2xycK2PDiB/
-         p9BORSOjRi0Ee55MHZUzd+jcC7Sb0ZE7rizWV089RP7ZlPXgi2CqCC0+NYxHQVaHHkxy
-         xU59VdcVyfqyPnmm3hZLwibd7OyK+CC1E0DMrYZ9QOfpHtH/Rq7t/64o4kNURzEhHLZQ
-         etUg==
-X-Gm-Message-State: APjAAAWhFYdeVvIWHmZLpC0eUgLjvD2oCTxYlG/3wL2JpJuA/+60KFpI
-        pEU5zFlqQKvSFdF4ty/erMaQoVQQ+4sNQmtQd7Ylew==
-X-Google-Smtp-Source: APXvYqzM2mHelZQDg7170xe9MHOKTlaQJCD7sNFNKFFEDLeAMsHhLXzzRDz8+QnUqQMimwbro3CZlYdg3pFwR+I/tGA=
-X-Received: by 2002:a1f:97ce:: with SMTP id z197mr29161293vkd.58.1556438334562;
- Sun, 28 Apr 2019 00:58:54 -0700 (PDT)
+        Sun, 28 Apr 2019 04:11:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9cfzCZHsC8Z1URVhGFCxQrxINgq5TQBCpge+7Hexgeo=; b=TFCG+qkPsR1tZhgIZ7nDdAu0U
+        41Nj91cp2ngQL//A/7D/Qd/9wiELv5/cmOFeNyPyksBVKb+qMzDrmLMV4ybT5jMS9H+MF5ZsLts1l
+        lfKLPgcZ0ZX3lBjNfifZXvn/oylF71G4vYc2rkGFLX8tAm9OrHVcOVcOGG0fnOkbaFDAL4OM0KDPp
+        T8SYAMoCCLFGrrD8yxjawK2PBNYA0Xix+L43FIhjbTddeH2nGIBjguRfnkqeOg3LL21Kp+PkuxAh/
+        4bERD+PCrlUYLJtsUSZQ5FXKeu2DsZb8IsCRYAqtv3geoy0wDTwEDGjksVmGvGbPjksJtmYTcqLcr
+        1c0xSPqAg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hKetv-00011K-CV; Sun, 28 Apr 2019 08:11:07 +0000
+Date:   Sun, 28 Apr 2019 01:11:07 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
+Subject: Re: DISCONTIGMEM is deprecated
+Message-ID: <20190428081107.GA30901@infradead.org>
+References: <20190419094335.GJ18914@techsingularity.net>
+ <20190419140521.GI7751@bombadil.infradead.org>
+ <20190421063859.GA19926@rapoport-lnx>
+ <20190421132606.GJ7751@bombadil.infradead.org>
+ <20190421211604.GN18914@techsingularity.net>
+ <20190423071354.GB12114@infradead.org>
+ <20190424113352.GA6278@rapoport-lnx>
 MIME-Version: 1.0
-References: <20190426151821.36944-1-yuehaibing@huawei.com>
-In-Reply-To: <20190426151821.36944-1-yuehaibing@huawei.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sun, 28 Apr 2019 10:58:43 +0300
-Message-ID: <CAOtvUMesBDrnMd=d5S50xj0W2PyYbb9E9SeYvaev4Dw7Uu_tHg@mail.gmail.com>
-Subject: Re: [PATCH -next] crypto: ccree - remove set but not used variable 'du_size'
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424113352.GA6278@rapoport-lnx>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 7:38 PM Yue Haibing <yuehaibing@huawei.com> wrote:
->
-> From: YueHaibing <yuehaibing@huawei.com>
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/crypto/ccree/cc_cipher.c: In function cc_setup_key_desc:
-> drivers/crypto/ccree/cc_cipher.c:645:15: warning: variable du_size set bu=
-t not used [-Wunused-but-set-variable]
->
-> It is never used since introduction in
-> commit dd8486c75085 ("crypto: ccree - move key load desc. before flow des=
-c.")
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/crypto/ccree/cc_cipher.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_c=
-ipher.c
-> index d9f8cd5..6bd3791 100644
-> --- a/drivers/crypto/ccree/cc_cipher.c
-> +++ b/drivers/crypto/ccree/cc_cipher.c
-> @@ -642,16 +642,12 @@ static void cc_setup_key_desc(struct crypto_tfm *tf=
-m,
->         int direction =3D req_ctx->gen_ctx.op_type;
->         dma_addr_t key_dma_addr =3D ctx_p->user.key_dma_addr;
->         unsigned int key_len =3D ctx_p->keylen;
-> -       unsigned int du_size =3D nbytes;
->         unsigned int din_size;
->
->         struct cc_crypto_alg *cc_alg =3D
->                 container_of(tfm->__crt_alg, struct cc_crypto_alg,
->                              skcipher_alg.base);
->
-> -       if (cc_alg->data_unit)
-> -               du_size =3D cc_alg->data_unit;
+On Wed, Apr 24, 2019 at 02:33:53PM +0300, Mike Rapoport wrote:
+> On Tue, Apr 23, 2019 at 12:13:54AM -0700, Christoph Hellwig wrote:
+> > On Sun, Apr 21, 2019 at 10:16:04PM +0100, Mel Gorman wrote:
+> > > 32-bit NUMA systems should be non-existent in practice. The last NUMA
+> > > system I'm aware of that was both NUMA and 32-bit only died somewhere
+> > > between 2004 and 2007. If someone is running a 64-bit capable system in
+> > > 32-bit mode with NUMA, they really are just punishing themselves for fun.
+> > 
+> > Can we mark it as BROKEN to see if someone shouts and then remove it
+> > a year or two down the road?  Or just kill it off now..
+> 
+> How about making SPARSEMEM default for x86-32?
 
-Thanks!
-This is a good catch. It seems we can also drop the whole cc_alg var
-as well in this case,
-since it is only used by the code setting du_size....
+Sounds good.
 
-Do you want to send a patch doing both or shall I ?
-
-Cheers,
-Gilad
-
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-values of =CE=B2 will give rise to dom!
+Another question:  I always found the option to even select the memory
+models like a bad tradeoff.  Can we really expect a user to make a sane
+choice?  I'd rather stick to a relativelty optimal choice based on arch
+and maybe a few other parameters (NUMA or not for example) and stick to
+it, reducing the testing matrix.
