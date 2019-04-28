@@ -1,180 +1,298 @@
 Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F6FC43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 12:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E46DC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 12:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 706A82075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 12:17:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556453848;
-	bh=QQ4jYknkONX+FauOuZHAVnwi/so2X9bQPTqcBLvN7lU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MN883jVy/q9fWZ1Cx6WxldSnf/Z9lXi7qPRK0esXJENh12gqTu7wSLOT/L06skcMk
-	 OZCp70dbGBZkKOAJNntkRpBYfdtUk6HA1v80IJXiY6gS8w82ChWkFeuC5Fl2WxvG+N
-	 7CVR4mM3c9FGMAI0htQ6g3/y74vigRhxPE0Ma/c0=
+	by mail.kernel.org (Postfix) with ESMTP id E6C0D2075D
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 12:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfD1MR1 (ORCPT
+        id S1726761AbfD1MRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 08:17:27 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46179 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfD1MR0 (ORCPT
+        Sun, 28 Apr 2019 08:17:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55374 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726480AbfD1MRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 08:17:26 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t17so11439935wrw.13
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 05:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TwBPjPMqNZxcT9Q6smXuEERZNadMZXwilI4z0tYvPy8=;
-        b=SHgLCpsQ6qC3nAQ3ByNaR9MGGc3JhiwG/vewMa8CVZMvC+mToY2dwNpoz+24mNPLBV
-         nhAG5hwuFDEQptrhi5wzTvO1ACQYZWrEMOmIcRhVFspZ4oS9fbHW4mlsHVF+mxGI05Hc
-         +rlacYdXYiCLJGiDnNCtclYo4feXfwwLDDh5w5M4r85d7sIUtor+SJkseTHX9reoTrrA
-         QiCWdOEn75vWRqK9pWh01M0xBDLEtCA9uVH8/YYcfLElLTDK/wvzyzRJQhLB4zoxusQ/
-         5MwWOU5w2CBdrTujYf3ulrNFVtx2iGlabG2N+O2MKRz7CIyrbhV+rDJhr+YTpkPJ/FXU
-         O58A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TwBPjPMqNZxcT9Q6smXuEERZNadMZXwilI4z0tYvPy8=;
-        b=KfcByRAsGySU7Wl5RqaLGYrwQg1uNDQGIgyFdMHQ1529PIJPgFCZ/BxOko0Ts2uiYM
-         An8032QX8GJTIQq8LIulMnpIWnsQS5A3KR7UwUnrsbCbTE7KJd1wUQ65yPuWbxziLCu9
-         IFxpn4r0NyTu4NZLanYCFjdcVVDZdaUrtNLCDMAl3J9HXve36QRIWcLS3iyXSiQL59sM
-         l6AjigCjBWXwwGTqVzQoo/nUaJwBGJRXG7KfmJqSMblXmH2RTd4OpwcCb2K+GQecA4Ls
-         eTmrxAq3c+j7ZJqtxl/vcK9TqrN5TZ7qZ8GD2NFz0n49gL5ffSa6golJ4qgXo+A4aY1o
-         8www==
-X-Gm-Message-State: APjAAAX/nYIDHED5QuOYNFWH7BI+bNonncYhb2PrezffmLbb6rPKqSW6
-        5CgJWOfveRrbb3efdPthftY=
-X-Google-Smtp-Source: APXvYqzwBcCyMgSz8LtQhEz6rVshzNq7VxStQhKk6bx8Llypm3FbPHyEmECUiu2i8C1Hqcj9+GV3sg==
-X-Received: by 2002:adf:f70a:: with SMTP id r10mr20989881wrp.96.1556453844279;
-        Sun, 28 Apr 2019 05:17:24 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id h16sm924254wrb.31.2019.04.28.05.17.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 28 Apr 2019 05:17:23 -0700 (PDT)
-Date:   Sun, 28 Apr 2019 14:17:21 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-Message-ID: <20190428121721.GA121434@gmail.com>
-References: <20190424140013.GA14594@sinkpad>
- <CAERHkrtVjU4SaHjPGNb140qBiU+wVELGaH6j9Z=cctToZ0qn9g@mail.gmail.com>
- <20190425095508.GA8387@gmail.com>
- <CAERHkrs0=xcx9UUZbZPYq4QbznUqHAuVbTnafSVpZFKwAEFyMA@mail.gmail.com>
- <20190427091716.GC99668@gmail.com>
- <CAERHkruEAVBsh6FphMKqgR2+HjsVVegxjnpOFRNfbrfZDNpc9w@mail.gmail.com>
- <20190427142137.GA72051@gmail.com>
- <CAERHkrtaU=Y-Lxypu_7uBbe-mJtG-3friz=ZLhV53X4FXHcEyA@mail.gmail.com>
- <20190428093304.GA7393@gmail.com>
- <CAERHkrvaSSR1wRECF1AcLOhpmCAH0ecvFEL5MOFjK05F0xSuzA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAERHkrvaSSR1wRECF1AcLOhpmCAH0ecvFEL5MOFjK05F0xSuzA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 28 Apr 2019 08:17:53 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3SC0cww058926
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 08:17:52 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s5b1p1adv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 08:17:51 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Sun, 28 Apr 2019 13:17:50 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 28 Apr 2019 13:17:48 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3SCHlO049283208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 28 Apr 2019 12:17:47 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C68942041;
+        Sun, 28 Apr 2019 12:17:47 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A07B4203F;
+        Sun, 28 Apr 2019 12:17:45 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sun, 28 Apr 2019 12:17:45 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Sun, 28 Apr 2019 15:17:44 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v3] docs/vm: add documentation of memory models
+Date:   Sun, 28 Apr 2019 15:17:43 +0300
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19042812-0016-0000-0000-000002761A45
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042812-0017-0000-0000-000032D29C8F
+Message-Id: <1556453863-16575-1-git-send-email-rppt@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-28_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904280089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Describe what {FLAT,DISCONTIG,SPARSE}MEM are and how they manage to
+maintain pfn <-> struct page correspondence.
 
-* Aubrey Li <aubrey.intel@gmail.com> wrote:
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+v3 changes:
+* more spelling and grammar
 
-> On Sun, Apr 28, 2019 at 5:33 PM Ingo Molnar <mingo@kernel.org> wrote:
-> > So because I'm a big fan of presenting data in a readable fashion, here
-> > are your results, tabulated:
-> 
-> I thought I tried my best to make it readable, but this one looks much better,
-> thanks, ;-)
-> >
-> >  #
-> >  # Sysbench throughput comparison of 3 different kernels at different
-> >  # load levels, higher numbers are better:
-> >  #
-> >
-> >  .--------------------------------------|----------------------------------------------------------------.
-> >  |  NA/AVX     vanilla-SMT    [stddev%] |coresched-SMT   [stddev%]   +/-  |   no-SMT    [stddev%]   +/-  |
-> >  |--------------------------------------|----------------------------------------------------------------|
-> >  |   1/1             508.5    [  0.2% ] |        504.7   [  1.1% ]   0.8% |    509.0    [  0.2% ]   0.1% |
-> >  |   2/2            1000.2    [  1.4% ] |       1004.1   [  1.6% ]   0.4% |    997.6    [  1.2% ]   0.3% |
-> >  |   4/4            1912.1    [  1.0% ] |       1904.2   [  1.1% ]   0.4% |   1914.9    [  1.3% ]   0.1% |
-> >  |   8/8            3753.5    [  0.3% ] |       3748.2   [  0.3% ]   0.1% |   3751.3    [  0.4% ]   0.1% |
-> >  |  16/16           7139.3    [  2.4% ] |       7137.9   [  1.8% ]   0.0% |   7049.2    [  2.4% ]   1.3% |
-> >  |  32/32          10899.0    [  4.2% ] |      10780.3   [  4.4% ]  -1.1% |  10339.2    [  9.6% ]  -5.1% |
-> >  |  64/64          15086.1    [ 11.5% ] |      14262.0   [  8.2% ]  -5.5% |  11168.7    [ 22.2% ] -26.0% |
-> >  | 128/128         15371.9    [ 22.0% ] |      14675.8   [ 14.4% ]  -4.5% |  10963.9    [ 18.5% ] -28.7% |
-> >  | 256/256         15990.8    [ 22.0% ] |      12227.9   [ 10.3% ] -23.5% |  10469.9    [ 19.6% ] -34.5% |
-> >  '--------------------------------------|----------------------------------------------------------------'
-> >
-> > One major thing that sticks out is that if we compare the stddev numbers
-> > to the +/- comparisons then it's pretty clear that the benchmarks are
-> > very noisy: in all but the last row stddev is actually higher than the
-> > measured effect.
-> >
-> > So what does 'stddev' mean here, exactly? The stddev of multipe runs,
-> > i.e. measured run-to-run variance? Or is it some internal metric of the
-> > benchmark?
-> >
-> 
-> The benchmark periodically reports intermediate statistics in one second,
-> the raw log looks like below:
-> [ 11s ] thds: 256 eps: 14346.72 lat (ms,95%): 44.17
-> [ 12s ] thds: 256 eps: 14328.45 lat (ms,95%): 44.17
-> [ 13s ] thds: 256 eps: 13773.06 lat (ms,95%): 43.39
-> [ 14s ] thds: 256 eps: 13752.31 lat (ms,95%): 43.39
-> [ 15s ] thds: 256 eps: 15362.79 lat (ms,95%): 43.39
-> [ 16s ] thds: 256 eps: 26580.65 lat (ms,95%): 35.59
-> [ 17s ] thds: 256 eps: 15011.78 lat (ms,95%): 36.89
-> [ 18s ] thds: 256 eps: 15025.78 lat (ms,95%): 39.65
-> [ 19s ] thds: 256 eps: 15350.87 lat (ms,95%): 39.65
-> [ 20s ] thds: 256 eps: 15491.70 lat (ms,95%): 36.89
-> 
-> I have a python script to parse eps(events per second) and lat(latency)
-> out, and compute the average and stddev. (And I can draw a curve locally).
-> 
-> It's noisy indeed when tasks number is greater than the CPU number.
-> It's probably caused by high frequent load balance and context switch.
+v2 changes:
+* spelling/grammar fixes
+* added note about deprecation of DISCONTIGMEM
 
-Ok, so it's basically an internal workload noise metric, it doesn't 
-represent the run-to-run noise.
+ Documentation/vm/index.rst        |   1 +
+ Documentation/vm/memory-model.rst | 183 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 184 insertions(+)
+ create mode 100644 Documentation/vm/memory-model.rst
 
-So it's the real stddev of the workload - but we don't know whether the 
-measured performance figure is exactly in the middle of the runtime 
-probability distribution.
+diff --git a/Documentation/vm/index.rst b/Documentation/vm/index.rst
+index b58cc3b..e8d943b 100644
+--- a/Documentation/vm/index.rst
++++ b/Documentation/vm/index.rst
+@@ -37,6 +37,7 @@ descriptions of data structures and algorithms.
+    hwpoison
+    hugetlbfs_reserv
+    ksm
++   memory-model
+    mmu_notifier
+    numa
+    overcommit-accounting
+diff --git a/Documentation/vm/memory-model.rst b/Documentation/vm/memory-model.rst
+new file mode 100644
+index 0000000..382f72a
+--- /dev/null
++++ b/Documentation/vm/memory-model.rst
+@@ -0,0 +1,183 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++.. _physical_memory_model:
++
++=====================
++Physical Memory Model
++=====================
++
++Physical memory in a system may be addressed in different ways. The
++simplest case is when the physical memory starts at address 0 and
++spans a contiguous range up to the maximal address. It could be,
++however, that this range contains small holes that are not accessible
++for the CPU. Then there could be several contiguous ranges at
++completely distinct addresses. And, don't forget about NUMA, where
++different memory banks are attached to different CPUs.
++
++Linux abstracts this diversity using one of the three memory models:
++FLATMEM, DISCONTIGMEM and SPARSEMEM. Each architecture defines what
++memory models it supports, what the default memory model is and
++whether it is possible to manually override that default.
++
++.. note::
++   At time of this writing, DISCONTIGMEM is considered deprecated,
++   although it is still in use by several architectures.
++
++All the memory models track the status of physical page frames using
++:c:type:`struct page` arranged in one or more arrays.
++
++Regardless of the selected memory model, there exists one-to-one
++mapping between the physical page frame number (PFN) and the
++corresponding `struct page`.
++
++Each memory model defines :c:func:`pfn_to_page` and :c:func:`page_to_pfn`
++helpers that allow the conversion from PFN to `struct page` and vice
++versa.
++
++FLATMEM
++=======
++
++The simplest memory model is FLATMEM. This model is suitable for
++non-NUMA systems with contiguous, or mostly contiguous, physical
++memory.
++
++In the FLATMEM memory model, there is a global `mem_map` array that
++maps the entire physical memory. For most architectures, the holes
++have entries in the `mem_map` array. The `struct page` objects
++corresponding to the holes are never fully initialized.
++
++To allocate the `mem_map` array, architecture specific setup code
++should call :c:func:`free_area_init_node` function or its convenience
++wrapper :c:func:`free_area_init`. Yet, the mappings array is not
++usable until the call to :c:func:`memblock_free_all` that hands all
++the memory to the page allocator.
++
++If an architecture enables `CONFIG_ARCH_HAS_HOLES_MEMORYMODEL` option,
++it may free parts of the `mem_map` array that do not cover the
++actual physical pages. In such case, the architecture specific
++:c:func:`pfn_valid` implementation should take the holes in the
++`mem_map` into account.
++
++With FLATMEM, the conversion between a PFN and the `struct page` is
++straightforward: `PFN - ARCH_PFN_OFFSET` is an index to the
++`mem_map` array.
++
++The `ARCH_PFN_OFFSET` defines the first page frame number for
++systems with physical memory starting at address different from 0.
++
++DISCONTIGMEM
++============
++
++The DISCONTIGMEM model treats the physical memory as a collection of
++`nodes` similarly to how Linux NUMA support does. For each node Linux
++constructs an independent memory management subsystem represented by
++`struct pglist_data` (or `pg_data_t` for short). Among other
++things, `pg_data_t` holds the `node_mem_map` array that maps
++physical pages belonging to that node. The `node_start_pfn` field of
++`pg_data_t` is the number of the first page frame belonging to that
++node.
++
++The architecture setup code should call :c:func:`free_area_init_node` for
++each node in the system to initialize the `pg_data_t` object and its
++`node_mem_map`.
++
++Every `node_mem_map` behaves exactly as FLATMEM's `mem_map` -
++every physical page frame in a node has a `struct page` entry in the
++`node_mem_map` array. When DISCONTIGMEM is enabled, a portion of the
++`flags` field of the `struct page` encodes the node number of the
++node hosting that page.
++
++The conversion between a PFN and the `struct page` in the
++DISCONTIGMEM model became slightly more complex as it has to determine
++which node hosts the physical page and which `pg_data_t` object
++holds the `struct page`.
++
++Architectures that support DISCONTIGMEM provide :c:func:`pfn_to_nid`
++to convert PFN to the node number. The opposite conversion helper
++:c:func:`page_to_nid` is generic as it uses the node number encoded in
++page->flags.
++
++Once the node number is known, the PFN can be used to index
++appropriate `node_mem_map` array to access the `struct page` and
++the offset of the `struct page` from the `node_mem_map` plus
++`node_start_pfn` is the PFN of that page.
++
++SPARSEMEM
++=========
++
++SPARSEMEM is the most versatile memory model available in Linux and it
++is the only memory model that supports several advanced features such
++as hot-plug and hot-remove of the physical memory, alternative memory
++maps for non-volatile memory devices and deferred initialization of
++the memory map for larger systems.
++
++The SPARSEMEM model presents the physical memory as a collection of
++sections. A section is represented with :c:type:`struct mem_section`
++that contains `section_mem_map` that is, logically, a pointer to an
++array of struct pages. However, it is stored with some other magic
++that aids the sections management. The section size and maximal number
++of section is specified using `SECTION_SIZE_BITS` and
++`MAX_PHYSMEM_BITS` constants defined by each architecture that
++supports SPARSEMEM. While `MAX_PHYSMEM_BITS` is an actual width of a
++physical address that an architecture supports, the
++`SECTION_SIZE_BITS` is an arbitrary value.
++
++The maximal number of sections is denoted `NR_MEM_SECTIONS` and
++defined as
++
++.. math::
++
++   NR\_MEM\_SECTIONS = 2 ^ {(MAX\_PHYSMEM\_BITS - SECTION\_SIZE\_BITS)}
++
++The `mem_section` objects are arranged in a two-dimensional array
++called `mem_sections`. The size and placement of this array depend
++on `CONFIG_SPARSEMEM_EXTREME` and the maximal possible number of
++sections:
++
++* When `CONFIG_SPARSEMEM_EXTREME` is disabled, the `mem_sections`
++  array is static and has `NR_MEM_SECTIONS` rows. Each row holds a
++  single `mem_section` object.
++* When `CONFIG_SPARSEMEM_EXTREME` is enabled, the `mem_sections`
++  array is dynamically allocated. Each row contains PAGE_SIZE worth of
++  `mem_section` objects and the number of rows is calculated to fit
++  all the memory sections.
++
++The architecture setup code should call :c:func:`memory_present` for
++each active memory range or use :c:func:`memblocks_present` or
++:c:func:`sparse_memory_present_with_active_regions` wrappers to
++initialize the memory sections. Next, the actual memory maps should be
++set up using :c:func:`sparse_init`.
++
++With SPARSEMEM there are two possible ways to convert a PFN to the
++corresponding `struct page` - a "classic sparse" and "sparse
++vmemmap". The selection is made at build time and it is determined by
++the value of `CONFIG_SPARSEMEM_VMEMMAP`.
++
++The classic sparse encodes the section number of a page in page->flags
++and uses high bits of a PFN to access the section that maps that page
++frame. Inside a section, the PFN is the index to the array of pages.
++
++The sparse vmemmap uses a virtually mapped memory map to optimize
++pfn_to_page and page_to_pfn operations. There is a global `struct
++page *vmemmap` pointer that points to a virtually contiguous array of
++`struct page` objects. A PFN is an index to that array and the the
++offset of the `struct page` from `vmemmap` is the PFN of that
++page.
++
++To use vmemmap, an architecture has to reserve a range of virtual
++addresses that will map the physical pages containing the memory
++map and make sure that `vmemmap` points to that range. In addition,
++the architecture should implement :c:func:`vmemmap_populate` method
++that will allocate the physical memory and create page tables for the
++virtual memory map. If an architecture does not have any special
++requirements for the vmemmap mappings, it can use default
++:c:func:`vmemmap_populate_basepages` provided by the generic memory
++management.
++
++The virtually mapped memory map allows storing `struct page` objects
++for persistent memory devices in pre-allocated storage on those
++devices. This storage is represented with :c:type:`struct vmem_altmap`
++that is eventually passed to vmemmap_populate() through a long chain
++of function calls. The vmemmap_populate() implementation may use the
++`vmem_altmap` along with :c:func:`altmap_alloc_block_buf` helper to
++allocate memory map on the persistent memory device.
+-- 
+2.7.4
 
-> Do you have any suggestions? Or any other information I can provide?
-
-Yeah, so we don't just want to know the "standard deviation" of the 
-measured throughput values, but also the "standard error of the mean".
-
-I suspect it's pretty low, below 1% for all rows?
-
-Thanks,
-
-	Ingo
