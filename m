@@ -2,100 +2,103 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB1CC43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E827CC43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B01D1206BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556471269;
-	bh=tMBABMwMn1Tklu43CLV59X9dr8+SqG8/ovrp/vPOJWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s6NFzxEd8rjuL7SoPCuoim+5q8P41x78qSg8xOn7Hi/9QdTvq8xoxtAGfUDY0Colh
-	 t5neApG2pNUWh5TPynjm5UxgvT5+GmrdxngPbTFgv/HLmGWntHN+lG9errWXrFNC/p
-	 yVao/Thp6P6IHQF1XBXXMB7yS2Y0crfM2xbpOm5U=
+	by mail.kernel.org (Postfix) with ESMTP id ACC6C2067C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:25:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlYThYJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfD1RHs (ORCPT
+        id S1726999AbfD1RZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 13:07:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbfD1RHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 13:07:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34EAA20656;
-        Sun, 28 Apr 2019 17:07:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556471267;
-        bh=tMBABMwMn1Tklu43CLV59X9dr8+SqG8/ovrp/vPOJWQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fPzbzuBE/Xj5GlFuS1dVy5Oyga5G0Rwee0mwgYdmr8Gwls2n2U1I8SK4mQGzzMyKw
-         3EEZK7DaREtShiEGJIuEP6/vYrEIWzS1GoaPNxbf3VBcLiKh3cIjTG73LuF0RWj0vg
-         w/pi8CO4y4ZeILcjZTU4kWkCLsv8zriwKQw/BC8o=
-Date:   Sun, 28 Apr 2019 19:07:45 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] sound: USB: line6: use dynamic buffers
-Message-ID: <20190428170745.GA19070@kroah.com>
-References: <20190428160411.GA12815@kroah.com>
- <s5hmukakrod.wl-tiwai@suse.de>
+        Sun, 28 Apr 2019 13:25:07 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43042 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfD1RZH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 13:25:07 -0400
+Received: by mail-pl1-f193.google.com with SMTP id n8so3957305plp.10
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 10:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=/nxmV2ejCLBlT2N8CFO5Chpe8WRL8/vlUabGbdVX9iI=;
+        b=BlYThYJgH+3PFtVlZ3/WM6LWYdsdDy749K6hzzpF1tt+t8StrYUG5URzLGbepM8Ieo
+         TV+D9aGm4fHo596hydua7SL49/68gGLviedt9Xc0WbXnqOvYEBKIN2b2ieegGMsJPGvu
+         m3q09rTSBmgjYxacxaiSrnz7A7MP8cqPCa9xSw351Cy9AxQXb3XO6siltDpOG0eiP8ZD
+         8BTtrSDQ0NLhXak7Cv8SF4NIX2jjmdWDhS3dNjGESnCpfkwOenUI05X0wCftr0SpCxRy
+         M+N8+GltLl7SFm/qN35UB3TRjYVYhA+drhOK+Iv34H7eoNq6Zpj0PijMvUP4udfiaHXy
+         pMHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=/nxmV2ejCLBlT2N8CFO5Chpe8WRL8/vlUabGbdVX9iI=;
+        b=f8OTf09h50xw5ncy4fxq266ObxA9wtSL74Ct6J8A4xLEQ6CyM9eb42xbCSOI/pD2tU
+         cMn7O2bgT3Dn4d2hr50J36g5uL38tQAtvbKA0/9fHXBXta2fPOY4XwvqabqxujgJCn1c
+         CnqIbCrie6OAonHX+xm23Vs3kZkgZoXKC3qdMwaBEgRgtxKvyp1Epeh2C9Sxk863PFYS
+         Uvx7EPUst0PCgHJicAZ0kF9GBvXzhGo6rvrFQU6iM3DZtPU62ZZabctocarOYI6Ym/f9
+         b3XrUyXqP6iUAKOEB7pHVCmXVSIwmLIRZk1GYVPP09qcfohpdM7JeMBIWqv5t1PMjvdK
+         zFAw==
+X-Gm-Message-State: APjAAAUKmgQG2Pt9Xywyv88QdHw/KyN6qAf44u2bkAiOhuPkDiAcfpWd
+        0ttA3vGTY9rP7ucBz2Qjqko=
+X-Google-Smtp-Source: APXvYqzebahgIFaU/nRnZ5/IHSuoOabIL/Qhxm17X1OZwhEAivLa7nZRJB0b113/BQzBly4R0t0cWw==
+X-Received: by 2002:a17:902:442:: with SMTP id 60mr58630388ple.107.1556472306788;
+        Sun, 28 Apr 2019 10:25:06 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id d10sm6465459pgi.6.2019.04.28.10.25.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Apr 2019 10:25:06 -0700 (PDT)
+Date:   Sun, 28 Apr 2019 22:54:59 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: mtd: maps: update physmap-versatile.c file entry
+Message-ID: <20190428172459.GA25940@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <s5hmukakrod.wl-tiwai@suse.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 06:42:10PM +0200, Takashi Iwai wrote:
-> On Sun, 28 Apr 2019 18:04:11 +0200,
-> Greg Kroah-Hartman wrote:
-> > 
-> > --- a/sound/usb/line6/toneport.c
-> > +++ b/sound/usb/line6/toneport.c
-> > @@ -365,16 +365,21 @@ static bool toneport_has_source_select(s
-> >  /*
-> >  	Setup Toneport device.
-> >  */
-> > -static void toneport_setup(struct usb_line6_toneport *toneport)
-> > +static int toneport_setup(struct usb_line6_toneport *toneport)
-> >  {
-> > -	u32 ticks;
-> > +	u32 *ticks;
-> >  	struct usb_line6 *line6 = &toneport->line6;
-> >  	struct usb_device *usbdev = line6->usbdev;
-> >  
-> > +	ticks = kmalloc(sizeof(*ticks), GFP_KERNEL);
-> > +	if (!ticks)
-> > +		return -ENOMEM;
-> > +
-> >  	/* sync time on device with host: */
-> >  	/* note: 32-bit timestamps overflow in year 2106 */
-> > -	ticks = (u32)ktime_get_real_seconds();
-> > -	line6_write_data(line6, 0x80c6, &ticks, 4);
-> > +	*ticks = (u32)ktime_get_real_seconds();
-> > +	line6_write_data(line6, 0x80c6, ticks, 4);
-> > +	kfree(ticks);
-> >  
-> >  	/* enable device: */
-> >  	toneport_send_cmd(usbdev, 0x0301, 0x0000);
-> 
-> This function misses the "return 0" at the end, so I fixed it up
-> manually and applied now.
+from the commit "mtd: maps: Rename physmap_of_{versatile, gemini} into
+physmap-{versatile, gemini}"
 
-Ugh, sorry about that.  Odd I didn't get a build error, my fault.
+physmap_of_versatile.c renamed as physmap-versatile.c
+updating the same in MAINTAINERS file.
 
-thanks for the quick response.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 43a9ceb..7e42422 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1151,7 +1151,7 @@ F:	arch/arm/boot/dts/versatile*
+ F:	drivers/clk/versatile/
+ F:	drivers/i2c/busses/i2c-versatile.c
+ F:	drivers/irqchip/irq-versatile-fpga.c
+-F:	drivers/mtd/maps/physmap_of_versatile.c
++F:	drivers/mtd/maps/physmap-versatile.c
+ F:	drivers/power/reset/arm-versatile-reboot.c
+ F:	drivers/soc/versatile/
+ 
+-- 
+2.7.4
+
