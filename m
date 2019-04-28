@@ -3,30 +3,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6970CC43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E70AC43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D328206A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123BF206BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 15:59:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfD1P7J (ORCPT
+        id S1726928AbfD1P6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 11:59:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51080 "EHLO mx1.redhat.com"
+        Sun, 28 Apr 2019 11:58:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50548 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbfD1P6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 11:58:39 -0400
+        id S1726744AbfD1P6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 11:58:31 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 251823084213;
-        Sun, 28 Apr 2019 15:58:38 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E73AE308FF32;
+        Sun, 28 Apr 2019 15:58:29 +0000 (UTC)
 Received: from llong.com (ovpn-120-22.rdu2.redhat.com [10.10.120.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B6F03604DD;
-        Sun, 28 Apr 2019 15:58:36 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C043620DF;
+        Sun, 28 Apr 2019 15:58:28 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -39,432 +39,128 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Tim Chen <tim.c.chen@linux.intel.com>,
         huang ying <huang.ying.caritas@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH-tip v6 06/20] locking/rwsem: Code cleanup after files merging
-Date:   Sun, 28 Apr 2019 11:57:41 -0400
-Message-Id: <20190428155755.14267-7-longman@redhat.com>
+        Waiman Long <longman@redhat.com>, stable@vger.kernel.org
+Subject: [PATCH-tip v6 01/20] locking/rwsem: Prevent decrement of reader count before increment
+Date:   Sun, 28 Apr 2019 11:57:36 -0400
+Message-Id: <20190428155755.14267-2-longman@redhat.com>
 In-Reply-To: <20190428155755.14267-1-longman@redhat.com>
 References: <20190428155755.14267-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Sun, 28 Apr 2019 15:58:38 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Sun, 28 Apr 2019 15:58:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After merging all the relevant rwsem code into one single file, there
-are a number of optimizations and cleanups that can be done:
+During my rwsem testing, it was found that after a down_read(), the
+reader count may occasionally become 0 or even negative. Consequently,
+a writer may steal the lock at that time and execute with the reader
+in parallel thus breaking the mutual exclusion guarantee of the write
+lock. In other words, both readers and writer can become rwsem owners
+simultaneously.
 
- 1) Remove all the EXPORT_SYMBOL() calls for functions that are not
-    accessed elsewhere.
- 2) Remove all the __visible tags as none of the functions will be
-    called from assembly code anymore.
- 3) Make all the internal functions static.
- 4) Remove some unneeded blank lines.
- 5) Remove the intermediate rwsem_down_{read|write}_failed*() functions
-    and rename __rwsem_down_{read|write}_failed_common() to
-    rwsem_down_{read|write}_slowpath().
- 6) Use atomic_long_try_cmpxchg_acquire() as much as possible.
- 7) Remove the rwsem_rtrylock and rwsem_wtrylock lock events as they
-    are not that useful.
+The current reader wakeup code does it in one pass to clear waiter->task
+and put them into wake_q before fully incrementing the reader count.
+Once waiter->task is cleared, the corresponding reader may see it,
+finish the critical section and do unlock to decrement the count before
+the count is incremented. This is not a problem if there is only one
+reader to wake up as the count has been pre-incremented by 1.  It is
+a problem if there are more than one readers to be woken up and writer
+can steal the lock.
 
-That enables the compiler to do better optimization and reduce code
-size. The text+data size of rwsem.o on an x86-64 machine with gcc8 was
-reduced from 10237 bytes to 5030 bytes with this change.
+The wakeup is actually done in 2 passes before the v4.9 commit
+70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only
+once"). To fix this problem, the wakeup is now done in two passes
+again. In the first pass, we collect the readers and count them. The
+reader count is then fully incremented. In the second pass, the
+waiter->task is then cleared and they are put into wake_q to be woken
+up later.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Fixes: 70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/lock_events_list.h |   2 -
- kernel/locking/rwsem.c            | 119 +++++++++---------------------
- 2 files changed, 34 insertions(+), 87 deletions(-)
+ kernel/locking/rwsem-xadd.c | 45 +++++++++++++++++++++++++------------
+ 1 file changed, 31 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/locking/lock_events_list.h b/kernel/locking/lock_events_list.h
-index ad7668cfc9da..11187a1d40b8 100644
---- a/kernel/locking/lock_events_list.h
-+++ b/kernel/locking/lock_events_list.h
-@@ -61,7 +61,5 @@ LOCK_EVENT(rwsem_opt_fail)	/* # of failed opt-spinnings		*/
- LOCK_EVENT(rwsem_rlock)		/* # of read locks acquired		*/
- LOCK_EVENT(rwsem_rlock_fast)	/* # of fast read locks acquired	*/
- LOCK_EVENT(rwsem_rlock_fail)	/* # of failed read lock acquisitions	*/
--LOCK_EVENT(rwsem_rtrylock)	/* # of read trylock calls		*/
- LOCK_EVENT(rwsem_wlock)		/* # of write locks acquired		*/
- LOCK_EVENT(rwsem_wlock_fail)	/* # of failed write lock acquisitions	*/
--LOCK_EVENT(rwsem_wtrylock)	/* # of write trylock calls		*/
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 551ad159338c..23e3aed2173a 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -205,7 +205,6 @@ void __init_rwsem(struct rw_semaphore *sem, const char *name,
- 	osq_lock_init(&sem->osq);
- #endif
- }
+diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
+index 6b3ee9948bf1..cab5b1f6b2de 100644
+--- a/kernel/locking/rwsem-xadd.c
++++ b/kernel/locking/rwsem-xadd.c
+@@ -130,6 +130,7 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ {
+ 	struct rwsem_waiter *waiter, *tmp;
+ 	long oldcount, woken = 0, adjustment = 0;
++	struct list_head wlist;
+ 
+ 	/*
+ 	 * Take a peek at the queue head waiter such that we can determine
+@@ -188,18 +189,44 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ 	 * of the queue. We know that woken will be at least 1 as we accounted
+ 	 * for above. Note we increment the 'active part' of the count by the
+ 	 * number of readers before waking any processes up.
++	 *
++	 * We have to do wakeup in 2 passes to prevent the possibility that
++	 * the reader count may be decremented before it is incremented. It
++	 * is because the to-be-woken waiter may not have slept yet. So it
++	 * may see waiter->task got cleared, finish its critical section and
++	 * do an unlock before the reader count increment.
++	 *
++	 * 1) Collect the read-waiters in a separate list, count them and
++	 *    fully increment the reader count in rwsem.
++	 * 2) For each waiters in the new list, clear waiter->task and
++	 *    put them into wake_q to be woken up later.
+ 	 */
++	INIT_LIST_HEAD(&wlist);
+ 	list_for_each_entry_safe(waiter, tmp, &sem->wait_list, list) {
+-		struct task_struct *tsk;
 -
- EXPORT_SYMBOL(__init_rwsem);
+ 		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
+ 			break;
  
- enum rwsem_waiter_type {
-@@ -331,7 +330,7 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ 		woken++;
+-		tsk = waiter->task;
++		list_move_tail(&waiter->list, &wlist);
++	}
++
++	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
++	lockevent_cond_inc(rwsem_wake_reader, woken);
++	if (list_empty(&sem->wait_list)) {
++		/* hit end of list above */
++		adjustment -= RWSEM_WAITING_BIAS;
++	}
++
++	if (adjustment)
++		atomic_long_add(adjustment, &sem->count);
++
++	/* 2nd pass */
++	list_for_each_entry(waiter, &wlist, list) {
++		struct task_struct *tsk;
  
++		tsk = waiter->task;
+ 		get_task_struct(tsk);
+-		list_del(&waiter->list);
++
  		/*
  		 * Ensure calling get_task_struct() before setting the reader
--		 * waiter to nil such that rwsem_down_read_failed() cannot
-+		 * waiter to nil such that rwsem_down_read_slowpath() cannot
- 		 * race with do_exit() by always holding a reference count
- 		 * to the task to wakeup.
+ 		 * waiter to nil such that rwsem_down_read_failed() cannot
+@@ -213,16 +240,6 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
  		 */
-@@ -517,8 +516,8 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
- /*
-  * Wait for the read lock to be granted
-  */
--static inline struct rw_semaphore __sched *
--__rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
-+static struct rw_semaphore __sched *
-+rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
- {
- 	long count, adjustment = -RWSEM_READER_BIAS;
- 	struct rwsem_waiter waiter;
-@@ -590,25 +589,11 @@ __rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
- 	return ERR_PTR(-EINTR);
- }
- 
--__visible struct rw_semaphore * __sched
--rwsem_down_read_failed(struct rw_semaphore *sem)
--{
--	return __rwsem_down_read_failed_common(sem, TASK_UNINTERRUPTIBLE);
--}
--EXPORT_SYMBOL(rwsem_down_read_failed);
--
--__visible struct rw_semaphore * __sched
--rwsem_down_read_failed_killable(struct rw_semaphore *sem)
--{
--	return __rwsem_down_read_failed_common(sem, TASK_KILLABLE);
--}
--EXPORT_SYMBOL(rwsem_down_read_failed_killable);
--
- /*
-  * Wait until we successfully acquire the write lock
-  */
--static inline struct rw_semaphore *
--__rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
-+static struct rw_semaphore *
-+rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
- {
- 	long count;
- 	bool waiting = true; /* any queued threads before us */
-@@ -709,26 +694,11 @@ __rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
- 	return ERR_PTR(-EINTR);
- }
- 
--__visible struct rw_semaphore * __sched
--rwsem_down_write_failed(struct rw_semaphore *sem)
--{
--	return __rwsem_down_write_failed_common(sem, TASK_UNINTERRUPTIBLE);
--}
--EXPORT_SYMBOL(rwsem_down_write_failed);
--
--__visible struct rw_semaphore * __sched
--rwsem_down_write_failed_killable(struct rw_semaphore *sem)
--{
--	return __rwsem_down_write_failed_common(sem, TASK_KILLABLE);
--}
--EXPORT_SYMBOL(rwsem_down_write_failed_killable);
--
- /*
-  * handle waking up a waiter on the semaphore
-  * - up_read/up_write has decremented the active part of count if we come here
-  */
--__visible
--struct rw_semaphore *rwsem_wake(struct rw_semaphore *sem)
-+static struct rw_semaphore *rwsem_wake(struct rw_semaphore *sem)
- {
- 	unsigned long flags;
- 	DEFINE_WAKE_Q(wake_q);
-@@ -743,15 +713,13 @@ struct rw_semaphore *rwsem_wake(struct rw_semaphore *sem)
- 
- 	return sem;
- }
--EXPORT_SYMBOL(rwsem_wake);
- 
- /*
-  * downgrade a write lock into a read lock
-  * - caller incremented waiting part of count and discovered it still negative
-  * - just wake up any readers at the front of the queue
-  */
--__visible
--struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem)
-+static struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem)
- {
- 	unsigned long flags;
- 	DEFINE_WAKE_Q(wake_q);
-@@ -766,7 +734,6 @@ struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem)
- 
- 	return sem;
- }
--EXPORT_SYMBOL(rwsem_downgrade_wake);
- 
- /*
-  * lock for reading
-@@ -775,7 +742,7 @@ inline void __down_read(struct rw_semaphore *sem)
- {
- 	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
- 			&sem->count) & RWSEM_READ_FAILED_MASK)) {
--		rwsem_down_read_failed(sem);
-+		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE);
- 		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
- 					RWSEM_READER_OWNED), sem);
- 	} else {
-@@ -787,7 +754,7 @@ static inline int __down_read_killable(struct rw_semaphore *sem)
- {
- 	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
- 			&sem->count) & RWSEM_READ_FAILED_MASK)) {
--		if (IS_ERR(rwsem_down_read_failed_killable(sem)))
-+		if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE)))
- 			return -EINTR;
- 		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
- 					RWSEM_READER_OWNED), sem);
-@@ -804,7 +771,6 @@ static inline int __down_read_trylock(struct rw_semaphore *sem)
- 	 */
- 	long tmp = RWSEM_UNLOCKED_VALUE;
- 
--	lockevent_inc(rwsem_rtrylock);
- 	do {
- 		if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
- 					tmp + RWSEM_READER_BIAS)) {
-@@ -820,30 +786,33 @@ static inline int __down_read_trylock(struct rw_semaphore *sem)
-  */
- static inline void __down_write(struct rw_semaphore *sem)
- {
--	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
--						 RWSEM_WRITER_LOCKED)))
--		rwsem_down_write_failed(sem);
-+	long tmp = RWSEM_UNLOCKED_VALUE;
-+
-+	if (unlikely(!atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
-+						      RWSEM_WRITER_LOCKED)))
-+		rwsem_down_write_slowpath(sem, TASK_UNINTERRUPTIBLE);
- 	rwsem_set_owner(sem);
- }
- 
- static inline int __down_write_killable(struct rw_semaphore *sem)
- {
--	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
--						 RWSEM_WRITER_LOCKED)))
--		if (IS_ERR(rwsem_down_write_failed_killable(sem)))
-+	long tmp = RWSEM_UNLOCKED_VALUE;
-+
-+	if (unlikely(!atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
-+						      RWSEM_WRITER_LOCKED))) {
-+		if (IS_ERR(rwsem_down_write_slowpath(sem, TASK_KILLABLE)))
- 			return -EINTR;
-+	}
- 	rwsem_set_owner(sem);
- 	return 0;
- }
- 
- static inline int __down_write_trylock(struct rw_semaphore *sem)
- {
--	long tmp;
-+	long tmp = RWSEM_UNLOCKED_VALUE;
- 
--	lockevent_inc(rwsem_wtrylock);
--	tmp = atomic_long_cmpxchg_acquire(&sem->count, RWSEM_UNLOCKED_VALUE,
--					  RWSEM_WRITER_LOCKED);
--	if (tmp == RWSEM_UNLOCKED_VALUE) {
-+	if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
-+					    RWSEM_WRITER_LOCKED)) {
- 		rwsem_set_owner(sem);
- 		return true;
+ 		wake_q_add_safe(wake_q, tsk);
  	}
-@@ -857,12 +826,11 @@ inline void __up_read(struct rw_semaphore *sem)
- {
- 	long tmp;
- 
--	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED),
--				sem);
-+	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED), sem);
- 	rwsem_clear_reader_owned(sem);
- 	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
--	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS))
--			== RWSEM_FLAG_WAITERS))
-+	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS)) ==
-+		      RWSEM_FLAG_WAITERS))
- 		rwsem_wake(sem);
- }
- 
-@@ -871,10 +839,12 @@ inline void __up_read(struct rw_semaphore *sem)
-  */
- static inline void __up_write(struct rw_semaphore *sem)
- {
-+	long tmp;
-+
- 	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
- 	rwsem_clear_owner(sem);
--	if (unlikely(atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED,
--			&sem->count) & RWSEM_FLAG_WAITERS))
-+	tmp = atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED, &sem->count);
-+	if (unlikely(tmp & RWSEM_FLAG_WAITERS))
- 		rwsem_wake(sem);
- }
- 
-@@ -910,7 +880,6 @@ void __sched down_read(struct rw_semaphore *sem)
- 
- 	LOCK_CONTENDED(sem, __down_read_trylock, __down_read);
- }
 -
- EXPORT_SYMBOL(down_read);
- 
- int __sched down_read_killable(struct rw_semaphore *sem)
-@@ -925,7 +894,6 @@ int __sched down_read_killable(struct rw_semaphore *sem)
- 
- 	return 0;
- }
+-	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
+-	lockevent_cond_inc(rwsem_wake_reader, woken);
+-	if (list_empty(&sem->wait_list)) {
+-		/* hit end of list above */
+-		adjustment -= RWSEM_WAITING_BIAS;
+-	}
 -
- EXPORT_SYMBOL(down_read_killable);
+-	if (adjustment)
+-		atomic_long_add(adjustment, &sem->count);
+ }
  
  /*
-@@ -939,7 +907,6 @@ int down_read_trylock(struct rw_semaphore *sem)
- 		rwsem_acquire_read(&sem->dep_map, 0, 1, _RET_IP_);
- 	return ret;
- }
--
- EXPORT_SYMBOL(down_read_trylock);
- 
- /*
-@@ -949,10 +916,8 @@ void __sched down_write(struct rw_semaphore *sem)
- {
- 	might_sleep();
- 	rwsem_acquire(&sem->dep_map, 0, 0, _RET_IP_);
--
- 	LOCK_CONTENDED(sem, __down_write_trylock, __down_write);
- }
--
- EXPORT_SYMBOL(down_write);
- 
- /*
-@@ -963,14 +928,14 @@ int __sched down_write_killable(struct rw_semaphore *sem)
- 	might_sleep();
- 	rwsem_acquire(&sem->dep_map, 0, 0, _RET_IP_);
- 
--	if (LOCK_CONTENDED_RETURN(sem, __down_write_trylock, __down_write_killable)) {
-+	if (LOCK_CONTENDED_RETURN(sem, __down_write_trylock,
-+				  __down_write_killable)) {
- 		rwsem_release(&sem->dep_map, 1, _RET_IP_);
- 		return -EINTR;
- 	}
- 
- 	return 0;
- }
--
- EXPORT_SYMBOL(down_write_killable);
- 
- /*
-@@ -985,7 +950,6 @@ int down_write_trylock(struct rw_semaphore *sem)
- 
- 	return ret;
- }
--
- EXPORT_SYMBOL(down_write_trylock);
- 
- /*
-@@ -994,10 +958,8 @@ EXPORT_SYMBOL(down_write_trylock);
- void up_read(struct rw_semaphore *sem)
- {
- 	rwsem_release(&sem->dep_map, 1, _RET_IP_);
--
- 	__up_read(sem);
- }
--
- EXPORT_SYMBOL(up_read);
- 
- /*
-@@ -1006,10 +968,8 @@ EXPORT_SYMBOL(up_read);
- void up_write(struct rw_semaphore *sem)
- {
- 	rwsem_release(&sem->dep_map, 1, _RET_IP_);
--
- 	__up_write(sem);
- }
--
- EXPORT_SYMBOL(up_write);
- 
- /*
-@@ -1018,10 +978,8 @@ EXPORT_SYMBOL(up_write);
- void downgrade_write(struct rw_semaphore *sem)
- {
- 	lock_downgrade(&sem->dep_map, _RET_IP_);
--
- 	__downgrade_write(sem);
- }
--
- EXPORT_SYMBOL(downgrade_write);
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
-@@ -1030,40 +988,32 @@ void down_read_nested(struct rw_semaphore *sem, int subclass)
- {
- 	might_sleep();
- 	rwsem_acquire_read(&sem->dep_map, subclass, 0, _RET_IP_);
--
- 	LOCK_CONTENDED(sem, __down_read_trylock, __down_read);
- }
--
- EXPORT_SYMBOL(down_read_nested);
- 
- void _down_write_nest_lock(struct rw_semaphore *sem, struct lockdep_map *nest)
- {
- 	might_sleep();
- 	rwsem_acquire_nest(&sem->dep_map, 0, 0, nest, _RET_IP_);
--
- 	LOCK_CONTENDED(sem, __down_write_trylock, __down_write);
- }
--
- EXPORT_SYMBOL(_down_write_nest_lock);
- 
- void down_read_non_owner(struct rw_semaphore *sem)
- {
- 	might_sleep();
--
- 	__down_read(sem);
- 	__rwsem_set_reader_owned(sem, NULL);
- }
--
- EXPORT_SYMBOL(down_read_non_owner);
- 
- void down_write_nested(struct rw_semaphore *sem, int subclass)
- {
- 	might_sleep();
- 	rwsem_acquire(&sem->dep_map, subclass, 0, _RET_IP_);
--
- 	LOCK_CONTENDED(sem, __down_write_trylock, __down_write);
- }
--
- EXPORT_SYMBOL(down_write_nested);
- 
- int __sched down_write_killable_nested(struct rw_semaphore *sem, int subclass)
-@@ -1071,14 +1021,14 @@ int __sched down_write_killable_nested(struct rw_semaphore *sem, int subclass)
- 	might_sleep();
- 	rwsem_acquire(&sem->dep_map, subclass, 0, _RET_IP_);
- 
--	if (LOCK_CONTENDED_RETURN(sem, __down_write_trylock, __down_write_killable)) {
-+	if (LOCK_CONTENDED_RETURN(sem, __down_write_trylock,
-+				  __down_write_killable)) {
- 		rwsem_release(&sem->dep_map, 1, _RET_IP_);
- 		return -EINTR;
- 	}
- 
- 	return 0;
- }
--
- EXPORT_SYMBOL(down_write_killable_nested);
- 
- void up_read_non_owner(struct rw_semaphore *sem)
-@@ -1087,7 +1037,6 @@ void up_read_non_owner(struct rw_semaphore *sem)
- 				sem);
- 	__up_read(sem);
- }
--
- EXPORT_SYMBOL(up_read_non_owner);
- 
- #endif
 -- 
 2.18.1
 
