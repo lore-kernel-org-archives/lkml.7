@@ -2,136 +2,94 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCC3C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D43C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76520205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA88206BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FP3HHRzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfD1QYP (ORCPT
+        id S1726959AbfD1QhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 12:24:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35860 "EHLO mx1.redhat.com"
+        Sun, 28 Apr 2019 12:37:14 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47355 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbfD1QYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 12:24:14 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 89F6A13BF43;
-        Sun, 28 Apr 2019 16:24:13 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 837F268729;
-        Sun, 28 Apr 2019 16:24:07 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Sun, 28 Apr 2019 18:24:12 +0200 (CEST)
-Date:   Sun, 28 Apr 2019 18:24:06 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        rostedt@goodmis.org, dancol@google.com, sspatil@google.com,
-        jannh@google.com, surenb@google.com, timmurray@google.com,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        torvalds@linux-foundation.org, kernel-team@android.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jann Horn <jann@thejh.net>,
-        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, viro@zeniv.linux.org.uk,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] Add polling support to pidfd
-Message-ID: <20190428162405.GA6757@redhat.com>
-References: <20190425190010.46489-1-joel@joelfernandes.org>
- <20190425222359.sqhboc4x4daznr6r@brauner.io>
+        id S1726901AbfD1QhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 12:37:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=uoSXhyD3TOK7i4eaxOafe7KFL4hfzJB0aeciU8oRpF8=; b=FP3HHRzzpWRywBh93FGqVkg6WT
+        VQ741RPEI3K435alYDJFEzFaFh//UpVWpB0PhdXWmLbW5JqY/9XW4Lyc8aNvIWrci3qXgoVwdXGgE
+        js4/0at4IXwEHMGAbwXjNUrbbm/glQmhXL5LUrUBsSg9qfgaiiAIFB6lVLpxONw76LGo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hKmnZ-0000m8-Rk; Sun, 28 Apr 2019 18:37:05 +0200
+Date:   Sun, 28 Apr 2019 18:37:05 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Biao Huang <biao.huang@mediatek.com>
+Cc:     Jose Abreu <joabreu@synopsys.com>, davem@davemloft.net,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, yt.shen@mediatek.com,
+        jianguo.zhang@mediatek.com
+Subject: Re: [PATCH 5/6] net: stmmac: add mdio clause 45 access from mac
+ device for dwmac4
+Message-ID: <20190428163705.GH23059@lunn.ch>
+References: <1556433009-25759-1-git-send-email-biao.huang@mediatek.com>
+ <1556433009-25759-6-git-send-email-biao.huang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190425222359.sqhboc4x4daznr6r@brauner.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Sun, 28 Apr 2019 16:24:14 +0000 (UTC)
+In-Reply-To: <1556433009-25759-6-git-send-email-biao.huang@mediatek.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for cc'ing me...
+On Sun, Apr 28, 2019 at 02:30:08PM +0800, Biao Huang wrote:
+> +static int stmmac_c45_read(struct mii_bus *bus, int phyaddr,
+> +			   int devad, int prtad)
+> +{
+> +	struct net_device *ndev = bus->priv;
+> +	struct stmmac_priv *priv = netdev_priv(ndev);
+> +	unsigned int mii_address = priv->hw->mii.addr;
+> +	unsigned int mii_data = priv->hw->mii.data;
+> +	u32 v, value;
+> +	int data;
+> +
+> +	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+> +			       100, 10000))
+> +		return -EBUSY;
 
-On 04/26, Christian Brauner wrote:
->
-> On Thu, Apr 25, 2019 at 03:00:09PM -0400, Joel Fernandes (Google) wrote:
-> > +static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
-> > +{
-> > +	struct task_struct *task;
-> > +	struct pid *pid;
-> > +	int poll_flags = 0;
-> > +
-> > +	/*
-> > +	 * tasklist_lock must be held because to avoid racing with
-> > +	 * changes in exit_state and wake up. Basically to avoid:
-> > +	 *
-> > +	 * P0: read exit_state = 0
-> > +	 * P1: write exit_state = EXIT_DEAD
-> > +	 * P1: Do a wake up - wq is empty, so do nothing
-> > +	 * P0: Queue for polling - wait forever.
-> > +	 */
-> > +	read_lock(&tasklist_lock);
-> > +	pid = file->private_data;
-> > +	task = pid_task(pid, PIDTYPE_PID);
-> > +	WARN_ON_ONCE(task && !thread_group_leader(task));
-> > +
-> > +	if (!task || (task->exit_state && thread_group_empty(task)))
-> > +		poll_flags = POLLIN | POLLRDNORM;
+Hi Biao
 
-Joel, I still can't understand why do we need tasklist... and I don't really
-understand the comment. The code looks as if you are trying to avoid poll_wait(),
-but this would be strange.
+readl_poll_timeout() returns an error code. It is better to return
+that, than make up some other error code. Yes, i know the C22 read
+returns EBUSY, but we don't need to copy that behaviour into C45.
 
-OK, why can't pidfd_poll() do
+> +
+> +	value = 0;
+> +	value |= (prtad << priv->hw->mii.cl45_reg_shift)
+> +			& priv->hw->mii.cl45_reg_mask;
+> +	writel(value, priv->ioaddr + mii_data);
+> +
+> +	/* delay 2ms to avoid error value of get_phy_c45_devs_in_pkg */
+> +	mdelay(2);
 
-	poll_wait(file, &pid->wait_pidfd, pts);
+Please could you explain this a bit more?
 
-	rcu_read_lock();
-	task = pid_task(pid, PIDTYPE_PID);
-	if (!task || task->exit_state && thread_group_empty(task))
-		poll_flags = POLLIN | ...;
-	rcu_read_unlock();
-
-	return poll_flags;
-
-?
-
-> > +static void do_notify_pidfd(struct task_struct *task)
->
-> Maybe a short command that this helper can only be called when we know
-> that task is a thread-group leader wouldn't hurt so there's no confusion
-> later.
-
-Not really. If the task is traced, do_notify_parent() (and thus do_notify_pidfd())
-can be called to notify the debugger even if the task is not a leader and/or if
-it is not the last thread. The latter means a spurious wakeup for pidfd_poll().
-
-> > +{
-> > +	struct pid *pid;
-> > +
-> > +	lockdep_assert_held(&tasklist_lock);
-> > +
-> > +	pid = get_task_pid(task, PIDTYPE_PID);
-> > +	wake_up_all(&pid->wait_pidfd);
-> > +	put_pid(pid);
-
-Why get/put?
-
-Oleg.
-
+       Andrew
