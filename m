@@ -2,147 +2,90 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5ABC43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F29C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84DE20675
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD0F206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 23:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="LmPJs1v1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vtb874mz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfD1Xtp (ORCPT
+        id S1726734AbfD1Xyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 19:49:45 -0400
-Received: from mail-eopbgr30065.outbound.protection.outlook.com ([40.107.3.65]:3380
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726725AbfD1Xtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 19:49:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zt07+4O0RX5Qhvic6+yNOfJzpEJvucjwxXbyvZECQW4=;
- b=LmPJs1v1uEssXPRZYYNIT45q3ZuzyLYTV18PqdypfrazelDpdfQMeBlB21gBySOS0FXfLclytsBnPCri/6xTBfTYiynPrcm5Pd+XqwnEiho9EqysRpxvdGstlbfZKEImcXaPESeZWiaOWmvZ3lPU50U3LBNw12nQKU/KG1diy0I=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6142.eurprd05.prod.outlook.com (20.178.205.88) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Sun, 28 Apr 2019 23:49:40 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::711b:c0d6:eece:f044]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::711b:c0d6:eece:f044%5]) with mapi id 15.20.1835.018; Sun, 28 Apr 2019
- 23:49:40 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Topic: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Index: AQHU/bjRDQW4dOHvME6ENVPTZDYrA6ZRzCoAgABydYA=
-Date:   Sun, 28 Apr 2019 23:49:40 +0000
-Message-ID: <20190428234935.GA15233@mellanox.com>
-References: <20190428115207.GA11924@ziepe.ca>
- <CAHk-=wj4ay=jy6wuN4d9p9v+O32i0aH9SMfu39VKP-Ai7hKp=g@mail.gmail.com>
-In-Reply-To: <CAHk-=wj4ay=jy6wuN4d9p9v+O32i0aH9SMfu39VKP-Ai7hKp=g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTXPR0101CA0059.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:1::36) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.49.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 93058b68-179e-43b5-8115-08d6cc342daa
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6142;
-x-ms-traffictypediagnostic: VI1PR05MB6142:
-x-microsoft-antispam-prvs: <VI1PR05MB6142B9E40D7287400A454FE7CF380@VI1PR05MB6142.eurprd05.prod.outlook.com>
-x-forefront-prvs: 0021920B5A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(136003)(346002)(396003)(189003)(199004)(6916009)(6512007)(99286004)(66946007)(53936002)(73956011)(66556008)(52116002)(3846002)(36756003)(478600001)(66446008)(2906002)(66476007)(6116002)(6246003)(76176011)(316002)(54906003)(5024004)(8676002)(81156014)(81166006)(86362001)(8936002)(97736004)(256004)(14444005)(68736007)(64756008)(71190400001)(71200400001)(11346002)(446003)(5660300002)(2616005)(476003)(229853002)(26005)(66066001)(6506007)(102836004)(386003)(53546011)(4326008)(7736002)(1076003)(305945005)(25786009)(6486002)(186003)(486006)(14454004)(33656002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6142;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EOqeBteptntUvH9L/zSdnlH9TK1KBYgETpNqig7/6EnslPowqQYCYfDnBO7PBbwdiUjfREAeqXDpvlPRXDSej/CJl6F4XB7E16TEC3Qjb5IDrG46y04bM1hsoUn9CVhEQZXixXG8vRQ7Dvo2qEzR7sKokgKHA1pGy9mca7ez/h+uMOeYLzqh6ZLRxhZMnmqLDN4AkB4fc0M7eMjPX0UqgArF9P1gdvzlGvbx4N2R6iUTG3aMdMlt1UAUeKhl3o2t/03p/4Hc+7P9DkR4o5f6luUwM2rLMdWVBjKhTqsYAPxzCEIIIX504wGjQjbV6AyKF8hpMr77nyW6AaIzfVWsiXOa9eUGhUVYBaaEJER9yNWtjp/FE4QAtroQCsvPIUZA09LHJ3+lXoXwxZ6LXGsUAUk9/HnA2CKpR136VX1dKwU=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <964490D7667EE94E9117C4919E79FD6C@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Sun, 28 Apr 2019 19:54:37 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:44121 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbfD1Xyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 19:54:37 -0400
+Received: by mail-yb1-f194.google.com with SMTP id u187so3175553ybg.11
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 16:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sJzmJt5dXSr46qHnoNS5EATc+3d/a2ElrqvTmuSBEdg=;
+        b=vtb874mzD79EZ4lK/FKahzxhVi0KRxJCPlqZoqswyk+2KOM5zWGrGYQuwyAm+T22Tw
+         owM7xGx6+2XBrBj5iKgttpXndlokSkCdXaHqUeHOFf+PlXlCZ2yp0uwBGU9kHmPDBaP3
+         NPMqftVpxG32Ym3soeW3UjOB6L1fPjZDBlyMdNqNwt9OVII2tfrlqfl/gnvIPU3bMaZn
+         cUVYDFNlR55+wB/mdDdGu/qVqcG7ro7bhCZ4ZElgyYQOn/W0/DI1IikYofKRbuRkkoiy
+         mESCGm4KqIGV5Jq0W0rf0Z4UcYiBTtc6ftKlNJ6VQTSglnjByMoBHVI/DsH9MW04d21q
+         MSfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sJzmJt5dXSr46qHnoNS5EATc+3d/a2ElrqvTmuSBEdg=;
+        b=F3PTihsGqXmPWA3fg3hGPo8BzW4vJKoTk9mxokPUOn2ADmzExHMdML+84kZwzm/An4
+         MkRWQvdYRKFJ9cM4O+zs4wgkiEugJAGK46a99BfC6hBVmlVB0HcoNEX0BS/3LxQoTtEJ
+         JUj/b49wtnZRrb7Xyb3mUq//gUT4+yNSNpH7ZTb6yPGowbmA7v6IBpgEMbtghEdQIRA8
+         sI0qc0rUwiUD6Qd+jLD8m/HHFoze+JSyE3x3dwD7GHDgscAKpIVA7RzlW0BDJJFKtn5I
+         T0VSAMYH+RN8kzbdbGisBgPRcUVK4vg/qefSpop6SGEaVs36SLk6ph6llHSpDsYR+8f7
+         uG9A==
+X-Gm-Message-State: APjAAAWN0dpVfaS5OOrZsdi3DtT57B0Pi5iP96ufiZSk5i3eH3YW8VPd
+        R099c4qYoPoEns3EKJ5gdiI6DqKL8Sggw1p0AqMz7A==
+X-Google-Smtp-Source: APXvYqywcrtNm7hfKOwHEbWcro/mUsCfRRyw7no0aSBlNf48FzHe5zU0X1HlsmhnwnPpE8C1iDov7piwnmKx6YCRD8c=
+X-Received: by 2002:a25:f507:: with SMTP id a7mr46894022ybe.164.1556495676033;
+ Sun, 28 Apr 2019 16:54:36 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93058b68-179e-43b5-8115-08d6cc342daa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2019 23:49:40.1912
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6142
+References: <20190423154405.259178-1-shakeelb@google.com> <20190425064858.GL12751@dhcp22.suse.cz>
+In-Reply-To: <20190425064858.GL12751@dhcp22.suse.cz>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Sun, 28 Apr 2019 16:54:24 -0700
+Message-ID: <CALvZod5Peau7D-O1oi0jFfiOCJrSOMHDnr6TPrTxawt_jh9izw@mail.gmail.com>
+Subject: Re: [PATCH v2] memcg: refill_stock for kmem uncharging too
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 09:59:56AM -0700, Linus Torvalds wrote:
-> On Sun, Apr 28, 2019 at 4:52 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
-> >
-> > Nothing particularly special here. There is a small merge conflict
-> > with Adrea's mm_still_valid patches which is resolved as below:
->=20
-> I still don't understand *why* you play the crazy VM games to begin with.
->=20
-> What's wrong with just returning SIGBUS? Why does that
-> rdma_umap_fault() not just look like this one-liner:
->=20
->         return VM_FAULT_SIGBUS;
->=20
-> without the crazy parts? Nobody ever explained why you'd want to have
-> that silly "let's turn it into a bogus anonymous mapping".
+On Wed, Apr 24, 2019 at 11:49 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 23-04-19 08:44:05, Shakeel Butt wrote:
+> > The commit 475d0487a2ad ("mm: memcontrol: use per-cpu stocks for socket
+> > memory uncharging") added refill_stock() for skmem uncharging path to
+> > optimize workloads having high network traffic. Do the same for the kmem
+> > uncharging as well. Though we can bypass the refill for the offlined
+> > memcgs but it may impact the performance of network traffic for the
+> > sockets used by other cgroups.
+>
+> While the change makes sense, I would really like to see what kind of
+> effect on performance does it really have. Do you have any specific
+> workload that benefits from it?
+>
 
-There was a big thread where I went over the use case with Andrea, but
-I guess that was private..
+Thanks for the review. I will run some benchmarks and report back later.
 
-It is for high availability - we have situations where the hardware
-can fault and needs some kind of destructive recovery. For instance a
-firmware reboot, or a VM migration.
-
-In these designs there may be multiple cards in the system and the
-userspace application could be using both. Just because one card
-crashed we can't send SIGBUS and kill the application, that breaks the
-HA design.
-
-So.. the kernel makes the BAR VMA into a 'dummy' and sends an async
-notification to the application. The use of the BAR memory by
-userspace is all 'write only' so it doesn't really care. When it sees
-the async notification it safely cleans up the userspace side of
-things.
-
-An more modern VM example of where this gets used is on VM systems
-using SRIO-V pass through of a raw RDMA device. When it is time to
-migrate the VM then the hypervisor causes the SRIO-V instance to fault
-and be removed from the guest kernel, then migrates and attaches a new
-RDMA SRIO-V instance. The user space is expected to see the failure,
-maintain state, then recover onto the new device.
-
-The only alternative that has come up would be to delay the kernel
-side until the application cleans up and deletes the VMA, but people
-generally don't like this as it degrades the recovery time and has the
-usual problems with blocking the kernel on userspace.
-
-When this was created I'm not sure people explored more creative ideas
-like trying to handle/ignore the SIGBUS in userspace - unfortunately
-it has been so long now that we are probably stuck doing this as part
-of the UAPI.
-
-I've been trying to make it less crufty over the last year based on
-remarks from yourself and Andrea, but I'm still stuck with this basic
-requirement that the VMA shouldn't fault or touch the BAR after the
-hardware is released by the kernel.
-
-Thanks,
-Jason
+Shakeel
