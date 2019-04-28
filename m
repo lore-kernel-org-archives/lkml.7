@@ -2,97 +2,123 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8B7C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55F8C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAA620693
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC1E2054F
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 17:59:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556474369;
+	bh=JNUjRdh880vN7p/G1PgxVQ6Y4hHPeo8k4TC+EN1AVSU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=O955MPiiB0hXz1MzQnqe0JYgaPPXpIaEucU0hPfVR+fin289D6FU1t5eZ3ssFQKge
+	 QMOQCKO13kThZ9auVFci726qlNkCSqyVhXk5aEXBwgJUHeE8lFfXAURVDgf61zB/Ou
+	 A9AHw/dn6bprtv+sV/BJyM61R6gPuoC2gvhdXWVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfD1Rvs convert rfc822-to-8bit (ORCPT
+        id S1727046AbfD1R72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 13:51:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbfD1Rvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 13:51:48 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 351F420679;
-        Sun, 28 Apr 2019 17:51:45 +0000 (UTC)
-Date:   Sun, 28 Apr 2019 13:51:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/4] x86/thread_info: introduce ->ftrace_int3_stack
- member
-Message-ID: <20190428135143.09d35bb6@oasis.local.home>
-In-Reply-To: <F6268634-96D3-4267-B739-6D375FAB26A8@amacapital.net>
-References: <20190427100639.15074-1-nstange@suse.de>
-        <20190427100639.15074-2-nstange@suse.de>
-        <F6268634-96D3-4267-B739-6D375FAB26A8@amacapital.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 28 Apr 2019 13:59:28 -0400
+Received: from mail-lj1-f180.google.com ([209.85.208.180]:34996 "EHLO
+        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfD1R71 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 13:59:27 -0400
+Received: by mail-lj1-f180.google.com with SMTP id z26so7327944ljj.2
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 10:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N4e0yPH0Vgnf1AYEoix3pVha6totByaAuqubrLlTrYo=;
+        b=CxCo+64mtOlFPXZ6njuM9Nw/uILb41oA0aj0ZF5IX4XwOfE0l6S/MdlJnUjWD9FrYz
+         oGk4osW2Qv2m/NsQ05JBrthfsd5+T11tG62SdQFHSs8ORkFtKFbN5b54Bt+u8yqZywQ4
+         H61gtF3uK3ZuSYEIw/VzZ9ArJmTj1wmuhh+LA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N4e0yPH0Vgnf1AYEoix3pVha6totByaAuqubrLlTrYo=;
+        b=taiJUKIgO6LKBbY9aK5XGXATuLIGR4ZtajxjBWelRoDijKTHHETvV3k10d27246k6R
+         Nxo+bZbjyU94IinIYKWrmSHyULjyp+96BZbP7S1lqnqZGIzzUmEXI/HQrGXAZIf2iQn6
+         b/11wjWBSvR/fSk+IcanydjORXVKyeYtFSOVTNZux6uNPTVvk2C7QpEFCE8u0tFALOTZ
+         Kgz+ifoi7y2XKeXCot/Ai36ErjN9OsSJOD1l8Z3UGU3F/uTRv9brbZanPB4ircxmXXxe
+         3/njFfQ4WZa6ToQ9ivUGQR8/4lTaHgbLMhlm0xGJAFJ4cjMGRddH0NxycSZFU8bjm8lt
+         UwlQ==
+X-Gm-Message-State: APjAAAUgRf9SmUdnS0vsZ2jGF/34iQLp4BV6BnTb06ow8B/rna4oenNP
+        VOHPo8cq+4s3KSqyHllGVSkMTYuKNS4=
+X-Google-Smtp-Source: APXvYqzyakl6/88dAy9sT5DJAYxYCceYQCySX9GHoOizcpuhwU7v8AUFM5hYYxpJ8l65h3fXFUhu3Q==
+X-Received: by 2002:a2e:968c:: with SMTP id q12mr18696499lji.36.1556474364871;
+        Sun, 28 Apr 2019 10:59:24 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id h29sm2467540ljb.49.2019.04.28.10.59.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Apr 2019 10:59:23 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id h21so7258687ljk.13
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 10:59:22 -0700 (PDT)
+X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr31231427lje.22.1556474362610;
+ Sun, 28 Apr 2019 10:59:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20190428155755.14267-1-longman@redhat.com> <20190428155755.14267-2-longman@redhat.com>
+ <CAHk-=wgCrtM7fPd=qmmg6UUDRcw9iq7a7_ypOHH3740xgv6wkQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgCrtM7fPd=qmmg6UUDRcw9iq7a7_ypOHH3740xgv6wkQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 28 Apr 2019 10:59:06 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgGN9KKCW8dii=nXwKQdu2N5AOMrVdS5qJvZAPOTvwHjA@mail.gmail.com>
+Message-ID: <CAHk-=wgGN9KKCW8dii=nXwKQdu2N5AOMrVdS5qJvZAPOTvwHjA@mail.gmail.com>
+Subject: Re: [PATCH-tip v6 01/20] locking/rwsem: Prevent decrement of reader
+ count before increment
+To:     Waiman Long <longman@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Apr 2019 10:41:10 -0700
-Andy Lutomirski <luto@amacapital.net> wrote:
+On Sun, Apr 28, 2019 at 10:41 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> It's the *first* loop that you could play games with, because you hold
+> the lock, and the list is stable during that loop. So the *first* loop
+> could just walk the list, and then do one list splitting operation
+> instead of doing that "list_move_tail()" thing for each entry.
 
+.. having looked at that, I would suggest against it.
 
-> > Note that at any given point
-> > in time, there can be at most four such call insn emulations pending:
-> > namely at most one per "process", "irq", "softirq" and "nmi" context.
-> >   
-> 
-> That’s quite an assumption. I think your list should also contain
-> exception, exceptions nested inside that exception, and machine
-> check, at the very least.  I’m also wondering why irq and softirq are
-> treated separately.
+I _think_ this short and sweet code snippet might just work fine for
+the first loop:
 
-4 has usually been the context count we choose. But I guess in theory,
-if we get exceptions then I could potentially be more.
+        list_for_each_entry(waiter, &sem->wait_list, list) {
+                if (waiter->type == RWSEM_WAITING_FOR_WRITE)
+                        break;
+                woken++;
+        }
+        list_cut_before(&wlist, &sem->wait_list, waiter);
 
-As for irq vs softirq, an interrupt can preempt a softirq. Interrupts
-are enabled while softirqs are running. When sofirqs run, softirqs are
-disabled to prevent nested softirqs. But interrupts are enabled again,
-and another interrupt may come in while a softirq is executing.
+and if it *does* work it would be both smaller and more efficient. But
+it looks a bit too subtle to my taste. Somebody would need to go
+through that with a fine comb, and double-check that it gets the
+"whole list" case right, for example.
 
-> 
-> All this makes me think that one of the other solutions we came up
-> with last time we discussed this might be better.
+So the "phase 1" loop could be perhaps simplified to the above cute things.
 
-+100
+But the "phase 2" loop absolutely has to be changed to use
+list_for_each_entry_safe().
 
-Perhaps adding another slot into pt_regs that gets used by int3 to
-store a slot to emulate a call on return?
-
--- Steve
-
+               Linus
