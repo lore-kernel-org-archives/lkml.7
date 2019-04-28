@@ -2,144 +2,129 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBECC43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 19:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DD8C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 19:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31AC3206C1
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 19:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D4B2067C
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 19:19:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWaPsYuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfD1TNU (ORCPT
+        id S1727180AbfD1TTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 15:13:20 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:37564 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726418AbfD1TNT (ORCPT
+        Sun, 28 Apr 2019 15:19:10 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33537 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfD1TTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 15:13:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TQSMxWA_1556478793;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TQSMxWA_1556478793)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 29 Apr 2019 03:13:15 +0800
-Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
- eligibility
-To:     Michal Hocko <mhocko@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190423175252.GP25106@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <5a571d64-bfce-aa04-312a-8e3547e0459a@linux.alibaba.com>
-Date:   Sun, 28 Apr 2019 12:13:07 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Sun, 28 Apr 2019 15:19:10 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j11so6313919lfm.0;
+        Sun, 28 Apr 2019 12:19:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mJFlfNrLLhFodWAkDjyar3iFGrW1LqXEzsbbr5M3lsY=;
+        b=UWaPsYuc83bWsj4h2kCex5L8UGlnpYYgTp8VNkWrPkDj1HEPkOWnoLzDvKMGnFoCX6
+         fO9YpHkKaPm5Cljm4K0dbWkBPXLy/sIsd33cA4daEzKvLQ/PydojlBfnDjL4ny4O2VeF
+         wnd7v9gJ/ljKF+W2zcz7BpQAwjy0sIf5vHSfitVywNd8X456r+M8WiFFQQ++4tBgyHC0
+         HAbX5JEdVZR8CN2vICH173vrhBI5517r3TYIiC3/ndl4M359eaKTlfak2qmPRtPGVTKa
+         j4nW4iiofe0mP+/bG/ATP8QwiKgzqXcXSSThNld4beEWMJqqSMbHnc7k0rB87WM35fI3
+         r5Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mJFlfNrLLhFodWAkDjyar3iFGrW1LqXEzsbbr5M3lsY=;
+        b=paqJRpxovcgCKQgn6vS1QHHxnISZ4OS1BqWcteLAmU7HVdVknyFkVU4EMNU9U+EVI+
+         ansIKMvhuzbb/35JNIa6xiiTx9wRrQbPAkrxuklNk6P+dSH85wB2r1IslkCq1bn9gr/k
+         MTlwRTamhBsUKIEWIGxylx94MQJ9xlk8ijyhbH1MP/YDB6eoA7l7Paz3pNKgqdY0+Ts1
+         nLICgk11j8dW5vQPLXWPdREK/C2SeKbTz9cesgay8RzM5NQ2nKNjoHW2VTLVZtXs+qRe
+         Mnf+8h8E/ujJehMJuXlihvKhRPR8Qf8xQgz7pVwbFh4q0bOHMVxjVbTFBl0vKNyC0398
+         cTCw==
+X-Gm-Message-State: APjAAAUcSTcRBWJO5MOYgFQe6nG9My+bGKuj0HiWjamP1kZivATwb82l
+        bSbo/3dlrk1L4t3nDEFknFY=
+X-Google-Smtp-Source: APXvYqyXHwhIK5hh1x/2ixW2wygdQGI98pqYAmzIQi/+zhAh695dFkXjiI+m6nJ6IQyYA4GilhDOOg==
+X-Received: by 2002:a19:7014:: with SMTP id h20mr31619963lfc.158.1556479148051;
+        Sun, 28 Apr 2019 12:19:08 -0700 (PDT)
+Received: from mobilestation ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id p19sm6921283lfc.48.2019.04.28.12.19.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 28 Apr 2019 12:19:07 -0700 (PDT)
+Date:   Sun, 28 Apr 2019 22:19:05 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] net: phy: realtek: Add rtl8211e rx/tx delays
+ config
+Message-ID: <20190428191903.ec53f25kspb7zhzd@mobilestation>
+References: <20190426093010.9609-1-fancer.lancer@gmail.com>
+ <20190426212112.5624-1-fancer.lancer@gmail.com>
+ <20190426214050.GU4041@lunn.ch>
+ <20190426234503.y6nm5hekyclmgftc@mobilestation>
+ <fbf2ff24-a435-fe69-abcc-1f9326e1d61d@gmail.com>
+ <20190427074400.is2hbij2k57f5daz@mobilestation>
+ <20190427152109.GJ14432@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20190423175252.GP25106@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190427152109.GJ14432@lunn.ch>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Apr 27, 2019 at 05:21:09PM +0200, Andrew Lunn wrote:
+> > > >> Hi Serge
+> > > >>
+> > > >> Next time please include a patch 0 containing a cover note explaining
+> > > >> the who series.
+> > > >>
+> > > > 
+> > > > Sure as long as the patchset gets to be much bigger than two small
+> > > > patches with an obvious reason to be merged.
+> > > 
+> > > netdev likes to have a cover letter for patch count >= 1, probably
+> > > something to be added to netdev-FAQ.rst.
+> > > -- 
+> > > Florian
+> > 
+> > Hello Florian
+> > Really, even with count = 1? So just one patch with cover-letter? Doesn't it
+> > seem redundant since at least a single patch can be thoroughly described in
+> > it' commit message?
+> 
+> Hi Serge
+> 
+> David workflow is to put the patch set into a branch, and then merge
+> the branch into his master, using the cover note as the merge commit
+> message.
+> 
+> You occasionally see commit messages for count == 1, but not often.
+> For > 1, if there is no cover note, somebody is likely to ask for one
+> :-)
+> 
+>     Andrew
 
+Hello Andrew and Florian
 
-On 4/23/19 10:52 AM, Michal Hocko wrote:
-> On Wed 24-04-19 00:43:01, Yang Shi wrote:
->> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
->> vma") introduced THPeligible bit for processes' smaps. But, when checking
->> the eligibility for shmem vma, __transparent_hugepage_enabled() is
->> called to override the result from shmem_huge_enabled().  It may result
->> in the anonymous vma's THP flag override shmem's.  For example, running a
->> simple test which create THP for shmem, but with anonymous THP disabled,
->> when reading the process's smaps, it may show:
->>
->> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
->> Size:               4096 kB
->> ...
->> [snip]
->> ...
->> ShmemPmdMapped:     4096 kB
->> ...
->> [snip]
->> ...
->> THPeligible:    0
->>
->> And, /proc/meminfo does show THP allocated and PMD mapped too:
->>
->> ShmemHugePages:     4096 kB
->> ShmemPmdMapped:     4096 kB
->>
->> This doesn't make too much sense.  The anonymous THP flag should not
->> intervene shmem THP.  Calling shmem_huge_enabled() with checking
->> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
->> dax vma check since we already checked if the vma is shmem already.
-> Kirill, can we get a confirmation that this is really intended behavior
-> rather than an omission please? Is this documented? What is a global
-> knob to simply disable THP system wise?
+Alright. I see your point. Though I am not really agree with it at this
+situation, the next version of the mini-patchset will be sent with a
+cover-letter as per maintainers request.
 
-Hi Kirill,
+Meanwhile lets put aside this discussion and get back to the topic-related
+one. Could you respond to the email I've sent in response to the Andrew's
+comment on the second patch of v2 duet?
 
-Ping. Any comment?
-
-Thanks,
-Yang
-
->
-> I have to say that the THP tuning API is one giant mess :/
->
-> Btw. this patch also seem to fix khugepaged behavior because it previously
-> ignored both VM_NOHUGEPAGE and MMF_DISABLE_THP.
->
->> Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: David Rientjes <rientjes@google.com>
->> Cc: Kirill A. Shutemov <kirill@shutemov.name>
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> ---
->> v2: Check VM_NOHUGEPAGE per Michal Hocko
->>
->>   mm/huge_memory.c | 4 ++--
->>   mm/shmem.c       | 3 +++
->>   2 files changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index 165ea46..5881e82 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -67,8 +67,8 @@ bool transparent_hugepage_enabled(struct vm_area_struct *vma)
->>   {
->>   	if (vma_is_anonymous(vma))
->>   		return __transparent_hugepage_enabled(vma);
->> -	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
->> -		return __transparent_hugepage_enabled(vma);
->> +	if (vma_is_shmem(vma))
->> +		return shmem_huge_enabled(vma);
->>   
->>   	return false;
->>   }
->> diff --git a/mm/shmem.c b/mm/shmem.c
->> index 2275a0f..6f09a31 100644
->> --- a/mm/shmem.c
->> +++ b/mm/shmem.c
->> @@ -3873,6 +3873,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
->>   	loff_t i_size;
->>   	pgoff_t off;
->>   
->> +	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
->> +	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
->> +		return false;
->>   	if (shmem_huge == SHMEM_HUGE_FORCE)
->>   		return true;
->>   	if (shmem_huge == SHMEM_HUGE_DENY)
->> -- 
->> 1.8.3.1
->>
+-Sergey
 
