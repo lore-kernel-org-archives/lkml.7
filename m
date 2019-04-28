@@ -2,194 +2,149 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9A1C43218
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A37C43218
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB4D206A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B3520679
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 18:58:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ConQIFHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfD1SvT (ORCPT
+        id S1727130AbfD1S6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 14:51:19 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:43236 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfD1SvT (ORCPT
+        Sun, 28 Apr 2019 14:58:53 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36743 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbfD1S6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 14:51:19 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hKotJ-0007FA-Uh; Sun, 28 Apr 2019 18:51:10 +0000
-Date:   Sun, 28 Apr 2019 19:51:09 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>
-Cc:     axboe@kernel.dk, dvyukov@google.com, jack@suse.cz,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        penguin-kernel@i-love.sakura.ne.jp, syzkaller-bugs@googlegroups.com
-Subject: Re: INFO: task hung in __get_super
-Message-ID: <20190428185109.GD23075@ZenIV.linux.org.uk>
-References: <001a113ed5540f411c0568cc8418@google.com>
- <0000000000002cd22305879b22c4@google.com>
+        Sun, 28 Apr 2019 14:58:53 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a8so5253332edx.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 11:58:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a+ILODwvOV/xXnzT6a1LEcZLC+Vx0+d8amE4WNJPmME=;
+        b=ConQIFHBjJQwx/98RMH7MzUPGjK0lA8m4ZsXojEZRDzlMwf83bnbCPUXE1cajwr3nD
+         SOjNwlpPzGuk9pUj9Fc2u/F2A6CtZ011C6TbPsttKkJN3TSW7TAyzB//5pZ3Uk9KVeyC
+         kW++MS5qu+VZyOaJcAZ14QNUIX8sdjTGj4wkk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a+ILODwvOV/xXnzT6a1LEcZLC+Vx0+d8amE4WNJPmME=;
+        b=YULiKLx4uMoDM8vmoaHSaq83Uv7at6NdwBjmpXK1wLLli3AzpV/PwMFb/qCHzNtvqs
+         +Hp+sHR9JFV/6sFjKzpUCO1Y6HfpOxwJOeHb8tLGzN9dKzYEd6dwET+g2LqyPCXV0i87
+         5+rZmqLZYOQGUOFOmyURAcFHdEh1goDstQc9M0X9/Ihqp/SDIJ1JDkZd4nK3xju0k+Pe
+         ku9eK73gwgZ5q2oeygDulrpG1z9bLFEirl048bRMGe2CyUUHy23FJ3yy+X5J03XdAqAH
+         OLhg1lyM5f/J62xcDbVooXMbQJYzeFm0WF47G40+O8fH73yz9sj+WpTXk6OsYXjoCuEp
+         8u+g==
+X-Gm-Message-State: APjAAAXFPjUNZEMYL+4IpH+gk+687g6EKkDR2cMNagGBCX+Xli3JKsia
+        aSZNCLUpGXsSNEgWv1QEJWkc+w==
+X-Google-Smtp-Source: APXvYqxCFil31gzBSBPCjqfStbaIP5WXyME6cGWlT+NEyVyCeMBXc9OJA96ZVLt1VdbypvDO6LLLCQ==
+X-Received: by 2002:a17:906:5809:: with SMTP id m9mr4215620ejq.223.1556477931438;
+        Sun, 28 Apr 2019 11:58:51 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
+        by smtp.gmail.com with ESMTPSA id i41sm7011653ede.36.2019.04.28.11.58.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Apr 2019 11:58:50 -0700 (PDT)
+Subject: Re: [PATCH 1/6] lib/string: add strnchrnul()
+To:     Yury Norov <yury.norov@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Yury Norov <ynorov@marvell.com>, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+References: <20190428032936.1317-1-ynorov@marvell.com>
+ <20190428032936.1317-2-ynorov@marvell.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <e23d695b-8cd1-9e22-af14-fe6fabb72efe@rasmusvillemoes.dk>
+Date:   Sun, 28 Apr 2019 20:58:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000002cd22305879b22c4@google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190428032936.1317-2-ynorov@marvell.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 11:14:06AM -0700, syzbot wrote:
->  down_read+0x49/0x90 kernel/locking/rwsem.c:26
->  __get_super.part.0+0x203/0x2e0 fs/super.c:788
->  __get_super include/linux/spinlock.h:329 [inline]
->  get_super+0x2e/0x50 fs/super.c:817
->  fsync_bdev+0x19/0xd0 fs/block_dev.c:525
->  invalidate_partition+0x36/0x60 block/genhd.c:1581
->  drop_partitions block/partition-generic.c:443 [inline]
->  rescan_partitions+0xef/0xa20 block/partition-generic.c:516
->  __blkdev_reread_part+0x1a2/0x230 block/ioctl.c:173
->  blkdev_reread_part+0x27/0x40 block/ioctl.c:193
->  loop_reread_partitions+0x1c/0x40 drivers/block/loop.c:633
->  loop_set_status+0xe57/0x1380 drivers/block/loop.c:1296
->  loop_set_status64+0xc2/0x120 drivers/block/loop.c:1416
->  lo_ioctl+0x8fc/0x2150 drivers/block/loop.c:1559
->  __blkdev_driver_ioctl block/ioctl.c:303 [inline]
->  blkdev_ioctl+0x6f2/0x1d10 block/ioctl.c:605
->  block_ioctl+0xee/0x130 fs/block_dev.c:1933
->  vfs_ioctl fs/ioctl.c:46 [inline]
->  file_ioctl fs/ioctl.c:509 [inline]
->  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
->  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
->  __do_sys_ioctl fs/ioctl.c:720 [inline]
->  __se_sys_ioctl fs/ioctl.c:718 [inline]
->  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
->  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+On 28/04/2019 05.29, Yury Norov wrote:
+> New function works like strchrnul() with a length limited strings.
+> 
+> Signed-off-by: Yury Norov <ynorov@marvell.com>
+> ---
+>  include/linux/string.h |  3 +++
+>  lib/string.c           | 20 ++++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 4deb11f7976b..69e8df51b630 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -62,6 +62,9 @@ extern char * strchr(const char *,int);
+>  #ifndef __HAVE_ARCH_STRCHRNUL
+>  extern char * strchrnul(const char *,int);
+>  #endif
+> +#ifndef __HAVE_ARCH_STRNCHRNUL
 
-ioctl(..., BLKRRPART) blocked on ->s_umount in __get_super().
-The trouble is, the only things holding ->s_umount appears to be
-these:
+I find it unlikely this would ever be performance-critical, so an arch
+would want to implement its own. Please let's avoid adding redundant
+ifdeffery (and yes, there's probably quite a few of the existing ones
+that should go away).
 
-> 2 locks held by syz-executor274/11716:
->  #0: 00000000a19e2025 (&type->s_umount_key#38/1){+.+.}, at:
-> alloc_super+0x158/0x890 fs/super.c:228
->  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl
-> drivers/block/loop.c:1514 [inline]
->  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150
-> drivers/block/loop.c:1572
+>  
+> +#ifndef __HAVE_ARCH_STRNCHRNUL
+> +/**
+> + * strnchrnul - Find and return a character in a length limited string,
+> + * or end of string
+> + * @s: The string to be searched
+> + * @count: The number of characters to be searched
+> + * @c: The character to search for
+> + *
+> + * Returns pointer to first occurrence of 'c' in s. If c is not found,
+> + * then return a pointer to the null byte at the end of s.
 
-> 2 locks held by syz-executor274/11717:
->  #0: 00000000e185c083 (&type->s_umount_key#38/1){+.+.}, at:
-> alloc_super+0x158/0x890 fs/super.c:228
->  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl
-> drivers/block/loop.c:1514 [inline]
->  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150
-> drivers/block/loop.c:1572
+Pet peeve: nul, not null. Especially important when this is in contrast
+to returning a NULL pointer. Also, the description is inaccurate; the
+whole point of the n-variant is that there is not necessarily any nul
+terminator.
 
-... and that's bollocks.  ->s_umount held there is that on freshly allocated
-superblock.  It *MUST* be in mount(2); no other syscall should be able to
-call alloc_super() in the first place.  So what the hell is that doing
-trying to call lo_ioctl() inside mount(2)?  Something like isofs attempting
-cdrom ioctls on the underlying device?
+> + */
+> +char *strnchrnul(const char *s, int count, int c)
+> +{
 
-Why do we have loop_func_table->ioctl(), BTW?  All in-tree instances are
-either NULL or return -EINVAL unconditionally.  Considering that the
-caller is
-                err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
-we could bloody well just get rid of cryptoloop_ioctl() (the only
-non-NULL instance) and get rid of calling lo_simple_ioctl() in
-lo_ioctl() switch's default.
+Yes, make count size_t so it's easier to distinguish from the c, and
+keep this parameter ordering (that matches the str n chr name).
 
-Something like this:
+> +	while (count-- && *s && *s != (char)c)
+> +		s++;
+> +	return (char *)s;
+> +}
+> +EXPORT_SYMBOL(strnchrnul);
 
-diff --git a/drivers/block/cryptoloop.c b/drivers/block/cryptoloop.c
-index 254ee7d54e91..f16468a562f5 100644
---- a/drivers/block/cryptoloop.c
-+++ b/drivers/block/cryptoloop.c
-@@ -167,12 +167,6 @@ cryptoloop_transfer(struct loop_device *lo, int cmd,
- }
- 
- static int
--cryptoloop_ioctl(struct loop_device *lo, int cmd, unsigned long arg)
--{
--	return -EINVAL;
--}
--
--static int
- cryptoloop_release(struct loop_device *lo)
- {
- 	struct crypto_sync_skcipher *tfm = lo->key_data;
-@@ -188,7 +182,6 @@ cryptoloop_release(struct loop_device *lo)
- static struct loop_func_table cryptoloop_funcs = {
- 	.number = LO_CRYPT_CRYPTOAPI,
- 	.init = cryptoloop_init,
--	.ioctl = cryptoloop_ioctl,
- 	.transfer = cryptoloop_transfer,
- 	.release = cryptoloop_release,
- 	.owner = THIS_MODULE
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index bf1c61cab8eb..2ec162b80562 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -955,7 +955,6 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	lo->lo_flags = lo_flags;
- 	lo->lo_backing_file = file;
- 	lo->transfer = NULL;
--	lo->ioctl = NULL;
- 	lo->lo_sizelimit = 0;
- 	lo->old_gfp_mask = mapping_gfp_mask(mapping);
- 	mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
-@@ -1064,7 +1063,6 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 
- 	loop_release_xfer(lo);
- 	lo->transfer = NULL;
--	lo->ioctl = NULL;
- 	lo->lo_device = NULL;
- 	lo->lo_encryption = NULL;
- 	lo->lo_offset = 0;
-@@ -1262,7 +1260,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 	if (!xfer)
- 		xfer = &none_funcs;
- 	lo->transfer = xfer->transfer;
--	lo->ioctl = xfer->ioctl;
- 
- 	if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
- 	     (info->lo_flags & LO_FLAGS_AUTOCLEAR))
-@@ -1525,7 +1522,7 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
- 		err = loop_set_block_size(lo, arg);
- 		break;
- 	default:
--		err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
-+		err = -EINVAL;
- 	}
- 	mutex_unlock(&loop_ctl_mutex);
- 	return err;
-@@ -1567,10 +1564,9 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
- 	case LOOP_SET_BLOCK_SIZE:
- 		if (!(mode & FMODE_WRITE) && !capable(CAP_SYS_ADMIN))
- 			return -EPERM;
--		/* Fall through */
-+		return lo_simple_ioctl(lo, cmd, arg);
- 	default:
--		err = lo_simple_ioctl(lo, cmd, arg);
--		break;
-+		return -EINVAL;
- 	}
- 
- 	return err;
-diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index af75a5ee4094..56a9a0c161d7 100644
---- a/drivers/block/loop.h
-+++ b/drivers/block/loop.h
-@@ -84,7 +84,6 @@ struct loop_func_table {
- 	int (*init)(struct loop_device *, const struct loop_info64 *); 
- 	/* release is called from loop_unregister_transfer or clr_fd */
- 	int (*release)(struct loop_device *); 
--	int (*ioctl)(struct loop_device *, int cmd, unsigned long arg);
- 	struct module *owner;
- }; 
- 
+This can be added if a modular user shows up. No reason to add that
+bloat to the kernel image immediately.
+
+Rasmus
