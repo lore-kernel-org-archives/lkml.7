@@ -2,86 +2,136 @@ Return-Path: <SRS0=wfQU=S6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059D9C43219
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCC3C43219
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0A2206A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556468284;
-	bh=1SaD5I+zLIUb4wHyGKaUi1WiE1ndGN+AH1sSoln7zW0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=BQ5FYHSzPBDhWHvkGeDTy1QXqN8G5BwwOKQOz4zpI8LeP3wmuvxJBHIWC7GBxlm3u
-	 9qUsUhHKZPno2RpJq6Ey/847u0WI95kq7LeniuzYKozpzJeGaxmN9B39i6sCEGuZfS
-	 xpfp5TkCeZEJLvHJA5sbd7gTUvmU8mSOFFps4L+0=
+	by mail.kernel.org (Postfix) with ESMTP id 76520205ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 28 Apr 2019 16:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfD1QSD (ORCPT
+        id S1726942AbfD1QYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 12:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59146 "EHLO mail.kernel.org"
+        Sun, 28 Apr 2019 12:24:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35860 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbfD1QSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 12:18:03 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726674AbfD1QYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 12:24:14 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D910C20693;
-        Sun, 28 Apr 2019 16:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556468282;
-        bh=1SaD5I+zLIUb4wHyGKaUi1WiE1ndGN+AH1sSoln7zW0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KL484Oas0TEC31AlJjWiOZ7359uhLrVnXyLq3wfxa8fJnYJbpwHpQByef9lgmEe3W
-         bBbw716/HnNB64mWtVY6UAUwzYtdesxclRtYgFAnQjMdB4NRgWkV6Qu8dEzogba5cG
-         nnAJepQxLHzukn2sMmKBDiXuctpaeT3rIova8qXs=
-Message-ID: <c570c901c850b6308bc78fcc6c7308f0bc491cb1.camel@kernel.org>
-Subject: Re: [GIT PULL] Ceph fixes for 5.1-rc7
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-cifs <linux-cifs@vger.kernel.org>
-Date:   Sun, 28 Apr 2019 12:18:00 -0400
-In-Reply-To: <20190428155216.GB23075@ZenIV.linux.org.uk>
-References: <CAHk-=wgPBx9xPWY7obK60=RTnOF3Ln0j9XkhYbekML=Fi3bFXg@mail.gmail.com>
-         <342ef35feb1110197108068d10e518742823a210.camel@kernel.org>
-         <20190425200941.GW2217@ZenIV.linux.org.uk>
-         <86674e79e9f24e81feda75bc3c0dd4215604ffa5.camel@kernel.org>
-         <20190426165055.GY2217@ZenIV.linux.org.uk>
-         <b175faae4bb98d3379a8642fe5f4e00587c3a734.camel@kernel.org>
-         <20190428043801.GE2217@ZenIV.linux.org.uk>
-         <7bac7ba5655a8e783a70f915853a0846e7ff143b.camel@kernel.org>
-         <20190428144850.GA23075@ZenIV.linux.org.uk>
-         <b875fdb47e17ab68d18c5e5e5cbd0ec70fec7ce9.camel@kernel.org>
-         <20190428155216.GB23075@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        by mx1.redhat.com (Postfix) with ESMTPS id 89F6A13BF43;
+        Sun, 28 Apr 2019 16:24:13 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 837F268729;
+        Sun, 28 Apr 2019 16:24:07 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Sun, 28 Apr 2019 18:24:12 +0200 (CEST)
+Date:   Sun, 28 Apr 2019 18:24:06 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, luto@amacapital.net,
+        rostedt@goodmis.org, dancol@google.com, sspatil@google.com,
+        jannh@google.com, surenb@google.com, timmurray@google.com,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        torvalds@linux-foundation.org, kernel-team@android.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jann Horn <jann@thejh.net>,
+        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, viro@zeniv.linux.org.uk,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] Add polling support to pidfd
+Message-ID: <20190428162405.GA6757@redhat.com>
+References: <20190425190010.46489-1-joel@joelfernandes.org>
+ <20190425222359.sqhboc4x4daznr6r@brauner.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190425222359.sqhboc4x4daznr6r@brauner.io>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Sun, 28 Apr 2019 16:24:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-04-28 at 16:52 +0100, Al Viro wrote:
-> On Sun, Apr 28, 2019 at 11:47:58AM -0400, Jeff Layton wrote:
-> 
-> > We could stick that in ceph_dentry_info (->d_fsdata). We have a flags
-> > field in there already.
-> 
-> Yes, but...  You have it freed in ->d_release(), AFAICS, and without
-> any delays.  So lockless accesses will be trouble.
+Thanks for cc'ing me...
 
-That's easy enough to fix -- we could add a rcu_head to it and call_rcu
-in ceph_d_release instead of just freeing it immediately.
+On 04/26, Christian Brauner wrote:
+>
+> On Thu, Apr 25, 2019 at 03:00:09PM -0400, Joel Fernandes (Google) wrote:
+> > +static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
+> > +{
+> > +	struct task_struct *task;
+> > +	struct pid *pid;
+> > +	int poll_flags = 0;
+> > +
+> > +	/*
+> > +	 * tasklist_lock must be held because to avoid racing with
+> > +	 * changes in exit_state and wake up. Basically to avoid:
+> > +	 *
+> > +	 * P0: read exit_state = 0
+> > +	 * P1: write exit_state = EXIT_DEAD
+> > +	 * P1: Do a wake up - wq is empty, so do nothing
+> > +	 * P0: Queue for polling - wait forever.
+> > +	 */
+> > +	read_lock(&tasklist_lock);
+> > +	pid = file->private_data;
+> > +	task = pid_task(pid, PIDTYPE_PID);
+> > +	WARN_ON_ONCE(task && !thread_group_leader(task));
+> > +
+> > +	if (!task || (task->exit_state && thread_group_empty(task)))
+> > +		poll_flags = POLLIN | POLLRDNORM;
 
-I guess if we find that d_fsdata is NULL, we can just treat it like we
-currently do a negative dentry?
--- 
-Jeff Layton <jlayton@kernel.org>
+Joel, I still can't understand why do we need tasklist... and I don't really
+understand the comment. The code looks as if you are trying to avoid poll_wait(),
+but this would be strange.
+
+OK, why can't pidfd_poll() do
+
+	poll_wait(file, &pid->wait_pidfd, pts);
+
+	rcu_read_lock();
+	task = pid_task(pid, PIDTYPE_PID);
+	if (!task || task->exit_state && thread_group_empty(task))
+		poll_flags = POLLIN | ...;
+	rcu_read_unlock();
+
+	return poll_flags;
+
+?
+
+> > +static void do_notify_pidfd(struct task_struct *task)
+>
+> Maybe a short command that this helper can only be called when we know
+> that task is a thread-group leader wouldn't hurt so there's no confusion
+> later.
+
+Not really. If the task is traced, do_notify_parent() (and thus do_notify_pidfd())
+can be called to notify the debugger even if the task is not a leader and/or if
+it is not the last thread. The latter means a spurious wakeup for pidfd_poll().
+
+> > +{
+> > +	struct pid *pid;
+> > +
+> > +	lockdep_assert_held(&tasklist_lock);
+> > +
+> > +	pid = get_task_pid(task, PIDTYPE_PID);
+> > +	wake_up_all(&pid->wait_pidfd);
+> > +	put_pid(pid);
+
+Why get/put?
+
+Oleg.
 
