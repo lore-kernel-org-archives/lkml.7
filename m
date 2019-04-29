@@ -2,122 +2,71 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E08BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9098BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15ED12075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5243F2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556575806;
+	bh=YKMsjr2Pl5ZVWI+GFbJC6l3R7niMMQuNDS9f+IO50hI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=E+MmsLIId746162VrtJhHM7Mw6DruyZ8K7hp0OyOjIXqXwS1DrEM5YkNHC/6ky91D
+	 PozxymTr5900HzUEQH3xWT4I+tXfcj2VX0mCy6Tl7p+rMGSEWf4dKX2RUMfn+K8OHT
+	 aS5uaIz9N6R5JyBXQnIDufsbF6/Ii6yzopvTprlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfD2WIR (ORCPT
+        id S1729580AbfD2WKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:08:17 -0400
-Received: from mga06.intel.com ([134.134.136.31]:37256 "EHLO mga06.intel.com"
+        Mon, 29 Apr 2019 18:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729412AbfD2WIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:08:17 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 15:08:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,411,1549958400"; 
-   d="scan'208";a="166186098"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Apr 2019 15:08:15 -0700
-Date:   Mon, 29 Apr 2019 15:08:15 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-Message-ID: <20190429220814.GF31379@linux.intel.com>
-References: <20190427100639.15074-4-nstange@suse.de>
- <20190427102657.GF2623@hirez.programming.kicks-ass.net>
- <20190428133826.3e142cfd@oasis.local.home>
- <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
- <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
- <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
- <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
- <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
- <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
- <CAHk-=wjyyKDv-WZLXZbVD=V05p2X7eg74z2SpR4TQTxN9JLq4Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjyyKDv-WZLXZbVD=V05p2X7eg74z2SpR4TQTxN9JLq4Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1728105AbfD2WKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 18:10:04 -0400
+Subject: Re: [GIT PULL] seccomp fixes for v5.1-rc8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556575804;
+        bh=YKMsjr2Pl5ZVWI+GFbJC6l3R7niMMQuNDS9f+IO50hI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=QSisNpw9nbUtIfrgvLv7YAAEFBvBb7uUjmoVflHkX8KoBXxcabcpKWdhoB16Z7eg2
+         z4t74e6uH/E6cSVMzYWDm/BDGHzfm84rgSkDWLr8kkMQqgpbELcDiV71CJOo493k9h
+         IS0XlzVUVOAI9nh8YfH8xPxbIQ4xHG4gI7AQcPXE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190429195836.GA30688@beast>
+References: <20190429195836.GA30688@beast>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190429195836.GA30688@beast>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git
+ tags/seccomp-v5.1-rc8
+X-PR-Tracked-Commit-Id: 7a0df7fbc14505e2e2be19ed08654a09e1ed5bf6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 83a50840e72a5a964b4704fcdc2fbb2d771015ab
+Message-Id: <155657580394.929.13197122571033546186.pr-tracker-bot@kernel.org>
+Date:   Mon, 29 Apr 2019 22:10:03 +0000
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        James Morris <jamorris@linux.microsoft.com>,
+        syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com,
+        Tycho Andersen <tycho@tycho.ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 01:16:10PM -0700, Linus Torvalds wrote:
-> On Mon, Apr 29, 2019 at 12:02 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > If nmi were to break it, it would be a cpu bug. I'm pretty sure I've
-> > seen the "shadow stops even nmi" documented for some uarch, but as
-> > mentioned it's not necessarily the only way to guarantee the shadow.
-> 
-> In fact, the documentation is simply the official Intel instruction
-> docs for "STI":
-> 
->     The IF flag and the STI and CLI instructions do not prohibit the
->     generation of exceptions and NMI interrupts. NMI interrupts (and
->     SMIs) may be blocked for one macroinstruction following an STI.
-> 
-> note the "may be blocked". As mentioned, that's just one option for
-> not having NMI break the STI shadow guarantee, but it's clearly one
-> that Intel has done at times, and clearly even documents as having
-> done so.
-> 
-> There is absolutely no question that the sti shadow is real, and that
-> people have depended on it for _decades_. It would be a horrible
-> errata if the shadow can just be made to go away by randomly getting
-> an NMI or SMI.
+The pull request you sent on Mon, 29 Apr 2019 12:58:36 -0700:
 
-FWIW, Lakemont (Quark) doesn't block NMI/SMI in the STI shadow, but I'm
-not sure that counters the "horrible errata" statement ;-).  SMI+RSM saves
-and restores STI blocking in that case, but AFAICT NMI has no such
-protection and will effectively break the shadow on its IRET.
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/seccomp-v5.1-rc8
 
-All other (modern) Intel uArchs block NMI in the shadow and also enforce
-STI_BLOCKING==0 when injecting an NMI via VM-Enter, i.e. prevent a VMM
-from breaking the shadow so long as the VMM preserves the shadow info.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/83a50840e72a5a964b4704fcdc2fbb2d771015ab
 
-KVM is generally ok with respect to STI blocking, but ancient versions
-didn't migrate STI blocking and there's currently a hole where
-single-stepping a guest (from host userspace) could drop STI_BLOCKING
-if a different VM-Exit occurs between the single-step #DB VM-Exit and the
-instruction in the shadow.  Though "don't do that" may be a reasonable
-answer in that case.
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
