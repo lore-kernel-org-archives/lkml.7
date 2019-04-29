@@ -2,97 +2,171 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC7FC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A1DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA4920675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556534459;
-	bh=v+uQIG9sMiPAkWbOsWkHOWu64bAMxrNQmbdm3UQMKcw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pTNq2r4vFus/cqWgcY1dMAYDPv8lQ4ykqNViU8xpIWaBOky+5e5QNawpCLGOImPPJ
-	 AotI5bwfqoIn1F9SwEpYZLvePRbRCz+pELArR6cVX8EXAoTwQ4Yn+NwlYE02kOyj6S
-	 3OxZnjKm9/SXiY8GptQ1oTinkdM+hCT1jWR5Y0N0=
+	by mail.kernel.org (Postfix) with ESMTP id 9376220675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfD2Kk5 (ORCPT
+        id S1727819AbfD2Km6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:40:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36982 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727560AbfD2Kk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 06:40:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 25CCFAB9D;
-        Mon, 29 Apr 2019 10:40:56 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 12:40:51 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, mm <linux-mm@kvack.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Subject: Re: memcg causes crashes in list_lru_add
-Message-ID: <20190429104051.GF21837@dhcp22.suse.cz>
-References: <f0cfcfa7-74d0-8738-1061-05d778155462@suse.cz>
- <2cbfb8dc-31f0-7b95-8a93-954edb859cd8@suse.cz>
- <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
+        Mon, 29 Apr 2019 06:42:58 -0400
+Received: from 9.mo173.mail-out.ovh.net ([46.105.72.44]:34442 "EHLO
+        9.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727621AbfD2Km6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 06:42:58 -0400
+X-Greylist: delayed 346 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Apr 2019 06:42:57 EDT
+Received: from player158.ha.ovh.net (unknown [10.109.159.132])
+        by mo173.mail-out.ovh.net (Postfix) with ESMTP id B8BBAFF697
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:37:09 +0200 (CEST)
+Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
+        (Authenticated sender: groug@kaod.org)
+        by player158.ha.ovh.net (Postfix) with ESMTPSA id C9E2051F45C6;
+        Mon, 29 Apr 2019 10:37:01 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 12:36:59 +0200
+From:   Greg Kurz <groug@kaod.org>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Alistair Popple <alistair@popple.id.au>, stable@vger.kernel.org
+Subject: Re: [PATCH] powerpc/powernv/npu: Fix reference leak
+Message-ID: <20190429123659.00c0622b@bahia.lan>
+In-Reply-To: <962c1d9e-719c-cb82-cabc-1cf619e1510b@ozlabs.ru>
+References: <155568805354.600470.13376593185688810607.stgit@bahia.lan>
+        <962c1d9e-719c-cb82-cabc-1cf619e1510b@ozlabs.ru>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 15264106512109181429
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddriedvgdefudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29-04-19 12:09:53, Jiri Slaby wrote:
-> On 29. 04. 19, 11:25, Jiri Slaby wrote:> memcg_update_all_list_lrus
-> should take care about resizing the array.
-> 
-> It should, but:
-> [    0.058362] Number of physical nodes 2
-> [    0.058366] Skipping disabled node 0
-> 
-> So this should be the real fix:
-> --- linux-5.0-stable1.orig/mm/list_lru.c
-> +++ linux-5.0-stable1/mm/list_lru.c
-> @@ -37,11 +37,12 @@ static int lru_shrinker_id(struct list_l
-> 
->  static inline bool list_lru_memcg_aware(struct list_lru *lru)
->  {
-> -       /*
-> -        * This needs node 0 to be always present, even
-> -        * in the systems supporting sparse numa ids.
-> -        */
-> -       return !!lru->node[0].memcg_lrus;
-> +       int i;
-> +
-> +       for_each_online_node(i)
-> +               return !!lru->node[i].memcg_lrus;
-> +
-> +       return false;
->  }
-> 
->  static inline struct list_lru_one *
-> 
-> 
-> 
-> 
-> 
-> Opinions?
+On Mon, 29 Apr 2019 16:01:29 +1000
+Alexey Kardashevskiy <aik@ozlabs.ru> wrote:
 
-Please report upstream. This code here is there for quite some time.
-I do not really remember why we do have an assumption about node 0
-and why it hasn't been problem until now.
+> On 20/04/2019 01:34, Greg Kurz wrote:
+> > Since 902bdc57451c, get_pci_dev() calls pci_get_domain_bus_and_slot(). This
+> > has the effect of incrementing the reference count of the PCI device, as
+> > explained in drivers/pci/search.c:
+> > 
+> >  * Given a PCI domain, bus, and slot/function number, the desired PCI
+> >  * device is located in the list of PCI devices. If the device is
+> >  * found, its reference count is increased and this function returns a
+> >  * pointer to its data structure.  The caller must decrement the
+> >  * reference count by calling pci_dev_put().  If no device is found,
+> >  * %NULL is returned.
+> > 
+> > Nothing was done to call pci_dev_put() and the reference count of GPU and
+> > NPU PCI devices rockets up.
+> > 
+> > A natural way to fix this would be to teach the callers about the change,
+> > so that they call pci_dev_put() when done with the pointer. This turns
+> > out to be quite intrusive, as it affects many paths in npu-dma.c,
+> > pci-ioda.c and vfio_pci_nvlink2.c.  
+> 
+> 
+> afaict this referencing is only done to protect the current traverser
+> and what you've done is actually a natural way (and the generic
+> pci_get_dev_by_id() does exactly the same), although this looks a bit weird.
+> 
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+Not exactly the same: pci_get_dev_by_id() always increment the refcount
+of the returned PCI device. The refcount is only decremented when this
+device is passed to pci_get_dev_by_id() to continue searching.
+
+That means that the users of the PCI device pointer returned by
+pci_get_dev_by_id() or its exported variants pci_get_subsys(),
+pci_get_device() and pci_get_class() do handle the refcount. They
+all pass the pointer to pci_dev_put() or continue the search,
+which calls pci_dev_put() internally.
+
+Direct and indirect callers of get_pci_dev() don't care for the
+refcount at all unless I'm missing something.
+
+> 
+> > Also, the issue appeared in 4.16 and
+> > some affected code got moved around since then: it would be problematic
+> > to backport the fix to stable releases.
+> > 
+> > All that code never cared for reference counting anyway. Call pci_dev_put()
+> > from get_pci_dev() to revert to the previous behavior.  
+> >> Fixes: 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary pcidev  
+> from pci_dn")
+> > Cc: stable@vger.kernel.org # v4.16
+> > Signed-off-by: Greg Kurz <groug@kaod.org>
+> > ---
+> >  arch/powerpc/platforms/powernv/npu-dma.c |   15 ++++++++++++++-
+> >  1 file changed, 14 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/powerpc/platforms/powernv/npu-dma.c b/arch/powerpc/platforms/powernv/npu-dma.c
+> > index e713ade30087..d8f3647e8fb2 100644
+> > --- a/arch/powerpc/platforms/powernv/npu-dma.c
+> > +++ b/arch/powerpc/platforms/powernv/npu-dma.c
+> > @@ -31,9 +31,22 @@ static DEFINE_SPINLOCK(npu_context_lock);
+> >  static struct pci_dev *get_pci_dev(struct device_node *dn)
+> >  {
+> >  	struct pci_dn *pdn = PCI_DN(dn);
+> > +	struct pci_dev *pdev;
+> >  
+> > -	return pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
+> > +	pdev = pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
+> >  					   pdn->busno, pdn->devfn);
+> > +
+> > +	/*
+> > +	 * pci_get_domain_bus_and_slot() increased the reference count of
+> > +	 * the PCI device, but callers don't need that actually as the PE
+> > +	 * already holds a reference to the device.  
+> 
+> Imho this would be just enough.
+> 
+> Anyway,
+> 
+> Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+> 
+
+Thanks !
+
+I now realize that I forgot to add the --cc option for stable on my stgit
+command line :-\.
+
+Cc'ing now.
+
+> 
+> How did you find it? :)
+> 
+
+While reading code to find some inspiration for OpenCAPI passthrough. :)
+
+I saw the following in vfio_pci_ibm_npu2_init():
+
+	if (!pnv_pci_get_gpu_dev(vdev->pdev))
+		return -ENODEV;
+
+and simply followed the function calls.
+
+> 
+> > Since callers aren't
+> > +	 * aware of the reference count change, call pci_dev_put() now to
+> > +	 * avoid leaks.
+> > +	 */
+> > +	if (pdev)
+> > +		pci_dev_put(pdev);
+> > +
+> > +	return pdev;
+> >  }
+> >  
+> >  /* Given a NPU device get the associated PCI device. */
+> >   
+> 
+
