@@ -2,68 +2,67 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B349C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD689C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB4A216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFF52084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:29:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="pFUVGdlR"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="J2dTv1NP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbfD2N3y (ORCPT
+        id S1728280AbfD2N34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:29:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:32851 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbfD2N3v (ORCPT
+        Mon, 29 Apr 2019 09:29:56 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46930 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728246AbfD2N3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:29:51 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s18so16140521wrp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 06:29:50 -0700 (PDT)
+        Mon, 29 Apr 2019 09:29:53 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t17so16009283wrw.13
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 06:29:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=u5gkjIo0jKHz5nMirUsgx+T49vpY9J+GcHz2XWc4FKc=;
-        b=pFUVGdlRPrcuUqW2/0hELTzPbKKNEYhqDI3CkoHGbZm5Yq65C2D4IF8ZEXBAdCGtm8
-         6y06tr2gg4sOArlY8cGKjM3ebjdz0ngMoptkgu46RzVGo5BR9g2+DFM/wOEPtp9o8wT4
-         Rwoc0G8zd17SAbTmHP7FagKPPu93ZXMX/8yb+MbH4oV242MLkVQFh4kWT4loQuxdmu0x
-         tYoULFW6Gm/RlFujGK8PtsjODesDRrDXCUEXXxbX1fOWnMy/BdnVREtQkCQeYj8X50nr
-         ymiJSVYd7oFu6C++IEeQyMRAe+AFq2Wdm4m2vv7Zk3zP031MG5rTwCecm4QiH1gEyYXu
-         Hx8A==
+        bh=whsOXQ8xRakI5AVYAzepVuB15C/D0yrTQsABLkaS6Vw=;
+        b=J2dTv1NPn4J99TrrljZ2hOdA1bv1ifuVO+cH2SVjLUxRsCwvDn6BHWRe13ydolX9HU
+         f0TgeitA6xsof7AZ1BTeJMhJx9kNVCtreRIIz9tilr7F8ppdQBBxnamrpVfxs+7s0EuC
+         /JVT4wZ1PMsPZY5/LjXMc70KWL4sthpL7sEtgbb7ZuUzPpYMMhz4nifFsD75k0rW8ryA
+         spcy4SlO6AluDcIowl1fcf1VPnzD2N57NI7qTRcgkQAlS9idnCiCIUExwUaYbgeV7gih
+         tm7D8w2q0cvdL0hYkGcQiVK21c5VDYXHMhWi8jpwQFBdbCzSs5At+eD45xDtXv+WytzX
+         tf+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=u5gkjIo0jKHz5nMirUsgx+T49vpY9J+GcHz2XWc4FKc=;
-        b=M/tC5zWnXfxzrceQwZHC1nzukuJTutaiA5SuJjjpQFkcNArycXWD25ALDQRQ15w4Qk
-         mlQMjIjPRobEveOcZgj4XB3cQXnLIMN/CDPMTKXvR39FQUv4xptWrKOhz7zbF/bQd5i9
-         QUxEwpkZ2og7GIvfogPYb6muSPAzTuW8VSKSsiRj4p2WuPZfAVWtkOwB+MzWhMoC34eJ
-         ePuVzoNBnpltbuN58jy+EqEq0PhZ9xDJ1GRgMYdlzYxYJbJUZJoeN1gpgZMUUSmURl6I
-         D58Eb9YkP/SVvSKlG6rM77WXlTZO7jGI8upj1Uu7oX/SlaT2gwXZvQJC3I9fdfdXPREe
-         B8fw==
-X-Gm-Message-State: APjAAAU8JnPhFoFrkTTzejpsrEqZfOkAPkpRIdv8h0Qe+EexY9lyAHHB
-        OAoL9HClZpDPa3JAU/xLgCvpvA==
-X-Google-Smtp-Source: APXvYqwQRjw0fpniFRPWZPbufXRuMFumxyoEfAbrckJdhgOSUuRSLDn24hIGZQuswECs2edXbWvhNQ==
-X-Received: by 2002:a5d:4392:: with SMTP id i18mr10153524wrq.239.1556544589439;
-        Mon, 29 Apr 2019 06:29:49 -0700 (PDT)
+        bh=whsOXQ8xRakI5AVYAzepVuB15C/D0yrTQsABLkaS6Vw=;
+        b=jSjqbXfxdamEX83PCunFV/AEM0aNjTJiZFw9tNFlxZoYANPdVM5AUXplXseiWX2PfG
+         Khb/CI2E3N0tvCOpKiY5/aF19ML4KGl7MzdCBg4HQIMpL1H3gV8wMyVNcG3ExiKNeq37
+         iEw2gLl9LOj0rPC+/ZFj2bZVhz/rkrTBGOgP0rMpqOJsb3pMWbdBVIMTqyepqg+2UlYd
+         naEaekFcjy2BA3UUUOne3cl9ELRUebqya5Cx1owzBWKk82HLhZ4m6MlEdaJVTDHpyqEE
+         sVvuYJgwsaJVsUmJOp4N0kkksiMEHtSdwYk8Rf+cXDV8R+qQJFe/ZXQJbHOs6O6lxmvj
+         tDLw==
+X-Gm-Message-State: APjAAAUhPMvHZLSN6ktGJHGmgJm4cSU4WeR6Pu7+rX+mmqF0NQcpS8PG
+        5JGif+nzW+COs/cTgXdxUD91ZiYMue4=
+X-Google-Smtp-Source: APXvYqxOsG9oiU7eEepi7586wap76Pj0lBUVZ/mY6bdH1Ba/VKYnS+x1TJFaXAE4iJXvcVWCek6nRA==
+X-Received: by 2002:adf:f845:: with SMTP id d5mr2185657wrq.107.1556544591717;
+        Mon, 29 Apr 2019 06:29:51 -0700 (PDT)
 Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id s17sm2857593wra.94.2019.04.29.06.29.48
+        by smtp.googlemail.com with ESMTPSA id s17sm2857593wra.94.2019.04.29.06.29.50
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 06:29:48 -0700 (PDT)
+        Mon, 29 Apr 2019 06:29:51 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
-Subject: [PATCH 1/6] ASoC: hdmi-codec: remove function name debug traces
-Date:   Mon, 29 Apr 2019 15:29:38 +0200
-Message-Id: <20190429132943.16269-2-jbrunet@baylibre.com>
+Subject: [PATCH 3/6] ASoC: hdmi-codec: stream is already locked in hw_params
+Date:   Mon, 29 Apr 2019 15:29:40 +0200
+Message-Id: <20190429132943.16269-4-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190429132943.16269-1-jbrunet@baylibre.com>
 References: <20190429132943.16269-1-jbrunet@baylibre.com>
@@ -74,72 +73,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the debug traces only showing the function name on entry.
-The same can be obtained using ftrace.
+startup() should have run before hw_params() is called, so the
+current_substream pointer should already be properly set. There
+is no reason to call hdmi_codec_new_stream() again in the
+hw_params() callback
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- sound/soc/codecs/hdmi-codec.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ sound/soc/codecs/hdmi-codec.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index e5b6769b9797..9dca24732069 100644
+index 4bd598253c62..780f2008b271 100644
 --- a/sound/soc/codecs/hdmi-codec.c
 +++ b/sound/soc/codecs/hdmi-codec.c
-@@ -416,8 +416,6 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
- 	int ret = 0;
- 
--	dev_dbg(dai->dev, "%s()\n", __func__);
--
- 	ret = hdmi_codec_new_stream(substream, dai);
- 	if (ret)
+@@ -495,10 +495,6 @@ static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
  		return ret;
-@@ -453,8 +451,6 @@ static void hdmi_codec_shutdown(struct snd_pcm_substream *substream,
- {
- 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+ 	}
  
--	dev_dbg(dai->dev, "%s()\n", __func__);
+-	ret = hdmi_codec_new_stream(substream, dai);
+-	if (ret)
+-		return ret;
 -
- 	WARN_ON(hcp->current_stream != substream);
- 
- 	hcp->chmap_idx = HDMI_CODEC_CHMAP_IDX_UNKNOWN;
-@@ -531,8 +527,6 @@ static int hdmi_codec_set_fmt(struct snd_soc_dai *dai,
- 	struct hdmi_codec_daifmt cf = { 0 };
- 	int ret = 0;
- 
--	dev_dbg(dai->dev, "%s()\n", __func__);
--
- 	if (dai->id == DAI_ID_SPDIF) {
- 		cf.fmt = HDMI_SPDIF;
- 	} else {
-@@ -602,8 +596,6 @@ static int hdmi_codec_digital_mute(struct snd_soc_dai *dai, int mute)
- {
- 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
- 
--	dev_dbg(dai->dev, "%s()\n", __func__);
--
- 	if (hcp->hcd.ops->digital_mute)
- 		return hcp->hcd.ops->digital_mute(dai->dev->parent,
- 						  hcp->hcd.data, mute);
-@@ -661,8 +653,6 @@ static int hdmi_codec_pcm_new(struct snd_soc_pcm_runtime *rtd,
- 	};
- 	int ret;
- 
--	dev_dbg(dai->dev, "%s()\n", __func__);
--
- 	ret =  snd_pcm_add_chmap_ctls(rtd->pcm, SNDRV_PCM_STREAM_PLAYBACK,
- 				      NULL, drv->playback.channels_max, 0,
- 				      &hcp->chmap_info);
-@@ -759,8 +749,6 @@ static int hdmi_codec_probe(struct platform_device *pdev)
- 	int dai_count, i = 0;
- 	int ret;
- 
--	dev_dbg(dev, "%s()\n", __func__);
--
- 	if (!hcd) {
- 		dev_err(dev, "%s: No plalform data\n", __func__);
- 		return -EINVAL;
+ 	hdmi_audio_infoframe_init(&hp.cea);
+ 	hp.cea.channels = params_channels(params);
+ 	hp.cea.coding_type = HDMI_AUDIO_CODING_TYPE_STREAM;
 -- 
 2.20.1
 
