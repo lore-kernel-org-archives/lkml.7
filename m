@@ -2,97 +2,74 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7110EC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC97C04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 414FF20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:26:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqOlHKGB"
+	by mail.kernel.org (Postfix) with ESMTP id A128320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfD2P0E (ORCPT
+        id S1728589AbfD2P1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:26:04 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34504 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbfD2P0D (ORCPT
+        Mon, 29 Apr 2019 11:27:30 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55735 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728488AbfD2P1a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:26:03 -0400
-Received: by mail-ed1-f66.google.com with SMTP id a6so9533110edv.1;
-        Mon, 29 Apr 2019 08:26:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=aonALYgL+fC9zvkDd9D30wIh1ca4DE2TOFz5g+1UCQg=;
-        b=MqOlHKGBUrtkGw/thEAiOVcQipneXzleb0RM/WE/NAIrWKwuZ/igOcZfZutIC36Y+D
-         kLv5JhJxZNlHfPV2unFalEBIn+R251ZYHMnUFKHLzWPTKPDBh4j1DH5fBQWKGZMvzLVb
-         SMz6kHEmwAk1jVmwT0zVVqmJxkqUZFnh5Be3UtymNcZBxrZC1dCeA8ZWGCke6h3WuDTI
-         PsjH3VSHWs1BZGE7yQ1Vs9L+vcwsR8eXgeZFz0UjkEq1+l6KvTCFALNtGLuE09m3CghC
-         cx6yoPLSQGZxVeq6086SUPMPKPbmJkifbBv8cOkt/YaQS5IgtCtZFbdEKFHyYcct3Z1K
-         HqIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:references:date
-         :in-reply-to:message-id:user-agent:mime-version;
-        bh=aonALYgL+fC9zvkDd9D30wIh1ca4DE2TOFz5g+1UCQg=;
-        b=oreQoeFV56KpNe1UbPOkHvD/GBJE6e5phON4qyYTD/KyEIpUcJ8nZWlyxz9s5jeu7c
-         FJMys67UXRGdh5FrPUKh3l+GDOuYAHCYUljMRGSWiyojJukVLrMV7gOjrsLnnSd78wty
-         do4jYoiSktEdPanVqK2Y6mhrK1lmTMZuTI6dx3FWETU+0zT0jZFH9A55kHKh+/l0MaQe
-         5epYXLS9l4NqYOKJegTXbPvdRrY6ZCvUnmIJWcb5zldrH+THUCoM8sH2fzQWOpti5Zsm
-         oSOyY5ay7hshntcW8I9pejovY9BAw3yu91qqvOYEQY3hF3RYeX3aMmJKwYGeaZ4pSpDY
-         yp0Q==
-X-Gm-Message-State: APjAAAXQEO60ZV1oMlwCvqeboCQRT1NAGgCiyHHDqtKxLIwETYoa1mb8
-        dy6jIwOWYUGRQEXhCz7wIEQ=
-X-Google-Smtp-Source: APXvYqyEQJEsE2ti6PwOMykBv5n2TIgt00/3l4kIKwcwjUrTagamP80EumknDfmmfKrxqeVCL9NbNA==
-X-Received: by 2002:a17:906:4c95:: with SMTP id q21mr31492152eju.14.1556551561666;
-        Mon, 29 Apr 2019 08:26:01 -0700 (PDT)
-Received: from dell.be.48ers.dk (d51A5BC31.access.telenet.be. [81.165.188.49])
-        by smtp.gmail.com with ESMTPSA id z32sm862711edz.85.2019.04.29.08.26.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 08:26:00 -0700 (PDT)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.89)
-        (envelope-from <peter@korsgaard.com>)
-        id 1hL8AK-0000pF-C1; Mon, 29 Apr 2019 17:26:00 +0200
-From:   Peter Korsgaard <peter@korsgaard.com>
-To:     "Enrico Weigelt\, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        linux-ia64@vger.kernel.org, linux-serial@vger.kernel.org,
-        andrew@aj.id.au, gregkh@linuxfoundation.org, sudeep.holla@arm.com,
-        liviu.dudau@arm.com, linux-mips@vger.kernel.org, vz@mleia.com,
-        linux@prisktech.co.nz, sparclinux@vger.kernel.org,
-        khilman@baylibre.com, macro@linux-mips.org,
-        slemieux.tyco@gmail.com, matthias.bgg@gmail.com, jacmet@sunsite.dk,
-        linux-amlogic@lists.infradead.org,
-        andriy.shevchenko@linux.intel.com, linuxppc-dev@lists.ozlabs.org,
-        davem@davemloft.net
-Subject: Re: [PATCH 12/41] drivers: tty: serial: uartlite: use dev_dbg() instead of pr_debug()
-References: <1556369542-13247-1-git-send-email-info@metux.net>
-        <1556369542-13247-13-git-send-email-info@metux.net>
-Date:   Mon, 29 Apr 2019 17:26:00 +0200
-In-Reply-To: <1556369542-13247-13-git-send-email-info@metux.net> (Enrico
-        Weigelt's message of "Sat, 27 Apr 2019 14:51:53 +0200")
-Message-ID: <875zqwrfxz.fsf@dell.be.48ers.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 29 Apr 2019 11:27:30 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hL8Bg-0005bK-1n; Mon, 29 Apr 2019 17:27:24 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hL8Bf-00046t-0a; Mon, 29 Apr 2019 17:27:23 +0200
+Date:   Mon, 29 Apr 2019 17:27:22 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
+Message-ID: <20190429152722.xw5bcocu2t77wb4u@pengutronix.de>
+References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
+ <CAJ2_jOF8RsLWHkcCJzwfpeMN0+G0oqbHto=nBBnpZDNfuQMKOw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ2_jOF8RsLWHkcCJzwfpeMN0+G0oqbHto=nBBnpZDNfuQMKOw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>>> "Enrico" == Enrico Weigelt, metux IT consult <info@metux.net> writes:
+On Mon, Apr 15, 2019 at 11:36:51AM +0530, Yash Shah wrote:
+> Hi,
+> 
+> Any comments on this patch series?
+> Any more changes are needed or it looks good to be merged upstream?
 
- > Using dev_dbg() instead of pr_debg() for more consistent output.
- > (prints device name, etc).
+In my eyes it would be great if Andreas Schwab was able to resolve the
+problems he pointed out in this thread.
 
- > Signed-off-by: Enrico Weigelt <info@metux.net>
-
-Acked-by: Peter Korsgaard <peter@korsgaard.com>
+Best regards
+Uwe
 
 -- 
-Bye, Peter Korsgaard
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
