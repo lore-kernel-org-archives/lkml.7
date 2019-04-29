@@ -2,130 +2,101 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE87C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C175DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D0320449
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:57:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KTRFAg/Q"
+	by mail.kernel.org (Postfix) with ESMTP id 953F92084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfD2J5k (ORCPT
+        id S1727648AbfD2KBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 05:57:40 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:46644 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727525AbfD2J5k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 05:57:40 -0400
-Received: by mail-vs1-f68.google.com with SMTP id e2so5493638vsc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 02:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5iKcYMeHTvYV/ojGAif7LIimREuXBzjZ/IIn9Py+Bbk=;
-        b=KTRFAg/QdIUZp9cOyAOJyKToCNwB5jdZZ3iUmC4NlCLEd502dosyUJGt2Em5CTT6BI
-         G+PDiK1BmQyJTczToyRZHM3v2L0dPLhRqxnWzB/vXyjnwUAFbECrcIX0OHTgugquVHcq
-         MTc+MpBOo0dRtfP/23qPClXOMT7HYlUpZA6WN47uiI3p3jkllys/RXUpXeoxq+JsqfXd
-         Gmx3ICMPTi4GuJLhms1sK8bR7rnG7Ps+qdDWKNsvaRtlWvD/yJGwkB3EqJvlLEmLBiqQ
-         y/EFQhp8D9oSVk+2IW16s6TKJVI8LmDgYc5fSYxUxmaJWSeRzjJHMpVqJUC436syraRg
-         rmTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5iKcYMeHTvYV/ojGAif7LIimREuXBzjZ/IIn9Py+Bbk=;
-        b=OlBtdv0El7VKs+Kq/iSK2rYySqDpqFjR9XgfKhVyR7sT8Z394wTcCW7ygklXXD3nAk
-         J7HeSopxVB7DrQIi2wSKJITBAEiHSKlfDCriqF0G4ajrVfXltJ6OqVU0t2BO1x/5fM5c
-         xdZQDlH1ethX4jUmCHhXXSCIncFprMKzoJZwbnBGWwW1b/7znPZbvSQCDyCAZx1gTCsw
-         yw0L3cnJAu/06WEun1u5A3bf/zMlFWWTH38vnC1VIa7U9igDJrBKV+bIl6hGBfHNdcST
-         T5zz/6CZYyVaPmWnykSgVuRKZmCebr9QgaILKwHCTqTXIYaZMXOU8+5sdCv+Ap0GXwpA
-         OxGQ==
-X-Gm-Message-State: APjAAAVtdTDK6uvLxk2GAS7Lkn97IDw/VxH2odhlZ/xjpwrl8SIN3/Kq
-        7IH+f8IL2ao0CyQOSHRiieh6IMTa5qbopdv690St4Q==
-X-Google-Smtp-Source: APXvYqw+DVB4A+oWlNfEJ4yNNJr2mpCLIYulP2TaMYSs5AmWe1v0HQOvm7D6Arhq68xHL7FgRmeTGLEYBftg5kM/1P8=
-X-Received: by 2002:a67:8155:: with SMTP id c82mr2462997vsd.200.1556531859282;
- Mon, 29 Apr 2019 02:57:39 -0700 (PDT)
+        Mon, 29 Apr 2019 06:01:12 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52180 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727217AbfD2KBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 06:01:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1DBF80D;
+        Mon, 29 Apr 2019 03:01:11 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74FFC3F5AF;
+        Mon, 29 Apr 2019 03:01:09 -0700 (PDT)
+Subject: Re: [PATCH v2 11/19] iommu/vt-d: Replace Intel specific PASID
+ allocator with IOASID
+To:     Auger Eric <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556062279-64135-12-git-send-email-jacob.jun.pan@linux.intel.com>
+ <e542fd95-acbe-05e9-e441-27dff752c21a@redhat.com>
+ <20190426140133.6d445315@jacob-builder>
+ <f06a9675-278f-51db-f385-e1305b3795d6@redhat.com>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <7529f2ca-167b-5e65-9330-9093638e9f91@arm.com>
+Date:   Mon, 29 Apr 2019 11:00:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190416183257.247902-1-rrangel@chromium.org> <CAPDyKFqYNMhDKy94zV8Bk80OUiS9JNFf2EmkbhJ0W_N=5=bZJQ@mail.gmail.com>
- <20190424153115.GA186956@google.com>
-In-Reply-To: <20190424153115.GA186956@google.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 29 Apr 2019 11:57:02 +0200
-Message-ID: <CAPDyKFqerMeQey0wJW3Ctohh77CJs6-PxSaR=T6ive_Rx-oMMA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Add trace events for SD registers.
-To:     Raul Rangel <rrangel@chromium.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Daniel Kurtz <djkurtz@chromium.org>, zwisler@chromium.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        hongjiefang <hongjiefang@asrmicro.com>,
-        Jennifer Dahm <jennifer.dahm@ni.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Kyle Roeschley <kyle.roeschley@ni.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Simon Horman <horms+renesas@verge.net.au>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f06a9675-278f-51db-f385-e1305b3795d6@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019 at 17:31, Raul Rangel <rrangel@chromium.org> wrote:
->
-> On Tue, Apr 23, 2019 at 08:29:15AM +0200, Ulf Hansson wrote:
-> > On Tue, 16 Apr 2019 at 20:33, Raul E Rangel <rrangel@chromium.org> wrote:
-> > >
-> > > I am not able to make a single event class for all these registers. They
-> > > all have different struct sizes and different printf formats.
-> > >
-> > > Thanks for the reviews!
-> > >
-> > > Changes in v2:
-> > > - Made trace_sd_scr print out flags.
-> > > - Add BUILD_BUG_ON to make sure tracing stays in sync with structs.
-> > > - memcpy using sizeof(__entry->raw)
-> > >
-> > > Raul E Rangel (4):
-> > >   mmc: core: Add trace event for SD SCR response
-> > >   mmc: core: Add trace event for SD SSR response
-> > >   mmc: core: Add trace event for SD OCR response
-> > >   mmc: core: Add trace event for CSD response
-> > >
-> > >  drivers/mmc/core/mmc.c     |   4 +
-> > >  drivers/mmc/core/sd.c      |  10 ++
-> > >  drivers/mmc/core/sd_ops.c  |   6 ++
-> > >  include/trace/events/mmc.h | 204 +++++++++++++++++++++++++++++++++++++
-> > >  4 files changed, 224 insertions(+)
-> > >
-> > > --
-> > > 2.21.0.392.gf8f6787159e-goog
-> > >
-> >
-> > Why do you need this? We already have these card registers reflected
-> > though sysfs files, isn't that sufficient?
-> >
-> I was not actually aware that the registers were exposed via sysfs. I
-> was debugging a problem where the host controller was returning all
-> zeros when reading from the card. I wasn't aware that it was returning
-> all zeros until I added tracing. It made it quite easy to diagnose the
-> problem by just diffing the two traces.
+On 27/04/2019 09:38, Auger Eric wrote:
+>>>> --- a/drivers/iommu/intel-iommu.c
+>>>> +++ b/drivers/iommu/intel-iommu.c
+>>>> @@ -5153,7 +5153,7 @@ static void auxiliary_unlink_device(struct
+>>>> dmar_domain *domain, domain->auxd_refcnt--;
+>>>>  
+>>>>  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
+>>>> -		intel_pasid_free_id(domain->default_pasid);
+>>>> +		ioasid_free(domain->default_pasid);
+>>>>  }
+>>>>  
+>>>>  static int aux_domain_add_dev(struct dmar_domain *domain,
+>>>> @@ -5171,9 +5171,8 @@ static int aux_domain_add_dev(struct
+>>>> dmar_domain *domain, if (domain->default_pasid <= 0) {
+>>>>  		int pasid;
+>>>>  
+>>>> -		pasid = intel_pasid_alloc_id(domain, PASID_MIN,
+>>>> -
+>>>> pci_max_pasids(to_pci_dev(dev)),
+>>>> -					     GFP_KERNEL);
+>>>> +		pasid = ioasid_alloc(NULL, PASID_MIN,
+>>>> pci_max_pasids(to_pci_dev(dev)) - 1,
+>>>> +				domain);
+>>>>  		if (pasid <= 0) {  
+>>> ioasid_t is a uint and returns INVALID_IOASID on error. Wouldn't it be
+>>> simpler to make ioasid_alloc return an int?
+>> Well, I think we still want the full uint range - 1(INVALID_IOASID).
+>> Intel uses 20bit but I think SMMUs use 32 bits for streamID? I
+>> should just check 
+>> 	if (pasid == INVALID_IOASID) {
+> Jean-Philippe may correct me but SMMU uses 20b SubstreamId which is a
+> superset of PASIDs. StreamId is 32b.
 
-This sounds like a quite an unusual problem, and I don't think having
-the buffers printed via tracing is worth it.
+Right, we use 20 bits for PASIDs (== SubstreamID really). Given the
+choices that vendors are making for PASIDs (a global namespace rather
+than per-VM), I wouldn't be surprised if they extend the size of PASIDs
+in a couple of years, so I added the typedef ioasid_t to ease a possible
+change from 32-bit to 64 in the future.
 
-Moreover, we already have tracing per command/request (but don't print
-the buffers), that should cover most of error cases during init, don't
-you think?
-
-[...]
-
-Kind regards
-Uffe
+Thanks,
+Jean
