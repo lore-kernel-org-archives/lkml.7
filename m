@@ -2,161 +2,135 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5CFC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99E7C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9BA2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBrmWAnv"
+	by mail.kernel.org (Postfix) with ESMTP id B3DDB2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfD2QjG (ORCPT
+        id S1728798AbfD2QkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:39:06 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37309 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728520AbfD2QjG (ORCPT
+        Mon, 29 Apr 2019 12:40:12 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:42718 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728520AbfD2QkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:39:06 -0400
-Received: by mail-pl1-f195.google.com with SMTP id z8so5337909pln.4;
-        Mon, 29 Apr 2019 09:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jUEy/JfKfAv3JgfKqnjgpSSW50RrxOwyz2Nzl3lB0hI=;
-        b=ZBrmWAnv9fcmRiGCYDyoIWph2fwLJdjyv3YUg3ROJj5npmjNa4zOXRIbfel92LFMr2
-         ph/v/JxibDkDqzXqrljIPY6dsuZc7Zj7t9jeMEvFA7f+TI987shq0jl1rtJ7EDmJKIYR
-         0NFJpU+cOC+21BCbdSHCuHsBC4y45lt1hQlXz1LQka//6Ibf2lehV0kTvpR8guw9ODS2
-         6ENPmPFY1r8r3ZIAk15xDZQmiDdkbouwXKv9idgbUavUw5EG6JpBnEuqIFOActUDjbHA
-         ZyhmpLlyrh+CXZ/DeifNnWhxsZ0tIM/4iWWsFsaX9ZGmTDwNAgMladqCUpnVeB5dVcpF
-         FFcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jUEy/JfKfAv3JgfKqnjgpSSW50RrxOwyz2Nzl3lB0hI=;
-        b=IBeUZr58ckRnMladsPbfxv0nZNiqnN6ILMjsZwjCaZ9HiK2m0/h0Ga7lchpi3555V9
-         virRciygwcWXHC93aNG/pwkP8eYnoUCCBeuobZ7N4FDaKqm3PgMaMgxVDpar2/wEDfV0
-         q7bciRZwe8WMtwy+Oub0YONGYAOz+0r5StEd9lg5nOS/XjWR/8o85wBDJZQGCqnSYPQK
-         +dMMpiB6al+ohEF0wq8VI9xVv8G88TfTcx3nhD7Y9qD71zjWSsvR7ObNi2uvUcmHlSbj
-         gvOQmdTIexyeDEPBejMI/DWj2ljepD9nKSBnGdVMR0QKduHY+CByDj7dbnEWChrCKVcq
-         TcdQ==
-X-Gm-Message-State: APjAAAU1G9sAOVtJH82wQz4nxnGhsHUyOzJplC9AM3Eq0F+I/h7qI47k
-        0q8hAWp6t9U0oc5fDRjLLHyP89cUrEu26nZdrC0=
-X-Google-Smtp-Source: APXvYqyMszo9xwsEj1TyrNFV1V5WbicK6+ycUoN8zZVsBE3oF5obZedR/jl686YkTKcc2RWGqce016AWd1HMH8DPC2U=
-X-Received: by 2002:a17:902:9b83:: with SMTP id y3mr63071549plp.165.1556555945476;
- Mon, 29 Apr 2019 09:39:05 -0700 (PDT)
+        Mon, 29 Apr 2019 12:40:12 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hL9Jq-0000dZ-2l; Mon, 29 Apr 2019 18:39:54 +0200
+Date:   Mon, 29 Apr 2019 18:39:53 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, jannh@google.com,
+        riel@surriel.com, mingo@redhat.com, bp@suse.de, Jason@zx2c4.com,
+        luto@kernel.org, tglx@linutronix.de, rkrcmar@redhat.com,
+        mingo@kernel.org, hpa@zytor.com, kvm@vger.kernel.org,
+        pbonzini@redhat.com, kurt.kanzenbach@linutronix.de
+Subject: [PATCH] x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe()
+ fails
+Message-ID: <20190429163953.gqxgsc5okqxp4olv@linutronix.de>
+References: <20190425173545.sogxyptbaqvoofm6@linutronix.de>
+ <cbb4c3de-1e12-c325-fa7f-40bc63c495e7@intel.com>
+ <20190426072659.swew4mvfz7dfjyqq@linutronix.de>
+ <89ed2d26-a73c-99ad-76d8-e4b46755c783@intel.com>
+ <20190426165013.mdgd2ocmdgkhja7n@linutronix.de>
+ <76afd2e7-40fb-15a4-d183-22e4b50de43d@intel.com>
+ <20190426200509.3q5ngl44o64q2lg2@linutronix.de>
+ <87871e60-4e64-2355-11b4-6201cab8bf75@intel.com>
 MIME-Version: 1.0
-References: <71250616-36c1-0d96-8fac-4aaaae6a28d4@redhat.com>
- <20190428030539.17776-1-yuehaibing@huawei.com> <516ba6e4-359b-15d0-e169-d8cc1e989a4a@redhat.com>
- <2c823bbf-28c4-b43d-52d9-b0e0356f03ae@redhat.com> <6AADFAC011213A4C87B956458587ADB4021F7531@dggeml532-mbs.china.huawei.com>
- <b33ce1f9-3d65-2d05-648b-f5a6cfbd59ab@redhat.com> <CAM_iQpUfpruaFowbiTOY7aH4Ts-xcY4JACGLOT3CUjLqpg_zXw@mail.gmail.com>
- <528517144.24310809.1556504619719.JavaMail.zimbra@redhat.com>
-In-Reply-To: <528517144.24310809.1556504619719.JavaMail.zimbra@redhat.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 29 Apr 2019 09:38:54 -0700
-Message-ID: <CAM_iQpXNp4h-ZAf4S+OH_1kVE_qk_eb+r6=ZUsK1t2=3aQOOtw@mail.gmail.com>
-Subject: Re: [PATCH] tun: Fix use-after-free in tun_net_xmit
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "weiyongjun (A)" <weiyongjun1@huawei.com>,
-        yuehaibing <yuehaibing@huawei.com>,
-        David Miller <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "Li,Rongqing" <lirongqing@baidu.com>,
-        nicolas dichtel <nicolas.dichtel@6wind.com>,
-        Chas Williams <3chas3@gmail.com>, wangli39@baidu.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        Peter Xu <peterx@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87871e60-4e64-2355-11b4-6201cab8bf75@intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 7:23 PM Jason Wang <jasowang@redhat.com> wrote:
->
->
-> On 2019/4/29 =E4=B8=8A=E5=8D=881:59, Cong Wang wrote:
-> > On Sun, Apr 28, 2019 at 12:51 AM Jason Wang <jasowang@redhat.com> wrote=
-:
-> >>> tun_net_xmit() doesn't have the chance to
-> >>> access the change because it holding the rcu_read_lock().
-> >>
-> >>
-> >> The problem is the following codes:
-> >>
-> >>
-> >>          --tun->numqueues;
-> >>
-> >>          ...
-> >>
-> >>          synchronize_net();
-> >>
-> >> We need make sure the decrement of tun->numqueues be visible to reader=
-s
-> >> after synchronize_net(). And in tun_net_xmit():
-> >
-> > It doesn't matter at all. Readers are okay to read it even they still u=
-se the
-> > stale tun->numqueues, as long as the tfile is not freed readers can rea=
-d
-> > whatever they want...
->
-> This is only true if we set SOCK_RCU_FREE, isn't it?
+In the compacted form, the XSAVES may save only XMM+SSE but skip FP.
+This is denoted by header->xfeatures = 6. The fastpath
+(copy_fpregs_to_sigframe()) does that but _also_ initialises the FP
+state (cwd to 0x37f, mxcsr as we do, remaining fields to 0).
+The slowpath (copy_xstate_to_user()) leaves most of the FP untouched.
+Only mxcsr and mxcsr_flags are set due to xfeatures_mxcsr_quirk().
+Now that XFEATURE_MASK_FP is set unconditionally we load on return from
+signal random garbage as the FP state.
 
+Instead of utilizing copy_xstate_to_user() fault-in the user memory and
+retry the fast path. Ideally the fast path succeeds on the second
+attempt but may be retried again if the memory is swapped out due to
+memory pressure. If the user memory can not be faulted-in then
+get_user_pages() returns an error so we don't loop forever.
 
-Sure, this is how RCU is supposed to work.
+Fault in memory via get_user_pages() so copy_fpregs_to_sigframe()
+succeeds without a fault.
 
->
-> >
-> > The decrement of tun->numqueues is just how we unpublish the old
-> > tfile, it is still valid for readers to read it _after_ unpublish, we o=
-nly need
-> > to worry about free, not about unpublish. This is the whole spirit of R=
-CU.
-> >
->
-> The point is we don't convert tun->numqueues to RCU but use
-> synchronize_net().
+Reported-by: Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Fixes: 69277c98f5eef ("x86/fpu: Always store the registers in copy_fpstate_to_sigframe()")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/kernel/fpu/signal.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
-Why tun->numqueues needs RCU? It is an integer, and reading a stale
-value is _perfectly_ fine.
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 7026f1c4e5e30..6d6c2d6afde42 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -158,7 +158,6 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
+ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ {
+ 	struct fpu *fpu = &current->thread.fpu;
+-	struct xregs_state *xsave = &fpu->state.xsave;
+ 	struct task_struct *tsk = current;
+ 	int ia32_fxstate = (buf != buf_fx);
+ 	int ret = -EFAULT;
+@@ -174,11 +173,12 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ 			sizeof(struct user_i387_ia32_struct), NULL,
+ 			(struct _fpstate_32 __user *) buf) ? -1 : 1;
+ 
++retry:
+ 	/*
+ 	 * Load the FPU registers if they are not valid for the current task.
+ 	 * With a valid FPU state we can attempt to save the state directly to
+-	 * userland's stack frame which will likely succeed. If it does not, do
+-	 * the slowpath.
++	 * userland's stack frame which will likely succeed. If it does not,
++	 * resolve the fault in the user memory and try again.
+ 	 */
+ 	fpregs_lock();
+ 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+@@ -193,14 +193,17 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ 	fpregs_unlock();
+ 
+ 	if (ret) {
+-		if (using_compacted_format()) {
+-			if (copy_xstate_to_user(buf_fx, xsave, 0, size))
+-				return -1;
+-		} else {
+-			fpstate_sanitize_xstate(fpu);
+-			if (__copy_to_user(buf_fx, xsave, fpu_user_xstate_size))
+-				return -1;
+-		}
++		int aligned_size;
++		int nr_pages;
++
++		aligned_size = offset_in_page(buf_fx) + fpu_user_xstate_size;
++		nr_pages = DIV_ROUND_UP(aligned_size, PAGE_SIZE);
++
++		ret = get_user_pages((unsigned long)buf_fx, nr_pages,
++				     FOLL_WRITE, NULL, NULL);
++		if (ret == nr_pages)
++			goto retry;
++		return -EFAULT;
+ 	}
+ 
+ 	/* Save the fsave header for the 32-bit frames. */
+-- 
+2.20.1
 
-If you actually meant to say tun->tfiles[] itself, no, it is a fixed-size a=
-rray,
-it doesn't shrink or grow, so we don't need RCU for it. This is also why
-a stale tun->numqueues is fine, as long as it never goes out-of-bound.
-
-
->
-> > You need to rethink about my SOCK_RCU_FREE patch.
->
-> The code is wrote before SOCK_RCU_FREE is introduced and assume no
-> de-reference from device after synchronize_net(). It doesn't harm to
-> figure out the root cause which may give us more confidence to the fix
-> (e.g like SOCK_RCU_FREE).
-
-I believe SOCK_RCU_FREE is the fix for the root cause, not just a
-cover-up.
-
-
->
-> I don't object to fix with SOCK_RCU_FREE, but then we should remove
-> the redundant synchronize_net(). But I still prefer to synchronize
-> everything explicitly like (completely untested):
-
-I agree that synchronize_net() can be removed. However I don't
-understand your untested patch at all, it looks like to fix a completely
-different problem rather than this use-after-free.
-
-Thanks.
