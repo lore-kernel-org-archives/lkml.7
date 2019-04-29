@@ -2,141 +2,141 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3050C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AC5C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91AF12067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC8E2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556573864;
-	bh=kMC+f0FPRvQwPSUAa7eKfW+Sk8yzzKI2NjPRGKPWkww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JQpOPn+J6yrXu4ZTS9bTuWZTWUD7e11vDWNJ5dG/KoCIZVC9rXRdQFsE7F7rE9YTM
-	 HaMUhcrzJtkRipgGBSVgEumMGikJ+R8U3ogq1aomMS3g3c//ktRIBVHzDszzuExkTP
-	 ZYSvDyqBkTSzHeM1F5b3kjmFuSMhmws0U8kqY1S0=
+	s=default; t=1556573940;
+	bh=GrP8cZOBRMBSsF8r0U8rosVWXZkA2KIhYapxx/V4Les=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=a+U5F7QT1XxlXWUD5hHbXLNhP17cB2UIe7XbKM6LsEUrnx3pulLHNBFfQ1Asxlwmx
+	 h6qFowfW+VW4zUeVgdjq6SPwCZ7AZufzW6Efg9lEsiQYJKYSJOwyEKWJzgm/5XkXDW
+	 CD/zTaPLtATEiaaaMGvO82j9edMVMEuSxrfSXgS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbfD2Vhn (ORCPT
+        id S1729488AbfD2Vi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 17:37:43 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33861 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729370AbfD2Vhn (ORCPT
+        Mon, 29 Apr 2019 17:38:59 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36058 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729336AbfD2Vi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 17:37:43 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n15so4003163ota.1;
-        Mon, 29 Apr 2019 14:37:42 -0700 (PDT)
+        Mon, 29 Apr 2019 17:38:58 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y8so4395804ljd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 14:38:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wSiV79NBIztMusWk2QP2VKKhKOlea+n31l0AFUl2Bg8=;
+        b=ZMLzPqHi9lETwhRL66Ic7OfH6fw2vR3J8CHiKq3pfDQQ78NgprQyY154J6Rqvkqc7s
+         C42c14gHHilvBkmQFjpiBuapTUcRjDejOz3oZMhlsRfav1CrKiKeXa5cwy+w5bWoRtOe
+         i2ztzqxJfLNJSPQmCXpPj6ttEC4mfbjCWUHRc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oRIzLTrSx8sr8Z69AM2UYd9a4FXBrnnXDJEnqjx6bRs=;
-        b=J5mhtTpvKGEXHtJUtASn0KqGsmAoIZFMI0Pp7IZI8ZDewIujHrlgdVWTotOJVbYnRC
-         qFEX4JNTw6uG8wt+LGRjmNs2+ItzICy6knmZAyRVuflwHq/WDGHVRvyYuL3JRhecThAL
-         aZa4gjwhCZcobAaJ1bwHQV3esmQL8VXCLz8xpIYt03I4TR/tC48fxfgXoiSETu/4d0+d
-         KtWSR3pHOqA3BnA4yy3U4P+NyKMVuf8Rkj3S4JihyMB4sWBfKgG9EPGPdqyFkXdSHJ69
-         Vk72qp5xByzw4j91qeMM2NDwIlzZtHZEhQPWc8AwxybwsPdgHJb1xvFijhMxmH6Tq2uG
-         9wLw==
-X-Gm-Message-State: APjAAAWFaRbQTce+JS7vnZUsUhy++Xnp9JnbpiuBqiP5sQeXY+NpEc7g
-        UA99LbpuZxA77YgZS8aWXw==
-X-Google-Smtp-Source: APXvYqxeGATGcJAobyxm9pqykSGskpXvjmXcXQZgSiDA+KW4LYFL0/aUikQVn3uyjbcKZnNFg9l4ZQ==
-X-Received: by 2002:a9d:6d84:: with SMTP id x4mr3812433otp.337.1556573862454;
-        Mon, 29 Apr 2019 14:37:42 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w10sm14496733oiw.48.2019.04.29.14.37.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 14:37:41 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 16:37:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     broonie@kernel.org, mark.rutland@arm.com,
-        Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: spi: Add spi-mux-gpio
-Message-ID: <20190429213740.GA29098@bogus>
-References: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
- <20190412050213.17698-2-chris.packham@alliedtelesis.co.nz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wSiV79NBIztMusWk2QP2VKKhKOlea+n31l0AFUl2Bg8=;
+        b=X0nYMUj3QQc1Pdw8IAMjOFjLsPpbskkcvXQAgwrQBenQco4I8L/wCowTluxsDZr2/G
+         bhH8YZQrcCYVMConvkmDPLnYATX58z9KwEUdmfxFIrAnphfhQ+psA/2O3nkLoVh++8CI
+         Tc1MUfZBcvt/5s7eAznP6qzijta+erPVfKXbk5u9ZdPt9xSTIId/hxsLKyHlZv33BJgw
+         FxooVtbVa8qaW23XAAg3s57hqc4dlMziA517wFm3/0zQa1zuouKTZqVkDuGzpj2Na5v/
+         o9WVs9yKlOlw1a3jG6K9+qwNY9V/SGNjVodkIzmFBjRT+Dc4d9X/WUUx7ddotxJueZoc
+         eiGg==
+X-Gm-Message-State: APjAAAWsX/N6YksAh3qgMR+XsA78kGRKeK8lGnsqDIg8oh0hDxJkd1+L
+        xMki93Ovr4xdg4YMyH8lktKXgLQV0wU=
+X-Google-Smtp-Source: APXvYqw6b2XnbFrw7BSLw+7VXZOlHqu+jA7VzPOEZoyPR24nhbg5JQgvTuJSCUiY/OgMo07i8S7Fyw==
+X-Received: by 2002:a2e:4b19:: with SMTP id y25mr2448696lja.106.1556573936325;
+        Mon, 29 Apr 2019 14:38:56 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id v141sm7473859lfa.52.2019.04.29.14.38.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 14:38:54 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id m18so6179475lje.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 14:38:53 -0700 (PDT)
+X-Received: by 2002:a2e:9ac8:: with SMTP id p8mr30631636ljj.79.1556573932539;
+ Mon, 29 Apr 2019 14:38:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412050213.17698-2-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-4-nstange@suse.de>
+ <20190427102657.GF2623@hirez.programming.kicks-ass.net> <20190428133826.3e142cfd@oasis.local.home>
+ <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+ <20190429145250.1a5da6ed@gandalf.local.home> <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
+ <20190429150724.6e501d27@gandalf.local.home> <CAHk-=wgbC-wiSrdDYAh1ORF4EKmecY+MkNsJBF=BWf4W1bXXgA@mail.gmail.com>
+ <20190429163043.535f4272@gandalf.local.home>
+In-Reply-To: <20190429163043.535f4272@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 29 Apr 2019 14:38:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjGquN7-kQCoa+LHCuiVTjefkk38qwaysd4wLLtoSZhpg@mail.gmail.com>
+Message-ID: <CAHk-=wjGquN7-kQCoa+LHCuiVTjefkk38qwaysd4wLLtoSZhpg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 05:02:11PM +1200, Chris Packham wrote:
-> Add binding documentation for spi-mux-gpio which is a slightly more
-> complicated hardware implementation of using gpios to steer SPI chip
-> selects.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->  .../devicetree/bindings/spi/spi-mux-gpio.txt  | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-mux-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-mux-gpio.txt b/Documentation/devicetree/bindings/spi/spi-mux-gpio.txt
-> new file mode 100644
-> index 000000000000..a32f25321d37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-mux-gpio.txt
-> @@ -0,0 +1,45 @@
-> +SPI bus gpio multiplexer
-> +
-> +The SPI bus gpio multiplexer can be used to implement more complicated access
-> +logic than can be supported with the cs-gpios property of a SPI bus.
-> +
-> +In the example below we have a SoC with a single SPI CS that is gated by the
-> +state of a gpio to select the desired SPI device.
-> +
-> +     +----------+  CS    +-----+ CS0  +----+
-> +     |          |--------|     |------|    |
-> +     |          |        | \ / |      +----+
-> +     |   SoC    |        |  +  |
-> +     |          |  GPIO  | / \ | CS1  +----+
-> +     |          |--------|     |------|    |
-> +     +----------+        +-----+      +----+
-> +
-> +Required properties:
-> +- compatible	- must be "spi-mux-gpio"
-> +- gpios		- gpios used to implement the multiplexing logic
-> +- spi-parent-bus - parent spi bus to use
-> +
-> +Optional properties:
-> +- spi-parent-cs - chip select on parent bus to use. Defaults to 0 if not
-> +                  specified.
-> +
-> +Example for a multiplexer with a single gpio:
-> +
-> +	spi-mux {
-> +		compatible = "spi-mux-gpio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		gpios = <&gpio0 1 0>;
-> +		spi-parent-bus = <&spi0>;
-> +		spi-parent-cs = <0>;
+On Mon, Apr 29, 2019 at 1:30 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> The update from "call custom_trampoline" to "call iterator_trampoline"
+> is where we have an issue.
 
-Why is this out of band? We can do something similar to I2C and use the 
-mux-control binding:
+So it has never worked. Just tell people that they have two chocies:
 
-spi {
-	mux@0 {
-		compatible = "spi-mux";
-		reg "0"; 
-		mux-controls = ...;
+ - you do the careful rewriting, which takes more time
 
-		spi-dev@0 {};
-		spi-dev@1 {};
-	};
+ - you do it by rewriting as nop and then back, which is what
+historically has been done, and that is fast and simple, because
+there's no need to be careful.
 
-	spi-dev@1 {};
+Really. I find your complaints completely incomprehensible. You've
+never rewritten call instructions atomically before, and now you
+complain about it being slightly more expensive to do it when I give
+you the code? Yes it damn well will be slightly more expensive. Deal
+with it.
 
-};
+Btw, once again - I several months ago also gave a suggestion on how
+it could be done batch-mode by having lots of those small stubs and
+just generating them dynamically.
 
-Rob
+You never wrote that code *EITHER*. It's been *months*.
+
+So now I've written the non-batch-mode code for you, and you just
+*complain* about it?
+
+I'm done with this discussion. I'm totally fed up.
+
+                 Linus
