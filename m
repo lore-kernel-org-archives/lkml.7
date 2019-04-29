@@ -2,100 +2,104 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8966C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D748DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CAC2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:26:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="AtaFGGkj"
+	by mail.kernel.org (Postfix) with ESMTP id ACC062087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbfD2KZ7 (ORCPT
+        id S1727797AbfD2K1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:25:59 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:57060 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727608AbfD2KZ6 (ORCPT
+        Mon, 29 Apr 2019 06:27:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39041 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727621AbfD2K1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 06:25:58 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C00BDC0087;
-        Mon, 29 Apr 2019 10:25:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556533559; bh=z5eTlFYWQgzvaQeVi4z2PR7OioSoOCan0A0M7ft+gn0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=AtaFGGkjAPvJDpQd3JAVKtVDly3g731hAe5bIr4sHeExke95zn/ywMT/RRaUqgv3d
-         aZIdswU4TMX7BKDK5Lerp2xZDmO1rZgMV+4WZjRljGfwLdex6Pj2s0e/i4h38gdcoc
-         /c03GNuO59xmtVoLv43zbErL/1VMk5Gm8ZYXYFAWVtra4bulNwwRXqn8DfmSeJmEk1
-         Mm3fIfFtFfHbfDAoLSgUxSU1xHkzIJOggqQrXInHJiTFVyfEmueZVnrd+3qhtf2x/9
-         ehyTTdWmDDA9NJVgPr3DrWZK2tLXCjyr5O9BLG2/bqIJkTs5mMcNnwCOoUGZEEUW6e
-         5mQgl+6UZVZxg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 1B09EA00B8;
-        Mon, 29 Apr 2019 10:25:56 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 29 Apr 2019 03:25:56 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
- 29 Apr 2019 12:25:54 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     "Voon, Weifeng" <weifeng.voon@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Subject: RE: [PATCH 3/7] net: stmmac: dma channel control register need to
- be init first
-Thread-Topic: [PATCH 3/7] net: stmmac: dma channel control register need to
- be init first
-Thread-Index: AQHU+n6DdNJICrCLmkmtbuchA6NOs6ZMVDIAgAaifDA=
-Date:   Mon, 29 Apr 2019 10:25:52 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B46E022@DE02WEMBXB.internal.synopsys.com>
-References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
- <1556126241-2774-4-git-send-email-weifeng.voon@intel.com>
- <D6759987A7968C4889FDA6FA91D5CBC8146EF098@PGSMSX103.gar.corp.intel.com>
-In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC8146EF098@PGSMSX103.gar.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+        Mon, 29 Apr 2019 06:27:45 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hL3Va-0006sr-JI; Mon, 29 Apr 2019 12:27:38 +0200
+Message-ID: <1556533656.2560.7.camel@pengutronix.de>
+Subject: Re: [PATCH v2 2/3] power: supply: Add driver for Microchip UCS1002
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org
+Cc:     Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 29 Apr 2019 12:27:36 +0200
+In-Reply-To: <20190429054741.7286-3-andrew.smirnov@gmail.com>
+References: <20190429054741.7286-1-andrew.smirnov@gmail.com>
+         <20190429054741.7286-3-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Voon, Weifeng <weifeng.voon@intel.com>
-Date: Thu, Apr 25, 2019 at 08:06:08
+Hi Andrey,
 
-> > stmmac_init_chan() needs to be called before stmmac_init_rx_chan() and
-> > stmmac_init_tx_chan(). This is because if PBLx8 is to be used,
-> > "DMA_CH(#i)_Control.PBLx8" needs to be set before programming
-> > "DMA_CH(#i)_TX_Control.TxPBL" and "DMA_CH(#i)_RX_Control.RxPBL".
-> >=20
-> > Reviewed-by: Zhang, Baoli <baoli.zhang@intel.com>
-> > Signed-off-by: Weifeng Voon <weifeng.voon@intel.com>
-> > Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Am Sonntag, den 28.04.2019, 22:47 -0700 schrieb Andrey Smirnov:
+> Add driver for Microchip UCS1002 Programmable USB Port Power
+> Controller with Charger Emulation. The driver exposed a power supply
+> device to control/monitor various parameter of the device as well as a
+> regulator to allow controlling VBUS line.
+> 
+> > Signed-off-by: Enric Balletbo Serra <enric.balletbo@collabora.com>
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> ---
+[...]
+> +	/* Enable charge rationing by default */
+> > +	ret = regmap_update_bits(info->regmap, UCS1002_REG_GENERAL_CFG,
+> > +				 F_RATION_EN, F_RATION_EN);
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to read general config: %d\n", ret);
+> > +		return ret;
+> > +	}
+> +
+> > +	/*
+> > +	 * Ignore the M1, M2, PWR_EN, and EM_EN pin states. Set active
+> > +	 * mode selection to BC1.2 CDP.
+> > +	 */
+> > +	ret = regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
+> > +				 V_SET_ACTIVE_MODE_MASK,
+> +				 V_SET_ACTIVE_MODE_BC12_CDP);
 
-This is a fix so it should belong to -net tree and it should have the=20
-"Fixes: " tag.
+This doesn't work as the F_PIN_IGNORE bit isn't set, so the the
+external strap settings are applied. I had to apply the following diff
+to make the driver behave as expected again:
 
-Thanks,
-Jose Miguel Abreu
+--- a/drivers/power/supply/ucs1002_power.c
++++ b/drivers/power/supply/ucs1002_power.c
+@@ -548,8 +548,8 @@ static int ucs1002_probe(struct i2c_client *client,
+         * mode selection to BC1.2 CDP.
+         */
+        ret = regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
+-                                V_SET_ACTIVE_MODE_MASK,
+-                                V_SET_ACTIVE_MODE_BC12_CDP);
++                                V_SET_ACTIVE_MODE_MASK | F_PIN_IGNORE,
++                                V_SET_ACTIVE_MODE_BC12_CDP | F_PIN_IGNORE);
+
+Regards,
+Lucas
