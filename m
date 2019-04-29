@@ -2,226 +2,125 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB86C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE2AC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A8D2147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345762084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:28:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qyP9cbaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfD2LVx (ORCPT
+        id S1727896AbfD2L2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 07:21:53 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38258 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727710AbfD2LVw (ORCPT
+        Mon, 29 Apr 2019 07:28:05 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51654 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbfD2L2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 07:21:52 -0400
-Received: by mail-vs1-f68.google.com with SMTP id s2so5652002vsi.5;
-        Mon, 29 Apr 2019 04:21:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mdvxW3096oymhhLijkYwlB+4ZsQ9bTDeYLFTkhhoWT4=;
-        b=Tz3mQopzxzwISpRkwz0O/IGw2FboxKSicIVwlbRyD8v2H6Oita7Y0CcJdb41dmDs7X
-         2KpBbByf74KDVBKv+4lIh4RA3XAGLhvn8XIB045U4zJ23QWsG4BnEjw56S5yL/kJmAjS
-         mXJeqdM7vRwtFhztFZwFmR15YIp3APxVlieTsr1BqrKe3Mi26IJFBaBBgyt19BcVjHit
-         cVXO2MVqx18mqRhDN+MHSyCnOIZtOAg1A87p8Rdb16X2hz/jH8R3a/jkbSj8MPuLaGd8
-         4s5BSiBh3DyZLrWSeq9elnNRk+2t2QUfCtKd4eYO2MxLZE0zw+YhuFV7o8WQClEGlW57
-         0DhQ==
-X-Gm-Message-State: APjAAAXCNgq4kSR2wwl4kmY1SNnezSXSXFuZWmvT43EfALv/I/kEMPX/
-        L2Xx1XzUTMhmvcSSTQfkbCQEmiKP/XUcfZT5mIxbsA==
-X-Google-Smtp-Source: APXvYqyBLXSgSzeSFGA+lrmZZStSQTkiEmGbyjDT4Q0RIadeIyRRYGNKYbjzOh25Yufe+6cvuTi49VY2gzPeSrKnTo8=
-X-Received: by 2002:a05:6102:113:: with SMTP id z19mr1491142vsq.166.1556536911181;
- Mon, 29 Apr 2019 04:21:51 -0700 (PDT)
+        Mon, 29 Apr 2019 07:28:05 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3TBRIIN117261;
+        Mon, 29 Apr 2019 06:27:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556537238;
+        bh=a+x+/nPRMlKw5EveKCxlbdn8CCxZMXGPNGFgU8VSsWA=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=qyP9cbaIP90UdXbkUo96l4vHkj77yrzUhS0DkhQGe3KqUXM1BQH4r+iZjWH+lNn6M
+         NnBImA8+D1mJMZ2ITWUJuN9VIbj9pU2DJj5h2ueBAD4rMDHTlfOhftfwgerH+g0nEj
+         qDrTjbyIIZTOTQJZ8GcrXXQYYTZZLO8BdQXC95uk=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3TBRHjo122088
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 29 Apr 2019 06:27:17 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 29
+ Apr 2019 06:27:17 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 29 Apr 2019 06:27:17 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3TBRFvH073635;
+        Mon, 29 Apr 2019 06:27:16 -0500
+Subject: Re: [alsa-devel] [PATCH] ASoC: tlv320aic3x: Add support for high
+ power analog output
+To:     Saravanan Sekar <sravanhome@gmail.com>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <20190427194005.7308-1-sravanhome@gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <507b9ee8-2505-8014-114e-563dc5995e8f@ti.com>
+Date:   Mon, 29 Apr 2019 14:27:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190429093631.10799-1-geert+renesas@glider.be>
- <20190429093631.10799-3-geert+renesas@glider.be> <f9310d4c-8f9e-a837-3ed3-4d7c294efd3f@arm.com>
-In-Reply-To: <f9310d4c-8f9e-a837-3ed3-4d7c294efd3f@arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 29 Apr 2019 13:21:39 +0200
-Message-ID: <CAMuHMdU3i7vqs9hd7rfvYH8QtqvwUB5vgsa_fwo5L4E3DQ_d1Q@mail.gmail.com>
-Subject: Re: [PATCH 2/5] irqchip: Add Renesas RZ/A1 Interrupt Controller driver
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190427194005.7308-1-sravanhome@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi,
 
-On Mon, Apr 29, 2019 at 12:07 PM Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On 29/04/2019 10:36, Geert Uytterhoeven wrote:
-> > Add a driver for the Renesas RZ/A1 Interrupt Controller.
-> >
-> > This supports using up to 8 external interrupts on RZ/A1, with
-> > configurable sense select.
-> >
-> > NMI edge select is not yet supported.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 27/04/2019 22.40, Saravanan Sekar wrote:
+> Add support to power and output level control for the analog high power
+> output drivers HPOUT and HPCOM.
+> 
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+>  sound/soc/codecs/tlv320aic3x.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
+> index 516d17cb2182..d4bafac802eb 100644
+> --- a/sound/soc/codecs/tlv320aic3x.c
+> +++ b/sound/soc/codecs/tlv320aic3x.c
+> @@ -419,6 +419,12 @@ static const struct snd_kcontrol_new aic3x_snd_controls[] = {
+>  	/* Pop reduction */
+>  	SOC_ENUM("Output Driver Power-On time", aic3x_poweron_time_enum),
+>  	SOC_ENUM("Output Driver Ramp-up step", aic3x_rampup_step_enum),
+> +
+> +	/* Analog HPOUT, HPCOM power and output level controls */
+> +	SOC_DOUBLE_R("Analog output power control", HPROUT_CTRL,
+> +			HPRCOM_CTRL, 0, 1, 0),
 
-> > --- /dev/null
-> > +++ b/drivers/irqchip/irq-renesas-rza1.c
+bit 0 of HPROUT_CTRL and HPRCOM_CTRL is handled by DAPM:
+"Right HP Out"
+"Right HP Com"
 
-> > +static void rza1_irqc_eoi(struct irq_data *d)
-> > +{
-> > +     struct rza1_irqc_priv *priv = irq_data_to_priv(d);
-> > +     unsigned int bit = BIT(irqd_to_hwirq(d));
->
-> Please use u32 instead of "unsigned int" for something that operates on
-> HW registers.
+> +	SOC_DOUBLE_R("Analog output level control", HPROUT_CTRL,
+> +			HPRCOM_CTRL, 4, 9, 0),
 
-Even for 16-bit registers?
+and this will modify the HPR and HPRCOM (right channels) only.
 
-> > +     u16 tmp;
-> > +
-> > +     tmp = readw(priv->base + IRQRR);
->
-> Same thing here. It's less confusing to use a u32 and mask out the top
-> bits if needed rather than having this implicit cast (applies all over
-> the code).
+You should add two controls:
 
-... so yes.
+/* HP/HPCOM volumes. From 0 to 9 dB in 1 dB steps */
+static DECLARE_TLV_DB_SCALE(hp_tlv, 0, 100, 0);
 
->
-> > +     if (tmp & bit)
-> > +             writew(GENMASK(IRQC_NUM_IRQ - 1, 0) & ~bit, priv->base + IRQRR);
->
-> Please use the _relaxed accessors all over the driver, you really do not
-> need a DSB on each of these accesses.
+SOC_DOUBLE_R_TLV("HP Playback Volume", HPLOUT_CTRL, HPROUT_CTRL, 4, 9,
+0, hp_tlv);
 
-OK.
+SOC_DOUBLE_R_TLV("HPCOM Playback Volume", HPLCOM_CTRL, HPRCOM_CTRL, 4,
+9, 0, hp_tlv);
 
-> > +static int rza1_irqc_set_type(struct irq_data *d, unsigned int type)
-> > +{
-> > +     struct rza1_irqc_priv *priv = irq_data_to_priv(d);
-> > +     unsigned int hw_irq = irqd_to_hwirq(d);
-> > +     u16 sense, tmp;
-> > +
-> > +     switch (type & IRQ_TYPE_SENSE_MASK) {
-> > +     case IRQ_TYPE_LEVEL_LOW:
-> > +             sense = ICR1_IRQS_LEVEL_LOW;
-> > +             break;
-> > +
-> > +     case IRQ_TYPE_EDGE_FALLING:
-> > +             sense = ICR1_IRQS_EDGE_FALLING;
-> > +             break;
-> > +
-> > +     case IRQ_TYPE_EDGE_RISING:
-> > +             sense = ICR1_IRQS_EDGE_RISING;
-> > +             break;
-> > +
-> > +     case IRQ_TYPE_EDGE_BOTH:
-> > +             sense = ICR1_IRQS_EDGE_BOTH;
-> > +             break;
-> > +
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     tmp = readw(priv->base + ICR1);
-> > +     tmp &= ~ICR1_IRQS_MASK(hw_irq);
-> > +     tmp |= ICR1_IRQS(hw_irq, sense);
-> > +     writew(tmp, priv->base + ICR1);
-> > +     return 0;
->
-> Don't you need to propagate the trigger configuration to the parent irqchip?
 
-No, the line to the parent GIC is always configured for high-level.
+>  };
+>  
+>  /* For other than tlv320aic3104 */
+> 
 
-> > +static int rza1_irqc_alloc(struct irq_domain *domain, unsigned int virq,
-> > +                        unsigned int nr_irqs, void *arg)
-> > +{
-> > +     struct rza1_irqc_priv *priv = domain->host_data;
-> > +     struct irq_fwspec *fwspec = arg;
-> > +     struct irq_fwspec spec;
-> > +     int ret;
-> > +
-> > +     ret = irq_domain_set_hwirq_and_chip(domain, virq, fwspec->param[0],
-> > +                                         &priv->chip, priv);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     spec.fwnode = &priv->dev->of_node->fwnode;
-> > +     spec.param_count = 3;
-> > +     spec.param[0] = GIC_SPI;
-> > +     spec.param[1] = priv->gic_spi_base + fwspec->param[0];
-> > +     spec.param[2] = IRQ_TYPE_LEVEL_HIGH;
->
-> This is related to my earlier question: Does this block turn everything
-> into level interrupts?
+- Péter
 
-That is my understanding of the hardware:
-  - Low-level interrupts are cleared when input becomes high again,
-  - Rising/falling/both edge interrupts are cleared by reading+writing IRQRR.
-
-FTR, the Hardware User Manual is available from
-https://www.renesas.com/eu/en/products/microcontrollers-microprocessors/rz/rza/rza1h.html#documents
-(Section 7. Interrupt Controller).
-
-> > +static int rza1_irqc_probe(struct platform_device *pdev)
-> > +{
-
-> > +     priv->chip.name = dev_name(dev);
->
-> name should normally be used to identify the overall "class" of
-
-OK, replacing by "rza1-irqc".
-
-> interrupt. .device is what should be used for the device itself.
-
-You mean .parent_device?
-Been there, done that: if I fill that in with "dev", it fails with
-
-    gpio-keys keyboard: Unable to claim irq 41; error -13
-    gpio-keys: probe of keyboard failed with error -13
-
-due to the call to pm_runtime_get_sync() in irq_chip_pm_get() failing.
-This driver doesn't have (and doesn't need) Runtime PM.
-
-> > +struct rza1_irqc_info rza1_irqc_info = {
-> > +     .gic_spi_base = 0,
-> > +};
->
-> To answer your question in the cover letter, I'd rather this came from
-> DT. And otherwise, it should be be static.
-
-(Oops, forget the "static const")
-
-Using a custom property, or derived from 8 interrupt specifiers in the
-interrupts property?
-
-> It otherwise looks good to me. If you respin it quickly enough, I'm
-> happy to take it for 5.2.
-
-Thanks, will do tomorrow, so Chris (in NC.US; let's hope he doesn't
-celebrate Golden Week) has a chance to comment...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
