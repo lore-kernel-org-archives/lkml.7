@@ -2,110 +2,93 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304D0C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2719FC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094DC20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC14A20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfD2K7n (ORCPT
+        id S1727956AbfD2LAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:59:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40452 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727710AbfD2K7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 06:59:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6F05BADE1;
-        Mon, 29 Apr 2019 10:59:41 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org,
-        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-Subject: [PATCH] memcg: make it work on sparse non-0-node systems
-Date:   Mon, 29 Apr 2019 12:59:39 +0200
-Message-Id: <20190429105939.11962-1-jslaby@suse.cz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
-References: <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
+        Mon, 29 Apr 2019 07:00:13 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:50376 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727710AbfD2LAN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 07:00:13 -0400
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from webmail.solarflare.com (webmail.solarflare.com [12.187.104.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us4.ppe-hosted.com (Proofpoint Essentials ESMTP Server) with ESMTPS id E14D728008D;
+        Mon, 29 Apr 2019 11:00:11 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ocex03.SolarFlarecom.com
+ (10.20.40.36) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 29 Apr
+ 2019 04:00:07 -0700
+Subject: Re: [PATCH] rds: ib: force endiannes annotation
+To:     Nicholas Mc Guire <hofrat@osadl.org>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>
+CC:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <rds-devel@oss.oracle.com>,
+        <linux-kernel@vger.kernel.org>
+References: <1556518178-13786-1-git-send-email-hofrat@osadl.org>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <20443fd3-bd1e-9472-8ca3-e3014e59f249@solarflare.com>
+Date:   Mon, 29 Apr 2019 12:00:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <1556518178-13786-1-git-send-email-hofrat@osadl.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-24580.005
+X-TM-AS-Result: No-4.279000-4.000000-10
+X-TMASE-MatchedRID: cgbqQT5W8hcOwH4pD14DsPHkpkyUphL9LC92/N1OWlkCJwlu5sh0qPlY
+        oV6p/cSxnvxAs02MrVHZj9bX58WOAtrx1weWCpUF9Ib/6w+1lWRzd7C7BtJobplWFHP5R0I96F2
+        xWH9ZAxvo0cmq7QOKCJE7C19CEuIWhlahuHmDw1YwmhCbeOj6aY/8SyGg0rIRY0DjZWmXtn6jxY
+        yRBa/qJUl4W8WVUOR/9xS3mVzWUuAojN1lLei7Rd/CUQwie/Fo7Mq1xmO35qw8xi0U5YNGcJ4n9
+        vxgOV3iHkqjqrZMW0AEbTwwTTJVcrjaVpzLE/5p34yXMiKxtsZMv+p+q89pYtQ17CngTb9OBKmZ
+        VgZCVnezGTWRXUlrx+EijnvekEIH
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.279000-4.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-24580.005
+X-MDID: 1556535612-qOvS5RxvVGZd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a single node system with node 0 disabled:
-  Scanning NUMA topology in Northbridge 24
-  Number of physical nodes 2
-  Skipping disabled node 0
-  Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
-  NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
+On 29/04/2019 07:09, Nicholas Mc Guire wrote:
+> diff --git a/net/rds/ib_recv.c b/net/rds/ib_recv.c
+> index 7055985..a070a2d 100644
+> --- a/net/rds/ib_recv.c
+> +++ b/net/rds/ib_recv.c
+> @@ -824,7 +824,7 @@ static void rds_ib_cong_recv(struct rds_connection *conn,
+>  	}
+>  
+>  	/* the congestion map is in little endian order */
+> -	uncongested = le64_to_cpu(uncongested);
+> +	uncongested = le64_to_cpu((__force __le64)uncongested);
+>  
+>  	rds_cong_map_updated(map, uncongested);
+>  }
+Again, a __force cast doesn't seem necessary here.  It looks like the
+ code is just using the wrong types; if all of src, dst and uncongested
+ were __le64 instead of uint64_t, and the last two lines replaced with
+ rds_cong_map_updated(map, le64_to_cpu(uncongested)); then the semantics
+ would be kept with neither sparse errors nor __force.
 
-This causes crashes in memcg when system boots:
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-  #PF error: [normal kernel read fault]
-...
-  RIP: 0010:list_lru_add+0x94/0x170
-...
-  Call Trace:
-   d_lru_add+0x44/0x50
-   dput.part.34+0xfc/0x110
-   __fput+0x108/0x230
-   task_work_run+0x9f/0xc0
-   exit_to_usermode_loop+0xf5/0x100
+__force is almost never necessary and mostly just masks other bugs or
+ endianness confusion in the surrounding code.  Instead of adding a
+ __force, either fix the code to be sparse-clean or leave the sparse
+ warning in place so that future developers know there's something not
+ right.
 
-It is reproducible as far as 4.12. I did not try older kernels. You have
-to have a new enough systemd, e.g. 241 (the reason is unknown -- was not
-investigated). Cannot be reproduced with systemd 234.
-
-The system crashes because the size of lru array is never updated in
-memcg_update_all_list_lrus and the reads are past the zero-sized array,
-causing dereferences of random memory.
-
-The root cause are list_lru_memcg_aware checks in the list_lru code.
-The test in list_lru_memcg_aware is broken: it assumes node 0 is always
-present, but it is not true on some systems as can be seen above.
-
-So fix this by checking the first online node instead of node 0.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: <cgroups@vger.kernel.org>
-Cc: <linux-mm@kvack.org>
-Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
----
- mm/list_lru.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 0730bf8ff39f..7689910f1a91 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
- 
- static inline bool list_lru_memcg_aware(struct list_lru *lru)
- {
--	/*
--	 * This needs node 0 to be always present, even
--	 * in the systems supporting sparse numa ids.
--	 */
--	return !!lru->node[0].memcg_lrus;
-+	return !!lru->node[first_online_node].memcg_lrus;
- }
- 
- static inline struct list_lru_one *
--- 
-2.21.0
-
+-Ed
