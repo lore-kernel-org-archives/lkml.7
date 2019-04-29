@@ -2,388 +2,193 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE95BC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795C6C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F8C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:19:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9tidZNr"
+	by mail.kernel.org (Postfix) with ESMTP id 49B2420675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfD2AT2 (ORCPT
+        id S1726884AbfD2AXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 20:19:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34106 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfD2ASI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 20:18:08 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v16so10858355wrp.1;
-        Sun, 28 Apr 2019 17:18:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RdbNxYZCMR3opS5rAF8WCgb0djFF5MQPNZ+HCOdP7Fw=;
-        b=E9tidZNrxe4NS8MJDsIZzzaK3K87vOIkcgifsNqCgsf0hx7HGd3xWRdmZSQMmoh9WH
-         G6o0yqEisAqNWabXKuuYR1FH+htmRS908NXeyA9klemFmR1Zx3uhcZ5vIopg4BgQ+NUo
-         08nEiGIO6CS/Hk8NzQiYZeu6kIq+V/WwSVOWJ7iIZVXY5wCoru1PvDdzRTd8WyeFfnCv
-         8stOL6qaD/1uBAoPiW4XW2VKu5M5hc2amcemqUn/nN8kcGwbgvlm3824JqLX39wBWe87
-         Gh6vw3bVB3DdksTQtZiEcwczALggqKCdBZ4d0nI44a1jM0btv4ESuh56ZM7RfhFcnMld
-         1owg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RdbNxYZCMR3opS5rAF8WCgb0djFF5MQPNZ+HCOdP7Fw=;
-        b=agKMvcm9QZJsFwoW41ovKPCPrYTW1kg+V0GCry5+/MOc6OnGnu2fsutTleqLTgpHRW
-         jTwrDrwNknZt286HJ5wtfhyoaP9QJguWrXZXaUGelXK79ByjhGtTqLLOZCGLUAUBtP6s
-         L4jKBLoqU8NqT0xvTlwNK8UXfFmgBdn2MZInX+GFQ+QH+01kV4EID9T9/8NmiBw+UTZ3
-         EKa4YWBRRtuEhLSM5XnEK30cpqsacks+uCgILCFX+EcFpu+JYG7/cZuePsoDutE4p1rm
-         Jd350hmmMeSfS0pZK803PIkLuERdf5l8ITsiw+tCT9OitD1MfgYYR7ga4hpUO4MzF+lm
-         L7Mg==
-X-Gm-Message-State: APjAAAVyGRPe6EZQMBjjwP4EN3g7rTZS79gTK9w8yloaBrN8L4SPv6sz
-        Ja57mBShvas56ZWFqk95Kok=
-X-Google-Smtp-Source: APXvYqxfm5xcl2Tc8+Bq6+qEnBgoDtagRtFv1BMtslrMXkxbCV8446CVa4p+4FFNv7hHzZ2tG40aJA==
-X-Received: by 2002:a05:6000:1192:: with SMTP id g18mr11027752wrx.253.1556497085019;
-        Sun, 28 Apr 2019 17:18:05 -0700 (PDT)
-Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id h16sm5098030wrb.31.2019.04.28.17.18.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Apr 2019 17:18:04 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v4 net-next 03/12] net: dsa: sja1105: Add support for FDB and MDB management
-Date:   Mon, 29 Apr 2019 03:16:57 +0300
-Message-Id: <20190429001706.7449-4-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190429001706.7449-1-olteanv@gmail.com>
-References: <20190429001706.7449-1-olteanv@gmail.com>
+        Sun, 28 Apr 2019 20:23:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51180 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726223AbfD2AXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 20:23:23 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 912CC3098544;
+        Mon, 29 Apr 2019 00:23:23 +0000 (UTC)
+Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9EC6917D08;
+        Mon, 29 Apr 2019 00:23:20 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 08:23:18 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     bp@alien8.de, j-nomura@ce.jp.nec.com, kasong@redhat.com,
+        dyoung@redhat.com
+Cc:     fanc.fnst@cn.fujitsu.com, x86@kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, tglx@linutronix.de
+Subject: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab and
+ ACPI tables
+Message-ID: <20190429002318.GA25400@MiWiFi-R3L-srv>
+References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424092944.30481-2-bhe@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424092944.30481-2-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 29 Apr 2019 00:23:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently only the (more difficult) first generation E/T series is
-supported. Here the TCAM is only 4-way associative, and to know where
-the hardware will search for a FDB entry, we need to perform the same
-hash algorithm in order to install the entry in the correct bin.
+From: Kairui Song <kasong@redhat.com>
 
-On P/Q/R/S, the TCAM should be fully associative. However the SPI
-command interface is different, and because I don't have access to a
-new-generation device at the moment, support for it is TODO.
+The current code only builds identity mapping for physical memory during
+kexec-type loading. The regions reserved by firmware are not covered.
+In the later patch, the boot decompressing code of kexec-ed kernel tries
+to access EFI systab and ACPI tables, lacking identity mapping for them
+will cause error and reset system to firmware.
 
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+This error doesn't happen on all systems. Because kexec enables gbpages
+to build identity mapping, the EFI systab and ACPI tables could have been
+covered if they share the same 1 GB area with physical memory. To make
+sure, we should map them always.
+
+So here add mapping for them.
+
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
-Changes from v4:
-Added prefix to crc8_add function name, renamed "index_in_bin" into
-"way", got rid of #undef, turned macros into functions.
+Changelog:
+v5->v6:
+  Tune code, comments and patch log Per Boris's comments.
+v5:
+  This patch was newly added into v5.
 
-Changes from v3:
-None
+ arch/x86/kernel/machine_kexec_64.c | 79 ++++++++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
 
-Changes from v2:
-None
-
- drivers/net/dsa/sja1105/sja1105.h             |   2 +
- .../net/dsa/sja1105/sja1105_dynamic_config.c  |  44 ++++
- drivers/net/dsa/sja1105/sja1105_main.c        | 194 ++++++++++++++++++
- 3 files changed, 240 insertions(+)
-
-diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
-index 40d7efe2e01a..1474830f963c 100644
---- a/drivers/net/dsa/sja1105/sja1105.h
-+++ b/drivers/net/dsa/sja1105/sja1105.h
-@@ -123,6 +123,8 @@ int sja1105_dynamic_config_write(struct sja1105_private *priv,
- 				 enum sja1105_blk_idx blk_idx,
- 				 int index, void *entry, bool keep);
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index ceba408ea982..0af01490ee2d 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -18,6 +18,7 @@
+ #include <linux/io.h>
+ #include <linux/suspend.h>
+ #include <linux/vmalloc.h>
++#include <linux/efi.h>
  
-+u8 sja1105_fdb_hash(struct sja1105_private *priv, const u8 *addr, u16 vid);
-+
- /* Common implementations for the static and dynamic configs */
- size_t sja1105_l2_forwarding_entry_packing(void *buf, void *entry_ptr,
- 					   enum packing_op op);
-diff --git a/drivers/net/dsa/sja1105/sja1105_dynamic_config.c b/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
-index d8f145488063..6df521542378 100644
---- a/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
-+++ b/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
-@@ -487,3 +487,47 @@ int sja1105_dynamic_config_write(struct sja1105_private *priv,
+ #include <asm/init.h>
+ #include <asm/pgtable.h>
+@@ -29,6 +30,47 @@
+ #include <asm/setup.h>
+ #include <asm/set_memory.h>
  
- 	return 0;
- }
-+
-+static u8 sja1105_crc8_add(u8 crc, u8 byte, u8 poly)
-+{
-+	int i;
-+
-+	for (i = 0; i < 8; i++) {
-+		if ((crc ^ byte) & (1 << 7)) {
-+			crc <<= 1;
-+			crc ^= poly;
-+		} else {
-+			crc <<= 1;
-+		}
-+		byte <<= 1;
-+	}
-+	return crc;
-+}
-+
-+/* CRC8 algorithm with non-reversed input, non-reversed output,
-+ * no input xor and no output xor. Code customized for receiving
-+ * the SJA1105 E/T FDB keys (vlanid, macaddr) as input. CRC polynomial
-+ * is also received as argument in the Koopman notation that the switch
-+ * hardware stores it in.
++#ifdef CONFIG_ACPI
++/*
++ * Used while adding mapping for ACPI tables.
++ * Can be reused when other iomem regions need be mapped
 + */
-+u8 sja1105_fdb_hash(struct sja1105_private *priv, const u8 *addr, u16 vid)
++struct init_pgtable_data {
++	struct x86_mapping_info *info;
++	pgd_t *level4p;
++};
++
++static int mem_region_callback(struct resource *res, void *arg)
 +{
-+	struct sja1105_l2_lookup_params_entry *l2_lookup_params =
-+		priv->static_config.tables[BLK_IDX_L2_LOOKUP_PARAMS].entries;
-+	u64 poly_koopman = l2_lookup_params->poly;
-+	/* Convert polynomial from Koopman to 'normal' notation */
-+	u8 poly = (u8)(1 + (poly_koopman << 1));
-+	u64 vlanid = l2_lookup_params->shared_learn ? 0 : vid;
-+	u64 input = (vlanid << 48) | ether_addr_to_u64(addr);
-+	u8 crc = 0; /* seed */
-+	int i;
++	struct init_pgtable_data *data = arg;
++	unsigned long mstart, mend;
 +
-+	/* Mask the eight bytes starting from MSB one at a time */
-+	for (i = 56; i >= 0; i -= 8) {
-+		u8 byte = (input & (0xffull << i)) >> i;
++	mstart = res->start;
++	mend = mstart + resource_size(res) - 1;
 +
-+		crc = sja1105_crc8_add(crc, byte, poly);
-+	}
-+	return crc;
++	return kernel_ident_mapping_init(data->info, data->level4p, mstart, mend);
 +}
 +
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index 7d2ad2db0d88..ec8137eff223 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -179,6 +179,9 @@ static int sja1105_init_static_fdb(struct sja1105_private *priv)
- 
- 	table = &priv->static_config.tables[BLK_IDX_L2_LOOKUP];
- 
-+	/* We only populate the FDB table through dynamic
-+	 * L2 Address Lookup entries
-+	 */
- 	if (table->entry_count) {
- 		kfree(table->entries);
- 		table->entry_count = 0;
-@@ -689,6 +692,191 @@ static void sja1105_adjust_link(struct dsa_switch *ds, int port,
- 		sja1105_adjust_port_config(priv, port, phydev->speed, true);
- }
- 
-+/* First-generation switches have a 4-way set associative TCAM that
-+ * holds the FDB entries. An FDB index spans from 0 to 1023 and is comprised of
-+ * a "bin" (grouping of 4 entries) and a "way" (an entry within a bin).
-+ * For the placement of a newly learnt FDB entry, the switch selects the bin
-+ * based on a hash function, and the way within that bin incrementally.
-+ */
-+static inline int sja1105et_fdb_index(int bin, int way)
++static int
++map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p)
 +{
-+	return bin * SJA1105ET_FDB_BIN_SIZE + way;
++	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
++	struct init_pgtable_data data;
++
++	data.info = info;
++	data.level4p = level4p;
++	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
++	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
++				   &data, mem_region_callback);
 +}
-+
-+static int sja1105_is_fdb_entry_in_bin(struct sja1105_private *priv, int bin,
-+				       const u8 *addr, u16 vid,
-+				       struct sja1105_l2_lookup_entry *match,
-+				       int *last_unused)
-+{
-+	int way;
-+
-+	for (way = 0; way < SJA1105ET_FDB_BIN_SIZE; way++) {
-+		struct sja1105_l2_lookup_entry l2_lookup = {0};
-+		int index = sja1105et_fdb_index(bin, way);
-+
-+		/* Skip unused entries, optionally marking them
-+		 * into the return value
-+		 */
-+		if (sja1105_dynamic_config_read(priv, BLK_IDX_L2_LOOKUP,
-+						index, &l2_lookup)) {
-+			if (last_unused)
-+				*last_unused = way;
-+			continue;
-+		}
-+
-+		if (l2_lookup.macaddr == ether_addr_to_u64(addr) &&
-+		    l2_lookup.vlanid == vid) {
-+			if (match)
-+				*match = l2_lookup;
-+			return way;
-+		}
-+	}
-+	/* Return an invalid entry index if not found */
-+	return -1;
-+}
-+
-+static int sja1105_fdb_add(struct dsa_switch *ds, int port,
-+			   const unsigned char *addr, u16 vid)
-+{
-+	struct sja1105_l2_lookup_entry l2_lookup = {0};
-+	struct sja1105_private *priv = ds->priv;
-+	struct device *dev = ds->dev;
-+	int last_unused = -1;
-+	int bin, way;
-+
-+	bin = sja1105_fdb_hash(priv, addr, vid);
-+
-+	way = sja1105_is_fdb_entry_in_bin(priv, bin, addr, vid,
-+					  &l2_lookup, &last_unused);
-+	if (way >= 0) {
-+		/* We have an FDB entry. Is our port in the destination
-+		 * mask? If yes, we need to do nothing. If not, we need
-+		 * to rewrite the entry by adding this port to it.
-+		 */
-+		if (l2_lookup.destports & BIT(port))
-+			return 0;
-+		l2_lookup.destports |= BIT(port);
-+	} else {
-+		int index = sja1105et_fdb_index(bin, way);
-+
-+		/* We don't have an FDB entry. We construct a new one and
-+		 * try to find a place for it within the FDB table.
-+		 */
-+		l2_lookup.macaddr = ether_addr_to_u64(addr);
-+		l2_lookup.destports = BIT(port);
-+		l2_lookup.vlanid = vid;
-+
-+		if (last_unused >= 0) {
-+			way = last_unused;
-+		} else {
-+			/* Bin is full, need to evict somebody.
-+			 * Choose victim at random. If you get these messages
-+			 * often, you may need to consider changing the
-+			 * distribution function:
-+			 * static_config[BLK_IDX_L2_LOOKUP_PARAMS].entries->poly
-+			 */
-+			get_random_bytes(&way, sizeof(u8));
-+			way %= SJA1105ET_FDB_BIN_SIZE;
-+			dev_warn(dev, "Warning, FDB bin %d full while adding entry for %pM. Evicting entry %u.\n",
-+				 bin, addr, way);
-+			/* Evict entry */
-+			sja1105_dynamic_config_write(priv, BLK_IDX_L2_LOOKUP,
-+						     index, NULL, false);
-+		}
-+	}
-+	l2_lookup.index = sja1105et_fdb_index(bin, way);
-+
-+	return sja1105_dynamic_config_write(priv, BLK_IDX_L2_LOOKUP,
-+					    l2_lookup.index, &l2_lookup,
-+					    true);
-+}
-+
-+static int sja1105_fdb_del(struct dsa_switch *ds, int port,
-+			   const unsigned char *addr, u16 vid)
-+{
-+	struct sja1105_l2_lookup_entry l2_lookup = {0};
-+	struct sja1105_private *priv = ds->priv;
-+	int index, bin, way;
-+	bool keep;
-+
-+	bin = sja1105_fdb_hash(priv, addr, vid);
-+	way = sja1105_is_fdb_entry_in_bin(priv, bin, addr, vid,
-+					  &l2_lookup, NULL);
-+	if (way < 0)
-+		return 0;
-+	index = sja1105et_fdb_index(bin, way);
-+
-+	/* We have an FDB entry. Is our port in the destination mask? If yes,
-+	 * we need to remove it. If the resulting port mask becomes empty, we
-+	 * need to completely evict the FDB entry.
-+	 * Otherwise we just write it back.
-+	 */
-+	if (l2_lookup.destports & BIT(port))
-+		l2_lookup.destports &= ~BIT(port);
-+	if (l2_lookup.destports)
-+		keep = true;
-+	else
-+		keep = false;
-+
-+	return sja1105_dynamic_config_write(priv, BLK_IDX_L2_LOOKUP,
-+					    index, &l2_lookup, keep);
-+}
-+
-+static int sja1105_fdb_dump(struct dsa_switch *ds, int port,
-+			    dsa_fdb_dump_cb_t *cb, void *data)
-+{
-+	struct sja1105_private *priv = ds->priv;
-+	struct device *dev = ds->dev;
-+	int i;
-+
-+	for (i = 0; i < SJA1105_MAX_L2_LOOKUP_COUNT; i++) {
-+		struct sja1105_l2_lookup_entry l2_lookup = {0};
-+		u8 macaddr[ETH_ALEN];
-+		int rc;
-+
-+		rc = sja1105_dynamic_config_read(priv, BLK_IDX_L2_LOOKUP,
-+						 i, &l2_lookup);
-+		/* No fdb entry at i, not an issue */
-+		if (rc == -EINVAL)
-+			continue;
-+		if (rc) {
-+			dev_err(dev, "Failed to dump FDB: %d\n", rc);
-+			return rc;
-+		}
-+
-+		/* FDB dump callback is per port. This means we have to
-+		 * disregard a valid entry if it's not for this port, even if
-+		 * only to revisit it later. This is inefficient because the
-+		 * 1024-sized FDB table needs to be traversed 4 times through
-+		 * SPI during a 'bridge fdb show' command.
-+		 */
-+		if (!(l2_lookup.destports & BIT(port)))
-+			continue;
-+		u64_to_ether_addr(l2_lookup.macaddr, macaddr);
-+		cb(macaddr, l2_lookup.vlanid, false, data);
-+	}
-+	return 0;
-+}
-+
-+/* This callback needs to be present */
-+static int sja1105_mdb_prepare(struct dsa_switch *ds, int port,
-+			       const struct switchdev_obj_port_mdb *mdb)
++#else
++static int init_acpi_pgtable(struct x86_mapping_info *info,
++				   pgd_t *level4p)
 +{
 +	return 0;
 +}
++#endif
 +
-+static void sja1105_mdb_add(struct dsa_switch *ds, int port,
-+			    const struct switchdev_obj_port_mdb *mdb)
-+{
-+	sja1105_fdb_add(ds, port, mdb->addr, mdb->vid);
-+}
-+
-+static int sja1105_mdb_del(struct dsa_switch *ds, int port,
-+			   const struct switchdev_obj_port_mdb *mdb)
-+{
-+	return sja1105_fdb_del(ds, port, mdb->addr, mdb->vid);
-+}
-+
- static int sja1105_bridge_member(struct dsa_switch *ds, int port,
- 				 struct net_device *br, bool member)
- {
-@@ -791,8 +979,14 @@ static const struct dsa_switch_ops sja1105_switch_ops = {
- 	.get_tag_protocol	= sja1105_get_tag_protocol,
- 	.setup			= sja1105_setup,
- 	.adjust_link		= sja1105_adjust_link,
-+	.port_fdb_dump		= sja1105_fdb_dump,
-+	.port_fdb_add		= sja1105_fdb_add,
-+	.port_fdb_del		= sja1105_fdb_del,
- 	.port_bridge_join	= sja1105_bridge_join,
- 	.port_bridge_leave	= sja1105_bridge_leave,
-+	.port_mdb_prepare	= sja1105_mdb_prepare,
-+	.port_mdb_add		= sja1105_mdb_add,
-+	.port_mdb_del		= sja1105_mdb_del,
+ #ifdef CONFIG_KEXEC_FILE
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 		&kexec_bzImage64_ops,
+@@ -36,6 +78,31 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
  };
+ #endif
  
- static int sja1105_check_device_id(struct sja1105_private *priv)
++static int
++map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
++{
++#ifdef CONFIG_EFI
++	unsigned long mstart, mend;
++
++	if (!efi_enabled(EFI_BOOT))
++		return 0;
++
++	mstart = (boot_params.efi_info.efi_systab |
++			((u64)boot_params.efi_info.efi_systab_hi<<32));
++
++	if (efi_enabled(EFI_64BIT))
++		mend = mstart + sizeof(efi_system_table_64_t);
++	else
++		mend = mstart + sizeof(efi_system_table_32_t);
++
++	if (!mstart)
++		return 0;
++
++	return kernel_ident_mapping_init(info, level4p, mstart, mend);
++#endif
++	return 0;
++}
++
+ static void free_transition_pgtable(struct kimage *image)
+ {
+ 	free_page((unsigned long)image->arch.p4d);
+@@ -159,6 +226,18 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 			return result;
+ 	}
+ 
++	/*
++	 * Prepare EFI systab and ACPI table mapping for kexec kernel,
++	 * since they are not covered by pfn_mapped.
++	 */
++	result = map_efi_systab(&info, level4p);
++	if (result)
++		return result;
++
++	result = map_acpi_tables(&info, level4p);
++	if (result)
++		return result;
++
+ 	return init_transition_pgtable(image, level4p);
+ }
+ 
 -- 
-2.17.1
+2.17.2
 
