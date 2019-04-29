@@ -7,77 +7,60 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89972C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAF0C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E722075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E487A2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NRn/9yYg"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uWs5FBir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfD2SvQ (ORCPT
+        id S1729173AbfD2Sw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:51:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47379 "EHLO
+        Mon, 29 Apr 2019 14:52:29 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55089 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729027AbfD2SvP (ORCPT
+        with ESMTP id S1729027AbfD2Sw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:51:15 -0400
+        Mon, 29 Apr 2019 14:52:28 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3TInl9o1031807
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3TIq3m01032703
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 29 Apr 2019 11:49:47 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3TInl9o1031807
+        Mon, 29 Apr 2019 11:52:03 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3TIq3m01032703
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556563788;
-        bh=m4f88uF4xvwWONg2c+JLdm1USzGrlVT2FHlWybCWYRc=;
+        s=2019041745; t=1556563924;
+        bh=xrDkEfZHqOrpJnGdbeTXyzFwzlz6S9jYWqO5Soq4z6g=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=NRn/9yYg5b7zAR+yD48E1empSDbO55W500SLBoidsUYPhGG4SEkIJO/FR7gWXNfAe
-         9vZP4HtBCibKgpZD8iPAxH630l3yjAwsbxRsIXQukcrql+4E1gR8MjJ3Mvv9iH809S
-         pP5jGxPtvUMfMpB9GdgFHVbnwZdJKkhVy/it9VIfKL1Af9gZE3hFtuJt/01+wipSop
-         uZQbYqWoXFEaJ/ZCD5NFM6eoai6mEphnZh/nW48RitCUxKccqiS5KiQZ6u1bJjk8CY
-         oNx3yLqQdPxzjNLC8LGmD2JntKVw/vQW9Ob76bAUtAXAxHf0FzZMoB65TQmP66pXcP
-         XKECszpgC6xRw==
+        b=uWs5FBirevUZWCNC6P0DPhaAl4R5GQuoYxWZeYKBq1JlU01ZBMtkqVcQ7cb+Yhm0W
+         eheN2psQahNsb+YIBzs8CR6tXojw5QmMREoMO/qV6XfcVSf4ynvc3Z5A7vDcpbodo2
+         yRUP3QQf5ovj8M9xe07c7V/o6JQXCtZHYnJOJYj7hl2ZlWYblfyMWyfMSOvLu0MVhj
+         3h3qxFRQK2FBooBjKzsoLD7KukLXjb4ftzXyyZ6V1jP8mTGkUgojfS+q1dD9dMgRy7
+         hCEr06qroyzjf4guJukpfc0evIln2Vy7t8wNETcKgGt9S27fnXMYfmcZJluASgi37F
+         GH0hxP1XNrvBg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3TInkh41031803;
-        Mon, 29 Apr 2019 11:49:46 -0700
-Date:   Mon, 29 Apr 2019 11:49:46 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3TIq25r1032698;
+        Mon, 29 Apr 2019 11:52:02 -0700
+Date:   Mon, 29 Apr 2019 11:52:02 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-214d8ca6ee854f696f75e75511fe66b409e656db@git.kernel.org>
-Cc:     rppt@linux.vnet.ibm.com, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, josef@toxicpanda.com,
-        dsterba@suse.com, agk@redhat.com, hch@lst.de,
-        akpm@linux-foundation.org, mingo@kernel.org,
-        joonas.lahtinen@linux.intel.com, jani.nikula@linux.intel.com,
-        rientjes@google.com, cl@linux.com, rostedt@goodmis.org,
-        maarten.lankhorst@linux.intel.com, penberg@kernel.org,
-        tom.zanussi@linux.intel.com, aryabinin@virtuozzo.com,
-        catalin.marinas@arm.com, jthumshirn@suse.de, luto@kernel.org,
-        robin.murphy@arm.com, m.szyprowski@samsung.com, mbenes@suse.cz,
-        clm@fb.com, hpa@zytor.com, snitzer@redhat.com, adobriyan@gmail.com,
-        airlied@linux.ie, tglx@linutronix.de, rodrigo.vivi@intel.com,
-        akinobu.mita@gmail.com, dvyukov@google.com, daniel@ffwll.ch,
-        glider@google.com
-Reply-To: snitzer@redhat.com, adobriyan@gmail.com, hpa@zytor.com,
-          clm@fb.com, airlied@linux.ie, akinobu.mita@gmail.com,
-          dvyukov@google.com, rodrigo.vivi@intel.com, tglx@linutronix.de,
-          daniel@ffwll.ch, glider@google.com, luto@kernel.org,
-          catalin.marinas@arm.com, jthumshirn@suse.de,
-          robin.murphy@arm.com, m.szyprowski@samsung.com, mbenes@suse.cz,
-          mingo@kernel.org, jani.nikula@linux.intel.com,
-          joonas.lahtinen@linux.intel.com, rientjes@google.com,
-          cl@linux.com, rostedt@goodmis.org, penberg@kernel.org,
-          maarten.lankhorst@linux.intel.com, tom.zanussi@linux.intel.com,
-          aryabinin@virtuozzo.com, rppt@linux.vnet.ibm.com,
-          jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
-          dsterba@suse.com, josef@toxicpanda.com, hch@lst.de,
-          agk@redhat.com, akpm@linux-foundation.org
-In-Reply-To: <20190425094803.713568606@linutronix.de>
-References: <20190425094803.713568606@linutronix.de>
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-eeec00d73be2e92ebce16c89154726250f2c80ef@git.kernel.org>
+Cc:     jannh@google.com, bp@suse.de, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, bigeasy@linutronix.de,
+        riel@surriel.com, kurt.kanzenbach@linutronix.de,
+        luto@amacapital.net, tglx@linutronix.de, pbonzini@redhat.com,
+        kvm@vger.kernel.org, mingo@kernel.org, x86@kernel.org
+Reply-To: jannh@google.com, bp@suse.de, riel@surriel.com,
+          bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+          hpa@zytor.com, dave.hansen@intel.com, pbonzini@redhat.com,
+          tglx@linutronix.de, kvm@vger.kernel.org, luto@amacapital.net,
+          kurt.kanzenbach@linutronix.de, x86@kernel.org, mingo@kernel.org
+In-Reply-To: <20190429163953.gqxgsc5okqxp4olv@linutronix.de>
+References: <20190429163953.gqxgsc5okqxp4olv@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/stacktrace] stacktrace: Provide common infrastructure
-Git-Commit-ID: 214d8ca6ee854f696f75e75511fe66b409e656db
+Subject: [tip:x86/fpu] x86/fpu: Fault-in user stack if
+ copy_fpstate_to_sigframe() fails
+Git-Commit-ID: eeec00d73be2e92ebce16c89154726250f2c80ef
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -91,336 +74,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  214d8ca6ee854f696f75e75511fe66b409e656db
-Gitweb:     https://git.kernel.org/tip/214d8ca6ee854f696f75e75511fe66b409e656db
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Thu, 25 Apr 2019 11:45:21 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Mon, 29 Apr 2019 12:37:57 +0200
+Commit-ID:  eeec00d73be2e92ebce16c89154726250f2c80ef
+Gitweb:     https://git.kernel.org/tip/eeec00d73be2e92ebce16c89154726250f2c80ef
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Mon, 29 Apr 2019 18:39:53 +0200
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Mon, 29 Apr 2019 20:25:45 +0200
 
-stacktrace: Provide common infrastructure
+x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails
 
-All architectures which support stacktrace carry duplicated code and
-do the stack storage and filtering at the architecture side.
+In the compacted form, XSAVES may save only the XMM+SSE state but skip
+FP (x87 state).
 
-Provide a consolidated interface with a callback function for consuming the
-stack entries provided by the architecture specific stack walker. This
-removes lots of duplicated code and allows to implement better filtering
-than 'skip number of entries' in the future without touching any
-architecture specific code.
+This is denoted by header->xfeatures = 6. The fastpath
+(copy_fpregs_to_sigframe()) does that but _also_ initialises the FP
+state (cwd to 0x37f, mxcsr as we do, remaining fields to 0).
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: linux-arch@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: linux-mm@kvack.org
-Cc: David Rientjes <rientjes@google.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: kasan-dev@googlegroups.com
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: iommu@lists.linux-foundation.org
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: David Sterba <dsterba@suse.com>
-Cc: Chris Mason <clm@fb.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: linux-btrfs@vger.kernel.org
-Cc: dm-devel@redhat.com
-Cc: Mike Snitzer <snitzer@redhat.com>
-Cc: Alasdair Kergon <agk@redhat.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: David Airlie <airlied@linux.ie>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc: Miroslav Benes <mbenes@suse.cz>
-Link: https://lkml.kernel.org/r/20190425094803.713568606@linutronix.de
+The slowpath (copy_xstate_to_user()) leaves most of the FP
+state untouched. Only mxcsr and mxcsr_flags are set due to
+xfeatures_mxcsr_quirk(). Now that XFEATURE_MASK_FP is set
+unconditionally, see
 
+  04944b793e18 ("x86: xsave: set FP, SSE bits in the xsave header in the user sigcontext"),
+
+on return from the signal, random garbage is loaded as the FP state.
+
+Instead of utilizing copy_xstate_to_user(), fault-in the user memory
+and retry the fast path. Ideally, the fast path succeeds on the second
+attempt but may be retried again if the memory is swapped out due
+to memory pressure. If the user memory can not be faulted-in then
+get_user_pages() returns an error so we don't loop forever.
+
+Fault in memory via get_user_pages() so copy_fpregs_to_sigframe()
+succeeds without a fault.
+
+Fixes: 69277c98f5eef ("x86/fpu: Always store the registers in copy_fpstate_to_sigframe()")
+Reported-by: Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jason@zx2c4.com
+Cc: kvm ML <kvm@vger.kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: rkrcmar@redhat.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190429163953.gqxgsc5okqxp4olv@linutronix.de
 ---
- include/linux/stacktrace.h |  39 ++++++++++
- kernel/stacktrace.c        | 173 +++++++++++++++++++++++++++++++++++++++++++++
- lib/Kconfig                |   4 ++
- 3 files changed, 216 insertions(+)
+ arch/x86/kernel/fpu/signal.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
-index 40decfbb9a24..f0cfd12cb45e 100644
---- a/include/linux/stacktrace.h
-+++ b/include/linux/stacktrace.h
-@@ -23,6 +23,44 @@ unsigned int stack_trace_save_regs(struct pt_regs *regs, unsigned long *store,
- unsigned int stack_trace_save_user(unsigned long *store, unsigned int size);
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 7026f1c4e5e3..6d6c2d6afde4 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -158,7 +158,6 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
+ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ {
+ 	struct fpu *fpu = &current->thread.fpu;
+-	struct xregs_state *xsave = &fpu->state.xsave;
+ 	struct task_struct *tsk = current;
+ 	int ia32_fxstate = (buf != buf_fx);
+ 	int ret = -EFAULT;
+@@ -174,11 +173,12 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ 			sizeof(struct user_i387_ia32_struct), NULL,
+ 			(struct _fpstate_32 __user *) buf) ? -1 : 1;
  
- /* Internal interfaces. Do not use in generic code */
-+#ifdef CONFIG_ARCH_STACKWALK
-+
-+/**
-+ * stack_trace_consume_fn - Callback for arch_stack_walk()
-+ * @cookie:	Caller supplied pointer handed back by arch_stack_walk()
-+ * @addr:	The stack entry address to consume
-+ * @reliable:	True when the stack entry is reliable. Required by
-+ *		some printk based consumers.
-+ *
-+ * Return:	True, if the entry was consumed or skipped
-+ *		False, if there is no space left to store
-+ */
-+typedef bool (*stack_trace_consume_fn)(void *cookie, unsigned long addr,
-+				       bool reliable);
-+/**
-+ * arch_stack_walk - Architecture specific function to walk the stack
-+ * @consume_entry:	Callback which is invoked by the architecture code for
-+ *			each entry.
-+ * @cookie:		Caller supplied pointer which is handed back to
-+ *			@consume_entry
-+ * @task:		Pointer to a task struct, can be NULL
-+ * @regs:		Pointer to registers, can be NULL
-+ *
-+ * ============ ======= ============================================
-+ * task	        regs
-+ * ============ ======= ============================================
-+ * task		NULL	Stack trace from task (can be current)
-+ * current	regs	Stack trace starting on regs->stackpointer
-+ * ============ ======= ============================================
-+ */
-+void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
-+		     struct task_struct *task, struct pt_regs *regs);
-+int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry, void *cookie,
-+			     struct task_struct *task);
-+void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
-+			  const struct pt_regs *regs);
-+
-+#else /* CONFIG_ARCH_STACKWALK */
- struct stack_trace {
- 	unsigned int nr_entries, max_entries;
- 	unsigned long *entries;
-@@ -37,6 +75,7 @@ extern void save_stack_trace_tsk(struct task_struct *tsk,
- extern int save_stack_trace_tsk_reliable(struct task_struct *tsk,
- 					 struct stack_trace *trace);
- extern void save_stack_trace_user(struct stack_trace *trace);
-+#endif /* !CONFIG_ARCH_STACKWALK */
- #endif /* CONFIG_STACKTRACE */
++retry:
+ 	/*
+ 	 * Load the FPU registers if they are not valid for the current task.
+ 	 * With a valid FPU state we can attempt to save the state directly to
+-	 * userland's stack frame which will likely succeed. If it does not, do
+-	 * the slowpath.
++	 * userland's stack frame which will likely succeed. If it does not,
++	 * resolve the fault in the user memory and try again.
+ 	 */
+ 	fpregs_lock();
+ 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+@@ -193,14 +193,17 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ 	fpregs_unlock();
  
- #if defined(CONFIG_STACKTRACE) && defined(CONFIG_HAVE_RELIABLE_STACKTRACE)
-diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-index dd55312f3fe9..27bafc1e271e 100644
---- a/kernel/stacktrace.c
-+++ b/kernel/stacktrace.c
-@@ -5,6 +5,8 @@
-  *
-  *  Copyright (C) 2006 Red Hat, Inc., Ingo Molnar <mingo@redhat.com>
-  */
-+#include <linux/sched/task_stack.h>
-+#include <linux/sched/debug.h>
- #include <linux/sched.h>
- #include <linux/kernel.h>
- #include <linux/export.h>
-@@ -66,6 +68,175 @@ int stack_trace_snprint(char *buf, size_t size, unsigned long *entries,
- }
- EXPORT_SYMBOL_GPL(stack_trace_snprint);
+ 	if (ret) {
+-		if (using_compacted_format()) {
+-			if (copy_xstate_to_user(buf_fx, xsave, 0, size))
+-				return -1;
+-		} else {
+-			fpstate_sanitize_xstate(fpu);
+-			if (__copy_to_user(buf_fx, xsave, fpu_user_xstate_size))
+-				return -1;
+-		}
++		int aligned_size;
++		int nr_pages;
++
++		aligned_size = offset_in_page(buf_fx) + fpu_user_xstate_size;
++		nr_pages = DIV_ROUND_UP(aligned_size, PAGE_SIZE);
++
++		ret = get_user_pages((unsigned long)buf_fx, nr_pages,
++				     FOLL_WRITE, NULL, NULL);
++		if (ret == nr_pages)
++			goto retry;
++		return -EFAULT;
+ 	}
  
-+#ifdef CONFIG_ARCH_STACKWALK
-+
-+struct stacktrace_cookie {
-+	unsigned long	*store;
-+	unsigned int	size;
-+	unsigned int	skip;
-+	unsigned int	len;
-+};
-+
-+static bool stack_trace_consume_entry(void *cookie, unsigned long addr,
-+				      bool reliable)
-+{
-+	struct stacktrace_cookie *c = cookie;
-+
-+	if (c->len >= c->size)
-+		return false;
-+
-+	if (c->skip > 0) {
-+		c->skip--;
-+		return true;
-+	}
-+	c->store[c->len++] = addr;
-+	return c->len < c->size;
-+}
-+
-+static bool stack_trace_consume_entry_nosched(void *cookie, unsigned long addr,
-+					      bool reliable)
-+{
-+	if (in_sched_functions(addr))
-+		return true;
-+	return stack_trace_consume_entry(cookie, addr, reliable);
-+}
-+
-+/**
-+ * stack_trace_save - Save a stack trace into a storage array
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ * @skipnr:	Number of entries to skip at the start of the stack trace
-+ *
-+ * Return: Number of trace entries stored.
-+ */
-+unsigned int stack_trace_save(unsigned long *store, unsigned int size,
-+			      unsigned int skipnr)
-+{
-+	stack_trace_consume_fn consume_entry = stack_trace_consume_entry;
-+	struct stacktrace_cookie c = {
-+		.store	= store,
-+		.size	= size,
-+		.skip	= skipnr + 1,
-+	};
-+
-+	arch_stack_walk(consume_entry, &c, current, NULL);
-+	return c.len;
-+}
-+EXPORT_SYMBOL_GPL(stack_trace_save);
-+
-+/**
-+ * stack_trace_save_tsk - Save a task stack trace into a storage array
-+ * @task:	The task to examine
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ * @skipnr:	Number of entries to skip at the start of the stack trace
-+ *
-+ * Return: Number of trace entries stored.
-+ */
-+unsigned int stack_trace_save_tsk(struct task_struct *tsk, unsigned long *store,
-+				  unsigned int size, unsigned int skipnr)
-+{
-+	stack_trace_consume_fn consume_entry = stack_trace_consume_entry_nosched;
-+	struct stacktrace_cookie c = {
-+		.store	= store,
-+		.size	= size,
-+		.skip	= skipnr + 1,
-+	};
-+
-+	if (!try_get_task_stack(tsk))
-+		return 0;
-+
-+	arch_stack_walk(consume_entry, &c, tsk, NULL);
-+	put_task_stack(tsk);
-+	return c.len;
-+}
-+
-+/**
-+ * stack_trace_save_regs - Save a stack trace based on pt_regs into a storage array
-+ * @regs:	Pointer to pt_regs to examine
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ * @skipnr:	Number of entries to skip at the start of the stack trace
-+ *
-+ * Return: Number of trace entries stored.
-+ */
-+unsigned int stack_trace_save_regs(struct pt_regs *regs, unsigned long *store,
-+				   unsigned int size, unsigned int skipnr)
-+{
-+	stack_trace_consume_fn consume_entry = stack_trace_consume_entry;
-+	struct stacktrace_cookie c = {
-+		.store	= store,
-+		.size	= size,
-+		.skip	= skipnr,
-+	};
-+
-+	arch_stack_walk(consume_entry, &c, current, regs);
-+	return c.len;
-+}
-+
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+/**
-+ * stack_trace_save_tsk_reliable - Save task stack with verification
-+ * @tsk:	Pointer to the task to examine
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ *
-+ * Return:	An error if it detects any unreliable features of the
-+ *		stack. Otherwise it guarantees that the stack trace is
-+ *		reliable and returns the number of entries stored.
-+ *
-+ * If the task is not 'current', the caller *must* ensure the task is inactive.
-+ */
-+int stack_trace_save_tsk_reliable(struct task_struct *tsk, unsigned long *store,
-+				  unsigned int size)
-+{
-+	stack_trace_consume_fn consume_entry = stack_trace_consume_entry;
-+	struct stacktrace_cookie c = {
-+		.store	= store,
-+		.size	= size,
-+	};
-+	int ret;
-+
-+	/*
-+	 * If the task doesn't have a stack (e.g., a zombie), the stack is
-+	 * "reliably" empty.
-+	 */
-+	if (!try_get_task_stack(tsk))
-+		return 0;
-+
-+	ret = arch_stack_walk_reliable(consume_entry, &c, tsk);
-+	put_task_stack(tsk);
-+	return ret;
-+}
-+#endif
-+
-+#ifdef CONFIG_USER_STACKTRACE_SUPPORT
-+/**
-+ * stack_trace_save_user - Save a user space stack trace into a storage array
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ *
-+ * Return: Number of trace entries stored.
-+ */
-+unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
-+{
-+	stack_trace_consume_fn consume_entry = stack_trace_consume_entry;
-+	struct stacktrace_cookie c = {
-+		.store	= store,
-+		.size	= size,
-+	};
-+
-+	/* Trace user stack if not a kernel thread */
-+	if (!current->mm)
-+		return 0;
-+
-+	arch_stack_walk_user(consume_entry, &c, task_pt_regs(current));
-+	return c.len;
-+}
-+#endif
-+
-+#else /* CONFIG_ARCH_STACKWALK */
-+
- /*
-  * Architectures that do not implement save_stack_trace_*()
-  * get these weak aliases and once-per-bootup warnings
-@@ -203,3 +374,5 @@ unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
- 	return trace.nr_entries;
- }
- #endif /* CONFIG_USER_STACKTRACE_SUPPORT */
-+
-+#endif /* !CONFIG_ARCH_STACKWALK */
-diff --git a/lib/Kconfig b/lib/Kconfig
-index a9e56539bd11..e86975bfca6a 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -597,6 +597,10 @@ config ARCH_HAS_UACCESS_FLUSHCACHE
- config ARCH_HAS_UACCESS_MCSAFE
- 	bool
- 
-+# Temporary. Goes away when all archs are cleaned up
-+config ARCH_STACKWALK
-+       bool
-+
- config STACKDEPOT
- 	bool
- 	select STACKTRACE
+ 	/* Save the fsave header for the 32-bit frames. */
