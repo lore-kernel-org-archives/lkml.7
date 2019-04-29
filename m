@@ -2,109 +2,114 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-11.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDA6C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54886C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B916D21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F9A2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:58:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="pw+544LY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jDz96Pvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbfD2TwU (ORCPT
+        id S1729285AbfD2T6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:52:20 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:28230 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfD2TwU (ORCPT
+        Mon, 29 Apr 2019 15:58:39 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32774 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2T6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:52:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1556567540; x=1588103540;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=iGR4Zs5nDuCr/SyO0IMhqYsZGxQL5/GTdmx0tD7WxoM=;
-  b=pw+544LYKC28PsL/Z2N+0ID6D3bMTQ1G0ikp8/rI05eIYXW/gA3Gs0GH
-   nEcSpgEskWzwGHOjImvTsdPGfs6vugv1RwFtF46ejff6obROGl5hJayCp
-   F0WvRGxpZem1Ov0uWVqN2ROjv46pW9QsODbgwU2e3w2RGsNts5PMveKWc
-   wW5VopU/kIzfkentNIijZ82tRSAQVTd43pVl4Z/f8/FKZ/GAWiFF+tdtH
-   iQHVo4HsyWB9OkXuy2KMXNtv2bxV5kRpH5la4RI8E+yY6bX7QV/FpyLs9
-   DysfIyGZahMn6VGNRPDf5FNImrkI++v2fxWdRzyTgT00vWzeHAZh0w9Yj
-   g==;
-X-IronPort-AV: E=Sophos;i="5.60,410,1549900800"; 
-   d="scan'208";a="108822905"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Apr 2019 03:52:20 +0800
-IronPort-SDR: skcBvZEAFKBWIz+0eofpg9whoUpuVYdGMYTU255UvfGAUlR3y4sfsH6XovlLbDS4jMlM6tBQKc
- m1uQNqu2r2TXG4xL1+f5D2bBJYZepYaD/0nw2MwLN+TXXkAYMwLlxLhfTk60NYnzw1BT9vWtM/
- 7FdSEgHE9B70ksycQdLsCzDZd3Z9g6vIcuFhWOtfWw26D2dL2rFJ2QAQrmZQc85XlPs7DZyhtH
- pIf+36hORR2JoVKxC4X0p55gw4ZB/0Z9z2t6vvM78utWIK81zUyfIyzkRHz5t8KkaE3JAPeJ4A
- yhPVDnPBEQ56kqPAtgmt38Li
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 29 Apr 2019 12:28:42 -0700
-IronPort-SDR: WCTsEeq+jdWM9wWQFiffEKgZ2ajy+EgpnirMSVaJ0tEi4A8l36v+D7tfZ6G59yMlywONSSNZ1X
- n22P6upFjfVXOl7H4ZV47RVT7HgJAmFl2r5v64s4HTUvhSoe+XA4fqmcU6Y83wdC4eiadY8KCS
- 1d1eUj5vmaac3eO0xjOVEiBdeFfClh/74oFrnoWCsCYXMaVdHGe+okInPBRTabZUbl23ghneos
- t+80OXpBGVIK59DaOffRqEzqU6jFoJlH/VbDehXFTeycX4DbkaXGACaVIIDJpLyKEZcrdMCTyM
- iS8=
-Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.66.167]) ([10.111.66.167])
-  by uls-op-cesaip01.wdc.com with ESMTP; 29 Apr 2019 12:52:20 -0700
-Subject: Re: [1/3] x86: Update DEBUG_TLBFLUSH options description.
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Gary Guo <gary@garyguo.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-References: <20190410224449.10877-1-atish.patra@wdc.com>
- <20190410224449.10877-2-atish.patra@wdc.com>
- <20190411065617.GA29422@infradead.org>
- <580d95d1-224f-a372-c656-1d2cbb19d868@wdc.com> <20190414142709.GA569@zn.tnic>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <956163a3-9a9f-ac12-b429-eb592bce815b@wdc.com>
-Date:   Mon, 29 Apr 2019 12:52:18 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Mon, 29 Apr 2019 15:58:39 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k19so5685816pgh.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:58:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=+0pEvJHfgnRVL31bGXerHYLPtlqb793XRK9UCWud7Go=;
+        b=jDz96PvqkXsvt2iFVhZf6RMWGPNt1zIabeQePrmGpbuy4I8jzBJxCFWlsmQ/z40mcl
+         tATLM6g6AAQYBGwz6xp9LnxyVOb/35LHbsUaEPBtQeZ5spmamP4Ag68lKwvrcQMzlIYH
+         CUWWa7gTifnDKg6+kwvaKU2ZsIM2LAU02xotc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=+0pEvJHfgnRVL31bGXerHYLPtlqb793XRK9UCWud7Go=;
+        b=LApVEOL5dF4VIWK7JVsJS9a9kInhHFxR/6LF3AqEo+qHVETrVsIkKgRD2lwdgghT7B
+         JgqSIl+WuLehUB0y/xQvCkBGSwPVbslYQOR+Mv4+uiW90L3/zxehMsf59tHL8rIMgoFT
+         Pr4XFRyNuxUv0I2aWaOJJh8lYkcNS26S58W31KxnyFbmYMV1GOOMfFo1AaRoR6naRLr1
+         KbzxqZ4pqKEB+g+Yc+iwgOR7xTTWpvAkBisxpE7p/WMx2KuGS7LeMdsKHegni1iRceUC
+         NUlZZ0v4OtHuey8o/q5DRBLkmB+xAY7drPjJRkXDxDF/XRhwntrX5d5KWh49NR1mfg+R
+         6XnA==
+X-Gm-Message-State: APjAAAUi95HshDlhf8BiJoWTayCsoMGpWypfn55k9XhtnmqEYY8uC9tW
+        QVJ54n6VpD1gLTcX3D4W2kqgig==
+X-Google-Smtp-Source: APXvYqxiIgh5n28OFLjkoA8cDfNSicOV7qyHbwvpCBktMKbOU7Gb05aDaHYrjmrYob5e3IFeNwM73g==
+X-Received: by 2002:a63:f444:: with SMTP id p4mr61384597pgk.32.1556567918686;
+        Mon, 29 Apr 2019 12:58:38 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id t13sm68644501pgo.14.2019.04.29.12.58.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 12:58:37 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 12:58:36 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        James Morris <jamorris@linux.microsoft.com>,
+        syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: [GIT PULL] seccomp fixes for v5.1-rc8
+Message-ID: <20190429195836.GA30688@beast>
 MIME-Version: 1.0
-In-Reply-To: <20190414142709.GA569@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/14/19 7:29 AM, Borislav Petkov wrote:
-> On Fri, Apr 12, 2019 at 01:14:54PM -0700, Atish Patra wrote:
->> On 4/10/19 11:56 PM, Christoph Hellwig wrote:
->>> Given that this option enables generic code (which you reuse for RISC-V
->>> later in this series) please also move the config option to
->>> mm/Kconfig, proabbly keyed off another ARCH_HAVE_DEBUG_TLBFLUSH
->>> symbol that the architecture can select.
->>>
->>
->> Sure.
-> 
-> And when you do that, instead of deleting the help text, make it
-> generic. Otherwise, there's no explanation anymore, how that option is
-> supposed to be used through tlb_flushall_shift.
-> 
-Not sure I am following you.
-tlb_flushall_shift knob was removed by
-commit e9f4e0a9fe27 ("x86/mm: Rip out complicated, out-of-date, buggy 
-TLB flushing")
+Hi Linus,
 
+Please pull these seccomp fixes for v5.1-rc8. Syzbot found a use-after-free
+bug in seccomp due to flags that should not be allowed to be used together.
+Tycho fixed this, I updated the self-tests, and the syzkaller PoC has been
+running for several days without triggering KASan (before this fix, it
+would reproduce). These patches have also been in -next for almost a week,
+just to be sure.
 
-Regards,
-Atish
+Thanks!
+
+-Kees
+
+The following changes since commit 8c2ffd9174779014c3fe1f96d9dc3641d9175f00:
+
+  Linux 5.1-rc2 (2019-03-24 14:02:26 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/seccomp-v5.1-rc8
+
+for you to fetch changes up to 7a0df7fbc14505e2e2be19ed08654a09e1ed5bf6:
+
+  seccomp: Make NEW_LISTENER and TSYNC flags exclusive (2019-04-25 15:55:58 -0700)
+
+----------------------------------------------------------------
+seccomp use-after-free fix
+
+- Add logic for making some seccomp flags exclusive (Tycho)
+- Update selftests for exclusivity testing (Kees)
+
+----------------------------------------------------------------
+Kees Cook (1):
+      selftests/seccomp: Prepare for exclusive seccomp flags
+
+Tycho Andersen (1):
+      seccomp: Make NEW_LISTENER and TSYNC flags exclusive
+
+ kernel/seccomp.c                              | 17 ++++++++++++--
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 34 ++++++++++++++++++++-------
+ 2 files changed, 40 insertions(+), 11 deletions(-)
+
+-- 
+Kees Cook
