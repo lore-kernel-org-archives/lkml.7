@@ -2,118 +2,84 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9170EC04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6624EC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1D221743
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A72A21743
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556546952;
-	bh=Z5esiYnjit++ho0ynGUXZjDz8rcfVMit9rf0NZ8iRQE=;
+	s=default; t=1556547017;
+	bh=xj7bE+I4lk+gqwSsMWtKtuHD+DyBxGy5Jwq7FNnHg7A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OrErbpsyFTpKWpnNi6FSQoRzfRvjSo0XcTgC0XoytDRSBqC48QS9fMfLkS1Ph3SWk
-	 TwMiWzQ+iAMHfN4lr+VREoxfdLLnLOcjW7sd7+WXHlt7EdLiGMcmd32o6y132MLWht
-	 tCEGwpXsyLhG8jbdt7R3iTHKNJlPO4RcVLXK2KuE=
+	b=ZONN61GSG46zKm2KRlEg8+bjdd2I3hlImOY0fQb6RJxRA1z/lCQe/zy7hbP2fPkBS
+	 0/vdlckIHankooKHu6FAEEEubNS/85trv1yt3mNco4pYXgIoS7O8ZV+r/oR2FmB+KX
+	 SEjztYvuNPwZg4gQRNGEsNPybDjI1uQciGIMpW6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbfD2OJL (ORCPT
+        id S1728356AbfD2OKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:09:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58086 "EHLO mail.kernel.org"
+        Mon, 29 Apr 2019 10:10:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbfD2OJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:09:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728208AbfD2OKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:10:15 -0400
+Received: from localhost (unknown [171.76.113.243])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F1722084B;
-        Mon, 29 Apr 2019 14:09:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 441032084B;
+        Mon, 29 Apr 2019 14:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556546948;
-        bh=Z5esiYnjit++ho0ynGUXZjDz8rcfVMit9rf0NZ8iRQE=;
+        s=default; t=1556547015;
+        bh=xj7bE+I4lk+gqwSsMWtKtuHD+DyBxGy5Jwq7FNnHg7A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=edr8pLRg/MgYcAQMpEsgqiMj2RIQufwlRdOxQG37XMHSrvhp3YU1+OXmv3wvY5NAm
-         /KNYNZy9EHwNGToHHAAgS/gqo+BHyPWPqya8/VCfe82Zwh8cJdDrpZAU+RJfIOeorr
-         cAGQS1LuJ9f2SJIVyKFcKI7kCepeAxJFCvcxbvbE=
-Date:   Mon, 29 Apr 2019 16:09:06 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nicolas Iooss <nicolas.iooss@m4x.org>
-Subject: Re: scripts/selinux build error in 4.14 after glibc update
-Message-ID: <20190429140906.GA7412@kroah.com>
-References: <20190422210041.GA21711@archlinux-i9>
- <CAHC9VhTtz3OA3EchaZaAeg=DxoGoz_WFdj+Mi9nd9i+cmjmuJA@mail.gmail.com>
- <20190423132926.GK17719@sasha-vm>
- <CAHC9VhRcdY7G_ES2VqNVpkoU=CRJkJySb3m1sFdgKJwh3JQ2oA@mail.gmail.com>
- <20190429124002.GB31371@kroah.com>
- <CAHC9VhQxrtYJTOj=aOL4FY=myA4ZO-rcY7TdCeFbjVnCmgOxew@mail.gmail.com>
+        b=1Fbmw+8GfM9xj/7f1UtCHL6gJJnj+VwgKny/DnoHygGMICqGYMVUe5SNDrvADfqAM
+         xSPtu/3PPUWLU9kBfg3KvVmJEtcZrzIywwscnQzc0XbkCw/JFusAdTCa4pVZ/eCVVU
+         o8wAqkVg/dcNQKKgFkWX16cbsggQt/NMy79/6Y8s=
+Date:   Mon, 29 Apr 2019 19:40:09 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 7/7] dmaengine: sprd: Add interrupt support for 2-stage
+ transfer
+Message-ID: <20190429141009.GO3845@vkoul-mobl.Dlink>
+References: <cover.1555330115.git.baolin.wang@linaro.org>
+ <07c070b4397296a4500d04abe16dfd8a71a2f211.1555330115.git.baolin.wang@linaro.org>
+ <20190429120108.GL3845@vkoul-mobl.Dlink>
+ <CAMz4kuJB2+6HziyDep4ctfmjFYpmZ-v_vrFQsJ9tHvwYzSJeKA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhQxrtYJTOj=aOL4FY=myA4ZO-rcY7TdCeFbjVnCmgOxew@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAMz4kuJB2+6HziyDep4ctfmjFYpmZ-v_vrFQsJ9tHvwYzSJeKA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:02:29AM -0400, Paul Moore wrote:
-> On Mon, Apr 29, 2019 at 8:40 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Tue, Apr 23, 2019 at 09:43:09AM -0400, Paul Moore wrote:
-> > > On Tue, Apr 23, 2019 at 9:29 AM Sasha Levin <sashal@kernel.org> wrote:
-> > > > On Mon, Apr 22, 2019 at 09:59:47PM -0400, Paul Moore wrote:
-> > > > >On Mon, Apr 22, 2019 at 5:00 PM Nathan Chancellor
-> > > > ><natechancellor@gmail.com> wrote:
-> > > > >> Hi all,
-> > > > >>
-> > > > >> After a glibc update to 2.29, my 4.14 builds started failing like so:
-> > > > >
-> > > > >...
-> > > > >
-> > > > >>   HOSTCC  scripts/selinux/genheaders/genheaders
-> > > > >> In file included from scripts/selinux/genheaders/genheaders.c:19:
-> > > > >> ./security/selinux/include/classmap.h:245:2: error: #error New address family defined, please update secclass_map.
-> > > > >>  #error New address family defined, please update secclass_map.
-> > > > >>   ^~~~~
-> > > > >
-> > > > >This is a known problem that has a fix in the selinux/next branch and
-> > > > >will be going up to Linus during the next merge window.  The fix is
-> > > > >quite small and should be relatively easy for you to backport to your
-> > > > >kernel build if you are interested; the patch can be found at the
-> > > > >archive link below:
-> > > > >
-> > > > >https://lore.kernel.org/selinux/20190225005528.28371-1-paulo@paulo.ac
-> > > >
-> > > > Why is it waiting for the next merge window? It fixes a build bug that
-> > > > people hit.
-> > >
-> > > I place a reasonably high bar on patches that I send up to Linus
-> > > outside of the merge window and I didn't feel this patch met that
-> > > criteria.  Nathan is only the second person I've seen who has
-> > > encountered this problem, the first being the original patch author.
-> > > As far as I've seen, the problem is only seen by users building older
-> > > kernels on very new userspaces (e.g. glibc v2.29 was released in
-> > > February 2019, Linux v4.14 was released in 2017); this doesn't appear
-> > > to be a large group of people and I didn't want to risk breaking the
-> > > main kernel tree during the -rcX phase for such a small group.
+On 29-04-19, 20:11, Baolin Wang wrote:
+> On Mon, 29 Apr 2019 at 20:01, Vinod Koul <vkoul@kernel.org> wrote:
+> > On 15-04-19, 20:15, Baolin Wang wrote:
+
+> > > @@ -429,6 +433,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+> > >               val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+> > >               val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
+> > >               val |= SPRD_DMA_GLB_2STAGE_EN;
+> > > +             if (schan->int_type != SPRD_DMA_NO_INT)
 > >
-> > Ugh, this breaks my local builds, I would recommend getting it to Linus
-> > sooner please.
+> > Who configure int_type?
 > 
-> Well, we are at -rc7 right now and it looks like an -rc8 is unlikely
-> so the question really comes down to can/do you want to wait a week?
+> The int_type is configured through the flags of
+> sprd_dma_prep_slave_sg() by users, see:
+> https://elixir.bootlin.com/linux/v5.1-rc6/source/include/linux/dma/sprd-dma.h#L9
 
-It's a regression in the 5.1-rc tree, that is hitting people now.  Why
-do you want to have a 5.1-final that is known to be broken?
+Please use DMA_PREP_INTERRUPT flag instead!
 
-thanks,
-
-greg k-h
+-- 
+~Vinod
