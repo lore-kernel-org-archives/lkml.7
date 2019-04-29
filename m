@@ -2,144 +2,135 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655C7C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD523C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCDE20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9F920675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556546287;
+	bh=zzwvCRjip66ErSWdogjE1z3JyHQPKCTMH76hG95wY1w=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=mK6apVQBPbvziZpQN9JAaFcU7RS6sl+RnYWVlPt7QyVWNtkuc5CffZ8wmgMYeM2LF
+	 qRQ9UKCA3KUEdX8zU/WxcDQNCVr076b6hmUze+SFg433GfBt6giglOehigIV7wG9mT
+	 pjgDy1rXAv9j3bnM77Kgw/wVxjwSUnwXjxEw4xfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfD2Nz7 (ORCPT
+        id S1728239AbfD2N6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:55:59 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:37433 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfD2Nz6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:55:58 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MwPjf-1gT9H42mKz-00sLKc; Mon, 29 Apr 2019 15:54:35 +0200
-Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet
- card
-To:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>
-Cc:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>,
-        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-References: <20190409144250.7237-1-TheSven73@gmail.com>
- <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
- <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
- <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
- <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
- <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
- <CAGngYiVJwRh_ESLfSYWak4RU60T2D1HW0-3Hg1CZbRjWhaSN5Q@mail.gmail.com>
- <7ceaeb70-f937-bd84-95e5-d7a6baeb5d87@metux.net>
- <CAGngYiUPZ+g4eXJKvgA9GSJXgOFAAf6Q3qqAheiqNSnJ+Dbx+w@mail.gmail.com>
- <e07f7575-2617-a11a-fd78-d068b10a8171@metux.net>
- <06024a8a-ad00-8062-215b-01b2f95a6e24@hartkopp.net>
- <c1b783b0-9773-17f5-d043-35e28f7797f0@suse.de>
- <d54b294e-d641-bb14-84ed-39d9a9079dc7@hartkopp.net>
- <CAGngYiX_xxDWEAbxQ=XeZPYAA+zgQ32U0Ov=CG86yE=6=qTfpg@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <2bed794d-4960-df09-df16-e063cc41eaae@metux.net>
-Date:   Mon, 29 Apr 2019 15:54:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 29 Apr 2019 09:58:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727710AbfD2N6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:58:06 -0400
+Received: from [192.168.0.101] (unknown [58.212.133.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E38320652;
+        Mon, 29 Apr 2019 13:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556546285;
+        bh=zzwvCRjip66ErSWdogjE1z3JyHQPKCTMH76hG95wY1w=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DdkFCSpiMwzmY3iDUsGsYTswDof5oOHqj60kasboHy0kE0VndEZimiGBYSfWU204S
+         9e5fv4bm6bzhFRrmIte5RaP39uJp9Ftbt7Xoa2yr6HHy+SSDfss8MRa74r9KBYVlck
+         I2rqUVIFc6M0eZt8uIooocVHfOP9EajhbVgSOikQ=
+Subject: Re: [PATCH] f2fs: fix to do sanity with enabled features in image
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+References: <20190424094850.118323-1-yuchao0@huawei.com>
+ <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
+Date:   Mon, 29 Apr 2019 21:57:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <CAGngYiX_xxDWEAbxQ=XeZPYAA+zgQ32U0Ov=CG86yE=6=qTfpg@mail.gmail.com>
+In-Reply-To: <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:XKZ+U9p2e+DR5HEHnRD3a5YgCyikZoBUmNnTjxGi9hDiE/mOW05
- MWW8x9pjhr0I3vtT2M9L+ZdxFYT2ydXVisV1SSZ4hu9gz4ovnbPz1NTvo5JQXim7xMcH7tP
- 6Od4jzmaMi36swtR+Wdrmha4aSlss0Dfv9o+1HZuyWDeK9Fz9UhWkTft5ncMplULHCuAgla
- lrqMyJPjIzrg+38RmVIfA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YGZf1uj3/6I=:uILxPV5x+bGgNNEKC7e4j3
- ZRnzQN+YTtXwsHoDQMyaNWvu6Jm7U6Qcha21dg/ejOZ71z2RNiORCtPH1g+emerxdEwWlWC4v
- NJUVRdpmXdaLcpHejA/Z9q0bjPLg0EGzJXtPjCkgGdQd7ZUp3i7s6OcI+QCZ2IjXVzsFSi4cE
- TmEIqfQagpIzOJ7bf2j7RimRZXupWLauRVEoTaEx7TgoUI8iskH3gf93pfdDVbJBTRs5bZhci
- ch31pjCpbIcoHExjCYiqFoQJ78lPhME0GbbKsfurukisZqmem9FdEC15H8Et68fC1yYuwLjms
- L7tRPSfDyMBZcOnig8r1HdMyoMVz66tBunZi/cWtCNc7WO5l/NyCLVugUVXxUyVAG6n0jc2Cz
- Y2k1p3aHTRiABAPzLC/yL4uZHDTRDE2FD75HqlklkPSk279L2bISEYkMRGHSug7NJd/yQ2fDs
- 2dKUHCjIZrGbtQnAujSvjQ3pRvstKFZ3Y6t5To45/MvG3RwhK0zfdSzISNVZnFJ63PnV+8im5
- sEfUC21/QW4Pg/y1lyKCQ3micL1i4PTJJz8OkBFcmMdzzuf6AiR3Jc8QkFIxuBT64PrzEC0ZP
- /KbTFQOI7ZuUa1GmQZvQN4UUitAS7JxFwcudbo2NV2LSBoQu9hy3Z3WWuNJwD3Ki3OFoe6zeI
- Xm/xlbRLcs8VhaKrrGsDeD+kVcjSyKZAmFR04lBir4zLsbSATgJmeL6LPOiMWPJL9Vmo+LiYW
- WnIOZoTymEHcEagvuhA2+r973IIV3lfRv9SZZ8h1cqtsiZ/0XtHRbM3onu8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.04.19 17:10, Sven Van Asbroeck wrote:
+On 2019-4-28 21:38, Jaegeuk Kim wrote:
+> On 04/24, Chao Yu wrote:
+>> This patch fixes to do sanity with enabled features in image, if
+>> there are features kernel can not recognize, just fail the mount.
+> 
+> We need to figure out per-feature-based rejection, since some of them can
+> be set without layout change.
 
-> The subsystem is called fieldbus_dev "fieldbus device" because it> abstracts Linux fieldbus clients that want to expose themselves as>
-e.g. an actuator, motor, console light, switch, ...
-Sounds a bit confusing. With that description, I'd expect highlevel
-interfaces similar to LED, input, IIO, etc ... but you're actually
-implementing an distributed process memory system. This in turn is
-just a subset of the fieldbus world.
+So any suggestion on how to implement this?
 
-> During one of the eleven review cycles, drivers/fieldbus_dev got> truncated to drivers/fieldbus because the reviewers felt that> _dev
-was redundant, given the lack of other fieldbus> subsystems.
-There is at least one: CAN. Sometimes CAN is used in the IEC61158-way,
-but also completely different, even both in combination.
+Maybe:
 
-> These cards are not controllers, but slaves on the bus.
+if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0))
+	check 4.14+ features
+else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0))
+	check 4.9+ features
+else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0))
+	check 4.4+ features
 
-Do they really implement the process memory part or just the lower
-layer communications ?
+Thanks,
 
-> I'm by no means a fieldbus expert. It seems that the term> 'fieldbus' is much broader than these process-memory based> standards?
-
-Yes, indeed.
-
-> I am open to any _concrete_ naming suggestion
-> that can get consensus.
-Maybe IEC61158 ?
-
-> I'm a bit confused by Wikipedia's entry for fieldbus.
-> It suggests that IEC 61158 and Fieldbus are
-> interchangeable?
-> https://en.wikipedia.org/wiki/Fieldbus
-
-That's wrong.
-
-> <quote>
-> Fieldbus is the name of a family of industrial computer
-> network protocols used for real-time distributed control,
-> standardized as IEC 61158.
-> </quote>
-
-IEC 61158 only standardizes one particular approach: the distributed
-process memory.
-
-> Given that CAN/EtherCAT are not process memory based
-> (that I know of), the fieldbus_dev subsystem is probably
-> not a good fit.
-
-ACK. Neither are MVB+friends.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> 
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/f2fs.h  | 13 +++++++++++++
+>>  fs/f2fs/super.c |  9 +++++++++
+>>  2 files changed, 22 insertions(+)
+>>
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index f5ffc09705eb..15b640967e12 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
+>>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
+>>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
+>>  
+>> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
+>> +				F2FS_FEATURE_BLKZONED |			\
+>> +				F2FS_FEATURE_ATOMIC_WRITE |		\
+>> +				F2FS_FEATURE_EXTRA_ATTR |		\
+>> +				F2FS_FEATURE_PRJQUOTA |			\
+>> +				F2FS_FEATURE_INODE_CHKSUM |		\
+>> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
+>> +				F2FS_FEATURE_QUOTA_INO |		\
+>> +				F2FS_FEATURE_INODE_CRTIME |		\
+>> +				F2FS_FEATURE_LOST_FOUND |		\
+>> +				F2FS_FEATURE_VERITY |			\
+>> +				F2FS_FEATURE_SB_CHKSUM)
+>> +
+>>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
+>>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
+>>  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index 4f8e9ab48b26..57f2fc6d14ba 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+>>  		return 1;
+>>  	}
+>>  
+>> +	/* check whether kernel supports all features */
+>> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
+>> +		f2fs_msg(sb, KERN_INFO,
+>> +			"Unsupported feature:%u: supported:%u",
+>> +			le32_to_cpu(raw_super->feature),
+>> +			F2FS_ALL_FEATURES);
+>> +		return 1;
+>> +	}
+>> +
+>>  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
+>>  	if (sanity_check_area_boundary(sbi, bh))
+>>  		return 1;
+>> -- 
+>> 2.18.0.rc1
