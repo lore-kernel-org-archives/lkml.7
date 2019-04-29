@@ -2,114 +2,96 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25274C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932F2C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA74C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:42:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqnjRWjI"
+	by mail.kernel.org (Postfix) with ESMTP id 63E6620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfD2Omx (ORCPT
+        id S1728393AbfD2OoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:42:53 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41064 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfD2Omx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:42:53 -0400
-Received: by mail-lf1-f68.google.com with SMTP id t30so8084353lfd.8;
-        Mon, 29 Apr 2019 07:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=H+FUhoAG0fL/FjGxEsCS+PUjM/aNhQ8xffw+Uis7okk=;
-        b=OqnjRWjIkIWfMSl6TLYqvoVGZTIodXRpmxOG3jqpcZYB+Aye6qqATR+S2FNwFmeKK1
-         I9V3FDjAszSWtSa4QcMB2Ap8X+n3Vm7OlaWVJQ8bt5niHkBrR0xjl43mRdLm+DTaeS9T
-         pk+x5W2VjsALPWa3UjxR4Zq9qFrC8Wtrn9vmwd0owFjp+cYL+q51ntFWN4Dyane918Jx
-         hXJVMgnqfTxhUZrb+COweBf8/dn4oyP3Ke+q+qFsgy3fpVWB/7LUDCPciCCNgBuT9cju
-         9TMNbBpNXWed6EX8rC7wGevRFU67enf5yAwNZHqkqNTrwEbk6ZAktksFyBmVLtPjuc/X
-         kBaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=H+FUhoAG0fL/FjGxEsCS+PUjM/aNhQ8xffw+Uis7okk=;
-        b=DbL/AKllJFZoNbSNA4RbjCGtFp4c6xjxG7oJR4mt9bYTYKL5MJzGbacvdz7Qo/FL3v
-         aWBVqzwRpoVBSDjDVpTRWwQfBfQIXtnQtmSjmJxXHVrGIF/qHhQ5mpgUqp1R6c1ChioZ
-         6cFzUdxYRgwCKnNatz8nHrYpbDnprcZ++B4mURnk0oQOYuJQEEk+7xfOP993us4KEJZE
-         VzVaBCXd+7UbSCYOxA0lhj/1SU3UJrAPpAWbo9QDYtBunAIh9IwQEWqdNKEpcvhTEUqj
-         O4iGUiCPHabMB7rT4BpWVkz2WTu03ctCtV2YEpm2TT1XwLyDlwXpOMnhxhEUv6swMQcm
-         vY9w==
-X-Gm-Message-State: APjAAAUlO/8Ml/ATm/3GHenFspQLFfSQtdGRUM4mbJ8Ek4+TERbMfl6G
-        Fibhutr0QSVQRIpT36mhwPU=
-X-Google-Smtp-Source: APXvYqzyknSkge7EA+KXTt5slr4ggcDQid3eyM3jg8HEnwSHC6GOo2KwrkuoDuhiJTUvNFhhsfK2FA==
-X-Received: by 2002:a19:384d:: with SMTP id d13mr13068296lfj.38.1556548971256;
-        Mon, 29 Apr 2019 07:42:51 -0700 (PDT)
-Received: from acerlaptop.localnet ([2a02:a315:5445:5300:605a:8802:3f56:a345])
-        by smtp.gmail.com with ESMTPSA id l79sm7371044lfe.92.2019.04.29.07.42.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Apr 2019 07:42:49 -0700 (PDT)
-From:   =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     kyungmin.park@samsung.com, bbrezillon@kernel.org, richard@nod.at,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 0/5] mtd: onenand/samsung: Add device tree support
-Date:   Mon, 29 Apr 2019 16:42:47 +0200
-Message-ID: <1813629.D8pu8sOiIg@acerlaptop>
-In-Reply-To: <20190429101928.265998b5@xps13>
-References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com> <20190429101928.265998b5@xps13>
+        Mon, 29 Apr 2019 10:44:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56478 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725838AbfD2OoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:44:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B1858AD49;
+        Mon, 29 Apr 2019 14:44:21 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 16:44:21 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] livepatch: Convert error about unsupported reliable
+ stacktrace into a warning
+Message-ID: <20190429144421.3ymte7reee22nf2c@pathway.suse.cz>
+References: <20190424085550.29612-1-pmladek@suse.com>
+ <20190424085550.29612-2-pmladek@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424085550.29612-2-pmladek@suse.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On poniedzia=C5=82ek, 29 kwietnia 2019 10:19:28 CEST Miquel Raynal wrote:
-> Hi Pawe=C5=82,
->=20
-> Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com> wrote on Fri, 26 Apr 2=
-019
-> 18:42:19 +0200:
->=20
-> > This patchset adds device tree support to Samsung OneNAND driver.
-> > It was tested on Samsung Galaxy S and Samsung Galaxy S Fascinate 4G,
-> > an Samsung S5PV210 based mobile phones.
-> >=20
-> > Tomasz Figa (5):
-> >   mtd: onenand/samsung: Unify resource order for controller variants
-> >   mtd: onenand/samsung: Make sure that bus clock is enabled
-> >   mtd: onenand/samsung: Add device tree support
-> >   dt-binding: mtd: onenand/samsung: Add device tree support
-> >   mtd: onenand/samsung: Set name field of mtd_info struct
-> >=20
-> >  .../bindings/mtd/samsung-onenand.txt          | 46 +++++++++
-> >  drivers/mtd/nand/onenand/samsung.c            | 94 +++++++++++++------
-> >  2 files changed, 113 insertions(+), 27 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/samsung-onena=
-nd.txt
-> >=20
->=20
-> I think you should use "mtd: onenand: samsung:" as prefix.
->=20
-> Thanks,
-> Miqu=C3=A8l
->=20
-Hi Miqu=C3=A8l
+On Wed 2019-04-24 10:55:48, Petr Mladek wrote:
+> The commit d0807da78e11d46f ("livepatch: Remove immediate feature") caused
+> that any livepatch was refused when reliable stacktraces were not supported
+> on the given architecture.
+> 
+> The limitation is too strong. User space processes are safely migrated
+> even when entering or leaving the kernel. Kthreads transition would
+> need to get forced. But it is safe when:
+> 
+>    + The livepatch does not change the semantic of the code.
+>    + Callbacks do not depend on a safely finished transition.
+> 
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  kernel/livepatch/core.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> index eb0ee10a1981..14f33ab6c583 100644
+> --- a/kernel/livepatch/core.c
+> +++ b/kernel/livepatch/core.c
+> @@ -1003,11 +1003,10 @@ int klp_enable_patch(struct klp_patch *patch)
+>  		return -ENODEV;
+>  
+>  	if (!klp_have_reliable_stack()) {
+> -		pr_err("This architecture doesn't have support for the livepatch consistency model.\n");
+> -		return -EOPNOTSUPP;
+> +		pr_warn("This architecture doesn't have support for the livepatch consistency model.\n");
+> +		pr_warn("The livepatch transition may never complete.\n");
+>  	}
+>  
+> -
+>  	mutex_lock(&klp_mutex);
+>  
+>  	ret = klp_init_patch_early(patch);
+> -- 
+> 2.16.4
 
-I'll fix all issues and send new version of patchset.
-Thanks for review and comments
+I have committed this patch into for-5.2/core branch.
 
+Best Regards,
+Petr
 
+PS: I am going to resend 2nd patch separately with more people
+    interested into kernel/stacktrace.c.
 
+    Also I am going to send two separate patches instead of
+    the 3rd one (complete warning removal, static err_buf).
