@@ -2,94 +2,89 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43076C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB02C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0DB20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86CDF20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:36:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HIYiXKVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbfD2QdI (ORCPT
+        id S1728696AbfD2QgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:33:08 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:45658 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728658AbfD2QdH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:33:07 -0400
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from webmail.solarflare.com (webmail.solarflare.com [12.187.104.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Mon, 29 Apr 2019 12:36:06 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38380 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728520AbfD2QgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:36:05 -0400
+Received: from zn.tnic (p200300EC2F073600329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:3600:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1-us2.ppe-hosted.com (Proofpoint Essentials ESMTP Server) with ESMTPS id B68071C00FC;
-        Mon, 29 Apr 2019 16:33:05 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ocex03.SolarFlarecom.com
- (10.20.40.36) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 29 Apr
- 2019 09:33:01 -0700
-Subject: Re: [PATCH net-next] sfc: mcdi_port: Mark expected switch
- fall-through
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Solarflare linux maintainers" <linux-net-drivers@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-References: <20190429153755.GA10596@embeddedor>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <868472ed-29e9-9e9c-fbba-e10b9a9cda10@solarflare.com>
-Date:   Mon, 29 Apr 2019 17:33:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B87D01EC027B;
+        Mon, 29 Apr 2019 18:36:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1556555763;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=fismiO90X9ow0flqEFvKG4xZhSvKMbYdUPumKyUhM9Q=;
+        b=HIYiXKVApvDpTbHt+PlhAFHoIKD7hjuzVMbirqjxzgyuu3MmYXciLwQeByWfBXIi8n7ZGG
+        JmqEiMLFwgc5z7qaUypuJWTpYU3D/FWlSEOzl2WFSZfumc32qPYes0/yxrryhUSKtuex8Y
+        eN+dlETiFUgSwoU/eKGsdygENq9nAQY=
+Date:   Mon, 29 Apr 2019 18:36:02 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v1 01/10] KVM: SVM: Add KVM_SEV SEND_START command
+Message-ID: <20190429163602.GE2324@zn.tnic>
+References: <20190424160942.13567-1-brijesh.singh@amd.com>
+ <20190424160942.13567-2-brijesh.singh@amd.com>
+ <20190426141042.GF4608@zn.tnic>
+ <e6f8da38-b8dd-a9c5-a358-5f33b6ea7b37@amd.com>
+ <20190426204327.GM4608@zn.tnic>
+ <2b63d983-a622-3bec-e6ac-abfd024e19c0@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20190429153755.GA10596@embeddedor>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-24580.005
-X-TM-AS-Result: No-6.551600-4.000000-10
-X-TMASE-MatchedRID: +c13yJDs9029RoRMIcfOgH/vIGFxULe8jLOy13Cgb4+qvcIF1TcLYCqz
-        9bm0+YwHXiSIvUL/7sfc+0V24WCpMVr6zeO3/gBbULGoTjCGdeUNwryf5xHtclc/CedjlcvkfMr
-        dD3NIUvvaFM5TPGLdCIAGGZdCG6IYv1l2Uvx6idpWdFebWIc3VsRB0bsfrpPI0PU0TdJoUtfgHh
-        Ytb7lu11txDPP/0YTMxa4J+jHZ5EVVJ1rq+IcxDSe2DxJHD59fxGSSRjLzG8m9o4SAHpQc8790q
-        q3qAMrd/VEPcph09jWFcgJc+QNMwu8bJovJYm8FYupx0XjSQPLDOFVmKqGJ4bPn3tFon6UK
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--6.551600-4.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-24580.005
-X-MDID: 1556555586-ZkJinuE-NKWe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2b63d983-a622-3bec-e6ac-abfd024e19c0@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2019 16:37, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
->
-> This patch fixes the following warning:
->
-> drivers/net/ethernet/sfc/mcdi_port.c: In function ‘efx_mcdi_phy_decode_link’:
-> ./include/linux/compiler.h:77:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
->  # define unlikely(x) __builtin_expect(!!(x), 0)
->                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> ./include/asm-generic/bug.h:125:2: note: in expansion of macro ‘unlikely’
->   unlikely(__ret_warn_on);     \
->   ^~~~~~~~
-> drivers/net/ethernet/sfc/mcdi_port.c:344:3: note: in expansion of macro ‘WARN_ON’
->    WARN_ON(1);
->    ^~~~~~~
-> drivers/net/ethernet/sfc/mcdi_port.c:345:2: note: here
->   case MC_CMD_FCNTL_OFF:
->   ^~~~
->
-> Warning level 3 was used: -Wimplicit-fallthrough=3
->
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Acked-by: Edward Cree <ecree@solarflare.com>
+On Mon, Apr 29, 2019 at 03:01:24PM +0000, Singh, Brijesh wrote:
+> Practically I don't see any reason why caller would do that but
+> theoretically it can. If we cache the len then we also need to consider
+> adding another flag to hint whether userspace ever requested length.
+> e.g an application can compute the length of session blob by looking at
+> the API version and spec and may never query the length.
+> 
+> > I mean I'm still thinking defensively here but maybe the only thing that
+> > would happen here with a bigger buffer is if the kmalloc() would fail,
+> > leading to eventual failure of the migration.
+> > 
+> > If the code limits the allocation to some sane max length, the migration
+> > won't fail even if userspace gives it too big values...
+
+So what about this? Limiting to a sane length...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
