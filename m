@@ -2,194 +2,138 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C37C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398C7C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E76F220675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076342147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TyBhTrfr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iybmumts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfD2RO5 (ORCPT
+        id S1728900AbfD2RQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:14:57 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:47870 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728769AbfD2RO4 (ORCPT
+        Mon, 29 Apr 2019 13:16:27 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43686 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728520AbfD2RQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:14:56 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 11F41C00A0;
-        Mon, 29 Apr 2019 17:14:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556558097; bh=KiymCE0SEjFh+yxlLj/PIdQ6Vg47QwbSiN8/7YvmW/E=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=TyBhTrfrv5ATDBT+TOcsUvEPyeYxUckG4dUgJgQqNiWR2PukgVsWPvvkpx5VSAf/d
-         sTn8S0dg9ReMItRmlndG8IRnBts0IjpSmoEbLIbwIU/npUVv1o+4NRbTh++4cmYvG3
-         eD49na40rtQBgHRPQhWN5AI68MovdwOkec2221UO9lQuabK4df+7b69miLpnfdxXP1
-         6xlQOKtfkCIUx1xf/siKcvwxfll0KVPIIZOidvbf27srTs9Ru64fbJAKatBfJNO8px
-         ssLHT0CICERo05dWpirW9eIqoeoWl7xbKlQWzZ7mrmEuKP1PwBxDz1P7gnbFAjiDYO
-         prUwuqTB5ef+A==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 8338FA0072;
-        Mon, 29 Apr 2019 17:14:54 +0000 (UTC)
-Received: from us01wembx1.internal.synopsys.com ([169.254.1.223]) by
- US01WXQAHTC1.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
- 29 Apr 2019 10:14:54 -0700
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-CC:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: perf tools build broken after v5.1-rc1
-Thread-Topic: perf tools build broken after v5.1-rc1
-Thread-Index: AQHU9whSYuAYlq2eD0OAivz0M0d5Nw==
-Date:   Mon, 29 Apr 2019 17:14:54 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
-References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
- <20190422152027.GB11750@kernel.org> <20190425214800.GC21829@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.13.184.19]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 29 Apr 2019 13:16:27 -0400
+Received: by mail-pl1-f195.google.com with SMTP id n8so5361759plp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yrQv2na9LmyqY09k2tODdC7kNnteQ3ci4lABBeEBPE4=;
+        b=iybmumtskaFi13rXf1HJRNM75LC2gfNuVub4KnqHpyiL1nlJvVY3GB8TV+dD9oOuZ/
+         Td7MWHJw+K+QcGrg31mzACAPWwL4QK9TNjJ/ke111sr1d6+dXa8wfFcmqkVEQ6DMpUyq
+         UDIdWqryCSjDq1vJx3c4OPWD5jKhI6QNy+NbuuddJiWkbWQfziJkYKWaWQk9eRmu5BGL
+         tA6a2KN3eeEtZIrlb/5HLrHkP34M29XvN9uPMLtrhrrvUWhIloFTve17Vd4coUsZuKJ/
+         l7fFWpeSldhasZPzT8tsU8zGgA2c2eUqXxBeZAbDkI/I02SU6AHbOF1tONzMazP3TBHe
+         qLeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yrQv2na9LmyqY09k2tODdC7kNnteQ3ci4lABBeEBPE4=;
+        b=Jn1xZqJxS8kBfX1gVACwCqFze/6N2nVq0QW1gUFgOtegaKI0EUcwosn9JSp93qJryY
+         cV/cupZ7486BQq91FTXzoWpNGZPonnCle5pbvJwI5McGyHtdQ1mZ4nAfyghtwPmlxjw2
+         82jeoUVh6YdH1jO4aGX+Ht53yTwj6/SbnfbefOJfstQHyBBS64UvoG7D+15xrqtv0WnO
+         YOSDulZcaVkhzVK9WyZ9dfQhyAyuXqsQNaydf+TTJQ1tRiij2PPJUpeLv+PlP94fHWlm
+         XN/YlHP28eyK9GZTgAH1sOVN8uyDWhbrzOAMpH+itDEPThDsDJKDMvLFie0uvFQq3xYM
+         Rmxw==
+X-Gm-Message-State: APjAAAVW7tZ/8gNDfh7iCMeKzJdptdY+r0Pi8CEl43/Jp3rHufm2bw3a
+        MgCfvePfQEDC2gPutWjfnDqEIGZUv76HSqZyZD8OWA==
+X-Google-Smtp-Source: APXvYqymDIPfBTHbfoLNX9Aw7ZzXqqRyg7AuW+O8cV1ErDsGXn5m1e6K5s0jN81AsooOh/W/UWJLePjyEP9rPiD6dPU=
+X-Received: by 2002:a17:902:e183:: with SMTP id cd3mr23254341plb.233.1556558186240;
+ Mon, 29 Apr 2019 10:16:26 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190423142629.120717-1-venture@google.com> <CAO=notzjzpt0WHfJEWXMGgkoJU8UiLnqZnrGrPs-dRH5GNdJyQ@mail.gmail.com>
+ <CAO=notz9QVoqKLrhJ3kx9FHja5+Mh68f36O36+1ewLG+SanmOA@mail.gmail.com>
+ <20190425172549.GA12376@kroah.com> <20190429165137.mwj4ehhwerunbef4@localhost>
+ <CAOesGMg49z4Gip-bLK-h7+LSLa4Fu68r11gT2EV8E8xMCPGDxg@mail.gmail.com>
+In-Reply-To: <CAOesGMg49z4Gip-bLK-h7+LSLa4Fu68r11gT2EV8E8xMCPGDxg@mail.gmail.com>
+From:   Patrick Venture <venture@google.com>
+Date:   Mon, 29 Apr 2019 10:16:14 -0700
+Message-ID: <CAO=notwVyTqvxfYRU1XJTwzSNCUAMgYCVpXVvqaN62uSiWyYCQ@mail.gmail.com>
+Subject: Re: [PATCH v2] soc: add aspeed folder and misc drivers
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>,
+        soc@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/25/19 2:48 PM, Arnaldo Carvalho de Melo wrote:=0A=
-> Em Mon, Apr 22, 2019 at 12:20:27PM -0300, Arnaldo Carvalho de Melo escrev=
-eu:=0A=
->> Em Fri, Apr 19, 2019 at 04:32:58PM -0700, Vineet Gupta escreveu:=0A=
->>> When building perf for ARC (v5.1-rc2) I get the following=0A=
->>  =0A=
->>> | In file included from bench/futex-hash.c:26:=0A=
->>> | bench/futex.h: In function 'futex_wait':=0A=
->>> | bench/futex.h:37:10: error: 'SYS_futex' undeclared (first use in this=
- function);=0A=
->>  =0A=
->>> git bisect led to 1a787fc5ba18ac767e635c58d06a0b46876184e3 ("tools head=
-ers uapi:=0A=
->>> Sync copy of asm-generic/unistd.h with the kernel sources")=0A=
->> Humm, I have to check why this:=0A=
->>=0A=
->> [perfbuilder@quaco ~]$ podman images | grep ARC=0A=
->> docker.io/acmel/linux-perf-tools-build-fedora                24-x-ARC-uC=
-libc          4c259582a8e6   5 weeks ago      846 MB=0A=
->> [perfbuilder@quaco ~]$=0A=
->>=0A=
->> isn't catching this... :-\=0A=
->>=0A=
->> FROM docker.io/fedora:24=0A=
->> MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>=0A=
->> ENV TOOLCHAIN=3Darc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_inst=
-all=0A=
->> ENV CROSS=3Darc-linux-=0A=
->> ENV SOURCEFILE=3D${TOOLCHAIN}.tar.gz=0A=
->> RUN dnf -y install make flex bison binutils gcc wget tar bzip2 bc findut=
-ils xz=0A=
->> RUN wget https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__github.c=
-om_foss-2Dfor-2Dsynopsys-2Ddwc-2Darc-2Dprocessors_toolchain_releases_downlo=
-ad_arc-2D2017.09-2Drc2_-24-257BSOURCEFILE-257D&d=3DDwIDaQ&c=3DDPL6_X_6JkXFx=
-7AXWqB0tg&r=3D7FgpX6o3vAhwMrMhLh-4ZJey5kjdNUwOL2CWsFwR4T8&m=3DHjtufCLozrW47=
-pS5C2YH3safLHQE7eEtmHFZsSWrz1M&s=3D29g4oKvGuYcLgheCUvZh3wojhhljivpLd8aj7Ur4=
-sKQ&e=3D=0A=
->> <SNIP>=0A=
->> COPY rx_and_build.sh /=0A=
->> ENV EXTRA_MAKE_ARGS=3DNO_LIBBPF=3D1=0A=
->> ENV ARCH=3Darc=0A=
->> ENV CROSS_COMPILE=3D/${TOOLCHAIN}/bin/${CROSS}=0A=
->> ENV EXTRA_CFLAGS=3D-matomic=0A=
-> So, now I have a libnuma crossbuilt in this container that allows me to=
-=0A=
-> build a ARC perf binary linked with zlib and numactl-devel, but only=0A=
-> after I applied the fix below.=0A=
->=0A=
-> Can you please provide the feature detection header in the build? I.e.=0A=
-> what I have with my ARC cross build container right now, after applying=
-=0A=
-> the patch below is:=0A=
->=0A=
-> [perfbuilder@60d5802468f6 perf]$ make $EXTRA_MAKE_ARGS ARCH=3D$ARCH CROSS=
-_COMPILE=3D$CROSS_COMPILE EXTRA_CFLAGS=3D"$EXTRA_CFLAGS" -C /git/perf/tools=
-/perf O=3D/tmp/build/perf=0A=
-> make: Entering directory '/git/perf/tools/perf'=0A=
->   BUILD:   Doing 'make -j8' parallel build=0A=
-> sh: line 0: command: -c: invalid option=0A=
-> command: usage: command [-pVv] command [arg ...]=0A=
->=0A=
-> Auto-detecting system features:=0A=
-> ...                         dwarf: [ OFF ]=0A=
-> ...            dwarf_getlocations: [ OFF ]=0A=
-> ...                         glibc: [ on  ]=0A=
-=0A=
-Not related to current issue, this run uses a uClibc toolchain and yet it i=
-s=0A=
-detecting glibc - doesn't seem right to me.=0A=
-=0A=
-> ...                          gtk2: [ OFF ]=0A=
-> ...                      libaudit: [ OFF ]=0A=
-> ...                        libbfd: [ OFF ]=0A=
-> ...                        libelf: [ OFF ]=0A=
-> ...                       libnuma: [ on  ]=0A=
-=0A=
-Wondering why that is - for me numa is off - even when using a glibc toolch=
-ain.=0A=
-=0A=
-> ...        numa_num_possible_cpus: [ on  ]=0A=
-> ...                       libperl: [ OFF ]=0A=
-> ...                     libpython: [ OFF ]=0A=
-> ...                      libslang: [ OFF ]=0A=
-> ...                     libcrypto: [ OFF ]=0A=
-> ...                     libunwind: [ OFF ]=0A=
-> ...            libdw-dwarf-unwind: [ OFF ]=0A=
-> ...                          zlib: [ OFF ]=0A=
-> ...                          lzma: [ OFF ]=0A=
-> ...                     get_cpuid: [ OFF ]=0A=
-> ...                           bpf: [ on  ]=0A=
-> ...                        libaio: [ OFF ]=0A=
-> ...        disassembler-four-args: [ OFF ]=0A=
->=0A=
->=0A=
-=0A=
-For my glibc toolchain, here's the feature detection output=0A=
-=0A=
-Auto-detecting system features:=0A=
-...                         dwarf: [ on  ]=0A=
-...            dwarf_getlocations: [ OFF ]=0A=
-...                         glibc: [ on  ]=0A=
-...                          gtk2: [ OFF ]=0A=
-...                      libaudit: [ OFF ]=0A=
-...                        libbfd: [ OFF ]=0A=
-...                        libelf: [ on  ]=0A=
-...                       libnuma: [ OFF ]=0A=
-...        numa_num_possible_cpus: [ OFF ]=0A=
-...                       libperl: [ OFF ]=0A=
-...                     libpython: [ OFF ]=0A=
-...                      libslang: [ OFF ]=0A=
-...                     libcrypto: [ OFF ]=0A=
-...                     libunwind: [ OFF ]=0A=
-...            libdw-dwarf-unwind: [ OFF ]=0A=
-...                          zlib: [ OFF ]=0A=
-...                          lzma: [ OFF ]=0A=
-...                     get_cpuid: [ OFF ]=0A=
-...                           bpf: [ on  ]=0A=
-...                        libaio: [ on  ]=0A=
-...        disassembler-four-args: [ OFF ]=0A=
-=0A=
-=0A=
+On Mon, Apr 29, 2019 at 10:13 AM Olof Johansson <olof@lixom.net> wrote:
+>
+> On Mon, Apr 29, 2019 at 10:08 AM Olof Johansson <olof@lixom.net> wrote:
+> >
+> > On Thu, Apr 25, 2019 at 07:25:49PM +0200, Greg KH wrote:
+> > > On Tue, Apr 23, 2019 at 08:28:14AM -0700, Patrick Venture wrote:
+> > > > On Tue, Apr 23, 2019 at 8:22 AM Patrick Venture <venture@google.com> wrote:
+> > > > >
+> > > > > On Tue, Apr 23, 2019 at 7:26 AM Patrick Venture <venture@google.com> wrote:
+> > > > > >
+> > > > > > Create a SoC folder for the ASPEED parts and place the misc drivers
+> > > > > > currently present into this folder.  These drivers are not generic part
+> > > > > > drivers, but rather only apply to the ASPEED SoCs.
+> > > > > >
+> > > > > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > > >
+> > > > > Accidentally lost the Acked-by when re-sending this patchset as I
+> > > > > didn't see it on v1 before re-sending v2 to the larger audience.
+> > > >
+> > > > Since there was a change between v1 and v2, Arnd, I'd appreciate you
+> > > > Ack this version of the patchset since it changes when the soc/aspeed
+> > > > Makefile is followed.
+> > >
+> > > I have no objection for moving stuff out of drivers/misc/ so the SOC
+> > > maintainers are free to take this.
+> > >
+> > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > I'm totally confused. This is the second "PATCH v2" of this patch that I came
+> > across, I already applied the first.
+> >
+> > Patrick: Follow up with incremental patch in case there's any difference.
+> > Meanwhile, please keep in mind that you're adding a lot of work for people when
+> > you respin patches without following up on the previous version. Thanks!
+>
+> Not only that, but subthreads were cc:d to arm@kernel.org and some
+> were not, so I missed the overnight conversation on the topic.
+>
+> If this email thread is any indication of how the code will be
+> flowing, there's definitely need for more structure. Joel, I'm hoping
+> you'll coordinate.
+
+To be honest, this patchset thread was a bit less clear than anyone
+prefers.  I use get_maintainers to get the initial list, and so adding
+arm@ or soc@ per a request tells me that perhaps those should be
+output via that script.
+
+>
+> I'm with Arnd on whether the code should be in drivers/soc or not --
+> most of it likely should not.
+
+I think the misc drivers for a SoC that are a single user interface
+that is focused on the use-case that belongs to that SoC only belong
+in soc/, while if there is something we can do in common -- different
+story.  If it makes sense to just have misc/aspeed/ instead of
+soc/aspeed -- would that align more?
+
+>
+>
+> -Olof
