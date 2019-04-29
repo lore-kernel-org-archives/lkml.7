@@ -2,140 +2,152 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_SBL,URIBL_SBL_A,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A99C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C362C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A04812075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D8E21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="odaReNKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbfD2Rcs (ORCPT
+        id S1729024AbfD2Rcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:32:48 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:38569 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728889AbfD2Rcp (ORCPT
+        Mon, 29 Apr 2019 13:32:53 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41061 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728844AbfD2Rcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:32:45 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M8QNy-1hPXqm04bA-004P7i; Mon, 29 Apr 2019 19:31:48 +0200
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
- CLONE_PIDFD]
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org, arnd@arndb.de,
-        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
-        mtk.manpages@gmail.com, akpm@linux-foundation.org, oleg@redhat.com,
-        cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com
-References: <20190414201436.19502-1-christian@brauner.io>
- <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415155034.GA25351@mail.hallyn.com>
- <000a64d6-1e22-21bf-f232-15f141092e44@metux.net>
- <20190429154949.GA23456@mail.hallyn.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <c95fbdbb-a62b-4ad1-f4be-7d1a8f96f508@metux.net>
-Date:   Mon, 29 Apr 2019 19:31:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 29 Apr 2019 13:32:53 -0400
+Received: by mail-io1-f68.google.com with SMTP id r10so9694498ioc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:32:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=63aD6WO7A1p5vw0l0eCm3B6MhF/Ss3f21asqmxXDYpI=;
+        b=odaReNKromheyA8ntOKaPo0HdjrpEPvLJSnhQ4bBCPuUplOwb5tvW7hj9rVnG+8I1+
+         511DP7QERvd/ergmKSXbuSLxQ9serPcbPXRzUPYorCfgHZ/nYH8zIPpDr+gFhGwoNnk8
+         wT4z5cxmA4pgtaomRcrEXrHoa1OcUrFFqHN3o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=63aD6WO7A1p5vw0l0eCm3B6MhF/Ss3f21asqmxXDYpI=;
+        b=YdMwc9prepifcqYGS1vFQsTa06uRVtJMSqAHFcS+xSfE8kiQkDKEbhgdGdB6vmAMb/
+         YClVe76HqFbKCEe1kb7KEGRwxNtGLmQGbCRMOSe8WgnXsc7r6VKerdE0twP4AZ0yaBo0
+         c1TuEKfx+cSR7VJc7VsqVe1jFOIZ1uO4VR5rkmCvB4GLBqw1+gMLc61Xnxpo6FiWBy6K
+         pqaRUzhPHAg+fLvWaTAOdTHrxlGZDLCuCy/ciG0HjYjKOXUQFFYoitIsWdpipJexHMnZ
+         1eHQCTbY9n63Q8lr8ahht9vsfb1+on6tdIgHoSxm7kEnMuofS3wwM22H4xfhx9sxu29K
+         KdFA==
+X-Gm-Message-State: APjAAAWyV48X5gjLUXVjcBDngnbyolLfUS3d/CTEd3ddysguLIBWErIm
+        eAdo7lIL3XcQ7AZ6SWwku/EKaA==
+X-Google-Smtp-Source: APXvYqxUg7iRGY3aXoZbjAXcrFjnbr6ZgUrIoeZ/sQjaSyaPcs5dFxcRM+bTnzwciQ/pwBtFE3OGPA==
+X-Received: by 2002:a6b:cf0f:: with SMTP id o15mr35513809ioa.5.1556559172442;
+        Mon, 29 Apr 2019 10:32:52 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id 62sm64920itx.41.2019.04.29.10.32.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 10:32:49 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-mmc@vger.kernel.org
+Cc:     djkurtz@chromium.org, zwisler@chromium.org,
+        Raul E Rangel <rrangel@chromium.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        hongjiefang <hongjiefang@asrmicro.com>,
+        Jennifer Dahm <jennifer.dahm@ni.com>,
+        linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        Kyle Roeschley <kyle.roeschley@ni.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v3] mmc: core: Verify SD bus width
+Date:   Mon, 29 Apr 2019 11:32:39 -0600
+Message-Id: <20190429173239.51305-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 MIME-Version: 1.0
-In-Reply-To: <20190429154949.GA23456@mail.hallyn.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:cOoGF4O0ntI/WPSdDzGnTzK38X8AqqrXHbTZWivbx0UCfrWZL/G
- Jj+ShRCDmnv/XYUPHuT5DwIVW48/XSFn11Zxwptd18b7ASF/5PLdTJaONOmRjshmKTB2+85
- WLqEsMstYdqJsobTMcsOCWj2Js1eO7hpRFG5JxtvafQ/pYdVtQuHE/yRL0ahDrbf7hP/5xn
- T7P3oXfD0An2k4SRFg5DA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DHNVwzPmvdQ=:otp/O9JL7oHEqhoLMW3eMN
- 1plzeYIy2FDwKunOBfzgAlmFXVKNAiLC5PQpDhJteyCxARePZzZufNp+NVY44WoVNG/hTKUAU
- ivxfi0ooWhuSXGgKQQZOIZjPKR7u1hPENDQm5Lxvn8NI2Ztf6ybJowZGXUhlYKDs37HW/CGs6
- tFvXtF/eEvSnotj2o3BCRol183ro5yrGOt2VDzjoD58BFfOVVfUp7uXupHalSoc2PWPHtkXjW
- UgCiUXv9J1B6UW9110waqz9LXa3VTFtFDpWCoO8pkCacBhwSj3Zqk2UdcnNZiOEh3H8b4Uydq
- M4h7v7gnAfBHbRO+Lns5U7Y70r+6WUWpr2XpMIFrie7isvePp3WYP5SHDy7osBpr16065z5Km
- M2a8DmBg309bysQcZ3WMsSPqnrXXXARypGf/mov0kYs49zmrvewMZnBRUAswjWj1h9k9igWfd
- rDMRfZSqTkSJQnuY74LUCcZyni/1xHce7EUGJFwLf7INrFb80haqLY1BsP5fbO2+RBLdL4DkV
- +jf1ObkV4rKApu8i2fK+tweHlDMbk1tKjfWCfdALOXebi+jiSBU24v/lSdNFhv8IpzaNce0H/
- AKZUO2Gu10qt/BxijhK5mOTCt3nxKG/T0zJvAZEJHwmfZqB/weEOyyKUFddMjNd78nndCqMR4
- FkKkjaBD/uYIR5n69poDbREqg7lwCTYCmotISrI0V0X5VrYv2J+hwLrClGqf61Lb1KYUgT0nN
- S1z37sR5jFBKwpj/M2MAIgNEpmNBmFbXdPqky8VvM+LoaX79Dzjk3Y7+BoA=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.04.19 17:49, Serge E. Hallyn wrote:
+The SD Physical Layer Spec says the following: Since the SD Memory Card
+shall support at least the two bus modes 1-bit or 4-bit width, then any SD
+Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
 
->> * all users are equal - no root at all. the only exception is the>>   initial process, which gets the kernel devices mounted into his>>
- namespace.> > This does not match my understanding, but I'm most likely
-wrong.  (I thought> there was an actual 'host owner' uid, which mostly
-is only used for initial> process, but is basically root with a
-different name, and used far less.  No> uid transitions without factotem
-so that it *looked* like no root user).
-Not quite (IIRC). The hostowner is just the user who booted the machine,
-the initial process runs under this uname and gets the kernel devices
-bound into his namespace, so he can start fileservers on them.
+This change verifies the card has specified a bus width.
 
-Also the caphash device (the one you can create capabilities, eg. for
-user change, which then can be used via capuse device) can only be
-opened once - usually by the host factotum.
+AMD SDHC Device 7806 can get into a bad state after a card disconnect
+where anything transferred via the DATA lines will always result in a
+zero filled buffer. Currently the driver will continue without error if
+the HC is in this condition. A block device will be created, but reading
+from it will result in a zero buffer. This makes it seem like the SD
+device has been erased, when in actuality the data is never getting
+copied from the DATA lines to the data buffer.
 
-There really is no such thing like root user.
+SCR is the first command in the SD initialization sequence that uses the
+DATA lines. By checking that the response was invalid, we can abort
+mounting the card.
 
->> What I'd like to achieve on Linux:>>>> * unprivileged users can have their own mount namespace, where
-they>>   can mount at will (maybe just 9P).> > No problem, you can do
-that now.
-But only within separate userns, IMHO. (and, when I last tried, plain
-users couldn't directly create their userns).
+Acked-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
 
->> * but they still appear as the same normal users to the rest of the
->>   system
-> 
-> No problem, you can do that now.
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+---
+Here is the testing I did:
 
-How exactly ? Did I miss something vital ?
+Good Trace: https://paste.fedoraproject.org/paste/oVEI5b0IzHD23Yo7CDZgEg
+[   30.103686] mmc0: new high speed SDHC card at address 0001
+[   30.105262] mmcblk0: mmc0:0001 00000 7.41 GiB
+[   30.108258]  mmcblk0: p1
+[   31.947250] mmc0: card 0001 removed
 
->> * 9p programs (compiled for Linux ABI) can run parallel to traditional
->>   linux programs within the same user and sessions (eg. from a terminal,
->>   i can call both the same way)
->> * namespace modifications affect both equally (eg. I could run ff in
->>   an own ns)
-> 
-> affect both of what equally?
+Bad Trace (before patch): https://paste.fedoraproject.org/paste/jBWfpFBM8gdEmGOzxij~hw
 
-mount / bind.
+Bad Trace (after patch): https://paste.fedoraproject.org/paste/8gB8MLYOKEUZEgHXmQ0W1Q
+[   33.810760] mmc0: invalid bus width
+[   33.810782] mmc0: error -22 whilst initialising SD card
+[   34.068818] mmc0: invalid bus width
+[   34.068839] mmc0: error -22 whilst initialising SD card
+[   34.329521] mmc0: invalid bus width
+[   34.329543] mmc0: error -22 whilst initialising SD card
+[   34.592061] mmc0: invalid bus width
+[   34.592084] mmc0: error -22 whilst initialising SD card
 
-> That's exactly what user namespaces are for.  You can create a new
-> user namespace, using no privilege at all, with your current uid (i.e.
-> 1000) mapped to whatever uid you like; if you pick 0, then you can unshare all
-> the namespaces you like.  
+In the traces you can see sd_scr is different
 
-But I don't like to appear as 'root' in here. I just wanna have my own
-filesystem namespace, nothing more.
+Changes in v3:
+- Rebased on mmc/next
 
-> Once you unshare mnt_ns, you can mount to your
-> heart's content.  To other processes on the host, your process is
-> uid 1000.
+Changes in v2:
+- Made the bus width check stricter. It now requires the value to match
+  the spec.
 
-Is that the uid, I'm appearing to filesystems ?
+ drivers/mmc/core/sd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> Regarding factotem, I agree that with the pidfd work going on etc, it's getting
-> more and more tempting to attempt a switch to that.  Looking back at my folder,
-> I see you posted a kernel patch for it.  I had done the same long ago.  Happy to
-> work with you again on that, and put a simple daemon into shadow package, if
-> util-linux isn't deemed the far better place.
-
-Yeah :)
-
-
---mtx
-
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index 265e1aeeb9d8..d3d32f9a2cb1 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -221,6 +221,14 @@ static int mmc_decode_scr(struct mmc_card *card)
+ 
+ 	if (scr->sda_spec3)
+ 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
++
++	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
++	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
++	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
++		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.21.0.593.g511ec345e18-goog
+
