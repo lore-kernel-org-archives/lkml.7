@@ -2,78 +2,81 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8917C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDA6C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72BD215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B916D21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="iRNrAo91"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="pw+544LY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfD2Tu4 (ORCPT
+        id S1729283AbfD2TwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:50:56 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:28148 "EHLO
+        Mon, 29 Apr 2019 15:52:20 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:28230 "EHLO
         esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbfD2Tux (ORCPT
+        with ESMTP id S1728928AbfD2TwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:50:53 -0400
+        Mon, 29 Apr 2019 15:52:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1556567453; x=1588103453;
+  t=1556567540; x=1588103540;
   h=subject:to:cc:references:from:message-id:date:
    mime-version:in-reply-to:content-transfer-encoding;
-  bh=QU8C5FHUHbs8SsOZ9YN/PcURVaJONHThVrfdV6R+ucY=;
-  b=iRNrAo91ytQqKF7yQ8ft993Urobxua89vdgODFH9U9GgrJNL4YVSOKNM
-   bycJABG9uU5w45OSEExOHeGtqacvUj+yvpGEj+WGBCHxHom8vvqFb/Fuu
-   Eyj3+3NNO3POY51xqNkaBMAQtQYAYrRGLGIX0vn2tOIXVYq9k6r3wo8yY
-   BNc0ejzS2Rqs+oJoCNxh90MUZB91/KHKyAK8HyE2w/jmvRng5X/lxQfbK
-   LbaQ0da/tRmj7zVI2aVX6kVvzbTgaai4fNTqwRTIBf6Rt3pF0YqxTbMDu
-   vhjvqs4hJe74EcbKP5Qy2m4CmaH1C1SqeYkMdmx+FHQ1M+rRbfPgp8u16
-   w==;
+  bh=iGR4Zs5nDuCr/SyO0IMhqYsZGxQL5/GTdmx0tD7WxoM=;
+  b=pw+544LYKC28PsL/Z2N+0ID6D3bMTQ1G0ikp8/rI05eIYXW/gA3Gs0GH
+   nEcSpgEskWzwGHOjImvTsdPGfs6vugv1RwFtF46ejff6obROGl5hJayCp
+   F0WvRGxpZem1Ov0uWVqN2ROjv46pW9QsODbgwU2e3w2RGsNts5PMveKWc
+   wW5VopU/kIzfkentNIijZ82tRSAQVTd43pVl4Z/f8/FKZ/GAWiFF+tdtH
+   iQHVo4HsyWB9OkXuy2KMXNtv2bxV5kRpH5la4RI8E+yY6bX7QV/FpyLs9
+   DysfIyGZahMn6VGNRPDf5FNImrkI++v2fxWdRzyTgT00vWzeHAZh0w9Yj
+   g==;
 X-IronPort-AV: E=Sophos;i="5.60,410,1549900800"; 
-   d="scan'208";a="108822848"
+   d="scan'208";a="108822905"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Apr 2019 03:50:43 +0800
-IronPort-SDR: NGLG1B5OCi0LAuATKVQKPs/+WHeVV59zyWXXhFJhAC9PWrYYvbB6EVafULP+MO3EuHFXIRkWL4
- a2yrxbjDltJKfbAYkC2KoUseDYTbCC7htISR0X1M02YfoRXBKcw9RYzG+BErow7FQ5BJUEKjWG
- cu2r5YHW4EXGgzV3B51rqnl1VGdW2bGV59jIGqedMJsfG3Z+O9rJacfPo9aHJ0v6RIn2gYkHzz
- mTuBYw7ZLTORUjpoWlR0PHi8E41OT8Xl4OSZ0/J3iPgCmgbxJYxGhQ8hH6OwCnGVQfYJiCKddj
- CTjNvjBczZlH/M8+5u785tqp
+  by ob1.hgst.iphmx.com with ESMTP; 30 Apr 2019 03:52:20 +0800
+IronPort-SDR: skcBvZEAFKBWIz+0eofpg9whoUpuVYdGMYTU255UvfGAUlR3y4sfsH6XovlLbDS4jMlM6tBQKc
+ m1uQNqu2r2TXG4xL1+f5D2bBJYZepYaD/0nw2MwLN+TXXkAYMwLlxLhfTk60NYnzw1BT9vWtM/
+ 7FdSEgHE9B70ksycQdLsCzDZd3Z9g6vIcuFhWOtfWw26D2dL2rFJ2QAQrmZQc85XlPs7DZyhtH
+ pIf+36hORR2JoVKxC4X0p55gw4ZB/0Z9z2t6vvM78utWIK81zUyfIyzkRHz5t8KkaE3JAPeJ4A
+ yhPVDnPBEQ56kqPAtgmt38Li
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 29 Apr 2019 12:27:05 -0700
-IronPort-SDR: WIxNxlwXkZwhe2QTYR5CqZl7GDzPmRfIWXE/ne+n3USGxuqMC4yTQEqYiI1wvhGqWpdqTmR9lF
- qxn1e/QdsndD3NjWgiOsdQxPXP24JtrPASI6r2FmbjtNXbnr9Z0mDXhf/sFyhob6m5JQCYeuSU
- oC8jQaHB44mncrYX1GQR53OqA5a+1KBlckRNBZmAbUNz7yEJpBRjHzsSkX90DuI3G/x3dFpGyo
- qqGL9vHo9eIEVcYtHrERbEOXZJtTqbPd6QxV7TUkdXqS0PSLc42vIWgMHO/ldHk84FqWFXFKg3
- WI4=
+  by uls-op-cesaep01.wdc.com with ESMTP; 29 Apr 2019 12:28:42 -0700
+IronPort-SDR: WCTsEeq+jdWM9wWQFiffEKgZ2ajy+EgpnirMSVaJ0tEi4A8l36v+D7tfZ6G59yMlywONSSNZ1X
+ n22P6upFjfVXOl7H4ZV47RVT7HgJAmFl2r5v64s4HTUvhSoe+XA4fqmcU6Y83wdC4eiadY8KCS
+ 1d1eUj5vmaac3eO0xjOVEiBdeFfClh/74oFrnoWCsCYXMaVdHGe+okInPBRTabZUbl23ghneos
+ t+80OXpBGVIK59DaOffRqEzqU6jFoJlH/VbDehXFTeycX4DbkaXGACaVIIDJpLyKEZcrdMCTyM
+ iS8=
 Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.66.167]) ([10.111.66.167])
-  by uls-op-cesaip01.wdc.com with ESMTP; 29 Apr 2019 12:50:43 -0700
-Subject: Re: [PATCH] tty: Don't force RISCV SBI console as preferred console
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
+  by uls-op-cesaip01.wdc.com with ESMTP; 29 Apr 2019 12:52:20 -0700
+Subject: Re: [1/3] x86: Update DEBUG_TLBFLUSH options description.
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
         Albert Ou <aou@eecs.berkeley.edu>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20190425133435.56065-1-anup.patel@wdc.com>
- <9a8be7ef-e62e-2a93-9170-e3dc70dfb25f@wdc.com>
- <CAAhSdy3z1aDdVZ3dM1bec0z_pNtmfdJ0XukX_0YWwy7Q90G9AA@mail.gmail.com>
+        Ingo Molnar <mingo@redhat.com>, Gary Guo <gary@garyguo.net>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+References: <20190410224449.10877-1-atish.patra@wdc.com>
+ <20190410224449.10877-2-atish.patra@wdc.com>
+ <20190411065617.GA29422@infradead.org>
+ <580d95d1-224f-a372-c656-1d2cbb19d868@wdc.com> <20190414142709.GA569@zn.tnic>
 From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <a886a50b-c9dd-2e10-37c4-98a591b6c89f@wdc.com>
-Date:   Mon, 29 Apr 2019 12:50:42 -0700
+Message-ID: <956163a3-9a9f-ac12-b429-eb592bce815b@wdc.com>
+Date:   Mon, 29 Apr 2019 12:52:18 -0700
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
  Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAAhSdy3z1aDdVZ3dM1bec0z_pNtmfdJ0XukX_0YWwy7Q90G9AA@mail.gmail.com>
+In-Reply-To: <20190414142709.GA569@zn.tnic>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,82 +85,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/25/19 11:21 PM, Anup Patel wrote:
-> On Fri, Apr 26, 2019 at 10:11 AM Atish Patra <atish.patra@wdc.com> wrote:
->>
->> On 4/25/19 6:35 AM, Anup Patel wrote:
->>> The Linux kernel will auto-disables all boot consoles whenever it
->>> gets a preferred real console.
->>>
->>> Currently on RISC-V systems, if we have a real console which is not
->>> RISCV SBI console then boot consoles (such as earlycon=sbi) are not
->>> auto-disabled when a real console (ttyS0 or ttySIF0) is available.
->>> This results in duplicate prints at boot-time after kernel starts
->>> using real console (i.e. ttyS0 or ttySIF0) if "earlycon=" kernel
->>> parameter was passed by bootloader.
->>>
->>> The reason for above issue is that RISCV SBI console always adds
->>> itself as preferred console which is causing other real consoles
->>> to be not used as preferred console.
+On 4/14/19 7:29 AM, Borislav Petkov wrote:
+> On Fri, Apr 12, 2019 at 01:14:54PM -0700, Atish Patra wrote:
+>> On 4/10/19 11:56 PM, Christoph Hellwig wrote:
+>>> Given that this option enables generic code (which you reuse for RISC-V
+>>> later in this series) please also move the config option to
+>>> mm/Kconfig, proabbly keyed off another ARCH_HAVE_DEBUG_TLBFLUSH
+>>> symbol that the architecture can select.
 >>>
 >>
->> Do we even need HVC_SBI console to be enabled by default? Disabling
->> CONFIG_HVC_RISCV_SBI seems to be fine while running in QEMU.
+>> Sure.
 > 
-> Actually, HVC_SBI console is useful on boards (such as SiFive Unleashed)
-> lacking upstream serial driver. It allows us to boot upstream kernel to prompt
-> on such boards with just timer driver (and probably irqchip driver).
+> And when you do that, instead of deleting the help text, make it
+> generic. Otherwise, there's no explanation anymore, how that option is
+> supposed to be used through tlb_flushall_shift.
 > 
-> Also, we should be able to use same kernel image on QEMU and SiFive
-> Unleashed board so disabling CONFIG_HVC_RISCV_SBI for QEMU is
-> a temporary solution.
-> 
->>
->> If we don't need it, I suggest we should remove the config option from
->> defconfig in addition to this patch.
-> 
-> Like mentioned above, HVC_SBI is useful for newer SOCs and boards
-> where serial driver is not yet up-streamed.
-> 
+Not sure I am following you.
+tlb_flushall_shift knob was removed by
+commit e9f4e0a9fe27 ("x86/mm: Rip out complicated, out-of-date, buggy 
+TLB flushing")
 
-Ok. Lets keep it then.
-
-> Regards,
-> Anup
-> 
->>
->> Regards,
->> Atish
->>> Ideally "console=" kernel parameter passed by bootloaders should
->>> be the one selecting a preferred real console.
->>>
->>> This patch fixes above issue by not forcing RISCV SBI console as
->>> preferred console.
->>>
->>> Fixes: afa6b1ccfad5 ("tty: New RISC-V SBI console driver")
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
->>> ---
->>>    drivers/tty/hvc/hvc_riscv_sbi.c | 1 -
->>>    1 file changed, 1 deletion(-)
->>>
->>> diff --git a/drivers/tty/hvc/hvc_riscv_sbi.c b/drivers/tty/hvc/hvc_riscv_sbi.c
->>> index 75155bde2b88..31f53fa77e4a 100644
->>> --- a/drivers/tty/hvc/hvc_riscv_sbi.c
->>> +++ b/drivers/tty/hvc/hvc_riscv_sbi.c
->>> @@ -53,7 +53,6 @@ device_initcall(hvc_sbi_init);
->>>    static int __init hvc_sbi_console_init(void)
->>>    {
->>>        hvc_instantiate(0, 0, &hvc_sbi_ops);
->>> -     add_preferred_console("hvc", 0, NULL);
->>>
->>>        return 0;
->>>    }
->>>
->>
-> 
-
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
 
 Regards,
 Atish
