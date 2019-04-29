@@ -2,154 +2,144 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA31C4321B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B844DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551B120675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FAA206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 03:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sCS33Wo8"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XRcprZIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfD2DFC (ORCPT
+        id S1727235AbfD2DKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 23:05:02 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43716 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfD2DFB (ORCPT
+        Sun, 28 Apr 2019 23:10:06 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:51524 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfD2DKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 23:05:01 -0400
-Received: by mail-io1-f68.google.com with SMTP id v9so7687410iol.10;
-        Sun, 28 Apr 2019 20:05:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dJMl90O95ELh7MccR/gotQ0iR4kxpXltz+n2rVMWVek=;
-        b=sCS33Wo854rOecdEepHQFeUD38yV4m0fx8fxGIDGiFttKs1dNNsEKXEkbVeyxlSjum
-         3xNFDFhJ2iF9Fh9LzN6/xoVy+YhiXgEoshszIQJUnps+YrJhuuw9lAxDcYmGEDff9HrD
-         TJ6Xu79Wqbtq1Tpi2wfMrvCOrwmCbJWN+8K8iOxPa9yGhqwXJHYJPfAWhw1jyiGBSsz3
-         6X4n0WUjEhAKyIGR/WesQJtN5xfG2amZp32CAU7q0+TYECzjxRQ/mdLi88A/Ti2/Vfqv
-         +JnR2yMzE207qkPhJUQQMzIyz+UetNgniIOCbX3kN+O9VLWgT/dAd33CFP0gKgTqhMkH
-         ZRgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dJMl90O95ELh7MccR/gotQ0iR4kxpXltz+n2rVMWVek=;
-        b=sAdYSg1EjYElLG7jtebHV/HI/gPxCMWKQwE5rtAZtOaaqLAgRTdjT4fVyP2UZt5hRV
-         NaQN+xpy8zlRx4uWLu+EUWSKO4oloQvhgfxFtnCHQkSUwcWQ9sYPLBZugGQQgdWTT3+m
-         VkSbXvnIr4bdZVp/F4SmAzCs4UflMy9bNmbbBIErmGADh8vkiW6ONpRozBdjY96MVIno
-         QIZEF34VLWrMdJPW12ISl1Oi0QDdyqetmMhEDgVkN4ESuxc6y41W9IaAXIFH5u70DjRZ
-         xFP8VUJKto0WAwXYvpGxH6XGdNFeu1GivYfg/5AI+dGhYjw45hO9QGurn3xhXkUc8j3b
-         bCQw==
-X-Gm-Message-State: APjAAAX1go70D3LyyGiI9BUwQjrbJ5uYCjILrqcEUFFN2AteVQB9fbY6
-        RVjS09t3in3DPJ/hB4/0IrmYCaDAC0cB9XUy/A==
-X-Google-Smtp-Source: APXvYqzeszOwZP14RtOC6mV9rY3uOhFyM1yQpZi/QDojtM4wzbayqEf6L0iWYkrbUvWs9aPmzqXndCUfaebQxYOHnc8=
-X-Received: by 2002:a6b:7d08:: with SMTP id c8mr3138801ioq.259.1556507100502;
- Sun, 28 Apr 2019 20:05:00 -0700 (PDT)
+        Sun, 28 Apr 2019 23:10:06 -0400
+X-Greylist: delayed 161115 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Apr 2019 23:10:03 EDT
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x3T39r1q016871;
+        Mon, 29 Apr 2019 12:09:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x3T39r1q016871
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556507394;
+        bh=D6/eHEGu1S/FgjaRhL+TDpUVhVgXkf1tnSwVBxG2mpI=;
+        h=References:In-Reply-To:From:Date:Subject:To:From;
+        b=XRcprZIF2wGKBMmYSTpLbQfAbNmSAMHisJs4xA88NzhGpL7nAQjWoeqGWNIjqfSyw
+         NZtPgqYmwhoIpq8la6IPIC+ggry5UWQhtsofmgR1wj/sYGvexinSUR9xmMN3dp9X50
+         oagtHTJL2vU8p2s7WHgWpdynf0e5in994+tEEFkfx1JmlW+NsW9tcYRIz/2Cq+qD9B
+         Ta9UfNkXZ96ba8ovKsOXQEGqteAle0LArbzgqfBprOQ7GUGvsFAEvMyYHgwIkOuaTg
+         zOxipQ33dUA0anPBhCW7XMY/cGTkya1rK29XogoDfbuEvraF2HvQmh1ul3uE+5KMR8
+         q/ZVZ+lU/FzfA==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id l17so1980970vke.7;
+        Sun, 28 Apr 2019 20:09:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAX+f3saOK7soeT9QSILkkyDwEyHsSlpY5ZkkndX1yKo/dACE9DA
+        Q+9UyQ3wGIV6E8DNEWUupeMA3cFSqyLSEoOrCQI=
+X-Google-Smtp-Source: APXvYqw0bG8CrWXMrxSWRjM4j1ygj/A090lPp2tsPXHl6m/HimipQzSsHgb6CJKrA93+n4itgvz1HpCs5J32rhJs1o4=
+X-Received: by 2002:a1f:9d0a:: with SMTP id g10mr2112150vke.0.1556507392399;
+ Sun, 28 Apr 2019 20:09:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <1556087581-14513-1-git-send-email-kernelfans@gmail.com>
- <10dc5468-6cd9-85c7-ba66-1dfa5aa922b7@suse.com> <CAFgQCTstd667wP6g+maxYekz4u3iBR2R=FHUiS1V=XxTs6MKUw@mail.gmail.com>
- <20190428083710.GA11981@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190428083710.GA11981@dhcp-128-65.nay.redhat.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Mon, 29 Apr 2019 11:04:49 +0800
-Message-ID: <CAFgQCTvQezGM7xgY2Q1RSUiQ7wLdxtUAeztrO3AqDfjx8f2kdg@mail.gmail.com>
-Subject: Re: [PATCHv2] kernel/crash: make parse_crashkernel()'s return value
- more indicant
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Matthias Brugger <mbrugger@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org,
-        Julien Thierry <julien.thierry@arm.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org,
-        linux-mips@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-s390@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        David Hildenbrand <david@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>,
-        Borislav Petkov <bp@alien8.de>, Stefan Agner <stefan@agner.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, Tony Luck <tony.luck@intel.com>,
-        Baoquan He <bhe@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Greg Hackmann <ghackmann@android.com>,
-        kexec@lists.infradead.org
+References: <1556346241-10451-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNAS2vTGF0dYJ67Ct2xDL=7qxYhhK-VoVHfkqDu0d8ULd+g@mail.gmail.com> <20190428174315.GC24089@mit.edu>
+In-Reply-To: <20190428174315.GC24089@mit.edu>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 29 Apr 2019 12:09:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASQqbWL_Lvn+=9PX41kbHNEB4K9dVS0LS=X-h0FEN9FHg@mail.gmail.com>
+Message-ID: <CAK7LNASQqbWL_Lvn+=9PX41kbHNEB4K9dVS0LS=X-h0FEN9FHg@mail.gmail.com>
+Subject: Re: [PATCH] unicode: refactor the rule for regenerating utf8data.h
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Olaf Weber <olaf@sgi.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-fsdevel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 4:37 PM Dave Young <dyoung@redhat.com> wrote:
+On Mon, Apr 29, 2019 at 2:44 AM Theodore Ts'o <tytso@mit.edu> wrote:
 >
-> On 04/25/19 at 04:20pm, Pingfan Liu wrote:
-> > On Wed, Apr 24, 2019 at 4:31 PM Matthias Brugger <mbrugger@suse.com> wrote:
-> > >
-> > >
-> > [...]
-> > > > @@ -139,6 +141,8 @@ static int __init parse_crashkernel_simple(char *cmdline,
-> > > >               pr_warn("crashkernel: unrecognized char: %c\n", *cur);
-> > > >               return -EINVAL;
-> > > >       }
-> > > > +     if (*crash_size == 0)
-> > > > +             return -EINVAL;
-> > >
-> > > This covers the case where I pass an argument like "crashkernel=0M" ?
-> > > Can't we fix that by using kstrtoull() in memparse and check if the return value
-> > > is < 0? In that case we could return without updating the retptr and we will be
-> > > fine.
-> > >
-> > It seems that kstrtoull() treats 0M as invalid parameter, while
-> > simple_strtoull() does not.
-> >
-> > If changed like your suggestion, then all the callers of memparse()
-> > will treats 0M as invalid parameter. This affects many components
-> > besides kexec.  Not sure this can be done or not.
->
-> simple_strtoull is obsolete, move to kstrtoull is the right way.
->
-> $ git grep memparse|wc
->     158     950   10479
->
-> Except some documentation/tools etc there are still a log of callers
-> which directly use the return value as the ull number without error
-> checking.
->
-> So it would be good to mark memparse as obsolete as well in
-> lib/cmdline.c, and introduce a new function eg. kmemparse() to use
-> kstrtoull,  and return a real error code, and save the size in an
-> argument like &size.  Then update X86 crashkernel code to use it.
->
-Thank for your good suggestion.
+> Thanks, for the suggestion and the patch!  I agree it's much better
+> with your proposed change (and it gets mkutf8data out of your hair :-)
 
-Regards,
-Pingfan
+Yes, this is my main motivation.
+
+>
+> I did need to make one change to your patch in order for it to work
+> correctly with a build directory.  That is, to support
+>
+>         make -O /build/ext4 REGENERATE_UTF8DATA=1 fs/unicode/
+>
+> I'll apply it to the ext4 git tree with this change.
+
+
+Thanks for the suggestion.
+
+My first thought was "don't do this",
+but it would be better to make it work with O= option.
+
+However, even with your fix-up, it won't work correctly.
+
+If O= is given, the newly-generated utf8data.h will be
+put in the object tree.
+
+It will co-exist with the old check-in utf8data.h
+and the old one will be included because
+the include paths in the srctree are searched first.
+
+I will send v2 shortly so that O= build will work
+correctly.
+
+Thanks.
+
+
+
+
+
+>                                    - Ted
+>
+> diff --git a/fs/unicode/Makefile b/fs/unicode/Makefile
+> index 1a109b7a1da9..45955264ac04 100644
+> --- a/fs/unicode/Makefile
+> +++ b/fs/unicode/Makefile
+> @@ -14,13 +14,13 @@ $(obj)/utf8-norm.o: $(obj)/utf8data.h
+>
+>  quiet_cmd_utf8data = GEN     $@
+>        cmd_utf8data = $(obj)/mkutf8data \
+> -               -a $(src)/DerivedAge.txt \
+> -               -c $(src)/DerivedCombiningClass.txt \
+> -               -p $(src)/DerivedCoreProperties.txt \
+> -               -d $(src)/UnicodeData.txt \
+> -               -f $(src)/CaseFolding.txt \
+> -               -n $(src)/NormalizationCorrections.txt \
+> -               -t $(src)/NormalizationTest.txt \
+> +               -a $(srctree)/$(src)/DerivedAge.txt \
+> +               -c $(srctree)/$(src)/DerivedCombiningClass.txt \
+> +               -p $(srctree)/$(src)/DerivedCoreProperties.txt \
+> +               -d $(srctree)/$(src)/UnicodeData.txt \
+> +               -f $(srctree)/$(src)/CaseFolding.txt \
+> +               -n $(srctree)/$(src)/NormalizationCorrections.txt \
+> +               -t $(srctree)/$(src)/NormalizationTest.txt \
+>                 -o $@
+>
+>  $(obj)/utf8data.h: $(filter %.txt, $(cmd_utf8data)) $(obj)/mkutf8data FORCE
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
