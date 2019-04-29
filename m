@@ -2,132 +2,200 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E142C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EC7C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CC0206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556520804;
-	bh=/8s3r5X+mra2HHJHmmBGYYEEnP8VSjNF/uGBLudyStM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sk/QLBox1XPH/gFRCdLbxTtPOJSxdHgGcs51C4CZHzjkUK9hvWFYuck1n22kaxu8P
-	 WGeMEiQ+3jIoTPcgpsJDHJ9R2Mm2Vagu6Io6Wxp50ShLLkZb7viSr/PreRU8bDWWTo
-	 hixLWjre6lV/qJKez2ENbZ4f1vdUFnIDFwAVJOWU=
+	by mail.kernel.org (Postfix) with ESMTP id 282F8206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VYh6Hgcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfD2GxY (ORCPT
+        id S1727463AbfD2GzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:53:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727208AbfD2GxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:53:23 -0400
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF2DB206BF;
-        Mon, 29 Apr 2019 06:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556520802;
-        bh=/8s3r5X+mra2HHJHmmBGYYEEnP8VSjNF/uGBLudyStM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Zoya90rKN0PHZexbyvZL9PtDtk+DylIduUidCxWViXejlQv8m3j4uR9GYRTYN6d1k
-         8p9P9qB0u+aLdiHCTIEnQLDkgXLrLOaeSAjiO1oBlYzjzfoBEL0+vRNAnGOXAU2z4f
-         H3s9nQR4Ll8wtrP0JKdV1UkOQVrEKlU2WQ/KFr90=
-Received: by mail-lf1-f44.google.com with SMTP id h5so7107832lfm.1;
-        Sun, 28 Apr 2019 23:53:21 -0700 (PDT)
-X-Gm-Message-State: APjAAAWk2hrEnmocLNCsjvvXjlVLVXnLV48rodclcgQhP2JeVmIPxgod
-        T6lJo+AfN/Oz5eIG7H2+FPfFOV4js5bwpicD3To=
-X-Google-Smtp-Source: APXvYqzNqMoLoFyXW1X6g3hv/YfTO7wryk7yF+B9HqpjcYIXKneyEULTZE0XAlyk9wlJ1OYKn0th3it5W/vg18auv2E=
-X-Received: by 2002:a19:c301:: with SMTP id t1mr30532924lff.167.1556520800288;
- Sun, 28 Apr 2019 23:53:20 -0700 (PDT)
+        Mon, 29 Apr 2019 02:55:03 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45786 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727173AbfD2GzD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 02:55:03 -0400
+Received: by mail-io1-f65.google.com with SMTP id e8so7993587ioe.12
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 23:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vh42txA4GIF8GOwTMnjPYuL5Fc1u/VudfT3A7UMZ/z0=;
+        b=VYh6Hgcu3AdHjCehGComZm+EL8xIlTCapqXD3bRRFo9HWXAXo/mdz9n+JjkSAhF/wZ
+         P3Ire2IwhuwxSwLZGouTHXstp8jdpVY/1ZXwcZaxhxlS3FJlMFYXGQ5jNtk/V4SdRKgi
+         66R6DCHGvgfWK5a19usQz3JykQxWavtbTWMQ4ncjlyYukVzOJUaCKaJ6k0u7dKU5m0ap
+         pV48I0yKlx8tjLpZllOmClYb+ULdZabgGdhR3042E7fLEWBUk5frgHr5rEmuHgZ1m2zI
+         YXBGFzDpqUzgg66qVc0voQJCrN7ys9iWQFHnCJBLhiciGFc2OXZOPsqDRA5UNdicW6XH
+         gNRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vh42txA4GIF8GOwTMnjPYuL5Fc1u/VudfT3A7UMZ/z0=;
+        b=W2d0RuSa0ia/5AyZqtHbYuJDKuUXHqmy7ZCfYqv/dBbGUbajVZD4zGjVprhcuiVhfb
+         njNqVnUh1AB5xQXeTvL1qSQn6ToYP1on/d+66PAOMSzOW5UBMDN9zFI5jTXlAehWatTM
+         P9XQKCdl1U0op1W4tWN5rrMqgcrhXOVG0efx8lc5bg3W7LanHB/dxS5uBRweGGeAkxYT
+         HXG/cWYnbzZGNnG1rI6tnB7o3TjMy71/DoBs+lzPT0iKy4YwTMFqKp0zElT6sjRKeyW5
+         sgDuTKwj4i7705DblktI2AOiT6XKNP4Pr69Gsf+AXIJyp/OJQznStdCuAOhLeCuQBMzX
+         oAFg==
+X-Gm-Message-State: APjAAAWpSc9XrM4GMTh1tXNPya06pR2w6jleWhKxgltMZihNmsdRScHK
+        d2vCmENMYXknW3lBnczg/AZo4smZbfKHkahj+kXkFA==
+X-Google-Smtp-Source: APXvYqw/gNNLzza37inUqhpueNdu/5URQrynyVUJUQxj2a7sEGfB1jSa7sYKuET7oRYkvDE9KmlFCXGniM44F11RtA8=
+X-Received: by 2002:a5d:97cd:: with SMTP id k13mr20306271ios.11.1556520901887;
+ Sun, 28 Apr 2019 23:55:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190414154805.10188-1-krzk@kernel.org> <20190414154805.10188-3-krzk@kernel.org>
-In-Reply-To: <20190414154805.10188-3-krzk@kernel.org>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 29 Apr 2019 08:53:09 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfzV0wn0a-4xvy1B0fR=X4VvpqNmtqwRGFhFdCMH3OpHA@mail.gmail.com>
-Message-ID: <CAJKOXPfzV0wn0a-4xvy1B0fR=X4VvpqNmtqwRGFhFdCMH3OpHA@mail.gmail.com>
-Subject: Re: [GIT PULL 3/3] ARM: samsung: Changes for v5.2
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        arm@kernel.org
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
+References: <000000000000df93f705846f0963@google.com>
+In-Reply-To: <000000000000df93f705846f0963@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 29 Apr 2019 08:54:50 +0200
+Message-ID: <CACT4Y+Ze8JeWS_VGQPwse2BSUDDw1DCBBi3MqBoPhtFN-YR52w@mail.gmail.com>
+Subject: Re: general protection fault in ip6_dst_hoplimit
+To:     syzbot <syzbot+4c869fc20129562c53fa@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Apr 2019 at 17:48, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Tue, Mar 19, 2019 at 10:22 AM syzbot
+<syzbot+4c869fc20129562c53fa@syzkaller.appspotmail.com> wrote:
 >
+> Hello,
 >
-> The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+> syzbot found the following crash on:
 >
->   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+> HEAD commit:    d9862cfb Merge tag 'mips_5.1' of git://git.kernel.org/pub/..
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12747c93200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=73d88a42238825ad
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4c869fc20129562c53fa
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 >
-> are available in the Git repository at:
+> Unfortunately, I don't have any reproducer for this crash yet.
 >
->   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-soc-5.2
->
-> for you to fetch changes up to 7676e667c841375b41d9438b559756141aa93d0e:
->
->   ARM: s3c64xx: Tidy up handling of regulator GPIO lookups (2019-04-14 12:53:03 +0200)
->
-> ----------------------------------------------------------------
-> Samsung mach/soc changes for v5.2
->
-> 1. Cleanup in mach code.
-> 2. Add necessary fixes for Suspend to RAM on Exynos5422 boards (tested
->    with Odroid XU3/XU4/HC1 family).  Finally this brings a working S2R
->    on these Odroid boards (still other drivers might have some issues
->    but mach code seems to be finished).
-> 3. Require MCPM for Exynos542x boards because otherwise not all of cores
->    will come online.
-> 4. GPIO regulator cleanup on S3C6410 Craig.
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+4c869fc20129562c53fa@syzkaller.appspotmail.com
 
-Hi Olof and Arnd,
 
-I see you pulled in DTS and DTS64 pull request. I think this one here
-is still pending.
+Eric, searching the dashboard for "ip6_dst" I've also found this. Can
+this be fixed by your "ipv6: fix races in ip6_dst_destroy()"?
+https://patchwork.ozlabs.org/patch/1092328/
+If there is some chance that it is fixed by your patch, then it may be
+better to mark it as fixed because there does not seem to be any other
+hypothesis.
 
-Best regards,
-Krzysztof
 
+> dst_release: dst:00000000f3b89511 refcnt:-2120685656
+> dst_release: dst:00000000f3b89511 refcnt:-2120685656
+> IPVS: set_ctl: invalid protocol: 46 0.0.4.1:20003
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 14303 Comm: syz-executor.2 Not tainted 5.0.0+ #97
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:ip6_dst_hoplimit+0x26/0x3f0 net/ipv6/output_core.c:127
+> Code: 00 00 00 00 55 48 89 e5 41 55 41 54 53 48 89 fb e8 0f 2e 4b fb 48 8d
+> 7b 10 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f
+> 85 7d 03 00 00 48 b8 00 00 00 00 00 fc ff df 4c 8b
+> RSP: 0018:ffff888029bb77c8 EFLAGS: 00010206
+> RAX: dffffc0000000000 RBX: 0000000000004a58 RCX: ffffc9000a21d000
+> RDX: 000000000000094d RSI: ffffffff86248861 RDI: 0000000000004a68
+> RBP: ffff888029bb77e0 R08: ffff888096e1e400 R09: ffffed1015d25021
+> R10: ffffed1015d25bcf R11: ffff8880ae928107 R12: ffff888064f31880
+> R13: 0000000000004a58 R14: 0000000000000000 R15: ffff888029bb7e20
+> FS:  00007f66dbd52700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f5833499000 CR3: 000000009ae87000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   ip6_sk_dst_hoplimit include/net/ipv6.h:765 [inline]
+>   udpv6_sendmsg+0x23af/0x28d0 net/ipv6/udp.c:1459
+>   inet_sendmsg+0x147/0x5d0 net/ipv4/af_inet.c:798
+>   sock_sendmsg_nosec net/socket.c:622 [inline]
+>   sock_sendmsg+0xdd/0x130 net/socket.c:632
+>   ___sys_sendmsg+0x806/0x930 net/socket.c:2137
+>   __sys_sendmsg+0x105/0x1d0 net/socket.c:2175
+>   __do_sys_sendmsg net/socket.c:2184 [inline]
+>   __se_sys_sendmsg net/socket.c:2182 [inline]
+>   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2182
+>   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+> kobject: 'loop5' (000000000bae834e): kobject_uevent_env
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x458079
+> Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f66dbd51c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> kobject: 'loop5' (000000000bae834e): fill_kobj_path: path
+> = '/devices/virtual/block/loop5'
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458079
+> RDX: 0000000000000000 RSI: 0000000020002b80 RDI: 0000000000000003
+> RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f66dbd526d4
+> R13: 00000000004c5601 R14: 00000000004d94a8 R15: 00000000ffffffff
+> Modules linked in:
+> kobject: 'loop4' (0000000057f28e01): kobject_uevent_env
+> ---[ end trace ad1e9a18c63dc6fd ]---
+> kobject: 'ip6gre0' (00000000482f98f6): kobject_cleanup, parent
+> (null)
+> RIP: 0010:ip6_dst_hoplimit+0x26/0x3f0 net/ipv6/output_core.c:127
+> kobject: 'loop4' (0000000057f28e01): fill_kobj_path: path
+> = '/devices/virtual/block/loop4'
+> Code: 00 00 00 00 55 48 89 e5 41 55 41 54 53 48 89 fb e8 0f 2e 4b fb 48 8d
+> 7b 10 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f
+> 85 7d 03 00 00 48 b8 00 00 00 00 00 fc ff df 4c 8b
+> kobject: 'ip6gre0' (00000000482f98f6): auto cleanup 'remove' event
+> RSP: 0018:ffff888029bb77c8 EFLAGS: 00010206
+> kobject: 'loop3' (000000006d432d43): kobject_uevent_env
+> RAX: dffffc0000000000 RBX: 0000000000004a58 RCX: ffffc9000a21d000
+> kobject: 'ip6gre0' (00000000482f98f6): kobject_uevent_env
+> RDX: 000000000000094d RSI: ffffffff86248861 RDI: 0000000000004a68
+> kobject: 'loop3' (000000006d432d43): fill_kobj_path: path
+> = '/devices/virtual/block/loop3'
+> RBP: ffff888029bb77e0 R08: ffff888096e1e400 R09: ffffed1015d25021
+> kobject: 'ip6gre0' (00000000482f98f6): kobject_uevent_env: uevent_suppress
+> caused the event to drop!
+> R10: ffffed1015d25bcf R11: ffff8880ae928107 R12: ffff888064f31880
+> kobject: 'ip6gre0' (00000000482f98f6): calling ktype release
+> R13: 0000000000004a58 R14: 0000000000000000 R15: ffff888029bb7e20
+> kobject: 'ip6gre0': free name
+> FS:  00007f66dbd52700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000625208 CR3: 000000009ae87000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> kobject: 'rx-0' (00000000e6299323): kobject_cleanup, parent 000000006ae1d517
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 >
-> ----------------------------------------------------------------
-> Charles Keepax (1):
->       ARM: s3c64xx: Tidy up handling of regulator GPIO lookups
 >
-> Joonyoung Shim (1):
->       ARM: exynos: Add CPU state management for Exynos542x under secure firmware
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
 >
-> Marek Szyprowski (5):
->       ARM: exynos: Move Exynos542x CPU state reset to pm_prepare()
->       ARM: exynos: Add Exynos SMC values for secure memory write
->       ARM: exynos: Fix undefined instruction during Exynos5422 resume
->       ARM: exynos: Fix infinite loops on CPU powerup failure
->       ARM: exynos: Set MCPM as mandatory for Exynos542x/5800 SoCs
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
+> syzbot.
 >
-> Wen Yang (1):
->       ARM: exynos: Fix a leaked reference by adding missing of_node_put
->
->  arch/arm/configs/exynos_defconfig            |  1 -
->  arch/arm/configs/multi_v7_defconfig          |  1 -
->  arch/arm/mach-exynos/Kconfig                 | 12 ++-----
->  arch/arm/mach-exynos/Makefile                |  2 +-
->  arch/arm/mach-exynos/common.h                |  1 +
->  arch/arm/mach-exynos/exynos.c                |  3 ++
->  arch/arm/mach-exynos/firmware.c              |  1 +
->  arch/arm/mach-exynos/mcpm-exynos.c           | 13 +++++++-
->  arch/arm/mach-exynos/platsmp.c               |  9 ++++-
->  arch/arm/mach-exynos/smc.h                   |  7 ++++
->  arch/arm/mach-exynos/suspend.c               | 49 ++++++++++++++++++++++++----
->  arch/arm/mach-s3c64xx/mach-crag6410-module.c | 14 ++++++--
->  12 files changed, 89 insertions(+), 24 deletions(-)
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000df93f705846f0963%40google.com.
+> For more options, visit https://groups.google.com/d/optout.
