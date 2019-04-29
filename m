@@ -2,83 +2,101 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0080DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6872FC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF9120652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 321032075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="baorS2Qb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="niwBPwvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfD2Hgd (ORCPT
+        id S1727517AbfD2HhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:36:33 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34214 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfD2Hgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:36:33 -0400
-Received: from zn.tnic (p200300EC2F073600CC908F6B12A96C5F.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:3600:cc90:8f6b:12a9:6c5f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6FF101EC0A99;
-        Mon, 29 Apr 2019 09:36:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1556523391;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ecj0aE6gq10rKox5w0C12D0qKcWWyug+xBLPklihyDQ=;
-        b=baorS2QbQlfP18vTtOK0cVWrLq5HKuwlJ3nSCscAr8t9TBRZYApffFMdbzA7Htog2Qfk//
-        xz9T4xLDXMcavQcOCdS9skoBKgNx7Huc/ylacMxvQU5GyJAxdakpWPmnASMO82vOk4Wcyt
-        Et4112kvddtMy0zadeuSMWAOZH3usrk=
-Date:   Mon, 29 Apr 2019 09:36:25 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Zhao, Yakui" <yakui.zhao@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Chen, Jason CJ" <jason.cj.chen@intel.com>
-Subject: Re: [RFC PATCH v5 4/4] x86/acrn: Add hypercall for ACRN guest
-Message-ID: <20190429073625.GA2324@zn.tnic>
-References: <1556067260-9128-1-git-send-email-yakui.zhao@intel.com>
- <1556067260-9128-5-git-send-email-yakui.zhao@intel.com>
- <20190425070712.GA57256@gmail.com>
- <6dd021a9-e2c0-ee84-55fd-3e6dfb4bd944@intel.com>
- <20190425110025.GA16164@zn.tnic>
- <473d145c-4bfd-4ec8-34c3-8a26a78fe40d@intel.com>
- <20190427085816.GB12360@zn.tnic>
- <e04c43cf-029b-d459-e9d9-1a1f5c403dab@intel.com>
- <20190428100309.GA2334@zn.tnic>
- <4c5ca6d7-ffb1-a5a5-9e46-9057802318e0@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4c5ca6d7-ffb1-a5a5-9e46-9057802318e0@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 29 Apr 2019 03:37:25 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42375 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfD2HhZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 03:37:25 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x15so4664731pln.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 00:37:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=JVE5mmezCRxz6WW+z9H8b28By3jF0TFZuCkFOKjspBU=;
+        b=niwBPwvEkClbDRK9YJuSfR/YAnw/h5dMpYBXnWsjBRo9UdkYLnka/aYR5Q7xahnsIb
+         as+f30ARN/KtCMGevNIB0IFhdEVlRioN0ls7/DgVufSsEhcD3pPvCOkX+kR7wurJgDQ0
+         AfpgLTNON+AQhxtN2jqk62c+TBCuNXyFrjduyVWOcpFE9NWYjqpJ0QLhiOGOFgry51RF
+         xKXS/VhlJkxeMb+81VBqOogBaQZjisJZMKVJ2CTFOY464h+3H9sNR06XsK3URQxdDtgB
+         CzRm8dgt5mRLInnpfk2i29EgagbmkXCDUfrlSQFnhEhyouzfrwunzNGSvkchDUFV406W
+         kdGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JVE5mmezCRxz6WW+z9H8b28By3jF0TFZuCkFOKjspBU=;
+        b=VXKqiavqtnb/YCuFNs2pXlwKksT4JGBeRWMWGKh7a0t9AIa/uGwS1BwGO+S29kxT5a
+         GyYMu4d8Lp8mTHY6WZdth9eaAJ9JgypQQ2fBnPal0ALvHI5j5tlQnM88Qc9wnb/SsNPx
+         i2f30crvceYXQyR/D7nxTOd9f153McvcXzRh6YuV09hlStfOk3+UXBZmMvXsT3LaczS7
+         OqwgSZ0DnzwwXWpa8LQMb6ao+Hs/P7CRXx9Pf+V9tBOo3g3G69uSxYckSwavHvdO9763
+         UJpUsgIRd7WveHOgiW5UuIT+vqeDejcFYrtkqLnRDrf02u8xV0gxvt6EFCAg5ewkWw7j
+         wRMQ==
+X-Gm-Message-State: APjAAAWcZHwkYzBKu3AKDqPykQHBYZfFtftuUeZ3jQjCVR/DU2bRG4xe
+        +YmE9dAySYI0ZqPpgEXzJtwk66bjqtE=
+X-Google-Smtp-Source: APXvYqwZzhRLIoaP5LpqWQUbjpD0Ir8YyzDeEPPahuxhn3iNg6BmuHDKJjh9YnJwHCLE1BExK5KxAg==
+X-Received: by 2002:a17:902:8545:: with SMTP id d5mr24800187plo.198.1556523444886;
+        Mon, 29 Apr 2019 00:37:24 -0700 (PDT)
+Received: from localhost.localdomain ([2405:204:12a5:ab58:559f:ec82:1c85:ce7])
+        by smtp.gmail.com with ESMTPSA id t24sm43485198pfe.110.2019.04.29.00.37.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 00:37:24 -0700 (PDT)
+From:   Vatsala Narang <vatsalanarang@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     eric@anholt.net, stefan.wahren@i2se.com, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, julia.lawall@lip6.fr,
+        Vatsala Narang <vatsalanarang@gmail.com>
+Subject: [PATCH] staging: vc04_services: bcm2835-camera: Modify return statement.
+Date:   Mon, 29 Apr 2019 13:06:58 +0530
+Message-Id: <20190429073658.32009-1-vatsalanarang@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 09:24:12AM +0800, Zhao, Yakui wrote:
-> Yes. "movq" only indicates explicitly that it is 64-bit mov as ACRN guest
-> only works under 64-bit mode.
-> I also check the usage of "mov" and "movq" in this scenario. There is no
-> difference except that the movq is an explicit 64-op.
+Modify return statement and remove the respective assignment.
 
-Damn, I'm tired of explaining this: it is explicit only to the code
-reader. gcc generates the *same* instruction no matter whether it has a
-"q" suffix or not as long as the destination register is a 64-bit one.
+Issue found by coccinelle.
 
-If you prefer to have it explicit, sure, use "movq".
+Signed-off-by: Vatsala Narang <vatsalanarang@gmail.com>
+---
+ drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+index c9b6346111a5..cef6d5b758e8 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+@@ -1507,10 +1507,9 @@ static int set_camera_parameters(struct vchiq_mmal_instance *instance,
+ 		.use_stc_timestamp = MMAL_PARAM_TIMESTAMP_MODE_RAW_STC
+ 	};
+ 
+-	ret = vchiq_mmal_port_parameter_set(instance, &camera->control,
++	return vchiq_mmal_port_parameter_set(instance, &camera->control,
+ 					    MMAL_PARAMETER_CAMERA_CONFIG,
+ 					    &cam_config, sizeof(cam_config));
+-	return ret;
+ }
+ 
+ #define MAX_SUPPORTED_ENCODINGS 20
 -- 
-Regards/Gruss,
-    Boris.
+2.17.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
