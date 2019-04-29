@@ -2,116 +2,135 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6E7C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1374AC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9B220656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41F820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:29:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CTLGlgkP"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Dplpme90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbfD2P2k (ORCPT
+        id S1728667AbfD2P3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:28:40 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53801 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728469AbfD2P2k (ORCPT
+        Mon, 29 Apr 2019 11:29:25 -0400
+Received: from mail.efficios.com ([167.114.142.138]:56700 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728479AbfD2P3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:28:40 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 26so14751366wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 08:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=II8KXmgk5i2NI+d+OagAFbqz1kgwsgIr5Q0TCse/uaE=;
-        b=CTLGlgkPaxWr00QsI3EOFLETyybraZIKbHkfyMUTo/ZDocD4Sw2Nqc39Xgs1UNJ1hg
-         hheR5rMt/LQfKRWtrvhjdLaUri/Lf/GpPsDs5SFlS+Np5vWAn5wSLozHtB0M4L5/g7LI
-         WzbHpOfFSGEL1cqLgs3AhBIS+hhXqXVyFX0+g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=II8KXmgk5i2NI+d+OagAFbqz1kgwsgIr5Q0TCse/uaE=;
-        b=QBosZR7tnl2UostzXWj5BTxsTEAK2UBtu65Sew77DkZXYAj9IjpG0izaIbWVzYgy4a
-         YfGxORtdY18JLr+IVBF1w43Y28biFddSYHXqieDmb/wDH0UsQgA0yF+9HN7s95S0ORIA
-         5cjZtT5wRNGE7WhJw5kSnZjgtvUhpjR7/ifVOZT8Mli2iks5DUCDwv6TDZpOw2xBISXq
-         DmsjLVUaH6e025SSudBjCV3YYMMsdaJ+1C/m2ffH8u8l/zTc7RRhzcRpOIuFHo07yw9C
-         Z+Ghxj6R2T96EPiw0+3KDJv70QbzF2Tht3n9m3HGjDKxs9uPBZKuRxi92pN4DnhgUS4T
-         jCvA==
-X-Gm-Message-State: APjAAAVKoT6DRqNyesIRO9aysPZB8JdHuD0fFoeTwXDk2Z4gWrx6SB95
-        StobvC7QBgdcTDVBvRE+8hHfnZmDlDw6jqI0wA/FRA==
-X-Google-Smtp-Source: APXvYqwjIP2ogzCulDTCoRN3zD+FONRuAk0p0ylTja8E7VBHXTiVcX/G42pUFehblUT4AwAaMZ+onJuC040kZpbr+Qo=
-X-Received: by 2002:a1c:1a85:: with SMTP id a127mr4020287wma.139.1556551718099;
- Mon, 29 Apr 2019 08:28:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <1527486084-4636-1-git-send-email-srinath.mannam@broadcom.com>
- <1527486084-4636-4-git-send-email-srinath.mannam@broadcom.com>
- <da76e12f246c3f10bfed28d8b91a3575dc73f243.camel@infradead.org> <20190429152422.GC17516@e107155-lin>
-In-Reply-To: <20190429152422.GC17516@e107155-lin>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Mon, 29 Apr 2019 20:58:26 +0530
-Message-ID: <CABe79T4MYf65QM+OHTPa_F8uG6_pd-9VLMQOHb9EPRyj2mEx1A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] thermal: broadcom: Add Stingray thermal driver
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Pramod Kumar <pramod.kumar@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Apr 2019 11:29:24 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 965A81C1C8F;
+        Mon, 29 Apr 2019 11:29:22 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id KhiAxotBqAbr; Mon, 29 Apr 2019 11:29:22 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 3B8541C1C8C;
+        Mon, 29 Apr 2019 11:29:22 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3B8541C1C8C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1556551762;
+        bh=oeB5Du+F0HQtKwSK2A3ZXitc9LMeHbag39VqK1/CHyg=;
+        h=From:To:Date:Message-Id;
+        b=Dplpme90ELJB7fIj6uwcV/mxKyf/prVOfa6IfRtHT93b9Dm2YlQcvjNivIe08xBNy
+         ohiE1VS5Luk0R0u7BPQG1mutigvB6MgVlBqMnr7XAvFqgWpSwISWVJY1ZjsDRmUFr1
+         T7tfUpGZeUpJiNw1OkpyBXNk76GxOy/XyiecYsiU/jzsGxK+4N7hPeVGNdppmKN+0g
+         VlwlThxD/5RGdQ0yN9s3Gl++a61/Xs1SvewTwtPVI0w2J17MHgs/qU0LsmmnkxaebE
+         PNTevuYjsxxMAD2uT2fplKslTL2gQ0wzZZEZEMEQQlYoqwMjLBDhYKflZhXdtLKtF2
+         kI7YnXciAwDKw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id KPbFGPCJ8WTo; Mon, 29 Apr 2019 11:29:22 -0400 (EDT)
+Received: from thinkos.internal.efficios.com (192-222-157-41.qc.cable.ebox.net [192.222.157.41])
+        by mail.efficios.com (Postfix) with ESMTPSA id A5E771C1C82;
+        Mon, 29 Apr 2019 11:29:21 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andi Kleen <andi@firstfloor.org>, Chris Lameter <cl@linux.com>,
+        Ben Maurer <bmaurer@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH for 5.2 00/12] Restartable Sequences selftests updates
+Date:   Mon, 29 Apr 2019 11:27:51 -0400
+Message-Id: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+Those rseq selftests updates are hereby submitted to Shuah Khan,
+maintainer of kernel selftests, for the next merge window (5.2).
 
-Thank you for notifying..
+They change the per-architecture pre-abort signatures to ensure those
+are valid trap instructions.
 
-Hi Sudeep,
+The way exit points are presented to debuggers is enhanced, ensuring
+all exit points are present, so debuggers don't have to disassemble
+rseq critical section to properly skip over them.
 
-I will send a patch to remove ACPI support.
+Discussions with the glibc community is reaching a concensus of exposing
+a __rseq_handled symbol from glibc to coexist with rseq early adopters.
+Update the rseq selftest code to expose and use this symbol.
 
-Regards,
-Srinath.
+Support for compiling asm goto with clang is added with the
+"-no-integrated-as" compiler switch, similarly to the toplevel kernel
+Makefile.
 
-On Mon, Apr 29, 2019 at 8:54 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Mon, Apr 29, 2019 at 06:07:12PM +0300, David Woodhouse wrote:
-> > On Mon, 2018-05-28 at 11:11 +0530, Srinath Mannam wrote:
-> > > From: Pramod Kumar <pramod.kumar@broadcom.com>
-> > >
-> > > This commit adds stingray thermal driver to monitor six
-> > > thermal zones temperature and trips at critical temperature.
-> >
-> > This matches an ACPI "BRCM0500" device but then calls
-> > devm_thermal_zone_of_sensor_register(), which AFAICT is going to fail
-> > on an ACPI system because the first thing that does is call
-> > of_find_node_by_name(NULL, "thermal-zones") which isn't going to find a
-> > match.
-> >
->
-> Thanks David for bringing this up. I hadn't noticed that this driver is
-> cheekily trying to do thermal management in ACPI using crafty
-> acpi_device_id match. ACPI thermal objects/methods must be used in the
-> firmware to do thermal management.
->
-> Pramod, can you remove the ACPI support or I can go ahead and post the
-> patch to do the same ?
->
-> > How does this work in the ACPI case?
->
-> It can't and shouldn't work if one can make it happen :)
->
-> --
-> Regards,
-> Sudeep
+Thanks,
+
+Mathieu
+
+Martin Schwidefsky (1):
+  rseq/selftests: s390: use trap4 for RSEQ_SIG
+
+Mathieu Desnoyers (11):
+  rseq/selftests: x86: Work-around bogus gcc-8 optimisation
+  rseq/selftests: Add __rseq_exit_point_array section for debuggers
+  rseq/selftests: Introduce __rseq_cs_ptr_array, rename __rseq_table to
+    __rseq_cs
+  rseq/selftests: Use __rseq_handled symbol to coexist with glibc
+  rseq/selftests: s390: use jg instruction for jumps outside of the asm
+  rseq/selftests: x86: use ud1 instruction as RSEQ_SIG opcode
+  rseq/selftests: arm: use udf instruction for RSEQ_SIG
+  rseq/selftests: aarch64 code signature: handle big-endian environment
+  rseq/selftests: powerpc code signature: generate valid instructions
+  rseq/selftests: mips: use break instruction for RSEQ_SIG
+  rseq/selftests: add -no-integrated-as for clang
+
+ tools/testing/selftests/rseq/Makefile     |   8 +-
+ tools/testing/selftests/rseq/rseq-arm.h   | 132 +++++++++++++--
+ tools/testing/selftests/rseq/rseq-arm64.h |  74 ++++++++-
+ tools/testing/selftests/rseq/rseq-mips.h  | 115 +++++++++++--
+ tools/testing/selftests/rseq/rseq-ppc.h   |  90 +++++++++-
+ tools/testing/selftests/rseq/rseq-s390.h  |  78 ++++++++-
+ tools/testing/selftests/rseq/rseq-x86.h   | 264 +++++++++++++++++++++---------
+ tools/testing/selftests/rseq/rseq.c       |  55 ++++++-
+ tools/testing/selftests/rseq/rseq.h       |   1 +
+ 9 files changed, 688 insertions(+), 129 deletions(-)
+
+-- 
+2.11.0
+
