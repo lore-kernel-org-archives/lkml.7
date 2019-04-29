@@ -1,77 +1,79 @@
 Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78760C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F92BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BE620652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EEAC20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:35:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=eat-dinner.eu header.i=@eat-dinner.eu header.b="vLvAlA23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfD2HeG (ORCPT
+        id S1727494AbfD2Hfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:34:06 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:40728 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfD2HeG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:34:06 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hL0nY-00059b-7m; Mon, 29 Apr 2019 09:34:00 +0200
-Date:   Mon, 29 Apr 2019 09:33:59 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     Joseph Myers <joseph@codesourcery.com>, libc-alpha@sourceware.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Lukasz Majewski <lukma@denx.de>,
-        Stepan Golosunov <stepan@golosunov.pp.ru>
-Subject: Re: [PATCH 1/2] y2038: make CONFIG_64BIT_TIME unconditional
-In-Reply-To: <20190426142531.1378357-1-arnd@arndb.de>
-Message-ID: <alpine.DEB.2.21.1904290933130.1626@nanos.tec.linutronix.de>
-References: <20190426142531.1378357-1-arnd@arndb.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 29 Apr 2019 03:35:52 -0400
+Received: from mail.eat-dinner.eu ([80.211.38.224]:43015 "EHLO eat-dinner.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726846AbfD2Hfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 03:35:51 -0400
+Received: by eat-dinner.eu (Postfix, from userid 1001)
+        id 5BBD4A35C7; Mon, 29 Apr 2019 09:32:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=eat-dinner.eu;
+        s=mail; t=1556523324;
+        bh=1wXsRnVQKyR5953v1mK5+VSjATpkqCFjMxx9a9NW6X4=;
+        h=Date:From:To:Subject:From;
+        b=vLvAlA23YMd/Mo2WzoHrDx9oNTDRjKptKz6pVcbkApvRUiqWgBBMXxcb45lKG2O94
+         kLwIdPccpoHc/akbcU50mxU+IjVkEDe7nFkNtxJ3Uk/OBzhmZTpn4sATKZ9D1gQr09
+         X6uAsArDLAXDTjaOT1V2p6eTrgn6/c6TJrb3Xbzk=
+Received: by mail.eat-dinner.eu for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 07:32:33 GMT
+Message-ID: <20190429084500-0.1.19.q7o.0.h9byqlccqn@eat-dinner.eu>
+Date:   Mon, 29 Apr 2019 07:32:33 GMT
+From:   =?UTF-8?Q? "Kapolcs_M=C3=A1ty=C3=A1s" ?= 
+        <kapolcs.matyas@eat-dinner.eu>
+To:     <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Dolgoz=C3=B3i_juttat=C3=A1sok?=
+X-Mailer: mail.eat-dinner.eu
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019, Arnd Bergmann wrote:
+=C3=9Cdv=C3=B6zl=C3=B6m!
+=20
+2019 janu=C3=A1rt=C3=B3l v=C3=A1ltozik a nem b=C3=A9r jelleg=C5=B1 juttat=
+=C3=A1sok rendje.
+=20
+Egy kiv=C3=A1l=C3=B3 lehet=C5=91s=C3=A9ggel =C3=A9lehet, amennyiben a mi =
+k=C3=A1rty=C3=A1nkat v=C3=A1lasztja!
+=20
+Ez a k=C3=A1rtya:
+=20
+Korl=C3=A1tlanul felhaszn=C3=A1lhat=C3=B3:
+=20
+k=C3=A9szp=C3=A9nzfelv=C3=A9tel
+=C3=A9lelmiszer v=C3=A1s=C3=A1rl=C3=A1s
+eg=C3=A9szs=C3=A9g=C3=BCgyi ell=C3=A1t=C3=A1s
+elektronikai term=C3=A9kek v=C3=A1s=C3=A1rl=C3=A1sa
+oktat=C3=A1s
+sz=C3=A1ll=C3=A1s
+=20
+K=C3=A1rty=C3=A1nk az egyetlen olyan val=C3=B3ban szabadfelhaszn=C3=A1l=C3=
+=A1s=C3=BA k=C3=A1rtya, melyet minden POS termin=C3=A1l elfogad!
+=20
+Amennyiben k=C3=A1rty=C3=A1nk felkeltette =C3=A9rdekl=C5=91d=C3=A9s=C3=A9=
+t, mint dolgoz=C3=B3i juttat=C3=A1s, k=C3=A9rem keressen fel a tov=C3=A1b=
+bi t=C3=A1j=C3=A9koztat=C3=A1s =C3=A9rdek=C3=A9ben!
+=20
+=C3=96r=C3=B6mmel =C3=A1llunk rendelkez=C3=A9s=C3=A9re mindenben!
 
-> As Stepan Golosunov points out, we made a small mistake in the
-> get_timespec64() function in the kernel. It was originally added under
-> the assumption that CONFIG_64BIT_TIME would get enabled on all 32-bit
-> and 64-bit architectures, but when I did the conversion, I only turned
-> it on for 32-bit ones.
-> 
-> The effect is that the get_timespec64() function never clears the upper
-> half of the tv_nsec field for 32-bit tasks in compat mode. Clearing this
-> is required for POSIX compliant behavior of functions that pass a
-> 'timespec' structure with a 64-bit tv_sec and a 32-bit tv_nsec, plus
-> uninitialized padding.
-> 
-> The easiest fix for linux-5.1 is to just make the Kconfig symbol
-> unconditional, as it was originally intended. As a follow-up,
-> we should remove any #ifdef CONFIG_64BIT_TIME completely.
-> 
-> Link: https://lore.kernel.org/lkml/20190422090710.bmxdhhankurhafxq@sghpc.golosunov.pp.ru/
-> Cc: Lukasz Majewski <lukma@denx.de>
-> Cc: Stepan Golosunov <stepan@golosunov.pp.ru>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> Please apply this one as a bugfix for 5.1
 
-Can you provide a 'Fixes: ....' tag please?
-
-Thanks,
-
-	tglx
+Kapolcs M=C3=A1ty=C3=A1s
+Hungary Team Leader
