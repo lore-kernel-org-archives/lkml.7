@@ -2,124 +2,106 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FA3C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B76C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EB42063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C39A2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:19:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ej/ASn9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbfD2PTH (ORCPT
+        id S1728611AbfD2PTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:19:07 -0400
-Received: from foss.arm.com ([217.140.101.70]:60186 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728249AbfD2PTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:19:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4327D80D;
-        Mon, 29 Apr 2019 08:19:06 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CD753F5C1;
-        Mon, 29 Apr 2019 08:19:04 -0700 (PDT)
-Subject: Re: [PATCH v2 7/7] iommu/dma-iommu: Remove iommu_dma_map_msi_msg()
-To:     Julien Grall <julien.grall@arm.com>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     logang@deltatee.com, douliyangs@gmail.com,
-        miquel.raynal@bootlin.com, marc.zyngier@arm.com,
-        jason@lakedaemon.net, tglx@linutronix.de, joro@8bytes.org,
-        bigeasy@linutronix.de, linux-rt-users@vger.kernel.org
-References: <20190429144428.29254-1-julien.grall@arm.com>
- <20190429144428.29254-8-julien.grall@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <74a6c2e6-126c-57f0-af5c-ab1130130eba@arm.com>
-Date:   Mon, 29 Apr 2019 16:19:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 11:19:35 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:42724 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728249AbfD2PTf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:19:35 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B1458C0081;
+        Mon, 29 Apr 2019 15:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556551176; bh=6ca6mfO960XBEcOh39ZiDJip0nWB/IKPMIyykJ70WEY=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=ej/ASn9kUF6DpwOz0Kaanp+8KeLtu2R8lijifgir3NVbN079ob8qsK6blxowQ7DM1
+         jlTL16Trt+O2a0j9p1gAPt0/UPGwh6ysnVdhDsXVzjJ/2MDXQvuX5eO3bB85vuEpAR
+         pQZfpuNveagwTo277SN+Db2E/OBh2g8kpo6N4jZLGWB9VABNt6LMTU++awUyEcrDlY
+         w+mD1mrVhSOCKCv/q0xclu+HdiQGokZrQw8jEs4cQuBnDpAXzKB8kSHITx2s1tTpp7
+         fXqICT3VEPMb101AeXIQo6OmPO9tCvPC1c7IYG8JEQF1KsaYaZ+oS58ETuUpUsAnpy
+         sZmMoA24vKGpQ==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 7CED8A006A;
+        Mon, 29 Apr 2019 15:19:29 +0000 (UTC)
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 29 Apr 2019 08:19:28 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
+ 29 Apr 2019 17:19:17 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     "Ong, Boon Leong" <boon.leong.ong@intel.com>,
+        Biao Huang <biao.huang@mediatek.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
+        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
+        "Voon, Weifeng" <weifeng.voon@intel.com>
+Subject: RE: [PATCH 2/2] net-next: stmmac: add mdio clause 45 access from
+ mac device for dwmac4
+Thread-Topic: [PATCH 2/2] net-next: stmmac: add mdio clause 45 access from
+ mac device for dwmac4
+Thread-Index: AQHU/lXExFDw5bAlc0G9MPOfQZ0kMKZTHp8AgAAh5QA=
+Date:   Mon, 29 Apr 2019 15:19:16 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B46E5B4@DE02WEMBXB.internal.synopsys.com>
+References: <1556519724-1576-1-git-send-email-biao.huang@mediatek.com>
+ <1556519724-1576-3-git-send-email-biao.huang@mediatek.com>
+ <AF233D1473C1364ABD51D28909A1B1B75C0C27ED@pgsmsx114.gar.corp.intel.com>
+In-Reply-To: <AF233D1473C1364ABD51D28909A1B1B75C0C27ED@pgsmsx114.gar.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190429144428.29254-8-julien.grall@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2019 15:44, Julien Grall wrote:
-> A recent change split iommu_dma_map_msi_msg() in two new functions. The
-> function was still implemented to avoid modifying all the callers at
-> once.
-> 
-> Now that all the callers have been reworked, iommu_dma_map_msi_msg() can
-> be removed.
+From: Ong, Boon Leong <boon.leong.ong@intel.com>
+Date: Mon, Apr 29, 2019 at 16:15:42
 
-Yay! The end of my horrible bodge :)
+> What is the preference of the driver maintainer here? =20
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Your implementation doesn't need the mdelay() so I think we should follow=20
+your way once you also address the review comments from Andrew and me.
 
-> Signed-off-by: Julien Grall <julien.grall@arm.com>
-> 
-> ---
->      Changes in v2:
->          - Rework the commit message
-> ---
->   drivers/iommu/dma-iommu.c | 20 --------------------
->   include/linux/dma-iommu.h |  5 -----
->   2 files changed, 25 deletions(-)
-> 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 2309f59cefa4..12f4464828a4 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -936,23 +936,3 @@ void iommu_dma_compose_msi_msg(struct msi_desc *desc,
->   	msg->address_lo &= cookie_msi_granule(domain->iova_cookie) - 1;
->   	msg->address_lo += lower_32_bits(msi_page->iova);
->   }
-> -
-> -void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
-> -{
-> -	struct msi_desc *desc = irq_get_msi_desc(irq);
-> -	phys_addr_t msi_addr = (u64)msg->address_hi << 32 | msg->address_lo;
-> -
-> -	if (WARN_ON(iommu_dma_prepare_msi(desc, msi_addr))) {
-> -		/*
-> -		 * We're called from a void callback, so the best we can do is
-> -		 * 'fail' by filling the message with obviously bogus values.
-> -		 * Since we got this far due to an IOMMU being present, it's
-> -		 * not like the existing address would have worked anyway...
-> -		 */
-> -		msg->address_hi = ~0U;
-> -		msg->address_lo = ~0U;
-> -		msg->data = ~0U;
-> -	} else {
-> -		iommu_dma_compose_msi_msg(desc, msg);
-> -	}
-> -}
-> diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
-> index 3fc48fbd6f63..ddd217c197df 100644
-> --- a/include/linux/dma-iommu.h
-> +++ b/include/linux/dma-iommu.h
-> @@ -82,7 +82,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr);
->   void iommu_dma_compose_msi_msg(struct msi_desc *desc,
->   			       struct msi_msg *msg);
->   
-> -void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg);
->   void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
->   
->   #else
-> @@ -122,10 +121,6 @@ static inline void iommu_dma_compose_msi_msg(struct msi_desc *desc,
->   {
->   }
->   
-> -static inline void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
-> -{
-> -}
-> -
->   static inline void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
->   {
->   }
-> 
+Maybe you can coordinate with Biao and submit a C45 implementation that=20
+can be tested by both ?
+
+Thanks,
+Jose Miguel Abreu
