@@ -2,138 +2,87 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D9DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CB9C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933DF2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0812021655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:40:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gzz1vEL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbfD2VkQ (ORCPT
+        id S1729491AbfD2Vkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 17:40:16 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:41775 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729252AbfD2VkQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 17:40:16 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MZl1l-1hEo5h0cBr-00Wj4u; Mon, 29 Apr 2019 23:40:14 +0200
-Subject: Re: [PATCH 4/4] input: keyboard: gpio-keys-polled: skip oftree code
- when CONFIG_OF disabled
-To:     Frank Rowand <frowand.list@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-References: <1555444645-15156-1-git-send-email-info@metux.net>
- <1555444645-15156-5-git-send-email-info@metux.net>
- <2a760b29-9f0b-ffa7-03dd-47ddb074563a@gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <d1a9f570-4f92-b46f-140e-45c823c82474@metux.net>
-Date:   Mon, 29 Apr 2019 23:40:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 29 Apr 2019 17:40:40 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53359 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729252AbfD2Vkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 17:40:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44tJ451Vd2z9sBV;
+        Tue, 30 Apr 2019 07:40:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556574037;
+        bh=nSuTSmQ4WhyowarfUioiQlZCzwTOgiF+9bVbpcklH+I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gzz1vEL6zOMn3Rg4FG+nm1o3SLMnHgxDI2q2HBRLiXOoujK0fH7KBRIXKPsuVJA9I
+         ZbgWNTeg1o1LJoQc0cz+cDGCy63h6rZ3pyN9RPjq1WHDjReWJ6ouQJvgeWKNhgQzUO
+         1ifqKS17M62t5iDd0g5CQksg7GWareJN0ZM6r+zJu1NI2+C+4pvHEWvICckc47LNxl
+         EN66Z1W3ellTQp9QXRZ2fW5GbFlCR0WQ6bO4v3KCo50Bx6J1apQp0JKagvFYVMfK5I
+         wh6x+zBE7ZY1coxILW/huymvsMGF7E9HnM0ij7UGLEJ326hsFuksxL9KfnCRHP/t78
+         cGwIHFJgoa5AQ==
+Date:   Tue, 30 Apr 2019 07:40:24 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the clk tree
+Message-ID: <20190430074024.40bf4c99@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <2a760b29-9f0b-ffa7-03dd-47ddb074563a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:I4a/wpfSYCV1FP4iWq6zHYT9Xsld2boyDi0X3mxwyz4FVfh43l1
- a3y7SajNXWAhMaiASYJtFUSzE96kmzZosSbSzZwueqX6AQpMJnxwNQLw/lTKymymgv/rPsh
- NM5K+IZlt2StBqcAxmaTvHiy5QxGRTXfA8VsmtS68v7H7aasK7Uocs9rKyFjOawoLJoCxwT
- qpr/60Kp6ApHBf2+XTEGQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8EZCKlsu8ng=:rPthvjdHhKarYQ/3UCc3WV
- 0RJ8yQyjwaKKhClCXbJYLZbXgtJqbLJfT13vDaP2mtobZfMFd6mI1SwLq2VSi1DnlH7oQiE1a
- 8Tda6HBx665ByrICysG1qcI7JQjbHW4gyxBWRkzy/sdOxKm935HhVpnpCT07buc6RwP+Bc+2j
- LtP+Az4MZf8P5GkKtd6FCS6MhAar5+cGndlXc8Qeuyz1WSUigOPX1XmCnin/2fSnyDQgiYyPq
- Ofsf8YRrsP3zK1DFtyV7O5ZxlMI+tAhbzT09Dg7uNvQf+Ve1PzO9fQYmLtKOGx8RlimbFjZwB
- jZzZ5TOKXn/OY8fsKZknZYMsNWGD7lz6uXQUe0Ym72xzYlLVQLm8smrkMSuPjtBQNwbMc2l6R
- hEGtcwKMMTe6mbDvCXwe7p+kcfujiSpHFfUE+VUGSpbq8Wng7Mkb964NYTC+aILgaZApro9Rm
- gBpGzznFPY8Fbtcv/kUVzTMdmWJL+FAcDhj8n2zJfOwBdHRgzglXmDCtg2kSB0gdwXI+vBvGz
- UwyMtrGF+XgjXV3zZVrvJM/MCsr05Mbh35xiuS5he/AAkuH1UVTP1YujOwVmQGtYksuDW5/8y
- /yfuNpxprCzTHYBbIi5As3hYe7PcaOMCoU1BdSNnZiKzgBGwN68UBIebf38rdgzbP/xcTe6Oj
- rvrW/Fhc5Qrbh7XZXonXI5ulgwlsmCSP7S8eG5lZ/MUrHAul00c3+L4LX0yPBXfmpeOZhZggh
- y/cTQAti9kbkZLf70KxZz8i2jjfl3zdpLPCWRCDHPjRrDOvuXB4AdE2PAZNA9bQfRY+BD6ZKe
- DVbqjzAONChgTnTMA6YfE1muvPgX0iK6PsXIs9+f11A5M/++jEdreHpixfIcOEAK8kLKXez
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/sBmbiR/G7ppATPAZ=rc/_zU"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.04.19 21:44, Frank Rowand wrote:
-> On 4/16/19 12:57 PM, Enrico Weigelt, metux IT consult wrote:
->> we don't need to build in oftree probing stuff when oftree isn't
->> enabled at all.
->>
->> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
->> ---
->>  drivers/input/keyboard/gpio_keys_polled.c | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
->> index 3f773b2..fbccb89 100644
->> --- a/drivers/input/keyboard/gpio_keys_polled.c
->> +++ b/drivers/input/keyboard/gpio_keys_polled.c
->> @@ -147,6 +147,7 @@ static void gpio_keys_polled_close(struct input_polled_dev *dev)
->>  static struct gpio_keys_platform_data *
->>  gpio_keys_polled_get_devtree_pdata(struct device *dev)
->>  {
->> +#ifdef CONFIG_OF
->>  	struct gpio_keys_platform_data *pdata;
->>  	struct gpio_keys_button *button;
->>  	struct fwnode_handle *child;
->> @@ -200,6 +201,9 @@ static void gpio_keys_polled_close(struct input_polled_dev *dev)
->>  	}
->>  
->>  	return pdata;
->> +#else /* CONFIG_OF */
->> +	return ERR_PTR(-ENOENT);
->> +#endif /* CONFIG_OF */
->>  }
->>  
->>  static void gpio_keys_polled_set_abs_params(struct input_dev *input,
->> @@ -226,7 +230,7 @@ static void gpio_keys_polled_set_abs_params(struct input_dev *input,
->>  	{ .compatible = "gpio-keys-polled", },
->>  	{ },
->>  };
-> 
-> 
->> -MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
->> +MODULE_DEVICE_TABLE_OF(gpio_keys_polled_of_match);
-> 
-> Not needed, when you use of_match_ptr() -- see below.
+--Sig_/sBmbiR/G7ppATPAZ=rc/_zU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Shall I remove the MODULE_DEVICE_TABLE... line completely ?
+Hi all,
 
-I'd like to have nothing of-related compiled in, when oftree isn't
-enabled.
+Commit
 
->>  static struct gpio_desc *gpio_keys_polled_get_gpiod_fwnode(
->>  	struct device *dev,
->> @@ -452,7 +456,9 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
->>  	.probe	= gpio_keys_polled_probe,
->>  	.driver	= {
->>  		.name	= DRV_NAME,
-> 
->> +#ifdef CONFIG_OF
->>  		.of_match_table = gpio_keys_polled_of_match,
->> +#endif /* CONFIG_OF */
-> 
-> No need for the #ifdef, use of_match_ptr():
-> 
->   		.of_match_table = of_match_ptr(gpio_keys_polled_of_match),
+  01d0a541ff4b ("clk: imx: correct i.MX7D AV PLL num/denom offset")
 
-Ok, thanks.
+is missing a Signed-off-by from its committer.
 
+--=20
+Cheers,
+Stephen Rothwell
 
---mtx
+--Sig_/sBmbiR/G7ppATPAZ=rc/_zU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzHb0gACgkQAVBC80lX
+0GwEXQgAi5ofR/8JCHxb95Bf6OedrtZbAaZxx6vup6H5pFus+C0tg5RWX6j65mpM
+/eIlZJRwJWtFrRxew8knNo6X32x8VSHEQQrwe4RQTY5k84KoSgTgO87330qBEclp
+j3yBWVAvyrc3K2nbDUTXbQMqTp0a1XVVYI51Pqs7yGm2TKhT7bvIRw0oHod/lDbF
+BA4xiMNfd0E91vQynY7VBq1uyDCysq8dbjN3eaE+rxSs4E/3jsBaeStfv9x2RDoP
+TsUXJu91wbhtHjCaerWkMhBsQnOuKl/MvVrOtmaXUxoZVxWPI/cBYove0LZDcI5P
+XJ3QlCyc5hNbtUlwFyDUUc7IATq7aA==
+=wDRd
+-----END PGP SIGNATURE-----
+
+--Sig_/sBmbiR/G7ppATPAZ=rc/_zU--
