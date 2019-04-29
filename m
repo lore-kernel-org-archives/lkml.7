@@ -2,145 +2,114 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D36CC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D843C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4AA20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:28:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="HCFKw9zf"
+	by mail.kernel.org (Postfix) with ESMTP id 46B0C20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfD2Q2e (ORCPT
+        id S1728745AbfD2Q3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:28:34 -0400
-Received: from mail-eopbgr750087.outbound.protection.outlook.com ([40.107.75.87]:26458
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728518AbfD2Q2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:28:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lC0eLMpx4+gAQbCBdlaCfVj3OMf2yetCZarWPVVfioc=;
- b=HCFKw9zfdW5j/GuIWbNM3tZFL3Hjtn4QYHudrKv7wdahb/g3FpjMVTId9QabAMgucmHy+9Jbkl++A5uNgJN9K4lBO5NMTSau9hM0VMDWNDkrDEQThWUCH7D/m6+sYd7MjOGgi8R5pSDQDzNLofHe7lXLq4lhvBlnHYZ7kNH+uZE=
-Received: from SN4PR0201CA0032.namprd02.prod.outlook.com
- (2603:10b6:803:2e::18) by BY2PR02MB153.namprd02.prod.outlook.com
- (2a01:111:e400:2c20::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.20.1835.14; Mon, 29
- Apr 2019 16:28:29 +0000
-Received: from CY1NAM02FT023.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::208) by SN4PR0201CA0032.outlook.office365.com
- (2603:10b6:803:2e::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1835.12 via Frontend
- Transport; Mon, 29 Apr 2019 16:28:29 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; lixom.net; dkim=none (message not signed)
- header.d=none;lixom.net; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT023.mail.protection.outlook.com (10.152.74.237) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1835.13
- via Frontend Transport; Mon, 29 Apr 2019 16:28:28 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hL98m-0003vP-8c; Mon, 29 Apr 2019 09:28:28 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hL98h-0006Gp-50; Mon, 29 Apr 2019 09:28:23 -0700
-Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x3TGSDKA005901;
-        Mon, 29 Apr 2019 09:28:13 -0700
-Received: from [172.19.20.5]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1hL98X-0006FJ-Ef; Mon, 29 Apr 2019 09:28:13 -0700
-Subject: Re: [PATCH] spi: zynqmp: Fix build break
-To:     Olof Johansson <olof@lixom.net>, <linux-spi@vger.kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Rajan Vaja <rajan.vaja@xilinx.com>,
-        Jolly Shah <jollys@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>
-References: <2bb66114-c976-9c44-6db3-33a5dd12edde@monstr.eu>
- <20190429162246.6061-1-olof@lixom.net>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <6d31dc90-7d0a-fc8d-cbc3-331200a01755@xilinx.com>
-Date:   Mon, 29 Apr 2019 09:28:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 12:29:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57940 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728518AbfD2Q3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:29:00 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6738C309264B;
+        Mon, 29 Apr 2019 16:29:00 +0000 (UTC)
+Received: from haswell-e.nc.xsintricity.com (ovpn-112-9.rdu2.redhat.com [10.10.112.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 890EC5D71D;
+        Mon, 29 Apr 2019 16:28:59 +0000 (UTC)
+Message-ID: <48cbd548d153d1d2a1cf6c4f2127a6cef5d55deb.camel@redhat.com>
+Subject: [GIT PULL] Please pull rdma.git
+From:   Doug Ledford <dledford@redhat.com>
+To:     "Torvalds, Linus" <torvalds@linux-foundation.org>
+Cc:     linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Gunthorpe, Jason" <jgg@ziepe.ca>
+Date:   Mon, 29 Apr 2019 12:28:57 -0400
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-uUtEAudNqpCcJkrqUv+r"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20190429162246.6061-1-olof@lixom.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(346002)(396003)(39860400002)(2980300002)(189003)(199004)(77096007)(9786002)(26005)(31696002)(478600001)(186003)(230700001)(81156014)(356004)(44832011)(76176011)(6246003)(31686004)(36756003)(107886003)(8676002)(81166006)(8936002)(2906002)(2486003)(23676004)(486006)(64126003)(50466002)(476003)(36386004)(54906003)(65826007)(58126008)(110136005)(446003)(11346002)(2616005)(63266004)(5660300002)(106002)(47776003)(4326008)(305945005)(65806001)(229853002)(336012)(65956001)(316002)(70206006)(70586007)(126002)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY2PR02MB153;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c430d502-812c-4034-9c49-08d6ccbfb665
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:BY2PR02MB153;
-X-MS-TrafficTypeDiagnostic: BY2PR02MB153:
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <BY2PR02MB153EE4CA9673A4B4A187BE3C6390@BY2PR02MB153.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:439;
-X-Forefront-PRVS: 0022134A87
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: JhY0kn2iWY9YJxpXQbKzPzws6tdcYtO8bp0wm3lnDdsF4w8oQdNjfCtuK0f9sfRHumgIy42AqKtxTBsLqCfXyuvAaXcBjCw9ycBNVKH2YL2kkDeaDvCDmfT7Oyx1R71f92WTtA4u2Wx6UUViQT/t/CMT72ucKoIv1EIUzFVeF6OuhHT9fwqtDZ+638cFPRLnKscD6Tn9bFEwp3tz5oJJsqSF/3Nq+dz5Z5ibxvd5IfLhCzNOEr4Vgl0rVd0F8i/E3zNXXQyLiQZFTJtmEI6tSMck+A58CEKE12Fu5JawiFw5OetG7VAP1IBvMOc93OM+BMMwnY6CammFfytRjOzgP0Lq7goYQ9m/Nk+lbtvefqIMIkJqE5T+h8AtNoGBMaB0qjBAg0L8AgZc+xmgtxoKnwPSeRJi8TJ31gyVHJoskxA=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2019 16:28:28.7463
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c430d502-812c-4034-9c49-08d6ccbfb665
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY2PR02MB153
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 29 Apr 2019 16:29:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29. 04. 19 9:22, Olof Johansson wrote:
-> Missing include:
-> drivers/spi/spi-zynqmp-gqspi.c:1025:13: error: implicit declaration of
->   function 'zynqmp_pm_get_eemi_ops'; did you mean
->   'zynqmp_process_dma_irq'? [-Werror=implicit-function-declaration]
-> 
-> Fixes: 3d0313786470a ('drivers: Defer probe if firmware is not ready')
-> Cc: Rajan Vaja <rajan.vaja@xilinx.com>
-> Cc: Jolly Shah <jollys@xilinx.com>
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Olof Johansson <olof@lixom.net>
-> ---
->  drivers/spi/spi-zynqmp-gqspi.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
-> index d07b6f940f9f..9850a0efe85a 100644
-> --- a/drivers/spi/spi-zynqmp-gqspi.c
-> +++ b/drivers/spi/spi-zynqmp-gqspi.c
-> @@ -14,6 +14,7 @@
->  #include <linux/delay.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/dmaengine.h>
-> +#include <linux/firmware/xlnx-zynqmp.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> 
 
+--=-uUtEAudNqpCcJkrqUv+r
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Michal Simek <michal.simek@xilinx.com>
+Hi Linus,
 
-Thanks,
-Michal
+As per the thread on our last pull request, this is the two line build
+fix for s390 and mips.
+
+The following changes since commit
+2557fabd6e29f349bfa0ac13f38ac98aa5eafc74:
+
+  RDMA/hns: Bugfix for mapping user db (2019-04-25 10:40:04 -0300)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-
+linus
+
+for you to fetch changes up to d79a26b99f5f40db6863b1973750fd1d134d99b4:
+
+  RDMA/uverbs: Fix compilation error on s390 and mips platforms (2019-
+04-29 11:47:55 -0400)
+
+----------------------------------------------------------------
+Pull request for 5.1-rc
+
+- Build fix for the last pull request on s390
+
+----------------------------------------------------------------
+Leon Romanovsky (1):
+      RDMA/uverbs: Fix compilation error on s390 and mips platforms
+
+ drivers/infiniband/core/uverbs_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-uUtEAudNqpCcJkrqUv+r
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAlzHJkkACgkQuCajMw5X
+L91InBAAl9wPAKjtoPDTK8G+FYEtytb74NlBVxkJXyh8axLo1YETZYy+Qv3S27L6
+mnY5lK3ottBBCtiho1XxtG5mqKWmWWC1to5cSx/UG90oc8s3NXZ5dhmMEtLLEVbG
+txuTL4X/TYy0veTlowDCUyYimPO8VZUy9agoybU6FBrvylobf/qU2gw0oP42oMr4
+2AiAK/9XiZTOwswG/PVuTy4UUYwM5hzEH7un74Qb/gaeQKYyGwwk2wQUtOZ7bgmh
+AoW1XnoAz2rrcvJGOGjpjY2ftHHIpB4ITIdBDC7sypNF9GJGYWMaVqLSe3L8DKNg
+BwboJ+ZCYelbRHGO0SPy5f68bP+S64XHcW1skvPc/+XEQF+8qYXWTPwjMtCWs5aY
+f67aC5k6yakbEDZ8vRp3tTqYXXzCcVNU27V+TCz2KyPas1hW/1x7ATo/czLjWP/1
+Pw0sYrWl0cOdNw4Uk9jJPhgYDZmbbQILPSBbif7Njuuyf5cvRP/o8IDktThBCm7z
+GKZguuTLJpHGwiE8VN6zntfB5s9jOPLPYO7K8dxsKNcmY8/RpVShibIK+T0d9PlD
+qT9r7lha7ZimdS14I1M1fgGtsBBk6TXCwxQ9Pifxq5QDIw08mhI3TdlmuexMPmYB
+3wgi6V1gWhlXZnulp3239r06xDSKU7iLmYfgHUVe8dA+ql6rpN4=
+=SufS
+-----END PGP SIGNATURE-----
+
+--=-uUtEAudNqpCcJkrqUv+r--
+
