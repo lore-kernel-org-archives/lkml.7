@@ -1,79 +1,84 @@
 Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F92BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0080DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEAC20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF9120652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=eat-dinner.eu header.i=@eat-dinner.eu header.b="vLvAlA23"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="baorS2Qb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfD2Hfw (ORCPT
+        id S1727506AbfD2Hgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:35:52 -0400
-Received: from mail.eat-dinner.eu ([80.211.38.224]:43015 "EHLO eat-dinner.eu"
+        Mon, 29 Apr 2019 03:36:33 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34214 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfD2Hfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:35:51 -0400
-Received: by eat-dinner.eu (Postfix, from userid 1001)
-        id 5BBD4A35C7; Mon, 29 Apr 2019 09:32:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=eat-dinner.eu;
-        s=mail; t=1556523324;
-        bh=1wXsRnVQKyR5953v1mK5+VSjATpkqCFjMxx9a9NW6X4=;
-        h=Date:From:To:Subject:From;
-        b=vLvAlA23YMd/Mo2WzoHrDx9oNTDRjKptKz6pVcbkApvRUiqWgBBMXxcb45lKG2O94
-         kLwIdPccpoHc/akbcU50mxU+IjVkEDe7nFkNtxJ3Uk/OBzhmZTpn4sATKZ9D1gQr09
-         X6uAsArDLAXDTjaOT1V2p6eTrgn6/c6TJrb3Xbzk=
-Received: by mail.eat-dinner.eu for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 07:32:33 GMT
-Message-ID: <20190429084500-0.1.19.q7o.0.h9byqlccqn@eat-dinner.eu>
-Date:   Mon, 29 Apr 2019 07:32:33 GMT
-From:   =?UTF-8?Q? "Kapolcs_M=C3=A1ty=C3=A1s" ?= 
-        <kapolcs.matyas@eat-dinner.eu>
-To:     <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Dolgoz=C3=B3i_juttat=C3=A1sok?=
-X-Mailer: mail.eat-dinner.eu
+        id S1726846AbfD2Hgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 03:36:33 -0400
+Received: from zn.tnic (p200300EC2F073600CC908F6B12A96C5F.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:3600:cc90:8f6b:12a9:6c5f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6FF101EC0A99;
+        Mon, 29 Apr 2019 09:36:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1556523391;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ecj0aE6gq10rKox5w0C12D0qKcWWyug+xBLPklihyDQ=;
+        b=baorS2QbQlfP18vTtOK0cVWrLq5HKuwlJ3nSCscAr8t9TBRZYApffFMdbzA7Htog2Qfk//
+        xz9T4xLDXMcavQcOCdS9skoBKgNx7Huc/ylacMxvQU5GyJAxdakpWPmnASMO82vOk4Wcyt
+        Et4112kvddtMy0zadeuSMWAOZH3usrk=
+Date:   Mon, 29 Apr 2019 09:36:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Zhao, Yakui" <yakui.zhao@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Chen, Jason CJ" <jason.cj.chen@intel.com>
+Subject: Re: [RFC PATCH v5 4/4] x86/acrn: Add hypercall for ACRN guest
+Message-ID: <20190429073625.GA2324@zn.tnic>
+References: <1556067260-9128-1-git-send-email-yakui.zhao@intel.com>
+ <1556067260-9128-5-git-send-email-yakui.zhao@intel.com>
+ <20190425070712.GA57256@gmail.com>
+ <6dd021a9-e2c0-ee84-55fd-3e6dfb4bd944@intel.com>
+ <20190425110025.GA16164@zn.tnic>
+ <473d145c-4bfd-4ec8-34c3-8a26a78fe40d@intel.com>
+ <20190427085816.GB12360@zn.tnic>
+ <e04c43cf-029b-d459-e9d9-1a1f5c403dab@intel.com>
+ <20190428100309.GA2334@zn.tnic>
+ <4c5ca6d7-ffb1-a5a5-9e46-9057802318e0@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4c5ca6d7-ffb1-a5a5-9e46-9057802318e0@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C3=9Cdv=C3=B6zl=C3=B6m!
-=20
-2019 janu=C3=A1rt=C3=B3l v=C3=A1ltozik a nem b=C3=A9r jelleg=C5=B1 juttat=
-=C3=A1sok rendje.
-=20
-Egy kiv=C3=A1l=C3=B3 lehet=C5=91s=C3=A9ggel =C3=A9lehet, amennyiben a mi =
-k=C3=A1rty=C3=A1nkat v=C3=A1lasztja!
-=20
-Ez a k=C3=A1rtya:
-=20
-Korl=C3=A1tlanul felhaszn=C3=A1lhat=C3=B3:
-=20
-k=C3=A9szp=C3=A9nzfelv=C3=A9tel
-=C3=A9lelmiszer v=C3=A1s=C3=A1rl=C3=A1s
-eg=C3=A9szs=C3=A9g=C3=BCgyi ell=C3=A1t=C3=A1s
-elektronikai term=C3=A9kek v=C3=A1s=C3=A1rl=C3=A1sa
-oktat=C3=A1s
-sz=C3=A1ll=C3=A1s
-=20
-K=C3=A1rty=C3=A1nk az egyetlen olyan val=C3=B3ban szabadfelhaszn=C3=A1l=C3=
-=A1s=C3=BA k=C3=A1rtya, melyet minden POS termin=C3=A1l elfogad!
-=20
-Amennyiben k=C3=A1rty=C3=A1nk felkeltette =C3=A9rdekl=C5=91d=C3=A9s=C3=A9=
-t, mint dolgoz=C3=B3i juttat=C3=A1s, k=C3=A9rem keressen fel a tov=C3=A1b=
-bi t=C3=A1j=C3=A9koztat=C3=A1s =C3=A9rdek=C3=A9ben!
-=20
-=C3=96r=C3=B6mmel =C3=A1llunk rendelkez=C3=A9s=C3=A9re mindenben!
+On Mon, Apr 29, 2019 at 09:24:12AM +0800, Zhao, Yakui wrote:
+> Yes. "movq" only indicates explicitly that it is 64-bit mov as ACRN guest
+> only works under 64-bit mode.
+> I also check the usage of "mov" and "movq" in this scenario. There is no
+> difference except that the movq is an explicit 64-op.
 
+Damn, I'm tired of explaining this: it is explicit only to the code
+reader. gcc generates the *same* instruction no matter whether it has a
+"q" suffix or not as long as the destination register is a 64-bit one.
 
-Kapolcs M=C3=A1ty=C3=A1s
-Hungary Team Leader
+If you prefer to have it explicit, sure, use "movq".
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
