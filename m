@@ -2,57 +2,68 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3859AC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBD5C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04B321655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F432215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="joV9WmxE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HuFJyw7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbfD2U2V (ORCPT
+        id S1729365AbfD2Ua1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:28:21 -0400
-Received: from mail.efficios.com ([167.114.142.138]:51518 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729212AbfD2U2V (ORCPT
+        Mon, 29 Apr 2019 16:30:27 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39372 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729316AbfD2Ua1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:28:21 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 462E71DA3AD;
-        Mon, 29 Apr 2019 16:28:19 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id lfsha8KaN3Fx; Mon, 29 Apr 2019 16:28:18 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 465211DA3A4;
-        Mon, 29 Apr 2019 16:28:18 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 465211DA3A4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556569698;
-        bh=YdzuJk5SnUFbR7C4FKv2y0/l5GDXHqEZ1IsDFtfLIUU=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=joV9WmxEQVsqv19xO5E+SX74B/DmyGn6EayUx6zUFDMkG+aZpO/OwVshAQ75YdpCN
-         9H414rbzLgB39elHjRYUbZ6ZCymS+V11b9Vpngz2cvicrJ6iJ6wT8YjE/UwtlSruF4
-         Ri63rFjdn1PoO8MEhAsVjjPvaA6OGnRXJ6DlneymQ5olMeBwzNf/kdeqBR6reW79PQ
-         3f++EZ9boHhC6ok8or6vGjriDoH2E1hDb0kV2Lj8T+W6wAPjPjIdYzZKghgM4ShWjn
-         ZIIJujpKMw7UA1qqREsVKKowtWi8VeKtdHf+M2/1fnF+cGZWZqErIixavrdoVs+Qn+
-         LKzDi6vPjokAA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id C8GZDjvDNJLn; Mon, 29 Apr 2019 16:28:18 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 261AB1DA393;
-        Mon, 29 Apr 2019 16:28:18 -0400 (EDT)
-Date:   Mon, 29 Apr 2019 16:28:18 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     ndesaulniers <ndesaulniers@google.com>, shuah <shuah@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mon, 29 Apr 2019 16:30:27 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e92so5616626plb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:30:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zoZD/dNKX5WgAZZR7UrYB8wzOfrnR6MIY38MQG1fU9I=;
+        b=HuFJyw7mcBSICXvwxdh6PMU9X3LJLUHpU9+bKmS9D3HjBjD776G0OSDEufj+PWdErx
+         k+PyxOOFQOv4gIG3lXqz8OPtk+h5QV9gyLoysdsdq29yCYbFcRy2Lcl69wcmmoVdCLpe
+         FlsNPdnOMLUXYepIRQZiaczXsQNBazRJMZ0M16estlF4q8C0e6bWl/rw3sku1cg3LAG6
+         /hr2t34gB65l0tdPv6Jcz9kv0WhOVgBjfreNS4WifOA0gMfDBQgOGsQTS8cNMEW8Ovlq
+         kemmEstg9YzsRssiopg3wv6x0o1paj4jb7lHf1m7hxUMUWiGesyu03sKiVEM3kPLdQFl
+         poeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zoZD/dNKX5WgAZZR7UrYB8wzOfrnR6MIY38MQG1fU9I=;
+        b=EAgizu+OHlh/kkGnId9ABsb1y5KFm4kytn3VlHbHDVHDoIizFxwhSBoAWb6HWS4Kl7
+         zor5uZkg8ChKCP9usCC+nJ6WH5WmXNKNVFBzLg2Ic6KTNIRMK+2bhrncYBtEufGId+Fg
+         EwXwrTY8tSk/GogXwlhx3caR4I1CQMizZppGl8RzlrfIdOINKfl3Ix1HPrgXiU3Qfk1k
+         fLlDcnlD5pUtSvwqInX0V1SNOfvD6qjSlt7yOebobeNfrNfUklUlkCTGt8upQduyr8mb
+         wY3fDIZtsPzTRGdlMdcBAkrmtM/6O6EH71g/TIQz0Xk7b/36pOh54WR/CLfOB/A2PL+f
+         xVfg==
+X-Gm-Message-State: APjAAAVwI4RBOfrYBWfU3IQt5onDsi0ocTkeW698hBAKpZ0hOHgGfokh
+        2HHjHAqKYgXuIsiy3WEwPcVUc6JZNgIwdFhpdkXmzw==
+X-Google-Smtp-Source: APXvYqxhr41z/hs2DekvYrX7RAFq341c0UsIKJJmbvYU/vfug6dUJri8bpSYOLqVcpo5BkOuZml7Dc4pFEKcsYeeoUo=
+X-Received: by 2002:a17:902:380c:: with SMTP id l12mr63915997plc.320.1556569825937;
+ Mon, 29 Apr 2019 13:30:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
+ <20190429152803.7719-13-mathieu.desnoyers@efficios.com> <CAKwvOdnbH0+ju5Ny-mB-Z4kC+ALyCJOU4Q8OCLHHjFAQzJqsXA@mail.gmail.com>
+ <712082435.384.1556569697998.JavaMail.zimbra@efficios.com>
+In-Reply-To: <712082435.384.1556569697998.JavaMail.zimbra@efficios.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 29 Apr 2019 13:30:14 -0700
+Message-ID: <CAKwvOdk1bUgczvUr3OVttFZ4ArO6fSEz6_enPmu+GDDy1yTrTQ@mail.gmail.com>
+Subject: Re: [PATCH for 5.2 12/12] rseq/selftests: add -no-integrated-as for clang
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     shuah <shuah@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         linux-api <linux-api@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -75,110 +86,57 @@ Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         Joel Fernandes <joelaf@google.com>,
         linux-kselftest <linux-kselftest@vger.kernel.org>,
         clang-built-linux <clang-built-linux@googlegroups.com>
-Message-ID: <712082435.384.1556569697998.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAKwvOdnbH0+ju5Ny-mB-Z4kC+ALyCJOU4Q8OCLHHjFAQzJqsXA@mail.gmail.com>
-References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com> <20190429152803.7719-13-mathieu.desnoyers@efficios.com> <CAKwvOdnbH0+ju5Ny-mB-Z4kC+ALyCJOU4Q8OCLHHjFAQzJqsXA@mail.gmail.com>
-Subject: Re: [PATCH for 5.2 12/12] rseq/selftests: add -no-integrated-as for
- clang
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/selftests: add -no-integrated-as for clang
-Thread-Index: Ac/EHQ/mSHgf8Nq7m+w8ff+ojTnKhQ==
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 29, 2019, at 1:03 PM, ndesaulniers ndesaulniers@google.com wrote:
+On Mon, Apr 29, 2019 at 1:28 PM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+> ----- On Apr 29, 2019, at 1:03 PM, ndesaulniers ndesaulniers@google.com wrote:
+>
+> > On Mon, Apr 29, 2019 at 8:29 AM Mathieu Desnoyers
+> > <mathieu.desnoyers@efficios.com> wrote:
+> >> diff --git a/tools/testing/selftests/rseq/Makefile
+> >> b/tools/testing/selftests/rseq/Makefile
+> >> index c30c52e1d0d2..d6469535630a 100644
+> >> --- a/tools/testing/selftests/rseq/Makefile
+> >> +++ b/tools/testing/selftests/rseq/Makefile
+> >> @@ -1,5 +1,11 @@
+> >>  # SPDX-License-Identifier: GPL-2.0+ OR MIT
+> >> -CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./
+> >> +
+> >> +ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+> >> +CLANG_FLAGS += -no-integrated-as
+> >> +endif
+> >> +
+> >> +CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ \
+> >> +         $(CLANG_FLAGS)
+> >
+> > The top level Makefile exports $(CLANG_FLAGS), which should contain
+> > `-no-integrated-as`.  Is that available here?  If so, then you can
+> > just add `$(CLANG_FLAGS)`, no compiler check needed.
+>
+> AFAIU, the makefiles under tools/testing/selftests all end up including
+> tools/testing/selftests/lib.mk, which states:
+>
+> "# This mimics the top-level Makefile. We do it explicitly here so that this
+>  # Makefile can operate with or without the kbuild infrastructure."
+>
+> So I don't think it's using any of the definitions from the toplevel
+> Makefile.
+>
+> > If not, maybe the test for CONFIG_CC_IS_CLANG is cleaner?
+>
+> A quick test indicates that the toplevel CONFIG_* definitions are unavailable
+> from the kernel selftests makefiles.
 
-> On Mon, Apr 29, 2019 at 8:29 AM Mathieu Desnoyers
-> <mathieu.desnoyers@efficios.com> wrote:
->>
->> Ongoing work for asm goto support from clang requires the
->> -no-integrated-as compiler flag.
->>
->> This compiler flag is present in the toplevel kernel Makefile,
->> but is not replicated for selftests. Add it specifically for
->> the rseq selftest which requires asm goto.
->>
->> Link: https://reviews.llvm.org/D56571
->> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> CC: Nick Desaulniers <ndesaulniers@google.com>
->> CC: Thomas Gleixner <tglx@linutronix.de>
->> CC: Joel Fernandes <joelaf@google.com>
->> CC: Peter Zijlstra <peterz@infradead.org>
->> CC: Catalin Marinas <catalin.marinas@arm.com>
->> CC: Dave Watson <davejwatson@fb.com>
->> CC: Will Deacon <will.deacon@arm.com>
->> CC: Shuah Khan <shuah@kernel.org>
->> CC: Andi Kleen <andi@firstfloor.org>
->> CC: linux-kselftest@vger.kernel.org
->> CC: "H . Peter Anvin" <hpa@zytor.com>
->> CC: Chris Lameter <cl@linux.com>
->> CC: Russell King <linux@arm.linux.org.uk>
->> CC: Michael Kerrisk <mtk.manpages@gmail.com>
->> CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
->> CC: Paul Turner <pjt@google.com>
->> CC: Boqun Feng <boqun.feng@gmail.com>
->> CC: Josh Triplett <josh@joshtriplett.org>
->> CC: Steven Rostedt <rostedt@goodmis.org>
->> CC: Ben Maurer <bmaurer@fb.com>
->> CC: linux-api@vger.kernel.org
->> CC: Andy Lutomirski <luto@amacapital.net>
->> CC: Andrew Morton <akpm@linux-foundation.org>
->> CC: Linus Torvalds <torvalds@linux-foundation.org>
->> ---
->>  tools/testing/selftests/rseq/Makefile | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/testing/selftests/rseq/Makefile
->> b/tools/testing/selftests/rseq/Makefile
->> index c30c52e1d0d2..d6469535630a 100644
->> --- a/tools/testing/selftests/rseq/Makefile
->> +++ b/tools/testing/selftests/rseq/Makefile
->> @@ -1,5 +1,11 @@
->>  # SPDX-License-Identifier: GPL-2.0+ OR MIT
->> -CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./
->> +
->> +ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
->> +CLANG_FLAGS += -no-integrated-as
->> +endif
->> +
->> +CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ \
->> +         $(CLANG_FLAGS)
-> 
-> The top level Makefile exports $(CLANG_FLAGS), which should contain
-> `-no-integrated-as`.  Is that available here?  If so, then you can
-> just add `$(CLANG_FLAGS)`, no compiler check needed.
-
-AFAIU, the makefiles under tools/testing/selftests all end up including
-tools/testing/selftests/lib.mk, which states:
-
-"# This mimics the top-level Makefile. We do it explicitly here so that this
- # Makefile can operate with or without the kbuild infrastructure."
-
-So I don't think it's using any of the definitions from the toplevel
-Makefile.
-
-> If not, maybe the test for CONFIG_CC_IS_CLANG is cleaner?
-
-A quick test indicates that the toplevel CONFIG_* definitions are unavailable
-from the kernel selftests makefiles.
-
-> Thanks for the patch, and helping test asm goto in Clang!
-
-You're very welcome! Considering that I intend to have rseq widely adopted in
-user-space, it's only natural to consider that its user-space side needs to be
-compiled by clang as well.
-
-Thanks,
-
-Mathieu
+Ok, in that case...
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Thanks again!
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Thanks,
+~Nick Desaulniers
