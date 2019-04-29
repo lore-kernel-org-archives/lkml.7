@@ -2,149 +2,159 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78517C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AC5C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CF7206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD27206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:57:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=haabendal.dk header.i=@haabendal.dk header.b="lBNJsg0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfD2G4w (ORCPT
+        id S1727391AbfD2G5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:56:52 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7705 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726764AbfD2G4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:56:52 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5ECC985FD7590DC8E2CB;
-        Mon, 29 Apr 2019 14:56:49 +0800 (CST)
-Received: from [127.0.0.1] (10.177.19.180) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Apr 2019
- 14:56:44 +0800
-Subject: Re: [PATCH next 23/25] thermal: Use dev_get_drvdata()
-To:     Zhang Rui <rui.zhang@intel.com>, <linux-kernel@vger.kernel.org>
-CC:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        <linux-pm@vger.kernel.org>
-References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
- <20190423075020.173734-24-wangkefeng.wang@huawei.com>
- <1556509663.2396.8.camel@intel.com>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <c835c3db-a070-94d5-d4d1-ae9bb521b76d@huawei.com>
-Date:   Mon, 29 Apr 2019 14:55:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.1
+        Mon, 29 Apr 2019 02:57:48 -0400
+Received: from mailrelay4-1.pub.mailoutpod1-cph3.one.com ([46.30.210.185]:24048
+        "EHLO mailrelay4-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727264AbfD2G5s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 02:57:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=haabendal.dk; s=20140924;
+        h=content-type:mime-version:message-id:in-reply-to:date:references:subject:cc:
+         to:from:from;
+        bh=6XgGXBZd9XuP2oE4RYwYzog341NRJDxtjWMZBSjiAvQ=;
+        b=lBNJsg0TqOZCs9zsmi7OlOlz1wKeTb8FI0J/+yKQeypPoT337WSvpPYP2/pyW3ht3JjaSTybk0hbz
+         c0LpDVQOhmRpZB7EFxCcruxLFgSmAMtfq2RxssZSD9SC3JZbOA2dkqsbdOav7qrmogx3ryl8zofC4J
+         4WA76c54x5vGgSFE=
+X-HalOne-Cookie: ee6e547916cc579600553f0a2d7cd6ab5b054162
+X-HalOne-ID: 164fce27-6a4c-11e9-a5a1-d0431ea8bb10
+Received: from localhost (unknown [193.163.1.7])
+        by mailrelay4.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 164fce27-6a4c-11e9-a5a1-d0431ea8bb10;
+        Mon, 29 Apr 2019 06:57:43 +0000 (UTC)
+From:   Esben Haabendal <esben@haabendal.dk>
+To:     "Enrico Weigelt\, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        andrew@aj.id.au, andriy.shevchenko@linux.intel.com,
+        macro@linux-mips.org, vz@mleia.com, slemieux.tyco@gmail.com,
+        khilman@baylibre.com, liviu.dudau@arm.com, sudeep.holla@arm.com,
+        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
+        linux@prisktech.co.nz, matthias.bgg@gmail.com,
+        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH 40/41] drivers: tty: serial: helper for setting mmio range
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+        <1556369542-13247-41-git-send-email-info@metux.net>
+Date:   Mon, 29 Apr 2019 08:57:43 +0200
+In-Reply-To: <1556369542-13247-41-git-send-email-info@metux.net> (Enrico
+        Weigelt's message of "Sat, 27 Apr 2019 14:52:21 +0200")
+Message-ID: <87muk9z4bc.fsf@haabendal.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1556509663.2396.8.camel@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.177.19.180]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+"Enrico Weigelt, metux IT consult" <info@metux.net> writes:
 
-On 2019/4/29 11:47, Zhang Rui wrote:
-> On 二, 2019-04-23 at 15:50 +0800, Kefeng Wang wrote:
->> Using dev_get_drvdata directly.
->>
->> Cc: Zhang Rui <rui.zhang@intel.com>
->> Cc: Eduardo Valentin <edubezval@gmail.com>
->> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
->> Cc: linux-pm@vger.kernel.org
->> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->> ---
->>  .../intel/int340x_thermal/processor_thermal_device.c      | 8 +-----
->> --
->>  drivers/thermal/st/stm_thermal.c                          | 6 ++----
->>  2 files changed, 3 insertions(+), 11 deletions(-)
->>
->> diff --git
->> a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
->> b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
->> index 8e1cf4d789be..4ad54b8d4778 100644
->> ---
->> a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
->> +++
->> b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
->> @@ -81,8 +81,6 @@ static ssize_t
->> power_limit_##index##_##suffix##_show(struct device *dev, \
->>  					struct device_attribute
->> *attr, \
->>  					char *buf) \
->>  { \
->> -	struct pci_dev *pci_dev; \
->> -	struct platform_device *pdev; \
->>  	struct proc_thermal_device *proc_dev; \
->>  	\
->>  	if (proc_thermal_emum_mode == PROC_THERMAL_NONE) { \
->> @@ -91,11 +89,7 @@ static ssize_t
->> power_limit_##index##_##suffix##_show(struct device *dev, \
->>  	} \
->>  	\
->>  	if (proc_thermal_emum_mode == PROC_THERMAL_PLATFORM_DEV) { \
->> -		pdev = to_platform_device(dev); \
->> -		proc_dev = platform_get_drvdata(pdev); \
->> -	} else { \
->> -		pci_dev = to_pci_dev(dev); \
->> -		proc_dev = pci_get_drvdata(pci_dev); \
->> +		proc_dev = dev_get_drvdata(dev); \
->>  	} \
->>  	return sprintf(buf, "%lu\n",\
->>  	(unsigned long)proc_dev->power_limits[index].suffix * 1000);
->> \
-> Sumeet has a patch to fix the same issue, which has been in my tree
-> https://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux.git/commit
-> /?h=next&id=1948d498dcf680bc650391f23da2f97e59f9126d
->
-> Plus, the previous fix is wrong because proc_dev will be left
-> uninitialized if proc_thermal_emum_mode equals PROC_THERMAL_PCI.
+> @@ -131,7 +133,8 @@ int __init hp300_setup_serial_console(void)
+>  		pr_info("Serial console is HP DCA at select code %d\n", scode);
+>  
+>  		port.uartclk = HPDCA_BAUD_BASE * 16;
+> -		port.mapbase = (pa + UART_OFFSET);
+> +
+> +		uart_memres_set_start_len(&port, (pa + UART_OFFSET));
 
-oh, Sumeet's patch is the right one and much cleaner.
+Missing length argument here.
 
+>  		port.membase = (char *)(port.mapbase + DIO_VIRADDRBASE);
+>  		port.regshift = 1;
+>  		port.irq = DIO_IPL(pa + DIO_VIRADDRBASE);
 
->
-> thanks,
-> rui
->
->> diff --git a/drivers/thermal/st/stm_thermal.c
->> b/drivers/thermal/st/stm_thermal.c
->> index bbd73c5a4a4e..cf9ddc52f30e 100644
->> --- a/drivers/thermal/st/stm_thermal.c
->> +++ b/drivers/thermal/st/stm_thermal.c
->> @@ -570,8 +570,7 @@ static int stm_thermal_prepare(struct
->> stm_thermal_sensor *sensor)
->>  static int stm_thermal_suspend(struct device *dev)
->>  {
->>  	int ret;
->> -	struct platform_device *pdev = to_platform_device(dev);
->> -	struct stm_thermal_sensor *sensor =
->> platform_get_drvdata(pdev);
->> +	struct stm_thermal_sensor *sensor = dev_get_drvdata(dev);
->>  
->>  	ret = stm_thermal_sensor_off(sensor);
->>  	if (ret)
->> @@ -585,8 +584,7 @@ static int stm_thermal_suspend(struct device
->> *dev)
->>  static int stm_thermal_resume(struct device *dev)
->>  {
->>  	int ret;
->> -	struct platform_device *pdev = to_platform_device(dev);
->> -	struct stm_thermal_sensor *sensor =
->> platform_get_drvdata(pdev);
->> +	struct stm_thermal_sensor *sensor = dev_get_drvdata(dev);
->>  
->>  	ret = stm_thermal_prepare(sensor);
->>  	if (ret)
-> .
->
+> diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+> index cf8ca66..895c90c 100644
+> --- a/drivers/tty/serial/xilinx_uartps.c
+> +++ b/drivers/tty/serial/xilinx_uartps.c
+> @@ -1626,8 +1626,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
+>  	 * This function also registers this device with the tty layer
+>  	 * and triggers invocation of the config_port() entry point.
+>  	 */
+> -	port->mapbase = res->start;
+> -	port->mapsize = CDNS_UART_REGISTER_SPACE;
+> +	uart_memres_set_start_len(res->start, CDNS_UART_REGISTER_SPACE);
 
+Missing 1st (port) argument here.
+
+>  	port->irq = irq;
+>  	port->dev = &pdev->dev;
+>  	port->uartclk = clk_get_rate(cdns_uart_data->uartclk);
+
+> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+> index 5fe2b03..d891c8d 100644
+> --- a/include/linux/serial_core.h
+> +++ b/include/linux/serial_core.h
+> @@ -427,6 +427,46 @@ void uart_console_write(struct uart_port *port, const char *s,
+>  int uart_match_port(struct uart_port *port1, struct uart_port *port2);
+>  
+>  /*
+> + * set physical io range from struct resource
+> + * if resource is NULL, clear the fields
+> + * also set the iotype to UPIO_MEM
+> + */
+> +static inline void uart_memres_set_res(struct uart_port *port,
+> +				       struct resource *res)
+> +{
+> +	if (!res) {
+> +		port->mapsize = 0;
+> +		port->mapbase = 0;
+> +		port->iobase = 0;
+> +		return;
+> +	}
+> +
+> +	if (resource_type(res) == IORESOURCE_IO) {
+> +		port->iotype = UPIO_PORT;
+> +		port->iobase = resource->start;
+> +		return;
+> +	}
+> +
+> +	uart->mapbase = res->start;
+> +	uart->mapsize = resource_size(res);
+> +	uart->iotype  = UPIO_MEM;
+
+Hardcoding UPIO_MEM like does not work for drivers using other kind of
+memory access, like UPIO_MEM16, UPIO_MEM32 and UPIO_MEM32BE.
+
+Why not leave the control of iotype to drivers as before this patch?
+
+> +}
+> +
+> +/*
+> + * set physical io range by start address and length
+> + * if resource is NULL, clear the fields
+> + * also set the iotype to UPIO_MEM
+> + */
+> +static inline void uart_memres_set_start_len(struct uart_driver *uart,
+> +					     resource_size_t start,
+> +					     resource_size_t len)
+> +{
+> +	uart->mapbase = start;
+> +	uart->mapsize = len;
+> +	uart->iotype  = UPIO_MEM;
+
+Same here, other iotype values must be possible.
+
+> +}
+> +
+> +/*
+>   * Power Management
+>   */
+>  int uart_suspend_port(struct uart_driver *reg, struct uart_port *port);
+
+/Esben
