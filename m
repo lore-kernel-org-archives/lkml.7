@@ -2,97 +2,102 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B85C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE24C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1798920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65CF20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Wh/qgAmh";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k5rSRXEu"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="E/9dWesp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfD2Oso (ORCPT
+        id S1728469AbfD2OtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:48:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39800 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728320AbfD2Osn (ORCPT
+        Mon, 29 Apr 2019 10:49:14 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:43392 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728318AbfD2OtO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:48:43 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B70F7608BA; Mon, 29 Apr 2019 14:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556549322;
-        bh=NcFqWJZM8KHVVeLy31Z4V83m0XnDaKF7vCAx6RUJ4kQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Wh/qgAmhyh7cA6V9hWUzr5W7oCSXScy5XwDthvFwo0xAf6rePnkuUxoaODcND7TXw
-         tLMHQZbSslvkTGFQCZmELkS2os0DDmXXpS0jd8MSklqBxQ/GqLVW9cnLP0TO9S4b6t
-         UNsnlSPkIZXHFOx0V861hIanpHY4dfsjQNyLsk+w=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF25760134;
-        Mon, 29 Apr 2019 14:48:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556549322;
-        bh=NcFqWJZM8KHVVeLy31Z4V83m0XnDaKF7vCAx6RUJ4kQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=k5rSRXEu3lTa/+KjDCIwxoOyt7MXBCnBHltcQsIQJHPowy4bg6iHAmqOHnrLmsnWb
-         ehJSTJTtnV99sNUBNQAubQeAHzYENPFIIgDKVNX8Xv8sTdG5PIN1Grw7EcnhAfdU1u
-         IQXFaioSpe6//5LnSBnl/9R+2jnLdDG6NYchdhr4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF25760134
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] ath6kl: wmi: use struct_size() helper
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190403184949.GA7597@embeddedor>
-References: <20190403184949.GA7597@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Mon, 29 Apr 2019 10:49:14 -0400
+Received: from grover.flets-west.jp (softbank126125154137.bbtec.net [126.125.154.137]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id x3TElneS020381;
+        Mon, 29 Apr 2019 23:47:50 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x3TElneS020381
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556549270;
+        bh=0mmb8KbbWCtfjhHsrd+vj0pp6+i0mYzDtsbj3K9ug1I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=E/9dWespF/U4QZkTXajWW8HEjCLAKKtzzLhBEGSrAj4VfD82pdB+QgLaWlgB+DsaT
+         6UI0FG8X+mhTF7iJ86IY7bk/U3OQrxcU79h6tlvXMIkW+rNrOfRKryd3DVsWy1zDwK
+         GEoeQScbG6zQ4LquGHs3UKD3O3f/13bm8Od5l+ilrhK1fR+9bjc8BSU6acIm2x3XLC
+         HdLCTYw7cNLim5D7ScD3XYmceYHSbcgDvkXZ5QWKCbEs8RsV66wgIIkk/SAIjtrJzP
+         pGVLbPgdaEyka1onhlmaEIaNBLWsgWmMU3aBWNiOlyoyhj6j6f3nXE4QE494aHzA1n
+         QXm9/2qJy4Asg==
+X-Nifty-SrcIP: [126.125.154.137]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sirio Balmelli <sirio@b-ad.ch>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
+        Yonghong Song <yhs@fb.com>,
+        Taeung Song <treeze.taeung@gmail.com>,
         linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190429144842.B70F7608BA@smtp.codeaurora.org>
-Date:   Mon, 29 Apr 2019 14:48:42 +0000 (UTC)
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Martin KaFai Lau <kafai@fb.com>, bpf@vger.kernel.org
+Subject: [PATCH] bpftool: exclude bash-completion/bpftool from .gitignore pattern
+Date:   Mon, 29 Apr 2019 23:47:39 +0900
+Message-Id: <1556549259-16298-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+tools/bpf/bpftool/.gitignore has the "bpftool" pattern, which is
+intended to ignore the following build artifact:
 
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes, in particular in the
-> context in which this code is being used.
-> 
-> So, replace code of the following form:
-> 
-> sizeof(*ev) + ev->num_neighbors * sizeof(struct wmi_neighbor_info)
-> 
-> with:
-> 
-> struct_size(ev, neighbor, ev->num_neighbors)
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+  tools/bpf/bpftool/bpftool
 
-Patch applied to ath-next branch of ath.git, thanks.
+However, the .gitignore entry is effective not only for the current
+directory, but also for any sub-directories.
 
-83d9562b6478 ath6kl: wmi: use struct_size() helper
+So, the following file is also considered to be ignored:
 
+  tools/bpf/bpftool/bash-completion/bpftool
+
+It is obviously version-controlled, so should be excluded from the
+.gitignore pattern.
+
+You can fix it by prefixing the pattern with '/', which means it is
+only effective in the current directory.
+
+I prefixed the other patterns consistently. IMHO, '/' prefixing is
+safer when you intend to ignore specific files.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ tools/bpf/bpftool/.gitignore | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignore
+index 67167e4..19efcc8 100644
+--- a/tools/bpf/bpftool/.gitignore
++++ b/tools/bpf/bpftool/.gitignore
+@@ -1,5 +1,5 @@
+ *.d
+-bpftool
+-bpftool*.8
+-bpf-helpers.*
+-FEATURE-DUMP.bpftool
++/bpftool
++/bpftool*.8
++/bpf-helpers.*
++/FEATURE-DUMP.bpftool
 -- 
-https://patchwork.kernel.org/patch/10884343/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.7.4
 
