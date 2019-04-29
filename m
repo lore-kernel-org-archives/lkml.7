@@ -2,148 +2,145 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FDBC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D36CC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36E821530
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556555169;
-	bh=bj7+n3P2zt1GsKkIXPcHMBO06qBROIEGOQ+zCdPaqFs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DDTTreykAMts04yzm3b57D+INW3aBPXtsewNPB2o5WJurCz1c2j6jPaNVTRhx28eH
-	 UgjiRTmR/niZTZ3UODr6zL2w8EaU3g9M762vamGSt9Pir/WNBaDF/h1dZ9i80oFcPx
-	 jGMDteqCFz810BeSJsYN8+2S1EMyyeLnZU94opZI=
+	by mail.kernel.org (Postfix) with ESMTP id 4A4AA20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:28:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="HCFKw9zf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbfD2Q0J (ORCPT
+        id S1728662AbfD2Q2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbfD2Q0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:26:08 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8DC32173E;
-        Mon, 29 Apr 2019 16:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556555167;
-        bh=bj7+n3P2zt1GsKkIXPcHMBO06qBROIEGOQ+zCdPaqFs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Yxj4nj4RhtP2Dp8y/Di6Rzz6NsAcd3KJTq9TajPpD+r5Gpv8iiusYuRWYLRP/Ev17
-         OJkUjzbPoUFvwDC86helwDwR7/ou0qo/ZS3tLiMZsOVx+/oeRBhg1DxHke921YYTcA
-         i+JXFDh2Yjnbl5k3YHlkRVjeV0rA3JZobObf87P8=
-Received: by mail-qt1-f181.google.com with SMTP id b3so12574269qtc.12;
-        Mon, 29 Apr 2019 09:26:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAWB39dkjkWlCN0miW3oExTEEUj5vDuePIp7AbFsbaGwXGopUKE9
-        a0TGQEw5QJXaKeXHRYef15Fl+A8QlTkcjOTcpQ==
-X-Google-Smtp-Source: APXvYqxmrpfobhstOL9g61ZfeyOcZLaz4w2E+msmiFaUvM+oogy+DnVE7G6vyrl1NOxtstfN8MjFYEzeOYV5F2BJoGI=
-X-Received: by 2002:a0c:d2f2:: with SMTP id x47mr48617546qvh.90.1556555166043;
- Mon, 29 Apr 2019 09:26:06 -0700 (PDT)
+        Mon, 29 Apr 2019 12:28:34 -0400
+Received: from mail-eopbgr750087.outbound.protection.outlook.com ([40.107.75.87]:26458
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728518AbfD2Q2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:28:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lC0eLMpx4+gAQbCBdlaCfVj3OMf2yetCZarWPVVfioc=;
+ b=HCFKw9zfdW5j/GuIWbNM3tZFL3Hjtn4QYHudrKv7wdahb/g3FpjMVTId9QabAMgucmHy+9Jbkl++A5uNgJN9K4lBO5NMTSau9hM0VMDWNDkrDEQThWUCH7D/m6+sYd7MjOGgi8R5pSDQDzNLofHe7lXLq4lhvBlnHYZ7kNH+uZE=
+Received: from SN4PR0201CA0032.namprd02.prod.outlook.com
+ (2603:10b6:803:2e::18) by BY2PR02MB153.namprd02.prod.outlook.com
+ (2a01:111:e400:2c20::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.20.1835.14; Mon, 29
+ Apr 2019 16:28:29 +0000
+Received: from CY1NAM02FT023.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::208) by SN4PR0201CA0032.outlook.office365.com
+ (2603:10b6:803:2e::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1835.12 via Frontend
+ Transport; Mon, 29 Apr 2019 16:28:29 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; lixom.net; dkim=none (message not signed)
+ header.d=none;lixom.net; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT023.mail.protection.outlook.com (10.152.74.237) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1835.13
+ via Frontend Transport; Mon, 29 Apr 2019 16:28:28 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1hL98m-0003vP-8c; Mon, 29 Apr 2019 09:28:28 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1hL98h-0006Gp-50; Mon, 29 Apr 2019 09:28:23 -0700
+Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x3TGSDKA005901;
+        Mon, 29 Apr 2019 09:28:13 -0700
+Received: from [172.19.20.5]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1hL98X-0006FJ-Ef; Mon, 29 Apr 2019 09:28:13 -0700
+Subject: Re: [PATCH] spi: zynqmp: Fix build break
+To:     Olof Johansson <olof@lixom.net>, <linux-spi@vger.kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jollys@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+References: <2bb66114-c976-9c44-6db3-33a5dd12edde@monstr.eu>
+ <20190429162246.6061-1-olof@lixom.net>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <6d31dc90-7d0a-fc8d-cbc3-331200a01755@xilinx.com>
+Date:   Mon, 29 Apr 2019 09:28:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1556261237-13823-1-git-send-email-chunfeng.yun@mediatek.com>
- <1556261237-13823-4-git-send-email-chunfeng.yun@mediatek.com>
- <20190426204906.GB15074@bogus> <1556453788.10179.224.camel@mhfsdcap03>
-In-Reply-To: <1556453788.10179.224.camel@mhfsdcap03>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 29 Apr 2019 11:25:54 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKXKRetoy4u_yAMgS+RA0vaRhzjR0zpLjKMtgRvFHXn7A@mail.gmail.com>
-Message-ID: <CAL_JsqKXKRetoy4u_yAMgS+RA0vaRhzjR0zpLjKMtgRvFHXn7A@mail.gmail.com>
-Subject: Re: [PATCH v4 3/6] dt-bindings: usb: mtu3: add properties about USB
- Role Switch
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190429162246.6061-1-olof@lixom.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(346002)(396003)(39860400002)(2980300002)(189003)(199004)(77096007)(9786002)(26005)(31696002)(478600001)(186003)(230700001)(81156014)(356004)(44832011)(76176011)(6246003)(31686004)(36756003)(107886003)(8676002)(81166006)(8936002)(2906002)(2486003)(23676004)(486006)(64126003)(50466002)(476003)(36386004)(54906003)(65826007)(58126008)(110136005)(446003)(11346002)(2616005)(63266004)(5660300002)(106002)(47776003)(4326008)(305945005)(65806001)(229853002)(336012)(65956001)(316002)(70206006)(70586007)(126002)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY2PR02MB153;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c430d502-812c-4034-9c49-08d6ccbfb665
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:BY2PR02MB153;
+X-MS-TrafficTypeDiagnostic: BY2PR02MB153:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <BY2PR02MB153EE4CA9673A4B4A187BE3C6390@BY2PR02MB153.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:439;
+X-Forefront-PRVS: 0022134A87
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: JhY0kn2iWY9YJxpXQbKzPzws6tdcYtO8bp0wm3lnDdsF4w8oQdNjfCtuK0f9sfRHumgIy42AqKtxTBsLqCfXyuvAaXcBjCw9ycBNVKH2YL2kkDeaDvCDmfT7Oyx1R71f92WTtA4u2Wx6UUViQT/t/CMT72ucKoIv1EIUzFVeF6OuhHT9fwqtDZ+638cFPRLnKscD6Tn9bFEwp3tz5oJJsqSF/3Nq+dz5Z5ibxvd5IfLhCzNOEr4Vgl0rVd0F8i/E3zNXXQyLiQZFTJtmEI6tSMck+A58CEKE12Fu5JawiFw5OetG7VAP1IBvMOc93OM+BMMwnY6CammFfytRjOzgP0Lq7goYQ9m/Nk+lbtvefqIMIkJqE5T+h8AtNoGBMaB0qjBAg0L8AgZc+xmgtxoKnwPSeRJi8TJ31gyVHJoskxA=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2019 16:28:28.7463
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c430d502-812c-4034-9c49-08d6ccbfb665
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY2PR02MB153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 7:16 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
->
-> On Fri, 2019-04-26 at 15:49 -0500, Rob Herring wrote:
-> > On Fri, Apr 26, 2019 at 02:47:14PM +0800, Chunfeng Yun wrote:
-> > > Now the USB Role Switch is supported, so add properties about it
-> > >
-> > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > > ---
-> > > v4: no changes
-> > > v3: no changes
-> > >
-> > > v2 changes:
-> > >   1. fix typo
-> > >   2. refer new binding about connector property
-> > > ---
-> > >  .../devicetree/bindings/usb/mediatek,mtu3.txt          | 10 ++++++++--
-> > >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> > > index 3382b5cb471d..6e004c4a89af 100644
-> > > --- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> > > +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> > > @@ -27,7 +27,9 @@ Optional properties:
-> > >   - ranges : allows valid 1:1 translation between child's address space and
-> > >     parent's address space
-> > >   - extcon : external connector for vbus and idpin changes detection, needed
-> > > -   when supports dual-role mode.
-> > > +   when supports dual-role mode; it's consiedered valid for compatibility
-> > > +   reasons, and not allowed for new bindings, use the property
-> > > +   usb-role-switch instead.
-> > >   - vbus-supply : reference to the VBUS regulator, needed when supports
-> > >     dual-role mode.
-> > >   - pinctrl-names : a pinctrl state named "default" is optional, and need be
-> > > @@ -36,7 +38,8 @@ Optional properties:
-> > >     is not set.
-> > >   - pinctrl-0 : pin control group
-> > >     See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > > -
-> > > + - usb-role-switch : use USB Role Switch to support dual-role switch, but
-> > > +   not extcon
-> >
-> > Coordinate with the Renesas and HiSilicon folks implementing the same
-> > thing and put this in a common spot.
-> I'll prepare a patch for it, and CC Biju and Yu
->
-> > However, I think this should not
-> > even be needed as knowing the controller capabilities (based on the
-> > compatible) and knowing the type of connector should be enough
-> > information to tell you if dual role is supported or not.
-> Some Dual-Role controller drivers already used extcon framework to
-> handle role switch, if try to support the new USB Role Switch framework,
-> the driver may want to know which way will be used.
+On 29. 04. 19 9:22, Olof Johansson wrote:
+> Missing include:
+> drivers/spi/spi-zynqmp-gqspi.c:1025:13: error: implicit declaration of
+>   function 'zynqmp_pm_get_eemi_ops'; did you mean
+>   'zynqmp_process_dma_irq'? [-Werror=implicit-function-declaration]
+> 
+> Fixes: 3d0313786470a ('drivers: Defer probe if firmware is not ready')
+> Cc: Rajan Vaja <rajan.vaja@xilinx.com>
+> Cc: Jolly Shah <jollys@xilinx.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Olof Johansson <olof@lixom.net>
+> ---
+>  drivers/spi/spi-zynqmp-gqspi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
+> index d07b6f940f9f..9850a0efe85a 100644
+> --- a/drivers/spi/spi-zynqmp-gqspi.c
+> +++ b/drivers/spi/spi-zynqmp-gqspi.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/dmaengine.h>
+> +#include <linux/firmware/xlnx-zynqmp.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> 
 
-Wouldn't it know by presence of 'extcon' property or not?
 
-> Sometimes users also want to use dual-role even use the type-A, such as
-> use sys interface to handle role switch, so only knowing the connector
-> type can't tell driver which way to use
+Acked-by: Michal Simek <michal.simek@xilinx.com>
 
-That use case doesn't sound like something that should be in DT
-though. That would be possible for any controller that supports
-dual-role. Though perhaps that requires some specific Vbus wiring? Or
-a cable with Vbus disconnected. Either way, doesn't sound USB
-compliant.
-
-Rob
+Thanks,
+Michal
