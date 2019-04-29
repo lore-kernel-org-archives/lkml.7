@@ -2,96 +2,119 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3C9C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D886C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F32E2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556559264;
-	bh=gOXMCRKfV3AI8yOSqJGtonTJbeDbGaWzIxmVZMVQCdo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L4jaSkiC1A14oOyMIgW0UF5F/ZeenRr6K/ShASZJQHebzeoBvyOj+bgp6Vn0d0ze4
-	 RKH/Vg88ax57yKFSTFXroZ+1w80g0nCFt1v2INrb+xemhKCUzK/cz3NNwdmzXXUg4X
-	 RIiubaKm+S/3+XxX7fOAU8f/sF3mjlp1woMXQVWk=
+	by mail.kernel.org (Postfix) with ESMTP id CF4012075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:35:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dh5XugVN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbfD2ReX (ORCPT
+        id S1729016AbfD2RfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:34:23 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44078 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbfD2ReW (ORCPT
+        Mon, 29 Apr 2019 13:35:06 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45326 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728798AbfD2RfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:34:22 -0400
-Received: by mail-ot1-f67.google.com with SMTP id d24so9349717otl.11;
-        Mon, 29 Apr 2019 10:34:22 -0700 (PDT)
+        Mon, 29 Apr 2019 13:35:06 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i21so2032102pgi.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3kM8XyTuKXCw/0VhDx0EpsJTgk6kLql0lEsb7+DZlns=;
+        b=dh5XugVNe0puvkDeCqwzeG18FWp/5XbFOyuGLNw7+8E5AlJh2gujXqo27m2hlqbeMN
+         aoQ3qFCgsNieB+uvlBChFOzwnZVpe+8lrSo4Rduy65FMiHqKULm+FBSzYeKhlkKHJhiV
+         8EXCznDKlX8MdjQ5/ajab1o0SyffoXlFNQufQrze+Odf7mAiydHdYBAl1/+IrrdtGqJJ
+         hTHe3RmvTYudiA30jwC+5MzvoQNXpoPu9ws7whaO1jpD+fa59TdaZLw8DbQwkUFUEgDM
+         3nj1Ci0MnWIZ40WUwPsdanhHbGxSEOzZbJ34vFkEp4+aRu44pwQUvzc5+EoN08dtXvIS
+         YOsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0XjhLzz/Sv+9Eags0QObjYlexjOysZAe8RyevUE1lSI=;
-        b=i3g4LXgGxu4vk5i/RoA2J6OjlFbdIKNzSbVTgJAiWzA8go8oZfAHpuYAb4W9+Ybehq
-         YIUx4u4usFXp4DP3OF8Y1SHEKw3Vr9IEv+TSQNUGP4r9IocswS1vrNtNgWSHT+F3y39s
-         AqmGa6/2T7w79y8iL7KzT/STA0z2eU/EOIPLAeoCZKFcMbZW5xADjpj/YXtVQuoiHdb0
-         WUU8HsB1Kt4YErGh3Uq9Y1BTkaEGlFhLJ7PhCHWjY4vJQhX8mr28UX2DhKwJp4o5ehfD
-         9GSyprpjIZgmSBGme5xNzu5zbAi1RUxiFsdgmWFdztU6lRynrvWZpWDQVdMfVEufzjeI
-         RPrw==
-X-Gm-Message-State: APjAAAVENUhH5DbXMacLp3fCuNDoAp545kRcHKO8ZyjQCh3babOEFgea
-        OkXZMQms853yLK46GH0K/Q==
-X-Google-Smtp-Source: APXvYqwKvzlwTuoEiQya1QujR0i/jv49H1pSYu4XaeHD7fxP5JxXLR1+czGJq3AcZGkp/ZZIiw2RMg==
-X-Received: by 2002:a9d:7e99:: with SMTP id m25mr1130215otp.7.1556559261978;
-        Mon, 29 Apr 2019 10:34:21 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k65sm14497146oia.16.2019.04.29.10.34.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 10:34:21 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 12:34:20 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        lee.jones@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 4/6] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-Message-ID: <20190429173420.GA1273@bogus>
-References: <20190405142855.3969-1-dmurphy@ti.com>
- <20190405142855.3969-4-dmurphy@ti.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3kM8XyTuKXCw/0VhDx0EpsJTgk6kLql0lEsb7+DZlns=;
+        b=rm74PfASD/fk9AQ6voy4GHD4F/DELEjKBk4RYnp3etUarAqSMMHEfY8r+g5IyCu5hr
+         zi4NKdchKP8qrVd87pQfj2EcgiYZjPFICPpiYmIDCkt0Gy3I0544m/6qTL7+BIcu32rF
+         3sdq8703aDOljFk+e3Bzv0pH7uRbVm8oIuh5lIPM749HwXMQf7KnBZftWDqO5PCfznyX
+         ohYp3cRGtoEwfVo3B74X9KOYd3SXVUw/g+Mcs/iMy/i5CJ7CJSty/sDiW9wGHkonfY/H
+         3Lu2zCZxmNQciLMSmpMcXTuURm6F0eJlcNFQBQ14IwQNvYvFn1SrmwfK+SZ183TkynQi
+         FRCQ==
+X-Gm-Message-State: APjAAAUxA90H8UYuibzE2OH+q8hwSZ9Zq3uf4jmXwFHMTKxAGsFMAUgN
+        YL2++tOOadpSCopWDpf28bTRo2m+Weu46oQCZcA/bw==
+X-Google-Smtp-Source: APXvYqyF4Z7BwUGF0kVmWLTqE2/dQ7UhZFi3PwcdVX7M6ya+BIelyPKfjymosKZyj06QgDVvgqPAS6PdbSbMbNTt5n0=
+X-Received: by 2002:a63:c702:: with SMTP id n2mr21522880pgg.255.1556559304964;
+ Mon, 29 Apr 2019 10:35:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190405142855.3969-4-dmurphy@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190426130015.GA12483@archlinux-i9> <20190426190603.5982-1-linux@rasmusvillemoes.dk>
+ <20190426190603.5982-2-linux@rasmusvillemoes.dk>
+In-Reply-To: <20190426190603.5982-2-linux@rasmusvillemoes.dk>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 29 Apr 2019 10:34:53 -0700
+Message-ID: <CAKwvOdm95LvKXFw3fartoAh0JFMJsHi5Nm1n9400L8gKgk4-Yw@mail.gmail.com>
+Subject: Re: [PATCH 12/10] powerpc: unbreak DYNAMIC_DEBUG=y build with clang
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Jason Baron <jbaron@akamai.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Apr 2019 09:28:53 -0500, Dan Murphy wrote:
-> The LM3697 is a single function LED driver. The single function LED
-> driver needs to reside in the LED directory as a dedicated LED driver
-> and not as a MFD device.  The device does have common brightness and ramp
-> features and those can be accomodated by a TI LMU framework.
-> 
-> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedicated
-> LED dt binding needs to be added.  The new LM3697 LED dt binding will then
-> reside in the Documentation/devicetree/bindings/leds directory and follow the
-> current LED and general bindings guidelines.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v2 - Made changes to reference ti,brightness-resolution to the ti-lmu.txt -
-> https://lore.kernel.org/patchwork/patch/1054501/
-> 
->  .../devicetree/bindings/leds/leds-lm3697.txt  | 73 +++++++++++++++++++
->  .../devicetree/bindings/mfd/ti-lmu.txt        | 27 +------
->  2 files changed, 74 insertions(+), 26 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
-> 
+On Fri, Apr 26, 2019 at 12:06 PM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> Current versions of clang does not like the %c modifier in inline
+> assembly for targets other than x86, so any DYNAMIC_DEBUG=y build
+> fails on ppc64. A fix is likely to land in 9.0 (see
+> https://github.com/ClangBuiltLinux/linux/issues/456), but unbreak the
+> build for older versions.
+>
+> Fixes: powerpc: select DYNAMIC_DEBUG_RELATIVE_POINTERS for PPC64
+> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks for fixing the build.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> ---
+> Andrew, please apply and/or fold into 10/10.
+>
+>  arch/powerpc/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 6821c8ae1d62..8511137ab963 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -155,7 +155,7 @@ config PPC
+>         select BUILDTIME_EXTABLE_SORT
+>         select CLONE_BACKWARDS
+>         select DCACHE_WORD_ACCESS               if PPC64 && CPU_LITTLE_ENDIAN
+> -       select DYNAMIC_DEBUG_RELATIVE_POINTERS  if PPC64
+> +       select DYNAMIC_DEBUG_RELATIVE_POINTERS  if PPC64 && (CC_IS_GCC || CLANG_VERSION >= 90000)
+>         select DYNAMIC_FTRACE                   if FUNCTION_TRACER
+>         select EDAC_ATOMIC_SCRUB
+>         select EDAC_SUPPORT
+> --
+> 2.20.1
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
