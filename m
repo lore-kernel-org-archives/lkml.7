@@ -2,105 +2,120 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BD6C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC53C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FAF2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:48:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556542112;
-	bh=QSu+NAd1MMfKxHlfItFxMun2D/kEyuEgIobDbv6k/Hc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZqRVmc+MNfBsYhpWizjPfLJrLpB43gFtzpog6SacVuQeP+rsW+UJPqmeAr6Z2JYjH
-	 7btdSsBUu7svl8L1Q1QqgJWF4MmciR3uGdWxHwlGVGAM0iB+zU1Tt9+atmTatQJypx
-	 GmcRRAObL4WTTOle+ovCtj9Whm7sBd4JSrCdJObI=
+	by mail.kernel.org (Postfix) with ESMTP id 9C03D2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbfD2Msa (ORCPT
+        id S1728182AbfD2MtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:48:30 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41002 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbfD2Ms3 (ORCPT
+        Mon, 29 Apr 2019 08:49:22 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:46828 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727956AbfD2MtW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:48:29 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v23so7984707oif.8;
-        Mon, 29 Apr 2019 05:48:29 -0700 (PDT)
+        Mon, 29 Apr 2019 08:49:22 -0400
+Received: by mail-vk1-f193.google.com with SMTP id x2so2233170vkx.13;
+        Mon, 29 Apr 2019 05:49:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=og27ttBtjgJ9jOWpsX9tE4/VFPoPVEaauxxZKhLh4wA=;
-        b=YCcyb68g0HbnPS6KqhPv1iQoUsdN6C77xSAlm73E1yODNV+UBW35DilpWWx/EtAneh
-         5gwo3fBoFmNETpiNRIlClBH/uT4bc6F6xHRHV7HZtuf/5NOQYIfKsBE2jcJK/CRtG96s
-         UQ3oCC2vc7i/E5MtnQZtWqBVTObh0Gx7nSkPUAR/+3Em9wDKQajeQxDz3DREQqpoAhJi
-         OOWBGaBl0wViTT0/QCEvjPvxk76j5PvTVZAG8ulMWvDMpANPTe94SR5gb0RJfRQRxPo4
-         Lkmz4+O/p8TZqi1gQalN6RgteLdQDDidfxY4TdKtlpOuub4qOjStW0q+sVp3Lr4CIQqU
-         mSbQ==
-X-Gm-Message-State: APjAAAVBqtiFBJr639FjSHXcWf9emfwwvNPjk/upa8L2strbv4+1vjL4
-        t5/NowxT3ky8/Ixxpxt7aw==
-X-Google-Smtp-Source: APXvYqwKkbM8iUDWYjwi3FrVr9CbooaBbkgXDxXE3TLfLAeQGcrA39ywmAR8rFYO2DOBT72rVzWKCg==
-X-Received: by 2002:aca:be89:: with SMTP id o131mr15557106oif.138.1556542108407;
-        Mon, 29 Apr 2019 05:48:28 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c3sm7872781otr.57.2019.04.29.05.48.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 05:48:27 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 07:48:27 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Long Cheng <long.cheng@mediatek.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=derKxdHvmEMuz4FzHHDQ6DWV/VvnnUQvUbRdCrLCHz4=;
+        b=OXEcNXyQ/Q997r2tL4wqLx41UP0PqBwePvzHKDos708Nmxu4dmjuuWbTuyjOsYmjBH
+         wPVtLkNpqG/csOgUQURUy196IxebJKbJV6NRj7B7w7C8OAug60R307bpMjBUDemrf5Vo
+         9wcZjPCL+cSaEP9d2BeqNZKFnlweWGO3Koc/4mHr4avm9vIW67ndaBmaWxyCqIhns2KU
+         YlVx4bbdptqieap4jO5IIj1NAeglsLcoZV9ynxPrr/FDS+KDLGGB0ENXczpO/ibuVmHE
+         q0SLfrX+Ql/kk/HH4HOHuW0LCJopx4d5xDMwGQV9o0nmGMFpYQcRxGc2fl72oVJrdSUo
+         Qu2A==
+X-Gm-Message-State: APjAAAV4jwa4R03VdheQBNNF7+8R+YCXyvQbn1uffe8HP/pSO2WGQbd1
+        32KR58YgJOLaS9D8HnLglYvhoqmreDz/Vp5TPa21erEX
+X-Google-Smtp-Source: APXvYqxG2n52Gp61OsgKrozjMvhkBaNh4Tyy20fOyQtE92Psy4c0oP4Z1TxExIYIuyavUO2gmsZvW3TgJ+BYSOX4Eis=
+X-Received: by 2002:a1f:1284:: with SMTP id 126mr32054800vks.72.1556542160610;
+ Mon, 29 Apr 2019 05:49:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190429093631.10799-1-geert+renesas@glider.be> <TY1PR01MB15620A5958E5A9211518E0C48A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB15620A5958E5A9211518E0C48A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 29 Apr 2019 14:49:08 +0200
+Message-ID: <CAMuHMdUasEO1VLX1h5ZL8F2VjLXnSbrVOm6KdO6yuzkw9RWAfA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] ARM: rskrza1: Add RZ/A1 IRQC and input switches
+To:     Chris Brandt <Chris.Brandt@renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, srv_heupstream@mediatek.com,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        YT Shen <yt.shen@mediatek.com>,
-        Zhenbao Liu <zhenbao.liu@mediatek.com>,
-        Long Cheng <long.cheng@mediatek.com>
-Subject: Re: [PATCH 3/4] dt-bindings: dma: uart: rename binding
-Message-ID: <20190429124827.GA13816@bogus>
-References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
- <1556336193-15198-4-git-send-email-long.cheng@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556336193-15198-4-git-send-email-long.cheng@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 27 Apr 2019 11:36:32 +0800, Long Cheng wrote:
-> The filename matches mtk-uart-apdma.c.
-> So using "mtk-uart-apdma.txt" should be better.
-> And add some property.
-> 
-> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
-> ---
->  .../devicetree/bindings/dma/8250_mtk_dma.txt       |   33 ------------
->  .../devicetree/bindings/dma/mtk-uart-apdma.txt     |   55 ++++++++++++++++++++
->  2 files changed, 55 insertions(+), 33 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-> 
+Hi Chris,
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+On Mon, Apr 29, 2019 at 2:21 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> I've been hacking this support into the standard GIC driver in our BSPs
+> for years now. :o
 
-If a tag was not added on purpose, please state why and what changed.
+Yeah, and having that patch in your tree breaks all other GICs, as
+I found out the hard way ;-)
+
+> On Mon, Apr 29, 2019, Geert Uytterhoeven wrote:
+> > I expect this driver to be reusable for RZ/A2, after adding a match
+> > entry with .gic_spi_base = 4.
+>
+> Yes, the same IP block is in RZ/A2.
+>
+> So with that said, should we call this driver irq-renesas-rza1.c or just
+> irq-renesas-rza.c?
+> It doesn't really matter to me.
+> For an RZ/A3, we might just use the same IP again.
+
+I've learned to be reluctant to put too many wildcards in names, as it may
+start to bite in the future. For driver names, it's not that bad (they can
+be changed), but for DT, it's a no-go.
+
+So for RZ/A2, I think it's best to use
+
+    compatible = "renesas,r7s9210-irqc", "renesas,rza1-irqc";
+    renesas,gic-spi-base = <4>;
+
+(adding "renesas,gic-spi-base = <0>" to r7s72100.dtsi as I speak).
+
+> Side note, I've seen this interrupt pin HW in some older SH4A devices
+> (like SH7724 and SH7757). So it's been around for a while.
+
+Right:
+
+    arch/sh/kernel/cpu/sh4a/setup-sh7343.c: { 0xa4140024, 0, 8, /* INTREQ00 */
+    arch/sh/kernel/cpu/sh4a/setup-sh7366.c: { 0xa4140024, 0, 8, /* INTREQ00 */
+    arch/sh/kernel/cpu/sh4a/setup-sh7722.c: { 0xa4140024, 0, 8, /* INTREQ00 */
+    arch/sh/kernel/cpu/sh4a/setup-sh7723.c: { 0xa4140024, 0, 8, /* INTREQ00 */
+    arch/sh/kernel/cpu/sh4a/setup-sh7724.c: { 0xa4140024, 0, 8, /* INTREQ00 */
+
+However, according to the sh7724 documentation, the register set is
+slightly different, as is its sense configuration (no support for both
+edges, but support for high-level interrupts).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
