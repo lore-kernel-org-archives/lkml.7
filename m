@@ -2,133 +2,65 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92619C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B9BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6425721655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893CB215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:32:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IQH8qytm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbfD2Uat (ORCPT
+        id S1729365AbfD2Ucw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:30:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729252AbfD2Uas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:30:48 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EAB1215EA;
-        Mon, 29 Apr 2019 20:30:45 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 16:30:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-Message-ID: <20190429163043.535f4272@gandalf.local.home>
-In-Reply-To: <CAHk-=wgbC-wiSrdDYAh1ORF4EKmecY+MkNsJBF=BWf4W1bXXgA@mail.gmail.com>
-References: <20190427100639.15074-1-nstange@suse.de>
-        <20190427100639.15074-4-nstange@suse.de>
-        <20190427102657.GF2623@hirez.programming.kicks-ass.net>
-        <20190428133826.3e142cfd@oasis.local.home>
-        <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
-        <20190429145250.1a5da6ed@gandalf.local.home>
-        <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
-        <20190429150724.6e501d27@gandalf.local.home>
-        <CAHk-=wgbC-wiSrdDYAh1ORF4EKmecY+MkNsJBF=BWf4W1bXXgA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 29 Apr 2019 16:32:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37614 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729212AbfD2Ucw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 16:32:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HHV9M9JNH9wJqqd1pXtgGONHUqdV+e8U142riGFNVzI=; b=IQH8qytmmguUYLg411iGVKfNN
+        nD34eKEWYiRYhLBhMUx+mqr5lv6zDoFm5cgrOopbYOwpGHYUs4cFHxqZrbBT4+rXBEufDz606/4KN
+        ZRtQ7vs2ld14WHx/mERkN5Z3GfhnAQkYpngTf84Ej7zV6Mzc5ghyfvn/z+qfmtOKAVs0Tjk6yxZGN
+        MdZ6OeWTiXY5OuQU3h7GLXeljG9ZAnJ26lymJ8p2EevkaoW4wvwto6It4Q3qVbjSFX9YBAaURjMj0
+        tcogCFCNcCflZZDzzRSopRlcopa2lLAIkTX8zDhHQ0FbHr9PxGOqKbyQNTFMrzPxaOQxxIlYulAum
+        C1GQrJ1dQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLCx3-0006UU-RG; Mon, 29 Apr 2019 20:32:37 +0000
+Date:   Mon, 29 Apr 2019 13:32:37 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ondrej Zary <linux@zary.sk>
+Cc:     Rik Faith <faith@cs.unc.edu>,
+        "David A . Hinds" <dahinds@users.sourceforge.net>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] fdomain: Resurrect driver (core)
+Message-ID: <20190429203237.GA19699@infradead.org>
+References: <20190428200626.28092-1-linux@zary.sk>
+ <20190428200626.28092-2-linux@zary.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190428200626.28092-2-linux@zary.sk>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 13:06:17 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> +void fdomain_reset(int base)
 
-> On Mon, Apr 29, 2019 at 12:07 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > Are you suggesting that I rewrite the code to do it one function at a
-> > time? This has always been batch mode. This is not something new. The
-> > function tracer has been around longer than the text poke code.  
-> 
-> Only do the 'call' instructions one at a time. Why would you change
-> _existing_ code?
+Should be marked static.
 
-The function tracing is a call instruction.
+Otherwise looks fine:
 
-On boot:
-
-<function_X>:
-	nop
-	blah
-	blah
-
-After a callback to function tracing is called:
-
-<function_X>
-	call custom_trampoline
-	blah
-	blah
-
-
-If we have two functions to that function added:
-
-<function_X>
-	call iterator_trampoline
-	blah
-	blah
-
-The update from "call custom_trampoline" to "call iterator_trampoline"
-is where we have an issue.
-
-We could make this a special case where we do this one at a time, but
-currently the code is all the same looking at tables to determine to
-what to do. Which is one of three:
-
- 1) change nop to call function
- 2) change call function to nop
- 3) update call function to another call function
-
-#3 is where we have an issue. But if we want this to be different, we
-would need to change the code significantly, and know that we are only
-updating calls to calls. Which would take a bit of accounting to see if
-that's the change that is being made.
-
-This thread started about that #3 operation causing a call to be missed
-because we turn it into a nop while we make the transition, where in
-reality it needs to be a call to one of the two functions in the
-transition.
-
--- Steve
+Reviewed-by: Christoph Hellwig <hch@lst.de>
