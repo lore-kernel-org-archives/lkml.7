@@ -2,79 +2,94 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24E3C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B6BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBED20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1252520578
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:17:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ogISHwwq";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ogISHwwq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfD2MPW (ORCPT
+        id S1728104AbfD2MRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:15:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55716 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727936AbfD2MPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:15:21 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 671BAF2465F76369B807;
-        Mon, 29 Apr 2019 20:15:19 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 29 Apr 2019 20:15:10 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] ASoC: sprd: Fix return value check in sprd_mcdt_probe()
-Date:   Mon, 29 Apr 2019 12:25:12 +0000
-Message-ID: <20190429122512.59242-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Mon, 29 Apr 2019 08:17:23 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:59524 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727936AbfD2MRW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 08:17:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 5EBF28EE1D8;
+        Mon, 29 Apr 2019 05:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1556540242;
+        bh=V8W4i17PSPDCdFQgaQ9datYSRuZ6HJF8DVD1l4ouvDk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ogISHwwqWQR46xjt+1BXFuVlmD/ievw37QJxSJbIs+glnx90FnZ+stHg6eYqOk1Xb
+         rctKlGG5rAmGXfePLpiFcA27yJVAbeN8WjUk0pFm101/zHrbYEZ66fEW7yidn5un9H
+         TclnOUVVeIjNrhPBHgoz44MCM1/Pyu/9mzlGebfc=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id eMNwNV-9nJIS; Mon, 29 Apr 2019 05:17:22 -0700 (PDT)
+Received: from [192.168.100.227] (unknown [24.246.103.29])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 534438EE03B;
+        Mon, 29 Apr 2019 05:17:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1556540242;
+        bh=V8W4i17PSPDCdFQgaQ9datYSRuZ6HJF8DVD1l4ouvDk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ogISHwwqWQR46xjt+1BXFuVlmD/ievw37QJxSJbIs+glnx90FnZ+stHg6eYqOk1Xb
+         rctKlGG5rAmGXfePLpiFcA27yJVAbeN8WjUk0pFm101/zHrbYEZ66fEW7yidn5un9H
+         TclnOUVVeIjNrhPBHgoz44MCM1/Pyu/9mzlGebfc=
+Message-ID: <1556540228.3119.10.camel@HansenPartnership.com>
+Subject: Re: [Lsf] [LSF/MM] Preliminary agenda ? Anyone ... anyone ? Bueller
+ ?
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lsf@lists.linux-foundation.org,
+        linux-mm@kvack.org, Jerome Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, lsf-pc@lists.linux-foundation.org,
+        Vlastimil Babka <vbabka@suse.cz>
+Date:   Mon, 29 Apr 2019 08:17:08 -0400
+In-Reply-To: <yq1zho911sg.fsf@oracle.com>
+References: <20190425200012.GA6391@redhat.com>
+         <83fda245-849a-70cc-dde0-5c451938ee97@kernel.dk>
+         <503ba1f9-ad78-561a-9614-1dcb139439a6@suse.cz> <yq1v9yx2inc.fsf@oracle.com>
+         <1556537518.3119.6.camel@HansenPartnership.com>
+         <yq1zho911sg.fsf@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of error, the function devm_ioremap_resource() returns ERR_PTR()
-and never returns NULL. The NULL test in the return value check should
-be replaced with IS_ERR().
+On Mon, 2019-04-29 at 07:36 -0400, Martin K. Petersen wrote:
+> James,
+> 
+> > Next year, simply expand the blurb to "sponsors, partners and
+> > attendees" to make it more clear ... or better yet separate them so
+> > people can opt out of partner spam and still be on the attendee
+> > list.
+> 
+> We already made a note that we need an "opt-in to be on the attendee
+> list" as part of the registration process next year. That's how other
+> conferences go about it...
 
-Fixes: d7bff893e04f ("ASoC: sprd: Add Spreadtrum multi-channel data transfer support")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- sound/soc/sprd/sprd-mcdt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+But for this year, I'd just assume the "event partners" checkbox covers
+publication of attendee data to attendees, because if you assume the
+opposite, since you've asked no additional permission of your speakers
+either, that would make publishing the agenda a GDPR violation.
 
-diff --git a/sound/soc/sprd/sprd-mcdt.c b/sound/soc/sprd/sprd-mcdt.c
-index 28f5e649733d..e9318d7a4810 100644
---- a/sound/soc/sprd/sprd-mcdt.c
-+++ b/sound/soc/sprd/sprd-mcdt.c
-@@ -951,8 +951,8 @@ static int sprd_mcdt_probe(struct platform_device *pdev)
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	mcdt->base = devm_ioremap_resource(&pdev->dev, res);
--	if (!mcdt->base)
--		return -ENOMEM;
-+	if (IS_ERR(mcdt->base))
-+		return PTR_ERR(mcdt->base);
- 
- 	mcdt->dev = &pdev->dev;
- 	spin_lock_init(&mcdt->lock);
-
-
+James
 
