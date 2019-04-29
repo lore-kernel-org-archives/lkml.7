@@ -6,106 +6,132 @@ X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF85C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CD7C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762772067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE45215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556569290;
-	bh=zhOeLwaykDggCSLMCowIi+63iuIZF51KgjGDPN3PEGc=;
+	s=default; t=1556569385;
+	bh=yFXknfQ8/xU2HNUaIiD7hUrrFggx2J0Rox0w/83/JZ4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Y/b8fMLaLdJxz4Mof031iPCy11kWDaFAq2GzBpYTYp33U004+cMQY1/Agrf9Kx5Qu
-	 Nr7+1g+ivci7SsBrkIhBk8ZspNxTsbpq675nE1atUtffwp1irtSIKUDTxxdSSMlq9Q
-	 BcIbR7IXT7gNLOFxsim9ZaSct5ISysM17L/90dxQ=
+	b=N6u39spLbS16rOREiWkAoV5sJXdhfaBplSwCF9J4clbXi4EMbGXs/+4/qlCrrV4YO
+	 h3qfuFSsYugNK50bGDWZukGqmT6gbBKImfGyrhSHKJYJFpAeC6B3entgW/Bu9eZ3Ju
+	 FYggdPV6hPTj9vlRsap+bksCVyJ921wWqo/hVA3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbfD2UV3 (ORCPT
+        id S1729338AbfD2UXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:21:29 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33085 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfD2UV3 (ORCPT
+        Mon, 29 Apr 2019 16:23:04 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39790 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2UXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:21:29 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f23so10664295ljc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:21:27 -0700 (PDT)
+        Mon, 29 Apr 2019 16:23:03 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q10so10610880ljc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:23:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+KBkvUzTALKgFLj/TOeD9d/FpBJiRxV8AwPVY9LOciU=;
-        b=OxXZEkxbYVzsZQ7Cy5ZsCi/u7kILgUKY0trvo9FOK+C+EkZRHqW8ZFkNORrDIB/mqL
-         F/DSCTJh2z/j8+NKw8b00XyqeE7sxk5+H0Bxooo63jGIVK8qknkJLbfkGup5Jj50YRvg
-         NW6+HnkqAnsclagMIbZlDrPBCOOSVVvs2zEnw=
+        bh=hZPco9B0AwJRcXRx0/3kAi2/oUVRUui1oHWnui3+POE=;
+        b=hK1kZGJXqBUwaiXALmHLkdcjKeYn61v//Mj8GdmL337feFsDle0PLwryNmXEBwrs8S
+         nMiE6KN2OCuC2luJ1gtpTtS9+ibFu0S06CjKBRLSvwg6ZCsFCBznCGPdZiCpgm7+NDA8
+         J3lnB9+NdA0txfHJzPOyF+qYo7ppMKAtL2K5s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+KBkvUzTALKgFLj/TOeD9d/FpBJiRxV8AwPVY9LOciU=;
-        b=kdCFMQISv1jO3P88MNrFGCkCHWJrFOc/lYlrwXojlOGFw5aztp+HMn9a7ve05OFqUt
-         89PQClaLmXb+dUkJRW0kTqYi7ad2AkMMR0UNC8qPRHE6bvY0j7rQGc9F0BAhkc1cWG3f
-         tUNdNeK7hunFnSGWWjArYvYhCdTRMWnwUDeCsz3Q6/opq6Mh/GdhAI3qwwamjBft0gR+
-         751eBf2yk406cIp6e6CRc50d8MWQx36xh0wDgmhP6s4gVJm2rLEJEIyzYN8jo8niJ+9A
-         K4I29qDGyB68AexfGO+Ep7SXzlj6uyBNPEdDfJQB6DBG/oYFy3Dc9NKi2CZGdVaw0X1W
-         K/rA==
-X-Gm-Message-State: APjAAAWa5ymcK8SDLFFf9iMpqlA5mcm57kNv5Xk/f0FS4zvDBs3/SHhP
-        JBNSpc1MYTnSZj+dD6v0Jy9itXYjj2w=
-X-Google-Smtp-Source: APXvYqyt4za4W5JVorPa/BBVhuhy8csPOW5jMf/SgcjIOFEFAENtHq99zfXIKwi6F5CmdDstnlkGdw==
-X-Received: by 2002:a2e:9546:: with SMTP id t6mr7551213ljh.51.1556569286649;
-        Mon, 29 Apr 2019 13:21:26 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id h21sm3031615ljf.16.2019.04.29.13.21.23
+        bh=hZPco9B0AwJRcXRx0/3kAi2/oUVRUui1oHWnui3+POE=;
+        b=rHhkRn+uAX9sfZAnfi5R7Ubmdw/thQYvunCZgW0rXP/qY2tmQjbf+QgNTyqdbOewD0
+         I1HRc+mFjz4BYe8FJ0ROfPzENiTqfhFDs1uCeeg6C/d2TUuNyOa4rNgxPyew8I1Ud5WO
+         Zf4SyjwXhEYLrWfiyRpz/ZxkN4eXC+R++S6vCEDhn6u22LiedPTq0YuMEaUXJXtRR5aH
+         tQ/++WmUh2FQvpj3RXbUpeTWUJzQJUmTv+mB8I/SFaZfybFbxMOQxfWQT3Yy3TPIZCy6
+         p8xogAZlvzB9uWzX/xUHcLm3N3D8MwLRH7PPyz9zxB6aKOphJF5fHsx3Z8/ZZw5T1qUa
+         s5/Q==
+X-Gm-Message-State: APjAAAUiAKGPXmbVhNXCNNcnew6rHR35gvxgPwqI2CNX6tpjEXHD2qp8
+        gSIdHxjVBaTJfyI4ufRU9EX/mA3pOXM=
+X-Google-Smtp-Source: APXvYqwFQHwaqmncjmVjbwmBqvM9cAcowydAW4O8TWkDgRG4b++jUKfdB/sBG/djFT5TmFe14BBiDg==
+X-Received: by 2002:a2e:8018:: with SMTP id j24mr9556562ljg.149.1556569381226;
+        Mon, 29 Apr 2019 13:23:01 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id a1sm3498962lfc.17.2019.04.29.13.23.00
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 13:21:23 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id w23so8892812lfc.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:21:23 -0700 (PDT)
-X-Received: by 2002:ac2:4567:: with SMTP id k7mr34223361lfm.166.1556569282855;
- Mon, 29 Apr 2019 13:21:22 -0700 (PDT)
+        Mon, 29 Apr 2019 13:23:00 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id h126so9042424lfh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:23:00 -0700 (PDT)
+X-Received: by 2002:ac2:43cf:: with SMTP id u15mr3771995lfl.67.1556568986468;
+ Mon, 29 Apr 2019 13:16:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190414201436.19502-1-christian@brauner.io> <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415195911.z7b7miwsj67ha54y@yavin> <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
- <20190420071406.GA22257@ip-172-31-15-78> <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
- <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
-In-Reply-To: <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
+References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-4-nstange@suse.de>
+ <20190427102657.GF2623@hirez.programming.kicks-ass.net> <20190428133826.3e142cfd@oasis.local.home>
+ <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+ <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
+ <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
+ <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
+ <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com> <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
+In-Reply-To: <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Apr 2019 13:21:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com>
-Message-ID: <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com>
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
-To:     Jann Horn <jannh@google.com>
-Cc:     Kevin Easton <kevin@guarana.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
+Date:   Mon, 29 Apr 2019 13:16:10 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjyyKDv-WZLXZbVD=V05p2X7eg74z2SpR4TQTxN9JLq4Q@mail.gmail.com>
+Message-ID: <CAHk-=wjyyKDv-WZLXZbVD=V05p2X7eg74z2SpR4TQTxN9JLq4Q@mail.gmail.com>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+To:     Andrew Lutomirski <luto@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 12:55 PM Jann Horn <jannh@google.com> wrote:
+On Mon, Apr 29, 2019 at 12:02 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> ... I guess that already has a name, and it's called vfork(). (Well,
-> except that the Linux vfork() isn't a real vfork().)
+> If nmi were to break it, it would be a cpu bug. I'm pretty sure I've
+> seen the "shadow stops even nmi" documented for some uarch, but as
+> mentioned it's not necessarily the only way to guarantee the shadow.
 
-What?
+In fact, the documentation is simply the official Intel instruction
+docs for "STI":
 
-Linux vfork() is very much a real vfork(). What do you mean?
+    The IF flag and the STI and CLI instructions do not prohibit the
+    generation of exceptions and NMI interrupts. NMI interrupts (and
+    SMIs) may be blocked for one macroinstruction following an STI.
 
-                 Linus
+note the "may be blocked". As mentioned, that's just one option for
+not having NMI break the STI shadow guarantee, but it's clearly one
+that Intel has done at times, and clearly even documents as having
+done so.
+
+There is absolutely no question that the sti shadow is real, and that
+people have depended on it for _decades_. It would be a horrible
+errata if the shadow can just be made to go away by randomly getting
+an NMI or SMI.
+
+              Linus
