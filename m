@@ -2,149 +2,95 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC32C46470
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47625C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 261922084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF982084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfD2KJ6 (ORCPT
+        id S1727795AbfD2KL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:09:58 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:38958 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727428AbfD2KJ5 (ORCPT
+        Mon, 29 Apr 2019 06:11:28 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:54210 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727428AbfD2KL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 06:09:57 -0400
-Received: by mail-wr1-f47.google.com with SMTP id a9so15149848wrp.6;
-        Mon, 29 Apr 2019 03:09:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=LlnFjg7cdPtMY68Qxa9DGaNp90LnLg5WJLNWEjaCUC4=;
-        b=ne6ebrjTdvxWmppwXsfN5lt11thtkmBDSvHRS1voP5+lzkrR+IjPEo7Qf0tkk8bmrC
-         0or/57s15i3G9V28X9eYs0fdscIgXQ9elgtxQIcbcmX+CDg766pwWXvRnsOSaNiR+VyS
-         VqrsSuqJ0zwiyU1czeo4novNYWzJLoMjDGuV//n24i6biAMZD51RvkLVXz+peBeNYd4d
-         a73YilRAZuqaPVm/W6QzDmx87MpF8GeMf+TrjsOXsiW4XPWJRlmSBKfupFTXZ6N2cbeW
-         PwVFTUTb7NSYSY1Xvlo0ZAlDVG8xcWKMB+tYqx0Wtc6EJQowmTaqERcPpzT/ouqf945Z
-         tX5g==
-X-Gm-Message-State: APjAAAVFjY36XkCda1SGQ3gixUkC+x8DcLTpXXXA8l5LEwYlM/1z6N2D
-        qihr+9fzJiEbpfpTM2Uj3+As1oHq
-X-Google-Smtp-Source: APXvYqyQllye7cYKik/HsHVmOu+rnX3aOFJuOpS91pLvtihzNHOqYA8tSvhUlIwQGmNwi9UD/60WAA==
-X-Received: by 2002:a5d:5308:: with SMTP id e8mr9950716wrv.126.1556532595633;
-        Mon, 29 Apr 2019 03:09:55 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id s124sm13406184wmf.42.2019.04.29.03.09.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 03:09:54 -0700 (PDT)
-Subject: Re: memcg causes crashes in list_lru_add
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, mm <linux-mm@kvack.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-References: <f0cfcfa7-74d0-8738-1061-05d778155462@suse.cz>
- <2cbfb8dc-31f0-7b95-8a93-954edb859cd8@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
-Date:   Mon, 29 Apr 2019 12:09:53 +0200
+        Mon, 29 Apr 2019 06:11:28 -0400
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from webmail.solarflare.com (webmail.solarflare.com [12.187.104.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us1.ppe-hosted.com (Proofpoint Essentials ESMTP Server) with ESMTPS id 3865B400066;
+        Mon, 29 Apr 2019 10:11:26 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ocex03.SolarFlarecom.com
+ (10.20.40.36) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 29 Apr
+ 2019 03:11:22 -0700
+Subject: Re: [PATCH] net_sched: force endianness annotation
+To:     Nicholas Mc Guire <hofrat@osadl.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>
+CC:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1556430899-11018-1-git-send-email-hofrat@osadl.org>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <07d36e94-aad4-a263-bf09-705ee1dd59ed@solarflare.com>
+Date:   Mon, 29 Apr 2019 11:11:20 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <2cbfb8dc-31f0-7b95-8a93-954edb859cd8@suse.cz>
-Content-Type: text/plain; charset=iso-8859-2
+In-Reply-To: <1556430899-11018-1-git-send-email-hofrat@osadl.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.17.20.203]
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-24580.005
+X-TM-AS-Result: No-4.292800-4.000000-10
+X-TMASE-MatchedRID: O/y65JfDwwsOwH4pD14DsPHkpkyUphL9Nvjc2DbB99Wrkv7SfIzez2mt
+        ukJWdiprNJnt9TW/xwYACvZf/rOov2c/On6gI+zz84dsinZ5e1hAq6/y5AEOOvVbyY0/zdkG8z7
+        0XDTUjsZOk++lKId7iyISKQcUnlqDq8jCopVJlk10BEBFOTiHn30tCKdnhB581kTfEkyaZdz6C0
+        ePs7A07fhmFHnZFzVqIamWssUXa64BevIcQN9A5G+FnJlIEuK1YTtPBk8rKR4ak2Ci3GfcjitY1
+        vUCSu8aNiWmlXPkwJxfqo383V2C46tqoSd6FkMRh8xkx6AsMh4ZTSkqdqz5FucIl+0VmRmLNglg
+        0VTTR7s35c5BnKCu9g==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.292800-4.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-24580.005
+X-MDID: 1556532687-g3uCOSzhz_G4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29. 04. 19, 11:25, Jiri Slaby wrote:> memcg_update_all_list_lrus
-should take care about resizing the array.
+On 28/04/2019 06:54, Nicholas Mc Guire wrote:
+> While the endiannes is being handled correctly sparse was unhappy with
+> the missing annotation as be16_to_cpu()/be32_to_cpu() expects a __be16
+> respectively __be32.
+[...]
+> diff --git a/net/sched/em_cmp.c b/net/sched/em_cmp.c
+> index 1c8360a..3045ee1 100644
+> --- a/net/sched/em_cmp.c
+> +++ b/net/sched/em_cmp.c
+> @@ -41,7 +41,7 @@ static int em_cmp_match(struct sk_buff *skb, struct tcf_ematch *em,
+>  		val = get_unaligned_be16(ptr);
+>  
+>  		if (cmp_needs_transformation(cmp))
+> -			val = be16_to_cpu(val);
+> +			val = be16_to_cpu((__force __be16)val);
+>  		break;
+There should probably be a comment here to explain what's going on.  TBH
+ it's probably a good general rule that any use of __force should have a
+ comment explaining why it's needed.
+AFAICT, get_unaligned_be16(ptr) is (barring alignment) equivalent to
+ be16_to_cpu(*(__be16 *)ptr).  But then calling be16_to_cpu() again on
+ val is bogus; it's already CPU endian.  There's a distinct lack of
+ documentation around as to the intended semantics of TCF_EM_CMP_TRANS,
+ but it would seem either (__force u16)cpu_to_be16(val); (which preserves
+ the existing semantics, that trans is a no-op on BE) or swab16(val);
+ would make more sense.
 
-It should, but:
-[    0.058362] Number of physical nodes 2
-[    0.058366] Skipping disabled node 0
-
-So this should be the real fix:
---- linux-5.0-stable1.orig/mm/list_lru.c
-+++ linux-5.0-stable1/mm/list_lru.c
-@@ -37,11 +37,12 @@ static int lru_shrinker_id(struct list_l
-
- static inline bool list_lru_memcg_aware(struct list_lru *lru)
- {
--       /*
--        * This needs node 0 to be always present, even
--        * in the systems supporting sparse numa ids.
--        */
--       return !!lru->node[0].memcg_lrus;
-+       int i;
-+
-+       for_each_online_node(i)
-+               return !!lru->node[i].memcg_lrus;
-+
-+       return false;
- }
-
- static inline struct list_lru_one *
-
-
-
-
-
-Opinions?
-
-thanks,
--- 
-js
-suse labs
+-Ed
