@@ -2,93 +2,145 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57819C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA4DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E94205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5257920652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:23:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="SbZBNC01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfD2NWU (ORCPT
+        id S1728197AbfD2NXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:22:20 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41841 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfD2NWT (ORCPT
+        Mon, 29 Apr 2019 09:23:35 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:35922 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725838AbfD2NXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:22:19 -0400
-Received: by mail-qk1-f194.google.com with SMTP id l199so5862772qke.8;
-        Mon, 29 Apr 2019 06:22:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jxj1FCipKcklarY6Q+hJsPo8HKtT8eDMF/LowfJ48xw=;
-        b=Sbt8zt5d/mefsrGhBrLCyCxx0ScBdXzomZnTqffwL8ee/2jJxZmIugIfbvJ/amxNH2
-         CuWYUv2wD5PeuSDLqncG+cFqtzjg/5hmzI1QUCy+kqzIYFv0PuFq3hVbWMCCA72BAck5
-         KSGECbiZTd8gYMGA7jMjHUGY0QtNN2xPt4t+nt6JBzcZZpWC4NJzvwpuUcrE1mAR51Bm
-         NPTLV/7eL2APotZt5g69Thn44L2avZuLRqNZTqByo3KwoFcNXrl6fT53jpm7iIkIK8Jp
-         bGi2x5a4cSih9GFpTIoyAuqeZoIAoy7zJRJ6JS+G9o0IFKlwckWqhpB+n5w3U57BDXKl
-         LQeg==
-X-Gm-Message-State: APjAAAVptRK3oDUEjovUIxLSPNAMjCkrO9M/UWiyEjiruiiCTDHBWqcc
-        Ea41oRxF4+XouMPmZSiG3o1DdgLYXrHFbUub8Dw=
-X-Google-Smtp-Source: APXvYqzA00hWBDMEberomQeBoApVfyufrjCPcagiQ+CrJXNsKP6fBHPvkVE+n4jTzMcf6/hgw0GZ+JNqgRHhjJk6HYc=
-X-Received: by 2002:ae9:ee15:: with SMTP id i21mr43735948qkg.107.1556544138476;
- Mon, 29 Apr 2019 06:22:18 -0700 (PDT)
+        Mon, 29 Apr 2019 09:23:34 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1A312C00C9;
+        Mon, 29 Apr 2019 13:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556544212; bh=Mflle1+S8Aliq2KJvkEHM5CV5/kFY6OCRX0cLLFEGAY=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=SbZBNC01WoIzwIP7hzZyDQ3Rk+XCeJzqaCBLZFlVvVhjX8w1M0aselKh4oBk+2+zf
+         lD1FsYsCU53FVMKM0yOjURKDEwTpuZRtd5wnuljCj0iaa8pmPXa7Nv+k4LgF/zRC2I
+         psmGyGHtCGy1O8JJH7tqcupzT7f/kCJpGd2PTfLAkQ8WrLVJWUM2CAPuAJYOVe8mBr
+         jJyAnY/xD8Jf489yymUkM1SRIl8oD9vizWZ+d3mJPvC8sA9Km0K7hU39h9GQjg40wF
+         cMcRerTVL52CK3Sc6BBkqsQ/MuQO2OSE1j9X1UGyu8IeKajq50c/vTDWQt3ht1i5eP
+         FwE1q+7bHZ1aA==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 5B869A0065;
+        Mon, 29 Apr 2019 13:23:29 +0000 (UTC)
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 29 Apr 2019 06:23:29 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
+ 29 Apr 2019 15:23:27 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     "Voon, Weifeng" <weifeng.voon@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Subject: RE: [PATCH 4/7] net: stmmac: introducing support for DWC xPCS logics
+Thread-Topic: [PATCH 4/7] net: stmmac: introducing support for DWC xPCS
+ logics
+Thread-Index: AQHU+oijzDBWZoWOSkutjbTSvGWKlaZMVEeAgAai8KA=
+Date:   Mon, 29 Apr 2019 13:23:26 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B46E26B@DE02WEMBXB.internal.synopsys.com>
+References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
+ <1556126241-2774-5-git-send-email-weifeng.voon@intel.com>
+ <D6759987A7968C4889FDA6FA91D5CBC8146EF0A8@PGSMSX103.gar.corp.intel.com>
+In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC8146EF0A8@PGSMSX103.gar.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190426142531.1378357-1-arnd@arndb.de> <alpine.DEB.2.21.1904290933130.1626@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1904290933130.1626@nanos.tec.linutronix.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Apr 2019 15:22:02 +0200
-Message-ID: <CAK8P3a2UVqg--Xs29o55QbsRKu-ynN8ZXR96Phiq2cuCoABvGw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] y2038: make CONFIG_64BIT_TIME unconditional
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Joseph Myers <joseph@codesourcery.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Lukasz Majewski <lukma@denx.de>,
-        Stepan Golosunov <stepan@golosunov.pp.ru>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 9:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Fri, 26 Apr 2019, Arnd Bergmann wrote:
->
-> > As Stepan Golosunov points out, we made a small mistake in the
-> > get_timespec64() function in the kernel. It was originally added under
-> > the assumption that CONFIG_64BIT_TIME would get enabled on all 32-bit
-> > and 64-bit architectures, but when I did the conversion, I only turned
-> > it on for 32-bit ones.
-> >
-> > The effect is that the get_timespec64() function never clears the upper
-> > half of the tv_nsec field for 32-bit tasks in compat mode. Clearing this
-> > is required for POSIX compliant behavior of functions that pass a
-> > 'timespec' structure with a 64-bit tv_sec and a 32-bit tv_nsec, plus
-> > uninitialized padding.
-> >
-> > The easiest fix for linux-5.1 is to just make the Kconfig symbol
-> > unconditional, as it was originally intended. As a follow-up,
-> > we should remove any #ifdef CONFIG_64BIT_TIME completely.
-> >
-> > Link: https://lore.kernel.org/lkml/20190422090710.bmxdhhankurhafxq@sghpc.golosunov.pp.ru/
-> > Cc: Lukasz Majewski <lukma@denx.de>
-> > Cc: Stepan Golosunov <stepan@golosunov.pp.ru>
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+From: Voon, Weifeng <weifeng.voon@intel.com>
+Date: Thu, Apr 25, 2019 at 08:06:43
+
+> > From: Ong Boon Leong <boon.leong.ong@intel.com>
+> >=20
+> > xPCS is DWC Ethernet Physical Coding Sublayer that may be integrated in=
+to a
+> > GbE controller that uses DWC EQoS MAC controller. An example of HW
+> > configuration is shown below:-
+> >=20
+> >   <-----------------GBE Controller---------->|<--External PHY chip-->
+> >=20
+> >   +----------+         +----+    +---+               +--------------+
+> >   |   EQoS   | <-GMII->|xPCS|<-->|L1 | <-- SGMII --> | External GbE |
+> >   |   MAC    |         |    |    |PHY|               | PHY Chip     |
+> >   +----------+         +----+    +---+               +--------------+
+> >          ^               ^                                  ^
+> >          |               |                                  |
+> >          +---------------------MDIO-------------------------+
+> >=20
+> > xPCS is a Clause-45 MDIO Manageable Device (MMD) and we need a way to
+> > differentiate it from external PHY chip that is discovered over MDIO.
+> > Therefore, xpcs_phy_addr is introduced in stmmac platform data
+> > (plat_stmmacenet_data) for differentiating xPCS from 'phy_addr' that
+> > belongs to external PHY.
+> >=20
+> > Basic functionalities for initializing xPCS and configuring auto negoti=
+ation (AN),
+> > loopback, link status, AN advertisement and Link Partner ability are
+> > implemented.
+> >=20
+> > xPCS interrupt handling for C37 AN complete is also implemented.
+> >=20
+> > Tested-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
+> > Reviewed-by: Chuah Kim Tatt <kim.tatt.chuah@intel.com>
+> > Reviewed-by: Voon Weifeng <weifeng.voon@intel.com>
+> > Reviewed-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
+> > Reviewed-by: Baoli Zhang <baoli.zhang@intel.com>
+> > Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
 > > ---
-> > Please apply this one as a bugfix for 5.1
->
-> Can you provide a 'Fixes: ....' tag please?
+> >  drivers/net/ethernet/stmicro/stmmac/dw_xpcs.h | 288
+> > ++++++++++++++++++++++++++
+> >  drivers/net/ethernet/stmicro/stmmac/hwif.h    |  17 ++
+> >  include/linux/stmmac.h                        |   1 +
+> >  3 files changed, 306 insertions(+)
+> >  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dw_xpcs.h
+> >=20
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dw_xpcs.h
+> > b/drivers/net/ethernet/stmicro/stmmac/dw_xpcs.h
+> > new file mode 100644
+> > index 0000000..446b714
+> > --- /dev/null
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/dw_xpcs.h
 
-Ok, resent both patches now. I also took the chance to add a clarification
-for the point that Lukasz missed on the first submission.
+I would rather prefer see this as a .c file and then just export a new=20
+structure for HWIF because this does not belong to the MAC. Is there any=20
+specific reason why you added this as a .h file besides the reuse of=20
+callbacks across cores ?
 
-       Arnd
+And having inline functions everywhere seems overkill also.
+
+Thanks,
+Jose Miguel Abreu
