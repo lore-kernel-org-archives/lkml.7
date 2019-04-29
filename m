@@ -2,108 +2,83 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30695C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A624FC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F204820673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="lw8aZnac"
+	by mail.kernel.org (Postfix) with ESMTP id 7D61D2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbfD2MZR (ORCPT
+        id S1728146AbfD2M1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:25:17 -0400
-Received: from mail-eopbgr1410093.outbound.protection.outlook.com ([40.107.141.93]:43232
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        Mon, 29 Apr 2019 08:27:24 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39456 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728005AbfD2MZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:25:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector1-renesas-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KXi0PzQBcTaVfb4Te06wM7Ri9eVVQFSQqsrolYwXmnA=;
- b=lw8aZnacT5lqnK927PFTmTmsrAV0SaZ38iHmCgJOfKe6ZyB8qdwyI96Z7D6iinxvdgrDgki+zaJ4Jw4Zwf7ojBCvdy1ZG7KOUA+P7QQsHOFYJSeWGFE6fxV4qG5O7VuBQ0XdqvrxKo4pg5BjVsonwDZKdhfFr7o3mXvWQcMe1k4=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1676.jpnprd01.prod.outlook.com (52.133.163.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Mon, 29 Apr 2019 12:25:11 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::99cf:c94c:d11f:c2f0]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::99cf:c94c:d11f:c2f0%5]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
- 12:25:11 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Marc Zyngier <marc.zyngier@arm.com>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/5] irqchip: Add Renesas RZ/A1 Interrupt Controller
- driver
-Thread-Topic: [PATCH 2/5] irqchip: Add Renesas RZ/A1 Interrupt Controller
- driver
-Thread-Index: AQHU/m8PB9wkGP0JyE6XlHkrtJGBYaZS6auAgAAU5ICAABDeMA==
-Date:   Mon, 29 Apr 2019 12:25:11 +0000
-Message-ID: <TY1PR01MB1562E95253A89499124CC6978A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20190429093631.10799-1-geert+renesas@glider.be>
- <20190429093631.10799-3-geert+renesas@glider.be>
- <f9310d4c-8f9e-a837-3ed3-4d7c294efd3f@arm.com>
- <CAMuHMdU3i7vqs9hd7rfvYH8QtqvwUB5vgsa_fwo5L4E3DQ_d1Q@mail.gmail.com>
-In-Reply-To: <CAMuHMdU3i7vqs9hd7rfvYH8QtqvwUB5vgsa_fwo5L4E3DQ_d1Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [75.60.247.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c16a221-4348-4b8e-63b8-08d6cc9db9b2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1676;
-x-ms-traffictypediagnostic: TY1PR01MB1676:
-x-microsoft-antispam-prvs: <TY1PR01MB16766E638159CC99599726A88A390@TY1PR01MB1676.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0022134A87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(396003)(346002)(366004)(376002)(189003)(199004)(8676002)(81156014)(8936002)(81166006)(93886005)(486006)(476003)(33656002)(11346002)(97736004)(446003)(478600001)(72206003)(4744005)(66066001)(14454004)(71190400001)(256004)(5660300002)(71200400001)(52536014)(99286004)(86362001)(4326008)(186003)(25786009)(54906003)(316002)(110136005)(305945005)(68736007)(7736002)(74316002)(102836004)(7416002)(9686003)(76176011)(26005)(3846002)(6116002)(6506007)(55016002)(53936002)(2906002)(6436002)(7696005)(6246003)(229853002)(76116006)(66556008)(66476007)(66946007)(64756008)(73956011)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1676;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BINyxRntme5yBXnSMxDvwapodzVx3jPxaqhZzWtLdKfCKIU/esNfasd86T2TSrucvIoDh9uUWKdqmbCG2to2unbIxupZex/V109zoKrCjb3thD+eRse0Js6KrfPtoYqBxNWOpkSdkZKCk1AkIdR7/I6IN+AsVfk0Pf0C19qy3jo0zySvSBPyIFgsgK3BYBkxBakptykK669KjEXiFZrK4a911pG09kP+FxwIxMEUE/oLJSpjtCpJaMjElh2Ou+wAemftC1RnKKlhoZOzUpKmunr+kvZkRvaJ/ZS5pUWNP0a0VKk+zZtTeF6OYzhsskPSR59LNO4g33CnGvHNaqn+qu0WepE9SxI3zZRjM7R8kxm1uZh1QSq/Wl4pdcQMj/muvTt/bTQCxyw7WxnpJJRL+J5HlwU9xztU68ZHiHPyewA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1727956AbfD2M1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 08:27:23 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B11085537030402A0CCD;
+        Mon, 29 Apr 2019 20:27:21 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 29 Apr 2019 20:27:11 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] ASoC: sprd: Fix to use list_for_each_entry_safe() when delete items
+Date:   Mon, 29 Apr 2019 12:37:13 +0000
+Message-ID: <20190429123713.64280-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c16a221-4348-4b8e-63b8-08d6cc9db9b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 12:25:11.4319
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1676
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIE1vbiwgQXByIDI5LCAyMDE5LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3Jv
-dGU6DQo+ID4gSXQgb3RoZXJ3aXNlIGxvb2tzIGdvb2QgdG8gbWUuIElmIHlvdSByZXNwaW4gaXQg
-cXVpY2tseSBlbm91Z2gsIEknbQ0KPiA+IGhhcHB5IHRvIHRha2UgaXQgZm9yIDUuMi4NCj4gDQo+
-IFRoYW5rcywgd2lsbCBkbyB0b21vcnJvdywgc28gQ2hyaXMgKGluIE5DLlVTOyBsZXQncyBob3Bl
-IGhlIGRvZXNuJ3QNCj4gY2VsZWJyYXRlIEdvbGRlbiBXZWVrKSBoYXMgYSBjaGFuY2UgdG8gY29t
-bWVudC4uLg0KDQpObyBHb2xkZW4gV2VlayBmb3IgbWUuDQoNCkV4Y2VwdCwgSSBnZXQgMSB3ZWVr
-IGEgeWVhciB3aGVuIEkgd2FrZSB1cCBpbiB0aGUgbW9ybmluZyBhbmQgbXkgaW5ib3ggDQppcyBu
-b3QgYWxyZWFkeSBmdWxsLi4uc28gaXQgaXMgYSBnb2xkZW4gd2VlayBmb3IgbWUuIDopDQoNCkkn
-bSBnb2luZyB0byB0cnkgdGhlc2UgcGF0Y2hlcyBvdXQgb24gUlovQTEgYW5kIFJaL0EyIHRvZGF5
-Lg0KDQoNCkNocmlzDQo=
+Since we will remove items off the list using list_del() we need
+to use a safe version of the list_for_each_entry() macro aptly named
+list_for_each_entry_safe().
+
+Fixes: d7bff893e04f ("ASoC: sprd: Add Spreadtrum multi-channel data transfer support")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ sound/soc/sprd/sprd-mcdt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/sound/soc/sprd/sprd-mcdt.c b/sound/soc/sprd/sprd-mcdt.c
+index 28f5e649733d..df250f7f2b6f 100644
+--- a/sound/soc/sprd/sprd-mcdt.c
++++ b/sound/soc/sprd/sprd-mcdt.c
+@@ -978,12 +978,12 @@ static int sprd_mcdt_probe(struct platform_device *pdev)
+ 
+ static int sprd_mcdt_remove(struct platform_device *pdev)
+ {
+-	struct sprd_mcdt_chan *temp;
++	struct sprd_mcdt_chan *chan, *temp;
+ 
+ 	mutex_lock(&sprd_mcdt_list_mutex);
+ 
+-	list_for_each_entry(temp, &sprd_mcdt_chan_list, list)
+-		list_del(&temp->list);
++	list_for_each_entry_safe(chan, temp, &sprd_mcdt_chan_list, list)
++		list_del(&chan->list);
+ 
+ 	mutex_unlock(&sprd_mcdt_list_mutex);
+
+
+
