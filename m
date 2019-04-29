@@ -2,105 +2,137 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196F1C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB7BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD13920675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B8DC20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:49:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbfD2PrB (ORCPT
+        id S1728656AbfD2Ptx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:47:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34458 "EHLO mx1.redhat.com"
+        Mon, 29 Apr 2019 11:49:53 -0400
+Received: from mail.hallyn.com ([178.63.66.53]:39526 "EHLO mail.hallyn.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbfD2PrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:47:00 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 982D0307EA87;
-        Mon, 29 Apr 2019 15:47:00 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-148.ams2.redhat.com [10.36.116.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C6F92899C;
-        Mon, 29 Apr 2019 15:46:59 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Renz <appswert@gmail.com>
-Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for 'jumper ezpad 6 pro b' touchscreen
-Date:   Mon, 29 Apr 2019 17:46:57 +0200
-Message-Id: <20190429154657.26797-1-hdegoede@redhat.com>
+        id S1728555AbfD2Ptx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:49:53 -0400
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+        id D18296C6; Mon, 29 Apr 2019 10:49:49 -0500 (CDT)
+Date:   Mon, 29 Apr 2019 10:49:49 -0500
+From:   "Serge E. Hallyn" <serge@hallyn.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
+        Christian Brauner <christian@brauner.io>,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, luto@kernel.org, arnd@arndb.de,
+        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
+        mtk.manpages@gmail.com, akpm@linux-foundation.org, oleg@redhat.com,
+        cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com
+Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
+ CLONE_PIDFD]
+Message-ID: <20190429154949.GA23456@mail.hallyn.com>
+References: <20190414201436.19502-1-christian@brauner.io>
+ <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
+ <20190415155034.GA25351@mail.hallyn.com>
+ <000a64d6-1e22-21bf-f232-15f141092e44@metux.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 29 Apr 2019 15:47:00 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000a64d6-1e22-21bf-f232-15f141092e44@metux.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Renz <appswert@gmail.com>
+On Tue, Apr 16, 2019 at 08:32:50PM +0200, Enrico Weigelt, metux IT consult wrote:
 
-Add touchscreen platform data for the 'jumper ezpad 6 pro b' touchscreen.
+(Sorry for the late reply, I had missed this one)
 
-Signed-off-by: Benjamin Renz <appswert@gmail.com>
-[hdegoede@redhat.com: Cleanup commit msg, fix some checkpatch warnings]
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> On 15.04.19 17:50, Serge E. Hallyn wrote:
+> 
+> Hi,
+> 
+> >> I'm working on implementing plan9-like fs namespaces, where unprivileged>> processes can change their own namespace at will. For that, certain>
+> > Is there any place where we can see previous discussion about this?
+> Yes, lkml and constainers list.
+> It's stalled since few month, as I'm too busy w/ other things.
+> 
+> > If you have to disable suid anyway, then is there any reason why the> existing ability to do this in a private user namespace, with only>
+> your own uid mapped (which you can do without any privilege) does> not
+> suffice?  That was actually one of the main design goals of user>
+> namespaces, to be able to clone(CLONE_NEWUSER), map your current uid,>
+> then clone(CLONE_NEWNS) and bind mount at will.
+> Well, it's not that easy ... maybe I should explain a bit more about how
+> Plan9 works, and how I intent to map it into Linux:
+> 
+> * on plan9, anybody can alter his own fs namespace (bind and mount), as
+>   well as spawning new ones
+> * basically anything is coming from some fileserver - even devices
+>   (eg. there is no such thing like device nodes)
+> * access control is done by the individual fileservers, based on the
+>   initial authentication (on connecting to the server, before mounting)
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 3319f0cbb558..bd0856d2e825 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -249,6 +249,21 @@ static const struct ts_dmi_data jumper_ezpad_6_pro_data = {
- 	.properties	= jumper_ezpad_6_pro_props,
- };
- 
-+static const struct property_entry jumper_ezpad_6_pro_b_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3692-jumper-ezpad-6-pro-b.fw"),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data jumper_ezpad_6_pro_b_data = {
-+	.acpi_name      = "MSSL1680:00",
-+	.properties     = jumper_ezpad_6_pro_b_props,
-+};
-+
- static const struct property_entry jumper_ezpad_mini3_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-min-x", 23),
- 	PROPERTY_ENTRY_U32("touchscreen-min-y", 16),
-@@ -690,6 +705,17 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_DATE, "08/18/2017"),
- 		},
- 	},
-+	{
-+		/* Jumper EZpad 6 Pro B */
-+		.driver_data = (void *)&jumper_ezpad_6_pro_b_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Jumper"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EZpad"),
-+			DMI_MATCH(DMI_BIOS_VERSION, "5.12"),
-+			/* Above matches are too generic, add bios-date match */
-+			DMI_MATCH(DMI_BIOS_DATE, "04/24/2018"),
-+		},
-+	},
- 	{
- 		/* Jumper EZpad mini3 */
- 		.driver_data = (void *)&jumper_ezpad_mini3_data,
--- 
-2.21.0
+yes, so far I'm aware of this,
 
+> * all users are equal - no root at all. the only exception is the
+>   initial process, which gets the kernel devices mounted into his
+>   namespace.
+
+This does not match my understanding, but I'm most likely wrong.  (I thought
+there was an actual 'host owner' uid, which mostly is only used for initial
+process, but is basically root with a different name, and used far less.  No
+uid transitions without factotem so that it *looked* like no root user).
+
+> What I'd like to achieve on Linux:
+> 
+> * unprivileged users can have their own mount namespace, where they
+>   can mount at will (maybe just 9P).
+
+No problem, you can do that now.
+
+> * but they still appear as the same normal users to the rest of the
+>   system
+
+No problem, you can do that now.
+
+> * 9p programs (compiled for Linux ABI) can run parallel to traditional
+>   linux programs within the same user and sessions (eg. from a terminal,
+>   i can call both the same way)
+> * namespace modifications affect both equally (eg. I could run ff in
+>   an own ns)
+
+affect both of what equally?
+
+> * these namespaces exist as long as there's one process alive in here
+
+That's sort of how it is now, except you can also pin the namespaces
+with their fds.
+
+> * creating a new ns can be done by unprivileged user
+
+That's true now.
+
+>  One of the things to make this work (w/o introducing a massive security
+> hole) is disable suid for those processes (actually, one day i'd like to
+> get rid of it completely, but that's another story).
+
+That's exactly what user namespaces are for.  You can create a new
+user namespace, using no privilege at all, with your current uid (i.e.
+1000) mapped to whatever uid you like; if you pick 0, then you can unshare all
+the namespaces you like.  Once you unshare mnt_ns, you can mount to your
+heart's content.  To other processes on the host, your process is
+uid 1000.  Host uid 0 is not mapped into your ns, so you cannot exploit
+suid to host root.
+
+Regarding factotem, I agree that with the pidfd work going on etc, it's getting
+more and more tempting to attempt a switch to that.  Looking back at my folder,
+I see you posted a kernel patch for it.  I had done the same long ago.  Happy to
+work with you again on that, and put a simple daemon into shadow package, if
+util-linux isn't deemed the far better place.
+
+-serge
