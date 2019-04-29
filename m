@@ -7,77 +7,77 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF90DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A1BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABEAE216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C851F20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="D7lXn/wM"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cjy/Ls/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729105AbfD2SdU (ORCPT
+        id S1729113AbfD2Sd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:33:20 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:53789 "EHLO
+        Mon, 29 Apr 2019 14:33:58 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50069 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbfD2SdT (ORCPT
+        with ESMTP id S1728844AbfD2Sd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:33:19 -0400
+        Mon, 29 Apr 2019 14:33:58 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3TIVuQk1027020
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3TIWeQV1027062
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 29 Apr 2019 11:31:56 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3TIVuQk1027020
+        Mon, 29 Apr 2019 11:32:40 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3TIWeQV1027062
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556562718;
-        bh=rrAoA0GKqwZzUoJAdxzshTaqR21TMHKaY7GTqRQHKHs=;
+        s=2019041745; t=1556562761;
+        bh=HNzyHm2E21S5Gbgg0B/008ePq/R4+OjiNJA63VMyUtQ=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=D7lXn/wMHAhhL29KWQmP58/VFIfSCuF4mRYEw2gLKI/KnbtaWlVoPjAPMNfahH8eA
-         xQO2/h7ijkbDTusnqqIVoRI1falbqTUHxZ7L1Ntjm9RSLxK3yuDQuMk+TumOCufrgq
-         KgPoUE/Z9DkhVcHHBQ8cUW+jOw06FxhthWgTZ2BE/yD85m2SwwWJ6vkci39WzOruTM
-         Bjl9/kc2+7Ilbr92SMAJZknG/mUN1EBq4cu1wKlsxxMtt0+9vxyi8VmxhNCVDZSA4R
-         UK9pjlxdveZax1kXxLIi8rEV0QDZf5IJjCfSbA1kDbl0ElHD9XPEYdUUzF3ll7d+CQ
-         l1FrRITEi+42w==
+        b=cjy/Ls/Jm+H/lC9QuUTB+d5/zjmfy47wCd9tdA3uwA/HZnt4+zbQOa13zf0Xri8gQ
+         H3dsFlLJIujpYUzYAYJkmC/1axU1dPF4TbSpFhbr9EfQ15k6ioxo+Qig/L0O/p2t5A
+         5JBWZeg9w6QCRg8YWCbRVLFPfteDz5z21Dyh81P6d4okt/fL722dKknS0CKbwlTD59
+         nV7lVw49FVbwDPCqldUf1p46W6+Vyrooc8MYXCWsTN6k/TO9aHFs96ZHkw0ac6Qadu
+         m8lRd0gxqQh1AeYwotbnJhm70x031LV1Q5c5qWSUyVU9+tQ0ITm1lesd6z2rXhWGDh
+         foPuJZ2a4uf6w==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3TIVums1027016;
-        Mon, 29 Apr 2019 11:31:56 -0700
-Date:   Mon, 29 Apr 2019 11:31:56 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3TIWdse1027058;
+        Mon, 29 Apr 2019 11:32:39 -0700
+Date:   Mon, 29 Apr 2019 11:32:39 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-e9b98e162aa53cbea7c8b0d6c9d5dc6e0f822b9c@git.kernel.org>
-Cc:     luto@kernel.org, mbenes@suse.cz, rostedt@goodmis.org,
-        josef@toxicpanda.com, penberg@kernel.org, tglx@linutronix.de,
-        rientjes@google.com, airlied@linux.ie, dsterba@suse.com,
-        joonas.lahtinen@linux.intel.com, aryabinin@virtuozzo.com,
-        akpm@linux-foundation.org, tom.zanussi@linux.intel.com,
-        linux-kernel@vger.kernel.org, agk@redhat.com, adobriyan@gmail.com,
-        catalin.marinas@arm.com, jani.nikula@linux.intel.com,
-        maarten.lankhorst@linux.intel.com, robin.murphy@arm.com,
-        m.szyprowski@samsung.com, snitzer@redhat.com, daniel@ffwll.ch,
-        hch@lst.de, hpa@zytor.com, jthumshirn@suse.de, mingo@kernel.org,
-        rodrigo.vivi@intel.com, cl@linux.com, glider@google.com,
-        rppt@linux.vnet.ibm.com, akinobu.mita@gmail.com,
-        dvyukov@google.com, jpoimboe@redhat.com, clm@fb.com
-Reply-To: aryabinin@virtuozzo.com, dsterba@suse.com,
-          joonas.lahtinen@linux.intel.com, adobriyan@gmail.com,
-          agk@redhat.com, catalin.marinas@arm.com,
-          linux-kernel@vger.kernel.org, tom.zanussi@linux.intel.com,
-          akpm@linux-foundation.org, rostedt@goodmis.org, mbenes@suse.cz,
-          luto@kernel.org, tglx@linutronix.de, rientjes@google.com,
-          airlied@linux.ie, penberg@kernel.org, josef@toxicpanda.com,
-          cl@linux.com, glider@google.com, rodrigo.vivi@intel.com,
-          rppt@linux.vnet.ibm.com, mingo@kernel.org, hch@lst.de,
-          hpa@zytor.com, jthumshirn@suse.de, daniel@ffwll.ch, clm@fb.com,
-          dvyukov@google.com, jpoimboe@redhat.com, akinobu.mita@gmail.com,
-          m.szyprowski@samsung.com, maarten.lankhorst@linux.intel.com,
-          robin.murphy@arm.com, jani.nikula@linux.intel.com,
-          snitzer@redhat.com
-In-Reply-To: <20190425094801.324810708@linutronix.de>
-References: <20190425094801.324810708@linutronix.de>
+Message-ID: <tip-c0cfc337264c5e02e0bc79de6b62857999588879@git.kernel.org>
+Cc:     mbenes@suse.cz, rppt@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, tom.zanussi@linux.intel.com,
+        jthumshirn@suse.de, jpoimboe@redhat.com, cl@linux.com,
+        maarten.lankhorst@linux.intel.com, agk@redhat.com, hpa@zytor.com,
+        adobriyan@gmail.com, robin.murphy@arm.com, clm@fb.com,
+        akinobu.mita@gmail.com, hch@lst.de, luto@kernel.org,
+        catalin.marinas@arm.com, joonas.lahtinen@linux.intel.com,
+        rostedt@goodmis.org, mingo@kernel.org, rientjes@google.com,
+        penberg@kernel.org, glider@google.com, daniel@ffwll.ch,
+        snitzer@redhat.com, jani.nikula@linux.intel.com,
+        aryabinin@virtuozzo.com, dsterba@suse.com,
+        akpm@linux-foundation.org, rodrigo.vivi@intel.com,
+        airlied@linux.ie, dvyukov@google.com, m.szyprowski@samsung.com,
+        tglx@linutronix.de, josef@toxicpanda.com
+Reply-To: jpoimboe@redhat.com, tom.zanussi@linux.intel.com,
+          jthumshirn@suse.de, linux-kernel@vger.kernel.org,
+          rppt@linux.vnet.ibm.com, mbenes@suse.cz, robin.murphy@arm.com,
+          maarten.lankhorst@linux.intel.com, hpa@zytor.com,
+          adobriyan@gmail.com, agk@redhat.com, cl@linux.com,
+          rostedt@goodmis.org, mingo@kernel.org, catalin.marinas@arm.com,
+          joonas.lahtinen@linux.intel.com, hch@lst.de, luto@kernel.org,
+          clm@fb.com, akinobu.mita@gmail.com, rientjes@google.com,
+          daniel@ffwll.ch, glider@google.com, penberg@kernel.org,
+          akpm@linux-foundation.org, jani.nikula@linux.intel.com,
+          aryabinin@virtuozzo.com, dsterba@suse.com, snitzer@redhat.com,
+          m.szyprowski@samsung.com, airlied@linux.ie, dvyukov@google.com,
+          rodrigo.vivi@intel.com, josef@toxicpanda.com, tglx@linutronix.de
+In-Reply-To: <20190425094801.414574828@linutronix.de>
+References: <20190425094801.414574828@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/stacktrace] stacktrace: Provide helpers for common stack
- trace operations
-Git-Commit-ID: e9b98e162aa53cbea7c8b0d6c9d5dc6e0f822b9c
+Subject: [tip:core/stacktrace] lib/stackdepot: Provide functions which
+ operate on plain storage arrays
+Git-Commit-ID: c0cfc337264c5e02e0bc79de6b62857999588879
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -91,31 +91,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e9b98e162aa53cbea7c8b0d6c9d5dc6e0f822b9c
-Gitweb:     https://git.kernel.org/tip/e9b98e162aa53cbea7c8b0d6c9d5dc6e0f822b9c
+Commit-ID:  c0cfc337264c5e02e0bc79de6b62857999588879
+Gitweb:     https://git.kernel.org/tip/c0cfc337264c5e02e0bc79de6b62857999588879
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Thu, 25 Apr 2019 11:44:55 +0200
+AuthorDate: Thu, 25 Apr 2019 11:44:56 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Mon, 29 Apr 2019 12:37:46 +0200
+CommitDate: Mon, 29 Apr 2019 12:37:47 +0200
 
-stacktrace: Provide helpers for common stack trace operations
+lib/stackdepot: Provide functions which operate on plain storage arrays
 
-All operations with stack traces are based on struct stack_trace. That's a
-horrible construct as the struct is a kitchen sink for input and
-output. Quite some usage sites embed it into their own data structures
-which creates weird indirections.
+The struct stack_trace indirection in the stack depot functions is a truly
+pointless excercise which requires horrible code at the callsites.
 
-There is absolutely no point in doing so. For all use cases a storage array
-and the number of valid stack trace entries in the array is sufficient.
-
-Provide helper functions which avoid the struct stack_trace indirection so
-the usage sites can be cleaned up.
+Provide interfaces based on plain storage arrays.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Acked-by: Alexander Potapenko <glider@google.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alexander Potapenko <glider@google.com>
 Cc: Alexey Dobriyan <adobriyan@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Christoph Lameter <cl@linux.com>
@@ -151,264 +145,147 @@ Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
 Cc: Miroslav Benes <mbenes@suse.cz>
 Cc: linux-arch@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190425094801.324810708@linutronix.de
+Link: https://lkml.kernel.org/r/20190425094801.414574828@linutronix.de
 
 ---
- include/linux/stacktrace.h |  27 +++++++
- kernel/stacktrace.c        | 170 +++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 182 insertions(+), 15 deletions(-)
+ include/linux/stackdepot.h |  4 +++
+ lib/stackdepot.c           | 70 +++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 55 insertions(+), 19 deletions(-)
 
-diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
-index ba29a0613e66..a24340b3e9e1 100644
---- a/include/linux/stacktrace.h
-+++ b/include/linux/stacktrace.h
-@@ -3,11 +3,26 @@
- #define __LINUX_STACKTRACE_H
+diff --git a/include/linux/stackdepot.h b/include/linux/stackdepot.h
+index 7978b3e2c1e1..4297c6d2991d 100644
+--- a/include/linux/stackdepot.h
++++ b/include/linux/stackdepot.h
+@@ -26,7 +26,11 @@ typedef u32 depot_stack_handle_t;
+ struct stack_trace;
  
- #include <linux/types.h>
-+#include <asm/errno.h>
+ depot_stack_handle_t depot_save_stack(struct stack_trace *trace, gfp_t flags);
++depot_stack_handle_t stack_depot_save(unsigned long *entries,
++				      unsigned int nr_entries, gfp_t gfp_flags);
  
- struct task_struct;
- struct pt_regs;
+ void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace);
++unsigned int stack_depot_fetch(depot_stack_handle_t handle,
++			       unsigned long **entries);
  
- #ifdef CONFIG_STACKTRACE
-+void stack_trace_print(unsigned long *trace, unsigned int nr_entries,
-+		       int spaces);
-+int stack_trace_snprint(char *buf, size_t size, unsigned long *entries,
-+			unsigned int nr_entries, int spaces);
-+unsigned int stack_trace_save(unsigned long *store, unsigned int size,
-+			      unsigned int skipnr);
-+unsigned int stack_trace_save_tsk(struct task_struct *task,
-+				  unsigned long *store, unsigned int size,
-+				  unsigned int skipnr);
-+unsigned int stack_trace_save_regs(struct pt_regs *regs, unsigned long *store,
-+				   unsigned int size, unsigned int skipnr);
-+unsigned int stack_trace_save_user(unsigned long *store, unsigned int size);
-+
-+/* Internal interfaces. Do not use in generic code */
- struct stack_trace {
- 	unsigned int nr_entries, max_entries;
- 	unsigned long *entries;
-@@ -41,4 +56,16 @@ extern void save_stack_trace_user(struct stack_trace *trace);
- # define save_stack_trace_tsk_reliable(tsk, trace)	({ -ENOSYS; })
- #endif /* CONFIG_STACKTRACE */
+ #endif
+diff --git a/lib/stackdepot.c b/lib/stackdepot.c
+index e513459a5601..e84f8e58495c 100644
+--- a/lib/stackdepot.c
++++ b/lib/stackdepot.c
+@@ -194,40 +194,60 @@ static inline struct stack_record *find_stack(struct stack_record *bucket,
+ 	return NULL;
+ }
  
-+#if defined(CONFIG_STACKTRACE) && defined(CONFIG_HAVE_RELIABLE_STACKTRACE)
-+int stack_trace_save_tsk_reliable(struct task_struct *tsk, unsigned long *store,
-+				  unsigned int size);
-+#else
-+static inline int stack_trace_save_tsk_reliable(struct task_struct *tsk,
-+						unsigned long *store,
-+						unsigned int size)
-+{
-+	return -ENOSYS;
-+}
-+#endif
-+
- #endif /* __LINUX_STACKTRACE_H */
-diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-index f8edee9c792d..b38333b3bc18 100644
---- a/kernel/stacktrace.c
-+++ b/kernel/stacktrace.c
-@@ -11,35 +11,54 @@
- #include <linux/kallsyms.h>
- #include <linux/stacktrace.h>
- 
--void print_stack_trace(struct stack_trace *trace, int spaces)
+-void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace)
 +/**
-+ * stack_trace_print - Print the entries in the stack trace
-+ * @entries:	Pointer to storage array
-+ * @nr_entries:	Number of entries in the storage array
-+ * @spaces:	Number of leading spaces to print
++ * stack_depot_fetch - Fetch stack entries from a depot
++ *
++ * @handle:		Stack depot handle which was returned from
++ *			stack_depot_save().
++ * @entries:		Pointer to store the entries address
++ *
++ * Return: The number of trace entries for this depot.
 + */
-+void stack_trace_print(unsigned long *entries, unsigned int nr_entries,
-+		       int spaces)
++unsigned int stack_depot_fetch(depot_stack_handle_t handle,
++			       unsigned long **entries)
  {
--	int i;
-+	unsigned int i;
+ 	union handle_parts parts = { .handle = handle };
+ 	void *slab = stack_slabs[parts.slabindex];
+ 	size_t offset = parts.offset << STACK_ALLOC_ALIGN;
+ 	struct stack_record *stack = slab + offset;
  
--	if (WARN_ON(!trace->entries))
-+	if (WARN_ON(!entries))
- 		return;
- 
--	for (i = 0; i < trace->nr_entries; i++)
--		printk("%*c%pS\n", 1 + spaces, ' ', (void *)trace->entries[i]);
-+	for (i = 0; i < nr_entries; i++)
-+		printk("%*c%pS\n", 1 + spaces, ' ', (void *)entries[i]);
+-	trace->nr_entries = trace->max_entries = stack->size;
+-	trace->entries = stack->entries;
+-	trace->skip = 0;
++	*entries = stack->entries;
++	return stack->size;
 +}
-+EXPORT_SYMBOL_GPL(stack_trace_print);
++EXPORT_SYMBOL_GPL(stack_depot_fetch);
 +
-+void print_stack_trace(struct stack_trace *trace, int spaces)
++void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace)
 +{
-+	stack_trace_print(trace->entries, trace->nr_entries, spaces);
++	unsigned int nent = stack_depot_fetch(handle, &trace->entries);
++
++	trace->max_entries = trace->nr_entries = nent;
  }
- EXPORT_SYMBOL_GPL(print_stack_trace);
+ EXPORT_SYMBOL_GPL(depot_fetch_stack);
  
--int snprint_stack_trace(char *buf, size_t size,
--			struct stack_trace *trace, int spaces)
-+/**
-+ * stack_trace_snprint - Print the entries in the stack trace into a buffer
-+ * @buf:	Pointer to the print buffer
-+ * @size:	Size of the print buffer
-+ * @entries:	Pointer to storage array
-+ * @nr_entries:	Number of entries in the storage array
-+ * @spaces:	Number of leading spaces to print
+ /**
+- * depot_save_stack - save stack in a stack depot.
+- * @trace - the stacktrace to save.
+- * @alloc_flags - flags for allocating additional memory if required.
++ * stack_depot_save - Save a stack trace from an array
 + *
-+ * Return: Number of bytes printed.
-+ */
-+int stack_trace_snprint(char *buf, size_t size, unsigned long *entries,
-+			unsigned int nr_entries, int spaces)
++ * @entries:		Pointer to storage array
++ * @nr_entries:		Size of the storage array
++ * @alloc_flags:	Allocation gfp flags
+  *
+- * Returns the handle of the stack struct stored in depot.
++ * Return: The handle of the stack struct stored in depot
+  */
+-depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
+-				    gfp_t alloc_flags)
++depot_stack_handle_t stack_depot_save(unsigned long *entries,
++				      unsigned int nr_entries,
++				      gfp_t alloc_flags)
  {
--	int i;
--	int generated;
--	int total = 0;
-+	unsigned int generated, i, total = 0;
+-	u32 hash;
+-	depot_stack_handle_t retval = 0;
+ 	struct stack_record *found = NULL, **bucket;
+-	unsigned long flags;
++	depot_stack_handle_t retval = 0;
+ 	struct page *page = NULL;
+ 	void *prealloc = NULL;
++	unsigned long flags;
++	u32 hash;
  
--	if (WARN_ON(!trace->entries))
-+	if (WARN_ON(!entries))
- 		return 0;
+-	if (unlikely(trace->nr_entries == 0))
++	if (unlikely(nr_entries == 0))
+ 		goto fast_exit;
  
--	for (i = 0; i < trace->nr_entries; i++) {
-+	for (i = 0; i < nr_entries && size; i++) {
- 		generated = snprintf(buf, size, "%*c%pS\n", 1 + spaces, ' ',
--				     (void *)trace->entries[i]);
-+				     (void *)entries[i]);
+-	hash = hash_stack(trace->entries, trace->nr_entries);
++	hash = hash_stack(entries, nr_entries);
+ 	bucket = &stack_table[hash & STACK_HASH_MASK];
  
- 		total += generated;
--
--		/* Assume that generated isn't a negative number */
- 		if (generated >= size) {
- 			buf += size;
- 			size = 0;
-@@ -51,6 +70,14 @@ int snprint_stack_trace(char *buf, size_t size,
+ 	/*
+@@ -235,8 +255,8 @@ depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
+ 	 * The smp_load_acquire() here pairs with smp_store_release() to
+ 	 * |bucket| below.
+ 	 */
+-	found = find_stack(smp_load_acquire(bucket), trace->entries,
+-			   trace->nr_entries, hash);
++	found = find_stack(smp_load_acquire(bucket), entries,
++			   nr_entries, hash);
+ 	if (found)
+ 		goto exit;
  
- 	return total;
+@@ -264,10 +284,10 @@ depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
+ 
+ 	spin_lock_irqsave(&depot_lock, flags);
+ 
+-	found = find_stack(*bucket, trace->entries, trace->nr_entries, hash);
++	found = find_stack(*bucket, entries, nr_entries, hash);
+ 	if (!found) {
+ 		struct stack_record *new =
+-			depot_alloc_stack(trace->entries, trace->nr_entries,
++			depot_alloc_stack(entries, nr_entries,
+ 					  hash, &prealloc, alloc_flags);
+ 		if (new) {
+ 			new->next = *bucket;
+@@ -297,4 +317,16 @@ exit:
+ fast_exit:
+ 	return retval;
  }
-+EXPORT_SYMBOL_GPL(stack_trace_snprint);
-+
-+int snprint_stack_trace(char *buf, size_t size,
-+			struct stack_trace *trace, int spaces)
-+{
-+	return stack_trace_snprint(buf, size, trace->entries,
-+				   trace->nr_entries, spaces);
-+}
- EXPORT_SYMBOL_GPL(snprint_stack_trace);
- 
- /*
-@@ -77,3 +104,116 @@ save_stack_trace_tsk_reliable(struct task_struct *tsk,
- 	WARN_ONCE(1, KERN_INFO "save_stack_tsk_reliable() not implemented yet.\n");
- 	return -ENOSYS;
- }
++EXPORT_SYMBOL_GPL(stack_depot_save);
 +
 +/**
-+ * stack_trace_save - Save a stack trace into a storage array
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ * @skipnr:	Number of entries to skip at the start of the stack trace
-+ *
-+ * Return: Number of trace entries stored
++ * depot_save_stack - save stack in a stack depot.
++ * @trace - the stacktrace to save.
++ * @alloc_flags - flags for allocating additional memory if required.
 + */
-+unsigned int stack_trace_save(unsigned long *store, unsigned int size,
-+			      unsigned int skipnr)
++depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
++				      gfp_t alloc_flags)
 +{
-+	struct stack_trace trace = {
-+		.entries	= store,
-+		.max_entries	= size,
-+		.skip		= skipnr + 1,
-+	};
-+
-+	save_stack_trace(&trace);
-+	return trace.nr_entries;
++	return stack_depot_save(trace->entries, trace->nr_entries, alloc_flags);
 +}
-+EXPORT_SYMBOL_GPL(stack_trace_save);
-+
-+/**
-+ * stack_trace_save_tsk - Save a task stack trace into a storage array
-+ * @task:	The task to examine
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ * @skipnr:	Number of entries to skip at the start of the stack trace
-+ *
-+ * Return: Number of trace entries stored
-+ */
-+unsigned int stack_trace_save_tsk(struct task_struct *task,
-+				  unsigned long *store, unsigned int size,
-+				  unsigned int skipnr)
-+{
-+	struct stack_trace trace = {
-+		.entries	= store,
-+		.max_entries	= size,
-+		.skip		= skipnr + 1,
-+	};
-+
-+	save_stack_trace_tsk(task, &trace);
-+	return trace.nr_entries;
-+}
-+
-+/**
-+ * stack_trace_save_regs - Save a stack trace based on pt_regs into a storage array
-+ * @regs:	Pointer to pt_regs to examine
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ * @skipnr:	Number of entries to skip at the start of the stack trace
-+ *
-+ * Return: Number of trace entries stored
-+ */
-+unsigned int stack_trace_save_regs(struct pt_regs *regs, unsigned long *store,
-+				   unsigned int size, unsigned int skipnr)
-+{
-+	struct stack_trace trace = {
-+		.entries	= store,
-+		.max_entries	= size,
-+		.skip		= skipnr,
-+	};
-+
-+	save_stack_trace_regs(regs, &trace);
-+	return trace.nr_entries;
-+}
-+
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+/**
-+ * stack_trace_save_tsk_reliable - Save task stack with verification
-+ * @tsk:	Pointer to the task to examine
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ *
-+ * Return:	An error if it detects any unreliable features of the
-+ *		stack. Otherwise it guarantees that the stack trace is
-+ *		reliable and returns the number of entries stored.
-+ *
-+ * If the task is not 'current', the caller *must* ensure the task is inactive.
-+ */
-+int stack_trace_save_tsk_reliable(struct task_struct *tsk, unsigned long *store,
-+				  unsigned int size)
-+{
-+	struct stack_trace trace = {
-+		.entries	= store,
-+		.max_entries	= size,
-+	};
-+	int ret = save_stack_trace_tsk_reliable(tsk, &trace);
-+
-+	return ret ? ret : trace.nr_entries;
-+}
-+#endif
-+
-+#ifdef CONFIG_USER_STACKTRACE_SUPPORT
-+/**
-+ * stack_trace_save_user - Save a user space stack trace into a storage array
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ *
-+ * Return: Number of trace entries stored
-+ */
-+unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
-+{
-+	struct stack_trace trace = {
-+		.entries	= store,
-+		.max_entries	= size,
-+	};
-+
-+	save_stack_trace_user(&trace);
-+	return trace.nr_entries;
-+}
-+#endif /* CONFIG_USER_STACKTRACE_SUPPORT */
+ EXPORT_SYMBOL_GPL(depot_save_stack);
