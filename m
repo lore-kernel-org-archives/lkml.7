@@ -5,96 +5,77 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5FCC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A3CC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7AF206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ECB32087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfD2Jnt (ORCPT
+        id S1727757AbfD2Jpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 05:43:49 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:56163 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbfD2Jnt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 05:43:49 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N2m3G-1gdyq42eM8-0133kZ; Mon, 29 Apr 2019 11:43:20 +0200
-Subject: Re: [PATCH 40/41] drivers: tty: serial: helper for setting mmio range
-To:     Esben Haabendal <esben@haabendal.dk>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        andrew@aj.id.au, andriy.shevchenko@linux.intel.com,
-        macro@linux-mips.org, vz@mleia.com, slemieux.tyco@gmail.com,
-        khilman@baylibre.com, liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-41-git-send-email-info@metux.net>
- <87ef5lz423.fsf@haabendal.dk>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <d0b966eb-46b7-d145-92ed-3c62c495f41b@metux.net>
-Date:   Mon, 29 Apr 2019 11:43:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <87ef5lz423.fsf@haabendal.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 29 Apr 2019 05:45:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56282 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727239AbfD2Jpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 05:45:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 80E2CAD43;
+        Mon, 29 Apr 2019 09:45:40 +0000 (UTC)
+Message-ID: <1556531138.5647.1.camel@suse.de>
+Subject: Re: [Bug 203297] Synaptics touchpad TM-3127 functionality broken by
+ PCI runtime power management patch on 4.20.2
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Keijo Vaara <ferdasyn@rocketmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>
+Date:   Mon, 29 Apr 2019 11:45:38 +0200
+In-Reply-To: <CAO-hwJLCPd-KfoK7OnSpEWG4B5cYfsH3J0tYAxJeVMqHyJEN1A@mail.gmail.com>
+References: <20190422130814.GJ173520@google.com>
+         <3a1139ef-10ed-6923-73c5-30fbf0c065c3@linux.intel.com>
+         <CAO-hwJKvXO6L7m0g1D6wycFP=Wu_qLDyLXTtmm0TkpxT5Z8ygw@mail.gmail.com>
+         <e96a7220-974f-1df6-70ee-695ee815057f@linux.intel.com>
+         <CAO-hwJLCPd-KfoK7OnSpEWG4B5cYfsH3J0tYAxJeVMqHyJEN1A@mail.gmail.com>
+Organization: Suse Linux
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:68dkhGSAKsaCjO526gNf2WSoTW6jL84pVEW36g5e32fJf4hZfEa
- B5yR5eOo/trCHlzEMiqf88gr4lugIpFcu4i7DTW0T8FoWZiDwOwvxkhUV//Oq9txPyP1qxO
- p0s8teHbOF2xnbWjYTCy/e6+F0vybuPcYhQPvcgRagIqrGRZ5ZI4QdP/10WEUP7zI9Ka+YU
- NVd7BerOC+zYOaIOiK9cQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NvmcDnTkNeI=:ba8d+q8YRab3rFKFqBt24t
- Zg9Zpq/zp8ESR/s4VsMdM2nnOKEofNFRgQuqib0Eoa+F6Di5aptfGcy2fbPQ8PlEnZZ9eFk2I
- W8lkLs1brmFQ4pMtwo1NaxLwJO+yyvyfB7yhUe3mP3ipOkVy3TvxwOqCpUxbn7cvLhhjdXYOV
- RACHse6YI1rEPLKisTi4jbY/Z2xia1z7JZNNtXMm7NyYuxlDHoAmeM51Uq1Sm9jqHrh3VjIFE
- zH5gWFbcmJhRKcS506T4D0qDLdiTRWb5HWe08PMYOLEyCWt6KkONz7ZlQEuLletC4+ebSyFne
- +YblDaPDYWW6s7TMZS94IzEKoglkP06ZU7juKMArxn0JPRB97yN78PMrSGLDm4zCHngdgwukX
- 8QhoUFb/g5oGgRP7xEm3XeyGV0XvRu9ft3THf7jFb/oF+7zCYEmaFMR7HLRHU94BxlelmoOUT
- hf0mEVyRlee3ckCEnDTzSPPktrpdeTwqaoCQIhlRInQVIwdhHJ8XZKfDN1mzvZ2IlFCWEBcMH
- +/+AxD4dkbOiJWktWAReEU2MAQiJAuIPnt8UjKkg2V6v0lHpO3+n8CFCI9Jvijm6LfpHzTHUN
- Z7KbPljaibH9464lnBZleel3EqRWzc88wYjkyJ4C3GZdlzFeP8imAVrJmxNQRR3yOT8ND3ssO
- MC6KOR0+WrmqVYkvJIvXzV6xd3FMar2vZbSJ2ckBe+smk2GbBP44mQDVVrZ5aKzyo4QDZBzHk
- BkVF8qEdunqnt+mSaL40iQ9yOh8uAqzpNBWyyGax+adypiNnzhrhF9jigoE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.04.19 09:03, Esben Haabendal wrote:
+On Mon, 2019-04-29 at 10:53 +0200, Benjamin Tissoires wrote:
+> On Mon, Apr 29, 2019 at 10:38 AM Jarkko Nikula
+> <jarkko.nikula@linux.intel.com> wrote:
+> > I got another thought about this. I noticed these input drivers need
+> > SMBus Host Notify, maybe that explain the PM dependency? If that's the
+> > only dependency then we could prevent the controller suspend if there is
+> > a client needing host notify mechanism. IMHO that's less hack than the
+> > patch to rmi_smbus.c.
+> 
+> So currently, AFAIK, only Synaptics (rmi4) and Elantech are using
+> SMBus Host Notify.
+> So this patch would prevent the same bugs for those 2 vendors, which is good.
+> 
+> It took me some time to understand why this would be less than a hack.
+> And indeed, given that Host Notify relies on the I2C connection to be
+> ready for the IRQ, we can not put the controller in suspend like we do
+> for others where the IRQ controller is still ready.
+> 
+> So yes, that could work from me. Not sure what Wolfram and Jean would
+> say though.
 
-> Why not simply replace iobase, mapbase and mapsize with a struct
-> resource value instead?
-
-That was actually my original goal, when I started this. But the
-situation is a bit more tricky. Many drivers (especially the old ones)
-initialize these fields in different ways. And there're many places
-accessing these fields.
-
-Drivers for old devices should be handled w/ great care. I don't have
-access to all that hardware, so I can't test it. Therefore, I'm trying
-to move in small steps. One step ahead another.
-
-One of my next steps would be factoring out more common operations
-(eg. mapping, etc) into helpers, up to a point, where someday no driver
-is accessing these fields directly anymore.
-
-Then we could easily move everything into struct resource. On that
-road, we'd also need to find a way for handling the specialities of
-the various UPIO_* modes via struct resource.
-
-
---mtx
+I would say OK with me, this looks like the cleanest solution to me, so
+if testing is positive, let's go with it.
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Jean Delvare
+SUSE L3 Support
