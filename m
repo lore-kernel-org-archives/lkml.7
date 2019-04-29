@@ -2,164 +2,91 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E0DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEDBC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40552084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6F02084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfD2OLk (ORCPT
+        id S1728381AbfD2OLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:11:40 -0400
-Received: from foss.arm.com ([217.140.101.70]:58090 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbfD2OLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:11:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9284FA78;
-        Mon, 29 Apr 2019 07:11:39 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B8C23F5C1;
-        Mon, 29 Apr 2019 07:11:38 -0700 (PDT)
-Subject: Re: [PATCH 19/26] iommu/dma: Cleanup variable naming in
- iommu_dma_alloc
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190422175942.18788-1-hch@lst.de>
- <20190422175942.18788-20-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <49314f40-0676-629c-379f-fc05e75fb078@arm.com>
-Date:   Mon, 29 Apr 2019 15:11:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 10:11:51 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:45011 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728119AbfD2OLu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:11:50 -0400
+Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N9d4t-1ggOYm2XMj-015Xti; Mon, 29 Apr 2019 16:11:21 +0200
+Subject: Re: [PATCH 01/41] drivers: tty: serial: dz: use dev_err() instead of
+ printk()
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, andrew@aj.id.au,
+        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
+        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
+        liviu.dudau@arm.com, sudeep.holla@arm.com,
+        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
+        linux@prisktech.co.nz, matthias.bgg@gmail.com,
+        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+ <1556369542-13247-2-git-send-email-info@metux.net>
+ <20190427132959.GA11368@kroah.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <e10175d0-bc3b-a4ab-cb47-0b4761bfb629@metux.net>
+Date:   Mon, 29 Apr 2019 16:11:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190422175942.18788-20-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20190427132959.GA11368@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:w68pyQn6kRKE7GRI8D4DIjXrIG1rM4JVO8YNhN1PjmA9qeJlTnd
+ FRfk7wZg3723UrBQe25rwfOnwSzGszEb1MIoCQQLNzhyCTgLVqEInQLMVDSZ6SrfQMpGeUD
+ sSICNMoMdNK6YaqchK3BXnaBaPE/dmfwd/DCv3Rgt3Peb9t9zVGwhF+PiwHnSknkczZ5jwA
+ iaTSwPj+i6uzJ5jOg0EOg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GSBkrDSKESA=:2lO9/amCuq6fFF597Ih05m
+ lHF5oKmclj72Zzkyd/7n7OIiwaRhSBo7oYOd2+ffp/NEUvN2Jn/raFhf0e6E8K+EU2aJRWYj6
+ xPazKtRy6+71hDxb8N8/muna5/ompU5XUHAHWvNiNsi3xQSwdRdyVk8toFHaLpavPormaaAC5
+ x6cZ0/wtOs54z6LsUIHciLayFiB+BmZ83+sLMyUYXe0KBI/zPixrZD+tu0VcsfcS7r7VYQj4/
+ JjNFl9B8X8o/Sjh9uG6Y3vBTGv49VcPY/5tQwUnsC39CoM168B+bxUNpEQ5zA3Jhrk95A+B1n
+ 6nETxBNJQ3EbF6WPXuX4E75BpNeVCeXQKfLnBOd3nrSBkj/uFH76O1vrWS4AgsfOTt4MHiI62
+ WKvPVRgqATCb3N2+oJ8px9tLb4lTxX6XUOOyI503AcT66SDfLFH39tMUPPkDqizBhpx9VxXp2
+ FfZsnVaVxHhAOPNsBpVjuzon/QzxCbElmVdBDB7ooHtQ3iaspczt+e5dMm0V3iq1okxyFRY5F
+ F/WoUUpE4JmdzZv6STWYNcXwQiTMhpJKgYW0+6X2Vmh2qw16Aiuqtn+H6LLyYHl3ToJgVosT6
+ IXgBwLjn12BZ5AjiiM6dfeDhbcZqWNCFedbIreNfGBORb11xOTrYSFbUOSyh0j1BEZIcGO+gz
+ XzZByfB5wMLlxYXWanXG9Wg07pbtgY6qOVP/x1S66+XQvoODts6tl2AdS2HQ7qtZOiBu6Jcml
+ CvF1VoxkjSF83yH+uX/lseAL7VLzTmM1k9ETeNvnTFIEjvXYr5L640CRVkc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/04/2019 18:59, Christoph Hellwig wrote:
-> From: Robin Murphy <robin.murphy@arm.com>
+On 27.04.19 15:29, Greg KH wrote:
+> On Sat, Apr 27, 2019 at 02:51:42PM +0200, Enrico Weigelt, metux IT consult wrote:
+>> Using dev_err() instead of printk() for more consistent output.
+>> (prints device name, etc).
+>>
+>> Signed-off-by: Enrico Weigelt <info@metux.net>
 > 
-> Most importantly clear up the size / iosize confusion.  Also rename addr
-> to cpu_addr to match the surrounding code and make the intention a little
-> more clear.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> [hch: split from a larger patch]
+> Your "From:" line does not match the signed-off-by line, so I can't take
+> any of these if I wanted to :(
 
-I can't bring myself to actually ack "my" patch, but I am perfectly 
-happy with the split :)
+Grmpf. I've manually changed it, as you isisted in having my company
+name remove from it ....
 
-Robin.
+--mtx
 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   drivers/iommu/dma-iommu.c | 45 +++++++++++++++++++--------------------
->   1 file changed, 22 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 95a12e975994..9b269f0792f3 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -960,64 +960,63 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
->   {
->   	bool coherent = dev_is_dma_coherent(dev);
->   	int ioprot = dma_info_to_prot(DMA_BIDIRECTIONAL, coherent, attrs);
-> -	size_t iosize = size;
-> +	size_t alloc_size = PAGE_ALIGN(size);
->   	struct page *page = NULL;
-> -	void *addr;
-> +	void *cpu_addr;
->   
-> -	size = PAGE_ALIGN(size);
->   	gfp |= __GFP_ZERO;
->   
->   	if (gfpflags_allow_blocking(gfp) &&
->   	    !(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
-> -		return iommu_dma_alloc_remap(dev, iosize, handle, gfp, attrs);
-> +		return iommu_dma_alloc_remap(dev, size, handle, gfp, attrs);
->   
->   	if (!gfpflags_allow_blocking(gfp) && !coherent) {
-> -		addr = dma_alloc_from_pool(size, &page, gfp);
-> -		if (!addr)
-> +		cpu_addr = dma_alloc_from_pool(alloc_size, &page, gfp);
-> +		if (!cpu_addr)
->   			return NULL;
->   
-> -		*handle = __iommu_dma_map(dev, page_to_phys(page), iosize,
-> +		*handle = __iommu_dma_map(dev, page_to_phys(page), size,
->   					  ioprot);
->   		if (*handle == DMA_MAPPING_ERROR) {
-> -			dma_free_from_pool(addr, size);
-> +			dma_free_from_pool(cpu_addr, alloc_size);
->   			return NULL;
->   		}
-> -		return addr;
-> +		return cpu_addr;
->   	}
->   
->   	if (gfpflags_allow_blocking(gfp))
-> -		page = dma_alloc_from_contiguous(dev, size >> PAGE_SHIFT,
-> -						 get_order(size),
-> +		page = dma_alloc_from_contiguous(dev, alloc_size >> PAGE_SHIFT,
-> +						 get_order(alloc_size),
->   						 gfp & __GFP_NOWARN);
->   	if (!page)
-> -		page = alloc_pages(gfp, get_order(size));
-> +		page = alloc_pages(gfp, get_order(alloc_size));
->   	if (!page)
->   		return NULL;
->   
-> -	*handle = __iommu_dma_map(dev, page_to_phys(page), iosize, ioprot);
-> +	*handle = __iommu_dma_map(dev, page_to_phys(page), size, ioprot);
->   	if (*handle == DMA_MAPPING_ERROR)
->   		goto out_free_pages;
->   
->   	if (!coherent || PageHighMem(page)) {
->   		pgprot_t prot = arch_dma_mmap_pgprot(dev, PAGE_KERNEL, attrs);
->   
-> -		addr = dma_common_contiguous_remap(page, size, VM_USERMAP, prot,
-> -				__builtin_return_address(0));
-> -		if (!addr)
-> +		cpu_addr = dma_common_contiguous_remap(page, alloc_size,
-> +				VM_USERMAP, prot, __builtin_return_address(0));
-> +		if (!cpu_addr)
->   			goto out_unmap;
->   
->   		if (!coherent)
-> -			arch_dma_prep_coherent(page, iosize);
-> +			arch_dma_prep_coherent(page, size);
->   	} else {
-> -		addr = page_address(page);
-> +		cpu_addr = page_address(page);
->   	}
-> -	memset(addr, 0, size);
-> -	return addr;
-> +	memset(cpu_addr, 0, alloc_size);
-> +	return cpu_addr;
->   out_unmap:
-> -	__iommu_dma_unmap(dev, *handle, iosize);
-> +	__iommu_dma_unmap(dev, *handle, size);
->   out_free_pages:
-> -	if (!dma_release_from_contiguous(dev, page, size >> PAGE_SHIFT))
-> -		__free_pages(page, get_order(size));
-> +	if (!dma_release_from_contiguous(dev, page, alloc_size >> PAGE_SHIFT))
-> +		__free_pages(page, get_order(alloc_size));
->   	return NULL;
->   }
->   
-> 
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
