@@ -2,110 +2,82 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC734C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B9AC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C168206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4EE206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfD2GJ4 (ORCPT
+        id S1727409AbfD2GLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:09:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42386 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726758AbfD2GJz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:09:55 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3T64KpG005234
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 02:09:54 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s5tan2n6k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 02:09:54 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Mon, 29 Apr 2019 07:09:52 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 29 Apr 2019 07:09:49 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3T69mUg32309268
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 06:09:48 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B65F852052;
-        Mon, 29 Apr 2019 06:09:48 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 75C1D52057;
-        Mon, 29 Apr 2019 06:09:48 +0000 (GMT)
-Date:   Mon, 29 Apr 2019 08:09:47 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
-References: <20190428115207.GA11924@ziepe.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190428115207.GA11924@ziepe.ca>
-X-TM-AS-GCONF: 00
-x-cbid: 19042906-4275-0000-0000-0000032F6605
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042906-4276-0000-0000-0000383EB9F7
-Message-Id: <20190429060947.GB3665@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=932 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904290047
+        Mon, 29 Apr 2019 02:11:31 -0400
+Received: from www.osadl.org ([62.245.132.105]:41113 "EHLO www.osadl.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbfD2GLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 02:11:31 -0400
+Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
+        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3T6BEma005090;
+        Mon, 29 Apr 2019 08:11:14 +0200
+From:   Nicholas Mc Guire <hofrat@osadl.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Nicholas Mc Guire <hofrat@osadl.org>
+Subject: [PATCH V2] staging: fieldbus: anybus-s: force endiannes annotation
+Date:   Mon, 29 Apr 2019 08:05:39 +0200
+Message-Id: <1556517940-13725-1-git-send-email-hofrat@osadl.org>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 11:52:12AM +0000, Jason Gunthorpe wrote:
-> Hi Linus,
-> 
-> Third rc pull request
-> 
-> Nothing particularly special here. There is a small merge conflict
-> with Adrea's mm_still_valid patches which is resolved as below:
-...
-> Jason Gunthorpe (3):
->       RDMA/mlx5: Do not allow the user to write to the clock page
->       RDMA/mlx5: Use rdma_user_map_io for mapping BAR pages
->       RDMA/ucontext: Fix regression with disassociate
+While the endiannes is being handled correctly sparse was unhappy with
+the missing annotation as be16_to_cpu() expects a __be16. The __force
+cast to __be16 makes sparse happy but has no impact on the generated 
+binary.
 
-This doesn't compile. The patch below would fix it, but not sure if
-this is what is intended:
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+---
 
-drivers/infiniband/core/uverbs_main.c: In function 'rdma_umap_fault':
-drivers/infiniband/core/uverbs_main.c:898:28: error: 'struct vm_fault' has no member named 'vm_start'
-   vmf->page = ZERO_PAGE(vmf->vm_start);
-                            ^~
-diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
-index 7843e89235c3..65fe89b3fa2d 100644
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -895,7 +895,7 @@ static vm_fault_t rdma_umap_fault(struct vm_fault *vmf)
- 
- 	/* Read only pages can just use the system zero page. */
- 	if (!(vmf->vma->vm_flags & (VM_WRITE | VM_MAYWRITE))) {
--		vmf->page = ZERO_PAGE(vmf->vm_start);
-+		vmf->page = ZERO_PAGE(vmf->vma->vm_start);
- 		get_page(vmf->page);
- 		return 0;
- 	}
+Problem reported by sparse
+
+V2: As requested by Sven Van Asbroeck <thesven73@gmail.com> make the
+    impact of the patch clear in the commit message.
+
+As far as I understand sparse here the __force is actually the only 
+solution possible to inform sparse that the endiannes handling is ok
+
+Patch was compile-tested with. x86_64_defconfig + OF=y, FIELDBUS_DEV=m,
+HMS_ANYBUSS_BUS=m
+
+Verification that the patch has no impact on the binary being generated
+was done by verifying that the diff of the binaries before and after
+applying the patch is empty.
+
+
+Patch is against 5.1-rc6 (localversion-next is next-20190426)
+
+ drivers/staging/fieldbus/anybuss/host.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/fieldbus/anybuss/host.c b/drivers/staging/fieldbus/anybuss/host.c
+index 6227daf..278acac 100644
+--- a/drivers/staging/fieldbus/anybuss/host.c
++++ b/drivers/staging/fieldbus/anybuss/host.c
+@@ -1348,7 +1348,7 @@ anybuss_host_common_probe(struct device *dev,
+ 	add_device_randomness(&val, 4);
+ 	regmap_bulk_read(cd->regmap, REG_FIELDBUS_TYPE, &fieldbus_type,
+ 			 sizeof(fieldbus_type));
+-	fieldbus_type = be16_to_cpu(fieldbus_type);
++	fieldbus_type = be16_to_cpu((__force __be16)fieldbus_type);
+ 	dev_info(dev, "Fieldbus type: %04X", fieldbus_type);
+ 	regmap_bulk_read(cd->regmap, REG_MODULE_SW_V, val, 2);
+ 	dev_info(dev, "Module SW version: %02X%02X",
+-- 
+2.1.4
 
