@@ -2,104 +2,149 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19F8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78517C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C1D2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:55:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="mEFOogOl"
+	by mail.kernel.org (Postfix) with ESMTP id 51CF7206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfD2Gz4 (ORCPT
+        id S1727432AbfD2G4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:55:56 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33173 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfD2Gzx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:55:53 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j11so7112129lfm.0
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 23:55:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2mNSQUENRd+OO6kAsaQU21E0sDqHovQn3FQJZCp3E+A=;
-        b=mEFOogOl2hAZA5U6qZswSy9bfFJpI90PxH1cpXR1UpBJyOp6XbDilE792dohqNmTTR
-         mq6Op4CtXDVFlbW1QRQIfScqFRhrm1tyWDgTY07BUo48fAk/Rdv5j1/bV2SUmQGRYYTO
-         RN7mhqU9U6vfKr1O8y/yFcDCxbPA5smdXUOx8ggXK2Ws9+TpVfAac/8KO2UCLthXcfTR
-         x3LXTDblsWnBsiUXaXMl6obvF3PPRMU8fMO/Tjh9QKwm2pkbzATFO6OeoFuNgogKxZio
-         1UptDlDkO5Wy2/fX/tCZ/J0BuijcsImXGEJn0/ZBKXlvZB9smx1N6IvI8yP/UfmBHujT
-         yRxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2mNSQUENRd+OO6kAsaQU21E0sDqHovQn3FQJZCp3E+A=;
-        b=TquRYIGilfm0ecQKgXapnKBmAWYIOyTBhBNYGcABHNZ471OUlnjiVIPayYA2oPJQdh
-         tRYZaSgnXMY/5XUybAu0/WoVRdJpO5PHxg/uH939CX2RDItlUTWyL4Ma1Ljt3/iohU4p
-         J4hTKq2Skr1oSH56ipFDf68aXaM4osAdnjWbGdLIFJx6/pUCjP5sY9ONxrPRrfYE2eqo
-         a9/XTYohpDNLsn7/NIeDKRdnpBZEV/wxIzXmIA8VaPkbk/pJbQSARh1jAK506P71dJnL
-         ZHbKYQQhOQGGrjelj5kacfB8EJ8MSsVxwyYzmBp/ODV6WUFGXOHjLW1/oGOmcOJ+rsqD
-         cHmg==
-X-Gm-Message-State: APjAAAWnrLzAN6w84HuOQtKEVfI2935do0sqiAhQ2aiaZDTJ5tBbOXho
-        rXavglMyrg+Q7KyGkIoYmCqr6g==
-X-Google-Smtp-Source: APXvYqzAsEv+tsNtdhETsmAqFPGgw59ipUzfw+huHzINrHvdFCO5LOLVYXjCq71QDeNmiOoiNAQNVQ==
-X-Received: by 2002:ac2:51da:: with SMTP id u26mr31416674lfm.32.1556520951858;
-        Sun, 28 Apr 2019 23:55:51 -0700 (PDT)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id b20sm6721906lfi.78.2019.04.28.23.55.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 28 Apr 2019 23:55:49 -0700 (PDT)
-Date:   Sun, 28 Apr 2019 23:21:39 -0700
-From:   Olof Johansson <olof@lixom.net>
-To:     Jens Wiklander <jens.wiklander@linaro.org>
-Cc:     arm-soc <arm@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [GIT PULL] tee subsys for v5.2
-Message-ID: <20190429062139.6bycwzbes6wk43ea@localhost>
-References: <20190417160120.GA19526@jax.urgonet>
+        Mon, 29 Apr 2019 02:56:52 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7705 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726764AbfD2G4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 02:56:52 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5ECC985FD7590DC8E2CB;
+        Mon, 29 Apr 2019 14:56:49 +0800 (CST)
+Received: from [127.0.0.1] (10.177.19.180) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 29 Apr 2019
+ 14:56:44 +0800
+Subject: Re: [PATCH next 23/25] thermal: Use dev_get_drvdata()
+To:     Zhang Rui <rui.zhang@intel.com>, <linux-kernel@vger.kernel.org>
+CC:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        <linux-pm@vger.kernel.org>
+References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
+ <20190423075020.173734-24-wangkefeng.wang@huawei.com>
+ <1556509663.2396.8.camel@intel.com>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <c835c3db-a070-94d5-d4d1-ae9bb521b76d@huawei.com>
+Date:   Mon, 29 Apr 2019 14:55:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417160120.GA19526@jax.urgonet>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1556509663.2396.8.camel@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.177.19.180]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 06:01:20PM +0200, Jens Wiklander wrote:
-> Hello arm-soc maintainers,
-> 
-> Please pull this OP-TEE driver patch. It allows the OP-TEE driver to work
-> without a static carved out shared memory area.
-> 
-> Thanks,
-> Jens
-> 
-> The following changes since commit 1c163f4c7b3f621efff9b28a47abb36f7378d783:
-> 
->   Linux 5.0 (2019-03-03 15:21:29 -0800)
-> 
-> are available in the Git repository at:
-> 
->   http://git.linaro.org:/people/jens.wiklander/linux-tee.git tags/tee-optee-for-5.2
-> 
-> for you to fetch changes up to 9733b072a12a422e2bf17bc7ba8b39769853d4a2:
-> 
->   optee: allow to work without static shared memory (2019-04-17 17:26:33 +0200)
-> 
-> ----------------------------------------------------------------
-> Allow OP-TEE driver to work without static shared memory
 
-Merged, thanks!
+On 2019/4/29 11:47, Zhang Rui wrote:
+> On 二, 2019-04-23 at 15:50 +0800, Kefeng Wang wrote:
+>> Using dev_get_drvdata directly.
+>>
+>> Cc: Zhang Rui <rui.zhang@intel.com>
+>> Cc: Eduardo Valentin <edubezval@gmail.com>
+>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Cc: linux-pm@vger.kernel.org
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> ---
+>>  .../intel/int340x_thermal/processor_thermal_device.c      | 8 +-----
+>> --
+>>  drivers/thermal/st/stm_thermal.c                          | 6 ++----
+>>  2 files changed, 3 insertions(+), 11 deletions(-)
+>>
+>> diff --git
+>> a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+>> b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+>> index 8e1cf4d789be..4ad54b8d4778 100644
+>> ---
+>> a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+>> +++
+>> b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+>> @@ -81,8 +81,6 @@ static ssize_t
+>> power_limit_##index##_##suffix##_show(struct device *dev, \
+>>  					struct device_attribute
+>> *attr, \
+>>  					char *buf) \
+>>  { \
+>> -	struct pci_dev *pci_dev; \
+>> -	struct platform_device *pdev; \
+>>  	struct proc_thermal_device *proc_dev; \
+>>  	\
+>>  	if (proc_thermal_emum_mode == PROC_THERMAL_NONE) { \
+>> @@ -91,11 +89,7 @@ static ssize_t
+>> power_limit_##index##_##suffix##_show(struct device *dev, \
+>>  	} \
+>>  	\
+>>  	if (proc_thermal_emum_mode == PROC_THERMAL_PLATFORM_DEV) { \
+>> -		pdev = to_platform_device(dev); \
+>> -		proc_dev = platform_get_drvdata(pdev); \
+>> -	} else { \
+>> -		pci_dev = to_pci_dev(dev); \
+>> -		proc_dev = pci_get_drvdata(pci_dev); \
+>> +		proc_dev = dev_get_drvdata(dev); \
+>>  	} \
+>>  	return sprintf(buf, "%lu\n",\
+>>  	(unsigned long)proc_dev->power_limits[index].suffix * 1000);
+>> \
+> Sumeet has a patch to fix the same issue, which has been in my tree
+> https://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux.git/commit
+> /?h=next&id=1948d498dcf680bc650391f23da2f97e59f9126d
+>
+> Plus, the previous fix is wrong because proc_dev will be left
+> uninitialized if proc_thermal_emum_mode equals PROC_THERMAL_PCI.
+
+oh, Sumeet's patch is the right one and much cleaner.
 
 
--Olof
+>
+> thanks,
+> rui
+>
+>> diff --git a/drivers/thermal/st/stm_thermal.c
+>> b/drivers/thermal/st/stm_thermal.c
+>> index bbd73c5a4a4e..cf9ddc52f30e 100644
+>> --- a/drivers/thermal/st/stm_thermal.c
+>> +++ b/drivers/thermal/st/stm_thermal.c
+>> @@ -570,8 +570,7 @@ static int stm_thermal_prepare(struct
+>> stm_thermal_sensor *sensor)
+>>  static int stm_thermal_suspend(struct device *dev)
+>>  {
+>>  	int ret;
+>> -	struct platform_device *pdev = to_platform_device(dev);
+>> -	struct stm_thermal_sensor *sensor =
+>> platform_get_drvdata(pdev);
+>> +	struct stm_thermal_sensor *sensor = dev_get_drvdata(dev);
+>>  
+>>  	ret = stm_thermal_sensor_off(sensor);
+>>  	if (ret)
+>> @@ -585,8 +584,7 @@ static int stm_thermal_suspend(struct device
+>> *dev)
+>>  static int stm_thermal_resume(struct device *dev)
+>>  {
+>>  	int ret;
+>> -	struct platform_device *pdev = to_platform_device(dev);
+>> -	struct stm_thermal_sensor *sensor =
+>> platform_get_drvdata(pdev);
+>> +	struct stm_thermal_sensor *sensor = dev_get_drvdata(dev);
+>>  
+>>  	ret = stm_thermal_prepare(sensor);
+>>  	if (ret)
+> .
+>
+
