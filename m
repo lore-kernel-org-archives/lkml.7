@@ -2,93 +2,160 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF42C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEB0C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B237321743
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19D52075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbfD2Qtc (ORCPT
+        id S1728845AbfD2QuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:49:32 -0400
-Received: from foss.arm.com ([217.140.101.70]:33752 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728621AbfD2Qtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:49:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F89C80D;
-        Mon, 29 Apr 2019 09:49:29 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2938F3F5AF;
-        Mon, 29 Apr 2019 09:49:28 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 17:49:23 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: fix pte_unmap() -Wunused-but-set-variable
-Message-ID: <20190429164923.GA26912@fuggles.cambridge.arm.com>
-References: <20190427012842.93737-1-cai@lca.pw>
+        Mon, 29 Apr 2019 12:50:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56406 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728681AbfD2QuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:50:11 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3TGgKpv032742
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:50:10 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s63hnc06a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:50:10 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Mon, 29 Apr 2019 17:50:08 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 29 Apr 2019 17:50:05 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3TGo4rD38994060
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Apr 2019 16:50:04 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27AF011C052;
+        Mon, 29 Apr 2019 16:50:04 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AAE7611C04A;
+        Mon, 29 Apr 2019 16:50:03 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.116])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 29 Apr 2019 16:50:03 +0000 (GMT)
+Date:   Mon, 29 Apr 2019 18:50:02 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+In-Reply-To: <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+        <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190427012842.93737-1-cai@lca.pw>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042916-4275-0000-0000-0000032F9E92
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042916-4276-0000-0000-0000383EF4DA
+Message-Id: <20190429185002.6041eecc.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=867 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904290114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 09:28:42PM -0400, Qian Cai wrote:
-> Many compilation warnings due to pte_unmap() compiles away. Fixed it by
-> making it an static inline function.
-> 
-> mm/gup.c: In function 'gup_pte_range':
-> mm/gup.c:1727:16: warning: variable 'ptem' set but not used
-> [-Wunused-but-set-variable]
-> mm/gup.c: At top level:
-> mm/memory.c: In function 'copy_pte_range':
-> mm/memory.c:821:24: warning: variable 'orig_dst_pte' set but not used
-> [-Wunused-but-set-variable]
-> mm/memory.c:821:9: warning: variable 'orig_src_pte' set but not used
-> [-Wunused-but-set-variable]
-> mm/swap_state.c: In function 'swap_ra_info':
-> mm/swap_state.c:641:15: warning: variable 'orig_pte' set but not used
-> [-Wunused-but-set-variable]
-> mm/madvise.c: In function 'madvise_free_pte_range':
-> mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
-> [-Wunused-but-set-variable]
-> 
-> Also, remove pte_unmap_nested() as nobody uses it anymore since the
-> commit ece0e2b6406a ("mm: remove pte_*map_nested()").
+On Fri, 26 Apr 2019 15:01:27 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Can you post that as a separate patch which also removes
-pte_offset_map_nested(), please?
+> +static struct ap_queue_status vfio_ap_setirq(struct vfio_ap_queue *q)
+> +{
+> +	struct ap_qirq_ctrl aqic_gisa = {};
+> +	struct ap_queue_status status = {};
+> +	struct kvm_s390_gisa *gisa;
+> +	struct kvm *kvm;
+> +	unsigned long h_nib, h_pfn;
+> +	int ret;
+> +
+> +	q->a_pfn = q->a_nib >> PAGE_SHIFT;
+> +	ret = vfio_pin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1,
+> +			     IOMMU_READ | IOMMU_WRITE, &h_pfn);
+> +	switch (ret) {
+> +	case 1:
+> +		break;
+> +	case -EINVAL:
+> +	case -E2BIG:
+> +		status.response_code = AP_RESPONSE_INVALID_ADDRESS;
+> +		/* Fallthrough */
+> +	default:
+> +		return status;
 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  arch/arm64/include/asm/pgtable.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index de70c1eabf33..7543e345e078 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -478,6 +478,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
->  	return __pmd_to_phys(pmd);
->  }
->  
-> +static inline void pte_unmap(pte_t *pte) { }
+Can we actually hit the default label? AFICT you would return an
+all-zero status, i.e. status.response_code == 0 'Normal completion'.
 
-Hmm, is this guaranteed to stop the compiler from warning? Assuming the
-pte_unmap() call is inlined, I'd expect it to keep complaining. What
-compiler are you using?
+> +	}
+> +
+> +	kvm = q->matrix_mdev->kvm;
+> +	gisa = kvm->arch.gisa_int.origin;
+> +
+> +	h_nib = (h_pfn << PAGE_SHIFT) | (q->a_nib & ~PAGE_MASK);
+> +	aqic_gisa.gisc = q->a_isc;
+> +	aqic_gisa.isc = kvm_s390_gisc_register(kvm, q->a_isc);
+> +	aqic_gisa.ir = 1;
+> +	aqic_gisa.gisa = gisa->next_alert >> 4;
 
-Also, there are a bunch of other architectures that I would expect to have
-this same issue because they defined pte_unmap() exactly the same way.
+Why gisa->next_alert? Isn't this supposed to get set to gisa origin
+(without some bits on the left)?
 
-Will
+> +
+> +	status = ap_aqic(q->apqn, aqic_gisa, (void *)h_nib);
+> +	switch (status.response_code) {
+> +	case AP_RESPONSE_NORMAL:
+> +		/* See if we did clear older IRQ configuration */
+> +		if (q->p_pfn)
+> +			vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
+> +					 &q->p_pfn, 1);
+> +		if (q->p_isc != VFIO_AP_ISC_INVALID)
+> +			kvm_s390_gisc_unregister(kvm, q->p_isc);
+> +		q->p_pfn = q->a_pfn;
+> +		q->p_isc = q->a_isc;
+> +		break;
+> +	case AP_RESPONSE_OTHERWISE_CHANGED:
+> +		/* We could not modify IRQ setings: clear new configuration */
+> +		vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1);
+> +		kvm_s390_gisc_unregister(kvm, q->a_isc);
+
+Hm, see below. Wouldn't you want to set a_isc to VFIO_AP_ISC_INVALID?
+
+> +		break;
+> +	default:	/* Fall Through */
+
+Is it 'break' or is it 'Fall Through'?
+
+> +		pr_warn("%s: apqn %04x: response: %02x\n", __func__, q->apqn,
+> +			status.response_code);
+> +		vfio_ap_free_irq_data(q);
+> +		break;
+> +	}
+> +
+> +	return status;
+> +}
+
