@@ -2,250 +2,168 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B956C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C142EC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE482147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8245B2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:23:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PCPGwWsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbfD2RWg (ORCPT
+        id S1728990AbfD2RXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:22:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34464 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728920AbfD2RWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:22:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5391CEBD;
-        Mon, 29 Apr 2019 10:22:32 -0700 (PDT)
-Received: from e110467-lin.cambridge.arm.com (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 746633F557;
-        Mon, 29 Apr 2019 10:22:30 -0700 (PDT)
-From:   Robin Murphy <robin.murphy@arm.com>
-To:     linux-mm@kvack.org
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: [PATCH v2 3/3] mm: introduce ARCH_HAS_PTE_DEVMAP
-Date:   Mon, 29 Apr 2019 18:22:17 +0100
-Message-Id: <39f00b9e5768d05bf7bbc75493f121ad7b553a2f.1556555457.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.21.0.dirty
-In-Reply-To: <cover.1556555457.git.robin.murphy@arm.com>
-References: <cover.1556555457.git.robin.murphy@arm.com>
+        Mon, 29 Apr 2019 13:23:05 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36973 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728920AbfD2RXE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 13:23:04 -0400
+Received: by mail-pl1-f194.google.com with SMTP id z8so5396419pln.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:23:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rsw8UPykdorsw4sPVzHVYzdipOf63m0Li/lJqRlHJ28=;
+        b=PCPGwWsH2zeGDnz68osLQlxPJg3Mq3ZZ3rJnVkG96kpebaebQeHBm6Fk21rGKM3Iu1
+         y5AjtKyIzxFb/lo+UhU4zgbnf1mIQ125i478+JYkFgTyfWa0760MVb5SuDjwIzpEXcYw
+         hsuIIjql21Co4qkj8ZGbsKYloGjQna0HcrYVspTiNXKqXDCW+s0aFPBdUg9eTF6+yswM
+         /BsGsVhdNvuhHPteCh6HvAaJhM30O7s3iZMC95XQFv/L2lDxLjTMuA3MugRnY75nJgxS
+         8WmicA925irBdJLs/VSS2PjmLpw/N5IaDkzrcGu0d1Aa5uivPxMCHlTGFB6rhqzTX0aM
+         aydA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rsw8UPykdorsw4sPVzHVYzdipOf63m0Li/lJqRlHJ28=;
+        b=EeNrhdDoODgZBZUq2LurH7DLvZgS9eY86HTKi5jDBMCeTb1Sch/Ba4dx1wkUcnxJ3y
+         Yn+7iXiPnj5eAIAFxBumXB6tCeALndRyPKiLu3NXR7nX5DQKQ0B1GJ7lWHxPsrJ6L0L+
+         peB9ZlheS7ZC6iP9vrwulXTNJt931GBy1Nq6ktdF1W5fbQbtgZvX04WdNpqYtr7v21R8
+         lxrEwYcs5VbhO+/gzdo3ZjXut6JUErxpK2AJZvfQd9m7JHPGIj7G1ZJAm6fDFoFTl8tz
+         29pz1AOEoNUMDX1aHNhhaWEhO2cVboHSIZPoiCaFFLk1i6nSzdt6rMgJbFxLHooh4UMG
+         Z/3A==
+X-Gm-Message-State: APjAAAX7E+SUOztW9nC6kB3dDoNcnQxXqKbqr1BHFWFAIKMd4JwGDT2v
+        KYaEYCJfoYwEvVFesa3MNmKCHYtIv/NBwS6j62/1fg==
+X-Google-Smtp-Source: APXvYqwSBXLgxbHxoEnDonqbACyGnvV1ZNezhTU6Vgc6F6Hq4BY3bKyqvj3eDuPWzZi/lzcpQtZLdjpJWlI4n7e056M=
+X-Received: by 2002:a17:902:e183:: with SMTP id cd3mr23298888plb.233.1556558583289;
+ Mon, 29 Apr 2019 10:23:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190423142629.120717-1-venture@google.com> <CAO=notzjzpt0WHfJEWXMGgkoJU8UiLnqZnrGrPs-dRH5GNdJyQ@mail.gmail.com>
+ <CAO=notz9QVoqKLrhJ3kx9FHja5+Mh68f36O36+1ewLG+SanmOA@mail.gmail.com>
+ <20190425172549.GA12376@kroah.com> <20190429165137.mwj4ehhwerunbef4@localhost>
+ <CAOesGMg49z4Gip-bLK-h7+LSLa4Fu68r11gT2EV8E8xMCPGDxg@mail.gmail.com>
+ <CAO=notwVyTqvxfYRU1XJTwzSNCUAMgYCVpXVvqaN62uSiWyYCQ@mail.gmail.com> <CAOesGMjShorZmVeLL1nJNPVOP+vNTVzcA=arU3qW8ZUDYCtjaQ@mail.gmail.com>
+In-Reply-To: <CAOesGMjShorZmVeLL1nJNPVOP+vNTVzcA=arU3qW8ZUDYCtjaQ@mail.gmail.com>
+From:   Patrick Venture <venture@google.com>
+Date:   Mon, 29 Apr 2019 10:22:51 -0700
+Message-ID: <CAO=notw5wcC4ybPhAuwq9n5HCY18Yewt-Wp7nJWP0kaRnOxtwA@mail.gmail.com>
+Subject: Re: [PATCH v2] soc: add aspeed folder and misc drivers
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>,
+        soc@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARCH_HAS_ZONE_DEVICE is somewhat meaningless in itself, and combined
-with the long-out-of-date comment can lead to the impression than an
-architecture may just enable it (since __add_pages() now "comprehends
-device memory" for itself) and expect things to work.
+On Mon, Apr 29, 2019 at 10:19 AM Olof Johansson <olof@lixom.net> wrote:
+>
+> On Mon, Apr 29, 2019 at 10:16 AM Patrick Venture <venture@google.com> wrote:
+> >
+> > On Mon, Apr 29, 2019 at 10:13 AM Olof Johansson <olof@lixom.net> wrote:
+> > >
+> > > On Mon, Apr 29, 2019 at 10:08 AM Olof Johansson <olof@lixom.net> wrote:
+> > > >
+> > > > On Thu, Apr 25, 2019 at 07:25:49PM +0200, Greg KH wrote:
+> > > > > On Tue, Apr 23, 2019 at 08:28:14AM -0700, Patrick Venture wrote:
+> > > > > > On Tue, Apr 23, 2019 at 8:22 AM Patrick Venture <venture@google.com> wrote:
+> > > > > > >
+> > > > > > > On Tue, Apr 23, 2019 at 7:26 AM Patrick Venture <venture@google.com> wrote:
+> > > > > > > >
+> > > > > > > > Create a SoC folder for the ASPEED parts and place the misc drivers
+> > > > > > > > currently present into this folder.  These drivers are not generic part
+> > > > > > > > drivers, but rather only apply to the ASPEED SoCs.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > > > > >
+> > > > > > > Accidentally lost the Acked-by when re-sending this patchset as I
+> > > > > > > didn't see it on v1 before re-sending v2 to the larger audience.
+> > > > > >
+> > > > > > Since there was a change between v1 and v2, Arnd, I'd appreciate you
+> > > > > > Ack this version of the patchset since it changes when the soc/aspeed
+> > > > > > Makefile is followed.
+> > > > >
+> > > > > I have no objection for moving stuff out of drivers/misc/ so the SOC
+> > > > > maintainers are free to take this.
+> > > > >
+> > > > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > >
+> > > > I'm totally confused. This is the second "PATCH v2" of this patch that I came
+> > > > across, I already applied the first.
+> > > >
+> > > > Patrick: Follow up with incremental patch in case there's any difference.
+> > > > Meanwhile, please keep in mind that you're adding a lot of work for people when
+> > > > you respin patches without following up on the previous version. Thanks!
+> > >
+> > > Not only that, but subthreads were cc:d to arm@kernel.org and some
+> > > were not, so I missed the overnight conversation on the topic.
+> > >
+> > > If this email thread is any indication of how the code will be
+> > > flowing, there's definitely need for more structure. Joel, I'm hoping
+> > > you'll coordinate.
+> >
+> > To be honest, this patchset thread was a bit less clear than anyone
+> > prefers.  I use get_maintainers to get the initial list, and so adding
+> > arm@ or soc@ per a request tells me that perhaps those should be
+> > output via that script.
+>
+> The tools are working as expected, we normally don't take patches
+> directly to arm@kernel.org, we let them go in through platform
+> maintainers who then send it on to us.
 
-In practice, however, ZONE_DEVICE users have little chance of
-functioning correctly without __HAVE_ARCH_PTE_DEVMAP, so let's clean
-that up the same way as ARCH_HAS_PTE_SPECIAL and make it the proper
-dependency so the real situation is clearer.
+Thanks for clarifying.
 
-Cc: x86@kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Acked-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
+>
+> > >
+> > > I'm with Arnd on whether the code should be in drivers/soc or not --
+> > > most of it likely should not.
+> >
+> > I think the misc drivers for a SoC that are a single user interface
+> > that is focused on the use-case that belongs to that SoC only belong
+> > in soc/, while if there is something we can do in common -- different
+> > story.  If it makes sense to just have misc/aspeed/ instead of
+> > soc/aspeed -- would that align more?
+>
+> Those views are how the "board file hell" started on 32-bit ARM too,
+> so we're definitely hesitant to jump to that conclusion without
+> knowing more about what's actually anticipated.
+>
+>
+> Do you happen to have an estimate on what kind of drivers are
+> needed/anticipated?
 
-v2: Add review tags.
+There is a UART routing control driver for ASPEED that spawned my push
+to soc/aspeed.  The advice on that thread was to put such drivers
+there.  There's likely to be a few more control-focused aspeed
+drivers.
 
- arch/powerpc/Kconfig                         | 2 +-
- arch/powerpc/include/asm/book3s/64/pgtable.h | 1 -
- arch/x86/Kconfig                             | 2 +-
- arch/x86/include/asm/pgtable.h               | 4 ++--
- arch/x86/include/asm/pgtable_types.h         | 1 -
- include/linux/mm.h                           | 4 ++--
- include/linux/pfn_t.h                        | 4 ++--
- mm/Kconfig                                   | 5 ++---
- mm/gup.c                                     | 2 +-
- 9 files changed, 11 insertions(+), 14 deletions(-)
+For Nuvoton, we definitely expect some similar LPC control drivers.
+Possibly an LPC snoop driver, similar to aspeed-lpc-snoop.  This
+supports the idea of creating some form of bmc subsystem as suggested
+above (or in a different thread).
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 5e3d0853c31d..77e1993bba80 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -135,6 +135,7 @@ config PPC
- 	select ARCH_HAS_MMIOWB			if PPC64
- 	select ARCH_HAS_PHYS_TO_DMA
- 	select ARCH_HAS_PMEM_API                if PPC64
-+	select ARCH_HAS_PTE_DEVMAP		if PPC_BOOK3S_64
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_MEMBARRIER_CALLBACKS
- 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC64
-@@ -142,7 +143,6 @@ config PPC
- 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
--	select ARCH_HAS_ZONE_DEVICE		if PPC_BOOK3S_64
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
- 	select ARCH_MIGHT_HAVE_PC_SERIO
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 581f91be9dd4..02c22ac8f387 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -90,7 +90,6 @@
- #define _PAGE_SOFT_DIRTY	_RPAGE_SW3 /* software: software dirty tracking */
- #define _PAGE_SPECIAL		_RPAGE_SW2 /* software: special page */
- #define _PAGE_DEVMAP		_RPAGE_SW1 /* software: ZONE_DEVICE page */
--#define __HAVE_ARCH_PTE_DEVMAP
- 
- /*
-  * Drivers request for cache inhibited pte mapping using _PAGE_NO_CACHE
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5ad92419be19..ffd50f27f395 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -60,6 +60,7 @@ config X86
- 	select ARCH_HAS_KCOV			if X86_64
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
- 	select ARCH_HAS_PMEM_API		if X86_64
-+	select ARCH_HAS_PTE_DEVMAP		if X86_64
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_REFCOUNT
- 	select ARCH_HAS_UACCESS_FLUSHCACHE	if X86_64
-@@ -69,7 +70,6 @@ config X86
- 	select ARCH_HAS_STRICT_MODULE_RWX
- 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
--	select ARCH_HAS_ZONE_DEVICE		if X86_64
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_MIGHT_HAVE_ACPI_PDC		if ACPI
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 2779ace16d23..89a1f6fd48bf 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -254,7 +254,7 @@ static inline int has_transparent_hugepage(void)
- 	return boot_cpu_has(X86_FEATURE_PSE);
- }
- 
--#ifdef __HAVE_ARCH_PTE_DEVMAP
-+#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
- static inline int pmd_devmap(pmd_t pmd)
- {
- 	return !!(pmd_val(pmd) & _PAGE_DEVMAP);
-@@ -715,7 +715,7 @@ static inline int pte_present(pte_t a)
- 	return pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
- }
- 
--#ifdef __HAVE_ARCH_PTE_DEVMAP
-+#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
- static inline int pte_devmap(pte_t a)
- {
- 	return (pte_flags(a) & _PAGE_DEVMAP) == _PAGE_DEVMAP;
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index d6ff0bbdb394..b5e49e6bac63 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -103,7 +103,6 @@
- #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
- #define _PAGE_NX	(_AT(pteval_t, 1) << _PAGE_BIT_NX)
- #define _PAGE_DEVMAP	(_AT(u64, 1) << _PAGE_BIT_DEVMAP)
--#define __HAVE_ARCH_PTE_DEVMAP
- #else
- #define _PAGE_NX	(_AT(pteval_t, 0))
- #define _PAGE_DEVMAP	(_AT(pteval_t, 0))
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index d76dfb7ac617..fe05c94f23e9 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -504,7 +504,7 @@ struct inode;
- #define page_private(page)		((page)->private)
- #define set_page_private(page, v)	((page)->private = (v))
- 
--#if !defined(__HAVE_ARCH_PTE_DEVMAP) || !defined(CONFIG_TRANSPARENT_HUGEPAGE)
-+#if !defined(CONFIG_ARCH_HAS_PTE_DEVMAP) || !defined(CONFIG_TRANSPARENT_HUGEPAGE)
- static inline int pmd_devmap(pmd_t pmd)
- {
- 	return 0;
-@@ -1698,7 +1698,7 @@ static inline void sync_mm_rss(struct mm_struct *mm)
- }
- #endif
- 
--#ifndef __HAVE_ARCH_PTE_DEVMAP
-+#ifndef CONFIG_ARCH_HAS_PTE_DEVMAP
- static inline int pte_devmap(pte_t pte)
- {
- 	return 0;
-diff --git a/include/linux/pfn_t.h b/include/linux/pfn_t.h
-index 7bb77850c65a..de8bc66b10a4 100644
---- a/include/linux/pfn_t.h
-+++ b/include/linux/pfn_t.h
-@@ -104,7 +104,7 @@ static inline pud_t pfn_t_pud(pfn_t pfn, pgprot_t pgprot)
- #endif
- #endif
- 
--#ifdef __HAVE_ARCH_PTE_DEVMAP
-+#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
- static inline bool pfn_t_devmap(pfn_t pfn)
- {
- 	const u64 flags = PFN_DEV|PFN_MAP;
-@@ -122,7 +122,7 @@ pmd_t pmd_mkdevmap(pmd_t pmd);
- 	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
- pud_t pud_mkdevmap(pud_t pud);
- #endif
--#endif /* __HAVE_ARCH_PTE_DEVMAP */
-+#endif /* CONFIG_ARCH_HAS_PTE_DEVMAP */
- 
- #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
- static inline bool pfn_t_special(pfn_t pfn)
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 25c71eb8a7db..fcb7ab08e294 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -655,8 +655,7 @@ config IDLE_PAGE_TRACKING
- 	  See Documentation/admin-guide/mm/idle_page_tracking.rst for
- 	  more details.
- 
--# arch_add_memory() comprehends device memory
--config ARCH_HAS_ZONE_DEVICE
-+config ARCH_HAS_PTE_DEVMAP
- 	bool
- 
- config ZONE_DEVICE
-@@ -664,7 +663,7 @@ config ZONE_DEVICE
- 	depends on MEMORY_HOTPLUG
- 	depends on MEMORY_HOTREMOVE
- 	depends on SPARSEMEM_VMEMMAP
--	depends on ARCH_HAS_ZONE_DEVICE
-+	depends on ARCH_HAS_PTE_DEVMAP
- 	select XARRAY_MULTI
- 
- 	help
-diff --git a/mm/gup.c b/mm/gup.c
-index f84e22685aaa..72a5c7d1e1a7 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1623,7 +1623,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
- }
- #endif /* CONFIG_ARCH_HAS_PTE_SPECIAL */
- 
--#if defined(__HAVE_ARCH_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
-+#if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
- static int __gup_device_huge(unsigned long pfn, unsigned long addr,
- 		unsigned long end, struct page **pages, int *nr)
- {
--- 
-2.21.0.dirty
-
+>
+>
+> -Olof
