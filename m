@@ -2,84 +2,145 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70C6C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E703C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BD122075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2AC2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:43:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556556235;
+	bh=FTkncIZbvmo+q4fzVAyRGdQAopbIMIOz0iSDBCOQ89k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xggECIgW343Hot/79mfBRMr84cVT+riO0lz4vE1SOQv0HycFuxW/wOWGkrObk9z93
+	 +SlKcqw5OMkYxCqwpLVsGAjkCHmcBevd71QySkvO0LHHD2PMzuUMcqezx4Rg1z+b6U
+	 06cP/Tn7cATpOQYfpT+rUmP739zTzXW9WnNHQPKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbfD2Qmg (ORCPT
+        id S1728812AbfD2Qny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:42:36 -0400
-Received: from smtprelay0016.hostedemail.com ([216.40.44.16]:41947 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728520AbfD2Qmf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:42:35 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 0722318224D9E;
-        Mon, 29 Apr 2019 16:42:34 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: card60_1622dbbbc1d5d
-X-Filterd-Recvd-Size: 2277
-Received: from XPS-9350 (unknown [213.83.164.10])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 29 Apr 2019 16:42:31 +0000 (UTC)
-Message-ID: <3078981761ff2a37354221eb79a1c24e43c30896.camel@perches.com>
-Subject: Re: [PATCH -next] lib/vsprintf: Make function pointer_string static
-From:   Joe Perches <joe@perches.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Yue Haibing <yuehaibing@huawei.com>, sergey.senozhatsky@gmail.com,
-        andriy.shevchenko@linux.intel.com, geert+renesas@glider.be,
-        me@tobin.cc, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Mon, 29 Apr 2019 09:42:30 -0700
-In-Reply-To: <20190429103925.6233e45f@gandalf.local.home>
-References: <20190426164630.22104-1-yuehaibing@huawei.com>
-         <20190426130204.23a5a05c@gandalf.local.home>
-         <20190429110801.awvdxawpee3sxujs@pathway.suse.cz>
-         <20190429091320.019e726b@gandalf.local.home>
-         <20190429143037.3qu5fzdo6g26rsmf@pathway.suse.cz>
-         <20190429103925.6233e45f@gandalf.local.home>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 29 Apr 2019 12:43:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728520AbfD2Qny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:43:54 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ACBE216F4;
+        Mon, 29 Apr 2019 16:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556556230;
+        bh=FTkncIZbvmo+q4fzVAyRGdQAopbIMIOz0iSDBCOQ89k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HGhohh5inSlyBklzyp/DveWB/sMf95ISDdNnu83TfGnaRqTQxMFq64xwEEYzUtKp/
+         pAfk1XO+OIhlMrBS3cqFZqo89HnrVjRmZHuk8OwKqtRCB9kD0MdLgfQDIwDg05exCN
+         IqIoEBUEknO8co16OeNZ5XWgmCJcEeiCAciSXIag=
+Received: by mail-qt1-f174.google.com with SMTP id p20so12667595qtc.9;
+        Mon, 29 Apr 2019 09:43:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAX+tr/hEdkGF6xc1rbhkCkTsEJqC75g8u0mCYxN0Y+KaaPEFpYe
+        enFj8Z5YlPamG9GuiUemlqC30LenV3ggWODcoA==
+X-Google-Smtp-Source: APXvYqzxGpqPUApkLr4tQOYZ40b33qqDT7vQFegDDDM/wN2fR4nE3DrASAaTlh9eyLchuOxZXj9xKQh4FvsDV4q+jYI=
+X-Received: by 2002:a0c:9066:: with SMTP id o93mr10205357qvo.246.1556556229764;
+ Mon, 29 Apr 2019 09:43:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
+ <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
+ <20190425195750.GA26031@bogus> <e4613d6e-0893-8163-32ef-8137c40d2b24@partner.samsung.com>
+In-Reply-To: <e4613d6e-0893-8163-32ef-8137c40d2b24@partner.samsung.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 29 Apr 2019 11:43:38 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+bJtjO8xbpnCRHmcyCB=b8DMr73GWKEz+xMXVZag0FrQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+bJtjO8xbpnCRHmcyCB=b8DMr73GWKEz+xMXVZag0FrQ@mail.gmail.com>
+Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add Exynos5422
+ DMC device description
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>, willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-04-29 at 10:39 -0400, Steven Rostedt wrote:
-> [ added Joe ]
-> > Good question. I have just double checked it. And pointer_string() with
-> > "noinline_for_stack" does not make any difference in the stack
-> > usage here.
-> > 
-> > I actually played with this before:
-> > 
-> > "noinline_for_stack" is a black magic added by
-> > the commit cf3b429b03e827c7180 ("vsprintf.c: use noinline_for_stack").
-> 
-> From what I understand, "noinline_for_stack" is just noinline and the
-> "for_stack" part is just to document that the noinline is used for
-> stack purposes. If the compiler doesn't inline the function without the
-> noinline, then it wont make any difference.
-> 
-> The point was to not inline the function because it can be used in
-> stack critical areas, and that it's better to do the call than to
-> increase the stack.
+On Mon, Apr 29, 2019 at 7:14 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> Hi Rob,
+>
+> On 4/25/19 9:57 PM, Rob Herring wrote:
+> > On Fri, Apr 19, 2019 at 04:19:24PM +0200, Lukasz Luba wrote:
+> >> The patch adds description for DT binding for a new Exynos5422 Dynamic
+> >> Memory Controller device.
+> >>
+> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> >> ---
+> >>   .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
+> >>   1 file changed, 73 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> >> new file mode 100644
+> >> index 0000000..133b3cc
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> >> @@ -0,0 +1,73 @@
+> >> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
+> >> +
+> >> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
+> >> +memory chips are connected. The driver is to monitor the controller in runtime
+> >> +and switch frequency and voltage. To monitor the usage of the controller in
+> >> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
+> >> +is able to measure the current load of the memory.
+> >> +When 'userspace' governor is used for the driver, an application is able to
+> >> +switch the DMC and memory frequency.
+> >> +
+> >> +Required properties for DMC device for Exynos5422:
+> >> +- compatible: Should be "samsung,exynos5422-bus".
+> >> +- clock-names : the name of clock used by the bus, "bus".
+> >> +- clocks : phandles for clock specified in "clock-names" property.
+> >> +- devfreq-events : phandles for PPMU devices connected to this DMC.
+> >> +- vdd-supply : phandle for voltage regulator which is connected.
+> >> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
+> >> +- operating-points-v2 : phandle for OPPs described in v2 definition.
+> >> +- device-handle : phandle of the connected DRAM memory device. For more
+> >> +    information please refer to Documentation
+> >
+> > The memory node(s) should be a child of the memory controller IMO.
+> I have followed the TI code for LPDDR2. They use 'device-handle'
+> probably because the memory controller can be moved into the common
+> .dtsi and taken by reference in .dts in a proper board file.
 
-It was added because of %pV is recursive and recursive
-functions can eat
-a lot of stack.
+You'd still have to have the ctrlr node in the board file to add the
+'device-handle' property.
 
-Using noinline_for_stack was just a bit more self-documenting.
+> The board .dts files might specify different DRAM chips and timings.
+> In Exynos case we will also have such situation: one memory controller
+> and a few different DRAM chips.
 
-I do still think it's a useful notation.
+You mean as in the case where there are multiple options and one chip
+gets populated on the board? So 'device-handle' is selecting which
+chip to use.
 
+You can actually do both here. Keep 'device-handle' to select which
+DRAM chip and have the chips as child nodes. But if you really don't
+want to have them as child nodes, that's fine.
+
+Rob
