@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAA9C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD459C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC2020578
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A613D20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:36:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="JOWacCEl"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="HqE7ctEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbfD2IfS (ORCPT
+        id S1727849AbfD2IgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 04:35:18 -0400
-Received: from first.geanix.com ([116.203.34.67]:50060 "EHLO first.geanix.com"
+        Mon, 29 Apr 2019 04:36:19 -0400
+Received: from first.geanix.com ([116.203.34.67]:49994 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727873AbfD2IfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 04:35:15 -0400
+        id S1727835AbfD2IfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 04:35:05 -0400
 Received: from localhost (unknown [193.163.1.7])
-        by first.geanix.com (Postfix) with ESMTPSA id B5BBD308E94;
-        Mon, 29 Apr 2019 08:33:50 +0000 (UTC)
+        by first.geanix.com (Postfix) with ESMTPSA id 786F4308E8D;
+        Mon, 29 Apr 2019 08:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1556526830; bh=Syxx7UjWQdn8ym6ReJbNhi4YaO2pdMxoPdpOacvkHXc=;
+        t=1556526820; bh=GUNaGmlTbAw02jGE5nx/29moxwD7xAZSrJPPjP7Ycjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=JOWacCElGVfmBjFHHw8WQQBDPJFJyMUpHn9DabH+ik6VatsagT46g8dJ0BBKibVgS
-         ar45ruo6nspqTR2U8meXgSCmOlOWm6yBhdUcjG+wDc4v5147vnPD2uoKa0sFkPRN+R
-         vk8ZlXCtcL6jsW9XGZzotjB41ISICQ99dRQCtoyxjUoXvGM18EYgjul1OzsMZ8jHgH
-         pqdBks6XSYJPcqYD+X3rDLD9qg3kjCkvrelK4W8MK8nGKeaqzXyhfGl64tL+ShStLo
-         uI84DxhLE82oDZN2wJR5HMEz+hpP7h3/U89uXUPvnrofBtpMzcOo1/Xl+G+DLjEuaw
-         5HzNSKYl4jApg==
+        b=HqE7ctEg9hIcYdMsERNM0DeaGm5yDZRTnrO7viYqkAyccKnFR36AUwEDcB/Tq8XKF
+         jswPw5gNuzXtNJGN4L7totYOyim3IgvKjgE1FVe8WKweG8kkIe5T4kAlu/iDOZ+xpE
+         cXwjhPOnX43yPPGKe9riOJjDFJrvxlqN6Keqassz6uUS1xqeEzQIR5Yni3pxCA2EG6
+         5pV6c75SWZACp4025po4k+57zq+17NnrstuWgTbuEqaRvJvMmA0T76KEQTJWcZIVWh
+         JxcZMEwmFNClK9mKELo57NPguCCpCpYD+AdqlOmHc94RHuHcW/bnVCMfCDBFr4Tp0p
+         lheUSBXtMMFLw==
 From:   Esben Haabendal <esben@geanix.com>
 To:     netdev@vger.kernel.org
 Cc:     "David S. Miller" <davem@davemloft.net>,
         Michal Simek <michal.simek@xilinx.com>,
-        Yang Wei <yang.wei9@zte.com.cn>,
-        YueHaibing <yuehaibing@huawei.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Yang Wei <yang.wei9@zte.com.cn>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/12] net: ll_temac: Enable DMA when ready, not before
-Date:   Mon, 29 Apr 2019 10:34:22 +0200
-Message-Id: <20190429083422.4356-13-esben@geanix.com>
+Subject: [PATCH 09/12] net: ll_temac: Fix bug causing buffer descriptor overrun
+Date:   Mon, 29 Apr 2019 10:34:19 +0200
+Message-Id: <20190429083422.4356-10-esben@geanix.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190429083422.4356-1-esben@geanix.com>
 References: <20190426073231.4008-1-esben@geanix.com>
@@ -56,53 +56,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As soon as TAILDESCR_PTR is written, DMA transfers might start.
-Let's ensure we are ready to receive DMA IRQ's before doing that.
+As we are actually using a BD for both the skb and each frag contained in
+it, the oldest TX BD would be overwritten when there was exactly one BD
+less than needed.
 
 Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
- drivers/net/ethernet/xilinx/ll_temac_main.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 5833f02..a230f6a 100644
+index 72ec338..2d50646 100644
 --- a/drivers/net/ethernet/xilinx/ll_temac_main.c
 +++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -316,17 +316,21 @@ static int temac_dma_bd_init(struct net_device *ndev)
- 		    CHNL_CTRL_IRQ_EN | CHNL_CTRL_IRQ_ERR_EN |
- 		    CHNL_CTRL_IRQ_DLY_EN | CHNL_CTRL_IRQ_COAL_EN);
+@@ -745,7 +745,7 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	start_p = lp->tx_bd_p + sizeof(*lp->tx_bd_v) * lp->tx_bd_tail;
+ 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
  
--	lp->dma_out(lp, RX_CURDESC_PTR,  lp->rx_bd_p);
--	lp->dma_out(lp, RX_TAILDESC_PTR,
--		       lp->rx_bd_p + (sizeof(*lp->rx_bd_v) * (RX_BD_NUM - 1)));
--	lp->dma_out(lp, TX_CURDESC_PTR, lp->tx_bd_p);
--
- 	/* Init descriptor indexes */
- 	lp->tx_bd_ci = 0;
- 	lp->tx_bd_next = 0;
- 	lp->tx_bd_tail = 0;
- 	lp->rx_bd_ci = 0;
- 
-+	/* Enable RX DMA transfers */
-+	wmb();
-+	lp->dma_out(lp, RX_CURDESC_PTR,  lp->rx_bd_p);
-+	lp->dma_out(lp, RX_TAILDESC_PTR,
-+		       lp->rx_bd_p + (sizeof(*lp->rx_bd_v) * (RX_BD_NUM - 1)));
-+
-+	/* Prepare for TX DMA transfer */
-+	lp->dma_out(lp, TX_CURDESC_PTR, lp->tx_bd_p);
-+
- 	return 0;
- 
- out:
-@@ -790,6 +794,7 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	skb_tx_timestamp(skb);
- 
- 	/* Kick off the transfer */
-+	wmb();
- 	lp->dma_out(lp, TX_TAILDESC_PTR, tail_p); /* DMA start */
- 
- 	return NETDEV_TX_OK;
+-	if (temac_check_tx_bd_space(lp, num_frag)) {
++	if (temac_check_tx_bd_space(lp, num_frag + 1)) {
+ 		if (!netif_queue_stopped(ndev))
+ 			netif_stop_queue(ndev);
+ 		return NETDEV_TX_BUSY;
 -- 
 2.4.11
 
