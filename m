@@ -2,241 +2,545 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDD3C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 05:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEF0C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 05:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72372206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 05:30:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lVY8T3bu"
+	by mail.kernel.org (Postfix) with ESMTP id 2CAA1214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 05:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556515932;
+	bh=R7yH6SCc2CdS819L2jITRdSb1HXfUxdjdXlqVBUtlGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jcnI7eLdWL9FxY4oV5S78zdCi9tp8CX4C7lGQ4n4jNJWeOdHkEkK1Srou+5PXZoTq
+	 VlsoerIqK42rwCrw8s4+1opUtigfpf4rymkhSWgfebWDhd16eDqD9D0birwF7yAE2B
+	 yj4l6/RVwEdcD2KBfUt0dblSQ728Y84JjNlalAG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfD2FaR (ORCPT
+        id S1727246AbfD2FcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 01:30:17 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:51692 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfD2FaQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 01:30:16 -0400
-Received: by mail-it1-f193.google.com with SMTP id s3so14505636itk.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 22:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3w9F4L2H1rP9to/5V17qizlCntfJhWuWWDPbePgiLv4=;
-        b=lVY8T3bu8WK/L1Laf1KemLAezdD1y965IE5aC9AwIW5kiy85w/2iDLzTOwU3oX/RhT
-         QlEey58vw5mYestPJHs5kyZVxQ2bZ8lolLbdx/m2JTgCGEGkbpRlA8HvWzfq4rXl8GPB
-         OirBGwaP5TlsQ5aceObQjNG0CQ1pWTBQaKecg0ByIMW+zazzcYuH/QO5DMzi4p8rljOL
-         Xh/IfrW+2cOPA+8KELqITYYm9Gcg7WhcDixymtqSNI/SDxMO0HgvMFLQwwncLI3XZvXV
-         zi5UYwkslP+awXYATxroxAxeQLIJyLJS3UnfBygJy+i5ujX5HhGfzsx1Z9Lx6VQBeBLz
-         SnfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3w9F4L2H1rP9to/5V17qizlCntfJhWuWWDPbePgiLv4=;
-        b=qbOEFZTOtfiq9NoOgNPuf5dICSZWNnkOC8rYTym9iS+g7wbxAzPS//EpxpdKPCsFlX
-         Q3Wby3o2+4i+FZjf37tPXo4xOINKWRz3DUM8tliMs1pH+UbULX/tDcaudY/GkNcrPg/O
-         u3BzEwyUzbRTfuPoibGWRr9a+xUfuC2ZVULq79mD9w5b2PXLxrGONHWaINhj6BRBcwpB
-         /hd08sI7tZNa5KvKe3HWihamMGgcaug1HHcT0ojji8K0WbmcvUziE4fOINtjtbhs0h4s
-         d0/2Kmaxt8Ci42Pis0r4zDhc37yOK6cjCDYtshekZp+HLIeXVc+A1VOz0LVxkrS1/PKK
-         h/xA==
-X-Gm-Message-State: APjAAAXWFFzLJKEDiSXloL/YHFq+uLkaS5zfMvOBxGNco6w732r4upyL
-        LWMtmnyZ+mVBah5xklpQ+GjAYfqZl31BVBMmxTQYJA==
-X-Google-Smtp-Source: APXvYqwlFabYJQ1MkECdPw/4DCKLWiNo/pYXBd47oUbJpOWvbVPuV/HywHTo3BiOPpxYH2sZt7061RzznUm8+D+TRdo=
-X-Received: by 2002:a24:7c8c:: with SMTP id a134mr15752208itd.144.1556515815493;
- Sun, 28 Apr 2019 22:30:15 -0700 (PDT)
+        Mon, 29 Apr 2019 01:32:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbfD2FcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 01:32:11 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DCB821473;
+        Mon, 29 Apr 2019 05:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556515929;
+        bh=R7yH6SCc2CdS819L2jITRdSb1HXfUxdjdXlqVBUtlGk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TEi4Q2ZS8heyrnZg0UuRD9dV4snqtWJyavXuT15OE0+SwGz4fgEKthIH71p/GTEa9
+         uAhU6T3i4Ikp7OrnZ6uK5vE0/jo7t3zttmW4YYaPWoBcIlmxFcLzo4JplqFQA19gHt
+         TmprPVEUAr+tp94oEAkGORX/SjenW7CbaG3F4FSA=
+Date:   Mon, 29 Apr 2019 11:02:03 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [V3 2/2] dmaengine: fsl-dpaa2-qdma: Add NXP dpaa2 qDMA
+ controller driver for Layerscape SoCs
+Message-ID: <20190429053203.GF3845@vkoul-mobl.Dlink>
+References: <20190409072212.15860-1-peng.ma@nxp.com>
+ <20190409072212.15860-2-peng.ma@nxp.com>
 MIME-Version: 1.0
-References: <001a113ed5540f411c0568cc8418@google.com> <0000000000002cd22305879b22c4@google.com>
- <20190428185109.GD23075@ZenIV.linux.org.uk>
-In-Reply-To: <20190428185109.GD23075@ZenIV.linux.org.uk>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 29 Apr 2019 07:30:03 +0200
-Message-ID: <CACT4Y+bN415biwxFPDfZNGkSbTuTUh-+47rJr31MWT-z-LHXmg@mail.gmail.com>
-Subject: Re: INFO: task hung in __get_super
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409072212.15860-2-peng.ma@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 8:51 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Sun, Apr 28, 2019 at 11:14:06AM -0700, syzbot wrote:
-> >  down_read+0x49/0x90 kernel/locking/rwsem.c:26
-> >  __get_super.part.0+0x203/0x2e0 fs/super.c:788
-> >  __get_super include/linux/spinlock.h:329 [inline]
-> >  get_super+0x2e/0x50 fs/super.c:817
-> >  fsync_bdev+0x19/0xd0 fs/block_dev.c:525
-> >  invalidate_partition+0x36/0x60 block/genhd.c:1581
-> >  drop_partitions block/partition-generic.c:443 [inline]
-> >  rescan_partitions+0xef/0xa20 block/partition-generic.c:516
-> >  __blkdev_reread_part+0x1a2/0x230 block/ioctl.c:173
-> >  blkdev_reread_part+0x27/0x40 block/ioctl.c:193
-> >  loop_reread_partitions+0x1c/0x40 drivers/block/loop.c:633
-> >  loop_set_status+0xe57/0x1380 drivers/block/loop.c:1296
-> >  loop_set_status64+0xc2/0x120 drivers/block/loop.c:1416
-> >  lo_ioctl+0x8fc/0x2150 drivers/block/loop.c:1559
-> >  __blkdev_driver_ioctl block/ioctl.c:303 [inline]
-> >  blkdev_ioctl+0x6f2/0x1d10 block/ioctl.c:605
-> >  block_ioctl+0xee/0x130 fs/block_dev.c:1933
-> >  vfs_ioctl fs/ioctl.c:46 [inline]
-> >  file_ioctl fs/ioctl.c:509 [inline]
-> >  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-> >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-> >  __do_sys_ioctl fs/ioctl.c:720 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:718 [inline]
-> >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-> >  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> ioctl(..., BLKRRPART) blocked on ->s_umount in __get_super().
-> The trouble is, the only things holding ->s_umount appears to be
-> these:
->
-> > 2 locks held by syz-executor274/11716:
-> >  #0: 00000000a19e2025 (&type->s_umount_key#38/1){+.+.}, at:
-> > alloc_super+0x158/0x890 fs/super.c:228
-> >  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl
-> > drivers/block/loop.c:1514 [inline]
-> >  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150
-> > drivers/block/loop.c:1572
->
-> > 2 locks held by syz-executor274/11717:
-> >  #0: 00000000e185c083 (&type->s_umount_key#38/1){+.+.}, at:
-> > alloc_super+0x158/0x890 fs/super.c:228
-> >  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_simple_ioctl
-> > drivers/block/loop.c:1514 [inline]
-> >  #1: 00000000bde6230e (loop_ctl_mutex){+.+.}, at: lo_ioctl+0x266/0x2150
-> > drivers/block/loop.c:1572
->
-> ... and that's bollocks.  ->s_umount held there is that on freshly allocated
-> superblock.  It *MUST* be in mount(2); no other syscall should be able to
-> call alloc_super() in the first place.  So what the hell is that doing
-> trying to call lo_ioctl() inside mount(2)?  Something like isofs attempting
-> cdrom ioctls on the underlying device?
+On 09-04-19, 15:22, Peng Ma wrote:
+> DPPA2(Data Path Acceleration Architecture 2) qDMA
+> The qDMA supports channel virtualization by allowing DMA jobs to be enqueued
+> into different frame queues. Core can initiate a DMA transaction by preparing
+> a frame descriptor(FD) for each DMA job and enqueuing this job to a frame queue.
+> through a hardware portal. The qDMA prefetches DMA jobs from the frame queues.
+> It then schedules and dispatches to internal DMA hardware engines, which
+> generate read and write requests. Both qDMA source data and destination data can
+> be either contiguous or non-contiguous using one or more scatter/gather tables.
+> The qDMA supports global bandwidth flow control where all DMA transactions are
+> stalled if the bandwidth threshold has been reached. Also supported are
+> transaction based read throttling.
+> 
+> Add NXP dppa2 qDMA to support some of Layerscape SoCs.
+> such as: LS1088A, LS208xA, LX2, etc.
+> 
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> ---
+> changed for v3:
+> 	- Add depends on arm64 for dpaa2 qdma driver 
+> 	- The dpaa2_io_service_[de]register functions have a new parameter
+> 	So update all calls to some functions
+> 
+>  drivers/dma/Kconfig                     |    2 +
+>  drivers/dma/Makefile                    |    1 +
+>  drivers/dma/fsl-dpaa2-qdma/Kconfig      |    9 +
+>  drivers/dma/fsl-dpaa2-qdma/Makefile     |    3 +
+>  drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c |  782 +++++++++++++++++++++++++++++++
+>  drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.h |  152 ++++++
+>  6 files changed, 949 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/dma/fsl-dpaa2-qdma/Kconfig
+>  create mode 100644 drivers/dma/fsl-dpaa2-qdma/Makefile
+>  create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+>  create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.h
+> 
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index eaf78f4..08aae01 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -671,6 +671,8 @@ source "drivers/dma/sh/Kconfig"
+>  
+>  source "drivers/dma/ti/Kconfig"
+>  
+> +source "drivers/dma/fsl-dpaa2-qdma/Kconfig"
+> +
+>  # clients
+>  comment "DMA Clients"
+>  	depends on DMA_ENGINE
+> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> index 6126e1c..2499ed8 100644
+> --- a/drivers/dma/Makefile
+> +++ b/drivers/dma/Makefile
+> @@ -75,6 +75,7 @@ obj-$(CONFIG_UNIPHIER_MDMAC) += uniphier-mdmac.o
+>  obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
+>  obj-$(CONFIG_ZX_DMA) += zx_dma.o
+>  obj-$(CONFIG_ST_FDMA) += st_fdma.o
+> +obj-$(CONFIG_FSL_DPAA2_QDMA) += fsl-dpaa2-qdma/
+>  
+>  obj-y += mediatek/
+>  obj-y += qcom/
+> diff --git a/drivers/dma/fsl-dpaa2-qdma/Kconfig b/drivers/dma/fsl-dpaa2-qdma/Kconfig
+> new file mode 100644
+> index 0000000..258ed6b
+> --- /dev/null
+> +++ b/drivers/dma/fsl-dpaa2-qdma/Kconfig
+> @@ -0,0 +1,9 @@
+> +menuconfig FSL_DPAA2_QDMA
+> +	tristate "NXP DPAA2 QDMA"
+> +	depends on ARM64
+> +	depends on FSL_MC_BUS && FSL_MC_DPIO
+> +	select DMA_ENGINE
+> +	select DMA_VIRTUAL_CHANNELS
+> +	help
+> +	  NXP Data Path Acceleration Architecture 2 QDMA driver,
+> +	  using the NXP MC bus driver.
+> diff --git a/drivers/dma/fsl-dpaa2-qdma/Makefile b/drivers/dma/fsl-dpaa2-qdma/Makefile
+> new file mode 100644
+> index 0000000..c1d0226
+> --- /dev/null
+> +++ b/drivers/dma/fsl-dpaa2-qdma/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Makefile for the NXP DPAA2 qDMA controllers
+> +obj-$(CONFIG_FSL_DPAA2_QDMA) += dpaa2-qdma.o dpdmai.o
+> diff --git a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+> new file mode 100644
+> index 0000000..0cdde0f
+> --- /dev/null
+> +++ b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+> @@ -0,0 +1,782 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright 2014-2018 NXP
+> +
+> +/*
+> + * Author: Changming Huang <jerry.huang@nxp.com>
+> + *
+> + * Driver for the NXP QDMA engine with QMan mode.
+> + * Channel virtualization is supported through enqueuing of DMA jobs to,
+> + * or dequeuing DMA jobs from different work queues with QMan portal.
+> + * This module can be found on NXP LS2 SoCs.
+> + *
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/dmapool.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/iommu.h>
+> +#include <linux/sys_soc.h>
+> +#include <linux/fsl/mc.h>
+> +#include <soc/fsl/dpaa2-io.h>
+> +
+> +#include "../virt-dma.h"
+> +#include "dpdmai_cmd.h"
+> +#include "dpdmai.h"
+> +#include "dpaa2-qdma.h"
+> +
+> +static bool smmu_disable = true;
+> +
+> +static struct dpaa2_qdma_chan *to_dpaa2_qdma_chan(struct dma_chan *chan)
+> +{
+> +	return container_of(chan, struct dpaa2_qdma_chan, vchan.chan);
+> +}
+> +
+> +static struct dpaa2_qdma_comp *to_fsl_qdma_comp(struct virt_dma_desc *vd)
+> +{
+> +	return container_of(vd, struct dpaa2_qdma_comp, vdesc);
+> +}
+> +
+> +static int dpaa2_qdma_alloc_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct dpaa2_qdma_chan *dpaa2_chan = to_dpaa2_qdma_chan(chan);
+> +	struct dpaa2_qdma_engine *dpaa2_qdma = dpaa2_chan->qdma;
+> +	struct device *dev = &dpaa2_qdma->priv->dpdmai_dev->dev;
+> +
+> +	dpaa2_chan->fd_pool = dma_pool_create("fd_pool", dev,
+> +					      FD_POOL_SIZE, 32, 0);
+> +	if (!dpaa2_chan->fd_pool)
+> +		return -ENOMEM;
+> +
+> +	return dpaa2_qdma->desc_allocated++;
+> +}
+> +
+> +static void dpaa2_qdma_free_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct dpaa2_qdma_chan *dpaa2_chan = to_dpaa2_qdma_chan(chan);
+> +	struct dpaa2_qdma_engine *dpaa2_qdma = dpaa2_chan->qdma;
+> +	unsigned long flags;
+> +
+> +	LIST_HEAD(head);
+> +
+> +	spin_lock_irqsave(&dpaa2_chan->vchan.lock, flags);
+> +	vchan_get_all_descriptors(&dpaa2_chan->vchan, &head);
+> +	spin_unlock_irqrestore(&dpaa2_chan->vchan.lock, flags);
+> +
+> +	vchan_dma_desc_free_list(&dpaa2_chan->vchan, &head);
+> +
+> +	dpaa2_dpdmai_free_comp(dpaa2_chan, &dpaa2_chan->comp_used);
+> +	dpaa2_dpdmai_free_comp(dpaa2_chan, &dpaa2_chan->comp_free);
+> +
+> +	dma_pool_destroy(dpaa2_chan->fd_pool);
+> +	dpaa2_qdma->desc_allocated--;
+> +}
+> +
+> +/*
+> + * Request a command descriptor for enqueue.
+> + */
+> +static struct dpaa2_qdma_comp *
+> +dpaa2_qdma_request_desc(struct dpaa2_qdma_chan *dpaa2_chan)
+> +{
+> +	struct dpaa2_qdma_comp *comp_temp = NULL;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&dpaa2_chan->queue_lock, flags);
+> +	if (list_empty(&dpaa2_chan->comp_free)) {
+> +		spin_unlock_irqrestore(&dpaa2_chan->queue_lock, flags);
+> +		comp_temp = kzalloc(sizeof(*comp_temp), GFP_KERNEL);
 
+GFP_NOWAIT?
 
-How useful would it be to see full stacks in such lockdep reports?
-Now that we have lib/stackdepot.c that is capable of memorizing large
-number of stacks and converting them to a single u32, we could use it
-in more debug facilities. I remember +Peter mentioned some problems
-with interrupts/reenterancy of stackdepot, but I hope it's resolvable
-(at least in some conservative way as we already call stackdepot from
-interrupts).
-I think ODEBUG facility have the same problem of showing only single
-PC in reports for a past stack.
-Should I file an issue for this?
+> +		if (!comp_temp)
+> +			goto err;
+> +		comp_temp->fd_virt_addr =
+> +			dma_pool_alloc(dpaa2_chan->fd_pool, GFP_NOWAIT,
+> +				       &comp_temp->fd_bus_addr);
+> +		if (!comp_temp->fd_virt_addr)
 
+err handling seems incorrect, you dont clean up, caller doesnt check
+return!
 
-> Why do we have loop_func_table->ioctl(), BTW?  All in-tree instances are
-> either NULL or return -EINVAL unconditionally.  Considering that the
-> caller is
->                 err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
-> we could bloody well just get rid of cryptoloop_ioctl() (the only
-> non-NULL instance) and get rid of calling lo_simple_ioctl() in
-> lo_ioctl() switch's default.
->
-> Something like this:
->
-> diff --git a/drivers/block/cryptoloop.c b/drivers/block/cryptoloop.c
-> index 254ee7d54e91..f16468a562f5 100644
-> --- a/drivers/block/cryptoloop.c
-> +++ b/drivers/block/cryptoloop.c
-> @@ -167,12 +167,6 @@ cryptoloop_transfer(struct loop_device *lo, int cmd,
->  }
->
->  static int
-> -cryptoloop_ioctl(struct loop_device *lo, int cmd, unsigned long arg)
-> -{
-> -       return -EINVAL;
-> -}
-> -
-> -static int
->  cryptoloop_release(struct loop_device *lo)
->  {
->         struct crypto_sync_skcipher *tfm = lo->key_data;
-> @@ -188,7 +182,6 @@ cryptoloop_release(struct loop_device *lo)
->  static struct loop_func_table cryptoloop_funcs = {
->         .number = LO_CRYPT_CRYPTOAPI,
->         .init = cryptoloop_init,
-> -       .ioctl = cryptoloop_ioctl,
->         .transfer = cryptoloop_transfer,
->         .release = cryptoloop_release,
->         .owner = THIS_MODULE
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index bf1c61cab8eb..2ec162b80562 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -955,7 +955,6 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
->         lo->lo_flags = lo_flags;
->         lo->lo_backing_file = file;
->         lo->transfer = NULL;
-> -       lo->ioctl = NULL;
->         lo->lo_sizelimit = 0;
->         lo->old_gfp_mask = mapping_gfp_mask(mapping);
->         mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
-> @@ -1064,7 +1063,6 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
->
->         loop_release_xfer(lo);
->         lo->transfer = NULL;
-> -       lo->ioctl = NULL;
->         lo->lo_device = NULL;
->         lo->lo_encryption = NULL;
->         lo->lo_offset = 0;
-> @@ -1262,7 +1260,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
->         if (!xfer)
->                 xfer = &none_funcs;
->         lo->transfer = xfer->transfer;
-> -       lo->ioctl = xfer->ioctl;
->
->         if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
->              (info->lo_flags & LO_FLAGS_AUTOCLEAR))
-> @@ -1525,7 +1522,7 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
->                 err = loop_set_block_size(lo, arg);
->                 break;
->         default:
-> -               err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
-> +               err = -EINVAL;
->         }
->         mutex_unlock(&loop_ctl_mutex);
->         return err;
-> @@ -1567,10 +1564,9 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
->         case LOOP_SET_BLOCK_SIZE:
->                 if (!(mode & FMODE_WRITE) && !capable(CAP_SYS_ADMIN))
->                         return -EPERM;
-> -               /* Fall through */
-> +               return lo_simple_ioctl(lo, cmd, arg);
->         default:
-> -               err = lo_simple_ioctl(lo, cmd, arg);
-> -               break;
-> +               return -EINVAL;
->         }
->
->         return err;
-> diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-> index af75a5ee4094..56a9a0c161d7 100644
-> --- a/drivers/block/loop.h
-> +++ b/drivers/block/loop.h
-> @@ -84,7 +84,6 @@ struct loop_func_table {
->         int (*init)(struct loop_device *, const struct loop_info64 *);
->         /* release is called from loop_unregister_transfer or clr_fd */
->         int (*release)(struct loop_device *);
-> -       int (*ioctl)(struct loop_device *, int cmd, unsigned long arg);
->         struct module *owner;
->  };
->
+> +			goto err;
+> +
+> +		comp_temp->fl_virt_addr =
+> +			(void *)((struct dpaa2_fd *)
+> +				comp_temp->fd_virt_addr + 1);
+
+casts and pointer math, what could go wrong!! This doesnt smell right!
+
+> +		comp_temp->fl_bus_addr = comp_temp->fd_bus_addr +
+> +					sizeof(struct dpaa2_fd);
+
+why not use fl_virt_addr and get the bus_address?
+
+> +		comp_temp->desc_virt_addr =
+> +			(void *)((struct dpaa2_fl_entry *)
+> +				comp_temp->fl_virt_addr + 3);
+> +		comp_temp->desc_bus_addr = comp_temp->fl_bus_addr +
+> +				sizeof(struct dpaa2_fl_entry) * 3;
+
+pointer math in the two calls doesnt match and as I said doesnt look
+good...
+
+> +
+> +		comp_temp->qchan = dpaa2_chan;
+> +		return comp_temp;
+> +	}
+> +	comp_temp = list_first_entry(&dpaa2_chan->comp_free,
+> +				     struct dpaa2_qdma_comp, list);
+> +	list_del(&comp_temp->list);
+> +	spin_unlock_irqrestore(&dpaa2_chan->queue_lock, flags);
+> +
+> +	comp_temp->qchan = dpaa2_chan;
+> +err:
+> +	return comp_temp;
+> +}
+> +
+> +static void
+> +dpaa2_qdma_populate_fd(u32 format, struct dpaa2_qdma_comp *dpaa2_comp)
+> +{
+> +	struct dpaa2_fd *fd;
+> +
+> +	fd = (struct dpaa2_fd *)dpaa2_comp->fd_virt_addr;
+
+whats with the casts! you seem to like them! You are casting away from
+void!
+
+> +	memset(fd, 0, sizeof(struct dpaa2_fd));
+> +
+> +	/* fd populated */
+> +	dpaa2_fd_set_addr(fd, dpaa2_comp->fl_bus_addr);
+> +	/* Bypass memory translation, Frame list format, short length disable */
+> +	/* we need to disable BMT if fsl-mc use iova addr */
+> +	if (smmu_disable)
+> +		dpaa2_fd_set_bpid(fd, QMAN_FD_BMT_ENABLE);
+> +	dpaa2_fd_set_format(fd, QMAN_FD_FMT_ENABLE | QMAN_FD_SL_DISABLE);
+> +
+> +	dpaa2_fd_set_frc(fd, format | QDMA_SER_CTX);
+> +}
+> +
+> +/* first frame list for descriptor buffer */
+> +static void
+> +dpaa2_qdma_populate_first_framel(struct dpaa2_fl_entry *f_list,
+> +				 struct dpaa2_qdma_comp *dpaa2_comp,
+> +				 bool wrt_changed)
+> +{
+> +	struct dpaa2_qdma_sd_d *sdd;
+> +
+> +	sdd = (struct dpaa2_qdma_sd_d *)dpaa2_comp->desc_virt_addr;
+
+again
+
+> +	memset(sdd, 0, 2 * (sizeof(*sdd)));
+> +
+> +	/* source descriptor CMD */
+> +	sdd->cmd = cpu_to_le32(QDMA_SD_CMD_RDTTYPE_COHERENT);
+> +	sdd++;
+> +
+> +	/* dest descriptor CMD */
+> +	if (wrt_changed)
+> +		sdd->cmd = cpu_to_le32(LX2160_QDMA_DD_CMD_WRTTYPE_COHERENT);
+> +	else
+> +		sdd->cmd = cpu_to_le32(QDMA_DD_CMD_WRTTYPE_COHERENT);
+> +
+> +	memset(f_list, 0, sizeof(struct dpaa2_fl_entry));
+> +
+> +	/* first frame list to source descriptor */
+> +	dpaa2_fl_set_addr(f_list, dpaa2_comp->desc_bus_addr);
+> +	dpaa2_fl_set_len(f_list, 0x20);
+> +	dpaa2_fl_set_format(f_list, QDMA_FL_FMT_SBF | QDMA_FL_SL_LONG);
+> +
+> +	/* bypass memory translation */
+> +	if (smmu_disable)
+> +		f_list->bpid = cpu_to_le16(QDMA_FL_BMT_ENABLE);
+> +}
+> +
+> +/* source and destination frame list */
+> +static void
+> +dpaa2_qdma_populate_frames(struct dpaa2_fl_entry *f_list,
+> +			   dma_addr_t dst, dma_addr_t src,
+> +			   size_t len, uint8_t fmt)
+> +{
+> +	/* source frame list to source buffer */
+> +	memset(f_list, 0, sizeof(struct dpaa2_fl_entry));
+> +
+> +	dpaa2_fl_set_addr(f_list, src);
+> +	dpaa2_fl_set_len(f_list, len);
+> +
+> +	/* single buffer frame or scatter gather frame */
+> +	dpaa2_fl_set_format(f_list, (fmt | QDMA_FL_SL_LONG));
+> +
+> +	/* bypass memory translation */
+> +	if (smmu_disable)
+> +		f_list->bpid = cpu_to_le16(QDMA_FL_BMT_ENABLE);
+> +
+> +	f_list++;
+> +
+> +	/* destination frame list to destination buffer */
+> +	memset(f_list, 0, sizeof(struct dpaa2_fl_entry));
+> +
+> +	dpaa2_fl_set_addr(f_list, dst);
+> +	dpaa2_fl_set_len(f_list, len);
+> +	dpaa2_fl_set_format(f_list, (fmt | QDMA_FL_SL_LONG));
+> +	/* single buffer frame or scatter gather frame */
+> +	dpaa2_fl_set_final(f_list, QDMA_FL_F);
+> +	/* bypass memory translation */
+> +	if (smmu_disable)
+> +		f_list->bpid = cpu_to_le16(QDMA_FL_BMT_ENABLE);
+> +}
+> +
+> +static struct dma_async_tx_descriptor
+> +*dpaa2_qdma_prep_memcpy(struct dma_chan *chan, dma_addr_t dst,
+> +			dma_addr_t src, size_t len, ulong flags)
+> +{
+> +	struct dpaa2_qdma_chan *dpaa2_chan = to_dpaa2_qdma_chan(chan);
+> +	struct dpaa2_qdma_engine *dpaa2_qdma;
+> +	struct dpaa2_qdma_comp *dpaa2_comp;
+> +	struct dpaa2_fl_entry *f_list;
+> +	bool wrt_changed;
+> +	u32 format;
+> +
+> +	dpaa2_qdma = dpaa2_chan->qdma;
+> +	dpaa2_comp = dpaa2_qdma_request_desc(dpaa2_chan);
+> +	wrt_changed = (bool)dpaa2_qdma->qdma_wrtype_fixup;
+> +
+> +#ifdef LONG_FORMAT
+
+ compile flag and define, so else part is dead code??
+
+> +	format = QDMA_FD_LONG_FORMAT;
+> +#else
+> +	format = QDMA_FD_SHORT_FORMAT;
+> +#endif
+> +	/* populate Frame descriptor */
+> +	dpaa2_qdma_populate_fd(format, dpaa2_comp);
+> +
+> +	f_list = (struct dpaa2_fl_entry *)dpaa2_comp->fl_virt_addr;
+> +
+> +#ifdef LONG_FORMAT
+> +	/* first frame list for descriptor buffer (logn format) */
+> +	dpaa2_qdma_populate_first_framel(f_list, dpaa2_comp, wrt_changed);
+> +
+> +	f_list++;
+> +#endif
+> +
+> +	dpaa2_qdma_populate_frames(f_list, dst, src, len, QDMA_FL_FMT_SBF);
+> +
+> +	return vchan_tx_prep(&dpaa2_chan->vchan, &dpaa2_comp->vdesc, flags);
+> +}
+> +
+> +static enum
+> +dma_status dpaa2_qdma_tx_status(struct dma_chan *chan,
+> +				dma_cookie_t cookie,
+> +				struct dma_tx_state *txstate)
+> +{
+> +	return dma_cookie_status(chan, cookie, txstate);
+> +}
+> +
+> +static void dpaa2_qdma_issue_pending(struct dma_chan *chan)
+> +{
+> +	struct dpaa2_qdma_chan *dpaa2_chan = to_dpaa2_qdma_chan(chan);
+> +	struct dpaa2_qdma_engine *dpaa2_qdma = dpaa2_chan->qdma;
+> +	struct dpaa2_qdma_priv *priv = dpaa2_qdma->priv;
+> +	struct dpaa2_qdma_comp *dpaa2_comp;
+> +	struct virt_dma_desc *vdesc;
+> +	struct dpaa2_fd *fd;
+> +	unsigned long flags;
+> +	int err;
+> +
+> +	spin_lock_irqsave(&dpaa2_chan->queue_lock, flags);
+> +	spin_lock(&dpaa2_chan->vchan.lock);
+> +	if (vchan_issue_pending(&dpaa2_chan->vchan)) {
+> +		vdesc = vchan_next_desc(&dpaa2_chan->vchan);
+> +		if (!vdesc)
+> +			goto err_enqueue;
+> +		dpaa2_comp = to_fsl_qdma_comp(vdesc);
+> +
+> +		fd = (struct dpaa2_fd *)dpaa2_comp->fd_virt_addr;
+> +
+> +		list_del(&vdesc->node);
+> +		list_add_tail(&dpaa2_comp->list, &dpaa2_chan->comp_used);
+
+what does this list do?
+
+> +
+> +		/* TOBO: priority hard-coded to zero */
+
+You mean TODO?
+
+> +		err = dpaa2_io_service_enqueue_fq(NULL,
+> +				priv->tx_queue_attr[0].fqid, fd);
+> +		if (err) {
+> +			list_del(&dpaa2_comp->list);
+> +			list_add_tail(&dpaa2_comp->list,
+> +				      &dpaa2_chan->comp_free);
+> +		}
+> +	}
+> +err_enqueue:
+> +	spin_unlock(&dpaa2_chan->vchan.lock);
+> +	spin_unlock_irqrestore(&dpaa2_chan->queue_lock, flags);
+> +}
+> +
+> +static int __cold dpaa2_qdma_setup(struct fsl_mc_device *ls_dev)
+> +{
+> +	struct dpaa2_qdma_priv_per_prio *ppriv;
+> +	struct device *dev = &ls_dev->dev;
+> +	struct dpaa2_qdma_priv *priv;
+> +	u8 prio_def = DPDMAI_PRIO_NUM;
+> +	int err;
+> +	int i;
+> +
+> +	priv = dev_get_drvdata(dev);
+> +
+> +	priv->dev = dev;
+> +	priv->dpqdma_id = ls_dev->obj_desc.id;
+> +
+> +	/*Get the handle for the DPDMAI this interface is associate with */
+
+Please run checkpatch, it should have told you that you need space after
+comment marker /* foo...
+
+> +	err = dpdmai_open(priv->mc_io, 0, priv->dpqdma_id, &ls_dev->mc_handle);
+> +	if (err) {
+> +		dev_err(dev, "dpdmai_open() failed\n");
+> +		return err;
+> +	}
+> +	dev_info(dev, "Opened dpdmai object successfully\n");
+> +
+> +	err = dpdmai_get_attributes(priv->mc_io, 0, ls_dev->mc_handle,
+> +				    &priv->dpdmai_attr);
+> +	if (err) {
+> +		dev_err(dev, "dpdmai_get_attributes() failed\n");
+> +		return err;
+
+so you dont close what you opened in dpdmai_open() Please give a serious
+thought and testing to this driver
+
+> +	}
+> +
+> +	if (priv->dpdmai_attr.version.major > DPDMAI_VER_MAJOR) {
+> +		dev_err(dev, "DPDMAI major version mismatch\n"
+> +			     "Found %u.%u, supported version is %u.%u\n",
+> +				priv->dpdmai_attr.version.major,
+> +				priv->dpdmai_attr.version.minor,
+> +				DPDMAI_VER_MAJOR, DPDMAI_VER_MINOR);
+> +	}
+> +
+> +	if (priv->dpdmai_attr.version.minor > DPDMAI_VER_MINOR) {
+> +		dev_err(dev, "DPDMAI minor version mismatch\n"
+> +			     "Found %u.%u, supported version is %u.%u\n",
+> +				priv->dpdmai_attr.version.major,
+> +				priv->dpdmai_attr.version.minor,
+> +				DPDMAI_VER_MAJOR, DPDMAI_VER_MINOR);
+
+what is the implication of these error, why not bail out on these?
+
+> +	}
+> +
+> +	priv->num_pairs = min(priv->dpdmai_attr.num_of_priorities, prio_def);
+> +	ppriv = kcalloc(priv->num_pairs, sizeof(*ppriv), GFP_KERNEL);
+
+what is the context of the fn, sleepy, atomic?
+
+> +	if (!ppriv) {
+> +		dev_err(dev, "kzalloc for ppriv failed\n");
+
+this need not be logged, core will do so
+
+> +		return -1;
+
+really -1??
+
+I think this driver needs more work, please fix these issues in the
+comments above and also see in rest of the code
+
+-- 
+~Vinod
