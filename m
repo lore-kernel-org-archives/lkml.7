@@ -2,99 +2,203 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38ACC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65948C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40BD320651
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:04:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CE28/wGV"
+	by mail.kernel.org (Postfix) with ESMTP id 3735C20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbfD2PEF (ORCPT
+        id S1728595AbfD2PEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:04:05 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:42138 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728376AbfD2PEE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:04:04 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 98CE4C002F;
-        Mon, 29 Apr 2019 15:04:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556550245; bh=EP0l9O+XUelRrIR09obEO6YxvbV7t+C4HdJOJBUa3uI=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=CE28/wGVwxEHboixUzXvBZ7W0piorfaFhmjtBZRhP4xYW+cXCsLqM9ARST+iO2GB1
-         2lmPyX06uBcZ32qFp054wZojyhLd/027tG3kH2nsHICGO+Nz3BVKw9vxHmj2uLhv2m
-         LquYPNX+IDbVZN9WeMFkIRlaqEptiXCg7U64vya21NE/y4j+mN83Juf+EM/pKOllWc
-         ylXLrpNe5cvhyhoYTJCHDF6E09DIbEUQmkgDtYnWQ3womAmskL0pzdFAuhajVFV2cX
-         OI4hPVl+aw0bRpWstwOhobMyeGW1eomffJIM22vstnJyp+4SD+STwP2NhlCIoTIL0i
-         bs+w9Mp89a9wg==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 94C3FA0096;
-        Mon, 29 Apr 2019 15:04:02 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 29 Apr 2019 08:04:02 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
- 29 Apr 2019 17:04:00 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Biao Huang <biao.huang@mediatek.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
-        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>
-Subject: RE: [PATCH 2/2] net-next: stmmac: add mdio clause 45 access from
- mac device for dwmac4
-Thread-Topic: [PATCH 2/2] net-next: stmmac: add mdio clause 45 access from
- mac device for dwmac4
-Thread-Index: AQHU/lXExFDw5bAlc0G9MPOfQZ0kMKZTPDhg
-Date:   Mon, 29 Apr 2019 15:03:59 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B46E586@DE02WEMBXB.internal.synopsys.com>
-References: <1556519724-1576-1-git-send-email-biao.huang@mediatek.com>
- <1556519724-1576-3-git-send-email-biao.huang@mediatek.com>
-In-Reply-To: <1556519724-1576-3-git-send-email-biao.huang@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 29 Apr 2019 11:04:49 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59820 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728253AbfD2PEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:04:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D99E680D;
+        Mon, 29 Apr 2019 08:04:47 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 503A83F5C1;
+        Mon, 29 Apr 2019 08:04:46 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 16:04:43 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     kan.liang@linux.intel.com
+Cc:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, eranian@google.com, tj@kernel.org,
+        ak@linux.intel.com
+Subject: Re: [PATCH 1/4] perf: Fix system-wide events miscounting during
+ cgroup monitoring
+Message-ID: <20190429150443.GB2182@lakrids.cambridge.arm.com>
+References: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
+ <1556549045-71814-2-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556549045-71814-2-git-send-email-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
-Date: Mon, Apr 29, 2019 at 07:35:24
+On Mon, Apr 29, 2019 at 07:44:02AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> When counting system-wide events and cgroup events simultaneously, the
+> value of system-wide events are miscounting. For example,
+> 
+>     perf stat -e cycles,instructions -e cycles,instructions -G
+> cgroup1,cgroup1,cgroup2,cgroup2 -a -e cycles,instructions -I 1000
+> 
+>      1.096265502     12,375,398,872      cycles              cgroup1
+>      1.096265502      8,396,184,503      instructions        cgroup1
+>  #    0.10  insn per cycle
+>      1.096265502    109,609,027,112      cycles              cgroup2
+>      1.096265502     11,533,690,148      instructions        cgroup2
+>  #    0.14  insn per cycle
+>      1.096265502    121,672,937,058      cycles
+>      1.096265502     19,331,496,727      instructions               #
+> 0.24  insn per cycle
+> 
+> The events are identical events for system-wide and cgroup. The
+> value of system-wide events is less than the sum of cgroup events,
+> which is wrong.
+> 
+> Both system-wide and cgroup are per-cpu. They share the same cpuctx
+> groups, cpuctx->flexible_groups/pinned_groups.
+> In context switch, cgroup switch tries to schedule all the events in
+> the cpuctx groups. The unmatched cgroup events can be filtered by its
+> event->cgrp. However, system-wide events, which event->cgrp is NULL, are
+> unconditionally switched, which causes miscounting.
 
-> +		value |=3D priv->hw->mii.cl45_en;
+Why exactly does that cause mis-counting?
 
-This tells the MAC that a C45 Capable PHY is connected so it should be=20
-written before anything else. Maybe that explains the need for the=20
-mdelay() that you have in the code ?
+Are the system-wide events not switched back in? Or filtered
+erroneously?
+
+> Introduce cgrp_switch in cpuctx to indicate the cgroup context switch.
+> If it's system-wide event in context switch, don't try to switch it.
+> 
+> Fixes: e5d1367f17ba ("perf: Add cgroup support")
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  include/linux/perf_event.h |  1 +
+>  kernel/events/core.c       | 30 ++++++++++++++++++++++++++++--
+>  2 files changed, 29 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index e47ef76..039e2f2 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -795,6 +795,7 @@ struct perf_cpu_context {
+>  #ifdef CONFIG_CGROUP_PERF
+>  	struct perf_cgroup		*cgrp;
+>  	struct list_head		cgrp_cpuctx_entry;
+> +	unsigned int			cgrp_switch		:1;
+>  #endif
+>  
+>  	struct list_head		sched_cb_entry;
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index dc7dead..388dd42 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -809,6 +809,7 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+>  
+>  		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+>  		perf_pmu_disable(cpuctx->ctx.pmu);
+> +		cpuctx->cgrp_switch = true;
+>  
+>  		if (mode & PERF_CGROUP_SWOUT) {
+>  			cpu_ctx_sched_out(cpuctx, EVENT_ALL);
+> @@ -832,6 +833,7 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+>  							     &cpuctx->ctx);
+>  			cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
+>  		}
+> +		cpuctx->cgrp_switch = false;
+>  		perf_pmu_enable(cpuctx->ctx.pmu);
+>  		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+>  	}
+> @@ -2944,13 +2946,25 @@ static void ctx_sched_out(struct perf_event_context *ctx,
+>  
+>  	perf_pmu_disable(ctx->pmu);
+>  	if (is_active & EVENT_PINNED) {
+> -		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list)
+> +		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list) {
+> +#ifdef CONFIG_CGROUP_PERF
+> +			/* Don't sched system-wide event when cgroup context switch */
+> +			if (cpuctx->cgrp_switch && !event->cgrp)
+> +				continue;
+> +#endif
+
+This pattern is duplicated several times, and should probably be a
+helper like:
+
+static bool skip_cgroup_switch(struct perf_cpu_context *cpuctx,
+			       struct perf_event *event);
+{
+	return IS_ENABLED(CONFIG_CGROUP_PERF) &&
+	       cpuctx->cgrp_switch &&
+	       !event->cgrp;
+}
+
+... allowing the above to be an unconditional:
+
+	if (skip_cgroup_switch(cpuctx, event))
+		continue;
+
+... and likewise for the other cases.
 
 Thanks,
-Jose Miguel Abreu
+Mark.
+
+>  			group_sched_out(event, cpuctx, ctx);
+> +		}
+>  	}
+>  
+>  	if (is_active & EVENT_FLEXIBLE) {
+> -		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list)
+> +		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list) {
+> +#ifdef CONFIG_CGROUP_PERF
+> +			/* Don't sched system-wide event when cgroup context switch */
+> +			if (cpuctx->cgrp_switch && !event->cgrp)
+> +				continue;
+> +#endif
+>  			group_sched_out(event, cpuctx, ctx);
+> +		}
+>  	}
+>  	perf_pmu_enable(ctx->pmu);
+>  }
+> @@ -3280,6 +3294,12 @@ static int pinned_sched_in(struct perf_event *event, void *data)
+>  	if (event->state <= PERF_EVENT_STATE_OFF)
+>  		return 0;
+>  
+> +#ifdef CONFIG_CGROUP_PERF
+> +	/* Don't sched system-wide event when cgroup context switch */
+> +	if (sid->cpuctx->cgrp_switch && !event->cgrp)
+> +		return 0;
+> +#endif
+> +
+>  	if (!event_filter_match(event))
+>  		return 0;
+>  
+> @@ -3305,6 +3325,12 @@ static int flexible_sched_in(struct perf_event *event, void *data)
+>  	if (event->state <= PERF_EVENT_STATE_OFF)
+>  		return 0;
+>  
+> +#ifdef CONFIG_CGROUP_PERF
+> +	/* Don't sched system-wide event when cgroup context switch */
+> +	if (sid->cpuctx->cgrp_switch && !event->cgrp)
+> +		return 0;
+> +#endif
+> +
+>  	if (!event_filter_match(event))
+>  		return 0;
+>  
+> -- 
+> 2.7.4
+> 
