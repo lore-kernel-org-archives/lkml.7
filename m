@@ -2,309 +2,133 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E84C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684E2C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBB0F20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D1F20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="FQ9o14Ed"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Q5o3w0VV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbfD2PfD (ORCPT
+        id S1728699AbfD2Pf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:35:03 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43267 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728555AbfD2PfB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:35:01 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t81so8623744oig.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 08:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kinvolk.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NCmEesKQZll6z8qms+OpZ8kCs6Eb9bECUhGbIFGCjHY=;
-        b=FQ9o14EdK9BE4hJyTRxHvBjI8WUQ9YLVspWY6yiOcsEhTAmKZSm8uIv1GgtotklAmu
-         lrFPviWMOAXoBKUTmNzyIwoL8cVHH5TQxVxXWMrrmWPQDbYRNGMQlGfpWH7ngFq2HOln
-         Mo7fCW6RVSce0XqXcqFdEkBIeVrDQj8IhTBW0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NCmEesKQZll6z8qms+OpZ8kCs6Eb9bECUhGbIFGCjHY=;
-        b=IKD5I2XCjs9Mtv4+jBURJyHJktIDysfotlP8V2UjbSBT7mS88SbZJrHKYnUYpxCiVF
-         9v/2p+//1YrB9zNiD3yFdBUy+XCYv9gL91oYezNuSPPnrcpYUS3kXn5A7f6G3LaatlqT
-         pCfIpOeDWEPNp21b4/GYXWuQtBVV/gkFuuuT+p+gVvbLfJLGyQX/YnUElOuHR69a+ay5
-         JSpROYFQRFXDN7FRxqUPhadIuhwcRRtOHK0OTnFj/Ol44vc0Yp1Cy9n6r1t64YLtI9oh
-         ++nMC+3AQ6ALrA+52D3fwJZb21g/hQcAs1m1Q14F+XjF88U8Nk8wPTq4G1GMLIl7StqK
-         AAPw==
-X-Gm-Message-State: APjAAAXaUH29tACCAuu1sRJpQuZX+JhdUu0QURJMm7yjy/bR5SbiRCpm
-        fhUkqV5UKI1YHnOSxjgNJtvAWS4uDnY98OUZTK4DHA==
-X-Google-Smtp-Source: APXvYqxjAGhcRBlWXEqyEs3QV3IHzccHauIUWfnwvaaIE/CDiE6g1L2U/eHYbqjkZXPfJd9TzBI4S1GWgXTfwMtpXIc=
-X-Received: by 2002:aca:540a:: with SMTP id i10mr3317988oib.54.1556552099454;
- Mon, 29 Apr 2019 08:34:59 -0700 (PDT)
+        Mon, 29 Apr 2019 11:35:58 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:39727 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728501AbfD2Pf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:35:57 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44t7z96kGcz9vD31;
+        Mon, 29 Apr 2019 17:35:49 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Q5o3w0VV; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id kbO7e4z3Oado; Mon, 29 Apr 2019 17:35:49 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44t7z95Zr4z9vD30;
+        Mon, 29 Apr 2019 17:35:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1556552149; bh=XXe83/pZb9AFMZAVXoUoxnryoMR8eaO+qKHpnqnFOB8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Q5o3w0VVtDkuaQJ720CrXVg1D1EEff1tyfslomh/gdc4+yk1/Dkug0ZmjOpliak9E
+         SNq24Cb/75QU4Vbo8GkPeMa5ZqrlcCuuxHVxWzptG/UbSIeVfGgHzF9GoK962b/vuv
+         2GQOk16RVxWf7DSmpu538h1my8dNOApiD0oga2ow=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EDA2C8B8B4;
+        Mon, 29 Apr 2019 17:35:54 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id P3bLUxeO-Wfq; Mon, 29 Apr 2019 17:35:54 +0200 (CEST)
+Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.6])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AEE718B8B3;
+        Mon, 29 Apr 2019 17:35:54 +0200 (CEST)
+Subject: Re: [RESEND PATCH v3 09/11] powerpc/mm/radix: mark
+ __radix__flush_tlb_range_psize() as __always_inline
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Cc:     linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Mathieu Malaterre <malat@debian.org>
+References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
+ <20190423034959.13525-10-yamada.masahiro@socionext.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <40b48947-b80e-7971-376d-52b594e26d17@c-s.fr>
+Date:   Mon, 29 Apr 2019 17:35:53 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190426154848.23490-1-alban@kinvolk.io> <CAH3MdRViqmPWm9UaOEO3ZKa5AodL7AGZ4Bb0FzyDcoqRoDmqNw@mail.gmail.com>
-In-Reply-To: <CAH3MdRViqmPWm9UaOEO3ZKa5AodL7AGZ4Bb0FzyDcoqRoDmqNw@mail.gmail.com>
-From:   Alban Crequy <alban@kinvolk.io>
-Date:   Mon, 29 Apr 2019 17:34:47 +0200
-Message-ID: <CADZs7q4rmRinZPMGVAnS95hA-prjdx7igFmaO=K_du13LsPm7g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 1/4] bpf: sock ops: add netns ino and dev in
- bpf context
-To:     Y Song <ys114321@gmail.com>
-Cc:     Alban Crequy <alban.crequy@gmail.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190423034959.13525-10-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 6:35 PM Y Song <ys114321@gmail.com> wrote:
->
-> On Fri, Apr 26, 2019 at 8:50 AM Alban Crequy <alban.crequy@gmail.com> wrote:
-> >
-> > From: Alban Crequy <alban@kinvolk.io>
-> >
-> > sockops programs can now access the network namespace inode and device
-> > via (struct bpf_sock_ops)->netns_ino and ->netns_dev. This can be useful
-> > to apply different policies on different network namespaces.
-> >
-> > In the unlikely case where network namespaces are not compiled in
-> > (CONFIG_NET_NS=n), the verifier will not allow access to ->netns_*.
-> >
-> > The generated BPF bytecode for netns_ino is loading the correct inode
-> > number at the time of execution.
-> >
-> > However, the generated BPF bytecode for netns_dev is loading an
-> > immediate value determined at BPF-load-time by looking at the initial
-> > network namespace. In practice, this works because all netns currently
-> > use the same virtual device. If this was to change, this code would need
-> > to be updated too.
-> >
-> > Signed-off-by: Alban Crequy <alban@kinvolk.io>
-> >
-> > ---
-> >
-> > Changes since v1:
-> > - add netns_dev (review from Alexei)
-> >
-> > Changes since v2:
-> > - replace __u64 by u64 in kernel code (review from Y Song)
-> > - remove unneeded #else branch: program would be rejected in
-> >   is_valid_access (review from Y Song)
-> > - allow partial reads (<u64) (review from Y Song)
-> >
-> >   Note: I have not been able to fully test partial reads on netns_dev.
-> > The following patches check partial reads in the verifier but it does
-> > not actually execute the program to check if partial reads generate the
-> > correct value. I tried to write a BPF program in C and declare the
-> > struct bpf_sock_ops as a volatile variable and I could get llvm to
-> > generate the BPF instructions to do partial loads. But then, I get the
-> > verifier error "dereference of modified ctx ptr R2 off=184 disallowed",
-> > explained in https://www.spinics.net/lists/netdev/msg531582.html
-> > What do you think should be done here?
->
-> You added partial read tests in test_verifier with raw asm codes.
-> It should be good enough.
->
-> For the compiler generated code causing verifier error, will take
-> a detailed look later.
 
-Thanks! To clarify my note: the patches I sent on the mailing list
-don't generate a verifier error.
 
-It only errors out when I try partial reads in C. You can see the code
-of the failed attempt that generate the error here:
-https://github.com/kinvolk/linux/blob/c5fe70990c897a866c7006a0068876b0fde9ee4d/tools/testing/selftests/bpf/test_sockmap_kern.h#L146-L176
+Le 23/04/2019 à 05:49, Masahiro Yamada a écrit :
+> This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
+> place. We need to eliminate potential issues beforehand.
 
-So if the partial read tests in test_verifier with raw asm codes are
-good enough, there is no need to investigate more on that.
+How did you identify the functions requiring __always_inline as this one 
+? Just by 'test and see if it fails', or did you have some script or so ?
 
-> Also I did not see a cover letter. For a series with 4 patches, it would be
-> the best if you can provide a separate cover letter.
+Here the problem is that one of the parameters of the function are used 
+as "immediate" constraint for the inline assembly, therefore requiring 
+the function to always be inline.
 
-Ok, I will do that for the next iteration.
+I guess this should be explained in the commit log and I'm wondering how 
+you ensure that you did identify all functions like this.
 
-> > ---
-> >  include/uapi/linux/bpf.h |  2 +
-> >  net/core/filter.c        | 94 ++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 96 insertions(+)
-> >
-> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > index eaf2d3284248..f4f841dde42c 100644
-> > --- a/include/uapi/linux/bpf.h
-> > +++ b/include/uapi/linux/bpf.h
-> > @@ -3213,6 +3213,8 @@ struct bpf_sock_ops {
-> >         __u32 sk_txhash;
-> >         __u64 bytes_received;
-> >         __u64 bytes_acked;
-> > +       __u64 netns_dev;
-> > +       __u64 netns_ino;
-> >  };
-> >
-> >  /* Definitions for bpf_sock_ops_cb_flags */
-> > diff --git a/net/core/filter.c b/net/core/filter.c
-> > index 2f88baf39cc2..9c77464b1501 100644
-> > --- a/net/core/filter.c
-> > +++ b/net/core/filter.c
-> > @@ -75,6 +75,8 @@
-> >  #include <net/seg6_local.h>
-> >  #include <net/lwtunnel.h>
-> >  #include <net/ipv6_stubs.h>
-> > +#include <linux/kdev_t.h>
-> > +#include <linux/proc_ns.h>
-> >
-> >  /**
-> >   *     sk_filter_trim_cap - run a packet through a socket filter
-> > @@ -6810,6 +6812,24 @@ static bool sock_ops_is_valid_access(int off, int size,
-> >                 }
-> >         } else {
-> >                 switch (off) {
-> > +               case offsetof(struct bpf_sock_ops, netns_dev) ...
-> > +                    offsetof(struct bpf_sock_ops, netns_dev) + sizeof(u64) - 1:
-> > +#ifdef CONFIG_NET_NS
-> > +                       if (off - offsetof(struct bpf_sock_ops, netns_dev)
-> > +                           + size > sizeof(u64))
->
-> This will allow something off = 1, size = 4. This is not what we want as
-> the access is not properly aligned.
+Christophe
 
-sock_ops_is_valid_access() does not allow off = 1, size = 4. There is
-this check at the beginning of the function:
-        if (off % size != 0)
-                return false;
-
-> You can look at function bpf_skb_is_valid_access(), esp. the two lines below:
->           bpf_ctx_record_field_size(info, size_default);
->            if (!bpf_ctx_narrow_access_ok(off, size, size_default))
->                    return false;
-
-Thanks for the pointer! I now see that if I use them, my code in
-sock_ops_convert_ctx_access() can be simplified.
-
-> > +                               return false;
-> > +#else
-> > +                       return false;
-> > +#endif
-> > +                       break;
-> > +               case offsetof(struct bpf_sock_ops, netns_ino):
-> > +#ifdef CONFIG_NET_NS
-> > +                       if (size != sizeof(u64))
-> > +                               return false;
-> > +#else
-> > +                       return false;
-> > +#endif
-> > +                       break;
-> >                 case bpf_ctx_range_till(struct bpf_sock_ops, bytes_received,
-> >                                         bytes_acked):
-> >                         if (size != sizeof(__u64))
-> > @@ -7727,6 +7747,11 @@ static u32 sock_addr_convert_ctx_access(enum bpf_access_type type,
-> >         return insn - insn_buf;
-> >  }
-> >
-> > +static struct ns_common *sockops_netns_cb(void *private_data)
-> > +{
-> > +       return &init_net.ns;
-> > +}
-> > +
-> >  static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
-> >                                        const struct bpf_insn *si,
-> >                                        struct bpf_insn *insn_buf,
-> > @@ -7735,6 +7760,10 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
-> >  {
-> >         struct bpf_insn *insn = insn_buf;
-> >         int off;
-> > +       struct inode *ns_inode;
-> > +       struct path ns_path;
-> > +       u64 netns_dev;
-> > +       void *res;
-> >
-> >  /* Helper macro for adding read access to tcp_sock or sock fields. */
-> >  #define SOCK_OPS_GET_FIELD(BPF_FIELD, OBJ_FIELD, OBJ)                        \
-> > @@ -7981,6 +8010,71 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
-> >                 SOCK_OPS_GET_OR_SET_FIELD(sk_txhash, sk_txhash,
-> >                                           struct sock, type);
-> >                 break;
-> > +
-> > +       case offsetof(struct bpf_sock_ops, netns_dev) ...
-> > +            offsetof(struct bpf_sock_ops, netns_dev) + sizeof(u64) - 1:
-> > +#ifdef CONFIG_NET_NS
-> > +               /* We get the netns_dev at BPF-load-time and not at
-> > +                * BPF-exec-time. We assume that netns_dev is a constant.
-> > +                */
-> > +               res = ns_get_path_cb(&ns_path, sockops_netns_cb, NULL);
-> > +               if (IS_ERR(res)) {
-> > +                       netns_dev = 0;
-> > +               } else {
-> > +                       ns_inode = ns_path.dentry->d_inode;
-> > +                       netns_dev = new_encode_dev(ns_inode->i_sb->s_dev);
-> > +               }
-> > +               off = si->off;
-> > +               off -= offsetof(struct bpf_sock_ops, netns_dev);
-> > +               switch (BPF_LDST_BYTES(si)) {
-> > +               case sizeof(u64):
-> > +                       *insn++ = BPF_MOV64_IMM(si->dst_reg, netns_dev);
-> > +                       break;
-> > +               case sizeof(u32):
-> > +                       netns_dev = *(u32 *)(((char *)&netns_dev) + off);
-> > +                       *insn++ = BPF_MOV32_IMM(si->dst_reg, netns_dev);
-> > +                       break;
-> > +               case sizeof(u16):
-> > +                       netns_dev = *(u16 *)(((char *)&netns_dev) + off);
-> > +                       *insn++ = BPF_MOV32_IMM(si->dst_reg, netns_dev);
-> > +                       break;
-> > +               case sizeof(u8):
-> > +                       netns_dev = *(u8 *)(((char *)&netns_dev) + off);
-> > +                       *insn++ = BPF_MOV32_IMM(si->dst_reg, netns_dev);
-> > +                       break;
-> > +               }
-> > +#endif
-> > +               break;
-> > +
-> > +       case offsetof(struct bpf_sock_ops, netns_ino):
-> > +#ifdef CONFIG_NET_NS
-> > +               /* Loading: sk_ops->sk->__sk_common.skc_net.net->ns.inum
-> > +                * Type: (struct bpf_sock_ops_kern *)
-> > +                *       ->(struct sock *)
-> > +                *       ->(struct sock_common)
-> > +                *       .possible_net_t
-> > +                *       .(struct net *)
-> > +                *       ->(struct ns_common)
-> > +                *       .(unsigned int)
-> > +                */
-> > +               BUILD_BUG_ON(offsetof(struct sock, __sk_common) != 0);
-> > +               BUILD_BUG_ON(offsetof(possible_net_t, net) != 0);
-> > +               *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> > +                                               struct bpf_sock_ops_kern, sk),
-> > +                                     si->dst_reg, si->src_reg,
-> > +                                     offsetof(struct bpf_sock_ops_kern, sk));
-> > +               *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> > +                                               possible_net_t, net),
-> > +                                     si->dst_reg, si->dst_reg,
-> > +                                     offsetof(struct sock_common, skc_net));
-> > +               *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> > +                                               struct ns_common, inum),
-> > +                                     si->dst_reg, si->dst_reg,
-> > +                                     offsetof(struct net, ns) +
-> > +                                     offsetof(struct ns_common, inum));
-> > +#endif
-> > +               break;
-> > +
-> >         }
-> >         return insn - insn_buf;
-> >  }
-> > --
-> > 2.20.1
-> >
+> 
+> If it is enabled for powerpc, the following error is reported:
+> 
+> arch/powerpc/mm/tlb-radix.c: In function '__radix__flush_tlb_range_psize':
+> arch/powerpc/mm/tlb-radix.c:104:2: error: asm operand 3 probably doesn't match constraints [-Werror]
+>    asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
+>    ^~~
+> arch/powerpc/mm/tlb-radix.c:104:2: error: impossible constraint in 'asm'
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> Changes in v3: None
+> Changes in v2:
+>    - split into a separate patch
+> 
+>   arch/powerpc/mm/tlb-radix.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
+> index 6a23b9ebd2a1..a2b2848f0ae3 100644
+> --- a/arch/powerpc/mm/tlb-radix.c
+> +++ b/arch/powerpc/mm/tlb-radix.c
+> @@ -928,7 +928,7 @@ void radix__tlb_flush(struct mmu_gather *tlb)
+>   	tlb->need_flush_all = 0;
+>   }
+>   
+> -static inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
+> +static __always_inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
+>   				unsigned long start, unsigned long end,
+>   				int psize, bool also_pwc)
+>   {
+> 
