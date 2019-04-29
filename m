@@ -2,290 +2,161 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A1BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D27C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C851F20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33583215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cjy/Ls/J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2Bgw87t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbfD2Sd6 (ORCPT
+        id S1729116AbfD2SfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:33:58 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50069 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbfD2Sd6 (ORCPT
+        Mon, 29 Apr 2019 14:35:00 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35982 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728962AbfD2Se7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:33:58 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3TIWeQV1027062
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 29 Apr 2019 11:32:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3TIWeQV1027062
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556562761;
-        bh=HNzyHm2E21S5Gbgg0B/008ePq/R4+OjiNJA63VMyUtQ=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=cjy/Ls/Jm+H/lC9QuUTB+d5/zjmfy47wCd9tdA3uwA/HZnt4+zbQOa13zf0Xri8gQ
-         H3dsFlLJIujpYUzYAYJkmC/1axU1dPF4TbSpFhbr9EfQ15k6ioxo+Qig/L0O/p2t5A
-         5JBWZeg9w6QCRg8YWCbRVLFPfteDz5z21Dyh81P6d4okt/fL722dKknS0CKbwlTD59
-         nV7lVw49FVbwDPCqldUf1p46W6+Vyrooc8MYXCWsTN6k/TO9aHFs96ZHkw0ac6Qadu
-         m8lRd0gxqQh1AeYwotbnJhm70x031LV1Q5c5qWSUyVU9+tQ0ITm1lesd6z2rXhWGDh
-         foPuJZ2a4uf6w==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3TIWdse1027058;
-        Mon, 29 Apr 2019 11:32:39 -0700
-Date:   Mon, 29 Apr 2019 11:32:39 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-c0cfc337264c5e02e0bc79de6b62857999588879@git.kernel.org>
-Cc:     mbenes@suse.cz, rppt@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org, tom.zanussi@linux.intel.com,
-        jthumshirn@suse.de, jpoimboe@redhat.com, cl@linux.com,
-        maarten.lankhorst@linux.intel.com, agk@redhat.com, hpa@zytor.com,
-        adobriyan@gmail.com, robin.murphy@arm.com, clm@fb.com,
-        akinobu.mita@gmail.com, hch@lst.de, luto@kernel.org,
-        catalin.marinas@arm.com, joonas.lahtinen@linux.intel.com,
-        rostedt@goodmis.org, mingo@kernel.org, rientjes@google.com,
-        penberg@kernel.org, glider@google.com, daniel@ffwll.ch,
-        snitzer@redhat.com, jani.nikula@linux.intel.com,
-        aryabinin@virtuozzo.com, dsterba@suse.com,
-        akpm@linux-foundation.org, rodrigo.vivi@intel.com,
-        airlied@linux.ie, dvyukov@google.com, m.szyprowski@samsung.com,
-        tglx@linutronix.de, josef@toxicpanda.com
-Reply-To: jpoimboe@redhat.com, tom.zanussi@linux.intel.com,
-          jthumshirn@suse.de, linux-kernel@vger.kernel.org,
-          rppt@linux.vnet.ibm.com, mbenes@suse.cz, robin.murphy@arm.com,
-          maarten.lankhorst@linux.intel.com, hpa@zytor.com,
-          adobriyan@gmail.com, agk@redhat.com, cl@linux.com,
-          rostedt@goodmis.org, mingo@kernel.org, catalin.marinas@arm.com,
-          joonas.lahtinen@linux.intel.com, hch@lst.de, luto@kernel.org,
-          clm@fb.com, akinobu.mita@gmail.com, rientjes@google.com,
-          daniel@ffwll.ch, glider@google.com, penberg@kernel.org,
-          akpm@linux-foundation.org, jani.nikula@linux.intel.com,
-          aryabinin@virtuozzo.com, dsterba@suse.com, snitzer@redhat.com,
-          m.szyprowski@samsung.com, airlied@linux.ie, dvyukov@google.com,
-          rodrigo.vivi@intel.com, josef@toxicpanda.com, tglx@linutronix.de
-In-Reply-To: <20190425094801.414574828@linutronix.de>
-References: <20190425094801.414574828@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/stacktrace] lib/stackdepot: Provide functions which
- operate on plain storage arrays
-Git-Commit-ID: c0cfc337264c5e02e0bc79de6b62857999588879
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 29 Apr 2019 14:34:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v80so1158755pfa.3;
+        Mon, 29 Apr 2019 11:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=R95+cNuWkIFZnhdtaDboYNwHP5ScfwcWH/l0fWKKkd8=;
+        b=K2Bgw87tnwhI/93ci3Ltv0UORl164W9D6VfuYRN8aASftib4j62ARHOR8NJkgmsGwd
+         kn4f09U0KwCIQ+TPINseJLDOfBWW88aGGA5MFNRZPki2wyjg3pDl53rchUfuy0qzq3e0
+         u8t5+Qq5zKLaEYGIVhQxn0EqefFcP1TxDOrdHI2JXgG6Pgfg1/1XAVp7abz7SW71gNHC
+         nWhXlCAAQ70vhezdPhMbQM0Qew9BoBEWxFcTy1Eu/7Dj+tvlZdvFY5+kFhARYn2/5T9B
+         W8svw1yJbsSQW62U55pTcqnofCUM3zUg+4osOYdoeHSU7lIj6rjOe6hxFA21zXBtzHCW
+         Lr+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=R95+cNuWkIFZnhdtaDboYNwHP5ScfwcWH/l0fWKKkd8=;
+        b=szBa6vgTkrD1Ht+d5/Wi6o2s1kvhrO+u618oL13KY/HXrOuY0fbEuoy4ZPuyMiideL
+         yf9cl8SsjZ+pscquOZYCTjrJLyQ8+hfHMBOSF6xUbDZ8p1J9hOas0COj8IxUsRl7wMDd
+         ZCxM2HmPbUM7GTeZOoWuSyK6XAGHLgnsJBnDLzSCJxZMviaxVTZvUI5xjLv+w9CpLBkh
+         CUZ9nVXrWIN/xKayytzIMBsj2cnh834GbBC8Zgaprbo4imhTJj9aONr8/HZzt2SDcPYD
+         5gKM5jRs4geL+t72uA1ZTuOlHvQrxYvJCByF4+trHouyWLEpuwmKG1v5B2wvG6RCI3Rv
+         YQyg==
+X-Gm-Message-State: APjAAAUXp2gBK366AENXA9+CxL+S5Y7mMvFepltz2evb23oZWOY5yHjF
+        VL54Ntc3WoIDfXQ/IeOP/5s=
+X-Google-Smtp-Source: APXvYqxHVzbrr3n6aKge7sXVjBxYitHE198LQU9yGpgqT2irmKf4QLdPRr27quFeiMMwGS/HJjas+Q==
+X-Received: by 2002:a63:8949:: with SMTP id v70mr12135945pgd.196.1556562898523;
+        Mon, 29 Apr 2019 11:34:58 -0700 (PDT)
+Received: from [172.27.227.196] ([216.129.126.118])
+        by smtp.googlemail.com with ESMTPSA id f71sm68850310pfc.109.2019.04.29.11.34.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 11:34:56 -0700 (PDT)
+Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Julian Anastasov <ja@ssi.bg>, Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        ddstreet@ieee.org, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000007d22100573d66078@google.com>
+ <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
+ <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
+ <9d430543-33c3-0d9b-dc77-3a179a8e3919@I-love.SAKURA.ne.jp>
+ <920ebaf1-ee87-0dbb-6805-660c1cbce3d0@I-love.SAKURA.ne.jp>
+ <cc054b5c-4e95-8d30-d4bf-9c85f7e20092@gmail.com>
+ <15b353e9-49a2-f08b-dc45-2e9bad3abfe2@i-love.sakura.ne.jp>
+ <057735f0-4475-7a7b-815f-034b1095fa6c@gmail.com>
+ <6e57bc11-1603-0898-dfd4-0f091901b422@i-love.sakura.ne.jp>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <f71dd5cd-c040-c8d6-ab4b-df97dea23341@gmail.com>
+Date:   Mon, 29 Apr 2019 12:34:54 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <6e57bc11-1603-0898-dfd4-0f091901b422@i-love.sakura.ne.jp>
+Content-Type: multipart/mixed;
+ boundary="------------A2951BECD619E8BAAC5FD632"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c0cfc337264c5e02e0bc79de6b62857999588879
-Gitweb:     https://git.kernel.org/tip/c0cfc337264c5e02e0bc79de6b62857999588879
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Thu, 25 Apr 2019 11:44:56 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Mon, 29 Apr 2019 12:37:47 +0200
+This is a multi-part message in MIME format.
+--------------A2951BECD619E8BAAC5FD632
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-lib/stackdepot: Provide functions which operate on plain storage arrays
+On 4/27/19 10:22 PM, Tetsuo Handa wrote:
+> On 2019/04/28 8:52, Eric Dumazet wrote:
+>> On 4/27/19 3:33 PM, Tetsuo Handa wrote:
+>>>
+>>> I'm waiting for davem why it is safe to move the dst entry from
+>>> "a device to unregister" to "a loopback device in that namespace".
+>>> I'm waiting for an explanation how the dst entry which was moved to
+>>> "a loopback device in that namespace" is released (i.e. what the
+>>> expected shutdown sequence is).
+>>
+>> The most probable explanation is that we make sure the loopback device
+>> is the last one to be dismantled at netns deletion,
+>> and this would obviously happen after all dst have been released.
+>>
+> 
+> rt_flush_dev() becomes a no-op if "dev" == "a loopback device in that
+> namespace". And according to debug printk(), rt_flush_dev() is called
+> on "a loopback device in that namespace" itself.
+> 
+> If "a loopback device in that namespace" is the last "one" (== "a network
+> device in that namespace" ?), which shutdown sequence should have called
+> dev_put("a loopback device in that namespace") before unregistration of
+> "a loopback device in that namespace" starts?
+> 
+> Since I'm not a netdev person, I appreciate if you can explain
+> that shutdown sequence using a flow chart.
+> 
 
-The struct stack_trace indirection in the stack depot functions is a truly
-pointless excercise which requires horrible code at the callsites.
+The attached patch adds a tracepoint to notifier_call_chain. If you have
+KALLSYMS enabled it will show the order of the function handlers:
 
-Provide interfaces based on plain storage arrays.
+perf record -e notifier:* -a -g &
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Acked-by: Alexander Potapenko <glider@google.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: linux-mm@kvack.org
-Cc: David Rientjes <rientjes@google.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: kasan-dev@googlegroups.com
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: iommu@lists.linux-foundation.org
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: David Sterba <dsterba@suse.com>
-Cc: Chris Mason <clm@fb.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: linux-btrfs@vger.kernel.org
-Cc: dm-devel@redhat.com
-Cc: Mike Snitzer <snitzer@redhat.com>
-Cc: Alasdair Kergon <agk@redhat.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: David Airlie <airlied@linux.ie>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc: Miroslav Benes <mbenes@suse.cz>
-Cc: linux-arch@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190425094801.414574828@linutronix.de
+ip netns del <NAME>
+<wait a few seconds>
 
----
- include/linux/stackdepot.h |  4 +++
- lib/stackdepot.c           | 70 +++++++++++++++++++++++++++++++++-------------
- 2 files changed, 55 insertions(+), 19 deletions(-)
+fg
+<ctrl-c on perf-record>
 
-diff --git a/include/linux/stackdepot.h b/include/linux/stackdepot.h
-index 7978b3e2c1e1..4297c6d2991d 100644
---- a/include/linux/stackdepot.h
-+++ b/include/linux/stackdepot.h
-@@ -26,7 +26,11 @@ typedef u32 depot_stack_handle_t;
- struct stack_trace;
- 
- depot_stack_handle_t depot_save_stack(struct stack_trace *trace, gfp_t flags);
-+depot_stack_handle_t stack_depot_save(unsigned long *entries,
-+				      unsigned int nr_entries, gfp_t gfp_flags);
- 
- void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace);
-+unsigned int stack_depot_fetch(depot_stack_handle_t handle,
-+			       unsigned long **entries);
- 
- #endif
-diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index e513459a5601..e84f8e58495c 100644
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -194,40 +194,60 @@ static inline struct stack_record *find_stack(struct stack_record *bucket,
- 	return NULL;
- }
- 
--void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace)
-+/**
-+ * stack_depot_fetch - Fetch stack entries from a depot
-+ *
-+ * @handle:		Stack depot handle which was returned from
-+ *			stack_depot_save().
-+ * @entries:		Pointer to store the entries address
-+ *
-+ * Return: The number of trace entries for this depot.
-+ */
-+unsigned int stack_depot_fetch(depot_stack_handle_t handle,
-+			       unsigned long **entries)
- {
- 	union handle_parts parts = { .handle = handle };
- 	void *slab = stack_slabs[parts.slabindex];
- 	size_t offset = parts.offset << STACK_ALLOC_ALIGN;
- 	struct stack_record *stack = slab + offset;
- 
--	trace->nr_entries = trace->max_entries = stack->size;
--	trace->entries = stack->entries;
--	trace->skip = 0;
-+	*entries = stack->entries;
-+	return stack->size;
-+}
-+EXPORT_SYMBOL_GPL(stack_depot_fetch);
-+
-+void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace)
-+{
-+	unsigned int nent = stack_depot_fetch(handle, &trace->entries);
-+
-+	trace->max_entries = trace->nr_entries = nent;
- }
- EXPORT_SYMBOL_GPL(depot_fetch_stack);
- 
- /**
-- * depot_save_stack - save stack in a stack depot.
-- * @trace - the stacktrace to save.
-- * @alloc_flags - flags for allocating additional memory if required.
-+ * stack_depot_save - Save a stack trace from an array
-+ *
-+ * @entries:		Pointer to storage array
-+ * @nr_entries:		Size of the storage array
-+ * @alloc_flags:	Allocation gfp flags
-  *
-- * Returns the handle of the stack struct stored in depot.
-+ * Return: The handle of the stack struct stored in depot
-  */
--depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
--				    gfp_t alloc_flags)
-+depot_stack_handle_t stack_depot_save(unsigned long *entries,
-+				      unsigned int nr_entries,
-+				      gfp_t alloc_flags)
- {
--	u32 hash;
--	depot_stack_handle_t retval = 0;
- 	struct stack_record *found = NULL, **bucket;
--	unsigned long flags;
-+	depot_stack_handle_t retval = 0;
- 	struct page *page = NULL;
- 	void *prealloc = NULL;
-+	unsigned long flags;
-+	u32 hash;
- 
--	if (unlikely(trace->nr_entries == 0))
-+	if (unlikely(nr_entries == 0))
- 		goto fast_exit;
- 
--	hash = hash_stack(trace->entries, trace->nr_entries);
-+	hash = hash_stack(entries, nr_entries);
- 	bucket = &stack_table[hash & STACK_HASH_MASK];
- 
- 	/*
-@@ -235,8 +255,8 @@ depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
- 	 * The smp_load_acquire() here pairs with smp_store_release() to
- 	 * |bucket| below.
- 	 */
--	found = find_stack(smp_load_acquire(bucket), trace->entries,
--			   trace->nr_entries, hash);
-+	found = find_stack(smp_load_acquire(bucket), entries,
-+			   nr_entries, hash);
- 	if (found)
- 		goto exit;
- 
-@@ -264,10 +284,10 @@ depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
- 
- 	spin_lock_irqsave(&depot_lock, flags);
- 
--	found = find_stack(*bucket, trace->entries, trace->nr_entries, hash);
-+	found = find_stack(*bucket, entries, nr_entries, hash);
- 	if (!found) {
- 		struct stack_record *new =
--			depot_alloc_stack(trace->entries, trace->nr_entries,
-+			depot_alloc_stack(entries, nr_entries,
- 					  hash, &prealloc, alloc_flags);
- 		if (new) {
- 			new->next = *bucket;
-@@ -297,4 +317,16 @@ exit:
- fast_exit:
- 	return retval;
- }
-+EXPORT_SYMBOL_GPL(stack_depot_save);
-+
-+/**
-+ * depot_save_stack - save stack in a stack depot.
-+ * @trace - the stacktrace to save.
-+ * @alloc_flags - flags for allocating additional memory if required.
-+ */
-+depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
-+				      gfp_t alloc_flags)
-+{
-+	return stack_depot_save(trace->entries, trace->nr_entries, alloc_flags);
-+}
- EXPORT_SYMBOL_GPL(depot_save_stack);
+perf script
+
+--------------A2951BECD619E8BAAC5FD632
+Content-Type: text/plain; charset=UTF-8; x-mac-type="0"; x-mac-creator="0";
+ name="0001-notifier-add-tracepoint-to-notifier_call_chain.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename*0="0001-notifier-add-tracepoint-to-notifier_call_chain.patch"
+
+RnJvbSA1NTEwYzE0ZTU2ZjNlOTllN2RmZDkyMDg3NDIxNDM3OTFlMTRhMmUyIE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBEYXZpZCBBaGVybiA8ZHNhaGVybkBnbWFpbC5jb20+
+CkRhdGU6IE1vbiwgMjkgQXByIDIwMTkgMTE6MjI6MDcgLTA3MDAKU3ViamVjdDogW1BBVENI
+XSBub3RpZmllcjogYWRkIHRyYWNlcG9pbnQgdG8gbm90aWZpZXJfY2FsbF9jaGFpbgoKU2ln
+bmVkLW9mZi1ieTogRGF2aWQgQWhlcm4gPGRzYWhlcm5AZ21haWwuY29tPgotLS0KIGtlcm5l
+bC9ub3RpZmllci5jIHwgMyArKysKIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykK
+CmRpZmYgLS1naXQgYS9rZXJuZWwvbm90aWZpZXIuYyBiL2tlcm5lbC9ub3RpZmllci5jCmlu
+ZGV4IDYxOTZhZjhhODIyMy4uOWI2NWE5YzU2ZmQ3IDEwMDY0NAotLS0gYS9rZXJuZWwvbm90
+aWZpZXIuYworKysgYi9rZXJuZWwvbm90aWZpZXIuYwpAQCAtNSw2ICs1LDggQEAKICNpbmNs
+dWRlIDxsaW51eC9yY3VwZGF0ZS5oPgogI2luY2x1ZGUgPGxpbnV4L3ZtYWxsb2MuaD4KICNp
+bmNsdWRlIDxsaW51eC9yZWJvb3QuaD4KKyNkZWZpbmUgQ1JFQVRFX1RSQUNFX1BPSU5UUwor
+I2luY2x1ZGUgPHRyYWNlL2V2ZW50cy9ub3RpZmllci5oPgogCiAvKgogICoJTm90aWZpZXIg
+bGlzdCBmb3Iga2VybmVsIGNvZGUgd2hpY2ggd2FudHMgdG8gYmUgY2FsbGVkCkBAIC05MCw2
+ICs5Miw3IEBAIHN0YXRpYyBpbnQgbm90aWZpZXJfY2FsbF9jaGFpbihzdHJ1Y3Qgbm90aWZp
+ZXJfYmxvY2sgKipubCwKIAkJCWNvbnRpbnVlOwogCQl9CiAjZW5kaWYKKwkJdHJhY2Vfbm90
+aWZpZXJfY2FsbF9jaGFpbihuYiwgdmFsKTsKIAkJcmV0ID0gbmItPm5vdGlmaWVyX2NhbGwo
+bmIsIHZhbCwgdik7CiAKIAkJaWYgKG5yX2NhbGxzKQotLSAKMi4xMS4wCgo=
+--------------A2951BECD619E8BAAC5FD632--
