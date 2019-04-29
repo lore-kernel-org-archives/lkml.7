@@ -2,138 +2,127 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3740CC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F04C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B19E204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B0D204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:14:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="TySbTLLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbfD2NOX (ORCPT
+        id S1728243AbfD2NOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:14:23 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56636 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfD2NOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:14:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C39EA78;
-        Mon, 29 Apr 2019 06:14:22 -0700 (PDT)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14FE73F71A;
-        Mon, 29 Apr 2019 06:14:19 -0700 (PDT)
-Subject: Re: [PATCH 2/7] iommu/dma-iommu: Split iommu_dma_map_msi_msg in two
- parts
-To:     Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     logang@deltatee.com, douliyangs@gmail.com,
-        miquel.raynal@bootlin.com, jason@lakedaemon.net,
-        tglx@linutronix.de, joro@8bytes.org, robin.murphy@arm.com,
-        bigeasy@linutronix.de, linux-rt-users@vger.kernel.org
-References: <20190418172611.21561-1-julien.grall@arm.com>
- <20190418172611.21561-3-julien.grall@arm.com>
- <86a75dce-e1dc-c57c-d80f-0cefd3c5a5dd@arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <6b498387-e17a-5901-4d0a-0d44ababba81@arm.com>
-Date:   Mon, 29 Apr 2019 14:14:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <86a75dce-e1dc-c57c-d80f-0cefd3c5a5dd@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 29 Apr 2019 09:14:53 -0400
+Received: from mail-eopbgr1410097.outbound.protection.outlook.com ([40.107.141.97]:14467
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725838AbfD2NOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:14:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector1-renesas-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QP2n1i19/SsImnJVzVhLTA2L7uBNCx5q3TTJj3POarY=;
+ b=TySbTLLQJb5qc+3Jj4oIepBW8Wp+UerfVv3PvgdaAuQWUrbsZmMwd799fvVORxjUKp/CM6mVtH+iZIyWlLima7U1171in+GvwRQuJfrfwYgUKw5c2xzWWp8dYxapbY9ZyYpokNRShz9WrNQNSCHsbC7NavGPBkcH80K0jFXmEt4=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1788.jpnprd01.prod.outlook.com (52.133.160.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.13; Mon, 29 Apr 2019 13:14:47 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::99cf:c94c:d11f:c2f0]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::99cf:c94c:d11f:c2f0%5]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
+ 13:14:47 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/5] ARM: rskrza1: Add RZ/A1 IRQC and input switches
+Thread-Topic: [PATCH 0/5] ARM: rskrza1: Add RZ/A1 IRQC and input switches
+Thread-Index: AQHU/m8QhsbWkw/8AEW0pGxxlBRO8aZTCh5ggAAM4gCAAAQO0A==
+Date:   Mon, 29 Apr 2019 13:14:46 +0000
+Message-ID: <TY1PR01MB156221290E3CF7835CBAEEE28A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20190429093631.10799-1-geert+renesas@glider.be>
+ <TY1PR01MB15620A5958E5A9211518E0C48A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <CAMuHMdUasEO1VLX1h5ZL8F2VjLXnSbrVOm6KdO6yuzkw9RWAfA@mail.gmail.com>
+In-Reply-To: <CAMuHMdUasEO1VLX1h5ZL8F2VjLXnSbrVOm6KdO6yuzkw9RWAfA@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7711ceaf-e991-48ff-73d4-08d6cca4a72b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1788;
+x-ms-traffictypediagnostic: TY1PR01MB1788:
+x-microsoft-antispam-prvs: <TY1PR01MB17884A61B49C549980C36DA78A390@TY1PR01MB1788.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0022134A87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(346002)(366004)(39860400002)(376002)(199004)(189003)(4326008)(3846002)(6246003)(6506007)(25786009)(53936002)(7416002)(74316002)(2906002)(305945005)(7736002)(97736004)(6116002)(52536014)(186003)(6916009)(102836004)(5660300002)(26005)(53546011)(316002)(54906003)(11346002)(446003)(6436002)(476003)(55016002)(229853002)(33656002)(486006)(8676002)(81166006)(81156014)(8936002)(66066001)(9686003)(256004)(71190400001)(66446008)(64756008)(66476007)(66556008)(66946007)(71200400001)(72206003)(73956011)(478600001)(76116006)(86362001)(68736007)(14454004)(7696005)(99286004)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1788;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: rE2/bC4apupJ55+sKR45Iy6mnVoYtcnLIq3myggLORAf64htdhrxr5r7vZ4QXB87I8q7uegjVKnwzCJDWH2kEIZtTZfgr48i0YoemurNMvxm9im4v+35QvzX7KNwMfwD7b4HlfjLqHFsGbrabF2w0k+1gVVXovCL/GRfzt8maG0UvvV1awm9EuPWEY2N8V7lra0KStfkftZeF1TEj+7ePGGl0Dgp6wZXPrWPccBA+LzseFq63LE/CvgS7tKk7egsfy/uMmwRkbAV45u694GpO8HyBZ+zFpPamp6HloohiD3+IPco6SMmMi3V8qY5Gr4fZRLoKhHQ42eOHiyXqKKolgWPM94bc2IoxcAU6NkUJQSsgCbrHZARWiqfQ+20Y0HyiFpcez+RMEQCYKqnnpGtNSvIiNLMuIOB1HsVTFx8Gj4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7711ceaf-e991-48ff-73d4-08d6cca4a72b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 13:14:46.9038
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1788
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 23/04/2019 11:54, Marc Zyngier wrote:
-> On 18/04/2019 18:26, Julien Grall wrote:
->> On RT, the function iommu_dma_map_msi_msg may be called from
->> non-preemptible context. This will lead to a splat with
->> CONFIG_DEBUG_ATOMIC_SLEEP as the function is using spin_lock
->> (they can sleep on RT).
->>
->> The function iommu_dma_map_msi_msg is used to map the MSI page in the
->> IOMMU PT and update the MSI message with the IOVA.
->>
->> Only the part to lookup for the MSI page requires to be called in
->> preemptible context. As the MSI page cannot change over the lifecycle
->> of the MSI interrupt, the lookup can be cached and re-used later on.
->>
->> This patch split the function iommu_dma_map_msi_msg in two new
->> functions:
->>      - iommu_dma_prepare_msi: This function will prepare the mapping in
->>      the IOMMU and store the cookie in the structure msi_desc. This
->>      function should be called in preemptible context.
->>      - iommu_dma_compose_msi_msg: This function will update the MSI
->>      message with the IOVA when the device is behind an IOMMU.
->>
->> Signed-off-by: Julien Grall <julien.grall@arm.com>
->> ---
->>   drivers/iommu/dma-iommu.c | 43 ++++++++++++++++++++++++++++++++-----------
->>   include/linux/dma-iommu.h | 21 +++++++++++++++++++++
->>   2 files changed, 53 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
->> index 77aabe637a60..f5c1f1685095 100644
->> --- a/drivers/iommu/dma-iommu.c
->> +++ b/drivers/iommu/dma-iommu.c
->> @@ -888,17 +888,17 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
->>   	return NULL;
->>   }
->>   
->> -void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
->> +int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
-> 
-> I quite like the idea of moving from having an irq to having an msi_desc
-> passed to the IOMMU layer...
-> 
->>   {
->> -	struct device *dev = msi_desc_to_dev(irq_get_msi_desc(irq));
->> +	struct device *dev = msi_desc_to_dev(desc);
->>   	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
->>   	struct iommu_dma_cookie *cookie;
->> -	struct iommu_dma_msi_page *msi_page;
->> -	phys_addr_t msi_addr = (u64)msg->address_hi << 32 | msg->address_lo;
->>   	unsigned long flags;
->>   
->> -	if (!domain || !domain->iova_cookie)
->> -		return;
->> +	if (!domain || !domain->iova_cookie) {
->> +		desc->iommu_cookie = NULL;
->> +		return 0;
->> +	}
->>   
->>   	cookie = domain->iova_cookie;
->>   
->> @@ -908,10 +908,33 @@ void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
->>   	 * of an MSI from within an IPI handler.
->>   	 */
->>   	spin_lock_irqsave(&cookie->msi_lock, flags);
->> -	msi_page = iommu_dma_get_msi_page(dev, msi_addr, domain);
->> +	desc->iommu_cookie = iommu_dma_get_msi_page(dev, msi_addr, domain);
->>   	spin_unlock_irqrestore(&cookie->msi_lock, flags);
->>   
->> -	if (WARN_ON(!msi_page)) {
->> +	return (desc->iommu_cookie) ? 0 : -ENOMEM;
->> +}
->> +
->> +void iommu_dma_compose_msi_msg(int irq, struct msi_msg *msg)
-> 
-> ... but I'd like it even better if it was uniform. Can you please move
-> the irq_get_msi_desc() to the callers of iommu_dma_compose_msi_msg(),
-> and make both functions take a msi_desc?
-
-Make sense. I will modify iommu_dma_compose_msi_msg to take a msi_desc in parameter.
-
-Cheers,
-
--- 
-Julien Grall
+SGkgR2VlcnQsDQoNCk9uIE1vbiwgQXByIDI5LCAyMDE5LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3Jv
+dGU6DQo+IE9uIE1vbiwgQXByIDI5LCAyMDE5IGF0IDI6MjEgUE0gQ2hyaXMgQnJhbmR0IDxDaHJp
+cy5CcmFuZHRAcmVuZXNhcy5jb20+DQo+IHdyb3RlOg0KPiA+IEkndmUgYmVlbiBoYWNraW5nIHRo
+aXMgc3VwcG9ydCBpbnRvIHRoZSBzdGFuZGFyZCBHSUMgZHJpdmVyIGluIG91ciBCU1BzDQo+ID4g
+Zm9yIHllYXJzIG5vdy4gOm8NCj4gDQo+IFllYWgsIGFuZCBoYXZpbmcgdGhhdCBwYXRjaCBpbiB5
+b3VyIHRyZWUgYnJlYWtzIGFsbCBvdGhlciBHSUNzLCBhcw0KPiBJIGZvdW5kIG91dCB0aGUgaGFy
+ZCB3YXkgOy0pDQoNCkkgbmV2ZXIgc2FpZCBpdCB3YXMgYSBnb29kIGhhY2sgOikNCg0KDQo+IFNv
+IGZvciBSWi9BMiwgSSB0aGluayBpdCdzIGJlc3QgdG8gdXNlDQo+IA0KPiAgICAgY29tcGF0aWJs
+ZSA9ICJyZW5lc2FzLHI3czkyMTAtaXJxYyIsICJyZW5lc2FzLHJ6YTEtaXJxYyI7DQo+ICAgICBy
+ZW5lc2FzLGdpYy1zcGktYmFzZSA9IDw0PjsNCg0KVGhhdCBzZWVtcyB0byBtYWtlIHNlbnNlLiBJ
+dCdzIHNwZWNpZmljIHRvIHI3czkyMTAgKFJaL0EyKSwgYnV0IA0KY29tcGF0aWJsZSB3aXRoIHRo
+ZSBvcmlnaW5hbCB2ZXJzaW9uIHdoaWNoIHdhcyBmb3IgcnphMS4gSXQgZXhwbGFpbnMgdGhlDQpo
+aXN0b3J5Lg0KDQoNCj4gPiBTaWRlIG5vdGUsIEkndmUgc2VlbiB0aGlzIGludGVycnVwdCBwaW4g
+SFcgaW4gc29tZSBvbGRlciBTSDRBIGRldmljZXMNCj4gPiAobGlrZSBTSDc3MjQgYW5kIFNINzc1
+NykuIFNvIGl0J3MgYmVlbiBhcm91bmQgZm9yIGEgd2hpbGUuDQo+IA0KPiBSaWdodDoNCj4gDQo+
+ICAgICBhcmNoL3NoL2tlcm5lbC9jcHUvc2g0YS9zZXR1cC1zaDczNDMuYzogeyAweGE0MTQwMDI0
+LCAwLCA4LCAvKg0KPiBJTlRSRVEwMCAqLw0KPiAgICAgYXJjaC9zaC9rZXJuZWwvY3B1L3NoNGEv
+c2V0dXAtc2g3MzY2LmM6IHsgMHhhNDE0MDAyNCwgMCwgOCwgLyoNCj4gSU5UUkVRMDAgKi8NCj4g
+ICAgIGFyY2gvc2gva2VybmVsL2NwdS9zaDRhL3NldHVwLXNoNzcyMi5jOiB7IDB4YTQxNDAwMjQs
+IDAsIDgsIC8qDQo+IElOVFJFUTAwICovDQo+ICAgICBhcmNoL3NoL2tlcm5lbC9jcHUvc2g0YS9z
+ZXR1cC1zaDc3MjMuYzogeyAweGE0MTQwMDI0LCAwLCA4LCAvKg0KPiBJTlRSRVEwMCAqLw0KPiAg
+ICAgYXJjaC9zaC9rZXJuZWwvY3B1L3NoNGEvc2V0dXAtc2g3NzI0LmM6IHsgMHhhNDE0MDAyNCwg
+MCwgOCwgLyoNCj4gSU5UUkVRMDAgKi8NCj4gDQo+IEhvd2V2ZXIsIGFjY29yZGluZyB0byB0aGUg
+c2g3NzI0IGRvY3VtZW50YXRpb24sIHRoZSByZWdpc3RlciBzZXQgaXMNCj4gc2xpZ2h0bHkgZGlm
+ZmVyZW50LCBhcyBpcyBpdHMgc2Vuc2UgY29uZmlndXJhdGlvbiAobm8gc3VwcG9ydCBmb3IgYm90
+aA0KPiBlZGdlcywgYnV0IHN1cHBvcnQgZm9yIGhpZ2gtbGV2ZWwgaW50ZXJydXB0cykuDQoNCklm
+IEkgcmVtZW1iZXIgY29ycmVjdGx5LCBJIHRoaW5rIHRoZSBkZXNpZ24gZW5naW5lZXJzIGNhbiBj
+aG9vc2UgdGhlIA0Kc2Vuc2UgYXMgdGhleSB3aXJlIGl0IHVwIGludGVybmFsbHkuIFRoZSBvbmVz
+IGluIHRoZSBTSDc3NTcgd2VyZSBjaG9zZW4gDQpiYXNlZCBvbiBhIHNwZWNpZmljIHVzZSBjYXNl
+LiBTbyBmYXIsIHRoZSBvbmVzIGNob3NlbiBmb3IgdGhlIFJaL0ExIHNlZW0gdG8NCm1ha2UgZXZl
+cnlvbmUgaGFwcHksIHNvIEkgYXNzdW1lIHdlJ2xsIGtlZXAgdGhlbSB0aGF0IHdheS4NCg0KDQpD
+aHJpcw0K
