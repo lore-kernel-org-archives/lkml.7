@@ -5,73 +5,76 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFA8C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907F2C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 213CA2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E762063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbfD2H3q (ORCPT
+        id S1727471AbfD2HcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:29:46 -0400
-Received: from mga01.intel.com ([192.55.52.88]:41476 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfD2H3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:29:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 00:29:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,408,1549958400"; 
-   d="scan'208";a="138322306"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by orsmga008.jf.intel.com with ESMTP; 29 Apr 2019 00:29:42 -0700
-Subject: Re: [PATCH 0/8] perf scripts python: Support pyside2 and misc Intel
- PT
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-References: <20190412113830.4126-1-adrian.hunter@intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <10798ccb-7da8-1f29-2a75-bf3aeeb29c96@intel.com>
-Date:   Mon, 29 Apr 2019 10:28:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 03:32:05 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:40722 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfD2HcE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 03:32:04 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hL0lK-00053O-Qd; Mon, 29 Apr 2019 09:31:43 +0200
+Date:   Mon, 29 Apr 2019 09:31:37 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
+cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v8 12/15] kvm/vmx: Emulate MSR TEST_CTL
+In-Reply-To: <87ef9a01-fc99-20be-ec20-2c65e6a012a1@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1904290929570.1626@nanos.tec.linutronix.de>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com> <1556134382-58814-13-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1904250931020.1762@nanos.tec.linutronix.de> <7395908840acfbf806146f5f20d3509342771a19.camel@linux.intel.com>
+ <alpine.DEB.2.21.1904280903520.1757@nanos.tec.linutronix.de> <87ef9a01-fc99-20be-ec20-2c65e6a012a1@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190412113830.4126-1-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/04/19 2:38 PM, Adrian Hunter wrote:
-> Hi
+On Sun, 28 Apr 2019, Xiaoyao Li wrote:
+> On 4/28/2019 3:09 PM, Thomas Gleixner wrote:
+> > On Sat, 27 Apr 2019, Xiaoyao Li wrote:
+> > > Indeed, if we use split lock detection for protection purpose, when host
+> > > has it enabled we should directly pass it to guest and forbid guest from
+> > > disabling it.  And only when host disables split lock detection, we can
+> > > expose it and allow the guest to turn it on.
+> > ?
+> > > If it is used for protection purpose, then it should follow what you said
+> > > and
+> > > this feature needs to be disabled by default. Because there are split lock
+> > > issues in old/current kernels and BIOS. That will cause the existing guest
+> > > booting failure and killed due to those split lock.
+> > 
+> > Rightfully so.
 > 
-> Here are patches to add support for pyside2 to the db-export scripts,
-> and a couple of Intel PT patches.
-> 
-> 
-> Adrian Hunter (8):
->       perf scripts python: exported-sql-viewer.py: Change python2 to python
->       perf scripts python: exported-sql-viewer.py: Use argparse module for argument parsing
->       perf scripts python: exported-sql-viewer.py: Add support for pyside2
->       perf scripts python: export-to-sqlite.py: Add support for pyside2
->       perf scripts python: export-to-postgresql.py: Add support for pyside2
->       perf tools: perf-with-kcore.sh: Always allow fix_buildid_cache_permissions
->       perf intel-pt: Improve sync_switch
->       perf intel-pt: Rationalize intel_pt_sync_switch()'s use of next_tid
-> 
->  tools/perf/perf-with-kcore.sh                     |  5 ---
->  tools/perf/scripts/python/export-to-postgresql.py | 43 +++++++++++++++----
->  tools/perf/scripts/python/export-to-sqlite.py     | 44 ++++++++++++++++---
->  tools/perf/scripts/python/exported-sql-viewer.py  | 51 ++++++++++++++++-------
->  tools/perf/util/intel-pt.c                        | 44 +++++++++++++++++--
->  5 files changed, 150 insertions(+), 37 deletions(-)
+> So, the patch 13 "Enable split lock detection by default" needs to be removed?
 
-Are these ok?
+Why? No. We enable it by default and everything which violates the rules
+gets what it deserves. If there is an issue, boot with ac_splitlock_off and
+be done with it.
 
+Thanks,
+
+	tglx
