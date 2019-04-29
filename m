@@ -2,119 +2,92 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08CAC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20942C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7772067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556568718;
-	bh=yHFuD1yqCum2y2trfA6le7Rc2q/f7UbNCSi1KupUDQw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OjYgVd4WBDokcN4PeyWZzS8sord3jg+NRum7hQTDAKdm7YDvUSuAEZnFsnZcJLBz9
-	 DjXmxlKa44iUnjKurTBuICDvgT7vPd4bnnqE9ZIw0JQ4npOxKgVeB4n+z6XE/dvRob
-	 z/a1D/CJ3UbbMQUS0XRNPrjIQf5ntt5NmLaayWG4=
+	by mail.kernel.org (Postfix) with ESMTP id D78952067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbfD2UL5 (ORCPT
+        id S1729322AbfD2UNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:11:57 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46428 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfD2UL4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:11:56 -0400
-Received: by mail-lf1-f68.google.com with SMTP id k18so8859619lfj.13
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:11:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6BzF2OGCOW6HJd/OnyiluqOmAxSSof4acOvoZOgQm9o=;
-        b=USATFDoZDh4xC+n5UqEtvteBhBowGyyECGRsSRhXKOP5PzafOvxupieg8HOTz7c/tT
-         PXOh2kw9Riqlvj6y0JnovEQkM5Sxqs6/eA/GdnQ1+qDmrJni0xr2WjZhGxpsNJCXOf6b
-         lOAASJsanyZBZOXaJ0IkarPkyAoriW6kXsvF0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6BzF2OGCOW6HJd/OnyiluqOmAxSSof4acOvoZOgQm9o=;
-        b=Dq/kDHuF/O6URex9WPc2R6M8zg2kU+LlrZz9j8wxCcBTMY/+01bnyEB1LSx5Xv8IH2
-         yggPcVvCRv4F4UDBPi7DYYS3lrGw7t67ssq0jhUTQKlpMQsQcb+U5NV4L0ZKNauoi/AA
-         WdVKW3zds73kciRWyWnOAfz3rPC4/5e5t63IMUMDygAhb+9N+/PGHVkamNwnxARvBunk
-         kNX+Guua56y0l0nrhIOuuSL2Tbu8HylTGV8pys1dwLLyFSZS9GeLZk5ncTtuak5hXhqj
-         vkFscity5DP+IjPWEF+zCEbXiAyHBa5Y9SmcOJupR+ZlumPjCyRT+hhkzyGqO75amPFJ
-         BPrw==
-X-Gm-Message-State: APjAAAVcuQOKD4tjfrQ3GUArqB+5HJ6Y6JQM4FHqVTTFAbqNm9TwcRUN
-        N27hLUAXIWiuQ2pirdiCOoyQ5HIftH0=
-X-Google-Smtp-Source: APXvYqylBVmx87Z1ny03VsamMro+Ta/VzuqeiRPzCihHKd0X19lzdNDpr35cHUguwvqUBjSSN/IMVQ==
-X-Received: by 2002:ac2:5207:: with SMTP id a7mr35414412lfl.70.1556568713912;
-        Mon, 29 Apr 2019 13:11:53 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id z7sm7555127lfg.40.2019.04.29.13.11.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 13:11:53 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id t1so477801lje.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:11:53 -0700 (PDT)
-X-Received: by 2002:a2e:3e0e:: with SMTP id l14mr33501765lja.125.1556568393207;
- Mon, 29 Apr 2019 13:06:33 -0700 (PDT)
+        Mon, 29 Apr 2019 16:13:51 -0400
+Received: from mga01.intel.com ([192.55.52.88]:20389 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728928AbfD2UNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 16:13:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 13:13:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,410,1549958400"; 
+   d="scan'208";a="169062376"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 29 Apr 2019 13:13:47 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 29 Apr 2019 23:13:47 +0300
+Date:   Mon, 29 Apr 2019 23:13:47 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Michael Hirmke <opensuse@mike.franken.de>
+Cc:     bhelgaas@google.com, gregkh@linuxfoundation.org, jslaby@suse.cz,
+        linux-kernel@vger.kernel.org, lukas@wunner.de, tiwai@suse.de,
+        Christian Kellner <ckellner@redhat.com>
+Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and
+ thunderbolt)
+Message-ID: <20190429201347.GV2583@lahna.fi.intel.com>
+References: <20190429195459.GU2583@lahna.fi.intel.com>
+ <EkoOCx3N6GB@mike.franken.de>
 MIME-Version: 1.0
-References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-4-nstange@suse.de>
- <20190427102657.GF2623@hirez.programming.kicks-ass.net> <20190428133826.3e142cfd@oasis.local.home>
- <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
- <20190429145250.1a5da6ed@gandalf.local.home> <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
- <20190429150724.6e501d27@gandalf.local.home>
-In-Reply-To: <20190429150724.6e501d27@gandalf.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Apr 2019 13:06:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgbC-wiSrdDYAh1ORF4EKmecY+MkNsJBF=BWf4W1bXXgA@mail.gmail.com>
-Message-ID: <CAHk-=wgbC-wiSrdDYAh1ORF4EKmecY+MkNsJBF=BWf4W1bXXgA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <EkoOCx3N6GB@mike.franken.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 12:07 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> Are you suggesting that I rewrite the code to do it one function at a
-> time? This has always been batch mode. This is not something new. The
-> function tracer has been around longer than the text poke code.
+On Mon, Apr 29, 2019 at 10:03:00PM +0200, Michael Hirmke wrote:
+> Hi all,
+> 
+> >On Mon, Apr 29, 2019 at 09:47:15PM +0200, Takashi Iwai wrote:
+> >> Hi,
+> 
+> >Hi,
+> 
+> >> we've got a regression report wrt xhci_hcd and thunderbolt on a Dell
+> >> machine.  5.0.7 is confirmed to work, so it must be a regression
+> >> introduced by 5.0.8.
+> >>
+> >> The details are found in openSUSE Bugzilla entry:
+> >>   https://bugzilla.opensuse.org/show_bug.cgi?id=1132943
+> >>
+> [...]
+> >>
+> >> I blindly suspected the commit 3943af9d01e9 and asked for a reverted
+> >> kernel, but in vain.  And now it was confirmed that the problem is
+> >> present with the latest 5.1-rc, too.
+> >>
+> >> I put some people who might have interest and the reporter (Michael)
+> >> to Cc.  If anyone has an idea, feel free to join to the Bugzilla, or
+> >> let me know if any help needed from the distro side.
+> 
+> >Since it exists in 5.1-rcX also it would be good if someone
+> >who see the problem (Michael?) could bisect it.
+> 
+> I know the meaning of bisecting, but I'm not really a developer, so I am
+> probably not able to interpret the results.
 
-Only do the 'call' instructions one at a time. Why would you change
-_existing_ code?
+No worries. 
 
-                 Linus
+I'm adding Christian who reported similar (same?) problem last week.
+Christian, this seems to exist in v5.1-rc6 at least. Can you try to
+bisect it on your side?
+
+I also have XPS 9370 but not that particular dock. I will check tomorrow
+if I can reproduce it as well.
