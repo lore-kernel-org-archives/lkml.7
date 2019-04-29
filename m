@@ -2,124 +2,152 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67640C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58744C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F472087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28BD720652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:44:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b9QWvLYt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cKzT/jEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfD2Rne (ORCPT
+        id S1728981AbfD2Rog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:43:34 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:41717 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728926AbfD2Rn3 (ORCPT
+        Mon, 29 Apr 2019 13:44:36 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45317 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728838AbfD2Rog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:43:29 -0400
-Received: by mail-vs1-f67.google.com with SMTP id g187so6400555vsc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:43:28 -0700 (PDT)
+        Mon, 29 Apr 2019 13:44:36 -0400
+Received: by mail-pl1-f195.google.com with SMTP id o5so5399040pls.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:44:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ofJyIqXwomA7GmqHzXwPuN8m6L/H0ryPXhElh4AzLbo=;
-        b=b9QWvLYtbc+VcNpxKV+IAdHf8oOksS7WNX6Jars+H2fG+d6ckHlQ4BFMCrET38xecj
-         gSQ6VW5/T+RIZwE3S2Kc+cQK/ngg2sceJ2wMxtRGy0aUsrkJA41QOvbvb7RCsq6AXXbR
-         3/oNq6sHc+kr5KfFz9Cc5x0ei1ULxzSvuFGZA=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k1NomnPWMIfso5x9ImCRSbz25mvLyl8gFIQ8b/bFOKU=;
+        b=cKzT/jECdjkEqqAqdqgiVNtmJx5QGXkHirh7YnqVt5rNVYMskoK+zKZQyuFzkPJxno
+         5AYGHxgllC2CbVNUdL+mNkm4B4eBeokIMKQHdluM17yqfP+8cg/DoL/6CfkLuBazikHf
+         4YpzBUCzq6MTjps7nW/JKehIzwO2k+csB39pgksxnQkbqkPPOLgIPu0h5TigJ8U657Y2
+         3ID46ruVukzp+FvgQZ9TeRXWJSKrVSB7dCob3me3OnLA7uFa2WI8OlQGPcxWrVOH8FZ2
+         xObdVCMqL9iuJ5+AQW0GvOVU91VwSOKLJ+Fa/ZAVjsma9rHjF1K24K3cb+9UHzAsj5kD
+         MsxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ofJyIqXwomA7GmqHzXwPuN8m6L/H0ryPXhElh4AzLbo=;
-        b=I98iuj/lnQ6+OnD3uj0HQL7cF+bF2iy7oYHUfPb1zGhiumBwsacxmoD6BbuSX06ZjY
-         z42ozXGGj7VCm2uTFWRn3ASQThRNgKpow1nVGwzX6E6j0ZIEgu0/Zfy33/n94sVBbw8h
-         I7i9NWp9XXzcu2I39dB3+VoAPlj3h2yIs9Urf/A/AuJVEvR0sc3FUvy/10fZUw/m2Ym+
-         oCsuHlKvxh52BuU7rqjIqVOf7pFqm83pMMv+Ctz1LGWuuvv5cmrglvrOMFh8wodXXfo+
-         G6s1A7QKZry2cTj36B8LEZJtfvEURmdGxxVpHFfC0NdJ++z19sOQaud5PPW5YgrXAMoB
-         vM4g==
-X-Gm-Message-State: APjAAAXVXtdOdRV3QjldavDjP7Oymb4wcHcAma7rx6WZhvuoA2gDXotY
-        njOlddGvDIbOUKAraxOth5q0Ap+MqzI=
-X-Google-Smtp-Source: APXvYqxRE0J1LhmcrQP6BJXSFd0m2w8OicqDE9jcP97UyTLGR6XZKx6HZep3ACTkZjkKooVM9mXZEA==
-X-Received: by 2002:a67:b44c:: with SMTP id c12mr12631254vsm.169.1556559808355;
-        Mon, 29 Apr 2019 10:43:28 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id 2sm38975733vke.27.2019.04.29.10.43.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 10:43:27 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id p13so3785467uaa.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:43:26 -0700 (PDT)
-X-Received: by 2002:ab0:20c1:: with SMTP id z1mr6396608ual.109.1556559806547;
- Mon, 29 Apr 2019 10:43:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k1NomnPWMIfso5x9ImCRSbz25mvLyl8gFIQ8b/bFOKU=;
+        b=WPTjY3UedJTWV3zZiRmTIGVT6wQ0tZoS9ikYYYEFc6cLo+lta/GLOEVqjX0FIqji3g
+         OmIgyWqkKICAKVjSl8V2YtrY0orT0mcJZK54QD3FIxcIPPg/A/uB9qp84fk2/8xyKMVh
+         Ini3yddkQ0YEm4yXjGMQY+Ki1o1eqbeYLHmu1zXI+yaU46auydkLmueg+KooOHKB+TAQ
+         cFAEplOvX+KwRXPcnq/nyZ8nCxGRC3lsNalpt6PeVryYMH3tS3XehAwqB13RhelI8BKE
+         Eu4YjtNTKe43aMrePKvzv4ovoe2QPVJXHmJ46T28lZoNQKmt2QmZLVzfHjleMJ47HGkS
+         qwcw==
+X-Gm-Message-State: APjAAAWp/SHW2eInquQdZ6/iqdE5WZYfuTVVvMnmiEVcSqvRhpPVFG1l
+        G/hqHyx/Vxawm9ilbVFvH5mUtw==
+X-Google-Smtp-Source: APXvYqxfDdgpKbi7c5IJfSUSR96PBo3aTr9H2pdfHg77PXLqLz0S0cq3UFVcfj/69GieeS/am76LyA==
+X-Received: by 2002:a17:902:bd0c:: with SMTP id p12mr12365704pls.50.1556559875914;
+        Mon, 29 Apr 2019 10:44:35 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id c22sm46860290pfn.136.2019.04.29.10.44.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 10:44:35 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 11:44:32 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, mike.leach@linaro.org,
+        rjw@rjwysocki.net, robert.walker@arm.com
+Subject: Re: [PATCH v2 35/36] [RFC] coresight: add return value for fixup
+ connections
+Message-ID: <20190429174432.GB18807@xps15>
+References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
+ <1555344260-12375-36-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-References: <cover.1555672441.git.arturp@synopsys.com> <87k1fis1b5.fsf@linux.intel.com>
- <SN1PR12MB2431EB450993E07730C3672FA73D0@SN1PR12MB2431.namprd12.prod.outlook.com>
- <CAD=FV=WKJMks9oCdUVS9vTKp9yD_VPE_uaAmTM9HgNoz8tt4pA@mail.gmail.com>
- <SN1PR12MB24312AEFA71B7EEF6FE4EB59A73E0@SN1PR12MB2431.namprd12.prod.outlook.com>
- <CAD=FV=WmtKYt5hn8s1PrjEgFcJqyc-8UWbyEmjPPVq0o4YgD5w@mail.gmail.com>
- <CAD=FV=WM7k-6moen+sgzZXnX-Zcw_BY9L=RTTrmt6pSHpXPLng@mail.gmail.com> <SN1PR12MB2431C9312AD486935C9B728AA7390@SN1PR12MB2431.namprd12.prod.outlook.com>
-In-Reply-To: <SN1PR12MB2431C9312AD486935C9B728AA7390@SN1PR12MB2431.namprd12.prod.outlook.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 29 Apr 2019 10:43:15 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VtNUu0GyamvOv8x4rFHjFZdOaLMkFN=Rh0mJED08fW2Q@mail.gmail.com>
-Message-ID: <CAD=FV=VtNUu0GyamvOv8x4rFHjFZdOaLMkFN=Rh0mJED08fW2Q@mail.gmail.com>
-Subject: Re: [PATCH v1 00/14] usb: dwc2: Fix and improve power saving modes.
-To:     Artur Petrosyan <Arthur.Petrosyan@synopsys.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        John Youn <John.Youn@synopsys.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555344260-12375-36-git-send-email-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Apr 15, 2019 at 05:04:18PM +0100, Suzuki K Poulose wrote:
+> Handle failures in fixing up connections for a newly registered
+> device. This will be useful to handle cases where we fail to expose
+> the links via sysfs for the connections.
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/hwtracing/coresight/coresight.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+> index 010bc86..4d63063 100644
+> --- a/drivers/hwtracing/coresight/coresight.c
+> +++ b/drivers/hwtracing/coresight/coresight.c
+> @@ -1025,18 +1025,18 @@ static int coresight_orphan_match(struct device *dev, void *data)
+>  	return 0;
+>  }
+>  
+> -static void coresight_fixup_orphan_conns(struct coresight_device *csdev)
+> +static int coresight_fixup_orphan_conns(struct coresight_device *csdev)
+>  {
+>  	/*
+>  	 * No need to check for a return value as orphan connection(s)
+>  	 * are hooked-up with each newly added component.
+>  	 */
+> -	bus_for_each_dev(&coresight_bustype, NULL,
+> +	return bus_for_each_dev(&coresight_bustype, NULL,
+>  			 csdev, coresight_orphan_match);
 
-On Mon, Apr 29, 2019 at 5:05 AM Artur Petrosyan
-<Arthur.Petrosyan@synopsys.com> wrote:
->
-> > To add a bit of breadcrumbs, I did the rebase atop my patches and also
-> > did some basic review of yours.  Other than a few nits I think I found
-> > at least one bug where you're unlocking a spinlock twice in the
-> > partial power down case.
-> Yeah thank you so much for the review it really helps to make
-> conclusions on the implementations. I have tested those patches on
-> HAPS-DX platform and have not got any problem. Hibernation and partial
-> power down flows are working ok.
+After this patch the comment is no longer true - please consider amending.
 
-Do you happen to have any boards that have "OTG_EN_PWROPT =3D 0"?  I'd
-love testing of my patch series with that.
+With the above:
 
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-> > I continue to be convinced that the right thing to do is to finish
-> > landing my series and then once you've spun yours atop mine we can
-> > look at landing it.
-> >
-> > Here's all my picks atop Felipe's tree that show how I resolved
-> > things:  https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__chromiu=
-m.googlesource.com_chromiumos_third-5Fparty_kernel_-2Blog_refs_sandbox_dian=
-ders_190426-2Ddwc2-2Dstuff&d=3DDwIFaQ&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=3D9hPBFK=
-CJ_nBjJhGVrrlYOeOQjP_HlVzYqrC_D7niMJI&m=3Dmdz-R9O5TUR_zXEeeCZO2341dvcwZro2c=
-edCZzIIans&s=3DmVfBGtiMQg2XVHXmGCWcd584g0DYRH1JDVnEnJWE6P8&e=3D
-> >
-> >
-> > -Doug
-> >
->
-> I will make my changes then will go ahead and rebase.
-
-Thanks!
-
-
--Doug
+>  }
+>  
+>  
+> -static void coresight_fixup_device_conns(struct coresight_device *csdev)
+> +static int coresight_fixup_device_conns(struct coresight_device *csdev)
+>  {
+>  	int i;
+>  
+> @@ -1056,6 +1056,8 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
+>  			conn->child_dev = NULL;
+>  		}
+>  	}
+> +
+> +	return 0;
+>  }
+>  
+>  static int coresight_remove_match(struct device *dev, void *data)
+> @@ -1265,10 +1267,15 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+>  
+>  	mutex_lock(&coresight_mutex);
+>  
+> -	coresight_fixup_device_conns(csdev);
+> -	coresight_fixup_orphan_conns(csdev);
+> +	ret = coresight_fixup_device_conns(csdev);
+> +	if (!ret)
+> +		ret = coresight_fixup_orphan_conns(csdev);
+>  
+>  	mutex_unlock(&coresight_mutex);
+> +	if (ret) {
+> +		coresight_unregister(csdev);
+> +		return ERR_PTR(ret);
+> +	}
+>  
+>  	return csdev;
+>  
+> -- 
+> 2.7.4
+> 
