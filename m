@@ -2,247 +2,166 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0990C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CF5C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A935A2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4A12087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfD2IQh (ORCPT
+        id S1727590AbfD2IQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 04:16:37 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:36616 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727477AbfD2IQg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 04:16:36 -0400
-Received: by mail-wr1-f54.google.com with SMTP id o4so2684587wra.3;
-        Mon, 29 Apr 2019 01:16:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:openpgp:autocrypt:to:message-id
-         :date:user-agent:mime-version:content-language
-         :content-transfer-encoding;
-        bh=P+LnBh7bBA7RULfpGkdEbgyn85Nf7wY/ion/MIZqKKo=;
-        b=rjWcy2yEnqJ1NV8Ep69oJ+PrLJlSN+RgQldllKNMbqSNZZdYOpIkTrnhz8TyQzOQfm
-         2Yg/nVlkd+zd8IkqEDUzGutrSw0xCcZskSdgWYyeH5lEBHTN+eIXDRl6zvduBkUTzD7G
-         VQzSe1oHyEGeYH+sShOtc373Z/0C2Q9uwIYfCmx/6LO2f7y3mJgOzajYhZv5SungKrNr
-         VH0NDM2oPFEm3R1NQWeAzlWXcjVSI4q4SEoKekOh42Lr9h51vMPT4u0ZnghPUO/8RoKQ
-         kQ9lM/4UWqRPHdoyqAm1yZ0v29uAMb4ANnT/BiSbebywlMVZdMmENypbMGM8DHONlUQn
-         ISkQ==
-X-Gm-Message-State: APjAAAUNSWEhgIm1VQbORzqEDBcr4oAbYp3+7T3zr2R91HKkjcP1ZMCQ
-        pWoXuOPGL5qoEqao9sAu7H95b0pV
-X-Google-Smtp-Source: APXvYqzuQcP54zEYmlCxvrYoOjsKwPHwVmf12onxxdaBI0M/izF6Fdqp5GCyhlA5ikb1o9b2ehKqWw==
-X-Received: by 2002:a5d:4308:: with SMTP id h8mr28851906wrq.22.1556525793653;
-        Mon, 29 Apr 2019 01:16:33 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id z4sm12594576wmk.5.2019.04.29.01.16.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 01:16:32 -0700 (PDT)
-From:   Jiri Slaby <jslaby@suse.cz>
-Subject: memcg causes crashes in list_lru_add
+        Mon, 29 Apr 2019 04:16:44 -0400
+Received: from foss.arm.com ([217.140.101.70]:49566 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727477AbfD2IQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 04:16:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDA5A80D;
+        Mon, 29 Apr 2019 01:16:43 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D23013F71A;
+        Mon, 29 Apr 2019 01:16:42 -0700 (PDT)
+Subject: Re: [PATCH 4/7] irqchip/irq-mbigen.c: Use
+ devm_platform_ioremap_resource()
+To:     Mukesh Ojha <mojha@codeaurora.org>, tglx@linutronix.de,
+        jason@lakedaemon.net, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1554362413-3305-1-git-send-email-mojha@codeaurora.org>
+ <1554362413-3305-5-git-send-email-mojha@codeaurora.org>
+From:   Marc Zyngier <marc.zyngier@arm.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, mm <linux-mm@kvack.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Message-ID: <f0cfcfa7-74d0-8738-1061-05d778155462@suse.cz>
-Date:   Mon, 29 Apr 2019 10:16:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <03de06b4-9814-81bf-f0c0-6bdb179b6c70@arm.com>
+Date:   Mon, 29 Apr 2019 09:16:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-GB
+In-Reply-To: <1554362413-3305-5-git-send-email-mojha@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 04/04/2019 08:20, Mukesh Ojha wrote:
+> devm_platform_ioremap_resource() internally have platform_get_resource()
+> and devm_ioremap_resource() in it. So instead of calling them separately
+> use devm_platform_ioremap_resource() directly.
+> 
+> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+> ---
+>  drivers/irqchip/irq-ls-scfg-msi.c | 4 +---
+>  drivers/irqchip/irq-mbigen.c      | 9 +--------
+>  2 files changed, 2 insertions(+), 11 deletions(-)
 
-with new enough systemd, one of our systems 100% crashes during boot.
-Kernels I tried are all affected: 5.1-rc7, 5.0.10 stable, 4.12.14.
+You're changing two drivers, and yet only mention one. Bad.
 
-The 5.1-rc7 crash:
-> [   12.022637] systemd[1]: Starting Create list of required static device nodes for the current kernel...
-> [   12.023353] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-> [   12.041502] #PF error: [normal kernel read fault]
-> [   12.041502] PGD 0 P4D 0 
-> [   12.041502] Oops: 0000 [#1] SMP NOPTI
-> [   12.041502] CPU: 0 PID: 208 Comm: (kmod) Not tainted 5.1.0-rc7-1.g04c1966-default #1 openSUSE Tumbleweed (unreleased)
-> [   12.041502] Hardware name: Supermicro H8DSP-8/H8DSP-8, BIOS 080011  06/30/2006
-> [   12.041502] RIP: 0010:list_lru_add+0x94/0x170
-> [   12.041502] Code: c6 07 00 66 66 66 90 31 c0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 49 8b 7c 24 20 49 8d 54 24 08 48 85 ff 74 07 e9 46 00 00 00 31 ff <48> 8b 42 08 4c 89 6a 08 49 89 55 00 49 89 45 08 4c 89 28 48 8b 42
-> [   12.041502] RSP: 0018:ffffb11b8091be50 EFLAGS: 00010202
-> [   12.041502] RAX: 0000000000000001 RBX: ffff930b35705a40 RCX: ffff9309cf21ade0
-> [   12.041502] RDX: 0000000000000000 RSI: ffff930ab61bc587 RDI: ffff930a17711000
-> [   12.041502] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> [   12.041502] R10: 0000000000000000 R11: 0000000000000008 R12: ffff9309f5f86640
-> [   12.041502] R13: ffff930ab5705a40 R14: 0000000000000001 R15: ffff930a171dc4e0
-> [   12.041502] FS:  00007f42d6ea5940(0000) GS:ffff930ab7800000(0000) knlGS:0000000000000000
-> [   12.041502] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   12.041502] CR2: 0000000000000008 CR3: 0000000057dec000 CR4: 00000000000006f0
-> [   12.041502] Call Trace:
-> [   12.041502]  d_lru_add+0x44/0x50
-> [   12.041502]  dput.part.34+0xfc/0x110
-> [   12.041502]  __fput+0x108/0x230
-> [   12.041502]  task_work_run+0x9f/0xc0
-> [   12.041502]  exit_to_usermode_loop+0xf5/0x100
-> [   12.041502]  do_syscall_64+0xe2/0x110
-> [   12.041502]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [   12.041502] RIP: 0033:0x7f42d77567b7
-> [   12.041502] Code: ff ff ff ff c3 48 8b 15 df 96 0c 00 f7 d8 64 89 02 b8 ff ff ff ff eb c0 66 2e 0f 1f 84 00 00 00 00 00 90 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 b1 96 0c 00 f7 d8 64 89 02 b8
-> [   12.041502] RSP: 002b:00007fffeb85c2c8 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
-> [   12.041502] RAX: 0000000000000000 RBX: 000055dfb6222fd0 RCX: 00007f42d77567b7
-> [   12.041502] RDX: 00007f42d78217c0 RSI: 000055dfb6223053 RDI: 0000000000000003
-> [   12.041502] RBP: 00007f42d78223c0 R08: 000055dfb62230b0 R09: 00007fffeb85c0f5
-> [   12.041502] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
-> [   12.041502] R13: 000055dfb6225080 R14: 00007fffeb85c3aa R15: 0000000000000003
-> [   12.041502] Modules linked in:
-> [   12.041502] CR2: 0000000000000008
-> [   12.491424] ---[ end trace 574d0c998e97d864 ]---
+> 
+> diff --git a/drivers/irqchip/irq-ls-scfg-msi.c b/drivers/irqchip/irq-ls-scfg-msi.c
+> index c671b32..aec5a2f 100644
+> --- a/drivers/irqchip/irq-ls-scfg-msi.c
+> +++ b/drivers/irqchip/irq-ls-scfg-msi.c
+> @@ -336,7 +336,6 @@ static int ls_scfg_msi_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_device_id *match;
+>  	struct ls_scfg_msi *msi_data;
+> -	struct resource *res;
+>  	int i, ret;
+>  
+>  	match = of_match_device(ls_scfg_msi_id, &pdev->dev);
+> @@ -349,8 +348,7 @@ static int ls_scfg_msi_probe(struct platform_device *pdev)
+>  
+>  	msi_data->cfg = (struct ls_scfg_msi_cfg *) match->data;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	msi_data->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	msi_data->regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(msi_data->regs)) {
+>  		dev_err(&pdev->dev, "failed to initialize 'regs'\n");
+>  		return PTR_ERR(msi_data->regs);
+> diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+> index 98b6e1d..c9aedfb 100644
+> --- a/drivers/irqchip/irq-mbigen.c
+> +++ b/drivers/irqchip/irq-mbigen.c
+> @@ -327,7 +327,6 @@ static inline int mbigen_acpi_create_domain(struct platform_device *pdev,
+>  static int mbigen_device_probe(struct platform_device *pdev)
+>  {
+>  	struct mbigen_device *mgn_chip;
+> -	struct resource *res;
+>  	int err;
+>  
+>  	mgn_chip = devm_kzalloc(&pdev->dev, sizeof(*mgn_chip), GFP_KERNEL);
+> @@ -335,13 +334,7 @@ static int mbigen_device_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	mgn_chip->pdev = pdev;
+> -
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!res)
+> -		return -EINVAL;
+> -
+> -	mgn_chip->base = devm_ioremap(&pdev->dev, res->start,
+> -				      resource_size(res));
+> +	mgn_chip->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (!mgn_chip->base) {
 
-Enabling KASAN reveals a bit more:
-> Allocated by task 1:
->  __kasan_kmalloc.constprop.13+0xc1/0xd0
->  __list_lru_init+0x3cd/0x5e0
+Now you are introducing a bug, as devm_ioremap and
+devm_platform_ioremap_resource do not return the same thing.
 
-This is kvmalloc in memcg_init_list_lru_node:
-        memcg_lrus = kvmalloc(sizeof(*memcg_lrus) +
-                              size * sizeof(void *), GFP_KERNEL);
+>  		dev_err(&pdev->dev, "failed to ioremap %pR\n", res);
+>  		return -ENOMEM;
+> 
 
->  sget_userns+0x65c/0xba0
->  kernfs_mount_ns+0x120/0x7f0
->  cgroup_do_mount+0x93/0x2e0
->  cgroup1_mount+0x335/0x925
->  cgroup_mount+0x14a/0x7b0
->  mount_fs+0xce/0x304
->  vfs_kern_mount.part.33+0x58/0x370
->  do_mount+0x390/0x2540
->  ksys_mount+0xb6/0xd0
-...
->
-> Freed by task 1:
->  __kasan_slab_free+0x125/0x170
->  kfree+0x90/0x1a0
->  acpi_ds_terminate_control_method+0x5a2/0x5c9
+Thanks,
 
-This is a different object (the address overflowed to an acpi-allocated
-memory). Irrelevant info.
-
-> The buggy address belongs to the object at ffff8880d69a2e68
->  which belongs to the cache kmalloc-16 of size 16
-> The buggy address is located 8 bytes to the right of
->  16-byte region [ffff8880d69a2e68, ffff8880d69a2e78)
-
-Hmm, 16byte slab. 'memcg_lrus' allocated above is 'struct
-list_lru_memcg' defined as:
-        struct rcu_head         rcu;
-        /* array of per cgroup lists, indexed by memcg_cache_id */
-        struct list_lru_one     *lru[0];
-
-sizeof(struct rcu_head) is 16. So it must mean that 'size' used in the
-'kvmalloc' above in 'memcg_init_list_lru_node' is 0. That cannot be correct.
-
-This confirms the theory:
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -366,8 +366,14 @@ static int memcg_init_list_lru_node(stru
-        struct list_lru_memcg *memcg_lrus;
-        int size = memcg_nr_cache_ids;
-
-+       if (!size) {
-+               pr_err("%s: XXXXXXXXX size is zero yet!\n", __func__);
-+               size = 256;
-+       }
-+
-        memcg_lrus = kvmalloc(sizeof(*memcg_lrus) +
-                              size * sizeof(void *), GFP_KERNEL);
-+       printk(KERN_DEBUG "%s:    a=%px\n", __func__, memcg_lrus);
-        if (!memcg_lrus)
-                return -ENOMEM;
-
-
-and even makes the beast booting. memcg has very wrong assumptions on
-'memcg_nr_cache_ids'. It does not assume it can change later, despite it
-does.
-
-These are dump_stacks from 'memcg_alloc_cache_id' which changes
-'memcg_nr_cache_ids' later during boot:
-CPU: 1 PID: 1 Comm: systemd Tainted: G            E
-5.0.10-0.ge8fc1e9-default #1 openSUSE Tumbleweed (unreleased)
-Hardware name: Supermicro H8DSP-8/H8DSP-8, BIOS 080011  06/30/2006
-Call Trace:
- dump_stack+0x9a/0xf0
- mem_cgroup_css_alloc+0xb16/0x16a0
- cgroup_apply_control_enable+0x2d7/0xb40
- cgroup_mkdir+0x594/0xc50
- kernfs_iop_mkdir+0x21a/0x2e0
- vfs_mkdir+0x37a/0x5d0
- do_mkdirat+0x1b1/0x200
- do_syscall_64+0xa5/0x290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-
-
-
-I am not sure why this is machine-dependent. I cannot reproduce on any
-other box.
-
-Any idea how to fix this mess?
-
-The report is in our bugzilla:
-https://bugzilla.suse.com/show_bug.cgi?id=1133616
-
-thanks,
+	M.
 -- 
-js
-suse labs
+Jazz is not dead. It just smells funny...
