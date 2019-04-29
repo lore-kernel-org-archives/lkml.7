@@ -2,733 +2,265 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83ACC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D27C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6782320673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:41:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C8HqsX5G"
+	by mail.kernel.org (Postfix) with ESMTP id 1D3192075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556578400;
+	bh=lkBIkbcGJTcFMTuKJMXmKeDdEvw3G26ywxjLlUYtlNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K2rrQV3E0fR1TxYns/dA5q3WOgS6DhPzeZ85GsiMh8gBVh0+uwyExU7+RkyCqwHYR
+	 H0AqN7oDghitwObQxU11cD0L6ePtRNLjO32VssjWCIfUh9NfFNaqCJWRe8uNRRAwGJ
+	 6My724Abd/TV0UJH1fM6kb2d2XquRXHUqgMYHOWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbfD2Wlx (ORCPT
+        id S1729684AbfD2WxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:41:53 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:39289 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729593AbfD2Wlw (ORCPT
+        Mon, 29 Apr 2019 18:53:19 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44092 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729601AbfD2WxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:41:52 -0400
-Received: by mail-it1-f193.google.com with SMTP id t200so1704216itf.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 15:41:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v2qu2ReeUaxnBMNdxYT9yjLwxK2o/ADHGcE/mrf0a/U=;
-        b=C8HqsX5GminfJWHc43b4AwmFYDoPXjhY6rAE7NGIijYeokxQqzU43MqD+KiDjgaq1G
-         vWQ8wIiUDpP9Z6YuAd5+030gE7NXX6XnkbBxI6tEQvFx/oZu+lZZf4UHSxa5WWmaBe4b
-         m3rbk/Q7GtS6Rl44OlHLLBTSKArefloXpIg6s=
+        Mon, 29 Apr 2019 18:53:18 -0400
+Received: by mail-ot1-f68.google.com with SMTP id d24so10186077otl.11;
+        Mon, 29 Apr 2019 15:53:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v2qu2ReeUaxnBMNdxYT9yjLwxK2o/ADHGcE/mrf0a/U=;
-        b=MxWOuckDbgsUL0kygzdS/2J7ctfdQ31q/7rW0cgAP7UD4ldaoNNYPnfAkhc+qKBOlf
-         NA0YkcnqO+14lbOONhrRn1AQMlE1uIMzkkjnhujrcUu2gMeoOo5mnTwCSi7AKQvgLGo7
-         pE2b4pkKlJGeIttZYQ3aWpyukWhhnt9fHgkbl4Y/V9wlZ3eZKa0pX19o5lBysTGJfE2q
-         IL6ro8COosYLr/dmugOJU/RjjzFXe0wvZlXQe+802A4mhQH4KrBLCru/Rnay0kuMkwVf
-         kXm9cxVmlQfBYbkUwwJNB3JnURNzDGGKqXY3TZeZFacy2GpWqLQrioYxlH92OcJNuWxa
-         +wkw==
-X-Gm-Message-State: APjAAAVIAm3ztm6jXKBUHsQQvm/MMVEYxzhaPIKpKpe1S2G5R7skYEPq
-        NobqECPTUUQoZc7MuYv0weAuw5RPLU8=
-X-Google-Smtp-Source: APXvYqwNUr7tTWQ+e/+uToQ9YjmrqEZENDydO7kyzbKLP0Ej7+XIIrx0ImWARYYFa7ISgftneGNHfg==
-X-Received: by 2002:a05:6638:29b:: with SMTP id c27mr26465303jaq.112.1556577711111;
-        Mon, 29 Apr 2019 15:41:51 -0700 (PDT)
-Received: from kiwi.bld.corp.google.com ([2620:15c:183:0:8223:87c:a681:66aa])
-        by smtp.gmail.com with ESMTPSA id p132sm574191ita.2.2019.04.29.15.41.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 15:41:50 -0700 (PDT)
-From:   Simon Glass <sjg@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Frank Rowand <frank.rowand@sony.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Simon Glass <sjg@chromium.org>
-Subject: [PATCH] RFC: Example schema files written in Python
-Date:   Mon, 29 Apr 2019 16:41:43 -0600
-Message-Id: <20190429224143.192506-1-sjg@chromium.org>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TJyEVrvktv6Tufpho/NZ7KCvbKlhL+8KY18oT1f7uHk=;
+        b=FJULULKAAcnBe11wbD9qO34jMJKWBnu/n50Zy9IOS/yVArJ6HHkD0EV5TEU9MIev63
+         g02p8u1dTmV5DSEWXfZ/x6KblmQoZurUwIkEGMD2XG1WlvgWREGv+lpPo/hGN1UfXBuq
+         Mht5zcmAC2V8OJ4yB7Sctpq+53tzFDfmcZH0mai9BOba1nEPf8FfhaNckk9vEQr4YFL+
+         xFyy5cZRAsECc8ASz1gy+EcWK+ddt6FzqMIix5px5cTckU/eM14CMJwpd+IO6PQytZ5d
+         zkYeEviN+pSrHjaZZFwU6CMFVvFnhFxD65nfE7tsLaYxuwTFoIlyHUkehEB6IH58dxYp
+         NqPw==
+X-Gm-Message-State: APjAAAX6p0moDAVXzpv/hWh+i92aibcqaisN3267Ybe1WeD5Q3e0AcWI
+        Yq4+6G3OBc2iMa1Rwi1Rxg==
+X-Google-Smtp-Source: APXvYqxyLs6MFB7n9d1LRFWLjpK15UJ0Vz05okp6i1ecyTDNMHsqOeG5GSjwhhfcQTOtr1suT8/yeg==
+X-Received: by 2002:a05:6830:4d:: with SMTP id d13mr8171393otp.106.1556578397797;
+        Mon, 29 Apr 2019 15:53:17 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s202sm2479151oih.42.2019.04.29.15.53.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 15:53:16 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 17:53:15 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Stu Hsieh <stu.hsieh@mediatek.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        CK Hu <ck.hu@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Subject: Re: [PATCH v2 01/15] dt-bindings: media: Add binding for MT2712
+ MIPI-CSI2
+Message-ID: <20190429225315.GA23589@bogus>
+References: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
+ <1555407015-18130-2-git-send-email-stu.hsieh@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555407015-18130-2-git-send-email-stu.hsieh@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of these are hand-written, but xilinx-xadc.py is auto-generated by
-binding_to_py.py as an example of the use of that tool.
+On Tue, Apr 16, 2019 at 05:30:01PM +0800, Stu Hsieh wrote:
+> Add MIPI-CSI2 dt-binding for Mediatek MT2712 SoC
+> 
+> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> ---
+>  .../bindings/media/mediatek-mipicsi-camsv.txt | 53 ++++++++++++++++++
+>  .../media/mediatek-mipicsi-common.txt         | 19 +++++++
+>  .../bindings/media/mediatek-mipicsi.txt       | 54 +++++++++++++++++++
+>  3 files changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+> new file mode 100644
+> index 000000000000..5f34974f12ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+> @@ -0,0 +1,53 @@
+> +* Mediatek MIPI-CSI2 receiver camsv
+> +
+> +Mediatek MIPI-CSI2 receiver camsv transfer data to DRAM in Mediatek SoCs
+> +
+> +Required properties:
+> +- reg : physical base address of the mipicsi receiver registers and length of
+> +  memory mapped region.
 
-This is part of a proof-of-concept device-tree validator. See the patch
-on the dtc mailing list for details:
+Looks like 2 regions in the example. What are they?
 
-   RFC: Python-based device-tree validation
+> +- clocks: device clocks, see
+> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
----
+1 clock?
 
- Documentation/__init__.py                     |   0
- Documentation/devicetree/__init__.py          |   0
- Documentation/devicetree/bindings/__init__.py |   0
- .../devicetree/bindings/arm/__init__.py       |   0
- Documentation/devicetree/bindings/arm/cpus.py | 125 ++++++++++++++++++
- Documentation/devicetree/bindings/arm/pmu.py  |  38 ++++++
- .../devicetree/bindings/arm/rockchip.py       |  16 +++
- .../devicetree/bindings/arm/xilinx.py         |  24 ++++
- Documentation/devicetree/bindings/base.py     |  14 ++
- Documentation/devicetree/bindings/chosen.py   |  15 +++
- .../devicetree/bindings/cpufreq/cpufreq-dt.py |  15 +++
- .../devicetree/bindings/fpga/fpga-region.py   |  15 +++
- .../bindings/iio/adc/xilinx-xadc.py           |  61 +++++++++
- .../bindings/iio/adc/xilinx-xadc.txt          |  34 ++---
- Documentation/devicetree/bindings/memory.py   |  15 +++
- Documentation/devicetree/bindings/opp/opp.py  |  15 +++
- .../bindings/regulator/fixed-regulator.py     |  14 ++
- .../bindings/regulator/regulator.py           |  19 +++
- .../reserved-memory/reserved-memory.py        |  14 ++
- .../devicetree/bindings/thermal/thermal.py    |  15 +++
- .../devicetree/bindings/usb/usb-nop-xceiv.py  |  16 +++
- 21 files changed, 449 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/__init__.py
- create mode 100644 Documentation/devicetree/__init__.py
- create mode 100644 Documentation/devicetree/bindings/__init__.py
- create mode 100644 Documentation/devicetree/bindings/arm/__init__.py
- create mode 100644 Documentation/devicetree/bindings/arm/cpus.py
- create mode 100644 Documentation/devicetree/bindings/arm/pmu.py
- create mode 100644 Documentation/devicetree/bindings/arm/rockchip.py
- create mode 100644 Documentation/devicetree/bindings/arm/xilinx.py
- create mode 100644 Documentation/devicetree/bindings/base.py
- create mode 100644 Documentation/devicetree/bindings/chosen.py
- create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-dt.py
- create mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.py
- create mode 100644 Documentation/devicetree/bindings/iio/adc/xilinx-xadc.py
- create mode 100644 Documentation/devicetree/bindings/memory.py
- create mode 100644 Documentation/devicetree/bindings/opp/opp.py
- create mode 100644 Documentation/devicetree/bindings/regulator/fixed-regulator.py
- create mode 100644 Documentation/devicetree/bindings/regulator/regulator.py
- create mode 100644 Documentation/devicetree/bindings/reserved-memory/reserved-memory.py
- create mode 100644 Documentation/devicetree/bindings/thermal/thermal.py
- create mode 100644 Documentation/devicetree/bindings/usb/usb-nop-xceiv.py
+> +- interrupts : interrupt number to the interrupt controller.
+> +
+> +Example:
+> +	seninf1_mux_camsv0: seninf_mux_camsv@15002100 {
+> +		reg = <0 0x15002120 0 0x40>,
+> +		      <0 0x15004000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
+> +		interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf2_mux_camsv1: seninf_mux_camsv@15002500 {
+> +		reg = <0 0x15002520 0 0x40>,
+> +		      <0 0x15005000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
+> +		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf3_mux_camsv2: seninf_mux_camsv@15002900 {
+> +		reg = <0 0x15002920 0 0x40>,
+> +		      <0 0x15006000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
+> +		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf4_mux_camsv3: seninf_mux_camsv@15002D00 {
+> +		reg = <0 0x15002D20 0 0x40>,
+> +		      <0 0x15007000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
+> +		interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf5_mux_camsv4: seninf_mux_camsv@15003100 {
+> +		reg = <0 0x15003120 0 0x40>,
+> +		      <0 0x15008000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
+> +		interrupts = <GIC_SPI 270 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf6_mux_camsv5: seninf_mux_camsv@15003500 {
+> +		reg = <0 0x15003520 0 0x40>,
+> +		      <0 0x15009000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
+> +		interrupts = <GIC_SPI 271 IRQ_TYPE_LEVEL_LOW>;
+> +	
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+> new file mode 100644
+> index 000000000000..a67c744b75f0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+> @@ -0,0 +1,19 @@
+> +* Mediatek MIPI-CSI2 receiver common
+> +
+> +Mediatek MIPI-CSI2 receiver is the MIPI Signal capture hardware present in Mediatek SoCs
+> +
+> +Required properties:
+> +- compatible: should be "mediatek,mt2712-mipicsi-common"
+> +- reg : physical base address of the mipicsi receiver registers and length of
+> +  memory mapped region.
+> +- clocks: device clocks, see
+> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
 
-diff --git a/Documentation/__init__.py b/Documentation/__init__.py
-new file mode 100644
-index 0000000000000..e69de29bb2d1d
-diff --git a/Documentation/devicetree/__init__.py b/Documentation/devicetree/__init__.py
-new file mode 100644
-index 0000000000000..e69de29bb2d1d
-diff --git a/Documentation/devicetree/bindings/__init__.py b/Documentation/devicetree/bindings/__init__.py
-new file mode 100644
-index 0000000000000..e69de29bb2d1d
-diff --git a/Documentation/devicetree/bindings/arm/__init__.py b/Documentation/devicetree/bindings/arm/__init__.py
-new file mode 100644
-index 0000000000000..e69de29bb2d1d
-diff --git a/Documentation/devicetree/bindings/arm/cpus.py b/Documentation/devicetree/bindings/arm/cpus.py
-new file mode 100644
-index 0000000000000..6a2e94903d438
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/cpus.py
-@@ -0,0 +1,125 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# /cpu bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeCpu, NodeCpus
-+from kschema import PropClocks, PropPhandle, PropReg, PropString, PropSupply
-+
-+enable_methods = [
-+    'actions,s500-smp',
-+    'allwinner,sun6i-a31',
-+    'allwinner,sun8i-a23',
-+    'allwinner,sun9i-a80-smp',
-+    'amlogic,meson8-smp',
-+    'amlogic,meson8b-smp',
-+    'arm,realview-smp',
-+    'brcm,bcm11351-cpu-method',
-+    'brcm,bcm23550',
-+    'brcm,bcm2836-smp',
-+    'brcm,bcm-nsp-smp',
-+    'brcm,brahma-b15',
-+    'marvell,armada-375-smp',
-+    'marvell,armada-380-smp',
-+    'marvell,armada-390-smp',
-+    'marvell,armada-xp-smp',
-+    'marvell,98dx3236-smp',
-+    'mediatek,mt6589-smp',
-+    'mediatek,mt81xx-tz-smp',
-+    'qcom,gcc-msm8660',
-+    'qcom,kpss-acc-v1',
-+    'qcom,kpss-acc-v2',
-+    'renesas,apmu',
-+    'renesas,r9a06g032-smp',
-+    'rockchip,rk3036-smp',
-+    'rockchip,rk3066-smp',
-+    'ste,dbx500-smp',
-+]
-+
-+schema = [
-+    NodeCpus(),
-+    NodeCpu(['arm,arm710t',
-+              'arm,arm720t',
-+              'arm,arm740t',
-+              'arm,arm7ej-s',
-+              'arm,arm7tdmi',
-+              'arm,arm7tdmi-s',
-+              'arm,arm9es',
-+              'arm,arm9ej-s',
-+              'arm,arm920t',
-+              'arm,arm922t',
-+              'arm,arm925',
-+              'arm,arm926e-s',
-+              'arm,arm926ej-s',
-+              'arm,arm940t',
-+              'arm,arm946e-s',
-+              'arm,arm966e-s',
-+              'arm,arm968e-s',
-+              'arm,arm9tdmi',
-+              'arm,arm1020e',
-+              'arm,arm1020t',
-+              'arm,arm1022e',
-+              'arm,arm1026ej-s',
-+              'arm,arm1136j-s',
-+              'arm,arm1136jf-s',
-+              'arm,arm1156t2-s',
-+              'arm,arm1156t2f-s',
-+              'arm,arm1176jzf',
-+              'arm,arm1176jz-s',
-+              'arm,arm1176jzf-s',
-+              'arm,arm11mpcore',
-+              'arm,armv8', # Only for s/w models
-+              'arm,cortex-a5',
-+              'arm,cortex-a7',
-+              'arm,cortex-a8',
-+              'arm,cortex-a9',
-+              'arm,cortex-a12',
-+              'arm,cortex-a15',
-+              'arm,cortex-a17',
-+              'arm,cortex-a53',
-+              'arm,cortex-a57',
-+              'arm,cortex-a72',
-+              'arm,cortex-a73',
-+              'arm,cortex-m0',
-+              'arm,cortex-m0+',
-+              'arm,cortex-m1',
-+              'arm,cortex-m3',
-+              'arm,cortex-m4',
-+              'arm,cortex-r4',
-+              'arm,cortex-r5',
-+              'arm,cortex-r7',
-+              'brcm,brahma-b15',
-+              'brcm,brahma-b53',
-+              'brcm,vulcan',
-+              'cavium,thunder',
-+              'cavium,thunder2',
-+              'faraday,fa526',
-+              'intel,sa110',
-+              'intel,sa1100',
-+              'marvell,feroceon',
-+              'marvell,mohawk',
-+              'marvell,pj4a',
-+              'marvell,pj4b',
-+              'marvell,sheeva-v5',
-+              'marvell,sheeva-v7',
-+              'nvidia,tegra132-denver',
-+              'nvidia,tegra186-denver',
-+              'nvidia,tegra194-carmel',
-+              'qcom,krait',
-+              'qcom,kryo',
-+              'qcom,kryo385',
-+              'qcom,scorpion'], [
-+        PropString('device_type', True, ''),
-+        PropReg(),
-+        PropClocks(),
-+        PropString('enable-method', True, 'psci|spin-table',
-+                   {'#arch': 'armv8'}),
-+        PropString('enable-method', False, '|'.join(enable_methods),
-+                   {'#arch': '!armv8'}),
-+        PropPhandle('rockchip,pmu', 'rockchip,rk3288-pmu',
-+                    cond_props={'enable-method': 'rockchip,rk3066-smp'}),
-+        PropSupply('cpu'),
-+    ]),
-+]
-diff --git a/Documentation/devicetree/bindings/arm/pmu.py b/Documentation/devicetree/bindings/arm/pmu.py
-new file mode 100644
-index 0000000000000..aa475b7293eff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/pmu.py
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Performance-Monitoring Unit (PMU) bindings
-+#
-+# not Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeDesc, PropIntList, PropReg
-+
-+schema = [
-+    NodeDesc('pmu', [
-+        'apm,potenza-pmu',
-+        'arm,armv8-pmuv3',
-+        'arm,cortex-a73-pmu',
-+        'arm,cortex-a72-pmu',
-+        'arm,cortex-a57-pmu',
-+        'arm,cortex-a53-pmu',
-+        'arm,cortex-a35-pmu',
-+        'arm,cortex-a17-pmu',
-+        'arm,cortex-a15-pmu',
-+        'arm,cortex-a12-pmu',
-+        'arm,cortex-a9-pmu',
-+        'arm,cortex-a8-pmu',
-+        'arm,cortex-a7-pmu',
-+        'arm,cortex-a5-pmu',
-+        'arm,arm11mpcore-pmu',
-+        'arm,arm1176-pmu',
-+        'arm,arm1136-pmu',
-+        'brcm,vulcan-pmu',
-+        'cavium,thunder-pmu',
-+        'qcom,scorpion-pmu',
-+        'qcom,scorpion-mp-pmu',
-+        'qcom,krait-pmu',
-+        ], False, [
-+        PropReg(),
-+        PropIntList('interrupts'),
-+    ]),
-+]
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.py b/Documentation/devicetree/bindings/arm/rockchip.py
-new file mode 100644
-index 0000000000000..991775a63ac52
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/rockchip.py
-@@ -0,0 +1,16 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Rockchip platforms device tree bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeModel
-+
-+schema = [
-+    NodeModel('Google Jerry',
-+              ['google,veyron-jerry-rev7', 'google,veyron-jerry-rev6',
-+               'google,veyron-jerry-rev5', 'google,veyron-jerry-rev4',
-+               'google,veyron-jerry-rev3', 'google,veyron-jerry',
-+               'google,veyron', 'rockchip,rk3288']),
-+]
-diff --git a/Documentation/devicetree/bindings/arm/xilinx.py b/Documentation/devicetree/bindings/arm/xilinx.py
-new file mode 100644
-index 0000000000000..8901878cfdf31
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/xilinx.py
-@@ -0,0 +1,24 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Rockchip platforms device tree bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeModel
-+
-+schema = [
-+    NodeModel('Digilent Zybo board',
-+              ['adapteva,parallella',
-+              'digilent,zynq-zybo',
-+              'digilent,zynq-zybo-z7',
-+              'xlnx,zynq-cc108',
-+              'xlnx,zynq-zc702',
-+              'xlnx,zynq-zc706',
-+              'xlnx,zynq-zc770-xm010',
-+              'xlnx,zynq-zc770-xm011',
-+              'xlnx,zynq-zc770-xm012',
-+              'xlnx,zynq-zc770-xm013',
-+              'xlnx,zynq-7000',
-+    ]),
-+]
-diff --git a/Documentation/devicetree/bindings/base.py b/Documentation/devicetree/bindings/base.py
-new file mode 100644
-index 0000000000000..9b86b30e12ee3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/base.py
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# base (built-in) bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeDesc, PropBool
-+
-+schema = [
-+    NodeDesc('simple-bus', ['simple-bus'], False, [
-+        PropBool('ranges'),
-+    ]),
-+]
-diff --git a/Documentation/devicetree/bindings/chosen.py b/Documentation/devicetree/bindings/chosen.py
-new file mode 100644
-index 0000000000000..9df2e6418222a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/chosen.py
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# /chosen bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeChosen, PropString
-+
-+schema = [
-+    NodeChosen([
-+        PropString('bootargs'),
-+        PropString('stdout-path'),
-+    ]),
-+]
-diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-dt.py b/Documentation/devicetree/bindings/cpufreq/cpufreq-dt.py
-new file mode 100644
-index 0000000000000..cb199af8dce5f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-dt.py
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# /cpu bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeCpu
-+from kschema import PropInt
-+
-+schema1 = [
-+    NodeCpu(None, [
-+        PropInt('clock-latency'),
-+        ])
-+    ]
-diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.py b/Documentation/devicetree/bindings/fpga/fpga-region.py
-new file mode 100644
-index 0000000000000..908cb8d3260f3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/fpga-region.py
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# fpga-region bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeDesc, PropBool, PropPhandle
-+
-+schema = [
-+    NodeDesc('fpga-region', ['fpga-region'], True, [
-+        PropPhandle('fpga-mgr', 'xlnx,zynq-devcfg-1.0'),
-+        PropBool('ranges'),
-+    ]),
-+]
-diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.py b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.py
-new file mode 100644
-index 0000000000000..9f55f48f7cde7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.py
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+
-+# Xilinx XADC device driver
-+
-+from kschema import NodeDesc, PropBool, PropClocks, PropInt, PropIntList, PropInterrupts, PropReg, PropStringList
-+
-+schema = [
-+    NodeDesc('xilinx-xadc', ['xlnx,zynq-xadc-1.00.a', 'xlnx,axi-xadc-1.00.a'], False, desc=
-+            'This binding document describes the bindings for both of them since the'
-+            'bindings are very similar. The Xilinx XADC is a ADC that can be found in the'
-+            'series 7 FPGAs from Xilinx. The XADC has a DRP interface for communication.'
-+            'Currently two different frontends for the DRP interface exist. One that is only'
-+            'available on the ZYNQ family as a hardmacro in the SoC portion of the ZYNQ. The'
-+            'other one is available on all series 7 platforms and is a softmacro with a AXI'
-+            'interface. This binding document describes the bindings for both of them since'
-+            'the bindings are very similar.', elements=[
-+        PropReg(required=True, 
-+            desc='Address and length of the register set for the device'),
-+        PropInterrupts(required=True, 
-+            desc='Interrupt for the XADC control interface.'),
-+        PropClocks(required=True, 
-+            desc='When using the ZYNQ this must be the ZYNQ PCAP clock,'
-+            'when using the AXI-XADC pcore this must be the clock that provides the'
-+            'clock to the AXI bus interface of the core.'),
-+        PropStringList('xlnx,external-mux', str_pattern='none|single|dual',
-+            desc=''),
-+        PropIntList('xlnx,external-mux-channel', valid_list='0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|16|1|2|3|4|5|6|8',
-+            desc='Configures which pair of pins is used to'
-+            'sample data in external mux mode.'
-+            'Valid values for single external multiplexer mode are:'
-+            'Valid values for dual external multiplexer mode are:'
-+            ''
-+            'This property needs to be present if the device is configured for'
-+            'external multiplexer mode (either single or dual). If the device is'
-+            'not using external multiplexer mode the property is ignored.'),
-+        NodeDesc('xlnx,channels', None, False, desc=
-+                'List of external channels that are connected to the ADC', elements=[
-+            PropInt('#address-cells', required=True, 
-+                desc='Should be 1.'),
-+            PropInt('#size-cells', required=True, 
-+                desc='Should be 0.'),
-+            NodeDesc('None', None, False, desc=
-+                    'The child nodes of this node represent the external channels which are'
-+                    'connected to the ADC. If the property is no present no external'
-+                    'channels will be assumed to be connected.', elements=[
-+                NodeDesc('None', None, False, desc=
-+                        'Each child node represents one channel and has the following'
-+                        'properties:', elements=[
-+                    PropIntList('reg', required=True, valid_list='0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|16',
-+                        desc='Pair of pins the channel is connected to.'
-+                        'Note each channel number should only be used at most'
-+                        'once.'),
-+                    PropBool('xlnx,bipolar', 
-+                        desc='If set the channel is used in bipolar'
-+                        'mode.'),
-+                    ]),
-+                ]),
-+            ]),
-+        ]),
-+    ]
-diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-index e0e0755cabd8a..24def33e6d6b8 100644
---- a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-@@ -32,24 +32,26 @@ Optional properties:
- 	- xlnx,external-mux-channel: Configures which pair of pins is used to
- 	  sample data in external mux mode.
- 	  Valid values for single external multiplexer mode are:
--		0: VP/VN
--		1: VAUXP[0]/VAUXN[0]
--		2: VAUXP[1]/VAUXN[1]
-+		* 0: VP/VN
-+		* 1: VAUXP[0]/VAUXN[0]
-+		* 2: VAUXP[1]/VAUXN[1]
- 		...
--		16: VAUXP[15]/VAUXN[15]
-+		* 16: VAUXP[15]/VAUXN[15]
- 	  Valid values for dual external multiplexer mode are:
--		1: VAUXP[0]/VAUXN[0] - VAUXP[8]/VAUXN[8]
--		2: VAUXP[1]/VAUXN[1] - VAUXP[9]/VAUXN[9]
-+		* 1: VAUXP[0]/VAUXN[0] - VAUXP[8]/VAUXN[8]
-+		* 2: VAUXP[1]/VAUXN[1] - VAUXP[9]/VAUXN[9]
- 		...
--		8: VAUXP[7]/VAUXN[7] - VAUXP[15]/VAUXN[15]
-+		* 8: VAUXP[7]/VAUXN[7] - VAUXP[15]/VAUXN[15]
- 
- 	  This property needs to be present if the device is configured for
- 	  external multiplexer mode (either single or dual). If the device is
- 	  not using external multiplexer mode the property is ignored.
--	- xnlx,channels: List of external channels that are connected to the ADC
-+
-+Required subnodes:
-+	- xlnx,channels: List of external channels that are connected to the ADC
- 	  Required properties:
--		* #address-cells: Should be 1.
--		* #size-cells: Should be 0.
-+		- #address-cells: Should be 1.
-+		- #size-cells: Should be 0.
- 
- 	  The child nodes of this node represent the external channels which are
- 	  connected to the ADC. If the property is no present no external
-@@ -58,16 +60,16 @@ Optional properties:
- 	  Each child node represents one channel and has the following
- 	  properties:
- 		Required properties:
--			* reg: Pair of pins the channel is connected to.
--				0: VP/VN
--				1: VAUXP[0]/VAUXN[0]
--				2: VAUXP[1]/VAUXN[1]
-+			- reg: Pair of pins the channel is connected to.
-+				* 0: VP/VN
-+				* 1: VAUXP[0]/VAUXN[0]
-+				* 2: VAUXP[1]/VAUXN[1]
- 				...
--				16: VAUXP[15]/VAUXN[15]
-+				* 16: VAUXP[15]/VAUXN[15]
- 			  Note each channel number should only be used at most
- 			  once.
- 		Optional properties:
--			* xlnx,bipolar: If set the channel is used in bipolar
-+			- xlnx,bipolar: If set the channel is used in bipolar
- 			  mode.
- 
- 
-diff --git a/Documentation/devicetree/bindings/memory.py b/Documentation/devicetree/bindings/memory.py
-new file mode 100644
-index 0000000000000..5f11c0bb6aa83
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory.py
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# /memory bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeMemory, PropReg, PropString
-+
-+schema = [
-+    NodeMemory([
-+        PropString('device_type', True),
-+        PropReg(),
-+    ]),
-+]
-diff --git a/Documentation/devicetree/bindings/opp/opp.py b/Documentation/devicetree/bindings/opp/opp.py
-new file mode 100644
-index 0000000000000..2cede72a3288f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/opp/opp.py
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# operating-point bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeCpu
-+from kschema import PropIntList
-+
-+schema1 = [
-+    NodeCpu(None, [
-+        PropIntList('operating-points'),
-+        ])
-+    ]
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.py b/Documentation/devicetree/bindings/regulator/fixed-regulator.py
-new file mode 100644
-index 0000000000000..cc51c1dd8a0fd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.py
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Performance-Monitoring Unit (PMU) bindings
-+#
-+# not Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeDesc, PropString
-+from regulator import SCHEMA_REGULATOR
-+
-+schema = [
-+    NodeDesc('regulator-fixed', ['regulator-fixed'], False, [
-+    ] + SCHEMA_REGULATOR),
-+]
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.py b/Documentation/devicetree/bindings/regulator/regulator.py
-new file mode 100644
-index 0000000000000..455af73ac8ea5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/regulator.py
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Performance-Monitoring Unit (PMU) bindings
-+#
-+# not Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeDesc, PropBool, PropInt, PropPhandleTarget, PropString
-+
-+SCHEMA_REGULATOR = [
-+    PropString('regulator-name', True),
-+    PropBool('regulator-always-on'),
-+    PropBool('regulator-boot-on'),
-+    PropInt('regulator-min-microvolt'),
-+    PropInt('regulator-max-microvolt'),
-+    PropPhandleTarget(),
-+    ];
-+
-+no_schema = True
-diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.py b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.py
-new file mode 100644
-index 0000000000000..0f19fc2b61633
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.py
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# /reserved-memory bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeReservedMemory, PropBool
-+
-+schema = [
-+    NodeReservedMemory([
-+        PropBool('ranges'),
-+    ]),
-+]
-diff --git a/Documentation/devicetree/bindings/thermal/thermal.py b/Documentation/devicetree/bindings/thermal/thermal.py
-new file mode 100644
-index 0000000000000..a24801937594d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/thermal.py
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# /thermal-zone bindings
-+#
-+# Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeDesc, NodeThermalZones
-+
-+schema = [
-+    NodeThermalZones([
-+        NodeDesc('cpu-thermal', []),
-+        NodeDesc('gpu-thermal', []),
-+    ]),
-+]
-diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.py b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.py
-new file mode 100644
-index 0000000000000..d71c9f9ba84ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.py
-@@ -0,0 +1,16 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Performance-Monitoring Unit (PMU) bindings
-+#
-+# not Copyright 2018 Google LLC
-+#
-+
-+from kschema import NodeDesc, PropGpios, PropInt, PropPhandleTarget
-+
-+schema = [
-+    NodeDesc('usb-nop-xceiv', ['usb-nop-xceiv'], False, [
-+        PropPhandleTarget(),
-+        PropInt('#phy-cells'),
-+        PropGpios('reset', 1),
-+    ]),
-+]
--- 
-2.21.0.593.g511ec345e18-goog
+How many clocks and what are they?
 
+> +
+> +
+> +Example:
+> +	mipicsi: mipicsi@15002000 {
+> +		compatible = "mediatek,mt2712-mipicsi-common", "syscon";
+> +		reg = <0 0x15002000 0 0x10>;
+> +		clocks = <&imgsys CLK_IMG_SENINF_CAM_EN>,
+> +			 <&imgsys CLK_IMG_SENINF_SCAM_EN>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+> new file mode 100644
+> index 000000000000..24741ed62b25
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+> @@ -0,0 +1,54 @@
+> +* Mediatek MIPI-CSI2 receiver
+> +
+> +Mediatek MIPI-CSI2 receiver is the MIPI Signal capture hardware present in Mediatek SoCs
+> +
+> +Required properties:
+> +- compatible: should be "mediatek,mt2712-mipicsi"
+> +- reg : physical base address of the mipicsi receiver registers and length of
+> +  memory mapped region.
+
+How many regions?
+
+> +- power-domains: a phandle to the power domain, see
+> +  Documentation/devicetree/bindings/power/power_domain.txt for details.
+> +- mediatek,larb: must contain the local arbiters in the current Socs, see
+> +  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+> +  for details.
+> +- iommus: should point to the respective IOMMU block with master port as
+> +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> +  for details.
+
+How many?
+
+> +- mediatek,seninf_mux_camsv: seninf_mux_camsv the data go through of the mipicsi port
+
+s/_/-/
+
+How many entries?
+
+> +- mediatek,mipicsiid: the id of the mipicsi port
+
+What is this for? We generally don't do device indexes in DT.
+
+> +- mediatek,mipicsi: the common component of the two mipicsi port
+> +
+> +Example:
+> +	mipicsi0: mipicsi@10217000 {
+> +		compatible = "mediatek,mt2712-mipicsi";
+> +		mediatek,mipicsi = <&mipicsi>;
+> +		iommus = <&iommu0 M4U_PORT_CAM_DMA0>,
+> +			 <&iommu0 M4U_PORT_CAM_DMA1>;
+> +		mediatek,larb = <&larb2>;
+> +		power-domains = <&scpsys MT2712_POWER_DOMAIN_ISP>;
+> +
+> +		mediatek,seninf_mux_camsv = <&seninf1_mux_camsv0
+> +					     &seninf2_mux_camsv1
+> +					     &seninf3_mux_camsv2
+> +					     &seninf4_mux_camsv3>;
+> +		reg = <0 0x10217000 0 0x60>,
+> +		      <0 0x15002100 0 0x4>,
+> +		      <0 0x15002300 0 0x100>;
+> +		mediatek,mipicsiid = <0>;
+> +		status="disabled";
+
+Don't show status in examples.
+
+> +	};
+> +
+> +	mipicsi1: mipicsi@10218000 {
+> +		compatible = "mediatek,mt2712-mipicsi";
+> +		mediatek,mipicsi = <&mipicsi>;
+> +		iommus = <&iommu0 M4U_PORT_CAM_DMA2>;
+> +		mediatek,larb = <&larb2>;
+> +		power-domains = <&scpsys MT2712_POWER_DOMAIN_ISP>;
+> +		mediatek,seninf_mux_camsv = <&seninf5_mux_camsv4
+> +					     &seninf6_mux_camsv5>;
+> +		reg = <0 0x10218000 0 0x60>,
+> +		      <0 0x15002500 0 0x4>,
+> +		      <0 0x15002700 0 0x100>;
+> +		mediatek,mipicsiid = <1>;
+> +		status="disabled";
+> +	};
+> \ No newline at end of file
+
+Fix this.
+
+> -- 
+> 2.18.0
+> 
