@@ -2,151 +2,116 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA01C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 05:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A87C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 05:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208F42087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 05:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6352087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 05:43:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vVTNghG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfD2FiX (ORCPT
+        id S1727246AbfD2Fny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 01:38:23 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:56283 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726139AbfD2FiX (ORCPT
+        Mon, 29 Apr 2019 01:43:54 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40959 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfD2Fnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 01:38:23 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TQTvTUn_1556516298;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TQTvTUn_1556516298)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 29 Apr 2019 13:38:20 +0800
-Date:   Mon, 29 Apr 2019 13:38:18 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 09/17] sched: Introduce sched_class::pick_task()
-Message-ID: <20190429053817.GC128241@aaronlu>
-References: <cover.1556025155.git.vpillai@digitalocean.com>
- <e2f1d30b0b3bb62c01824f422badf159147982d7.1556025155.git.vpillai@digitalocean.com>
+        Mon, 29 Apr 2019 01:43:53 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u17so791450pfn.7
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2019 22:43:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=S6olaaoMgCPdNo+TQ5dKNbZrzG8cHHnKkwnShCeOItA=;
+        b=vVTNghG8+EXptSKKElI+90BdcTKrPVcDaawjQoAPtAHprgvxAwfsIyUlN7eSQpkMq1
+         r8IlUWyXc8o0gAgfuWbxADSpvDVIUSyjnBq4M16wgQ612CLJltsgXClxENqiTIS/cEsN
+         L5UHLr/4iGjBnsuvcMJLgn+QAiLZ7IZlDD+CiJJrEV/jsMY11Iev1b5+C6zFodkqFRHd
+         lbq+wtTJU3MULv0Vm/iu9qCuwdk6ZA8j5gQcgnDIeN2uenMC4yme8YB9c0fLX0wdn6sC
+         TpsDCeNjhGi3LN+JARS7HwqqJucAA1DVs0QqOkM+MY4Zorb6dZYwwbBYLJjj6Jyvyvh2
+         pfQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=S6olaaoMgCPdNo+TQ5dKNbZrzG8cHHnKkwnShCeOItA=;
+        b=NSp4mo6orvplwtNDnaBFHXtWs5oc67DLK57WoUfggALAbdB35x9zLoFPdVS0HHJEPj
+         2Q8YvuhDaqiyjkI/rYT6NskW9v4RIlHI6OwmeBivWP8wLHzITpWmSyzCdi8dWkB73H7h
+         uU4RvyPXJLPqpqLqxBXX89xwE1ys7fecyJ/DEXP5cW+OUH66Su2h6NQjLiKqjjB8AWCx
+         dYkrHSZt16q+wCwREyPt30NAUsVZ9mhHyqV7D1YsOryS4lUAgFPxGqavzOT79AHAjaP6
+         QCRoN4Ye+SAd1BYZZO4GAbMy06LnhEgseMFqv/y26uELD/U/ZDPzXSi4MnKqCkbg11SU
+         /VMg==
+X-Gm-Message-State: APjAAAX9ue/F+ErgDVTx7R5oai54g/qs/CyLExDwtmpcUmQCeTkEz7h3
+        hiVTvWN4i4GHbI9qV46f656HijnnXBM=
+X-Google-Smtp-Source: APXvYqyR0BedU0HRa9qIql/vNEnoOrMXmo165VyvbsnwOXe7QM4jxF/+e+MxiLue3le0JEShGbwICQ==
+X-Received: by 2002:a62:1c13:: with SMTP id c19mr59820324pfc.11.1556516632851;
+        Sun, 28 Apr 2019 22:43:52 -0700 (PDT)
+Received: from localhost ([122.166.139.136])
+        by smtp.gmail.com with ESMTPSA id h187sm55306813pfc.52.2019.04.28.22.43.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Apr 2019 22:43:52 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 11:13:50 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     edubezval@gmail.com, rui.zhang@intel.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>
+Subject: Re: [PATCH - resend 1/3] thermal/drivers/cpu_cooling: Fixup the
+ header and copyright
+Message-ID: <20190429054350.kaup4w2b5yx3mdqb@vireshk-i7>
+References: <20190428095106.5171-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e2f1d30b0b3bb62c01824f422badf159147982d7.1556025155.git.vpillai@digitalocean.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190428095106.5171-1-daniel.lezcano@linaro.org>
+User-Agent: NeoMutt/20180323-120-3dd1ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 04:18:14PM +0000, Vineeth Remanan Pillai wrote:
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index c055bad249a9..45d86b862750 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4132,7 +4132,7 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
->  	 * Avoid running the skip buddy, if running something else can
->  	 * be done without getting too unfair.
->  	 */
-> -	if (cfs_rq->skip == se) {
-> +	if (cfs_rq->skip && cfs_rq->skip == se) {
->  		struct sched_entity *second;
->  
->  		if (se == curr) {
-> @@ -4150,13 +4150,13 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
->  	/*
->  	 * Prefer last buddy, try to return the CPU to a preempted task.
->  	 */
-> -	if (cfs_rq->last && wakeup_preempt_entity(cfs_rq->last, left) < 1)
-> +	if (left && cfs_rq->last && wakeup_preempt_entity(cfs_rq->last, left) < 1)
->  		se = cfs_rq->last;
->  
->  	/*
->  	 * Someone really wants this to run. If it's not unfair, run it.
->  	 */
-> -	if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1)
-> +	if (left && cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1)
->  		se = cfs_rq->next;
->  
->  	clear_buddies(cfs_rq, se);
-> @@ -6937,6 +6937,37 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
->  		set_last_buddy(se);
->  }
->  
-> +static struct task_struct *
-> +pick_task_fair(struct rq *rq)
-> +{
-> +	struct cfs_rq *cfs_rq = &rq->cfs;
-> +	struct sched_entity *se;
-> +
-> +	if (!cfs_rq->nr_running)
-> +		return NULL;
-> +
-> +	do {
-> +		struct sched_entity *curr = cfs_rq->curr;
-> +
-> +		se = pick_next_entity(cfs_rq, NULL);
-> +
-> +		if (!(se || curr))
-> +			return NULL;
+On 28-04-19, 11:51, Daniel Lezcano wrote:
+> The copyright format does not conform to the format requested by
+> Linaro: https://wiki.linaro.org/Copyright
+> 
+> Fix it.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Viresh Kumar <viresh.kumar@linaro.org>
 
-I think you have already avoided the null pointer access bug in
-the above pick_next_entity() by doing multiple checks for null pointers:
-cfs_rq->skip and left.
+What exactly have I done here ? :)
 
-An alternative way to fix the null pointer access bug: if curr is the
-only runnable entity in this cfs_rq, there is no need to call
-pick_next_entity(cfs_rq, NULL) since the rbtree is empty. This way
-pick_next_entity() doesn't need change. something like:
+> ---
+>  drivers/thermal/cpu_cooling.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+> index ee8419a6390c..42aeb9087cab 100644
+> --- a/drivers/thermal/cpu_cooling.c
+> +++ b/drivers/thermal/cpu_cooling.c
+> @@ -2,9 +2,11 @@
+>   *  linux/drivers/thermal/cpu_cooling.c
+>   *
+>   *  Copyright (C) 2012	Samsung Electronics Co., Ltd(http://www.samsung.com)
+> - *  Copyright (C) 2012  Amit Daniel <amit.kachhap@linaro.org>
+>   *
+> - *  Copyright (C) 2014  Viresh Kumar <viresh.kumar@linaro.org>
+> + *  Copyright (C) 2012-2018 Linaro Limited.
+> + *
+> + *  Authors:	Amit Daniel <amit.kachhap@linaro.org>
+> + *		Viresh Kumar <viresh.kumar@linaro.org>
+>   *
+>   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   *  This program is free software; you can redistribute it and/or modify
+> -- 
+> 2.17.1
 
-	do {
-		struct sched_entity *curr = cfs_rq->curr;
-
-		if (curr && curr->on_rq && cfs_rq->nr_running == 1)
-			se = NULL;
-		else
-			se = pick_next_entity(cfs_rq, NULL);
-
-		/* the following code doesn't change */
-> +
-> +		if (curr) {
-> +			if (se && curr->on_rq)
-> +				update_curr(cfs_rq);
-> +
-> +			if (!se || entity_before(curr, se))
-> +				se = curr;
-> +		}
-> +
-> +		cfs_rq = group_cfs_rq(se);
-> +	} while (cfs_rq);
-> +
-> +	return task_of(se);
-> +}
-
-There is another problem I'm thinking: suppose cpu0 and cpu1 are
-siblings and task A, B are runnable on cpu0 and curr is A. When cpu1
-schedules, pick_task_fair() will also be called for cpu0 to decide
-which CPU's task to preempt the other.
-
-When pick_task_fair() is called for cpu0 due to cpu1 schedules:
-curr(i.e. A) may only run a few nanoseconds, and thus can have a higher
-vruntime than B. So we chose B to fight with task chosen from cpu1. If
-B wins, we will schedule B on cpu0. If B loses, we will probably
-schedule idle on cpu0(if cookie unmatch). Either case, A didn't get its
-share. We probably want to make sure a task at least running for some
-time before being considered to be preempted.
+-- 
+viresh
