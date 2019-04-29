@@ -2,126 +2,141 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C836BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D692C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD41215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556565881;
-	bh=Fu/hOYIZwVfzmJTjU83cB5kYU+/G8jx9tdKv57qTrFw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mks1bWPIs5it8Vvztu0JGV152RTfFBd0BIKdsIfiMkKpGyqtW1gC0d7I/RnctGnUl
-	 ipF8KG+dlNeNAgcKdfTo7a/+itirY1hB8a/1N/a8w+F2Ryjh0bdw3VaEYLXmrEY7jq
-	 ooTUMTl3joSTjhdx7xpSzrrS0Jfe4XBUKHKORbYU=
+	by mail.kernel.org (Postfix) with ESMTP id 5D3492067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:27:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="mkOtiQnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbfD2TYk (ORCPT
+        id S1729231AbfD2T1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41156 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728928AbfD2TYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:24:39 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BCD5217F4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 19:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556565878;
-        bh=Fu/hOYIZwVfzmJTjU83cB5kYU+/G8jx9tdKv57qTrFw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DXjxbd2Lmoo7ZhT4rQRWlNx5tEMhMkUhhz6oNcEqKJmks+85LbaOlYELmHhzWnmXw
-         t1P35R8xDyDyVPx7mebki/bK7xMFQYVF//VBvJS31jfq0Z83F3sRF6+kJgN2WhRHD1
-         1yPl5zKEp0fXgsgRq3kEdoNEfBSDGCCwrnFjQTJw=
-Received: by mail-wm1-f43.google.com with SMTP id h18so736025wml.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:24:38 -0700 (PDT)
-X-Gm-Message-State: APjAAAVXuukoxD7yt7DVFpwNPVAz8yTCRBh4waHBugk+qHEQ8Fky5M7B
-        lS346lj6+zgPLXLIAipDYrcHo8j3fz8LGDbWP18uRA==
-X-Google-Smtp-Source: APXvYqyjZBsIOAF7hRXJ3H5ln2FIgXx47NTYjflr71BzIx+w9pLCUNqgqyvcXcorJunBRFnUslFSeqIvc4RKDh2gXiQ=
-X-Received: by 2002:a7b:c257:: with SMTP id b23mr415036wmj.83.1556565875080;
- Mon, 29 Apr 2019 12:24:35 -0700 (PDT)
+        Mon, 29 Apr 2019 15:27:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41793 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2T1O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 15:27:14 -0400
+Received: by mail-io1-f66.google.com with SMTP id r10so10013735ioc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:27:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yM+qItkSV7cyOzrR0XusuAc8CsANFg6gCkRKBVgtPLc=;
+        b=mkOtiQnY+tvJCO67zt0OTJfLIOW19SiBik3Jn1sSE0wipaqZ4CuUeTsZTMJ8OfKmOW
+         TnmafCROZ1COEoBVSrZCsHNaJ7QZXwp5eB8BBM/hfmstC0gRXW6S8gsAkVtyY/kOIquE
+         Z7k2wQEx4eQzDuFCenwXp4/9+Rl+u+8YBV1uuk1Xh4XfsYnjPNngdzNjJhUWkDzZQI/M
+         uLziucGwmZhjK81QF8kp9SbfjaUM3w+UTTDKt+bcsT0E5mLLnraryYmsqs0slNft/vGM
+         F7nVVva4kjQdHT48m4TjAgelo2XBZRYTjLjzqxT1XaqfN3vq1sCvSHzZfPft1sbJ0fGS
+         cfqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yM+qItkSV7cyOzrR0XusuAc8CsANFg6gCkRKBVgtPLc=;
+        b=sUfb76/pwSG9ueUywv2CYCM1dWUOVMXYG7earlVJYvJWNqxhyJUaqLqTfIcEj3bzT9
+         DE7wZV3Cq5bfzEuNbHYJxfqn3kLbjroi0jlfjQs9bFUsF3XfhvwDapEpR6kSse6mT9p4
+         jjfIlHpnyhKApn80iVawW0E3dcQuCD8mdxLNvfazxcshDV01ewbiFK76Cxw5r/6Lp89h
+         qTeoYn/aEH4xBv8qO3wgRHdkn4ZNynbf0QNkZs4MDiVUkpTaAzqehr67F76+2Haya4mf
+         AuVwqfJJ+s1m/SucjLkuaZCVgEEOp8byQAtmVj3+GfUu9GYWLT9BUD5/FBjLPRp1vvna
+         ul2Q==
+X-Gm-Message-State: APjAAAWqRMMM+yPXLuapzJsnqveNPugth7Q0BseA2RcLmYWuU3xSk9Z6
+        qNlyJaZAXO/IszhBB14cGIqI0BvOC5pfVlh25j6AbA==
+X-Google-Smtp-Source: APXvYqxnpM22Us/BjZc44Va9fpbRb6KCGDpMRCGC9vemv4K7V0RFwjfmFcku2NXR+S4Uf3aARtyunnitr8/59FB8k+M=
+X-Received: by 2002:a5e:9307:: with SMTP id k7mr12222114iom.155.1556566033384;
+ Mon, 29 Apr 2019 12:27:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-4-nstange@suse.de>
- <20190427102657.GF2623@hirez.programming.kicks-ass.net> <20190428133826.3e142cfd@oasis.local.home>
- <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
- <CAHk-=wjphmrQXMfbw9j-tTzDvJ+Uc+asMHdFa=1_1xZoYVUC=g@mail.gmail.com>
- <CALCETrXvmZPHsfRVnW0AtyddfN-2zaCmWn+FsrF6XPTOFd_Jmw@mail.gmail.com>
- <CAHk-=whtt4K2f0KPtG-4Pykh3FK8UBOjD8jhXCUKB5nWDj_YRA@mail.gmail.com>
- <CALCETrWELBCK-kqX5FCEDVUy8kCT-yVu7m_7Dtn=GCsHY0Du5A@mail.gmail.com>
- <CAHk-=wgewK4eFhF3=0RNtk1KQjMANFH6oDE=8m=84RExn2gxhw@mail.gmail.com> <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
-In-Reply-To: <CAHk-=whay7eN6+2gZjY-ybRbkbcqAmgrLwwszzHx8ws3c=S-MA@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 29 Apr 2019 12:24:23 -0700
-X-Gmail-Original-Message-ID: <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
-Message-ID: <CALCETrXzVU0Q7u1q=QFPaDr=aojjF5cjbOi9CxxXnp5GqTqsWA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
- fops invocation
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+References: <20190423142629.120717-1-venture@google.com> <CAO=notzjzpt0WHfJEWXMGgkoJU8UiLnqZnrGrPs-dRH5GNdJyQ@mail.gmail.com>
+ <CAO=notz9QVoqKLrhJ3kx9FHja5+Mh68f36O36+1ewLG+SanmOA@mail.gmail.com>
+ <20190425172549.GA12376@kroah.com> <20190429165137.mwj4ehhwerunbef4@localhost>
+ <CAO=notwewAeeLz=LsOcSj=DakLGW0KjeDHALP5Nv2ckgkRqnFA@mail.gmail.com>
+In-Reply-To: <CAO=notwewAeeLz=LsOcSj=DakLGW0KjeDHALP5Nv2ckgkRqnFA@mail.gmail.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 29 Apr 2019 12:27:02 -0700
+Message-ID: <CAOesGMipoKED=XLg+VtEVG0Os_MUzsPgOfBFJ+qoJs_fNmP+3g@mail.gmail.com>
+Subject: Re: [PATCH v2] soc: add aspeed folder and misc drivers
+To:     Patrick Venture <venture@google.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>,
+        soc@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 12:13 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Mon, Apr 29, 2019 at 10:12 AM Patrick Venture <venture@google.com> wrote:
 >
+> On Mon, Apr 29, 2019 at 10:08 AM Olof Johansson <olof@lixom.net> wrote:
+> >
+> > On Thu, Apr 25, 2019 at 07:25:49PM +0200, Greg KH wrote:
+> > > On Tue, Apr 23, 2019 at 08:28:14AM -0700, Patrick Venture wrote:
+> > > > On Tue, Apr 23, 2019 at 8:22 AM Patrick Venture <venture@google.com> wrote:
+> > > > >
+> > > > > On Tue, Apr 23, 2019 at 7:26 AM Patrick Venture <venture@google.com> wrote:
+> > > > > >
+> > > > > > Create a SoC folder for the ASPEED parts and place the misc drivers
+> > > > > > currently present into this folder.  These drivers are not generic part
+> > > > > > drivers, but rather only apply to the ASPEED SoCs.
+> > > > > >
+> > > > > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > > >
+> > > > > Accidentally lost the Acked-by when re-sending this patchset as I
+> > > > > didn't see it on v1 before re-sending v2 to the larger audience.
+> > > >
+> > > > Since there was a change between v1 and v2, Arnd, I'd appreciate you
+> > > > Ack this version of the patchset since it changes when the soc/aspeed
+> > > > Makefile is followed.
+> > >
+> > > I have no objection for moving stuff out of drivers/misc/ so the SOC
+> > > maintainers are free to take this.
+> > >
+> > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > I'm totally confused. This is the second "PATCH v2" of this patch that I came
+> > across, I already applied the first.
 >
+> I think the issue here was that I added to the CC list another email
+> and so you may see the v2  without that mailing list, and a v2 with it
+> --
 >
-> On Mon, Apr 29, 2019, 12:02 Linus Torvalds <torvalds@linux-foundation.org> wrote:
->>
->>
->>
->> If nmi were to break it, it would be a cpu bug.
+> Does this require a v3?  I honestly didn't think so, but this was the
+> first time I had to add more people without needing other changes.
+
+Well, v2 doesn't build. I'll fix it up locally by adding an 'endmenu'
+to drivers/soc/aspeed/Kconfig. But... brings up questions how this was
+tested before submitting?
+
+scripts/kconfig/conf  --allnoconfig Kconfig
+drivers/soc/Kconfig:24: 'menu' in different file than 'menu'
+drivers/soc/aspeed/Kconfig:1: location of the 'menu'
+drivers/Kconfig:233: 'menu' in different file than 'menu'
+drivers/soc/aspeed/Kconfig:1: location of the 'menu'
+<none>:34: syntax error
+
+> >
+> > Patrick: Follow up with incremental patch in case there's any difference.
+> > Meanwhile, please keep in mind that you're adding a lot of work for people when
+> > you respin patches without following up on the previous version. Thanks!
 >
->
-> Side note: we *already* depend on sti shadow working in other parts of the kernel, namely sti->iret.
->
+> w.r.t this patch series.  I found an issue with v1, and released a v2
+> with the detail of what changed.  I thought that was the correct
+> approach.  I apologize for creating extra work, that's something
+> nobody needs.
 
-Where?  STI; IRET would be nuts.
+It's ok to submit newer versions, but it's convenient when they get
+threaded also in non-gmail mail readers (by using in-reply-to).
 
-Before:
 
-commit 4214a16b02971c60960afd675d03544e109e0d75
-Author: Andy Lutomirski <luto@kernel.org>
-Date:   Thu Apr 2 17:12:12 2015 -0700
-
-    x86/asm/entry/64/compat: Use SYSRETL to return from compat mode SYSENTER
-
-we did sti; sysxit, but, when we discussed this, I don't recall anyone
-speaking up in favor of the safely of the old code.
-
-Not to mention that the crash we'll get if we get an NMI and a
-rescheduling interrupt in this path will be very, very hard to debug.
+-Olof
