@@ -2,89 +2,111 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BD2C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59709C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 117DF20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ah5nNChg";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eqFUYsKY"
+	by mail.kernel.org (Postfix) with ESMTP id 31B1E20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbfD2Ouk (ORCPT
+        id S1728489AbfD2OvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:50:40 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42016 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728350AbfD2Ouj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:50:39 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3C462605A2; Mon, 29 Apr 2019 14:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556549439;
-        bh=Med0BVNCDB0qzfpASZ4nce6f8HqonA2tKuVNkYHuYQI=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Ah5nNChgvOOw6mOmFgT7PL5tXnN5pdBdG8kBIovG6ogqF8qbt5KsONyyvZkLpNIjB
-         iHA5ZelqrKgwdeoAq1WjsWY1uy7C6x7mOROm+Nl2EMGKIIgilQgFUF5X4HfHK5XD86
-         Pp1cZMfjQaEqBwWVBT0/ZyO1POKTO3k9qaBrZKY0=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 29 Apr 2019 10:51:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55166 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728320AbfD2OvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:51:06 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E88060214;
-        Mon, 29 Apr 2019 14:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556549438;
-        bh=Med0BVNCDB0qzfpASZ4nce6f8HqonA2tKuVNkYHuYQI=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=eqFUYsKYQ/rCJUcCjTjobW0O2VTsNvQOhxsfHu/6Vez8QwUFRBnH2SFAdOuS/hTka
-         078kCQE1N3wui2PpI8xCGaKM64GRqIyWR4Z7C7brfagSNkF0X27Q+RnnMzJET9Fi0g
-         85S8YUEwaylKD48uLyOKMcmKhJgH1fTa5g5PbpL8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6E88060214
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 56FD9307D96F;
+        Mon, 29 Apr 2019 14:51:06 +0000 (UTC)
+Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 39DC328982;
+        Mon, 29 Apr 2019 14:51:05 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 08:51:04 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     mr.nuke.me@gmail.com, linux-pci@vger.kernel.org,
+        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add link_change error handler and vfio-pci user
+Message-ID: <20190429085104.728aee75@x1.home>
+In-Reply-To: <20190424175758.GC244134@google.com>
+References: <155605909349.3575.13433421148215616375.stgit@gimli.home>
+        <20190424175758.GC244134@google.com>
+Organization: Red Hat
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath6kl: remove redundant check of status != 0
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190404134723.24667-1-colin.king@canonical.com>
-References: <20190404134723.24667-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190429145039.3C462605A2@smtp.codeaurora.org>
-Date:   Mon, 29 Apr 2019 14:50:39 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 29 Apr 2019 14:51:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
+On Wed, 24 Apr 2019 12:57:58 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> The check on status not being zero is redundant as previous code
-> paths that set status to an error value break out of the while
-> loop and hence status is never non-zero at the check. Remove
-> this redundant code.
+> On Tue, Apr 23, 2019 at 04:42:28PM -0600, Alex Williamson wrote:
+> > The PCIe bandwidth notification service generates logging any time a
+> > link changes speed or width to a state that is considered downgraded.
+> > Unfortunately, it cannot differentiate signal integrity related link
+> > changes from those intentionally initiated by an endpoint driver,
+> > including drivers that may live in userspace or VMs when making use
+> > of vfio-pci.  Therefore, allow the driver to have a say in whether
+> > the link is indeed downgraded and worth noting in the log, or if the
+> > change is perhaps intentional.
+> > 
+> > For vfio-pci, we don't know the intentions of the user/guest driver
+> > either, but we do know that GPU drivers in guests actively manage
+> > the link state and therefore trigger the bandwidth notification for
+> > what appear to be entirely intentional link changes.
+> > 
+> > Fixes: e8303bb7a75c PCI/LINK: Report degraded links via link bandwidth notification
+> > Link: https://lore.kernel.org/linux-pci/155597243666.19387.1205950870601742062.stgit@gimli.home/T/#u
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > ---
+> > 
+> > Changing to pci_dbg() logging is not super usable, so let's try the
+> > previous idea of letting the driver handle link change events as they
+> > see fit.  Ideally this might be two patches, but for easier handling,
+> > folding the pci and vfio-pci bits together.  Comments?  Thanks,  
 > 
-> Addresses-Coverity: ("Logically dead code")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> I'm a little uneasy about the bandwidth notification logging as a
+> whole.  Messages in dmesg don't seem like a solid base for building
+> management tools.
+> 
+> I assume the eventual goal would be some sort of digested notification
+> along the lines of "hey mr/ms administrator, the link to device X
+> unexpectedly became slower, you might want to check that out."
+> 
+> If I were building that, I don't think I would use dmesg.  I might
+> write a daemon that polls /sys/.../current_link_{speed,width}, or
+> maybe use some sort of netlink event.  Maybe it would be useful to
+> have the admin designate devices of interest.
+> 
+> I'm hesitant about adding a .link_change() handler.  If there's
+> something useful a driver could do with it, that's one thing.  But
+> using it merely to suppress a message doesn't really seem worth the
+> trouble, and it seems unfriendly to ask drivers to add it when they
+> didn't ask for it and get no benefit from it.
 
-Patch applied to ath-next branch of ath.git, thanks.
+So where do we go from here?  I agree that dmesg is not necessarily a
+great choice for these sorts of events and if they went somewhere else,
+maybe I wouldn't have the same concerns about them generating user
+confusion or contributing to DoS vectors from userspace drivers.  As it
+is though, we have known cases where benign events generate confusing
+logging messages, which seems like a regression.  Drivers didn't ask
+for a link_change handler, but nor did they ask that the link state to
+their device be monitored so closely.  Maybe this not only needs some
+sort of change to the logging mechanism, but also an opt-in by the
+driver if they don't expect runtime link changes.  Thanks,
 
-e643da21e19a ath6kl: remove redundant check of status != 0
-
--- 
-https://patchwork.kernel.org/patch/10885625/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Alex
