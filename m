@@ -2,96 +2,99 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C32C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FCEC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7AF2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB2B2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U/mRA5vt"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="EuGV0Qng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfD2SkK (ORCPT
+        id S1729139AbfD2SkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:40:10 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37944 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbfD2SkJ (ORCPT
+        Mon, 29 Apr 2019 14:40:16 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38644 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbfD2SkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:40:09 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3TITABQ152714;
-        Mon, 29 Apr 2019 18:40:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=j0AJlgOFT0aoHqUBDmivQXLsxYBIT5dXF99E3snJngs=;
- b=U/mRA5vtoapEKoFo4Uxi4fS5VJhFz3BKfSXG9rZM0IMTtSb2t2nwPJPZMUyN1gmS9oXC
- FvOteREIPlFtXx5lZt5yDWwp/g/erIoDr76RetP0Ll+dTEVpEv2LMORWZEIVTlZArq3i
- n3Xe5ySN1KXAUTWILRzQzcesLvTWHhxJhuTslJ5m8BB8P0q2YjPPr8lWUHe34m0dSYKl
- chBX/bj39eaZnPQQ8LgidUYtrmXhDxvQbl4IH8in0geUNvDLj09ahGtARDNQF2sEmgbV
- YtHVq4x+xmBXeH3Zb3+hypNVO1v9Sh0Xd2BaCTfROP/qU/vmCoWYkVlJ6Ev0WudfOQOZ /A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2s4fqq05dp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 18:40:03 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3TIcxOe087523;
-        Mon, 29 Apr 2019 18:40:02 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2s5u50jd03-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 18:40:02 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3TIe0bQ027494;
-        Mon, 29 Apr 2019 18:40:01 GMT
-Received: from Santoshs-MacBook-Pro.local (/10.11.38.116)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 29 Apr 2019 11:40:00 -0700
-Subject: Re: [PATCH] soc: ti: pm33xx: Add a print while entering RTC only mode
- with DDR in self-refresh
-To:     Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, tony@atomide.com
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        d-gerlach@ti.com, t-kristo@ti.com
-References: <20190429044435.19315-1-j-keerthy@ti.com>
-From:   "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <b862e2c4-781c-ced9-3a6f-b0095562732a@oracle.com>
-Date:   Mon, 29 Apr 2019 11:39:53 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Mon, 29 Apr 2019 14:40:16 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t20so9593958otl.5;
+        Mon, 29 Apr 2019 11:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AIxwIgNSfaujQ4GPPqUMnOdn83DSpET9dvXRMl5W0+w=;
+        b=EuGV0QngoRp1elwK5NLy2DGZmqBuVLr+Ls3Odv97wQBLYLDBFPEkMfEfA2zyAP2O5F
+         0VdGvddl/xHVevEZE6BkE5waIQh4YEM4xV3Ro+42lLI0O22XnJmpSzTNUqufoEKl1Zp/
+         7NRTXt5btltp+knmeSLCs6OhZBI3K9QQxf84sUGj2JL9JMlC1GeEuBqlpY9LNAADfURo
+         SDUzDON2q6bhZFRCZiRA72vL9fYo6/7KHlV8hdfujg+9ZwAJ9pFjP8hdBmr85Bht1VlQ
+         9o0tAYtxpkKaoH19O5+anAHQhPWYwMK4UUSpfWXtaBAHKzLezEWJ7k/C+lD/BKWM+IM7
+         bjGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AIxwIgNSfaujQ4GPPqUMnOdn83DSpET9dvXRMl5W0+w=;
+        b=WwckOu5GLZ8Autz4837CSCMlTwoFaw0vldR0V4fRXM+gnkPC5K1UCn1viAXkbrQc7H
+         nRWXp+hTKXIQrnUsvJvZc5/AXijoqMI6mNUlQOWnobJ1C07lWWEkLf3Uy+KyrsfRyf6j
+         OEsoE0jH9D7efODcaJFF0BZA6cLfude5aUhf8y3P9KsSljt6A5tVDoQxZjOQw4CLK+Ha
+         wJ7osETGnGdD5w/zkL8ddf9MmLQ3w9F/Zovkg37JH/D9ocz62tt7AE69CBiszBsvsHTl
+         aljj27DBcSo6jDRxHXlrMLYg6KWx1llmk0/39t8QKRlotiPPkigle+pzYgIUrYf8SEHT
+         kbSw==
+X-Gm-Message-State: APjAAAW9i2au75WGhZb555MZSTh5W36fBb2yRLucuPQJIjBZB0Mv1TPZ
+        3wHD/lCriYcrv+yzRy2GC/77D5svkWRO9QQsb1E=
+X-Google-Smtp-Source: APXvYqzFzy5rGcPg0FDIYVKVcBPB+ZcZhnT7+rWrK3IOiVig1P7nHguvCnh2+qmYXPpHc45YJrusPP0gkXKMi+QY1Ok=
+X-Received: by 2002:a9d:3db4:: with SMTP id l49mr39429758otc.131.1556563215148;
+ Mon, 29 Apr 2019 11:40:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190429044435.19315-1-j-keerthy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=998
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904290126
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9242 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904290126
+References: <20190423090235.17244-1-jbrunet@baylibre.com> <CAPDyKFoQyPKERckAdU+kkw3go=161PWc+5GAkz7y=xWMGbq+SQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFoQyPKERckAdU+kkw3go=161PWc+5GAkz7y=xWMGbq+SQ@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 29 Apr 2019 20:40:04 +0200
+Message-ID: <CAFBinCBGU53h9063jj8n8q3whT=eZ9y6MPaYYqU_K9UXssK_nw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] mmc: meson-gx: clean up and tuning update
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/28/19 9:44 PM, Keerthy wrote:
-> Currently there is no way to distinguish if the SoC entered DS0
-> mode or the RTC only mode. Hence add a print before entering
-> the RTC only mode.
-> 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+Hi Ulf, Hi Kevin,
 
-Tony, Am assuming you will queue this up ?
+On Mon, Apr 29, 2019 at 12:45 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Tue, 23 Apr 2019 at 11:02, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> >
+> > The purpose of this series is too improve reliability of the amlogic mmc
+> > driver on new (g12a) and old ones (axg, gxl, gxbb, etc...)
+> >
+> > * The 3 first patches are just harmless clean ups.
+>
+> Applied these first three, postponing the the rest until Martin are
+> happy with all of them. Thanks!
+thank you for taking the first three patches!
+I am fine with everything except the patch description of patch 4 and
+7 as noted here: [0]
+
+Kevin, can you please also have a look at this series (if you didn't already)?
+you reviewed earlier changes to the tuning mechanism in this driver.
+it would be great to know that you're happy with these changes as well.
+
+
+Regards
+Martin
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2019-April/011488.html
