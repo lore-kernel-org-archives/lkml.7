@@ -2,32 +2,32 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A878DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 04:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A144DC004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 04:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D792087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 04:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE582087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 04:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfD2EyI (ORCPT
+        id S1727275AbfD2EyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 00:54:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:28440 "EHLO mga03.intel.com"
+        Mon, 29 Apr 2019 00:54:12 -0400
+Received: from mga03.intel.com ([134.134.136.65]:28441 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbfD2EyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 00:54:05 -0400
+        id S1727031AbfD2EyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 00:54:07 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Apr 2019 21:54:04 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Apr 2019 21:54:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,408,1549958400"; 
-   d="scan'208";a="146566271"
+   d="scan'208";a="146566285"
 Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga003.jf.intel.com with ESMTP; 28 Apr 2019 21:54:04 -0700
+  by orsmga003.jf.intel.com with ESMTP; 28 Apr 2019 21:54:06 -0700
 From:   ira.weiny@intel.com
 To:     lsf-pc@lists.linux-foundation.org
 Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Michal Hocko <mhocko@suse.com>, Ira Weiny <ira.weiny@intel.com>
-Subject: [RFC PATCH 01/10] fs/locks: Add trace_leases_conflict
-Date:   Sun, 28 Apr 2019 21:53:50 -0700
-Message-Id: <20190429045359.8923-2-ira.weiny@intel.com>
+Subject: [RFC PATCH 03/10] mm/gup: Pass flags down to __gup_device_huge* calls
+Date:   Sun, 28 Apr 2019 21:53:52 -0700
+Message-Id: <20190429045359.8923-4-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190429045359.8923-1-ira.weiny@intel.com>
 References: <20190429045359.8923-1-ira.weiny@intel.com>
@@ -51,89 +51,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- fs/locks.c                      | 20 ++++++++++++++-----
- include/trace/events/filelock.h | 35 +++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+), 5 deletions(-)
+In order to support taking and/or checking for a LONGTERM lease on a FS
+DAX inode these calls need to know if FOLL_LONGTERM was specified.
 
-diff --git a/fs/locks.c b/fs/locks.c
-index eaa1cfaf73b0..4b66ed91fb53 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1528,11 +1528,21 @@ static void time_out_leases(struct inode *inode, struct list_head *dispose)
+This patch passes the flags down but does not use them.  It does this in
+prep for 2 future patches.
+---
+ mm/gup.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index 42680823fbbe..a8ac75bc1452 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1853,7 +1853,8 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
  
- static bool leases_conflict(struct file_lock *lease, struct file_lock *breaker)
+ #if defined(__HAVE_ARCH_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
+ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+-		unsigned long end, struct page **pages, int *nr)
++		unsigned long end, struct page **pages, int *nr,
++		unsigned int flags)
  {
--	if ((breaker->fl_flags & FL_LAYOUT) != (lease->fl_flags & FL_LAYOUT))
--		return false;
--	if ((breaker->fl_flags & FL_DELEG) && (lease->fl_flags & FL_LEASE))
--		return false;
--	return locks_conflict(breaker, lease);
-+	bool rc;
-+
-+	if ((breaker->fl_flags & FL_LAYOUT) != (lease->fl_flags & FL_LAYOUT)) {
-+		rc = false;
-+		goto trace;
-+	}
-+	if ((breaker->fl_flags & FL_DELEG) && (lease->fl_flags & FL_LEASE)) {
-+		rc = false;
-+		goto trace;
-+	}
-+
-+	rc = locks_conflict(breaker, lease);
-+trace:
-+	trace_leases_conflict(rc, lease, breaker);
-+	return rc;
+ 	int nr_start = *nr;
+ 	struct dev_pagemap *pgmap = NULL;
+@@ -1886,30 +1887,33 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
  }
  
- static bool
-diff --git a/include/trace/events/filelock.h b/include/trace/events/filelock.h
-index fad7befa612d..4b735923f2ff 100644
---- a/include/trace/events/filelock.h
-+++ b/include/trace/events/filelock.h
-@@ -203,6 +203,41 @@ TRACE_EVENT(generic_add_lease,
- 		show_fl_type(__entry->fl_type))
- );
+ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+-		unsigned long end, struct page **pages, int *nr)
++		unsigned long end, struct page **pages, int *nr,
++		unsigned int flags)
+ {
+ 	unsigned long fault_pfn;
+ 	int nr_start = *nr;
  
-+TRACE_EVENT(leases_conflict,
-+	TP_PROTO(bool conflict, struct file_lock *lease, struct file_lock *breaker),
-+
-+	TP_ARGS(conflict, lease, breaker),
-+
-+	TP_STRUCT__entry(
-+		__field(void *, lease)
-+		__field(void *, breaker)
-+		__field(unsigned int, l_fl_flags)
-+		__field(unsigned int, b_fl_flags)
-+		__field(unsigned char, l_fl_type)
-+		__field(unsigned char, b_fl_type)
-+		__field(bool, conflict)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->lease = lease;
-+		__entry->l_fl_flags = lease->fl_flags;
-+		__entry->l_fl_type = lease->fl_type;
-+		__entry->breaker = breaker;
-+		__entry->b_fl_flags = breaker->fl_flags;
-+		__entry->b_fl_type = breaker->fl_type;
-+		__entry->conflict = conflict;
-+	),
-+
-+	TP_printk("conflict %d: lease=0x%p fl_flags=%s fl_type=%s; breaker=0x%p fl_flags=%s fl_type=%s",
-+		__entry->conflict,
-+		__entry->lease,
-+		show_fl_flags(__entry->l_fl_flags),
-+		show_fl_type(__entry->l_fl_type),
-+		__entry->breaker,
-+		show_fl_flags(__entry->b_fl_flags),
-+		show_fl_type(__entry->b_fl_type))
-+);
-+
- #endif /* _TRACE_FILELOCK_H */
+ 	fault_pfn = pmd_pfn(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+-	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
++	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr, flags))
+ 		return 0;
  
- /* This part must be outside protection */
+ 	if (unlikely(pmd_val(orig) != pmd_val(*pmdp))) {
+ 		undo_dev_pagemap(nr, nr_start, pages);
+ 		return 0;
+ 	}
++
+ 	return 1;
+ }
+ 
+ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+-		unsigned long end, struct page **pages, int *nr)
++		unsigned long end, struct page **pages, int *nr,
++		unsigned int flags)
+ {
+ 	unsigned long fault_pfn;
+ 	int nr_start = *nr;
+ 
+ 	fault_pfn = pud_pfn(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+-	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
++	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr, flags))
+ 		return 0;
+ 
+ 	if (unlikely(pud_val(orig) != pud_val(*pudp))) {
+@@ -1920,14 +1924,16 @@ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+ }
+ #else
+ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+-		unsigned long end, struct page **pages, int *nr)
++		unsigned long end, struct page **pages, int *nr,
++		unsigned int flags)
+ {
+ 	BUILD_BUG();
+ 	return 0;
+ }
+ 
+ static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long addr,
+-		unsigned long end, struct page **pages, int *nr)
++		unsigned long end, struct page **pages, int *nr,
++		unsigned int flags)
+ {
+ 	BUILD_BUG();
+ 	return 0;
+@@ -1946,7 +1952,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ 	if (pmd_devmap(orig)) {
+ 		if (unlikely(flags & FOLL_LONGTERM))
+ 			return 0;
+-		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
++		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr,
++					     flags);
+ 	}
+ 
+ 	refs = 0;
+@@ -1988,7 +1995,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+ 	if (pud_devmap(orig)) {
+ 		if (unlikely(flags & FOLL_LONGTERM))
+ 			return 0;
+-		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
++		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr,
++					     flags);
+ 	}
+ 
+ 	refs = 0;
 -- 
 2.20.1
 
