@@ -2,92 +2,124 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426C9C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD33C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1495520652
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B324F20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556559960;
-	bh=RdZEIE1yML4NLzsLDlQheSTk8OsdY1CjK/XZauwHndY=;
+	s=default; t=1556560104;
+	bh=7uEIB2ZsBAHxnHKWhlK5gogZ9GfNL0z6khQg0FJEfEE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZQvUeMBeGZjfkvMm/b7JugwNpbk+d9tcbCcj7/uUazty3spRPI6/OjqchQ+J+6pAl
-	 iL9B8+Ohk5x0+CNE4fQH/Vg8UMaj5Le+xSKgVHGufpMFd2yABQI0Agf+HthX66wC8J
-	 DRf3V204Kl5AdTVLAEMN/bLnluVDXnZE62JuvX9M=
+	b=A5/D26tV7WYQCAn+qyhGHSHzu1TZVpFYxJB8MSsv8g8VFXh3LTd+JZCyfvWHHEqyc
+	 9Q+OPggyymtYP1MLrM5Yuv1FTXRf3jFLGp0uD/ZqfuqKXJLtmFPHX1iIZiH08YVLcm
+	 Cnq1GAM33g1ddY1Nh9eoNTkWRtbPF6dHeIgj2BYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfD2Rp6 (ORCPT
+        id S1728928AbfD2RsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:45:58 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41334 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728748AbfD2Rp6 (ORCPT
+        Mon, 29 Apr 2019 13:48:23 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39078 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbfD2RsX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:45:58 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g8so8415762otl.8;
-        Mon, 29 Apr 2019 10:45:57 -0700 (PDT)
+        Mon, 29 Apr 2019 13:48:23 -0400
+Received: by mail-ot1-f66.google.com with SMTP id o39so9438726ota.6;
+        Mon, 29 Apr 2019 10:48:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jAzJmF2TDQHSyudozQ8MRP+x53QYDHzdtWrUcOyie5o=;
-        b=g+R92KDFW0x6NHaON6tGIwOzwahJ1uY0f2uFCkM4ehSXaRpBAy18WwSJwtH24yiNe8
-         Dg6R8os/+N3ERC8WIGnbGzbVmntXuD3l6v60G+bWPUzFAUYTgXamkoM8+k0Hygiag358
-         GhJSY0zjzqtA+iVigi21JwYab0ZHSptzDZa3GUb+5ElgDPZSLLDfbjpAHCd+XoXNw3W1
-         fUo9gVCXk3klCJArpYi8zt+LC0xiTwZp08rGBvCJaPEVcuBd7S06+vaQ0G9Ii2T0Ol6N
-         +wb+8004MAeSHDVZQJI9zLO9mqyT9QTIsihnsVlEJRJYudAGAISx7wr+ryHl4Xk4q3WW
-         3lAA==
-X-Gm-Message-State: APjAAAXP/1pUa26HJGkf/eXsNAxq4jxGUKPhrIqtba3Po3E4Tvs+/7yL
-        Wu+pL+cVudy8UBa+4r+JhGhHMoc=
-X-Google-Smtp-Source: APXvYqyDmhrZrBxVsjETXa+G0jMSBEdawMchYDvBe7bdT/A54hBJgsvfF2vIblFu+/8+xxw3vWkkFw==
-X-Received: by 2002:a9d:7f89:: with SMTP id t9mr23252837otp.169.1556559413449;
-        Mon, 29 Apr 2019 10:36:53 -0700 (PDT)
+        bh=eZFE5rOYc7aUDrk0hdPVUsnyCLMzSmYtEJdwfTLpnBA=;
+        b=YWCeHmIVWTl/QvwU4N8KLYWfQckvznEHYecOBLbmTObdq8p4TOiKvTrZJ23P5RN689
+         Si0EFXy+D6oeXcEJSaBtvJutwk/UAfu5AT8+DQxwGVtAUoMf5vhjRplYikEscdRcTQ+V
+         MsVlxf/w/svYJepjIAyI/tCDCvCANk8Zf1vviZ+dE58w+DVeTZ6VIFS/TO5u5u6+l1BB
+         yOtnJ1BlhYpqQfUL9m6iAOI7Y0S6BJciE6ps7JnrtKrCRZEwwPcvkiTFwuYRW12zX0J6
+         pP8e3FDfT9MNrWbp745LCDJCCbw46pB8CjjuhKDigUJOsdaYVmxqEEY2XpFdV1hoaZDo
+         ItmA==
+X-Gm-Message-State: APjAAAWiH6i5r5aLGzjxlM0NAScZ/mF14+QN7YOT1pV8TBI3ePiTx47B
+        jKyDiH/9TxSe3rNsHr8RYQ==
+X-Google-Smtp-Source: APXvYqxFcsWvYzC0Egzh1oIYiDnPVKr/WIFOW4gi1acr2+enruy3cklggGK48CwdHxAoIDG0T61mPQ==
+X-Received: by 2002:a9d:68c6:: with SMTP id i6mr15444685oto.330.1556560102605;
+        Mon, 29 Apr 2019 10:48:22 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s26sm13741338otk.24.2019.04.29.10.36.52
+        by smtp.gmail.com with ESMTPSA id w5sm7766257oib.6.2019.04.29.10.48.21
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 10:36:52 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 12:36:51 -0500
+        Mon, 29 Apr 2019 10:48:21 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 12:48:21 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH 2/6] dt-bindings: media: sun6i-csi: Add compatible string
- for A83T variant
-Message-ID: <20190429173651.GA6551@bogus>
-References: <20190408165744.11672-1-wens@kernel.org>
- <20190408165744.11672-3-wens@kernel.org>
+To:     richard.gong@linux.intel.com
+Cc:     gregkh@linuxfoundation.org, mark.rutland@arm.com,
+        dinguyen@kernel.org, atull@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Richard Gong <richard.gong@intel.com>
+Subject: Re: [PATCHv1 2/6] dt-bindings, firmware: add Intel Stratix10 remote
+ system update binding
+Message-ID: <20190429174821.GA22717@bogus>
+References: <1554835562-25056-1-git-send-email-richard.gong@linux.intel.com>
+ <1554835562-25056-3-git-send-email-richard.gong@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190408165744.11672-3-wens@kernel.org>
+In-Reply-To: <1554835562-25056-3-git-send-email-richard.gong@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  9 Apr 2019 00:57:40 +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
+On Tue, Apr 09, 2019 at 01:45:58PM -0500, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
 > 
-> The A83T SoC has a camera sensor interface (known as CSI in Allwinner
-> lingo), which is similar to the one found on the A64 and H3. The only
-> difference seems to be that support of MIPI CSI through a connected
-> MIPI CSI-2 bridge.
+> Add a device tree binding for the Intel Stratix10 remote system
+> update (RSU) driver
 > 
-> Add a compatible string for this variant.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> Reviewed-by: Alan Tull <atull@kernel.org>
 > ---
->  Documentation/devicetree/bindings/media/sun6i-csi.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/firmware/intel,stratix10-rsu.txt      | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/intel,stratix10-rsu.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/firmware/intel,stratix10-rsu.txt b/Documentation/devicetree/bindings/firmware/intel,stratix10-rsu.txt
+> new file mode 100644
+> index 0000000..b6250eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/intel,stratix10-rsu.txt
+> @@ -0,0 +1,31 @@
+> +Intel Remote System Update Driver for Stratix10 SoC
+> +============================================
+> +The Intel Remote System Update (RSU) driver exposes interfaces
+> +accessed through the Intel Service Layer to user space via sysfs
+> +interface. The RSU interfaces report and control some of the optional
+> +RSU features on Intel Stratix 10 SoC.
+> +
+> +The RSU feature provides a way for customers to update the boot
+> +configuration of a Intel Stratix 10 SoC device with significantly reduced
+> +risk of corrupting the bitstream storage and bricking the system.
+> +
+> +Required properties:
+> +-------------------
+> +The rsu node has the following mandatory properties, must be located under
+> +the firmware/svc node.
+> +
+> +- compatible: "intel,stratix10-rsu"
+> +
+> +Example:
+> +-------
+> +	firmware {
+> +		svc {
+> +			compatible = "intel,stratix10-svc";
+> +			method = "smc";
+> +			memory-region = <&service_reserved>;
+> +
+> +			rsu: rsu {
+> +				compatible = "intel,stratix10-rsu";
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+There's no DT resources, so why does this need to be in DT. Just make 
+the driver for the parent instantiate the driver for this.
+
+Rob
