@@ -2,122 +2,62 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7790C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AC5C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D8E20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ve8XuKyG"
+	by mail.kernel.org (Postfix) with ESMTP id 2E78820675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbfD2TKk (ORCPT
+        id S1729186AbfD2TK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:10:40 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:37780 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729054AbfD2TKk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:10:40 -0400
-Received: by mail-it1-f196.google.com with SMTP id r85so818268itc.2;
-        Mon, 29 Apr 2019 12:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KkDvipA08mC8IxvH8qSF4bz6Gcm5+BjwC5oiwie6/+k=;
-        b=Ve8XuKyGlDC7d2Jvv5JaFeEFVAN2jn4Wg3QY/h79fYFFc1Gn6E1SWgOE0LXGs3cKFE
-         6uJSMSnHFL3OsVIykxCMPR0dttZ74X/ELKhgOBL/ILoONnzQ5ThckDLH1amLcUVNx3d6
-         W/GUBBAdD1ZPt3D110gl+7UoYrQEFRHsuAOLEsF1Rf6WgvZ7q0UqANogslubKvkn9tbF
-         9WbTvIoSc5HK9pb826UynoX6IbBoyw0t5qU8973CIGOQalIHLmjjCufU5CwqO/ovGSmV
-         FjgjjcPs9sqpnYkXcILGgODVrWI8Aef3xVhVoTbkJY1uRom7QOEMy/Pnn+J/nw8hHS0V
-         P/Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KkDvipA08mC8IxvH8qSF4bz6Gcm5+BjwC5oiwie6/+k=;
-        b=RI4LI1MzZQtp2BVEm0mp0MN9NN/FUWuyBl736HfLvXHbvqEOFJn7CM+sJfLZLThHZ6
-         nSIDKGfmN9Rb7+VrkihIJQAkYiNBnkXmG52a8MimgIhEPwuyOlxu5Mo8wX1tIlCd+PbF
-         6g7kSESYpSsrpwWKA8+TeoDs0GXocJ4wCVuZasaMUQqOpH/YIdZ8BP5wpMA40pio3t1D
-         eQsKRgw6XrKKpeUe3XI5+20B0uBwsH4JyzVigPoDpcHKeBvlZstBUM0XvkPV4LshEXWE
-         w2TPODtMChCRYoGkS+YdbCnEYf9oA5W2r/AZ6IxsAnAh9ZcqcsHeuF3PHhf2Ju6nbPCN
-         BM4g==
-X-Gm-Message-State: APjAAAVsBwIG9aeQ+XQbW8RdO03s8L13w8iACZk6TGt2WCeyj0lwZAH2
-        8my/gW0CKqkaNsq/wD2XiVqiK8zGRwROvCmzDZM=
-X-Google-Smtp-Source: APXvYqxjcgCsVThGvzbspmleSENSy0vAB6gHVpHLHIM/eJvNC75iwpTXhF3s96hudw8y9HP19dvMhBdh2kK5aKvCYO4=
-X-Received: by 2002:a02:62ce:: with SMTP id d197mr43109134jac.91.1556565038867;
- Mon, 29 Apr 2019 12:10:38 -0700 (PDT)
+        Mon, 29 Apr 2019 15:10:58 -0400
+Received: from verein.lst.de ([213.95.11.211]:40628 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729044AbfD2TK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 15:10:57 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 9DC0668AFE; Mon, 29 Apr 2019 21:10:40 +0200 (CEST)
+Date:   Mon, 29 Apr 2019 21:10:40 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/26] iommu/dma: Factor out remapped pages lookup
+Message-ID: <20190429191040.GC5637@lst.de>
+References: <20190422175942.18788-1-hch@lst.de> <20190422175942.18788-12-hch@lst.de> <f8c04947-0ddb-17c5-8918-5859aabc220c@arm.com>
 MIME-Version: 1.0
-References: <20190429054741.7286-1-andrew.smirnov@gmail.com>
- <20190429054741.7286-3-andrew.smirnov@gmail.com> <1556533656.2560.7.camel@pengutronix.de>
-In-Reply-To: <1556533656.2560.7.camel@pengutronix.de>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Mon, 29 Apr 2019 12:10:27 -0700
-Message-ID: <CAHQ1cqECkn3242zVb55ifmgEHdq0se91=PpS1zDL4wj2WdZmbw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] power: supply: Add driver for Microchip UCS1002
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8c04947-0ddb-17c5-8918-5859aabc220c@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 3:27 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+On Mon, Apr 29, 2019 at 02:05:46PM +0100, Robin Murphy wrote:
+> On 22/04/2019 18:59, Christoph Hellwig wrote:
+>> From: Robin Murphy <robin.murphy@arm.com>
+>>
+>> Since we duplicate the find_vm_area() logic a few times in places where
+>> we only care aboute the pages, factor out a helper to abstract it.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> [hch: don't warn when not finding a region, as we'll rely on that later]
 >
-> Hi Andrey,
->
-> Am Sonntag, den 28.04.2019, 22:47 -0700 schrieb Andrey Smirnov:
-> > Add driver for Microchip UCS1002 Programmable USB Port Power
-> > Controller with Charger Emulation. The driver exposed a power supply
-> > device to control/monitor various parameter of the device as well as a
-> > regulator to allow controlling VBUS line.
-> >
-> > > Signed-off-by: Enric Balletbo Serra <enric.balletbo@collabora.com>
-> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > > Cc: Chris Healy <cphealy@gmail.com>
-> > > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > > Cc: Guenter Roeck <linux@roeck-us.net>
-> > > Cc: Sebastian Reichel <sre@kernel.org>
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-pm@vger.kernel.org
-> > ---
-> [...]
-> > +     /* Enable charge rationing by default */
-> > > +   ret = regmap_update_bits(info->regmap, UCS1002_REG_GENERAL_CFG,
-> > > +                            F_RATION_EN, F_RATION_EN);
-> > > +   if (ret) {
-> > > +           dev_err(dev, "Failed to read general config: %d\n", ret);
-> > > +           return ret;
-> > > +   }
-> > +
-> > > +   /*
-> > > +    * Ignore the M1, M2, PWR_EN, and EM_EN pin states. Set active
-> > > +    * mode selection to BC1.2 CDP.
-> > > +    */
-> > > +   ret = regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
-> > > +                            V_SET_ACTIVE_MODE_MASK,
-> > +                              V_SET_ACTIVE_MODE_BC12_CDP);
->
-> This doesn't work as the F_PIN_IGNORE bit isn't set, so the the
-> external strap settings are applied. I had to apply the following diff
-> to make the driver behave as expected again:
->
+> Yeah, I did think about that and the things which it might make a little 
+> easier, but preserved it as-is for the sake of keeping my modifications 
+> quick and simple. TBH I'm now feeling more inclined to drop the WARNs 
+> entirely at this point, since it's not like there's ever been any general 
+> guarantee that freeing the wrong thing shouldn't just crash, but that's 
+> something we can easily come back to later if need be.
 
-Ugh, I missed this since pins on my board are set properly. Thanks for
-catching that and sorry about the bug. Will fix in v3.
-
-Thanks,
-Andrey Smirnov
+Ok, I've dropped the warnings.
