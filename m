@@ -2,106 +2,150 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A95CC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68351C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB0A20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3638420675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="J4ZnqAXR"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="WJtEtPJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfD2RS7 (ORCPT
+        id S1728953AbfD2RTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:18:59 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39010 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728778AbfD2RS6 (ORCPT
+        Mon, 29 Apr 2019 13:19:18 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39561 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728778AbfD2RTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:18:58 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h16so7157432qtk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:18:58 -0700 (PDT)
+        Mon, 29 Apr 2019 13:19:17 -0400
+Received: by mail-io1-f68.google.com with SMTP id c3so9674511iok.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:19:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jSTnY20qh+9b+fgMWdr7QdTtLxQEdNrvMsQhAEqFRPQ=;
-        b=J4ZnqAXRg9j1GFxYtxKe6YVghngN71fz2kjh093Y+OOWzlrzrkDXWNLlfywFD3OlOB
-         zuYHLS0Y/EWauPsTFyrxOeOSHPyquWEV3uuuEb8qmAS5S4M4e1Qaz8eI9InMlbS/Nl12
-         hfrAZ4vd36BctyDjW8ajK5Hqeu4N/giB/+OYpeLW3d5qld8voDl8xZpIx0ydsFSGfN5H
-         hN02DMonp4+3iz2woY0xyYExueonPxo4jxCRtKsy3VpocSAPVIhY5nw1Z5o6LYn2exYh
-         fYO1nuRdtSNUlDSYXOIXr/b8cGIVm+riWuZLU9giLGVhso85uLRYedbJRNoXNdOWzyz7
-         301w==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TcHWiD1mzC1uHmKop2kWHjOyjfjQjqGRJXvrFO4NZ0M=;
+        b=WJtEtPJw0ligOQLTkD1wdJpW0Xya6+Usnixo6qM6RCmaVuRB6Sw6wj0oxCImo1LiSU
+         19ZpSQb6bgjljTeQNsMfJ+Dkk6kINsP22ZduO9o3JEefbuBit3tCiV16cve3eLhpO5td
+         V8a7R8RsMk5Yk3qj9DVxD6ISwW+9YBSsNeDXoi264fxd29BQM1fdcUVUufbMTl8f8fcE
+         98rFyJ+pJy0G8gcajIbrpNypKbFgTJ7t8QCLvYVwV6WWr61DbX04g2oDc58uLlWTRWvx
+         FW0GZFyaO5zbqVX6Hw+8yJxE8cYkhp3fCI/Ox3LRQ2puDTOC3dkRvSZhNkSB+oK8Tzgm
+         RuUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jSTnY20qh+9b+fgMWdr7QdTtLxQEdNrvMsQhAEqFRPQ=;
-        b=YQj60ymLIFMy2a1JR8OHKKtpRkKq3NEq9s9uLKDUlaLMfdLUNsSKU6z9HEAhgDKfjz
-         wnOS4DmkSX3IgT3G2w/fPKZSS5naLBtQKOAddrvuekXw6pXRBEGw1u8rr6NkPUAAjIAG
-         OEKphfqJRN/J7qXBWV3H79oLVIH3XUPqr56Jt36J6/YI7FyK2s/m2v9ZRiG3h60ndhNT
-         Sv29/pgt8tye2DGnNVSulyZ/Aw7fkitxVoWz96dxLgVFDkdewmPEspF4Finx3F6jGtpo
-         MamNnf7rrfNVMYpeqdOR49AjY4rMC4d53PWJvOVOtRhUu2iluIayb4g71PtzBL4EyEZI
-         9Lxg==
-X-Gm-Message-State: APjAAAWvSnibidxH4H6H4t90a/FYG//9gsurzkK7qObkXJ7FNtQJHxaj
-        nS58l/nFkKJTP2Mm4gb3rxeqCQ==
-X-Google-Smtp-Source: APXvYqzDpiBsyJcAKjWLppvlEr8mrOVkh4RSHLNQbBP/5FkuX6AtXnf/sYzYfCOFZ5hGGWjHuCWC8w==
-X-Received: by 2002:a0c:fba9:: with SMTP id m9mr749817qvp.32.1556558337608;
-        Mon, 29 Apr 2019 10:18:57 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id e4sm18216200qtb.61.2019.04.29.10.18.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 10:18:57 -0700 (PDT)
-Message-ID: <1556558335.6132.9.camel@lca.pw>
-Subject: Re: [PATCH] arm64: fix pte_unmap() -Wunused-but-set-variable
-From:   Qian Cai <cai@lca.pw>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 29 Apr 2019 13:18:55 -0400
-In-Reply-To: <20190429164923.GA26912@fuggles.cambridge.arm.com>
-References: <20190427012842.93737-1-cai@lca.pw>
-         <20190429164923.GA26912@fuggles.cambridge.arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TcHWiD1mzC1uHmKop2kWHjOyjfjQjqGRJXvrFO4NZ0M=;
+        b=sh3Bybirp9EtERQXcTNYELoNnighesF67Wu1be60bxPoFbUIy+B/w1RDsz2nirrpz1
+         DoP1JPGpii6vYgmz05SDpvCaKaYIVoBNrqmCWdrNeM94zzyJk9iT4+E3O9T7dmdh/IpK
+         NrKuboG4v3WeaqZRBNQPBkj5/XVnp0HN+Vz6ofeLV4m5IJfnumS7tX091vJhuKWl+4hv
+         DGJg44LyPQYV4dp6CJxhgNgy5Q4TmL1+Z5EkQWP9ulv+xj7gSR75JtgpMBkDUZoRl21U
+         gzDj0J0vM/na7n1N4kwAJ8HEiAHIVggaCu2rpnS65Iha2iuQQtpCdTi8GArwlfp956fB
+         yBDA==
+X-Gm-Message-State: APjAAAXv8IfPWPtcnLExteOoBbXzgpqgxbJWRmINZqOUuCc2xO+xkVyb
+        /PV7UAwBYX+1wymx4GRZ6RElDXNvOYOw0h28S1HwMA==
+X-Google-Smtp-Source: APXvYqwr2b6ak9dkpcvCh4y3y7IhGFDCOLPWZnc8qygdB7THWWCzrsfb52Z9YiShfN4rx8ZPHnDzMPYVrnL0fFrmwzc=
+X-Received: by 2002:a6b:5910:: with SMTP id n16mr16081346iob.140.1556558356559;
+ Mon, 29 Apr 2019 10:19:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190423142629.120717-1-venture@google.com> <CAO=notzjzpt0WHfJEWXMGgkoJU8UiLnqZnrGrPs-dRH5GNdJyQ@mail.gmail.com>
+ <CAO=notz9QVoqKLrhJ3kx9FHja5+Mh68f36O36+1ewLG+SanmOA@mail.gmail.com>
+ <20190425172549.GA12376@kroah.com> <20190429165137.mwj4ehhwerunbef4@localhost>
+ <CAOesGMg49z4Gip-bLK-h7+LSLa4Fu68r11gT2EV8E8xMCPGDxg@mail.gmail.com> <CAO=notwVyTqvxfYRU1XJTwzSNCUAMgYCVpXVvqaN62uSiWyYCQ@mail.gmail.com>
+In-Reply-To: <CAO=notwVyTqvxfYRU1XJTwzSNCUAMgYCVpXVvqaN62uSiWyYCQ@mail.gmail.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 29 Apr 2019 10:19:04 -0700
+Message-ID: <CAOesGMjShorZmVeLL1nJNPVOP+vNTVzcA=arU3qW8ZUDYCtjaQ@mail.gmail.com>
+Subject: Re: [PATCH v2] soc: add aspeed folder and misc drivers
+To:     Patrick Venture <venture@google.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>,
+        soc@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-04-29 at 17:49 +0100, Will Deacon wrote:
-> >  arch/arm64/include/asm/pgtable.h | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm64/include/asm/pgtable.h
-> > b/arch/arm64/include/asm/pgtable.h
-> > index de70c1eabf33..7543e345e078 100644
-> > --- a/arch/arm64/include/asm/pgtable.h
-> > +++ b/arch/arm64/include/asm/pgtable.h
-> > @@ -478,6 +478,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
-> >  	return __pmd_to_phys(pmd);
-> >  }
-> >  
-> > +static inline void pte_unmap(pte_t *pte) { }
-> 
-> Hmm, is this guaranteed to stop the compiler from warning? Assuming the
-> pte_unmap() call is inlined, I'd expect it to keep complaining. What
-> compiler are you using?
+On Mon, Apr 29, 2019 at 10:16 AM Patrick Venture <venture@google.com> wrote:
+>
+> On Mon, Apr 29, 2019 at 10:13 AM Olof Johansson <olof@lixom.net> wrote:
+> >
+> > On Mon, Apr 29, 2019 at 10:08 AM Olof Johansson <olof@lixom.net> wrote:
+> > >
+> > > On Thu, Apr 25, 2019 at 07:25:49PM +0200, Greg KH wrote:
+> > > > On Tue, Apr 23, 2019 at 08:28:14AM -0700, Patrick Venture wrote:
+> > > > > On Tue, Apr 23, 2019 at 8:22 AM Patrick Venture <venture@google.com> wrote:
+> > > > > >
+> > > > > > On Tue, Apr 23, 2019 at 7:26 AM Patrick Venture <venture@google.com> wrote:
+> > > > > > >
+> > > > > > > Create a SoC folder for the ASPEED parts and place the misc drivers
+> > > > > > > currently present into this folder.  These drivers are not generic part
+> > > > > > > drivers, but rather only apply to the ASPEED SoCs.
+> > > > > > >
+> > > > > > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > > > >
+> > > > > > Accidentally lost the Acked-by when re-sending this patchset as I
+> > > > > > didn't see it on v1 before re-sending v2 to the larger audience.
+> > > > >
+> > > > > Since there was a change between v1 and v2, Arnd, I'd appreciate you
+> > > > > Ack this version of the patchset since it changes when the soc/aspeed
+> > > > > Makefile is followed.
+> > > >
+> > > > I have no objection for moving stuff out of drivers/misc/ so the SOC
+> > > > maintainers are free to take this.
+> > > >
+> > > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >
+> > > I'm totally confused. This is the second "PATCH v2" of this patch that I came
+> > > across, I already applied the first.
+> > >
+> > > Patrick: Follow up with incremental patch in case there's any difference.
+> > > Meanwhile, please keep in mind that you're adding a lot of work for people when
+> > > you respin patches without following up on the previous version. Thanks!
+> >
+> > Not only that, but subthreads were cc:d to arm@kernel.org and some
+> > were not, so I missed the overnight conversation on the topic.
+> >
+> > If this email thread is any indication of how the code will be
+> > flowing, there's definitely need for more structure. Joel, I'm hoping
+> > you'll coordinate.
+>
+> To be honest, this patchset thread was a bit less clear than anyone
+> prefers.  I use get_maintainers to get the initial list, and so adding
+> arm@ or soc@ per a request tells me that perhaps those should be
+> output via that script.
 
-Yes, it is guaranteed. Tested on both gcc and clang.
+The tools are working as expected, we normally don't take patches
+directly to arm@kernel.org, we let them go in through platform
+maintainers who then send it on to us.
 
-> 
-> Also, there are a bunch of other architectures that I would expect to have
-> this same issue because they defined pte_unmap() exactly the same way.
+> >
+> > I'm with Arnd on whether the code should be in drivers/soc or not --
+> > most of it likely should not.
+>
+> I think the misc drivers for a SoC that are a single user interface
+> that is focused on the use-case that belongs to that SoC only belong
+> in soc/, while if there is something we can do in common -- different
+> story.  If it makes sense to just have misc/aspeed/ instead of
+> soc/aspeed -- would that align more?
 
-This has already fixed in powerpc that went in.
+Those views are how the "board file hell" started on 32-bit ARM too,
+so we're definitely hesitant to jump to that conclusion without
+knowing more about what's actually anticipated.
 
-https://lore.kernel.org/lkml/20190307144031.52494-1-cai@lca.pw/
 
-I am not sure if I care about any other arches nor I have real hardware to test
-further.
+Do you happen to have an estimate on what kind of drivers are
+needed/anticipated?
+
+
+-Olof
