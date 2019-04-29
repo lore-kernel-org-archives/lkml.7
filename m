@@ -2,177 +2,152 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40ABC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD042C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949712075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:40:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Yvz5MKIw"
+	by mail.kernel.org (Postfix) with ESMTP id 9423721537
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfD2Hkx (ORCPT
+        id S1727481AbfD2Hpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:40:53 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38838 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfD2Hkx (ORCPT
+        Mon, 29 Apr 2019 03:45:54 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38877 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727380AbfD2Hpy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:40:53 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w11so1519762edl.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 00:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cR/Ec4vlE+X0Q9Ok0IFawlzdAj+EmfR3ChCRLcZ/ulo=;
-        b=Yvz5MKIw4ZC5qQmsVZshla4AGaxfZIkBuWlgR8PFsij1idit2Hg9pf2BY9X4YfNeP3
-         0q/OaZHtVMvHVNJgHFZHNFVsd0ifJTRDRyvokNYW0ozxAb1Va4b1IMM0D/HUCYlZsuXw
-         R7XvyxOE825SE4PFlQvLU61RelsDsB9+qbxZg=
+        Mon, 29 Apr 2019 03:45:54 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d13so10858342qth.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 00:45:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=cR/Ec4vlE+X0Q9Ok0IFawlzdAj+EmfR3ChCRLcZ/ulo=;
-        b=tBXCF+v6q675VTAV5RrDNRErS/a+R7AqVKBd0Df3yQQVrux6/q81ubMqBPIgCH+c79
-         F46GP2vg1NQZVt2r3IXpqaGbKwbhQRBibs0YohuGQvpBIeRZO+/5+yRMtIxBhAhtzFX8
-         PorqkpvFTM+GJhlXocRCRKFuuhWFpd9k++abPm0IifKJo+YBM2BuMq/l9lDFpz4bNOyz
-         KauDJJl23EKPHfVKqZUPB3ut91Yo+hXCzuA5vr+n76Ph3T2wYZUR35HA06JyBHHbzQm6
-         CA7r4f500/OUsylWNEttWgE5TIUGOY+JjEeHuqvMbqJR/cW6VYut8kudQcwjFOkxUzGg
-         1vgw==
-X-Gm-Message-State: APjAAAWJ4EGffLyaIZzpQfT4d5nYCAww1djoc/PyYmibNUZVqsZImhsl
-        TjYjeoSwJg02Uh27vP9n0VJntw==
-X-Google-Smtp-Source: APXvYqyamfeC0VDCz3uc3J7R7UkR4tbLJux/+a07AHsJfdjm2ugURBFwopOn5nLJ9FRLCID5f7b7Rw==
-X-Received: by 2002:aa7:dc44:: with SMTP id g4mr37840116edu.268.1556523650136;
-        Mon, 29 Apr 2019 00:40:50 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id u10sm8782904edj.22.2019.04.29.00.40.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 00:40:49 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 09:40:47 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Thomas Hellstrom <thomas@shipmail.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        David Airlie <airlied@redhat.com>
-Subject: Re: [PATCH] Revert "drm/qxl: drop prime import/export callbacks"
-Message-ID: <20190429074047.GJ3271@phenom.ffwll.local>
-Mail-Followup-To: Thomas Hellstrom <thomas@shipmail.org>,
-        Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" <spice-devel@lists.freedesktop.org>,
-        David Airlie <airlied@redhat.com>
-References: <20190426053324.26443-1-kraxel@redhat.com>
- <CAKMK7uG+vMU0hqqiKAswu=LqpkcXtLPqbYLRWgoAPpsQQV4qzA@mail.gmail.com>
- <8ae152fe-7811-4de3-e26f-350650a8f992@shipmail.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G1fYVX4Wl40jdZ8+GWZHzYu+3eRKXOD4apXXEPaZ4Wc=;
+        b=dSYoU72GZBkecApfUSCaglJ4NDTV0VnaPXDJwLKOcmN9hLa5FLOxOFAX8/8HE1fxmE
+         sKyYITN6M7UKGKCVn2+5eDMPtdVKNXj8Thj4jHLlFtfbm3wadccIPjWHfqSROp8+Bok6
+         nyEIbyDxm47hOdTuaksQz/h5T+JO1owPZ6BAYj2dGWdPOH+iHcdvxVz7v7uXz+vbqbMq
+         q5DAIBtkHS8Ff7IAqQTRpBSwJxmy2z92gISSdnV9jloLPgbpzw0PCDuXgB9MjmRdY8rN
+         PCPXNcKp+dpbTmDd+0OTFX2MTVswd2wwUPCPMwlUtfCeiorfN3I5BxlkWnqdEErBnRt7
+         +BfA==
+X-Gm-Message-State: APjAAAUGvBysBcwKciKdHD01COvDhl7inAVEGhQsjeM+r/p2u5oG1TNs
+        rsPtnHSmVoAprIZgoFQzHVLOC31s/+aU2KXLxg81lA==
+X-Google-Smtp-Source: APXvYqypk8m0KUmH/pdaKn2c6dXVHzcwhT3MS6/t9LfLWL9Bs64Cy4DoGt4GK6iloNtlI/ZK+yiFhuwRgID1pkwlfBw=
+X-Received: by 2002:a0c:e5d0:: with SMTP id u16mr18985451qvm.48.1556523953508;
+ Mon, 29 Apr 2019 00:45:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ae152fe-7811-4de3-e26f-350650a8f992@shipmail.org>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190422130814.GJ173520@google.com> <3a1139ef-10ed-6923-73c5-30fbf0c065c3@linux.intel.com>
+In-Reply-To: <3a1139ef-10ed-6923-73c5-30fbf0c065c3@linux.intel.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 29 Apr 2019 09:45:42 +0200
+Message-ID: <CAO-hwJKvXO6L7m0g1D6wycFP=Wu_qLDyLXTtmm0TkpxT5Z8ygw@mail.gmail.com>
+Subject: Re: [Bug 203297] Synaptics touchpad TM-3127 functionality broken by
+ PCI runtime power management patch on 4.20.2
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Keijo Vaara <ferdasyn@rocketmail.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 05:42:23PM +0200, Thomas Hellstrom wrote:
-> On 4/26/19 4:21 PM, Daniel Vetter wrote:
-> > On Fri, Apr 26, 2019 at 7:33 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
-> > > This reverts commit f4c34b1e2a37d5676180901fa6ff188bcb6371f8.
-> > > 
-> > > Simliar to commit a0cecc23cfcb Revert "drm/virtio: drop prime
-> > > import/export callbacks".  We have to do the same with qxl,
-> > > for the same reasons (it breaks DRI3).
-> > > 
-> > > Drop the WARN_ON_ONCE().
-> > > 
-> > > Fixes: f4c34b1e2a37d5676180901fa6ff188bcb6371f8
-> > > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> > Maybe we need some helpers for virtual drivers which only allow
-> > self-reimport and nothing else at all? I think there's qxl, virgl,
-> > vmwgfx and maybe also vbox one who could use this ... Just a quick
-> > idea.
-> > -Daniel
-> 
-> I think vmwgfx could, in theory, support the full range of operations,
-> at least for reasonably recent device versions. However, it wouldn't be
-> terribly efficient since the exported dma-buf sglist would basically be a
-> bounce-buffer.
+On Fri, Apr 26, 2019 at 2:14 PM Jarkko Nikula
+<jarkko.nikula@linux.intel.com> wrote:
+>
+> On 4/22/19 4:08 PM, Bjorn Helgaas wrote:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=203297
+> >
+> > Regression, suspected but as yet unconfirmed cause:
+> >
+> >    c5eb1190074c ("PCI / PM: Allow runtime PM without callback functions")
+> >
+> > backported to 4.20 stable as 39e1be324c2f.
+> >
+> With help of Keijo it was confirmed above patch broke the Synaptics
+> touchpad. Not bisected but touchpad works again by forcing the i2c-i801
+> SMBus controller always on:
+> "echo on >/sys/bus/pci/devices/0000\:00\:1f.3/power/control"
+>
+> Above patch is a generalized fix that fixed the runtime PM regression on
+> i2c-i801 and re-allow the controller go to runtime suspend when idle. So
+> most probably Synaptics touchpad was broken by i2c-i801 runtime PM also
+> before but got unnoticed. Which is easy since on many platforms SMBus
+> controller doesn't necessarily have the PCI PM capabilities.
+>
+> I would like to ask help from input subsystem experts what kind of SMBus
+> power state dependency Synaptics RMI4 SMBus devices have since it cease
+> to work if SMBus controllers idles between transfers and how this is
+> best to fix?
 
-Yeah not sure that makes sense to support really ...
--Daniel
+Hmm, I am not sure there is such an existing architecture you could
+use in a simple patch.
 
-> 
-> /Thomas
-> 
-> 
-> > > ---
-> > >   drivers/gpu/drm/qxl/qxl_drv.c   |  4 ++++
-> > >   drivers/gpu/drm/qxl/qxl_prime.c | 12 ++++++++++++
-> > >   2 files changed, 16 insertions(+)
-> > > 
-> > > diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-> > > index 578d867a81d5..f33e349c4ec5 100644
-> > > --- a/drivers/gpu/drm/qxl/qxl_drv.c
-> > > +++ b/drivers/gpu/drm/qxl/qxl_drv.c
-> > > @@ -255,10 +255,14 @@ static struct drm_driver qxl_driver = {
-> > >   #if defined(CONFIG_DEBUG_FS)
-> > >          .debugfs_init = qxl_debugfs_init,
-> > >   #endif
-> > > +       .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
-> > > +       .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
-> > >          .gem_prime_export = drm_gem_prime_export,
-> > >          .gem_prime_import = drm_gem_prime_import,
-> > >          .gem_prime_pin = qxl_gem_prime_pin,
-> > >          .gem_prime_unpin = qxl_gem_prime_unpin,
-> > > +       .gem_prime_get_sg_table = qxl_gem_prime_get_sg_table,
-> > > +       .gem_prime_import_sg_table = qxl_gem_prime_import_sg_table,
-> > >          .gem_prime_vmap = qxl_gem_prime_vmap,
-> > >          .gem_prime_vunmap = qxl_gem_prime_vunmap,
-> > >          .gem_prime_mmap = qxl_gem_prime_mmap,
-> > > diff --git a/drivers/gpu/drm/qxl/qxl_prime.c b/drivers/gpu/drm/qxl/qxl_prime.c
-> > > index 8b448eca1cd9..114653b471c6 100644
-> > > --- a/drivers/gpu/drm/qxl/qxl_prime.c
-> > > +++ b/drivers/gpu/drm/qxl/qxl_prime.c
-> > > @@ -42,6 +42,18 @@ void qxl_gem_prime_unpin(struct drm_gem_object *obj)
-> > >          qxl_bo_unpin(bo);
-> > >   }
-> > > 
-> > > +struct sg_table *qxl_gem_prime_get_sg_table(struct drm_gem_object *obj)
-> > > +{
-> > > +       return ERR_PTR(-ENOSYS);
-> > > +}
-> > > +
-> > > +struct drm_gem_object *qxl_gem_prime_import_sg_table(
-> > > +       struct drm_device *dev, struct dma_buf_attachment *attach,
-> > > +       struct sg_table *table)
-> > > +{
-> > > +       return ERR_PTR(-ENOSYS);
-> > > +}
-> > > +
-> > >   void *qxl_gem_prime_vmap(struct drm_gem_object *obj)
-> > >   {
-> > >          struct qxl_bo *bo = gem_to_qxl_bo(obj);
-> > > --
-> > > 2.18.1
-> > > 
-> > 
-> 
+rmi-driver.c does indeed create an input device we could use to toggle
+on/off the PM state, but those callbacks are not wired to the
+transport driver (rmi_smbus.c), so it would required a little bit of
+extra work. And then, there are other RMI4 functions (firmware
+upgrade) that would not be happy if PM is in suspend while there is no
+open input node.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+So I think this "hack" (with Mika's comments addressed) should go in
+until someone starts propagating the PM states correctly.
+
+Cheers,
+Benjamin
+
+>
+> Instead of revert I think we'd need to have some method to force SMBus
+> controller on whenever the touchpad is active, like when there is a
+> userspace listening.
+>
+> I'm not expert in this area so as quick proof of concept I had a
+> following hack which forces the I2C/SMBus adapter, and eventually the
+> parent PCI device of it on when the RMI4 SMBus device is probed and let
+> the SMBus controller to idle when removed.
+>
+> According to Keijo it fixes the issue but I like to hear input experts
+> for better place to put these.
+>
+> diff --git a/drivers/input/rmi4/rmi_smbus.c b/drivers/input/rmi4/rmi_smbus.c
+> index b6ccf39c6a7b..2b11d69be313 100644
+> --- a/drivers/input/rmi4/rmi_smbus.c
+> +++ b/drivers/input/rmi4/rmi_smbus.c
+> @@ -16,6 +16,7 @@
+>   #include <linux/lockdep.h>
+>   #include <linux/module.h>
+>   #include <linux/pm.h>
+> +#include <linux/pm_runtime.h>
+>   #include <linux/rmi.h>
+>   #include <linux/slab.h>
+>   #include "rmi_driver.h"
+> @@ -332,6 +333,9 @@ static int rmi_smb_probe(struct i2c_client *client,
+>
+>         dev_info(&client->dev, "registering SMbus-connected sensor\n");
+>
+> +       /* Force SMBus adapter on while RMI4 device is connected */
+> +       pm_runtime_get(&client->adapter->dev);
+> +
+>         error = rmi_register_transport_device(&rmi_smb->xport);
+>         if (error) {
+>                 dev_err(&client->dev, "failed to register sensor: %d\n", error);
+> @@ -346,6 +350,7 @@ static int rmi_smb_remove(struct i2c_client *client)
+>         struct rmi_smb_xport *rmi_smb = i2c_get_clientdata(client);
+>
+>         rmi_unregister_transport_device(&rmi_smb->xport);
+> +       pm_runtime_put(&client->adapter->dev);
+>
+>         return 0;
+>   }
+>
+> --
+> Jarkko
