@@ -5,88 +5,91 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73560C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF260C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDFF2087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B602087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfD2LL1 (ORCPT
+        id S1727943AbfD2LNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 07:11:27 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:52276 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727819AbfD2LL0 (ORCPT
+        Mon, 29 Apr 2019 07:13:50 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38514 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbfD2LNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 07:11:26 -0400
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from webmail.solarflare.com (webmail.solarflare.com [12.187.104.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us3.ppe-hosted.com (Proofpoint Essentials ESMTP Server) with ESMTPS id C22A560006A;
-        Mon, 29 Apr 2019 11:11:23 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ocex03.SolarFlarecom.com
- (10.20.40.36) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 29 Apr
- 2019 04:11:19 -0700
-Subject: Re: [PATCH] net_sched: force endianness annotation
-To:     Nicholas Mc Guire <der.herr@hofr.at>
-CC:     Nicholas Mc Guire <hofrat@osadl.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1556430899-11018-1-git-send-email-hofrat@osadl.org>
- <07d36e94-aad4-a263-bf09-705ee1dd59ed@solarflare.com>
- <20190429104414.GB17493@osadl.at>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <eb4449ae-70db-c487-9c47-301225734943@solarflare.com>
-Date:   Mon, 29 Apr 2019 12:11:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 07:13:50 -0400
+Received: by mail-qk1-f196.google.com with SMTP id g141so1301153qke.5;
+        Mon, 29 Apr 2019 04:13:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x28FrJjCiQBqslkV+zQDusUSdhRwlePNuGMIarDkv/M=;
+        b=KjFCx3f8TeZtNxQPZkuirjnLjg6sgQ4GVdqWeB9Xb4jgwKvXSwejAP8d0Ve9GxJHqy
+         +5zh/Y7cF5oUq3nm6ZcwLXIC1tAWVlykQA2GLEdezucoGIj0geG9CvfkbqMgPh4WRGkB
+         uXwCoY3pcUah5nME6m8J7dvCxkdCojs1mzQPkcPGYem2VvoHn2su0X3rz5R/lzWzKnUL
+         yXcVmDp1piq2OBXcX8xaChlcOEocEh8ATEOSa9jIlnoOoPRZ/NGhIIAm26MzWCSADvCW
+         JvmVnbOOln+DqXgO2KOlzR988WAySKsCXKIQVEoWGols5OPUb1raZu6rT6VQiBWOzdem
+         N/qA==
+X-Gm-Message-State: APjAAAVNs2GkOcAT/YHJfEBavVm/Jo/KZ+v9uod842lvrlyP+gnVQ0Zo
+        kFmj60FFngIU5bWU8msY8Vwyhi+caBrciDp0xi8=
+X-Google-Smtp-Source: APXvYqz5Mm4SyC+HruUyK9z+7pLahPm2GOCckLoU5T6jy4fQSPbtU+ocNRTAYbZOsAs2wlbEba/EZ/7vwNo/tqCKHl4=
+X-Received: by 2002:a37:c402:: with SMTP id d2mr34106774qki.291.1556536429180;
+ Mon, 29 Apr 2019 04:13:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190429104414.GB17493@osadl.at>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-24580.005
-X-TM-AS-Result: No-1.536500-4.000000-10
-X-TMASE-MatchedRID: cgbqQT5W8hcOwH4pD14DsPHkpkyUphL9O69hrW/YgWEA6s2mIXI3kEiM
-        B4CWhnR4u6ilxywUcf3ICNxBaY9fXITbRrXUOpijKkmNLLBos7D4h+uI7dxXxLWZRTTpSHog7/J
-        GRZ8PgCeVu5TRVGSDESu5f3xEk+/3pUxzcSQ8HaSXXOyNnX/prFYPArum7kxlLQOOgimiPKajxY
-        yRBa/qJUl4W8WVUOR/9xS3mVzWUuCMx6OO8+QGvucHxr/YAuamj7P44VS7adN119JNcU7kqe7ip
-        daarOdTxI1DqzRBr//WpoNhF+t/c2ejIkpQ4ELxgESWhk0zdQcrAvj/GqkNw9Q17CngTb9OBKmZ
-        VgZCVnezGTWRXUlrxxtsJUxyzWNSVlxr1FJij9s=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--1.536500-4.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-24580.005
-X-MDID: 1556536286-Yp76MjzM6jjh
+References: <20190427153222.GA9613@jerusalem> <20190427202150.GB9613@jerusalem>
+ <CAMuHMdXNCxHP=BWPOy70LjNJoMH+zy7yYOHj29gYt79_5=4ffg@mail.gmail.com>
+ <CAK8P3a2F6KW3M7ZaK=WL8429j_z=y_wXrx6rthxni8vBmsMPyg@mail.gmail.com>
+ <c75092d5-0bbf-cd8e-d0a2-ff1384ac5a48@linux-m68k.org> <CAMuHMdUC6zXH5SUEChDNHHJL2=Aq6XfRebFWK0JtH5zDWMSVgQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdUC6zXH5SUEChDNHHJL2=Aq6XfRebFWK0JtH5zDWMSVgQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 29 Apr 2019 13:13:32 +0200
+Message-ID: <CAK8P3a0gex0ffvX9zQDV=N7g6q7UAxxYRn2PeAbbAgrd1wTvQg@mail.gmail.com>
+Subject: Re: endianness swapped
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Ungerer <gerg@linux-m68k.org>,
+        Angelo Dureghello <angelo@sysam.it>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Linux/m68k" <linux-m68k@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2019 11:44, Nicholas Mc Guire wrote:
-> be16_to_cpu((__force __be16)val) should be a NOP on big-endian as well
-Yes.  But it's semiotically wrong to call be16_to_cpu() on a cpu-endian
- value; if the existing behaviour is desired, it ought to be implemented
- differently.
-> The problem with using swab16 is that it is impating the binary significantly
-> so I'm not sure if the change is really side-effect free
-It's not; it changes the behaviour.  That's why I brought up the question
- of the intended behaviour — it's unclear whether the current (no-op on BE)
- behaviour is correct or whether it's a bug in the original code.
-Better to leave the sparse error in place — drawing future developers'
- attention to something being possibly wrong here — than to mask it with a
- synthetic 'fix' which we don't even know if it's correct or not.
+On Mon, Apr 29, 2019 at 10:44 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Sun, Apr 28, 2019 at 3:59 PM Greg Ungerer <gerg@linux-m68k.org> wrote:
+> > On 28/4/19 7:21 pm, Arnd Bergmann wrote:
+> > > On Sun, Apr 28, 2019 at 10:46 AM Geert Uytterhoeven
+> > > <geert@linux-m68k.org> wrote:
+> > >>
+> > >> Orthogonal to how Coldfire's read[wl]() should be fixed, I find it a bit
+> > >> questionable to swap data twice on big endian architectures.
+> > >
+> > > I would expect that the compiler is capable of detecting a double
+> > > swap and optimize it out. Even if it can't, there are not that many
+> > > instances of io{read,write}{16,32}be in the kernel, so the increase
+> > > in kernel image size from a double swap should be limited to a
+> > > few extra instructions, and the runtime overhead should be
+> > > negligible compared to the bus access.
+>
+> Probably the overhead is not negligible on old m68k...
 
-> but I just am unsure if
-> -                   val = be16_to_cpu(val);
-> +                   val = swab16(val);
-> is actually equivalent.
-If you're not sure about such things, maybe you shouldn't be touching
- endianness-related code.  swab is *not* a no-op, either on BE or LE.
+Maybe the I/O devices are faster than I expected then. I was guessing
+that there is still a factor of 100x or more between going to an on-chip
+bus and single byterev register-to-register instruction.
 
--Ed
+I did notice that __arch_swab32() is an inline assembly, so the
+compiler has no way of eliminating the double swap, but
+setting CONFIG_ARCH_USE_BUILTIN_BSWAP makes it
+do the right thing.
+
+      Arnd
