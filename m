@@ -2,90 +2,60 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F7DC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D348C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6856F2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556547806;
-	bh=CkUjjUJoMHq8rlvMrsqjvKQxwGL4ZgTcgUZqqiiE4wk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DbDxWiPaGw+A/vH9V77z/0HZfBVG7nGClON/gflwzTxTYyUdHpl9UlXWbIfJuQGxR
-	 tEpty+z57KtCZBrET+ipQZwB8vtbV4TpAAKchsjy/kS5tiPPT/HA9IgcK2VaqQiu6j
-	 akFT/A0Dc1gopvr6T8+pDFgmd0XsY9p5zbwrLSkc=
+	by mail.kernel.org (Postfix) with ESMTP id 463252084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfD2OXZ (ORCPT
+        id S1728386AbfD2OXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728260AbfD2OXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:23:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05EF02087B;
-        Mon, 29 Apr 2019 14:23:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556547803;
-        bh=CkUjjUJoMHq8rlvMrsqjvKQxwGL4ZgTcgUZqqiiE4wk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DbpGdnjdtpdQJlRzLjdXk/CzMnGnx2UImW/X2Ktk2CSjyqyJm9+xzPJkeajfWT9Qd
-         N3PRnB8M7vrDlYE0ETDEyal91HTyIwFfrFHNs92GYThQ8pojlh/IRIH3MXMHNa5heE
-         ZNgpK7yyRwLUt1w0xCmLk/cfr533cOSm5sUVT9v0=
-Date:   Mon, 29 Apr 2019 16:23:21 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, andrew@aj.id.au,
-        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH 01/41] drivers: tty: serial: dz: use dev_err() instead of
- printk()
-Message-ID: <20190429142321.GA29007@kroah.com>
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-2-git-send-email-info@metux.net>
- <20190427132959.GA11368@kroah.com>
- <e10175d0-bc3b-a4ab-cb47-0b4761bfb629@metux.net>
+        Mon, 29 Apr 2019 10:23:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49396 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728258AbfD2OX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:23:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0AD15AF1E;
+        Mon, 29 Apr 2019 14:23:28 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 16:23:26 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     iommu@lists.linux-foundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: "iommu/amd: Set exclusion range correctly" causes smartpqi
+ offline
+Message-ID: <20190429142326.GA4678@suse.de>
+References: <1556290348.6132.6.camel@lca.pw>
+ <20190426152632.GC3173@suse.de>
+ <1556294112.6132.7.camel@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e10175d0-bc3b-a4ab-cb47-0b4761bfb629@metux.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1556294112.6132.7.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 04:11:15PM +0200, Enrico Weigelt, metux IT consult wrote:
-> On 27.04.19 15:29, Greg KH wrote:
-> > On Sat, Apr 27, 2019 at 02:51:42PM +0200, Enrico Weigelt, metux IT consult wrote:
-> >> Using dev_err() instead of printk() for more consistent output.
-> >> (prints device name, etc).
-> >>
-> >> Signed-off-by: Enrico Weigelt <info@metux.net>
-> > 
-> > Your "From:" line does not match the signed-off-by line, so I can't take
-> > any of these if I wanted to :(
-> 
-> Grmpf. I've manually changed it, as you isisted in having my company
-> name remove from it ....
+On Fri, Apr 26, 2019 at 11:55:12AM -0400, Qian Cai wrote:
+> https://git.sr.ht/~cai/linux-debug/blob/master/dmesg
 
-Yes, that's fine, but the lines have to match.  See the documentation
-for how to have a "From:" in the changelog text to override whatever
-your email client happens to pollute the email with :)
+Thanks, I can't see any definitions for unity ranges or exclusion ranges
+in the IVRS table dump, which makes it even more weird.
 
-thanks,
+Can you please send me the output of
 
-greg k-h
+	for f in `ls -1 /sys/kernel/iommu_groups/*/reserved_regions`; do echo "---$f"; cat $f;done
+
+to double-check?
+
+Thanks,
+
+	Joerg
