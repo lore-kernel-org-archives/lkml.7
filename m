@@ -2,117 +2,160 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D90C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 981E5C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F77216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556554724;
-	bh=y+8rKTlzq61ygqpRLwRIKyd+HPW/HceVYVOZlw5ZooE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pUjPL8PsNoPy0RFGm9L/6r4noL4GO+FQWH3o4Sz6EMeJ6XS9rPsymRbkILyv6xbC2
-	 bfZoLd2tzO2RDQBbmame9wLXIWB1ZjM6C5/Joodu6XwYMKHYQVru9SRDyvgzbo9YdW
-	 OszTtl+KhH3usgFFpXaAn4uUQA/yGQKbZPqmYigQ=
+	by mail.kernel.org (Postfix) with ESMTP id 59BC620673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:20:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="iSPjnQYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfD2QSn (ORCPT
+        id S1728720AbfD2QUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:18:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728542AbfD2QSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:18:43 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D83BF20673;
-        Mon, 29 Apr 2019 16:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556554722;
-        bh=y+8rKTlzq61ygqpRLwRIKyd+HPW/HceVYVOZlw5ZooE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cAszN/xU6nogM20gyC6HXrHhU4HZtFzFs8Xz0vUh77Fokj1XAWwp3bh6DryIw11R2
-         GfkPiX1NXpGSJRFIE3vm9LCIMdVrj/joj7rl/EAukRhXXAznX1W9Qc/OJnAMAWxlXb
-         DgCdG4gX1SWabm5LQSftTtV9D2WcIlTKq/+YNsE8=
-Received: by mail-qt1-f174.google.com with SMTP id d13so12583267qth.5;
-        Mon, 29 Apr 2019 09:18:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAX2iJkBEw4scXg++JG3NSN7iak4VEAR8sp0fFUsdaqqV78TDzwZ
-        5PXzrs5m9uHUR4zngZiUzNufCA7glDGU7MNmuA==
-X-Google-Smtp-Source: APXvYqyzqs09hNBiab7wqw3JOVfJ9CFkM2ZcAO05H+2Yc6TdhfKWUtxNLYtavldF7yNklJkdWImkkMHYR0Y3l+v22yw=
-X-Received: by 2002:aed:306c:: with SMTP id 99mr2856198qte.38.1556554721170;
- Mon, 29 Apr 2019 09:18:41 -0700 (PDT)
+        Mon, 29 Apr 2019 12:20:31 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44423 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728518AbfD2QUa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:20:30 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z16so5376485pgv.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 09:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iuoLsJiPnw/JXgOxrXpRVQgpAhR00WHi9L2khmPRaTU=;
+        b=iSPjnQYQaqRrj0IHGTf3wsrwbk+JHEPAnXZITG0ikQDFPK8m3yc1CaalbhvyWR29bk
+         7s8DH8X3ZDDWG/U3DkDT2ILEuyvYtDJbtVoEcQehKE+SO7r4a7BVvPYm93YjJXf44gAt
+         mmtBl9dwWu5XnlfvLh2TZ6HbgAuf7JsrwV9UPy/H4vHnSdMACAHADCOrUGgIQhj2fuG1
+         OnyL+pWRN6HKmyp0DO5QVVNopshYK8xfvD4WgvzMYPNxCXy5P5M/NEhXraBMf2zB2UZH
+         TB9+8Z87rIw+oorbIcLiXJHaJwyPgykxBTLQMWunRVfyEO0pP+vzOkiBAupgCdfc8yye
+         Gr0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iuoLsJiPnw/JXgOxrXpRVQgpAhR00WHi9L2khmPRaTU=;
+        b=HBdaqCuhFhQkA1NyIG8sVt5ejHsNIBb/GWZkASkmWznA3X4NYHojL/K4erNaUmsmNf
+         kUXTB2YXiUTsYX0HFFcndmkIPrIeB7GX8VV4ScLpJRcNPhNUhF9ySrqhuLijlSu92bCy
+         BMbxewSp1LuZr3r/rVzxOzYWRWoyRcwSL99b+ijZkaj4lT4HOpoReNv2RmDuSAHGxWa0
+         JgJ1DJHbc1mJh+YDur7fr5lAX2L1/8gVRPtwP5ugU86nT9guETKbY0eGI2YAvnTUULNG
+         oS3h+9h1evG8puG1U9WFQHi2xSRSkr2u3QETnsC9/ym5x7NapCkStcLgAIWQvz/hvRqe
+         15bA==
+X-Gm-Message-State: APjAAAWZHJGvUoh34iTem1H4Mh/QsHBOiUs8x/jxmt2f+M3K+0AdFuh0
+        hTH+RjawooM/6KH7sy5jbHzT7g==
+X-Google-Smtp-Source: APXvYqy3R91vdFUP7MKOE9lK74Z9U5vcLN6dC1ce1iC0TEnZ1uYEIe4JQCIqgHZKe27Fn8Hxbq0p3A==
+X-Received: by 2002:a62:5707:: with SMTP id l7mr65700691pfb.205.1556554829368;
+        Mon, 29 Apr 2019 09:20:29 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id s187sm38235391pgb.13.2019.04.29.09.20.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 09:20:29 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 09:20:27 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH] net-sysfs: expose IRQ number
+Message-ID: <20190429092027.6013677d@hermes.lan>
+In-Reply-To: <20190429060107.10245-1-zajec5@gmail.com>
+References: <20190429060107.10245-1-zajec5@gmail.com>
 MIME-Version: 1.0
-References: <20190410174139.20012-1-tiny.windzz@gmail.com> <20190410174139.20012-3-tiny.windzz@gmail.com>
- <20190426211540.GA890@bogus> <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
-In-Reply-To: <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 29 Apr 2019 11:18:29 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
-Message-ID: <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document allwinner,cpu-operating-points-v2
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 4:53 AM Frank Lee <tiny.windzz@gmail.com> wrote:
->
-> On Sat, Apr 27, 2019 at 5:15 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, Apr 10, 2019 at 01:41:39PM -0400, Yangtao Li wrote:
-> > > Allwinner Process Voltage Scaling Tables defines the voltage and
-> > > frequency value based on the speedbin blown in the efuse combination.
-> > > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> > > provide the OPP framework with required information.
-> > > This is used to determine the voltage and frequency value for each
-> > > OPP of operating-points-v2 table when it is parsed by the OPP framework.
-> > >
-> > > The "allwinner,cpu-operating-points-v2" DT extends the "operating-points-v2"
-> > > with following parameters:
-> > > - nvmem-cells (NVMEM area containig the speedbin information)
-> > > - opp-microvolt-<name>: voltage in micro Volts.
-> > >   At runtime, the platform can pick a <name> and matching
-> > >   opp-microvolt-<name> property.
-> > >                       HW:             <name>:
-> > >                       sun50iw-h6      speed0 speed1 speed2
-> >
-> > We already have at least one way to support speed bins with QC kryo
-> > binding. Why do we need a different way?
->
-> For some SOCs, for some reason (making the CPU have approximate performance),
-> they use the same frequency but different voltage. In the case where
-> this speed bin
-> is not a lot and opp uses the same frequency, too many repeated opp
-> nodes are a bit
-> redundant and not intuitive enough.
->
-> So, I think it's worth the new method.
+On Mon, 29 Apr 2019 08:01:07 +0200
+Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> wrote:
 
-Well, I don't.
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+>=20
+> Knowing IRQ number makes e.g. reading /proc/interrupts much simpler.
+> It's more reliable than guessing device name used by a driver when
+> calling request_irq().
+>=20
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> ---
+> I found a script parsing /proc/interrupts for a given interface name. It =
+wasn't
+> working for me as it assumed request_irq() was called with a device name.=
+ It's
+> not a case for all drivers.
+>=20
+> I also found some other people looking for a proper solution for that:
+> https://unix.stackexchange.com/questions/275075/programmatically-determin=
+e-the-irqs-associated-with-a-network-interface
+> https://stackoverflow.com/questions/7516984/retrieving-irq-number-of-a-nic
+>=20
+> Let me know if this solution makes sense. I can say it works for me ;)
+> ---
+>  Documentation/ABI/testing/sysfs-class-net |  7 +++++++
+>  net/core/net-sysfs.c                      | 16 ++++++++++++++++
+>  2 files changed, 23 insertions(+)
+>=20
+> diff --git a/Documentation/ABI/testing/sysfs-class-net b/Documentation/AB=
+I/testing/sysfs-class-net
+> index 664a8f6a634f..33440fe77ca7 100644
+> --- a/Documentation/ABI/testing/sysfs-class-net
+> +++ b/Documentation/ABI/testing/sysfs-class-net
+> @@ -301,3 +301,10 @@ Contact:	netdev@vger.kernel.org
+>  Description:
+>  		32-bit unsigned integer counting the number of times the link has
+>  		been down
+> +
+> +What:		/sys/class/net/<iface>/irq
+> +Date:		April 2019
+> +KernelVersion:	5.2
+> +Contact:	netdev@vger.kernel.org
+> +Description:
+> +		IRQ number used by device
+> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> index e4fd68389d6f..a3eb7c3f1f37 100644
+> --- a/net/core/net-sysfs.c
+> +++ b/net/core/net-sysfs.c
+> @@ -512,6 +512,21 @@ static ssize_t phys_switch_id_show(struct device *de=
+v,
+>  }
+>  static DEVICE_ATTR_RO(phys_switch_id);
+> =20
+> +static ssize_t irq_show(struct device *dev, struct device_attribute *att=
+r,
+> +			char *buf)
+> +{
+> +	const struct net_device *netdev =3D to_net_dev(dev);
+> +	ssize_t ret;
+> +
+> +	if (!rtnl_trylock())
+> +		return restart_syscall();
+> +	ret =3D sprintf(buf, "%d\n", netdev->irq);
+> +	rtnl_unlock();
+> +
+> +	return ret;
+> +}
+> +static DEVICE_ATTR_RO(irq);
+> +
+>  static struct attribute *net_class_attrs[] __ro_after_init =3D {
+>  	&dev_attr_netdev_group.attr,
+>  	&dev_attr_type.attr,
+> @@ -542,6 +557,7 @@ static struct attribute *net_class_attrs[] __ro_after=
+_init =3D {
+>  	&dev_attr_proto_down.attr,
+>  	&dev_attr_carrier_up_count.attr,
+>  	&dev_attr_carrier_down_count.attr,
+> +	&dev_attr_irq.attr,
+>  	NULL,
+>  };
+>  ATTRIBUTE_GROUPS(net_class);
 
-We can't have every SoC vendor doing their own thing just because they
-want to. If there are technical reasons why existing bindings don't
-work, then maybe we need to do something different. But I haven't
-heard any reasons.
+Can't you find this on the PCI side already?
+$ ls /sys/class/net/eno1/device/msi_irqs/
+37  38  39  40  41
 
-Rob
