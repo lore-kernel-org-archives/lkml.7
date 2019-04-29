@@ -2,95 +2,135 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F05BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E757C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B252087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD792087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:24:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sNu4hws/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tLB4/F4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfD2KXk (ORCPT
+        id S1727800AbfD2KYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:23:40 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40105 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727428AbfD2KXk (ORCPT
+        Mon, 29 Apr 2019 06:24:54 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:45505 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727746AbfD2KYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 06:23:40 -0400
-Received: by mail-wm1-f66.google.com with SMTP id h11so14921122wmb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 03:23:39 -0700 (PDT)
+        Mon, 29 Apr 2019 06:24:54 -0400
+Received: by mail-ua1-f67.google.com with SMTP id o33so3283223uae.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 03:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9U654s0y3/OTSiMoK1+3nXkaUK985F53Lm18Cxpkwjw=;
-        b=sNu4hws/TaY8GaFc8dyvmg+FW5/ryQH20TEta7WDZ6DNboRsaDEJ1G5g+3QodO80lz
-         yWV2/U6H+LDyxFWVETn1tW+Yy/z5WDXiuFOmveVhzrLUwJJGcmABzlsUaDfMCXY6mhTn
-         BJALXTC/JxKGC3cGGMd1rRALKsv1IUYXlqaFZ73NOVXK+AXa6w2tfgnkzQVirczoMYbJ
-         l0tAobCAA5vMUdM9a9UFg9BW4e31Ychs932Icrlkj0pg/0xjUs66axoWRZP/1xTBUf75
-         VCTq01XreUR2RV5J4OZxSdTg0HT1aU2Y6JpcsQdX3m1wOqAdeSDGfvjR/LhTYBxgiA8P
-         W8MA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gPCG35Z0sQWoCgRDLwq42tnfmX+wifRoA3FWD5hwxvc=;
+        b=tLB4/F4wex0McW37xwqLzfYZqBfhM+Bg+Pvur+3g8qDeYazjWIQy/lz5m0zk/FCQVQ
+         XmOtG+UkXnucGqOpekVmieTSCQDorVC/eeJo4j7pRneQgx/AAWdFucmgRQomE6QmtBKC
+         I8ddOlX8EfNwRcQOh4KXqy9HVAFzvv46Mu/YDmYD5GazbztlELwz2tEZxc7huSZj/8F1
+         lH3mIhuq7CJVwV1LlCzLCJ1f6adSoUq7d212wKYvvqeBRXvpswVN/3dkL0jKxw11MVHl
+         j8fUCB5zAQbbieIR089A55ltNxZ8UixUQ3weKX76eUudDUTdTm0Yin/Q8GaFLAM7myjb
+         RI8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9U654s0y3/OTSiMoK1+3nXkaUK985F53Lm18Cxpkwjw=;
-        b=Wt1vZSh/slVbW4h/9r4yU/BKOUnMZhp0G0MKvPVbCU0ZhhQ0lmtyDHOvVVnx1L7QuW
-         N0/VHsBlvYdmv5GJamuNkRulTqZi13Z/DuseiJF11fi+M7DGnT1SiclJxCYDuJ3nW6Dr
-         E3onrXaxOxQdLE7o0TvH5sFRk1XKeLzjY03NBUW4MLI0cw36itqGttSxUCN2580FuR+U
-         Y2Yw8B1XCi8pVBDpAf9Wc85iRc/uLcNI0vQ0sskXwRPJrvi9obT42J8PN7D9r6WRUKXV
-         sVqTDyCubYD/hCs39vgE2BOqV5mzPdNlMFeNYCdqlO8g7fS66a7ENqRbFifQ63+6wSd5
-         xJyw==
-X-Gm-Message-State: APjAAAXg4KROYHFxdQ/OrbDMWBGCPcQVhemXMdCyGFqk2932mGUZDKDP
-        fhgIGv2vGASHD1rZqAK274BfPA==
-X-Google-Smtp-Source: APXvYqzuIr088WqVnUik2HpohJ2FvVRToR12zoB533mbajPOk1tDXuO2RvmDLe+JxMnff/DpTnJyIg==
-X-Received: by 2002:a1c:e916:: with SMTP id q22mr16865079wmc.148.1556533418772;
-        Mon, 29 Apr 2019 03:23:38 -0700 (PDT)
-Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id m25sm1598874wmi.45.2019.04.29.03.23.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 03:23:38 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/meson: imply dw-hdmi i2s audio for meson hdmi
-Date:   Mon, 29 Apr 2019 12:23:25 +0200
-Message-Id: <20190429102325.29022-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gPCG35Z0sQWoCgRDLwq42tnfmX+wifRoA3FWD5hwxvc=;
+        b=NXI53y78SoQZno3a0/AR4/EBv6uxaoabyasqVMy6mww5JXpmyFJR1HKaXPdFlDfOWp
+         zyhGL/qIz6gaam33NmB393YSYA48fcym1BZ0c7FoOfhlyPf/EI5E2azRGQdx+Qi8zgH/
+         FuWpVcLOcKnwIlx5kGyAl2ADrXy+NxTu/0TlRDS82gjYcfjeLvaDwg4dxwfwSrnuG8RA
+         4grCzliZbBz8QZ0JsZ9O19p0dERBSUj5PuqFT3FeomIgm7soxrR6vUG1XjpBB1XMz7e9
+         t8xhsk8clMDVj2j16OAv8driYw6hfm28Mf7jy5uS1G4p40WqMCCA14PH/FNl05d7zoDK
+         4rKQ==
+X-Gm-Message-State: APjAAAV7i9eqhAECV5dD3JDF7tHpGwovyvriDjvIYfBkYXmWTZBZYvFR
+        Br/2wiA0XcnBFiF0thunsddGiSWRHa24s3QfSVmAkQ==
+X-Google-Smtp-Source: APXvYqxF1WTtM1rV78s3KnjLyCxrofhMMER4xv6KhDMnpmQc+hYEaAbnXgGlRozcA1Fl3/o8EkKoGfFL2x0giENTDUE=
+X-Received: by 2002:ab0:2b13:: with SMTP id e19mr5482164uar.15.1556533492970;
+ Mon, 29 Apr 2019 03:24:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1556244392-15822-1-git-send-email-orito.takao@socionext.com>
+In-Reply-To: <1556244392-15822-1-git-send-email-orito.takao@socionext.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 29 Apr 2019 12:24:16 +0200
+Message-ID: <CAPDyKFouv1MDJXwDryqhC=X4mLycoAigB3x6Xee09U+QNGTa-Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: add DT bindings for Milbeaut SD controller
+To:     Takao Orito <orito.takao@socionext.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jaswinder Singh <jaswinder.singh@linaro.org>,
+        sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com,
+        kanematsu.shinji@socionext.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Imply the i2s part of the Synopsys HDMI driver for Amlogic SoCs.
-This will enable the i2s part by default when meson hdmi driver
-is enable but let platforms not supported by the audio subsystem
-disable it if necessary.
+On Fri, 26 Apr 2019 at 04:04, Takao Orito <orito.takao@socionext.com> wrote:
+>
+> Signed-off-by: Takao Orito <orito.takao@socionext.com>
+> ---
+>  .../devicetree/bindings/mmc/sdhci-milbeaut.txt     | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt b/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+> new file mode 100644
+> index 0000000..7008462
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+> @@ -0,0 +1,35 @@
+> +* SOCIONEXT SDHCI controller
+> +
+> +This file documents differences between the core properties in mmc.txt
+> +and the properties used by the sdhci_milbeaut driver.
+> +
+> +Required properties:
+> +- compatible: "socionext,milbeaut-m10v-sdhci-3.0"
+> +- clocks: Must contain an entry for each entry in clock-names. It is a
+> +  list of phandles and clock-specifier pairs.
+> +  See ../clocks/clock-bindings.txt for details.
+> +- clock-names: Should contain the following two entries:
+> +       "iface" - clock used for sdhci interface
+> +       "core"  - core clock for sdhci controller
+> +
+> +Optional properties:
+> +- vqmmc-supply: phandle to the regulator device tree node, mentioned
+> +  as the VCCQ/VDD_IO supply in the eMMC/SD specs.
+> +- fujitsu,cmd-dat-delay-select: boolean property indicating that this host
+> +  requires the CMD_DAT_DELAY control to be enabled.
+> +- sni,mmc-power-gpio: set property indicating that power on or off needs
+> +  control of gpios.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/gpu/drm/meson/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Please use a vmmc-supply instead of "power-gpio" (which means you need
+to model this as a fixed GPIO regulator).
 
-diff --git a/drivers/gpu/drm/meson/Kconfig b/drivers/gpu/drm/meson/Kconfig
-index c28b69f48555..a480e4a80bea 100644
---- a/drivers/gpu/drm/meson/Kconfig
-+++ b/drivers/gpu/drm/meson/Kconfig
-@@ -14,3 +14,4 @@ config DRM_MESON_DW_HDMI
- 	depends on DRM_MESON
- 	default y if DRM_MESON
- 	select DRM_DW_HDMI
-+	imply DRM_DW_HDMI_I2S_AUDIO
--- 
-2.20.1
+> +
+> +Example:
+> +       sdhci3: mmc@1b010000 {
+> +               compatible = "socionext,milbeaut-m10v-sdhci-3.0";
+> +               reg = <0x1b010000 0x10000>;
+> +               interrupts = <0 265 0x4>;
+> +               voltage-ranges = <3300 3300>;
+> +               bus-width = <4>;
+> +               clocks = <&clk 7>, <&ahb_clk>;
+> +               clock-names = "core", "iface";
+> +               cap-sdio-irq;
+> +               sni,mmc-power-gpio = <&pinctrl 53 GPIO_ACTIVE_HIGH>;
+> +                       fujitsu,cmd-dat-delay-select;
+> +       };
+> --
+> 1.9.1
+>
+>
 
+Kind regards
+Uffe
