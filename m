@@ -2,173 +2,93 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24226C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49B4C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C3020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A24820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="mg3zcpHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbfD2OpW (ORCPT
+        id S1728639AbfD2Opr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:45:22 -0400
-Received: from mga05.intel.com ([192.55.52.43]:1324 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728560AbfD2OpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:45:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 07:45:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
-   d="scan'208";a="154739495"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
-  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2019 07:45:20 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, tj@kernel.org, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 1/4] perf: Fix system-wide events miscounting during cgroup monitoring
-Date:   Mon, 29 Apr 2019 07:44:02 -0700
-Message-Id: <1556549045-71814-2-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
-References: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
+        Mon, 29 Apr 2019 10:45:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42604 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728591AbfD2Opp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:45:45 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f23so8801043otl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 07:45:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aQsRWF6zIWFP6u6h0fPNHWWaz224ukr01sNXIEFyCVQ=;
+        b=mg3zcpHysM6rxTpxenL9XK1Zvah5E8w7vALbhvoiC1TTSma8Uh03KVN2sZ/4CiEuYD
+         rh1/u68dnX0A/77n7RkiSethSJB1plU2anOxMkHaaARyjqBdZoRbLqjDcITWeOwaqDcI
+         e1Pzj4PkAkhkdZKp06TdV5TzX5pJ6R0U3I9zrrUXIX97GPLKLnuj9Vmyo8alefksc6IQ
+         OBknpz6qeF5s+/12FcMhebcfTBS0ZMW00lYtSAKIYiPzTtU9VazgAyPd8nYIvfJMxBUB
+         IXC3tdnl/MKwn/p3XtylFqWgkCCXS37gjkUFW4K+t/orEQHMJMB/uMahCEV8Kwl6H+m6
+         79zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aQsRWF6zIWFP6u6h0fPNHWWaz224ukr01sNXIEFyCVQ=;
+        b=AtvlLkkRfLwsBUQSxFcdJ1perbvHJHSzYHLhbRHp7iUXugPSaf+MpK9UMQc0vr/2ch
+         Hh0UbDMQCwzshvj17RkEu2WGQPnpaULrnQGi+K/w4IvQDulzyp6mstff70nm8K3BkIGs
+         YOOxhqfYOdG4FNuaMW/D/hGVceOSFJVgpy5ZhkBUuaQJ06R/bhUxf1xMxhYIJwZGPULg
+         +zOSNCjYM+WfDKbPopyC08NZzY0QxYJmKPlF64MtM8xYL6RWsARooQNRSiAw7mnguYi6
+         amSYR0FRzq1mSFujVBZvbIbmQ6RKbjt49ZN4dYfSYS1mPDaFqhHRn4cp3shR38Br3XxQ
+         VVvA==
+X-Gm-Message-State: APjAAAWgqwRbNUOKqH4Si3XFDr7YKXg78ZVF7omRo//murc6gHB4Lco0
+        qPXh+lcXtrEGyDES/sbkX/wm7dl8qh4BLO0whEJvKQ==
+X-Google-Smtp-Source: APXvYqxqg+I+R6IIaH5kNEYHVK7570HerFOrgSzrqloi1r1ZqXhWIBt8AfWeSDPOfld3FTAKn8gp1GCbdSfV+VpC4HA=
+X-Received: by 2002:a9d:7ad1:: with SMTP id m17mr3105184otn.367.1556549144567;
+ Mon, 29 Apr 2019 07:45:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190429115535.12793-1-hch@lst.de>
+In-Reply-To: <20190429115535.12793-1-hch@lst.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 29 Apr 2019 07:45:34 -0700
+Message-ID: <CAPcyv4iJo6QdDdaXWJCnF3LqO-wSkRcKx1wwWF1h-=q=z2UZdA@mail.gmail.com>
+Subject: Re: [PATCH] kernel: remove the unused device_private_entry_fault export
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Mon, Apr 29, 2019 at 4:56 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> This export has been entirely unused since it was added more than 1 1/2
+> years ago.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  kernel/memremap.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/kernel/memremap.c b/kernel/memremap.c
+> index 4e59d29245f4..1490e63f69a9 100644
+> --- a/kernel/memremap.c
+> +++ b/kernel/memremap.c
+> @@ -45,7 +45,6 @@ vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
+>          */
+>         return devmem->page_fault(vma, addr, page, flags, pmdp);
+>  }
+> -EXPORT_SYMBOL(device_private_entry_fault);
+>  #endif /* CONFIG_DEVICE_PRIVATE */
 
-When counting system-wide events and cgroup events simultaneously, the
-value of system-wide events are miscounting. For example,
+Looks good to me.
 
-    perf stat -e cycles,instructions -e cycles,instructions -G
-cgroup1,cgroup1,cgroup2,cgroup2 -a -e cycles,instructions -I 1000
-
-     1.096265502     12,375,398,872      cycles              cgroup1
-     1.096265502      8,396,184,503      instructions        cgroup1
- #    0.10  insn per cycle
-     1.096265502    109,609,027,112      cycles              cgroup2
-     1.096265502     11,533,690,148      instructions        cgroup2
- #    0.14  insn per cycle
-     1.096265502    121,672,937,058      cycles
-     1.096265502     19,331,496,727      instructions               #
-0.24  insn per cycle
-
-The events are identical events for system-wide and cgroup. The
-value of system-wide events is less than the sum of cgroup events,
-which is wrong.
-
-Both system-wide and cgroup are per-cpu. They share the same cpuctx
-groups, cpuctx->flexible_groups/pinned_groups.
-In context switch, cgroup switch tries to schedule all the events in
-the cpuctx groups. The unmatched cgroup events can be filtered by its
-event->cgrp. However, system-wide events, which event->cgrp is NULL, are
-unconditionally switched, which causes miscounting.
-
-Introduce cgrp_switch in cpuctx to indicate the cgroup context switch.
-If it's system-wide event in context switch, don't try to switch it.
-
-Fixes: e5d1367f17ba ("perf: Add cgroup support")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 30 ++++++++++++++++++++++++++++--
- 2 files changed, 29 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index e47ef76..039e2f2 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -795,6 +795,7 @@ struct perf_cpu_context {
- #ifdef CONFIG_CGROUP_PERF
- 	struct perf_cgroup		*cgrp;
- 	struct list_head		cgrp_cpuctx_entry;
-+	unsigned int			cgrp_switch		:1;
- #endif
- 
- 	struct list_head		sched_cb_entry;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index dc7dead..388dd42 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -809,6 +809,7 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
- 
- 		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
- 		perf_pmu_disable(cpuctx->ctx.pmu);
-+		cpuctx->cgrp_switch = true;
- 
- 		if (mode & PERF_CGROUP_SWOUT) {
- 			cpu_ctx_sched_out(cpuctx, EVENT_ALL);
-@@ -832,6 +833,7 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
- 							     &cpuctx->ctx);
- 			cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
- 		}
-+		cpuctx->cgrp_switch = false;
- 		perf_pmu_enable(cpuctx->ctx.pmu);
- 		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
- 	}
-@@ -2944,13 +2946,25 @@ static void ctx_sched_out(struct perf_event_context *ctx,
- 
- 	perf_pmu_disable(ctx->pmu);
- 	if (is_active & EVENT_PINNED) {
--		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list)
-+		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list) {
-+#ifdef CONFIG_CGROUP_PERF
-+			/* Don't sched system-wide event when cgroup context switch */
-+			if (cpuctx->cgrp_switch && !event->cgrp)
-+				continue;
-+#endif
- 			group_sched_out(event, cpuctx, ctx);
-+		}
- 	}
- 
- 	if (is_active & EVENT_FLEXIBLE) {
--		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list)
-+		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list) {
-+#ifdef CONFIG_CGROUP_PERF
-+			/* Don't sched system-wide event when cgroup context switch */
-+			if (cpuctx->cgrp_switch && !event->cgrp)
-+				continue;
-+#endif
- 			group_sched_out(event, cpuctx, ctx);
-+		}
- 	}
- 	perf_pmu_enable(ctx->pmu);
- }
-@@ -3280,6 +3294,12 @@ static int pinned_sched_in(struct perf_event *event, void *data)
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
- 
-+#ifdef CONFIG_CGROUP_PERF
-+	/* Don't sched system-wide event when cgroup context switch */
-+	if (sid->cpuctx->cgrp_switch && !event->cgrp)
-+		return 0;
-+#endif
-+
- 	if (!event_filter_match(event))
- 		return 0;
- 
-@@ -3305,6 +3325,12 @@ static int flexible_sched_in(struct perf_event *event, void *data)
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
- 
-+#ifdef CONFIG_CGROUP_PERF
-+	/* Don't sched system-wide event when cgroup context switch */
-+	if (sid->cpuctx->cgrp_switch && !event->cgrp)
-+		return 0;
-+#endif
-+
- 	if (!event_filter_match(event))
- 		return 0;
- 
--- 
-2.7.4
-
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
