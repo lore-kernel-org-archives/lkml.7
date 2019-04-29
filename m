@@ -2,114 +2,235 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56424C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA2BC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A1A2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hYcWBuwZ"
+	by mail.kernel.org (Postfix) with ESMTP id 8E33821655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556561726;
+	bh=BEuoxrHOikGMabdnmBmH6gHVmxkjNsT3ePXHftAPabs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=z21SjAeQzdffwUh1aLtaQE9FA+eIHgnu42HbLqLcP0kbfa5tv1QtChJwefbKrv2Gh
+	 c0yqWohE2g3c76q9eTp2oAvMZvFK74lkctYwBU4uGDO+p0V1YWxgplFnGW46GevV3I
+	 Yk6bXy/IpzTwvh8oRirVkT97ss7iEJTOlQTmDmKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfD2SNn (ORCPT
+        id S1729129AbfD2SPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:13:43 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:40807 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728748AbfD2SNm (ORCPT
+        Mon, 29 Apr 2019 14:15:25 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36773 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729043AbfD2SPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:13:42 -0400
-Received: by mail-it1-f196.google.com with SMTP id k64so480723itb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 11:13:42 -0700 (PDT)
+        Mon, 29 Apr 2019 14:15:25 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u17so8772989lfi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 11:15:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=2QB4RJLb+6FEgLy4+w2DfbmeovqCpuAG21kyMkfP7XA=;
-        b=hYcWBuwZg/dYju1jvYpCEc4yGVpKLo1p/FuOY+cVj7+/Jpy0Mw80hE6psm76KVf1i8
-         KpY9I0ahMAcReeV47+0bPMixh6yQufRO1oQxGQhrHNh+I5hVIm4HgefeyLcBEY0YZgvP
-         6MJfEAAII4GbchxZO26JIPCDmjhXoZhVrk7P8sslat8s+/XGBgvkTts89RxtQLZ7SOXW
-         GMgg/3L9Zui9809LZAVhciqSjpqx6kR70O2XurbBlYHPM0LV6TOjDPFk9+HkyTOKrSe7
-         c7AmKwacwdZSG93o7MNnmcUwdAxTf7BpA8HeiroNIqIk+H9PUWgntk2lQSor4Y57Y50l
-         bixA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4rSXrLueo+dlB0QOA/Bz3QN8ayKh59Nj+1c63WoQALY=;
+        b=BGgMKVPsvqNoV6+19qjq9PyjRoQcgSyZoqJJgWGli2u+TA0JhPmNLWxVZNZngOTh0Z
+         bBbwt+/UwMXmo/5/P88lqtFZDjNDADrto7uZEZhKt3oRPWdU9IZgxI3xIN6kYaaq5rjS
+         q9ZRgMmDVcReuUcQT1NEHybGemWu/Bnwa48X8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=2QB4RJLb+6FEgLy4+w2DfbmeovqCpuAG21kyMkfP7XA=;
-        b=IoLVeRUlvaHLjSTZ1NX6ZSrXe0/0SdvciNmorG8w+YNue8jpFCtuD/PhcjNRstFXBh
-         FQGE1bUcZuxdmUGyIAd5M5wgL15pyPsvo1qPna/FasCClMLCWMauQj36/S9RiEiO5rp0
-         z0np//Wz4YithKMioBWeVNy4utNrjjI35DeibnOSQT5P2nIFWAmWm3lDL96BRTTrXn+o
-         KUgNrbd/UiEnGw6n7DKtGxM6SXsMgDyDfs9hujL5fYwKRMVf9NDnVLI7hugMeTL6puGx
-         4QDXmjLbpeDb8DmNA2qbr0ctdlpu5iKYYjuU4XX7frTiIzfTjg2iQOh+Fdr4Td7XaKMl
-         yHuw==
-X-Gm-Message-State: APjAAAW/z9YI3sfBFFyAuWNKLNKTH5JpCJlERkyuRqFHqxUZopYOInKv
-        gN+FMqJ7Gvgl9MGpa5o92tcFIQ==
-X-Google-Smtp-Source: APXvYqx4XUXqAY+TWlfS929HupQJSdXoLFiGxqPYvRrbV+KHeRkcNZnCuY/p2CVCrXYNGOGlQp8gEw==
-X-Received: by 2002:a24:5309:: with SMTP id n9mr329796itb.11.1556561621668;
-        Mon, 29 Apr 2019 11:13:41 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id k203sm175872itb.0.2019.04.29.11.13.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 11:13:40 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 11:13:40 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Rob Herring <robh@kernel.org>
-cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH 2/6] dt-bindings: riscv: sifive: add YAML documentation
- for the SiFive FU540
-In-Reply-To: <20190429180846.GA26021@bogus>
-Message-ID: <alpine.DEB.2.21.9999.1904291113140.10713@viisi.sifive.com>
-References: <20190411084304.5072-2-paul.walmsley@sifive.com> <20190411084304.5072-3-paul.walmsley@sifive.com> <20190429180846.GA26021@bogus>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4rSXrLueo+dlB0QOA/Bz3QN8ayKh59Nj+1c63WoQALY=;
+        b=Dx5l/sAkijuIDQ33s7Xq7x8OqI8DnsK34hBSmnP7BurwPKdPMNaraQqivwjZyjASFH
+         MbduerScFGqEVAqkGoXhkZdq5SbsaZG8EA//AdJTnGpO6w/ukSkEJ96STYPftPopXVEB
+         +nfo2R7OJdtz5i4QJT1l6m5czi/PeCfq6MUidu7jPzOS65AA7McrqRYONlygkKM67xXV
+         lPeJI9dLSiArhX7sVwCLKb2pT6FwsnROwyu+GQy9l+NkFOQL2IC/Lm5lfb7aAKe9pseU
+         zR7wb7rs507fjEvo2rTL6cXL0Gux5FD9iy24BDrK7srzLi97hICV9VCEiXA5J041ezSy
+         Ctjg==
+X-Gm-Message-State: APjAAAWoukUdoVWL9IF+v2ryZSg5QK6Cxymi1cZtPrSq2mGEVQFUO34m
+        QwvnCOsxW/erIwQkspLG4l2tTjL0veg=
+X-Google-Smtp-Source: APXvYqzErmMIGLcdXZHXsw/synAKpzehKQH0/BMvb5HgskNVqlBgCewlVtaqG0+XbS7UybY1k8zthQ==
+X-Received: by 2002:a19:a8c8:: with SMTP id r191mr33200338lfe.161.1556561722102;
+        Mon, 29 Apr 2019 11:15:22 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id y29sm538325ljd.85.2019.04.29.11.15.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 11:15:21 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id w23so8610521lfc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 11:15:21 -0700 (PDT)
+X-Received: by 2002:a19:48c9:: with SMTP id v192mr32479159lfa.136.1556561234549;
+ Mon, 29 Apr 2019 11:07:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-4-nstange@suse.de>
+ <20190427102657.GF2623@hirez.programming.kicks-ass.net> <20190428133826.3e142cfd@oasis.local.home>
+In-Reply-To: <20190428133826.3e142cfd@oasis.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 29 Apr 2019 11:06:58 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+Message-ID: <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000007504920587af2741"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019, Rob Herring wrote:
+--0000000000007504920587af2741
+Content-Type: text/plain; charset="UTF-8"
 
-> On Thu, Apr 11, 2019 at 01:43:00AM -0700, Paul Walmsley wrote:
-> > Add YAML DT binding documentation for the SiFive FU540 SoC.  This
-> > SoC is documented at:
-> > 
-> >     https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-> > 
-> > Passes dt-doc-validate, as of yaml-bindings commit 4c79d42e9216.
+On Sun, Apr 28, 2019 at 10:38 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> For optimization reasons, if there's only a single user of a function
+> it gets its own trampoline that sets up the call to its callback and
+> calls that callback directly:
 
-...
+So this is the same issue as the static calls, and it has exactly the
+same solution.
 
-> > ---
-> >  .../devicetree/bindings/riscv/sifive.yaml     | 26 +++++++++++++++++++
-> >  MAINTAINERS                                   |  9 +++++++
-> >  2 files changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/riscv/sifive.yaml b/Documentation/devicetree/bindings/riscv/sifive.yaml
-> > new file mode 100644
-> > index 000000000000..d2808d8d79bb
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/riscv/sifive.yaml
-> > @@ -0,0 +1,26 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/riscv/sifive/sifive.yaml#
-> 
-> The path here should match the file path. IOW, drop 'sifive/'.
+Which I already outlined once, and nobody wrote the code for.
 
-Thanks, will do.
+So here's a COMPLETELY UNTESTED patch that only works (_if_ it works) for
 
-- Paul
+ (a) 64-bit
 
+ (b) SMP
+
+but that's just because I've hardcoded the percpu segment handling.
+
+It does *not* emulate the "call" in the BP handler itself, instead if
+replace the %ip (the same way all the other BP handlers replace the
+%ip) with a code sequence that just does
+
+        push %gs:bp_call_return
+        jmp *%gs:bp_call_target
+
+after having filled in those per-cpu things.
+
+The reason they are percpu is that after the %ip has been changed, the
+target CPU goes its merry way, and doesn't wait for the text--poke
+semaphore serialization. But since we have interrupts disabled on that
+CPU, we know that *another* text poke won't be coming around and
+changing the values.
+
+THIS IS ENTIRELY UNTESTED! I've built it, and it at least seems to
+build, although with warnings
+
+  arch/x86/kernel/alternative.o: warning: objtool:
+emulate_call_irqoff()+0x9: indirect jump found in RETPOLINE build
+  arch/x86/kernel/alternative.o: warning: objtool:
+emulate_call_irqon()+0x8: indirect jump found in RETPOLINE build
+  arch/x86/kernel/alternative.o: warning: objtool:
+emulate_call_irqoff()+0x9: sibling call from callable instruction with
+modified stack frame
+  arch/x86/kernel/alternative.o: warning: objtool:
+emulate_call_irqon()+0x8: sibling call from callable instruction with
+modified stack frame
+
+that will need the appropriate "ignore this case" annotations that I didn't do.
+
+Do I expect it to work? No. I'm sure there's some silly mistake here,
+but the point of the patch is to show it as an example, so that it can
+actually be tested.
+
+With this, it should be possible (under the text rewriting lock) to do
+
+        replace_call(callsite, newcallopcode, callsize, calltargettarget);
+
+to do the static rewriting of the call at "callsite" to have the new
+call target.
+
+And again. Untested. But doesn't need any special code in the entry
+path, and the concept is simple even if there are probably stupid bugs
+just because it's entirely untested.
+
+Oh, and did I mention that I didn't test this?
+
+                Linus
+
+--0000000000007504920587af2741
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jv2o33gb0>
+X-Attachment-Id: f_jv2o33gb0
+
+IGFyY2gveDg2L2tlcm5lbC9hbHRlcm5hdGl2ZS5jIHwgNTQgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDUxIGluc2VydGlvbnMoKyks
+IDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2FsdGVybmF0aXZl
+LmMgYi9hcmNoL3g4Ni9rZXJuZWwvYWx0ZXJuYXRpdmUuYwppbmRleCA5YTc5Yzc4MDhmOWMuLjky
+YjU5OTU4Y2ZmMyAxMDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVsL2FsdGVybmF0aXZlLmMKKysr
+IGIvYXJjaC94ODYva2VybmVsL2FsdGVybmF0aXZlLmMKQEAgLTczOSw3ICs3MzksMTEgQEAgc3Rh
+dGljIHZvaWQgZG9fc3luY19jb3JlKHZvaWQgKmluZm8pCiB9CiAKIHN0YXRpYyBib29sIGJwX3Bh
+dGNoaW5nX2luX3Byb2dyZXNzOwotc3RhdGljIHZvaWQgKmJwX2ludDNfaGFuZGxlciwgKmJwX2lu
+dDNfYWRkcjsKK3N0YXRpYyB2b2lkICpicF9pbnQzX2hhbmRsZXJfaXJxb2ZmLCAqYnBfaW50M19o
+YW5kbGVyX2lycW9uLCAqYnBfaW50M19hZGRyOworc3RhdGljIHZvaWQgKmJwX2ludDNfY2FsbF90
+YXJnZXQsICpicF9pbnQzX2NhbGxfcmV0dXJuOworCitzdGF0aWMgREVGSU5FX1BFUl9DUFUodm9p
+ZCAqLCBicF9jYWxsX3JldHVybik7CitzdGF0aWMgREVGSU5FX1BFUl9DUFUodm9pZCAqLCBicF9j
+YWxsX3RhcmdldCk7CiAKIGludCBwb2tlX2ludDNfaGFuZGxlcihzdHJ1Y3QgcHRfcmVncyAqcmVn
+cykKIHsKQEAgLTc2Miw3ICs3NjYsMjIgQEAgaW50IHBva2VfaW50M19oYW5kbGVyKHN0cnVjdCBw
+dF9yZWdzICpyZWdzKQogCQlyZXR1cm4gMDsKIAogCS8qIHNldCB1cCB0aGUgc3BlY2lmaWVkIGJy
+ZWFrcG9pbnQgaGFuZGxlciAqLwotCXJlZ3MtPmlwID0gKHVuc2lnbmVkIGxvbmcpIGJwX2ludDNf
+aGFuZGxlcjsKKwlyZWdzLT5pcCA9ICh1bnNpZ25lZCBsb25nKSBicF9pbnQzX2hhbmRsZXJfaXJx
+b247CisKKwkvKgorCSAqIElmIHdlIHdhbnQgYW4gaXJxb2ZmIGlycTMgaGFuZGxlciwgYW5kIGlu
+dGVycnVwdHMgd2VyZQorCSAqIG9uLCB3ZSB0dXJuIHRoZW0gb2ZmIGFuZCB1c2UgdGhlIHNwZWNp
+YWwgaXJxb2ZmIGhhbmRsZXIKKwkgKiBpbnN0ZWFkLgorCSAqLworCWlmIChicF9pbnQzX2hhbmRs
+ZXJfaXJxb2ZmKSB7CisJCXRoaXNfY3B1X3dyaXRlKGJwX2NhbGxfdGFyZ2V0LCBicF9pbnQzX2Nh
+bGxfdGFyZ2V0KTsKKwkJdGhpc19jcHVfd3JpdGUoYnBfY2FsbF9yZXR1cm4sIGJwX2ludDNfY2Fs
+bF9yZXR1cm4pOworCisJCWlmIChyZWdzLT5mbGFncyAmIFg4Nl9FRkxBR1NfSUYpIHsKKwkJCXJl
+Z3MtPmZsYWdzICY9IH5YODZfRUZMQUdTX0lGOworCQkJcmVncy0+aXAgPSAodW5zaWduZWQgbG9u
+ZykgYnBfaW50M19oYW5kbGVyX2lycW9mZjsKKwkJfQorCX0KIAogCXJldHVybiAxOwogfQpAQCAt
+NzkyLDcgKzgxMSw3IEBAIHZvaWQgKnRleHRfcG9rZV9icCh2b2lkICphZGRyLCBjb25zdCB2b2lk
+ICpvcGNvZGUsIHNpemVfdCBsZW4sIHZvaWQgKmhhbmRsZXIpCiB7CiAJdW5zaWduZWQgY2hhciBp
+bnQzID0gMHhjYzsKIAotCWJwX2ludDNfaGFuZGxlciA9IGhhbmRsZXI7CisJYnBfaW50M19oYW5k
+bGVyX2lycW9uID0gaGFuZGxlcjsKIAlicF9pbnQzX2FkZHIgPSAodTggKilhZGRyICsgc2l6ZW9m
+KGludDMpOwogCWJwX3BhdGNoaW5nX2luX3Byb2dyZXNzID0gdHJ1ZTsKIApAQCAtODMwLDcgKzg0
+OSwzNiBAQCB2b2lkICp0ZXh0X3Bva2VfYnAodm9pZCAqYWRkciwgY29uc3Qgdm9pZCAqb3Bjb2Rl
+LCBzaXplX3QgbGVuLCB2b2lkICpoYW5kbGVyKQogCSAqIHRoZSB3cml0aW5nIG9mIHRoZSBuZXcg
+aW5zdHJ1Y3Rpb24uCiAJICovCiAJYnBfcGF0Y2hpbmdfaW5fcHJvZ3Jlc3MgPSBmYWxzZTsKKwli
+cF9pbnQzX2hhbmRsZXJfaXJxb2ZmID0gTlVMTDsKIAogCXJldHVybiBhZGRyOwogfQogCitleHRl
+cm4gYXNtbGlua2FnZSB2b2lkIGVtdWxhdGVfY2FsbF9pcnFvbih2b2lkKTsKK2V4dGVybiBhc21s
+aW5rYWdlIHZvaWQgZW11bGF0ZV9jYWxsX2lycW9mZih2b2lkKTsKKworYXNtKAorCSIudGV4dFxu
+IgorCSIuZ2xvYmFsIGVtdWxhdGVfY2FsbF9pcnFvZmZcbiIKKwkiLnR5cGUgZW11bGF0ZV9jYWxs
+X2lycW9mZiwgQGZ1bmN0aW9uXG4iCisJImVtdWxhdGVfY2FsbF9pcnFvZmY6XG5cdCIKKwkJInB1
+c2ggJWdzOmJwX2NhbGxfcmV0dXJuXG5cdCIKKwkJInN0aVxuXHQiCisJCSJqbXAgKiVnczpicF9j
+YWxsX3RhcmdldFxuIgorCSIuc2l6ZSBlbXVsYXRlX2NhbGxfaXJxb2ZmLCAuLWVtdWxhdGVfY2Fs
+bF9pcnFvZmZcbiIKKworCSIuZ2xvYmFsIGVtdWxhdGVfY2FsbF9pcnFvblxuIgorCSIudHlwZSBl
+bXVsYXRlX2NhbGxfaXJxb24sIEBmdW5jdGlvblxuIgorCSJlbXVsYXRlX2NhbGxfaXJxb246XG5c
+dCIKKwkJInB1c2ggJWdzOmJwX2NhbGxfcmV0dXJuXG5cdCIKKwkJImptcCAqJWdzOmJwX2NhbGxf
+dGFyZ2V0XG4iCisJIi5zaXplIGVtdWxhdGVfY2FsbF9pcnFvbiwgLi1lbXVsYXRlX2NhbGxfaXJx
+b25cbiIKKwkiLnByZXZpb3VzXG4iKTsKKwordm9pZCByZXBsYWNlX2NhbGwodm9pZCAqYWRkciwg
+Y29uc3Qgdm9pZCAqb3Bjb2RlLCBzaXplX3QgbGVuLCB2b2lkICp0YXJnZXQpCit7CisJYnBfaW50
+M19jYWxsX3RhcmdldCA9IHRhcmdldDsKKwlicF9pbnQzX2NhbGxfcmV0dXJuID0gYWRkciArIGxl
+bjsKKwlicF9pbnQzX2hhbmRsZXJfaXJxb2ZmID0gZW11bGF0ZV9jYWxsX2lycW9mZjsKKwl0ZXh0
+X3Bva2VfYnAoYWRkciwgb3Bjb2RlLCBsZW4sIGVtdWxhdGVfY2FsbF9pcnFvbik7Cit9Cg==
+--0000000000007504920587af2741--
