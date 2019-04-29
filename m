@@ -2,138 +2,92 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A619C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD8EC004C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 700012147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A925205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 06:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfD2Gq3 (ORCPT
+        id S1727363AbfD2Gtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 02:46:29 -0400
-Received: from smtp2.provo.novell.com ([137.65.250.81]:59745 "EHLO
-        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfD2Gq3 (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Mon, 29 Apr 2019 02:46:29 -0400
-Received: from ghe-pc.suse.asia (prva10-snat226-1.provo.novell.com [137.65.226.35])
-        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Mon, 29 Apr 2019 00:46:17 -0600
-From:   Gang He <ghe@suse.com>
-To:     mark@fasheh.com, jlbec@evilplan.org, jiangqi903@gmail.com
-Cc:     Gang He <ghe@suse.com>, linux-kernel@vger.kernel.org,
-        ocfs2-devel@oss.oracle.com, akpm@linux-foundation.org
-Subject: [PATCH 2/2] ocfs2: add locking filter debugfs file
-Date:   Mon, 29 Apr 2019 14:46:13 +0800
-Message-Id: <20190429064613.29365-2-ghe@suse.com>
-X-Mailer: git-send-email 2.12.3
-In-Reply-To: <20190429064613.29365-1-ghe@suse.com>
-References: <20190429064613.29365-1-ghe@suse.com>
+        Mon, 29 Apr 2019 02:49:32 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:53559 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbfD2Gtb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 02:49:31 -0400
+Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mcp3E-1gl7730n7C-00ZzhK; Mon, 29 Apr 2019 08:48:59 +0200
+Subject: Re: [PATCH 37/41] drivers: tty: serial: 8250: simplify io resource
+ size computation
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        andrew@aj.id.au, macro@linux-mips.org, vz@mleia.com,
+        slemieux.tyco@gmail.com, khilman@baylibre.com, liviu.dudau@arm.com,
+        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
+        davem@davemloft.net, jacmet@sunsite.dk, linux@prisktech.co.nz,
+        matthias.bgg@gmail.com, linux-mips@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+ <1556369542-13247-38-git-send-email-info@metux.net>
+ <20190428152103.GP9224@smile.fi.intel.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <431b36fe-3071-fcfd-b04e-b4b293e79a80@metux.net>
+Date:   Mon, 29 Apr 2019 08:48:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20190428152103.GP9224@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:M88UFXLBX4VkHOON6uaOcOnE636KnuLI4S/ApACS+qnAPKvNe1+
+ 9MFUOX3DMU30BBIWozSwvAEA9pGnmBl6OGeXBQ8Y1viVSeN44w0UCqfu9VYX20rWKj/nkKL
+ vlvP3uU93E8RgsPKi9ujRFjje3G/Y2BUL7L9RvbqLvk4fuIny6ic9WkRhGLxllJ4DYLhyIb
+ wH0HgSJz+Bi+9teW53wMg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UkSaLiNxTwM=:2TXPwgpE5+RBFRbyUqHOFQ
+ xeHDo/3j0Na0BnkC+0JTCEUa34sTmyQbRB7w4ugZtpJdoNSu1xdU+BMA09hadC91DTT1c0yzO
+ kuk7XpLkyI+N0+19kIGZ5gCjqYsD/gbKZ8Qyy9JocWvi4y1vEXHasSDdt8iTaU9VrQLQy8flK
+ qSDevaqy2gkfA3bR4BtjfkFZnSKHQtpDiqq3mXC+4IcTnAFIySQzIAlEJJiI55bqb+tSkbzKq
+ owQcCerB9D3TCNpnxqqLNVjWK+g79RDFMzNjrcbVvEkGniIRma6jIIKMCyNf42DVoMiMrhh0x
+ aXAPFtRiFh/GxROS/IxKSP4wV6B5wR/h27VqFY21bHhQofeIIGTmI0KiIabQGBsdW35kxOhxg
+ 1i/1jG+pgigRkOKnignHIi2N2wHB6JAqxpWKLNKvEGWP50G0wE8Z6ORBFJtpohgAXfmwiFBxW
+ 3n1pn+bbr+SvajsKMQUl3+ZkelGKovLL03+RClDxUZP2SUJsaCOHtLAKZGFiCfwViK8E8xgfT
+ G9pOuAh4EzKSrpcY52lyA+aZpShZ857A09XO01lj1MT/UIHMroXwGqPKTYB4pmEmeIzsrBOO+
+ 5T+0kwhObrwWG+hIxyGgBRbGwhYmyae04xr2e8gQMLYXfoA6nSOT3OsoSAIHPclTioTlxFhoE
+ Oa4DTHlLTaZWs27uSZAC9epbFBl9Fx2JmP26IreUA0ypMl3yx9fpLArWCrivScL7WAoEN62AS
+ VaOqKOyMslPbPSY1JUwq9qDAdgT3eIjQcZTeU8BmLykfVe2cq22dosTi4sw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add locking filter debugfs file, which is used to filter lock
-resources dump from locking_state debugfs file.
-We use d_filter_secs field to filter lock resources dump,
-the default d_filter_secs(0) value filters nothing,
-otherwise, only dump the last N seconds active lock resources.
-This enhancement can avoid dumping lots of old records.
-The d_filter_secs value can be changed via locking_filter file.
+On 28.04.19 17:21, Andy Shevchenko wrote:
 
-Signed-off-by: Gang He <ghe@suse.com>
----
- fs/ocfs2/dlmglue.c | 33 +++++++++++++++++++++++++++++++++
- fs/ocfs2/ocfs2.h   |  2 ++
- 2 files changed, 35 insertions(+)
+> 
+>> +#define SERIAL_RT2880_IOSIZE	0x100
+> 
+> And why this is in the header file and not in corresponding C one?
 
-diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
-index dccf4136f8c1..2f36fe40295c 100644
---- a/fs/ocfs2/dlmglue.c
-+++ b/fs/ocfs2/dlmglue.c
-@@ -3006,6 +3006,8 @@ struct ocfs2_dlm_debug *ocfs2_new_dlm_debug(void)
- 	kref_init(&dlm_debug->d_refcnt);
- 	INIT_LIST_HEAD(&dlm_debug->d_lockres_tracking);
- 	dlm_debug->d_locking_state = NULL;
-+	dlm_debug->d_locking_filter = NULL;
-+	dlm_debug->d_filter_secs = 0;
- out:
- 	return dlm_debug;
- }
-@@ -3104,11 +3106,28 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
- {
- 	int i;
- 	char *lvb;
-+	u32 now, last;
- 	struct ocfs2_lock_res *lockres = v;
-+	struct ocfs2_dlm_debug *dlm_debug =
-+			((struct ocfs2_dlm_seq_priv *)m->private)->p_dlm_debug;
- 
- 	if (!lockres)
- 		return -EINVAL;
- 
-+	now = ktime_to_timespec(ktime_get()).tv_sec;
-+	if (lockres->l_lock_prmode.ls_last > lockres->l_lock_exmode.ls_last)
-+		last = lockres->l_lock_prmode.ls_last;
-+	else
-+		last = lockres->l_lock_exmode.ls_last;
-+
-+	/*
-+	 * Use d_filter_secs field to filter lock resources dump,
-+	 * the default d_filter_secs(0) value filters nothing,
-+	 * otherwise, only dump the last N seconds active lock resources.
-+	 */
-+	if (dlm_debug->d_filter_secs && (now - last) > dlm_debug->d_filter_secs)
-+		return 0;
-+
- 	seq_printf(m, "0x%x\t", OCFS2_DLM_DEBUG_STR_VERSION);
- 
- 	if (lockres->l_type == OCFS2_LOCK_TYPE_DENTRY)
-@@ -3258,6 +3277,19 @@ static int ocfs2_dlm_init_debug(struct ocfs2_super *osb)
- 		goto out;
- 	}
- 
-+	dlm_debug->d_locking_filter = debugfs_create_u32("locking_filter",
-+						0600,
-+						osb->osb_debug_root,
-+						&dlm_debug->d_filter_secs);
-+	if (!dlm_debug->d_locking_filter) {
-+		ret = -EINVAL;
-+		mlog(ML_ERROR,
-+		     "Unable to create locking filter debugfs file.\n");
-+		debugfs_remove(dlm_debug->d_locking_state);
-+		dlm_debug->d_locking_state = NULL;
-+		goto out;
-+	}
-+
- 	ocfs2_get_dlm_debug(dlm_debug);
- out:
- 	return ret;
-@@ -3269,6 +3301,7 @@ static void ocfs2_dlm_shutdown_debug(struct ocfs2_super *osb)
- 
- 	if (dlm_debug) {
- 		debugfs_remove(dlm_debug->d_locking_state);
-+		debugfs_remove(dlm_debug->d_locking_filter);
- 		ocfs2_put_dlm_debug(dlm_debug);
- 	}
- }
-diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
-index 8efa022684f4..f4da51099889 100644
---- a/fs/ocfs2/ocfs2.h
-+++ b/fs/ocfs2/ocfs2.h
-@@ -237,6 +237,8 @@ struct ocfs2_orphan_scan {
- struct ocfs2_dlm_debug {
- 	struct kref d_refcnt;
- 	struct dentry *d_locking_state;
-+	struct dentry *d_locking_filter;
-+	u32 d_filter_secs;
- 	struct list_head d_lockres_tracking;
- };
- 
+hmm, no particular reason, maybe just an old habit to put definitions
+into .h files ;-)
+
+I can move it to 8250_of.c if you like me to.
+
+
+
+--mtx
+
 -- 
-2.21.0
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
