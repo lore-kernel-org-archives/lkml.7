@@ -2,93 +2,102 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA03C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80347C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759522087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ECA820675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:22:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="vPpCrKUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbfD2QVI (ORCPT
+        id S1728698AbfD2QW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:21:08 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:51893 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728518AbfD2QVI (ORCPT
+        Mon, 29 Apr 2019 12:22:57 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34974 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728518AbfD2QW4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:21:08 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mwwm5-1gaMFo1KN1-00yOxX; Mon, 29 Apr 2019 18:20:39 +0200
-Subject: Re: [PATCH 22/41] drivers: tty: serial: cpm_uart: fix logging calls
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, linux-ia64@vger.kernel.org,
-        linux-serial@vger.kernel.org, andrew@aj.id.au,
-        gregkh@linuxfoundation.org, sudeep.holla@arm.com,
-        liviu.dudau@arm.com, linux-mips@vger.kernel.org, vz@mleia.com,
-        linux@prisktech.co.nz, sparclinux@vger.kernel.org,
-        khilman@baylibre.com, macro@linux-mips.org,
-        slemieux.tyco@gmail.com, matthias.bgg@gmail.com, jacmet@sunsite.dk,
-        linux-amlogic@lists.infradead.org,
-        andriy.shevchenko@linux.intel.com, linuxppc-dev@lists.ozlabs.org,
-        davem@davemloft.net
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-23-git-send-email-info@metux.net>
- <a00ba23b-e73e-c964-a6d0-347cb605b8c8@c-s.fr>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <fc01df37-3e7e-0c71-745d-63fbd83c1079@metux.net>
-Date:   Mon, 29 Apr 2019 18:20:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <a00ba23b-e73e-c964-a6d0-347cb605b8c8@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:tyjLH/89kE1DHJTcj7yQUi5/jAAZ5RWHEAZ1BEYsF/kWEbRkhEH
- ZeaoyF1df0iBCTPcuY9nMjeSr96B+reEDpUpVACuMx58hYfg0Ovl49rQYub23PLjPK+yUID
- slNmJJYsTtoV+aOWQj1HRbA5ynpZ744EoI0A3tjgNZt1lZntfjDIcPBJU9Pfhs6+X+GK7WP
- t2o2PeOOqkzRGtr61EECg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VjVnj6n6CTk=:oLoFfSXyDvVj4bcXT6Ih/4
- kL0M02IkYcM23hQBqWuWitHhRHbYjCdwo7yZCm+3pBB5no8X/Ztr8zkGyrVRrPMSlNYX0gK3B
- zLkvJlnWomR5UquIKZ13gZBV4/wjOl1kSv+4LiRfmqDVFOKnXIw+UAnjDoRPwbvqi2dxuhVHa
- IXOpQP00pNeser50seIPI/ovlbFbXJMBOVj1rt+0+0uSk0wstKhVVSaWsva/3NcMpYr44iwKN
- pL8XlLZaS2QOBl/ynF7SoVxFIvZnEMQhJorItjLuphNxXCvtzj8rhqLrrkkajgQ/0pjUy4Tiq
- 3WJvabYmjDHm85gs3l1RGTIP/leL/aifhMaOXM4Qx1sHVTJJxlMw1it7I31wrFqe0C0T5Tnk3
- +5c0iqDZF6VBw0XsN+FMTdvwwN5so9je+rNUHID3sD5Yvm8xjw93Uo6bviA4/IiHvX0mEdSAj
- xKxitSG92ozPUuigbzb+oogChLmFoFbXi6s3ER6JiRSVDa9POQO26X1cecixkOz2/SyaNrtd5
- wi3bBiZX/zwK/cEVJZg0BMo3ilxjtajTeiY2OsNJmCcBp61mptn8TueHekBXTEmqhyvIWEcks
- Pwcb//riDg9W1mzMTxm5SPvVgmRR3xYRVRFYmTDZ46n62kPQaVUbket7jbv2AqHlWLKiCqkR4
- n4RNCb4xflN9afHD65/ruEWM68k3MVK9H9CPTVyg90priPsyjBaWTOwBYdw4mnSSnWx3W9pFV
- HxWHJkWswPIQsZuk5ib+4UBHe5duPTXhYEDd7bKV8coJopag7yNzn+KUAT2H9z/JPgKcId2QY
- fg2wigxSa7xJUSvPOamObTx2eMiO5lok3NOq7YtNTSlPbcGNlc13ID61c5JH/6t6NJ6lPjs
+        Mon, 29 Apr 2019 12:22:56 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so5318813plp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 09:22:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=4f6WrzyzuO2F1bDTPxHcLE3z/+pAjPfe9qLmvK4A6as=;
+        b=vPpCrKUW2ez99jzndfqZtu6JNvWNanlUzH3AuveO0GSSRCCQl72+NIdUPDxp4e1j2D
+         oR+KD27SMnporP7BtqsmFOHrHH48hM80JhZBbvQFxbgs9ZmuljJwGNsbO97maHqcUfjg
+         8wSXcpfVKMB8tCe4gXP+HgKsW0HJtYjx0dBSpNwC87IzbXqY3gwaTJ7c+snUOwGxdTSd
+         2zD9P9f8ZXZjyRLibwYBPF9JXLqNVcGKoIVvLYRLSDdEH/zokklEz+pbZ4uhjxbg/sSw
+         527JDJwiLrfS+2iiWXbdKDp8JItn+dGur5RpDU6TA35z23hVVY64OqVnxcZtB9i0suTd
+         njtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=4f6WrzyzuO2F1bDTPxHcLE3z/+pAjPfe9qLmvK4A6as=;
+        b=kEamK9pvTkG7qLNY0OsLKdqy1v92cYz65ZoEDDpXHCKI6iAM+iZoZLLloPH4Jl8kj8
+         9q7JYc6YE1Q70n3FlioKoAw5LZnFtxC9eqonKuN4tgfhpvzhRLdAmjeKWh0FkA2BoiGj
+         gvkyqS2Zf77lLxL0+o6ryQ5oy32z7VZxC7oeW7D9ZMflEsSKog5Cyuq6r3f8QqF8LCFS
+         85AVc/JKKM1wBAvjwVCGWXOdrciDYVaPuRFMgj6SQTBfkTudBhkfoSZTDnWj13mm8RA9
+         iKpANF5OcGb5vzbGE9jiGJTmXEx84pC7Wtv0kngg9otCQaLsV2Ek9xChQlyld7chMv2E
+         2iCw==
+X-Gm-Message-State: APjAAAXUpggiJuufcTi7F9S+EmnDxkEx3JRkJpEeSQ6nJ0G/RPLjoas1
+        8kF6xykpXQaO+QjokzDQc5evGQ==
+X-Google-Smtp-Source: APXvYqzYEA3pbS2iE2gKVdOlfQIPiAhmrRB708Vt+S0UrPEJo1az+L1keMZHjy1L2zZAifx1wHJpAQ==
+X-Received: by 2002:a17:902:b605:: with SMTP id b5mr24397547pls.206.1556554975840;
+        Mon, 29 Apr 2019 09:22:55 -0700 (PDT)
+Received: from localhost.localdomain (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id g10sm39691003pgq.54.2019.04.29.09.22.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 09:22:54 -0700 (PDT)
+From:   Olof Johansson <olof@lixom.net>
+To:     linux-spi@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jollys@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] spi: zynqmp: Fix build break
+Date:   Mon, 29 Apr 2019 09:22:46 -0700
+Message-Id: <20190429162246.6061-1-olof@lixom.net>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <2bb66114-c976-9c44-6db3-33a5dd12edde@monstr.eu>
+References: <2bb66114-c976-9c44-6db3-33a5dd12edde@monstr.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.04.19 17:59, Christophe Leroy wrote:
+Missing include:
+drivers/spi/spi-zynqmp-gqspi.c:1025:13: error: implicit declaration of
+  function 'zynqmp_pm_get_eemi_ops'; did you mean
+  'zynqmp_process_dma_irq'? [-Werror=implicit-function-declaration]
 
-> If we want to do something useful, wouldn't it make more sense to
-> introduce the use of dev_err() in order to identify the faulting device
-> in the message ?
+Fixes: 3d0313786470a ('drivers: Defer probe if firmware is not ready')
+Cc: Rajan Vaja <rajan.vaja@xilinx.com>
+Cc: Jolly Shah <jollys@xilinx.com>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ drivers/spi/spi-zynqmp-gqspi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Well, I could get the struct device* pointer via pinfo.port->dev,
-but I wasn't entirely sure that it's always defined before these
-functions could be called.
-
-Shall I change it to dev_*() ?
-
-
---mtx
-
+diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
+index d07b6f940f9f..9850a0efe85a 100644
+--- a/drivers/spi/spi-zynqmp-gqspi.c
++++ b/drivers/spi/spi-zynqmp-gqspi.c
+@@ -14,6 +14,7 @@
+ #include <linux/delay.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmaengine.h>
++#include <linux/firmware/xlnx-zynqmp.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.11.0
+
