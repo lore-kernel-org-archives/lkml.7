@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD2EC004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CAEC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DE62168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD59E206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfD2Jgx (ORCPT
+        id S1727842AbfD2Jg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 05:36:53 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:38570 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727659AbfD2Jgn (ORCPT
+        Mon, 29 Apr 2019 05:36:56 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:41470 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727773AbfD2Jgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Apr 2019 05:36:43 -0400
 Received: from ramsan ([84.194.111.163])
-        by michel.telenet-ops.be with bizsmtp
-        id 69cc2000R3XaVaC069ccRa; Mon, 29 Apr 2019 11:36:39 +0200
+        by xavier.telenet-ops.be with bizsmtp
+        id 69cd2000G3XaVaC019cdVz; Mon, 29 Apr 2019 11:36:40 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hL2iD-0000ws-83; Mon, 29 Apr 2019 11:36:37 +0200
+        id 1hL2iD-0000wf-3R; Mon, 29 Apr 2019 11:36:37 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hL2iD-0002pE-5P; Mon, 29 Apr 2019 11:36:37 +0200
+        id 1hL2iD-0002p2-2E; Mon, 29 Apr 2019 11:36:37 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -42,9 +42,9 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
 Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 5/5] ARM: dts: rskrza1: Add input switches
-Date:   Mon, 29 Apr 2019 11:36:31 +0200
-Message-Id: <20190429093631.10799-6-geert+renesas@glider.be>
+Subject: [PATCH 1/5] dt-bindings: interrupt-controller: Add Renesas RZ/A1 Interrupt Controller
+Date:   Mon, 29 Apr 2019 11:36:27 +0200
+Message-Id: <20190429093631.10799-2-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190429093631.10799-1-geert+renesas@glider.be>
 References: <20190429093631.10799-1-geert+renesas@glider.be>
@@ -53,83 +53,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for input switches SW1-3 on the Renesas RZ/A1 RSK+RZA1
-development board.
-
-Note that this uses the IRQ interrupts, as the RZ/A1 GPIO controller
-does not include interrupt support.
+Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-v2:
-  - Use rza1-irqc instead of gic.
----
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 38 ++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ .../renesas,rza1-irqc.txt                     | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
 
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-index ff24301dc1be54de..99acfe4fe11aaed9 100644
---- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- #include "r7s72100.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
- 
- / {
-@@ -28,6 +29,37 @@
- 		reg = <0x08000000 0x02000000>;
- 	};
- 
-+	keyboard {
-+		compatible = "gpio-keys";
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+new file mode 100644
+index 0000000000000000..0914d3d216c3bdac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+@@ -0,0 +1,27 @@
++DT bindings for the Renesas RZ/A1 Interrupt Controller
 +
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&keyboard_pins>;
++The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
++RZ/A1 SoCs:
++  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
++    interrupts,
++  - NMI edge select.
 +
-+		key-1 {
-+			interrupt-parent = <&irqc>;
-+			interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_1>;
-+			label = "SW1";
-+			wakeup-source;
-+		};
++Required properties:
++  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
++		fallback.
++		Examples with soctypes are:
++		  - "renesas,r7s72100-irqc" (RZ/A1H)
++  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
++				 in interrupts.txt in this directory)
++  - interrupt-controller: Marks the device as an interrupt controller
++  - reg: Base address and length of the memory resource used by the interrupt
++         controller
 +
-+		key-2 {
-+			interrupt-parent = <&irqc>;
-+			interrupts = <2 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_2>;
-+			label = "SW2";
-+			wakeup-source;
-+		};
++Example:
 +
-+		key-3 {
-+			interrupt-parent = <&irqc>;
-+			interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_3>;
-+			label = "SW3";
-+			wakeup-source;
-+		};
++	irqc: interrupt-controller@fcfef800 {
++		compatible = "renesas,r7s72100-irqc", "renesas,rza1-irqc";
++		#interrupt-cells = <2>;
++		interrupt-controller;
++		reg = <0xfcfef800 0x6>;
 +	};
-+
- 	lbsc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -101,6 +133,12 @@
- 			 <RZA1_PINMUX(1, 7, 1)>;	/* RIIC3SDA */
- 	};
- 
-+	keyboard_pins: keyboard {
-+		pinmux = <RZA1_PINMUX(1, 9, 3)>,	/* IRQ3 */
-+			 <RZA1_PINMUX(1, 8, 3)>,	/* IRQ2 */
-+			 <RZA1_PINMUX(1, 11, 3)>;	/* IRQ5 */
-+	};
-+
- 	/* Serial Console */
- 	scif2_pins: serial2 {
- 		pinmux = <RZA1_PINMUX(3, 0, 6)>,	/* TxD2 */
 -- 
 2.17.1
 
