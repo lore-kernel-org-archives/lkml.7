@@ -2,89 +2,114 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00556C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D80C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EE320673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA5420675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfD2PgC (ORCPT
+        id S1728588AbfD2PiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:36:02 -0400
-Received: from monster.unsafe.ru ([5.9.28.80]:44264 "EHLO mail.unsafe.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbfD2PgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:36:01 -0400
-Received: from dhcp129-178.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.unsafe.ru (Postfix) with ESMTPSA id CDA5EC61824;
-        Mon, 29 Apr 2019 15:35:57 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 17:35:55 +0200
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-api@vger.kernel.org, linux-modules@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>
-Subject: Re: [PATCH v3] moduleparam: Save information about built-in modules
- in separate file
-Message-ID: <20190429153555.GX9023@dhcp129-178.brq.redhat.com>
-References: <20190429090854.GU9023@dhcp129-178.brq.redhat.com>
- <CAK7LNARpeSTr=VWudDRQ8sobcPQqtqzcLm7EqyvoKFYT84Hk6Q@mail.gmail.com>
+        Mon, 29 Apr 2019 11:38:06 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.101]:41492 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728448AbfD2PiF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:38:05 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 08AC81A521FA
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:38:05 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id L8M0hiZXP90onL8M1hrJ5s; Mon, 29 Apr 2019 10:38:05 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.54.97] (port=52388 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hL8Lt-001QMb-7P; Mon, 29 Apr 2019 10:38:01 -0500
+Date:   Mon, 29 Apr 2019 10:37:55 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH net-next] sfc: mcdi_port: Mark expected switch fall-through
+Message-ID: <20190429153755.GA10596@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAK7LNARpeSTr=VWudDRQ8sobcPQqtqzcLm7EqyvoKFYT84Hk6Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.54.97
+X-Source-L: No
+X-Exim-ID: 1hL8Lt-001QMb-7P
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.54.97]:52388
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 21
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:08:44AM +0900, Masahiro Yamada wrote:
-> >  modules.builtin
-> > +modules.builtin.modinfo
-> >
-> >  #
-> >  # Top-level generic files
-> 
-> 
-> Let me repeat the same comments as in v2
-> (https://patchwork.kernel.org/patch/10888207/#22595563)
-> as you ignored them.
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-I miss it. Sorry about that.
+This patch fixes the following warning:
 
-> > diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> > index c8cf45362bd6..41ef7cb043c1 100755
-> > --- a/scripts/link-vmlinux.sh
-> > +++ b/scripts/link-vmlinux.sh
-> > @@ -226,6 +226,10 @@ modpost_link vmlinux.o
-> >  # modpost vmlinux.o to check for section mismatches
-> >  ${MAKE} -f "${srctree}/scripts/Makefile.modpost" vmlinux.o
-> >
-> > +info MODINFO modules.builtin.modinfo
-> > +"${OBJCOPY}" -j .modinfo -O binary vmlinux.o modules.builtin.modinfo
-> > +chmod 444 modules.builtin.modinfo
-> 
-> 
-> Why is this 'chmod 444' necessary?
+drivers/net/ethernet/sfc/mcdi_port.c: In function ‘efx_mcdi_phy_decode_link’:
+./include/linux/compiler.h:77:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+ # define unlikely(x) __builtin_expect(!!(x), 0)
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/asm-generic/bug.h:125:2: note: in expansion of macro ‘unlikely’
+  unlikely(__ret_warn_on);     \
+  ^~~~~~~~
+drivers/net/ethernet/sfc/mcdi_port.c:344:3: note: in expansion of macro ‘WARN_ON’
+   WARN_ON(1);
+   ^~~~~~~
+drivers/net/ethernet/sfc/mcdi_port.c:345:2: note: here
+  case MC_CMD_FCNTL_OFF:
+  ^~~~
 
-I just wanted to show that this file will never change.
-I will remove this line.
+Warning level 3 was used: -Wimplicit-fallthrough=3
 
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/sfc/mcdi_port.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/sfc/mcdi_port.c b/drivers/net/ethernet/sfc/mcdi_port.c
+index 9382bb0b4d5a..a4bbfebe3d64 100644
+--- a/drivers/net/ethernet/sfc/mcdi_port.c
++++ b/drivers/net/ethernet/sfc/mcdi_port.c
+@@ -342,6 +342,7 @@ static void efx_mcdi_phy_decode_link(struct efx_nic *efx,
+ 		break;
+ 	default:
+ 		WARN_ON(1);
++		/* Fall through */
+ 	case MC_CMD_FCNTL_OFF:
+ 		link_state->fc = 0;
+ 		break;
 -- 
-Rgrds, legion
+2.21.0
 
