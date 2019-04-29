@@ -4,66 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A247C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6645EC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 699A22067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345802067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="l1Fo0n6u"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="V8llIgXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbfD2UP5 (ORCPT
+        id S1729429AbfD2UQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:15:57 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35447 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729260AbfD2UP4 (ORCPT
+        Mon, 29 Apr 2019 16:16:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33604 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729421AbfD2UQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:15:56 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f7so9374552wrs.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:15:55 -0700 (PDT)
+        Mon, 29 Apr 2019 16:16:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s18so17952155wrp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:15:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vCxinVg6A2SbZ9ILJWHL9gGNmahRdcgdd1xrKNk0P5I=;
-        b=l1Fo0n6uuK81vsv4KUn6MAwronVLRTlTPD56VCaSdgU8NGFkVEOa609qnKppM/uCO2
-         HRgtrD83lc/5DFL2xOjq3oahOEW1qqD3ehf1gcdxcWCNoazbEXEAR2cf5vf3SeNvIXu8
-         xGW9OWHJbo1YhQVyG7oYR8xqAkT/BUsxIeWqo=
+        bh=HnQQB+q10KJ+tBjmTDVhEUeBuplkgzFkaabaWorIDK0=;
+        b=V8llIgXP6nhj3mBW9/AXO9OGQRGRnVOgd/Mgx/UqS0Dmg6P71DCInuxWyizpcBDv2v
+         s4LWS3ulfKwPBDJxaH97b/cxsArPA7/vK6pLhrgQwPdEmqCASyvUl8VDq6EE/M867QlH
+         vuLUSwu+6ZvKtN0hQBgi2CjSm7a1FwV/4h3/I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=vCxinVg6A2SbZ9ILJWHL9gGNmahRdcgdd1xrKNk0P5I=;
-        b=dUf4itAkqzcrbtM1H7alB+zBKk/XjSwlREB4oH37w45XeHd0x8BeyjCOz20bikDMi3
-         hoRbjdh4auiODWaEJILwNQg1hISIZgSapoOmtokjHknX3Ri8kaBQo5xZUsrXJ+bL2+KL
-         St4qdeWRSVeEyejccZ9JirSN7kYbaFftYRFgxTRorV7a4OA5ZmvWBISwL/WC/AYjpr2B
-         e4hA5Mb4snAKjTT46iP8yd1XKsPfxg4MybBejHFwloDnTD44cjJDYu+cp2AZcwr0oME3
-         DP9mABkXqOmweDFCLXLi4GHquVVouWcVlD9560nSW4qdkOeCrX9xGQkVtI/+oARyL9fL
-         nUDQ==
-X-Gm-Message-State: APjAAAWcU73IUfxMezUHFoXXXpWJQ/25V5AdZMWcgRO1N2ME5eEYj2Ck
-        GMg3UlWtZ0okLL5U8jiqQs0kJboybc0=
-X-Google-Smtp-Source: APXvYqw63jnClhdJcOMmVCX4Q14I5kSfu+qjnhDfPAb2p9j2fIrWdfwp6P5Jp2R5xGLI7EjMZ+WPsA==
-X-Received: by 2002:a05:6000:12cb:: with SMTP id l11mr703764wrx.89.1556568954590;
-        Mon, 29 Apr 2019 13:15:54 -0700 (PDT)
+        bh=HnQQB+q10KJ+tBjmTDVhEUeBuplkgzFkaabaWorIDK0=;
+        b=CK9VZLpFdm97pDkeyCoNm/0ERIlNFBxTFixeHTW9H8RBgo5BIvdNmmh4Zms/PjqS0R
+         G4BJboobe90JEU7SoZoBQCTkwpL1wGN3/31llBzzHjMzePu8uSefk1mjqXcOZdzYywuU
+         uyF9DGFs0cPE+Tn4fQBttzdxS16x8ms0tS5s90UmyCYZcYK5UhxlV1bHwUvHfWxQK5sv
+         20hyR2KV6U9ooFxv+wrWwfsKp7BPTt0kuHmj0qLaXcbcK59vQcEknYrLJKUBreaHpmVj
+         dWFiWX75jR+rSotyePaira/EoZrowJASMIk8ZDL4/9seCLcZ4MB4/VSUYxMlmMAnpOlk
+         bk2A==
+X-Gm-Message-State: APjAAAU2zj9OEMrrdEiGVn+YUYze10+SAhKTjJtRkfpyrkdjjoFiqWN1
+        lNB0sgC6Dl1+sM2Kyp5jO8nicsDtA+0=
+X-Google-Smtp-Source: APXvYqzO/shy+lwWyu704q2dOX00yaUvvzyKRtzyAEk5wDzatGiK5EyHB6NgTBNQOz/tIfNcD7NiVw==
+X-Received: by 2002:adf:fb4a:: with SMTP id c10mr13358709wrs.309.1556568958675;
+        Mon, 29 Apr 2019 13:15:58 -0700 (PDT)
 Received: from localhost.localdomain (ip-93-97.sn2.clouditalia.com. [83.211.93.97])
-        by smtp.gmail.com with ESMTPSA id k6sm22864019wrd.20.2019.04.29.13.15.52
+        by smtp.gmail.com with ESMTPSA id k6sm22864019wrd.20.2019.04.29.13.15.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 29 Apr 2019 13:15:53 -0700 (PDT)
+        Mon, 29 Apr 2019 13:15:57 -0700 (PDT)
 From:   Andrea Parri <andrea.parri@amarulasolutions.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        stable@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org
-Subject: [PATCH 1/5] drm/msm: Fix improper uses of smp_mb__{before,after}_atomic()
-Date:   Mon, 29 Apr 2019 22:14:57 +0200
-Message-Id: <1556568902-12464-2-git-send-email-andrea.parri@amarulasolutions.com>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org
+Subject: [PATCH 2/5] bio: fix improper use of smp_mb__before_atomic()
+Date:   Mon, 29 Apr 2019 22:14:58 +0200
+Message-Id: <1556568902-12464-3-git-send-email-andrea.parri@amarulasolutions.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
 References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
@@ -72,45 +68,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These barriers only apply to the read-modify-write operations; in
-particular, they do not apply to the atomic_set() primitive.
+This barrier only applies to the read-modify-write operations; in
+particular, it does not apply to the atomic_set() primitive.
 
-Replace the barriers with smp_mb()s.
+Replace the barrier with an smp_mb().
 
-Fixes: b1fc2839d2f92 ("drm/msm: Implement preemption for A5XX targets")
+Fixes: dac56212e8127 ("bio: skip atomic inc/dec of ->bi_cnt for most use cases")
 Cc: stable@vger.kernel.org
 Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
 Reported-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Jordan Crouse <jcrouse@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: freedreno@lists.freedesktop.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org
 ---
- drivers/gpu/drm/msm/adreno/a5xx_preempt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/bio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-index 3d62310a535fb..ee0820ee0c664 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-@@ -39,10 +39,10 @@ static inline void set_preempt_state(struct a5xx_gpu *gpu,
- 	 * preemption or in the interrupt handler so barriers are needed
- 	 * before...
- 	 */
--	smp_mb__before_atomic();
-+	smp_mb();
- 	atomic_set(&gpu->preempt_state, new);
- 	/* ... and after*/
--	smp_mb__after_atomic();
-+	smp_mb();
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index e584673c18814..5becbafb84e8a 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -224,7 +224,7 @@ static inline void bio_cnt_set(struct bio *bio, unsigned int count)
+ {
+ 	if (count != 1) {
+ 		bio->bi_flags |= (1 << BIO_REFFED);
+-		smp_mb__before_atomic();
++		smp_mb();
+ 	}
+ 	atomic_set(&bio->__bi_cnt, count);
  }
- 
- /* Write the most recent wptr for the given ring into the hardware */
 -- 
 2.7.4
 
