@@ -2,41 +2,43 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2D0C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13B2C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8640620656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAAAC20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfD2OpT (ORCPT
+        id S1728601AbfD2OpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:45:19 -0400
+        Mon, 29 Apr 2019 10:45:24 -0400
 Received: from mga05.intel.com ([192.55.52.43]:1324 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728331AbfD2OpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:45:18 -0400
+        id S1728564AbfD2OpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:45:22 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 07:45:17 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 07:45:21 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
-   d="scan'208";a="154739482"
+   d="scan'208";a="154739498"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
-  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2019 07:45:17 -0700
+  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2019 07:45:21 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     eranian@google.com, tj@kernel.org, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 0/4] Optimize cgroup context switch
-Date:   Mon, 29 Apr 2019 07:44:01 -0700
-Message-Id: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH 2/4] perf: Add filter_match() as a parameter for pinned/flexible_sched_in()
+Date:   Mon, 29 Apr 2019 07:44:03 -0700
+Message-Id: <1556549045-71814-3-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
+References: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -44,53 +46,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-On systems with very high context switch rates between cgroups,
-there are high overhead using cgroup perf.
+A fast path will be introduced in the following patches to speed up the
+cgroup events sched in, which only needs a simpler filter_match().
 
-Current codes have two issues.
-- System-wide events are mistakenly switched in cgroup
-  context switch. It causes system-wide events miscounting,
-  and brings avoidable overhead.
-  Patch 1 fixes the issue.
-- The cgroup context switch sched_in is low efficient.
-  All cgroup events share the same per-cpu pinned/flexible groups.
-  The RB trees for pinned/flexible groups don't understand cgroup.
-  Current code has to traverse all events, and use event_filter_match()
-  to filter the events for specific cgroup.
-  Patch 2-4 adds a fast path for cgroup context switch sched_in by
-  training the RB tree to understand cgroup. The extra filtering
-  can be avoided.
+Add filter_match() as a parameter for pinned/flexible_sched_in().
 
+No functional change.
 
-Here is test with 6 cgroups running.
-Each cgroup has a specjbb benchmark running.
-The perf command is as below.
-   perf stat -e cycles,instructions -e cycles,instructions
-   -e cycles,instructions -e cycles,instructions 
-   -e cycles,instructions -e cycles,instructions
-   -G cgroup1,cgroup1,cgroup2,cgroup2,cgroup3,cgroup3
-   -G cgroup4,cgroup4,cgroup5,cgroup5,cgroup6,cgroup6
-   -a -e cycles,instructions -I 1000
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ kernel/events/core.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-The average RT (Response Time) reported from specjbb is
-used as key performance metrics. (The lower the better)
-
-                                        RT(us)              Overhead
-Baseline (no perf stat):                4286.9
-Use cgroup perf, no patches:            4483.6                4.6%
-Use cgroup perf, apply patch 1:         4369.2                1.9%
-Use cgroup perf, apple all patches:     4335.3                1.1%
-
-Kan Liang (4):
-  perf: Fix system-wide events miscounting during cgroup monitoring
-  perf: Add filter_match() as a parameter for pinned/flexible_sched_in()
-  perf cgroup: Add cgroup ID as a key of RB tree
-  perf cgroup: Add fast path for cgroup switch
-
- include/linux/perf_event.h |   7 ++
- kernel/events/core.c       | 171 +++++++++++++++++++++++++++++++++++++++------
- 2 files changed, 157 insertions(+), 21 deletions(-)
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 388dd42..782fd86 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3251,7 +3251,8 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
+ }
+ 
+ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+-			      int (*func)(struct perf_event *, void *), void *data)
++			      int (*func)(struct perf_event *, void *, int (*)(struct perf_event *)),
++			      void *data)
+ {
+ 	struct perf_event **evt, *evt1, *evt2;
+ 	int ret;
+@@ -3271,7 +3272,7 @@ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+ 			evt = &evt2;
+ 		}
+ 
+-		ret = func(*evt, data);
++		ret = func(*evt, data, event_filter_match);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -3287,7 +3288,8 @@ struct sched_in_data {
+ 	int can_add_hw;
+ };
+ 
+-static int pinned_sched_in(struct perf_event *event, void *data)
++static int pinned_sched_in(struct perf_event *event, void *data,
++			   int (*filter_match)(struct perf_event *))
+ {
+ 	struct sched_in_data *sid = data;
+ 
+@@ -3300,7 +3302,7 @@ static int pinned_sched_in(struct perf_event *event, void *data)
+ 		return 0;
+ #endif
+ 
+-	if (!event_filter_match(event))
++	if (!filter_match(event))
+ 		return 0;
+ 
+ 	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
+@@ -3318,7 +3320,8 @@ static int pinned_sched_in(struct perf_event *event, void *data)
+ 	return 0;
+ }
+ 
+-static int flexible_sched_in(struct perf_event *event, void *data)
++static int flexible_sched_in(struct perf_event *event, void *data,
++			     int (*filter_match)(struct perf_event *))
+ {
+ 	struct sched_in_data *sid = data;
+ 
+@@ -3331,7 +3334,7 @@ static int flexible_sched_in(struct perf_event *event, void *data)
+ 		return 0;
+ #endif
+ 
+-	if (!event_filter_match(event))
++	if (!filter_match(event))
+ 		return 0;
+ 
+ 	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
 -- 
 2.7.4
 
