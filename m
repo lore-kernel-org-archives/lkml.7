@@ -2,55 +2,108 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EB7C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47B7C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80B42075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C3520675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:07:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbfD2TEF (ORCPT
+        id S1729125AbfD2TH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:04:05 -0400
-Received: from verein.lst.de ([213.95.11.211]:40600 "EHLO newverein.lst.de"
+        Mon, 29 Apr 2019 15:07:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbfD2TEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:04:05 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 6398268AFE; Mon, 29 Apr 2019 21:03:48 +0200 (CEST)
-Date:   Mon, 29 Apr 2019 21:03:48 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/26] iommu/dma: Refactor iommu_dma_free
-Message-ID: <20190429190348.GB5637@lst.de>
-References: <20190422175942.18788-1-hch@lst.de> <20190422175942.18788-15-hch@lst.de> <8321a363-f448-3e48-48f6-58d2b44a2900@arm.com>
+        id S1726725AbfD2TH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 15:07:29 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FFAD20673;
+        Mon, 29 Apr 2019 19:07:26 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 15:07:24 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+Message-ID: <20190429150724.6e501d27@gandalf.local.home>
+In-Reply-To: <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
+References: <20190427100639.15074-1-nstange@suse.de>
+        <20190427100639.15074-4-nstange@suse.de>
+        <20190427102657.GF2623@hirez.programming.kicks-ass.net>
+        <20190428133826.3e142cfd@oasis.local.home>
+        <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+        <20190429145250.1a5da6ed@gandalf.local.home>
+        <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8321a363-f448-3e48-48f6-58d2b44a2900@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 02:59:43PM +0100, Robin Murphy wrote:
-> Hmm, I do still prefer my original flow with the dma_common_free_remap() 
-> call right out of the way at the end rather than being a special case in 
-> the middle of all the page-freeing (which is the kind of existing 
-> complexity I was trying to eliminate). I guess you've done this to avoid 
-> having "if (!dma_release_from_contiguous(...))..." twice like I ended up 
-> with, which is fair enough I suppose - once we manage to solve the new 
-> dma_{alloc,free}_contiguous() interface that may tip the balance so I can 
-> always revisit this then.
+On Mon, 29 Apr 2019 11:59:04 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Ok, I'll try to accomodate that with a minor rework.
+> I really don't care. Just do what I suggested, and if you have numbers to
+> show problems, then maybe I'll care.
+> 
+
+Are you suggesting that I rewrite the code to do it one function at a
+time? This has always been batch mode. This is not something new. The
+function tracer has been around longer than the text poke code.
+
+> Right now you're just making excuses for this. I described the solution
+> months ago, now I've written a patch, if that's not good enough then we can
+> just skip this all entirely.
+> 
+> Honestly, if you need to rewrite tens of thousands of calls, maybe you're
+> doing something wrong?
+> 
+
+ # cd /sys/kernel/debug/tracing
+ # cat available_filter_functions | wc -l
+ 45856
+ # cat enabled_functions | wc -l
+ 0
+ # echo function > current_tracer
+ # cat enabled_functions | wc -l
+ 45856
+
+There, I just enabled 45,856 function call sites in one shot!
+
+How else do you want to update them? Every function in the kernel has a
+nop, that turns into a call to the ftrace_handler, if I add another
+user of that code, it will change each one as well.
+
+-- Steve
