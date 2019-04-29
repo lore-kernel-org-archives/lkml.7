@@ -2,114 +2,111 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AEEC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA28C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E93B205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:53:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Cs8My31Z";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kUMv2g9Y"
+	by mail.kernel.org (Postfix) with ESMTP id C41E3205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfD2OxY (ORCPT
+        id S1728610AbfD2Oxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:53:24 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45752 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728339AbfD2OxX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:53:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9ADFB608BA; Mon, 29 Apr 2019 14:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556549602;
-        bh=irxS69ui9uFMypPtZqVaCG/Lyxyxkh55XfmeD07SihU=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Cs8My31ZU3N55iB9OsJd1qkpQ/pS1e7Tz1rvpTO77bQ9TZqXUMd5UYure5BBxXpV+
-         yGf1XtsIWDvyN00FDOONjsJYznq2JGBi32jlw4j7LVoPCYLNYsV2s6FDM1/zQ7Agkg
-         EZ1w52b46Dmqfllhif2/DeMjanM9oufKJgrDRkoQ=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 753E9605A2;
-        Mon, 29 Apr 2019 14:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556549602;
-        bh=irxS69ui9uFMypPtZqVaCG/Lyxyxkh55XfmeD07SihU=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=kUMv2g9YWlEUImByOoq+dRrRUTRLUDM33tu/YtvF+krEF2knqyxMCmyozogHXt0UM
-         PC6GfOGZ7zBR7Ii8z3Bh1a5oTNqSODuP1baG0ORe+xWVDvbkzeOJHn1Bm9EC+IgouK
-         EHlzcohEw+tsV1VhbLLqM659jcWzpHmCNBdGMO3A=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 753E9605A2
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Mon, 29 Apr 2019 10:53:40 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59450 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728396AbfD2Oxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:53:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7A6E80D;
+        Mon, 29 Apr 2019 07:53:39 -0700 (PDT)
+Received: from [10.32.98.83] (e111474-lin.manchester.arm.com [10.32.98.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 187983F5C1;
+        Mon, 29 Apr 2019 07:53:37 -0700 (PDT)
+Subject: Re: [PATCH v1 1/2] perf cs-etm: Always allocate memory for
+ cs_etm_queue::prev_packet
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190428083228.20246-1-leo.yan@linaro.org>
+From:   Robert Walker <robert.walker@arm.com>
+Message-ID: <bba9c934-2ee9-4c0a-b3c8-52c901f740db@arm.com>
+Date:   Mon, 29 Apr 2019 15:53:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <20190428083228.20246-1-leo.yan@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath9k: Check for errors when reading SREV register
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190318190557.21599-1-timschumi@gmx.de>
-References: <20190318190557.21599-1-timschumi@gmx.de>
-To:     Tim Schumacher <timschumi@gmx.de>
-Cc:     unlisted-recipients:; (no To-header on input) timschumi@gmx.de,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
-        Cc:     unlisted-recipients:; (no To-header on input)timschumi@gmx.de
-                                                                     ^-missing end of address
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190429145322.9ADFB608BA@smtp.codeaurora.org>
-Date:   Mon, 29 Apr 2019 14:53:22 +0000 (UTC)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tim Schumacher <timschumi@gmx.de> wrote:
+Hi,
 
-> Right now, if an error is encountered during the SREV register
-> read (i.e. an EIO in ath9k_regread()), that error code gets
-> passed all the way to __ath9k_hw_init(), where it is visible
-> during the "Chip rev not supported" message.
-> 
->     ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
->     ath: phy2: Mac Chip Rev 0x0f.3 is not supported by this driver
->     ath: phy2: Unable to initialize hardware; initialization status: -95
->     ath: phy2: Unable to initialize hardware; initialization status: -95
->     ath9k_htc: Failed to initialize the device
-> 
-> Check for -EIO explicitly in ath9k_hw_read_revisions() and return
-> a boolean based on the success of the operation. Check for that in
-> __ath9k_hw_init() and abort with a more debugging-friendly message
-> if reading the revisions wasn't successful.
-> 
->     ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
->     ath: phy2: Failed to read SREV register
->     ath: phy2: Could not read hardware revision
->     ath: phy2: Unable to initialize hardware; initialization status: -95
->     ath: phy2: Unable to initialize hardware; initialization status: -95
->     ath9k_htc: Failed to initialize the device
-> 
-> This helps when debugging by directly showing the first point of
-> failure and it could prevent possible errors if a 0x0f.3 revision
-> is ever supported.
-> 
-> Signed-off-by: Tim Schumacher <timschumi@gmx.de>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+On 28/04/2019 09:32, Leo Yan wrote:
+> Robert Walker reported a segmentation fault is observed when process
+> CoreSight trace data; this issue can be easily reproduced by the
+> command 'perf report --itrace=i1000i' for decoding tracing data.
+>
+> If neither the 'b' flag (synthesize branches events) nor 'l' flag
+> (synthesize last branch entries) are specified to option '--itrace',
+> cs_etm_queue::prev_packet will not been initialised.  After merging
+> the code to support exception packets and sample flags, there
+> introduced a number of uses of cs_etm_queue::prev_packet without
+> checking whether it is valid, for these cases any accessing to
+> uninitialised prev_packet will cause crash.
+>
+> As cs_etm_queue::prev_packet is used more widely now and it's already
+> hard to follow which functions have been called in a context where the
+> validity of cs_etm_queue::prev_packet has been checked, this patch
+> always allocates memory for cs_etm_queue::prev_packet.
+>
+> Reported-by: Robert Walker <robert.walker@arm.com>
+> Suggested-by: Robert Walker <robert.walker@arm.com>
+> Fixes: 7100b12cf474 ("perf cs-etm: Generate branch sample for exception packet")
+> Fixes: 24fff5eb2b93 ("perf cs-etm: Avoid stale branch samples when flush packet")
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>   tools/perf/util/cs-etm.c | 8 +++-----
+>   1 file changed, 3 insertions(+), 5 deletions(-)
 
-Patch applied to ath-next branch of ath.git, thanks.
+I've tested these with the trace from the HiKey960 and the segfault no 
+longer occurs
 
-2f90c7e5d094 ath9k: Check for errors when reading SREV register
+Tested-by: Robert Walker <robert.walker@arm.com>
 
--- 
-https://patchwork.kernel.org/patch/10858399/
+Regards
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Rob
 
+>
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 110804936fc3..054b480aab04 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -422,11 +422,9 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
+>   	if (!etmq->packet)
+>   		goto out_free;
+>   
+> -	if (etm->synth_opts.last_branch || etm->sample_branches) {
+> -		etmq->prev_packet = zalloc(szp);
+> -		if (!etmq->prev_packet)
+> -			goto out_free;
+> -	}
+> +	etmq->prev_packet = zalloc(szp);
+> +	if (!etmq->prev_packet)
+> +		goto out_free;
+>   
+>   	if (etm->synth_opts.last_branch) {
+>   		size_t sz = sizeof(struct branch_stack);
