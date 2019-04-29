@@ -2,150 +2,94 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BC5C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44CFC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24A52053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556521463;
-	bh=oTFo+X/n5Dd/OvXlvP7dbo0CidB3qMCRTetmpdUAJBM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=whyLr5rFmvkdyYrEqQbV98+hhOSlEhKvZJGpDe9tc5FXRoBX0b6lSm8dU2o4zYiBs
-	 HNUbYFJM3sINA6lRc2n37hIliIlp/AvSiRnzXRQa7dZgb2u883CRWEA53MejGdpLFJ
-	 j0krcVrNA8VWxU4bZ/FBTgnCDa7OPWBQvwkkekis=
+	by mail.kernel.org (Postfix) with ESMTP id 71C322053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfD2HEX (ORCPT
+        id S1727412AbfD2HFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:04:23 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34249 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfD2HEW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:04:22 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n15so1646565ota.1;
-        Mon, 29 Apr 2019 00:04:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LM+MBIKe0mwYMMv3jF2FrcYhobpKYmKEZS9fGWMXsAs=;
-        b=RiRDYysgBtrNzUx05AHYN94xYVKDSZZs3pqR8Au4vT170hy1bzqVdLZhV6krZ9BZ4n
-         ZQT4DMARuTy/zYKNBucbHofZURDodgoksp7zXGixLCry1v6J1Q536bJ24pVhdWoLL7wv
-         ihXSQHyEu6TLXB5RYJIMXqry4mYhv3HKZ8If9ImTF09189Hgp8T7qbp/goVmi+/zHZuV
-         Uuy4UNkPqGIMbYuvwLdRy0mAbhTbgWxwP4gEcEKj3edWswOusX/QLRAbB5PFr49ObPF3
-         Cd8DENwLIav6Xki4JaCUncfnI7qxBQRp7gaDSF/iOX/5pFtTrEGLeLWlik6+EO3BsCDB
-         qaKQ==
-X-Gm-Message-State: APjAAAXAqqiBngXOwGqWzABNHlE6oUIcrjLlXyWvz6rILV3oS5noEK+x
-        9tqOFy/hn/Ptemed2iK3jXkJsIv2CGlM8KypYCM=
-X-Google-Smtp-Source: APXvYqxoflu2iMl6ng4hw0hdU2IsyyvzMMl7dWgy9CvBZMqAYkD2iMKEE/xN+MH94AAnqnTINhCz2UpmysA/PF6SXlQ=
-X-Received: by 2002:a9d:6e17:: with SMTP id e23mr7268147otr.65.1556521461471;
- Mon, 29 Apr 2019 00:04:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190422130814.GJ173520@google.com> <3a1139ef-10ed-6923-73c5-30fbf0c065c3@linux.intel.com>
-In-Reply-To: <3a1139ef-10ed-6923-73c5-30fbf0c065c3@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 29 Apr 2019 09:04:05 +0200
-Message-ID: <CAJZ5v0iYYJBR77R51y1hVKsBQDmUpv5_dtSqMMiCoEZgC5cX=g@mail.gmail.com>
-Subject: Re: [Bug 203297] Synaptics touchpad TM-3127 functionality broken by
- PCI runtime power management patch on 4.20.2
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Keijo Vaara <ferdasyn@rocketmail.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Apr 2019 03:05:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56742 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726589AbfD2HFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 03:05:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1BFA8AE60;
+        Mon, 29 Apr 2019 07:05:44 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 09:05:43 +0200
+Message-ID: <s5hv9yxjnp4.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Arnd Bergmann" <arnd@arndb.de>
+Cc:     "Alexander Viro" <viro@zeniv.linux.org.uk>,
+        <alsa-devel@alsa-project.org>, "Vinod Koul" <vkoul@kernel.org>,
+        <linux-um@lists.infradead.org>, <y2038@lists.linaro.org>,
+        "Jaroslav Kysela" <perex@perex.cz>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 20/26] compat_ioctl: remove translation for sound ioctls
+In-Reply-To: <s5hk1fthx9u.wl-tiwai@suse.de>
+References: <20190416202013.4034148-1-arnd@arndb.de>
+        <20190416202839.248216-1-arnd@arndb.de>
+        <s5hk1fthx9u.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 2:14 PM Jarkko Nikula
-<jarkko.nikula@linux.intel.com> wrote:
->
-> On 4/22/19 4:08 PM, Bjorn Helgaas wrote:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=203297
-> >
-> > Regression, suspected but as yet unconfirmed cause:
-> >
-> >    c5eb1190074c ("PCI / PM: Allow runtime PM without callback functions")
-> >
-> > backported to 4.20 stable as 39e1be324c2f.
-> >
-> With help of Keijo it was confirmed above patch broke the Synaptics
-> touchpad. Not bisected but touchpad works again by forcing the i2c-i801
-> SMBus controller always on:
-> "echo on >/sys/bus/pci/devices/0000\:00\:1f.3/power/control"
->
-> Above patch is a generalized fix that fixed the runtime PM regression on
-> i2c-i801 and re-allow the controller go to runtime suspend when idle. So
-> most probably Synaptics touchpad was broken by i2c-i801 runtime PM also
-> before but got unnoticed. Which is easy since on many platforms SMBus
-> controller doesn't necessarily have the PCI PM capabilities.
->
-> I would like to ask help from input subsystem experts what kind of SMBus
-> power state dependency Synaptics RMI4 SMBus devices have since it cease
-> to work if SMBus controllers idles between transfers and how this is
-> best to fix?
->
-> Instead of revert I think we'd need to have some method to force SMBus
-> controller on whenever the touchpad is active, like when there is a
-> userspace listening.
->
-> I'm not expert in this area so as quick proof of concept I had a
-> following hack which forces the I2C/SMBus adapter, and eventually the
-> parent PCI device of it on when the RMI4 SMBus device is probed and let
-> the SMBus controller to idle when removed.
->
-> According to Keijo it fixes the issue but I like to hear input experts
-> for better place to put these.
->
-> diff --git a/drivers/input/rmi4/rmi_smbus.c b/drivers/input/rmi4/rmi_smbus.c
-> index b6ccf39c6a7b..2b11d69be313 100644
-> --- a/drivers/input/rmi4/rmi_smbus.c
-> +++ b/drivers/input/rmi4/rmi_smbus.c
-> @@ -16,6 +16,7 @@
->   #include <linux/lockdep.h>
->   #include <linux/module.h>
->   #include <linux/pm.h>
-> +#include <linux/pm_runtime.h>
->   #include <linux/rmi.h>
->   #include <linux/slab.h>
->   #include "rmi_driver.h"
-> @@ -332,6 +333,9 @@ static int rmi_smb_probe(struct i2c_client *client,
->
->         dev_info(&client->dev, "registering SMbus-connected sensor\n");
->
-> +       /* Force SMBus adapter on while RMI4 device is connected */
-> +       pm_runtime_get(&client->adapter->dev);
+On Wed, 17 Apr 2019 10:05:33 +0200,
+Takashi Iwai wrote:
+> 
+> On Tue, 16 Apr 2019 22:28:05 +0200,
+> Arnd Bergmann wrote:
+> > 
+> > The SNDCTL_* and SOUND_* commands are the old OSS user interface.
+> > 
+> > I checked all the sound ioctl commands listed in fs/compat_ioctl.c
+> > to see if we still need the translation handlers. Here is what I
+> > found:
+> > 
+> > - sound/oss/ is (almost) gone from the kernel, this is what actually
+> >   needed all the translations
+> > - The ALSA emulation for OSS correctly handles all compat_ioctl
+> >   commands already.
+> > - sound/oss/dmasound/ is the last holdout of the original OSS code,
+> >   this is only used on arch/m68k, which has no 64-bit mode and
+> >   hence needs no compat handlers
+> > - arch/um/drivers/hostaudio_kern.c may run in 64-bit mode with
+> >   32-bit x86 user space underneath it. This rare corner case is
+> >   the only one that still needs the compat handlers.
+> > 
+> > By adding a simple redirect of .compat_ioctl to .unlocked_ioctl in the
+> > UML driver, we can remove all the COMPATIBLE_IOCTL() annotations without
+> > a change in functionality. For completeness, I'm adding the same thing
+> > to the dmasound file, knowing that it makes no difference.
+> > 
+> > The compat_ioctl list contains one comment about SNDCTL_DSP_MAPINBUF and
+> > SNDCTL_DSP_MAPOUTBUF, which actually would need a translation handler
+> > if implemented. However, the native implementation just returns -EINVAL,
+> > so we don't care.
+> > 
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> This looks like a really nice cleanup.  Thanks!
+> 
+> Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
-That should be pm_runtime_get_sync() IMO.
+Is this supposed to be taken via sound git tree, or would you apply
+over yours?  I'm fine in either way.
 
-Otherwise, the rmi_register_transport_device() may be called before
-completing the PM transition.
 
-> +
->         error = rmi_register_transport_device(&rmi_smb->xport);
->         if (error) {
->                 dev_err(&client->dev, "failed to register sensor: %d\n", error);
-> @@ -346,6 +350,7 @@ static int rmi_smb_remove(struct i2c_client *client)
->         struct rmi_smb_xport *rmi_smb = i2c_get_clientdata(client);
->
->         rmi_unregister_transport_device(&rmi_smb->xport);
-> +       pm_runtime_put(&client->adapter->dev);
->
->         return 0;
->   }
->
-> --
-> Jarkko
+thanks,
+
+Takashi
