@@ -2,107 +2,97 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16E6C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F55C04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B4B2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:36:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="LMg93wbR"
+	by mail.kernel.org (Postfix) with ESMTP id C9066215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556537769;
+	bh=xrb4idnEqTxEw7YKrCpZyBX26GxTnwHkDH99g213PQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MPl5fCmMH7bFhDOphHBQhEYcc7h4eA+FbyhxyGtXxk2mV0gbSB4WMVlGieI8z/P3S
+	 0X5qQOwP/fEWVLG2A2ysA0KoXgillqGkYAvzptw1F/L8+n3g8HyllMmRQBUmIafXtn
+	 HEH+XmD6C77CiR4xfvQdRFZhy2iw8ADWKdJ0XCAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfD2LgB (ORCPT
+        id S1728034AbfD2LgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 07:36:01 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33426 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbfD2Lf6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 07:35:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k19so5038663pgh.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 04:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EuTJNEBUxIXVy/jkPavKDissHj1o1WU2Fh3f2uBGdzU=;
-        b=LMg93wbRYuKdSDc9paygKJ489CBVqczTEyfJjZzh2LIpSmgeicLLCj9VptDH3QHao1
-         XFOR6DHuRYYNuA/B6IdP4wF0uKib5VrD+sWQcCfKXG1rHNiyAUh5vPNwVijAutSSqC5v
-         gYy57GYGkNETPrTZqKlW6Ne/3hs5LZePqLm7dR/0z1Oxc/cZjDi8EnZVjViQaEshU6ku
-         DYpLiH1hxlzjEjJ1hhIhRE09LlMf6/qRciA+OOp42sejJzvGAfHmIU//cpo0Kanf5sGA
-         wMQyXh4HvdE870boKk9A64UyJCgmLzVHZPh7Gm2MV6j6qdPI1OE65vInOozKJQKn7O0W
-         Q/yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EuTJNEBUxIXVy/jkPavKDissHj1o1WU2Fh3f2uBGdzU=;
-        b=rCHEyuQLpk8b3RuwOcOTVLM0+0ESfSDd0Yp2NzGBQkbGymQZQFywjwoer+Q6vcZPzD
-         r462SyDElDsUoKGbXHniuEzApoQbuAoDx7FPDjWGSInUlwwsmtcmqmd2s3JuYB0y8JP6
-         fZMvhofXTtsgWy5U1JD+zQZ1V9PmWVo0ePHA+8e6R7d1ZT+PY65vuMbcKgLNd3obLZ2w
-         OV8pZqfIfejEHNmPrS3Oeyt50IIerx1FWFyjt0jfwVQgeQ8qmJ/XAJoZ8+4mHOazOGQl
-         cVKXjOLSwW8YbR8wfmJOEkpnTNDlwFFS/0SrBH473yBgBz1J0VD7664hxHRoKxoFSqYX
-         1JIw==
-X-Gm-Message-State: APjAAAXSDIG5+i4+zpE3z8v2Q/WoUFAUQePrtcOD1OZBlMawi57esr0d
-        mbN8MnBVao1NNa3RJR8t5XIfUA==
-X-Google-Smtp-Source: APXvYqzOJMP1gy39115HBlFV255byrdw9v/LOMd4avadg0aq9//p0ZgYQwgoFilydb75nUgnO53jbw==
-X-Received: by 2002:a63:5349:: with SMTP id t9mr21552505pgl.327.1556537757473;
-        Mon, 29 Apr 2019 04:35:57 -0700 (PDT)
-Received: from localhost.localdomain (118-171-142-181.dynamic-ip.hinet.net. [118.171.142.181])
-        by smtp.gmail.com with ESMTPSA id b13sm45058844pfd.12.2019.04.29.04.35.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 04:35:56 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Pawel Moll <pawel.moll@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/2] regulator: vexpress: Switch to SPDX identifier
-Date:   Mon, 29 Apr 2019 19:35:42 +0800
-Message-Id: <20190429113542.476-2-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190429113542.476-1-axel.lin@ingics.com>
-References: <20190429113542.476-1-axel.lin@ingics.com>
+        Mon, 29 Apr 2019 07:36:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727986AbfD2LgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 07:36:07 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B69482075E;
+        Mon, 29 Apr 2019 11:36:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556537766;
+        bh=xrb4idnEqTxEw7YKrCpZyBX26GxTnwHkDH99g213PQY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VEW+K+47fN2uG7Z1EKCt2g8fTb1RQbfUPM6mxN3KWl5FiTdqryFkRGMrfXCZje2El
+         EeJIuGirmR+BnFAi+o/wbYHW29KWlDOoHDWrqRXlEFFUwVN8kKX/1JWTGcAJMeT3Y5
+         bvzr+DdI92iexlvpfVvTrkptqj5Xg8GNxGNLIudI=
+Date:   Mon, 29 Apr 2019 17:05:55 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     dan.j.williams@intel.com, eric.long@unisoc.com,
+        orsonzhai@gmail.com, zhang.lyra@gmail.com, broonie@kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] dmaengine: sprd: Fix the possible crash when getting
+ engine status
+Message-ID: <20190429113555.GI3845@vkoul-mobl.Dlink>
+References: <cover.1555330115.git.baolin.wang@linaro.org>
+ <2eecd528e85377f03e6fbc5e7d6544b9c9f59cb1.1555330115.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2eecd528e85377f03e6fbc5e7d6544b9c9f59cb1.1555330115.git.baolin.wang@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/vexpress-regulator.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+On 15-04-19, 20:14, Baolin Wang wrote:
+> We will get a NULL virtual descriptor by vchan_find_desc() when the descriptor
+> has been submitted, that will crash the kernel when getting the engine status.
 
-diff --git a/drivers/regulator/vexpress-regulator.c b/drivers/regulator/vexpress-regulator.c
-index a15a1319436a..1235f46e633e 100644
---- a/drivers/regulator/vexpress-regulator.c
-+++ b/drivers/regulator/vexpress-regulator.c
-@@ -1,15 +1,6 @@
--/*
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * Copyright (C) 2012 ARM Limited
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (C) 2012 ARM Limited
- 
- #define DRVNAME "vexpress-regulator"
- #define pr_fmt(fmt) DRVNAME ": " fmt
+No that is wrong, status is for descriptor and not engine!
+
+> In this case, since the descriptor has been submitted, which means the pointer
+> 'schan->cur_desc' will point to the current descriptor, then we can use
+> 'schan->cur_desc' to get the engine status to avoid this issue.
+
+Nope, since the descriptor is completed, you return with residue as 0
+and DMA_COMPLETE status!
+
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>  drivers/dma/sprd-dma.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> index 48431e2..e29342a 100644
+> --- a/drivers/dma/sprd-dma.c
+> +++ b/drivers/dma/sprd-dma.c
+> @@ -625,7 +625,7 @@ static enum dma_status sprd_dma_tx_status(struct dma_chan *chan,
+>  		else
+>  			pos = 0;
+>  	} else if (schan->cur_desc && schan->cur_desc->vd.tx.cookie == cookie) {
+> -		struct sprd_dma_desc *sdesc = to_sprd_dma_desc(vd);
+> +		struct sprd_dma_desc *sdesc = schan->cur_desc;
+>  
+>  		if (sdesc->dir == DMA_DEV_TO_MEM)
+>  			pos = sprd_dma_get_dst_addr(schan);
+> -- 
+> 1.7.9.5
+
 -- 
-2.20.1
-
+~Vinod
