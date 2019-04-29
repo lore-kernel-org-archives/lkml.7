@@ -3,199 +3,163 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74205C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79069C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C17320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4930420656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 10:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfD2KNG (ORCPT
+        id S1727856AbfD2KNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 06:13:06 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:56863 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727428AbfD2KNG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 06:13:06 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mn2eH-1gtAeU2env-00k71v; Mon, 29 Apr 2019 12:12:41 +0200
-Subject: Re: [PATCH 40/41] drivers: tty: serial: helper for setting mmio range
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        andrew@aj.id.au, macro@linux-mips.org, vz@mleia.com,
-        slemieux.tyco@gmail.com, khilman@baylibre.com, liviu.dudau@arm.com,
-        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
-        davem@davemloft.net, jacmet@sunsite.dk, linux@prisktech.co.nz,
-        matthias.bgg@gmail.com, linux-mips@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        sparclinux@vger.kernel.org
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-41-git-send-email-info@metux.net>
- <20190428153905.GR9224@smile.fi.intel.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <c75f4ca9-367c-25d5-2597-75f2dccf6e1c@metux.net>
-Date:   Mon, 29 Apr 2019 12:12:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 29 Apr 2019 06:13:09 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52572 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727428AbfD2KNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 06:13:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 652D680D;
+        Mon, 29 Apr 2019 03:13:07 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E13DA3F5AF;
+        Mon, 29 Apr 2019 03:13:04 -0700 (PDT)
+Subject: Re: [PATCH v7 11/14] irqchip: ti-sci-inta: Add support for Interrupt
+ Aggregator driver
+To:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        tglx@linutronix.de, jason@lakedaemon.net
+Cc:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>,
+        linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>
+References: <20190420100950.7997-1-lokeshvutla@ti.com>
+ <20190420100950.7997-12-lokeshvutla@ti.com>
+ <bb768bc0-e18b-3794-8083-1612da10b0c1@ti.com>
+ <79b34c45-023b-2df4-26f4-e151e74a46ac@arm.com>
+ <7d012633-e540-df8f-7c21-07702447cb8a@ti.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <3723e553-4e04-4ce4-080b-01f1a9843ea8@arm.com>
+Date:   Mon, 29 Apr 2019 11:13:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190428153905.GR9224@smile.fi.intel.com>
+In-Reply-To: <7d012633-e540-df8f-7c21-07702447cb8a@ti.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:5FkmJafy5b5rMQmFz5MFYjwZmJr3yDLuFQxt3St57wxX5e7mxBe
- D8gfJTEZt0nLiRI3QkVGXsb9wFfsMmR3uoGvaxXgyLlbyWLfln2s3zeyyG6o65B1y5WhMcw
- +UezzJKbteNZnyt/6ruUBSu+3RNIYCG4i6IsdWYkD19xg7ktkmAgoTChutrNqAWKbIy18AH
- 9oGUMGzHGkqb2alaK+C2g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7tP6LgaKJ7I=:f1If2vaJgwBnL/GMoXSVIX
- MPluTwHXqchm7WJg0qmVVZG7JtWCbTp0wuD3Y5kmBa5wFnvp1/XLA14GcDxgC6ecixJrilyO1
- ajh0Xr0Xqi41cOjfAGDjmbED/G6IxY+lBKINgsciqrC4fkrb8/EKY2LBqfF38e5uUwB0JyD/o
- PPHDPuYNCAvxwe2px9yLabR7lCcaI3j8oSMZT8aIgRvOq4yuEud+V3yfnbUjDAhy7AAZXSTNz
- PFxpQK8JC/VjmUfuyj02oJOCfW1OccsGB45/LwL304A8lPd/BtjqwFq1UH05e45x/ZNj0wMRi
- QIyUo6L0cymajBznFNs8i7smcqapNbCttDsScmvqLDhF8QMo0DAndENY4ny04KI/pftgsLSEO
- bgvp+wj5zHD6ObQm/cJ7RNYrPHZ7NK4dTBk83YaL83sqNIN5sUTYVMRTDljX3GSQr7kBSy9pJ
- WL56aZQL6H4rNLgRgew/lYTQ4W7//8UIpidCWD7ofRaC7VrGWNwpTs8l2ebScq8Wsl6QLCaO2
- O0pZ9fPElJ+wdwey6GXGouyoHxdMFxL3u9IYSgRxWq9+3w52h1wHrCmAC/taWiTDBc2semljj
- OwQJV9hG90HAtzDQe8o0df0wESJjF1ztyJVNgHjVWhSmNiZ9TSEND/7hZM/Lt4ScGqIzcMSjv
- 2Og6Lk8EzYxVNyzrHKir1tCMBx1j/0QbRyNnxNQo07uH1cbysow9CPLPJ3dAYImDxDcAUjMRB
- 5Lc3dsS4j36EMoHTPVR+6f104n+ntvt5nPCp5xG5dNp8mXtAHkchqYFy+IU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.04.19 17:39, Andy Shevchenko wrote:
-
-Hi,
-
-seems I've forgot to add "RFC:" in the subject - I'm not entirely happy
-w/ that patch myself, just want to hear your oppinions.
-
->> -	port->port.iotype = UPIO_MEM;>> -	port->port.mapbase = pci_resource_start(pcidev, bar) + offset;>> +
-uart_memres_set_start_len(&port->port,>> +				
-pci_resource_start(pcidev, bar) + offset,>> +				
-pci_resource_len(pcidev, bar));>> +> > I don't see how it's better.>
-Moreover, the size argument seems wrong here.
-hmm, I'm actually not sure yet, what the correct size really would be,
-where the value actually comes from. Just assumed that it would be the
-whole area that the BAR tells. But now I recognized that I'd need to
-substract 'offset' here.
-
-Rethinking it further, we'd probably could deduce the UPIO_* from the
-struct resource, too.
-
->> +		uart_memres_set_start_len(>> +			&port,>> +			FRODO_BASE + FRODO_APCI_OFFSET(1), 0);> > Please,
-avoid such splitting, first parameter is quite fit above line.
-
-Ok. My intention was having both parameters starting at the same line,
-but then the second line would get too long again. > ...and here, and
-maybe in other places you split the assignments to the members> in two
-part. Better to call your function before or after these blocks of>
-assignments.
-the reason what I've just replaced the exactly the assignments, trying
-not to touch too much ;-)
-I'll have a closer look on what can be moved w/o side effects.
-
->> -			uport->mapsize	= ZS_CHAN_IO_SIZE;
->> -			uport->mapbase	= dec_kn_slot_base +
->> -					  zs_parms.scc[chip] +
->> -					  (side ^ ZS_CHAN_B) * ZS_CHAN_IO_SIZE;
->> +
->> +			uart_memres_set_start_len(dec_kn_slot_base +
->> +						    zs_parms.scc[chip] +
->> +						    (side ^ ZS_CHAN_B) *
->> +							ZS_CHAN_IO_SIZE,
->> +						  ZS_CHAN_IO_SIZE);
+On 29/04/2019 09:59, Lokesh Vutla wrote:
 > 
-> This looks hard to read. Think of temporary variables and better formatting
-> style.
-
-Ok.
-
 > 
->>  /*
->> + * set physical io range from struct resource
->> + * if resource is NULL, clear the fields
->> + * also set the iotype to UPIO_MEM
+> On 29/04/19 2:17 PM, Marc Zyngier wrote:
+>> On 23/04/2019 11:00, Lokesh Vutla wrote:
+>>> Hi Marc,
+>>
+>> [...]
+>>
+>>>> +/**
+>>>> + * ti_sci_inta_set_type() - Update the trigger type of the irq.
+>>>> + * @data:	Pointer to corresponding irq_data
+>>>> + * @type:	Trigger type as specified by user
+>>>> + *
+>>>> + * Note: This updates the handle_irq callback for level msi.
+>>>> + *
+>>>> + * Return 0 if all went well else appropriate error.
+>>>> + */
+>>>> +static int ti_sci_inta_set_type(struct irq_data *data, unsigned int type)
+>>>> +{
+>>>> +	struct irq_desc *desc = irq_to_desc(data->irq);
+>>>> +
+>>>> +	/*
+>>>> +	 * .alloc default sets handle_edge_irq. But if the user specifies
+>>>> +	 * that IRQ is level MSI, then update the handle to handle_level_irq
+>>>> +	 */
+>>>> +	if (type & IRQF_TRIGGER_HIGH)
+>>>> +		desc->handle_irq = handle_level_irq;
+>>>> +
+>>>> +	return 0;
+>>>
+>>>
+>>> Returning error value is causing request_irq to fail, so still returning 0. Do
+>>> you suggest any other method to handle this?
+>>
+>> But that is the very point, isn't it? If you pass the wrong triggering
+>> type to request_irq, it *must* fail. What you should have is something like:
+>>
+>> switch (type & IRQ_TYPE_SENSE_MASK) {
+>> case IRQF_TRIGGER_HIGH:
+>> 	desc->handle_irq = handle_level_irq;
+>> 	return 0;
+>> case IRQ_TYPE_EDGE_RISING:
+>> 	return 0;
+>> default:
+>> 	return -EINVAL;
+>> }
+>>
+>> (adjust as necessary).
+>>
+>> What's wrong with this?
 > 
-> Something wrong with punctuation and style. Please, use proper casing and
-> sentences split.
+> I get it. Will fix it in next version. I also got the firmware update as well.
+> If you are okay with rest of the series, I want to post the next version with
+> the firmware update.
+Then post it now, and I'll review that. I'd rather look at the latest
+than providing feedback on something that has already changed.
 
-Ok. fixed it.
+Thanks,
 
-
->> +static inline void uart_memres_set_res(struct uart_port *port,
-> 
-> Perhaps better name can be found.
-> Especially taking into account that it handles IO / MMIO here.
-
-hmm, lacking creativity here ;-)
-any suggestions ?
-
-> 
->> +				       struct resource *res)
->> +{
->> +	if (!res) {
-> 
-> It should return an error in such case.
-
-It's not an error, but desired behaviour: NULL resource
-clears the value.
-
->> +		port->mapsize = 0;
->> +		port->mapbase = 0;
->> +		port->iobase = 0;
->> +		return;
->> +	}
->> +
->> +	if (resource_type(res) == IORESOURCE_IO) {
->> +		port->iotype = UPIO_PORT;
->> +		port->iobase = resource->start;
->> +		return;
->> +	}
->> +
->> +	uart->mapbase = res->start;
->> +	uart->mapsize = resource_size(res);
-> 
->> +	uart->iotype  = UPIO_MEM;
-> 
-> Only one type? Why type is even set here?
-
-It's the default case. The special cases (eg. UPIO_MEM32) need to be
-set explicitly, after that call.
-
-Not really nice, but haven't found a better solution yet. I don't like
-the idea of passing an UPIO_* parameter to the function, most callers
-should not care, if they don't really need to.
-
-
->> + */
-> 
->> +static inline void uart_memres_set_start_len(struct uart_driver *uart,
->> +					     resource_size_t start,
->> +					     resource_size_t len)
-> 
-> The comment doesn't tell why this is needed when we have one for struct
-> resource.
-
-Renamed it to uart_memres_set_mmio_range().
-
-This helper is meant for drivers that don't work w/ struct resource,
-or explicitly set their own len.
-
-
-
-Thanks for your review.
-
---mtx
-
+	M.
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Jazz is not dead. It just smells funny...
