@@ -2,85 +2,71 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404C8C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135D6C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A73C2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C322053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 13:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556543641;
+	bh=CrWxlEGusK6KH4RcYMEbD22IYi7mEltvdFmE+TItnOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xPJbzJ/3RXxLWivvuYaHfN7E+OAeGMTbAasIvvKNMZusPjtwLNuMNP4OXNtWBKJVv
+	 MFBqfkH2ugiYActWqiYtFOIropjulzExD/FZ+MPjDUiwwYi8rdqbr6msldxkksQVK8
+	 JMGd2cL6AqEZ5Gf7YjLM1PuFNfa3EF+N+/jY1Tyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfD2NNr (ORCPT
+        id S1728210AbfD2NOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 09:13:47 -0400
-Received: from mga07.intel.com ([134.134.136.100]:61113 "EHLO mga07.intel.com"
+        Mon, 29 Apr 2019 09:14:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfD2NNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 09:13:47 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 06:13:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
-   d="scan'208";a="165912751"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Apr 2019 06:13:44 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hL66J-0008BA-M6; Mon, 29 Apr 2019 16:13:43 +0300
-Date:   Mon, 29 Apr 2019 16:13:43 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        hotwater438@tutanota.com, hdegoede@redhat.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: intel: Clear interrupt status in unmask callback
-Message-ID: <20190429131343.GC9224@smile.fi.intel.com>
-References: <20190422044539.16085-1-kai.heng.feng@canonical.com>
- <20190426214758.GC9224@smile.fi.intel.com>
- <6BCF9C55-E365-4638-8030-99EBA348F8D4@canonical.com>
+        id S1725838AbfD2NOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 09:14:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25777204EC;
+        Mon, 29 Apr 2019 13:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556543639;
+        bh=CrWxlEGusK6KH4RcYMEbD22IYi7mEltvdFmE+TItnOg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WpXLlUoWZbbjvXO+4+uImOD+zQ9toXL1PbPDOhWxPInYyrC0RnNNpwEFmaSp8q1Fg
+         xy1I7WuLpviKKB/rikP5kV0wEImhucrupDhut6YqbQLDOyEl3+vIV+1VICRuLO+bZ7
+         ALG03dE9R/kchOyiOAgsjaVi9Fzt/6YsLFuOIxgU=
+Date:   Mon, 29 Apr 2019 15:13:57 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jim Lin <jilin@nvidia.com>
+Cc:     mathias.nyman@intel.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] usb: xhci: Add Clear_TT_Buffer
+Message-ID: <20190429131357.GB27385@kroah.com>
+References: <1556541065-22352-1-git-send-email-jilin@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6BCF9C55-E365-4638-8030-99EBA348F8D4@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1556541065-22352-1-git-send-email-jilin@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 05:16:16PM +0800, Kai-Heng Feng wrote:
-> at 05:47, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Apr 22, 2019 at 12:45:39PM +0800, Kai-Heng Feng wrote:
-> > > Commit a939bb57cd47 ("pinctrl: intel: implement gpio_irq_enable") was
-> > > added because clearing interrupt status bit is required to avoid
-> > > unexpected behavior.
-> > > 
-> > > Turns out the unmask callback also needs the fix, which can solve weird
-> > > IRQ triggering issues on I2C touchpad ELAN1200.
+On Mon, Apr 29, 2019 at 08:31:05PM +0800, Jim Lin wrote:
+> --- a/drivers/usb/host/xhci.h
+> +++ b/drivers/usb/host/xhci.h
+> @@ -1864,6 +1864,7 @@ struct xhci_hcd {
+>  	unsigned		hw_lpm_support:1;
+>  	/* Broken Suspend flag for SNPS Suspend resume issue */
+>  	unsigned		broken_suspend:1;
+> +	unsigned		clearing_tt:1;
 
-> > Is it possible scenario when IRQ enable is called, but not masking
-> > callbacks?
-> > For _AEI or GPE?
-> 
-> I am unfamiliar with both of them, what are the callbacks to be used for
-> _AEI and GPE case?
-> Seems like both gpiolib and irqchip call irq_unmask() when irq_enable() is
-> absent.
+Document the bitfield?
 
-Yes, that's correct, thank you for double checking.
+Sorry, missed this last submission.
 
- * @irq_enable:         enable the interrupt (defaults to chip->unmask if NULL)
-
-
-Wait for v2 with mentioned earlier changes and gathered tags.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+greg k-h
