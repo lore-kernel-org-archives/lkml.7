@@ -2,101 +2,92 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D69CC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF47C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72044204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C357204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556548282;
+	bh=iLPez6aL8Qyb4FMaCswXFWPVTnFlnE/oSNnuMiusZB4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LyMdD1lBG0qfUbg4rq31iTcmLzkBBHvUGDg0nC2iwiLNKsHuZvlpiz1WABqZ7SP86
+	 Bk26qkkb4fd7DFISEP76D5u3b7oqUzt878cMIvuPp804lwfxMp1Fx2Ce5PdItnvyB+
+	 U/KAtAqb3h28DeWXDDRgtNg6zwj+RlKIhoP/gQbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfD2Oaq (ORCPT
+        id S1728376AbfD2ObV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:30:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51344 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728240AbfD2Oap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:30:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3579EAF1F;
-        Mon, 29 Apr 2019 14:30:44 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 16:30:37 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Yue Haibing <yuehaibing@huawei.com>, sergey.senozhatsky@gmail.com,
-        andriy.shevchenko@linux.intel.com, geert+renesas@glider.be,
-        me@tobin.cc, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH -next] lib/vsprintf: Make function pointer_string static
-Message-ID: <20190429143037.3qu5fzdo6g26rsmf@pathway.suse.cz>
-References: <20190426164630.22104-1-yuehaibing@huawei.com>
- <20190426130204.23a5a05c@gandalf.local.home>
- <20190429110801.awvdxawpee3sxujs@pathway.suse.cz>
- <20190429091320.019e726b@gandalf.local.home>
+        Mon, 29 Apr 2019 10:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728240AbfD2ObU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:31:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 870AC204EC;
+        Mon, 29 Apr 2019 14:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556548280;
+        bh=iLPez6aL8Qyb4FMaCswXFWPVTnFlnE/oSNnuMiusZB4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X4bMJc7ag8MpYvn57/m2S5y0Q8O5lsawtizPxZkUSNyCiLkF0MmPFrZp55p3Q301B
+         XXqYsCi7QTvlWXkWGC40bJfEnUzT/mXJZF75f4vTMXFwVOV4oXNomKan/9NVFAHEae
+         TJZN07cELsPpKYxpHNxPCy1IT+thHuIo15VCdDcU=
+Date:   Mon, 29 Apr 2019 16:31:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hao Lee <haolee.swjtu@gmail.com>
+Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tty: serial: 8250: Fix type field in format string
+Message-ID: <20190429143117.GA1474@kroah.com>
+References: <20190427091943.GA3810@haolee.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190429091320.019e726b@gandalf.local.home>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190427091943.GA3810@haolee.io>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-04-29 09:13:20, Steven Rostedt wrote:
-> On Mon, 29 Apr 2019 13:08:01 +0200
-> Petr Mladek <pmladek@suse.com> wrote:
+On Sat, Apr 27, 2019 at 05:19:43PM +0800, Hao Lee wrote:
+> The dev_dbg statement should print the value of uart.port.mapbase instead
+> of its address. Besides that, uart.port.irq and uart.port.iotype are all
+> unsigned types, so using %u is more appropriate.
 > 
-> > > Looks like commit "vsprintf: Do not check address of well-known
-> > > strings" removed the: "static noinline_for_stack"
-> > > 
-> > > Does pointer_string() need that still?  
-> > 
-> > Heh, it was removed by mistake and well hidden in the diff.
-> > 
-> > I have pushed Yue's fix into printk.git, branch
-> > for-5.2-vsprintf-hardening
-> > 
-> > Thanks for the patch.
+> Signed-off-by: Hao Lee <haolee.swjtu@gmail.com>
+> ---
+>  drivers/tty/serial/8250/8250_pnp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> But doesn't it still need the "noinline_for_stack", that doesn't look
-> like it changed.
+> diff --git a/drivers/tty/serial/8250/8250_pnp.c b/drivers/tty/serial/8250/8250_pnp.c
+> index 431e69a5a6a0..9dea11baf479 100644
+> --- a/drivers/tty/serial/8250/8250_pnp.c
+> +++ b/drivers/tty/serial/8250/8250_pnp.c
+> @@ -462,8 +462,8 @@ serial_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
+>  		return -ENODEV;
+>  
+>  	dev_dbg(&dev->dev,
+> -		 "Setup PNP port: port %lx, mem %pa, irq %d, type %d\n",
+> -		 uart.port.iobase, &uart.port.mapbase,
+> +		 "Setup PNP port: port %#lx, mem %#lx, irq %u, type %u\n",
+> +		 uart.port.iobase, uart.port.mapbase,
+>  		 uart.port.irq, uart.port.iotype);
+>  
+>  	if (flags & CIR_PORT) {
+> -- 
+> 2.14.5
 
-Good question. I have just double checked it. And pointer_string() with
-"noinline_for_stack" does not make any difference in the stack
-usage here.
+This causes build warnings when applied, I'm having to drop it now.
 
+Please be more careful, when submitting patches, always test-build them
+first.
 
-I actually played with this before:
-
-"noinline_for_stack" is a black magic added by
-the commit cf3b429b03e827c7180 ("vsprintf.c: use noinline_for_stack").
-
-It is evidently useful in some cases. But I somehow doubt
-that it really makes things better when used everywhere.
-Therefore I have got a bit relaxed and omitted it in most
-newly added functions that did not affect the results.
-
-They are the same before and after the patchset:
-
-pmladek@pathway:/prace/kernel/linux-printk> objdump -d lib/vsprintf.o | perl scripts/checkstack.pl
-0x00000e12 symbol_string [vsprintf.o]:                  248
-0x00000e6d symbol_string [vsprintf.o]:                  248
-0x000012fb ip6_addr_string_sa [vsprintf.o]:             112
-0x00001415 ip6_addr_string_sa [vsprintf.o]:             112
-0x000028c6 resource_string.isra.9 [vsprintf.o]:         104
-0x00002964 resource_string.isra.9 [vsprintf.o]:         104
-
-
-Would you like to fix this clearly, for example, rebase and
-put both "static noinline_for_stack" back or add yet
-another commit or?
-
-IMHO, it is not too important. Anyway, I am open for any
-advice. I do not want to create more mess.
-
-Best Regards,
-Petr
+greg k-h
