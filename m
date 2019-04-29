@@ -2,137 +2,137 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135E4C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DD8C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDBE20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 08:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0791720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:00:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QHusFS31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfD2IyW (ORCPT
+        id S1727639AbfD2JA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 04:54:22 -0400
-Received: from foss.arm.com ([217.140.101.70]:50684 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfD2IyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 04:54:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5561B80D;
-        Mon, 29 Apr 2019 01:54:21 -0700 (PDT)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 734CF3F71A;
-        Mon, 29 Apr 2019 01:54:19 -0700 (PDT)
-Subject: Re: [PATCH v2 33/36] coresight: acpi: Support for components
-To:     rjw@rjwysocki.net
-Cc:     mathieu.poirier@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        mike.leach@linaro.org, robert.walker@arm.com
-References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
- <1555344260-12375-34-git-send-email-suzuki.poulose@arm.com>
- <20190425174553.GB4080@xps15>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <876c6e2c-0a6a-1814-c9ad-1e81d16b0cb0@arm.com>
-Date:   Mon, 29 Apr 2019 09:54:17 +0100
+        Mon, 29 Apr 2019 05:00:26 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39180 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727525AbfD2JA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 05:00:26 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3T903GW088945;
+        Mon, 29 Apr 2019 04:00:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556528404;
+        bh=6AoMSEP6k0dB31rGEgSMYkvxlMJV2xJSnrQQRDzjTkg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QHusFS31q57Y1idKXPWuRPB3aAlPnoJ6+bqdgRkwp9l0rv6O9c4jqBlV85q7HRDyj
+         vLWYrI7/yaTELtP7ZOi2HzAuXGXfn1Ki5cNYEvDS7aRbtXPMR4w8Y6R1Sxx1ntWnGV
+         kGZzxdL54oGX44+iLcSQnOh0+5qIeqd8Cqz4t8/k=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3T903xl065793
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 29 Apr 2019 04:00:03 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 29
+ Apr 2019 04:00:03 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 29 Apr 2019 04:00:03 -0500
+Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3T8xwEq020597;
+        Mon, 29 Apr 2019 03:59:59 -0500
+Subject: Re: [PATCH v7 11/14] irqchip: ti-sci-inta: Add support for Interrupt
+ Aggregator driver
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>
+CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>,
+        <linus.walleij@linaro.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>
+References: <20190420100950.7997-1-lokeshvutla@ti.com>
+ <20190420100950.7997-12-lokeshvutla@ti.com>
+ <bb768bc0-e18b-3794-8083-1612da10b0c1@ti.com>
+ <79b34c45-023b-2df4-26f4-e151e74a46ac@arm.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <7d012633-e540-df8f-7c21-07702447cb8a@ti.com>
+Date:   Mon, 29 Apr 2019 14:29:33 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190425174553.GB4080@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <79b34c45-023b-2df4-26f4-e151e74a46ac@arm.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rafael,
 
-On 25/04/2019 18:45, Mathieu Poirier wrote:
-> On Mon, Apr 15, 2019 at 05:04:16PM +0100, Suzuki K Poulose wrote:
->> All AMBA devices are handled via ACPI AMBA scan notifier
->> infrastructure. The platform devices get the ACPI id
->> added to their driver.
+
+On 29/04/19 2:17 PM, Marc Zyngier wrote:
+> On 23/04/2019 11:00, Lokesh Vutla wrote:
+>> Hi Marc,
+> 
+> [...]
+> 
+>>> +/**
+>>> + * ti_sci_inta_set_type() - Update the trigger type of the irq.
+>>> + * @data:	Pointer to corresponding irq_data
+>>> + * @type:	Trigger type as specified by user
+>>> + *
+>>> + * Note: This updates the handle_irq callback for level msi.
+>>> + *
+>>> + * Return 0 if all went well else appropriate error.
+>>> + */
+>>> +static int ti_sci_inta_set_type(struct irq_data *data, unsigned int type)
+>>> +{
+>>> +	struct irq_desc *desc = irq_to_desc(data->irq);
+>>> +
+>>> +	/*
+>>> +	 * .alloc default sets handle_edge_irq. But if the user specifies
+>>> +	 * that IRQ is level MSI, then update the handle to handle_level_irq
+>>> +	 */
+>>> +	if (type & IRQF_TRIGGER_HIGH)
+>>> +		desc->handle_irq = handle_level_irq;
+>>> +
+>>> +	return 0;
 >>
->> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   drivers/acpi/acpi_amba.c                           | 9 +++++++++
->>   drivers/hwtracing/coresight/coresight-replicator.c | 9 ++++++++-
->>   2 files changed, 17 insertions(+), 1 deletion(-)
 >>
->> diff --git a/drivers/acpi/acpi_amba.c b/drivers/acpi/acpi_amba.c
->> index 7f77c07..eef5a69 100644
->> --- a/drivers/acpi/acpi_amba.c
->> +++ b/drivers/acpi/acpi_amba.c
->> @@ -24,6 +24,15 @@
->>   
->>   static const struct acpi_device_id amba_id_list[] = {
->>   	{"ARMH0061", 0}, /* PL061 GPIO Device */
->> +	{"ARMHC500", 0}, /* ARM CoreSight ETM4x */
->> +	{"ARMHC501", 0}, /* ARM CoreSight ETR */
->> +	{"ARMHC502", 0}, /* ARM CoreSight STM */
->> +	{"ARMHC503", 0}, /* ARM CoreSight Debug */
->> +	{"ARMHC979", 0}, /* ARM CoreSight TPIU */
->> +	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
->> +	{"ARMHC98D", 0}, /* ARM CoreSight Dynamic Replicator */
->> +	{"ARMHC9CA", 0}, /* ARM CoreSight CATU */
->> +	{"ARMHC9FF", 0}, /* ARM CoreSight Funnel */
->>   	{"", 0},
->>   };
->>   
->> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
->> index 2eb489c..a8f42df 100644
->> --- a/drivers/hwtracing/coresight/coresight-replicator.c
->> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
->> @@ -5,6 +5,7 @@
->>    * Description: CoreSight Replicator driver
->>    */
->>   
->> +#include <linux/acpi.h>
->>   #include <linux/amba/bus.h>
->>   #include <linux/kernel.h>
->>   #include <linux/device.h>
->> @@ -290,11 +291,17 @@ static const struct of_device_id static_replicator_match[] = {
->>   	{}
->>   };
->>   
->> +#ifdef CONFIG_ACPI
->> +static const struct acpi_device_id static_replicator_acpi_ids[] = {
->> +	{"ARMHC985", 0}, /* ARM CoreSight Static Replicator */
->> +};
->> +#endif
->>   static struct platform_driver static_replicator_driver = {
->>   	.probe          = static_replicator_probe,
->>   	.driver         = {
->>   		.name   = "coresight-replicator",
->> -		.of_match_table = static_replicator_match,
->> +		.of_match_table = of_match_ptr(static_replicator_match),
->> +		.acpi_match_table = ACPI_PTR(static_replicator_acpi_ids),
->>   		.pm	= &replicator_dev_pm_ops,
->>   		.suppress_bind_attrs = true,
->>   	},
+>> Returning error value is causing request_irq to fail, so still returning 0. Do
+>> you suggest any other method to handle this?
 > 
-> For the coresight part: Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> But that is the very point, isn't it? If you pass the wrong triggering
+> type to request_irq, it *must* fail. What you should have is something like:
 > 
-> You probably want to split this patch in half so that Rafael can pick up the
-> the first part of it in his tree.
+> switch (type & IRQ_TYPE_SENSE_MASK) {
+> case IRQF_TRIGGER_HIGH:
+> 	desc->handle_irq = handle_level_irq;
+> 	return 0;
+> case IRQ_TYPE_EDGE_RISING:
+> 	return 0;
+> default:
+> 	return -EINVAL;
+> }
 > 
+> (adjust as necessary).
+> 
+> What's wrong with this?
 
+I get it. Will fix it in next version. I also got the firmware update as well.
+If you are okay with rest of the series, I want to post the next version with
+the firmware update.
 
-We have the CoreSight components span over AMBA and platform devices. This
-series is almost getting ready, so for the next revision I would like to
-get your view on how to split this particular patch.
-
-We have components in AMBA and Platform devices. Would you prefer to split
-the patch and pull the ACPI_AMBA changes above in to your tree ? Or are
-you happy with Mathieu pushing this change together with the other ACPI
-bindings support in the CoreSight drivers ?
-
-FWIW, we should still be fine if we split and the patches reach at different
-times. Please let me know your thoughts.
-
-Suzuki
+Thanks and regards,
+Lokesh
