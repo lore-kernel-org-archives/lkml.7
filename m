@@ -2,105 +2,191 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7829CC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3A7C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB47F20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:20:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBvSV/Sr"
+	by mail.kernel.org (Postfix) with ESMTP id 381D92063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfD2PUC (ORCPT
+        id S1728661AbfD2PUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:20:02 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40332 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728302AbfD2PUC (ORCPT
+        Mon, 29 Apr 2019 11:20:10 -0400
+Received: from albert.telenet-ops.be ([195.130.137.90]:57804 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728636AbfD2PUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:20:02 -0400
-Received: by mail-ed1-f67.google.com with SMTP id e56so3190384ede.7;
-        Mon, 29 Apr 2019 08:20:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=dPnq76BudBLUCskM0DaeuuctlwoGzT39qQr2q1xJdTg=;
-        b=BBvSV/SrDNJ31+/UOkSM5bpG5QGX9iuVEAlHSpvrDOGj+4PW80QrSA2NQvvNYxzojp
-         Zd++WkJIJdsJI48+0P5HrqTBvNXDC1r245KbMoADl3uY5vH+mVrnUi6+8qjpF2ydE+tq
-         TwF1hj4480FhhbTHgn4M/QznEs6p0sHaHA9yrWx15VQqD4rerfkEYjhIuk1lUIvL8NJx
-         M8wE73xeYfkcTLVAM5oCB5RVNjauTgvl4PjUAhsoMUZ5oTPhnvZ5wvz6bSMifDGNwT/e
-         KSK9tYNcpfIF8GPBuVeJpf2B9oLlA2ItKshISp7tatkcaGkzhTIiD3dveMl7nJ6B+iIV
-         zmmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:references:date
-         :in-reply-to:message-id:user-agent:mime-version;
-        bh=dPnq76BudBLUCskM0DaeuuctlwoGzT39qQr2q1xJdTg=;
-        b=W9s1t/OgV8qqBHvXotuEhe3Mhiwgpg6UMb3tlgDwdL7vTbfT1IIsA8F/0zGK7S5a17
-         fS6q7av8lzSl6yU2Jxju9wOisr8eM5BTihFR86/+hE+d9V8Qnx27Sn1JRCPMYDaoi8M3
-         nNMoM5Xx8EMeLOghY2QX1ly1XTuS14trK8M7b+wsoPQ/bBuSjaJEcapV6EdYuv7O6Nyn
-         5wEw4hhAtE2c+rZYaSWkrvQHt49M1AO+Xr6n9LoIdzFSiu+zHkcHSaNp6zVnZm8o+aD/
-         4XRMEWtw8/+cmjbPqsP6m1o776u3kJQfOabTge5T7UwrLkwz4fwPidRXVz8e0QQ9c+vh
-         BFAg==
-X-Gm-Message-State: APjAAAUfR1FaZgE9tCuK2LQjYH9E/Js7R4wAnV4/ThnKNrmvofTXIN+8
-        lw3oL/YYSNUvlIzDIMUlvTM=
-X-Google-Smtp-Source: APXvYqwQbi0omP7jYdcby2odHruq4pxaQ7sP2Qij52VODZOog6lth6WIRzjEKd0jUTWzRbOuB+nVlQ==
-X-Received: by 2002:a17:906:2482:: with SMTP id e2mr12684688ejb.289.1556551199464;
-        Mon, 29 Apr 2019 08:19:59 -0700 (PDT)
-Received: from dell.be.48ers.dk (d51A5BC31.access.telenet.be. [81.165.188.49])
-        by smtp.gmail.com with ESMTPSA id p18sm5851269ejm.4.2019.04.29.08.19.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 08:19:58 -0700 (PDT)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.89)
-        (envelope-from <peter@korsgaard.com>)
-        id 1hL84T-0000dV-Kj; Mon, 29 Apr 2019 17:19:57 +0200
-From:   Peter Korsgaard <peter@korsgaard.com>
-To:     "Enrico Weigelt\, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        linux-ia64@vger.kernel.org, linux-serial@vger.kernel.org,
-        andrew@aj.id.au, gregkh@linuxfoundation.org, sudeep.holla@arm.com,
-        liviu.dudau@arm.com, linux-mips@vger.kernel.org, vz@mleia.com,
-        linux@prisktech.co.nz, sparclinux@vger.kernel.org,
-        khilman@baylibre.com, macro@linux-mips.org,
-        slemieux.tyco@gmail.com, matthias.bgg@gmail.com, jacmet@sunsite.dk,
-        linux-amlogic@lists.infradead.org,
-        andriy.shevchenko@linux.intel.com, linuxppc-dev@lists.ozlabs.org,
-        davem@davemloft.net
-Subject: Re: [PATCH 13/41] drivers: tty: serial: uartlite: fill mapsize and use it
-References: <1556369542-13247-1-git-send-email-info@metux.net>
-        <1556369542-13247-14-git-send-email-info@metux.net>
-Date:   Mon, 29 Apr 2019 17:19:57 +0200
-In-Reply-To: <1556369542-13247-14-git-send-email-info@metux.net> (Enrico
-        Weigelt's message of "Sat, 27 Apr 2019 14:51:54 +0200")
-Message-ID: <87muk8rg82.fsf@dell.be.48ers.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 29 Apr 2019 11:20:09 -0400
+Received: from ramsan ([84.194.111.163])
+        by albert.telenet-ops.be with bizsmtp
+        id 6FL72000v3XaVaC06FL7ki; Mon, 29 Apr 2019 17:20:08 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hL84d-0002Y2-Qp; Mon, 29 Apr 2019 17:20:07 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hL84d-0005tU-PT; Mon, 29 Apr 2019 17:20:07 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 5/5] irqchip/renesas-irqc: Convert to managed initializations
+Date:   Mon, 29 Apr 2019 17:20:06 +0200
+Message-Id: <20190429152006.22593-6-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190429152006.22593-1-geert+renesas@glider.be>
+References: <20190429152006.22593-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>>> "Enrico" == Enrico Weigelt, metux IT consult <info@metux.net> writes:
+Simplify error handling by converting the driver to use managed
+allocations and initializations.
 
- > Fill the struct uart_port->mapsize field and use it, insteaf of
+Note that platform_get_resource() and ioremap_nocache() are combined in
+devm_platform_ioremap_resource().
 
-s/insteaf/instead/
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/irqchip/irq-renesas-irqc.c | 54 +++++++++---------------------
+ 1 file changed, 15 insertions(+), 39 deletions(-)
 
- > hardcoded values in many places. This makes the code layout a bit
- > more consistent and easily allows using generic helpers for the
- > io memory handling.
-
- > Candidates for such helpers could be eg. the request+ioremap and
- > iounmap+release combinations.
-
- > Signed-off-by: Enrico Weigelt <info@metux.net>
-
-Acked-by: Peter Korsgaard <peter@korsgaard.com>
-
+diff --git a/drivers/irqchip/irq-renesas-irqc.c b/drivers/irqchip/irq-renesas-irqc.c
+index af03ee31a87bb11d..cde9f9c0687e94a4 100644
+--- a/drivers/irqchip/irq-renesas-irqc.c
++++ b/drivers/irqchip/irq-renesas-irqc.c
+@@ -126,16 +126,13 @@ static int irqc_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	const char *name = dev_name(dev);
+ 	struct irqc_priv *p;
+-	struct resource *io;
+ 	struct resource *irq;
+ 	int ret;
+ 	int k;
+ 
+-	p = kzalloc(sizeof(*p), GFP_KERNEL);
+-	if (!p) {
+-		ret = -ENOMEM;
+-		goto err0;
+-	}
++	p = devm_kzalloc(dev, sizeof(*p), GFP_KERNEL);
++	if (!p)
++		return -ENOMEM;
+ 
+ 	p->dev = dev;
+ 	platform_set_drvdata(pdev, p);
+@@ -143,14 +140,6 @@ static int irqc_probe(struct platform_device *pdev)
+ 	pm_runtime_enable(dev);
+ 	pm_runtime_get_sync(dev);
+ 
+-	/* get hold of manadatory IOMEM */
+-	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!io) {
+-		dev_err(dev, "not enough IOMEM resources\n");
+-		ret = -EINVAL;
+-		goto err1;
+-	}
+-
+ 	/* allow any number of IRQs between 1 and IRQC_IRQ_MAX */
+ 	for (k = 0; k < IRQC_IRQ_MAX; k++) {
+ 		irq = platform_get_resource(pdev, IORESOURCE_IRQ, k);
+@@ -166,14 +155,14 @@ static int irqc_probe(struct platform_device *pdev)
+ 	if (p->number_of_irqs < 1) {
+ 		dev_err(dev, "not enough IRQ resources\n");
+ 		ret = -EINVAL;
+-		goto err1;
++		goto err_runtime_pm_disable;
+ 	}
+ 
+ 	/* ioremap IOMEM and setup read/write callbacks */
+-	p->iomem = ioremap_nocache(io->start, resource_size(io));
+-	if (!p->iomem) {
+-		ret = -ENXIO;
+-		goto err2;
++	p->iomem = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(p->iomem)) {
++		ret = PTR_ERR(p->iomem);
++		goto err_runtime_pm_disable;
+ 	}
+ 
+ 	p->cpu_int_base = p->iomem + IRQC_INT_CPU_BASE(0); /* SYS-SPI */
+@@ -183,7 +172,7 @@ static int irqc_probe(struct platform_device *pdev)
+ 	if (!p->irq_domain) {
+ 		ret = -ENXIO;
+ 		dev_err(dev, "cannot initialize irq domain\n");
+-		goto err2;
++		goto err_runtime_pm_disable;
+ 	}
+ 
+ 	ret = irq_alloc_domain_generic_chips(p->irq_domain, p->number_of_irqs,
+@@ -191,7 +180,7 @@ static int irqc_probe(struct platform_device *pdev)
+ 					     0, 0, IRQ_GC_INIT_NESTED_LOCK);
+ 	if (ret) {
+ 		dev_err(dev, "cannot allocate generic chip\n");
+-		goto err3;
++		goto err_remove_domain;
+ 	}
+ 
+ 	p->gc = irq_get_domain_generic_chip(p->irq_domain, 0);
+@@ -206,46 +195,33 @@ static int irqc_probe(struct platform_device *pdev)
+ 
+ 	/* request interrupts one by one */
+ 	for (k = 0; k < p->number_of_irqs; k++) {
+-		if (request_irq(p->irq[k].requested_irq, irqc_irq_handler,
+-				0, name, &p->irq[k])) {
++		if (devm_request_irq(dev, p->irq[k].requested_irq,
++				     irqc_irq_handler, 0, name, &p->irq[k])) {
+ 			dev_err(dev, "failed to request IRQ\n");
+ 			ret = -ENOENT;
+-			goto err4;
++			goto err_remove_domain;
+ 		}
+ 	}
+ 
+ 	dev_info(dev, "driving %d irqs\n", p->number_of_irqs);
+ 
+ 	return 0;
+-err4:
+-	while (--k >= 0)
+-		free_irq(p->irq[k].requested_irq, &p->irq[k]);
+ 
+-err3:
++err_remove_domain:
+ 	irq_domain_remove(p->irq_domain);
+-err2:
+-	iounmap(p->iomem);
+-err1:
++err_runtime_pm_disable:
+ 	pm_runtime_put(dev);
+ 	pm_runtime_disable(dev);
+-	kfree(p);
+-err0:
+ 	return ret;
+ }
+ 
+ static int irqc_remove(struct platform_device *pdev)
+ {
+ 	struct irqc_priv *p = platform_get_drvdata(pdev);
+-	int k;
+-
+-	for (k = 0; k < p->number_of_irqs; k++)
+-		free_irq(p->irq[k].requested_irq, &p->irq[k]);
+ 
+ 	irq_domain_remove(p->irq_domain);
+-	iounmap(p->iomem);
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+-	kfree(p);
+ 	return 0;
+ }
+ 
 -- 
-Bye, Peter Korsgaard
+2.17.1
+
