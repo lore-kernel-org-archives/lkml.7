@@ -2,107 +2,129 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CB8C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F155C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4EA2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qwffatbE"
+	by mail.kernel.org (Postfix) with ESMTP id 2D29C21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 22:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556576039;
+	bh=KQu1qlF+5iyFhmjTZy0KFmFihaE+EF733HlbDNrwKrM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DhzkSDbQsNvVmA8abxmGP+QLzCnt7cgMNyxeQvA9MPIReyIgNIfizdOLNoyYVIYzI
+	 ZzU4X7LY75hwjGB2eQYwx4EsFsbrCHmC8FPmxXQISaL95iPAIsWwAdjEA8+pyA99KD
+	 yoXVLeK+hbFO0e8bFP0xyjA1+EwFT0zFhq+n+OfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbfD2WNw (ORCPT
+        id S1729620AbfD2WN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 18:13:52 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58499 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbfD2WNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 18:13:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44tJpN53Lzz9sB8;
-        Tue, 30 Apr 2019 08:13:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556576029;
-        bh=JohJsfj3PTYRmS+9/9zJbwJfmi37M2byawEZFQG5jl8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qwffatbEmBWPEs/zpyHBqXltw9cJNRgM5G1kUgtzMIxvW91zRrwBZKwF2Rl12fgEd
-         nu+yAg0BmycrcIZwE5RQwovT6rso6S27IZWskV+VDMXvSJHY1azOcgq++s91Kl8363
-         K+1rgtM9wuAKs/mQmLhcSUpyRLEOJEiWtpXDpT4vs+V4edFcrE1+uhYg5NsnF0Q7uQ
-         +zFwIimeSYyE2b3uV724DdZyFYdHpJIw8gJ6aB78On20df7RA/rEHdDvIQeLzCiI4a
-         YCj6eD9RgOECaulb7fTIHFiC+H9KxVtovqCWvftdh4ekeW5QroClBzfgPZVZMwrr8L
-         w+kYaNKtcdzXw==
-Date:   Tue, 30 Apr 2019 08:13:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: linux-next: manual merge of the rdma-fixes tree with Linus' tree
-Message-ID: <20190430081346.3196b60f@canb.auug.org.au>
+        Mon, 29 Apr 2019 18:13:57 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33995 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729418AbfD2WN4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 18:13:56 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v10so9690823oib.1;
+        Mon, 29 Apr 2019 15:13:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m4+1WtfCWcUUeWzzaEWxRWw2TZvNITlNmy6F8RQ/rdw=;
+        b=KXZyjTZ52r4ijyvmLBB9YxMNoxRodB1tMbFAl2xSR6Rmawc2UhIaiyVNn3h/yy0+eG
+         AyQ7hbLDqaTaui8mIdw2gMCulUzTRcge4bOVUiPJzO+RXuqRBUGB46993s3g6Uk7FcRN
+         BffSvqjPd+Rv5WhUFUFkZblTJPDZ1M6XdwMYkEZdmMlTeKsVMEFqAQUae5XQG85JenS0
+         E7qTcw+4CuB0cftWrtJMp4hnXpGVxJQocIRPFpwV7+qPGDdeaAZ6XW7LialdZ76d67cL
+         VS418nwi+v01OIKTmqqTlVbjbaUhld0GYPblSCOXXBZL1KzGAbKCwDQ7F5iKiuJj+jso
+         SZ3w==
+X-Gm-Message-State: APjAAAVqvDN3PybuGaz9qybxDhKeItCcALx3lUbsqU5daNF14eS0Swvo
+        ixbTx6TELJUX4F0Mvp/KKxrlFso=
+X-Google-Smtp-Source: APXvYqyHtudepiGHnk8jmspB8YE7X7Z8AuRjDoRWm2vUgAeBzx34BJxAuulUTEO+NLO70TVzjbC5Xw==
+X-Received: by 2002:aca:cf8e:: with SMTP id f136mr891742oig.118.1556576035146;
+        Mon, 29 Apr 2019 15:13:55 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n185sm12090613oif.8.2019.04.29.15.13.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 15:13:54 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 17:13:53 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, krzk@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
+        lee.jones@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: power: supply: Max17040: Add low
+ level SOC alert threshold
+Message-ID: <20190429221353.GA25837@bogus>
+References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+ <20190415012635.6369-1-matheus@castello.eng.br>
+ <20190415012635.6369-3-matheus@castello.eng.br>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/aGqEJja6r4eSE9GIBbFg4sy"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415012635.6369-3-matheus@castello.eng.br>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/aGqEJja6r4eSE9GIBbFg4sy
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Apr 14, 2019 at 10:26:33PM -0300, Matheus Castello wrote:
+> For configure low level state of charge threshold alert signaled from
+> max17040 we add "maxim,alert-soc-level" property.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  .../power/supply/max17040_battery.txt         | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> new file mode 100644
+> index 000000000000..9b2cc67d556f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> @@ -0,0 +1,24 @@
+> +max17040_battery
+> +~~~~~~~~~~~~~~~~
+> +
+> +Required properties :
+> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
 
-Hi all,
+This is really a charger, not a battery.
 
-Today's linux-next merge of the rdma-fixes tree got a conflict in:
+> +
+> +Optional properties :
+> +- maxim,alert-soc-level :	The alert threshold that sets the state of
+> + 				charge level where an interrupt is generated.
+> +                          	Can be configured from 1 up to 32. If skipped
+> +				the power up default value of 4 will be used.
 
-  drivers/infiniband/core/uverbs_main.c
+Units? This is a low or high alert? Does a common property make sense 
+here?
 
-between commit:
+> +- interrupt-parent : 		The GPIO bank from the interrupt line.
 
-  6a5c5d26c4c6 ("rdma: fix build errors on s390 and MIPS due to bad ZERO_PA=
-GE use")
+Drop this. interrupt-parent is implied.
 
-from Linus' tree and commit:
+> +- interrupts : 			Interrupt line see Documentation/devicetree/
+> +				bindings/interrupt-controller/interrupts.txt
+> +
+> +Example:
+> +
+> +	battery-charger@36 {
+> +		compatible = "maxim,max17040";
+> +		reg = <0x36>;
+> +		maxim,alert-soc-level = <10>;
+> +		interrupt-parent = <&gpio7>;
+> +		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
 
-  d79a26b99f5f ("RDMA/uverbs: Fix compilation error on s390 and mips platfo=
-rms")
+Usually there are battery properties that need to be described too...
 
-from the rdma-fixes tree.
-
-I fixed it up (I just used the version from Linus' tree) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/aGqEJja6r4eSE9GIBbFg4sy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzHdxoACgkQAVBC80lX
-0GwG3Af/a5q4L1kD5ptbcU8ulRUg1b6T7gFVsjTSYvloLMDOMxABY+duRjRaipTe
-FQl2rELZkLkt/7wXWv5NtRJgaBTLQ4Q+zV8liInIsypEOCjK5VWenuPzwxw3bJQ8
-WsqEObsNpBKTFJeqxSrgELc/mxHP4sn6Mt/c6silZ0FPodzCl4JSEFwWSm7HNzK/
-4SHP672W926uo4woPwUq1oRxmQnk0LHEMyPxJZ48wV/Z3U0F4vGYMfvQeJfYtCrW
-fPidonA254Mfg9TxwdOej3h9OZpu+yr7GRXJwfo1gvLn7ggtU4xQD83Cr41rclwf
-5FzB5nJ0z1DHrrwaJZfNk7eN4pGH8g==
-=oXyz
------END PGP SIGNATURE-----
-
---Sig_/aGqEJja6r4eSE9GIBbFg4sy--
+> +	};
+> -- 
+> 2.17.0
+> 
