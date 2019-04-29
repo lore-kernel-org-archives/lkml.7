@@ -2,106 +2,96 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF02BC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A2FC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DB92166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFB920656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfD2JAl (ORCPT
+        id S1727710AbfD2JAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 05:00:41 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:30235 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727525AbfD2JAl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 05:00:41 -0400
-X-IronPort-AV: E=Sophos;i="5.60,409,1549954800"; 
-   d="scan'208";a="30867583"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 29 Apr 2019 02:00:40 -0700
-Received: from localhost (10.10.76.4) by chn-sv-exch02.mchp-main.com
- (10.10.76.38) with Microsoft SMTP Server id 14.3.352.0; Mon, 29 Apr 2019
- 02:00:39 -0700
-Date:   Mon, 29 Apr 2019 11:00:05 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Raag Jadav <raagjadav@gmail.com>
-CC:     <linux-i2c@vger.kernel.org>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: at91: handle TXRDY interrupt spam
-Message-ID: <20190429090005.f6ydghzu5n5yruav@M43218.corp.atmel.com>
-Mail-Followup-To: Raag Jadav <raagjadav@gmail.com>,
-        linux-i2c@vger.kernel.org, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <1556005008-6318-1-git-send-email-raagjadav@gmail.com>
+        Mon, 29 Apr 2019 05:00:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47878 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727525AbfD2JAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 05:00:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E6CA5AD3A;
+        Mon, 29 Apr 2019 09:00:40 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 83A30E0117; Mon, 29 Apr 2019 11:00:40 +0200 (CEST)
+Date:   Mon, 29 Apr 2019 11:00:40 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
+Message-ID: <20190429090040.GB21672@unicorn.suse.cz>
+References: <20190428115207.GA11924@ziepe.ca>
+ <20190429060947.GB3665@osiris>
+ <20190429084030.GA4275@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556005008-6318-1-git-send-email-raagjadav@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190429084030.GA4275@mellanox.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Raag,
-
-On Tue, Apr 23, 2019 at 01:06:48PM +0530, Raag Jadav wrote:
-> External E-Mail
+On Mon, Apr 29, 2019 at 08:40:37AM +0000, Jason Gunthorpe wrote:
+> On Mon, Apr 29, 2019 at 08:09:47AM +0200, Heiko Carstens wrote:
+> > On Sun, Apr 28, 2019 at 11:52:12AM +0000, Jason Gunthorpe wrote:
+> > > Hi Linus,
+> > > 
+> > > Third rc pull request
+> > > 
+> > > Nothing particularly special here. There is a small merge conflict
+> > > with Adrea's mm_still_valid patches which is resolved as below:
+> > ...
+> > > Jason Gunthorpe (3):
+> > >       RDMA/mlx5: Do not allow the user to write to the clock page
+> > >       RDMA/mlx5: Use rdma_user_map_io for mapping BAR pages
+> > >       RDMA/ucontext: Fix regression with disassociate
+> > 
+> > This doesn't compile. The patch below would fix it, but not sure if
+> > this is what is intended:
+> > 
+> > drivers/infiniband/core/uverbs_main.c: In function 'rdma_umap_fault':
+> > drivers/infiniband/core/uverbs_main.c:898:28: error: 'struct vm_fault' has no member named 'vm_start'
+> >    vmf->page = ZERO_PAGE(vmf->vm_start);
+> >                             ^~
+> > diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
+> > index 7843e89235c3..65fe89b3fa2d 100644
+> > +++ b/drivers/infiniband/core/uverbs_main.c
+> > @@ -895,7 +895,7 @@ static vm_fault_t rdma_umap_fault(struct vm_fault *vmf)
+> >  
+> >  	/* Read only pages can just use the system zero page. */
+> >  	if (!(vmf->vma->vm_flags & (VM_WRITE | VM_MAYWRITE))) {
+> > -		vmf->page = ZERO_PAGE(vmf->vm_start);
+> > +		vmf->page = ZERO_PAGE(vmf->vma->vm_start);
+> >  		get_page(vmf->page);
+> >  		return 0;
+> >  	}
+> > 
 > 
+> Thanks Heiko, this looks right to me. 
 > 
-> Performing i2c write operation while SDA or SCL line is held
-> or grounded by slave device, we go into infinite at91_twi_write_next_byte
-> loop with TXRDY interrupt spam.
+> I'm surprised to be seeing this at this point, these patches should
+> have been seen by 0 day for several days now, and they were in
+> linux-next already too..
 
-Sorry but I am not sure to have the full picture, the controller is in
-slave or master mode?
+Most architectures have versions of ZERO_PAGE() which ignore the
+argument so that the code builds anyway. I'm not sure if 0-day also
+tests s390x builds (which is where I ran into this).
 
-SVREAD is only used in slave mode. When SVREAD is set, it means that a read
-access is performed and your issue concerns the write operation.
-
-Regards
-
-Ludovic
-
-> 
-> Signed-off-by: Raag Jadav <raagjadav@gmail.com>
-> ---
->  drivers/i2c/busses/i2c-at91.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-at91.c
-> index 3f3e8b3..b2f5fdb 100644
-> --- a/drivers/i2c/busses/i2c-at91.c
-> +++ b/drivers/i2c/busses/i2c-at91.c
-> @@ -72,6 +72,7 @@
->  #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
->  #define	AT91_TWI_RXRDY		BIT(1)	/* Receive Holding Register Ready */
->  #define	AT91_TWI_TXRDY		BIT(2)	/* Transmit Holding Register Ready */
-> +#define	AT91_TWI_SVREAD		BIT(3)	/* Slave Read */
->  #define	AT91_TWI_OVRE		BIT(6)	/* Overrun Error */
->  #define	AT91_TWI_UNRE		BIT(7)	/* Underrun Error */
->  #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
-> @@ -571,7 +572,10 @@ static irqreturn_t atmel_twi_interrupt(int irq, void *dev_id)
->  		at91_disable_twi_interrupts(dev);
->  		complete(&dev->cmd_complete);
->  	} else if (irqstatus & AT91_TWI_TXRDY) {
-> -		at91_twi_write_next_byte(dev);
-> +		if ((status & AT91_TWI_SVREAD) && (dev->buf_len == 0))
-> +			at91_twi_write(dev, AT91_TWI_IDR, AT91_TWI_TXRDY);
-> +		else
-> +			at91_twi_write_next_byte(dev);
->  	}
->  
->  	/* catch error flags */
-> -- 
-> 2.7.4
-> 
-> 
+Michal Kubecek
