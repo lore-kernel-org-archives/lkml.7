@@ -2,145 +2,109 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E703C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C57C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2AC2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556556235;
-	bh=FTkncIZbvmo+q4fzVAyRGdQAopbIMIOz0iSDBCOQ89k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xggECIgW343Hot/79mfBRMr84cVT+riO0lz4vE1SOQv0HycFuxW/wOWGkrObk9z93
-	 +SlKcqw5OMkYxCqwpLVsGAjkCHmcBevd71QySkvO0LHHD2PMzuUMcqezx4Rg1z+b6U
-	 06cP/Tn7cATpOQYfpT+rUmP739zTzXW9WnNHQPKw=
+	by mail.kernel.org (Postfix) with ESMTP id E41E42075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:43:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="GYJJoS4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbfD2Qny (ORCPT
+        id S1728836AbfD2Qn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:43:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728520AbfD2Qny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:43:54 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ACBE216F4;
-        Mon, 29 Apr 2019 16:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556556230;
-        bh=FTkncIZbvmo+q4fzVAyRGdQAopbIMIOz0iSDBCOQ89k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HGhohh5inSlyBklzyp/DveWB/sMf95ISDdNnu83TfGnaRqTQxMFq64xwEEYzUtKp/
-         pAfk1XO+OIhlMrBS3cqFZqo89HnrVjRmZHuk8OwKqtRCB9kD0MdLgfQDIwDg05exCN
-         IqIoEBUEknO8co16OeNZ5XWgmCJcEeiCAciSXIag=
-Received: by mail-qt1-f174.google.com with SMTP id p20so12667595qtc.9;
-        Mon, 29 Apr 2019 09:43:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAX+tr/hEdkGF6xc1rbhkCkTsEJqC75g8u0mCYxN0Y+KaaPEFpYe
-        enFj8Z5YlPamG9GuiUemlqC30LenV3ggWODcoA==
-X-Google-Smtp-Source: APXvYqzxGpqPUApkLr4tQOYZ40b33qqDT7vQFegDDDM/wN2fR4nE3DrASAaTlh9eyLchuOxZXj9xKQh4FvsDV4q+jYI=
-X-Received: by 2002:a0c:9066:: with SMTP id o93mr10205357qvo.246.1556556229764;
- Mon, 29 Apr 2019 09:43:49 -0700 (PDT)
+        Mon, 29 Apr 2019 12:43:58 -0400
+Received: from mail-eopbgr690061.outbound.protection.outlook.com ([40.107.69.61]:16899
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728520AbfD2Qn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:43:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TYyWNcu7FCggw4Uv8bWgg9K/2sSIp4hmI7hYXCtC/oQ=;
+ b=GYJJoS4IoQIuhvXAMFkWjr33iHetlcX0PL6OiO2T6oPdp1pbwQ2AiuCW/eoaOrDZP0BVn83IL9NkpabdubTr7gEUb8BOoIQNuNWwGMEUA/porm+nAyL3rSj1Ig72Jkpo6+jJ96d9kiLymQyWNiZmH9UzPbT8rDTVHmx/HoMYZII=
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.116.31) by
+ DM6PR12MB2619.namprd12.prod.outlook.com (20.176.116.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.13; Mon, 29 Apr 2019 16:43:53 +0000
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::9183:846f:a93e:9a43]) by DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::9183:846f:a93e:9a43%5]) with mapi id 15.20.1835.016; Mon, 29 Apr 2019
+ 16:43:53 +0000
+From:   "Singh, Brijesh" <brijesh.singh@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v1 01/10] KVM: SVM: Add KVM_SEV SEND_START command
+Thread-Topic: [RFC PATCH v1 01/10] KVM: SVM: Add KVM_SEV SEND_START command
+Thread-Index: AQHU+rgqsjyUQYD5ekOPbYup8IOCm6ZOfjkAgAAFPwCAAGh9gIAEA5iAgABuRgCAAAIvgA==
+Date:   Mon, 29 Apr 2019 16:43:53 +0000
+Message-ID: <9d330734-02cf-9d21-e26f-56fe9d16fa03@amd.com>
+References: <20190424160942.13567-1-brijesh.singh@amd.com>
+ <20190424160942.13567-2-brijesh.singh@amd.com>
+ <20190426141042.GF4608@zn.tnic>
+ <e6f8da38-b8dd-a9c5-a358-5f33b6ea7b37@amd.com>
+ <20190426204327.GM4608@zn.tnic>
+ <2b63d983-a622-3bec-e6ac-abfd024e19c0@amd.com>
+ <20190429163602.GE2324@zn.tnic>
+In-Reply-To: <20190429163602.GE2324@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0501CA0117.namprd05.prod.outlook.com
+ (2603:10b6:803:42::34) To DM6PR12MB2682.namprd12.prod.outlook.com
+ (2603:10b6:5:4a::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7bd3823a-da8c-41b6-5580-08d6ccc1dd59
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2619;
+x-ms-traffictypediagnostic: DM6PR12MB2619:
+x-microsoft-antispam-prvs: <DM6PR12MB261911E3119BC80F557977B2E5390@DM6PR12MB2619.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-forefront-prvs: 0022134A87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(366004)(136003)(376002)(346002)(189003)(199004)(102836004)(68736007)(53936002)(26005)(31686004)(6512007)(2906002)(8676002)(81166006)(186003)(81156014)(4326008)(36756003)(25786009)(53546011)(14454004)(6506007)(6246003)(8936002)(7736002)(54906003)(2616005)(446003)(386003)(11346002)(316002)(476003)(66066001)(305945005)(99286004)(478600001)(76176011)(229853002)(6916009)(52116002)(6486002)(66476007)(6436002)(66556008)(486006)(66946007)(7416002)(6116002)(558084003)(97736004)(14444005)(256004)(31696002)(66446008)(73956011)(3846002)(71200400001)(93886005)(71190400001)(86362001)(5660300002)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2619;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: lWnzl1C+vEhEIaX/9nXFaDmdYF06yuhz2+BT05ysgtekrkyuk5xt3/hfBeFmjKyCwMtX6dNVt22DgEqBB2TUo7R/C2qKZiuRZ0WbZ9io5TfuJIWP+PJpld/RJQ/xMIH8M+hkOHYVFvNCkkhlRpOdEeg6PlSu96T2J+Gajwotr59uXJ/IONFx+jRHVulc7sr3l0wJ2GnpGq/UtYvyJQ2+W8yx0bler+U7bE6M94o4CLNYS8QMB9aQx9X2o6U4NNNZyF5yn8EOYyeOroQsZ5ApqMcGgs/SPICSgD79zKmbJJd6uhOF/QE3wuPvshCn8QXOp6h1NddND19hqDQsCioG1PGpPrs29ZS9GZW7HjcTONy0+dzLRkw+xT8SfDXSW/UD8mAp2aZF/m6XEE7czdTwUEq2xQmsrnjid/lR/6LF8TM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <47D67942F49E49489E04543939504C08@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190419141947eucas1p13a27605e04169ab528ef5bfb385eddbc@eucas1p1.samsung.com>
- <1555683568-20882-7-git-send-email-l.luba@partner.samsung.com>
- <20190425195750.GA26031@bogus> <e4613d6e-0893-8163-32ef-8137c40d2b24@partner.samsung.com>
-In-Reply-To: <e4613d6e-0893-8163-32ef-8137c40d2b24@partner.samsung.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 29 Apr 2019 11:43:38 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+bJtjO8xbpnCRHmcyCB=b8DMr73GWKEz+xMXVZag0FrQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+bJtjO8xbpnCRHmcyCB=b8DMr73GWKEz+xMXVZag0FrQ@mail.gmail.com>
-Subject: Re: [PATCH v6 06/10] dt-bindings: memory-controllers: add Exynos5422
- DMC device description
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>, willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7bd3823a-da8c-41b6-5580-08d6ccc1dd59
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 16:43:53.8070
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2619
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 7:14 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Hi Rob,
->
-> On 4/25/19 9:57 PM, Rob Herring wrote:
-> > On Fri, Apr 19, 2019 at 04:19:24PM +0200, Lukasz Luba wrote:
-> >> The patch adds description for DT binding for a new Exynos5422 Dynamic
-> >> Memory Controller device.
-> >>
-> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> >> ---
-> >>   .../bindings/memory-controllers/exynos5422-dmc.txt | 73 ++++++++++++++++++++++
-> >>   1 file changed, 73 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> >> new file mode 100644
-> >> index 0000000..133b3cc
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> >> @@ -0,0 +1,73 @@
-> >> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
-> >> +
-> >> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
-> >> +memory chips are connected. The driver is to monitor the controller in runtime
-> >> +and switch frequency and voltage. To monitor the usage of the controller in
-> >> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
-> >> +is able to measure the current load of the memory.
-> >> +When 'userspace' governor is used for the driver, an application is able to
-> >> +switch the DMC and memory frequency.
-> >> +
-> >> +Required properties for DMC device for Exynos5422:
-> >> +- compatible: Should be "samsung,exynos5422-bus".
-> >> +- clock-names : the name of clock used by the bus, "bus".
-> >> +- clocks : phandles for clock specified in "clock-names" property.
-> >> +- devfreq-events : phandles for PPMU devices connected to this DMC.
-> >> +- vdd-supply : phandle for voltage regulator which is connected.
-> >> +- reg : registers of two CDREX controllers, chip information, clocks subsystem.
-> >> +- operating-points-v2 : phandle for OPPs described in v2 definition.
-> >> +- device-handle : phandle of the connected DRAM memory device. For more
-> >> +    information please refer to Documentation
-> >
-> > The memory node(s) should be a child of the memory controller IMO.
-> I have followed the TI code for LPDDR2. They use 'device-handle'
-> probably because the memory controller can be moved into the common
-> .dtsi and taken by reference in .dts in a proper board file.
-
-You'd still have to have the ctrlr node in the board file to add the
-'device-handle' property.
-
-> The board .dts files might specify different DRAM chips and timings.
-> In Exynos case we will also have such situation: one memory controller
-> and a few different DRAM chips.
-
-You mean as in the case where there are multiple options and one chip
-gets populated on the board? So 'device-handle' is selecting which
-chip to use.
-
-You can actually do both here. Keep 'device-handle' to select which
-DRAM chip and have the chips as child nodes. But if you really don't
-want to have them as child nodes, that's fine.
-
-Rob
+DQoNCk9uIDQvMjkvMTkgMTE6MzYgQU0sIEJvcmlzbGF2IFBldGtvdiB3cm90ZToNCj4gU28gd2hh
+dCBhYm91dCB0aGlzPyBMaW1pdGluZyB0byBhIHNhbmUgbGVuZ3RoLi4uDQoNClN1cmUsIHdlIGhh
+dmUgZGVmaW5lZCBhIFNFVl9GV19CTE9CX01BWF9TSVpFIGFuZCBjYW4gdXNlIGl0IHRvIGxpbWl0
+DQp0aGUgYmxvYiBjb3B5IHNpemUuIEkgd2lsbCBkbyB0aGlzIGluIG5leHQgcmV2LiB0aGFua3MN
+Cg0KLUJyaWplc2gNCg==
