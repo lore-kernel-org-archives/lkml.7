@@ -2,153 +2,137 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6817C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A97BC04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8888E2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1EC2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556553666;
+	bh=TE1ewElB1YwLMGITzAatJEBshCwXkGp6DoQ8Uy+WE4w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HrmxcoGBA3bdmL9gqyGmZ6DKqoOe6UYsH76VTfxoIyczTfm9r85S1+Gvm/E0QdpLD
+	 GHy1lOg1r7m2eRTCwa+MvEYgUxt7af6hT9zCrplP5V7EYgi8pAH6B2i3wRILltNHPD
+	 lqj2n3xMCLcvLgoWZEpEBoZO7Tg/fMENEdyENQ48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbfD2QAa (ORCPT
+        id S1728789AbfD2QBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:00:30 -0400
-Received: from foss.arm.com ([217.140.101.70]:32994 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728522AbfD2QA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:00:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A22E31993;
-        Mon, 29 Apr 2019 09:00:27 -0700 (PDT)
-Received: from e112298-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7998B3F5C1;
-        Mon, 29 Apr 2019 09:00:25 -0700 (PDT)
-From:   Julien Thierry <julien.thierry@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        marc.zyngier@arm.com, yuzenghui@huawei.com,
-        wanghaibin.wang@huawei.com, james.morse@arm.com,
-        will.deacon@arm.com, catalin.marinas@arm.com, mark.rutland@arm.com,
-        liwei391@huawei.com, Julien Thierry <julien.thierry@arm.com>
-Subject: [PATCH v2 5/5] arm64: fix kernel stack overflow in kdump capture kernel
-Date:   Mon, 29 Apr 2019 17:00:07 +0100
-Message-Id: <1556553607-46531-6-git-send-email-julien.thierry@arm.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556553607-46531-1-git-send-email-julien.thierry@arm.com>
-References: <1556553607-46531-1-git-send-email-julien.thierry@arm.com>
+        Mon, 29 Apr 2019 12:01:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37490 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728506AbfD2QBE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:01:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y5so15648868wma.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 09:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=47R6Zpibyfoy78svmdHN6byC39LAOhbREp9Vq7W8ApM=;
+        b=J6WZI/9oZi6DDKY6ako6bYIe0Ho2qjghdiWqUvyAS7l+nRMiKRoF8QwS9JlolG6510
+         Q5N5HRulN4x7f8dcPpZl33KYtvLvbzdGSd/3dbgaGUcRzgXw5L1Qf7mUIcJtFZ1+oUSn
+         mdW4XoBbzNwcx8pEvJffS3J5si1MuSH4OKvngUBtaFM166ubF70+375GsLojZWBCfWOr
+         nhX4md1G6bbEC5WxHgTjR9Gj1ivGp+iSHr17nK9iayfFdLrWFtXsF7za9jkRiyTBvEEL
+         +eEjbLwRWQtIMo9uBWDgYiZJrJc9ucIY6foS1IKhzEC/Nsl9ZeuUqKdeE6zweMUf5/47
+         IT5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=47R6Zpibyfoy78svmdHN6byC39LAOhbREp9Vq7W8ApM=;
+        b=Zzt0/9snqvb3x9E3AxCZMnIYLLkIY6v1cwWasJfwbKRw0VyYHADYJcAOY5ulGcp1JE
+         UAfkJk68sGgccVSsP+A/jaWRrRNf0T31+fY65+QWkcydCHN7gR/sc98mS9NEUsMxyUuB
+         /Ye9DMzqcS9xVgCUcjQi/MTxdnGwPmckJlSysdFsew8VabMWdk09mnK/ILDWYSNQqc4o
+         WzCye0wWCycI+6v10JjdQjhg70zMqnH7CQ49OBCdsh1By4SLU0C+DzsuLwlNu7L18C/b
+         ALzXk3ODijXgjSzUUOFJO47EuxdsUvX2JfpIw+PfbWjOOU/7Pj5a+xo5fbRpS2+mRrfu
+         CXRw==
+X-Gm-Message-State: APjAAAXm6/u4OsiJL5roJMXnBmF+kkoG2x652b6kROYdHhDbU6O5lPUt
+        YFfWNbkSuhr6U6c3kXgcJAg=
+X-Google-Smtp-Source: APXvYqzcpnQflanBpal3y5NxmBtr/1fTly+OrRIG47nJowVPZPtGq8IlWtBEAgYrnNE/BQwVzQb2xQ==
+X-Received: by 2002:a1c:f901:: with SMTP id x1mr541889wmh.136.1556553662023;
+        Mon, 29 Apr 2019 09:01:02 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id t74sm237110wmt.3.2019.04.29.09.01.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Apr 2019 09:01:01 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 18:00:58 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190429160058.GA82935@gmail.com>
+References: <20190427091716.GC99668@gmail.com>
+ <CAERHkruEAVBsh6FphMKqgR2+HjsVVegxjnpOFRNfbrfZDNpc9w@mail.gmail.com>
+ <20190427142137.GA72051@gmail.com>
+ <CAERHkrtaU=Y-Lxypu_7uBbe-mJtG-3friz=ZLhV53X4FXHcEyA@mail.gmail.com>
+ <20190428093304.GA7393@gmail.com>
+ <CAERHkrvaSSR1wRECF1AcLOhpmCAH0ecvFEL5MOFjK05F0xSuzA@mail.gmail.com>
+ <20190428121721.GA121434@gmail.com>
+ <db7c3e51-d013-b3d9-7bce-c247aa2e7144@linux.intel.com>
+ <20190429061422.GA20939@gmail.com>
+ <24bca399-5370-c4b5-725f-979db06bfc29@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24bca399-5370-c4b5-725f-979db06bfc29@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
 
-When enabling ARM64_PSEUDO_NMI feature in kdump capture kernel, it will
-report a kernel stack overflow exception:
+* Li, Aubrey <aubrey.li@linux.intel.com> wrote:
 
-[    0.000000] CPU features: detected: IRQ priority masking
-[    0.000000] alternatives: patching kernel code
-[    0.000000] Insufficient stack space to handle exception!
-[    0.000000] ESR: 0x96000044 -- DABT (current EL)
-[    0.000000] FAR: 0x0000000000000040
-[    0.000000] Task stack:     [0xffff0000097f0000..0xffff0000097f4000]
-[    0.000000] IRQ stack:      [0x0000000000000000..0x0000000000004000]
-[    0.000000] Overflow stack: [0xffff80002b7cf290..0xffff80002b7d0290]
-[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.34-lw+ #3
-[    0.000000] pstate: 400003c5 (nZcv DAIF -PAN -UAO)
-[    0.000000] pc : el1_sync+0x0/0xb8
-[    0.000000] lr : el1_irq+0xb8/0x140
-[    0.000000] sp : 0000000000000040
-[    0.000000] pmr_save: 00000070
-[    0.000000] x29: ffff0000097f3f60 x28: ffff000009806240
-[    0.000000] x27: 0000000080000000 x26: 0000000000004000
-[    0.000000] x25: 0000000000000000 x24: ffff000009329028
-[    0.000000] x23: 0000000040000005 x22: ffff000008095c6c
-[    0.000000] x21: ffff0000097f3f70 x20: 0000000000000070
-[    0.000000] x19: ffff0000097f3e30 x18: ffffffffffffffff
-[    0.000000] x17: 0000000000000000 x16: 0000000000000000
-[    0.000000] x15: ffff0000097f9708 x14: ffff000089a382ef
-[    0.000000] x13: ffff000009a382fd x12: ffff000009824000
-[    0.000000] x11: ffff0000097fb7b0 x10: ffff000008730028
-[    0.000000] x9 : ffff000009440018 x8 : 000000000000000d
-[    0.000000] x7 : 6b20676e69686374 x6 : 000000000000003b
-[    0.000000] x5 : 0000000000000000 x4 : ffff000008093600
-[    0.000000] x3 : 0000000400000008 x2 : 7db2e689fc2b8e00
-[    0.000000] x1 : 0000000000000000 x0 : ffff0000097f3e30
-[    0.000000] Kernel panic - not syncing: kernel stack overflow
-[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.34-lw+ #3
-[    0.000000] Call trace:
-[    0.000000]  dump_backtrace+0x0/0x1b8
-[    0.000000]  show_stack+0x24/0x30
-[    0.000000]  dump_stack+0xa8/0xcc
-[    0.000000]  panic+0x134/0x30c
-[    0.000000]  __stack_chk_fail+0x0/0x28
-[    0.000000]  handle_bad_stack+0xfc/0x108
-[    0.000000]  __bad_stack+0x90/0x94
-[    0.000000]  el1_sync+0x0/0xb8
-[    0.000000]  init_gic_priority_masking+0x4c/0x70
-[    0.000000]  smp_prepare_boot_cpu+0x60/0x68
-[    0.000000]  start_kernel+0x1e8/0x53c
-[    0.000000] ---[ end Kernel panic - not syncing: kernel stack overflow ]---
+> > I.e. showing the approximate CPU thread-load figure column would be 
+> > very useful too, where '50%' shows half-loaded, '100%' fully-loaded, 
+> > '200%' over-saturated, etc. - for each row?
+> 
+> See below, hope this helps.
+> .--------------------------------------------------------------------------------------------------------------------------------------.
+> |NA/AVX vanilla-SMT     [std% / sem%]     cpu% |coresched-SMT   [std% / sem%]     +/-     cpu% |  no-SMT [std% / sem%]   +/-      cpu% |
+> |--------------------------------------------------------------------------------------------------------------------------------------|
+> |  1/1        508.5     [ 0.2%/ 0.0%]     2.1% |        504.7   [ 1.1%/ 0.1%]    -0.8%    2.1% |   509.0 [ 0.2%/ 0.0%]   0.1%     4.3% |
+> |  2/2       1000.2     [ 1.4%/ 0.1%]     4.1% |       1004.1   [ 1.6%/ 0.2%]     0.4%    4.1% |   997.6 [ 1.2%/ 0.1%]  -0.3%     8.1% |
+> |  4/4       1912.1     [ 1.0%/ 0.1%]     7.9% |       1904.2   [ 1.1%/ 0.1%]    -0.4%    7.9% |  1914.9 [ 1.3%/ 0.1%]   0.1%    15.1% |
+> |  8/8       3753.5     [ 0.3%/ 0.0%]    14.9% |       3748.2   [ 0.3%/ 0.0%]    -0.1%   14.9% |  3751.3 [ 0.4%/ 0.0%]  -0.1%    30.5% |
+> | 16/16      7139.3     [ 2.4%/ 0.2%]    30.3% |       7137.9   [ 1.8%/ 0.2%]    -0.0%   30.3% |  7049.2 [ 2.4%/ 0.2%]  -1.3%    60.4% |
+> | 32/32     10899.0     [ 4.2%/ 0.4%]    60.3% |      10780.3   [ 4.4%/ 0.4%]    -1.1%   55.9% | 10339.2 [ 9.6%/ 0.9%]  -5.1%    97.7% |
+> | 64/64     15086.1     [11.5%/ 1.2%]    97.7% |      14262.0   [ 8.2%/ 0.8%]    -5.5%   82.0% | 11168.7 [22.2%/ 1.7%] -26.0%   100.0% |
+> |128/128    15371.9     [22.0%/ 2.2%]   100.0% |      14675.8   [14.4%/ 1.4%]    -4.5%   82.8% | 10963.9 [18.5%/ 1.4%] -28.7%   100.0% |
+> |256/256    15990.8     [22.0%/ 2.2%]   100.0% |      12227.9   [10.3%/ 1.0%]   -23.5%   73.2% | 10469.9 [19.6%/ 1.7%] -34.5%   100.0% |
+> '--------------------------------------------------------------------------------------------------------------------------------------'
 
-The reason is init_gic_priority_masking() may unmask PSR.I while the
-irq stacks are not inited yet. Some "NMI" could be raised unfortunately
-and it will just go into this exception.
+Very nice, thank you!
 
-In this patch, we just write the PMR in smp_prepare_boot_cpu(), and delay
-unmasking PSR.I after irq stacks inited in init_IRQ().
+What's interesting is how in the over-saturated case (the last three 
+rows: 128, 256 and 512 total threads) coresched-SMT leaves 20-30% CPU 
+performance on the floor according to the load figures.
 
-Fixes: e79321883842 ("arm64: Switch to PMR masking when starting CPUs")
-Signed-off-by: Wei Li <liwei391@huawei.com>
-[JT: make init_gic_priority_masking() not modify daif, rebase on other
-     priority masking fixes]
-Signed-off-by: Julien Thierry <julien.thierry@arm.com>
----
- arch/arm64/kernel/irq.c | 9 +++++++++
- arch/arm64/kernel/smp.c | 8 +-------
- 2 files changed, 10 insertions(+), 7 deletions(-)
+Is this true idle time (which shows up as 'id' during 'top'), or some 
+load average artifact?
 
-diff --git a/arch/arm64/kernel/irq.c b/arch/arm64/kernel/irq.c
-index fdd9cb2..e8daa7a 100644
---- a/arch/arm64/kernel/irq.c
-+++ b/arch/arm64/kernel/irq.c
-@@ -77,6 +77,15 @@ void __init init_IRQ(void)
- 	irqchip_init();
- 	if (!handle_arch_irq)
- 		panic("No interrupt controller found.");
-+
-+	if (system_uses_irq_prio_masking()) {
-+		/*
-+		 * Now that we have a stack for our IRQ handler, set
-+		 * the PMR/PSR pair to a consistent state.
-+		 */
-+		WARN_ON(read_sysreg(daif) & PSR_A_BIT);
-+		local_daif_restore(DAIF_PROCCTX_NOIRQ);
-+	}
- }
- 
- /*
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 2a6d0dd1..c08a075 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -192,13 +192,7 @@ static void init_gic_priority_masking(void)
- 
- 	WARN_ON(!(cpuflags & PSR_I_BIT));
- 
--	/* We can only unmask PSR.I if we can take aborts */
--	if (!(cpuflags & PSR_A_BIT)) {
--		gic_write_pmr(GIC_PRIO_IRQOFF);
--		write_sysreg(cpuflags & ~PSR_I_BIT, daif);
--	} else {
--		gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_IGNORE_PMR);
--	}
-+	gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_IGNORE_PMR);
- }
- 
- /*
--- 
-1.9.1
-
+	Ingo
