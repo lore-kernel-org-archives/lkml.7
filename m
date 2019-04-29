@@ -2,114 +2,111 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54886C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45819C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F9A2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1136C2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:59:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jDz96Pvq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="G56vm10o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfD2T6j (ORCPT
+        id S1729309AbfD2T7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:58:39 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32774 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfD2T6j (ORCPT
+        Mon, 29 Apr 2019 15:59:12 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:31849 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2T7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:58:39 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k19so5685816pgh.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 12:58:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=+0pEvJHfgnRVL31bGXerHYLPtlqb793XRK9UCWud7Go=;
-        b=jDz96PvqkXsvt2iFVhZf6RMWGPNt1zIabeQePrmGpbuy4I8jzBJxCFWlsmQ/z40mcl
-         tATLM6g6AAQYBGwz6xp9LnxyVOb/35LHbsUaEPBtQeZ5spmamP4Ag68lKwvrcQMzlIYH
-         CUWWa7gTifnDKg6+kwvaKU2ZsIM2LAU02xotc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=+0pEvJHfgnRVL31bGXerHYLPtlqb793XRK9UCWud7Go=;
-        b=LApVEOL5dF4VIWK7JVsJS9a9kInhHFxR/6LF3AqEo+qHVETrVsIkKgRD2lwdgghT7B
-         JgqSIl+WuLehUB0y/xQvCkBGSwPVbslYQOR+Mv4+uiW90L3/zxehMsf59tHL8rIMgoFT
-         Pr4XFRyNuxUv0I2aWaOJJh8lYkcNS26S58W31KxnyFbmYMV1GOOMfFo1AaRoR6naRLr1
-         KbzxqZ4pqKEB+g+Yc+iwgOR7xTTWpvAkBisxpE7p/WMx2KuGS7LeMdsKHegni1iRceUC
-         NUlZZ0v4OtHuey8o/q5DRBLkmB+xAY7drPjJRkXDxDF/XRhwntrX5d5KWh49NR1mfg+R
-         6XnA==
-X-Gm-Message-State: APjAAAUi95HshDlhf8BiJoWTayCsoMGpWypfn55k9XhtnmqEYY8uC9tW
-        QVJ54n6VpD1gLTcX3D4W2kqgig==
-X-Google-Smtp-Source: APXvYqxiIgh5n28OFLjkoA8cDfNSicOV7qyHbwvpCBktMKbOU7Gb05aDaHYrjmrYob5e3IFeNwM73g==
-X-Received: by 2002:a63:f444:: with SMTP id p4mr61384597pgk.32.1556567918686;
-        Mon, 29 Apr 2019 12:58:38 -0700 (PDT)
-Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id t13sm68644501pgo.14.2019.04.29.12.58.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 12:58:37 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 12:58:36 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        James Morris <jamorris@linux.microsoft.com>,
-        syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: [GIT PULL] seccomp fixes for v5.1-rc8
-Message-ID: <20190429195836.GA30688@beast>
+        Mon, 29 Apr 2019 15:59:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1556567952; x=1588103952;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GppUJ721qvDXD5FXETSpJUQwCmaDQ8dPUNFVqKinAfU=;
+  b=G56vm10odKoK0gaJm6BNSkICEQ5l3WJe+vjyeEhTMUc5m+vFTKn/Zz07
+   pyYWNiBaNvWky2XHpgjpzPX+TOtQFQUNyXGs7D/4KpoluFMr4AVmnmbCz
+   OOPJThNILD90zSCNgD51JkSbU+WQbXJAbX9KG31z1C3VFYIu+vWmzflzn
+   rI6GIcNlZqBH8mzW+bzzY0REdfsUP5bEUX3eEQBMI9CXMuq216VqzQlx5
+   7kP2dgZoQyk2aUMnMpsT74JYZzjAvXWJm8YCwLEP5FTQVZ3KRa5ttmOul
+   gdjJ9cN1JFxEudOGLnPxC2nmbsT3dohnruMHMKwRgoVgM1xb8udtZn6Ng
+   g==;
+X-IronPort-AV: E=Sophos;i="5.60,410,1549900800"; 
+   d="scan'208";a="108309663"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Apr 2019 03:58:11 +0800
+IronPort-SDR: Mxqimv4jQPbi+O0E6GAOJpAgo0XPFhgFhVqWlhAD+D/KwLrd+hLfVqesNYLLBTVaYVvUoJ15sM
+ o9rTKDKlcFsSLo97uzBXkc/222hTpbJsMGeffl7sGbks8SIc+F/fINYjIK7vY8Wt5xCh1yyYLP
+ qHHyFZOZZTnHjeNC7Y4zf8zb0o0MmX8u213pClv1CIkjKi+0w/GBR5V2BNMyMVrLxp0QspI9TD
+ D+p0oLpso/xsWtFZ7fFkvW0Y5//2K2tn8P5+Jrf6BXFgOghXdq1qXIrJ3vum8Dxy7bZZe2xWVs
+ A0/WzAVRs1z3kuEn1YN5PNlS
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP; 29 Apr 2019 12:34:34 -0700
+IronPort-SDR: AGlb8C2mLL6BEh346K0F1Ldnycd8TuHmmHBt8swMOSQWKGcUOZ/GtOQDaFFXeORG/zWxkCgHXx
+ nzJQlQIghVNQXnkEjAQOEQUPOjNCVQ5y1SBejZUGuuFp9B0eRtslW/zK8NGGjJDIQpFozyVeOM
+ c1c2kGCUDOUVsq/h9Ge49ygnvU7TmuxYJwZ5n+rJO10fyN3/A7uhaldxaK15ZJIhvGQrq8VGJu
+ nx6P8XoH9tIOdcny39PXJFO6BV+PcDuraWj9yW0XYNUyojx7wUvonwTJv9e1f8aixOeexoZ4Xf
+ +80=
+Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
+  by uls-op-cesaip01.wdc.com with ESMTP; 29 Apr 2019 12:58:10 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anup Patel <anup@brainfault.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Changbin Du <changbin.du@intel.com>,
+        Gary Guo <gary@garyguo.net>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        linux-riscv@lists.infradead.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH v2 0/3] TLB flush counters
+Date:   Mon, 29 Apr 2019 12:57:56 -0700
+Message-Id: <20190429195759.18330-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The RISC-V patch (2/3) is based on Gary's TLB flush patch series
 
-Please pull these seccomp fixes for v5.1-rc8. Syzbot found a use-after-free
-bug in seccomp due to flags that should not be allowed to be used together.
-Tycho fixed this, I updated the self-tests, and the syzkaller PoC has been
-running for several days without triggering KASan (before this fix, it
-would reproduce). These patches have also been in -next for almost a week,
-just to be sure.
+https://patchwork.kernel.org/project/linux-riscv/list/?series=97315
 
-Thanks!
+The x86 kconfig fix patch(1/3) can be applied separately.
 
--Kees
+Changes from v1->v2:
+1. Move the arch specific config option to a common one as it touches
+   generic code.
+2. Introduced another config that architectures can select to enable
+   tlbflush option.
 
-The following changes since commit 8c2ffd9174779014c3fe1f96d9dc3641d9175f00:
+Atish Patra (3):
+x86: Move DEBUG_TLBFLUSH option.
+RISC-V: Enable TLBFLUSH counters for debug kernel.
+RISC-V: Update tlb flush counters
 
-  Linux 5.1-rc2 (2019-03-24 14:02:26 -0700)
+arch/riscv/Kconfig                |  1 +
+arch/riscv/include/asm/tlbflush.h |  5 +++++
+arch/riscv/mm/tlbflush.c          | 12 ++++++++++++
+arch/x86/Kconfig                  |  1 +
+arch/x86/Kconfig.debug            | 19 -------------------
+mm/Kconfig.debug                  | 13 +++++++++++++
+6 files changed, 32 insertions(+), 19 deletions(-)
 
-are available in the Git repository at:
+--
+2.21.0
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/seccomp-v5.1-rc8
-
-for you to fetch changes up to 7a0df7fbc14505e2e2be19ed08654a09e1ed5bf6:
-
-  seccomp: Make NEW_LISTENER and TSYNC flags exclusive (2019-04-25 15:55:58 -0700)
-
-----------------------------------------------------------------
-seccomp use-after-free fix
-
-- Add logic for making some seccomp flags exclusive (Tycho)
-- Update selftests for exclusivity testing (Kees)
-
-----------------------------------------------------------------
-Kees Cook (1):
-      selftests/seccomp: Prepare for exclusive seccomp flags
-
-Tycho Andersen (1):
-      seccomp: Make NEW_LISTENER and TSYNC flags exclusive
-
- kernel/seccomp.c                              | 17 ++++++++++++--
- tools/testing/selftests/seccomp/seccomp_bpf.c | 34 ++++++++++++++++++++-------
- 2 files changed, 40 insertions(+), 11 deletions(-)
-
--- 
-Kees Cook
