@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D92C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADA4C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5265C21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A1521530
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 09:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfD2JRG (ORCPT
+        id S1727958AbfD2JRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 05:17:06 -0400
-Received: from shell.v3.sk ([90.176.6.54]:59238 "EHLO shell.v3.sk"
+        Mon, 29 Apr 2019 05:17:10 -0400
+Received: from shell.v3.sk ([90.176.6.54]:59251 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbfD2JRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 05:17:06 -0400
+        id S1727829AbfD2JRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 05:17:08 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id C7F19103685;
-        Mon, 29 Apr 2019 11:16:58 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id D4CDE103687;
+        Mon, 29 Apr 2019 11:17:00 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id KBELO8rOCpzy; Mon, 29 Apr 2019 11:16:44 +0200 (CEST)
+        with ESMTP id Ho8C2D_M78ZT; Mon, 29 Apr 2019 11:16:47 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id E5BB8103692;
-        Mon, 29 Apr 2019 11:16:42 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 36E7910367F;
+        Mon, 29 Apr 2019 11:16:44 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id s7BXmGS662Aw; Mon, 29 Apr 2019 11:16:40 +0200 (CEST)
+        with ESMTP id 5CgC0gHsT-Au; Mon, 29 Apr 2019 11:16:39 +0200 (CEST)
 Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id A811C10367F;
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 07D0F10367C;
         Mon, 29 Apr 2019 11:16:39 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -47,9 +47,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         jacopo mondi <jacopo@jmondi.org>,
         Sakari Ailus <sakari.ailus@iki.fi>,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v4 03/10] [media] marvell-ccic: don't generate EOF on parallel bus
-Date:   Mon, 29 Apr 2019 11:16:25 +0200
-Message-Id: <20190429091632.2462285-4-lkundrak@v3.sk>
+Subject: [PATCH v4 01/10] media: dt-bindings: marvell,mmp2-ccic: Add Marvell MMP2 camera
+Date:   Mon, 29 Apr 2019 11:16:23 +0200
+Message-Id: <20190429091632.2462285-2-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190429091632.2462285-1-lkundrak@v3.sk>
 References: <20190429091632.2462285-1-lkundrak@v3.sk>
@@ -60,39 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 05fed81625bf ("[media] marvell-ccic: add MIPI support for
-marvell-ccic driver") that claimed to add CSI2 turned on C0_EOF_VSYNC for
-parallel bus without a very good explanation.
+Add Marvell MMP2 camera host interface.
 
-That broke camera on OLPC XO-1.75 which precisely uses a sensor on a
-parallel bus. Revert that chunk.
-
-Tested on an OLPC XO-1.75.
-
-Fixes: 05fed81625bf755cc67c5864cdfd18b69ea828d1
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/media/platform/marvell-ccic/mcam-core.c | 6 ------
- 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/me=
-dia/platform/marvell-ccic/mcam-core.c
-index d97f39bde9bd..d24e5b7a3bc5 100644
---- a/drivers/media/platform/marvell-ccic/mcam-core.c
-+++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-@@ -792,12 +792,6 @@ static void mcam_ctlr_image(struct mcam_camera *cam)
- 	 * Make sure it knows we want to use hsync/vsync.
- 	 */
- 	mcam_reg_write_mask(cam, REG_CTRL0, C0_SIF_HVSYNC, C0_SIFM_MASK);
--	/*
--	 * This field controls the generation of EOF(DVP only)
--	 */
--	if (cam->bus_type !=3D V4L2_MBUS_CSI2_DPHY)
--		mcam_reg_set_bit(cam, REG_CTRL0,
--				C0_EOF_VSYNC | C0_VEDGE_CTRL);
- }
+---
+Changes since v3:
+- Dropped the video-interfaces.txt reference
+- Clarify "clocks", "clock-names" and "clock-output-names" descriptions
+- Refer to other documentation by full path
+
+Changes since v2:
+- Added #clock-cells, clock-names, port
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 =20
-=20
+.../bindings/media/marvell,mmp2-ccic.txt      | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-=
+ccic.txt
+
+diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.tx=
+t b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+new file mode 100644
+index 000000000000..cf7767268c52
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+@@ -0,0 +1,38 @@
++Marvell MMP2 camera host interface
++
++Required properties:
++ - compatible: Should be "marvell,mmp2-ccic".
++ - reg: Register base and size.
++ - interrupts: The interrupt number.
++ - #clock-cells: Nust be 0.
++
++Optional properties:
++ - clocks: Reference to the input clock as specified by
++           Documentation/devicetree/bindings/clock/clock-bindings.txt.
++ - clock-names: Names of the clocks used; "axi" for the AXI bus interfac=
+e,
++                "func" for the peripheral clock and "phy" for the parall=
+el
++                video bus interface.
++ - clock-output-names: Optional clock source for sensors. Shall be "mclk=
+".
++
++Required subnodes:
++ - port: The parallel bus interface port with a single endpoint linked t=
+o
++         the sensor's endpoint as described in
++         Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	camera0: camera@d420a000 {
++		compatible =3D "marvell,mmp2-ccic";
++		reg =3D <0xd420a000 0x800>;
++		interrupts =3D <42>;
++		clocks =3D <&soc_clocks MMP2_CLK_CCIC0>;
++		clock-names =3D "axi";
++		#clock-cells =3D <0>;
++		clock-output-names =3D "mclk";
++
++		port {
++			camera0_0: endpoint {
++				remote-endpoint =3D <&ov7670_0>;
++			};
++		};
++	};
 --=20
 2.21.0
 
