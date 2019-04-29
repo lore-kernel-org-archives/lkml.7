@@ -2,213 +2,239 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC705C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C53C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66085206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556497032;
-	bh=oG6Yu4j/Dt+FoonJfviNsLx4jjegkGBiqnZn0AdmUTE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WDXvB/khbz94BavAUK6qxSvCxkVa6cksMLdlzLJuVrtlmm70HiyakQ61DYQr6zR5t
-	 hnxqJWDcfISxffZSRf0f4myrY9T2Y0aqAn1Z5kF/rZUXawBxbUc+NhOdrOWNTD8KOC
-	 zzX2/gRd1pKoxEYK2rMKWBBjtaozT4MlHUONYsuo=
+	by mail.kernel.org (Postfix) with ESMTP id 3CA9820652
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 00:18:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eugu2JGC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfD2ARL (ORCPT
+        id S1726937AbfD2ASE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Apr 2019 20:17:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726223AbfD2ARL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Apr 2019 20:17:11 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E7F620656;
-        Mon, 29 Apr 2019 00:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556497029;
-        bh=oG6Yu4j/Dt+FoonJfviNsLx4jjegkGBiqnZn0AdmUTE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1zvrhoZQieoigcwC87QQNYfTCrNcvfzgWSdrwQfu2RuYfbLjxt/oyZEf6++27LBz6
-         Me+gqjRshaO/NydGhU3lmYWw2N7PuE97zeOudmiKZReE23OQ607uvPJDtW1XW0scgB
-         zUKqhXT5fTekSE5F71QHTMYV7/Gp/YIx3L+RLn20=
-Date:   Sun, 28 Apr 2019 19:17:08 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     fred@fredlawl.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mika.westerberg@linux.intel.com, lukas@wunner.de,
-        andriy.shevchenko@linux.intel.com, keith.busch@intel.com,
-        mr.nuke.me@gmail.com, liudongdong3@huawei.com, thesven73@gmail.com
-Subject: Re: [PATCH 4/4] PCI/portdrv: Add dev_fmt() to port drivers
-Message-ID: <20190429001708.GM14616@google.com>
-References: <20190427191304.32502-1-fred@fredlawl.com>
- <20190427191304.32502-5-fred@fredlawl.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190427191304.32502-5-fred@fredlawl.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 28 Apr 2019 20:18:04 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53379 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbfD2ASE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Apr 2019 20:18:04 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 26so11574950wmj.3;
+        Sun, 28 Apr 2019 17:18:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2T7noN4367tfx6VYmz3FpjmukFhrGIKbCovTkZB0ID4=;
+        b=eugu2JGCRPnKoFSBtbEeEIgJQ2icGGZiuFiw50Fk03JveH2Dicp3Pg0R2rTbqVGmIM
+         z9wwOAGcESX8joF3SditxnwwnBOuOEkPSU3kMGGXkouKKsTTposaRXIpESrLUJy/jBB8
+         QaCuQYcTQMS3CpeQT/g8x2MWHDd/qReQ5VBPhwXmpw87zv03YFjF6BiaJZG20vbiS/y5
+         9xmcoRi22yjWXY3QHjdarfc7Mk920qGIWOH5VRR67zU6RyZHp9mu4ZsATqOTf5JFLq5S
+         qPlhyxkUXWMMWnrMfrZMy9Tia0wA7auxcPeaeWODIC6/k5upBOxb6Xk1NbYiz+E7ebk8
+         gp5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2T7noN4367tfx6VYmz3FpjmukFhrGIKbCovTkZB0ID4=;
+        b=c7v+quDIQNOsT0tAGaP2+ww2i28S1CJ45lakjoc+8ErNc4aGTWhE2teeHdB2YMXFA9
+         2I22rNrGlZ4K9t6szMDq/UvVFxBw/5pf+UouVkqLV9u9UxD55vbvO/1azzbeLp8R2vRT
+         I/tRLsOUJTi5GuhUq7GkLwyVtQV06h3wh0XEHG4DqkyGgq5HL8yVumQwZbKpLkQKp9sb
+         EaVBVoIQsgpgnGsSQV5vVKsbGBxcJFhJdRB02kshwYo7iKYxHcXOWe+dM2/9deeG5RgZ
+         aE6V0i6IOfe5JudXU3Bsq5YwXP0zLqGgO5xLAYlWmqEifkyxHebHQiKLe4ZyXHHPV63R
+         wvdg==
+X-Gm-Message-State: APjAAAXQH4RlBqI4MBzD+CpMMnBTsMhDPSM+eXZXJhYumGdierbNpnsi
+        8/KWmk29hzlZK7WmAvPm/DI5rhhG9Y4=
+X-Google-Smtp-Source: APXvYqy4tsuedG1pgCpOnOhdzRAidYzNvvPgTX815ee4dKisRdew4lNi7PEGv/g5oL16qwThZdbT2g==
+X-Received: by 2002:a1c:4c1a:: with SMTP id z26mr15794026wmf.73.1556497081854;
+        Sun, 28 Apr 2019 17:18:01 -0700 (PDT)
+Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
+        by smtp.gmail.com with ESMTPSA id h16sm5098030wrb.31.2019.04.28.17.18.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Apr 2019 17:18:01 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH v4 net-next 00/12] NXP SJA1105 DSA driver
+Date:   Mon, 29 Apr 2019 03:16:54 +0300
+Message-Id: <20190429001706.7449-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 02:13:04PM -0500, fred@fredlawl.com wrote:
-> From: Frederick Lawler <fred@fredlawl.com>
-> 
-> Add dev_fmt() to port drivers.
-> 
-> Signed-off-by: Frederick Lawler <fred@fredlawl.com>
-> ---
->  drivers/pci/hotplug/pciehp_core.c  | 3 +++
->  drivers/pci/hotplug/pciehp_ctrl.c  | 2 ++
->  drivers/pci/hotplug/pciehp_hpc.c   | 3 +++
->  drivers/pci/hotplug/pciehp_pci.c   | 2 ++
->  drivers/pci/pcie/aer.c             | 3 +++
->  drivers/pci/pcie/aer_inject.c      | 2 ++
->  drivers/pci/pcie/bw_notification.c | 2 ++
->  drivers/pci/pcie/dpc.c             | 2 ++
->  drivers/pci/pcie/pme.c             | 2 ++
->  9 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-> index 430a47556813..b07d713fd4bd 100644
-> --- a/drivers/pci/hotplug/pciehp_core.c
-> +++ b/drivers/pci/hotplug/pciehp_core.c
-> @@ -17,6 +17,9 @@
->   *   Dely Sy <dely.l.sy@intel.com>"
->   */
->  
-> +#define pr_fmt(fmt) "pciehp: " fmt
-> +#define dev_fmt(fmt) pr_fmt(fmt)
+This patchset adds a DSA driver for the SPI-controlled NXP SJA1105
+switch.  Due to the hardware's unfriendliness, most of its state needs
+to be shadowed in kernel memory by the driver. To support this and keep
+a decent amount of cleanliness in the code, a new generic API for
+converting between CPU-accessible ("unpacked") structures and
+hardware-accessible ("packed") structures is proposed and used.
 
-This should be in the same patch that converts from using the pcie_device
-to the pci_dev.  That way the "pciehp" that came from the pcie_device is
-atomically replaced with the "pciehp" from pr_fmt()/dev_fmt().
+The driver is GPL-2.0 licensed. The source code files which are licensed
+as BSD-3-Clause are hardware support files and derivative of the
+userspace NXP sja1105-tool program, which is BSD-3-Clause licensed.
 
-If you do it in separate patches, there's an intermediate stage where
-there's no prefix at all, and we want to avoid that.
+TODO items:
+* Add support for traffic.
+* Add full support for the P/Q/R/S series. The patches were mostly
+  tested on a first-generation T device.
+* Add timestamping support and PTP clock manipulation.
+* Figure out how the tc-taprio hardware offload that was just proposed
+  by Vinicius can be used to configure the switch's time-aware scheduler.
+* Rework link state callbacks to use phylink once the SGMII port
+  is supported.
 
-BTW, in most cases you can simply do this, which is slightly simpler:
+Changes in v4:
+1. Previous patchset was broken apart, and for the moment the driver is
+   configuring the switch as unmanaged. Support for regular and management
+   traffic, as well as for PTP timestamping, will be submitted once the
+   basic driver is accepted. Some core DSA patches were also broken out
+   of the series, and are a dependency for this series:
+   https://patchwork.ozlabs.org/project/netdev/list/?series=105069
+2. Addressed Jiri Pirko's feedback about too generic function and macro
+   naming.
+3. Re-introduced ETH_P_DSA_8021Q.
 
-  #define dev_fmt pr_fmt
+v3 patchset can be found at:
+https://lkml.org/lkml/2019/4/12/978
 
->  #include <linux/moduleparam.h>
->  #include <linux/kernel.h>
->  #include <linux/slab.h>
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index 345c02b1e8d7..969a9c72f65d 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -13,6 +13,8 @@
->   *
->   */
->  
-> +#define dev_fmt(fmt) "pciehp: " fmt
-> +
->  #include <linux/kernel.h>
->  #include <linux/types.h>
->  #include <linux/pm_runtime.h>
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 28a132a0d9db..f2a3da105f5b 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -12,6 +12,9 @@
->   * Send feedback to <greg@kroah.com>,<kristen.c.accardi@intel.com>
->   */
->  
-> +#define pr_fmt(fmt) "pciehp: " fmt
-> +#define dev_fmt(fmt) pr_fmt(fmt)
-> +
->  #include <linux/kernel.h>
->  #include <linux/types.h>
->  #include <linux/jiffies.h>
-> diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-> index 55967ce567f6..04ccd535aca7 100644
-> --- a/drivers/pci/hotplug/pciehp_pci.c
-> +++ b/drivers/pci/hotplug/pciehp_pci.c
-> @@ -13,6 +13,8 @@
->   *
->   */
->  
-> +#define dev_fmt(fmt) "pciehp: " fmt
-> +
->  #include <linux/kernel.h>
->  #include <linux/types.h>
->  #include <linux/pci.h>
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 224d878a28b4..6fd67285423d 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -12,6 +12,9 @@
->   *    Andrew Patterson <andrew.patterson@hp.com>
->   */
->  
-> +#define pr_fmt(fmt) "AER: " fmt
-> +#define dev_fmt(fmt) pr_fmt(fmt)
-> +
->  #include <linux/cper.h>
->  #include <linux/pci.h>
->  #include <linux/pci-acpi.h>
-> diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-> index 610b617ae600..d4f6d49acd0c 100644
-> --- a/drivers/pci/pcie/aer_inject.c
-> +++ b/drivers/pci/pcie/aer_inject.c
-> @@ -12,6 +12,8 @@
->   *     Huang Ying <ying.huang@intel.com>
->   */
->  
-> +#define dev_fmt(fmt) "AER: " fmt
-> +
->  #include <linux/module.h>
->  #include <linux/init.h>
->  #include <linux/irq.h>
-> diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
-> index d2eae3b7cc0f..a4bb90562cd5 100644
-> --- a/drivers/pci/pcie/bw_notification.c
-> +++ b/drivers/pci/pcie/bw_notification.c
-> @@ -14,6 +14,8 @@
->   * and warns when links become degraded in operation.
->   */
->  
-> +#define dev_fmt(fmt) "BWN: " fmt
-> +
->  #include "../pci.h"
->  #include "portdrv.h"
->  
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 72659286191b..b3c10cdc508a 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -6,6 +6,8 @@
->   * Copyright (C) 2016 Intel Corp.
->   */
->  
-> +#define dev_fmt(fmt) "DPC: " fmt
-> +
->  #include <linux/aer.h>
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
-> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-> index 54d593d10396..d6698423a6d6 100644
-> --- a/drivers/pci/pcie/pme.c
-> +++ b/drivers/pci/pcie/pme.c
-> @@ -7,6 +7,8 @@
->   * Copyright (C) 2009 Rafael J. Wysocki <rjw@sisk.pl>, Novell Inc.
->   */
->  
-> +#define dev_fmt(fmt) "PME: " fmt
-> +
->  #include <linux/pci.h>
->  #include <linux/kernel.h>
->  #include <linux/errno.h>
-> -- 
-> 2.17.1
-> 
+Changes in v3:
+1. Removed the patch for a dedicated Ethertype to use with 802.1Q DSA
+   tagging
+2. Changed the SJA1105 switch tagging protocol sysfs label from
+   "sja1105" to "8021q" to denote to users such as tcpdump that the
+   structure is more generic.
+3. Respun previous patch "net: dsa: Allow drivers to modulate between
+   presence and absence of tagging". Current equivalent patch is called
+   "net: dsa: Allow drivers to filter packets they can decode source
+   port from" and at least allows reception of management traffic during
+   the time when switch tagging is not enabled.
+4. Added DSA-level fixes for the bridge core not unsetting
+   vlan_filtering when ports leave. The global VLAN filtering is treated
+   as a special case. Made the mt7530 driver use this. This patch
+   benefits the SJA1105 because otherwise traffic in standalone mode
+   would no longer work after removing the ports from a vlan_filtering
+   bridge, since the driver and the hardware would be in an inconsistent
+   state.
+5. Restructured the documentation as rst. This depends upon the recently
+   submitted "[PATCH net-next] Documentation: net: dsa: transition to
+   the rst format": https://patchwork.ozlabs.org/patch/1084658/.
+
+v2 patchset can be found at:
+https://www.spinics.net/lists/netdev/msg563454.html
+
+Changes in v2:
+1. Device ID is no longer auto-detected but enforced based on explicit DT
+   compatible string. This helps with stricter checking of DT bindings.
+2. Group all device-specific operations into a sja1105_info structure and
+   avoid using the IS_ET() and IS_PQRS() macros at runtime as much as possible.
+3. Added more verbiage to commit messages and documentation.
+4. Treat the case where RGMII internal delays are requested through DT bindings
+   and return error.
+5. Miscellaneous cosmetic cleanup in sja1105_clocking.c
+6. Not advertising link features that are not supported, such as pause frames
+   and the half duplex modes.
+7. Fixed a mistake in previous patchset where the switch tagging was not
+   actually enabled (lost during a rebase). This brought up another uncaught
+   issue where switching at runtime between tagging and no-tagging was not
+   supported by DSA. Fixed up the mistake in "net: dsa: sja1105: Add support
+   for traffic through standalone ports", and added the new patch "net: dsa:
+   Allow drivers to modulate between presence and absence of tagging" to
+   address the other issue.
+8. Added a workaround for switch resets cutting a frame in the middle of
+   transmission, which would throw off some link partners.
+9. Changed the TPID from ETH_P_EDSA (0xDADA) to a newly introduced one:
+   ETH_P_DSA_8021Q (0xDADB). Uncovered another mistake in the previous patchset
+   with a missing ntohs(), which was not caught because 0xDADA is
+   endian-agnostic.
+10. Made NET_DSA_TAG_8021Q select VLAN_8021Q
+11. Renamed __dsa_port_vlan_add to dsa_port_vid_add and not to
+    dsa_port_vlan_add_trans, as suggested, because the corresponding _del function
+    does not have a transactional phase and the naming is more uniform this way.
+
+v1 patchset can be found at:
+https://www.spinics.net/lists/netdev/msg561589.html
+
+Changes from RFC:
+1. Removed the packing code for the static configuration tables that were
+   not currently used
+2. Removed the code for unpacking a static configuration structure from
+   a memory buffer (not used)
+3. Completely removed the SGMII stubs, since the configuration is not
+   complete anyway.
+4. Moved some code from the SJA1105 introduction commit into the patch
+   that used it.
+5. Made the code for checking global VLAN filtering generic and made b53
+   driver use it.
+6. Made mt7530 driver use the new generic dp->vlan_filtering
+7. Fixed check for stringset in .get_sset_count
+8. Minor cleanup in sja1105_clocking.c
+9. Fixed a confusing typo in DSA
+
+RFC can be found at:
+https://www.mail-archive.com/netdev@vger.kernel.org/msg291717.html
+
+Vladimir Oltean (12):
+  lib: Add support for generic packing operations
+  net: dsa: Introduce driver for NXP SJA1105 5-port L2 switch
+  net: dsa: sja1105: Add support for FDB and MDB management
+  net: dsa: sja1105: Error out if RGMII delays are requested in DT
+  ether: Add dedicated Ethertype for pseudo-802.1Q DSA tagging
+  net: dsa: sja1105: Add support for VLAN operations
+  net: dsa: sja1105: Add support for ethtool port counters
+  net: dsa: sja1105: Add support for configuring address aging time
+  net: dsa: sja1105: Prevent PHY jabbering during switch reset
+  net: dsa: sja1105: Reject unsupported link modes for AN
+  Documentation: net: dsa: Add details about NXP SJA1105 driver
+  dt-bindings: net: dsa: Add documentation for NXP SJA1105 driver
+
+ .../devicetree/bindings/net/dsa/sja1105.txt   |  157 ++
+ Documentation/networking/dsa/index.rst        |    1 +
+ Documentation/networking/dsa/sja1105.rst      |  167 ++
+ Documentation/packing.txt                     |  150 ++
+ MAINTAINERS                                   |   14 +
+ drivers/net/dsa/Kconfig                       |    2 +
+ drivers/net/dsa/Makefile                      |    1 +
+ drivers/net/dsa/sja1105/Kconfig               |   15 +
+ drivers/net/dsa/sja1105/Makefile              |   10 +
+ drivers/net/dsa/sja1105/sja1105.h             |  154 ++
+ drivers/net/dsa/sja1105/sja1105_clocking.c    |  602 +++++++
+ .../net/dsa/sja1105/sja1105_dynamic_config.c  |  533 ++++++
+ .../net/dsa/sja1105/sja1105_dynamic_config.h  |   43 +
+ drivers/net/dsa/sja1105/sja1105_ethtool.c     |  418 +++++
+ drivers/net/dsa/sja1105/sja1105_main.c        | 1459 +++++++++++++++++
+ drivers/net/dsa/sja1105/sja1105_spi.c         |  591 +++++++
+ .../net/dsa/sja1105/sja1105_static_config.c   |  988 +++++++++++
+ .../net/dsa/sja1105/sja1105_static_config.h   |  254 +++
+ include/linux/dsa/sja1105.h                   |   23 +
+ include/linux/packing.h                       |   49 +
+ include/uapi/linux/if_ether.h                 |    1 +
+ lib/Makefile                                  |    2 +-
+ lib/packing.c                                 |  211 +++
+ 23 files changed, 5844 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/sja1105.txt
+ create mode 100644 Documentation/networking/dsa/sja1105.rst
+ create mode 100644 Documentation/packing.txt
+ create mode 100644 drivers/net/dsa/sja1105/Kconfig
+ create mode 100644 drivers/net/dsa/sja1105/Makefile
+ create mode 100644 drivers/net/dsa/sja1105/sja1105.h
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_clocking.c
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_dynamic_config.c
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_dynamic_config.h
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_ethtool.c
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_main.c
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_spi.c
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_static_config.c
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_static_config.h
+ create mode 100644 include/linux/dsa/sja1105.h
+ create mode 100644 include/linux/packing.h
+ create mode 100644 lib/packing.c
+
+-- 
+2.17.1
+
