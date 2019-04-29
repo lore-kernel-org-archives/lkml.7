@@ -2,188 +2,111 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FD4C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EF3C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C957A20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:32:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="PR3flQxh"
+	by mail.kernel.org (Postfix) with ESMTP id E153C2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbfD2Pc3 (ORCPT
+        id S1728533AbfD2Pe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:32:29 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39038 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbfD2Pc2 (ORCPT
+        Mon, 29 Apr 2019 11:34:59 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:22625 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728311AbfD2Pe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:32:28 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a9so16708801wrp.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 08:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:openpgp:autocrypt:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Jm6QDHUao+fmhsEgeeVvgd+wkNrUYKnME477xuih/hc=;
-        b=PR3flQxhNbaAFxKjtv7FejaFDY6VRQ1kij1nO95FfSRPYPeQBy69TFJprPhIjzQzZH
-         dQ/HpqfI3WmNigkA46Wn3RNcxVxRiCND8GViaEzK5JBaceiS/G9lPhX/ZaRd+p1YBzt6
-         50e0CdLWrG5XcEdu+82Q82nHi9WF4/OJl3tFNRmjPP3fvbcc8etq2BhF17xh8d7cbIEa
-         wGXxpatqpW28jQ/UsH3FcsDgMJ8IQCI49FLBf+qjwbDyrcIdiFDIui0TOTpXuF+lzGcz
-         Mu2nBs4E7iEyZInVoIR7ZTGRadFbivpvBsKSTafqF7gZWnX3HSN7MYl9viipyR7oKOd/
-         UiaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:openpgp:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Jm6QDHUao+fmhsEgeeVvgd+wkNrUYKnME477xuih/hc=;
-        b=uTXZe+8AAPsjaNJVrKXReIb3nGo6M0uEE77xWikGmqPMzo+EaDrmfl8qskqCRqFGVW
-         zof41luvS7CS4PVJ9NTiXm21YaW92fCOkQcLXTb0/fIqIWQrxhBJlTjhBLl4aqG8SU0G
-         US9i/nJn3stvU5BmB4t/0VgQf+2bL92XiF9eldLG06QHEeR2tsRunOa2GspUleYDTiJj
-         Dp7nyrLdkKOmJLrBmr3OBtyRRFWRuDKEP+0OTOwDHTuoaVplBj63aLfbaiBJrfdpJbsq
-         qn3WMEMRO6VONTNKey5VL+dR+DKJfevrIFGT9GFRuGs3o8CLiIUzmCJq/A7qQrOGu5Ai
-         4AVw==
-X-Gm-Message-State: APjAAAUy9qhDleZaurbKns5gSQBEOdaSBQhkvEjx17KIu010vY6c0lAM
-        fPX7ngMXxG2a3+/pi5Tib3k6GQ==
-X-Google-Smtp-Source: APXvYqysad4oREcw0QAUigGM16Cg5nBTyW/rr1rQECUTzgHeB4ew+1HRtxprS3wo4qEv4QCDFB03Mw==
-X-Received: by 2002:a5d:69cb:: with SMTP id s11mr10410137wrw.315.1556551946678;
-        Mon, 29 Apr 2019 08:32:26 -0700 (PDT)
-Received: from [172.20.1.250] ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id t18sm839634wrg.19.2019.04.29.08.32.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 08:32:25 -0700 (PDT)
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Sirio Balmelli <sirio@b-ad.ch>, Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        Yonghong Song <yhs@fb.com>,
-        Taeung Song <treeze.taeung@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Martin KaFai Lau <kafai@fb.com>, bpf@vger.kernel.org
-References: <1556549259-16298-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Quentin Monnet <quentin.monnet@netronome.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
- mQINBFnqRlsBEADfkCdH/bkkfjbglpUeGssNbYr/TD4aopXiDZ0dL2EwafFImsGOWmCIIva2
- MofTQHQ0tFbwY3Ir74exzU9X0aUqrtHirQHLkKeMwExgDxJYysYsZGfM5WfW7j8X4aVwYtfs
- AVRXxAOy6/bw1Mccq8ZMTYKhdCgS3BfC7qK+VYC4bhM2AOWxSQWlH5WKQaRbqGOVLyq8Jlxk
- 2FGLThUsPRlXKz4nl+GabKCX6x3rioSuNoHoWdoPDKsRgYGbP9LKRRQy3ZeJha4x+apy8rAM
- jcGHppIrciyfH38+LdV1FVi6sCx8sRKX++ypQc3fa6O7d7mKLr6uy16xS9U7zauLu1FYLy2U
- N/F1c4F+bOlPMndxEzNc/XqMOM9JZu1XLluqbi2C6JWGy0IYfoyirddKpwzEtKIwiDBI08JJ
- Cv4jtTWKeX8pjTmstay0yWbe0sTINPh+iDw+ybMwgXhr4A/jZ1wcKmPCFOpb7U3JYC+ysD6m
- 6+O/eOs21wVag/LnnMuOKHZa2oNsi6Zl0Cs6C7Vve87jtj+3xgeZ8NLvYyWrQhIHRu1tUeuf
- T8qdexDphTguMGJbA8iOrncHXjpxWhMWykIyN4TYrNwnyhqP9UgqRPLwJt5qB1FVfjfAlaPV
- sfsxuOEwvuIt19B/3pAP0nbevNymR3QpMPRl4m3zXCy+KPaSSQARAQABtC1RdWVudGluIE1v
- bm5ldCA8cXVlbnRpbi5tb25uZXRAbmV0cm9ub21lLmNvbT6JAj0EEwEIACcFAlnqRlsCGyMF
- CQlmAYAFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQNvcEyYwwfB7tChAAqFWG30+DG3Sx
- B7lfPaqs47oW98s5tTMprA+0QMqUX2lzHX7xWb5v8qCpuujdiII6RU0ZhwNKh/SMJ7rbYlxK
- qCOw54kMI+IU7UtWCej+Ps3LKyG54L5HkBpbdM8BLJJXZvnMqfNWx9tMISHkd/LwogvCMZrP
- TAFkPf286tZCIz0EtGY/v6YANpEXXrCzboWEiIccXRmbgBF4VK/frSveuS7OHKCu66VVbK7h
- kyTgBsbfyQi7R0Z6w6sgy+boe7E71DmCnBn57py5OocViHEXRgO/SR7uUK3lZZ5zy3+rWpX5
- nCCo0C1qZFxp65TWU6s8Xt0Jq+Fs7Kg/drI7b5/Z+TqJiZVrTfwTflqPRmiuJ8lPd+dvuflY
- JH0ftAWmN3sT7cTYH54+HBIo1vm5UDvKWatTNBmkwPh6d3cZGALZvwL6lo0KQHXZhCVdljdQ
- rwWdE25aCQkhKyaCFFuxr3moFR0KKLQxNykrVTJIRuBS8sCyxvWcZYB8tA5gQ/DqNKBdDrT8
- F9z2QvNE5LGhWDGddEU4nynm2bZXHYVs2uZfbdZpSY31cwVS/Arz13Dq+McMdeqC9J2wVcyL
- DJPLwAg18Dr5bwA8SXgILp0QcYWtdTVPl+0s82h+ckfYPOmkOLMgRmkbtqPhAD95vRD7wMnm
- ilTVmCi6+ND98YblbzL64YG5Ag0EWepGWwEQAM45/7CeXSDAnk5UMXPVqIxF8yCRzVe+UE0R
- QQsdNwBIVdpXvLxkVwmeu1I4aVvNt3Hp2eiZJjVndIzKtVEoyi5nMvgwMVs8ZKCgWuwYwBzU
- Vs9eKABnT0WilzH3gA5t9LuumekaZS7z8IfeBlZkGXEiaugnSAESkytBvHRRlQ8b1qnXha3g
- XtxyEqobKO2+dI0hq0CyUnGXT40Pe2woVPm50qD4HYZKzF5ltkl/PgRNHo4gfGq9D7dW2OlL
- 5I9qp+zNYj1G1e/ytPWuFzYJVT30MvaKwaNdurBiLc9VlWXbp53R95elThbrhEfUqWbAZH7b
- ALWfAotD07AN1msGFCES7Zes2AfAHESI8UhVPfJcwLPlz/Rz7/K6zj5U6WvH6aj4OddQFvN/
- icvzlXna5HljDZ+kRkVtn+9zrTMEmgay8SDtWliyR8i7fvnHTLny5tRnE5lMNPRxO7wBwIWX
- TVCoBnnI62tnFdTDnZ6C3rOxVF6FxUJUAcn+cImb7Vs7M5uv8GufnXNUlsvsNS6kFTO8eOjh
- 4fe5IYLzvX9uHeYkkjCNVeUH5NUsk4NGOhAeCS6gkLRA/3u507UqCPFvVXJYLSjifnr92irt
- 0hXm89Ms5fyYeXppnO3l+UMKLkFUTu6T1BrDbZSiHXQoqrvU9b1mWF0CBM6aAYFGeDdIVe4x
- ABEBAAGJAiUEGAEIAA8FAlnqRlsCGwwFCQlmAYAACgkQNvcEyYwwfB4QwhAAqBTOgI9k8MoM
- gVA9SZj92vYet9gWOVa2Inj/HEjz37tztnywYVKRCRfCTG5VNRv1LOiCP1kIl/+crVHm8g78
- iYc5GgBKj9O9RvDm43NTDrH2uzz3n66SRJhXOHgcvaNE5ViOMABU+/pzlg34L/m4LA8SfwUG
- ducP39DPbF4J0OqpDmmAWNYyHh/aWf/hRBFkyM2VuizN9cOS641jrhTO/HlfTlYjIb4Ccu9Y
- S24xLj3kkhbFVnOUZh8celJ31T9GwCK69DXNwlDZdri4Bh0N8DtRfrhkHj9JRBAun5mdwF4m
- yLTMSs4Jwa7MaIwwb1h3d75Ws7oAmv7y0+RgZXbAk2XN32VM7emkKoPgOx6Q5o8giPRX8mpc
- PiYojrO4B4vaeKAmsmVer/Sb5y9EoD7+D7WygJu2bDrqOm7U7vOQybzZPBLqXYxl/F5vOobC
- 5rQZgudR5bI8uQM0DpYb+Pwk3bMEUZQ4t497aq2vyMLRi483eqT0eG1QBE4O8dFNYdK5XUIz
- oHhplrRgXwPBSOkMMlLKu+FJsmYVFeLAJ81sfmFuTTliRb3Fl2Q27cEr7kNKlsz/t6vLSEN2
- j8x+tWD8x53SEOSn94g2AyJA9Txh2xBhWGuZ9CpBuXjtPrnRSd8xdrw36AL53goTt/NiLHUd
- RHhSHGnKaQ6MfrTge5Q0h5A=
-Subject: Re: [PATCH] bpftool: exclude bash-completion/bpftool from .gitignore
- pattern
-Message-ID: <ec1d2c14-ae27-38c7-9b79-4e323161d6f5@netronome.com>
-Date:   Mon, 29 Apr 2019 16:32:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 11:34:59 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-62-DYiISddmOvuraxlBQcgNxw-1; Mon, 29 Apr 2019 16:34:56 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
+ 29 Apr 2019 16:34:55 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 29 Apr 2019 16:34:55 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Gustavo A. R. Silva'" <gustavo@embeddedor.com>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: RE: [PATCH] usbip: vhci_hcd: Mark expected switch fall-through
+Thread-Topic: [PATCH] usbip: vhci_hcd: Mark expected switch fall-through
+Thread-Index: AQHU/plu2318l/GBi0OLId5OVcMGj6ZTNpSw///1h4CAABKa0A==
+Date:   Mon, 29 Apr 2019 15:34:55 +0000
+Message-ID: <c3b730fde3ab44d1b339187518077bcf@AcuMS.aculab.com>
+References: <20190429143957.GA6725@embeddedor>
+ <1daec8c8929e4d18b2059ab1dfbfdf4a@AcuMS.aculab.com>
+ <287c8504-eafa-ebbb-aa39-babb86fdeb94@embeddedor.com>
+In-Reply-To: <287c8504-eafa-ebbb-aa39-babb86fdeb94@embeddedor.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <1556549259-16298-1-git-send-email-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: DYiISddmOvuraxlBQcgNxw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-04-29 23:47 UTC+0900 ~ Masahiro Yamada <yamada.masahiro@socionext.com>
-> tools/bpf/bpftool/.gitignore has the "bpftool" pattern, which is
-> intended to ignore the following build artifact:
-> 
->   tools/bpf/bpftool/bpftool
-> 
-> However, the .gitignore entry is effective not only for the current
-> directory, but also for any sub-directories.
-> 
-> So, the following file is also considered to be ignored:
-> 
->   tools/bpf/bpftool/bash-completion/bpftool
-> 
-> It is obviously version-controlled, so should be excluded from the
-> .gitignore pattern.
-> 
-> You can fix it by prefixing the pattern with '/', which means it is
-> only effective in the current directory.
-> 
-> I prefixed the other patterns consistently. IMHO, '/' prefixing is
-> safer when you intend to ignore specific files.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-
-Hi,
-
-“Files already tracked by Git are not affected” by the .gitignore (says
-the relevant man page), so bash completion file is not ignored. It would
-be if we were to add the sources to the index of a new Git repo. But
-sure, it does not cost much to make the .gitignore cleaner.
-
-> 
->  tools/bpf/bpftool/.gitignore | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignore
-> index 67167e4..19efcc8 100644
-> --- a/tools/bpf/bpftool/.gitignore
-> +++ b/tools/bpf/bpftool/.gitignore
-> @@ -1,5 +1,5 @@
->  *.d
-> -bpftool
-> -bpftool*.8
-> -bpf-helpers.*
-> -FEATURE-DUMP.bpftool
-> +/bpftool
-> +/bpftool*.8
-> +/bpf-helpers.*
-
-Careful when you add all those slashes, however. "bpftool*.8" and
-"bpf-helpers.*" should match files under Documentation/, so you do NOT
-want to prefix them with just a "/".
-
-Quentin
-
-> +/FEATURE-DUMP.bpftool
-> 
+RnJvbTogR3VzdGF2byBBLiBSLiBTaWx2YQ0KPiBTZW50OiAyOSBBcHJpbCAyMDE5IDE2OjA2DQo+
+IE9uIDQvMjkvMTkgOTo0NCBBTSwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0KPiA+IEZyb206IEd1c3Rh
+dm8gQS4gUi4gU2lsdmENCj4gPj4gU2VudDogMjkgQXByaWwgMjAxOSAxNTo0MA0KPiA+PiBJbiBw
+cmVwYXJhdGlvbiB0byBlbmFibGluZyAtV2ltcGxpY2l0LWZhbGx0aHJvdWdoLCBtYXJrIHN3aXRj
+aA0KPiA+PiBjYXNlcyB3aGVyZSB3ZSBhcmUgZXhwZWN0aW5nIHRvIGZhbGwgdGhyb3VnaC4NCj4g
+PiAuLi4NCj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL3VzYmlwL3ZoY2lfaGNkLmMgYi9k
+cml2ZXJzL3VzYi91c2JpcC92aGNpX2hjZC5jDQo+ID4+IGluZGV4IDY2N2Q5YzBlYzkwNS4uMDAw
+YWI3MjI1NzE3IDEwMDY0NA0KPiA+PiAtLS0gYS9kcml2ZXJzL3VzYi91c2JpcC92aGNpX2hjZC5j
+DQo+ID4+ICsrKyBiL2RyaXZlcnMvdXNiL3VzYmlwL3ZoY2lfaGNkLmMNCj4gPj4gQEAgLTUwOCw2
+ICs1MDgsNyBAQCBzdGF0aWMgaW50IHZoY2lfaHViX2NvbnRyb2woc3RydWN0IHVzYl9oY2QgKmhj
+ZCwgdTE2IHR5cGVSZXEsIHUxNiB3VmFsdWUsDQo+ID4+ICAJCWNhc2UgVVNCX1BPUlRfRkVBVF9V
+MV9USU1FT1VUOg0KPiA+PiAgCQkJdXNiaXBfZGJnX3ZoY2lfcmgoDQo+ID4+ICAJCQkJIiBTZXRQ
+b3J0RmVhdHVyZTogVVNCX1BPUlRfRkVBVF9VMV9USU1FT1VUXG4iKTsNCj4gPj4gKwkJCS8qIEZh
+bGwgdGhyb3VnaCAqLw0KPiA+PiAgCQljYXNlIFVTQl9QT1JUX0ZFQVRfVTJfVElNRU9VVDoNCj4g
+Pj4gIAkJCXVzYmlwX2RiZ192aGNpX3JoKA0KPiA+PiAgCQkJCSIgU2V0UG9ydEZlYXR1cmU6IFVT
+Ql9QT1JUX0ZFQVRfVTJfVElNRU9VVFxuIik7DQo+ID4NCj4gPiBUaGF0IGRvZXNuJ3QgbG9vayBy
+aWdodCwgYm90aCBkZWJ1ZyBtZXNzYWdlcyBzZWVtIHRvIGdldCBwcmludGVkLg0KPiA+DQo+IA0K
+PiBBdCBmaXJzdCBzaWdodCwgSSB0aG91Z2h0IHRoZSBzYW1lIHdheSwgdGhlbiBJIHRvb2sgYSBs
+b29rIGludG8NCj4gY29tbWl0Og0KPiANCj4gMWM5ZGU1YmY0Mjg2MTI0NTg0Mjc5NDNiNzI0YmVh
+NTFhYmRlNTIwYQ0KPiANCj4gYW5kIG5vdGljZWQgdGhhdCB0aGUgb3JpZ2luYWwgZGV2ZWxvcGVy
+IHByb3Blcmx5IGFkZGVkIGZhbGwtdGhyb3VnaA0KPiBjb21tZW50cyBpbiBvdGhlciBwbGFjZXMg
+aW4gdGhlIHNhbWUgc3dpdGNoKCkgY29kZSwgdGhhdCBnYXZlIG1lIHRoZQ0KPiBpbXByZXNzaW9u
+IGhlIGtuZXcgd2hhdCBoZSB3YXMgZG9pbmc7IHRoZW4gSSBub3RpY2VkIHRoZSBmb2xsb3dpbmcN
+Cj4gZXJyb3IgbWVzc2FnZSBpbiBjYXNlIFVTQl9QT1JUX0ZFQVRfVTJfVElNRU9VVDoNCj4gDQo+
+IAlpZiAoaGNkLT5zcGVlZCAhPSBIQ0RfVVNCMykgew0KPiAJCXByX2VycigiVVNCX1BPUlRfRkVB
+VF9VMS8yX1RJTUVPVVQgcmVxIG5vdCAiDQo+IAkJICAgICAgICJzdXBwb3J0ZWQgZm9yIFVTQiAy
+LjAgcm9vdGh1YlxuIik7DQo+IAkJZ290byBlcnJvcjsNCj4gCX0NCj4gDQo+IHRoaXMgZXJyb3Ig
+bWVzc2FnZSBpcyB3aGF0IG1ha2VzIG1lIHRoaW5rIHRoZSBmYWxsLXRocm91Z2ggaXMNCj4gaW50
+ZW50aW9uYWw7IG90aGVyd2lzZSBJIHRoaW5rIGl0IHdvdWxkIGxvb2sgbGlrZSB0aGlzIGluc3Rl
+YWQ6DQo+IA0KPiAJaWYgKGhjZC0+c3BlZWQgIT0gSENEX1VTQjMpIHsNCj4gCQlwcl9lcnIoIlVT
+Ql9QT1JUX0ZFQVRfVTJfVElNRU9VVCByZXEgbm90ICINCj4gCQkgICAgICAgInN1cHBvcnRlZCBm
+b3IgVVNCIDIuMCByb290aHViXG4iKTsNCj4gCQlnb3RvIGVycm9yOw0KPiAJfQ0KDQpHb2QsIHRo
+YXQgY29kZSBpcyB0cnVseSB1Z2x5IDotKA0KDQpJdCBzdGFydHMgb2ZmIGJhZCB3aXRoIGFsbCB0
+aG9zZSAndTE2JyBwYXJhbWV0ZXJzIC0gdGhleSdsbCByZXF1aXJlIGENCm1hc2sgb3BlcmF0aW9u
+IHNvbWV3aGVyZS4NCg0KVGhlbiB3ZSBoYXZlIHRoZSBjbGFzc2ljOg0KCXdJbmRleCA9ICgoX191
+OCkod0luZGV4ICYgMHhmZikpOw0KU29tZSBjb21waWxlcnMgaGF2ZSBiZWVuIGtub3duIHRvIGFu
+ZCB3aXRoIDB4ZmYgdHdpY2UgZm9yIGNvZGUgbGlrZSB0aGF0Lg0KU2luY2UgdGhlIHRhcmdldCBp
+cyB1MTYgdGhlcmUgY291bGQgYmUgYSAzcmQgbWFzayB3aXRoIDB4ZmZmZiBvbiBub24teDg2Lg0K
+DQpJIGxpa2UgdG8gcHV0IGEgYmxhbmsgbGluZSBiZWZvcmUgJ2Nhc2UnIGxpbmVzIC0gdGhlIG9u
+bHkgb25lcyBpbiB0aGF0DQpmdW5jdGlvbiBhcmUgaW4gdGhlIG1pZGRsZSBvZiBuZXN0ZWQgY2Fz
+ZSBibG9ja3MhDQoNCklmIHlvdSBoYXZlIHRvIHJlbHkgb24gdGhlIHVzYmlwX2RiZ192aGNpX3Jo
+KCkgZGVidWcgbGluZXMgeW91J2xsDQp3aXNoIHRoZXkgY29udGFpbmVkIG1vcmUgY29udGV4dCEN
+CnZoY2lfaHViX2NvbnRyb2woKSBoYXMgb25lIGVhcmx5IG9uOyB0aGUgcmVzdCBjb3VsZCBiZSBr
+aWxsZWQgLQ0KdGhleSBjb250YWluIG5vIG1vcmUgaW5mb3JtYXRpb24uDQoNCglEYXZpZA0KDQot
+DQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwg
+TWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2Fs
+ZXMpDQo=
 
