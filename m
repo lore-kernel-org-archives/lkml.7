@@ -2,94 +2,76 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7400C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFA8C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A73B205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213CA2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbfD2HX6 (ORCPT
+        id S1727416AbfD2H3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:23:58 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:40881 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbfD2HX5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:23:57 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N7AAk-1giQjU0jDY-017SZ2; Mon, 29 Apr 2019 09:23:28 +0200
-Subject: Re: [PATCH 01/41] drivers: tty: serial: dz: use dev_err() instead of
- printk()
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, andrew@aj.id.au,
-        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-2-git-send-email-info@metux.net>
- <20190427133117.GC11368@kroah.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <721dc048-8b5f-e7f5-2dab-f0f328435e0c@metux.net>
-Date:   Mon, 29 Apr 2019 09:23:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 29 Apr 2019 03:29:46 -0400
+Received: from mga01.intel.com ([192.55.52.88]:41476 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726846AbfD2H3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 03:29:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 00:29:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,408,1549958400"; 
+   d="scan'208";a="138322306"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga008.jf.intel.com with ESMTP; 29 Apr 2019 00:29:42 -0700
+Subject: Re: [PATCH 0/8] perf scripts python: Support pyside2 and misc Intel
+ PT
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+References: <20190412113830.4126-1-adrian.hunter@intel.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <10798ccb-7da8-1f29-2a75-bf3aeeb29c96@intel.com>
+Date:   Mon, 29 Apr 2019 10:28:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190427133117.GC11368@kroah.com>
+In-Reply-To: <20190412113830.4126-1-adrian.hunter@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:2yBsSwNlRemILw3qvHg+EUmYturt1pLcLjGTAKgJyue8kvRS4SA
- Ycg5vG+6X+ZgHuQ3PHVzy/Dv44Zuxjh37IHDyzF2jEvtvZGNvYkKtrnXVZYGUnPdIu0W46i
- 2IMqhI87Gg+pJeqQ6/ht5bwJVFkYWHqCEPoyT4ASEIm1+8v8y21GaFqc39ZCbGTdMT51cQj
- 0S+tKBdUy1LLCwqz09Z5Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hvct3rbX28g=:TmP05eZMgYa4HiZY4PnD/X
- 6m3IhBL+nEVPGdArSYiuiX7eZZXEk5U/K4fdA/5I69ZzNB+lgpMzTJARgTptylrCcsF+ec56R
- EcFsOKNj9r4+Pijm0w6PIOOCQR9sDUMsKWVVev1N7blGt5gqfEfHG3QYEEANluS9l3kZ85qbk
- LdiiJxi6KrmHyMeNDiFyYrsu6r5+ZF6VhCjr35ptTbfRr0e5WdHohtBwPezdwun0dBypwZywX
- L5iAIZgzdTo2KZXu+RTM7QCX25OsuIZNUK0fBx7MuFFqj8vtok69bXzmZ8j7mixBq7tx5Wrn6
- i/cdujidsg4MAPszgSCu03/hJyb8p1ELPZ5aG5Cw03pNubg+wvW0vv70xGJY2ux2SC5jfv/TZ
- 0kjKPYeKxFMu/0DII+t2N4c4ZCQJKTkCH/2d297RXIqJfaPcp0I+1ngc88j46FPAj7Y/CXSna
- oWFRjB2Mk47zKZTsVGCP+SZCjO+ppRHXdfWvy2WO2L47GwCItPGmDKR1G9/dkNJT/v4lSeMO9
- 8RlnxdMzk4uTIE1tZ0xj9SJNh31sjQNICyC1uJ5Jnx2LeKdeZw8Ultodwh9RHuzYigZGtEqtq
- +w5cJnlLXt6zOcX65xf+ZznoLz9/DKEE+bN1MafnjmBF5nahezF1Q9YFoj0JclEWAYzhUDE9C
- F62YYxCgxwvt3b48D5G4DMkXK5gD+OnF6o1vZQ8+QwLzMY/Vt77ayebi1+6HkKqsi3zgXZHmD
- 8+778zAcA9tvPs8yE7LGV7ixGCrb8ircrZMSmUQV9blo0HEhiHR6q028GOw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.04.19 15:31, Greg KH wrote:
-> On Sat, Apr 27, 2019 at 02:51:42PM +0200, Enrico Weigelt, metux IT consult wrote:
->> Using dev_err() instead of printk() for more consistent output.
->> (prints device name, etc).
->>
->> Signed-off-by: Enrico Weigelt <info@metux.net>
->> ---
->>  drivers/tty/serial/dz.c | 8 ++++----
+On 12/04/19 2:38 PM, Adrian Hunter wrote:
+> Hi
 > 
-> Do you have this hardware to test any of these changes with?
+> Here are patches to add support for pyside2 to the db-export scripts,
+> and a couple of Intel PT patches.
+> 
+> 
+> Adrian Hunter (8):
+>       perf scripts python: exported-sql-viewer.py: Change python2 to python
+>       perf scripts python: exported-sql-viewer.py: Use argparse module for argument parsing
+>       perf scripts python: exported-sql-viewer.py: Add support for pyside2
+>       perf scripts python: export-to-sqlite.py: Add support for pyside2
+>       perf scripts python: export-to-postgresql.py: Add support for pyside2
+>       perf tools: perf-with-kcore.sh: Always allow fix_buildid_cache_permissions
+>       perf intel-pt: Improve sync_switch
+>       perf intel-pt: Rationalize intel_pt_sync_switch()'s use of next_tid
+> 
+>  tools/perf/perf-with-kcore.sh                     |  5 ---
+>  tools/perf/scripts/python/export-to-postgresql.py | 43 +++++++++++++++----
+>  tools/perf/scripts/python/export-to-sqlite.py     | 44 ++++++++++++++++---
+>  tools/perf/scripts/python/exported-sql-viewer.py  | 51 ++++++++++++++++-------
+>  tools/perf/util/intel-pt.c                        | 44 +++++++++++++++++--
+>  5 files changed, 150 insertions(+), 37 deletions(-)
 
-Unfortunately not :(
+Are these ok?
 
-Do you happen to know anybody who has ?
-
---mtx
-
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
