@@ -2,119 +2,188 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97E7C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9077C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B202A2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984D32075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfD2Htl convert rfc822-to-8bit (ORCPT
+        id S1727543AbfD2Huo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:49:41 -0400
-Received: from mga17.intel.com ([192.55.52.151]:24807 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726718AbfD2Htl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:49:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 00:49:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,408,1549958400"; 
-   d="scan'208";a="341727417"
-Received: from irsmsx103.ger.corp.intel.com ([163.33.3.157])
-  by fmsmga006.fm.intel.com with ESMTP; 29 Apr 2019 00:49:37 -0700
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.21]) by
- IRSMSX103.ger.corp.intel.com ([169.254.3.30]) with mapi id 14.03.0415.000;
- Mon, 29 Apr 2019 08:49:36 +0100
-From:   "Reshetova, Elena" <elena.reshetova@intel.com>
-To:     Theodore Ts'o <tytso@mit.edu>
-CC:     Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        David Laight <David.Laight@ACULAB.COM>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Index: AQHU81HQwzT9MH4dM0y/JZXnSwiYT6Y8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCABF9DMA==
-Date:   Mon, 29 Apr 2019 07:49:36 +0000
-Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4C66AA0@IRSMSX102.ger.corp.intel.com>
-References: <2236FBA76BA1254E88B949DDB74E612BA4C51962@IRSMSX102.ger.corp.intel.com>
- <20190416120822.GV11158@hirez.programming.kicks-ass.net>
- <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
- <20190416154348.GB3004@mit.edu>
- <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com>
- <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com>
- <20190417151555.GG4686@mit.edu>
- <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
- <20190426140102.GA4922@mit.edu>
-In-Reply-To: <20190426140102.GA4922@mit.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjk1M2FlY2UtNGNjNi00NGE3LTkyOGMtYWI0NjUxYWVmZmY1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicXh0RVBVY2VhQittUTM2UUNyblVEa1JtT2lFa0NaMzRmRExPMnRDOU05N0Fpc0NIVGEzTGkzQzVTSUpNRzlaYyJ9
-x-originating-ip: [163.33.239.180]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Mon, 29 Apr 2019 03:50:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59510 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727362AbfD2Hun (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 03:50:43 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3T7oB1J065691
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 03:50:42 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s5w7u8108-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 03:50:41 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Mon, 29 Apr 2019 08:50:40 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 29 Apr 2019 08:50:38 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3T7obVR57409618
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Apr 2019 07:50:37 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47EBB11C052;
+        Mon, 29 Apr 2019 07:50:37 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 022F711C050;
+        Mon, 29 Apr 2019 07:50:37 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 29 Apr 2019 07:50:36 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCHv2] perf/report: Report OOM in perf report status line
+Date:   Mon, 29 Apr 2019 09:50:33 +0200
+X-Mailer: git-send-email 2.16.4
+X-TM-AS-GCONF: 00
+x-cbid: 19042907-4275-0000-0000-0000032F6FF9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042907-4276-0000-0000-0000383EC436
+Message-Id: <20190429075033.68680-1-tmricht@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904290059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+An -ENOMEM error is not reported in the GTK GUI.
+Instead this error message pops up on the screen:
 
-> On Fri, Apr 26, 2019 at 11:33:09AM +0000, Reshetova, Elena wrote:
-> > Adding Eric and Herbert to continue discussion for the chacha part.
-> > So, as a short summary I am trying to find out a fast (fast enough to be used per
-> syscall
-> > invocation) source of random bits with good enough security properties.
-> > I started to look into chacha kernel implementation and while it seems that it is
-> designed to
-> > work with any number of rounds, it does not expose less than 12 rounds primitive.
-> > I guess this is done for security sake, since 12 is probably the lowest bound we
-> want people
-> > to use for the purpose of encryption/decryption, but if we are to build an efficient
-> RNG,
-> > chacha8 probably is a good tradeoff between security and speed.
-> >
-> > What are people's opinions/perceptions on this? Has it been considered before to
-> create a
-> > kernel RNG based on chacha?
-> 
-> Well, sure.  The get_random_bytes() kernel interface and the
-> getrandom(2) system call uses a CRNG based on chacha20.  See
-> extract_crng() and crng_reseed() in drivers/char/random.c.
+[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1
 
-Oh, indeed, I missed this link fully when was trying to trace chacha
-usages in kernel. I am not familiar with crypto kernel API and looks like
-my source code cross referencing failed here miserably. 
+	Processing events... [974K/3M]
+	Error:failed to process sample
 
-Only question left is how fast/slow is this... 
+	0xf4198 [0x8]: failed to process type: 68
 
-Best Regards,
-Elena.
+However when I use the same perf.data file with --stdio it works:
+
+[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1 --stdio \
+		| head -12
+
+  # Total Lost Samples: 0
+  #
+  # Samples: 76K of event 'cycles'
+  # Event count (approx.): 99056160000
+  #
+  # Overhead  Command          Shared Object      Symbol
+  # ........  ...............  .................  .........
+  #
+     8.81%  find             [kernel.kallsyms]  [k] ftrace_likely_update
+     8.74%  swapper          [kernel.kallsyms]  [k] ftrace_likely_update
+     8.34%  sshd             [kernel.kallsyms]  [k] ftrace_likely_update
+     2.19%  kworker/u512:1-  [kernel.kallsyms]  [k] ftrace_likely_update
+
+The sample precentage is a bit low.....
+
+The GUI always fails in the FINISHED_ROUND event (68) and does not
+indicate the reason why.
+
+When happened is the following. Perf report calls a lot of functions and
+down deep when a FINISHED_ROUND event is processed, these functions are
+called:
+
+  perf_session__process_event()
+  + perf_session__process_user_event()
+    + process_finished_round()
+      + ordered_events__flush()
+        + __ordered_events__flush()
+	  + do_flush()
+	    + ordered_events__deliver_event()
+	      + perf_session__deliver_event()
+	        + machine__deliver_event()
+	          + perf_evlist__deliver_event()
+	            + process_sample_event()
+	              + hist_entry_iter_add() --> only called in GUI case!!!
+	                + hist_iter__report__callback()
+	                  + symbol__inc_addr_sample()
+
+	                    Now this functions runs out of memory and
+			    returns -ENOMEM. This is reported all the way up
+			    until function
+
+perf_session__process_event() returns to its caller, where -ENOMEM is
+changed to -EINVAL and processing stops:
+
+ if ((skip = perf_session__process_event(session, event, head)) < 0) {
+      pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+	     head, event->header.size, event->header.type);
+      err = -EINVAL;
+      goto out_err;
+ }
+
+This occurred in the FINISHED_ROUND event when it has to process some
+10000 entries and ran out of memory.
+
+This patch indicates the root cause and displays it in the status line
+of ther perf report GUI.
+
+Output before (on GUI status line):
+0xf4198 [0x8]: failed to process type: 68
+
+Output after:
+0xf4198 [0x8]: failed to process type: 68 [not enough memory]
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Jiri Olsa <jolsa@redhat.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+---
+ tools/perf/util/session.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index b17f1c9bc965..267d3f8fcc0f 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1930,10 +1930,17 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 
+ 	if (size < sizeof(struct perf_event_header) ||
+ 	    (skip = rd->process(session, event, file_pos)) < 0) {
+-		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+-		       file_offset + head, event->header.size,
+-		       event->header.type);
+-		err = -EINVAL;
++		if (skip < 0) {
++			pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
++			       file_offset + head, event->header.size,
++			       event->header.type, strerror(-skip));
++			err = skip;
++		} else {
++			pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
++			       file_offset + head, event->header.size,
++			       event->header.type);
++			err = -EINVAL;
++		}
+ 		goto out;
+ 	}
+ 
+-- 
+2.19.1
+
