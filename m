@@ -2,59 +2,160 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CD3C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53EAC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539F720675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B467C2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:56:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TCJfhTf+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfD2PuY (ORCPT
+        id S1728663AbfD2P4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:50:24 -0400
-Received: from foss.arm.com ([217.140.101.70]:32808 "EHLO foss.arm.com"
+        Mon, 29 Apr 2019 11:56:19 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:54573 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbfD2PuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:50:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AE8980D;
-        Mon, 29 Apr 2019 08:50:24 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34E983F5C1;
-        Mon, 29 Apr 2019 08:50:23 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 16:50:20 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     james.morse@arm.com, linux-arm-kernel@lists.infradead.org,
+        id S1728516AbfD2P4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:56:18 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44t8Qg1H7zz9vD3T;
+        Mon, 29 Apr 2019 17:56:11 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=TCJfhTf+; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id e4zvibUn7XuO; Mon, 29 Apr 2019 17:56:11 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44t8Qg01MLz9vD3G;
+        Mon, 29 Apr 2019 17:56:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1556553371; bh=MAsrBDvhnJttPasnsN8gBilzLEIc1tXHx2VDi8YmxeA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=TCJfhTf+GtIv6E3INZukOMu5Yh2lbbCEwQPfE+Jza9vNBWj1fGcVlvS9y5bh8WQEf
+         A7u5vGY3+mSGrzSQnBl5pVv9YKko+vqC2/RZ1Df503Iz9uiAHImnTg5AE5lZEFW3ho
+         5D0sxY1tKt7QvFSa0C7DrgwII8Apaq2alR/vHwLs=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 325D98B8B4;
+        Mon, 29 Apr 2019 17:56:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id lnR_i6xj-pyv; Mon, 29 Apr 2019 17:56:16 +0200 (CEST)
+Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.6])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D48808B8B3;
+        Mon, 29 Apr 2019 17:56:15 +0200 (CEST)
+Subject: Re: [PATCH 23/41] drivers: tty: serial: cpm_uart: fix styling issues
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firmware: arm_sdei: Prohibit probing in '_sdei_handler'
-Message-ID: <20190429155020.GB11429@fuggles.cambridge.arm.com>
-References: <1556244996-1047-1-git-send-email-wangxiongfeng2@huawei.com>
+Cc:     lorenzo.pieralisi@arm.com, linux-ia64@vger.kernel.org,
+        linux-serial@vger.kernel.org, andrew@aj.id.au,
+        gregkh@linuxfoundation.org, sudeep.holla@arm.com,
+        liviu.dudau@arm.com, linux-mips@vger.kernel.org, vz@mleia.com,
+        linux@prisktech.co.nz, sparclinux@vger.kernel.org,
+        khilman@baylibre.com, macro@linux-mips.org,
+        slemieux.tyco@gmail.com, matthias.bgg@gmail.com, jacmet@sunsite.dk,
+        linux-amlogic@lists.infradead.org,
+        andriy.shevchenko@linux.intel.com, linuxppc-dev@lists.ozlabs.org,
+        davem@davemloft.net
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+ <1556369542-13247-24-git-send-email-info@metux.net>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <df50792f-88bc-379a-d9e1-4f2dc1f4965a@c-s.fr>
+Date:   Mon, 29 Apr 2019 17:56:15 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556244996-1047-1-git-send-email-wangxiongfeng2@huawei.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <1556369542-13247-24-git-send-email-info@metux.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 10:16:36AM +0800, Xiongfeng Wang wrote:
-> Functions called in '_sdei_handler' are needed to be marked as
-> 'nokprobe'. Because these functions are called in NMI context and
-> neither the arch-code's debug infrastructure nor kprobes core supports
-> this.
+
+
+Le 27/04/2019 à 14:52, Enrico Weigelt, metux IT consult a écrit :
+> Fix checkpatch errors:
+
+What the main purpose of this change ?
+
+If we apply this, any fix to stable will be a nightmare to backport. Is 
+it really worth it ?
+
+Anyway, a couple of comments in the patch below
+
+[...]
+
 > 
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
+> 
+> Signed-off-by: Enrico Weigelt <info@metux.net>
 > ---
->  drivers/firmware/arm_sdei.c | 3 +++
->  1 file changed, 3 insertions(+)
+>   drivers/tty/serial/cpm_uart/cpm_uart.h      | 10 +--
+>   drivers/tty/serial/cpm_uart/cpm_uart_core.c | 95 ++++++++++++++++-------------
+>   drivers/tty/serial/cpm_uart/cpm_uart_cpm1.h |  4 +-
+>   drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c |  6 +-
+>   4 files changed, 64 insertions(+), 51 deletions(-)
 
-Queued for 5.2. Thanks.
+[...]
 
-Will
+> 
+> @@ -1048,9 +1058,10 @@ static void cpm_uart_early_write(struct uart_cpm_port *pinfo,
+>   static int poll_wait_key(char *obuf, struct uart_cpm_port *pinfo)
+>   {
+>   	u_char		c, *cp;
+> -	volatile cbd_t	*bdp;
+>   	int		i;
+>   
+> +	volatile cbd_t	*bdp;
+> +
+
+This was likely a false positive from checkpatch. The formatting was 
+good, and now it is wrong as it adds an unnecessary blank line.
+
+>   	/* Get the address of the host memory buffer.
+>   	 */
+>   	bdp = pinfo->rx_cur;
+
+[...]
+
+> diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c b/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c
+> index a0fccda..154ac19 100644
+> --- a/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c
+> +++ b/drivers/tty/serial/cpm_uart/cpm_uart_cpm2.c
+> @@ -117,8 +117,7 @@ int cpm_uart_allocbuf(struct uart_cpm_port *pinfo, unsigned int is_con)
+>   	if (is_con) {
+>   		mem_addr = kzalloc(memsz, GFP_NOWAIT);
+>   		dma_addr = virt_to_bus(mem_addr);
+> -	}
+> -	else
+> +	} else
+>   		mem_addr = dma_alloc_coherent(pinfo->port.dev, memsz, &dma_addr,
+>   					      GFP_KERNEL);
+
+Checkpatch should have told you that in case first leg has braces, 
+second leg must have braces too even if it's a single line.
+
+Christophe
+
+
+>   
+> @@ -148,7 +147,8 @@ void cpm_uart_freebuf(struct uart_cpm_port *pinfo)
+>   	dma_free_coherent(pinfo->port.dev, L1_CACHE_ALIGN(pinfo->rx_nrfifos *
+>   							  pinfo->rx_fifosize) +
+>   			  L1_CACHE_ALIGN(pinfo->tx_nrfifos *
+> -					 pinfo->tx_fifosize), (void __force *)pinfo->mem_addr,
+> +					 pinfo->tx_fifosize),
+> +			  (void __force *)pinfo->mem_addr,
+>   			  pinfo->dma_addr);
+>   
+>   	cpm_dpfree(pinfo->dp_addr);
+> 
