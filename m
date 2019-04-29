@@ -2,418 +2,159 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2A5C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A968AC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD2620656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764BF20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfD2PXG (ORCPT
+        id S1728619AbfD2PXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:23:06 -0400
-Received: from mga11.intel.com ([192.55.52.93]:33441 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfD2PXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:23:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 08:23:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,409,1549958400"; 
-   d="scan'208";a="227760348"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 29 Apr 2019 08:23:06 -0700
-Date:   Mon, 29 Apr 2019 08:25:50 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 15/19] iommu/vt-d: Add bind guest PASID support
-Message-ID: <20190429082550.76f3f736@jacob-builder>
-In-Reply-To: <66758de4-2b76-7380-3636-7da1c0a6dc65@redhat.com>
-References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1556062279-64135-16-git-send-email-jacob.jun.pan@linux.intel.com>
-        <66758de4-2b76-7380-3636-7da1c0a6dc65@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 29 Apr 2019 11:23:14 -0400
+Received: from gateway33.websitewelcome.com ([192.185.145.23]:26066 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728414AbfD2PXN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:23:13 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 4FD811CB79
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:23:13 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id L87dhjvKa2qH7L87dh3Nux; Mon, 29 Apr 2019 10:23:13 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.54.97] (port=49208 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hL87c-001IPs-Rf; Mon, 29 Apr 2019 10:23:12 -0500
+Subject: Re: [PATCH] wil6210: fix potential out-of-bounds read
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Maya Erez <merez@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Kondratiev <qca_vkondrat@qca.qualcomm.com>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190415145646.GA16597@embeddedor>
+ <20190429150007.69D8E60741@smtp.codeaurora.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <579ff8c6-7178-e409-6bc6-bde8ceae581a@embeddedor.com>
+Date:   Mon, 29 Apr 2019 10:23:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190429150007.69D8E60741@smtp.codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.54.97
+X-Source-L: No
+X-Exim-ID: 1hL87c-001IPs-Rf
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.54.97]:49208
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Apr 2019 18:15:27 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
 
-> Hi Jacob,
+
+On 4/29/19 10:00 AM, Kalle Valo wrote:
+> "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 > 
-> On 4/24/19 1:31 AM, Jacob Pan wrote:
-> > When supporting guest SVA with emulated IOMMU, the guest PASID
-> > table is shadowed in VMM. Updates to guest vIOMMU PASID table
-> > will result in PASID cache flush which will be passed down to
-> > the host as bind guest PASID calls.
-> > 
-> > For the SL page tables, it will be harvested from device's
-> > default domain (request w/o PASID), or aux domain in case of
-> > mediated device.
-> > 
-> >     .-------------.  .---------------------------.
-> >     |   vIOMMU    |  | Guest process CR3, FL only|
-> >     |             |  '---------------------------'
-> >     .----------------/
-> >     | PASID Entry |--- PASID cache flush -
-> >     '-------------'                       |
-> >     |             |                       V
-> >     |             |                CR3 in GPA
-> >     '-------------'
-> > Guest
-> > ------| Shadow |--------------------------|--------
-> >       v        v                          v
-> > Host
-> >     .-------------.  .----------------------.
-> >     |   pIOMMU    |  | Bind FL for GVA-GPA  |
-> >     |             |  '----------------------'
-> >     .----------------/  |
-> >     | PASID Entry |     V (Nested xlate)
-> >     '----------------\.------------------------------.
-> >     |             |   |SL for GPA-HPA, default domain|
-> >     |             |   '------------------------------'
-> >     '-------------'
-> > Where:
-> >  - FL = First level/stage one page tables
-> >  - SL = Second level/stage two page tables
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-> > ---
-> >  drivers/iommu/intel-iommu.c |   4 +
-> >  drivers/iommu/intel-svm.c   | 174
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> > include/linux/intel-iommu.h |  10 ++- include/linux/intel-svm.h
-> > |   7 ++ 4 files changed, 193 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 77bbe1b..89989b5 100644
-> > --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -5768,6 +5768,10 @@ const struct iommu_ops intel_iommu_ops = {
-> >  	.dev_enable_feat	= intel_iommu_dev_enable_feat,
-> >  	.dev_disable_feat	= intel_iommu_dev_disable_feat,
-> >  	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +	.sva_bind_gpasid	= intel_svm_bind_gpasid,
-> > +	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
-> > +#endif
-> >  };
-> >  
-> >  static void quirk_iommu_g4x_gfx(struct pci_dev *dev)
-> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> > index 8fff212..0a973c2 100644
-> > --- a/drivers/iommu/intel-svm.c
-> > +++ b/drivers/iommu/intel-svm.c
-> > @@ -227,6 +227,180 @@ static const struct mmu_notifier_ops
-> > intel_mmuops = { 
-> >  static DEFINE_MUTEX(pasid_mutex);
-> >  static LIST_HEAD(global_svm_list);
-> > +#define for_each_svm_dev() \
-> > +	list_for_each_entry(sdev, &svm->devs, list)	\
-> > +	if (dev == sdev->dev)				\
-> > +
-> > +int intel_svm_bind_gpasid(struct iommu_domain *domain,
-> > +			struct device *dev,
-> > +			struct gpasid_bind_data *data)
-> > +{
-> > +	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-> > +	struct intel_svm_dev *sdev;
-> > +	struct intel_svm *svm = NULL;
-> > +	struct dmar_domain *ddomain;
-> > +	int pasid_max;
-> > +	int ret = 0;
-> > +
-> > +	if (WARN_ON(!iommu) || !data)
-> > +		return -EINVAL;
-> > +
-> > +	if (dev_is_pci(dev)) {
-> > +		pasid_max = pci_max_pasids(to_pci_dev(dev));
-> > +		if (pasid_max < 0)
-> > +			return -EINVAL;
-> > +	} else
-> > +		pasid_max = 1 << 20;
-> > +
-> > +	if (data->pasid <= 0 || data->pasid >= pasid_max)
-> > +		return -EINVAL;
-> > +
-> > +	ddomain = to_dmar_domain(domain);
-> > +	/* REVISIT:
-> > +	 * Sanity check adddress width and paging mode support
-> > +	 * width matching in two dimensions:
-> > +	 * 1. paging mode CPU <= IOMMU
-> > +	 * 2. address width Guest <= Host.
-> > +	 */
-> > +	mutex_lock(&pasid_mutex);
-> > +	svm = ioasid_find(NULL, data->pasid, NULL);
-> > +	if (IS_ERR(svm)) {
-> > +		ret = PTR_ERR(svm);
-> > +		goto out;
-> > +	}
-> > +	if (svm) {
-> > +		if (list_empty(&svm->devs)) {
-> > +			dev_err(dev, "GPASID %d has no devices
-> > bond but SVA is allocated\n",
-> > +				data->pasid);
-> > +			ret = -ENODEV; /*
-> > +					* If we found svm for the
-> > PASID, there must be at
-> > +					* least one device bond,
-> > otherwise svm should be freed.
-> > +					*/  
-> comment should be put after list_empty I think. In which circumstances
-> can it happen, I mean, isn't it a BUG_ON case?
-Well, I think failing to bind guest PASID is not severe enough to the
-host to use BUG_ON. It has to be something more catastrophic to use
-BUG_ON right? I will relocate the comments.
-> > +			goto out;
-> > +		}
-> > +		for_each_svm_dev() {
-> > +			/* In case of multiple sub-devices of the
-> > same pdev assigned, we should
-> > +			 * allow multiple bind calls with the same
-> > PASID and pdev.
-> > +			 */
-> > +			sdev->users++;
-> > +			goto out;
-> > +		}
-> > +	} else {
-> > +		/* We come here when PASID has never been bond to
-> > a device. */
-> > +		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
-> > +		if (!svm) {
-> > +			ret = -ENOMEM;
-> > +			goto out;
-> > +		}
-> > +		/* REVISIT: upper layer/VFIO can track host
-> > process that bind the PASID.
-> > +		 * ioasid_set = mm might be sufficient for vfio to
-> > check pasid VMM
-> > +		 * ownership.
-> > +		 */
-> > +		svm->mm = get_task_mm(current);
-> > +		svm->pasid = data->pasid;
-> > +		refcount_set(&svm->refs, 0);
-> > +		ioasid_set_data(data->pasid, svm);
-> > +		INIT_LIST_HEAD_RCU(&svm->devs);
-> > +		INIT_LIST_HEAD(&svm->list);
-> > +
-> > +		mmput(svm->mm);
-> > +	}
-> > +	svm->flags |= SVM_FLAG_GUEST_MODE;
-> > +	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
-> > +	if (!sdev) {
-> > +		ret = -ENOMEM;  
-> in case of failure what is the state of svm (you added the
-> SVM_FLAG_GUEST_MODE bit typically, is it safe to leave it?)
-The SVM_FLAG_GUEST_MODE flag is used for fault reporting where faults
-such as PRQ need to be injected into the guest. If this kzalloc()
-fails, the nested translation would not be setup for this PASID. So
-there shouldn't be any user of the flag. But I think it is better to
-move svm->flags |= SVM_FLAG_GUEST_MODE; to the end when everything is
-setup for nesting.
-
-> > +		goto out;
-> > +	}
-> > +	sdev->dev = dev;
-> > +	sdev->users = 1;
-> > +
-> > +	/* Set up device context entry for PASID if not enabled
-> > already */
-> > +	ret = intel_iommu_enable_pasid(iommu, sdev->dev);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to enable PASID
-> > capability\n");
-> > +		kfree(sdev);  
-> same here
-> > +		goto out;
-> > +	}
-> > +
-> > +	/*
-> > +	 * For guest bind, we need to set up PASID table entry as
-> > follows:
-> > +	 * - FLPM matches guest paging mode
-> > +	 * - turn on nested mode
-> > +	 * - SL guest address width matching
-> > +	 */
-> > +	ret = intel_pasid_setup_nested(iommu,
-> > +				dev,
-> > +				(pgd_t *)data->gcr3,
-> > +				data->pasid,
-> > +				data->flags,
-> > +				ddomain,
-> > +				data->addr_width);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to set up PASID %d in nested
-> > mode, Err %d\n",
-> > +			data->pasid, ret);
-> > +		kfree(sdev);
-> > +		goto out;
-> > +	}
-> > +
-> > +	init_rcu_head(&sdev->rcu);
-> > +	refcount_inc(&svm->refs);
-> > +	list_add_rcu(&sdev->list, &svm->devs);
-> > + out:
-> > +	mutex_unlock(&pasid_mutex);
-> > +	return ret;
-> > +}
-> > +
-> > +int intel_svm_unbind_gpasid(struct device *dev, int pasid)
-> > +{
-> > +	struct intel_svm_dev *sdev;
-> > +	struct intel_iommu *iommu;
-> > +	struct intel_svm *svm;
-> > +	int ret = -EINVAL;
-> > +
-> > +	mutex_lock(&pasid_mutex);
-> > +	iommu = intel_svm_device_to_iommu(dev);
-> > +	if (!iommu)
-> > +		goto out;
-> > +
-> > +	svm = ioasid_find(NULL, pasid, NULL);
-> > +	if (IS_ERR(svm)) {
-> > +		ret = PTR_ERR(svm);
-> > +		goto out;
-> > +	}
-> > +
-> > +	if (!svm)
-> > +		goto out;
-> > +
-> > +	for_each_svm_dev() {
-> > +		ret = 0;
-> > +		sdev->users--;
-> > +		if (!sdev->users) {
-> > +			list_del_rcu(&sdev->list);
-> > +			intel_pasid_tear_down_entry(iommu, dev,
-> > svm->pasid);
-> > +			/* TODO: Drain in flight PRQ for the PASID
-> > since it
-> > +			 * may get reused soon, we don't want to
-> > +			 * confuse with its previous live.
-> > +			 * intel_svm_drain_prq(dev, pasid);
-> > +			 */
-> > +			kfree_rcu(sdev, rcu);
-> > +
-> > +			if (list_empty(&svm->devs)) {
-> > +				list_del(&svm->list);
-> > +				kfree(svm);
-> > +				/*
-> > +				 * We do not free PASID here until
-> > explicit call
-> > +				 * from the guest to free.  
-> can you be confident in the guest?
-No. But I have confident in the kernel VFIO code to manage guest life
-cycle :)
-I assume when a guest doesn't do unbind when it dies or unload a
-assigned device, I expect VFIO to free all the PASIDs. VFIO needs to
-police the PASID ownership anyway in order to make sure a PASID
-assigned to guest A cannot be used to bind from guest B.
-This is the flow I worked out with Yi, who is doing the VFIO part. Any
-particular concerns?
-
-> > +				 */
-> > +				ioasid_set_data(pasid, NULL);
-> > +			}
-> > +		}
-> > +		break;
-> > +	}
-> > + out:
-> > +	mutex_unlock(&pasid_mutex);
-> > +
-> > +	return ret;
-> > +}
-> >  
-> >  int intel_svm_bind_mm(struct device *dev, int *pasid, int flags,
-> > struct svm_dev_ops *ops) {
-> > diff --git a/include/linux/intel-iommu.h
-> > b/include/linux/intel-iommu.h index 48fa164..5d67d0d4 100644
-> > --- a/include/linux/intel-iommu.h
-> > +++ b/include/linux/intel-iommu.h
-> > @@ -677,7 +677,9 @@ int intel_iommu_enable_pasid(struct intel_iommu
-> > *iommu, struct device *dev); int intel_svm_init(struct intel_iommu
-> > *iommu); extern int intel_svm_enable_prq(struct intel_iommu *iommu);
-> >  extern int intel_svm_finish_prq(struct intel_iommu *iommu);
-> > -
-> > +extern int intel_svm_bind_gpasid(struct iommu_domain *domain,
-> > +		struct device *dev, struct gpasid_bind_data *data);
-> > +extern int intel_svm_unbind_gpasid(struct device *dev, int pasid);
-> >  struct svm_dev_ops;
-> >  
-> >  struct intel_svm_dev {
-> > @@ -693,12 +695,16 @@ struct intel_svm_dev {
-> >  
-> >  struct intel_svm {
-> >  	struct mmu_notifier notifier;
-> > -	struct mm_struct *mm;
-> > +	union {
-> > +		struct mm_struct *mm;
-> > +		u64 gcr3;
-> > +	};
-> >  	struct intel_iommu *iommu;
-> >  	int flags;
-> >  	int pasid;
-> >  	struct list_head devs;
-> >  	struct list_head list;
-> > +	refcount_t refs; /* # of devs bond to the PASID */  
-> number of devices sharing the same PASID?
-more clear wording, thanks.
-> >  };
-> >  
-> >  extern struct intel_iommu *intel_svm_device_to_iommu(struct device
-> > *dev); diff --git a/include/linux/intel-svm.h
-> > b/include/linux/intel-svm.h index e3f7631..34b0a3b 100644
-> > --- a/include/linux/intel-svm.h
-> > +++ b/include/linux/intel-svm.h
-> > @@ -52,6 +52,13 @@ struct svm_dev_ops {
-> >   * do such IOTLB flushes automatically.
-> >   */
-> >  #define SVM_FLAG_SUPERVISOR_MODE	(1<<1)
-> > +/*
-> > + * The SVM_FLAG_GUEST_MODE flag is used when a guest process bind
-> > to a device.  
-> binds
-will fix
-
-> > + * In this case the mm_struct is in the guest kernel or userspace,
-> > its life
-> > + * cycle is managed by VMM and VFIO layer. For IOMMU driver, this
-> > API provides
-> > + * means to bind/unbind guest CR3 with PASIDs allocated for a
-> > device.
-> > + */
-> > +#define SVM_FLAG_GUEST_MODE	(1<<2)
-> >  
-> >  #ifdef CONFIG_INTEL_IOMMU_SVM
-> >  
-> >   
+>> Notice that *rc* can evaluate to up to 5, include/linux/netdevice.h:
+>>
+>> enum gro_result {
+>>         GRO_MERGED,
+>>         GRO_MERGED_FREE,
+>>         GRO_HELD,
+>>         GRO_NORMAL,
+>>         GRO_DROP,
+>>         GRO_CONSUMED,
+>> };
+>> typedef enum gro_result gro_result_t;
+>>
+>> In case *rc* evaluates to 5, we end up having an out-of-bounds read
+>> at drivers/net/wireless/ath/wil6210/txrx.c:821:
+>>
+>> 	wil_dbg_txrx(wil, "Rx complete %d bytes => %s\n",
+>> 		     len, gro_res_str[rc]);
+>>
+>> Fix this by adding element "GRO_CONSUMED" to array gro_res_str.
+>>
+>> Addresses-Coverity-ID: 1444666 ("Out-of-bounds read")
+>> Fixes: 194b482b5055 ("wil6210: Debug print GRO Rx result")
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> Reviewed-by: Maya Erez <merez@codeaurora.org>
+>> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 > 
-> Thanks
+> Patch applied to ath-next branch of ath.git, thanks.
 > 
-> Eric
+> bfabdd699732 wil6210: fix potential out-of-bounds read
+> 
 
-[Jacob Pan]
+Awesome. :)
+
+Thanks, Kalle.
+--
+Gustavo
