@@ -2,132 +2,118 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF18C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9170EC04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E0F2177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1D221743
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556546952;
+	bh=Z5esiYnjit++ho0ynGUXZjDz8rcfVMit9rf0NZ8iRQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OrErbpsyFTpKWpnNi6FSQoRzfRvjSo0XcTgC0XoytDRSBqC48QS9fMfLkS1Ph3SWk
+	 TwMiWzQ+iAMHfN4lr+VREoxfdLLnLOcjW7sd7+WXHlt7EdLiGMcmd32o6y132MLWht
+	 tCEGwpXsyLhG8jbdt7R3iTHKNJlPO4RcVLXK2KuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfD2OJC (ORCPT
+        id S1728349AbfD2OJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 10:09:02 -0400
-Received: from foss.arm.com ([217.140.101.70]:57994 "EHLO foss.arm.com"
+        Mon, 29 Apr 2019 10:09:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbfD2OJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 10:09:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3072FA78;
-        Mon, 29 Apr 2019 07:09:01 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBEE43F5C1;
-        Mon, 29 Apr 2019 07:08:59 -0700 (PDT)
-Subject: Re: [PATCH 21/26] iommu/dma: Refactor iommu_dma_get_sgtable
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190422175942.18788-1-hch@lst.de>
- <20190422175942.18788-22-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <10b0710c-b2b4-7647-6846-71d9df4bd038@arm.com>
-Date:   Mon, 29 Apr 2019 15:08:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728119AbfD2OJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:09:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F1722084B;
+        Mon, 29 Apr 2019 14:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556546948;
+        bh=Z5esiYnjit++ho0ynGUXZjDz8rcfVMit9rf0NZ8iRQE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=edr8pLRg/MgYcAQMpEsgqiMj2RIQufwlRdOxQG37XMHSrvhp3YU1+OXmv3wvY5NAm
+         /KNYNZy9EHwNGToHHAAgS/gqo+BHyPWPqya8/VCfe82Zwh8cJdDrpZAU+RJfIOeorr
+         cAGQS1LuJ9f2SJIVyKFcKI7kCepeAxJFCvcxbvbE=
+Date:   Mon, 29 Apr 2019 16:09:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Nicolas Iooss <nicolas.iooss@m4x.org>
+Subject: Re: scripts/selinux build error in 4.14 after glibc update
+Message-ID: <20190429140906.GA7412@kroah.com>
+References: <20190422210041.GA21711@archlinux-i9>
+ <CAHC9VhTtz3OA3EchaZaAeg=DxoGoz_WFdj+Mi9nd9i+cmjmuJA@mail.gmail.com>
+ <20190423132926.GK17719@sasha-vm>
+ <CAHC9VhRcdY7G_ES2VqNVpkoU=CRJkJySb3m1sFdgKJwh3JQ2oA@mail.gmail.com>
+ <20190429124002.GB31371@kroah.com>
+ <CAHC9VhQxrtYJTOj=aOL4FY=myA4ZO-rcY7TdCeFbjVnCmgOxew@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190422175942.18788-22-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhQxrtYJTOj=aOL4FY=myA4ZO-rcY7TdCeFbjVnCmgOxew@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/04/2019 18:59, Christoph Hellwig wrote:
-> Inline __iommu_dma_get_sgtable_page into the main function, and use the
-> fact that __iommu_dma_get_pages return NULL for remapped contigous
-> allocations to simplify the code flow a bit.
-
-Yeah, even I was a bit dubious about the readability of "if (page)... 
-else if (pages)..." that my attempt ended up with, so I don't really 
-have anything to complain about here.
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   drivers/iommu/dma-iommu.c | 45 +++++++++++++++------------------------
->   1 file changed, 17 insertions(+), 28 deletions(-)
+On Mon, Apr 29, 2019 at 10:02:29AM -0400, Paul Moore wrote:
+> On Mon, Apr 29, 2019 at 8:40 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > On Tue, Apr 23, 2019 at 09:43:09AM -0400, Paul Moore wrote:
+> > > On Tue, Apr 23, 2019 at 9:29 AM Sasha Levin <sashal@kernel.org> wrote:
+> > > > On Mon, Apr 22, 2019 at 09:59:47PM -0400, Paul Moore wrote:
+> > > > >On Mon, Apr 22, 2019 at 5:00 PM Nathan Chancellor
+> > > > ><natechancellor@gmail.com> wrote:
+> > > > >> Hi all,
+> > > > >>
+> > > > >> After a glibc update to 2.29, my 4.14 builds started failing like so:
+> > > > >
+> > > > >...
+> > > > >
+> > > > >>   HOSTCC  scripts/selinux/genheaders/genheaders
+> > > > >> In file included from scripts/selinux/genheaders/genheaders.c:19:
+> > > > >> ./security/selinux/include/classmap.h:245:2: error: #error New address family defined, please update secclass_map.
+> > > > >>  #error New address family defined, please update secclass_map.
+> > > > >>   ^~~~~
+> > > > >
+> > > > >This is a known problem that has a fix in the selinux/next branch and
+> > > > >will be going up to Linus during the next merge window.  The fix is
+> > > > >quite small and should be relatively easy for you to backport to your
+> > > > >kernel build if you are interested; the patch can be found at the
+> > > > >archive link below:
+> > > > >
+> > > > >https://lore.kernel.org/selinux/20190225005528.28371-1-paulo@paulo.ac
+> > > >
+> > > > Why is it waiting for the next merge window? It fixes a build bug that
+> > > > people hit.
+> > >
+> > > I place a reasonably high bar on patches that I send up to Linus
+> > > outside of the merge window and I didn't feel this patch met that
+> > > criteria.  Nathan is only the second person I've seen who has
+> > > encountered this problem, the first being the original patch author.
+> > > As far as I've seen, the problem is only seen by users building older
+> > > kernels on very new userspaces (e.g. glibc v2.29 was released in
+> > > February 2019, Linux v4.14 was released in 2017); this doesn't appear
+> > > to be a large group of people and I didn't want to risk breaking the
+> > > main kernel tree during the -rcX phase for such a small group.
+> >
+> > Ugh, this breaks my local builds, I would recommend getting it to Linus
+> > sooner please.
 > 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index acdfe866cb29..138b85e675c8 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -1070,42 +1070,31 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
->   	return __iommu_dma_mmap(pages, size, vma);
->   }
->   
-> -static int __iommu_dma_get_sgtable_page(struct sg_table *sgt, struct page *page,
-> -		size_t size)
-> -{
-> -	int ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
-> -
-> -	if (!ret)
-> -		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
-> -	return ret;
-> -}
-> -
->   static int iommu_dma_get_sgtable(struct device *dev, struct sg_table *sgt,
->   		void *cpu_addr, dma_addr_t dma_addr, size_t size,
->   		unsigned long attrs)
->   {
-> -	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-> -	struct page **pages;
-> +	struct page *page;
-> +	int ret;
->   
-> -	if (!is_vmalloc_addr(cpu_addr)) {
-> -		struct page *page = virt_to_page(cpu_addr);
-> -		return __iommu_dma_get_sgtable_page(sgt, page, size);
-> -	}
-> +	if (is_vmalloc_addr(cpu_addr)) {
-> +		struct page **pages = __iommu_dma_get_pages(cpu_addr);
->   
-> -	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
-> -		/*
-> -		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
-> -		 * hence in the vmalloc space.
-> -		 */
-> -		struct page *page = vmalloc_to_page(cpu_addr);
-> -		return __iommu_dma_get_sgtable_page(sgt, page, size);
-> +		if (pages) {
-> +			return sg_alloc_table_from_pages(sgt, pages,
-> +					PAGE_ALIGN(size) >> PAGE_SHIFT,
-> +					0, size, GFP_KERNEL);
-> +		}
-> +
-> +		page = vmalloc_to_page(cpu_addr);
-> +	} else {
-> +		page = virt_to_page(cpu_addr);
->   	}
->   
-> -	pages = __iommu_dma_get_pages(cpu_addr);
-> -	if (WARN_ON_ONCE(!pages))
-> -		return -ENXIO;
-> -	return sg_alloc_table_from_pages(sgt, pages, count, 0, size,
-> -					 GFP_KERNEL);
-> +	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
-> +	if (!ret)
-> +		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
-> +	return ret;
->   }
->   
->   static const struct dma_map_ops iommu_dma_ops = {
-> 
+> Well, we are at -rc7 right now and it looks like an -rc8 is unlikely
+> so the question really comes down to can/do you want to wait a week?
+
+It's a regression in the 5.1-rc tree, that is hitting people now.  Why
+do you want to have a 5.1-final that is known to be broken?
+
+thanks,
+
+greg k-h
