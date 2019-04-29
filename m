@@ -2,108 +2,67 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A062EC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF52C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C28C2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="lqnRekWa"
+	by mail.kernel.org (Postfix) with ESMTP id 9DA2920675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbfD2Pmj (ORCPT
+        id S1728702AbfD2PnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:42:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44740 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728541AbfD2Pmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:42:39 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d24so8988110otl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 08:42:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kinvolk.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uPWRyFwOnHxJrmou63FjPEpH1GTpfepGPs3japprjXw=;
-        b=lqnRekWa9dbIraNi5UiSY4ohDHSwF6B9xg46rAn6Fzw5cvwjUVJjo4VzTBcXb6Jo2o
-         fyIB/+34Sk3xW1ijxE/4hNyvMjziGTrncHvQEF80t4MkTmZWrFwvANV1bwHStRaxTC9f
-         1j/f28yth6HeynPkxHP4JL4lLGPi8xDzrGkLs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uPWRyFwOnHxJrmou63FjPEpH1GTpfepGPs3japprjXw=;
-        b=FTbsxRRXjPOhbC9tF2jcT+g1mfkM6xCm2Vq/mIw2jC4BHJ1DxfhiNfawaTKPUgdJkI
-         /JsMMcw4e9F07aCwg4CqvMU1W0RNQVhR6lzzec6uRy2+vaDYJwU085eMRaIQpRrSLslM
-         egEuGvJ4AQuGv/E6prMhIMLoZ9zWy36QQIJMj+C+pIoSeRYABqvDu0W0830jT2h7W/mu
-         TtsO0FFiSB8Kzh879TyfUyh9nBV59nZSWOVofMCPc+ooV77jc7jjQV53JK6hqNTOAqYQ
-         iDh++AN36vlqR0lthLyd0Ez428oZcYLYLmWNBiCC0fY19lF+V81wjj1R4Lnfme6iONxA
-         k/zA==
-X-Gm-Message-State: APjAAAVwawZ93JboOvM/M/xojVfeeQePaU9XHc4GXJ6tFj17GkhueL08
-        OUg6ycgps9v/hy89XWvaxABL5+v0x6NDO1QKRoPBow==
-X-Google-Smtp-Source: APXvYqxCctyR9f2N/YMUieKkb1EPq5FE2J8WzcjKHu5MzAPSAsovnGOl9M1XPgQF8uw3rEldb/xBtpRenjdKT7qLV0g=
-X-Received: by 2002:a9d:4d91:: with SMTP id u17mr33805040otk.356.1556552558265;
- Mon, 29 Apr 2019 08:42:38 -0700 (PDT)
+        Mon, 29 Apr 2019 11:43:02 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60930 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728438AbfD2PnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:43:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DD0580D;
+        Mon, 29 Apr 2019 08:43:02 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BFB23F5C1;
+        Mon, 29 Apr 2019 08:42:59 -0700 (PDT)
+Subject: Re: [PATCH v6 00/13] Add support for usb on Hikey960
+To:     Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     john.stultz@linaro.org, suzhuangluan@hisilicon.com,
+        kongfei@hisilicon.com, liuyu712@hisilicon.com,
+        wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com,
+        fangshengzhou@hisilicon.com, lipengcheng8@huawei.com,
+        songxiaowei@hisilicon.com, xuyiping@hisilicon.com,
+        xuyoujun4@huawei.com, yudongbin@hisilicon.com,
+        zangleigang@hisilicon.com
+References: <20190420064019.57522-1-chenyu56@huawei.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <766eb894-f939-02d2-5a3b-03fb51f7c4ee@arm.com>
+Date:   Mon, 29 Apr 2019 16:42:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190426154848.23490-1-alban@kinvolk.io> <20190426140323.4edf1127@cakuba.netronome.com>
- <CADZs7q7O9TL5wXFBq_SgAdNCkzO=3tyLnF1_chthX3jao=PKqA@mail.gmail.com> <20190427113940.223fd4d1@cakuba.netronome.com>
-In-Reply-To: <20190427113940.223fd4d1@cakuba.netronome.com>
-From:   Alban Crequy <alban@kinvolk.io>
-Date:   Mon, 29 Apr 2019 17:42:27 +0200
-Message-ID: <CADZs7q6OORsEh=agQ5gzwr8uzj9emXU5x-317tF3POsO_Z2nKw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 1/4] bpf: sock ops: add netns ino and dev in
- bpf context
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Alban Crequy <alban.crequy@gmail.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190420064019.57522-1-chenyu56@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 8:39 PM Jakub Kicinski
-<jakub.kicinski@netronome.com> wrote:
->
-> On Sat, 27 Apr 2019 12:48:25 +0200, Alban Crequy wrote:
-> > On Fri, Apr 26, 2019 at 11:03 PM Jakub Kicinski
-> > <jakub.kicinski@netronome.com> wrote:
-> > >
-> > > On Fri, 26 Apr 2019 17:48:45 +0200, Alban Crequy wrote:
-> > > > In the unlikely case where network namespaces are not compiled in
-> > > > (CONFIG_NET_NS=n), the verifier will not allow access to ->netns_*.
-> > >
-> > > Naive question - why return an error?  init_net should always be there,
-> > > no?
-> >
-> > True for netns_dev. However, without CONFIG_NET_NS, we cannot access netns_ino:
-> >
-> > (struct sock_common).possible_net_t.(struct net *):
-> >
-> > typedef struct {
-> > #ifdef CONFIG_NET_NS
-> >         struct net *net;
-> > #endif
-> > } possible_net_t;
-> >
-> > And I don't think it would make much sense to allow access to
-> > netns_dev but not netns_ino.
->
-> Right, if CONFIG_NET_NS=n we could just take the pointer to init_net
-> directly, and not worry about the field.  IMHO it'd be preferable to
-> changing the UAPI based on kernel config, but I don't feel super
-> strongly.
+Hi,
 
-I see the point about not changing the UAPI. So I will update the patch to:
-- return netns_dev unconditionally, regardless of CONFIG_NET_NS
-- return netns_ino with either the correct value or zero depending on
-CONFIG_NET_NS.
+On 20/04/2019 07:40, Yu Chen wrote:
+> The patchset adds support for usb functionality of Hikey960, includes:
+> - usb phy driver for Hisilicon Kirin Soc hi3660
+> - usb driver for HiKey960 board
+> - some adjustment in dwc3 and usb role driver
+> - dts for support usb of HiKey960
+> 
+
+Still works fine on my Debian setup:
+
+Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+
+Thanks,
+Valentin
