@@ -2,360 +2,119 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F1AC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B08CAC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFF3E21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:11:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Hde1DtRP"
+	by mail.kernel.org (Postfix) with ESMTP id 7A7772067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 20:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556568718;
+	bh=yHFuD1yqCum2y2trfA6le7Rc2q/f7UbNCSi1KupUDQw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OjYgVd4WBDokcN4PeyWZzS8sord3jg+NRum7hQTDAKdm7YDvUSuAEZnFsnZcJLBz9
+	 DjXmxlKa44iUnjKurTBuICDvgT7vPd4bnnqE9ZIw0JQ4npOxKgVeB4n+z6XE/dvRob
+	 z/a1D/CJ3UbbMQUS0XRNPrjIQf5ntt5NmLaayWG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbfD2ULs (ORCPT
+        id S1729341AbfD2UL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 16:11:48 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39173 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfD2ULr (ORCPT
+        Mon, 29 Apr 2019 16:11:57 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46428 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfD2UL4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 16:11:47 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e92so5595443plb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:11:46 -0700 (PDT)
+        Mon, 29 Apr 2019 16:11:56 -0400
+Received: by mail-lf1-f68.google.com with SMTP id k18so8859619lfj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:11:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6YszmraZk0PIvbH3wLg7kw3GDQli+Qt1spMZezEYAP8=;
-        b=Hde1DtRPRuIT/8sX45rLjipJED224JpEvnG7gwmtp4z1uwo6Uxz1c+9B7f6HA7fe9o
-         dvPnFlGJZn6EImJo/qWD2VrlKqagpRb5z7tvGlyR1n7EvsDc6TkjJKQUGCfedT+l956M
-         er8fnJa6LVMNLsAv8ngG0D2ef1ejHPkdNc0sT07oqDg7KWmocGnlKShjxGfLJZ083k28
-         bglx+IWvMwDWVvH8xhoZ7qfHzspVtZHOiT9daAFuc4lWLr5JzsRVFxM7xske1K0ma+N9
-         Y+BptlBrzZkcAl5xcwFxoq1mtclQx/1wsCPdBkbcgI0l84lbDwrSNGW4DK5KnLTZ9qbu
-         hKNQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6BzF2OGCOW6HJd/OnyiluqOmAxSSof4acOvoZOgQm9o=;
+        b=USATFDoZDh4xC+n5UqEtvteBhBowGyyECGRsSRhXKOP5PzafOvxupieg8HOTz7c/tT
+         PXOh2kw9Riqlvj6y0JnovEQkM5Sxqs6/eA/GdnQ1+qDmrJni0xr2WjZhGxpsNJCXOf6b
+         lOAASJsanyZBZOXaJ0IkarPkyAoriW6kXsvF0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=6YszmraZk0PIvbH3wLg7kw3GDQli+Qt1spMZezEYAP8=;
-        b=nj9x7d+X9GRp+yTSurXQUayb9QF8fH4Vt7GDvOKAyBYaRSB/HiBaMrM6dYBbzrHfdN
-         p9TvnOIqe7fBm9ar+qy4+LpTIi/DhrHZb8s0JaJ1u9wPPVT0SZnuSnlOi7Yun9RvgM04
-         lGyQBqsPqMLaAEHC162ImN5h9pFsASKFiCx7fphfARhwwc+/XWsglYDXiDOgp9yItZF0
-         dnpgZAeplnEw1iu/Ud+kvkXCGEdsCmHj3gPYkHSPZhhISFGqjyn6IxyIhmJ4YFNFcSWa
-         K+QuoFo8d6j99nGdZvGZJ5VWkKfG8+QiLXv6uHITyHWu5eBFIK0gsLzr0lSjn1R++Rbf
-         0iaw==
-X-Gm-Message-State: APjAAAXLqyiCZ2ZlPbwW5tgNpJRyLTutKuZZqg/to8vq3oBl3SaMsk1k
-        733J2KowNqHSKHwf6zzTaEV9sQ==
-X-Google-Smtp-Source: APXvYqzhfh0ZUl8cmoBYCxOLChPzLpo0MLmmlTQLlURkrDXuO7GpeA3XqI9PqSK+o5BXSaZBcKYCjA==
-X-Received: by 2002:a17:902:b48a:: with SMTP id y10mr5371936plr.86.1556568704852;
-        Mon, 29 Apr 2019 13:11:44 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id h127sm49384318pgc.31.2019.04.29.13.11.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 13:11:43 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 13:11:43 -0700 (PDT)
-X-Google-Original-Date: Mon, 29 Apr 2019 11:37:51 PDT (-0700)
-Subject:     Re: [PATCH] riscv: Support non-coherency memory model
-In-Reply-To: <1555947870-23014-1-git-send-email-guoren@kernel.org>
-CC:     ren_guo@c-sky.com, guoren@kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, tech-privileged@lists.riscv.org,
-        Andrew Waterman <andrew@sifive.com>, anup.patel@wdc.com,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        green.hu@gmail.com, m.szyprowski@samsung.com, rppt@linux.ibm.com,
-        robin.murphy@arm.com, swood@redhat.com, vincentc@andestech.com,
-        xiaoyan_xiang@c-sky.com
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     guoren@kernel.org
-Message-ID: <mhng-4889b94b-2734-4657-83c2-654d3677733e@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6BzF2OGCOW6HJd/OnyiluqOmAxSSof4acOvoZOgQm9o=;
+        b=Dq/kDHuF/O6URex9WPc2R6M8zg2kU+LlrZz9j8wxCcBTMY/+01bnyEB1LSx5Xv8IH2
+         yggPcVvCRv4F4UDBPi7DYYS3lrGw7t67ssq0jhUTQKlpMQsQcb+U5NV4L0ZKNauoi/AA
+         WdVKW3zds73kciRWyWnOAfz3rPC4/5e5t63IMUMDygAhb+9N+/PGHVkamNwnxARvBunk
+         kNX+Guua56y0l0nrhIOuuSL2Tbu8HylTGV8pys1dwLLyFSZS9GeLZk5ncTtuak5hXhqj
+         vkFscity5DP+IjPWEF+zCEbXiAyHBa5Y9SmcOJupR+ZlumPjCyRT+hhkzyGqO75amPFJ
+         BPrw==
+X-Gm-Message-State: APjAAAVcuQOKD4tjfrQ3GUArqB+5HJ6Y6JQM4FHqVTTFAbqNm9TwcRUN
+        N27hLUAXIWiuQ2pirdiCOoyQ5HIftH0=
+X-Google-Smtp-Source: APXvYqylBVmx87Z1ny03VsamMro+Ta/VzuqeiRPzCihHKd0X19lzdNDpr35cHUguwvqUBjSSN/IMVQ==
+X-Received: by 2002:ac2:5207:: with SMTP id a7mr35414412lfl.70.1556568713912;
+        Mon, 29 Apr 2019 13:11:53 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id z7sm7555127lfg.40.2019.04.29.13.11.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 13:11:53 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id t1so477801lje.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 13:11:53 -0700 (PDT)
+X-Received: by 2002:a2e:3e0e:: with SMTP id l14mr33501765lja.125.1556568393207;
+ Mon, 29 Apr 2019 13:06:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190427100639.15074-1-nstange@suse.de> <20190427100639.15074-4-nstange@suse.de>
+ <20190427102657.GF2623@hirez.programming.kicks-ass.net> <20190428133826.3e142cfd@oasis.local.home>
+ <CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com>
+ <20190429145250.1a5da6ed@gandalf.local.home> <CAHk-=wjm93jLtVxTX4HZs6K4k1Wqh3ujjmapqaYtcibVk_YnzQ@mail.gmail.com>
+ <20190429150724.6e501d27@gandalf.local.home>
+In-Reply-To: <20190429150724.6e501d27@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 29 Apr 2019 13:06:17 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgbC-wiSrdDYAh1ORF4EKmecY+MkNsJBF=BWf4W1bXXgA@mail.gmail.com>
+Message-ID: <CAHk-=wgbC-wiSrdDYAh1ORF4EKmecY+MkNsJBF=BWf4W1bXXgA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] x86/ftrace: make ftrace_int3_handler() not to skip
+ fops invocation
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Apr 2019 08:44:30 PDT (-0700), guoren@kernel.org wrote:
-> From: Guo Ren <ren_guo@c-sky.com>
+On Mon, Apr 29, 2019 at 12:07 PM Steven Rostedt <rostedt@goodmis.org> wrote:
 >
-> The current riscv linux implementation requires SOC system to support
-> memory coherence between all I/O devices and CPUs. But some SOC systems
-> cannot maintain the coherence and they need support cache clean/invalid
-> operations to synchronize data.
->
-> Current implementation is no problem with SiFive FU540, because FU540
-> keeps all IO devices and DMA master devices coherence with CPU. But to a
-> traditional SOC vendor, it may already have a stable non-coherency SOC
-> system, the need is simply to replace the CPU with RV CPU and rebuild
-> the whole system with IO-coherency is very expensive.
->
-> So we should make riscv linux also support non-coherency memory model.
-> Here are the two points that riscv linux needs to be modified:
->
->  - Add _PAGE_COHERENCY bit in current page table entry attributes. The bit
->    designates a coherence for this page mapping. Software set the bit to
->    tell the hardware that the region of the page's memory area must be
->    coherent with IOs devices in SOC system by PMA settings.
->    If IOs and CPU are already coherent in SOC system, CPU just ignore
->    this bit.
->
->    PTE format:
->    | XLEN-1  10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0
->          PFN      C  RSW  D   A   G   U   X   W   R   V
->                   ^
->    BIT(9): Coherence attribute bit
->           0: hardware needn't keep the page coherenct and software will
->              maintain the coherence with cache clear/invalid operations.
->           1: hardware must keep the page coherenct and software needn't
->              maintain the coherence.
->    BIT(8): Reserved for software and now it's _PAGE_SPECIAL in linux
->
->    Add a new hardware bit in PTE also need to modify Privileged
->    Architecture Supervisor-Level ISA:
->    https://github.com/riscv/riscv-isa-manual/pull/374
+> Are you suggesting that I rewrite the code to do it one function at a
+> time? This has always been batch mode. This is not something new. The
+> function tracer has been around longer than the text poke code.
 
-This is a RISC-V ISA modification, which isn't really appropriate to suggest on
-the kernel mailing lists.  The right place to talk about this is at the RISC-V
-foundation, which owns the ISA -- we can't change the hardware with a patch to
-Linux :).
+Only do the 'call' instructions one at a time. Why would you change
+_existing_ code?
 
->  - Add SBI_FENCE_DMA 9 in riscv-sbi.
->    sbi_fence_dma(start, size, dir) could synchronize CPU cache data with
->    DMA device in non-coherency memory model. The third param's definition
->    is the same with linux's in include/linux/dma-direction.h:
->
->    enum dma_data_direction {
-> 	DMA_BIDIRECTIONAL = 0,
-> 	DMA_TO_DEVICE = 1,
-> 	DMA_FROM_DEVICE = 2,
-> 	DMA_NONE = 3,
->    };
->
->    The first param:start must be physical address which could be handled
->    in M-state.
->
->    Here is a pull request to the riscv-sbi-doc:
->    https://github.com/riscv/riscv-sbi-doc/pull/15
->
-> We have tested the patch on our fpga SOC system which network controller
-> connected to a non-cache-coherency interconnect in and it couldn't work
-> without the patch.
->
-> There is no side effect for FU540 whose CPU don't care _PAGE_COHERENCY
-> in PTE, but FU540's bbl also need to implement a simple sbi_fence_dma
-> by directly return. In fact, if you give a correct configuration for
-> dev_is_dma_conherent(), linux dma framework wouldn't call sbi_fence_dma
-> any more.
-
-Non-coherent fences also need to be discussed as part of a RISC-V ISA
-extension.  I know people have expressed interest, but I don't know of a
-working group that's already been set up.
-
->
-> Changelog:
->  - Use coherency instead of consistency for all to maintain term
->    consistency. (Xiang Xiaoyan)
->  - Add riscv-isa-manual modification pull request link.
->  - Correct grammatical errors.
->
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> Cc: Andrew Waterman <andrew@sifive.com>
-> Cc: Anup Patel <anup.patel@wdc.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Greentime Hu <green.hu@gmail.com>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Scott Wood <swood@redhat.com>
-> Cc: Vincent Chen <vincentc@andestech.com>
-> Cc: Xiang Xiaoyan <xiaoyan_xiang@c-sky.com>
-> ---
->  arch/riscv/Kconfig                    |  4 ++++
->  arch/riscv/include/asm/pgtable-bits.h |  1 +
->  arch/riscv/include/asm/pgtable.h      | 11 +++++++++
->  arch/riscv/include/asm/sbi.h          | 10 ++++++++
->  arch/riscv/mm/Makefile                |  1 +
->  arch/riscv/mm/dma-mapping.c           | 44 +++++++++++++++++++++++++++++++++++
->  arch/riscv/mm/ioremap.c               |  2 +-
->  7 files changed, 72 insertions(+), 1 deletion(-)
->  create mode 100644 arch/riscv/mm/dma-mapping.c
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index eb56c82..f0fc503 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -16,9 +16,12 @@ config RISCV
->  	select OF
->  	select OF_EARLY_FLATTREE
->  	select OF_IRQ
-> +	select ARCH_HAS_SYNC_DMA_FOR_CPU
-> +	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
->  	select ARCH_WANT_FRAME_POINTERS
->  	select CLONE_BACKWARDS
->  	select COMMON_CLK
-> +	select DMA_DIRECT_REMAP
->  	select GENERIC_CLOCKEVENTS
->  	select GENERIC_CPU_DEVICES
->  	select GENERIC_IRQ_SHOW
-> @@ -27,6 +30,7 @@ config RISCV
->  	select GENERIC_STRNCPY_FROM_USER
->  	select GENERIC_STRNLEN_USER
->  	select GENERIC_SMP_IDLE_THREAD
-> +	select GENERIC_ALLOCATOR
->  	select GENERIC_ATOMIC64 if !64BIT || !RISCV_ISA_A
->  	select HAVE_ARCH_AUDITSYSCALL
->  	select HAVE_MEMBLOCK_NODE_MAP
-> diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm/pgtable-bits.h
-> index 470755c..104f8c0 100644
-> --- a/arch/riscv/include/asm/pgtable-bits.h
-> +++ b/arch/riscv/include/asm/pgtable-bits.h
-> @@ -31,6 +31,7 @@
->  #define _PAGE_ACCESSED  (1 << 6)    /* Set by hardware on any access */
->  #define _PAGE_DIRTY     (1 << 7)    /* Set by hardware on any write */
->  #define _PAGE_SOFT      (1 << 8)    /* Reserved for software */
-> +#define _PAGE_COHERENCY (1 << 9)    /* Coherency */
->
->  #define _PAGE_SPECIAL   _PAGE_SOFT
->  #define _PAGE_TABLE     _PAGE_PRESENT
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 1141364..26debb4 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -66,6 +66,7 @@
->
->  #define PAGE_KERNEL		__pgprot(_PAGE_KERNEL)
->  #define PAGE_KERNEL_EXEC	__pgprot(_PAGE_KERNEL | _PAGE_EXEC)
-> +#define PAGE_KERNEL_COHERENCY	__pgprot(_PAGE_KERNEL | _PAGE_COHERENCY)
->
->  extern pgd_t swapper_pg_dir[];
->
-> @@ -375,6 +376,16 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
->  	return ptep_test_and_clear_young(vma, address, ptep);
->  }
->
-> +#define pgprot_noncached pgprot_noncached
-> +static inline pgprot_t pgprot_noncached(pgprot_t _prot)
-> +{
-> +	unsigned long prot = pgprot_val(_prot);
-> +
-> +	prot |= _PAGE_COHERENCY;
-> +
-> +	return __pgprot(prot);
-> +}
-> +
->  /*
->   * Encode and decode a swap entry
->   *
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index b6bb10b..b945e50 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -25,6 +25,7 @@
->  #define SBI_REMOTE_SFENCE_VMA 6
->  #define SBI_REMOTE_SFENCE_VMA_ASID 7
->  #define SBI_SHUTDOWN 8
-> +#define SBI_FENCE_DMA 9
->
->  #define SBI_CALL(which, arg0, arg1, arg2) ({			\
->  	register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);	\
-> @@ -42,6 +43,8 @@
->  #define SBI_CALL_0(which) SBI_CALL(which, 0, 0, 0)
->  #define SBI_CALL_1(which, arg0) SBI_CALL(which, arg0, 0, 0)
->  #define SBI_CALL_2(which, arg0, arg1) SBI_CALL(which, arg0, arg1, 0)
-> +#define SBI_CALL_3(which, arg0, arg1, arg2) \
-> +			SBI_CALL(which, arg0, arg1, arg2)
->
->  static inline void sbi_console_putchar(int ch)
->  {
-> @@ -82,6 +85,13 @@ static inline void sbi_remote_fence_i(const unsigned long *hart_mask)
->  	SBI_CALL_1(SBI_REMOTE_FENCE_I, hart_mask);
->  }
->
-> +static inline void sbi_fence_dma(unsigned long start,
-> +			       unsigned long size,
-> +			       unsigned long dir)
-> +{
-> +	SBI_CALL_3(SBI_FENCE_DMA, start, size, dir);
-> +}
-> +
->  static inline void sbi_remote_sfence_vma(const unsigned long *hart_mask,
->  					 unsigned long start,
->  					 unsigned long size)
-> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> index b68aac7..adc563a 100644
-> --- a/arch/riscv/mm/Makefile
-> +++ b/arch/riscv/mm/Makefile
-> @@ -9,3 +9,4 @@ obj-y += fault.o
->  obj-y += extable.o
->  obj-y += ioremap.o
->  obj-y += cacheflush.o
-> +obj-y += dma-mapping.o
-> diff --git a/arch/riscv/mm/dma-mapping.c b/arch/riscv/mm/dma-mapping.c
-> new file mode 100644
-> index 0000000..5e1d179
-> --- /dev/null
-> +++ b/arch/riscv/mm/dma-mapping.c
-> @@ -0,0 +1,44 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/dma-mapping.h>
-> +
-> +static int __init atomic_pool_init(void)
-> +{
-> +	return dma_atomic_pool_init(GFP_KERNEL, pgprot_noncached(PAGE_KERNEL));
-> +}
-> +postcore_initcall(atomic_pool_init);
-> +
-> +void arch_dma_prep_coherent(struct page *page, size_t size)
-> +{
-> +	memset(page_address(page), 0, size);
-> +
-> +	sbi_fence_dma(page_to_phys(page), size, DMA_BIDIRECTIONAL);
-> +}
-> +
-> +void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
-> +			      size_t size, enum dma_data_direction dir)
-> +{
-> +	switch (dir) {
-> +	case DMA_TO_DEVICE:
-> +	case DMA_FROM_DEVICE:
-> +	case DMA_BIDIRECTIONAL:
-> +		sbi_fence_dma(paddr, size, dir);
-> +		break;
-> +	default:
-> +		BUG();
-> +	}
-> +}
-> +
-> +void arch_sync_dma_for_cpu(struct device *dev, phys_addr_t paddr,
-> +			   size_t size, enum dma_data_direction dir)
-> +{
-> +	switch (dir) {
-> +	case DMA_TO_DEVICE:
-> +	case DMA_FROM_DEVICE:
-> +	case DMA_BIDIRECTIONAL:
-> +		sbi_fence_dma(paddr, size, dir);
-> +		break;
-> +	default:
-> +		BUG();
-> +	}
-> +}
-> diff --git a/arch/riscv/mm/ioremap.c b/arch/riscv/mm/ioremap.c
-> index bd2f2db..f6aaf1e 100644
-> --- a/arch/riscv/mm/ioremap.c
-> +++ b/arch/riscv/mm/ioremap.c
-> @@ -73,7 +73,7 @@ static void __iomem *__ioremap_caller(phys_addr_t addr, size_t size,
->   */
->  void __iomem *ioremap(phys_addr_t offset, unsigned long size)
->  {
-> -	return __ioremap_caller(offset, size, PAGE_KERNEL,
-> +	return __ioremap_caller(offset, size, PAGE_KERNEL_COHERENCY,
->  		__builtin_return_address(0));
->  }
->  EXPORT_SYMBOL(ioremap);
+                 Linus
