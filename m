@@ -2,144 +2,136 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C67C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB5DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BB8205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6228E20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfD2PMM (ORCPT
+        id S1728528AbfD2PMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:12:12 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59986 "EHLO
+        Mon, 29 Apr 2019 11:12:31 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60016 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbfD2PMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:12:08 -0400
+        id S1728253AbfD2PMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:12:30 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 951F680D;
-        Mon, 29 Apr 2019 08:12:07 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89B103F5C1;
-        Mon, 29 Apr 2019 08:12:05 -0700 (PDT)
-Subject: Re: [PATCH v2 1/7] genirq/msi: Add a new field in msi_desc to store
- an IOMMU cookie
-To:     Julien Grall <julien.grall@arm.com>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     logang@deltatee.com, douliyangs@gmail.com,
-        miquel.raynal@bootlin.com, marc.zyngier@arm.com,
-        jason@lakedaemon.net, tglx@linutronix.de, joro@8bytes.org,
-        bigeasy@linutronix.de, linux-rt-users@vger.kernel.org
-References: <20190429144428.29254-1-julien.grall@arm.com>
- <20190429144428.29254-2-julien.grall@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <df16760f-b5fe-5af4-18a1-fbb450d772a4@arm.com>
-Date:   Mon, 29 Apr 2019 16:12:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ACE580D;
+        Mon, 29 Apr 2019 08:12:30 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 84DFF3F5C1;
+        Mon, 29 Apr 2019 08:12:28 -0700 (PDT)
+Date:   Mon, 29 Apr 2019 16:12:26 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     kan.liang@linux.intel.com
+Cc:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, eranian@google.com, tj@kernel.org,
+        ak@linux.intel.com
+Subject: Re: [PATCH 2/4] perf: Add filter_match() as a parameter for
+ pinned/flexible_sched_in()
+Message-ID: <20190429151225.GC2182@lakrids.cambridge.arm.com>
+References: <1556549045-71814-1-git-send-email-kan.liang@linux.intel.com>
+ <1556549045-71814-3-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190429144428.29254-2-julien.grall@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556549045-71814-3-git-send-email-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2019 15:44, Julien Grall wrote:
-> When an MSI doorbell is located downstream of an IOMMU, it is required
-> to swizzle the physical address with an appropriately-mapped IOVA for any
-> device attached to one of our DMA ops domain.
+On Mon, Apr 29, 2019 at 07:44:03AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> At the moment, the allocation of the mapping may be done when composing
-> the message. However, the composing may be done in non-preemtible
-> context while the allocation requires to be called from preemptible
-> context.
+> A fast path will be introduced in the following patches to speed up the
+> cgroup events sched in, which only needs a simpler filter_match().
 > 
-> A follow-up change will split the current logic in two functions
-> requiring to keep an IOMMU cookie per MSI.
+> Add filter_match() as a parameter for pinned/flexible_sched_in().
 > 
-> A new field is introduced in msi_desc to store an IOMMU cookie. As the
-> cookie may not be required in some configuration, the field is protected
-> under a new config CONFIG_IRQ_MSI_IOMMU.
-> 
-> A pair of helpers has also been introduced to access the field.
+> No functional change.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+I suspect that the cost you're trying to avoid is pmu_filter_match()
+iterating over the entire group, which arm systems rely upon for correct
+behaviour on big.LITTLE systems.
 
-> Signed-off-by: Julien Grall <julien.grall@arm.com>
+Is that the case?
+
+Thanks,
+Mark.
+
 > 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > ---
->      Changes in v2:
->          - Update the commit message to use imperative mood
->          - Protect the field with a new config that will be selected by
->          IOMMU_DMA later on
->          - Add a set of helpers to access the new field
-> ---
->   include/linux/msi.h | 26 ++++++++++++++++++++++++++
->   kernel/irq/Kconfig  |  3 +++
->   2 files changed, 29 insertions(+)
+>  kernel/events/core.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
 > 
-> diff --git a/include/linux/msi.h b/include/linux/msi.h
-> index 7e9b81c3b50d..82a308c19222 100644
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -77,6 +77,9 @@ struct msi_desc {
->   	struct device			*dev;
->   	struct msi_msg			msg;
->   	struct irq_affinity_desc	*affinity;
-> +#ifdef CONFIG_IRQ_MSI_IOMMU
-> +	const void			*iommu_cookie;
-> +#endif
->   
->   	union {
->   		/* PCI MSI/X specific data */
-> @@ -119,6 +122,29 @@ struct msi_desc {
->   #define for_each_msi_entry_safe(desc, tmp, dev)	\
->   	list_for_each_entry_safe((desc), (tmp), dev_to_msi_list((dev)), list)
->   
-> +#ifdef CONFIG_IRQ_MSI_IOMMU
-> +static inline const void *msi_desc_get_iommu_cookie(struct msi_desc *desc)
-> +{
-> +	return desc->iommu_cookie;
-> +}
-> +
-> +static inline void msi_desc_set_iommu_cookie(struct msi_desc *desc,
-> +					     const void *iommu_cookie)
-> +{
-> +	desc->iommu_cookie = iommu_cookie;
-> +}
-> +#else
-> +static inline const void *msi_desc_get_iommu_cookie(struct msi_desc *desc)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline void msi_desc_set_iommu_cookie(struct msi_desc *desc,
-> +					     const void *iommu_cookie)
-> +{
-> +}
-> +#endif
-> +
->   #ifdef CONFIG_PCI_MSI
->   #define first_pci_msi_entry(pdev)	first_msi_entry(&(pdev)->dev)
->   #define for_each_pci_msi_entry(desc, pdev)	\
-> diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
-> index 5f3e2baefca9..8fee06625c37 100644
-> --- a/kernel/irq/Kconfig
-> +++ b/kernel/irq/Kconfig
-> @@ -91,6 +91,9 @@ config GENERIC_MSI_IRQ_DOMAIN
->   	select IRQ_DOMAIN_HIERARCHY
->   	select GENERIC_MSI_IRQ
->   
-> +config IRQ_MSI_IOMMU
-> +	bool
-> +
->   config HANDLE_DOMAIN_IRQ
->   	bool
->   
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 388dd42..782fd86 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -3251,7 +3251,8 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
+>  }
+>  
+>  static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+> -			      int (*func)(struct perf_event *, void *), void *data)
+> +			      int (*func)(struct perf_event *, void *, int (*)(struct perf_event *)),
+> +			      void *data)
+>  {
+>  	struct perf_event **evt, *evt1, *evt2;
+>  	int ret;
+> @@ -3271,7 +3272,7 @@ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+>  			evt = &evt2;
+>  		}
+>  
+> -		ret = func(*evt, data);
+> +		ret = func(*evt, data, event_filter_match);
+>  		if (ret)
+>  			return ret;
+>  
+> @@ -3287,7 +3288,8 @@ struct sched_in_data {
+>  	int can_add_hw;
+>  };
+>  
+> -static int pinned_sched_in(struct perf_event *event, void *data)
+> +static int pinned_sched_in(struct perf_event *event, void *data,
+> +			   int (*filter_match)(struct perf_event *))
+>  {
+>  	struct sched_in_data *sid = data;
+>  
+> @@ -3300,7 +3302,7 @@ static int pinned_sched_in(struct perf_event *event, void *data)
+>  		return 0;
+>  #endif
+>  
+> -	if (!event_filter_match(event))
+> +	if (!filter_match(event))
+>  		return 0;
+>  
+>  	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
+> @@ -3318,7 +3320,8 @@ static int pinned_sched_in(struct perf_event *event, void *data)
+>  	return 0;
+>  }
+>  
+> -static int flexible_sched_in(struct perf_event *event, void *data)
+> +static int flexible_sched_in(struct perf_event *event, void *data,
+> +			     int (*filter_match)(struct perf_event *))
+>  {
+>  	struct sched_in_data *sid = data;
+>  
+> @@ -3331,7 +3334,7 @@ static int flexible_sched_in(struct perf_event *event, void *data)
+>  		return 0;
+>  #endif
+>  
+> -	if (!event_filter_match(event))
+> +	if (!filter_match(event))
+>  		return 0;
+>  
+>  	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
+> -- 
+> 2.7.4
 > 
