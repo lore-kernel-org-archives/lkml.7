@@ -2,112 +2,94 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B865C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7400C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B82E2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:19:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vpsxKVmd"
+	by mail.kernel.org (Postfix) with ESMTP id 8A73B205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 07:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfD2HTG (ORCPT
+        id S1727439AbfD2HX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 03:19:06 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46150 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727306AbfD2HTF (ORCPT
+        Mon, 29 Apr 2019 03:23:58 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:40881 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbfD2HX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 03:19:05 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3T7BApm016465;
-        Mon, 29 Apr 2019 09:18:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=TykFYt9jpvTCwyKhyahs+89NrVvncrSmdvgdWwwYztk=;
- b=vpsxKVmdKayCtuheOa+LEhE9Hcpk7rlGwuMKQum+17xVVfQrvFfnO40kzSgCbA84AUwH
- L7SlOnCyZSO6lBJafRag5na2endexM3rAmXLyb+9FX1d3/Fp0Y9LXo9tCgLKmZbSVRiD
- JT3SIbLns4QyIg4IOxlefXJLcmjxlB5f+iIuKr0rglt2G9yRqur/OkXoVTvkPSgQyhbr
- nXHarlN5rFyPXEdrmmZlVsBlRfprzHc3Jfi16QGK6iYtvca8BiWCw3G/k3EuUN/JVPqV
- z2bZZIRjM0do9BmEnoL/IwY57OVi9H2q1HSY/7I0/7YQtbPw3yU/IcvISF0I/ju5oi/m KQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2s5u5d0g7p-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 29 Apr 2019 09:18:44 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9757B31;
-        Mon, 29 Apr 2019 07:18:43 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 357AD122C;
-        Mon, 29 Apr 2019 07:18:43 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 29 Apr
- 2019 09:18:43 +0200
-Subject: Re: [PATCH 2/6] net: stmmac: fix csr_clk can't be zero issue
-To:     Biao Huang <biao.huang@mediatek.com>,
-        Jose Abreu <joabreu@synopsys.com>, <davem@davemloft.net>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <jianguo.zhang@mediatek.com>
-References: <1556433009-25759-1-git-send-email-biao.huang@mediatek.com>
- <1556433009-25759-3-git-send-email-biao.huang@mediatek.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <24f4b268-aa7f-e1f7-59fc-2bc163eb8277@st.com>
-Date:   Mon, 29 Apr 2019 09:18:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 03:23:57 -0400
+Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N7AAk-1giQjU0jDY-017SZ2; Mon, 29 Apr 2019 09:23:28 +0200
+Subject: Re: [PATCH 01/41] drivers: tty: serial: dz: use dev_err() instead of
+ printk()
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, andrew@aj.id.au,
+        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
+        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
+        liviu.dudau@arm.com, sudeep.holla@arm.com,
+        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
+        linux@prisktech.co.nz, matthias.bgg@gmail.com,
+        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
+References: <1556369542-13247-1-git-send-email-info@metux.net>
+ <1556369542-13247-2-git-send-email-info@metux.net>
+ <20190427133117.GC11368@kroah.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <721dc048-8b5f-e7f5-2dab-f0f328435e0c@metux.net>
+Date:   Mon, 29 Apr 2019 09:23:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <1556433009-25759-3-git-send-email-biao.huang@mediatek.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190427133117.GC11368@kroah.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_04:,,
- signatures=0
+X-Provags-ID: V03:K1:2yBsSwNlRemILw3qvHg+EUmYturt1pLcLjGTAKgJyue8kvRS4SA
+ Ycg5vG+6X+ZgHuQ3PHVzy/Dv44Zuxjh37IHDyzF2jEvtvZGNvYkKtrnXVZYGUnPdIu0W46i
+ 2IMqhI87Gg+pJeqQ6/ht5bwJVFkYWHqCEPoyT4ASEIm1+8v8y21GaFqc39ZCbGTdMT51cQj
+ 0S+tKBdUy1LLCwqz09Z5Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hvct3rbX28g=:TmP05eZMgYa4HiZY4PnD/X
+ 6m3IhBL+nEVPGdArSYiuiX7eZZXEk5U/K4fdA/5I69ZzNB+lgpMzTJARgTptylrCcsF+ec56R
+ EcFsOKNj9r4+Pijm0w6PIOOCQR9sDUMsKWVVev1N7blGt5gqfEfHG3QYEEANluS9l3kZ85qbk
+ LdiiJxi6KrmHyMeNDiFyYrsu6r5+ZF6VhCjr35ptTbfRr0e5WdHohtBwPezdwun0dBypwZywX
+ L5iAIZgzdTo2KZXu+RTM7QCX25OsuIZNUK0fBx7MuFFqj8vtok69bXzmZ8j7mixBq7tx5Wrn6
+ i/cdujidsg4MAPszgSCu03/hJyb8p1ELPZ5aG5Cw03pNubg+wvW0vv70xGJY2ux2SC5jfv/TZ
+ 0kjKPYeKxFMu/0DII+t2N4c4ZCQJKTkCH/2d297RXIqJfaPcp0I+1ngc88j46FPAj7Y/CXSna
+ oWFRjB2Mk47zKZTsVGCP+SZCjO+ppRHXdfWvy2WO2L47GwCItPGmDKR1G9/dkNJT/v4lSeMO9
+ 8RlnxdMzk4uTIE1tZ0xj9SJNh31sjQNICyC1uJ5Jnx2LeKdeZw8Ultodwh9RHuzYigZGtEqtq
+ +w5cJnlLXt6zOcX65xf+ZznoLz9/DKEE+bN1MafnjmBF5nahezF1Q9YFoj0JclEWAYzhUDE9C
+ F62YYxCgxwvt3b48D5G4DMkXK5gD+OnF6o1vZQ8+QwLzMY/Vt77ayebi1+6HkKqsi3zgXZHmD
+ 8+778zAcA9tvPs8yE7LGV7ixGCrb8ircrZMSmUQV9blo0HEhiHR6q028GOw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On 27.04.19 15:31, Greg KH wrote:
+> On Sat, Apr 27, 2019 at 02:51:42PM +0200, Enrico Weigelt, metux IT consult wrote:
+>> Using dev_err() instead of printk() for more consistent output.
+>> (prints device name, etc).
+>>
+>> Signed-off-by: Enrico Weigelt <info@metux.net>
+>> ---
+>>  drivers/tty/serial/dz.c | 8 ++++----
+> 
+> Do you have this hardware to test any of these changes with?
 
-On 4/28/19 8:30 AM, Biao Huang wrote:
-> The specific clk_csr value can be zero, and
-> stmmac_clk is necessary for MDC clock which can be set dynamically.
-> So, change the condition from plat->clk_csr to plat->stmmac_clk to
-> fix clk_csr can't be zero issue.
-> 
-> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-> ---
->   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index 818ad88..9e89b94 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -4376,7 +4376,7 @@ int stmmac_dvr_probe(struct device *device,
->   	 * set the MDC clock dynamically according to the csr actual
->   	 * clock input.
->   	 */
-> -	if (!priv->plat->clk_csr)
-> +	if (priv->plat->stmmac_clk)
->   		stmmac_clk_csr_set(priv);
->   	else
->   		priv->clk_csr = priv->plat->clk_csr;
-> 
+Unfortunately not :(
 
-So, as soon as stmmac_clk will be declared, it is no longer possible to 
-fix a CSR through the device tree ?
+Do you happen to know anybody who has ?
+
+--mtx
+
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
