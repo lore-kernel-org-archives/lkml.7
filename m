@@ -2,123 +2,138 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74336C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D9DC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E2F2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556573978;
-	bh=Zj9xxx011OGk5FghX+GJ9PqQQX2m4l3ezBnglnFdH/U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ANZcz4LQunKOVZ9DVKh3lDHDBPMvm3lgqmSEuQIkvwe5OxdJ3DYBk3LN66xFYx/mT
-	 d8W56pzOiXPgolKBiFhCzLttbpFwqJe5MBgHToNSzILCAS3fpqEWZHALhb/ex2/dIW
-	 yVzmPXyQ8SIWjYXA7xm7W3k52gEEa8Mcp/BNgYLE=
+	by mail.kernel.org (Postfix) with ESMTP id 933DF2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 21:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbfD2Vjg (ORCPT
+        id S1729431AbfD2VkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 17:39:36 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38750 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729252AbfD2Vjg (ORCPT
+        Mon, 29 Apr 2019 17:40:16 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:41775 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729252AbfD2VkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 17:39:36 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e18so4898146lja.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 14:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xn/5jS+m49YEHy9VewaGSeXNPslEqie8PTvJU6EXUNw=;
-        b=hxFbqa4ewa41rSYJkjywqzmK/JSCoGBv9pbM0qVpY7Jcn8QmH+hVBPBdi7+D/zJmdk
-         nmh191WRMCDQnlnOa+BZyyPstDYFCZkzpGRd0yKcaYhaQ9NmaL1Wd+MyXvvygdZSo+wh
-         4K4v5k4yhv7oc8csttKN+MRZCq2FU2n6mdTIY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xn/5jS+m49YEHy9VewaGSeXNPslEqie8PTvJU6EXUNw=;
-        b=QpxnMYP4XDxxWgV0++z8R0nn9BpBQCGsR7g3FD6fhEqn42ckiuhRgW7EHE99dv6/et
-         9QjENIIJsv08Yv9a5PKe67pFFGafbDsZvWAT28dBGnvC+lnYaNOKje4VhkQQR8EmLTzr
-         +OtCvmkmJhqdf2ah/XuAviiLdfPrBlQwi9EKgnb51ciqy3DHY4C4U82lCvnOU9gLJVhH
-         qCcMltpXAH/LRSvKPq/qz+clGWvCtJhFuA9N7/uYxZmv49U/C51BWrlwD8azNP9eh1nO
-         QlQFNLqJ7GiTdJi6P6/BK3tEmptufppDN4XdB7CtC+Qr2SwvGTq8c/P/Sxp6MmHjvAlk
-         +xDA==
-X-Gm-Message-State: APjAAAUDKtGA77/VvWBz1mirguH6T5GJjd2gYc8fPapg5un9bmEu0ljT
-        xykN6JF/1jgpkQB7VcHzRjkB3EggK1c=
-X-Google-Smtp-Source: APXvYqz2+nE8gyiN2dh2WsShdX1xdJUq4UA5whZeCTwkCobtza0qV2ZA88FNovQw+jDjO8dtFf36JA==
-X-Received: by 2002:a2e:7605:: with SMTP id r5mr12689234ljc.161.1556573974394;
-        Mon, 29 Apr 2019 14:39:34 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id i64sm8165140lfe.18.2019.04.29.14.39.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 14:39:34 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id w23so9043877lfc.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 14:39:34 -0700 (PDT)
-X-Received: by 2002:ac2:43cf:: with SMTP id u15mr3927622lfl.67.1556573506825;
- Mon, 29 Apr 2019 14:31:46 -0700 (PDT)
+        Mon, 29 Apr 2019 17:40:16 -0400
+Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MZl1l-1hEo5h0cBr-00Wj4u; Mon, 29 Apr 2019 23:40:14 +0200
+Subject: Re: [PATCH 4/4] input: keyboard: gpio-keys-polled: skip oftree code
+ when CONFIG_OF disabled
+To:     Frank Rowand <frowand.list@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
+References: <1555444645-15156-1-git-send-email-info@metux.net>
+ <1555444645-15156-5-git-send-email-info@metux.net>
+ <2a760b29-9f0b-ffa7-03dd-47ddb074563a@gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <d1a9f570-4f92-b46f-140e-45c823c82474@metux.net>
+Date:   Mon, 29 Apr 2019 23:40:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190414201436.19502-1-christian@brauner.io> <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415195911.z7b7miwsj67ha54y@yavin> <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
- <20190420071406.GA22257@ip-172-31-15-78> <CAG48ez0gG4bd-t1wdR2p6-N2FjWbCqm_+ZThKfF7yKnD=KLqAQ@mail.gmail.com>
- <CAG48ez15bf1EJB0XTJsGFpvf8r5pj9+rv1axKVr13H1NW7ARZw@mail.gmail.com>
- <CAHk-=wi_N81mKYFz33ycoWiL7_tGbZBMJOsAs16inYzSza+OEw@mail.gmail.com> <87zho8bl8x.fsf@oldenburg2.str.redhat.com>
-In-Reply-To: <87zho8bl8x.fsf@oldenburg2.str.redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Apr 2019 14:31:30 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiPv4QJBC0qX8xxnT5P2C7S5uDG0HKdvdSpcoXaHG91tQ@mail.gmail.com>
-Message-ID: <CAHk-=wiPv4QJBC0qX8xxnT5P2C7S5uDG0HKdvdSpcoXaHG91tQ@mail.gmail.com>
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     Jann Horn <jannh@google.com>, Kevin Easton <kevin@guarana.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2a760b29-9f0b-ffa7-03dd-47ddb074563a@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:I4a/wpfSYCV1FP4iWq6zHYT9Xsld2boyDi0X3mxwyz4FVfh43l1
+ a3y7SajNXWAhMaiASYJtFUSzE96kmzZosSbSzZwueqX6AQpMJnxwNQLw/lTKymymgv/rPsh
+ NM5K+IZlt2StBqcAxmaTvHiy5QxGRTXfA8VsmtS68v7H7aasK7Uocs9rKyFjOawoLJoCxwT
+ qpr/60Kp6ApHBf2+XTEGQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8EZCKlsu8ng=:rPthvjdHhKarYQ/3UCc3WV
+ 0RJ8yQyjwaKKhClCXbJYLZbXgtJqbLJfT13vDaP2mtobZfMFd6mI1SwLq2VSi1DnlH7oQiE1a
+ 8Tda6HBx665ByrICysG1qcI7JQjbHW4gyxBWRkzy/sdOxKm935HhVpnpCT07buc6RwP+Bc+2j
+ LtP+Az4MZf8P5GkKtd6FCS6MhAar5+cGndlXc8Qeuyz1WSUigOPX1XmCnin/2fSnyDQgiYyPq
+ Ofsf8YRrsP3zK1DFtyV7O5ZxlMI+tAhbzT09Dg7uNvQf+Ve1PzO9fQYmLtKOGx8RlimbFjZwB
+ jZzZ5TOKXn/OY8fsKZknZYMsNWGD7lz6uXQUe0Ym72xzYlLVQLm8smrkMSuPjtBQNwbMc2l6R
+ hEGtcwKMMTe6mbDvCXwe7p+kcfujiSpHFfUE+VUGSpbq8Wng7Mkb964NYTC+aILgaZApro9Rm
+ gBpGzznFPY8Fbtcv/kUVzTMdmWJL+FAcDhj8n2zJfOwBdHRgzglXmDCtg2kSB0gdwXI+vBvGz
+ UwyMtrGF+XgjXV3zZVrvJM/MCsr05Mbh35xiuS5he/AAkuH1UVTP1YujOwVmQGtYksuDW5/8y
+ /yfuNpxprCzTHYBbIi5As3hYe7PcaOMCoU1BdSNnZiKzgBGwN68UBIebf38rdgzbP/xcTe6Oj
+ rvrW/Fhc5Qrbh7XZXonXI5ulgwlsmCSP7S8eG5lZ/MUrHAul00c3+L4LX0yPBXfmpeOZhZggh
+ y/cTQAti9kbkZLf70KxZz8i2jjfl3zdpLPCWRCDHPjRrDOvuXB4AdE2PAZNA9bQfRY+BD6ZKe
+ DVbqjzAONChgTnTMA6YfE1muvPgX0iK6PsXIs9+f11A5M/++jEdreHpixfIcOEAK8kLKXez
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 1:38 PM Florian Weimer <fweimer@redhat.com> wrote:
->
-> In Linux-as-the-ABI (as opposed to Linux-as-the-implementation), vfork
-> is sometimes implemented as fork, so applications cannot rely on the
-> vfork behavior regarding the stopped parent and the shared address
-> space.
+On 29.04.19 21:44, Frank Rowand wrote:
+> On 4/16/19 12:57 PM, Enrico Weigelt, metux IT consult wrote:
+>> we don't need to build in oftree probing stuff when oftree isn't
+>> enabled at all.
+>>
+>> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+>> ---
+>>  drivers/input/keyboard/gpio_keys_polled.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+>> index 3f773b2..fbccb89 100644
+>> --- a/drivers/input/keyboard/gpio_keys_polled.c
+>> +++ b/drivers/input/keyboard/gpio_keys_polled.c
+>> @@ -147,6 +147,7 @@ static void gpio_keys_polled_close(struct input_polled_dev *dev)
+>>  static struct gpio_keys_platform_data *
+>>  gpio_keys_polled_get_devtree_pdata(struct device *dev)
+>>  {
+>> +#ifdef CONFIG_OF
+>>  	struct gpio_keys_platform_data *pdata;
+>>  	struct gpio_keys_button *button;
+>>  	struct fwnode_handle *child;
+>> @@ -200,6 +201,9 @@ static void gpio_keys_polled_close(struct input_polled_dev *dev)
+>>  	}
+>>  
+>>  	return pdata;
+>> +#else /* CONFIG_OF */
+>> +	return ERR_PTR(-ENOENT);
+>> +#endif /* CONFIG_OF */
+>>  }
+>>  
+>>  static void gpio_keys_polled_set_abs_params(struct input_dev *input,
+>> @@ -226,7 +230,7 @@ static void gpio_keys_polled_set_abs_params(struct input_dev *input,
+>>  	{ .compatible = "gpio-keys-polled", },
+>>  	{ },
+>>  };
+> 
+> 
+>> -MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
+>> +MODULE_DEVICE_TABLE_OF(gpio_keys_polled_of_match);
+> 
+> Not needed, when you use of_match_ptr() -- see below.
 
-What broken library does that?
+Shall I remove the MODULE_DEVICE_TABLE... line completely ?
 
-Sure, we didn't have a proper vfork() long long long ago. But that
-predates both git and BK, so it's some time in the 90's. We've had a
-proper vfork() *forever*.
+I'd like to have nothing of-related compiled in, when oftree isn't
+enabled.
 
-> In fact, it would be nice to have a flag we can check in the posix_spawn
-> implementation, so that we can support vfork-as-fork without any run
-> time cost to native Linux.
+>>  static struct gpio_desc *gpio_keys_polled_get_gpiod_fwnode(
+>>  	struct device *dev,
+>> @@ -452,7 +456,9 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+>>  	.probe	= gpio_keys_polled_probe,
+>>  	.driver	= {
+>>  		.name	= DRV_NAME,
+> 
+>> +#ifdef CONFIG_OF
+>>  		.of_match_table = gpio_keys_polled_of_match,
+>> +#endif /* CONFIG_OF */
+> 
+> No need for the #ifdef, use of_match_ptr():
+> 
+>   		.of_match_table = of_match_ptr(gpio_keys_polled_of_match),
 
-No. Just make a bug-report to whatever broken library you use. What's
-the point of having a library that can't even get vfork() right? Why
-would you want to have a flag to say "vfork is broken"?
+Ok, thanks.
 
-                 Linus
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
