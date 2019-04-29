@@ -2,97 +2,108 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CE4C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A062EC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7969920675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C28C2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 15:42:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="lqnRekWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbfD2Pj6 (ORCPT
+        id S1728657AbfD2Pmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 11:39:58 -0400
-Received: from mga01.intel.com ([192.55.52.88]:3329 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728436AbfD2Pj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:39:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Apr 2019 08:39:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,410,1549958400"; 
-   d="scan'208";a="295503882"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga004.jf.intel.com with ESMTP; 29 Apr 2019 08:39:51 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hL8Nh-0001DD-6k; Mon, 29 Apr 2019 18:39:49 +0300
-Date:   Mon, 29 Apr 2019 18:39:49 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        andrew@aj.id.au, macro@linux-mips.org, vz@mleia.com,
-        slemieux.tyco@gmail.com, khilman@baylibre.com, liviu.dudau@arm.com,
-        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
-        davem@davemloft.net, jacmet@sunsite.dk, linux@prisktech.co.nz,
-        matthias.bgg@gmail.com, linux-mips@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH 36/41] drivers: tty: serial: 8250: store mmio resource
- size in port struct
-Message-ID: <20190429153949.GV9224@smile.fi.intel.com>
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-37-git-send-email-info@metux.net>
- <20190428151848.GO9224@smile.fi.intel.com>
- <4bab941a-c2f2-7f1c-9bc2-86c63f171c25@metux.net>
+        Mon, 29 Apr 2019 11:42:39 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44740 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728541AbfD2Pmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 11:42:39 -0400
+Received: by mail-ot1-f65.google.com with SMTP id d24so8988110otl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 08:42:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kinvolk.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uPWRyFwOnHxJrmou63FjPEpH1GTpfepGPs3japprjXw=;
+        b=lqnRekWa9dbIraNi5UiSY4ohDHSwF6B9xg46rAn6Fzw5cvwjUVJjo4VzTBcXb6Jo2o
+         fyIB/+34Sk3xW1ijxE/4hNyvMjziGTrncHvQEF80t4MkTmZWrFwvANV1bwHStRaxTC9f
+         1j/f28yth6HeynPkxHP4JL4lLGPi8xDzrGkLs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uPWRyFwOnHxJrmou63FjPEpH1GTpfepGPs3japprjXw=;
+        b=FTbsxRRXjPOhbC9tF2jcT+g1mfkM6xCm2Vq/mIw2jC4BHJ1DxfhiNfawaTKPUgdJkI
+         /JsMMcw4e9F07aCwg4CqvMU1W0RNQVhR6lzzec6uRy2+vaDYJwU085eMRaIQpRrSLslM
+         egEuGvJ4AQuGv/E6prMhIMLoZ9zWy36QQIJMj+C+pIoSeRYABqvDu0W0830jT2h7W/mu
+         TtsO0FFiSB8Kzh879TyfUyh9nBV59nZSWOVofMCPc+ooV77jc7jjQV53JK6hqNTOAqYQ
+         iDh++AN36vlqR0lthLyd0Ez428oZcYLYLmWNBiCC0fY19lF+V81wjj1R4Lnfme6iONxA
+         k/zA==
+X-Gm-Message-State: APjAAAVwawZ93JboOvM/M/xojVfeeQePaU9XHc4GXJ6tFj17GkhueL08
+        OUg6ycgps9v/hy89XWvaxABL5+v0x6NDO1QKRoPBow==
+X-Google-Smtp-Source: APXvYqxCctyR9f2N/YMUieKkb1EPq5FE2J8WzcjKHu5MzAPSAsovnGOl9M1XPgQF8uw3rEldb/xBtpRenjdKT7qLV0g=
+X-Received: by 2002:a9d:4d91:: with SMTP id u17mr33805040otk.356.1556552558265;
+ Mon, 29 Apr 2019 08:42:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4bab941a-c2f2-7f1c-9bc2-86c63f171c25@metux.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190426154848.23490-1-alban@kinvolk.io> <20190426140323.4edf1127@cakuba.netronome.com>
+ <CADZs7q7O9TL5wXFBq_SgAdNCkzO=3tyLnF1_chthX3jao=PKqA@mail.gmail.com> <20190427113940.223fd4d1@cakuba.netronome.com>
+In-Reply-To: <20190427113940.223fd4d1@cakuba.netronome.com>
+From:   Alban Crequy <alban@kinvolk.io>
+Date:   Mon, 29 Apr 2019 17:42:27 +0200
+Message-ID: <CADZs7q6OORsEh=agQ5gzwr8uzj9emXU5x-317tF3POsO_Z2nKw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 1/4] bpf: sock ops: add netns ino and dev in
+ bpf context
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Alban Crequy <alban.crequy@gmail.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 04:55:05PM +0200, Enrico Weigelt, metux IT consult wrote:
-> On 28.04.19 17:18, Andy Shevchenko wrote:
-> > On Sat, Apr 27, 2019 at 02:52:17PM +0200, Enrico Weigelt, metux IT consult wrote:
+On Sat, Apr 27, 2019 at 8:39 PM Jakub Kicinski
+<jakub.kicinski@netronome.com> wrote:
+>
+> On Sat, 27 Apr 2019 12:48:25 +0200, Alban Crequy wrote:
+> > On Fri, Apr 26, 2019 at 11:03 PM Jakub Kicinski
+> > <jakub.kicinski@netronome.com> wrote:
+> > >
+> > > On Fri, 26 Apr 2019 17:48:45 +0200, Alban Crequy wrote:
+> > > > In the unlikely case where network namespaces are not compiled in
+> > > > (CONFIG_NET_NS=n), the verifier will not allow access to ->netns_*.
+> > >
+> > > Naive question - why return an error?  init_net should always be there,
+> > > no?
+> >
+> > True for netns_dev. However, without CONFIG_NET_NS, we cannot access netns_ino:
+> >
+> > (struct sock_common).possible_net_t.(struct net *):
+> >
+> > typedef struct {
+> > #ifdef CONFIG_NET_NS
+> >         struct net *net;
+> > #endif
+> > } possible_net_t;
+> >
+> > And I don't think it would make much sense to allow access to
+> > netns_dev but not netns_ino.
+>
+> Right, if CONFIG_NET_NS=n we could just take the pointer to init_net
+> directly, and not worry about the field.  IMHO it'd be preferable to
+> changing the UAPI based on kernel config, but I don't feel super
+> strongly.
 
-> >> -	int ret = 0;
-> > 
-> > This and Co is a separate change that can be done in its own patch.
-> 
-> I don't really understand :(
-> Do you mean the splitting off the retval part from the rest ?
-
-You do two things here: one of them is removing ret and other relative changes.
-This should be split to a separate patch.
-
-> > You may increase readability by introducing temporary variables
-> > 
-> > 	... mapbase = port->mapbase;
-> > 	... mapsize = port->mapsize;
-> > 	...
-> > 	port->membase = ioremap_nocache(mapbase, mapsize);
-> > 	...
-> 
-> Is that really necessary ? Maybe it's just my personal taste, but I
-> don't feel the more more verbose one is really easier to read.
-
-Up to Greg. For me it's harder to read all those port-> in several parameters.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+I see the point about not changing the UAPI. So I will update the patch to:
+- return netns_dev unconditionally, regardless of CONFIG_NET_NS
+- return netns_ino with either the correct value or zero depending on
+CONFIG_NET_NS.
