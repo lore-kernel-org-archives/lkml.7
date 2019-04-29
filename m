@@ -2,93 +2,141 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6931CC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECCDC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358BB2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C604D20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbfD2Mhg (ORCPT
+        id S1728211AbfD2MiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:37:36 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:36881 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbfD2Mhf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:37:35 -0400
-Received: from [192.168.1.110] ([77.9.18.117]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MPoPd-1h7YiS0myB-00MpYJ; Mon, 29 Apr 2019 14:37:11 +0200
-Subject: Re: [PATCH 01/41] drivers: tty: serial: dz: use dev_err() instead of
- printk()
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, andrew@aj.id.au,
-        andriy.shevchenko@linux.intel.com, macro@linux-mips.org,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, davem@davemloft.net, jacmet@sunsite.dk,
-        linux@prisktech.co.nz, matthias.bgg@gmail.com,
-        linux-mips@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-References: <1556369542-13247-1-git-send-email-info@metux.net>
- <1556369542-13247-2-git-send-email-info@metux.net>
- <20190427133117.GC11368@kroah.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <bae3f23b-8823-f089-c40e-024ba225555f@metux.net>
-Date:   Mon, 29 Apr 2019 14:37:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 29 Apr 2019 08:38:02 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7142 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728054AbfD2MiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 08:38:02 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4FF3A2625511BE6A939F;
+        Mon, 29 Apr 2019 20:37:59 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.188.190) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 29 Apr 2019 20:37:49 +0800
+From:   ChenGang <cg.chen@huawei.com>
+To:     <mark@fasheh.com>, <jlbec@evilplan.org>, <jiangqi903@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        <ocfs2-devel@oss.oracle.com>, <joseph.qi@linux.alibaba.com>,
+        ChenGang <cg.chen@huawei.com>
+Subject: Re: [PATCH] fs: ocfs: fix spelling mistake "hearbeating" -> "heartbeat"
+Date:   Mon, 29 Apr 2019 20:41:40 +0800
+Message-ID: <1556541700-35237-1-git-send-email-cg.chen@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
-In-Reply-To: <20190427133117.GC11368@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:KHUlUYtstuOEVXKZKNHyCnLCt6mq7L7HHLmuMvln4md2is42m2D
- Gvo9vOwjIRj6LOt0W8pXYE9v/qI7Zt147k18Yao4ebuIrvwMIQUsLt/uhZdnIkf6TXIF/2S
- i841E/m6um4E5qYu5wWiUl7XOuDGZarAmJeOQLoXfq89S/4wJw/bTUhC+J+wfkeAy6LT8O0
- 2Q4XNEfbMs6baSq1jfeqg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qsR2mgXWc80=:kOaVYs2+zc60ka2vcrJS1G
- 6jjjD2rzIyURBuqEL6QGX/rLYjQoEewtndqbo2z/Zeq3LWRQK7VVV/g3jzsqHfHK0pRbR3iWW
- lHzYu+Ocphgh3aYHOj1tT4XVJikTmy1DGrmwSaYPiqxxRYGEOHHKgsd8MwiJvcyFqrJmY4bZf
- CmMGOlXqmGS4/mcQcfpGcPWy/tHy81F4dTNC+fHe1ORcaaPnQILx0hNuDe34B22WYlKx/NSnB
- G26mudb1+zA7rCK11WN5pz1xNscoklrB4MG7l23BtLE3kTqFh2AD2CWhWMF650iI91vzCekSl
- 81iaSY9aOKIG/IWZlr4bOF2ADTZFekb5jsCGBI9fJ0XxDOOZmKOfU4m5yoYV3qUZjIkjqdwjR
- BNGBKyeNceGPrXYEpckfa+hDYD5k/aFeWiymyqiRbWXtiTGL1l91toEPNqF8usmeATFJZo30c
- 2tPDHQVcb5UtItD0TEupC6+LC8CUPRmifWN4DmMjmQs+rYTCL7XWL72+ruXo4kMgAfKDXW0IG
- d6AUbAR06eze8qNuIXBOydRC/nRDTIv9BLJwnixcfqonqBiXSLRQ9XEhmZMC+gCQEmQPvRuGo
- v/L1GiKVpib2P2r06lK31PMfqW4f59ibIiaMTwNj/cpXrKc1s7+ephQ78zpKUW19SiZDmrDpJ
- CD2b/FyvoP+mFBB5xvOL+xjqTCggBjuFXC+oC8/QD0xSSAX2fub+agHpSpCGZT2CmyXSPquCS
- nDXXmSecoORpQFCPaPHR5Z12wTg4UfBlSqiv6ZT6mrUg8zSf+/GRQVmfBVM=
+Content-Type: text/plain
+X-Originating-IP: [10.67.188.190]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.04.19 15:31, Greg KH wrote:
-> On Sat, Apr 27, 2019 at 02:51:42PM +0200, Enrico Weigelt, metux IT consult wrote:
->> Using dev_err() instead of printk() for more consistent output.
->> (prints device name, etc).
->>
->> Signed-off-by: Enrico Weigelt <info@metux.net>
+Hi Joseph,
+Thanks for your advice, and I folded the four patches into one.
+
+On 19/4/28 20:22, Joseph Qi wrote:
+>Hi ChenGang,
+>Could you please fold these four patches into one?
+
+>Thanks,
+>Joseph
+
+>On 19/4/27 20:22, ChenGang wrote:
+>> There is a spelling mistake in o2hb_do_disk_heartbeat debug message.Fix it.
+>> 
+>> Signed-off-by: ChenGang <cg.chen@huawei.com>
 >> ---
->>  drivers/tty/serial/dz.c | 8 ++++----
-> 
-> Do you have this hardware to test any of these changes with?
+>>  fs/ocfs2/cluster/heartbeat.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/fs/ocfs2/cluster/heartbeat.c 
+>> b/fs/ocfs2/cluster/heartbeat.c index f3c20b2..e4e7df1 100644
+>> --- a/fs/ocfs2/cluster/heartbeat.c
+>> +++ b/fs/ocfs2/cluster/heartbeat.c
+>> @@ -1198,7 +1198,7 @@ static int o2hb_do_disk_heartbeat(struct o2hb_region *reg)
+>>  	if (atomic_read(&reg->hr_steady_iterations) != 0) {
+>>  		if (atomic_dec_and_test(&reg->hr_unsteady_iterations)) {
+>>  			printk(KERN_NOTICE "o2hb: Unable to stabilize "
+>> -			       "heartbeart on region %s (%s)\n",
+>> +			       "heartbeat on region %s (%s)\n",
+>>  			       config_item_name(&reg->hr_item),
+>>  			       reg->hr_dev_name);
+>> 			atomic_set(&reg->hr_steady_iterations, 0);
+>>
 
-Unfortunately not :(
 
+Signed-off-by: ChenGang <cg.chen@huawei.com>
+---
+ fs/ocfs2/cluster/heartbeat.c | 2 +-
+ fs/ocfs2/cluster/quorum.c    | 2 +-
+ fs/ocfs2/cluster/tcp.c       | 2 +-
+ fs/ocfs2/dlm/dlmmaster.c     | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
---mtx
-
-
+diff --git a/fs/ocfs2/cluster/heartbeat.c b/fs/ocfs2/cluster/heartbeat.c
+index f3c20b2..e4e7df1 100644
+--- a/fs/ocfs2/cluster/heartbeat.c
++++ b/fs/ocfs2/cluster/heartbeat.c
+@@ -1198,7 +1198,7 @@ static int o2hb_do_disk_heartbeat(struct o2hb_region *reg)
+ 	if (atomic_read(&reg->hr_steady_iterations) != 0) {
+ 		if (atomic_dec_and_test(&reg->hr_unsteady_iterations)) {
+ 			printk(KERN_NOTICE "o2hb: Unable to stabilize "
+-			       "heartbeart on region %s (%s)\n",
++			       "heartbeat on region %s (%s)\n",
+ 			       config_item_name(&reg->hr_item),
+ 			       reg->hr_dev_name);
+ 			atomic_set(&reg->hr_steady_iterations, 0);
+diff --git a/fs/ocfs2/cluster/quorum.c b/fs/ocfs2/cluster/quorum.c
+index af2e747..792132f 100644
+--- a/fs/ocfs2/cluster/quorum.c
++++ b/fs/ocfs2/cluster/quorum.c
+@@ -89,7 +89,7 @@ static void o2quo_fence_self(void)
+ 	};
+ }
+ 
+-/* Indicate that a timeout occurred on a hearbeat region write. The
++/* Indicate that a timeout occurred on a heartbeat region write. The
+  * other nodes in the cluster may consider us dead at that time so we
+  * want to "fence" ourselves so that we don't scribble on the disk
+  * after they think they've recovered us. This can't solve all
+diff --git a/fs/ocfs2/cluster/tcp.c b/fs/ocfs2/cluster/tcp.c
+index e9f236a..7a43c04 100644
+--- a/fs/ocfs2/cluster/tcp.c
++++ b/fs/ocfs2/cluster/tcp.c
+@@ -1776,7 +1776,7 @@ static void o2net_hb_node_up_cb(struct o2nm_node *node, int node_num,
+ 		(msecs_to_jiffies(o2net_reconnect_delay()) + 1);
+ 
+ 	if (node_num != o2nm_this_node()) {
+-		/* believe it or not, accept and node hearbeating testing
++		/* believe it or not, accept and node heartbeating testing
+ 		 * can succeed for this node before we got here.. so
+ 		 * only use set_nn_state to clear the persistent error
+ 		 * if that hasn't already happened */
+diff --git a/fs/ocfs2/dlm/dlmmaster.c b/fs/ocfs2/dlm/dlmmaster.c
+index 826f056..41b80d5 100644
+--- a/fs/ocfs2/dlm/dlmmaster.c
++++ b/fs/ocfs2/dlm/dlmmaster.c
+@@ -2176,7 +2176,7 @@ static void dlm_assert_master_worker(struct dlm_work_item *item, void *data)
+  * think that $RECOVERY is currently mastered by a dead node.  If so,
+  * we wait a short time to allow that node to get notified by its own
+  * heartbeat stack, then check again.  All $RECOVERY lock resources
+- * mastered by dead nodes are purged when the hearbeat callback is
++ * mastered by dead nodes are purged when the heartbeat callback is
+  * fired, so we can know for sure that it is safe to continue once
+  * the node returns a live node or no node.  */
+ static int dlm_pre_master_reco_lockres(struct dlm_ctxt *dlm,
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+1.8.5.6
+
