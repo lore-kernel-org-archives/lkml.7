@@ -2,120 +2,79 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC53C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE93CC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C03D2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957542075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 12:51:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HVlw3m+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbfD2MtW (ORCPT
+        id S1728184AbfD2MvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 08:49:22 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:46828 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbfD2MtW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 08:49:22 -0400
-Received: by mail-vk1-f193.google.com with SMTP id x2so2233170vkx.13;
-        Mon, 29 Apr 2019 05:49:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=derKxdHvmEMuz4FzHHDQ6DWV/VvnnUQvUbRdCrLCHz4=;
-        b=OXEcNXyQ/Q997r2tL4wqLx41UP0PqBwePvzHKDos708Nmxu4dmjuuWbTuyjOsYmjBH
-         wPVtLkNpqG/csOgUQURUy196IxebJKbJV6NRj7B7w7C8OAug60R307bpMjBUDemrf5Vo
-         9wcZjPCL+cSaEP9d2BeqNZKFnlweWGO3Koc/4mHr4avm9vIW67ndaBmaWxyCqIhns2KU
-         YlVx4bbdptqieap4jO5IIj1NAeglsLcoZV9ynxPrr/FDS+KDLGGB0ENXczpO/ibuVmHE
-         q0SLfrX+Ql/kk/HH4HOHuW0LCJopx4d5xDMwGQV9o0nmGMFpYQcRxGc2fl72oVJrdSUo
-         Qu2A==
-X-Gm-Message-State: APjAAAV4jwa4R03VdheQBNNF7+8R+YCXyvQbn1uffe8HP/pSO2WGQbd1
-        32KR58YgJOLaS9D8HnLglYvhoqmreDz/Vp5TPa21erEX
-X-Google-Smtp-Source: APXvYqxG2n52Gp61OsgKrozjMvhkBaNh4Tyy20fOyQtE92Psy4c0oP4Z1TxExIYIuyavUO2gmsZvW3TgJ+BYSOX4Eis=
-X-Received: by 2002:a1f:1284:: with SMTP id 126mr32054800vks.72.1556542160610;
- Mon, 29 Apr 2019 05:49:20 -0700 (PDT)
+        Mon, 29 Apr 2019 08:51:06 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58714 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727956AbfD2MvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 08:51:06 -0400
+Received: from zn.tnic (p200300EC2F073600329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:3600:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E61C11EC027B;
+        Mon, 29 Apr 2019 14:51:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1556542265;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=bA2DoZBdBxjCQTavTzxSc5Np+MuR/nnLiokGPyDt0i8=;
+        b=HVlw3m+fIF2XMTA1R+vvf1ylQ6diXofFpsgL4of6CWSFQb6v4/OEzkOvM6zB1xxzh0iPlC
+        dctwnxi0SXRhG0k7iRlkIwjEHwVBT5Wxhfhl+iwKoNWLR6gP/15u0urGvUvWIpVeHVRQjC
+        qJUrgog+zUByu6mW7RxYBNYyMsVaJS8=
+Date:   Mon, 29 Apr 2019 14:50:59 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     j-nomura@ce.jp.nec.com, kasong@redhat.com, dyoung@redhat.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
+        kexec@lists.infradead.org, hpa@zytor.com
+Subject: Re: [PATCH v5 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Message-ID: <20190429125059.GB2324@zn.tnic>
+References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424092944.30481-2-bhe@redhat.com>
+ <20190427161121.GC12360@zn.tnic>
+ <20190428054114.GS3584@localhost.localdomain>
 MIME-Version: 1.0
-References: <20190429093631.10799-1-geert+renesas@glider.be> <TY1PR01MB15620A5958E5A9211518E0C48A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB15620A5958E5A9211518E0C48A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 29 Apr 2019 14:49:08 +0200
-Message-ID: <CAMuHMdUasEO1VLX1h5ZL8F2VjLXnSbrVOm6KdO6yuzkw9RWAfA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] ARM: rskrza1: Add RZ/A1 IRQC and input switches
-To:     Chris Brandt <Chris.Brandt@renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190428054114.GS3584@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+On Sun, Apr 28, 2019 at 01:41:14PM +0800, Baoquan He wrote:
+> About this place, do you think below change is OK to you?
+> 
+> ~~~
+> The current code only builds identity mapping for physical memory during
+> kexec-type loading. The regions reserved by firmware are not covered.
+> In the later code change, the boot decompressing code of kexec-ed kernel
+> will try to access EFI systab and ACPI tables, lacking identity mapping for
+> them will cause error and reset system to firmware.
 
-On Mon, Apr 29, 2019 at 2:21 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> I've been hacking this support into the standard GIC driver in our BSPs
-> for years now. :o
+Yap, better.
 
-Yeah, and having that patch in your tree breaks all other GICs, as
-I found out the hard way ;-)
-
-> On Mon, Apr 29, 2019, Geert Uytterhoeven wrote:
-> > I expect this driver to be reusable for RZ/A2, after adding a match
-> > entry with .gic_spi_base = 4.
->
-> Yes, the same IP block is in RZ/A2.
->
-> So with that said, should we call this driver irq-renesas-rza1.c or just
-> irq-renesas-rza.c?
-> It doesn't really matter to me.
-> For an RZ/A3, we might just use the same IP again.
-
-I've learned to be reluctant to put too many wildcards in names, as it may
-start to bite in the future. For driver names, it's not that bad (they can
-be changed), but for DT, it's a no-go.
-
-So for RZ/A2, I think it's best to use
-
-    compatible = "renesas,r7s9210-irqc", "renesas,rza1-irqc";
-    renesas,gic-spi-base = <4>;
-
-(adding "renesas,gic-spi-base = <0>" to r7s72100.dtsi as I speak).
-
-> Side note, I've seen this interrupt pin HW in some older SH4A devices
-> (like SH7724 and SH7757). So it's been around for a while.
-
-Right:
-
-    arch/sh/kernel/cpu/sh4a/setup-sh7343.c: { 0xa4140024, 0, 8, /* INTREQ00 */
-    arch/sh/kernel/cpu/sh4a/setup-sh7366.c: { 0xa4140024, 0, 8, /* INTREQ00 */
-    arch/sh/kernel/cpu/sh4a/setup-sh7722.c: { 0xa4140024, 0, 8, /* INTREQ00 */
-    arch/sh/kernel/cpu/sh4a/setup-sh7723.c: { 0xa4140024, 0, 8, /* INTREQ00 */
-    arch/sh/kernel/cpu/sh4a/setup-sh7724.c: { 0xa4140024, 0, 8, /* INTREQ00 */
-
-However, according to the sh7724 documentation, the register set is
-slightly different, as is its sense configuration (no support for both
-edges, but support for high-level interrupts).
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Thx.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Regards/Gruss,
+    Boris.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Good mailing practices for 400: avoid top-posting and trim the reply.
