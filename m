@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EBBC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9724CC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9685D21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6480E2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 19:28:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnLEK9nP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwQR60+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbfD2T2j (ORCPT
+        id S1729284AbfD2T2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 15:28:39 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39187 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729126AbfD2T2h (ORCPT
+        Mon, 29 Apr 2019 15:28:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43258 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729126AbfD2T2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 15:28:37 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e92so5543717plb.6;
-        Mon, 29 Apr 2019 12:28:37 -0700 (PDT)
+        Mon, 29 Apr 2019 15:28:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e67so5806255pfe.10;
+        Mon, 29 Apr 2019 12:28:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=N16LaqSXsujrM14YSLIl8eePsGRALjhHNphPHlzavCU=;
-        b=QnLEK9nPx93FypGtYt83qsBuN4twcEfhXjDmYpeJYXc5FAP6z5OHHbGoO1v7/3yEEH
-         2qElset2x/BdOCz4a7q9QSa9bJG4PMH5xt/xM+U5dmul1RbeG8p0WoWmIPwTIjCEvW6l
-         Pj8Hr9poK2w/zpeCbf7JdC2szhNrblS8S50r9nIHOf5pWT2gVSIHODYTsEyNnXT8HI9c
-         iwUipWzG3QDub1obyT0746RnmauJ8juGLju4D3us5pBfFXewN09/Fepjltengl2HzCqD
-         ndWCca9dcioLJuzd0HvBBbNNZtRdKuT0s0BEc3wzRzy4l1f91EE3MjPBApn0NfW1FiMt
-         oAaA==
+        bh=zMXiwgjvtDUD1JgP0fZUvJHdTaY8BBg28l03u7zynPQ=;
+        b=hwQR60+XW+Ex9w89lMRy4zW9zZcFcSxJn4uvM3BuMaZ5isPOc34dE8ty4bY0QIHKmE
+         I1fT8OauHX+w5+Sr6thENSl+5HrnaY0gOzRosy0zH5DapmVKlkL6Kv3t9kXYLtCnSNwy
+         VwX5RT2nbDKJb+e85RNe3Yi4pYbocy7SlXGCn0AvckDYIiralgKKyUY/MXb6348uUXyt
+         WGLplWrUj/NPFjg791nHVtiP0DdV9MYP57Emu+eVDcIn+72JSw+zZT73hzij+HipTVMH
+         h6Nhji0nZYZJBWTGWr7DGcnveCbIJbJsGEFmhJ2JMy1WYzFNdRMCnBfq2f8Fif0f6hXJ
+         AeaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=N16LaqSXsujrM14YSLIl8eePsGRALjhHNphPHlzavCU=;
-        b=D/auvxGXkQMft/Eh0pGjMiFiGMC6gX5uQZILWl6YrAIxR2vNDCJJxwAOoo34gThKDa
-         FQF9xxjZ4rpH/gf9jtA3tZu7oRemaDCVIU2L9l8WDL/Y3SjsWm0NWHsVODLEeLHQITCM
-         F9Y8IAXUkrcm5ZXqSPLunzMHuViddYkOJyByl0g7w+4lQ4uowCGCoQj15cOKDrjFsYkv
-         mNY4uq8P79neByviYCWDbLS9TBay8beXroD5gqMsRo29f/LpoQdlm1THzWYWdF9SG0Pl
-         +9blRL1IJKUEZh0ibx38IZsj/dJXZngyUSocjHABti0vYoEwBiiVamtPz3yCuTDSDv8y
-         09cw==
-X-Gm-Message-State: APjAAAWD8gfVGZt3tux2dM0sA27p77oDpn58oYkr3clfD5zryOWFATFs
-        eM/+jEVmJzmiFbzfg3WO7OA=
-X-Google-Smtp-Source: APXvYqyfuGRoFhbNJ4GBIrQRUhkWfflW8mvlVE3AjOe4mbRBZzcfDkeC1KH3Y4zSsDWLzMbodl/TDQ==
-X-Received: by 2002:a17:902:bf4a:: with SMTP id u10mr31756026pls.63.1556566116820;
-        Mon, 29 Apr 2019 12:28:36 -0700 (PDT)
+        bh=zMXiwgjvtDUD1JgP0fZUvJHdTaY8BBg28l03u7zynPQ=;
+        b=UOX3cBH7g9A4okpRAiTs7e5LLQb9CeAmHgjR8Z7V5tEfShydx8DfM//DQ40rxmGGfH
+         YCEN/eKXBRyzQWgNguuwoQx1h35Xh2wlvJ7YsNLgUiVhYPLD6gzM2RyToVjqAA9U55zH
+         re0TQtTOJPBxhrX/lBAH+G0a0azgpQUrWrO5MIRPdjJmRFz/eTXt7YAHIqbf/7gRYLxp
+         deaPNiUZF0dkeSErbW1LwGH7McIhVJBXx2oDZg+Tq6G2D+NEIoJR7j6cSKLPBkfnaVBz
+         ZgloBCtovn3iNpN3BAuCUwkO+B8VhZI2W92jaHJXepsMdpkyn40ROtujj4hjbWnlYlKj
+         WLTg==
+X-Gm-Message-State: APjAAAUEzaEXZofoBrrfhlp+1CGhVhAY/Wibs9aQqtIN61rJiBfetWl1
+        BmnCXx9ogYZga32JsejrDzM=
+X-Google-Smtp-Source: APXvYqxjaUGeoKNm81722Fq7OOemlAEQb7+hjGDhjjlBWDPhCp5DnhOspN2+rtc6xDMG1Uq9UXeV9g==
+X-Received: by 2002:a63:c54a:: with SMTP id g10mr37236700pgd.71.1556566119630;
+        Mon, 29 Apr 2019 12:28:39 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a9sm45791477pfo.17.2019.04.29.12.28.36
+        by smtp.gmail.com with ESMTPSA id j20sm48495447pfn.84.2019.04.29.12.28.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Apr 2019 12:28:36 -0700 (PDT)
+        Mon, 29 Apr 2019 12:28:39 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>
 Cc:     Paul Gortmaker <paul.gortmaker@windriver.com>,
         linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 2/5] watchdog: Move pretimeout governor configuration up
-Date:   Mon, 29 Apr 2019 12:28:28 -0700
-Message-Id: <1556566111-31970-2-git-send-email-linux@roeck-us.net>
+Subject: [PATCH 4/5] watchdog: npcm: Enable modular builds
+Date:   Mon, 29 Apr 2019 12:28:30 -0700
+Message-Id: <1556566111-31970-4-git-send-email-linux@roeck-us.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556566111-31970-1-git-send-email-linux@roeck-us.net>
 References: <1556566111-31970-1-git-send-email-linux@roeck-us.net>
@@ -70,135 +70,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Watchdog pretimeout configuration was at the end of the Kconfig
-file, after individual watchdog drivers, and thus easy to miss.
-Move it right after basic watchdog option declarations.
+Most of the NPCM7XX drivers can be built as modules.
+The NPCM7XX watchdog driver code supports building it as
+module, but its configuration option is set to bool.
+Make itr tristate to actually support modular builds.
+This improves consistency with other drivers for the
+same platform and enables including the driver in multi-
+platform configurations.
 
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/watchdog/Kconfig | 104 +++++++++++++++++++++++------------------------
- 1 file changed, 52 insertions(+), 52 deletions(-)
+ drivers/watchdog/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index accbf75032ef..ac37a14439c7 100644
+index c2d6934508ee..e5b30c4947d7 100644
 --- a/drivers/watchdog/Kconfig
 +++ b/drivers/watchdog/Kconfig
-@@ -63,6 +63,58 @@ config WATCHDOG_SYSFS
- 	  Say Y here if you want to enable watchdog device status read through
- 	  sysfs attributes.
+@@ -618,7 +618,7 @@ config COH901327_WATCHDOG
+ 	  compiled as a module.
  
-+comment "Watchdog Pretimeout Governors"
-+
-+config WATCHDOG_PRETIMEOUT_GOV
-+	bool "Enable watchdog pretimeout governors"
-+	depends on WATCHDOG_CORE
-+	help
-+	  The option allows to select watchdog pretimeout governors.
-+
-+if WATCHDOG_PRETIMEOUT_GOV
-+
-+config WATCHDOG_PRETIMEOUT_GOV_NOOP
-+	tristate "Noop watchdog pretimeout governor"
-+	default WATCHDOG_CORE
-+	help
-+	  Noop watchdog pretimeout governor, only an informational
-+	  message is added to kernel log buffer.
-+
-+config WATCHDOG_PRETIMEOUT_GOV_PANIC
-+	tristate "Panic watchdog pretimeout governor"
-+	default WATCHDOG_CORE
-+	help
-+	  Panic watchdog pretimeout governor, on watchdog pretimeout
-+	  event put the kernel into panic.
-+
-+choice
-+	prompt "Default Watchdog Pretimeout Governor"
-+	default WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
-+	help
-+	  This option selects a default watchdog pretimeout governor.
-+	  The governor takes its action, if a watchdog is capable
-+	  to report a pretimeout event.
-+
-+config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_NOOP
-+	bool "noop"
-+	depends on WATCHDOG_PRETIMEOUT_GOV_NOOP
-+	help
-+	  Use noop watchdog pretimeout governor by default. If noop
-+	  governor is selected by a user, write a short message to
-+	  the kernel log buffer and don't do any system changes.
-+
-+config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
-+	bool "panic"
-+	depends on WATCHDOG_PRETIMEOUT_GOV_PANIC
-+	help
-+	  Use panic watchdog pretimeout governor by default, if
-+	  a watchdog pretimeout event happens, consider that
-+	  a watchdog feeder is dead and reboot is unavoidable.
-+
-+endchoice
-+
-+endif # WATCHDOG_PRETIMEOUT_GOV
-+
- #
- # General Watchdog drivers
- #
-@@ -2052,56 +2104,4 @@ config USBPCWATCHDOG
- 
- 	  Most people will say N.
- 
--comment "Watchdog Pretimeout Governors"
--
--config WATCHDOG_PRETIMEOUT_GOV
--	bool "Enable watchdog pretimeout governors"
--	depends on WATCHDOG_CORE
--	help
--	  The option allows to select watchdog pretimeout governors.
--
--if WATCHDOG_PRETIMEOUT_GOV
--
--config WATCHDOG_PRETIMEOUT_GOV_NOOP
--	tristate "Noop watchdog pretimeout governor"
--	default WATCHDOG_CORE
--	help
--	  Noop watchdog pretimeout governor, only an informational
--	  message is added to kernel log buffer.
--
--config WATCHDOG_PRETIMEOUT_GOV_PANIC
--	tristate "Panic watchdog pretimeout governor"
--	default WATCHDOG_CORE
--	help
--	  Panic watchdog pretimeout governor, on watchdog pretimeout
--	  event put the kernel into panic.
--
--choice
--	prompt "Default Watchdog Pretimeout Governor"
--	default WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
--	help
--	  This option selects a default watchdog pretimeout governor.
--	  The governor takes its action, if a watchdog is capable
--	  to report a pretimeout event.
--
--config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_NOOP
--	bool "noop"
--	depends on WATCHDOG_PRETIMEOUT_GOV_NOOP
--	help
--	  Use noop watchdog pretimeout governor by default. If noop
--	  governor is selected by a user, write a short message to
--	  the kernel log buffer and don't do any system changes.
--
--config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
--	bool "panic"
--	depends on WATCHDOG_PRETIMEOUT_GOV_PANIC
--	help
--	  Use panic watchdog pretimeout governor by default, if
--	  a watchdog pretimeout event happens, consider that
--	  a watchdog feeder is dead and reboot is unavoidable.
--
--endchoice
--
--endif # WATCHDOG_PRETIMEOUT_GOV
--
- endif # WATCHDOG
+ config NPCM7XX_WATCHDOG
+-	bool "Nuvoton NPCM750 watchdog"
++	tristate "Nuvoton NPCM750 watchdog"
+ 	depends on ARCH_NPCM || COMPILE_TEST
+ 	default y if ARCH_NPCM7XX
+ 	select WATCHDOG_CORE
 -- 
 2.7.4
 
