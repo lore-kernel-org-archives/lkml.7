@@ -2,107 +2,300 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22947C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FF1C04AA6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93DC12087B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:16:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJz0hQbA"
+	by mail.kernel.org (Postfix) with ESMTP id 7FE0D20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbfD2QQb (ORCPT
+        id S1728696AbfD2QRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:16:31 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36296 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728481AbfD2QQa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:16:30 -0400
-Received: by mail-ed1-f67.google.com with SMTP id a8so7592944edx.3;
-        Mon, 29 Apr 2019 09:16:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TEEvDMj9Vnh4ofwZ+ypl/2/A05GwNPsk2joWuaOOOw4=;
-        b=HJz0hQbA1rP8NYrqGN7y0hlrW3zLp4WGDSN0ueeyblkx7/6tCXcGmfDbLKuDutP5Xm
-         WVZP3vKy3VAx021VsNT7G8CgslKnBkyox4ENDFJ1cRMpLXt8kdL9ih9pMTI+d+kZpatk
-         RhPSnF8P2ySOxKw8ez/bHZ0O6OvDmD1iLPKZUt5CUD1hg/LJFpZMEdniT5UixMNK+Htm
-         HA+vvLvRiNwp4D6YOnMY/Cfh26skl+g4pNUOihXCD9ga0WEGHNgLzKjbITIqTZf7+rku
-         A/IfpppA8iKK/q1dDcPJCOx+t24qbWYKpajXooOQCuNNxMbCe0OFVZFWd5H3uTiSpwH0
-         YMUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TEEvDMj9Vnh4ofwZ+ypl/2/A05GwNPsk2joWuaOOOw4=;
-        b=iQoD/DD0qAsmIiPxbIjEON851bQmMI5dv7wlYe1Etv141Bro9C1Xlx08ZPMvR74kgi
-         G2n5lsWk46nb20kPzGqmmMXchR+qWg2bpZJ4DuL0q/ee+WJAttiCgrnxjTWlSz5xDK4m
-         wdxZt8HLCLpI0GZXrm8LiamJfXkaJ9lAjsaPen+qqnbHBiVVC6EOCW4c0ywkK4jVSMGs
-         TQYElKlG3ITrHbHqt/yXZa0PxmUh45azQ1lbaRzUDnzY0xV07/BVLy9IiHZ4kBuId5ie
-         2LKOjnFP+T/K8dwgvuSVZYdkzIihcSAhIjV5RP0m9zBsywKh1rnAUzJF9PX2rl4OQUc+
-         mnAA==
-X-Gm-Message-State: APjAAAV6DiTTYNuVecu59ERUI9cnVioPLTqqUHXltj2H4XM+yniNpAfA
-        OPckElv0M3QwHc3wK12cdHgYTJqv+Dc2gzwn6Kk=
-X-Google-Smtp-Source: APXvYqzfHd8EUL9/YOPCq45PtaLoMvDgtXEeoUUMFLXy5GztgZp7M/yNI5RTJ5FvH9J/MLiZ5MpfkrDKcAmLyOChczw=
-X-Received: by 2002:a50:bdcc:: with SMTP id z12mr37920478edh.138.1556554588928;
- Mon, 29 Apr 2019 09:16:28 -0700 (PDT)
+        Mon, 29 Apr 2019 12:17:11 -0400
+Received: from vps-vb.mhejs.net ([37.28.154.113]:56154 "EHLO vps-vb.mhejs.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728481AbfD2QRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:17:11 -0400
+Received: from MUA
+        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <mail@maciej.szmigiero.name>)
+        id 1hL8xl-0002p5-Am; Mon, 29 Apr 2019 18:17:05 +0200
+From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+To:     Michael Krufky <mkrufky@linuxtv.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Andy Walls <awalls@md.metrocast.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCH v12 0/8] [media] Add analog mode support for Medion MD95700
+Date:   Mon, 29 Apr 2019 18:16:51 +0200
+Message-Id: <cover.1556554056.git.mail@maciej.szmigiero.name>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190429060107.10245-1-zajec5@gmail.com>
-In-Reply-To: <20190429060107.10245-1-zajec5@gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Mon, 29 Apr 2019 12:15:52 -0400
-Message-ID: <CAF=yD-+Z=u5Vh=z73BSDrAQZSSXvwOYAxZNLzVMksz5pdfmP=Q@mail.gmail.com>
-Subject: Re: [PATCH] net-sysfs: expose IRQ number
-To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 2:01 AM Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
-wrote:
->
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->
-> Knowing IRQ number makes e.g. reading /proc/interrupts much simpler.
-> It's more reliable than guessing device name used by a driver when
-> calling request_irq().
->
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
-> ---
-> I found a script parsing /proc/interrupts for a given interface name. It =
-wasn't
-> working for me as it assumed request_irq() was called with a device name.=
- It's
-> not a case for all drivers.
->
-> I also found some other people looking for a proper solution for that:
-> https://unix.stackexchange.com/questions/275075/programmatically-determin=
-e-the-irqs-associated-with-a-network-interface
-> https://stackoverflow.com/questions/7516984/retrieving-irq-number-of-a-ni=
-c
->
-> Let me know if this solution makes sense. I can say it works for me ;)
+This series adds support for analog part of Medion 95700 in the cxusb
+driver.
 
-If parsing /proc/interrupts is problematic, also see the
-/sys/kernel/irq interface added in commit ecb3f394c5db ("genirq:
-Expose interrupt information through sysfs"). Does that address your
-use-case as well? Though it does the inverse mapping from IRQ to name.
+What works:
+* Video capture at various sizes with sequential fields,
+* Input switching (TV Tuner, Composite, S-Video),
+* TV and radio tuning,
+* Video standard switching and auto detection,
+* Radio mode switching (stereo / mono),
+* Unplugging while capturing,
+* DVB / analog coexistence,
+* Raw BT.656 stream support.
 
-Another practical issue is that many network devices register more
-than one interrupt. Perhaps one control interrupt, plus one per
-receive queue and possibly one per transmit queue. Unfortunately those
-cannot be identified in a driver-independent manner. Because an
-interface /sys/class/net/$DEV/queues/rx-$i/irq would be useful.
+What does not work yet:
+* Audio,
+* VBI,
+* Picture controls.
+
+This series (as a one patch) was submitted for inclusion few years ago,
+then waited few months in a patch queue.
+Unfortunately, by the time it was supposed to be merged there
+were enough changes in media that it was no longer mergeable.
+
+I thought at that time that I will be able to rebase and retest it soon
+but unfortunately up till now I was never able to find enough time to do
+so.
+Also, with the passing of time the implementation diverged more and
+more from the current kernel code, necessitating even more reworking.
+
+That last iteration can be found here:
+https://patchwork.linuxtv.org/patch/8048/
+
+Since that version there had been the following changes:
+* Adaptation to changes in V4L2 / DVB core,
+
+* Radio device was added, with a possibility to tune to a FM radio
+station and switch between stereo and mono modes (tested by taping
+audio signal directly at tuner output pin),
+
+* DVB / analog coexistence was improved - resolved a few cases where
+DVB core would switch off power or reset the tuner when the device
+was still being used but in the analog mode,
+
+* Fixed issues reported by v4l2-compliance,
+
+* Switching to raw BT.656 mode is now done by a custom streaming
+parameter set via VIDIOC_S_PARM ioctl instead of using a
+V4L2_BUF_TYPE_PRIVATE buffer (which was removed from V4L2),
+
+* General small code cleanups (like using BIT() or ARRAY_SIZE() macros
+instead of open coding them, code formatting improvements, etc.).
+
+Changes from v1:
+* Only support configuration of cx25840 pins that the cxusb driver is
+actually using so there is no need for an ugly CX25840_PIN() macro,
+
+* Split cxusb changes into two patches: first one implementing
+digital / analog coexistence in this driver, second one adding the
+actual implementation of the analog mode,
+
+* Fix a warning reported by kbuild test robot.
+
+Changes from v2:
+* Split out ivtv cx25840 platform data zero-initialization to a separate
+commit,
+
+* Add kernel-doc description of struct cx25840_state,
+
+* Make sure that all variables used in CX25840_VCONFIG_OPTION() and
+CX25840_VCONFIG_SET_BIT() macros are their explicit parameters,
+
+* Split out some code from cxusb_medion_copy_field() and
+cxusb_medion_v_complete_work() functions to separate ones to increase
+their readability,
+
+* Generate masks using GENMASK() and BIT() macros in cx25840.h and
+cxusb.h.
+
+Changes from v3:
+Add SPDX tag to a newly added "cxusb-analog.c" file.
+
+Changes from v4:
+* Make analog support conditional on a new DVB_USB_CXUSB_ANALOG Kconfig
+option,
+
+* Use '//' comments in the header of a newly added "cxusb-analog.c"
+file,
+
+* Don't print errors on memory allocation failures,
+
+* Get rid of the driver MODULE_VERSION(),
+
+* Small formating fix of a one line.
+
+Changes from v5:
+Rebase onto current media_tree/master.
+
+Changes from v6:
+Adapt to commit 4eb2f55728abbe changing V4L2_SUBDEV_IO_PIN_* from bit
+masks to bit numbers.
+Thanks to Dan Carpenter's kbuild bot for catching this.
+
+Changes from v7:
+* Simplify cx25840_function_to_pad() assuming that the values of
+individual members of I/O pad enum will always match the actual
+chip register values,
+
+* Add a comment that the above is now a requirement to the I/O pad enum,
+
+* Don't #undef macros in the cx25840 patch,
+
+* Change "generic_mode" variable type in struct cx25840_state to bool,
+
+* Prefix todo-style comments added by the cx25840 patch with "TODO:",
+
+* Add a core init op to the cx25840 driver and use it to turn the
+generic_mode on instead of doing it via the platform data,
+
+* Use the above core init op to also provide a vconfig configuration
+to the cx25840 driver so the cxusb driver does not have to pass this
+(constant) configuration there on every video input change,
+
+* Remove cxusb_auxbuf_advance(), cxusb_auxbuf_begin() and
+cxusb_auxbuf_isend(),
+
+* Add a missing frame sequence counter support,
+
+* Test the driver with v4l2-compliance with streaming tests enabled,
+
+* Set device_caps in struct video_device during probe instead of returning
+it manually in vidioc_querycap handler,
+
+* Don't set the format name in vidioc_enum_fmt_vid_cap handler,
+
+* Drop various memset() zeroing in ioctl handlers, as suggested during
+last review,
+
+* Enforce minimum buffer count via in_buffers_needed field of
+struct vb2_queue instead of doing it in queue_setup callback,
+
+* Rewrite stream starting / stopping / configuration mechanism using a
+'stop_streaming' flag, remove cxusb_medion_stream_busy(),
+
+* Set the lock field in struct vb2_queue so vb2_ops_wait_prepare() /
+vb2_ops_wait_finish() helpers can be utilized,
+
+* Split out raw (unprocessed) BT.656 stream capturing support to a
+separate patch, adapt it to a recent change introduced by
+commit 8a7c5594c020 ("v4l2-ioctl: clear fields in s_parm") that forced
+extendedmode set by VIDIOC_S_PARM to zero,
+
+* Add a comment that if we ever need to support analog mode in similar
+hardware then this code should be made generic,
+
+* Remove a requirement that URB length has to be less than full frame
+size,
+
+* Limit URB length to avoid very high order memory allocations,
+
+* Remove out-of-order incoming URB support: this can't really happen,
+
+* Small cleanups here and there.
+
+Changes from v8:
+Rebase onto current media_tree/master.
+
+Changes from v9:
+* Elaborate generic mode comments in cx25840 and cxusb drivers,
+add datasheet references to cx25840 chip video output settings,
+
+* Describe the new DVB_USB_ADAP_STREAMING_CTRL_NO_URB flag,
+
+* Drop likely and unlikely annotations in cxusb driver from the patches,
+
+* Exclusively use strscpy (and not strncpy, strcpy, etc.) in the patches,
+
+* Drop zeroing of various v4l fields which should be zeroed by the
+core v4l code,
+
+* Adapt VIDIOC_S_FMT handler so the video format can't be changed if
+buffers are allocated,
+
+* Add VB2_DMABUF to the list of supported I/O modes.
+
+Changes from v10:
+* Add a commit cleaning up cx25840_load_fw() and its comments
+(no functional change intended),
+
+* Add a commit renaming cx25840 g_std operation to querystd operation
+since this is what this handler does,
+
+* Add a commit that clamps out-of-range picture sizes in cx25840
+set_fmt subdev operation so it conforms better to the V4L2 API,
+
+* cx25840 driver generic mode (enabled by calling its init op) is currently
+only implemented for cx2584x-family chips.
+Add a relevant comment and a warning to catch unintentional uses,
+
+* Program cx25840 driver video timings in the generic mode to the same
+values that the chip autoconfig would set.
+
+While improving the set_fmt subdev operation it became obvious that
+the video timings that cx25840 driver was setting resulted in a strange
+BT.656 PAL stream that had two active video areas per field (one with
+just a single line) and 580 active lines total.
+An output format with 580 active lines total meant that the most common
+PAL capture line count of 576 needed a non-identity scaling factor.
+
+This is the reason why in the generic mode the driver now uses the same
+values that the chip autoconfig would set (read from the chip).
+These give a nice, BT.656-compliant PAL stream with 576 lines and one
+active video area per field.
+
+cxusb raw mode, as provided by the last commit, is very useful for
+diagnosing these issues as it gives access to a raw BT.656 stream
+from the cx25840 chip where one can see line count for each field, see
+where VBI lines lie, which lines actually contain samples (as it is
+possible to have some active video lines without any samples at all and
+some VBI lines with normal line samples - cx25840 can move a VBI marker
+independently of a "start capturing samples" marker and, in fact, can have
+a slightly different VBI / active video divider between the two fields in
+a frame),
+
+* Remove the dvb-usb framework DVB_USB_ADAP_STREAMING_CTRL_NO_URB flag
+and always assume its behaviour (always make sure that data URBs are
+not active before calling a driver streaming_ctrl callback),
+
+* Initialize cxusb driver to PAL mode instead of trying to autodetect
+the standard,
+
+* Change videodev->tvnorms and the currently set standard when switching
+inputs so VIDIOC_ENUMSTD and VIDIOC_G_STD correctly return a limited
+standard set for TV tuner input,
+
+* Implement VIDIOC_QUERYSTD operation,
+
+* Make sure to return bottom-top field order for 525-line signal
+captures.
+
+Changes from v11:
+Add g_std operation to cx25840 driver and use it instead of querystd
+operation when determining field order in cxusb driver.
+
+ drivers/media/i2c/cx25840/cx25840-core.c |  554 +++++-
+ drivers/media/i2c/cx25840/cx25840-core.h |   15 +
+ drivers/media/i2c/cx25840/cx25840-vbi.c  |    4 +
+ drivers/media/usb/dvb-usb/Kconfig        |   16 +-
+ drivers/media/usb/dvb-usb/Makefile       |    3 +
+ drivers/media/usb/dvb-usb/cxusb-analog.c | 1974 ++++++++++++++++++++++
+ drivers/media/usb/dvb-usb/cxusb.c        |  451 ++++-
+ drivers/media/usb/dvb-usb/cxusb.h        |  158 ++
+ drivers/media/usb/dvb-usb/dvb-usb-dvb.c  |    5 +-
+ drivers/media/usb/dvb-usb/dvb-usb-init.c |   13 +
+ drivers/media/usb/dvb-usb/dvb-usb.h      |   10 +
+ drivers/media/v4l2-core/v4l2-ioctl.c     |    3 +-
+ include/media/drv-intf/cx25840.h         |  105 +-
+ 13 files changed, 3176 insertions(+), 135 deletions(-)
+ create mode 100644 drivers/media/usb/dvb-usb/cxusb-analog.c
