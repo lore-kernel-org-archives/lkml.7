@@ -2,102 +2,121 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA614C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1ADC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0DE20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E912147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:13:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="GwmbbJ8m"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="UWe7teRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfD2RMj (ORCPT
+        id S1728889AbfD2RNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:12:39 -0400
-Received: from mail-eopbgr820103.outbound.protection.outlook.com ([40.107.82.103]:6126
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728520AbfD2RMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:12:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7fB6tjOKj0Z9AukhUTQohof/FE3IbFFHpjFF0AFsy1o=;
- b=GwmbbJ8miwHAZ2nkphaETJZRnK5mTC6BLMOYZgIANm28UXHq5oOP1E2T+ccENsU0nCGDUcYopfRb3tmVEbIcoFoSLHosqLqbOe0YGhgF+12nclGn3JQ7+rtFAk+prWdnOcoFTI8ITulgyiHVXQ937rE28q8jxku4mq+VzncmgRI=
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
- MWHPR0601MB3658.namprd06.prod.outlook.com (10.167.236.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Mon, 29 Apr 2019 17:12:35 +0000
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::2d6d:7e4b:d2ff:5e29]) by MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::2d6d:7e4b:d2ff:5e29%3]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
- 17:12:34 +0000
-From:   Trent Piepho <tpiepho@impinj.com>
-To:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "anson.huang@nxp.com" <anson.huang@nxp.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC:     "linux-imx@nxp.com" <linux-imx@nxp.com>
-Subject: Re: [PATCH] rtc: snvs: Use __maybe_unused instead of #if
- CONFIG_PM_SLEEP
-Thread-Topic: [PATCH] rtc: snvs: Use __maybe_unused instead of #if
- CONFIG_PM_SLEEP
-Thread-Index: AQHU/lmEml9HNTGs9Ea7jhPERyCyyKZTYMSA
-Date:   Mon, 29 Apr 2019 17:12:34 +0000
-Message-ID: <1556557953.31309.4.camel@impinj.com>
-References: <1556521071-8981-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1556521071-8981-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tpiepho@impinj.com; 
-x-originating-ip: [216.207.205.253]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 153c713e-f07c-4566-887f-08d6ccc5df7a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR0601MB3658;
-x-ms-traffictypediagnostic: MWHPR0601MB3658:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MWHPR0601MB3658D5D9A6E0B0E5E519D2F3D3390@MWHPR0601MB3658.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0022134A87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39840400004)(376002)(346002)(136003)(396003)(199004)(189003)(26005)(6306002)(486006)(229853002)(6506007)(6246003)(14454004)(25786009)(476003)(71190400001)(53936002)(71200400001)(102836004)(6512007)(186003)(2906002)(4326008)(103116003)(36756003)(2501003)(91956017)(305945005)(76116006)(64756008)(66446008)(66556008)(66946007)(2201001)(5660300002)(68736007)(7736002)(99286004)(3846002)(6116002)(66476007)(73956011)(76176011)(8676002)(81156014)(81166006)(97736004)(8936002)(6436002)(966005)(66066001)(2616005)(478600001)(6486002)(14444005)(256004)(446003)(86362001)(316002)(11346002)(110136005)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3658;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: impinj.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ogJIyIiSvmfztsdw+6kTcDFpL1RdDzsF0Ya4PT9TijEtSouCXUkj2pPh+b7yF40Y7OADcbDmmfL8a/70p6g/Lije02Nif7BewHTMIKF6DPv1Zj4ejhimc/GV7cXq6qYcJTZuotMT5oHPZT0yWly+/w6tD5EJVZH+M3HDfRrfJqad+SIDpwI09XKgCasIVlQAOzPfcPfq01SGyXEs9eYeC7Mdagv/y84Jw+TksOcCSVvPVcTXIIfqDHnmAk54S6d9lKpoQTIzXBgtfIeUhSePWbxM5Zo21C2bw2NXogoLqz53BpNtCcHI7Y8ezgGHwGnStJfVsi41wsHwWmvXtohf8u6yYXCxZNMXUiIY39vERnp2DUrZBHJR+XGkfzddY3Q929IB9rvMvj6Iu17+TY2R8WveCLah2ivZzgHuquaxrw8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B3CEA9D2E6B6E741858AAAB4819F3480@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 29 Apr 2019 13:13:02 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:35521 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728520AbfD2RNB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 13:13:01 -0400
+Received: by mail-it1-f196.google.com with SMTP id w15so231089itc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2019 10:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=25fiyi7j1Bbc8JQlGA4N04qFKyRP6T12Pl+h/G3rDyI=;
+        b=UWe7teRVNHnVVVX7AxpBK7ppMB7htmVYCLs2maddnhAQN3s3CmuabCZeOMH8mGI/+6
+         /JAfjgHvCS2HhFocaMlJd0BXxYtS9navSccjbvY6qbHBMMr4XEP05Vux6hRDc7FRqF9t
+         kiOiH9k0iz1UZcROEN79XDk6Y4qZ4lS4HzZB2oSvWSi83Rn8F2YFkjGPBu66JMg3b00L
+         7fc+GysM/pjBsAmOQm4Bn8C/JvFBndEdO1r5YjJ9N0VM9tkAqjSOPKtK1qzYDc9iIoYW
+         FuK/BnRIigm4/uC2qkKopwb616CzVTL2ueBStfTT9+WDc3wTMj6WBvJkt9HrY9wm4l1G
+         xNXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=25fiyi7j1Bbc8JQlGA4N04qFKyRP6T12Pl+h/G3rDyI=;
+        b=qXSooUE+hqr/eANWAyVduGmk2mDV3n+f8ktmdlD6DHAnVgZc49SbRMADedXlEFTDYE
+         KI/We1VkMIY4VjprCuEn5v56K4f4XsNzZ/vp/rz1osWGo7X6IcLuL3cMu3i9ZMwdJR6o
+         In3WKnvamvpPOJy3hY/HcidqtNV9uSABM9LsvQMS/MTZ7/Q9J9d7WrYl5wtFEkZWWi5m
+         RyKTlJ+SCSxapWgfOuAADduINiGyp/s5hihBhxDv4JD2KqxVi53mQxJwsUTVK7ftIqiZ
+         cGwVCQXumXaRdgtN5NK3AQhhkbaxf2Q16YqEg2sUzEJ1ORhHULdCMez6JAWJ17u6ieqb
+         eEMw==
+X-Gm-Message-State: APjAAAXXNVyxgi+JUKTJ27RF3Kg5Y16pIG8i/QgFWkT3jbFE61+YB0Ra
+        Gp+UwWBdEC8qaFF6RdcN3OXtvUivMTcezwbKn5G3VQ==
+X-Google-Smtp-Source: APXvYqweY4l9yaoGv4MZCSEVnHgtdmzETHUyk5nS1Ww7LwbZsUOtMDtCJk63xjgrLfehIEYLnqh+/O9ZQ0ZLjkXKcqk=
+X-Received: by 2002:a24:58c:: with SMTP id 134mr87853itl.103.1556557980790;
+ Mon, 29 Apr 2019 10:13:00 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: impinj.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 153c713e-f07c-4566-887f-08d6ccc5df7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 17:12:34.7835
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3658
+References: <20190423142629.120717-1-venture@google.com> <CAO=notzjzpt0WHfJEWXMGgkoJU8UiLnqZnrGrPs-dRH5GNdJyQ@mail.gmail.com>
+ <CAO=notz9QVoqKLrhJ3kx9FHja5+Mh68f36O36+1ewLG+SanmOA@mail.gmail.com>
+ <20190425172549.GA12376@kroah.com> <20190429165137.mwj4ehhwerunbef4@localhost>
+In-Reply-To: <20190429165137.mwj4ehhwerunbef4@localhost>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 29 Apr 2019 10:12:48 -0700
+Message-ID: <CAOesGMg49z4Gip-bLK-h7+LSLa4Fu68r11gT2EV8E8xMCPGDxg@mail.gmail.com>
+Subject: Re: [PATCH v2] soc: add aspeed folder and misc drivers
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Patrick Venture <venture@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>,
+        soc@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA0LTI5IGF0IDA3OjAyICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4g
-VXNlIF9fbWF5YmVfdW51c2VkIGZvciBwb3dlciBtYW5hZ2VtZW50IHJlbGF0ZWQgZnVuY3Rpb25z
-DQo+IGluc3RlYWQgb2YgI2lmIENPTkZJR19QTV9TTEVFUCB0byBzaW1wbHkgdGhlIGNvZGUuDQo+
-IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCg0K
-VGhpcyB3aWxsIHJlc3VsdCBpbiB0aGUgZnVuY3Rpb25zIGFsd2F5cyBiZWluZyBpbmNsdWRlZCwg
-ZXZlbiBpZg0KUE1fU0xFRVAgaXMgb2ZmLi4uDQoNCj4gIA0KPiBAQCAtMzg3LDE0ICszODUsNiBA
-QCBzdGF0aWMgY29uc3Qgc3RydWN0IGRldl9wbV9vcHMgc252c19ydGNfcG1fb3BzID0gew0KPiAg
-CS5yZXN1bWVfbm9pcnEgPSBzbnZzX3J0Y19yZXN1bWVfbm9pcnEsDQo+ICB9Ow0KDQouLi5iZWNh
-dXNlIHRoZXkgd2lsbCBhbHdheXMgYmUgdXNlZCBieSB0aGUgZGVmaW5pdGlvbiBvZg0Kc252c19y
-dGNfcG1fb3BzIGhlcmUuDQoNCkluIG9yZGVyIGZvciB0aGlzIHRvIHdvcmssIFNJTVBMRV9ERVZf
-UE1fT1BTKCkgbmVlZHMgdG8gYmUgdXNlZCwNCnNvIHRoYXQgdGhlIGRldl9wbV9vcHMgc3RydWN0
-IGlzIGVtcHR5IHdoZW4gUE0gaXMgb2ZmIGFuZCB0aGUgZnVuY3Rpb25zDQpkb24ndCBnZXQgcmVm
-ZXJlbmNlZC4gU2VlOiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS8xLzE3LzM3Ng0K
+On Mon, Apr 29, 2019 at 10:08 AM Olof Johansson <olof@lixom.net> wrote:
+>
+> On Thu, Apr 25, 2019 at 07:25:49PM +0200, Greg KH wrote:
+> > On Tue, Apr 23, 2019 at 08:28:14AM -0700, Patrick Venture wrote:
+> > > On Tue, Apr 23, 2019 at 8:22 AM Patrick Venture <venture@google.com> wrote:
+> > > >
+> > > > On Tue, Apr 23, 2019 at 7:26 AM Patrick Venture <venture@google.com> wrote:
+> > > > >
+> > > > > Create a SoC folder for the ASPEED parts and place the misc drivers
+> > > > > currently present into this folder.  These drivers are not generic part
+> > > > > drivers, but rather only apply to the ASPEED SoCs.
+> > > > >
+> > > > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > >
+> > > > Accidentally lost the Acked-by when re-sending this patchset as I
+> > > > didn't see it on v1 before re-sending v2 to the larger audience.
+> > >
+> > > Since there was a change between v1 and v2, Arnd, I'd appreciate you
+> > > Ack this version of the patchset since it changes when the soc/aspeed
+> > > Makefile is followed.
+> >
+> > I have no objection for moving stuff out of drivers/misc/ so the SOC
+> > maintainers are free to take this.
+> >
+> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> I'm totally confused. This is the second "PATCH v2" of this patch that I came
+> across, I already applied the first.
+>
+> Patrick: Follow up with incremental patch in case there's any difference.
+> Meanwhile, please keep in mind that you're adding a lot of work for people when
+> you respin patches without following up on the previous version. Thanks!
+
+Not only that, but subthreads were cc:d to arm@kernel.org and some
+were not, so I missed the overnight conversation on the topic.
+
+If this email thread is any indication of how the code will be
+flowing, there's definitely need for more structure. Joel, I'm hoping
+you'll coordinate.
+
+I'm with Arnd on whether the code should be in drivers/soc or not --
+most of it likely should not.
+
+
+-Olof
