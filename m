@@ -2,149 +2,109 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BACC43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71CEC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27CCD2147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7094C2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 17:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Kw/kCK7q"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="DMT5kV5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbfD2RbZ (ORCPT
+        id S1728949AbfD2Rcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 13:31:25 -0400
-Received: from mail-eopbgr1410133.outbound.protection.outlook.com ([40.107.141.133]:41136
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728807AbfD2RbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 13:31:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector1-renesas-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=swucM8BOh7f/BWiSuQmaNsmLU6pVebibAtYZxUbTeqc=;
- b=Kw/kCK7qLZ0CK5CwsrwlF9/mNDQogzR7hbiT0enfejSlbodi3eTF58aDXIocI9HRln37B3PRySTFv8eGCnbAOlm2eslSdHgD+hpNbnl4bItZftNb3K2f4BPIQjSKbitG939831a+6SDQNWh72lA4KjGxNRDg+mG2pkokirPhgyY=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1561.jpnprd01.prod.outlook.com (52.133.161.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Mon, 29 Apr 2019 17:31:18 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::99cf:c94c:d11f:c2f0]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::99cf:c94c:d11f:c2f0%5]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
- 17:31:18 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/5] irqchip: Add Renesas RZ/A1 Interrupt Controller
- driver
-Thread-Topic: [PATCH 2/5] irqchip: Add Renesas RZ/A1 Interrupt Controller
- driver
-Thread-Index: AQHU/m8PB9wkGP0JyE6XlHkrtJGBYaZS6auAgAAU5ICAAAQ6gIAAXF+A
-Date:   Mon, 29 Apr 2019 17:31:18 +0000
-Message-ID: <TY1PR01MB15620363F895ACD71CFE77878A390@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20190429093631.10799-1-geert+renesas@glider.be>
- <20190429093631.10799-3-geert+renesas@glider.be>
- <f9310d4c-8f9e-a837-3ed3-4d7c294efd3f@arm.com>
- <CAMuHMdU3i7vqs9hd7rfvYH8QtqvwUB5vgsa_fwo5L4E3DQ_d1Q@mail.gmail.com>
- <e6c6dfe7-f67d-90a9-eee5-d30b94c7c978@arm.com>
-In-Reply-To: <e6c6dfe7-f67d-90a9-eee5-d30b94c7c978@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [75.60.247.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d415dc14-bf93-45ca-afa6-08d6ccc87d18
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1561;
-x-ms-traffictypediagnostic: TY1PR01MB1561:
-x-microsoft-antispam-prvs: <TY1PR01MB15618A1E1A81C110D0CEE12D8A390@TY1PR01MB1561.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0022134A87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(136003)(376002)(396003)(346002)(199004)(189003)(53936002)(9686003)(33656002)(66946007)(55016002)(256004)(66556008)(66476007)(71190400001)(71200400001)(64756008)(229853002)(6436002)(68736007)(66446008)(52536014)(73956011)(86362001)(76116006)(4326008)(6246003)(7416002)(2906002)(6506007)(102836004)(76176011)(81166006)(478600001)(81156014)(72206003)(66066001)(14454004)(8676002)(486006)(446003)(305945005)(7696005)(26005)(3846002)(6116002)(8936002)(7736002)(74316002)(25786009)(316002)(54906003)(110136005)(93886005)(5660300002)(186003)(99286004)(476003)(11346002)(97736004);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1561;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: myOHj3L3ouM3bcsuBGg7kbXqhK56EkXUwCy+LeWz8Sx0/Y5eYGJUHGNAEXPbHjam6LfGeK/xKyu64VTUeHsGOQX11XkSqwuwXpeO7PAb/YS5V0vrPNhYc111MPLyMhhSbOcfiGBIPd8hnqzqV1oDOFHy3n8w8k66XkyuxC2j0xVpynWrcDki4EHlE0+zcqpSOtljrBCws+evyGJdeB5fbb1FANjAwg6tfyOfcN3zajxe9eL+3AXzoCp1kHrlPX1/wA2vCqRJjEGMw9jzUJjAAx1kRt7bKTs2nON2a5p5mYhZ3Y4HSxtv67bWDz757G5zNpf4UR1soeBRhMQ+sWCI7MkVSi1TZLL0bWgzw+0oKQ0hr8JndI071e2ZmOPIJVgbgtwo+/Y1Xj/6KRFcHKcoh5nFOqDj2hVnz+hwMwJcW2g=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 29 Apr 2019 13:32:31 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:58668 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728798AbfD2Rca (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 13:32:30 -0400
+Received: from pps.filterd (m0122333.ppops.net [127.0.0.1])
+        by mx0a-00190b01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3THW7lU029960;
+        Mon, 29 Apr 2019 18:32:19 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=jan2016.eng; bh=sS7DrQAgbihdhID9iWJw9oN4UHyGdasArGXMZWDAwSA=;
+ b=DMT5kV5/nEua4sy5xPmHLK+2L55ki5959TcXOes5jGvXG6YBXHR6llG6wbUq1BGB/ELm
+ SSgDEWKOPNsmG05b8+oWFkYHWdA+99RbWudDzExCAPwKyNXAyP58uWf6cMuNjMjcBOSE
+ Cz77p70tP+sv0qTvy9xqkWQf2FhC5Pt6xHE4Lvf5KmzlIu1GGE39q7/L5c3HvF4O/cuC
+ UBKAtSOiWWWQmI3q5aTuM9gkXSyATMS9/YfqjRAmoIazBvixNv0/iLiOWcmIFITlDdg9
+ hby+mAhXqCt9OtUBycivVy0OarUVt3pIi85lsaDFCXfflk0nIAMoion4H3rSdvNu7rPq OA== 
+Received: from prod-mail-ppoint3 (prod-mail-ppoint3.akamai.com [96.6.114.86] (may be forged))
+        by mx0a-00190b01.pphosted.com with ESMTP id 2s4eb6jcux-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Apr 2019 18:32:19 +0100
+Received: from pps.filterd (prod-mail-ppoint3.akamai.com [127.0.0.1])
+        by prod-mail-ppoint3.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x3THWFRc004727;
+        Mon, 29 Apr 2019 13:32:18 -0400
+Received: from prod-mail-relay15.akamai.com ([172.27.17.40])
+        by prod-mail-ppoint3.akamai.com with ESMTP id 2s4jdvcg8r-1;
+        Mon, 29 Apr 2019 13:32:18 -0400
+Received: from bos-lpxjs (bos-lpxjs.kendall.corp.akamai.com [172.29.171.194])
+        by prod-mail-relay15.akamai.com (Postfix) with ESMTP id 377C420064;
+        Mon, 29 Apr 2019 17:32:18 +0000 (GMT)
+Received: from dbanerje by bos-lpxjs with local (Exim 4.86_2)
+        (envelope-from <dbanerje@akamai.com>)
+        id 1hLA8I-0000OJ-DQ; Mon, 29 Apr 2019 13:32:02 -0400
+From:   Debabrata Banerjee <dbanerje@akamai.com>
+To:     Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, Dmitry Monakhov <dmonakhov@openvz.org>,
+        linux-kernel@vger.kernel.org
+Cc:     dbanerje@akamai.com
+Subject: [PATCH v2] ext4: bad mount opts in no journal mode
+Date:   Mon, 29 Apr 2019 13:31:58 -0400
+Message-Id: <20190429173158.1463-1-dbanerje@akamai.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d415dc14-bf93-45ca-afa6-08d6ccc87d18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 17:31:18.2948
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1561
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904290120
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904290120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQgYW5kIE1hcmMsDQoNCkkgdGVzdGVkIEdlZXJ0J3MgcGF0Y2hlcyBvbiBSWi9BMSBh
-bmQgUlovQTIgYm9hcmRzIChwdXNoIGJ1dHRvbnMgYW5kIExDRA0KdG91Y2hzY3JlZW4gY29udHJv
-bGxlcikuIFdvcmtzIGdyZWF0IQ0KDQokIGNhdCAvcHJvYy9pbnRlcnJ1cHRzDQogNDk6ICAgICAg
-IDUwNTAgIGZjZmVmODAwLmludGVycnVwdC1jb250cm9sbGVyICAgMSBMZXZlbCAgICAgZnQ1eDA2
-X3RzDQogNTA6ICAgICAgICAgMzIgIGZjZmVmODAwLmludGVycnVwdC1jb250cm9sbGVyICAgMyBF
-ZGdlICAgICAgU1cxDQogNTE6ICAgICAgICAgMTIgIGZjZmVmODAwLmludGVycnVwdC1jb250cm9s
-bGVyICAgMiBFZGdlICAgICAgU1cyDQogNTI6ICAgICAgICAgMTAgIGZjZmVmODAwLmludGVycnVw
-dC1jb250cm9sbGVyICAgNSBFZGdlICAgICAgU1czDQoNCg0KRm9yIFJaL0EyLCBJIHBhdGNoZWQg
-dGhlIGRyaXZlci9LY29uZmlnIGFzIGZvbGxvd3M6DQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2lycWNoaXAvaXJxLXJlbmVzYXMtcnphMS5jIGIvZHJpdmVycy9pcnFjaGlw
-L2lycS1yZW5lc2FzLXJ6YTEuYw0KaW5kZXggNjUxMTAwMTlhZGRhLi44OWE3MjE4NjRmZjkgMTAw
-NjQ0DQotLS0gYS9kcml2ZXJzL2lycWNoaXAvaXJxLXJlbmVzYXMtcnphMS5jDQorKysgYi9kcml2
-ZXJzL2lycWNoaXAvaXJxLXJlbmVzYXMtcnphMS5jDQpAQCAtMjA2LDcgKzIwNiwxMiBAQCBzdHJ1
-Y3QgcnphMV9pcnFjX2luZm8gcnphMV9pcnFjX2luZm8gPSB7DQogICAgICAgIC5naWNfc3BpX2Jh
-c2UgPSAwLA0KIH07DQogDQorc3RydWN0IHJ6YTFfaXJxY19pbmZvIHJ6YTJfaXJxY19pbmZvID0g
-ew0KKyAgICAgICAuZ2ljX3NwaV9iYXNlID0gNCwNCit9Ow0KKw0KIHN0YXRpYyBjb25zdCBzdHJ1
-Y3Qgb2ZfZGV2aWNlX2lkIHJ6YTFfaXJxY19kdF9pZHNbXSA9IHsNCisgICAgICAgeyAuY29tcGF0
-aWJsZSA9ICJyZW5lc2FzLHI3czkyMTAtaXJxYyIsICZyemEyX2lycWNfaW5mbyB9LA0KICAgICAg
-ICB7IC5jb21wYXRpYmxlID0gInJlbmVzYXMscnphMS1pcnFjIiwgJnJ6YTFfaXJxY19pbmZvIH0s
-DQogICAgICAgIHt9LA0KIH07DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvcmVuZXNhcy9LY29u
-ZmlnIGIvZHJpdmVycy9zb2MvcmVuZXNhcy9LY29uZmlnDQppbmRleCAxNDQ4YjZkYmNkYjIuLjRh
-YjdkY2ZkNmEyZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL3JlbmVzYXMvS2NvbmZpZw0KKysr
-IGIvZHJpdmVycy9zb2MvcmVuZXNhcy9LY29uZmlnDQpAQCAtNjUsNiArNjUsNyBAQCBjb25maWcg
-QVJDSF9SN1M5MjEwDQogICAgICAgIGJvb2wgIlJaL0EyIChSN1M5MjEwKSINCiAgICAgICAgc2Vs
-ZWN0IFBNDQogICAgICAgIHNlbGVjdCBQTV9HRU5FUklDX0RPTUFJTlMNCisgICAgICAgc2VsZWN0
-IFJFTkVTQVNfUlpBMV9JUlFDDQogICAgICAgIHNlbGVjdCBSRU5FU0FTX09TVE0NCiANCiBjb25m
-aWcgQVJDSF9SOEE3M0E0DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoNCg0KSG93ZXZlciwgYXMgcGVyOg0KDQoN
-Ck9uIE1vbiwgQXByIDI5LCAyMDE5LCBNYXJjIFp5bmdpZXIgd3JvdGU6DQo+ID4+PiArc3RydWN0
-IHJ6YTFfaXJxY19pbmZvIHJ6YTFfaXJxY19pbmZvID0gew0KPiA+Pj4gKyAgICAgLmdpY19zcGlf
-YmFzZSA9IDAsDQo+ID4+PiArfTsNCj4gPj4NCj4gPj4gVG8gYW5zd2VyIHlvdXIgcXVlc3Rpb24g
-aW4gdGhlIGNvdmVyIGxldHRlciwgSSdkIHJhdGhlciB0aGlzIGNhbWUgZnJvbQ0KPiA+PiBEVC4g
-QW5kIG90aGVyd2lzZSwgaXQgc2hvdWxkIGJlIGJlIHN0YXRpYy4NCj4gPg0KPiA+IChPb3BzLCBm
-b3JnZXQgdGhlICJzdGF0aWMgY29uc3QiKQ0KPiA+DQo+ID4gVXNpbmcgYSBjdXN0b20gcHJvcGVy
-dHksIG9yIGRlcml2ZWQgZnJvbSA4IGludGVycnVwdCBzcGVjaWZpZXJzIGluIHRoZQ0KPiA+IGlu
-dGVycnVwdHMgcHJvcGVydHk/DQo+IA0KPiBBIGN1c3RvbSBwcm9wZXJ0eSBpcyBmaW5lIGJ5IG1l
-IChldmVyeWJvZHkgZG9lcyB0aGF0IGFueXdheSkuDQoNCg0KSSdsbCByZS10ZXN0IGFmdGVyIHYy
-IG9mIHRoZSBwYXRjaCB3aGVuIGdpY19zcGlfYmFzZSBtb3ZlcyB0byBEVC4NCg0KDQoNCklmIHlv
-dSB3YW50IHRvIGFkZCBSWi9BMiBpbnRvIHRoaXMgc2VyaWVzIHRvIGdldCBpdCBhbGwgZG9uZSBh
-dCBvbmNlLCANCkknbGwgdGVzdCB0aGF0IGFzIHdlbGwuDQoNCkp1c3Qgbm90ZSB0aGF0IG9uIHRo
-ZSBSWi9BMk0gRVZCLCBvbmx5IFNXMyBpcyBjb25uZWN0ZWQgdG8gYW4gaW50ZXJydXB0IA0KcGlu
-IChJUlEwKS4NCg0KJnBpbmN0cmwgew0KCS8qIFNXMyA9IElSUTAgKi8NCglrZXlib2FyZF9waW5z
-OiBrZXlib2FyZCB7DQoJCXBpbm11eCA9IDxSWkEyX1BJTk1VWChQT1JUSiwgMSwgNik+OwkvKiBJ
-UlEwICovDQoJfTsNCn07DQoNCi8gew0KCWtleWJvYXJkIHsNCgkJY29tcGF0aWJsZSA9ICJncGlv
-LWtleXMiOw0KDQoJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQoJCXBpbmN0cmwtMCA9IDwm
-a2V5Ym9hcmRfcGlucz47DQoNCgkJa2V5LTMgew0KCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmaXJx
-Yz47DQoJCQlpbnRlcnJ1cHRzID0gPDAgSVJRX1RZUEVfRURHRV9CT1RIPjsNCgkJCWxpbnV4LGNv
-ZGUgPSA8S0VZXzM+Ow0KCQkJbGFiZWwgPSAiU1czIjsNCgkJCXdha2V1cC1zb3VyY2U7DQoJCX07
-DQoJfTsNCn07DQoNCg0KDQpDaHJpcw0KDQo=
+Fixes:
+commit 1e381f60dad9 ("ext4: do not allow journal_opts for fs w/o journal")
+
+Instead of removing EXT4_MOUNT_JOURNAL_CHECKSUM from s_def_mount_opt as
+I assume was intended, all other options were blown away leading to
+_ext4_show_options() output being incorrect.
+
+Signed-off-by: Debabrata Banerjee <dbanerje@akamai.com>
+---
+ fs/ext4/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 6ed4eb81e674..5cdf1d88b5c3 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4238,7 +4238,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 				 "data=, fs mounted w/o journal");
+ 			goto failed_mount_wq;
+ 		}
+-		sbi->s_def_mount_opt &= EXT4_MOUNT_JOURNAL_CHECKSUM;
++		sbi->s_def_mount_opt &= ~EXT4_MOUNT_JOURNAL_CHECKSUM;
+ 		clear_opt(sb, JOURNAL_CHECKSUM);
+ 		clear_opt(sb, DATA_FLAGS);
+ 		sbi->s_journal = NULL;
+-- 
+2.21.0
+
