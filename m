@@ -6,37 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7B3C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A342CC43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2472075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6512064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 16:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfD2QAX (ORCPT
+        id S1728811AbfD2QAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 12:00:23 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:32952 "EHLO
+        Mon, 29 Apr 2019 12:00:32 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:32980 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbfD2QAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:00:20 -0400
+        id S1728789AbfD2QAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:00:25 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D34D9165C;
-        Mon, 29 Apr 2019 09:00:19 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38AB116A3;
+        Mon, 29 Apr 2019 09:00:25 -0700 (PDT)
 Received: from e112298-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 855803F5C1;
-        Mon, 29 Apr 2019 09:00:17 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 06D243F5C1;
+        Mon, 29 Apr 2019 09:00:22 -0700 (PDT)
 From:   Julien Thierry <julien.thierry@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
         marc.zyngier@arm.com, yuzenghui@huawei.com,
         wanghaibin.wang@huawei.com, james.morse@arm.com,
         will.deacon@arm.com, catalin.marinas@arm.com, mark.rutland@arm.com,
-        liwei391@huawei.com, Julien Thierry <julien.thierry@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Subject: [PATCH v2 2/5] arm64: Fix interrupt tracing in the presence of NMIs
-Date:   Mon, 29 Apr 2019 17:00:04 +0100
-Message-Id: <1556553607-46531-3-git-send-email-julien.thierry@arm.com>
+        liwei391@huawei.com, Julien Thierry <julien.thierry@arm.com>
+Subject: [PATCH v2 4/5] arm64: irqflags: Introduce explicit debugging for IRQ priorities
+Date:   Mon, 29 Apr 2019 17:00:06 +0100
+Message-Id: <1556553607-46531-5-git-send-email-julien.thierry@arm.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556553607-46531-1-git-send-email-julien.thierry@arm.com>
 References: <1556553607-46531-1-git-send-email-julien.thierry@arm.com>
@@ -45,202 +43,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the presence of any form of instrumentation, nmi_enter() should be
-done before calling any traceable code and any instrumentation code.
+Using IRQ priority masking to enable/disable interrupts is a bit
+sensitive as it requires to deal with both ICC_PMR_EL1 and PSR.I.
 
-Currently, nmi_enter() is done in handle_domain_nmi(), which is much
-too late as instrumentation code might get called before. Move the
-nmi_enter/exit() calls to the arch IRQ vector handler.
+Introduce some validity checks to both highlight the states in which
+functions dealing with IRQ enabling/disabling can (not) be called, and
+bark a warning when called in an unexpected state.
 
-On arm64, it is not possible to know if the IRQ vector handler was
-called because of an NMI before acknowledging the interrupt. However, It
-is possible to know whether normal interrupts could be taken in the
-interrupted context (i.e. if taking an NMI in that context could
-introduce a potential race condition).
+Since these checks are done on hotpaths, introduce a build option to
+choose whether to do the checking.
 
-When interrupting a context with IRQs disabled, call nmi_enter() as soon
-as possible. In contexts with IRQs enabled, defer this to the interrupt
-controller, which is in a better position to know if an interrupt taken
-is an NMI.
-
-Fixes: bc3c03ccb ("arm64: Enable the support of pseudo-NMIs")
 Signed-off-by: Julien Thierry <julien.thierry@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
 ---
- arch/arm64/kernel/entry.S    | 44 +++++++++++++++++++++++++++++++++-----------
- arch/arm64/kernel/irq.c      | 17 +++++++++++++++++
- drivers/irqchip/irq-gic-v3.c |  6 ++++++
- kernel/irq/irqdesc.c         |  8 ++++++--
- 4 files changed, 62 insertions(+), 13 deletions(-)
+ arch/arm64/Kconfig                 | 11 +++++++++++
+ arch/arm64/include/asm/daifflags.h |  9 +++++++++
+ arch/arm64/include/asm/irqflags.h  | 14 ++++++++++++++
+ 3 files changed, 34 insertions(+)
 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 6a38903..00c1f21 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -420,6 +420,20 @@ tsk	.req	x28		// current thread_info
- 	irq_stack_exit
- 	.endm
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 7e34b9e..3fb38f3 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1359,6 +1359,17 @@ config ARM64_PSEUDO_NMI
 
-+#ifdef CONFIG_ARM64_PSEUDO_NMI
-+	/*
-+	 * Set res to 0 if irqs were masked in interrupted context.
-+	 * Otherwise set res to non-0 value.
-+	 */
-+	.macro test_irqs_unmasked res:req, pmr:req
-+alternative_if ARM64_HAS_IRQ_PRIO_MASKING
-+	sub	\res, \pmr, #GIC_PRIO_IRQON
-+alternative_else
-+	mov	\res, xzr
-+alternative_endif
-+	.endm
-+#endif
-+
- 	.text
+ 	  If unsure, say N
 
- /*
-@@ -616,19 +630,19 @@ ENDPROC(el1_sync)
- el1_irq:
- 	kernel_entry 1
- 	enable_da_f
--#ifdef CONFIG_TRACE_IRQFLAGS
++if ARM64_PSEUDO_NMI
++config ARM64_DEBUG_PRIORITY_MASKING
++	bool "Debug interrupt priority masking"
++	help
++	  This adds runtime checks to functions enabling/disabling
++	  interrupts when using priority masking. The additional checks verify
++	  the validity of ICC_PMR_EL1 when calling concerned functions.
 +
- #ifdef CONFIG_ARM64_PSEUDO_NMI
- alternative_if ARM64_HAS_IRQ_PRIO_MASKING
- 	ldr	x20, [sp, #S_PMR_SAVE]
--alternative_else
--	mov	x20, #GIC_PRIO_IRQON
--alternative_endif
--	cmp	x20, #GIC_PRIO_IRQOFF
--	/* Irqs were disabled, don't trace */
--	b.ls	1f
-+alternative_else_nop_endif
-+	test_irqs_unmasked	res=x0, pmr=x20
-+	cbz	x0, 1f
-+	bl	asm_nmi_enter
-+1:
- #endif
++	  If unsure, say N
++endif
 +
-+#ifdef CONFIG_TRACE_IRQFLAGS
- 	bl	trace_hardirqs_off
--1:
- #endif
+ config RELOCATABLE
+ 	bool
+ 	help
+diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
+index a32ece9..9512968 100644
+--- a/arch/arm64/include/asm/daifflags.h
++++ b/arch/arm64/include/asm/daifflags.h
+@@ -28,6 +28,11 @@
+ /* mask/save/unmask/restore all exceptions, including interrupts. */
+ static inline void local_daif_mask(void)
+ {
++	WARN_ON(IS_ENABLED(CONFIG_ARM64_DEBUG_PRIORITY_MASKING) &&
++		system_uses_irq_prio_masking() &&
++		(read_sysreg_s(SYS_ICC_PMR_EL1) == (GIC_PRIO_IRQOFF |
++						    GIC_PRIO_IGNORE_PMR)));
++
+ 	asm volatile(
+ 		"msr	daifset, #0xf		// local_daif_mask\n"
+ 		:
+@@ -62,6 +67,10 @@ static inline void local_daif_restore(unsigned long flags)
+ {
+ 	bool irq_disabled = flags & PSR_I_BIT;
 
- 	irq_handler
-@@ -647,14 +661,22 @@ alternative_else_nop_endif
- 	bl	preempt_schedule_irq		// irq en/disable is done inside
- 1:
- #endif
--#ifdef CONFIG_TRACE_IRQFLAGS
++	WARN_ON(IS_ENABLED(CONFIG_ARM64_DEBUG_PRIORITY_MASKING) &&
++		system_uses_irq_prio_masking() &&
++		!(read_sysreg(daif) & PSR_I_BIT));
 +
- #ifdef CONFIG_ARM64_PSEUDO_NMI
- 	/*
- 	 * if IRQs were disabled when we received the interrupt, we have an NMI
- 	 * and we are not re-enabling interrupt upon eret. Skip tracing.
- 	 */
--	cmp	x20, #GIC_PRIO_IRQOFF
--	b.ls	1f
-+	test_irqs_unmasked	res=x0, pmr=x20
-+	cbz	x0, 1f
-+	bl	asm_nmi_exit
-+1:
-+#endif
-+
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+#ifdef CONFIG_ARM64_PSEUDO_NMI
-+	test_irqs_unmasked	res=x0, pmr=x20
-+	cbnz	x0, 1f
- #endif
- 	bl	trace_hardirqs_on
- 1:
-diff --git a/arch/arm64/kernel/irq.c b/arch/arm64/kernel/irq.c
-index 92fa817..fdd9cb2 100644
---- a/arch/arm64/kernel/irq.c
-+++ b/arch/arm64/kernel/irq.c
-@@ -27,8 +27,10 @@
- #include <linux/smp.h>
- #include <linux/init.h>
- #include <linux/irqchip.h>
-+#include <linux/kprobes.h>
- #include <linux/seq_file.h>
- #include <linux/vmalloc.h>
-+#include <asm/daifflags.h>
- #include <asm/vmap_stack.h>
+ 	if (!irq_disabled) {
+ 		trace_hardirqs_on();
 
- unsigned long irq_err_count;
-@@ -76,3 +78,18 @@ void __init init_IRQ(void)
- 	if (!handle_arch_irq)
- 		panic("No interrupt controller found.");
- }
-+
-+/*
-+ * Stubs to make nmi_enter/exit() code callable from ASM
-+ */
-+asmlinkage void notrace asm_nmi_enter(void)
-+{
-+	nmi_enter();
-+}
-+NOKPROBE_SYMBOL(asm_nmi_enter);
-+
-+asmlinkage void notrace asm_nmi_exit(void)
-+{
-+	nmi_exit();
-+}
-+NOKPROBE_SYMBOL(asm_nmi_exit);
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 15e55d3..4847673 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -495,7 +495,13 @@ static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs
-
- 	if (gic_supports_nmi() &&
- 	    unlikely(gic_read_rpr() == GICD_INT_NMI_PRI)) {
-+		if (interrupts_enabled(regs))
-+			nmi_enter();
-+
- 		gic_handle_nmi(irqnr, regs);
-+
-+		if (interrupts_enabled(regs))
-+			nmi_exit();
- 		return;
- 	}
-
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 9f8a709..b3fdf48 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -679,6 +679,8 @@ int __handle_domain_irq(struct irq_domain *domain, unsigned int hwirq,
-  * @hwirq:	The HW irq number to convert to a logical one
-  * @regs:	Register file coming from the low-level handling code
-  *
-+ *		This function must be called from an NMI context.
-+ *
-  * Returns:	0 on success, or -EINVAL if conversion has failed
+diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
+index 516cdfc..a40abc2 100644
+--- a/arch/arm64/include/asm/irqflags.h
++++ b/arch/arm64/include/asm/irqflags.h
+@@ -40,6 +40,13 @@
   */
- int handle_domain_nmi(struct irq_domain *domain, unsigned int hwirq,
-@@ -688,7 +690,10 @@ int handle_domain_nmi(struct irq_domain *domain, unsigned int hwirq,
- 	unsigned int irq;
- 	int ret = 0;
+ static inline void arch_local_irq_enable(void)
+ {
++	if (IS_ENABLED(CONFIG_ARM64_DEBUG_PRIORITY_MASKING) &&
++	    system_uses_irq_prio_masking()) {
++		u32 pmr = read_sysreg_s(SYS_ICC_PMR_EL1);
++
++		WARN_ON(pmr != GIC_PRIO_IRQON && pmr != GIC_PRIO_IRQOFF);
++	}
++
+ 	asm volatile(ALTERNATIVE(
+ 		"msr	daifclr, #2		// arch_local_irq_enable\n"
+ 		"nop",
+@@ -53,6 +60,13 @@ static inline void arch_local_irq_enable(void)
 
--	nmi_enter();
-+	/*
-+	 * NMI context needs to be setup earlier in order to deal with tracing.
-+	 */
-+	WARN_ON(!in_nmi());
-
- 	irq = irq_find_mapping(domain, hwirq);
-
-@@ -701,7 +706,6 @@ int handle_domain_nmi(struct irq_domain *domain, unsigned int hwirq,
- 	else
- 		ret = -EINVAL;
-
--	nmi_exit();
- 	set_irq_regs(old_regs);
- 	return ret;
- }
+ static inline void arch_local_irq_disable(void)
+ {
++	if (IS_ENABLED(CONFIG_ARM64_DEBUG_PRIORITY_MASKING) &&
++	    system_uses_irq_prio_masking()) {
++		u32 pmr = read_sysreg_s(SYS_ICC_PMR_EL1);
++
++		WARN_ON(pmr != GIC_PRIO_IRQON && pmr != GIC_PRIO_IRQOFF);
++	}
++
+ 	asm volatile(ALTERNATIVE(
+ 		"msr	daifset, #2		// arch_local_irq_disable",
+ 		"msr_s  " __stringify(SYS_ICC_PMR_EL1) ", %0",
 --
 1.9.1
