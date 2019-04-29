@@ -2,98 +2,87 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36038C04AA6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2779C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F47620673
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961CB2087B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 11:08:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbfD2LG6 (ORCPT
+        id S1727925AbfD2LIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 07:06:58 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53646 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727710AbfD2LG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 07:06:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F026280D;
-        Mon, 29 Apr 2019 04:06:56 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE03A3F5AF;
-        Mon, 29 Apr 2019 04:06:53 -0700 (PDT)
-Subject: Re: [PATCH v3 02/10] swiotlb: Factor out slot allocation and free
-To:     Lu Baolu <baolu.lu@linux.intel.com>, Christoph Hellwig <hch@lst.de>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20190421011719.14909-1-baolu.lu@linux.intel.com>
- <20190421011719.14909-3-baolu.lu@linux.intel.com>
- <20190422164555.GA31181@lst.de>
- <0c6e5983-312b-0d6b-92f5-64861cd6804d@linux.intel.com>
- <20190423061232.GB12762@lst.de>
- <dff50b2c-5e31-8b4a-7fdf-99d17852746b@linux.intel.com>
- <20190424144532.GA21480@lst.de>
- <a189444b-15c9-8069-901d-8cdf9af7fc3c@linux.intel.com>
- <20190426150433.GA19930@lst.de>
- <93b3d627-782d-cae0-2175-77a5a8b3fe6e@linux.intel.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <90182d27-5764-7676-8ca6-b2773a40cfe1@arm.com>
-Date:   Mon, 29 Apr 2019 12:06:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 29 Apr 2019 07:08:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42188 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727710AbfD2LIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Apr 2019 07:08:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B81C6ACD1;
+        Mon, 29 Apr 2019 11:08:02 +0000 (UTC)
+Date:   Mon, 29 Apr 2019 13:08:01 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Yue Haibing <yuehaibing@huawei.com>, sergey.senozhatsky@gmail.com,
+        andriy.shevchenko@linux.intel.com, geert+renesas@glider.be,
+        me@tobin.cc, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH -next] lib/vsprintf: Make function pointer_string static
+Message-ID: <20190429110801.awvdxawpee3sxujs@pathway.suse.cz>
+References: <20190426164630.22104-1-yuehaibing@huawei.com>
+ <20190426130204.23a5a05c@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <93b3d627-782d-cae0-2175-77a5a8b3fe6e@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426130204.23a5a05c@gandalf.local.home>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2019 06:10, Lu Baolu wrote:
-> Hi Christoph,
+On Fri 2019-04-26 13:02:04, Steven Rostedt wrote:
+> On Sat, 27 Apr 2019 00:46:30 +0800
+> Yue Haibing <yuehaibing@huawei.com> wrote:
 > 
-> On 4/26/19 11:04 PM, Christoph Hellwig wrote:
->> On Thu, Apr 25, 2019 at 10:07:19AM +0800, Lu Baolu wrote:
->>> This is not VT-d specific. It's just how generic IOMMU works.
->>>
->>> Normally, IOMMU works in paging mode. So if a driver issues DMA with
->>> IOVA  0xAAAA0123, IOMMU can remap it with a physical address 0xBBBB0123.
->>> But we should never expect IOMMU to remap 0xAAAA0123 with physical
->>> address of 0xBBBB0000. That's the reason why I said that IOMMU will not
->>> work there.
->>
->> Well, with the iommu it doesn't happen.  With swiotlb it obviosuly
->> can happen, so drivers are fine with it.  Why would that suddenly
->> become an issue when swiotlb is called from the iommu code?
->>
+> > From: YueHaibing <yuehaibing@huawei.com>
+> > 
+> > Fix sparse warning:
+> > 
+> > lib/vsprintf.c:673:6: warning:
+> >  symbol 'pointer_string' was not declared. Should it be static?
+> > 
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > ---
+> >  lib/vsprintf.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index 1f367f3..7b0a614 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -670,8 +670,9 @@ char *string(char *buf, char *end, const char *s,
+> >  	return string_nocheck(buf, end, s, spec);
+> >  }
+> >  
+> > -char *pointer_string(char *buf, char *end, const void *ptr,
+> > -		     struct printf_spec spec)
+> > +static char *pointer_string(char *buf, char *end,
 > 
-> I would say IOMMU is DMA remapping, not DMA engine. :-)
+> Looks like commit "vsprintf: Do not check address of well-known
+> strings" removed the: "static noinline_for_stack"
+> 
+> Does pointer_string() need that still?
 
-I'm not sure I really follow the issue here - if we're copying the 
-buffer to the bounce page(s) there's no conceptual difference from 
-copying it to SWIOTLB slot(s), so there should be no need to worry about 
-the original in-page offset.
+Heh, it was removed by mistake and well hidden in the diff.
 
- From the reply up-thread I guess you're trying to include an 
-optimisation to only copy the head and tail of the buffer if it spans 
-multiple pages, and directly map the ones in the middle, but AFAICS 
-that's going to tie you to also using strict mode for TLB maintenance, 
-which may not be a win overall depending on the balance between 
-invalidation bandwidth vs. memcpy bandwidth. At least if we use standard 
-SWIOTLB logic to always copy the whole thing, we should be able to 
-release the bounce pages via the flush queue to allow 'safe' lazy unmaps.
+I have pushed Yue's fix into printk.git, branch
+for-5.2-vsprintf-hardening
 
-Either way I think it would be worth just implementing the 
-straightforward version first, then coming back to consider 
-optimisations later.
+Thanks for the patch.
 
-Robin.
+Best Regards,
+Petr
