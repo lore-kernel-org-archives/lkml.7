@@ -7,77 +7,76 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D510C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25518C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDDCA20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF196215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 18:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="N7IZqHza"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qZCViHIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbfD2Sf3 (ORCPT
+        id S1729136AbfD2Sfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Apr 2019 14:35:29 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48179 "EHLO
+        Mon, 29 Apr 2019 14:35:53 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:47499 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728962AbfD2Sf3 (ORCPT
+        with ESMTP id S1729130AbfD2Sfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Apr 2019 14:35:29 -0400
+        Mon, 29 Apr 2019 14:35:53 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3TIXM1M1027359
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3TIYkPd1027462
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 29 Apr 2019 11:33:22 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3TIXM1M1027359
+        Mon, 29 Apr 2019 11:34:46 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3TIYkPd1027462
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556562804;
-        bh=x8WNcoaGARUCBLFd77Kf/cOMvJFpzF7M2O4bHK1xiyY=;
+        s=2019041745; t=1556562888;
+        bh=tD78nErbFOXSLjomx3YZxxwA14XMQMWEldwwMWwz7JY=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=N7IZqHzaHJ38rq/r7uxVNCG3D3TROJ6fip1scD55+bDnVuQliJ4ut/znhfS5ikNXD
-         krmenxc4aVKyGRYrdyPRpkF4r7cbqSNpqQjIFrouN7qYo5tXMXwmv2s6lxWqVB+RwY
-         rrhupGJOz19be0vh5mAWsfc4GRf/Fr4BVhW+69RNagFOHi9MhpFNOYsI4X2g4Ts4/x
-         7pbkdtSCrEIiPjwiuclB4Zp4aFD9c34UXsqD0mTcERaflXz7xNdEGZmLoNKwazj9mo
-         +HaQZElfbAlr7Gx0JktHrrngqOO5Arx7SVnWtktuzZt7t+SyHjfzslmEEHeu3H1b9w
-         8EZIZNb1Ky4Aw==
+        b=qZCViHIWeK7BMnVGyg8206MWsT3c/ZwJtmFJVqVMe7KR7aFW0DkYr3OBO/GdH3Adi
+         lvX6wHs7nGqVtyWInIFeCzZ5G2J8m9lN72C6f/d3FCzkhdVyD8bFLLz0zZgRoUSXM4
+         iXXxICd/tf6n6kNFZ2eCM9lAGcME5LuXtyf23CEypq5853VZmdspckOKW0R7WMDG5x
+         iv4PtyZpFWDDJHBVuAP3TRKUpdbdXeQQyQ/9kf6XVypNKbv9hXGC1nYjpmh5yIIrci
+         16j2j3EvYJu4jI7IxXS9z6ejJ7vr7lqiSl3llhwFPcotH71mIZIJivdGpWeC/0OMz9
+         4IIYU/RE8KgpA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3TIXMbF1027355;
-        Mon, 29 Apr 2019 11:33:22 -0700
-Date:   Mon, 29 Apr 2019 11:33:22 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3TIYktY1027458;
+        Mon, 29 Apr 2019 11:34:46 -0700
+Date:   Mon, 29 Apr 2019 11:34:46 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-1b59562d3ab09dcef188eb8055d05f0336380394@git.kernel.org>
-Cc:     jthumshirn@suse.de, mbenes@suse.cz, dvyukov@google.com, clm@fb.com,
-        josef@toxicpanda.com, snitzer@redhat.com, cl@linux.com,
-        linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        dsterba@suse.com, mingo@kernel.org, akpm@linux-foundation.org,
-        robin.murphy@arm.com, rppt@linux.vnet.ibm.com, airlied@linux.ie,
-        rientjes@google.com, penberg@kernel.org, hpa@zytor.com,
-        daniel@ffwll.ch, glider@google.com, akinobu.mita@gmail.com,
-        catalin.marinas@arm.com, jani.nikula@linux.intel.com,
-        luto@kernel.org, m.szyprowski@samsung.com, adobriyan@gmail.com,
-        hch@lst.de, rodrigo.vivi@intel.com,
-        joonas.lahtinen@linux.intel.com, tom.zanussi@linux.intel.com,
-        agk@redhat.com, rostedt@goodmis.org,
-        maarten.lankhorst@linux.intel.com, aryabinin@virtuozzo.com,
-        tglx@linutronix.de
-Reply-To: cl@linux.com, linux-kernel@vger.kernel.org, josef@toxicpanda.com,
-          snitzer@redhat.com, clm@fb.com, dvyukov@google.com,
-          mbenes@suse.cz, jthumshirn@suse.de, daniel@ffwll.ch,
-          glider@google.com, rientjes@google.com, penberg@kernel.org,
-          hpa@zytor.com, robin.murphy@arm.com, mingo@kernel.org,
-          dsterba@suse.com, akpm@linux-foundation.org,
-          rppt@linux.vnet.ibm.com, airlied@linux.ie, jpoimboe@redhat.com,
-          luto@kernel.org, jani.nikula@linux.intel.com,
-          akinobu.mita@gmail.com, catalin.marinas@arm.com,
-          aryabinin@virtuozzo.com, maarten.lankhorst@linux.intel.com,
-          tglx@linutronix.de, joonas.lahtinen@linux.intel.com,
-          rodrigo.vivi@intel.com, tom.zanussi@linux.intel.com,
-          agk@redhat.com, rostedt@goodmis.org, m.szyprowski@samsung.com,
-          adobriyan@gmail.com, hch@lst.de
-In-Reply-To: <20190425094801.501919093@linutronix.de>
-References: <20190425094801.501919093@linutronix.de>
+Message-ID: <tip-f93877214a83e88373b20801c2d671923d03d07d@git.kernel.org>
+Cc:     akpm@linux-foundation.org, akinobu.mita@gmail.com,
+        penberg@kernel.org, luto@kernel.org, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, joonas.lahtinen@linux.intel.com,
+        mbenes@suse.cz, rostedt@goodmis.org, jpoimboe@redhat.com,
+        hpa@zytor.com, tglx@linutronix.de, rientjes@google.com,
+        catalin.marinas@arm.com, robin.murphy@arm.com,
+        rodrigo.vivi@intel.com, snitzer@redhat.com, agk@redhat.com,
+        jthumshirn@suse.de, adobriyan@gmail.com, m.szyprowski@samsung.com,
+        daniel@ffwll.ch, glider@google.com, aryabinin@virtuozzo.com,
+        cl@linux.com, mingo@kernel.org, tom.zanussi@linux.intel.com,
+        dsterba@suse.com, airlied@linux.ie, clm@fb.com,
+        josef@toxicpanda.com, maarten.lankhorst@linux.intel.com,
+        hch@lst.de, jani.nikula@linux.intel.com, rppt@linux.vnet.ibm.com
+Reply-To: josef@toxicpanda.com, maarten.lankhorst@linux.intel.com,
+          hch@lst.de, jani.nikula@linux.intel.com, rppt@linux.vnet.ibm.com,
+          tom.zanussi@linux.intel.com, mingo@kernel.org, dsterba@suse.com,
+          airlied@linux.ie, clm@fb.com, jthumshirn@suse.de,
+          adobriyan@gmail.com, m.szyprowski@samsung.com,
+          aryabinin@virtuozzo.com, daniel@ffwll.ch, glider@google.com,
+          cl@linux.com, rodrigo.vivi@intel.com, snitzer@redhat.com,
+          agk@redhat.com, rientjes@google.com, tglx@linutronix.de,
+          catalin.marinas@arm.com, robin.murphy@arm.com,
+          linux-kernel@vger.kernel.org, joonas.lahtinen@linux.intel.com,
+          mbenes@suse.cz, rostedt@goodmis.org, hpa@zytor.com,
+          jpoimboe@redhat.com, penberg@kernel.org, luto@kernel.org,
+          dvyukov@google.com, akpm@linux-foundation.org,
+          akinobu.mita@gmail.com
+In-Reply-To: <20190425094801.683039030@linutronix.de>
+References: <20190425094801.683039030@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/stacktrace] backtrace-test: Simplify stack trace handling
-Git-Commit-ID: 1b59562d3ab09dcef188eb8055d05f0336380394
+Subject: [tip:core/stacktrace] latency_top: Simplify stack trace handling
+Git-Commit-ID: f93877214a83e88373b20801c2d671923d03d07d
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -91,17 +90,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1b59562d3ab09dcef188eb8055d05f0336380394
-Gitweb:     https://git.kernel.org/tip/1b59562d3ab09dcef188eb8055d05f0336380394
+Commit-ID:  f93877214a83e88373b20801c2d671923d03d07d
+Gitweb:     https://git.kernel.org/tip/f93877214a83e88373b20801c2d671923d03d07d
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Thu, 25 Apr 2019 11:44:57 +0200
+AuthorDate: Thu, 25 Apr 2019 11:44:59 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Mon, 29 Apr 2019 12:37:47 +0200
+CommitDate: Mon, 29 Apr 2019 12:37:48 +0200
 
-backtrace-test: Simplify stack trace handling
+latency_top: Simplify stack trace handling
 
-Replace the indirection through struct stack_trace by using the storage
-array based interfaces.
+Replace the indirection through struct stack_trace with an invocation of
+the storage array based interface.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
@@ -143,36 +142,44 @@ Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
 Cc: Miroslav Benes <mbenes@suse.cz>
 Cc: linux-arch@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190425094801.501919093@linutronix.de
+Link: https://lkml.kernel.org/r/20190425094801.683039030@linutronix.de
 
 ---
- kernel/backtracetest.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ kernel/latencytop.c | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
-diff --git a/kernel/backtracetest.c b/kernel/backtracetest.c
-index 1323360d90e3..a563c8fdad0d 100644
---- a/kernel/backtracetest.c
-+++ b/kernel/backtracetest.c
-@@ -48,19 +48,14 @@ static void backtrace_test_irq(void)
- #ifdef CONFIG_STACKTRACE
- static void backtrace_test_saved(void)
- {
--	struct stack_trace trace;
- 	unsigned long entries[8];
-+	unsigned int nr_entries;
- 
- 	pr_info("Testing a saved backtrace.\n");
- 	pr_info("The following trace is a kernel self test and not a bug!\n");
- 
--	trace.nr_entries = 0;
--	trace.max_entries = ARRAY_SIZE(entries);
--	trace.entries = entries;
--	trace.skip = 0;
--
--	save_stack_trace(&trace);
--	print_stack_trace(&trace, 0);
-+	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
-+	stack_trace_print(entries, nr_entries, 0);
+diff --git a/kernel/latencytop.c b/kernel/latencytop.c
+index f5a90ab3c6b9..99a5b5f46dc5 100644
+--- a/kernel/latencytop.c
++++ b/kernel/latencytop.c
+@@ -141,20 +141,6 @@ account_global_scheduler_latency(struct task_struct *tsk,
+ 	memcpy(&latency_record[i], lat, sizeof(struct latency_record));
  }
- #else
- static void backtrace_test_saved(void)
+ 
+-/*
+- * Iterator to store a backtrace into a latency record entry
+- */
+-static inline void store_stacktrace(struct task_struct *tsk,
+-					struct latency_record *lat)
+-{
+-	struct stack_trace trace;
+-
+-	memset(&trace, 0, sizeof(trace));
+-	trace.max_entries = LT_BACKTRACEDEPTH;
+-	trace.entries = &lat->backtrace[0];
+-	save_stack_trace_tsk(tsk, &trace);
+-}
+-
+ /**
+  * __account_scheduler_latency - record an occurred latency
+  * @tsk - the task struct of the task hitting the latency
+@@ -191,7 +177,8 @@ __account_scheduler_latency(struct task_struct *tsk, int usecs, int inter)
+ 	lat.count = 1;
+ 	lat.time = usecs;
+ 	lat.max = usecs;
+-	store_stacktrace(tsk, &lat);
++
++	stack_trace_save_tsk(tsk, lat.backtrace, LT_BACKTRACEDEPTH, 0);
+ 
+ 	raw_spin_lock_irqsave(&latency_lock, flags);
+ 
