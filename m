@@ -2,137 +2,97 @@ Return-Path: <SRS0=c0gK=S7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D39C43219
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB44C43219
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDFC20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDBD20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Apr 2019 14:46:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="R0d7TFh+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="l6r95cqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbfD2Oqc (ORCPT
+        id S1728472AbfD2Oqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 29 Apr 2019 10:46:32 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59160 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728320AbfD2Oqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from smtp.codeaurora.org ([198.145.29.96]:36306 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728319AbfD2Oqb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Apr 2019 10:46:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C24A80D;
-        Mon, 29 Apr 2019 07:46:31 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA8DB3F5C1;
-        Mon, 29 Apr 2019 07:46:29 -0700 (PDT)
-Subject: Re: [PATCH 23/26] iommu/dma: Don't depend on CONFIG_DMA_DIRECT_REMAP
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190422175942.18788-1-hch@lst.de>
- <20190422175942.18788-24-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <57ecaf25-ac9a-ec34-d552-bcbc1891875e@arm.com>
-Date:   Mon, 29 Apr 2019 15:46:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D1D186028C; Mon, 29 Apr 2019 14:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556549190;
+        bh=TXlvK+53Z5f7AAMbyCS48iatA/iddrA8c1tdF+6cefU=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=R0d7TFh+0WYBWSk9avXHa0LzZlLH0FBwZOzrJkUG2vaF1CryoF/PwOLtRLwuELCoH
+         c2zxFEOPUrefK26fpfqQW7JpJGs9pOaiX5MKdy1Zjmh5ZwZBnFQMlOnXqDJs7QtEbG
+         km/5qqvQzhZBE2JxWj40ijgnnQ4QZvAwXnVqg8zc=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8F8AB60134;
+        Mon, 29 Apr 2019 14:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556549190;
+        bh=TXlvK+53Z5f7AAMbyCS48iatA/iddrA8c1tdF+6cefU=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=l6r95cqpXisbYCLJNfZkoe4mDjZdthulp9XKgShVCNuB2t4OQ6+nG8OXRU1YWFXlm
+         yw53+DDxo4ROPWsUADA/ps6jau3v2UowG5n1XyJJAAshLUBOvK/9FEDh8Rl03EybyT
+         xfHC1mBIXuzxbZn4mBYap/ZMs3aiIHvyg7MwhRoM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8F8AB60134
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190422175942.18788-24-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] ath6kl: debug: Use struct_size() helper
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190403154835.GA20955@embeddedor>
+References: <20190403154835.GA20955@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190429144630.D1D186028C@smtp.codeaurora.org>
+Date:   Mon, 29 Apr 2019 14:46:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/04/2019 18:59, Christoph Hellwig wrote:
-> For entirely dma coherent architectures there is no requirement to ever
-> remap dma coherent allocation.  Move all the remap and pool code under
-> IS_ENABLED() checks and drop the Kconfig dependency.
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes, in particular in the
+> context in which this code is being used.
+> 
+> So, change the following form:
+> 
+> sizeof(*tbl) + num_entries * sizeof(struct wmi_bss_roam_info)
+> 
+>  to :
+> 
+> struct_size(tbl, info, num_entries)
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   drivers/iommu/Kconfig     |  1 -
->   drivers/iommu/dma-iommu.c | 16 +++++++++-------
->   2 files changed, 9 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index bdc14baf2ee5..6f07f3b21816 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -95,7 +95,6 @@ config IOMMU_DMA
->   	select IOMMU_API
->   	select IOMMU_IOVA
->   	select NEED_SG_DMA_LENGTH
-> -	depends on DMA_DIRECT_REMAP
->   
->   config FSL_PAMU
->   	bool "Freescale IOMMU support"
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 8fc6098c1eeb..278a9a960107 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -923,10 +923,11 @@ static void __iommu_dma_free(struct device *dev, size_t size, void *cpu_addr)
->   	struct page *page = NULL;
->   
->   	/* Non-coherent atomic allocation? Easy */
-> -	if (dma_free_from_pool(cpu_addr, alloc_size))
-> +	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
-> +	    dma_free_from_pool(cpu_addr, alloc_size))
->   		return;
->   
-> -	if (is_vmalloc_addr(cpu_addr)) {
-> +	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr)) {
->   		/*
->   		 * If it the address is remapped, then it's either non-coherent
->   		 * or highmem CMA, or an iommu_dma_alloc_remap() construction.
-> @@ -972,7 +973,7 @@ static void *iommu_dma_alloc_pages(struct device *dev, size_t size,
->   	if (!page)
->   		return NULL;
->   
-> -	if (!coherent || PageHighMem(page)) {
-> +	if (IS_ENABLED(CONFIG_DMA_REMAP) && (!coherent || PageHighMem(page))) {
->   		pgprot_t prot = arch_dma_mmap_pgprot(dev, PAGE_KERNEL, attrs);
->   
->   		cpu_addr = dma_common_contiguous_remap(page, alloc_size,
-> @@ -1005,11 +1006,12 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
->   
->   	gfp |= __GFP_ZERO;
->   
-> -	if (gfpflags_allow_blocking(gfp) &&
-> +	if (IS_ENABLED(CONFIG_DMA_REMAP) && gfpflags_allow_blocking(gfp) &&
->   	    !(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
->   		return iommu_dma_alloc_remap(dev, size, handle, gfp, attrs);
->   
-> -	if (!gfpflags_allow_blocking(gfp) && !coherent)
-> +	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
-> +	    !gfpflags_allow_blocking(gfp) && !coherent)
->   		cpu_addr = dma_alloc_from_pool(PAGE_ALIGN(size), &page, gfp);
->   	else
->   		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
-> @@ -1041,7 +1043,7 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
->   	if (off >= nr_pages || vma_pages(vma) > nr_pages - off)
->   		return -ENXIO;
->   
-> -	if (is_vmalloc_addr(cpu_addr)) {
-> +	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr)) {
->   		struct page **pages = __iommu_dma_get_pages(cpu_addr);
->   
->   		if (pages)
-> @@ -1063,7 +1065,7 @@ static int iommu_dma_get_sgtable(struct device *dev, struct sg_table *sgt,
->   	struct page *page;
->   	int ret;
->   
-> -	if (is_vmalloc_addr(cpu_addr)) {
-> +	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr)) {
->   		struct page **pages = __iommu_dma_get_pages(cpu_addr);
->   
->   		if (pages) {
-> 
+Patch applied to ath-next branch of ath.git, thanks.
+
+df75786b9233 ath6kl: debug: Use struct_size() helper
+
+-- 
+https://patchwork.kernel.org/patch/10884039/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
